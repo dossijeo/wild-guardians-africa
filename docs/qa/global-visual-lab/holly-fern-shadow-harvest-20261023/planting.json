@@ -1,0 +1,153 @@
+{
+  "result": {
+    "harvest": {
+      "id": "plant-50",
+      "alive": false,
+      "requested": false,
+      "growth": 140,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "manual",
+          "wait": 0
+        }
+      ],
+      "steps": 333,
+      "elapsed": 166.4999999999992,
+      "time": 286.5000000000066,
+      "pauses": [
+        "menu"
+      ]
+    },
+    "planted": {
+      "shadow": {
+        "rebuilds": 8,
+        "instances": 19343,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "nearby": 0,
+      "plants": 13,
+      "money": "{\"n\":\"575\",\"d\":\"1\"}",
+      "cache": {
+        "draws": 144,
+        "hits": 171,
+        "untracked": 0
+      }
+    },
+    "observed": [
+      "CropPlaced",
+      "WaterSatisfied",
+      "WaterSatisfied",
+      "WaterSatisfied",
+      "WaterSatisfied",
+      "WaterSatisfied",
+      "WaterSatisfied",
+      "WaterSatisfied",
+      "CropMatured",
+      "HarvestRequested",
+      "CropMatured",
+      "HarvestRequested",
+      "CropMatured",
+      "HarvestRequested",
+      "CropPicked",
+      "CropPicked",
+      "CropMatured",
+      "HarvestRequested",
+      "CrateDelivered",
+      "CrateDelivered",
+      "CropMatured",
+      "HarvestRequested",
+      "CropMatured",
+      "HarvestRequested",
+      "CropMatured",
+      "HarvestRequested",
+      "CropMatured",
+      "HarvestRequested",
+      "CropPicked",
+      "CropPicked",
+      "CropMatured",
+      "HarvestRequested",
+      "CropMatured",
+      "HarvestRequested",
+      "CrateDelivered",
+      "CrateDelivered",
+      "CropMatured",
+      "HarvestRequested",
+      "CropPicked",
+      "CropMatured",
+      "HarvestRequested",
+      "CropPicked",
+      "CrateDelivered",
+      "CrateDelivered",
+      "CropPicked",
+      "CropPicked",
+      "CrateDelivered",
+      "CropPicked",
+      "CrateDelivered",
+      "CrateDelivered",
+      "CropPicked",
+      "CropPicked",
+      "CrateDelivered",
+      "CrateDelivered",
+      "CropPicked",
+      "WaterSatisfied",
+      "CrateDelivered",
+      "CropMatured",
+      "HarvestRequested",
+      "CropPicked"
+    ],
+    "dirty": false,
+    "enabled": true,
+    "modules": [
+      "http://127.0.0.1:5190/src/simulation/game.js?t=1792704266542"
+    ],
+    "point": [
+      99.78296568627452,
+      3.3259999332427976,
+      -3.541544117647059
+    ],
+    "before": {
+      "shadow": {
+        "rebuilds": 7,
+        "instances": 19373,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "nearby": 6,
+      "plants": 12,
+      "money": "{\"n\":\"580\",\"d\":\"1\"}",
+      "cache": {
+        "draws": 142,
+        "hits": 170,
+        "untracked": 0
+      }
+    },
+    "after": {
+      "shadow": {
+        "rebuilds": 9,
+        "instances": 19441,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "nearby": 6,
+      "plants": 13,
+      "money": "{\"n\":\"707\",\"d\":\"1\"}",
+      "cache": {
+        "draws": 145,
+        "hits": 175,
+        "untracked": 0
+      }
+    },
+    "glError": 0
+  },
+  "errors": []
+}

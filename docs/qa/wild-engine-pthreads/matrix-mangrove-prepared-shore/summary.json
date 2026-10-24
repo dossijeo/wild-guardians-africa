@@ -1,0 +1,462 @@
+{
+  "commit": "41ef4150fcf765a6a7ec02a12b50ad79da9f6ca2",
+  "quality": "media",
+  "compare": "water-shore-worker",
+  "farCompletionGate": true,
+  "horizonBedBudget": 2,
+  "scope": "Paused real game; equivalent completed streaming work, 720p, GPU timer every third render. Not active simulation or visual acceptance.",
+  "runs": [
+    {
+      "biome": "manglares",
+      "label": "a1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 153,
+        "mean": 28.692124183006516,
+        "p95": 66.40499999999884,
+        "max": 116.30999999999767
+      },
+      "gpu": {
+        "count": 52,
+        "mean": 22.496353153846158,
+        "p95": 30.785624,
+        "max": 31.424738
+      },
+      "preparedShore": {
+        "count": 0,
+        "bytes": 0
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {
+        "nativeTerrainBuffer": {
+          "count": 50,
+          "mean": 0.8307000005245209,
+          "p95": 1.2199999690055847,
+          "max": 2.0200000405311584
+        },
+        "bindMangroveMudEdges": {
+          "count": 46,
+          "mean": 3.440434779809869,
+          "p95": 5.634999990463257,
+          "max": 7.230000019073486
+        },
+        "prepareMangroveBank": {
+          "count": 32,
+          "mean": 2.54546875692904,
+          "p95": 7.129999995231628,
+          "max": 8.410000026226044
+        },
+        "prepareNaturalWater": {
+          "count": 32,
+          "mean": 0.07015624828636646,
+          "p95": 0.125,
+          "max": 0.15000003576278687
+        }
+      },
+      "programRetention": null,
+      "slowGlCount": 6,
+      "slowGlMs": 274.1449999809265,
+      "horizon": {
+        "count": 154,
+        "mean": 0.01600649565845341,
+        "p95": 0.025000035762786865,
+        "max": 0.04500001668930054
+      },
+      "syncChunks": {
+        "count": 154,
+        "mean": 0.9459740264075143,
+        "p95": 0.5049999952316284,
+        "max": 61.644999980926514
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.176399998664856,
+        "p95": 4.435000002384186,
+        "max": 6.985000014305115
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05890000104904175,
+        "p95": 0.09499996900558472,
+        "max": 0.10999995470046997
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6837999999523163,
+        "p95": 0.9900000095367432,
+        "max": 1.6949999928474426
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 47.14328125,
+        "p95": 63.909912109375,
+        "max": 84.340087890625
+      },
+      "install": {
+        "count": 50,
+        "mean": 11.863700000047684,
+        "p95": 16.455000042915344,
+        "max": 18.884999990463257
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4389.894999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-prepared-shore/manglares-a1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 153,
+        "mean": 28.58251633986928,
+        "p95": 66.46500000000378,
+        "max": 116.40000000000146
+      },
+      "gpu": {
+        "count": 52,
+        "mean": 22.433821096153846,
+        "p95": 29.509738,
+        "max": 36.347447
+      },
+      "preparedShore": {
+        "count": 32,
+        "bytes": 536460
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {
+        "nativeTerrainBuffer": {
+          "count": 50,
+          "mean": 0.828099993467331,
+          "p95": 1.6199999451637268,
+          "max": 1.9749999642372131
+        },
+        "bindMangroveMudEdges": {
+          "count": 46,
+          "mean": 3.470217393792194,
+          "p95": 5.605000019073486,
+          "max": 7.245000004768372
+        },
+        "prepareMangroveBank": {
+          "count": 32,
+          "mean": 0.04156249761581421,
+          "p95": 0.06499999761581421,
+          "max": 0.07999998331069946
+        },
+        "prepareNaturalWater": {
+          "count": 32,
+          "mean": 0.050156254321336746,
+          "p95": 0.06999999284744263,
+          "max": 0.09500002861022949
+        }
+      },
+      "programRetention": null,
+      "slowGlCount": 7,
+      "slowGlMs": 299.50000005960464,
+      "horizon": {
+        "count": 154,
+        "mean": 0.016266233735270315,
+        "p95": 0.025000035762786865,
+        "max": 0.10500001907348633
+      },
+      "syncChunks": {
+        "count": 154,
+        "mean": 1.0349675312444762,
+        "p95": 0.5550000071525574,
+        "max": 68.74000000953674
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.357499997615814,
+        "p95": 4.819999992847443,
+        "max": 6.380000054836273
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.057299998998641966,
+        "p95": 0.08000004291534424,
+        "max": 0.1549999713897705
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6755999982357025,
+        "p95": 1.1800000071525574,
+        "max": 1.6050000190734863
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 49.627900390625,
+        "p95": 69.6650390625,
+        "max": 72.0498046875
+      },
+      "install": {
+        "count": 50,
+        "mean": 10.257000006437302,
+        "p95": 15.040000021457672,
+        "max": 20.189999997615814
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4373.125,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-prepared-shore/manglares-b1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "a2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 153,
+        "mean": 29.126307189542466,
+        "p95": 50.0199999999968,
+        "max": 116.34999999999854
+      },
+      "gpu": {
+        "count": 52,
+        "mean": 23.72456134615385,
+        "p95": 31.183227,
+        "max": 34.793593
+      },
+      "preparedShore": {
+        "count": 0,
+        "bytes": 0
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {
+        "nativeTerrainBuffer": {
+          "count": 50,
+          "mean": 0.7899999988079071,
+          "p95": 1.3100000023841858,
+          "max": 1.6049999594688416
+        },
+        "bindMangroveMudEdges": {
+          "count": 46,
+          "mean": 3.3150000015030736,
+          "p95": 5.075000047683716,
+          "max": 7.0450000166893005
+        },
+        "prepareMangroveBank": {
+          "count": 32,
+          "mean": 2.4604687485843897,
+          "p95": 6.759999990463257,
+          "max": 7.129999995231628
+        },
+        "prepareNaturalWater": {
+          "count": 32,
+          "mean": 0.07078124582767487,
+          "p95": 0.1300000548362732,
+          "max": 0.1549999713897705
+        }
+      },
+      "programRetention": null,
+      "slowGlCount": 6,
+      "slowGlMs": 288.5450000166893,
+      "horizon": {
+        "count": 154,
+        "mean": 0.015616884479274997,
+        "p95": 0.030000030994415283,
+        "max": 0.06499999761581421
+      },
+      "syncChunks": {
+        "count": 154,
+        "mean": 1.0758766222309757,
+        "p95": 0.4899999499320984,
+        "max": 75.60500001907349
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.5273999989032747,
+        "p95": 5.459999978542328,
+        "max": 8.030000030994415
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.057799993753433226,
+        "p95": 0.09500002861022949,
+        "max": 0.12000000476837158
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7246999955177307,
+        "p95": 1.3399999737739563,
+        "max": 1.3949999809265137
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 48.61828125,
+        "p95": 62.6650390625,
+        "max": 72.25
+      },
+      "install": {
+        "count": 50,
+        "mean": 11.623299998044967,
+        "p95": 17.060000002384186,
+        "max": 19.155000030994415
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4456.324999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-prepared-shore/manglares-a2.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 147,
+        "mean": 29.07207482993198,
+        "p95": 66.4800000000032,
+        "max": 99.77999999999884
+      },
+      "gpu": {
+        "count": 50,
+        "mean": 22.281550060000004,
+        "p95": 30.223332,
+        "max": 33.82453
+      },
+      "preparedShore": {
+        "count": 32,
+        "bytes": 536460
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {
+        "nativeTerrainBuffer": {
+          "count": 50,
+          "mean": 0.8179999971389771,
+          "p95": 1.2099999785423279,
+          "max": 2.524999976158142
+        },
+        "bindMangroveMudEdges": {
+          "count": 46,
+          "mean": 3.2055434766023057,
+          "p95": 5.465000033378601,
+          "max": 5.889999985694885
+        },
+        "prepareMangroveBank": {
+          "count": 32,
+          "mean": 0.03906250558793545,
+          "p95": 0.06499999761581421,
+          "max": 0.0700000524520874
+        },
+        "prepareNaturalWater": {
+          "count": 32,
+          "mean": 0.04874999448657036,
+          "p95": 0.09500002861022949,
+          "max": 0.13499999046325684
+        }
+      },
+      "programRetention": null,
+      "slowGlCount": 5,
+      "slowGlMs": 173.3949999809265,
+      "horizon": {
+        "count": 148,
+        "mean": 0.016114865605895583,
+        "p95": 0.029999971389770508,
+        "max": 0.06000000238418579
+      },
+      "syncChunks": {
+        "count": 148,
+        "mean": 1.0204391890280955,
+        "p95": 0.6500000357627869,
+        "max": 62.9549999833107
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.2075,
+        "p95": 4.774999976158142,
+        "max": 6.185000002384186
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05909999966621399,
+        "p95": 0.09000003337860107,
+        "max": 0.13999998569488525
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6585999977588654,
+        "p95": 1.100000023841858,
+        "max": 1.6100000143051147
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 48.0181005859375,
+        "p95": 61.599853515625,
+        "max": 66.35986328125
+      },
+      "install": {
+        "count": 50,
+        "mean": 9.8448000061512,
+        "p95": 15.27999997138977,
+        "max": 20.210000038146973
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4273.595000000001,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-prepared-shore/manglares-b2.json"
+    }
+  ]
+}

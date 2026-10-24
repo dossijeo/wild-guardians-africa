@@ -1,0 +1,9 @@
+# LOD coherente para hojas de Manglares
+
+Candidata QA sobre el borde por desgaste: centro cercano termina sobre diagonal 0–2 del LOD lejano, normal converge a una normal común por hoja, viento se atenúa con LOD y pigmento converge a la raíz de cada hoja. Se ajusta interpolación de sombreado del centro. Conserva cuatro hojas compartidas y colapsa las cuatro adicionales. Sin cambios de modelos originales o producción.
+
+Seis parejas normales día/noche: cámara, hora, instancias y triángulos iguales. [Día](comparison-day.jpg), [noche](comparison-night.jpg). Se conserva la cubierta; cambio local de brillo y detalle, no se afirma mejora artística global. Atributo flatNormal adicional: 672 bytes nominales (56 vértices × 3 float32), sin texturas, draw calls ni triángulos nuevos. Sin errores WebGL/página. Tiempos GPU pendientes.
+
+Prueba adicional de extremo en ../mangrove-leaf-lod-endpoint-20261021: shader lod=0, control fuerza malla cercana y candidata malla lejana. 6033/4540/7517 instancias idénticas por cámara, día/noche. Diferencia media RGBA máxima 0.001214/255, 553–1105 píxeles diferentes: casi equivalentes, no exactamente. No se atribuyen residuos sin diagnóstico adicional. Esta prueba fuerza un estado y no sustituye vídeo/cámara en movimiento ni demuestra ausencia de popping temporal. No se ha cuantificado mejora respecto al extremo de la versión anterior.
+
+Reproducción Vite5190: capture-mangrove-leaf-lod-20261021.mjs, package-mangrove-leaf-lod-20261021.py, capture-mangrove-leaf-lod-endpoint-20261021.mjs y audit-mangrove-leaf-lod-endpoint-20261021.py en tools/experiments. PNG regenerables localmente. Endpoint no es benchmark: dibuja distintos triángulos deliberadamente para comparar representación equivalente. Pendientes movimiento, baja, streaming, costes y otros biomas. Mantener candidata QA.

@@ -1,0 +1,725 @@
+{
+  "note": "Prior global recipe versus three candidates; matched geometry in all biomes. Static comparison, not performance.",
+  "pairs": [
+    {
+      "quality": "media",
+      "biome": "sabana",
+      "phase": "day",
+      "view": "game",
+      "calls": 72,
+      "triangles": 1927535,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "sabana",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 79,
+      "triangles": 1950031,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "sabana",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 65,
+      "triangles": 1865675,
+      "mae": 0.0021553096064814816,
+      "changedPixels": 43
+    },
+    {
+      "quality": "media",
+      "biome": "sabana",
+      "phase": "night",
+      "view": "game",
+      "calls": 72,
+      "triangles": 1927535,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "sabana",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 79,
+      "triangles": 1950031,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "sabana",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 65,
+      "triangles": 1865675,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "game",
+      "calls": 66,
+      "triangles": 869817,
+      "mae": 0.43915834780092594,
+      "changedPixels": 24718
+    },
+    {
+      "quality": "media",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 72,
+      "triangles": 924228,
+      "mae": 0.6874497251157408,
+      "changedPixels": 24765
+    },
+    {
+      "quality": "media",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 62,
+      "triangles": 865178,
+      "mae": 0.9717126012731482,
+      "changedPixels": 45354
+    },
+    {
+      "quality": "media",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "game",
+      "calls": 66,
+      "triangles": 869817,
+      "mae": 0.13004484953703704,
+      "changedPixels": 24080
+    },
+    {
+      "quality": "media",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 72,
+      "triangles": 924228,
+      "mae": 0.21290690104166668,
+      "changedPixels": 24332
+    },
+    {
+      "quality": "media",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 62,
+      "triangles": 865178,
+      "mae": 0.28906430844907405,
+      "changedPixels": 44740
+    },
+    {
+      "quality": "media",
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "game",
+      "calls": 39,
+      "triangles": 399675,
+      "mae": 3.099662543402778,
+      "changedPixels": 310759
+    },
+    {
+      "quality": "media",
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 34,
+      "triangles": 246170,
+      "mae": 0.7610138165509259,
+      "changedPixels": 91604
+    },
+    {
+      "quality": "media",
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 32,
+      "triangles": 232389,
+      "mae": 2.806531756365741,
+      "changedPixels": 269174
+    },
+    {
+      "quality": "media",
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "game",
+      "calls": 39,
+      "triangles": 399675,
+      "mae": 3.333371310763889,
+      "changedPixels": 310709
+    },
+    {
+      "quality": "media",
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 34,
+      "triangles": 246170,
+      "mae": 0.7892028356481482,
+      "changedPixels": 91558
+    },
+    {
+      "quality": "media",
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 32,
+      "triangles": 232389,
+      "mae": 3.018070023148148,
+      "changedPixels": 269527
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "game",
+      "calls": 64,
+      "triangles": 614104,
+      "mae": 1.011017433449074,
+      "changedPixels": 52920
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 60,
+      "triangles": 470157,
+      "mae": 0.8301334635416666,
+      "changedPixels": 41105
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 540732,
+      "mae": 0.9628989438657407,
+      "changedPixels": 57871
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "game",
+      "calls": 64,
+      "triangles": 614104,
+      "mae": 0.7944299768518519,
+      "changedPixels": 49679
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 60,
+      "triangles": 470157,
+      "mae": 0.6291948784722222,
+      "changedPixels": 39315
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 540732,
+      "mae": 0.7365067997685185,
+      "changedPixels": 52147
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "game",
+      "calls": 69,
+      "triangles": 502116,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 68,
+      "triangles": 528331,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 66,
+      "triangles": 437465,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "game",
+      "calls": 69,
+      "triangles": 502116,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 68,
+      "triangles": 528331,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 66,
+      "triangles": 437465,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "desierto",
+      "phase": "day",
+      "view": "game",
+      "calls": 44,
+      "triangles": 221404,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "desierto",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 39,
+      "triangles": 207188,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "desierto",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 47,
+      "triangles": 225117,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "desierto",
+      "phase": "night",
+      "view": "game",
+      "calls": 44,
+      "triangles": 221404,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "desierto",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 39,
+      "triangles": 207188,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "media",
+      "biome": "desierto",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 47,
+      "triangles": 225117,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "sabana",
+      "phase": "day",
+      "view": "game",
+      "calls": 69,
+      "triangles": 1274920,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "sabana",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 76,
+      "triangles": 1339074,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "sabana",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 61,
+      "triangles": 1168462,
+      "mae": 0.004718967013888889,
+      "changedPixels": 84
+    },
+    {
+      "quality": "baja",
+      "biome": "sabana",
+      "phase": "night",
+      "view": "game",
+      "calls": 69,
+      "triangles": 1274920,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "sabana",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 76,
+      "triangles": 1339074,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "sabana",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 61,
+      "triangles": 1168462,
+      "mae": 0.003585431134259259,
+      "changedPixels": 84
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "game",
+      "calls": 62,
+      "triangles": 504136,
+      "mae": 0.18571469907407406,
+      "changedPixels": 11631
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 69,
+      "triangles": 565583,
+      "mae": 0.5746668836805555,
+      "changedPixels": 20539
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 56,
+      "triangles": 522918,
+      "mae": 0.6172479021990741,
+      "changedPixels": 27990
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "game",
+      "calls": 62,
+      "triangles": 504136,
+      "mae": 0.05324146412037037,
+      "changedPixels": 11281
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 69,
+      "triangles": 565583,
+      "mae": 0.1733933738425926,
+      "changedPixels": 20132
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 56,
+      "triangles": 522918,
+      "mae": 0.18093388310185185,
+      "changedPixels": 27596
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "game",
+      "calls": 36,
+      "triangles": 335551,
+      "mae": 3.426867042824074,
+      "changedPixels": 311621
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 32,
+      "triangles": 201341,
+      "mae": 0.8253953269675925,
+      "changedPixels": 92266
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 30,
+      "triangles": 180640,
+      "mae": 3.055425347222222,
+      "changedPixels": 270670
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "game",
+      "calls": 36,
+      "triangles": 335551,
+      "mae": 3.6005103443287036,
+      "changedPixels": 311546
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 32,
+      "triangles": 201341,
+      "mae": 0.8882125289351852,
+      "changedPixels": 92291
+    },
+    {
+      "quality": "baja",
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 30,
+      "triangles": 180640,
+      "mae": 3.264019820601852,
+      "changedPixels": 271037
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "game",
+      "calls": 61,
+      "triangles": 462480,
+      "mae": 1.0153287760416667,
+      "changedPixels": 53324
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 54,
+      "triangles": 313164,
+      "mae": 0.8324837239583334,
+      "changedPixels": 41424
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 59,
+      "triangles": 416897,
+      "mae": 0.9805501302083334,
+      "changedPixels": 58724
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "game",
+      "calls": 61,
+      "triangles": 462480,
+      "mae": 0.8176450376157407,
+      "changedPixels": 50094
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 54,
+      "triangles": 313164,
+      "mae": 0.6758091001157407,
+      "changedPixels": 39653
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 59,
+      "triangles": 416897,
+      "mae": 0.7519039351851852,
+      "changedPixels": 52980
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "game",
+      "calls": 65,
+      "triangles": 394439,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 67,
+      "triangles": 396063,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 345106,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "game",
+      "calls": 65,
+      "triangles": 394439,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 67,
+      "triangles": 396063,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 345106,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "desierto",
+      "phase": "day",
+      "view": "game",
+      "calls": 38,
+      "triangles": 208853,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "desierto",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 35,
+      "triangles": 198383,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "desierto",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 42,
+      "triangles": 215362,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "desierto",
+      "phase": "night",
+      "view": "game",
+      "calls": 38,
+      "triangles": 208853,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "desierto",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 35,
+      "triangles": 198383,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "baja",
+      "biome": "desierto",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 42,
+      "triangles": 215362,
+      "mae": 0.0,
+      "changedPixels": 0
+    }
+  ]
+}

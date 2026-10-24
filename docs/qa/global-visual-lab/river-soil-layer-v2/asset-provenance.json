@@ -1,0 +1,43 @@
+{
+  "source": "https://ambientcg.com/view?id=Ground079S",
+  "license": "CC0-1.0",
+  "verified": "2026-10-21",
+  "reusedFrom": "public/content/ground-materials.json canyons",
+  "assets": [
+    {
+      "role": "base",
+      "path": "public/assets/9943235b3605983c3890ad20c266441dcbd35f161e0da7e1b3ffb3529dd9cd3f.jpg",
+      "sha256": "9943235b3605983c3890ad20c266441dcbd35f161e0da7e1b3ffb3529dd9cd3f",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "fileBytes": 1753093
+    },
+    {
+      "role": "normal",
+      "path": "public/assets/8d860446c06bc548b750cdbd8ed5a25f0132a72ca9de22d738571e36242a8da9.jpg",
+      "sha256": "8d860446c06bc548b750cdbd8ed5a25f0132a72ca9de22d738571e36242a8da9",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "fileBytes": 2236056
+    },
+    {
+      "role": "arh",
+      "path": "public/assets/72472a81bc5a18a0591a7dcf91772c16e60cd03ca606d51b2d7c890cfbaeff5f.png",
+      "sha256": "72472a81bc5a18a0591a7dcf91772c16e60cd03ca606d51b2d7c890cfbaeff5f",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "fileBytes": 2016192
+    }
+  ],
+  "estimatedRGBA8WithFullMipChainBytes": 16777216,
+  "estimateNote": "Three 1024-square RGBA8 texture allocations with mipmaps, rounded; not measured VRAM, excludes driver/cache overhead."
+}

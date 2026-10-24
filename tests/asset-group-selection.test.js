@@ -95,3 +95,20 @@ test('pending dirty ranges remain bounded when a pass is never drawn',()=>{
  assert.equal(color.array[12],2);assert.equal(shadow.array[12],2);
  color.onUploadCallback();shadow.onUploadCallback();assert.deepEqual(color.updateRanges,[]);assert.deepEqual(shadow.updateRanges,[]);f.groups.dispose();
 });
+
+
+test('smooth partial instances use camera culling and dirty ranges without removing offscreen shadow casters',()=>{
+ const f=fixture();f.groups.smoothObstruction=true;
+ const source=f.batch.meshes[0].geometry.attributes.nativeVisibility;source.array.fill(.4);source.needsUpdate=true;
+ render(f);const g=f.groups.colors.get('0:0'),fade=g.smoothFades[0],shadow=f.groups.shadows.get('0').mesh;
+ assert.equal(g.mesh.count,0);assert.equal(g.smoothFades.filter(m=>m.visible).length,1);assert.equal(shadow.count,3);
+ fade.instanceMatrix.onUploadCallback();fade.geometry.attributes.nativeVisibility.onUploadCallback();
+ const matrixVersion=fade.instanceMatrix.version,shadowVersion=shadow.instanceMatrix.version;
+ f.camera.position.x+=.001;assert.equal(render(f).uploads,0);assert.equal(fade.instanceMatrix.version,matrixVersion);
+ source.setX(0,.6);source.needsUpdate=true;render(f);
+ assert.equal(fade.instanceMatrix.version,matrixVersion);assert.deepEqual(fade.geometry.attributes.nativeVisibility.updateRanges,[{start:0,count:1}]);
+ assert.equal(shadow.instanceMatrix.version,shadowVersion);
+ f.camera.lookAt(60,5,0);render(f);assert.equal(g.smoothFades.filter(m=>m.visible).length,1);assert.equal(fade.instanceMatrix.array[12],60);assert.equal(shadow.count,3);
+ source.array.fill(1);source.needsUpdate=true;render(f);assert.equal(fade.visible,false);assert.equal(g.mesh.count,1);
+ f.groups.dispose();
+});

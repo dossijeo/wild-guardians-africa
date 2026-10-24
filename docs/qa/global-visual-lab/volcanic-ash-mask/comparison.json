@@ -1,0 +1,125 @@
+{
+  "note": "Procedural ash versus cached mask, identical geometry. Static captures; separate benchmark.",
+  "pairs": [
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "game",
+      "calls": 69,
+      "triangles": 502116,
+      "mae": 0.09033998842592593,
+      "changedPixels": 135776
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 68,
+      "triangles": 528331,
+      "mae": 0.07509584780092593,
+      "changedPixels": 93449
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 66,
+      "triangles": 437465,
+      "mae": 0.12284649884259259,
+      "changedPixels": 158513
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "game",
+      "calls": 69,
+      "triangles": 502116,
+      "mae": 0.041285083912037036,
+      "changedPixels": 83836
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 68,
+      "triangles": 528331,
+      "mae": 0.02964084201388889,
+      "changedPixels": 53443
+    },
+    {
+      "quality": "media",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 66,
+      "triangles": 437465,
+      "mae": 0.052573784722222225,
+      "changedPixels": 97904
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "game",
+      "calls": 65,
+      "triangles": 394439,
+      "mae": 0.09589228877314815,
+      "changedPixels": 140067
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 67,
+      "triangles": 396063,
+      "mae": 0.08339301215277778,
+      "changedPixels": 100781
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 345106,
+      "mae": 0.12515625,
+      "changedPixels": 160963
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "game",
+      "calls": 65,
+      "triangles": 394439,
+      "mae": 0.04342918113425926,
+      "changedPixels": 87274
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 67,
+      "triangles": 396063,
+      "mae": 0.032582103587962964,
+      "changedPixels": 58033
+    },
+    {
+      "quality": "baja",
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 345106,
+      "mae": 0.05352973090277778,
+      "changedPixels": 99490
+    }
+  ]
+}

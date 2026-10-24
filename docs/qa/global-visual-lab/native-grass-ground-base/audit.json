@@ -1,0 +1,331 @@
+{
+  "captures": [
+    {
+      "view": "close",
+      "hour": "day",
+      "returnPixels": 0,
+      "changedPixels": {
+        "ground": 19306,
+        "continuous": 19505
+      },
+      "sameResources": true,
+      "samePose": true
+    },
+    {
+      "view": "close",
+      "hour": "night",
+      "returnPixels": 0,
+      "changedPixels": {
+        "ground": 19262,
+        "continuous": 19464
+      },
+      "sameResources": true,
+      "samePose": true
+    },
+    {
+      "view": "game",
+      "hour": "day",
+      "returnPixels": 0,
+      "changedPixels": {
+        "ground": 9425,
+        "continuous": 9478
+      },
+      "sameResources": true,
+      "samePose": true
+    },
+    {
+      "view": "game",
+      "hour": "night",
+      "returnPixels": 0,
+      "changedPixels": {
+        "ground": 9408,
+        "continuous": 9453
+      },
+      "sameResources": true,
+      "samePose": true
+    }
+  ],
+  "errors": [],
+  "benchmarks": [
+    {
+      "quality": "media",
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpuMean": 17.682937975000005,
+        "gpuP95": 19.87889435,
+        "cpuMean": 3.3295833328117928,
+        "cpuP95": 4.104999993741511,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "ground": {
+        "gpuMean": 18.4181917125,
+        "gpuP95": 21.030347349999996,
+        "cpuMean": 3.3175000003228585,
+        "cpuP95": 4.300000011920929,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "continuous": {
+        "gpuMean": 18.746402233333335,
+        "gpuP95": 21.5873755,
+        "cpuMean": 3.32291666790843,
+        "cpuP95": 4.4000000059604645,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      }
+    },
+    {
+      "quality": "media",
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpuMean": 18.800898716666666,
+        "gpuP95": 21.6978352,
+        "cpuMean": 3.480833333606521,
+        "cpuP95": 4.310000011324879,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "ground": {
+        "gpuMean": 19.422823420833332,
+        "gpuP95": 22.6494237,
+        "cpuMean": 3.64749999952813,
+        "cpuP95": 4.804999983310697,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "continuous": {
+        "gpuMean": 19.273752899999998,
+        "gpuP95": 22.538460349999998,
+        "cpuMean": 3.7162500002731877,
+        "cpuP95": 4.6999999895691875,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      }
+    },
+    {
+      "quality": "media",
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpuMean": 20.039448795833334,
+        "gpuP95": 22.91465005,
+        "cpuMean": 3.0504166660209497,
+        "cpuP95": 3.9000000059604645,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "ground": {
+        "gpuMean": 20.402400162499998,
+        "gpuP95": 23.330673499999996,
+        "cpuMean": 2.976666665946444,
+        "cpuP95": 3.7050000160932526,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "continuous": {
+        "gpuMean": 20.89343987083333,
+        "gpuP95": 24.29437925,
+        "cpuMean": 3.063750000173847,
+        "cpuP95": 3.9000000059604645,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      }
+    },
+    {
+      "quality": "media",
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpuMean": 20.570871200000003,
+        "gpuP95": 23.257182099999998,
+        "cpuMean": 2.9279166676104067,
+        "cpuP95": 3.699999988079071,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "ground": {
+        "gpuMean": 21.269218908333333,
+        "gpuP95": 24.4647648,
+        "cpuMean": 2.995833333954215,
+        "cpuP95": 3.800000011920929,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "continuous": {
+        "gpuMean": 21.72399455,
+        "gpuP95": 25.696022249999995,
+        "cpuMean": 3.0691666670143603,
+        "cpuP95": 4.0,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      }
+    },
+    {
+      "quality": "baja",
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpuMean": 14.171999775,
+        "gpuP95": 15.971889699999998,
+        "cpuMean": 3.2708333334575097,
+        "cpuP95": 4.299999983608723,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 56,
+        "geometries": 140
+      },
+      "ground": {
+        "gpuMean": 13.713992625,
+        "gpuP95": 15.76777065,
+        "cpuMean": 3.2100000001490114,
+        "cpuP95": 4.299999983608723,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 56,
+        "geometries": 140
+      },
+      "continuous": {
+        "gpuMean": 14.1195093,
+        "gpuP95": 16.0249759,
+        "cpuMean": 3.283750000347694,
+        "cpuP95": 4.104999995231626,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 56,
+        "geometries": 140
+      }
+    },
+    {
+      "quality": "baja",
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpuMean": 14.443326395833333,
+        "gpuP95": 15.974400749999997,
+        "cpuMean": 3.0466666652510566,
+        "cpuP95": 4.0,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 56,
+        "geometries": 140
+      },
+      "ground": {
+        "gpuMean": 14.715463025,
+        "gpuP95": 17.249035499999998,
+        "cpuMean": 3.024583333109816,
+        "cpuP95": 4.005000001192091,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 56,
+        "geometries": 140
+      },
+      "continuous": {
+        "gpuMean": 15.46597495,
+        "gpuP95": 18.06847795,
+        "cpuMean": 3.1491666668405136,
+        "cpuP95": 4.099999995529652,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 56,
+        "geometries": 140
+      }
+    },
+    {
+      "quality": "baja",
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpuMean": 14.429286670833333,
+        "gpuP95": 16.0806269,
+        "cpuMean": 2.9804166673372188,
+        "cpuP95": 3.7999999836087226,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 56,
+        "geometries": 138
+      },
+      "ground": {
+        "gpuMean": 14.6615118625,
+        "gpuP95": 16.9661089,
+        "cpuMean": 3.06125000094374,
+        "cpuP95": 4.204999989271162,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 56,
+        "geometries": 138
+      },
+      "continuous": {
+        "gpuMean": 14.674524170833333,
+        "gpuP95": 16.703777449999997,
+        "cpuMean": 3.068333334599932,
+        "cpuP95": 3.9050000056624397,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 56,
+        "geometries": 138
+      }
+    },
+    {
+      "quality": "baja",
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpuMean": 15.205057058333333,
+        "gpuP95": 17.571382199999995,
+        "cpuMean": 3.0129166656484205,
+        "cpuP95": 3.9050000056624397,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 56,
+        "geometries": 138
+      },
+      "ground": {
+        "gpuMean": 15.227003145833333,
+        "gpuP95": 17.763100650000002,
+        "cpuMean": 2.8095833328862985,
+        "cpuP95": 3.800000011920929,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 56,
+        "geometries": 138
+      },
+      "continuous": {
+        "gpuMean": 14.999573925,
+        "gpuP95": 16.665728499999997,
+        "cpuMean": 2.7841666656235855,
+        "cpuP95": 3.605000023543833,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 56,
+        "geometries": 138
+      }
+    }
+  ]
+}

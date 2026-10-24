@@ -1,0 +1,17 @@
+export async function installGrassPigmentLod(page){
+ await page.route('**/tools/experiments/qa-continuous-grass.js*',async route=>{
+  const response=await route.fetch();let body=await response.text();
+  const edits=[['float bend=uCoverageRefined*.50','float bend=lod*uCoverageRefined*.50'],['N.y-=uCoverageRefined*uCoverageWindStrength','N.y-=lod*uCoverageRefined*uCoverageWindStrength']];
+  for(const [a,b] of edits){if(!body.includes(a))throw Error('Wind LOD anchor missing');body=body.replace(a,b);}
+  const edits2=[
+   ['in vec3 flatPosition,bladeRoot;', 'in vec3 flatPosition,bladeRoot,flatNormal;'],
+   ["['flatPosition',3],['bladeRoot',3]","['flatPosition',3],['bladeRoot',3],['flatNormal',3]"],
+   ['vec3 N=normal;', 'vec3 N=normalize(mix(flatNormal,normal,lod*uCoverageRefined));'],
+   [' q.meshes=',` for(const data of Object.values(modules)){data.flatNormal=[];for(let i=0;i<data.uv.length/2;i++){const leaf=Math.round(data.uv[i*2+1]*12);const n=leaf<8?modules.light.normal.slice(leaf*9,leaf*9+3):data.normal.slice(i*3,i*3+3);data.flatNormal.push(...n);}}
+ q.meshes=`]
+  ];
+  for(const [a,b] of edits2){if(!body.includes(a))throw Error('Normal LOD anchor missing: '+a);body=body.replace(a,b);}
+  const pigment='(root.xz+pos.xz)*uCoverageScale';if(!body.includes(pigment))throw Error('Pigment anchor');body=body.replace(pigment,'(root.xz+pos.xz*lod)*uCoverageScale');
+  await route.fulfill({response,body});
+ });
+}

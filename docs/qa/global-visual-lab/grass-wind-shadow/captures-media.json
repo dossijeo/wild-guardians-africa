@@ -1,0 +1,506 @@
+{
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "note": "Actual menu-started campaign, default rendering, paused simulation; all variants share the same world and cameras. Full-frame renderer counters.",
+  "records": [
+    {
+      "file": "media-close-day-wind.webp",
+      "view": "close",
+      "phase": "day",
+      "variant": "wind",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        88,
+        8.818869972229004,
+        19
+      ],
+      "target": [
+        85,
+        6.818869972229004,
+        15
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 81,
+      "triangles": 1142303,
+      "geometries": 202,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "wind",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": false,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-day-shadow.webp",
+      "view": "close",
+      "phase": "day",
+      "variant": "shadow",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        88,
+        8.818869972229004,
+        19
+      ],
+      "target": [
+        85,
+        6.818869972229004,
+        15
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 113,
+      "triangles": 2014075,
+      "geometries": 202,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "shadow",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": true,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-night-wind.webp",
+      "view": "close",
+      "phase": "night",
+      "variant": "wind",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        88,
+        8.818869972229004,
+        19
+      ],
+      "target": [
+        85,
+        6.818869972229004,
+        15
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 81,
+      "triangles": 1142303,
+      "geometries": 202,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "wind",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": false,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-night-shadow.webp",
+      "view": "close",
+      "phase": "night",
+      "variant": "shadow",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        88,
+        8.818869972229004,
+        19
+      ],
+      "target": [
+        85,
+        6.818869972229004,
+        15
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 113,
+      "triangles": 2014075,
+      "geometries": 202,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "shadow",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": true,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-day-wind.webp",
+      "view": "game",
+      "phase": "day",
+      "variant": "wind",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "target": [
+        60,
+        6.848869972229004,
+        0
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 71,
+      "triangles": 965516,
+      "geometries": 195,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "wind",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": false,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-day-shadow.webp",
+      "view": "game",
+      "phase": "day",
+      "variant": "shadow",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "target": [
+        60,
+        6.848869972229004,
+        0
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 102,
+      "triangles": 1797078,
+      "geometries": 195,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "shadow",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": true,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-night-wind.webp",
+      "view": "game",
+      "phase": "night",
+      "variant": "wind",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "target": [
+        60,
+        6.848869972229004,
+        0
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 71,
+      "triangles": 965516,
+      "geometries": 195,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "wind",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": false,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-night-shadow.webp",
+      "view": "game",
+      "phase": "night",
+      "variant": "shadow",
+      "quality": "media",
+      "windTime": 2.1,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "target": [
+        60,
+        6.848869972229004,
+        0
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 102,
+      "triangles": 1797078,
+      "geometries": 195,
+      "textures": 61,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "shadow",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "windStrength": 0.18,
+        "windTime": 2,
+        "castShadow": true,
+        "additionalTextures": 0,
+        "notes": "Same wind and placement, optional native directional shadow with matching deformation.",
+        "shadowEnabled": true
+      },
+      "errors": []
+    }
+  ]
+}

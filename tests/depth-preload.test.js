@@ -91,3 +91,27 @@ test('depth CPU candidate retains cancellation during its real suspended frame',
  const pending=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,cpuBudget:true,frameBudget:16,signal:owner.signal,now:()=>clock,compile:()=>{calls++;clock+=8;return Promise.resolve();},nextFrame:()=>new Promise(()=>{})});
  await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,2);owner.abort();await assert.rejects(pending,/cancelled/);assert.equal(calls,2);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);s.cleanup();
 });
+
+
+test('global admission owns the complete depth transaction, preserving state while queued and waiting',async()=>{
+ const s=setup(),queue=[];let barriers=0,submissions=0;
+ const scheduler={submit(iterator,options){return new Promise((resolve,reject)=>queue.push({iterator,options,resolve,reject}));}};
+ const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,nextFrame:async()=>{barriers++;},compile:()=>{submissions++;assert.equal(s.renderer.getRenderTarget(),s.pipeline.smokeDepth);return Promise.resolve();}});
+ assert.equal(submissions,0);assert.equal(s.renderer.getRenderTarget(),s.prior);
+ const deadlines=[];
+ for(let i=0;i<3;i++){
+  while(!queue.length)await Promise.resolve();
+  const job=queue.shift();deadlines.push(job.options.deadline);assert.equal(job.options.valid(),true);
+  const result=job.iterator.next();assert.equal(result.done,true);
+  assert.equal(s.renderer.getRenderTarget(),s.prior);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);
+  job.resolve(result.value);
+ }
+ await preparing;assert.equal(barriers,0);assert.equal(submissions,3);assert.equal(new Set(deadlines).size,1);s.cleanup();
+});
+test('cancelled depth admission cannot submit stale borrowed materials',async()=>{
+ const s=setup();let stop=false,queued,resolve;
+ const scheduler={submit(iterator,options){queued={iterator,options};return new Promise(r=>{resolve=r;});}};
+ const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,cancelled:()=>stop,compile:()=>assert.fail('stale compile')});
+ stop=true;assert.throws(()=>queued.options.valid(),/cancelled/);queued.iterator.return();resolve(null);
+ await assert.rejects(preparing,/cancelled/);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);s.cleanup();
+});

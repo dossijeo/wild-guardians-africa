@@ -1,0 +1,118 @@
+[
+  {
+    "record": 0,
+    "variant": "cache512",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 22.1246,
+    "frameMs": 27.7142,
+    "p95Ms": 33.200000047683716,
+    "cpuMs": 8.3433,
+    "cache": null
+  },
+  {
+    "record": 1,
+    "variant": "cache512",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 23.0396,
+    "frameMs": 28.3817,
+    "p95Ms": 33.89999997615814,
+    "cpuMs": 7.8467,
+    "cache": null
+  },
+  {
+    "record": 2,
+    "variant": "incrementalsmooth",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 23.2572,
+    "frameMs": 28.9517,
+    "p95Ms": 35.5,
+    "cpuMs": 8.3175,
+    "cache": {
+      "bytes": 19765928,
+      "peakBytes": 23991008,
+      "tiles": 336,
+      "published": 42,
+      "cancelled": 4,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 3,
+    "variant": "incrementalsmooth",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 23.266,
+    "frameMs": 29.1542,
+    "p95Ms": 33.59999996423721,
+    "cpuMs": 8.2867,
+    "cache": {
+      "bytes": 22582648,
+      "peakBytes": 23991008,
+      "tiles": 343,
+      "published": 42,
+      "cancelled": 5,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 4,
+    "variant": "cache512",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 22.0081,
+    "frameMs": 28.67,
+    "p95Ms": 35.19999998807907,
+    "cpuMs": 8.5367,
+    "cache": null
+  },
+  {
+    "record": 5,
+    "variant": "cache512",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 23.3953,
+    "frameMs": 31.385,
+    "p95Ms": 40.80000001192093,
+    "cpuMs": 9.0358,
+    "cache": null
+  },
+  {
+    "record": 6,
+    "variant": "incrementalsmooth",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 22.6741,
+    "frameMs": 29.9325,
+    "p95Ms": 37.40000003576279,
+    "cpuMs": 8.2042,
+    "cache": {
+      "bytes": 22582648,
+      "peakBytes": 23991008,
+      "tiles": 341,
+      "published": 42,
+      "cancelled": 5,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 7,
+    "variant": "incrementalsmooth",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 24.0848,
+    "frameMs": 29.5283,
+    "p95Ms": 36,
+    "cpuMs": 8.6592,
+    "cache": {
+      "bytes": 22582648,
+      "peakBytes": 23991008,
+      "tiles": 342,
+      "published": 42,
+      "cancelled": 5,
+      "rejected": 0
+    }
+  }
+]

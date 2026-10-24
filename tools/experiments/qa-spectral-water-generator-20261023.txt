@@ -1,0 +1,9 @@
+ const size=256,data=new Uint8Array(size*size*2),slopes=new Float32Array(size*size*2);
+ // Integer Fourier modes are periodic at the tile boundary; no axis-aligned cell seams.
+ const modes=[];for(let i=0;i<24;i++){const angle=i*2.399963229728653,r=9+(i%7)*2.7,kx=Math.round(Math.cos(angle)*r),ky=Math.round(Math.sin(angle)*r);modes.push([kx,ky,i*1.61803398875,1/Math.hypot(kx,ky)]);}
+ let energy=0;
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){let sx=0,sy=0;for(const [kx,ky,p,a] of modes){const q=Math.cos(2*Math.PI*(kx*(x+.5)+ky*(y+.5))/size+p)*a;sx+=kx*q;sy+=ky*q;}const at=(y*size+x)*2;slopes[at]=sx;slopes[at+1]=sy;energy+=sx*sx+sy*sy;}
+ // Match the measured RMS energy of the original tile instead of increasing strength.
+ let originalEnergy=0;
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){const px=(x+.5)/size*32,py=(y+.5)/size*32,ix=Math.floor(px),iy=Math.floor(py),fx=fract(px),fy=fract(py),ux=fx*fx*(3-2*fx),uy=fy*fy*(3-2*fy),a=hash(ix,iy),b=hash(ix+1,iy),c=hash(ix,iy+1),d=hash(ix+1,iy+1),mixed=a-b-c+d;const sx=6*fx*(1-fx)*(b-a+mixed*uy),sy=6*fy*(1-fy)*(c-a+mixed*ux);originalEnergy+=sx*sx+sy*sy;}
+ const gain=Math.sqrt(originalEnergy/energy);for(let i=0;i<data.length;i++)data[i]=Math.round(Math.max(0,Math.min(1,slopes[i]*gain/3+.5))*255);

@@ -1,0 +1,2045 @@
+# DecisiÃ³n de direcciÃ³n global
+
+> ActualizaciÃ³n de alcance (20/10/2026): la investigaciÃ³n prioritaria es ahora una **cubierta herbÃ¡cea continua** en Sabana, no matas decorativas dispersas. La propuesta histÃ³rica de reutilizar pocas matas queda sustituida por el [objetivo vigente de cobertura A/B/C](continuous-grass/OBJECTIVE.md). El usuario permite estudiar cards con cutout si aportan una alternativa real; no se mantiene una prohibiciÃ³n general de esa representaciÃ³n. Las conclusiones anteriores se conservan como historial, no como criterio de Ã©xito del nuevo ensayo.
+
+Estado: 19 de octubre de 2026, rama experimental `codex/global-visual-lab`. Referencias: seis mockups proporcionados y capturas del renderer real. No se integra en main ni cambia la opciÃ³n por defecto.
+
+## Alcance y pausa del atlas
+
+La prioridad es la escena completa: iluminaciÃ³n, integraciÃ³n de suelo/objetos, lectura de volumen y vegetaciÃ³n desde cÃ¡mara normal. **Quedan en pausa el retoque minucioso del atlas del taller y su automatizaciÃ³n.** Se conservan sus variantes, archivos fuente, comparaciones y lÃ­mites; no se revierten ni se presentan como acabadas. Solo se retomarÃ¡n cuando exista una direcciÃ³n global visualmente convincente y con coste aceptable.
+
+## Primera comparaciÃ³n y variante elegida para continuar
+
+La direcciÃ³n con mejor relaciÃ³n entre impacto visible y coste es **el relleno diurno del suelo y la lectura de sombras proyectadas**. El ensayo demuestra que parte del aspecto plano procede del relleno del suelo, mÃ¡s claro que el de los props. Cambiar ese relleno recupera sombras amplias sin geometrÃ­a, atlas, texturas o draw calls adicionales.
+
+No se adopta la sustituciÃ³n literal del perfil de sombra sobre todo el suelo: enfrÃ­a zonas soleadas, oscurece demasiado Volcanes y no afecta a la rama toon del Desierto. Es una direcciÃ³n para continuar, no una soluciÃ³n terminada en seis biomas.
+
+| IntervenciÃ³n | Resultado visual | Coste verificado | DecisiÃ³n |
+|---|---|---|---|
+| Contacto aplicado tambiÃ©n a luz directa | PrÃ¡cticamente invisible desde cÃ¡mara normal | Sin recursos nuevos; una lectura lÃ³gica adicional del mapa | Descartar |
+| Relleno del suelo con paleta de sombra de props | Mejor volumen en Sabana, Gran RÃ­o y CaÃ±Ã³n; beneficios desiguales | ABBA sin regresiÃ³n observada en Sabana/Gran RÃ­o; recursos iguales | Continuar con alcance controlado |
+| Placas de basalto horneadas en Blender | Parecen pavimento; pierden detalle y lectura nocturna | Tres mapas 1024Â²; geometrÃ­a y draws de Volcanes iguales | Descartar |
+| VegetaciÃ³n adicional o sustituta de rondas previas | Matas insuficientes o identidad incorrecta; una prueba empeorÃ³ GPU nocturna | RegresiÃ³n observada de +2,19 ms en matas bajas | No generalizar ni aumentar densidad sin una propuesta artÃ­stica distinta |
+
+## Coste real del candidato de iluminaciÃ³n
+
+ABBA aislado, calidad media, 1280Ã—720, semilla 712, cÃ¡mara fija, 180 muestras por fase. Medias de dos repeticiones:
+
+| Escena | GPU original â†’ variante | CPU envÃ­o original â†’ variante |
+|---|---:|---:|
+| Sabana dÃ­a | 18,199 â†’ 18,158 ms | 5,359 â†’ 5,210 ms |
+| Sabana noche | 19,023 â†’ 18,693 ms | 5,016 â†’ 4,917 ms |
+| Gran RÃ­o dÃ­a | 14,446 â†’ 14,097 ms | 5,991 â†’ 5,654 ms |
+| Gran RÃ­o noche | 14,955 â†’ 14,829 ms | 5,654 â†’ 5,348 ms |
+
+Presupuesto previo: +0 mapas/draws/geometrÃ­a y mÃ¡ximo +0,5 ms GPU. Cumple en estos casos. Las pequeÃ±as diferencias negativas no prueban aceleraciÃ³n; el shader no reduce trabajo y la noche es esencialmente idÃ©ntica. No hay mediciÃ³n GPU de los otros cuatro biomas, latencia de carga ni VRAM residente. No confundir el nÃºmero de recursos con bytes residentes.
+
+## DecisiÃ³n por bioma
+
+| Bioma | Lo que merece conservar de la direcciÃ³n | CondiciÃ³n para continuar |
+|---|---|---|
+| Sabana | Sombras amplias bajo copas y objetos mÃ¡s legibles | Mantener el amarillo cÃ¡lido de zonas al sol; no aÃ±adir grano uniforme |
+| Gran RÃ­o | Mejor agrupaciÃ³n visual bajo Ã¡rboles | Evitar que la sombra funda plantas pequeÃ±as con el tapiz |
+| Manglares | Algo mÃ¡s de profundidad | Resolver integraciÃ³n de bases/musgo sin oscurecer toda la isla; no reclamar raÃ­ces nuevas mediante textura |
+| Volcanes | El ensayo no justifica el nuevo relleno | Conservar su versiÃ³n anterior; el albedo azul y la escala de fractura requieren una propuesta distinta a placas regulares |
+| Gran CaÃ±Ã³n | Mayor separaciÃ³n de planos del relieve | Validar tambiÃ©n cÃ¡mara normal transitable: la fixture amplia tiene una pared dominante |
+| Desierto | Sirve de control sin cambios | Su rama toon necesita evaluaciÃ³n propia; no afirmar que comparte el resultado del suelo fÃ­sico |
+
+## Siguiente revisiÃ³n concreta
+
+Preparar una variante QA que reduzca el relleno **solo donde existe sombra proyectada**, usando la cobertura ya calculada en el shader. Mantener iluminaciÃ³n del suelo soleado y noche originales. Evaluar primero si conserva el beneficio de volumen sin la pÃ©rdida de calidez; no realizar un barrido ciego de constantes. Volcanes y Desierto deben mantenerse como controles hasta que haya evidencia especÃ­fica para modificarlos.
+
+Antes de adoptar: repetir seis biomas, cÃ¡mara normal y baja, dÃ­a/noche con encuadre/semilla/hora iguales; revisar transiciÃ³n sol/sombra y cambios de cÃ¡mara. Solo si mejora claramente, coordinar ABBA GPU y validar streaming/calidad. Mantener los mismos presupuestos y documentar toda excepciÃ³n.
+
+## Evidencia revisable
+
+- [Relleno: 48 capturas, evaluaciÃ³n artÃ­stica y ABBA](ground-shade-coherence/README.md)
+- [Sabana original](ground-shade-coherence/savanna-0-game-day.png) / [relleno candidato](ground-shade-coherence/savanna-ground-shade-coherence-game-day.png)
+- [Gran RÃ­o original](ground-shade-coherence/grand-river-0-game-day.png) / [relleno candidato](ground-shade-coherence/grand-river-ground-shade-coherence-game-day.png)
+- [Volcanes original](ground-shade-coherence/volcano-0-game-day.png) / [relleno candidato](ground-shade-coherence/volcano-ground-shade-coherence-game-day.png)
+- [Contacto: 48 capturas y descarte](ground-contact-integration/README.md)
+- [Basalto: 48 capturas, Blender y descarte](basalt-plates/README.md)
+
+144 capturas de esta ronda, no 144 escenas de campaÃ±a. Son fixtures del renderer real; no equivalen a navegaciÃ³n o combate. Build correcto de 402 mÃ³dulos en `54e3e0fd`; los cambios siguientes son QA/documentaciÃ³n y conservan runtime original.
+
+## Pase de relleno restringido a sombras
+
+[48 capturas y ABBA](ground-shadow-fill/README.md): mejora localizada visible sin enfriar el suelo soleado; noche idÃ©ntica en los biomas modificados. Se conserva como candidato QA, sin adoptarlo todavÃ­a: la ronda de Sabana diurna supera el presupuesto GPU y requiere una mediciÃ³n mÃ¡s estable. Gran RÃ­o y CaÃ±Ã³n pasan el umbral en esta ronda, sin probarlo para todo el juego. Los seis mockups originales estÃ¡n localizados en [ART-REFERENCES.md](ART-REFERENCES.md).
+
+La inspecciÃ³n de CaÃ±Ã³n confirma que reforzar sombras de objetos no resuelve las del relieve: el terreno residente recibe sombra pero no la proyecta. Se prepara un experimento separado, `qa-terrain-shadow-volume.js`, reutilizando geometrÃ­a y el pass existentes; todavÃ­a sin decisiÃ³n de adopciÃ³n ni coste aprobado.
+
+## RevisiÃ³n de campaÃ±a y nuevos candidatos (20/10)
+
+- [Partidas reales pausadas](campaign-shadow-review/README.md): 18 capturas de Sabana, Gran RÃ­o y CaÃ±Ã³n desde el menÃº, sin entidades artificiales; cÃ¡maras estables por pareja y sin errores de red/JS registrados.
+- [Sombras de relieve](terrain-shadow-volume/README.md): beneficio claro en CaÃ±Ã³n, no en las vistas de Sabana/Gran RÃ­o. Pendiente benchmark de cada pass y streaming; no activado globalmente.
+- [RepeticiÃ³n del relleno en misma pÃ¡gina](ground-shadow-fill/PAIRED.md): el salto diurno de Sabana no reaparece; CaÃ±Ã³n nocturno supera por poco el umbral. Mantener incertidumbre, no afirmar aceleraciÃ³n.
+- [Cojines de hierba](grass-cushions/README.md): fuente Blender y 8 capturas; descartados por poca presencia visual para +151.140 triÃ¡ngulos. No aumentar densidad del piloto. Se necesita una propuesta conjunta de suelo y masas de vegetaciÃ³n.
+
+La opciÃ³n integrada `?visualLab=global-lighting` conserva el relleno local y aÃ±ade casters de terreno solo en CaÃ±Ã³n. Build y 20 pruebas existentes pasan; [capturas de integraciÃ³n y recorrido de chunks](global-lighting-integrated/README.md). Es una opciÃ³n de evaluaciÃ³n, no una declaraciÃ³n de calidad final. Se documenta explÃ­citamente el coste nocturno de terreno por encima del presupuesto previo y el borde de fixture tambiÃ©n presente en la referencia.
+
+## Pase de paleta volcÃ¡nica y estratos (20/10)
+
+Se conserva [carbÃ³n volcÃ¡nico](volcanic-charcoal/README.md) Ãºnicamente en la opciÃ³n experimental: reduce el azul del suelo hacia roca neutra cÃ¡lida, sin recursos adicionales. ABBA QA diurno: 14,416 â†’ 14,424 ms GPU; la deriva nocturna impide concluir sobre rendimiento a partir de su media. La noche y la escala del relieve siguen pendientes. La ruta integrada coincide visualmente con el candidato.
+
+Se elimina la selecciÃ³n de bioma por fragmento del relleno integrado, usando constantes de material; 24 capturas confirman conservaciÃ³n de apariencia. El benchmark de uniformes es histÃ³rico, no prueba de coste de la revisiÃ³n actual. [Estratos del CaÃ±Ã³n](canyon-bedding/README.md) descartados: no mejoran el volumen y aÃ±aden discontinuidades visibles.
+
+La siguiente intervenciÃ³n artÃ­stica debe concentrar geometrÃ­a vegetal legible en masas y distancias Ãºtiles, con culling y presupuesto explÃ­cito, coordinada con la lectura del suelo. No repetir una distribuciÃ³n uniforme de matas casi invisibles. Ninguno de estos pases alcanza todavÃ­a la calidad de los seis mockups.
+
+La [ronda integrada de paletas constantes](global-lighting-integrated/CONSTANT-PERFORMANCE.md) confirma que queda trabajo de coste: Sabana y CaÃ±Ã³n diurno superan +0,5 ms GPU. No se promociona la opciÃ³n a comportamiento por defecto ni se da por aprobado el presupuesto global. Se corrigiÃ³ ademÃ¡s una colisiÃ³n de claves de cachÃ© entre biomas introducida al usar constantes de material (prueba que falla antes y pasa despuÃ©s).
+
+[Islas de hierba visible](grass-islands/README.md): la selecciÃ³n por cÃ¡mara reduce la geometrÃ­a adicional a 18.540 triÃ¡ngulos en la vista normal y 26.280 en la baja, pero los tallos angulosos no alcanzan la direcciÃ³n artÃ­stica. Descartada la malla; el ahorro no constituye aprobaciÃ³n visual ni benchmark GPU. Fuente Blender, ocho capturas y lÃ­mites de la prueba conservados.
+
+## Agua: superficie y coste (20/10)
+
+El [diagnÃ³stico de agua](water-route-audit/README.md) confirma que el material procedural sÃ­ cubre la charca; no hace falta cambiar su geometrÃ­a. Las [normales irregulares](water-surface/README.md) mejoran la lectura en 48 capturas de seis biomas y 32 vistas adicionales con animaciÃ³n visual, pero el coste supera el presupuesto en varias vistas. Eliminar el dibujo residual de bandas conserva el aspecto y da resultados de coste mixtos: [prueba sin bandas](water-surface-lean/README.md). Pendiente evaluar el mapa compartido de pendientes y partidas reales antes de integrar. La calidad global, las orillas y la vegetaciÃ³n siguen incompletas.
+
+Se conserva el [agua con mapa de pendientes compartido](water-integrated/README.md) dentro de `global-lighting`: 48 capturas integradas, 16 de partidas reales y prueba de streaming/origen. El ABBA del candidato con mapa queda dentro de +0,5 ms en las ocho fases de cuatro biomas (mÃ¡ximo +0,250 ms), con deriva documentada. Una textura nominal de ~171 KiB con mipmaps sustituye el cÃ¡lculo irregular por fragmento; los nuevos chunks comparten el recurso y se libera una vez al cerrar la escena. Build de 404 mÃ³dulos y 23 pruebas pasan. Esto no resuelve las orillas, la lectura nocturna ni el coste total pendiente del relleno/sombras globales.
+
+## VegetaciÃ³n externa CC0 (20/10)
+
+[Hierba Kenney adaptada en Blender](kenney-grass/README.md): ocho capturas comparables de dÃ­a/noche. Malla cerrada de 512 triÃ¡ngulos, 103/128 instancias visibles y un draw adicional; +52.736/+65.536 triÃ¡ngulos. Descartada por lectura demasiado cuadrada y arbustiva. No integrada ni aprobada por rendimiento temporal. Se conservan fuente CC0, licencia y auditorÃ­a; buscar hojas mÃ¡s finas y masas coherentes con el suelo antes de aumentar densidad. El objetivo global sigue pendiente.
+
+[Filtrado de frecuencia del suelo](ground-frequency/README.md): 48 capturas, 24 parejas verificadas. Filtrar conjuntamente albedo/normales/ARH reduce ruido pero produce desenfoque y manchas blandas, especialmente en Sabana y Gran RÃ­o. Descartado; no integrado. Sin geometrÃ­a/draw/textura adicional, sin aprobaciÃ³n temporal GPU. Separar contraste cromÃ¡tico de normales y oclusiÃ³n en el siguiente ensayo.
+
+[Normales al 45 %](ground-normal-balance/README.md) y [normales al 160 %](ground-normal-rich/README.md): 32 capturas de Sabana/Gran RÃ­o. El primer extremo aplana el tapiz; el segundo enfatiza la paja sin crear masas vegetales. Ambos descartados, valor original conservado. El siguiente pase debe abordar geometrÃ­a fina y distribuciÃ³n, no seguir ajustando Ãºnicamente la intensidad de normales. Contadores y variaciones entre cargas documentados; sin aprobaciÃ³n temporal GPU.
+
+[Matas de hojas finas](grass-fine/README.md): fuente Blender cerrada de 72 hojas, ocho capturas y benchmark de visibilidad en la misma escena. Lectura mÃ¡s fina, todavÃ­a poca cobertura. +118.656 triÃ¡ngulos en juego; GPU dÃ­a +0,300 ms, noche +3,196 ms y repeticiÃ³n BAAB +1,192 ms. No integrada por coste. Se conserva la forma para reducir geometrÃ­a/material antes de ampliar cobertura; no repetir simplemente mayor densidad.
+
+[Hierba fina reducida](grass-fine-lite/README.md): mismas 72 hojas y posiciones, 720 frente a 1.152 triÃ¡ngulos por mata (-37,5 %), apariencia similar en cÃ¡mara baja. Se conserva como base de investigaciÃ³n, no integrada. GPU ABBA dÃ­a/noche +0,990/+0,137 ms; BAAB -0,474/+0,916 ms, variaciÃ³n documentada. El presupuesto sigue sin aprobar; aislar material antes de aumentar densidad.
+
+[Material difuso de hierba](grass-diffuse/README.md): ocho capturas y comparaciÃ³n ABBA de materiales sobre idÃ©ntica geometrÃ­a. GPU -0,258 ms dÃ­a/+0,240 ms noche; no prueba ventaja consistente. Material actual conservado. La siguiente prueba debe reducir segmentos a distancia mediante niveles de detalle, preservando curvatura cercana; no aumentar densidad ni aprobar presupuesto con estos datos.
+
+[Hierba con dos niveles geomÃ©tricos](grass-lod/README.md): 29.664 triÃ¡ngulos adicionales en juego frente a 74.160 del piloto reducido; 42.480 en baja. Ocho capturas, seis vistas de transiciÃ³n y poblaciÃ³n sin duplicados. GPU ABBA +1,568 ms dÃ­a/+0,238 ms noche: no integrado, presupuesto pendiente. El lateral expone brillo excesivamente claro del suelo a contraluz; siguiente prioridad: aislar respuesta especular del terreno antes de aÃ±adir complejidad vegetal. No dar por resuelta la transiciÃ³n abrupta de LOD.
+
+## Suelo mate a contraluz (20/10)
+
+Se conserva [rugosidad mÃ­nima seca 0,86](ground-roughness/README.md) en global-lighting para Sabana, Gran RÃ­o y suelo de CaÃ±Ã³n: elimina buena parte del reflejo blanquecino sin borrar fibras, normales ni sombras. 72 capturas QA, [36 integradas y 12 de campaÃ±a](roughness-integrated/README.md); streaming de los tres biomas y 18 pruebas pasan, build correcto. No aÃ±ade draw calls, triÃ¡ngulos ni texturas. GPU lateral: Sabana +0,380/+0,043 ms dÃ­a/noche; RÃ­o +0,113/-0,210; CaÃ±Ã³n -0,476/+0,848, repeticiÃ³n nocturna -0,289. VariaciÃ³n temporal documentada, no garantÃ­a de coste cero ni aprobaciÃ³n del presupuesto global. Renderer por defecto, musgo, volcÃ¡n y Desierto sin este ajuste. Calidad de mockups todavÃ­a pendiente.
+
+[Respuesta de cielo en paredes](canyon-sky/README.md) y [suavizado de normales compartidas](canyon-normal-smooth/README.md): 24 capturas de CaÃ±Ã³n. El primer ensayo resalta triangulaciÃ³n regular; el segundo la atenÃºa, pero mantiene bandas planas. Ambos descartados, sin cambios runtime. Normales: 23.243 vÃ©rtices modificados en 15 mallas, posiciones y colores verificados intactos. Evaluar material rocoso proyectado sobre las paredes, no repetir un barrido de intensidades de luz.
+
+[Rock035 proyectado en paredes](canyon-rock-texture/README.md) y [color con normales](canyon-rock-normal/README.md): 24 capturas, cero triÃ¡ngulos/draw calls adicionales y una/dos texturas. Descartados: grano fino sin fracturas ni capas amplias; las bandas siguen planas. Fuente existente identificada y licencia CC0 verificada en ambientCG. Buscar roca estratificada a escala mayor, sin intensificar este mapa ni cambiar siluetas. Sin benchmark temporal ni integraciÃ³n.
+
+[Cliff Side estratificado CC0](canyon-stratified/README.md): doce capturas y seis parejas verificadas. Las grietas ya se leen, pero persisten bandas y aparece discontinuidad al horizonte. GPU ABBA lateral +2,040 ms dia/+1,432 noche, dos texturas, cero draw calls/triangulos extra. Piloto no integrado. Reducir lecturas y resolver continuidad antes de nueva evaluacion; conservar fuente, licencia y hashes.
+
+[Proyeccion dominante con continuidad](canyon-dominant/README.md): reduce cuatro lecturas a dos y aplica roca tambien al horizonte y chunks nuevos. 12 capturas finales y 12 del primer intento descartado; recorrido 0/+96/-96 m verifica claves de chunks diferentes y todos los materiales conectados. GPU ABBA +0,724 ms dia/+0,696 noche: todavia no integrado. Las bandas claras siguen dominando; aislar aporte de normales y color antes de optimizar mas.
+
+[Aislamiento de normales](canyon-color-only/README.md): las grietas permanecen con una textura menos; 12 capturas, aporte normal pequeno en estas vistas. GPU frente a global-lighting +1,531/+0,893 ms, sin ahorro temporal demostrado. [Franjas atenuadas](canyon-soft-bands/README.md): 12 capturas finales mas 12 del intento con anclaje inactivo documentado. Mejora la jerarquia de grietas/franjas; GPU -0,066/+0,461 ms en otra ronda con deriva. Conservar candidato para campana y angulos adicionales, no integrado ni aprobado globalmente.
+
+## Roca de Canon integrada (20/10)
+
+Se conserva [color estratificado con franjas atenuadas](canyon-integrated/README.md) dentro de global-lighting: una textura compartida entre terreno/horizonte, sin mapa normal externo, sin geometria extra. 72 capturas de seis biomas, 12 de campana integrada y 12 del piloto; streaming 0/+96/-96 m, propiedad/liberacion y 12 pruebas pasan. Build correcto. Coste del candidato equivalente -0,066/+0,461 ms GPU con deriva documentada; esta ronda integrada verifica aspecto y contadores, no nuevo benchmark temporal. Renderer por defecto y otros biomas sin nueva textura. Calidad global, vegetacion, lectura nocturna y presupuesto conjunto siguen pendientes.
+
+[Legibilidad nocturna compartida](night-readability/README.md): 72 capturas, 36 parejas, cero recursos/draws/triangulos extra. Uniforme 1,12 -> 1,55 ayuda modestamente en cinco biomas; Desierto mas marron sin mejora convincente, descartado alli. GPU nocturno ABBA -0,087 a +0,396 ms con variacion; dia practicamente identico. Conservar candidato para campana/transicion, no integrado. Volcanes y plantas oscuras siguen pendientes.
+
+## Noche por bioma integrada (20/10)
+
+Se conserva [intensidad nocturna 1,55 en cinco biomas](night-integrated/README.md) dentro de global-lighting; Desierto y renderer por defecto quedan en 1,12. 48 capturas de campana integrada, 48 del piloto y 216 muestras numericas de transicion verifican alcance y curva nocturna intacta. Sin recursos, geometria ni instrucciones shader nuevas. Siete pruebas y build pasan. GPU del piloto -0,087 a +0,396 ms con variacion; sin nuevo benchmark temporal integrado. Volcanes, cultivos pequenos, vegetacion 3D y presupuesto conjunto siguen pendientes.
+
+## Matas 3D agrupadas (20/10)
+
+[Grass clumps](grass-clumps/README.md): candidato Blender de 360 triangulos por mata, 192 instancias, 24 capturas validas Sabana/Gran Rio dia/noche y tres camaras. +1 draw, +69.120 triangulos, sin texturas; GPU ABBA +0,186 a +0,703 ms con deriva. Dos ensayos previos archivados: tratamiento generico y reconstruccion nativa que excedia el limite. El pase final aisla callbacks y comprueba capacidad. Conservar modelo para desarrollar distribucion/streaming; no integrar el modulo QA ni declarar alcanzada calidad global.
+
+## Distribucion de matas con streaming (20/10)
+
+[Grass streaming](grass-streaming/README.md): el piloto sigue chunks y eventos de ocupacion, con 192 instancias y transiciones de escala. 24 capturas antes/despues a 0/+288/0 m en Sabana y Gran Rio; mantiene matas donde la instantanea anterior se vaciaba. Pruebas de ocupacion, capacidad y liberacion pasan. GPU incremental +0,217 a +0,475 ms; seleccion durante movimiento optimizada de ~1,2 a 0,54-0,59 ms medios. Conservar para campana y revision de transiciones; no integrado, otros cuatro biomas y presupuesto conjunto pendientes.
+
+## Matas en campana nativa (20/10)
+
+[Grass campaign](grass-campaign/README.md): 24 capturas finales y cuatro videos dia/noche en Sabana/Gran Rio. La campana detecto incompatibilidad con field.moisture y exclusiones incompletas. El piloto ahora lee la mascara RGBA nativa y las huellas existentes: cero invasiones de edificios o desgaste alto entre 5.747 candidatas por bioma. Dos rondas intermedias archivadas. GPU real de campana +0,348 a +1,313 ms con deriva: no promover las 192 matas actuales. Conservar compatibilidad/distribucion y mejorar forma/coste del modelo; calidad global y otros cuatro biomas pendientes.
+
+## Forma de matas arqueadas (20/10)
+
+[Grass arched](grass-arched/README.md): conservar candidato Blender de 15 hojas, 240 triangulos y 150 vertices exportados (antes 360/868), GLB 8.008 bytes sin texturas. 32 capturas finales de campana y cuatro videos en Sabana/Gran Rio; 16 parejas con camara/poblacion coincidentes. GPU de visibilidad -0,073 a +0,420 ms, con variacion y sin comparacion temporal directa contra el modelo anterior. [Grass broad](grass-broad/README.md) descartado por aspecto de listones. Siguiente pase: distribucion menos regular y adaptacion a los otros cuatro biomas; todavia no integrado ni calidad global alcanzada.
+
+## Distribucion por seis biomas (20/10)
+
+[Grass biomes](grass-biomes/README.md): 48 capturas finales de campana y 48 iniciales, grupos irregulares y paletas/densidades por bioma. Auditoria de todas las candidatas sin invasiones de fluidos, pendientes excluidas, desgaste alto o huellas. Benchmark de seis biomas: 48 bloques de 180 muestras; diferencias GPU -0,153 a +0,824 ms con variacion. Conservar distribucion irregular y Volcanes dorado como candidatos; descartar perfil de Manglares por aporte pequeno y coste diurno. Canon/Desierto mantienen presencia escasa. No integrado. Siguiente prioridad: volver al suelo/relieve del Desierto y volumen/sombras del Canon; Manglares necesita cobertura de hoja ancha. La ruta antigua de material del Desierto usa normalAmount .010 y es una hipotesis concreta para probar, no un cambio ya hecho.
+
+## Relieve del Desierto: pilotos descartados (20/10)
+
+[Normales amplificadas](desert-normal/README.md), [ondulaciones uniformes](desert-ripples/README.md) y [ondulaciones suaves](desert-ripples-soft/README.md): 36 capturas reales, 18 parejas verificadas, sin geometria adicional. La primera variante aporta motas; la segunda franjas demasiado regulares; la tercera mejora la discrecion pero apenas aporta volumen en estas camaras. No integradas. Dos benchmarks ABBA estaticos documentan coste y deriva, sin aprobar presupuesto de campana. Siguiente prioridad: sombreado amplio y sombras del terreno, incluyendo una camara fuera del poblado; no seguir aumentando solo microdetalle. Calidad global de los seis mockups pendiente.
+
+## Luz gradual del Desierto (20/10)
+
+Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integracion opt-in](desert-light-integrated/README.md) en terreno y horizonte del Desierto. Las bandas discretas eran la causa de los cortes amplios de color; suavizar sus transiciones mejora el volumen sin cambiar paleta ni geometria. 24 capturas piloto incluyen dunas fuera del poblado. GPU ABBA +0,014 ms dia/+0,113 noche, con deriva y sin aprobar el presupuesto global. No se combinan los pilotos anteriores de micrograno/franjas. La integracion se valida con seis biomas, dia/noche, streaming y pruebas de alcance. Arena fina, vegetacion y calidad global siguen pendientes; retomar despues el volumen/sombras de Sabana, Gran Rio y Canon.
+
+## Filtro de sombras mas amplio (20/10)
+
+[Disco de nueve muestras](ground-shadow-disk/README.md): 24 capturas comparables y 24 bloques ABBA en Sabana, Gran Rio y Canon. Bordes mas suaves con las mismas nueve consultas y sin geometria adicional; aporte global pequeno y Gran Rio diurno supera +0,5 ms en esta ronda. No integrado; movimiento y calidad baja/alta pendientes antes de reconsiderar. Priorizar vegetacion 3D y contacto local sobre mas desenfoque de sombras. [PR #159 en borrador](REVIEW.md), sin fusion y con alcance historico documentado.
+
+## Sombras de matas arqueadas (20/10)
+
+[Grass contact](grass-contact/README.md): 36 capturas, 18 parejas con matas identicas, 24 bloques ABBA de campana con cache solar desactivada. GPU incremental -0,148 a +0,421 ms con variacion; auditoria de todos los pases confirma +1 draw y 240 triangulos por instancia en cada actualizacion. No integrado: beneficio cercano discreto y casi nulo en Canon. Los contadores habituales de ultimo pase no incluyen sombras; la auditoria separada evita presentarlos como coste cero. Prioridad siguiente: forma y cobertura de las masas vegetales con el mismo presupuesto, antes de mas instancias o ajustes globales del sesgo solar.
+
+## Hojas adicionales con triangulos acotados (20/10)
+
+[Grass dense](grass-dense/README.md), 24 hojas/240 triangulos, descartado por tiras rigidas. [Grass mixed](grass-mixed/README.md), 19 hojas/238 triangulos, conserva algunas curvas pero no mejora claramente la masa. 16 capturas cercanas de campana en total, modelos Blender cerrados y validacion glTF sin avisos. ABBA directo del combinado contra el original en Sabana/Rio, sin confundirlo con ocultar vegetacion. Mantener grass-arched; no integrado. Proxima prioridad: lectura del material/normales de la vegetacion existente a escala de juego, antes de otro barrido de cantidad de hojas.
+
+## Follaje nativo fuera del poblado (20/10)
+
+[Transiciones suaves](foliage-soft-light/README.md), 24 capturas y ABBA de tres biomas: aporte pequeno, Sabana diurna +0,566 ms; descartado. [Mayor normal del atlas](foliage-normal/README.md), 28 capturas incluido Rio con camara elevada: no crea detalle nuevo convincente; descartado sin benchmark temporal. Ninguno integrado. Las vistas +50/+30 m muestran masas vegetales nativas mas densas que el claro de aldea: mantener paisaje y aldea en QA antes de juzgar cobertura. No seguir amplificando el atlas existente; siguiente ensayo, detalle de hojas modeladas en Blender y horneado para el material de copas, sin alterar contornos. Calidad global pendiente.
+
+## Relieve foliar horneado en Blender (20/10)
+
+[Foliage detail](foliage-detail/README.md): fuente propia de 72 hojas cerradas, mosaico normal 512Â², sin nueva geometria en juego. 24 capturas reales y 12 parejas verificadas fuera del poblado en Sabana/Rio/Manglares. El efecto produce pequenas marcas angulosas en copas cercanas y es escaso a distancia; descartado. ABBA de 24 bloques: +0,119 a +0,771 ms GPU, con deriva, mas una textura nominal de 1,33 MiB. No integrado. Priorizar lectura amplia del terreno y masas vegetales; no continuar aumentando detalle fino de copas sin una mejora visual demostrada. Calidad global pendiente.
+
+## Variacion amplia del color del suelo (20/10)
+
+[Ground palette patches](ground-palette-patches/README.md): 24 capturas, 12 parejas verificadas en Sabana/Rio/Canon, dia y noche. Dos escalas de ruido tintan el albedo conservando fibras, normales y geometria. Cambia el cromatismo pero no mejora claramente el volumen: descartado. ABBA final incluye terreno y horizonte; una ronda interrumpida con selector incompleto se archiva como invalida. Deriva relevante; no interpretar diferencias negativas como aceleracion. Siguiente paso: recorrido real de las matas arqueadas conservadas junto a la iluminacion global, antes de promoverlas al modo experimental, manteniendo Manglares excluido hasta resolver coste/aporte. No mas acumulacion de microajustes sin ganancia visible. Calidad global pendiente.
+
+## Recorrido real de matas y coste fuera de la aldea (20/10)
+
+[Grass traversal](grass-traversal/README.md): seis recorridos de 576 m, 36 PNG y seis videos separados de las mediciones. Sabana/Rio/Canon recuperan candidatas y camara al volver, con bloques residentes correctos y maximo 192 instancias; sin errores. GPU total en movimiento ~15-22 ms de media y ~19-28 ms p95. Nuevo ABBA de paisaje: +0,474 Sabana dia, +0,557 Rio dia, +0,733 Canon dia (182 matas, frente a 21 en la vieja vista de aldea). Variacion entre bloques; ningun ahorro probado por diferencias negativas. Conservar forma/distribucion, pero no aprobar presupuesto ni integrar aun: siguiente ensayo, presupuesto visible menor y revision del verde nocturno de Canon. Interaccion real de construccion, calidades baja/alta y otros tres recorridos pendientes. Calidad global pendiente.
+
+## Limite de 128 matas (20/10)
+
+[Grass budget128](grass-budget128/README.md): 24 capturas y ABBA directo 192/128/128/192 en tres biomas, camaras de paisaje dia/noche. Cobertura cercana similar, perdida lejana; sin ahorro temporal consistente y tres casos diurnos mas lentos pese a menos triangulos. No promover como optimizacion. Timeout inicial de carga de Rio documentado; repeticion completa sin errores. Mantener 192 como control QA, no como presupuesto aprobado. Siguiente ensayo: aislar material/recepcion de sombras con igual numero de instancias; revisar color seco por separado. Calidad global pendiente.
+
+## Control de repetibilidad GPU (20/10)
+
+[Grass repeatability](grass-repeatability/README.md): 32 bloques/5.760 muestras en Canon, A/A identico y ABBA BAAB de 192/128, dia/noche. Camara, matrices, cantidades y contadores invariantes en A/A; aun asi, rango entre bloques 2,135 ms dia/1,209 noche. La diferencia 128-192 cambia de signo respecto al pase previo (-0,171 dia/+0,548 noche). No demuestra ahorro ni lentitud intrinseca de 128. Informe anterior matizado. Siguiente ensayo: aislar recepcion de sombras en matas manteniendo modelo y cantidad, con controles y orden inverso; no usar un unico delta pequeno como veto o aprobacion. Calidad global y presupuesto acumulado pendientes.
+
+## Relieve del suelo sin geometrÃ­a: Sabana (20/10)
+
+La peticiÃ³n posterior del usuario limita este pase al material del suelo; quedan en pausa los ensayos de sombras de matas y toda geometrÃ­a adicional. [Ground POM](ground-pom/README.md) compara A original, B continua (equivalente: Sabana ya usa iluminaciÃ³n continua), C POM refinado y D microoclusiÃ³n precalculada. AÃ±ade dos hipÃ³tesis de altura coherente E/F como diagnÃ³sticos descartados.
+
+56 capturas verificadas, ocho clips de cÃ¡mara, 9.600 muestras GPU en Intel UHD, calidades media/baja y dÃ­a/noche. A/B y vuelta A2 idÃ©nticos; geometrÃ­a, draw calls y entidades invariantes. La visibilidad solar forzada no altera un solo pÃ­xel nocturno. Contadores de shader: 3,615 lecturas de altura por fragmento de suelo cercano en A frente a 5,951 en C/D. GPU cercana diurna/media: 14,332 ms A; 16,340 C; 15,692 D; existe deriva entre controles idÃ©nticos.
+
+**No integrar ni extender a otros biomas:** C reduce el escalonado, pero D no alcanza las acumulaciones del mockup. E parece moldeado y F pierde fibras. No estÃ¡ demostrada la procedencia fÃ­sica del ARH adaptado. El bake posterior de fibras conocidas mostrÃ³ que una correlaciÃ³n baja entre gradiente de altura y normales no prueba desalineaciÃ³n; se retira esa interpretaciÃ³n fuerte. Hace falta un conjunto de mapas coherente antes de aumentar muestras o amplitud. Solo se publican herramientas, mapas QA y evidencia; comportamiento por defecto intacto. El objetivo global de calidad sigue sin alcanzarse.
+
+### Viento y sombras de matas: 2026-10-20
+
+[Prototipo de viento](grass-wind/README.md): candidato QA sobre las mismas 192 matas Blender, sin coste de geometrÃ­a adicional frente al control estÃ¡tico. Presupuesto fino aÃºn incierto. [Sombras dinÃ¡micas](grass-wind-shadow/README.md): descartadas; invalidar el mapa solar completo aÃ±ade 22â€“44% GPU en la prueba de media y aporta poco en cÃ¡mara normal. No activar por defecto; calidad global y streaming largo siguen pendientes.
+
+### Paleta seca de las matas del CaÃ±Ã³n (20/10)
+
+[Canyon dry grass](canyon-dry-grass/README.md): perfil QA de CaÃ±Ã³n pasa a tinte lineal [1,.68,.48], conservando forma/distribuciÃ³n y otros biomas. Doce capturas, cuatro retornos exactos, 1.920 muestras GPU. Mejora modesta de coherencia seca, no de volumen. Diferencias temporales cercanas desfavorables y deriva documentadas; no aprueba el coste acumulado ni integra la vegetaciÃ³n en producciÃ³n.
+
+### CorrecciÃ³n del callback de viento (20/10)
+
+[Grass wind preserved](grass-wind-preserved/README.md): el piloto anterior reemplazaba AfricanToon; se corrige conservando callback y cachÃ©. DiecisÃ©is capturas, ocho pares estÃ¡ticos exactos, doce comprobaciones de identidad del shader y 3.840 muestras GPU. Se retira la aplicabilidad directa de los costes anteriores de viento/sombras a esta revisiÃ³n. Baja/juego/noche +9,74%; presupuesto no aprobado. HipÃ³tesis de transmisiÃ³n archivada como prueba inactiva, no descartada artÃ­sticamente. Calidad global pendiente.
+
+### TransmisiÃ³n foliar en iluminaciÃ³n nativa (20/10)
+
+[Grass translucency native](grass-translucency-native/README.md): parche activo de artLighting416, 36 capturas, seis controles nocturnos y doce retornos exactos, dos clips de cÃ¡mara en Gran RÃ­o y 5.760 muestras GPU. Descartado: aclara caras sin ganancia clara de volumen y reduce contraste en RÃ­o. Sin recursos geomÃ©tricos nuevos; coste variable y presupuesto no aprobado. No repetir aumentos de intensidad para forzar diferencia. La estructura de masas vegetales y el suelo siguen siendo la carencia principal.
+
+### Bases cian en hierba seca (20/10)
+
+[Native grass base](native-grass-base/README.md): raycasts identifican pintura del slot 8 sobre suelo seco, no agua del mundo. MÃ¡scara cromÃ¡tica limitada al material nativo conserva geometrÃ­a e iluminaciÃ³n. Doce capturas y 3.840 muestras GPU; tres retornos exactos y cinco pÃ­xeles residuales en el cuarto. Mejora parcial de color, pero persisten las peanas circulares y restos cian. Conservar solo como candidato QA, sin aprobar coste (+6,45% media/juego/noche). PrÃ³xima investigaciÃ³n: transiciÃ³n material base/suelo; no mÃ¡s aumento de luz para corregir una discontinuidad de materiales. Calidad global pendiente.
+
+### TransiciÃ³n material de bases al terreno (20/10)
+
+[Native grass ground base](native-grass-ground-base/README.md): comparte textura de suelo en coordenadas de mundo, con variante adicional de iluminaciÃ³n continua, sombra y contacto. Mejora localizada frente a los discos pintados, especialmente de noche; persisten contorno naranja y falta de normales/POM/mÃ¡scaras de terreno. DiecisÃ©is capturas, cuatro retornos exactos, cuatro clips de Ã³rbita y 5.760 muestras GPU. Conservar como candidato QA sin activar: tres condiciones de la variante continua superan el 5%; no extender la receta incompleta. La calidad global y la transiciÃ³n completa siguen pendientes.
+
+### MÃ¡scara por altura en bases de hierba (20/10)
+
+[Native grass root mask](native-grass-root-mask/README.md): una sola componente conectada en el recurso; la mÃ¡scara anterior excluÃ­a bordes inclinados y cian clasificado como follaje. La transiciÃ³n local 0,025â€“0,055 integra mejor la peana conservando geometrÃ­a, pero tiÃ±e raÃ­ces/piedras bajas. DiecisÃ©is capturas con cuatro retornos exactos, cuatro clips y 5.760 muestras GPU. Candidato QA sin aprobar coste: dos condiciones superan +5% frente al original. Cerrar por ahora la iteraciÃ³n de este recurso y volver a suelo/vegetaciÃ³n a escala global en Gran RÃ­o y CaÃ±Ã³n. No extender automÃ¡ticamente los umbrales ni declarar alcanzada la calidad global.
+
+## Cubierta continua de Sabana â€” 20/10/2026
+
+El [piloto A/B/C](continuous-grass/README.md) sustituye la prioridad de matas aisladas. La cobertura opaca instanciada forma franjas continuas con viento y LOD, preservando los modelos originales. C media aÃ±ade 212.704 triÃ¡ngulos y dos draws en cÃ¡mara normal; C baja hÃ­brida, 36.960 y un draw. Se entregan 48 capturas/control, dos vÃ­deos, 8.640 muestras GPU Intel UHD, overdraw, memoria y streaming. Se conserva como candidato QA, sin opciÃ³n por defecto ni extensiÃ³n a otros biomas: todavÃ­a falta finura/agrupaciÃ³n orgÃ¡nica comparable a la referencia y amortizar la activaciÃ³n. No fusionar.
+
+## Cubierta continua: primer piloto de Gran RÃ­o
+
+Tras conservar el resultado de Sabana y su viento 8Ã—, se ha preparado un [piloto especÃ­fico de Gran RÃ­o](continuous-grass-river/README.md): menor altura, pigmento verde y cobertura condicionada por humedad. Cuenta con 48 capturas y vÃ­deos, pero sigue pendiente de benchmark GPU aislado y revisiÃ³n de orillas/streaming. No se activa por defecto ni se generaliza a otros biomas.
+
+## ActualizaciÃ³n: cobertura, costes y regreso al CaÃ±Ã³n
+
+La cobertura de Sabana conserva el viento 8Ã— aprobado. Gran RÃ­o dispone de [correcciÃ³n de orillas](continuous-grass-river/shore-triangles/README.md) y [mediciones](continuous-grass-river/performance/README.md); la frase histÃ³rica de benchmark pendiente anterior ya no describe el estado actual. Las candidatas de LOD, continuidad de viento y normales siguen separadas. La [validaciÃ³n combinada](continuous-grass-river/combined-validation/README.md) y el [control intercalado](continuous-grass-river/interleaved-validation/README.md) no permiten promover por rendimiento: existe deriva incluso ejecutando la misma ruta en calidad baja. Se conserva la ruta original en baja y se cierran las repeticiones equivalentes en esta sesiÃ³n.
+
+En Gran CaÃ±Ã³n, [textura al pie de pared](canyon-wall-foot/README.md) elimina una franja lisa, pero no mejora suficientemente el volumen global. DiecisÃ©is capturas, ocho pares con cÃ¡mara/entidades/draws/triÃ¡ngulos iguales y sin errores GL registrados. No integrar ni realizar otro barrido de intensidades; conservar evidencia. La primera cÃ¡mara normal atravesaba una pared y se reemplazÃ³ antes de publicar. No se modifica geometrÃ­a para imitar el mockup.
+
+La calidad global continÃºa pendiente. Evitar confundir continuidad local de material o diferencias de pÃ­xeles con la estructura de masas y separaciÃ³n de planos de las referencias.
+
+
+## Estado posterior: paleta del CaÃ±Ã³n y materiales de Manglares/Desierto
+
+El [relleno cÃ¡lido de suelo en sombra del CaÃ±Ã³n](canyon-warm-floor/README.md) se conserva como candidato QA reversible, con [comprobaciÃ³n de streaming](canyon-warm-floor/streaming/README.md), sin aprobar presupuesto global. La [revisiÃ³n interactiva](global-candidate-review/README.md) reÃºne Sabana, Gran RÃ­o y CaÃ±Ã³n; las coberturas mantienen viento 8Ã— y no activan las variantes de LOD de coste incierto.
+
+[Mangrove damp moss](mangrove-damp-moss/README.md) queda descartado: la mÃ¡scara hÃºmeda selecciona una regiÃ³n limitada y no aporta volumen apreciable. Se conservan Moss002 puro y barro independiente.
+
+[Desierto: radiancia continua](desert-continuous-radiance/README.md) tambiÃ©n se descarta como receta: 24 capturas de campaÃ±a y doce parejas verificadas muestran pÃ©rdida de dorado y facetas amplias persistentes. El diagnÃ³stico confirma que la salida toon ordinaria de arena no consume la radiancia `lit` calculada previamente; no atribuirle mejoras por cambios en esa BRDF sin verificar la salida final. Mantener la rampa suavizada integrada. Sin benchmark temporal de esta receta rechazada; no repetir barridos de intensidad ni confundir cambio cromÃ¡tico con relieve. Calidad global pendiente.
+
+
+## Cierre y reapertura de cobertura continua
+
+[Lifecycle de cobertura](continuous-grass-lifecycle/README.md): fallo reproducido y corregido en Sabana/Gran RÃ­o conservados. El cierre ya no deja una instancia liberada como activa ni pisa callbacks posteriores. Doce ciclos completos en media/baja, 24 capturas dÃ­a/noche; las reaperturas conservan cobertura y viento 8Ã—, con diferencias residuales de hasta seis pÃ­xeles/un nivel RGB. Contadores de geometrÃ­as regresan al valor cerrado en cada ciclo. Es una correcciÃ³n de fiabilidad del piloto, no una nueva aprobaciÃ³n de rendimiento o integraciÃ³n. Calidad global pendiente.
+
+
+## Arena irregular CC0: nueva candidata del Desierto
+
+[Aerial sand](desert-aerial-sand/README.md): 36 capturas en dunas, normal GL de Aerial Beach 01 a escala 30 m, conservando pintura cÃ¡lida. Separar la normal geomÃ©trica para el detector de contorno elimina el punteado que producÃ­a el relieve fino. La variante final usa solo el mapa normal y conserva casi la misma imagen que la de dos mapas; se mantiene como candidata QA. 1440 muestras GPU de la receta intermedia muestran coste y deriva importantes, no aprobaciÃ³n. Pendientes coste de normal-only, cÃ¡mara mÃ³vil, perfil bajo y streaming; no integrar todavÃ­a. No repetir variantes que usan la normal fina como contorno.
+
+
+## Arena normal-only: activaciÃ³n segura y validaciÃ³n
+
+[ValidaciÃ³n](desert-aerial-sand/VALIDATION.md): se reproduce y corrige `glTexStorage2D: Texture is immutable` al activar despuÃ©s de noche. Reemplazo seguro del objeto de textura y actualizaciÃ³n de uniformes; no mutar Source sobre memoria ya inicializada. Recorridos 0/144/288/0 en media/baja enlazan 25 materiales residentes y un horizonte; 40 capturas contando controles sin helper. Retornos con pequeÃ±as diferencias adicionales cuantificadas, no identidad binaria. 2880 muestras GPU de la candidata final: baja diurna +.338 ms con poca deriva; media/noche aÃºn variables. Mantener candidata QA, sin integrar. Siguiente puerta: cÃ¡mara mÃ³vil y estabilidad de crestas, sin aÃ±adir geometrÃ­a ni rebajar la mejora artÃ­stica para pasar un contador.
+
+
+## Arena en movimiento: comparativa controlada
+
+[Cuatro vÃ­deos](desert-aerial-sand/motion/README.md), media/baja y dÃ­a/noche, de elevada a cercana y retorno. 484 parejas A/B coinciden en pose/hora/draws/triÃ¡ngulos tras corregir el harness por cargas asÃ­ncronas y cachÃ© LOD inicial. Los intentos no comparables se documentan y se excluyen. 308 parejas simÃ©tricas con geometrÃ­a coincidente: 304 exactas, cuatro con hasta seis pÃ­xeles/un nivel RGB. No equivale a prueba universal de ausencia de aliasing ni a FPS real; mantener candidata QA y revisar presupuesto acumulado. Sin cambios de material en este pase ni activaciÃ³n general.
+
+
+## Arena junto al poblado inicial
+
+[RevisiÃ³n de asentamiento](desert-aerial-sand/settlement/README.md): 24 capturas reales media/baja y dÃ­a/noche, 12 parejas con cÃ¡mara/hora/geometrÃ­a iguales y sin errores. El volumen se aprecia entre edificios y conserva calidez; aparece un borde de camino mÃ¡s dentado en la vista normal. Antes de promover, aislar desgaste/mÃ¡scara/iluminaciÃ³n en ese borde. No se repite rendimiento ni se integra la candidata; presupuesto media/noche y calidad global siguen pendientes.
+
+
+## Arena seca: causa de la franja y correcciÃ³n localizada
+
+[AblaciÃ³n](desert-aerial-sand/edge-ablation/README.md): 72 capturas comparables aÃ­slan la franja dentada en la banda especular, no obligan a cambiar desgaste ni borrar normales. [Candidata seca](desert-aerial-sand/dry-specular/README.md): factor especular por suavidad al cuadrado, 24 capturas; ocho de doce vistas idÃ©nticas a normal-only y cuatro eliminan la franja conservando relieve. Sin geometrÃ­a/pasadas nuevas; no hay aprobaciÃ³n temporal de coste. Mantener QA, pendiente movimiento y presupuesto acumulado; calidad global abierta.
+
+
+## Arena seca: movimiento y contraste temporal
+
+[Recorrido del poblado](desert-aerial-sand/dry-specular/motion/README.md): 484 parejas coinciden en cÃ¡mara/hora/geometrÃ­a; retorno reproducible con residuos mÃ­nimos compartidos por A/B. [Dos protocolos de coste](desert-aerial-sand/dry-specular/performance/README.md): 8.832 muestras vÃ¡lidas, serie larga e intercalaciÃ³n corta ABBA; sin errores ni regresiÃ³n grande reproducida, pero dispersiÃ³n impide certificar +0,5 ms media/noche. No reiterar esta microprueba hasta que pase. Siguiente contraste: cadencia de campaÃ±a real sin consultas GPU y coste acumulado del conjunto. La candidata no se integra todavÃ­a; objetivo de seis biomas abierto.
+
+## Cadencia de campaÃ±a: controles corregidos
+
+[DiagnÃ³stico](desert-aerial-sand/dry-specular/campaign-settled/README.md): el tutorial avanzaba pese a la pausa QA y el horizonte podÃ­a incorporar materiales candidatos al control. Pausa existente de menÃº y estabilizaciÃ³n previa corrigen ambos; 480 frames con estado/materiales residentes estables y cÃ¡mara/geometrÃ­a coincidentes. Pilotos archivados y excluidos. Serie completa corregida pendiente de cierre; no aprobar rendimiento ni integrar todavÃ­a.
+
+
+## Arena seca: cadencia nativa completada
+
+[Serie completa](desert-aerial-sand/dry-specular/campaign-final/README.md): 32 bloques, 7.680 frames con cÃ¡mara/geometrÃ­a/estado comparables, media/baja dÃ­a/noche. No reproduce una penalizaciÃ³n grande consistente; dispersiÃ³n impide afirmar aceleraciÃ³n o certificar +0,5 ms GPU. Avanzar a integraciÃ³n opcional con carga y lifecycle propios, conservando original por defecto, y verificar paridad con helper/streaming. No repetir la serie esperando cifras favorables; conjunto global aÃºn no aprobado.
+
+
+## Arena integrada como opciÃ³n explÃ­cita
+
+[IntegraciÃ³n](desert-aerial-sand/integration/README.md): `visualLab=global-lighting&sandRelief=1`, carga y dispose de BiomeGround. Doce parejas reales integraciÃ³n/helper: diez exactas y dos con un pÃ­xel/un nivel RGB; mismas cÃ¡maras y geometrÃ­a. Once pruebas pasan. Original por defecto; pendientes streaming y lifecycle de esta nueva ruta antes de ampliar activaciÃ³n.
+
+
+## Arena opcional: nuevos chunks y cierre
+
+[Streaming integrado](desert-aerial-sand/integration-streaming/README.md): media/baja, 0/144/288/0m, dÃ­a/noche. Los 25 materiales residentes y horizonte reciben receta; fuente y clon de normal se liberan una sola vez por cierre. Retorno con diferencias RGB pequeÃ±as documentadas, no identidad. Pendientes reaperturas repetidas y revisiÃ³n del conjunto; opciÃ³n conservada sin cambiar defecto.
+
+
+## Arena integrada: reapertura validada
+
+[Seis ciclos](desert-aerial-sand/integration-reopen/README.md): tres por calidad media/baja, mismo documento sin reload, cierre por menÃº y nueva partida. Doce capturas; ocho comparaciones de reapertura idÃ©nticas RGB, misma geometrÃ­a/cÃ¡mara. Fuente y clon nuevos/liberados una vez en cada ciclo. No certifica fugas prolongadas. Conservar opciÃ³n y volver a revisar el conjunto de seis biomas; no dedicar mÃ¡s rondas a microvalidar solo arena.
+
+
+## RevisiÃ³n conjunta actual de seis biomas
+
+[CampaÃ±a comparada](combined-campaign-review/README.md): 72 capturas, 36 parejas de cÃ¡mara/hora, tres vistas y dÃ­a/noche media. ReÃºne iluminaciÃ³n, cobertura C viento8, CaÃ±Ã³n cÃ¡lido y arena. Sin nuevos benchmarks; coste geomÃ©trico de hierba explÃ­cito. Pendientes claros: borde de cobertura RÃ­o, suelo medio CaÃ±Ã³n/Volcanes y repeticiÃ³n/bordes barro-musgo Manglares. Siguiente pase: integraciÃ³n visual de barro, respetando huella y reglas. No se acredita calidad global ni coste combinado.
+
+
+## Manglares: recorte orgÃ¡nico descartado
+
+[Barro con borde irregular](mangrove-organic-mud-rim/README.md): 24 capturas, doce parejas sin cambios de cÃ¡mara/geometrÃ­a. Reduce el polÃ­gono visible pero conserva el salto de material y aspecto pegado. Descartado; no gastar presupuesto optimizando esta receta. Siguiente hipÃ³tesis: mezcla visual de color/normal/rugosidad en frontera, respetando contornos autoritativos.
+
+
+## Manglares: frontera con mezcla material
+
+[Mezcla barro/musgo](mangrove-mud-moss-blend/README.md): 24 capturas, doce parejas de cÃ¡mara/geometrÃ­a idÃ©nticas. La ruta comÃºn de suelo permite mezclar color/normal/rugosidad/AO sin recorte ni blending; transiciÃ³n mÃ¡s integrada. Interior mÃ¡s claro/hÃºmedo, pendiente control. PreparaciÃ³n ingenua423â€“586ms acumulados: no promover; cachear cÃ¡lculos duplicados antes de benchmark GPU. Candidata visual, sin aprobaciÃ³n global.
+
+
+## Manglares: preparaciÃ³n reutilizada
+
+[CachÃ© y bÃºsqueda acotada](mangrove-mud-moss-pruned/README.md): evita89977 evaluaciones repetidas inicialmente; preparaciÃ³n observada158â€“179ms frente423â€“460ms, sin atribuir toda diferencia a algoritmo. Once de doce capturas idÃ©nticas; cuatro pÃ­xeles residuales en una vista. Sigue QA; siguiente puerta visual: separar transiciÃ³n de aclarado/brillo interior antes de GPU/lifecycle.
+
+
+## Manglares: conservar identidad del barro
+
+[Control mate](mangrove-mud-moss-matte/README.md) reduce destellos pero no resuelve el aclarado. [Interior toon](mangrove-mud-moss-toon-interior/README.md) conserva respuesta estilizada hacia dentro y mezcla con suelo en borde; recupera color terroso sin cortar transiciÃ³n. 48 capturas entre ambos ensayos,24 parejas coincidentes en cÃ¡mara/geometrÃ­a, sin errores. Elegir interior toon para coste/movimiento; pendiente reutilizar lectura duplicada, GPU y lifecycle. No integrado.
+
+## Manglares: ciclo QA y optimizaciÃ³n descartada
+
+Recorrido, descarga y normal Ãºnica documentados en [motion](mangrove-mud-moss-toon-interior/motion/README.md) y [streaming](mangrove-mud-moss-toon-interior/streaming/README.md). La [rama de iluminaciÃ³n interior](mangrove-mud-moss-interior-branch/README.md) conserva doce capturas exactas, pero32 bloques no demuestran ahorro consistente: descartada. Mantener mezcla anterior solo QA; volver al corte de cobertura y color en Gran RÃ­o antes de nuevas micropruebas de barro. Calidad global aÃºn no acreditada.
+
+## Presupuesto conjunto: no promover todavÃ­a
+
+La [revisiÃ³n V2](combined-campaign-review-v2/README.md) reÃºne las candidatas de RÃ­o, Manglares y CaÃ±Ã³n en seis biomas y dos calidades. El [benchmark en campaÃ±a baja](combined-campaign-budget/README.md) completa48 bloques ABBA,5.760 muestras GPU y8.640 frames de cadencia, con paridad de cÃ¡mara/geometrÃ­a y sin errores registrados. Manglares presenta una seÃ±al de mayor coste; Sabana ya excede el presupuesto de16,7ms en varios bloques. Los controles sin cambios tambiÃ©n fluctÃºan sustancialmente: no atribuir cada delta al material ni anunciar aceleraciones. Mantener candidatas QA, inicio original intacto. Siguiente prioridad: reducir coste de cobertura de Sabana conservando continuidad visual y simplificar mezcla de Manglares; no repetir esta serie sin una hipÃ³tesis nueva.
+
+## Sabana: no recortar cobertura sin atribuciÃ³n de coste
+
+La [prueba de aislamiento](savanna-coverage-cost-isolation/README.md) cambia la prioridad anterior: ocho bloques ABBA,960 muestras GPU y1.440 frames muestran que desactivar la cobertura no elimina los picos ni produce una mejora consistente. Solo aÃ±ade39.008 triÃ¡ngulos/un draw frente a1.235.913 triÃ¡ngulos ya enviados sin ella; no interpretar esa proporciÃ³n como tiempo GPU. Seis parejas reales confirman pÃ©rdida visible de volumen al quitarla. Conservar densidad y viento; siguiente acciÃ³n: atribuir el coste restante por materiales/objetos antes de reducir calidad. No acredita aÃºn presupuesto estable ni calidad global.
+
+## Sabana: eliminar envÃ­o fuera del encuadre
+
+La [atribuciÃ³n por draw](savanna-draw-attribution/README.md) identifica lotes de objetos como origen de1,19millones de triÃ¡ngulos. La [candidata de frustum por instancia](savanna-instance-frustum/README.md), solo QA, reduce la vista normal a499mil sin cambiar modelos ni cobertura: cuatro capturas exactas y dos inversas con residuos pendientes. Ocho bloques ABBA muestran GPU diurna14,59â€“14,81â†’9,07â€“10,30ms; noche14,38â€“20,89â†’9,47â€“10,04ms. No extrapolar a toda campaÃ±a. Conservar candidata para medir movimiento, invalidaciÃ³n, streaming y seis biomas antes de integraciÃ³n. El objetivo artÃ­stico completo sigue pendiente.
+
+## Frustum en movimiento: evitar subidas redundantes
+
+[Recorrido y benchmark](savanna-instance-frustum/motion/README.md):70 de72 parejas RGB exactas; dos residuos localizados, causa pendiente.960 muestras GPU y1.440 frames revelan CPU aproximadamente1ms mayor y48 subidas de grupos/frame frente11, con p95 peor. No integrar la variante actual. Siguiente hipÃ³tesis: comprobar visibilidad al mover cÃ¡mara, pero actualizar matrices/buffers solo si cambian selecciÃ³n u origen. Mantener cobertura y modelos; falta validaciÃ³n global.
+
+## SelecciÃ³n estable y transiciones suaves
+
+La [mÃ¡scara de selecciÃ³n](savanna-instance-selection/README.md) reduce subidas de48 a unas14 por frame manteniendo geometrÃ­a exacta; los tiempos se solapan, aÃºn sin aprobaciÃ³n global.68 de72 pares RGB exactos, residuos pendientes. Conservar candidata QA.
+
+El usuario propone suavizar ocultaciÃ³n cercana y paso impostor/3D. La [prueba MSAA](obstruction-msaa/README.md) elimina la cuadrÃ­cula8Ã—8 pero4 muestras no producen un fundido continuo; no adoptar sola. Priorizar una transiciÃ³n limitada a instancias prÃ³ximas que se ocultan y estudiar aparte la coordinaciÃ³n entre impostor y geometrÃ­a. Mantener las optimizaciones independientes de estos cambios visuales.
+
+## Fundidos de cÃ¡mara: candidato con coste pendiente
+
+El [fundido convencional](obstruction-blend/README.md) se descarta por superposiciÃ³n de caras internas. El [control de superficie cercana](obstruction-surface-blend/README.md) elimina el tramado y reduce esa acumulaciÃ³n, pero aÃ±ade2â€“4 draws en poses afectadas y empeora GPU/CPU/cadencia en la serie mÃ³vil corregida.960 muestras GPU,1.440 frames; piloto de dt variable excluido por falta de repetibilidad. Mantener solo como candidato visual: pendiente vÃ­deo, profundidad mÃ¡s barata, agua/transparencias, lifecycle e impostores. No activar globalmente ni cambiar main.
+
+## Profundidad auxiliar reutilizada
+
+[Material estÃ¡ndar de profundidad](obstruction-depth-only/README.md): ocho parejas exactas tras sincronizar opacidad.960 muestras GPU/1.440 frames, misma geometrÃ­a por Ã­ndice. GPU diurna15,83â€“16,08â†’14,70â€“15,17ms; noche y p95 no concluyentes. Conservar como base QA del fundido, no como aprobaciÃ³n global. Siguiente puerta: vÃ­deo determinista y lectura de la silueta translÃºcida; despuÃ©s interacciÃ³n con transparencias e impostores.
+
+## Recorrido de ocultaciÃ³n sincronizado
+
+[VÃ­deos dÃ­a/noche](obstruction-fade-motion/README.md):180 parejas con cÃ¡mara, viento y opacidad por instancia idÃ©nticos.119 exactas RGB, mÃ¡ximo3 instancias parciales/4 draws extra. La cuadrÃ­cula desaparece; persiste una silueta translÃºcida intermedia. Piloto con148 imÃ¡genes vacÃ­as por espera asÃ­ncrona tras render excluido; serie final verificada sin imÃ¡genes vacÃ­as. Candidato solo QA. Siguiente validaciÃ³n: agua/partÃ­culas, solapamiento de objetos y lifecycle; transiciÃ³n de impostores sigue independiente y pendiente.
+
+
+### PrecondiciÃ³n real de la transiciÃ³n de impostores
+
+El piloto de fundido con impostores detectÃ³ que la campaÃ±a actual usa sesiÃ³n espacial y desactiva la ruta antigua incluso con la preferencia activada. Se aÃ±adiÃ³ una comprobaciÃ³n que impide emitir comparativas sin adaptadores. [DiagnÃ³stico y prototipo no validado](impostor-blend-pilot/README.md). No hay resultado visual ni de rendimiento atribuible a este candidato; falta una escena con identidades y cobertura coincidentes. El commit de vÃ­deos de ocultaciÃ³n cercana `8d6bc2fa5` quedÃ³ publicado correctamente.
+
+
+### Piloto de ocultaciÃ³n junto al rÃ­o
+
+[Gran RÃ­o, nueve poses de dÃ­a y noche](obstruction-water-pilot/README.md): 18 parejas auditadas, 12 exactas, mÃ¡ximo dos instancias parciales y tres llamadas adicionales. Quita el tramado en la orilla; no acredita un cruce significativo sobre el agua ni composiciÃ³n transparente (el agua actual es opaca). Candidata aÃºn de QA; partÃ­culas, superposiciones y ciclo de vida siguen pendientes.
+
+
+### Descartada la profundidad compartida del fundido cercano
+
+La [prueba transparente controlada](obstruction-transparent-probe/README.md) confirma oclusiÃ³n opaca de elementos detrÃ¡s de objetos parcialmente desvanecidos: 25.431 pÃ­xeles del marcador quedan totalmente bloqueados por los auxiliares. No promover la candidata de superficie cercana; esta decisiÃ³n sustituye su recomendaciÃ³n provisional anterior. Resolverlo necesita composiciÃ³n/profundidad aislada y mediciÃ³n adicional, no solo quitar el tramado. El renderer original permanece intacto.
+
+
+### Volcanes: ceniza por zonas
+
+[DepÃ³sitos visuales de ceniza](volcanic-ash-pilot/README.md): 24 capturas, 12 parejas con geometrÃ­a idÃ©ntica, y 8 bloques ABBA en Intel UHD. La separaciÃ³n de zonas suaves/rocosas mejora la variedad a distancia de juego; conservar como direcciÃ³n QA, sin promover todavÃ­a. GPU diurna +~1 ms en medias agregadas, con solapamiento entre bloques. Pendientes menor coste, movimiento y streaming; no se aÃ±aden texturas, geometrÃ­a ni draw calls.
+
+
+### Ceniza volcÃ¡nica: movimiento y regreso
+
+[72 parejas y recorrido de streaming](volcanic-ash-motion/README.md) con cÃ¡mara/geometrÃ­a coincidentes, dÃ­a y noche. DepÃ³sitos estables en la muestra de regreso tras cambio de origen; no RGB exacto (2.053 pÃ­xeles candidata, 3.361 original). Sin crecimiento monotÃ³nico de contadores en una vuelta; no equivale a validar fugas ni coste dinÃ¡mico. Sigue pendiente optimizaciÃ³n antes de promover.
+
+
+### Ceniza precalculada en mÃ¡scara existente
+
+[ComparaciÃ³n procedural/mÃ¡scara](volcanic-ash-mask/README.md): 24 capturas coincidentes en geometrÃ­a, bajo error RGB medio y 8 bloques ABBA. Se reutiliza R del suelo volcÃ¡nico sin tocar canales restantes ni datos del worker. Mejora GPU nocturna en esta serie, resultado diurno variable; conservar alternativa QA sin promover. PreparaciÃ³n CPU ~0,535 ms/mÃ¡scara en Node, no latencia de streaming. Pendientes borde con horizonte, movimiento y coste de creaciÃ³n de chunks.
+
+
+### MÃ¡scara de ceniza: preparaciÃ³n y recarga real
+
+[72 parejas y streaming en navegador](volcanic-ash-mask-motion/README.md): mÃ¡scara sin desplazamiento amplio en la muestra de regreso, residuales similares a procedural. 85 mÃ¡scaras nuevas, 46,6 ms CPU acumulados (~0,55 ms por mÃ¡scara), no tiempo por frame. Horizonte volcÃ¡nico adicional ausente por diseÃ±o y en ejecuciÃ³n; corregida esa precondiciÃ³n, sin declarar validada una transiciÃ³n inexistente. Mantener alternativa de revisiÃ³n; rendimiento diurno aÃºn variable.
+
+
+### Ceniza accesible en una partida normal del laboratorio
+
+[OpciÃ³n explÃ­cita integrada](volcanic-ash-review-option/README.md): `visualLab=global-lighting&volcanicAsh=procedural` o `volcanicAsh=mask`. Solo Volcanes; ausente por defecto. 36/36 capturas RGB exactas contra QA y modo desactivado anterior, 8 pruebas aprobadas y build correcto. Permite revisar sin interceptaciÃ³n de shaders; no es promociÃ³n a valor predeterminado ni conclusiÃ³n de calidad global. PR #159 permanece abierta.
+
+
+### Gran RÃ­o: continuidad de paleta en la cubierta
+
+[Paleta de suelo aplicada a hojas](river-cover-palette/README.md): 24 capturas, 12 parejas y 8 bloques ABBA. Menor borde oscuro en la muestra media, con el mismo desgaste, instancias y triÃ¡ngulos. Solo tres constantes, sin nuevas muestras o recursos. Tiempos GPU solapados y noche candidata algo mayor: no afirmar aceleraciÃ³n. Conservar candidata visual para probar movimiento/LOD; no sustituir aÃºn receta anterior.
+
+
+### Paleta de Gran RÃ­o: movimiento y LOD
+
+[144 parejas y benchmark mÃ³vil](river-cover-palette-motion/README.md), baja/media y dÃ­a/noche. Misma geometrÃ­a, selecciÃ³n y viento; el color aclara la cubierta sin resolver todo el borde lejano. GPU menor en esta serie, picos nocturnos no mejores uniformemente: conservar como ajuste cromÃ¡tico, no optimizaciÃ³n. Apto para revisiÃ³n explÃ­cita, sin sustituir aÃºn el valor anterior.
+
+
+### Gran Río: descartada la reducción de altura más extensa
+
+[Transición de 12 frente a 24 metros](river-cover-fade/README.md): 24 capturas, 12 parejas con geometría enviada idéntica. La franja más amplia suaviza parcialmente el borde, pero aplana la cubierta a distancia de juego. No adoptar ni invertir en benchmark temporal de esta candidata; conservar altura y estudiar la diferencia de respuesta suelo/cubierta. Sin cambios de producción.
+
+
+### Gran Río: sombreado de raíz insuficiente
+
+[24 capturas de raíz fija frente a atenuada](river-cover-root/README.md), geometría coincidente. No promover: el cambio es leve y no resuelve el borde. La lectura de shaders identifica respuestas difusas distintas entre suelo y cubierta; siguiente prueba debe aislar esa diferencia conservando volumen, en vez de acumular ajustes pequeños de brillo.
+
+
+### Gran Río: Lambert de suelo no basta para hojas
+
+[24 capturas con aproximación difusa del terreno](river-cover-diffuse/README.md): misma geometría, mayor lectura de orientación diurna pero oscurecimiento nocturno excesivo. Descartar; no confundir aproximación Lambert con equivalencia de BRDF completa. Próximo diagnóstico: contribución por ambas caras y luz transmitida, aislando términos antes de ajustar paleta. Sin benchmark temporal por fallo artístico.
+
+
+### Gran Río: respuesta de la cara opuesta
+
+[24 capturas y 8 bloques ABBA](river-cover-two-sided/README.md): aclarado moderado sin regresión nocturna visual como Lambert, pero el borde permanece. GPU de la candidata mayor en esta serie; no promover con una mejora limitada. Conservar alternativa QA y diagnosticar material subyacente/cobertura efectiva antes de otra corrección de iluminación.
+
+
+### Diagnóstico: no confundir desgaste con alcance de hierba
+
+[Seis parejas con falso color](river-cover-boundary/README.md) separan reducción por distancia y altura de ancla. El borde junto al poblado en media muestra reducción de ancla sin señal roja apreciable: no es solo LOD lejano. Suelo conserva textura herbácea donde la cubierta ya se elimina por desgaste. Priorizar coordinación material/máscaras, respetando caminos, antes de más ajustes de iluminación. Esta evidencia corrige la interpretación demasiado general del borde en ensayos anteriores.
+
+
+### Gran Río: falta detalle de tierra bajo la cubierta
+
+[Desgaste coordinado del material](river-ground-wear/README.md): 24 capturas, geometría igual. Al reducir Grass Medium 01 aparece color base casi uniforme y se pierde detalle en poblado/caminos; descartar implementación. Próxima prueba: capa de tierra reutilizable, revisando Ground079S existente, en lugar de retirar textura sin sustitución. Sin benchmark temporal por fallo artístico claro.
+
+
+### Gran Río: tierra con detalle bajo el desgaste
+
+[Ground079S pigmentado, segunda iteración](river-soil-layer-v2/README.md): recupera detalle de suelo desnudo y diferencia tierra/hierba; primera versión demasiado clara descartada. 24 capturas por iteración y 8 bloques ABBA para V2, geometría coincidente. Tres texturas adicionales (~16 MiB RGBA8+mips estimados), hasta tres lecturas en tierra. GPU con alta variabilidad y rangos solapados: candidata solo QA, sin aprobar coste. Pendientes movimiento, streaming y repetición de rendimiento.
+
+
+### Capa de tierra: movimiento y liberación comprobados en una vuelta
+
+[144 parejas, vídeos y streaming](river-soil-layer-motion/README.md). Cámara/viento/opacidades/geometría coinciden; muestra de regreso sin desplazamiento amplio, con pequeños residuales también en control. Tres eventos de liberación para tres texturas al cerrar cada candidata. Una vuelta por calidad no prueba ausencia de fugas; coste aún pendiente de repetición estable. Conservar QA sin promover.
+
+
+### Tierra del río: coste móvil mixto
+
+[Benchmark móvil de V2](river-soil-layer-motion/README.md): ocho bloques, 960 muestras GPU/1.440 frames, geometría igual. GPU diurna +~1,30 ms (11,4 %) agregado, noche menor; no promover todavía. Próxima optimización concreta: evitar leer mapas de hierba donde la capa de tierra los sustituye completamente, exigiendo equivalencia visual.
+
+
+### Salida anticipada de tierra: no mejora GPU demostrada
+
+[Paridad y benchmark móvil](river-soil-early/README.md): ocho de doce parejas exactas; otras cuatro suman cinco píxeles con máximo 1/255 tras sincronizar ocultaciones. 960 muestras GPU/1.440 frames no muestran ahorro consistente. Mantener opción desactivada; reducir lecturas teóricas no basta para aprobar la optimización.
+
+
+### Cañón: tres muestras de microvisibilidad no aportan volumen
+
+[24 capturas y análisis de altura](canyon-microshadow/README.md): solo 26–53 píxeles diurnos cambian; noche exacta. Descartar tres lecturas extra. Diagnóstico offline: 0,0384 % de texeles bloqueados con pasos .05/.12/.25 m a amplitud .10 m. No forzar profundidad; estudiar horizonte offline con pasos de texel antes de añadir más coste al shader.
+
+
+### Cañón: precálculo solar recupera microdetalle, no volumen global
+
+[ARH alfa con 32 pasos de medio texel](canyon-microshadow-bake/README.md): RGB conservado, sin nuevas lecturas. 24 capturas; seis parejas nocturnas exactas, cambios diurnos pequeños sin salto artístico claro. No incorporar. Evitar más rondas equivalentes de microcontraste; el relieve mesoscópico sigue pendiente.
+
+### Gran Río: alinear desgaste no naturaliza la frontera
+
+[Comparación V2 frente a transición .08–.30](river-soil-wear-aligned/README.md): 24 capturas con geometría idéntica. Reduce franja verde plana pero agranda y acentúa el claro circular. No promover; investigar forma espacial visual antes de más cambios de umbral.
+
+### Gran Río: ruta nativa de máscaras confirmada
+
+[Diagnóstico del borde irregular](river-yard-shape/README.md): modificar el generador JavaScript deja 12/12 parejas RGB exactas porque BiomeGround recibe bytes nativos. No es rechazo artístico. El siguiente piloto debe transformar una copia visual al recibir los bytes y comprobar cambios efectivos antes de ampliar capturas.
+
+### Gran Río: transformación de máscara residente funcional
+
+[Franja irregular monotónica](river-fringe-mask/README.md): 633 cambios de alfa registrados, 24 capturas, invariantes y solapes sintéticos correctos. Cambia suelo y selección de hojas sin tocar Wild Engine. No promover receta: irregularidad limitada y pérdida de cobertura; falta una mejora artística clara.
+
+### Cañón: separar depósitos arenosos de grava
+
+[Prueba de composición](canyon-sediment/README.md): 24 capturas, geometría idéntica. Cambio amplio de lectura frente a grava uniforme, pero arena procedural demasiado lisa y con patrón residual de piedras. No integrar receta; investigar material de arena coherente, no más microcontraste.
+
+### Cañón: mapas de arena recuperan ondulaciones
+
+[Depósitos Aerial Beach 01](canyon-sand-maps/README.md): 24 capturas, geometría idéntica. Candidata cercana con ondulaciones visibles, pero crestas demasiado destacadas en sombra. Dos mapas y dos lecturas extra; coste temporal, cámara normal y lifecycle pendientes. No integrar aún.
+
+### Cañón: arena visible a cámara normal, coste nocturno pendiente
+
+[Revisión normal](canyon-sand-maps/overview/README.md) y [ABBA Intel UHD](canyon-sand-maps/performance/README.md): 24 capturas adicionales; elevada obstruida no válida para evaluar conjunto. Arena conserva ondulaciones normales; 960 muestras GPU muestran noche 7.69–8.20ms contra 6.63–7.27ms. No aprobar coste ni integrar.
+
+### Cañón: precalcular depósitos no ahorra GPU demostrado
+
+[Máscara residente](canyon-sand-mask/README.md): 24 capturas con diferencias pequeñas (.036–.168/255), 960 muestras GPU. Día procedural7.51–7.69ms contra máscara8.16–9.60ms; noche variable sin ventaja. No promover. También pendiente tratar horizonte sin máscara; mantener receta procedural QA.
+
+### Cañón: elevada útil y liberación de arena verificadas
+
+[12 capturas elevadas](canyon-sand-maps/elevated/README.md): vista corregida muestra ambas orillas y ondulaciones; noche oscurece depósitos. world.dispose libera exactamente una vez cada uno de los dos clones. No equivale a prueba de fugas prolongada; coste nocturno y movimiento pendientes.
+
+### Cañón: crestas claras vinculadas a reflexión ambiental
+
+[Ablación normal/color](canyon-sand-ablation/README.md),18 capturas, y [reflexión](canyon-sand-reflection/README.md),12 capturas: normal plana elimina crestas pero borra volumen; color medio no elimina el patrón. Anular biomeSpec quita crestas blancas en sombra conservando relieve soleado, pero afecta otros materiales. No integrar anulación global; estudiar respuesta especular limitada a arena seca.
+
+### Cañón: respuesta seca acotada a depósitos
+
+[36 capturas](canyon-sand-dry/README.md): atenuación especular ambiental por peso de arena, conservando normales e iluminación directa. Reduce crestas claras cercanas y mantiene ondulación normal/nocturna. Conservar QA, no integrar: movimiento y coste total siguen pendientes.
+
+### Cañón: arena seca sigue costando más con cámara móvil
+
+[ABBA completo](canyon-sand-dry/moving-performance/README.md):960 muestras GPU,1440 frames, geometría y cámaras iguales. Día grava6.04–6.63ms/arena7.29–7.70ms; noche6.79–7.21/7.38–8.09ms. No aprobar presupuesto. Investigar reducir trabajo del material manteniendo relieve, no repetir la máscara descartada.
+
+### Cañón: arena con un mapa, candidata de coste
+
+[Normal-only seca](canyon-sand-normal-only/README.md):24 capturas frente a completa, una textura adicional verificada. ABBA móvil frente a grava: noche6.89–7.01ms contra6.85–7.06ms; control diurno deriva5.61–7.51ms y no permite aprobar presupuesto. Conserva relieve cercano con menor variación de color. Continuar, no integrar.
+
+### Cañón: normal-only conserva lectura a cámara normal
+
+[12 capturas y cierre real](canyon-sand-normal-only/overview/README.md): mantiene ondulaciones en normal diurna y elevada nocturna inspeccionadas, con color más uniforme. Una textura adicional, liberada una vez. Pendientes revisión temporal y medición diurna estable; no integrar.
+
+### Cañón: aproximación cercana de arena normal-only
+
+[Cuatro vídeos y 144 parejas](canyon-sand-normal-only/motion-close/README.md), media/baja y día/noche: cámara, hora y geometría coincidentes, cero errores registrados. Pareja diurna inspeccionada conserva ondulaciones; secuencia disponible para revisión temporal completa. Recorrido inicial oculto por meseta descartado y sustituido por aproximación corta despejada. No mide FPS ni streaming largo. Coste diurno todavía inconcluso; mantener QA sin integrar.
+
+### Cañón: confirmación diurna de coste normal-only
+
+[ABAB con 180 frames de calentamiento](canyon-sand-normal-only/day-confirmation/README.md):960 muestras GPU y960 frames separados de cadencia, cámaras/geometría iguales. Grava6.62–6.72ms frente a arena6.59–6.77ms; sin sobrecoste relevante observado en este recorrido bajo. No prueba aceleración ni coste cercano con mayor ocupación de pantalla. Conservar candidata; pendientes revisión temporal completa y streaming prolongado antes de integrar.
+
+### Cañón: coste cercano limita la aprobación de arena
+
+[ABAB cercano día/noche](canyon-sand-normal-only/close-performance/README.md):1920 muestras GPU y1920 frames, geometría/cámara iguales. Día +0.230/+0.536ms GPU frente a grava; noche mixta. Conservar candidata visual, no aprobar presupuesto universal desde la cámara anterior. Siguiente investigación: trabajo redundante de grava/POM y mezcla, con ablación que conserve lectura de material.
+
+### Cañón: atenuación de POM bajo arena, prueba visual
+
+[24 capturas](canyon-sand-buried-relief/README.md) comparan normal-only con/sin atenuar parallax residual de grava bajo depósito. Parejas cercanas media día/noche conservan ondulaciones, cambian detalle fino. No es equivalente exacto: grava conserva peso residual. Una textura y geometría iguales. Conservar QA para medir; no afirmar ahorro antes del benchmark ni activar por defecto.
+
+### Cañón: descartar atenuación de POM como ahorro
+
+[ABAB directo](canyon-sand-buried-relief/performance/README.md),1920 muestras GPU/1920 frames: candidata más lenta en cuatro parejas (+0.028/+0.429ms día,+0.543/+0.137ms noche), sin ahorro demostrado. No atribuir causa sin más instrumentación. Mantener buriedRelief=false y arena normal-only sin esta aproximación. No promover ni repetir la misma receta sin nueva hipótesis.
+
+### Cañón: arena conserva distribución tras cambios de origen
+
+[Streaming corregido](canyon-sand-normal-only/streaming-corrected/README.md):36 capturas,18 parejas, dos circuitos por fase,16 cambios de origen/variante. Regresos globales verificados; tira diurna mantiene depósitos. Una capa liberada una vez. Recuentos nocturnos regresan sin crecimiento acumulado observado; no prueba de fugas largas. Piloto con conversión doble de origen excluido. Coste cercano previo sigue vigente; no integrar todavía.
+
+### Cañón: arena normal-only integrada como opción explícita
+
+[`canyonSand=1` con global-lighting](canyon-sand-integrated/README.md), solo Cañón y off por defecto.12/12 parejas RGB exactas QA/integrada, media/baja día/noche, una capa y geometría iguales; build pasa. No incluye atenuación POM descartada. Coste cercano previo persiste; pendiente validar streaming integrado y revisión temporal. No aprobación global ni main.
+
+### Cañón: streaming de canyonSand integrado
+
+[18 parejas QA/integrada](canyon-sand-integrated/streaming/README.md):10 exactas RGB; otras1–7 píxeles, máximo10 niveles, causa no aislada. Cámaras/chunks/geometría iguales,16 cambios de origen por variante, textura adicional liberada una vez. Tira diurna conserva depósitos. Mantener opción explícita; pendiente revisión temporal continua. No afirmar paridad exacta global ni ausencia de fugas largas.
+
+### Revisión conjunta V3: priorizar repetición de Manglares
+
+[Seis biomas día/noche](combined-campaign-review-v3/README.md), calidad media y tres poses. Integra en la comparación paleta de Río, arena de Cañón y ceniza; otros tres controles sin cambios A/B. Persisten claro uniforme del Río, musgo repetitivo de Manglares y masas planas de ceniza. Siguiente prioridad: romper repetición y organizar cobertura de Manglares sin cambiar ocupación/siluetas. No hay benchmark nuevo ni aprobación global.
+
+### Manglares: deformar UV no resuelve cobertura uniforme
+
+[Prueba UV](mangrove-uv-warp/README.md):24 capturas tras corregir inserción de shader. Curva filas pero conserva formas abultadas uniformes; descartar artísticamente sin benchmark. Hallazgo de pipeline: uGroundPureMoss retorna antes de POM/máscaras generales y fija cobertura1. Siguiente trabajo debe actuar sobre esa rama real y distribución de material, no aumentar parallax inactivo.
+
+### Manglares: dos escalas suavizan patrón pero exceden coste
+
+[24 capturas y ABAB](mangrove-moss-scales/README.md):menos repetición gruesa, pérdida de relieve; GPU+1.81ms día/+2.12ms noche agrupados,1920muestras. Descartar mezcla doble en tiempo real. Investigar composición offline reutilizable manteniendo tres lecturas, sin presentar ahorro antes de probarlo.
+
+### Manglares: composición offline a memoria nominal constante
+
+[24 capturas](mangrove-moss-composite/README.md):tres mapas1024² con escalas1/4 precalculadas. Mantiene áreas gruesas y finas sin seis lecturas en runtime; shader original,16MiB nominal como fuente. Pierde ancho de banda fino y sigue repitiendo cada~8.7m. Conservar QA para benchmark/juntas/movimiento, no afirmar coste igual ni integrar todavía.
+
+### Manglares: coste offline no concluyente
+
+[ABAB de compuesto](mangrove-moss-composite/performance/README.md),1920muestras GPU/1920frames: +0.283ms día/+0.460ms noche agrupados, pero parejas cambian signo y una noche+1.108ms. No aprobar equivalencia o presupuesto estable. Revisar detalle cercano y juntas antes de más repeticiones; candidata solo QA.
+
+### Manglares: compuesto cercano insuficiente para promover
+
+[24 capturas cercanas](mangrove-moss-composite/close/README.md):rompe uniformidad pero detalle fino granular y volumen todavía plano en oblicua; no promover. Bordes numéricos no certifican juntas y normal horizontal empeora relativamente. Mantener estudio; siguiente cambio debe mejorar estructura/transición a humedad, no solo escala.
+
+### Manglares: borde variable insuficiente; avance de musgo candidato
+
+[36 capturas en dos ensayos](mangrove-mud-fringe/README.md):variar anchura conserva disco; avance desigual de musgo hacia interior rompe contorno aparente en parche cercano día/noche. Geometría/ocupación intactas. Reduce área visible y podría borrar parches pequeños: conservar QA para normal/tamaños/coste, no integrar. Sin benchmark nuevo.
+
+### Manglares: el borde irregular fijo no supera la vista general
+
+[24 capturas y 12 parejas](mangrove-mud-fringe/overview/README.md), media/baja, día/noche y tres vistas. Cámaras, hora y geometría coinciden. La inspección elevada diurna y normal nocturna muestra reducción excesiva de varios parches: descartar el avance fijo de 2,2 unidades, sustituyendo la valoración provisional cercana. Sin nuevo benchmark; primero preservar núcleos de barro con un límite dependiente del tamaño. El musgo repetitivo sigue sin alcanzar la referencia artística.
+
+### Manglares: borde limitado por tamaño, solo QA
+
+[24 capturas y benchmark ABAB](mangrove-mud-fringe/sized-inset/README.md). El radio aproximado del contorno limita el avance y conserva mejor el núcleo de barro en las vistas inspeccionadas. 1.920 muestras GPU válidas y 1.920 frames de cadencia, con geometría coincidente; diferencias GPU cambian de signo y último bloque nocturno empeora notablemente. No hay coste estable demostrado: conservar solo como prototipo visual, pendiente temporal/streaming y diagnóstico de variabilidad. No resuelve el musgo repetitivo ni acredita calidad global.
+
+### Borde de Manglares: recarga acotada validada
+
+[Dos circuitos y cierre del mundo](mangrove-mud-fringe/sized-inset/streaming/README.md), 36 capturas/18 parejas, misma cámara/geometría. Atributos válidos en chunks cargados; 371.100 bytes adicionales constantes al volver; 24 geometrías notifican dispose una vez y cero referencias activas tras cierre. Retornos nocturnos exactos, diurnos con residuo pequeño no aislado. No prueba prolongada de fugas ni coste estable. Mantener QA y volver a priorizar la estructura superficial del musgo y su relación con los otros biomas, no seguir acumulando retoques menores de borde.
+
+### Manglares: escala uniforme fina insuficiente
+
+[Ensayo .115 frente a .32](mangrove-moss-fine-scale/README.md):24 capturas/12 parejas, media/baja, día/noche, cámara/geometría coincidentes. Reduce los abultamientos grandes pero conserva cobertura homogénea y pierde lectura nocturna. No promover ni hacer benchmark de esta candidata como solución completa. Siguiente hipótesis: distribución de materiales por condiciones del terreno, no otra intensidad universal de normal o escala.
+
+### Manglares: ruta contextual existente descartada como sustitución
+
+[24 capturas](mangrove-context/README.md) comparan pureMoss con la rama contextual existente, misma escala/mapas y amplitud parallax cero. Cámara/geometría coinciden. Brillo húmedo extenso y zonas oscuras homogéneas; no adoptar. La rama mezcla color base fuera del musgo, no otro material texturizado. Reutilizar máscaras requiere desacoplar cobertura y humedad, verificar sus datos reales y diseñar distribución entre materiales; no basta con desactivar pureMoss. Sin nuevo benchmark por fallo artístico.
+
+### Manglares: rangos contextuales verificados en campaña espacial
+
+[Auditoría de 25 máscaras enlazadas](mangrove-context/mask-audit/README.md): cobertura R mediana235/255 y máximo245, frente al límite0.42 del generador JS de humedal. La partida utiliza payload nativo; no calibrar mezcla con el rango antiguo. G/B aportan variación espacial y A desgaste localizado. Diseñar mezcla visual sin alterar motor, pendiente horizonte y otras semillas. Esta auditoría no es una mejora visual ni un benchmark.
+
+### Manglares: mezcla texturizada todavía insuficiente
+
+[Dos repartos de musgo/barro](mangrove-substrate/README.md),48 capturas/24 parejas. Primero demasiado barro; segundo conserva verde pero aparece mancha amplia de detalles superpuestos. Ninguno aprobado. Mezcla de mapas reales con rugosidad alta evita la respuesta húmeda anterior, pero necesita transición por estructura/altura y coherencia con parches. Tres lecturas extra de mapas y una máscara; sin benchmark por fallo artístico, horizonte y lifecycle pendientes. No seguir solo ajustando umbrales.
+
+### Manglares: transición por altura, candidata sin aprobar
+
+[48 capturas](mangrove-height-blend/README.md) frente a mezcla lineal. Mapas de altura con medianas186/255 y39/255 requieren normalización artística antes de comparar. La variante calibrada separa musgo/barro, pero tiene borde de detalle pequeño y barro nocturno azulado. Conservar solo para estudiar primer plano/movimiento y coherencia de color; coste, horizonte y recursos pendientes. No integrar ni declarar mejora global.
+
+### Manglares: la transición por altura no basta para volumen
+
+[24 capturas cercanas](mangrove-height-blend/transition-close/README.md) en región seleccionada por máscara contextual. Separación visible entre materiales, pero musgo pegado al plano, sin espesor/oclusión de borde, y barro cromáticamente incoherente. No integrar ni endurecer máscara para simular volumen. Sin benchmark nuevo; piloto inicial sin transición excluido.
+
+### Manglares: conversión de color no resuelve la discrepancia
+
+[24 capturas](mangrove-height-blend/linear-color/README.md) con transición por altura fija: multiplicador en RGB codificado frente a luz lineal aproximada. Barro más claro, pero sigue diferencia con parches y tinte nocturno. No adoptar como corrección completa; toLinear4 es gamma2.2, no sRGB exacto. Separar iluminación/rugosidad de las dos rutas antes de más calibración cromática. Sin benchmark ni integración.
+
+### Manglares: el azul no desaparece al atenuar especular ambiental
+
+[Ablación localizada](mangrove-height-blend/soil-spec/README.md),24 capturas con escena/geometría coincidentes. biomeSpec ponderado por cobertura de musgo: barro más oscuro, pero persiste tinte nocturno y diferencia con parches. No adoptar supresión general ni atribuir toda la discrepancia a reflejos. Sin benchmark; el cálculo original sigue ejecutándose.
+
+### Manglares: receta compartida mejora coherencia, coste no aprobado
+
+[24 capturas y ABAB](mangrove-height-blend/soil-toon/README.md). La receta del barro aproxima su respuesta a los parches, cálida de día y menos azul de noche. 1.920 muestras GPU válidas/1.920 frames, misma geometría; deriva fuerte y candidata más lenta en ambas noches (+5.944/+1.008ms). Conservar referencia visual, no integrar doble iluminación sin evitar trabajo redundante y validar coste/imagen. No demuestra volumen global ni presupuesto cumplido.
+
+### Manglares: omitir iluminación sin peso ofrece ahorro nocturno
+
+[Capturas, repetición y ABAB](mangrove-height-blend/lighting-skip/README.md).11/12 parejas iniciales exactas;18 píxeles residuales en una pose. Repetición baja6/6 exactas, causa del residuo no aislada.1.920 muestras GPU válidas/1.920 frames: noche−2.934/−0.647ms frente a doble iluminación; día+0.749/−0.394ms. Conservar candidata QA, no aprobar presupuesto global; flag falso por defecto. Coste total frente a musgo puro pendiente.
+
+### Decisión del conjunto de Manglares: no integrar
+
+[Comparación total contra musgo puro](mangrove-height-blend/full-review/README.md):24 capturas y1.920 muestras GPU válidas/1.920 frames. Sobrecoste en los cuatro pares:+4.735/+3.669ms día,+4.622/+3.862ms noche (promedios+47.9%/+45.2%). La distribución mejora, pero no el volumen suficiente. Descartar esta implementación de mezcla/iluminación para integración; sustituye recomendaciones provisionales previas. Conservar hallazgos de máscaras/color/altura, no seguir puliendo pequeños umbrales de esta receta. Retomar prioridades Sabana/Gran Río/Gran Cañón; objetivo global no alcanzado.
+
+
+## Corrección de criterio por indicación del usuario: calidad y coste separados
+
+La valoración artística no se descarta automáticamente al superar un presupuesto de GPU. Una variante visualmente prometedora se conserva con receta, capturas y coste, pendiente de optimización local o compensación medida en otros sistemas. No activar por defecto no significa abandonar la dirección visual. Las simplificaciones deben compararse con la mejor imagen conservada, no solo con el original plano.
+
+Queda revocada la recomendación anterior de abandonar el sustrato completo de Manglares: el usuario aprueba su aspecto y pide optimizarlo. Sus medidas siguen vigentes; no hay aprobación de rendimiento ni de integración en main. Véase [revisión de decisiones](VISUAL-CANDIDATES-REVIEW.md).
+
+
+### Manglares: optimización conservando la referencia visual aprobada
+
+[Protección por altura](mangrove-height-blend/sample-gate/height-guard/README.md): seis parejas reales,8–25 píxeles residuales por imagen.1920 muestras GPU válidas; cuatro diferencias favorables, pero magnitud variable (−.087 a−1.927ms) y última candidata con peor CPU/cadencia. Conservar candidata sin afirmar equivalencia exacta ni ahorro estable. La receta visual aprobada sigue intacta; no se abandona por coste.
+
+
+### Manglares: color-only no acredita ahorro estable
+
+[Benchmark de color condicional](mangrove-height-blend/sample-gate/color-only/performance/README.md):1920 muestras GPU válidas; diferencias diurnas+5.446/−1.108ms, nocturnas−.019/−3.543ms, con fuerte variación del control. No promover como optimización demostrada. Las72 parejas móviles conservan diferencias pequeñas, pero no sustituyen la prueba de coste. La receta visual aprobada se conserva; ampliar validación de recursos y buscar trabajo redundante sin degradar la imagen.
+
+
+### Manglares: receta aprobada supera recorrido y cierre acotados
+
+[Streaming del sustrato completo](mangrove-height-blend/full-streaming/README.md):36 capturas/18 parejas, dos circuitos por fase con±192m, escenas comparables y sin errores. Regresos nocturnos exactos; diurnos con residuo pequeño también en control. Tres texturas liberadas una vez cada una;24 geometrías y cero referencias QA tras cierre. No prueba de fugas prolongadas ni nuevo benchmark. Conservar la receta visual aprobada, sin activar optimizaciones de muestreo no demostradas.
+
+
+### Cañón: arena completa disponible como alternativa explícita
+
+[`canyonSand=full` con global-lighting](canyon-sand-full-integrated/README.md), solo Cañón. La opción1 conserva normal-only.11/12 parejas QA/integrada exactas; una difiere2píxeles. Build y9pruebas pasan. Fuente CC0 existente copiada sin cambio; caché separada por variante. Pendientes streaming integrado y coste cercano, sin main ni sustitución del perfil económico.
+
+
+### Cañón: recorrido de arena completa integrada
+
+[36capturas y cierre](canyon-sand-full-integrated/streaming/README.md):18parejas QA/integrada,13exactas y5con2–5píxeles de diferencia máxima1. Escenas/origen/geometría coincidentes; ambas texturas se liberan una vez. Regresos sin crecimiento acumulado observado, no prueba de fugas largas ni coste cercano. Mantener completa como alternativa del laboratorio.
+
+
+### Gran Río: perturbación del material insuficiente visualmente
+
+[24capturas de franja de tierra](river-soil-material-fringe/README.md): misma geometría y máscara nativa, variación solo del peso de mezcla. Diferencia demasiado sutil en normal diurna/nocturna revisadas; no promover microajuste, sin benchmark. TierraV2 conservada. Requiere composición a escala mayor, no acumular pequeños umbrales.
+
+
+### Buffers residentes: primer prototipo por chunk
+
+[Prueba QA en Sabana](persistent-asset-groups/README.md): misma cobertura y triángulos, pero CPU/cadencia empeoran en cuatro parejas ABBA. La partición por chunk aumenta llamadas y vistas de geometría, y mantiene subidas por LOD/visibilidad. No integrar este diseño; conservar el objetivo de matrices residentes separando selección y transiciones. Ninguna variante artística se reduce o descarta por este resultado técnico. [Comparación previa de contenido](instance-cull-upload-gate/README.md) evita muchas subidas pero sigue pagando recorrido CPU; tampoco prueba mejora estable de cadencia.
+
+
+### Selección por IDs sobre matrices residentes: prueba ejecutada
+
+[Prototipo WebGL2 real](resident-matrices/README.md):960muestras GPU,1440fotogramas, calls/triángulos coincidentes. Viable funcionalmente, pero la primera versión empeora CPU/GPU/cadencia; conserva empaquetado de origen y pierde residencia al recrear lotes. Mantener en QA, sin integración ni generalizar como límite de WebGL2. No reducir calidad artística; el rendimiento debe financiar las mejoras aprobadas, no reemplazarlas.
+
+
+### Manglares: sustrato aprobado integrado como opción
+
+[`mangroveSubstrate=full`](mangrove-substrate-integrated/README.md) con global-lighting:12parejas QA/integrada RGB exactas, baja/media día/noche, build y4pruebas pasan. Conserva receta completa. Aún depende del ayudanteQA para bordes de barro; integración del conjunto y streaming pendientes. No declarar terminada la mejora global ni eliminar variantes por coste.
+
+
+### Manglares: bordes de barro incorporados al ciclo normal de chunks
+
+[Receta completa integrada](mangrove-full-integrated/README.md):12parejas RGB exactas contra QA, sin ayudante en candidato; mismos vértices y triángulos. Build y3pruebas pasan. Streaming integrado en ejecución; faltan auditoría, coste y perfil muy_baja en GPU. Se conserva el aspecto aprobado sin activar por defecto ni tocar main.
+
+
+### Reversibilidad de calidad en seis biomas
+
+[48capturas estabilizadas](all-biome-quality-switch-settled/README.md):sin erroresGPU; seis de12regresos RGB exactos y demás1–6píxeles. Sombras recuperadas en mosaico diurno; máscaras estables y contadores de geometrías/texturas vuelven al inicio. No benchmark ni validación de todas las combinaciones artísticas. La primera comparación de Desierto se invalidó por chunks pendientes y se repitió correctamente.
+
+
+### Gran Río: tierra V2 conservada como opción integrada
+
+[`riverSoil=1`](river-soil-integrated/README.md) con global-lighting, solo Gran Río.9/12parejas QA/integrada RGB exactas; tres inversas con residuos sin causa aislada. Build y6pruebas pasan. La cubierta/paleta siguen usando ayudantesQA en estas capturas; pendientes streaming y coste integrados. El borde regular del poblado sigue siendo una limitación artística, no resuelta por integrar la receta.
+
+
+### Gran Río: streaming de tierra integrada
+
+[72capturas/36parejas](river-soil-integrated/streaming/README.md):24exactas, resto máximo10píxeles/delta1; geometría/cobertura/origen coincidentes. Tres texturas liberadas una vez al cierre en cada sesión. Regresos nocturnos casi exactos; residuos diurnos similares en QA/integrada. Coste integrado y transición artística del poblado pendientes.
+
+
+### Gran Río: integración en perfil mínimo
+
+[Doce capturas en muy_baja](river-soil-integrated/minimum/README.md): cuatro de seis parejas QA/integración exactas, residuos inversos de 154/29 píxeles. Geometría y cobertura coinciden. La explanada regular sigue siendo un límite artístico y los tiempos GPU/CPU del perfil mínimo siguen pendientes; no se declara calidad global alcanzada.
+
+
+### Gran Río: coste de la tierra integrada en muy_baja
+
+[ABBA y capturas original/integrada](river-soil-integrated/minimum-performance/README.md):960muestras GPU/1.440frames, misma geometría/cobertura. Medias GPU solapadas, sin sobrecoste consistente; cadencia fija cercana a16,6ms. Conservar opción artística sin afirmar coste cero ni extrapolar a movimiento. El borde circular del poblado continúa pendiente; no repetir los ajustes menores de fringe ya evaluados.
+
+
+### Gran Río: claros herbáceos del poblado
+
+[Piloto visual](river-yard-islands/README.md): separa la explanada radial de los accesos mediante una máscara visual y el snapshot de poblados ya disponible en Engine. Doce capturas; vista normal añade693 módulos/5.544triángulos y reduce el claro marrón circular. Conservar candidata; coste, caminos, varios poblados y streaming sin validar. No integrado ni declarado objetivo alcanzado.
+
+
+### Revisión conjunta actualizada tras Gran Río
+
+[36capturas de seis biomas](combined-campaign-review-v5/README.md): reúne opciones conservadas y claros herbáceos/margen de viento. Sin erroresGL/overflow; no benchmark ni aprobación global. Prioridad artística siguiente: planos y luz cálida de roca volcánica, conservando ceniza y noche. No continuar indefinidamente microvalidando solo GranRío.
+
+
+### Volcanes: tinte solar insuficiente para resolver volumen
+
+[Doce capturas](volcanic-solar-rock/README.md): noche RGB exacta, geometría/draws iguales. La calidez tenue no resuelve planos ni explanadas lisas; conservar referencia de color, no integrar ni descartar por coste. Siguiente ensayo centrado en escala/estructura mesoscópica de roca, con ceniza conservada.
+
+
+### Volcanes: fracturas ampliadas
+
+[Doce capturas](volcanic-rock-scale/README.md): Rock035 al doble de extensión y altura nominal, normales sin aumentar, ceniza conservada. Fracturas más legibles desde vista normal; conservar candidata por mejora artística. Pendientes POM en movimiento/coste y áreas de ceniza aún lisas; no integrar ni declarar objetivo alcanzado.
+
+
+### Volcanes: afloramientos dentro de ceniza
+
+[Doce capturas](volcanic-ash-cavities/README.md): el mapa de altura reduce ceniza sobre crestas y conserva depósitos amplios. Mejora estructural visible; conservar candidata con una lecturaARH adicional, coste y movimiento pendientes. Aproximación sobre UV sin desplazar, no capas físicas ni siluetas nuevas.
+
+
+### Volcanes: diagnóstico y refinamiento de POM
+
+[Ablación](volcanic-pom-ablation/README.md) y [refinamiento](volcanic-pom-refined/README.md),24capturas: anular desplazamiento reduce franjas pero aplana; interpolar cruce suaviza parte del escalonado manteniendo relieve, máximo8lecturas. Conservar candidata QA, pendientes movimiento/coste y líneas residuales del material.
+
+### Gran Cañón: diagnóstico de sedimento de ribera
+
+[Ensayo por altura](canyon-bank-sediment/README.md): doce capturas, contadores y cámaras iguales. Oscurece demasiada terraza y pierde arena sin resolver la orilla; no integrar. Siguiente prueba requiere proximidad espacial al agua, no altura sola. [Receta volcánica optativa integrada](volcanic-rock-integrated/README.md): paridad exacta con QA en seis parejas; costes previos conservados.
+
+
+### Gran Cañón: proximidad espacial a ribera
+
+[Doce capturas corregidas](canyon-bank-proximity-v3/README.md): conserva arena seca y limita sedimento junto al río. Detectada y corregida solo en QA la sobrescritura constante de contexto. Candidata pendiente de coste de preparación/streaming y horizonte; no integrada.
+
+
+### Gran Cañón: discontinuidad cercana/lejana visible
+
+[Alejamiento comparado](canyon-bank-distance-motion-v2/README.md): 96 parejas y vídeos día/noche. Corte de tono del fondo del cañón ya presente en control; sedimento no lo origina. Priorizar aislamiento de material/iluminación del horizonte antes de integrar ribera. No validada continuidad global.
+
+
+### Preferencia explícita: transparencia suave antes que tramado
+
+[Fundido integrado en laboratorio](obstruction-smooth-frontside/README.md): parciales con alpha blending sin profundidad auxiliar; opacos siguen agrupados. FrontSide no elimina las capas delanteras de copas complejas: queda pendiente superficie más cercana aislada. No declarar retirado todo dithering de impostores/clipping.
+
+
+### Fundido de árboles con superficie aislada
+
+[Prototipo de una capa por objeto](obstruction-isolated-depth/README.md): dieciséis capturas, mejora visible en copa cercana sin tramado ni profundidad opaca compartida. Conservar candidata; hasta21.09MiB nominales, coste y transparentes detrás sin validar. No integración todavía.
+
+
+### Fundido aislado: coste activo y movimiento reproducible
+
+[Coste con un parcial al35%](obstruction-isolated-depth/performance-held/README.md): ABBA GPU favorable en Intel UHD, CPU similar; no extrapolar a FPS global. [Secuencia día/noche](obstruction-isolated-motion-v2/README.md):72 parejas con cámara/opacidad exactas, hasta tres parciales y cuatro targets retenidos (~28.125MiB nominales). La acumulación de targets es el siguiente foco de optimización. Mantener candidata; integración global y validación de efectos reales pendientes.
+
+### Pool de profundidad para fundidos
+
+[Comparación de reutilización](obstruction-isolated-pool/README.md): misma ruta, cuatro targets retenidos pasan a tres (28.125→21.094MiB nominales).69/72 parejas exactas; tres con3–21 píxeles distintos documentados, una sin parciales. Sin nuevas asignaciones en la segunda fase. Variante QA, no mejora de FPS demostrada ni integración global.
+
+### Ciclo de vida de los targets aislados
+
+[Resolución y desmontaje](obstruction-isolated-lifecycle-v2/README.md):72 parejas al cambiar1280→960→1280,67 exactas y máximo9 píxeles distintos. Trim3→1, dispose1→0, reinstalación con imagen exacta tras corregir caché de uniformes antigua. Helper QA, no certificación de fugas globales ni de efectos reales.
+
+### Humo nativo con profundidad aislada
+
+[Diagnóstico con BuildingEffects](obstruction-isolated-smoke-probe/README.md): partículas QA por shaders y pase de humo reales,583070 píxeles de señal con/sin aislado, cero completamente bloqueados. Color del árbol oculto para aislar profundidad; no certifica composición final ni todos los VFX. Pendiente evitar prepasadas redundantes al capturar profundidad auxiliar.
+
+### Prepasada aislada sin duplicación en smokeDepth
+
+[Composición con árbol visible](obstruction-isolated-smoke-composition/README.md): imágenes exactas con/sin humo al omitir el trabajo auxiliar dentro de captureDepth. Dos parciales:4→2 dibujos auxiliares con humo;2→2 sin humo. Sin equivalencia automática en FPS. Helper QA, pendiente integración y validación amplia.
+
+### Gran Cañón: corte ligado a contribución de sombra
+
+[Dos diagnósticos](canyon-shadow-isolation/README.md): receiveShadow del horizonte no cambia píxeles; neutralizar groundVisibility elimina corte y sombras útiles. No integrar ese diagnóstico. Revisar cobertura/proyección/transición de shadow map y relleno cálido dependiente de sombra antes de recolorear materiales. La atribución previa a material cercano/lejano no estaba demostrada.
+
+### Gran Cañón: recuperar emisores de sombra lejanos
+
+[Candidata horizon.castShadow](canyon-horizon-caster/README.md): recupera continuidad sombreada del valle en vistas36/47 conservando volumen. Ampliar fade del borde no arregló el corte. Mantener candidata; medir trabajo real de actualización de sombras antes de integrar. Contadores de captura solo color, no coste total.
+
+### Coste del emisor lejano de Gran Cañón
+
+[ABBA caché/forzado](canyon-horizon-caster/performance/README.md): caché sigue acertando sin draws añadidos; actualización suma1 draw/34404 triángulos en view47. Tiempos variables incluso en control: no delta temporal robusto. Conservar candidata visual; pendientes movimiento/streaming y perfil bajo.
+
+### Opción integrada de emisor lejano de Gran Cañón
+
+[Paridad QA/integrada](canyon-horizon-integrated/README.md): `visualLab=global-lighting&canyonShadows=horizon`, solo canyons.12 parejas exactas baja/media día/noche; baja sin sombras solares es compatibilidad, media confirma receta.11 tests y build pasan. Opt-in, pendientes streaming/movimiento prolongados; no main.
+
+### Horizonte emisor tras reemplazo de chunks
+
+[Cuatro regresos día/noche](canyon-horizon-streaming/README.md):25 chunks activos,88 geometrías y56 texturas en regresos de candidata, sin crecimiento observado ni errores. Sombras se reconstruyen al viajar. Prueba acotada, no garantía de fugas a largo plazo ni benchmark de movimiento continuo.
+
+### Revisión global V6
+
+[36 capturas seis biomas](combined-campaign-review-v6/README.md), mismas cámaras/horas que V5, sin errores. Conserva mejoras de Volcanes/Cañón. Próximo foco: repetición regular del musgo de Manglares, sin perder volumen/paleta; lectura nocturna volcánica pendiente. No certifica calidad objetivo global ni FPS del conjunto.
+
+### Manglares: deformar UV no elimina la repetición
+
+[Seis parejas](mangrove-uv-warp-v2/README.md): ondas suaves conservan volumen/paleta pero convierten filas en filas curvas. No promover por insuficiencia artística; original intacto. Próximo enfoque: orientaciones locales mezcladas sin costuras y normales coherentes. No descartado por coste, ni benchmark temporal de esta variante.
+
+
+### Manglares: dos orientaciones conservadas como candidata
+
+[Seis parejas y ABBA](moss-orientations-20261021/README.md): menor repetición de filas, volumen y paleta conservados. Tres lecturas extra, sin geometría ni pasadas añadidas. GPU diurna 15.96/17.67→19.35/19.92 ms: conservar candidata y optimizar; no integrar todavía ni descartar solo por coste. Falta movimiento/streaming y variedad macro del mockup.
+
+
+### Musgo: perspectiva normal a elevada
+
+[48 parejas día/noche](moss-orientation-motion-20261021/README.md), cámaras y geometría coincidentes, sin errores. Conserva menor repetición en vistas revisadas. Vídeos de capturas asentadas a12fps, no FPS real ni certificación de estabilidad temporal/streaming. Candidata retenida, no integrada.
+
+
+### Musgo: muestreo condicional con paridad visual
+
+[Seis parejas exactas y ABBA](moss-sample-gate-20261021/README.md): omite color/normal secundarios cuando su peso es cero. Conserva toda la imagen en estas vistas. GPU diurna favorable pero controles variables y cadencia sin ganancia consistente: retener candidata, no prometer FPS ni integrar aún.
+
+
+### Volcanes: luz direccional nocturna insuficiente por sí sola
+
+[Seis parejas](volcanic-night-relief-20261021/README.md): +45% solo direccional del suelo, día exacto; crestas algo más visibles de noche pero zonas oscuras aún ilegibles. Conservar diagnóstico, no integrar ni atribuir coste/FPS sin benchmark. Revisar ambiente y oclusión como siguiente hipótesis.
+
+
+### Volcanes: separar ambiente y oclusión
+
+[18 capturas](volcanic-night-components-20261021/README.md): ambiente nocturno x1.65 mejora lectura de depósitos; suavizar AO tiene efecto pequeño. Día exacto. Conservar ambiente como candidata pendiente de coste/ciclo/movimiento; no integrar ni eliminar AO globalmente.
+
+
+### Ambiente volcánico: coste y transición pendiente
+
+[ABBA Intel UHD](volcanic-night-components-20261021/performance/README.md): sin regresión consistente, sin mejora FPS demostrada. La multiplicación actual refuerza también el componente diurno durante crepúsculo; antes de integrar, corregir solo el extremo nocturno y capturar estados intermedios.
+
+
+### Volcanes: extremo nocturno corregido
+
+[30 capturas de cinco momentos](volcanic-night-endpoint-20261021/README.md): día/noche exactos al control; tres estados intermedios conservan lectura sin amplificar el componente diurno. Candidata corregida retenida para integración opt-in, sin atribuirle aún tiempos del shader anterior ni validar ciclo completo.
+
+
+### Ambiente nocturno volcánico: opción integrada
+
+[15 parejas exactas QA/opción](volcanic-night-integrated-20261021/README.md): activar visualLab=global-lighting&volcanicNight=ambient.5 tests y build pasan. Solo suelo volcánico mapeado, predeterminado intacto. Pendientes amanecer, streaming y coste final; no aprobación global ni main.
+
+
+### Volcanes: amanecer exacto, rendimiento aún sin aprobación
+
+[15 parejas amanecer](volcanic-dawn-20261021/README.md) QA/integrada exactas. [ABBA final](volcanic-night-integrated-20261021/performance/README.md) registra primera repetición candidata más lenta y segunda cercana al control: mantener todos los datos, repetir alternancia en misma página antes de aprobar coste. Opción artística conservada.
+
+
+### Volcanes: ajuste conservado tras streaming
+
+[32 capturas y cuatro regresos](volcanic-night-streaming-20261021/README.md):25 chunks/110 geometrías estables en regresos, sin errores ni crecimiento de texturas dentro de variante. Lectura nocturna conservada. Tiempos de carga/render/auditoría no equivalen a FPS; rendimiento final sigue pendiente de aclarar.
+
+
+### Revisión global V7
+
+[36 capturas comparables con V6](combined-campaign-review-v7/README.md), sin errores. Incluye opción nocturna volcánica y musgo QA de dos orientaciones. Mantener mejoras; siguiente foco artístico: claros de Desierto demasiado lisos, conservando desgaste/ocupación. Pendientes transición de cubierta Sabana/Río y validación temporal/coste del conjunto; objetivo global no logrado.
+
+
+### Desierto: recuperar relieve residual del desgaste
+
+[Seis parejas](desert-wear-relief-20261021/README.md): normales residuales15→45% en desgaste máximo, arena intacta y máscaras sin cambios. Ondulaciones suaves entre edificios, candidata conservada; pendientes coste, movimiento y revisión nocturna. No integrada ni solución completa de uniformidad.
+
+
+### Desierto: coste y lectura nocturna del relieve residual
+
+[ABBA Intel UHD](desert-wear-relief-20261021/performance/README.md): GPU favorable, CPU similar, sin mejora consistente de cadencia. Conservar candidata por ondulaciones visibles también de noche; no prometer FPS. Pendientes movimiento/perfil bajo, no integrada.
+
+
+### Desierto: compatibilidad visual en baja
+
+[Seis parejas día/noche](desert-wear-low-20261021/README.md): relieve residual visible, cámaras/geometría iguales y sin errores. Sin sombras solares como media; no extrapolar benchmark ni a muy_baja. Mantener candidata, pendientes movimiento e integración.
+
+
+### Desierto: opción residual integrada
+
+[Seis parejas QA/integrada](desert-wear-integrated-20261021/README.md): sandWear=residual junto a sandRelief=1/global-lighting.2 exactas,resto1–2 píxeles con delta1RGB; no afirmar igualdad exacta.4 tests/build pasan. Predeterminado intacto, pendientes movimiento/streaming y baja integrada.
+
+
+### Desierto: baja integrada tras reemplazo de chunks
+
+[32 capturas y regresos](desert-wear-streaming-20261021/README.md):25 chunks/62 geometrías estables, sin errores ni crecimiento de texturas dentro de variante. Relieve conservado de noche. No benchmark de movimiento continuo ni ahorro VRAM demostrado; opción retenida.
+
+
+### Desierto: movimiento real durante carga
+
+[960 renders continuos](desert-continuous-20261021/README.md), sin errores; cámaras iguales, carga asíncrona difiere18/6 frames día/noche. Tiempos medios similares con picos en ambos; no atribuir rendimiento causal ni ausencia de shimmering sin vídeo. Opción conservada.
+
+
+### Sabana: viento y LOD geométrico
+
+[Seis parejas](grass-wind-lod-20261021/README.md): candidata aplica el lod18–24 existente a bend y normales, evitando salto de esas expresiones al lote lejano. Mantiene viento8 cercano y geometría; falta vídeo/cruce del límite/coste, no declarar mejora temporal demostrada por capturas estáticas.
+
+
+### Sabana: secuencia comparativa viento/LOD
+
+[72 parejas y vídeos](grass-wind-motion-20261021/README.md): cámara/tiempo de viento/geometría iguales, selección cercana2438–3186. Sin errores, cobertura conservada en contacto. Vídeo de poses asentadas, no FPS; pendientes evaluación temporal fina y coste, no afirmar LOD completamente resuelto.
+
+
+### Sabana: normales base del LOD
+
+[Seis parejas y auditoría de módulos](grass-normal-lod-20261021/README.md): normales difieren20° media/40.6°máximo; candidata interpola hacia módulo light con atributo1296bytes nominales. Sin geometría añadida ni errores. Cambio estático pequeño; pendientes prueba temporal/coste antes de promover.
+
+
+### Sabana: coste conjunto de transición LOD
+
+[ABBA original/viento+normales](grass-normal-lod-20261021/performance/README.md): GPU diurna ~+0.48ms, CPU/cadencia sin ganancia consistente. Instancias/triángulos iguales. Conservar candidata, falta validar beneficio temporal final; no descartar por coste ni prometer FPS.
+
+
+### Sabana: cuantificar el extremo de LOD
+
+[Diagnóstico de3153 instancias comunes](grass-lod-endpoint-20261021/README.md): normales reducen diferencia de imagen entre cercano aplanado/lejano19% día y5% noche; sigue siendo parcial. No confundir métrica de píxeles con calidad global ni aprobar coste automáticamente. Persisten otras diferencias de representación.
+
+
+### Sabana: muestreo de color coherente entre LOD
+
+[Diagnóstico](grass-pigment-endpoint-20261021/README.md) reduce salto adicional51% día/65% noche respecto a viento+normales usando raíz común lejana. [Seis parejas normales](grass-pigment-lod-20261021/README.md) conservan cobertura/paleta en vista revisada. Falta animación/coste final; candidata QA, no solución global certificada.
+
+
+### Sabana: combinación final y benchmark inválido
+
+[72 parejas/vídeos](grass-final-motion-20261021/README.md) de viento+normales+pigmento, sin errores. [ABBA rechazado](grass-pigment-lod-20261021/performance/README.md): consulta GPU960777ms en último control; conservar muestra, no calcular aprobación. Repetición pendiente, candidata no integrada.
+
+
+### Sabana: repetición válida del coste final de LOD
+
+[ABBA repetido](grass-pigment-repeat-20261021/README.md):480 muestras GPU válidas,720 frames de cadencia y geometría igual. GPU media aumenta1.35ms día/0.54ms noche; variación entre bloques impide afirmar mejora de FPS. Ronda anterior inválida conservada, causa no identificada. Mantener candidata visual en QA, pendiente revisión temporal y Gran Río; sin integración por defecto.
+
+
+### Gran Río: LOD compuesto con paleta y desgaste
+
+[Seis parejas equivalentes](river-grass-lod-equivalent-20261021/README.md): viento/normales/pigmento adaptados al shader independiente de Gran Río. Cobertura, geometría y draws iguales; continuidad y paleta conservadas en revisión normal día/noche. Dos rondas inválidas conservadas por interceptor incorrecto y pérdida de máscara; corregidas antes de comparar. Candidata QA, pendientes movimiento y coste específico.
+
+
+### Gran Río: coste del LOD coherente
+
+[ABBA válido](river-grass-lod-equivalent-20261021/performance/README.md):480 muestras GPU,720 frames,misma cobertura/geometría. GPU diurna favorable en ambos bloques de candidata; CPU similar,cadencia nocturna prácticamente igual. Residencia de texturas inicial distinta y variación del control limitan causalidad. Conservar candidata, pendiente evaluación temporal; no extrapolar a Sabana ni promover por defecto.
+
+
+### Gran Río: recorrido de LOD con viento
+
+[72 parejas y vídeos](river-grass-motion-20261021/README.md): selección cercana3778–4631 y lejana5845–7489,idénticas entre variantes;sin errores. Contactos mantienen continuidad y caminos. Poses asentadas a12fps,no rendimiento real ni certificación de ausencia de popping. Conservar QA;pendiente revisión temporal fina y nueva vista global de seis biomas.
+
+
+### Revisión global V8
+
+[36 capturas de seis biomas](combined-campaign-review-v8/README.md),cámara/hora iguales a V7,sin errores. Reúne LOD de hierba y relieve residual del Desierto. Identidad cromática conservada;persisten uniformidad de Gran Río,repetición del musgo y detalle nocturno volcánico insuficiente. Objetivo global no alcanzado;priorizar cambio artístico mesoscópico o legibilidad nocturna sobre microajustes adicionales de LOD. Sin benchmark global ni integración por defecto.
+
+
+### Gran Río: variación espacial de pigmento
+
+[Seis parejas](river-patch-color-20261021/README.md):campo determinista precalculado por tile y atributo existente,sin nuevas texturas/geometría. Variación suave visible en vista elevada,mejora modesta,no resuelve uniformidad. Candidata QA conservada;pendientes coste y transición hacia terreno lejano.
+
+
+### Gran Río: transición lejana del pigmento espacial
+
+[Seis parejas](river-patch-fade-20261021/README.md):retorno24–36 al pigmento original mediante componente existente,sin nuevas texturas/geometría. [ABBA](river-patch-fade-20261021/performance/README.md) técnicamente válido pero deriva del control14.52→25.74ms día impide aislar coste. Conservar candidata visual;no aprobar rendimiento ni descartarla por esta ronda. Próxima medición debe alternar en misma escena con residencia estabilizada.
+
+
+### Gran Río: aislar residencia en benchmark de pigmento
+
+[ABBA en una misma escena](river-patch-shared-20261021/README.md):180 geometrías/67 texturas constantes,480 muestras válidas. Persiste deriva GPU del control29.09→21.71ms día;residencia desigual no era la única causa. Sin conclusión causal de coste. Conservar candidata;antes de repetir benchmarks,diagnosticar carga/scheduling y validar imagen del control clonado. Continuar trabajo artístico global sin descartar por esta incertidumbre.
+
+
+### Volcanes: equilibrio cromático nocturno
+
+[Seis parejas](volcanic-night-spectrum-20261021/README.md):relleno nocturno menos azul,mantiene roca oscura y mejora moderadamente lectura. Tres vistas diurnas exactas;misma geometría,sin errores. Solo cambia constante,sin benchmark temporal aún. Candidata QA conservada,pendiente crepúsculo y coste;objetivo global no alcanzado.
+
+
+### Volcanes: transición del relleno cromático
+
+[15 parejas en cinco niveles](volcanic-spectrum-twilight-20261021/README.md):día exacto,diferencia gradual hacia noche,cámara/hora/geometría iguales,sin errores. Vista intermedia conserva roca oscura. Conservar candidata;no certificar ciclo continuo ni rendimiento con estas capturas.
+
+
+### Volcanes: relleno cromático en baja
+
+[Seis parejas](volcanic-spectrum-low-20261021/README.md):día exacto y lectura nocturna moderadamente mejor en vista revisada;misma cámara/geometría,sin errores. Apariencia compatible con baja,no validación FPS ni muy_baja. Candidata QA conservada.
+
+
+### Volcanes: spectrum integrado como opción
+
+[Seis parejas QA/integración exactas](volcanic-spectrum-integrated-20261021/README.md). visualLab=global-lighting&volcanicNight=spectrum,ambient anterior conservado,predeterminado intacto.12 tests existentes ybuild pasan. Integración experimental,no aprobación de coste ni finalización global.
+
+
+### Volcanes: coste integrado de spectrum
+
+[ABBA](volcanic-spectrum-integrated-20261021/performance/README.md):480 muestras válidas,misma geometría. Último control14.45→27.13ms GPU día impide atribuir ventaja a candidata14.82/14.97ms. Conservar opción visual,no aprobar coste global;diagnosticar scheduling/carga antes de repetir precisión.
+
+
+### Diagnóstico: carga GPU concurrente confirmada
+
+[Ocho muestras CIM](gpu-contention-20261021/README.md) sin benchmark propio:Chrome GPU de measure-wild-renderer.mjs usa10–95% del motor3D. No se interrumpe ni se contacta con otro trabajo. Explicación plausible,no prueba retrospectiva de todas las rondas. Antes de más benchmarks precisos registrar carga yesperar ventana sin prueba concurrente;continuar trabajo artístico sin atribuir ganancias FPS.
+
+
+### Manglares: orientación oblicua descartada artísticamente
+
+[Seis parejas90/45 grados](moss-oblique-20261021/README.md):misma geometría,sin errores. Persiste patrón de filas;no mejora suficiente para reemplazar mezcla anterior. Conservada como descarte artístico,no por coste. Siguiente dirección:distribución/escala de acumulaciones.
+
+
+### Manglares: dos escalas de acumulaciones
+
+[Seis parejas](moss-two-scales-20261021/README.md):segunda escalaUV.57,misma geometría,sin errores. Más variedad en primer plano,franjas todavía visibles. Conservar candidata,sin reemplazo ni aprobación de coste. Pendientes noche/movimiento;no benchmark por contención GPU conocida.
+
+
+### Manglares: recorrido de mezcla de escalas
+
+[48 parejas yvídeos](moss-scale-motion-20261021/README.md),misma cámara/geometría,sin errores. Contacto nocturno conserva regiones,relieve pierde lectura al elevarse. No certifica ausencia de shimmering;poses asentadas,no FPS. Mantener candidata QA ylimitaciones globales.
+
+
+### Manglares: diagnóstico del recurso yescala
+
+[Auditoría de mapas](moss-source-audit-20261021/README.md):tile8.70unidades/secundario15.26,ruta pureMoss sin POM,normal atenuada a distancia. FFT muestra anisotropía moderada,no prueba de filas fuertes globales. Próxima hipótesis:variación de fase espacial continua,con mapas coherentes;evitar más rotaciones aisladas.
+
+
+### Manglares: regiones desplazadas descartadas
+
+[Seis parejas](moss-regions-20261021/README.md):cuatro muestras regionales,misma geometría,sin errores. Promedio suaviza relieve yno elimina filas;no promover por resultado artístico. Coste no medido,no motivo del descarte. Si se retoma,preservar crestas con mezcla por altura yvalidar origen flotante.
+
+
+### Manglares: regiones por altura no promovidas
+
+[Seis parejas](moss-height-regions-20261021/README.md):ponderación exponencial por altura,misma geometría,sin errores. No supera visualmente a dos escalas,persiste suavizado. Descarte artístico,no por coste. Cerrar ajustes de esta mezcla antes de nueva hipótesis sobre material/iluminación.
+
+
+### Manglares: volver a la referencia de cubierta
+
+[Revisión del mockup ypipeline](mangrove-cover-direction-20261021/README.md):suelo ya tiene iluminación continua;la referencia destaca hojas solapadas con silueta. GLB existentes78/128triángulos no prueban cubierta continua. Próximo prototipo:unidad baja de hojas anchas Blender+instancing,máscaras/LOD existentes,presupuesto por área. No seguir mezclando mapas como sustituto de esa representación.
+
+
+### Manglares: primer módulo Blender de hojas bajas
+
+[Asset ypresupuesto](mangrove-leaf-cover-20261021/README.md):32 triángulos,8 hojas,altura9cm. Proyección40% a separación.5;no cumple continuidad. Mejorar reparto antes de subir densidad. JSON/GLB/.blend conservados,sin integración en juego ni afirmación de éxito.
+
+
+### Caras traseras de árboles: comparación explícita
+
+[24 capturas reales](obstruction-backfaces-20261021/README.md): DoubleSide, FrontSide actual y superficie más cercana, Sabana baja día/noche. FrontSide reduce acumulación pero conserva capas delanteras; profundidad aislada mejora la lectura del suelo y permanece candidata QA. Dos targets nominales 14.06 MiB y dos dibujos auxiliares con dos parciales; no atribuir FPS a contadores de la última pasada. Sin cambios de modelos ni integración.
+
+
+### Manglares: cubierta Blender probada dentro del juego
+
+[36 capturas y assets](mangrove-leaf-fill-20261021/README.md): ocho hojas,32 triángulos,proyección periódica40→92% sin subir densidad. Material corregido muestra hojas solapadas desde cámara normal;conservar candidata. Región añade92–115mil triángulos y2draw calls,sin errores. Frontera con musgo,LOD,streaming yGPU pendientes;no integrada ni objetivo alcanzado.
+
+
+### Manglares: atenuación por cobertura insuficiente
+
+[Seis parejas](mangrove-leaf-edge-20261021/README.md): crecimiento por máscara mantiene instancias y triángulos, pero no resuelve frontera principal. Existen además exclusiones binarias; diagnosticar su contribución espacial antes de ajustar. Conservar prueba, no promover como solución ni atribuir ganancias FPS.
+
+
+### Manglares: desgaste identificado y borde suavizado
+
+[Diagnóstico espacial](mangrove-leaf-mask-audit-20261021/README.md):3076 exclusiones por desgaste,114 por margen y323 por agua sobre9216 posiciones;clasificador mantiene seis capturas exactas. [Candidata](mangrove-leaf-wear-edge-20261021/README.md) reduce tamaño por desgaste sin modificar exclusiones ni presupuesto geométrico. Mejora visible del borde día/noche;conservar QA. Pendientes movimiento,agua/ocupación,streaming yGPU.
+
+
+### Manglares: convergencia LOD de hojas
+
+[LOD QA](mangrove-leaf-lod-20261021/README.md) alinea centro, normales, pigmento y atenuación de viento. Seis parejas normales conservan cubierta; seis parejas de extremo forzado dan MAE RGBA máximo0.001214/255,no equivalencia exacta. +672 bytes de normales,sin triángulos adicionales. Movimiento,streaming yGPU pendientes.
+
+
+### Manglares: recorrido comparable de LOD
+
+[72 parejas y vídeos](mangrove-leaf-motion-20261021/README.md):near489–2429,far4067–5469,cámara/viento/geometría iguales,sin errores. Láminas conservan cubierta con menor detalle a distancia. Poses asentadas a12fps,no benchmark ni certificación temporal exhaustiva. Streaming,perfil bajo,cámara fija ycoste pendientes.
+
+
+### Manglares: conexión QA con streaming
+
+[Prueba de ciclo de vida](mangrove-leaf-stream-20261021/README.md):seis parejas exactamente iguales;recorrido0→192→0 mantiene claves de25chunks,resuelve invalidación yrestaura capa original al desmontar. Sin errores;no certifica fugas ni latencia. Pendientes eventos reales,baja ybenchmark.
+
+
+### Manglares: perfil bajo pendiente de calidad
+
+[Cuatro hojas](mangrove-leaf-low-20261021/README.md) pasan streaming pero quedan dispersas. [Ocho hojas a cámara fija](mangrove-leaf-low-eight-fixed-20261021/README.md) cubren más con doble triángulo,mismas instancias,pero parecen parches planos;no promover por resultado artístico. Intento automático inválido preservado. Mejorar unidad antes de densidad;GPU pendiente.
+
+
+### Manglares: arqueado cercano en baja no basta
+
+[Seis parejas](mangrove-leaf-low-arched-20261021/README.md):ocho hojas arqueadas cerca mejoran luz local,pero persisten parches desde cámara normal. Mismas instancias;33–71mil triángulos frente20–42mil,+1drawcall. Conservar prueba,no promover ni descartar solo por rendimiento.
+
+
+### Manglares: variación interna sin aumentar triángulos
+
+[Nuevo módulo Blender](mangrove-leaf-varied-20261021/README.md) varía ángulo yaltura de ocho hojas;seis parejas baja mantienen instancias/presupuesto. Menor alineación ymejor lectura local;conservar candidata,parche aún demasiado distinguible. Pendientes movimiento/GPU, no éxito global.
+
+
+### Manglares: primera medida estática con baja contención
+
+[ABBA IntelUHD](mangrove-leaf-cost-20261021/README.md),480GPU/720cadencia válidos. Cubierta suma2draw calls/59504triángulos;delta GPU medio+0.40ms día/+1.16ms noche,convariación entre bloques. Cadencia~16.6ms,sin diferenciaFPS demostrada. Conservar candidata,pendientes movimiento/preparación/media;no aprobación global.
+
+
+### Manglares: coste de cámara móvil medido
+
+[ABBA IntelUHD,baja](mangrove-leaf-moving-cost-20261021/README.md):720GPU/720cadencia válidos,trayectorias iguales. Selector0.16–0.17ms;GPU+0.65/+0.76ms día/noche;intervalo+1.9/+2.3ms. Cachés calientes,sin construcción de tiles;no streaming frío. Conservar calidad yoptimizar, no aprobación global.
+
+
+### Manglares: rangos activos de subida
+
+[Equivalencia y ABBA](mangrove-leaf-upload-ranges-20261021/README.md): seis parejas exactas; geometría y trayectoria iguales. Prefijo activo nominal94KB frente1.2MB de capacidad, sin reducir VRAM. No mejora consistente de FPS/GPU en esta ronda; conservar candidata de bajo riesgo sin atribuir ganancia demostrada.
+
+
+### Revisión global V9
+
+[36 capturas de seis biomas](combined-campaign-review-v9/README.md), cámaras/horas iguales a V8 ysin errores. Añade espectro nocturno volcánico yhojas media/musgo dos escalas. Sigue pendiente lectura nocturna de Río/Volcanes ycoherencia suelo/cobertura de Manglares:éxito local no implica mejora global. No extrapolar benchmark baja a esta combinación media ni declarar objetivo alcanzado.
+
+
+### Gran Río: recuperación localizada del detalle nocturno
+
+[Dos intensidades QA](river-night-ambient-strong-20261021/README.md),seis parejas cada una. Primera demasiado sutil;segunda mejora lectura de fibras sin cambiar día (tres parejas exactas),sombras oinstancias. Conservar candidata,validar distancia/crepúsculo antes de integración;sin costeGPU medido.
+
+
+### Gran Río: revisión nocturna a distancia
+
+[Seis parejas](river-night-distance-20261021/README.md) conservan cámaras y geometría, tres diurnas exactas. Sin anillo luminoso evidente en poses estáticas; a distancia sigue dominando suelo plano. Conservar candidata, pendientes crepúsculo/movimiento/baja y rendimiento.
+
+
+### Gran Río: ambiente nocturno en baja
+
+[Seis parejas](river-night-low-20261021/README.md): mejora de lectura conservada con módulo lejano, 42–68 mil triángulos de cubierta sin cambios entre variantes. Tres diurnas exactas, sin errores. Conservar candidata; pendientes crepúsculo, movimiento y benchmark.
+
+
+### Gran Río: mezcla nocturna progresiva
+
+[Quince parejas](river-night-twilight-20261021/README.md) verifican uNight 0/.25/.5/.75/1, cámaras y geometría iguales. Mezcla intermedia discreta, tres diurnas exactas. Conservar candidata; aún faltan movimiento y benchmark.
+
+
+### Gran Río: coste nocturno medido
+
+[ABBA Intel UHD](river-night-cost-20261021/README.md),720 tiempos GPU válidos. Noche A16.64/B16.69ms,sin penalización clara CPU/cadencia. Deriva diurna impide atribuir pequeñas diferencias. Conservar mejora artística, movimiento pendiente.
+
+
+### Gran Río: recorrido de cámara con viento
+
+[72 parejas y vídeos](river-night-motion-20261021/README.md),selección y cámaras iguales,sin overflow. Contacto conserva mejora cerca y a distancia. Poses asentadas,no fluidez real ni certificación temporal exhaustiva. Candidata para revisión global.
+
+
+### Revisión global V10
+
+[36 capturas](combined-campaign-review-v10/README.md):33 exactas frente V9,solo cambia Gran Río nocturno. Conservar combinación QA con mejora medida;priorizar coherencia suelo/cobertura de Manglares. No objetivo global alcanzado.
+
+
+### Manglares: crecimiento por cobertura sin efecto
+
+[Seis parejas exactas](mangrove-leaf-cover-growth-20261021/README.md) al adelantar tamaño completo .48→.28. No promover; cámara normal solo near1/far452. Priorizar diagnóstico de exclusiones en región del poblado, no más ajustes de tamaño sin evidencia.
+
+
+### Manglares: desgaste del poblado identificado
+
+[Mapa de exclusiones](mangrove-village-mask-20261021/README.md):8634/9216 puntos rechazados primero por desgaste,508 aceptados. groundWear417 mezcla patio circular ycorredores;selector rechaza ambos. Seis capturas exactas. Próximo experimento distinguir patio/camino sin relajar agua/ocupación ni cambiar simulación.
+
+
+### Manglares: separación patio/camino no aplicada
+
+[Intento inválido](mangrove-yard-cover-20261021-recheck/README.md):campo JS settlementSite ausente en escena nativa aunque máscara residente contiene desgaste. Helper ahora falla explícitamente. Verificar generación nativa y fuente de metadatos antes de reconstruir componentes; no rechazo de hipótesis artística.
+
+
+### Manglares: fuente nativa encontrada
+
+[Resumen de asentamiento](mangrove-native-site-20261021/README.md) disponible vía horizonSource.snapshot():centro60,0,semiejes28.405/15.724. Receta C++ confirma patio/corredores y radios derivados. Se puede leer por invalidación,sin nuevas consultas por fotograma ni cambios de Engine. Verificar noise antes de reconstruir máscara visual.
+
+
+### Manglares: cubierta de patio visible
+
+[Máscara nativa QA](mangrove-native-yard-20261021/README.md) permite hojas entre edificios,corredores conservadores intactos. Cámara normal near1→1090,triángulos3648→63112. Mejora de volumen con bordes rectos ycontraste pendiente. Conservar candidata,medir coste yrefinar;V10 intacta.
+
+
+### Manglares: borde gradual de cubierta de patio
+
+[Seis parejas](mangrove-yard-edge-20261021/README.md) conservan instancias ytriángulos, suavizan borde fuera del corredor. Conservar candidata; contraste musgo/hojas ybenchmark pendientes. No integrada V10.
+
+
+### Manglares: pigmento de cubierta de patio
+
+[Seis parejas](mangrove-yard-pigment-20261021/README.md) acercan hojas al musgo sin cambios geométricos. Conservar candidata para benchmark completo;repetición yvalidación dinámica pendientes. No integrada V10.
+
+
+### Skyboxes incorporados a la dirección global
+
+[Primer pase QA](sky-depth-20261021/README.md):noche menos parda,día aún demasiado sutil. Trabajar nubes y horizonte;no basta aumentar saturación. [Benchmark de patio](mangrove-yard-cost-20261021/README.md) contaminado por carga externa,no decisión de coste.
+
+
+### Cielo diurno: separación de nubes
+
+[Seis parejas](sky-cloud-depth-20261021/README.md):azul más presente,nubes conservadas por heurística. Horizonte aún gris;auditor detecta diferencias también en mitad inferior,diagnosticar aislamiento antes de integrar. Pendientes seis biomas,crepúsculo yGPU.
+
+
+### Cielo: aislamiento verificado en seis vistas
+
+[Máscara negro/blanco](sky-visible-mask-20261021/README.md):0 cambios cromáticos fuera de píxeles que responden al cielo. Único píxel inferior748,626 también corresponde al fondo. Continuar revisión artística;no evidencia de alteración del terreno en estas vistas.
+
+
+### Cielo: tinte uniforme de horizonte no promovido
+
+[Seis parejas](sky-horizon-depth-20261021/README.md):menos gris pero nubes bajas pierden contraste. Mantener sky-cloud-depth como referencia;separar bruma ynubes. Noche exacta,sin benchmark ni integración.
+
+
+### Cielo: horizonte con protección de nubes
+
+[Seis parejas](sky-horizon-cloud-mask-20261021/README.md):preserva mejor nubes que tinte uniforme,mejora moderada. Conservar para revisar seis biomas ycrepúsculo antes de seguir afinando. Noche exacta,GPU pendiente.
+
+
+### 2026-10-21 — cielo en seis biomas
+72 capturas y 36 parejas publicadas en sky-six-biomes-20261021. Candidata de horizonte con protección de nubes: día menos gris y noche azul oscuro. Mejora moderada, conservada para seguir trabajando; no integración por defecto. Una pareja nocturna de Sabana difiere en un draw call y queda pendiente de repetición. Sin benchmark nuevo. Objetivo global pendiente.
+
+
+### Cielo: transición nocturna muestreada
+Quince parejas de Sabana en sky-twilight-20261021: cinco niveles de mezcla y tres cámaras. Cámaras, horas, triángulos y draw calls coinciden. Sin dominante extraña en revisión visual de pose 1. Se conserva candidata; pendiente vídeo continuo, amanecer y coste GPU. La discrepancia nocturna de un call del pase anterior no se reproduce; causa no determinada.
+
+
+### Cielo: secuencias de ciclo y coste pendiente
+96 capturas en sky-cycle-20261021, vídeos ensamblados de amanecer/anochecer con cámara fija. 48 parejas con cámaras/horas/triángulos iguales; una difiere en un draw call. Hojas revisadas sin dominante extraña; reproducción continua pendiente. Benchmark aplazado por contención GPU externa 80–88 %, documentada en sky-cost-20261021. Sin cifras nuevas ni integración por defecto.
+
+
+### Cielo: comandos de dibujo instrumentados
+24 parejas de amanecer en sky-draw-diagnostic-20261021 envían el mismo multiconjunto de comandos WebGL; la diferencia intermitente anterior no se reproduce y sigue sin causa identificada. GPU externa 78–93 % en segunda comprobación: coste pendiente. Continuar trabajo visual independiente, sin usar la contención como bloqueo global.
+
+
+### Desierto: deformación amplia no promovida
+Seis parejas en desert-ripple-warp-20261021. Rompe repetición pero estira las ondas en bandas peinadas; descartada esta intensidad por calidad visual, no por rendimiento. Misma cámara/hora/triángulos/calls. Sin benchmark nuevo. Próximo enfoque: limitar Jacobiano y transformar normales coherentemente, conservando calidez.
+
+
+### Desierto: deformación acotada, mejora insuficiente
+Seis parejas en desert-ripple-bounded-20261021. Corrige estiramiento excesivo y transforma gradiente; resultado visual demasiado próximo al original para promover. No descartado por rendimiento. Siguiente dirección: relieve mesoscópico/acumulaciones; no más amplitud UV. Objetivo global pendiente.
+
+
+### Desierto: relieve mesoscópico candidato
+Seis parejas en desert-meso-20261021: pendientes de material a dos escalas aportan volumen visible sin deformar las ondas pequeñas. Conservar candidata; ligera apariencia arrugada lejana pendiente de atenuación/movimiento. Mismos calls/triángulos, sin benchmark nuevo ni integración por defecto. Validar baja, streaming y coste antes de promover.
+
+
+### Desierto: relieve conservado en baja
+Seis parejas en desert-meso-low-20261021: mejora visible en laderas también sin sombras de edificios del perfil media; mismos calls/triángulos. Mantener candidata. Benchmark preparado pero no ejecutado por carga externa 23–76 % documentada en desert-meso-cost-20261021. Pendientes movimiento, atenuación lejana y coste.
+
+
+### Desierto: atenuación lejana preferida
+Seis parejas en desert-meso-filter-20261021 comparan candidata mesoscópica anterior con atenuación .25–1.2. Conserva volumen cercano y reduce arrugas lejanas; preferir para siguiente validación. Mismos calls/triángulos. No ahorro GPU demostrado: siguen calculándose ruido/gradientes. Movimiento y coste pendientes.
+
+
+### Desierto: candidata disponible mediante opción explícita
+Implementado sandMeso=1, condicionado a visualLab=global-lighting y sandRelief=1, desactivado por defecto. Seis parejas QA/opción nativa exactamente iguales en desert-meso-optin-20261021. Clave de shader propia, guardas verificadas. Mantener como experimental: coste/movimiento/streaming pendientes; main intacta.
+
+
+### Desierto: ida/vuelta de streaming
+En desert-meso-stream-20261021, sandMeso off/on conserva chunks y contadores tras viaje de 192 unidades. Noche retorna píxel exacto; día diferencias mínimas también en control, con origen 0→240→48. Sin salto visible en hoja diurna. No prueba de movimiento continuo ni fugas; costes pendientes.
+
+
+### Desierto: ABBA nativo contaminado durante la ejecución
+En desert-meso-native-cost-20261021, preflight libre pero otra prueba GPU reaparece durante ABBA (35–80 %). 720 queries y 720 muestras de cadencia con geometría/cámaras iguales; control diurno deriva 10.103→16.819 ms GPU. validity.json declara comparación de rendimiento inválida. No atribuir sobrecoste ni descartar candidata; coste fiable pendiente.
+
+
+### V11 y aprobación artística de Desierto
+El usuario aprueba expresamente el último relieve filtrado de Desierto para la versión final: preservar su apariencia durante optimización. V11 incorpora sandMeso=1: 36 capturas, 30 idénticas a V10, solo seis de Desierto cambian. Coste fiable pendiente; no fusión. Nueva prioridad solicitada: mejorar pantalla de carga interactiva en coherencia con el juego. PR #159 permanece draft.
+
+
+### Pantalla de carga: referencia y atmósfera
+loading-art-20261021 contiene cuatro capturas del LoadingDiorama real, día/noche base/candidata. Mejora moderada del fondo; pendiente contacto del maíz, overlay e interacción. Sin promoción ni afirmación de rendimiento.
+
+
+### Jardín de carga según los nuevos mockups
+loading-contact-20261021 compara atmósfera, contacto y composición garden. Interfaz real, día/noche, clic para plantar y callback de cancelar verificados. Noche despejada y montaña diurna suavizada; contacto sutil. 6 draws en todas; garden reduce 48 triángulos decorativos, sin afirmación de rendimiento. Pendientes sombras direccionales, coste y encuadre vertical (quinta planta cortada). Solo QA.
+
+
+### Jardín de carga: sombras nativas y aislamiento
+loading-shadow-isolated-20261021 añade sombras reales del maíz y corrige el encuadre vertical para cinco plantas. Hallazgo: el hook de proxies de partida contaminaba el primer shadow pass (672812 triángulos); retirada solo QA, deja 29882 con viento y 7 draws. Estático GPU ~2.9 ms sin / 4.6–4.8 con; viento inestable, sin delta fiable. Conservar candidata visual, optimizar muestreo y aislar propietarios antes de integrar. No cambio de producción.
+
+
+### Carga: filtro de cuatro muestras no promovido
+loading-pcf-20261021 compara ambas rutas originales (suelo transparente Three PCFSoft, maíz PCF nativo) con cuatro consultas. Pierde suavidad en suelo y no muestra ahorro en ABAB. Conservar sombras originales; no descartar la mejora artística. Medición parcial con otras cargas, sin delta causal exacto. Solo QA.
+
+
+### Carga: capacidad completa y cámara
+32 pares en loading-capacity-fit-v2-20261021: 18 plantas, cuatro etapas, día/noche y dos formatos con sombras on/off. La cámara fija cortaba 1/4 raíces; fit V2 deja cero, conserva geometría y desplaza niebla para evitar ocultación. Pendientes transición suave, rotación, cuatro plantas y texto al llenar capacidad. Candidata QA, no integración.
+
+
+### Carga: transición al plantar y extremos de giro
+loading-framing-motion-20261021 añade distancia interpolada .35 s, respuesta inmediata con movimiento reducido y vídeo offline de seis segundos (4→11→18 plantas). 180 frames y 12 poses día/noche/formato/ángulo: cero raíces fuera y errores. No benchmark ni carga real. Conserva sombras originales; pendiente integrar ciclo de vida y restauración a partida.
+
+
+### Rayo de carga oblicuo e iluminación material
+Solicitud del usuario: más presencia/oblicuidad y que alumbre las plantas. loading-beam-light-20261022 conecta huella de bruma con contribución de luz según normal/albedo en maíz y suelo. Opción nativa loadingBeam=oblique, desactivada por defecto, cuatro capturas píxel exacto con QA. Sin nuevas pasadas/texturas; coste por fragmento pendiente. Es luz artística proyectada, no volumen físico ni nuevas sombras del rayo.
+
+
+### 2026-10-22 - Fixed loading zoom takes precedence
+
+User rejects camera retreat when adding plants. Do not integrate capacity-fit or smooth-framing adapters. Parallel-ray and island-haze QA retains original fixed camera and verifies position/FOV/zoom from 4 to 18 plants. See `loading-parallel-fixed-20261022/README.md`. Capacity portrait clipping must be addressed through composition/planting bounds, never automatic zoom.
+
+
+### 2026-10-22 - Fixed-view planting-region candidate
+
+`loading-plant-region-20261022` tests a presentation-only validity envelope for new plants instead of camera retreat. The deterministic gesture sequence fits eight mature maize plants, with twelve day/night/orbit/aspect screenshots and unchanged zoom/FOV. Original four plants and models preserved. Region-full UI, broader viewport validation and integration remain pending; no performance claim from drawing fewer plants.
+
+
+### 2026-10-22 - Diffuse light and reference comparison
+
+User requests continued iteration against original day/night loading mockups, fixed zoom, diffuse overlapping rays and stronger contrast. `loading-mockup-comparison-20261022` includes original references, three-way sheets and explicit remaining differences. `loading-diffuse-contrast-20261022` preserves native shadows in the added light and aligns the directional source with the beam; six projected direction checks pass. Day ground contrast and night light isolation improve. Moving-camera shadow-cache cost and integration remain pending. No claim of final mockup equivalence.
+
+
+### 2026-10-22 - Central mesa composition
+
+`loading-central-mesa-20261022` concentrates the existing atlas into a softer central mesa matching the day reference direction. Fixed camera, maize and aligned beam shadows preserved. Height-9 trial rejected as oversized; height 7 with lower base retained. Eight captures pass, both night outputs pixel-identical to prior diffuse-light candidate, unchanged draws/triangles. Day sky colour and full integration remain pending.
+
+
+### 2026-10-22 - Day atmosphere and fixed-view contrast
+
+`loading-day-air-20261022` reduces only daytime mist-vignette attenuation and warms the outer haze. Day reference/prior/candidate sheet retained; eight captures pass, both night outputs pixel-identical. Original maize, fixed camera, central mesa and aligned beam shadows preserved. Next priority: consolidate these QA candidates into a controlled native loading option and measure animated cost rather than indefinitely accumulating isolated visual fixtures.
+
+
+### 2026-10-22 - Native shadow ownership prerequisite
+
+World asset-shadow proxies are now scoped to WorldScene. Loading QA no longer detaches the world hook. 31 relevant tests pass, eight images match the prior day-air candidate exactly, and disposing the garden restores real world rendering with 19 asset-shadow draws and no GL errors. See `loading-shadow-owned-20261022`. Full art-direction runtime integration and moving-light benchmark remain pending.
+
+
+### 2026-10-22 - Native diffuse light option
+
+`loadingBeam=diffuse` now owns its analytic lighting/atmosphere and aligned native shadows through the diorama lifecycle. Four controlled images match QA exactly; real menu completion and cancellation pass. 24 existing loading tests plus two ownership/option tests pass. Native central mesa/contact/plant-region composition and animated-cost measurements remain pending; do not present the full QA composition as already integrated.
+
+
+### 2026-10-22 - Native central mesa
+
+The diffuse option now owns central mesa layout and atmospheric feathering in LoadingDiorama. Four captures match the previous QA backdrop exactly without backdrop routing; actual completion and cancel flow pass. Contact/planting-region and sky parity remain separate pending integration; animated cost still unmeasured. See `loading-native-mesa-20261022`.
+
+
+### 2026-10-22 - Native moving-light shadow cost attribution
+
+Two 768-query series on Intel UHD confirm 6 draws/16002 triangles with cached shadows and 7/29882 with wind or beam-aligned camera movement. Same-pose cache/refresh day/night images match exactly. GPU repeat drift remains near 2x even after RAF-paced collection, so timing deltas are inconclusive; do not claim FPS gain or discard the art. CPU submission around 0.5 ms in this isolated fixture. See `loading-native-motion-paced-20261022`. Stronger timing control needed before a release budget.
+
+
+## Native loading root contact (2026-10-22)
+Integrated event-updated root contact into loadingBeam=diffuse. Four day/night landscape/portrait captures are pixel-identical to the previous QA contact version; 6 calls, 16002 triangles, no GL errors. See loading-native-contact-20261022/README.md. Original default unchanged; sky/mist QA parity and planting-region integration remain pending.
+
+
+## Native fixed-view loading planting (2026-10-22)
+Diffuse option now restricts additional plants to the tested fixed-view region through a gesture-only predicate. Twelve captures, eight mature plants, fixed zoom/FOV/distance and no GL errors. See loading-native-region-20261022. Initial portrait leaf edges, other aspect ratios and full-region UI remain unresolved; no full quality claim.
+
+
+## Native loading haze and renewed mockup comparison (2026-10-22)
+Diffuse atmosphere now owns the selected horizon opacity, with four pixel-identical captures and no added draw. See loading-native-haze-20261022 for day/night side-by-sides and outstanding artistic differences: night blue/stars/peripheral ground, day soil warmth, group composition and UI. Global sky grading remains QA-only.
+
+
+## Loading night depth (2026-10-22)
+Selected blue atmosphere and stronger soft stars with aspect-correct cells. Four native captures match QA trial; daytime maximum difference is one 8-bit channel level. See loading-native-night-depth-20261022/night-three-way.webp. Six draws, no additional textures; GPU delta unproven.
+
+
+## Loading soil tone (2026-10-22)
+Selected warmer daytime earth and restrained textured blue night rim. Four native captures match QA trial; existing draws/shadows preserved. See loading-native-soil-tone-20261022 for day/night mockup-before-after comparisons. Global biome materials unchanged; overall quality goal remains unproven.
+
+
+## Native loading sky owner (2026-10-22)
+Removed the final graphical QA dependency from loading captures: local graded sky materials borrow textures and geometry without changing the gameplay sky. Four captures match the QA-graded predecessor exactly. See loading-native-sky-20261022. Local material/program overhead remains unbenchmarked; no extra texture or draw.
+
+
+## Loading planting feedback (2026-10-22)
+Rejected soil gestures now provide localized feedback, cleared by successful planting. Real mouse gesture and four captures verified; no global-full claim or added frame scan. See loading-plant-feedback-20261022.
+
+
+## Fresh global sky pairs over V11 (2026-10-22)
+36 fresh campaign captures / 18 pairs for Sabana, Gran Rio and Gran Canon, matching cameras/time/draws/triangles. Sky benefit is localized to horizon-visible views; it does not resolve ground relief. See global-sky-paired-20261022. No old ground-shadow-fill process active; selected fill already integrated. V11 coverage adapters and other three biome sky checks remain pending.
+
+
+## Canyon sand scale trial (2026-10-22)
+Twelve real captures compare 30 versus 12 world-unit sand period, all paired counters/cameras equal. Finer scale weakens relief at game distance; do not promote alone. Artistic rejection, no performance claim. See canyon-sand-scale-20261022. Next direction: retain mesoscopic structure with fine detail and more natural material shore transition, without authoritative geometry changes.
+
+
+## Canyon two-scale normal trial (2026-10-22)
+Twelve paired captures retain broad sand normals plus rotated fine detail. Improvement too subtle at gameplay distance; no integration, no performance rejection. Adds one textureGrad. See canyon-sand-layered-20261022. Stop normal-scale refinement and investigate the visibly uniform shore transition using existing presentation masks.
+
+
+## Canyon shore feasibility (2026-10-22)
+Existing canyon mask has no shore data and water has no depth input. QA fills unused B at chunk creation from waterInfo: twelve captures confirm location, but dark strip reads as trench. Do not integrate; scalar dampening alone fails artistic goal. Added 1225 queries/mask unbenchmarked. See canyon-shore-20261022.
+
+
+## Canyon shallow-water edge candidate (2026-10-22)
+Twelve captures test two lateral-bank floats per existing water vertex, producing turquoise shallow edges before native lighting. Modest improvement retained for continuity/cost testing, not integrated. No extra geometry/draw/sample; 8 bytes per water vertex and creation queries. Far horizon water remains unchanged. See canyon-water-depth-20261022.
+
+
+## Canyon bank streaming audit (2026-10-22)
+192-unit out/back: 352 coincident boundary comparisons, zero attribute error; 81744 resident bytes for 10218 vertices restored on return. Night exact, day drift also in control. No GL errors, paired geometry/counters equal. Near/far water and GPU timing still pending. See canyon-water-stream-20261022.
+
+
+## Canyon horizon bank prototype (2026-10-22)
+Same shallow-bank data now covers QA horizon water (+36864 bytes). Two 12-image fixtures pass counters/errors. Long river view exposes pre-existing wall/shore LOD discontinuities; do not claim seamless horizon or integrate yet. See canyon-water-horizon-view-20261022. Next inspect horizon transition rather than masking it with colour.
+
+
+## Canyon horizon receiveShadow isolation (2026-10-22)
+Twelve real captures: five of six pairs exact, remaining max channel delta 1/255. No improvement; do not integrate flag as seam fix. AfricanToon ground visibility bypasses receiveShadow (unlike objects). Coarse horizon normals/geometry remain next diagnostic; no performance claim. See canyon-horizon-shadow-receive-20261022.
+
+
+## Canyon horizon normal isolation (2026-10-22)
+Twelve fresh real captures: area-weighted coincident-vertex normals soften distant diagonal bright facets without changing positions or triangle counts. Sawtooth bank persists. Retain QA candidate; construction cost and resident-edge continuity unmeasured, no FPS claim. See canyon-horizon-normals-20261022.
+
+
+## Canyon normal preparation cost (2026-10-22)
+Live 103212-vertex horizon, alternating string/numeric implementation: warmed median 29.5 vs 10.5 ms, exact float32 normal equivalence and unchanged positions/colours. Retain numeric QA candidate; move preparation to existing worker before integration. Not an FPS/GPU claim. See canyon-horizon-normal-cost-20261022.
+
+
+## Native opt-in horizon normal worker (2026-10-22)
+`visualLab=global-lighting&canyonNormals=smooth` prepares existing normal slots in horizon workers. Twelve captures exact versus main-thread candidate/control; 17 targeted tests pass. Worker preparation 10-33.8 ms, not total frame latency. Continuous camera validation pending; default unchanged. See canyon-horizon-worker-normals-20261022.
+
+
+## Canyon continuous camera A/B/A/B (2026-10-22)
+180-frame/192-unit day path: CPU medians 4.7-5.0 ms; normal option raises worker median latency from 92.6/94.4 to 121.5/109.4 ms. 20 and 16 paired frames differ in residency; do not claim FPS improvement. Settled geometry equal and repeat images exact. Retain opt-in visual improvement, reduce delivery cost; night motion pending. See canyon-horizon-motion-20261022.
+
+
+## Reusable horizon normal scratch (2026-10-22)
+Native opt-in now reuses 3.45 MiB worker scratch. A/B/A/B normal median 13.2 -> 4.5-4.6 ms; delivery 112-116 -> 103-107 ms. All endpoint images identical, 17 tests pass. No frame improvement claim (B2 max worse; residency differs). Stop micro-optimizing and return to visible bank/LOD continuity. See canyon-horizon-scratch-motion-20261022.
+
+
+## Canyon fine-grid visual reference (2026-10-22)
+Valid 12-image 4x8 vs2x2 horizon comparison: distant wall facets improve, bank steps/join remain. Horizon103212 ->802656 vertices (+233148 triangles/frame), calls unchanged. Retain artistic reference, pursue localized conforming refinement, not global density increase. Initial failed color-batch attempt replaced and guard added. See canyon-horizon-grid-20261022.
+
+
+## Adaptive Canyon horizon candidate (2026-10-22)
+River-corridor2x2 with conforming4x8 exterior: six day/night candidate images exact versus full fine reference, ~72% fewer horizon vertices (227-229k vs803k). Three-origin topology audit passes; no spatial state mutation. QA builder generation remains slow (Node559-749 ms), no GPU/FPS claim. Retain art/candidate; validate other views and optimize generation before integration. See canyon-horizon-adaptive-20261022.
+
+
+## Adaptive builder packing optimization (2026-10-22)
+Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-508 ->160-241 ms. All24 buffer comparisons exact; six new game captures pixel-identical. QA only; no FPS/heap claim, moving latency and other views pending. See canyon-adaptive-build-cost-20261022 and canyon-horizon-adaptive-fast-20261022.
+
+
+## Adaptive horizon second-seed angles (2026-10-22)
+24 new captures at seed918271. Close views exact but weak horizon coverage; wide views show small outer lighting/contour differences, no obvious still-image cracks. Retain candidate, do not generalize exact pixel claims. Broad plateau material blotches shared with full-fine reference need separate material work. See canyon-adaptive-angles-20261022 and canyon-adaptive-wide-20261022.
+
+
+## Canyon plateau material contrast (2026-10-22)
+24 real captures isolate footprint-dependent sand deposit blending on identical adaptive geometry. Full distance averaging too flat: reject artistically. Retain35%-variation soft candidate, pending near/gameplay and motion checks. Same texture samples/draws/triangles, no GPU/FPS claim. See canyon-sand-distance-blend-20261022 and canyon-sand-soft-blend-20261022.
+
+
+## Soft sand near/gameplay check (2026-10-22)
+12 real captures at seed918271: near detail/shadows retained, six matched draw/triangle pairs; distant/grazing regions change. Keep QA candidate, temporal fade and other quality profiles pending before integration. See canyon-sand-soft-near-20261022.
+
+
+## Soft sand camera playback (2026-10-22)
+240 real frames,120 matched day/night pairs; camera rises near-to-wide. Deliver MP4 comparisons and keyframes; near detail retained, distant contrast attenuates. Settled pose capture encoded30fps, NOT realtime benchmark or full temporal certification. Candidate ready for opt-in integration review; default unchanged. See canyon-sand-soft-motion-20261022.
+
+
+## Native soft Canyon sand option (2026-10-22)
+`visualLab=global-lighting&canyonSand=full&canyonSandBlend=soft` now native, default unchanged. 12 fresh images:10 exact vs QA,2 max1/255 delta;3 targeted tests pass. Geometry/other adapters still QA, quality/GPU validation pending. See canyon-sand-soft-native-20261022.
+
+
+## 2026-10-22: remaining sky comparisons
+
+Completed 36 real captures / 18 matched day-night pairs for Mangroves, Volcanoes and Desert in global-sky-remaining-20261022. All paired cameras, times, draws and triangles match; no recorded errors. Approved Desert mesorelief preserved. Cooler sky grading is retained as a candidate, but low horizons remain too uniform and elevated views do not validate sky detail. Combined with global-sky-paired-20261022, all six biomes now have this limited static comparison. No timing or global completion claim; native sky integration and richer composition remain pending.
+
+
+## 2026-10-22: cloud latitude experiments
+
+Three Sabana low-camera trials (36 real day/night captures) isolate panorama latitude. Large negative and positive offsets lose cloud detail: rejected. Mild -.025 offset retains clouds and improves presence near treetops; keep QA candidate in sky-cloud-latitude-subtle-20261022. A/B/A/B Intel UHD evidence in sky-cloud-latitude-cost-20261022: matched counters,720 valid GPU samples; baseline drift prevents isolated cost conclusion. Reflection panorama remains unchanged, requiring consistency work before integration. No production shader changes or completion claim. No live ground-shadow-fill experiment process found.
+
+
+## 2026-10-22: sky/reflection directional consistency
+
+Gran Rio:18 real images compare sky-only latitude to the same day remap in environment4 and endpoint guards. Reflected clouds now follow the revised sky direction; daytime/twilight visible change. Nine same-page endpoint ON/OFF/ON frames yield six pixel-exact comparisons. See sky-reflection-latitude-20261022 and sky-reflection-endpoints-20261022. Intel UHD A/B/A/B in sky-reflection-cost-20261022:720 valid GPU samples,matched counters; day means13.391/13.387/13.297/13.455ms,RAF16.62-16.63ms. Retain QA candidate; no broad FPS claim. Different display/radiance color curves remain unresolved, so native integration still pending.
+
+
+## 2026-10-22: precalculated sky/environment palette
+
+18 real Gran Rio day/twilight/night captures in sky-environment-palette-20261022. Shared artistic palette applied to reduced environment radiance once in sky worker; turquoise day water retained,night reflections cooler. Nine matched camera/counter pairs,no errors. Cached row latitude is byte-identical to uncached on both real HDRs. Node build overhead about30ms per texture,not per frame. A/B/A/B Intel UHD in sky-environment-palette-cost-20261022:720 valid GPU samples;day B +.232/+.852ms,night slightly faster,cadence16.62-16.63ms. No zero-cost/FPS claim. Retain moderate consistency candidate; next broader settlement/biome review and shared native sky integration. Default/main untouched.
+
+
+## 2026-10-22: six-biome palette decision and native atmospheric sky
+
+72 real paired images across all6 biomes in sky-palette-six-biomes-20261022. Full environment palette preserved as QA but NOT adopted globally: Canyon water becomes too blue/less softly turquoise,matte-surface benefit small. Keep authored environment palette. Integrate selected cloud-protected sky grading plus shared day-reflection latitude via visualLab=global-lighting&skyAtmosphere=clouds. 36 fresh native captures all pixel-exact to retained QA baseline,18 targeted tests pass;see sky-atmosphere-native-20261022. Original default and main untouched. Earlier shader performance evidence retained; broader motion/quality/loading visual validation and remaining terrain/vegetation adapter integration are pending.
+
+
+### 2026-10-22: native Savanna continuous coverage
+Scene-owned optional grassCoverage=continuous in global-lighting. Retained pigment/normal/wind LOD, event-driven occupancy, resident renderer masks, no Engine queries. Six QA/native day/night camera pairs pixel-exact; equal calls/triangles/instances; 1,207,752 attribute/index bytes; zero overflow. Six lifecycle/occupancy tests pass. No new FPS claim. See continuous-grass-native-20261022/README.md. Movement, quality, River integration and global quality remain pending.
+
+
+### 2026-10-22: coverage projection and live-quality fixes
+Native Savanna coverage now reselects on projection changes and accepts runtime quality. Settled 96-unit outbound/return path: 25 coverage/resident chunks, no orphans or overflow, day/night. Media/baja/very-low/media restores identical instance/counter totals; low retains continuous light modules, very-low uses terrain fallback. FOV automatic/forced buffers and final images exact. Six targeted tests pass. See continuous-grass-stream-quality-20261022; continuous motion timing, rapid streaming and full biome completion remain pending.
+
+
+### 2026-10-22: native River coverage and moving-camera cost
+Shared native opt-in now includes Gran Rio with its retained pigment/night ambient/wear taper/.85 wind padding and resident water triangles. Twelve QA/native pairs across Savanna/River pixel-exact; seven tests pass including adjacent water-chunk invalidation. Clean moving-camera/wind A/B/A/B Intel UHD:720 valid GPU samples, identical frame geometry/cameras; native GPU deltas -.173 to +.223ms, CPU within .026ms, no consistent cost/speedup. Preserve exploratory noisy run separately. See continuous-grass-river-native-20261022. Keep opt-in; River rapid streaming, full preset and other-biome integration remain pending.
+
+
+### 2026-10-22: native River yard mask
+riverYards=islands integrates retained visual wear islands in BiomeGround. Existing renderer revision/snapshot source injected, cached until terrain revision changes; no QA globals or Engine internals. Six native/QA day-night pose pairs pixel-exact, seven targeted tests pass, snapshot test one read across25 same-revision accesses. No FPS claim; real newly-founded-village event validation pending. Retained River composition now runs with native soil/coverage/yards/sky options. See river-yards-native-20261022.
+
+
+### 2026-10-22: native Canyon warm shadow floor
+canyonFloor=warm integrates retained floor palette for mapped resident/horizon materials, no QA lifecycle wrappers. Twelve near/wide day-night pairs:7 pixel-exact,5 max1/255 sparse differences; equal geometry/counters,4 tests pass. Intel UHD moving-camera ABAB720 valid GPU queries:day deltas-.303/+.024ms,night+.156/+.395ms;cadence17.55-17.57ms. Retain opt-in with night overhead documented; no optimization claim. Wide plateau mottling still present in baseline; soft sand/adaptive horizon remain to combine and validate. See canyon-warm-floor-native-20261022.
+
+
+### 2026-10-22: preferred combined native Canyon material
+36 real captures compare warm base/soft sand/soft+smooth normals,12 matched three-way poses day-night; same geometry/counters, no errors. Retain combined recipe: less plateau mottling, improved slope volume, near ripples/strata intact. Re-read original mockup; shoreline/water/detail remain incomplete. Near moving ABAB failed geometry equivalence on12 frames due horizon timing; preserve invalid data. Fixed-resident repeat passes720GPUqueries,day+.18ms,night+.10/-.17ms;wide passes720queries but second combined day+1.61ms. No free-cost claim. Worker normal builds3-15.7ms observed,3.62MB scratch. See canyon-native-composition-20261022/preferred-recipe.json and README. Streaming and global quality remain pending.
+
+
+### 2026-10-22: native two-scale Mangrove moss
+mangroveMoss=layered integrates retained height-blended rotated moss maps before separate soil lighting. Six QA/native pairs pixel-exact,4 tests pass. Intel UHD moving ABAB720validGPUqueries, exact per-frame geometry/cameras. GPUday-.135/-.311ms,night+.058/+.726ms;CPU+.128 to+.354ms. Preserve art,opt-in;no optimization claim, investigate alongside leaf-coverage integration. Leaf adapter,low/portrait/streaming/global completion remain pending. See mangrove-moss-native-20261022.
+
+
+### 2026-10-22: native Mangrove leaf coverage
+Shared continuous coverage now owns retained Blender Mangrove leaves, original geometry/pigment/wind/LOD/wear taper; distinct density and fixed leaf size. Six QA/native pairs pixel-exact, equal counters and1,204,048bufferbytes,8tests pass. Moving ABAB720validGPUqueries exact per-frame geometry; timings vary both signs,baseline night drift2.116ms;no speedup claim. Retain native opt-in. Native moss/substrate/leaf/sky composition available;long streaming,quality,portrait,event gameplay and overall art target pending. See mangrove-leaf-native-20261022.
+
+
+### 2026-10-22: six-biome native composition baseline and art gaps
+36 real day/night frames, six individually reviewed art-reference sheets; no QA material/coverage adapters, no captured GL/console errors. Native integration is established, artistic completion is not: River coverage too uniform, Mangrove settlement dominated by moss, Canyon water/banks too abrupt. Preserve approved Desert relief. Prioritize retained Canyon bank-depth evaluation then broad-scale grass structure. Counters only, no new timing claim; full-recipe movement/profiles/events remain pending. See six-biome-native-review-20261022/README.md.
+
+
+### 2026-10-22: Canyon bank transition revisited on native composition
+18 fresh frames compare baseline/retained depth/wider world-modulated transition, six exact geometry/camera pairs per candidate. Original tint too subtle; wider variant visibly separates shallow/center but remains a clean band, not natural shoreline detail. Both retained QA, not adopted. No new draws/triangles/textures, no fresh timing claim; structured variant adds two fragment sine evaluations. Next: coherent land/water boundary detail, then movement/seams and timings. See canyon-bank-combined-review-20261022/README.md.
+
+
+### 2026-10-22: Canyon sediment-edge QA and cost
+Six new paired day/night frames: two-scale world noise breaks clean bank tint; hard land/water contour remains, QA retained not adopted. Moving resident A/B/A/B720 valid GPU queries and exact frame geometry. GPUday10.894/9.617 then9.769/9.629ms;night10.753/10.745 then10.812/10.732ms. Baseline day drift1.125ms: no speedup claim. CPU/cadence separate; no streaming/preparation measurement. See canyon-bank-combined-review-20261022 and canyon-bank-sediment-cost-20261022.
+
+
+### 2026-10-22: reject height-only Canyon bank humidity
+Twelve new day/night frames, exact geometry/cameras versus sediment. Broad .04-.52 height humidity darkens the low shelf too widely; narrow .015-.16 avoids it but adds little visible structure. Terrain source confirms shelf starts only .13 above water. Neither integrated; no timing claim for rejected variants. Preserve sediment QA; next priority River broad-scale continuous coverage rather than further marginal bank color changes. See canyon-bank-combined-review-20261022.
+
+
+### 2026-10-22: River correlated coverage study
+18 real frames: baseline/correlated height/correlated height+pigment, same instance budget and exclusions. Height-only reduces volume; meadow retains more but fine texture still dominates, neither native integration justified. Six meadow pairs exact counters/camera; ABAB720 valid GPU queries, day deltas+.304/-.285ms, CPUday+.51/+.55ms, night variable. No zero-cost/speedup claim, cached build cost unmeasured. Next investigate module/material scale and far transition rather than density or minor random tuning. See river-coverage-structure-20261022.
+
+
+### 2026-10-22: River layer isolation and underlay candidate
+24 fresh day/night frames compare baseline/terrain-only/blade pigment mip5/ground underlay filtering. Terrain-only retains fine mottling; blade filtering contributes little. Ground underlay8x color footprint under mask/distance eligibility makes standing blades clearer; retained QA pending motion/cost/actual coverage eligibility. Six underlay pairs exact camera/counters. Initial auxiliary-sample patch failed GLSL scope; corrected to materialCover410 assignment, successful frames only. No fresh timing claim; main/native unchanged. See river-coverage-pigment-scale-20261022.
+
+
+### 2026-10-22: River underlay activation and cost
+ABAB720 valid GPU queries, same per-frame geometry. Day deltas-.150/-.481ms,night+.134/+.052ms versus baseline night drift.704ms;no speedup/zero-cost claim. Added shared QA activation/range from coverage state:18 real frames,6 off pairs exact original terrain and6 on pairs exact retained candidate. Media visibility only verified; live quality/dispose, motion video, exclusions and streaming pending. See river-underlay-activation-20261022.
+
+
+### 2026-10-22: River underlay lifecycle and motion evidence
+12 live coverage-quality/visibility states pass expected activation/range; restored frames pixel-exact and dispose clears filter. Overall renderer remains media. Camera/wind videos day/night:96 paired frames exact geometry/camera,0overflow/errors, fixed residents not streaming. Sampled contact sheets inspected, full temporal artifact absence not claimed. Exclusion eligibility remains next native-integration gate. See river-underlay-lifecycle-20261022 and river-underlay-motion-20261022.
+
+
+### 2026-10-22: selected-anchor River underlay mask
+QA R8 masks now derive from actual capacity-limited draw anchors after renderer exclusions;12 realframes,6 pairs exact counters/camera,retained blade readability.25masks235225R8bytes+equalCPU scratch. Naive127updates294.3ms cumulative CPU,97uploads912673bytes;not frametime benchmark, optimize cached tile raster before adoption. Unit probe passes ownership/capacity/clear/upload suppression/eviction/dispose. Exclusion influence approximate, temporal/gameplay validation pending. See river-underlay-selected-mask-20261022.
+
+
+### 2026-10-22: cached grass-mask footprints
+30 deterministic mask/upload cases exact;6 real reference/cached pairs pixel-exact. ABAB720validqueries equalgeometry:CPUrender-.264 to-.522ms in4pairs,GPU signs vary,RAF no consistent improvement. Coldcapture cumulative mask time250.2/288.8ms: no cold-build benefit,JS cachememory additional. Retain modest CPU improvement QA;next incremental mask updates,not native adoption. See river-underlay-mask-cache-20261022.
+
+
+### 2026-10-22: reject Set-based incremental mask optimization
+30 deterministic byte/upload cases and6 real image pairs exact.102rebuilt/2963skipped chunkupdates does not yield frame benefit:ABAB720validGPUqueries,CPUdelta-.04/+.808ms day,-.24/+1.130night,interval inconsistent. Keep prior footprint cache and visual improvement; reject this machinery as preferred. Next persistent accepted-tile eligibility with explicit changed-semantics/overflow validation. See river-underlay-mask-incremental-20261022.
+
+
+### 2026-10-22: persistent accepted-tile underlay eligibility
+5/6 real pairs pixel-exact,last1 redchannel1/255;equalgeometry. Changed semantics fromselecteddrawmask,overflow disablesfilter. Synthetic invalidation/replacement/dispose checks pass. ABAB720validGPUqueries CPUrender improves1.233-2.303ms,GPU similar,interval3better1worse:no stableFPSclaim. Captureuploads26vs92,butcold/invalidation wrapper309msvs240ms remainscostly. Preferred QA,nextrealoccupancy/streaming/quality/overflowrecovery before native. See river-underlay-mask-persistent-20261022.
+
+
+### Persistent River underlay: settled streaming probe
+
+See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 96-unit round trip: 25 masks/25 resident chunks, no orphan ownership or GL errors, 10 chunks replaced at far stop. Return geometry counts exact; night pixels exact, day has small unresolved differences (10438 pixels, max 39/255). Not full visual parity, occupancy validation, or a timing benchmark. Keep candidate QA-only pending control comparison.
+
+
+### River underlay: repeat daytime streaming
+
+`river-underlay-mask-persistent-stream-warm-20261022` removes night/cache-warmth confounding: both control and candidate reproduce cold drift on first trip, then return pixel-exact with identical mask hashes on a second daytime trip. No stale ownership/GL errors; geometry counts exact. This is settled single-seed evidence, not fast-streaming or occupancy validation. Proceed to gameplay occupancy checks; candidate remains QA-only.
+
+
+### Persistent River underlay: actual crop event
+
+`river-underlay-mask-persistent-occupancy-20261022` exercises normal center placement and maize planting, without manual coverage invalidation. CropPlaced sets dirty, normal sync consumes it; 97 nearby anchors become zero and mask center is zero. Four inspected real frames, no GL errors or overflow. Night frames are post-placement only, not a separate planting test. Other occupancy events and quality/overflow recovery remain pending; no timing claim.
+
+
+### Persistent River underlay: quality/capacity recovery
+
+`river-underlay-mask-persistent-quality-20261022`: 16 frames, six restored RGB frames pixel-exact, activation/ranges correct, forced overflow disables filter, no GL errors. Two-render settling leaves first-frame recovery ordering unproven; helper disables overflow immediately but reactivation currently reads prior overflow. Resolve before native integration.
+
+
+### Persistent River underlay: same-render recovery fixed
+
+The helper now sets activation from current selection state, resolving previous-overflow lag. `river-underlay-mask-persistent-first-frame-20261022` captures ONE render after transitions: six restored RGB frames exact, expected activation/ranges, no GL errors, overflow recovery passes helper regression too. Candidate still QA-only; native integration/parity and broader art review remain.
+
+
+### Native opt-in River underlay
+
+`riverUnderlay=persistent` now enables the retained underlay with River soil/global lighting. Native modules own masks and same-selection activation; defaults unchanged. `river-underlay-native-parity-20261022`: six native/QA pairs RGB pixel-exact with exact draw/triangle counts and no GL errors. Native helper regression added. Browser native lifecycle and broader art review remain pending; previous QA benchmark is not a fresh native performance measurement.
+
+
+### Native River underlay lifecycle verified
+
+See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using native code only. Repeated daytime streaming exact; actual planting removes 97 anchors and clears mask; six quality/capacity/visibility restoration frames exact on first render. No GL errors or stale ownership. Cold first-trip drift persists as documented. Next native ABAB cost, then shared art recipe/review; not global completion.
+
+
+### Native River underlay cost decision
+
+`river-underlay-native-cost-20261022`: ABAB Intel UHD, 720 valid GPU samples, exact per-frame geometry/camera, no GL errors. Mixed CPU/GPU/interval differences; baseline drifts >.9 ms GPU, so no speedup claim. Second night B costs +.413 ms GPU/+ .676 ms interval. RETAIN opt-in for visible underlay improvement; not zero-cost or stable FPS gain. Resume broader artistic work after this measured native integration.
+
+
+### Mangrove representative bank review
+
+`mangrove-bank-native-review-20261022` adds six native day/night frames and original-reference side-by-side. Individual inspection identifies hard uniform green/blue shore boundary as dominant gap; leafy bank groups already present. Next prioritize existing-surface shallow/wet transition, not indiscriminate density. Geometry/layout preserved; counters only, no new timing claim.
+
+
+### Mangrove shallow band trial: not selected
+
+`mangrove-bank-shallow-review-20261022`: 12 real frames/6 exact geometry-camera pairs. Existing shore distance sampled to one float per water vertex; no added geometry/draws. Day/night inspection finds a uniform dark halo, not reference-like sediment/roots transition. Reject this form artistically, preserve evidence; no timing claim. Next localized irregular transition rather than global dark bank strip.
+
+
+### Mangrove irregular sediment candidate
+
+`mangrove-bank-sediment-review-20261022`: 12 real frames, six matched camera/time/geometry pairs. World-space variable sediment reduces continuous dark halo but improvement remains modest; hard green land edge persists. Retain QA intermediate, next coherent land-side wet substrate; no native adoption or timing claim.
+
+
+### Mangrove land/water substrate candidate
+
+`mangrove-bank-wetland-review-20261022`: 12 real frames, six exact geometry pairs. Existing soil exposed near shore via R8 distance mask + existing patch noise; visibly breaks green edge into brown pockets, night readable, contours still smooth. Retain QA candidate. Temporary texture ownership currently whole-scene only; fix chunk lifetime before streaming/benchmark/native adoption.
+
+
+### Mangrove shore-mask ownership corrected
+
+`mangrove-bank-owned-review-20261022`: QA shares existing ground material owner counter; shore texture released with final owner and removed from whole-scene registry. In-browser real-class controlled-resource test passes normal and scene-first disposal exactly once. Six real RGB captures exact to prior candidate, no errors. Live streaming and benchmark still pending; no native adoption.
+
+
+### Mangrove combined shore ABAB cost
+
+`mangrove-bank-wetland-cost-20261022`: Intel UHD 720 valid GPU samples, exact camera/geometry, no errors. Candidate adds .475-1.136 ms GPU across four pairs (range .475 to 1.136); CPU/cadence mixed. Retain visual result and isolate shader cost before native adoption; procedural water noise is a hypothesis, not proven bottleneck. No FPS gain or streaming-cost claim.
+
+
+### Mangrove sediment gating
+
+Skip water noise outside its maximum 3.5-unit shore influence, keeping derivatives outside branch. Six RGB pairs exact; no added memory. `mangrove-bank-gated-cost-20261022` ABAB720 GPU samples: three pairs improve .380-.689 ms, first day regresses .143ms; CPU mixed. Retain preferred QA optimization, not guaranteed FPS gain. Live streaming/continuity remains before integration.
+
+
+### Mangrove shore live streaming ownership
+
+`mangrove-bank-stream-20261022`: real 96-unit round trips, 25 shore masks live at every stop, each step creates/releases five, registry stays50 including ground masks. No accumulating shore textures in this path, no GL errors. Geometry return exact; night RGB exact, day differs and remains unisolated. Settled test only, not fast streaming/full parity.
+
+
+### Mangrove streaming control/warm repeat
+
+`mangrove-bank-stream-control-20261022`: twenty real daytime frames. Both native and candidate drift on first trip (~196-198k pixels), both second trips exact RGB; candidate holds25 masks. No errors. First-trip cause remains unisolated, not candidate-exclusive. Supports moving retained candidate to explicit opt-in native implementation, preserving general limitation and measured GPU cost.
+
+
+### Native opt-in Mangrove shore
+
+`mangroveShore=sediment` with global lighting/full substrate integrates retained gated sediment and land mask, defaults unchanged. `mangrove-bank-native-parity-20261022`: six RGB frames exact to QA, no errors; native ownership/option tests pass. Mangroves have no NativeHorizon, resident water only. Native live streaming and broader art composition still pending.
+
+
+### Native Mangrove shore streaming
+
+`mangrove-bank-native-stream-20261022`: ten native settled frames,25 shore/50 total masks every stop,no errors. Camera/geometry exact to QA;7 RGB exact,3 differ in3-5 pixels (max9/77/74),cause unisolated. Retain opt-in and return to combined artistic review; broader seed/motion validation still pending.
+
+
+### Six-biome native review V2
+
+`six-biome-native-review-v2-20261022`:36 real frames,six individually inspected art sheets,new River underlay/Mangrove shore enabled.24 unaffected-biome RGB frames exact incl.approved Desert. Retain additions; global parity unproven. Remaining strong gaps: Canyon blue smooth banks,Volcano cold gray ground,Savanna/River macro cover structure. Next bounded Volcano direct-ground warmth experiment preserving night/ambient/models.
+
+
+### Volcano ground sunlight trial
+
+`volcano-ground-sun-review-20261022`:12 real frames,3 night pairs RGB exact,all geometry/camera/time exact. Warmer mapped-ground direct sun produces moderate brown highlights while retaining cavities. Retain QA comparison, not final art match or native adoption. Next localize warmth to relief lighting; no new timing claim.
+
+### Volcano orientation-weighted warmth review
+
+`volcano-ground-ridge-review-20261022`:18 real frames; six night pairs RGB exact, geometry/camera/time retained. Localized sun-facing warmth preserves charcoal better than uniform tint, but visual gain is modest. Both remain QA, no native promotion or performance claim. Next prioritize material-scale variation rather than further small tint changes.
+
+### Volcano ash structure pilot
+
+`volcano-ash-structure-review-20261022`:12 real frames, six geometry/camera/time pairs exact, no captured errors. Wider warmer deposits improve broad material separation more visibly than sun tint. Both day/night change. Retain QA; excessive smoothing, motion and ABAB cost remain to evaluate before native promotion.
+
+### Volcano ash deposits ABAB cost
+
+`volcano-ash-structure-cost-20261022`:720 valid GPU samples, equivalent moving-camera geometry/state. GPU deltas -.130 to +.039 ms, no consistent change; night CPU +.200/+.378 ms, cadence ~16.63 ms paced. Retain visual candidate, no speedup claim; visual motion, lower profile and additional seeds pending.
+
+### Volcano deposits low-profile second seed
+
+`volcano-ash-low-seed-review-20261022`:12 real captures, seed913/baja, six matched camera/geometry/time pairs, no captured errors. Day/night game-view inspection retains material separation; broad ash smoothing remains an artistic caveat. Static transfer check, not low-profile performance or motion validation.
+
+### Native volcanic deposits option
+
+`volcanicDeposits=broad` with global-lighting/layered rock retains broader warmer ash, scoped to Volcano. Six native day/night captures RGB exact to QA (`volcano-ash-native-parity-20261022`), defaults unchanged. Movement/streaming validation still pending; no fresh timing claim.
+
+### Volcanic deposits native streaming control
+
+`volcano-deposits-native-stream-20261022`:30 settled frames, paired geometry/camera exact,25 ground masks throughout,no errors. Both baseline/candidate warm-day and night roundtrips RGB exact; cold-return small differences occur in both, cause unisolated. Resources stabilize; not full leak proof or continuous-motion validation. Retain opt-in.
+
+### Canyon mineral shallows pilot
+
+`canyon-bank-mineral-review-20261022`:18 controlled captures; repaired obsolete resident-water QA anchor. Mineral palette softens blue contrast but still produces blurry bands and straight shoreline. Retain QA, no native adoption; structural bank treatment needed before timing work.
+
+### Canyon granular shelves rejected
+
+`canyon-bank-granular-review-20261022`:12 controlled frames, no errors, equal geometry. Defined noise shelves read as painted/floating patches, worse at night; reject artistically before benchmarking. Next couple existing land/water material response or actual depth, not further isolated water color noise.
+
+### Canyon shared sand bed pilot
+
+`canyon-bank-bed-review-20261022`:12 controlled frames, borrowed existing sand texture and approximate depth attenuation. Removes floating-patch appearance, but normal-view gain remains subtle and straight shore unresolved. QA only, no measured cost/native adoption; avoid further tiny tint tuning.
+
+### Canyon cross-section diagnosis
+
+`canyon-bank-cross-section-20261022`:81 native mesh raycasts at z102. Mesh/field agree ~2.2e-7; approximate wet depth is close (summary.json). Large coordinate offset ruled out locally. Visible shoreline is inside nominal waterHalf; next couple wet land and water lighting/material response, not more isolated color noise.
+
+### Loading day/night sky handoff continuity
+
+Real cinematic sampling exposed daytime sky grading jump and nighttime decorative mist-star cut. Loading sky grade and mist now fade during ascent, reaching world appearance before skyOnly/handoff. Day/night final videos and frame sequences retained;10 existing tests pass. QA night clock override only, production simulation untouched. Videos10Hz, not FPS benchmarks.
+
+### Canyon coupled wet-bank review closed
+
+`canyon-bank-coupled-review-20261022`:12 controlled frames from interrupted trial reviewed/audited. Dark wet bank reinforces canal-like outline, especially night; reject artistically, no timing claim. Next need consistent submerged-ground lighting rather than more independent tint/noise/darkening.
+
+### Canyon lit submerged sand pilot
+
+`canyon-bank-litbed-review-20261022`:12 matched real captures, no errors. Independent bed normal/BRDF before water reflection avoids dark edge but introduces daytime pale fringe. QA only; shared sand/rock material mixture still missing, no performance or final-art claim.
+
+### Canyon mixed bed pilot
+
+`canyon-bank-mixedbed-review-20261022`:12 matched frames, no errors. Shared texture/deposit weights alone strengthen pale foam-like fringe; reject native adoption. Full ground color/normal/AO contract remains absent; inspect complete transformation before further approximations.
+
+### Canyon reflection and material-contract diagnosis
+
+`canyon-bank-reflectiondepth-review-20261022`:12 real controlled frames, all six day/night camera/geometry pairs equal, no captured errors. Reducing near-shore reflection softens daytime pale rim but does not resolve the canal-like bank; diagnostic only, no native adoption or timing claim. Source audit found reversed normal-map lateral axis in prior bed pilots plus omitted gravel normal/ARH, AO and warm shadow fill. Correct shared material response before more color tuning.
+
+### Canyon native normal-basis correction in QA
+
+`canyon-bank-normalbasis-review-20261022`:12 real frames; all six pairs camera/time/geometry equal, no errors. Shared native sampleTurfN410 fixes the reversed lateral basis in submerged-bed pilots. Visual effect minimal across all day/night views; retained as QA correctness groundwork, not an art improvement or native feature. Reinspection of original mockup confirms bank continuity and game-scale composition remain the priority.
+
+### Canyon shared ground material: microdetail trial series closed
+
+`canyon-bank-sharedground-review-20261022`:12 real day/night frames use actual groundMaterial417/full soft sand and borrowed uniforms. Camera/geometry/resource counts match, no final errors. No convincing game-scale gain; lighting parity remains incomplete. QA only, no timing/adoption claim. Close isolated bed-microdetail series and move to broad bank transition/distribution; do not continue tiny pigment/normal tweaks.
+
+### Canyon vegetation context and archived scatter
+
+`canyon-scatter-restoration-review-20261022`:12 controlled frames restore existing Blender canyon module in QA. 249-255 instances, +1 draw call, +25,896-26,520 triangles; no timing claim. Art gain too weak at game scale, not rejected for performance. Next regional coverage/distribution instead of uniformly sparse tufts. Preliminary farVegetation A/B invalid: spatialSession disables both arms; recorded separately, not used for conclusions.
+
+### Canyon bank regions and measured cost
+
+`canyon-bank-regions-review-20261022`:12 paired frames concentrate existing Blender modules near banks with gaps;317 instances versus249-255 and unchanged draws. More visible placement, still thin isolated tufts. `canyon-bank-regions-cost-20261022`:720 valid GPU samples, ABAB Intel UHD; paired GPU deltas +.181/+.319/+1.209/+1.861ms, RAF ~16.63ms. Cost variable, not free; retain QA direction, improve collective authored mass before density escalation/native adoption.
+
+### Canyon authored bank cover candidate
+
+`canyon-bank-cover-review-20261022`:new original Blender104-triangle module (same triangle budget, wider26 leaves) visibly improves collective mass in12 controlled day/night captures;317 instances and calls/triangles match. Retain QA candidate, still separate plants. `canyon-bank-cover-cost-20261022`:720 valid Intel UHD GPU samples; daytime GPU delta ~0ms, night variable +.339/-2.459ms, no speedup claim. Before native adoption audit larger footprint/occupancy, quality/seed and streaming.
+
+### Canyon cover footprint and streaming correction
+
+`canyon-cover-footprint-stream-20261022` detects35 water-overhang and4 blocker-radius intrusions despite dry anchors. `canyon-cover-footprint-fixed-20261022` rejects those using actual transformed vertices during generation;279 versus317 instances at origin, zero sampled violations.30 real day/night streaming checkpoints total,25 detail chunks stable, all six return images RGB exact after fixing blank-frame capture harness. QA only; generation timing/events/other profiles still pending.
+
+### Canyon cover secondary seed / low-quality validation
+
+`canyon-cover-secondary-low-20261022`:seed913/baja,15 real streaming checkpoints, zero sampled footprint violations, all three RGB returns exact; day/night natural-bank views retain vegetation readability. sampleChunk102 calls mean.626/p951.400/max8.100ms (not full streaming/frame cost). Keep candidate; event verification and quality policy pending, no native adoption yet.
+
+### Canyon cover event lifecycle
+
+`canyon-cover-events-20261022`:actual event bus/field/asset in isolated copied-state scene, six crop/wall/center events at0.529m from chunk seam. Four nearby chunks update; removal restores exact279-instance distribution; zero sampled footprint violations and idle flush0. Observed event flush4.2-10.6ms, not a benchmark bound. Event logic supported; quality policy and generation cost remain before opt-in native integration.
+
+### Canyon bank cover explicit native option
+
+`canyonCover=banks` with global-lighting now enables the validated Blender bank module through native rendering. `canyon-cover-native-parity-20261022`:15/15 real day/night streaming frames RGB exact versus corrected QA,4 existing lifecycle tests pass, option isolated to canyons. Default/global recipe unchanged. Quality policy and broader native/gameplay validation remain outstanding; no final-global-quality claim.
+
+### Priority: natural water edges in all biomes
+
+User explicitly reprioritized completing natural water/land transitions across all six biomes; vegetation must not substitute for this. `canyon-transparent-bank-review-20261022`:12 real matched frames use single-pass depth opacity to expose actual terrain lighting, eliminating copied-bed pale fringe. Edge now less straight but too blurred; retain foundation, not final shore. No timing/sorting claims yet. Next reusable shore/depth representation and biome-specific transition, movement and cost validation.
+
+
+## Orillas: mapa de fondo y contorno, seis biomas (22 octubre, worldbank)
+
+La petición de completar orillas naturales sigue siendo la prioridad activa y **no está terminada**. Se ha probado un prototipo QA con mapa de fondo/contorno, transición irregular y origen flotante correcto. 72 capturas reales cubren seis biomas, tres vistas, día/noche; se registra una pareja no equivalente en Volcanes noche vista 2. Desierto permanece RGB idéntico. Se corrigen el borrado del agua de Manglares, el contorno duplicado de charcas y la falsa costa del horizonte del Cañón. El borde es más suave y el Cañón gana entrantes; todavía faltan sedimento/corteza, mayor naturalidad y validación de streaming. Nada se activa por defecto.
+
+[Comparativas, límites y reproducción](biome-world-bank-review-20261022/README.md). [ABAB Intel UHD](biome-world-bank-cost-20261022/README.md): 1.440 consultas GPU válidas y contadores equivalentes. Sabana sin penalización consistente; Cañón +2,81–4,56 ms GPU. Se conserva la dirección visual; siguiente trabajo: reducir el área transparente, integrar perfiles específicos y validar el recorrido/recursos, no reemplazar orillas por más matas.
+
+
+## Orillas: interior opaco sin pérdida visual (22 octubre, corebank)
+
+El Cañón conserva las seis capturas estáticas y las diez de recorrido RGB exactas frente a worldbank, incluyendo cambio de origen. Separar interior opaco/franja transparente recupera 1,35–3,07 ms GPU de día y 1,09–2,85 ms de noche en ABAB Intel UHD, con 720 consultas válidas. Añade 4–5 draws, no geometrías/mapas nuevos. No hay mejora CPU consistente ni se prueba aumento de FPS. Se conserva como candidata QA; falta integración, otros biomas, perfiles y streaming prolongado. [Comparativa y límites](canyon-core-bank-review-20261022/README.md). La prioridad sigue siendo completar las orillas naturales de todos los biomas.
+
+
+## Gran Río: cauce principal, no generalizar corebank (22 octubre)
+
+La revisión apunta ahora a riverX(102), no a una charca. Worldbank suaviza el borde, pero aún falta material de ribera. Corebank es exacto en cuatro vistas y difiere en ocho píxeles en otras dos; ABAB Intel UHD (720 consultas) no muestra ganancia consistente de GPU y aumenta CPU 0,07–0,49 ms. Mantenerlo como candidato del Cañón, no política universal. Dos ensayos de sedimento en el agua producen un contorno oscuro o una mejora demasiado discreta: no adoptar como solución final. Próximo trabajo: material terrestre húmedo de la ribera, sin alterar terreno autoritativo. [Evidencia y reproducción](river-channel-bank-review-20261022/README.md).
+
+
+## 2026-10-22: Gran Rio soil bank
+
+Native opt-in `riverBank=soil` preserves the validated variable soil bank and reduces grass at the water margin. Six day/night QA/native captures are RGB exact. ABAB cost is mixed, including a night regression; retained for visible artistic improvement, not claimed as an FPS optimization. Short streaming passes without errors, but daytime return differs and remains unresolved. See [report](river-land-bank-review-20261022/README.md). Approved moss shore direction remains retained; biome-specific water palettes are next.
+
+
+## 2026-10-22: native regional water palettes
+
+Opt-in `waterPalette=regional` with global-lighting now preserves the reviewed biome colors through the shared fluid material context. All 36 day/night QA/native comparisons are RGB exact. Mangrove olive remains an artistic candidate needing surface variation; approved moss shores are retained. No extra shader work or textures, and no FPS gain claimed. See [native palette report](native-water-palette-parity-20261022/README.md). Worldbank shoreline routing remains QA and must still be integrated and validated separately.
+
+
+## 2026-10-22: native Canyon core validated
+
+Opt-in `waterEdges=natural&waterCore=opaque` retains exact static and ten moving-checkpoint shore/core RGB parity. Intel UHD ABAB saves 0.97-2.49 ms GPU day and 1.72-2.95 ms night; CPU mixed, no FPS gain demonstrated. Retain Canyon-only; do not generalize. See [benchmark](native-canyon-core-cost-20261022/README.md) and [streaming](native-canyon-core-stream-20261022/README.md). Construction cost and modest-quality validation remain pending.
+
+
+## 2026-10-22: user selects deep blue Mangrove water
+
+Retain and refine deep blue over olive, superseding the earlier optical-depth rejection. Native natural-water shader now matches the selected QA result (five RGB-exact pairs, two differing pixels in the sixth). Moss retained. No FPS claim; extra map read remains to benchmark. See [native deep water](mangrove-deep-water-native-20261022/README.md).
+
+
+## 2026-10-22: full background required for subsequent QA
+
+User requires all subsequent artistic and performance validation to include the normal distant 2D impostors and HQ mountain backdrops. Do not set farVegetation:false in new final-scene comparisons. Use the normal quality-driven farVegetationProfile, verify attachment and loaded adapter layers plus visible biome-2d-backdrop, and include their resource and draw cost. Prior isolated 3D studies remain diagnostic only. Review color, lighting and transitions before considering DOF; DOF is an optional experiment, not an approved default or a substitute for matching distant art. New capture harness: tools/experiments/capture-full-background-review-20261022.mjs.
+
+
+## 2026-10-22: pendiente indicado por el usuario — hojas de Manglares
+
+Corregir los patrones rectangulares visibles en las hojas del suelo de Manglares. Revisar distribucion, mascaras y limites de parches/chunks con capturas comparables, preservando el musgo aprobado. El usuario pide hacerlo despues: continuar primero con el agua lejana y la integracion/validacion de fondos 2D conectados a Wild Engine. No cambiar la prioridad actual por esta anotacion.
+
+
+## 2026-10-22: distant Mangrove water and benchmark parity
+
+Muted-blue distant water retained with natural shores, preserving near blue and moss; no extra shader operations. Full-background day/night far-facing comparisons match calls/triangles. Terrain revision is now part of seam cache keys, with regression coverage. Both full-scene reload-based ABAB attempts failed workload equivalence (one extra call, 5641 triangles in one load), even after idle adapters and 45 stable renders. Do not claim performance from those attempts; next control must alternate variants within one loaded world and inspect resource/draw differences. See mangrove-far-water-native-20261022 and mangrove-deep-water-full-settled-cost-20261022.
+
+
+## 2026-10-22: single-world full-scene water benchmark
+
+720 valid GPU samples with exactly matching GPU workload across ABAB; CPU/cadence workload equal within each pair, one nocturnal frame differs between pairs. GPU means 19-21 ms, shader deltas mixed; no speedup or consistent penalty demonstrated. Retain deep blue for art. See mangrove-water-single-world-cost-20261022. Far-transition alpha trial is QA only: impostor/standby paths no longer dither, but reload-based capture workloads differ. Next compare transparency within one loaded world and inspect readiness/ordering; do not adopt or reject from these first images alone. Mangrove rectangular ground-leaf patterns remain deferred per user priority.
+
+
+## 2026-10-22: controlled smooth far transition candidate
+
+Warmed single-world Sabana QA: six before/alpha pairs have equal calls/triangles; all six return-to-dither images are RGB exact. Old alpha reload comparison was contaminated by an inherited water override and is explicitly invalidated in its report. QA clone registration corrected to avoid duplicate AfricanToon. Fixed-camera full-scene ABAB has 720 valid GPU samples; daytime delta mixed, night alpha +0.22/+1.09 ms GPU. Retain candidate for refinement, not production: overlap ordering, movement and other biomes still pending. Moving benchmark remains non-equivalent due changing tree selection. See far-transition-warmed-world-20261022 and far-alpha-static-cost-20261022.
+
+
+## 2026-10-22: moving full-background transition control
+
+Sabana day/night 240-frame camera paths retain exact per-frame calls/triangles across dither, alpha and return. Ten PNG return controls are RGB exact. Real WebM recordings retained (235 encoded frames; not synchronized benchmarks). Smooth far-tree candidate removes dotted coverage, but dense overlap ordering, other biomes and long-distance streaming remain unproven. No production adoption yet. See far-transition-motion-20261022/README.md.
+
+
+## 2026-10-22: Mangrove transparency order limitation isolated
+
+Motion captures retain blue water/moss/full backgrounds. Strict parity fails on one nocturnal frame (8 triangles) and 3 tiny RGB return differences; not a performance comparison. Independent synchronous impostor-order reversal is exact under dither but changes 4018 day / 4010 night pixels under alpha, with all restored images exact and equal workloads. Alpha batches currently lack camera-depth ordering and disable depth writes even for opaque coverage. Retain smooth direction; next separate opaque coverage and assess ordering of partial transitions, measuring added cost. Do not adopt current unsorted alpha globally. See mangrove-far-transition-order-20261022/README.md.
+
+
+## 2026-10-22: ordered smooth impostor QA candidate
+
+Implemented opaque/partial complementary draws plus per-atlas depth ordering in reusable packed views, preserving canonical readiness IDs. Mangrove day/night input-order reversal now RGB exact (unsorted alpha changed ~4000 pixels); unit test passes. Static Intel UHD ABAB: +4 calls/+2202 triangles; daytime GPU +0.28/+0.47 ms, night mixed (+1.96/-1.01). Retain candidate for art; no native adoption or speedup claim. Moving sorting/upload cost, cross-atlas partial overlap and standby ordering remain next requirements. See mangrove-far-transition-ordered-20261022 and far-ordered-static-cost-20261022.
+
+
+## 2026-10-22: moving ordered transparency and incremental packing
+
+Per-atlas opaque split reduces forced batch-order sensitivity from ~5768 to 40 pixels in Mangroves; residual is a small partial-crown overlap, not globally solved transparency. Moving baseline sorting/packing costs ~0.19-0.20 ms and marks 44040 bytes/frame. Incremental cache has RGB-exact day/night parity and equal ABAB workloads but saves only 0.85% bytes and ~0.006-0.049 ms local mean; do not adopt as significant optimization or attribute noisy whole-frame gains to it. Retain smooth art candidate; broaden normal-order visual validation across biomes next, rather than expanding marginal cache work. See mangrove-far-transition-batch-order-20261022 and far-incremental-moving-cost-20261022.
+
+
+## 2026-10-22: ordered transitions reviewed across six biomes
+
+144 real captures, three views/day/night with full native backgrounds. Candidate visually useful on transitioning trees in Sabana/River/Volcanoes and retained in Mangroves; Canyon sparse view shows no demonstrated benefit. 31/36 matrix returns exact; Sabana game-view return changes one native representation (1 draw/4937 triangles), while immediate material-toggle return is exact. Tiny Desert/Canyon edge residuals remain. QA extra-call counter corrected to exclude empty Canyon batch; raw evidence retained. Proceed toward opt-in native integration/lifetime and near-handoff checks, not marginal cache optimization. Gran Rio distant turquoise water still needs separate palette integration; Mangrove leaf rectangles remain deferred. See far-transition-six-biome-20261022/README.md and far-transition-direct-control-20261022/README.md.
+
+
+## 2026-10-22: native Gran Rio distant-water palette
+
+Retained muted blue [.30,.44,.48] for natural-shore Gran Rio regional-water path, replacing bright turquoise far patches. Grey-green QA alternative not selected. Six initial return controls exact; six native-to-selected-blue pairs exact. Native return has one tiny 3-pixel/max2 residual documented. Calls/triangles/resources unchanged; constant uniform edit adds no shader operations or maps. Existing six far-ground tests pass. Simplified distant reflections/night response and moving seams remain limitations. See river-far-water-palette-20261022 and river-far-water-native-20261022.
+
+
+## 2026-10-22: tarea posterior — pantalla de inicio por capas y parallax
+
+Solicitud del usuario: iniciar esta mejora **después de completar los impostores, las mejoras del agua y los seis biomas**. No desplazar la validación actual ni confundir esta pantalla con la carga interactiva.
+
+Referencia artística: [mockup de inicio](references/start-screen-layered-parallax-13762.png). Renovar la composición 2D mediante capas con profundidad y parallax: paisaje cálido al atardecer, horizonte y cascadas, guardianes en las nubes, vegetación y personajes en primer plano, y tótem central que organiza las opciones. Usar el mockup como dirección de composición, riqueza cromática y jerarquía visual.
+
+Requisitos que deben conservarse: animación de acercamiento al elegir una opción; partículas de colores en movimiento que iluminan el tótem; funcionamiento de las opciones y legibilidad de la interfaz. Validar en el menú real la composición, el parallax, el acercamiento y las partículas, incluyendo vídeo y coste de rendimiento. Esta anotación programa trabajo dentro del objetivo existente; no inicia una automatización ni cambia ahora el menú.
+
+
+## 2026-10-22: native opt-in smooth far transition integration
+
+`farTransitions=smooth` inside the global-lighting lab now enables the reviewed ordered candidate without QA material routes. 76 targeted tests pass; Sabana/Mangrove native captures match QA calls/triangles in 12/12 views, 10 RGB exact and two tiny residuals. No new performance claim. Scene-scoped owned packing and standby clones preserve canonical IDs and dispose independently. Keep opt-in pending long-distance streaming, native moving benchmarks and remaining-biome captures. See [native integration evidence](far-transition-native-20261022/README.md).
+
+
+## 2026-10-22: native smooth coverage across six biomes and streaming cleanup
+
+Native captures now cover all six biomes with full backgrounds. Additional four-biome run matches prior QA calls/triangles in 24/24 views; Volcanoes exact, Desert/Canyon tiny edge residuals, River includes its subsequent water-palette change and is not an isolated pixel comparison. Mangrove 192m streaming excursion replaces nine regions/species; corrected lifecycle check releases all 12 tracked smooth resources and restores the preceding continuous-grass scene hook. Return tree representation is not exact and requires original-path control. Keep opt-in; no new timing claim. See far-transition-native-other-biomes-20261022 and far-transition-native-stream-verified-20261022.
+
+Original-dither streaming control completed: return images also differ (10564 day/8262 night pixels). Across all ten checkpoints, smooth-vs-original workload delta equals exactly its four complementary opaque draws and 2190–2206 triangles; no unexplained extra workload. This separates the pre-existing stateful return behavior from the smooth integration, without proving identical per-pixel causes. See far-transition-legacy-stream-control-20261022.
+
+
+## 2026-10-22: native moving low-quality transition benchmark
+
+Intel UHD Mangroves, full backgrounds, native original/smooth reload ABAB: 720 valid GPU queries, exact per-frame workload after subtracting opaque split, no GL errors. Day GPU delta -0.99/+1.05ms; night -0.94/-0.98ms. CPU/cadence mixed and reload variance prevents causal FPS claims. Retain art; no consistent disproportionate penalty shown by this modest-profile local path. Other-biome timings and transparency-order limitations remain. See far-native-low-moving-cost-20261022.
+
+
+## 2026-10-22: Mangrove rectangular leaf exclusions corrected
+
+Resumed deferred leaf investigation after native far integration/low-quality validation. Resident water was excluding leaves over its entire rectangular bounding box. Reuse existing River triangle buckets plus neighbor checks in Mangroves, preserving authored leaves, moss, blue water and shore padding. Native six-image parity with QA exact; 2696–8976 recovered leaf triangles, no overflow. Five relevant tests include dry corners/wet triangle interiors and neighbor invalidation. Cost of restored coverage pending; no FPS claim. Asset-water bounding fallback and other distribution patterns remain limitations. See mangrove-leaf-triangle-native-20261022.
+
+
+## 2026-10-22: recovered Mangrove leaf coverage cost
+
+Single-world rectangle/triangle ABAB yields 720 valid GPU queries and ~2062 additional leaf triangles on the moving path. Three paired frames differ in non-leaf representation; initial rectangle pass also slower than repeat. No consistent GPU penalty, but no causal speedup/zero-cost claim. Visible tile rebuild 13.3/10.7ms rectangle versus26.7/10.8ms triangles, outside samples; chunk-index creation remains unmeasured. Retain art fix and document limitations. See mangrove-leaf-footprint-cost-20261022.
+
+
+## 2026-10-22: corrected leaf shoreline survives low-quality streaming
+
+192m low-profile Mangrove excursion day/night: no overflow/errors, leaf counts2432/4066/1864/4066/2432 return exactly. 80 whole coverage-chunk preparations mean0.514ms/p951.8ms/max2.9ms, event/streaming work rather than per-frame; index-only time and actual JS memory not isolated. Full backgrounds retained. Shoreline shape looks natural in the far checkpoint, but regular leaf repetition on exposed soil remains an artistic issue separate from rectangular exclusions. See mangrove-leaf-stream-low-20261022.
+
+
+## 2026-10-22: wider leaf jitter retained as QA only
+
+Low-profile exposed-soil comparison with full backgrounds: within-cell amplitude0.25→0.95 breaks some regularity but enlarges holes; flat leaf-piece appearance persists. Do not adopt as a claimed volume solution or reject based on unmeasured performance. Preserve QA candidate and water-footprint fix. Next examine far-leaf shape/normals and material contrast. See mangrove-leaf-jitter-20261022.
+
+
+## 2026-10-22: authored folded/rounded leaf candidates
+
+Prior near-arched experiment already showed limited benefit; current audit identifies averaged far normals and four-vertex silhouette. New own Blender assets keep roots/population but use six-sided leaves with retained crease normals,24 far/48 near triangles. Low-profile real captures preserve instance counts/draws; rounded silhouette improves leaf reading, stronger cupped version retained for cost comparison. Local improvement, not full mockup equivalence. No native promotion or performance rejection; GPU/motion/medium validation pending. See mangrove-leaf-folded-20261022 and mangrove-leaf-cupped-20261022.
+
+
+## 2026-10-22: cupped leaf cost isolated at fixed camera
+
+Reload and single-world moving studies retain20/33 non-leaf LOD frame mismatches; not causal cost evidence. Fixed-camera single-world control passes all workload checks with720 valid GPU queries: daytime +0.26/+0.22ms; nighttime mixed -0.80/+0.28ms. Retain cupped visual candidate, no FPS claim. Two asset tests prove retained-leaf endpoint attribute equality but not motion appearance. Medium imagery/LOD movement still needed before integration. See mangrove-leaf-cupped-static-cost-20261022 and the two preceding cost directories.
+
+
+## 2026-10-22: cupped Mangrove leaf native option and medium motion
+
+Bank-centred medium comparison shows clearer collective leaf volume. Original/cupped camera and leaf counts match for240 requested frames day/night, no overflow/errors. Recordings235–236 frames, qualitative only; initial water-centred framing retained as limited evidence. Native `mangroveLeaves=cupped` within global-lighting is now opt-in, original default unchanged. Ten native-vs-QA checkpoints RGB exact; eight targeted tests pass. Low static GPU cost remains prior evidence; medium timing/global temporal certification not claimed. See mangrove-leaf-cupped-native-motion-20261022.
+
+
+## 2026-10-22: medium cupped-leaf cost verified
+
+Fixed-camera medium ABAB: 720 valid GPU samples and zero unexplained workload frames. Daytime +0.435/+0.896ms (2.1–4.7%); night +0.585/-0.128ms. Retain visual improvement, no FPS claim or moving-cost generalization. Both geometry sets resident, so this is not final memory budget. See mangrove-leaf-cupped-medium-cost-20261022. Composite review recipe is separate from historical base query to preserve A/B controls.
+
+
+## 2026-10-22: combined five-biome captures complete
+
+60 frames with native far backgrounds ready and no recorded GL/page errors; Mangroves separately captured. Static evidence only, not full completion. Grand Canyon reverse daylight exposes sawtooth water boundary and repetitive reflections despite retained warm shadow richness. Prioritize an isolated visual shoreline treatment; preserve authoritative terrain/water. See reviewed-five-biomes-20261022.
+
+
+## 2026-10-22: Canyon generic mesh-edge mask rejected
+
+Removing Canyon edge-distance bypass creates transverse dry stripes at internal strip joins; sawtooth bank persists. Twelve QA frames, no GL/page errors. Production unchanged; not a performance rejection. Next isolate depth sampling. See canyon-boundary-mask-20261022.
+
+
+## 2026-10-22: Canyon denser bed mask does not solve sawtooth
+
+QA2→8 samples/metre retains lateral serration; twelve captures preserve camera/draw/triangle counts and record no errors. Do not promote up-to16x mask texels for this limited change. Native height query is continuous triangular interpolation of one-metre terrain lattice. Next isolate visual bank treatment; authoritative geometry unchanged. See canyon-depth-density-20261022.
+
+
+## 2026-10-22: soft Canyon bank retained for refinement
+
+Wider depth opacity ramp visibly softens sawtooth without geometry/mask-resolution changes or transverse strips. Twelve capture controls pass. Reverse day/night inspected; daylight too diffuse in places. Retain QA, tune intermediate ramp and measure transparent-rim cost before promotion. See canyon-soft-bank-20261022.
+
+
+## 2026-10-22: intermediate Canyon bank GPU cost
+
+720 valid GPU samples, zero workload mismatches. Day +1.863/+1.081ms, night +0.314/+0.183ms versus original ramp with same opaque core. Retain art candidate; optimize transparent rim work rather than reject visual result. Motion and per-pass mechanism remain unverified. See canyon-balanced-bank-cost-20261022.
+
+
+## 2026-10-22: early shoreline discard timing inconclusive
+
+720 valid GPU samples, zero workload mismatches, mixed day deltas +0.736/-2.218ms and night +0.790/+0.169ms. Keep optimization QA only; balanced bank art retained. Small residual pixels occur beside building, cause not isolated. Full-background192m streaming validation started separately. See canyon-early-bank-cost-20261022.
+
+
+## 2026-10-22: balanced Canyon bank native opt-in
+
+Native canyonBank=balanced requires global-lighting and natural shores, Canyon only. Five/six QA comparisons RGB exact; remaining13 pixels beside building. Five targeted tests pass. Retained art with measured +1.08–1.86ms daytime GPU cost; early-discard optimization excluded. Day/night sampled motion review and192m streaming controls documented. Defaults unchanged; reflection repetition remains pending. See canyon-balanced-native-20261022.
+
+
+## 2026-10-22: explicit six-biome closure criteria
+
+See closure-review-20261022 for six mockup/current comparisons, per-biome unmet evidence versus optional polish, and frozen globalClosureQuery candidate. No biome declared complete. Stop treating every possible ripple variant as a blocker; prioritize representative normal-scale scenes, missing oasis/riverside evidence and Mangrove broad material variation. Preserve full original goal and final technical checks.
+
+## 2026-10-22: varied Mangrove cover available as opt-in
+
+Native mangroveDistribution=varied requires global-lighting and Mangrove; original recipe retained. Twelve QA/native images RGB exact; six final workloads identical. Six targeted tests pass. Reduces visible grid/patch contrast, but broad homogeneous areas remain. Measured day GPU cost +0.61..1.85ms, night -0.53..0.67ms, CPU mixed; no FPS claim. See mangrove-varied-native-20261022. This preserves the candidate for review rather than declaring Mangrove complete.
+
+
+## 2026-10-22: user rejects reduced leaf presence
+
+The user rejects mangroveDistribution=varied: leaves lose too much apparent density and volume. This supersedes earlier positive artistic assessments. Keep the dense original in the selected recipe. The optional variant remains only as rejected experimental history, not a final candidate. Further distribution work must preserve original leaf size and growth response; isolate positional/orientation changes instead of reducing coverage. The completed low-quality benchmark measures this rejected option and does not justify adoption.
+
+
+## User rejection: insufficient visible leaf presence
+
+User explicitly rejects this pigment blend because leaves become almost invisible against the ground. Unchanged geometric density does not establish preserved perceptual density. Supersedes earlier positive candidate assessment. Do not select or integrate this treatment. The uncommitted native option was removed after its capture completed. Dense original pigment, geometry and selected recipe remain unchanged. Next work must preserve original contrast as well as size and density, and target spatial boundary regularity directly.
+
+## 2026-10-22: approved Mangrove leaves are the LEFT original
+
+User clarified the selection of the additive-fringe comparison: LEFT, original dense coverage, not the additive right side. Keep the original selected recipe and its pigment, size, density and boundary response. Both additive and connected fringe remain QA history, not selected improvements. The mistaken uncommitted native additive option was removed. Do not interpret this approval as validation of all six biomes or completion of performance/streaming checks.
+
+
+## 2026-10-22: tarea posterior a la pantalla de inicio — microeventos
+
+Solicitud explícita del usuario tras incorporar main: validar visualmente los microeventos interactivos (grupos de sprites de hojas, pájaros, hormigas, nubes, fuego y demás variantes) frente a la nueva dirección gráfica.
+
+Orden de trabajo: terminar primero la integración de main y la nueva línea base; completar las mejoras y validaciones pendientes de biomas, agua e impostores; rehacer la pantalla de inicio ya encargada; después abordar esta revisión de microeventos. No adelantar cambios artísticos de microeventos durante los benchmarks de integración.
+
+Criterios: presencia visible y legible sobre la zona de cultivos a escala normal de juego; coherencia de color, iluminación y calidad con los seis biomas y su ciclo día/noche; movimiento natural, variado e interesante; ausencia de clipping con suelo, cultivos, edificios y demás elementos, y revisión de bordes de pantalla/oclusiones. Comprobar también las interacciones durante los tiempos muertos y conservar su comportamiento funcional.
+
+El usuario autoriza sustituir los sprites si su diseño o calidad desentonan. Revisar primero el catálogo real y demostrar los problemas con capturas/vídeos del juego; validar las sustituciones en contexto, con cámara fija y en movimiento, perfiles medio/bajo y costes medidos. Documentar fuentes y licencias de cualquier recurso nuevo. No considerar terminada la tarea por el mero hecho de que los sprites se dibujen o las pruebas funcionales pasen.
+
+## 2026-10-23: experimento autorizado de hojas de Manglares en sprites
+
+El usuario solicita probar sprites 2D con normales, elevados unos centímetros, incluso con varias hojas por sprite, frente a las hojas 3D caras. Esta autorización específica permite tarjetas para este experimento; no reinterpretar la antigua exclusión de planos cruzados como prohibición. Conservar la variante 3D aprobada como control y no reducir densidad, tamaño ni contraste para producir una aparente mejora de rendimiento.
+
+Primera candidata QA: horneado de las hojas cupped existentes, ocho hojas/16 triángulos cerca y cuatro/8 lejos, cobertura alfa y normales en espacio del módulo, 4,5 cm sobre suelo. Mantener buffers de instancias, máscaras, distancias y selección originales. Preparada sin modificar src ni activar la opción por defecto. Comparar primer plano, escala normal y ángulo oblicuo, día/noche y movimiento; medir GPU/CPU, overdraw y memoria antes de recomendar. Las normales del viento son todavía una aproximación y la tarjeta no conserva la silueta vertical de la hoja. La comparación real se ejecutará tras la serie de integración en marcha para no contaminarla.
+
+## 2026-10-23: helecho suministrado, corrección de postura
+
+El usuario solicita probar el GLB CC0 de Holly Fern horneado en Blender (color/transparencia y normales), con módulos de rama completa mayores y distribución menos costosa. Tras la primera captura horizontal, aclara que las ramas deben salir del suelo, no parecer hojas caídas. La postura horizontal queda como diagnóstico, no candidata artística. Evaluar tarjetas erguidas/inclinadas ancladas por el tallo, normales rotadas coherentemente, viento moderado y oclusión desde cámara normal e inversa. Conservar hojas 3D aprobadas como control; no aceptar reducción de coste que simplemente deje menos cobertura visible.
+
+## 2026-10-23: dirección corregida de helechos — matas bajas estrelladas
+
+El usuario reemplaza la postura erguida por manojos de 3–5 frondas superpuestas, ligeramente cóncavas/horizontales, que se abren desde un centro junto al suelo. Mantener una masa baja de base (textura o cobertura densa aprobada) y usar helechos agrupados con menor frecuencia para variar altura. No interpretar como retorno a ramas caídas ni arbustos altos. Orientar la normal de iluminación hacia arriba, suavizar normales horneadas y añadir translucidez sutil para evitar reversos negros. Comparar la opción híbrida con base 3D preservada y declarar expresamente su coste adicional, sin prometer ahorro por reducir solo la capa emergente. El benchmark erguido en curso se conserva como candidato superado, no se retoca durante la medición.
+
+## 2026-10-23: comparar cobertura solo de helechos
+
+El usuario pide ver las frondas sin la alfombra de hojas redondas. Preparar una alternativa independiente que oculte únicamente las mallas base y use matas radiales en todos los anclajes válidos existentes, frente a la mezcla de base completa y aproximadamente un séptimo de matas. Mantener la variante aprobada recuperable; no confundir esta nueva autorización para quitar la base en una prueba con aprobación artística del resultado. Revisar continuidad, caminos, agua, vista de juego y noche; registrar densidad, silueta y costes reales.
+
+## 2026-10-23: legibilidad de la cobertura solo de helechos
+
+El usuario observa camuflaje con el suelo y solicita oscurecer, aumentar contraste y también tamaño. Probar variante independiente con frondas 35% más amplias y 25% más altas, verde más oscuro, contraste de albedo 1,22 y gradiente suave de base a punta. Aumentar margen de máscara a 1 m para respetar agua, cultivos y obstáculos; conservar control anterior. Reutilizar directamente buffers nativos sin pase adicional de selección en la variante solo de helechos. No presentar reducción de triángulos como mejora FPS sin medición.
+
+## 2026-10-23: tono intermedio de helechos
+
+El usuario considera excesivamente oscura la última variante. Mantener tamaño (+35% XZ / +25% Y), contraste 1,22, distribución y gradiente de volumen; aclarar únicamente la modulación de color de (0,30;0,43;0,25) a (0,37;0,50;0,31), sin regresar al primer verde (0,48;0,61;0,40). Revisar capturas de día y noche. Los benchmarks de variantes superadas se conservan como parciales; no justifican una decisión de rendimiento de esta versión.
+
+## 2026-10-23: borde irregular de helechos
+
+El usuario solicita reducir aproximadamente 30% la densidad en la periferia para romper la franja uniforme, conservando el interior. Probar descarte determinista durante generación de tiles cacheados, con probabilidad máxima 0,30 en el borde y transición gradual a cero en el interior. Reutilizar las muestras de cobertura/desgaste ya calculadas para la huella, sin nuevas consultas a Wild Engine ni aleatoriedad por cámara/fotograma. Mantener color intermedio, tamaño y exclusiones de seguridad. No reducir la densidad global ni usar transparencia para ocultar plantas.

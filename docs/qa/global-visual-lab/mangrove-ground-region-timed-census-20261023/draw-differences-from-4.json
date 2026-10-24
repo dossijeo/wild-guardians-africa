@@ -1,0 +1,92 @@
+{
+  "records": 4,
+  "diagnosticOnly": true,
+  "differences": [
+    {
+      "phase": "day",
+      "run": 1,
+      "variant": "region",
+      "frame": 101,
+      "delta": [
+        0,
+        0
+      ],
+      "removed": [
+        [
+          [
+            "Scene/native-tree-standby/Mesh",
+            "screen",
+            "MeshStandardMaterial",
+            460,
+            1,
+            1
+          ],
+          1
+        ]
+      ],
+      "added": [
+        [
+          [
+            "Scene/native_merged_assets/native-obstruction-blend",
+            "screen",
+            "MeshStandardMaterial",
+            460,
+            1,
+            1
+          ],
+          1
+        ]
+      ]
+    },
+    {
+      "phase": "day",
+      "run": 1,
+      "variant": "region",
+      "frame": 108,
+      "delta": [
+        -1,
+        -708
+      ],
+      "removed": [
+        [
+          [
+            "Scene/native-tree-standby/Mesh",
+            "screen",
+            "MeshStandardMaterial",
+            708,
+            1,
+            1
+          ],
+          1
+        ]
+      ],
+      "added": []
+    },
+    {
+      "phase": "night",
+      "run": 1,
+      "variant": "region",
+      "frame": 108,
+      "delta": [
+        -1,
+        -708
+      ],
+      "removed": [
+        [
+          [
+            "Scene/native-tree-standby/Mesh",
+            "screen",
+            "MeshStandardMaterial",
+            708,
+            1,
+            1
+          ],
+          1
+        ]
+      ],
+      "added": []
+    }
+  ],
+  "invalidCensuses": [],
+  "limitation": "Names may identify batches rather than individual assets; IDs are local to each page."
+}

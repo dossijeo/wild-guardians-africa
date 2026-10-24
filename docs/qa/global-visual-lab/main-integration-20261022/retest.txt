@@ -1,0 +1,185 @@
+TAP version 13
+# (node:2624) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+ok 1 - real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+  ---
+  duration_ms: 1596.5695
+  ...
+# Subtest: queue dispatches one nearest scored request and ignores late IDs without completing the active job
+ok 2 - queue dispatches one nearest scored request and ignores late IDs without completing the active job
+  ---
+  duration_ms: 2.3824
+  ...
+# Subtest: travel and forced rebuild discard obsolete responses and regenerate the current epoch
+ok 3 - travel and forced rebuild discard obsolete responses and regenerate the current epoch
+  ---
+  duration_ms: 0.6113
+  ...
+# Subtest: invalidating a loaded chunk refreshes it without counting stale data as ready
+ok 4 - invalidating a loaded chunk refreshes it without counting stale data as ready
+  ---
+  duration_ms: 0.6702
+  ...
+# Subtest: a newer invalidation rejects an in-flight stale refresh
+ok 5 - a newer invalidation rejects an in-flight stale refresh
+  ---
+  duration_ms: 0.5712
+  ...
+# Subtest: invalidation leaves offscreen work alone and discards an in-flight changed chunk
+ok 6 - invalidation leaves offscreen work alone and discards an in-flight changed chunk
+  ---
+  duration_ms: 0.6733
+  ...
+# Subtest: worker failure preserves pending work in asynchronous local mode and dispose cancels it
+ok 7 - worker failure preserves pending work in asynchronous local mode and dispose cancels it
+  ---
+  duration_ms: 0.85
+  ...
+# Subtest: generation and installation failures settle waiters and coordinate mismatches never enter the world
+ok 8 - generation and installation failures settle waiters and coordinate mismatches never enter the world
+  ---
+  duration_ms: 1.8395
+  ...
+# Subtest: scene installs transferred data without regenerating terrain or navigation population on the main thread
+ok 9 - scene installs transferred data without regenerating terrain or navigation population on the main thread
+  ---
+  duration_ms: 65.4459
+  ...
+# Subtest: initial readiness follows the native nine-chunk threshold while the outer queue continues
+ok 10 - initial readiness follows the native nine-chunk threshold while the outer queue continues
+  ---
+  duration_ms: 0.6998
+  ...
+# (node:24552) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent DPR cap reduces pixels without changing the quality profile or scene state
+ok 11 - independent DPR cap reduces pixels without changing the quality profile or scene state
+  ---
+  duration_ms: 6.744
+  ...
+# Subtest: physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+ok 12 - physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+  ---
+  duration_ms: 1.4899
+  ...
+# Subtest: live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+ok 13 - live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+  ---
+  duration_ms: 4.3022
+  ...
+# Subtest: live world quality and resize preserve simulation, ground geometry and existing chunk objects
+ok 14 - live world quality and resize preserve simulation, ground geometry and existing chunk objects
+  ---
+  duration_ms: 4.6155
+  ...
+# Subtest: static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+ok 15 - static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+  ---
+  duration_ms: 1.4249
+  ...
+# Subtest: canyon horizon changes only its ground material when the resident rectangle stays the same
+ok 16 - canyon horizon changes only its ground material when the resident rectangle stays the same
+  ---
+  duration_ms: 356.1438
+  ...
+# (node:924) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+ok 17 - unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 36.6596
+  ...
+# Subtest: unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+ok 18 - unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 16.9308
+  ...
+# Subtest: suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+ok 19 - suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+  ---
+  duration_ms: 14.9482
+  ...
+# Subtest: navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+ok 20 - navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+  ---
+  duration_ms: 13.3931
+  ...
+# Subtest: an affected asset pool retires its material and instance buffer while preserving shared water geometry
+ok 21 - an affected asset pool retires its material and instance buffer while preserving shared water geometry
+  ---
+  duration_ms: 1.5483
+  ...
+# Subtest: explicit confirmed actions detect in-place Engine suppression changes and restore only their slot
+ok 22 - explicit confirmed actions detect in-place Engine suppression changes and restore only their slot
+  ---
+  duration_ms: 6.8593
+  ...
+# Subtest: camera-driven chunk synchronization does not poll the unchanged suppression population
+ok 23 - camera-driven chunk synchronization does not poll the unchanged suppression population
+  ---
+  duration_ms: 3.1007
+  ...
+# Subtest: all quality presets retain individual color culling
+ok 24 - all quality presets retain individual color culling
+  ---
+  duration_ms: 3.1438
+  ...
+# (node:28996) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 25 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 808.8471
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 26 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 191.1007
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 27 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.6316
+  ...
+# (node:41024) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a Sabana game state renders and routes from one spatial authority through topology events
+ok 28 - a Sabana game state renders and routes from one spatial authority through topology events
+  ---
+  duration_ms: 352.0043
+  ...
+# Subtest: the same game-state session streams and routes in all six biomes
+ok 29 - the same game-state session streams and routes in all six biomes
+  ---
+  duration_ms: 419.8192
+  ...
+# Subtest: chunk selection distinguishes an absent chunk from a resident chunk with zero props
+ok 30 - chunk selection distinguishes an absent chunk from a resident chunk with zero props
+  ---
+  duration_ms: 4.1441
+  ...
+# Subtest: one resident C++ world supplies streamed render chunks and actor routes
+ok 31 - one resident C++ world supplies streamed render chunks and actor routes
+  ---
+  duration_ms: 51.8565
+  ...
+# Subtest: stream cancellation does not generate chunks that were never requested by the renderer
+ok 32 - stream cancellation does not generate chunks that were never requested by the renderer
+  ---
+  duration_ms: 21.6312
+  ...
+# Subtest: production terrain installer accepts the same C++ payload used for navigation
+ok 33 - production terrain installer accepts the same C++ payload used for navigation
+  ---
+  duration_ms: 51.4525
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2340.2117

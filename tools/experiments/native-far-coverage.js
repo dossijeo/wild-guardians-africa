@@ -10,7 +10,7 @@ export class NativeFarCoverage {
   for(const group of chunks.values())for(const batch of group.userData.lodBatches??[]){
    if(batch.slot!==this.slot||!batch.fade)continue;
    let record=this.cache.get(batch);if(!record){record={anchors:batch.instances.map(t=>treeAtlasAnchor(t,this.base)),ranges:batch.instances.map(t=>treeTransitionRange(t,this.treeHeight,this.start,this.end,this.transitionHeight)),stamp:null};this.cache.set(batch,record);}
-   const stamp=[camera.position.x,camera.position.z,revision,batch.fade.attribute.version,batch.key,...batch.meshes.map(m=>m.instanceMatrix.version+':'+m.count)].join('|');if(stamp===record.stamp)continue;this.scans++;
+   const stamp=[camera.position.x,camera.position.z,revision,batch.fade.attribute.version,batch.key,...batch.meshes.map(m=>m.instanceMatrix.version+':'+m.count)].join('|');if(stamp===record.stamp&&batch.meshes.every((m,i)=>m.geometry.attributes.nativeVisibility?.version===record.coverageVersions?.[i]))continue;this.scans++;
    for(const [level,mesh] of batch.meshes.entries()){
     const attribute=mesh.geometry.attributes.nativeVisibility;let first=Infinity,last=-1;if(!attribute)continue;
     for(const [j,index] of batch.orders[level].entries()){
@@ -20,6 +20,9 @@ export class NativeFarCoverage {
     }
     if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;uploads++;}
    }
+   // Capture versions after our writes so quiet frames remain cached, while
+   // native LOD repacking cannot leave obsolete composed coverage behind.
+   record.coverageVersions=batch.meshes.map(m=>m.geometry.attributes.nativeVisibility?.version);
    record.stamp=stamp;
   }
   return uploads;

@@ -1,0 +1,15 @@
+{
+  "heightMetersMin": 0.014509803921568629,
+  "heightMetersMax": 0.1,
+  "texelWorldMeters": 0.01220703125,
+  "sunRiseOverRun": 0.5931730451971593,
+  "gradientMagnitudePercentiles": {
+    "50": 0.13724015427772807,
+    "90": 0.40156862745098054,
+    "99": 0.8857842983690873,
+    "100": 2.6808909239348293
+  },
+  "threeTapBlockingFraction": 0.00038433074951171875,
+  "meanBlocking": 8.709717198908294e-05,
+  "note": "Offline full-resolution bilinear periodic height, flipped Y as Three texture upload; ignores mipmaps, footprint fade, slope, POM displacement, actual scene visibility. Diagnostic only, not rendered performance."
+}

@@ -1,0 +1,47 @@
+{
+  "cycles": [
+    {
+      "cycle": 0,
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 2438,
+        "far": 8303,
+        "leaves": 95680,
+        "triangles": 212704,
+        "chunks": 25,
+        "cachedTiles": 40,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 82.40000003576279,
+          "selectionMs": 74.90000000596046,
+          "selectionCount": 1,
+          "candidates": 16000,
+          "masked": 2136,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "active": {
+        "geometries": 157,
+        "textures": 59
+      },
+      "closed": {
+        "referenceRemoved": false,
+        "hookRestored": true,
+        "detached": true,
+        "enabled": true,
+        "memory": {
+          "geometries": 155,
+          "textures": 59
+        },
+        "glError": 0
+      }
+    }
+  ],
+  "failure": "Teardown invariants failed",
+  "errors": []
+}

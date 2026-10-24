@@ -9,3 +9,10 @@ test('percentage and bar use exactly the same smoothed native growth progress an
  const snapshot={pending:['gpu'],progress:.67,ready:false},copy=loadingCopy(snapshot,{progress:.58});assert.equal(copy.value,.58);assert.equal(copy.percent,58);assert.equal(loadingCopy({...snapshot,progress:1},{progress:1}).percent,99);
  const ready=loadingCopy({pending:[],progress:1,ready:true},{progress:1,locale:'es',pointer:'touch'});assert.equal(ready.value,1);assert.equal(ready.percent,100);assert.equal(ready.title,'Todo está listo');assert.equal(ready.help,'Toca la tierra para plantar más maíz');assert.equal(loadingCopy(snapshot,{pointer:'mouse'}).help,'Click the soil to plant more maize');
 });
+
+test('occupied-soil feedback is localized and does not claim the whole island is full',()=>{
+ const snapshot={progress:.5,ready:false,pending:['animals']};
+ assert.equal(loadingCopy(snapshot,{locale:'es',plantingBlocked:true}).help,'Aquí no cabe otra planta');
+ assert.equal(loadingCopy(snapshot,{locale:'en-US',plantingBlocked:true}).help,'There is no room for another plant here');
+ assert.equal(loadingCopy(snapshot,{locale:'es',plantingBlocked:false}).help,'Haz clic en la tierra para plantar más maíz');
+});

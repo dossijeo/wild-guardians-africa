@@ -1,0 +1,5 @@
+# Raised horizon: initial active-camera observation
+
+Sourceeb7f13815, QA mountain base-10. Day route matches requested144mX/50.4mZ excursion; night deviates in424frames, up to164.685units horizontally. These frames must NOT be claimed as a controlled night route. The ordinary raid camera runs after updateCamera in WorldScene.render and can retarget a live raid; the initial harness did not hold manual control. Raid state itself was not recorded, so source inspection identifies a plausible mechanism rather than independently proving every diverted frame's cause.
+
+No browser/GL errors or unexpected pauses; workers/simulation advance. Video/contact sheets show artwork during actual camera behavior, not a before/after equivalence test. Contact sheets inspected; no obvious exposed rectangular mountain foot. Follow-up uses existing RaidCameraDirector.beginManual(), without stopping the simulation, and explicitly audits every horizontal camera coordinate. See ../sabana-horizon-raised-manual-motion-20261023. Preserve this original run rather than overwriting it.

@@ -1,0 +1,39 @@
+{
+  "seed": 712,
+  "tileSpacing": 0.5,
+  "nearTrianglesPerSquareUnit": 128.0,
+  "farTrianglesPerSquareUnit": 32.0,
+  "modules": {
+    "near": {
+      "leaves": 8,
+      "triangles": 32,
+      "vertices": 40,
+      "min": [
+        -0.2902367115020752,
+        0.014999999664723873,
+        -0.3247297406196594
+      ],
+      "max": [
+        0.29118070006370544,
+        0.08946889638900757,
+        0.30221498012542725
+      ]
+    },
+    "far": {
+      "leaves": 4,
+      "triangles": 8,
+      "vertices": 16,
+      "min": [
+        -0.2902367115020752,
+        0.014999999664723873,
+        -0.3114648461341858
+      ],
+      "max": [
+        0.29118070006370544,
+        0.05735732614994049,
+        0.3013317584991455
+      ]
+    }
+  },
+  "note": "Nominal spacing budget, not measured filled surface. No game integration or performance claim."
+}

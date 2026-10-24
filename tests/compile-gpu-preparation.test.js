@@ -100,3 +100,10 @@ test('invalid or empty explicit selection never claims material readiness',async
  await assert.rejects(f.run({check:()=>{},selectPrograms:()=>null}),/no selected readiness program/);
  await assert.rejects(f.run({check:()=>{},selectPrograms:42}),/Invalid GPU program selector/);assert.equal(f.counts().compilations,2);
 });
+
+test('a deleted Three program is cancelled before its driver readiness query',async()=>{
+ let calls=0;const program={program:{},isReady:()=>{calls++;return false;}},material={};
+ const renderer={compile:()=>new Set([material]),properties:{get:()=>({currentProgram:program})}};
+ const pending=compileGpuPreparation(renderer,{},{},{},{check:()=>{}});program.program=undefined;
+ await assert.rejects(pending,error=>error.code==='GPU_PROGRAM_DISPOSED');assert.equal(calls,1);
+});

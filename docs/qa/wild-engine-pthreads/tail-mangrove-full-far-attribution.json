@@ -1,0 +1,624 @@
+{
+  "scope": "Diagnostic run with CPU sampling and GL wrappers; not comparable as an uninstrumented speed benchmark. Samples are exclusive attribution, not full function wall time.",
+  "sourceCheckpoint": "d182b9ba3",
+  "farSettled": true,
+  "created": 50,
+  "summary": {
+    "slices": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "preparationCpu": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "preparationLatency": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "generate": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "remove": {
+      "count": 50,
+      "mean": 3.8537999987602234,
+      "p95": 11.120000004768372,
+      "max": 18.444999992847443
+    },
+    "removeBatch": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "admit": {
+      "count": 50,
+      "mean": 0.06269999861717224,
+      "p95": 0.11000001430511475,
+      "max": 0.16999995708465576
+    },
+    "cancel": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "publish": {
+      "count": 50,
+      "mean": 0.8294000041484832,
+      "p95": 1.350000023841858,
+      "max": 2.034999966621399
+    },
+    "install": {
+      "count": 50,
+      "mean": 19.806600004434586,
+      "p95": 30.605000019073486,
+      "max": 59.189999997615814
+    },
+    "terrain": {
+      "count": 50,
+      "mean": 19.07830000281334,
+      "p95": 29.230000019073486,
+      "max": 55.155000030994415
+    },
+    "props": {
+      "count": 1000,
+      "mean": 0.08521500015258789,
+      "p95": 0.3700000047683716,
+      "max": 1.1600000262260437
+    },
+    "mud": {
+      "count": 50,
+      "mean": 3.1649000000953675,
+      "p95": 5.660000026226044,
+      "max": 10.415000021457672
+    },
+    "attach": {
+      "count": 52,
+      "mean": 0.9566346120375854,
+      "p95": 1.5,
+      "max": 2.099999964237213
+    },
+    "details": {
+      "count": 50,
+      "mean": 0.4857999992370605,
+      "p95": 1.4200000166893005,
+      "max": 3.439999997615814
+    },
+    "render": {
+      "count": 194,
+      "mean": 11.488943301832553,
+      "p95": 17.055000007152557,
+      "max": 152.15499997138977
+    },
+    "draw": {
+      "count": 194,
+      "mean": 7.048711342602661,
+      "p95": 9.995000004768372,
+      "max": 87.18000000715256
+    },
+    "cache": {
+      "count": 194,
+      "mean": 0.12270618376043654,
+      "p95": 0.5900000333786011,
+      "max": 0.9350000023841858
+    },
+    "nativeCompute": {
+      "count": 50,
+      "mean": 49.6427001953125,
+      "p95": 74.114990234375,
+      "max": 87.06494140625
+    },
+    "frames": {
+      "count": 161,
+      "mean": 30.881956521739145,
+      "p95": 83,
+      "max": 166.05999999999767
+    },
+    "horizon": {
+      "count": 194,
+      "mean": 0.01654639502161557,
+      "p95": 0.029999971389770508,
+      "max": 0.0899999737739563
+    },
+    "syncChunks": {
+      "count": 194,
+      "mean": 1.2929896912009446,
+      "p95": 0.550000011920929,
+      "max": 137.78000003099442
+    },
+    "microevents": {
+      "count": 194,
+      "mean": 0.05216494509854268,
+      "p95": 0.0899999737739563,
+      "max": 0.3999999761581421
+    },
+    "presentation": {
+      "count": 194,
+      "mean": 6.865979385130184,
+      "p95": 9.430000007152557,
+      "max": 87.125
+    },
+    "worldDraw": {
+      "count": 194,
+      "mean": 6.849407219395195,
+      "p95": 9.415000021457672,
+      "max": 87.11000001430511
+    },
+    "threeRender": {
+      "count": 494,
+      "mean": 2.5272672065356483,
+      "p95": 6.469999969005585,
+      "max": 86.33499997854233
+    }
+  },
+  "detail": {
+    "nativeTerrainBuffer": {
+      "count": 50,
+      "mean": 1.0430999970436097,
+      "p95": 1.5199999809265137,
+      "max": 6.944999992847443
+    },
+    "bindMangroveMudEdges": {
+      "count": 46,
+      "mean": 4.380543482044469,
+      "p95": 8.044999957084656,
+      "max": 13.600000023841858
+    },
+    "prepareMangroveBank": {
+      "count": 32,
+      "mean": 2.982031248509884,
+      "p95": 7.910000026226044,
+      "max": 9.915000021457672
+    },
+    "prepareNaturalWater": {
+      "count": 32,
+      "mean": 8.521718755364418,
+      "p95": 16.964999973773956,
+      "max": 18.189999997615814
+    }
+  },
+  "slowGl": [
+    {
+      "name": "getProgramInfoLog",
+      "ms": 30.214999973773956,
+      "programId": 86,
+      "alreadyWarmed": true
+    },
+    {
+      "name": "getProgramInfoLog",
+      "ms": 23.50499999523163,
+      "programId": 87,
+      "alreadyWarmed": true
+    },
+    {
+      "name": "getProgramInfoLog",
+      "ms": 23.55000001192093,
+      "programId": 90,
+      "alreadyWarmed": true
+    },
+    {
+      "name": "getProgramInfoLog",
+      "ms": 22.810000002384186,
+      "programId": 91,
+      "alreadyWarmed": true
+    },
+    {
+      "name": "getProgramInfoLog",
+      "ms": 78.27999997138977,
+      "programId": 93,
+      "alreadyWarmed": true
+    }
+  ],
+  "exclusiveSamples": [
+    {
+      "ms": 2570.056,
+      "frame": {
+        "functionName": "(idle)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 709.859,
+      "frame": {
+        "functionName": "(program)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 222.334,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 115.033,
+      "frame": {
+        "functionName": "bindMangroveMudEdges",
+        "scriptId": "128",
+        "url": "http://127.0.0.1:5190/src/rendering/global-mangrove-mud-edges.js",
+        "lineNumber": 10,
+        "columnNumber": 36
+      }
+    },
+    {
+      "ms": 95.591,
+      "frame": {
+        "functionName": "attribute",
+        "scriptId": "363",
+        "url": "http://127.0.0.1:5190/src/rendering/shadow-cache.js",
+        "lineNumber": 23,
+        "columnNumber": 20
+      }
+    },
+    {
+      "ms": 75.515,
+      "frame": {
+        "functionName": "prepareNaturalWaterBed",
+        "scriptId": "124",
+        "url": "http://127.0.0.1:5190/src/rendering/natural-water-edges.js",
+        "lineNumber": 4,
+        "columnNumber": 39
+      }
+    },
+    {
+      "ms": 70.503,
+      "frame": {
+        "functionName": "(garbage collector)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 63.257,
+      "frame": {
+        "functionName": "wasm-function[61]",
+        "scriptId": "479",
+        "url": "http://127.0.0.1:5190/wild-engine/spatial-threaded.wasm",
+        "lineNumber": 0,
+        "columnNumber": 32490
+      }
+    },
+    {
+      "ms": 60.497,
+      "frame": {
+        "functionName": "surface",
+        "scriptId": "154",
+        "url": "http://127.0.0.1:5190/src/rendering/mud-patches.js",
+        "lineNumber": 24,
+        "columnNumber": 25
+      }
+    },
+    {
+      "ms": 49.199,
+      "frame": {
+        "functionName": "attribute",
+        "scriptId": "363",
+        "url": "http://127.0.0.1:5190/src/rendering/shadow-cache.js",
+        "lineNumber": 23,
+        "columnNumber": 20
+      }
+    },
+    {
+      "ms": 40.383,
+      "frame": {
+        "functionName": "boundaryDistance",
+        "scriptId": "124",
+        "url": "http://127.0.0.1:5190/src/rendering/natural-water-edges.js",
+        "lineNumber": 23,
+        "columnNumber": 24
+      }
+    },
+    {
+      "ms": 38.336,
+      "frame": {
+        "functionName": "upload",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 34742,
+        "columnNumber": 15
+      }
+    },
+    {
+      "ms": 37.842,
+      "frame": {
+        "functionName": "getBoundingClientRect",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 37.295,
+      "frame": {
+        "functionName": "updateMatrixWorld",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 8324,
+        "columnNumber": 19
+      }
+    },
+    {
+      "ms": 36.907,
+      "frame": {
+        "functionName": "updateMatrixWorld",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 8324,
+        "columnNumber": 19
+      }
+    },
+    {
+      "ms": 36.821,
+      "frame": {
+        "functionName": "toArray",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 7290,
+        "columnNumber": 9
+      }
+    },
+    {
+      "ms": 33.8,
+      "frame": {
+        "functionName": "",
+        "scriptId": "124",
+        "url": "http://127.0.0.1:5190/src/rendering/natural-water-edges.js",
+        "lineNumber": 12,
+        "columnNumber": 115
+      }
+    },
+    {
+      "ms": 32.731,
+      "frame": {
+        "functionName": "frame",
+        "scriptId": "9",
+        "url": "http://127.0.0.1:5190/src/app/main.js",
+        "lineNumber": 551,
+        "columnNumber": 14
+      }
+    },
+    {
+      "ms": 31.737,
+      "frame": {
+        "functionName": "update",
+        "scriptId": "188",
+        "url": "http://127.0.0.1:5190/src/rendering/asset-groups.js",
+        "lineNumber": 154,
+        "columnNumber": 8
+      }
+    },
+    {
+      "ms": 30.949,
+      "frame": {
+        "functionName": "select",
+        "scriptId": "127",
+        "url": "http://127.0.0.1:5190/src/rendering/continuous-grass.js",
+        "lineNumber": 131,
+        "columnNumber": 16
+      }
+    },
+    {
+      "ms": 27.16,
+      "frame": {
+        "functionName": "wasm-function[43]",
+        "scriptId": "479",
+        "url": "http://127.0.0.1:5190/wild-engine/spatial-threaded.wasm",
+        "lineNumber": 0,
+        "columnNumber": 23047
+      }
+    },
+    {
+      "ms": 27.008,
+      "frame": {
+        "functionName": "scan",
+        "scriptId": "128",
+        "url": "http://127.0.0.1:5190/src/rendering/global-mangrove-mud-edges.js",
+        "lineNumber": 26,
+        "columnNumber": 14
+      }
+    },
+    {
+      "ms": 26.326,
+      "frame": {
+        "functionName": "URLSearchParams",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 25.758,
+      "frame": {
+        "functionName": "wasm-function[71]",
+        "scriptId": "479",
+        "url": "http://127.0.0.1:5190/wild-engine/spatial-threaded.wasm",
+        "lineNumber": 0,
+        "columnNumber": 57860
+      }
+    },
+    {
+      "ms": 24.274,
+      "frame": {
+        "functionName": "bounds",
+        "scriptId": "128",
+        "url": "http://127.0.0.1:5190/src/rendering/global-mangrove-mud-edges.js",
+        "lineNumber": 25,
+        "columnNumber": 16
+      }
+    },
+    {
+      "ms": 23.44,
+      "frame": {
+        "functionName": "matches",
+        "scriptId": "363",
+        "url": "http://127.0.0.1:5190/src/rendering/shadow-cache.js",
+        "lineNumber": 101,
+        "columnNumber": 9
+      }
+    },
+    {
+      "ms": 23.098,
+      "frame": {
+        "functionName": "WebGLRenderer.renderBufferDirect",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 40313,
+        "columnNumber": 38
+      }
+    },
+    {
+      "ms": 23.044,
+      "frame": {
+        "functionName": "updateObstructions",
+        "scriptId": "185",
+        "url": "http://127.0.0.1:5190/src/rendering/obstruction.js",
+        "lineNumber": 43,
+        "columnNumber": 34
+      }
+    },
+    {
+      "ms": 22.969,
+      "frame": {
+        "functionName": "upload",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 34742,
+        "columnNumber": 15
+      }
+    },
+    {
+      "ms": 22.381,
+      "frame": {
+        "functionName": "mudPatchGeometry",
+        "scriptId": "154",
+        "url": "http://127.0.0.1:5190/src/rendering/mud-patches.js",
+        "lineNumber": 21,
+        "columnNumber": 32
+      }
+    },
+    {
+      "ms": 22.132,
+      "frame": {
+        "functionName": "fromBufferAttribute",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 2785,
+        "columnNumber": 21
+      }
+    },
+    {
+      "ms": 21.892,
+      "frame": {
+        "functionName": "wasm-function[20]",
+        "scriptId": "479",
+        "url": "http://127.0.0.1:5190/wild-engine/spatial-threaded.wasm",
+        "lineNumber": 0,
+        "columnNumber": 5774
+      }
+    },
+    {
+      "ms": 21.592,
+      "frame": {
+        "functionName": "vertex",
+        "scriptId": "124",
+        "url": "http://127.0.0.1:5190/src/rendering/natural-water-edges.js",
+        "lineNumber": 12,
+        "columnNumber": 14
+      }
+    },
+    {
+      "ms": 21.062,
+      "frame": {
+        "functionName": "",
+        "scriptId": "188",
+        "url": "http://127.0.0.1:5190/src/rendering/asset-groups.js",
+        "lineNumber": 82,
+        "columnNumber": 135
+      }
+    },
+    {
+      "ms": 20.889,
+      "frame": {
+        "functionName": "updateMatrixWorld",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 8324,
+        "columnNumber": 19
+      }
+    },
+    {
+      "ms": 20.773,
+      "frame": {
+        "functionName": "updateObstructions",
+        "scriptId": "185",
+        "url": "http://127.0.0.1:5190/src/rendering/obstruction.js",
+        "lineNumber": 43,
+        "columnNumber": 34
+      }
+    },
+    {
+      "ms": 20.66,
+      "frame": {
+        "functionName": "updateAssetLods",
+        "scriptId": "186",
+        "url": "http://127.0.0.1:5190/src/rendering/asset-lod.js",
+        "lineNumber": 36,
+        "columnNumber": 31
+      }
+    },
+    {
+      "ms": 20.009,
+      "frame": {
+        "functionName": "updateMatrixWorld",
+        "scriptId": "288",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 8324,
+        "columnNumber": 19
+      }
+    },
+    {
+      "ms": 19.466,
+      "frame": {
+        "functionName": "getParameter",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "ms": 19.008,
+      "frame": {
+        "functionName": "bindMangroveMudEdges",
+        "scriptId": "29",
+        "url": "http://127.0.0.1:5190/src/rendering/scene.js",
+        "lineNumber": 764,
+        "columnNumber": 29
+      }
+    }
+  ]
+}

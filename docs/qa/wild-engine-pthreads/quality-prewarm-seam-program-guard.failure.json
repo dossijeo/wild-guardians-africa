@@ -1,0 +1,467 @@
+{
+  "message": "page.evaluate: Error: GL error after quality change: 0x501\n    at Module.verifyGameQualityCycle (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:46:89)\n    at async eval (eval at evaluate (:370:30), <anonymous>:1:10)\n    at async <anonymous>:396:30",
+  "diagnostic": {
+    "message": "GL error after quality change: 0x501",
+    "rows": [
+      {
+        "quality": "media",
+        "programs": 82,
+        "drawCalls": 82,
+        "recovery": {
+          "revision": 3,
+          "ms": 161.51500004529953,
+          "retained": 81
+        },
+        "retention": {
+          "retained": 81,
+          "released": 81,
+          "destroyed": 1,
+          "abandoned": 0,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "settingMs": 2.0799999833106995,
+        "prewarmMs": 209.9399999976158,
+        "prewarmInvalidations": 0,
+        "transitionMs": 776.1499999761581,
+        "frameTimes": [
+          21.74500000476837,
+          21.0450000166893,
+          28.855000019073486,
+          45.33499997854233,
+          26.834999978542328,
+          15.5450000166893,
+          19.0799999833107,
+          16.105000019073486,
+          17.144999980926514,
+          29.59500002861023,
+          11.149999976158142,
+          16.830000042915344,
+          13.409999966621399,
+          17.55000001192093,
+          43.87999999523163,
+          36.29000002145767,
+          49.83499997854233,
+          36.32499998807907,
+          38.605000019073486,
+          76.49500000476837,
+          23.264999985694885
+        ]
+      }
+    ],
+    "attribution": [
+      {
+        "kind": "renderer",
+        "name": "render",
+        "quality": "media",
+        "ms": 14.085000038146973,
+        "at": 33048.27500003576,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 14.740000009536743,
+        "at": 33048.310000002384,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 14.834999978542328,
+        "at": 33048.314999997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 18.615000009536743,
+        "at": 33048.31999999285,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 10.064999997615814,
+        "at": 33072.22500002384,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 10.740000009536743,
+        "at": 33089.889999985695,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 11.875,
+        "at": 33107.439999997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 10.929999947547913,
+        "at": 33150.82999998331,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 10.5,
+        "at": 33187.58500003815,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 10.40499997138977,
+        "at": 33229.87999999523,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 14.254999995231628,
+        "at": 33273.25999999046,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 14.310000002384186,
+        "at": 33273.25999999046,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 18.289999961853027,
+        "at": 33273.25999999046,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 10.014999985694885,
+        "at": 33312.17500001192,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 15.285000026226044,
+        "at": 33312.18000000715,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 11.4200000166893,
+        "at": 33384.67000001669,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 11.475000023841858,
+        "at": 33384.67000001669,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 17.139999985694885,
+        "at": 33384.67500001192,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 12.675000011920929,
+        "at": 33404.935000002384,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 10.069999992847443,
+        "at": 33427.189999997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 10.139999985694885,
+        "at": 33427.189999997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 14.689999997615814,
+        "at": 33427.19499999285,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 11.280000030994415,
+        "at": 33598.08500003815,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 10.165000021457672,
+        "at": 33654.60500001907,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramInfoLog",
+        "quality": "baja",
+        "ms": 15.824999988079071,
+        "at": 33788.54500001669,
+        "stack": null,
+        "program": {
+          "id": 95,
+          "cacheKey": "23,24,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133121,srgb,onBeforeCompile() {\n  }"
+        }
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramInfoLog",
+        "quality": "baja",
+        "ms": 19.14500004053116,
+        "at": 33810.17000001669,
+        "stack": null,
+        "program": {
+          "id": 96,
+          "cacheKey": "23,25,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,2049,srgb,onBeforeCompile() {\n  }"
+        }
+      },
+      {
+        "kind": "renderer",
+        "name": "render",
+        "quality": "baja",
+        "ms": 60.69500005245209,
+        "at": 33820.155000030994,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "syncChunks",
+        "quality": "baja",
+        "ms": 11.865000009536743,
+        "at": 33906.735000014305,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 19.564999997615814,
+        "at": 33914.01999998093,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 11.089999973773956,
+        "at": 34010.75,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 10.875,
+        "at": 35068.935000002384,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "syncChunks",
+        "quality": "baja",
+        "ms": 18.014999985694885,
+        "at": 35275.45499998331,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 25.884999990463257,
+        "at": 35283.07499998808,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 14.714999973773956,
+        "at": 36768.939999997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 10.024999976158142,
+        "at": 36831.45499998331,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramInfoLog",
+        "quality": "baja",
+        "ms": 31.0799999833107,
+        "at": 39025.689999997616,
+        "stack": null,
+        "program": {
+          "id": 104,
+          "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,2051,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|mangrove-shore-v1|qa-depth-bank-v2|manglares"
+        }
+      },
+      {
+        "kind": "renderer",
+        "name": "render",
+        "quality": "baja",
+        "ms": 57.810000002384186,
+        "at": 39027.564999997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "baja",
+        "ms": 59.480000019073486,
+        "at": 39028.11500000954,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "baja",
+        "ms": 59.985000014305115,
+        "at": 39028.11500000954,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 62.66500002145767,
+        "at": 39028.12000000477,
+        "stack": null,
+        "program": null
+      }
+    ]
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x6b0c010a9c00] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (737,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(742,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (737,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(742,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (755,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(760,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(755,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(760,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (754,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(754,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

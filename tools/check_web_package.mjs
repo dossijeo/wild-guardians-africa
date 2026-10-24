@@ -1,12 +1,14 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL} from './web-package.mjs';
+import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,QA_ONLY_VISUAL_DIRECTORIES} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
+for(const path of inventory)if(['.js','.mjs','.json','.html','.css'].includes(extname(path))){const text=await readFile(resolve(root,path),'utf8');for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(!text.includes('assets/visual-lab/'+name+'/'),'Packaged code references excluded QA assets: '+path+' -> '+name);}
+for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(![...inventory].some(path=>path.startsWith(`assets/visual-lab/${name}/`)),'QA-only visual assets must not ship: '+name);
 const libraryManifest=JSON.parse(await readFile(resolve(root,'library/manifest.json'),'utf8'));
 assert.deepEqual(Object.keys(libraryManifest).sort(),['crops','destruction','sfx','walls'],'Only linked Library labs should ship');
 const gameplayCrop=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8')).find(model=>model.source.includes('Cultivos'));

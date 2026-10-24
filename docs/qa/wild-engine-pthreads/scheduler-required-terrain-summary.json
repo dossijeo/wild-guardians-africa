@@ -1,0 +1,593 @@
+{
+  "scope": "Interleaved active Manglares Intel UHD 720p low, 360 frames/144m. All cases use scheduler, stable shadows and dormant crop depth preparation. elastic-debt: burst flag 0/1/0/1, rejected. required-terrain: deadline now+250/now/now+250/now, retained. Simulation varies with wall time, not final-state image equivalence. CPU/GPU separate; no isolated scheduler CPU cost claim from lifetime counters.",
+  "rows": [
+    {
+      "case": "A1",
+      "readyMs": 28933.705000042915,
+      "frames": {
+        "count": 360,
+        "mean": 27.529569444444437,
+        "p95": 49.955000000001746,
+        "max": 83.17500000000291,
+        "p99": 66.71999999999389
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.40535976859504,
+        "p95": 32.54677,
+        "max": 45.939531
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 670.865666671594,
+        "p95": 1202.7150000333786,
+        "max": 1251.9549999833107
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.172333339850107,
+        "p95": 12.51500016450882,
+        "max": 12.899999856948853
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 500.32000094652176,
+        "coordinationMs": 55.4949991106987,
+        "maxUnitMs": 11.629999995231628,
+        "overruns": 87,
+        "deadlineLoans": 82,
+        "oversizeRecoveries": 0,
+        "continuationMs": 29.949999928474426,
+        "continuationTurns": 1126,
+        "median": 16.689999999995052,
+        "p95": 33.36999999999534,
+        "p99": 49.95999999999913,
+        "cpu95": 7.334999978542328,
+        "jitter": 16.68000000000029,
+        "budgetMs": 2.1353207772986735,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "cpuMs": 0.3400000333786011,
+          "maxCpuMs": 0.0350000262260437,
+          "waitMs": 3947.8400000333786,
+          "maxWaitMs": 314.9350000023842
+        },
+        "ground": {
+          "count": 15,
+          "cpuMs": 23.07499998807907,
+          "maxCpuMs": 3.6449999809265137,
+          "waitMs": 553.9300000071526,
+          "maxWaitMs": 102.11000001430511
+        },
+        "mud-geometry": {
+          "count": 15,
+          "cpuMs": 42.614999890327454,
+          "maxCpuMs": 6.0799999833106995,
+          "waitMs": 619.6699999570847,
+          "maxWaitMs": 100.63499999046326
+        },
+        "mud-edges": {
+          "count": 15,
+          "cpuMs": 0.375,
+          "maxCpuMs": 0.050000011920928955,
+          "waitMs": 498.62000012397766,
+          "maxWaitMs": 84.73500001430511
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "cpuMs": 3.07999986410141,
+          "maxCpuMs": 0.07500004768371582,
+          "waitMs": 1465.540000140667,
+          "maxWaitMs": 382.25999999046326
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "cpuMs": 41.86500012874603,
+          "maxCpuMs": 0.7749999761581421,
+          "waitMs": 1946.2449998259544,
+          "maxWaitMs": 154.82499998807907
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "cpuMs": 1.76500004529953,
+          "maxCpuMs": 0.19499999284744263,
+          "waitMs": 62.799999952316284,
+          "maxWaitMs": 62.23499995470047
+        },
+        "water-geometry": {
+          "count": 15,
+          "cpuMs": 3.0749999284744263,
+          "maxCpuMs": 0.7249999642372131,
+          "waitMs": 148.0650001168251,
+          "maxWaitMs": 66.60500001907349
+        },
+        "bank": {
+          "count": 8,
+          "cpuMs": 0.30000001192092896,
+          "maxCpuMs": 0.09000003337860107,
+          "waitMs": 63.58499997854233,
+          "maxWaitMs": 62.77999997138977
+        },
+        "water-edges": {
+          "count": 8,
+          "cpuMs": 0.3550001382827759,
+          "maxCpuMs": 0.08000004291534424,
+          "waitMs": 66.83499991893768,
+          "maxWaitMs": 66.14999997615814
+        },
+        "water-core": {
+          "count": 8,
+          "cpuMs": 0.004999995231628418,
+          "maxCpuMs": 0.004999995231628418,
+          "waitMs": 68.01500004529953,
+          "maxWaitMs": 67.44999998807907
+        },
+        "prop-filter": {
+          "count": 15,
+          "cpuMs": 2.2199999690055847,
+          "maxCpuMs": 0.20999997854232788,
+          "waitMs": 75.04999989271164,
+          "maxWaitMs": 59.5349999666214
+        },
+        "prop-slots": {
+          "count": 75,
+          "cpuMs": 18.515000104904175,
+          "maxCpuMs": 0.8050000071525574,
+          "waitMs": 400.35499984025955,
+          "maxWaitMs": 65.4899999499321
+        }
+      }
+    },
+    {
+      "case": "B1",
+      "readyMs": 27798.735000014305,
+      "frames": {
+        "count": 360,
+        "mean": 27.85295833333334,
+        "p95": 49.955000000001746,
+        "max": 83.25499999999738,
+        "p99": 66.87000000000262
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.7668008677686,
+        "p95": 35.838333,
+        "max": 46.000311
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 418.8536666591962,
+        "p95": 981.7199999690056,
+        "max": 1045.925000011921
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.08333334128062,
+        "p95": 10.81499993801117,
+        "max": 13.790000081062317
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 488.72999995946884,
+        "coordinationMs": 52.7750009894371,
+        "maxUnitMs": 8.180000007152557,
+        "overruns": 57,
+        "deadlineLoans": 54,
+        "oversizeRecoveries": 0,
+        "continuationMs": 33.24000018835068,
+        "continuationTurns": 1517,
+        "median": 16.735000000000582,
+        "p95": 33.345000000001164,
+        "p99": 33.55999999999767,
+        "cpu95": 6.834999978542328,
+        "jitter": 16.610000000000582,
+        "budgetMs": 3.370683024705937,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "cpuMs": 0.3249998688697815,
+          "maxCpuMs": 0.034999966621398926,
+          "waitMs": 567.9599999785423,
+          "maxWaitMs": 82.43999999761581
+        },
+        "ground": {
+          "count": 15,
+          "cpuMs": 24.389999985694885,
+          "maxCpuMs": 3.4799999594688416,
+          "waitMs": 457.1200001835823,
+          "maxWaitMs": 106.94000005722046
+        },
+        "mud-geometry": {
+          "count": 15,
+          "cpuMs": 39.24000006914139,
+          "maxCpuMs": 3.9100000262260437,
+          "waitMs": 899.4699999690056,
+          "maxWaitMs": 227.74500000476837
+        },
+        "mud-edges": {
+          "count": 15,
+          "cpuMs": 0.3049999475479126,
+          "maxCpuMs": 0.04500001668930054,
+          "waitMs": 564.0949999094009,
+          "maxWaitMs": 84.80500000715256
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "cpuMs": 3.440000057220459,
+          "maxCpuMs": 0.07999998331069946,
+          "waitMs": 1189.5199999809265,
+          "maxWaitMs": 223.25
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "cpuMs": 43.044999957084656,
+          "maxCpuMs": 0.7099999785423279,
+          "waitMs": 1068.3150000572205,
+          "maxWaitMs": 111.31499999761581
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "cpuMs": 1.580000102519989,
+          "maxCpuMs": 0.2200000286102295,
+          "waitMs": 160.02999997138977,
+          "maxWaitMs": 82.02500003576279
+        },
+        "water-geometry": {
+          "count": 15,
+          "cpuMs": 2.9349998831748962,
+          "maxCpuMs": 0.7699999809265137,
+          "waitMs": 136.15999990701675,
+          "maxWaitMs": 68.31499999761581
+        },
+        "bank": {
+          "count": 8,
+          "cpuMs": 0.24500000476837158,
+          "maxCpuMs": 0.050000011920928955,
+          "waitMs": 0.7000001072883606,
+          "maxWaitMs": 0.22499996423721313
+        },
+        "water-edges": {
+          "count": 8,
+          "cpuMs": 0.2950000762939453,
+          "maxCpuMs": 0.04500001668930054,
+          "waitMs": 0.9900000095367432,
+          "maxWaitMs": 0.4100000262260437
+        },
+        "water-core": {
+          "count": 8,
+          "cpuMs": 0,
+          "maxCpuMs": 0,
+          "waitMs": 1.3049999475479126,
+          "maxWaitMs": 0.4099999666213989
+        },
+        "prop-filter": {
+          "count": 15,
+          "cpuMs": 2.1600000262260437,
+          "maxCpuMs": 0.2149999737739563,
+          "waitMs": 52.6599999666214,
+          "maxWaitMs": 31.599999964237213
+        },
+        "prop-slots": {
+          "count": 75,
+          "cpuMs": 18.29000014066696,
+          "maxCpuMs": 0.7000000476837158,
+          "waitMs": 1042.0249999165535,
+          "maxWaitMs": 117.55500000715256
+        }
+      }
+    },
+    {
+      "case": "A2",
+      "readyMs": 28399.235000014305,
+      "frames": {
+        "count": 360,
+        "mean": 27.898555555555564,
+        "p95": 49.98500000000058,
+        "max": 83.15499999999884,
+        "p99": 66.65499999999884
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.77827549586778,
+        "p95": 31.874114,
+        "max": 36.84953
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 705.4856666684151,
+        "p95": 1413.9350000023842,
+        "max": 1805.6150000095367
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.039666692415873,
+        "p95": 11.055000126361847,
+        "max": 12.824999988079071
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 474.61499977111816,
+        "coordinationMs": 54.014998733997345,
+        "maxUnitMs": 9.259999990463257,
+        "overruns": 77,
+        "deadlineLoans": 74,
+        "oversizeRecoveries": 0,
+        "continuationMs": 26.95000010728836,
+        "continuationTurns": 1254,
+        "median": 16.70499999999447,
+        "p95": 33.31499999999505,
+        "p99": 33.40500000000611,
+        "cpu95": 6.6049999594688416,
+        "jitter": 16.610000000000582,
+        "budgetMs": 3.173747992800057,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "cpuMs": 0.34499984979629517,
+          "maxCpuMs": 0.029999971389770508,
+          "waitMs": 3672.9500000476837,
+          "maxWaitMs": 405.89999997615814
+        },
+        "ground": {
+          "count": 15,
+          "cpuMs": 22.524999976158142,
+          "maxCpuMs": 2.7899999618530273,
+          "waitMs": 681.3700001239777,
+          "maxWaitMs": 153.81500005722046
+        },
+        "mud-geometry": {
+          "count": 15,
+          "cpuMs": 39.219999969005585,
+          "maxCpuMs": 3.8350000381469727,
+          "waitMs": 616.9399999380112,
+          "maxWaitMs": 81.3400000333786
+        },
+        "mud-edges": {
+          "count": 15,
+          "cpuMs": 0.28499990701675415,
+          "maxCpuMs": 0.025000035762786865,
+          "waitMs": 481.2550000548363,
+          "maxWaitMs": 75.375
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "cpuMs": 3.220000386238098,
+          "maxCpuMs": 0.08499997854232788,
+          "waitMs": 999.1449996232986,
+          "maxWaitMs": 143.60000002384186
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "cpuMs": 43.50000035762787,
+          "maxCpuMs": 0.625,
+          "waitMs": 1972.0349996685982,
+          "maxWaitMs": 116.60500001907349
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "cpuMs": 1.8499997854232788,
+          "maxCpuMs": 0.25,
+          "waitMs": 0.6800001263618469,
+          "maxWaitMs": 0.19499999284744263
+        },
+        "water-geometry": {
+          "count": 15,
+          "cpuMs": 3.2500001192092896,
+          "maxCpuMs": 0.9449999928474426,
+          "waitMs": 304.2350000143051,
+          "maxWaitMs": 129.00499999523163
+        },
+        "bank": {
+          "count": 8,
+          "cpuMs": 0.3349999785423279,
+          "maxCpuMs": 0.07500004768371582,
+          "waitMs": 95.56999999284744,
+          "maxWaitMs": 40.64500004053116
+        },
+        "water-edges": {
+          "count": 8,
+          "cpuMs": 0.3750000596046448,
+          "maxCpuMs": 0.07500004768371582,
+          "waitMs": 159.71999996900558,
+          "maxWaitMs": 80.5349999666214
+        },
+        "water-core": {
+          "count": 8,
+          "cpuMs": 0.019999980926513672,
+          "maxCpuMs": 0.004999995231628418,
+          "waitMs": 77.91999995708466,
+          "maxWaitMs": 77.39999997615814
+        },
+        "prop-filter": {
+          "count": 15,
+          "cpuMs": 1.9600001573562622,
+          "maxCpuMs": 0.1850000023841858,
+          "waitMs": 438.4299999475479,
+          "maxWaitMs": 233.99500000476837
+        },
+        "prop-slots": {
+          "count": 75,
+          "cpuMs": 18.70999985933304,
+          "maxCpuMs": 0.8149999976158142,
+          "waitMs": 931.8900000452995,
+          "maxWaitMs": 150.2699999809265
+        }
+      }
+    },
+    {
+      "case": "B2",
+      "readyMs": 28067.469999969006,
+      "frames": {
+        "count": 360,
+        "mean": 27.945208333333337,
+        "p95": 49.94000000000233,
+        "max": 83.0199999999968,
+        "p99": 66.57499999999709
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.785129495867768,
+        "p95": 31.505364,
+        "max": 36.228749
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 606.9283333341281,
+        "p95": 1055.1299999952316,
+        "max": 1174.164999961853
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.16266673008601,
+        "p95": 10.934999942779541,
+        "max": 12.559999942779541
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 495.10499984025955,
+        "coordinationMs": 53.86000281572342,
+        "maxUnitMs": 10.179999947547913,
+        "overruns": 95,
+        "deadlineLoans": 87,
+        "oversizeRecoveries": 0,
+        "continuationMs": 29.005000054836273,
+        "continuationTurns": 1391,
+        "median": 16.7300000000032,
+        "p95": 33.419999999998254,
+        "p99": 33.53500000000349,
+        "cpu95": 6.60999995470047,
+        "jitter": 16.689999999995052,
+        "budgetMs": 3.26458010890972,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "cpuMs": 0.4800001382827759,
+          "maxCpuMs": 0.12000000476837158,
+          "waitMs": 672.3800000548363,
+          "maxWaitMs": 88.44999998807907
+        },
+        "ground": {
+          "count": 15,
+          "cpuMs": 22.55000001192093,
+          "maxCpuMs": 2.8700000047683716,
+          "waitMs": 705.2649999260902,
+          "maxWaitMs": 111.97499996423721
+        },
+        "mud-geometry": {
+          "count": 15,
+          "cpuMs": 38.170000195503235,
+          "maxCpuMs": 3.89000004529953,
+          "waitMs": 571.8999998569489,
+          "maxWaitMs": 73.24500000476837
+        },
+        "mud-edges": {
+          "count": 15,
+          "cpuMs": 0.2500001788139343,
+          "maxCpuMs": 0.039999961853027344,
+          "waitMs": 539.4549998044968,
+          "maxWaitMs": 76.13499999046326
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "cpuMs": 3.2900004982948303,
+          "maxCpuMs": 0.07499998807907104,
+          "waitMs": 688.2199994921684,
+          "maxWaitMs": 162.40499997138977
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "cpuMs": 44.67499965429306,
+          "maxCpuMs": 0.6549999713897705,
+          "waitMs": 4028.125000298023,
+          "maxWaitMs": 236.7699999809265
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "cpuMs": 1.9200000166893005,
+          "maxCpuMs": 0.2900000214576721,
+          "waitMs": 181.58499997854233,
+          "maxWaitMs": 65.78999996185303
+        },
+        "water-geometry": {
+          "count": 15,
+          "cpuMs": 3.26500004529953,
+          "maxCpuMs": 0.8100000023841858,
+          "waitMs": 200.03000009059906,
+          "maxWaitMs": 82.49500000476837
+        },
+        "bank": {
+          "count": 8,
+          "cpuMs": 0.3250000476837158,
+          "maxCpuMs": 0.07499998807907104,
+          "waitMs": 81.83499991893768,
+          "maxWaitMs": 55.014999985694885
+        },
+        "water-edges": {
+          "count": 8,
+          "cpuMs": 0.36500000953674316,
+          "maxCpuMs": 0.07999998331069946,
+          "waitMs": 48.5799999833107,
+          "maxWaitMs": 48.05500000715256
+        },
+        "water-core": {
+          "count": 8,
+          "cpuMs": 0,
+          "maxCpuMs": 0,
+          "waitMs": 0.7600000500679016,
+          "maxWaitMs": 0.21500003337860107
+        },
+        "prop-filter": {
+          "count": 15,
+          "cpuMs": 2.1399998664855957,
+          "maxCpuMs": 0.24000000953674316,
+          "waitMs": 26.064999997615814,
+          "maxWaitMs": 25.089999973773956
+        },
+        "prop-slots": {
+          "count": 75,
+          "cpuMs": 20.01000028848648,
+          "maxCpuMs": 0.7400000095367432,
+          "waitMs": 1204.3949996829033,
+          "maxWaitMs": 118.64500004053116
+        }
+      }
+    }
+  ]
+}

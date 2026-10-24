@@ -1,0 +1,11 @@
+# Rejected benchmark preparation: rebuild asset groups
+
+This QA-only experiment tests whether clearing NativeAssetGroups once at the settled camera can remove loading-history residency differences while preserving the rendered scene. Production code and selected artwork are unchanged.
+
+Run `node tools/experiments/audit-volcano-group-reset-20261022.mjs`, then `python tools/experiments/compare-volcano-group-reset-20261022.py`. For the identical waiting control without clearing groups, set `WG_RESET_CONTROL=1` for both commands; output is the adjacent volcano-group-control-20261022 directory. Run serially. Medium/low/medium/low, day/night, same saved populated Volcanoes fixture, seed712, full background, 1280x720, early simulation pause. Snapshot after90 stable frames, then180 more frames. All sixteen records completed without browser/GL errors. No GPU timing claim.
+
+Reset reduces registered geometry counts from334 to313 (medium) and308 to290 (low); repeats then agree. However, night images change by12676/12673 pixels in medium and15776/15778 in low, with maximum channel deltas218/220. Day pairs change by4/0/0/0 pixels. The no-reset control changes only0–4 pixels (maximum delta8), with334 medium and308 low geometries unchanged throughout. Both exact-RGB comparators remain intentionally red; the control's tiny residuals also preclude claiming bit-exact determinism.
+
+Inspected night side-by-side and amplified difference image: dominant reset differences are in distant vegetation at the top of the image, while the settlement remains visually stable. Cause is not yet isolated. Since ordinary group retirement can occur during streaming, investigate whether this also happens on a real camera out-and-back before treating it as only a QA artifact.
+
+Decision: do not run the proposed prepared benchmark or integrate cache clearing. The temporary benchmark scripts were removed without execution. Retain the earlier provisional benchmark, preserve smooth obstruction transparency, and record retained fade resources explicitly in future measurements rather than changing render state to obtain equal counters. This experiment does not justify any reduction in vegetation density or visual quality.

@@ -47,3 +47,16 @@ test('disabled, cached and empty-light passes do not add proxies; hidden color b
  let visited=0;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.render=(lights,world)=>{visited++;assert.equal(world.getObjectByName('native_asset_shadow_pass').children.length,0);};
  const release2=installAssetShadows(renderer,()=>chunks);renderer.shadowMap.render([{}],scene,f.camera);assert.equal(visited,1);release2();
 });
+
+
+test('scene-owned shadow proxies skip presentation scenes without reading world chunks',()=>{
+ const {group,batch,chunks,camera}=fixture(),world=new THREE.Scene(),presentation=new THREE.Scene();world.add(group);world.updateMatrixWorld(true);
+ let reads=0,passes=0;
+ const original=function(lights,scene){passes++;const proxy=scene.getObjectByName('native_asset_shadow_pass');if(scene===world){assert.ok(proxy);assert.deepEqual(proxy.children,[batch.shadow]);}else{assert.equal(proxy,undefined);assert.equal(batch.shadow.parent,null);}return scene;};
+ const renderer={shadowMap:{enabled:true,autoUpdate:true,render:original}};
+ const release=installAssetShadows(renderer,()=>{reads++;return chunks;},world);
+ assert.equal(renderer.shadowMap.render([{}],presentation,camera),presentation);assert.equal(reads,0);
+ assert.equal(renderer.shadowMap.render([{}],world,camera),world);assert.equal(reads,1);assert.equal(batch.shadow.parent,null);
+ renderer.shadowMap.render([{}],presentation,camera);assert.equal(reads,1);assert.equal(passes,3);assert.deepEqual(presentation.children,[]);
+ release();assert.equal(renderer.shadowMap.render,original);
+});

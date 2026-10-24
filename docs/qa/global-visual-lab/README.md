@@ -1,0 +1,99 @@
+# Laboratorio visual global (rama experimental)
+
+Este laboratorio compara capturas del `WorldScene` real con cámara, semilla 712, hora y escala fijas. La fixture contiene 16 cultivos y 10 piezas de muralla visibles por bioma; no representa una compra legal ni una campaña. Las seis capturas originales están en [`six-biome-reference`](./six-biome-reference/). Los pares día/noche con el atlas de normales activado están en [`global-normal-day`](./global-normal-day/) y [`global-normal-night`](./global-normal-night/), frente a [`baseline-night`](./baseline-night/). El cambio combinado de Sabana está en [`savanna-layer-grass-updated`](./savanna-layer-grass-updated/) y [`savanna-layer-grass-night`](./savanna-layer-grass-night/).
+
+## Auditoría previa
+
+- Three.js/WebGL2 ya usa ACES, sombra PCF suave, atlas de contacto nativo de 256², `shadow-cache`, instancing de cultivos/props y descarga de chunks residentes. Los modelos de aldea son geometría/UV/normales empaquetados con atlas de color y normal; suavizar todas las normales en Blender destruiría aristas artísticas. No se modificó ningún modelo original.
+- Corrección de auditoría: cinco suelos tienen base, normal y ARH autorales; Desierto usa ARH neutro y el recorrido puro de musgo de Manglar omite el parallax general. Véase el [ensayo de matas bajas y auditoría actual](./grass-beds/README.md), descartado por regresión nocturna. El de Sabana proviene de *Grass Medium 01*; su canal B ARH se emplea en parallax de hasta ocho muestras (`relief=0.075`, `normalBoost=1.2`). No faltaba una técnica de parallax; aumentar su amplitud es una elección artística con coste.
+- [`shadow-audit/reuse.json`](./shadow-audit/reuse.json) registra un `shadowSnapshot()` de 14.777 valores y mediana de 0,3–0,5 ms CPU por fotograma. La escena estática acertó 39/40 veces; con actor móvil redibujó 40/40. [`shadow-audit/gpu.json`](./shadow-audit/gpu.json) mide el pass de sombra móvil en ~2,20–5,09 ms GPU de mediana según bioma. El sol tiene dirección fija, pero el encuadre de la cámara de sombras sigue a la cámara. El relieve no proyecta actualmente en ese pass. Por ello, un mapa solar precalculado podría añadir volumen a paredes permanentes, pero **no ahorraría** ese coste del pass; requeriría memoria, subida de textura y tratamiento de costuras. No se añadió otro mapa solar/AO.
+
+## Pilotos conservados
+
+`visualLab=normal` conecta el atlas de normales existente de la aldea, sin cambiar topología ni silueta. En las cámaras fijas de los seis biomas la diferencia es demasiado sutil para recomendar su activación. Se conserva como prueba acotada, no como mejora adoptada.
+
+`visualLab=layer` usa arena existente como sustrato y paja original como capa superior, ambas con sus mapas de normales y ARH. Una máscara derivada del `ground-mask` existente controla claros, caminos y cobertura; UV y perturbación del borde están ligados a coordenadas del mundo. No crea una segunda autoridad de terreno. La captura muestra un suelo más arenoso, pero aún hay una frontera diagonal perceptible en primer plano y no alcanza la riqueza del mockup. La ABBA de [`savanna-layer-report.json`](./abba/savanna-layer-report.json) dio 17,13–17,98 ms GPU de día para la capa frente a 18,04–18,83 ms base; el punto base nocturno de 26,70 ms fue un outlier frío y no prueba una mejora nocturna. Misma geometría y draw calls. `visualLab=layer-relief` eleva normal a 1,6 y parallax a 0,12 solo en paja; añade aproximadamente 0,7–0,9 ms GPU frente a `layer` en la muestra corta, para un efecto modesto. No se recomienda activarlo.
+
+`visualLab=layer-grass` añade **matas 3D reales**, no tarjetas cruzadas. La malla derivada en Blender tiene 224 triángulos por mata, alpha cutout, instancing en un draw call, no proyecta sombra dinámica y usa los chunks residentes como límite de vida. La distribución es determinista y usa cobertura, humedad, pendiente, agua, desgaste y distancia a entidades; una función de clúster concentra parte de las matas cerca del cultivo. En la fixture final hay 458 matas y 102.592 triángulos extra. [`polyhaven-cluster-vs-layer-report.json`](./abba/polyhaven-cluster-vs-layer-report.json) compara ABBA con el mismo suelo: GPU día 17,44/18,04 ms sin matas y 18,53/18,27 con matas (sobrecoste medio ~0,66 ms); noche 18,32/18,46 frente a 18,87/18,61 (~0,35 ms). El movimiento y la simulación no cambian. El detalle sigue disperso desde la cámara fija y necesita diseño adicional de agrupación/LOD antes de ser una mejora por defecto para los seis biomas.
+
+Se generó además una pequeña biblioteca Blender de detalles de los seis biomas mediante [`blender-visual-ground-detail.py`](../../../tools/experiments/blender-visual-ground-detail.py), con 54–108 triángulos por malla, pero solo se conectó la variante Sabana tras medición. La implementación no debe presentarse como una mejora global ya validada. El experimento de planos cruzados se descartó por siluetas/manchas oscuras y no forma parte de la implementación seleccionada.
+
+### Segunda iteración: silueta 3D a altura de cámara
+
+[`blender-grass-silhouette-variants.py`](../../../tools/experiments/blender-grass-silhouette-variants.py) produce dos alternativas sin emplear planos cruzados. La reagrupación `structured` combina dos submallas reales CC0 de Poly Haven (218 triángulos), pero en la [vista baja](./low-layer-grass-structured/savanna.png) se lee como ramas finas y resulta menos convincente que el [piloto anterior](./low-layer-grass/savanna.png). Se conserva el script/captura como resultado negativo, sin cargarla en el juego.
+
+La candidata `visualLab=layer-grass-sculpted` es una mata original de 22 hojas curvadas, **176 triángulos de geometría 3D**, color de vértices y sin textura alpha. Con las mismas 458 posiciones deterministas suma 80.608 triángulos y un draw call. Tiene mejor altura y silueta en las vistas [baja de día](./low-layer-grass-sculpted/savanna.png) y [baja de noche](./low-night-layer-grass-sculpted/savanna.png); la [vista completa de día](./grass-sculpted-day/savanna.png) y la [nocturna](./grass-sculpted-night/savanna.png) confirman que los cultivos siguen legibles. Su escala inicial era excesiva y se redujo de 3,1 a 2,25; el resultado sigue siendo algo puntiagudo y menos denso que el mockup.
+
+La ABBA [`grass-sculpted-vs-layer.json`](./abba/grass-sculpted-vs-layer.json) mide 18,04/18,87 ms GPU día/noche para el suelo sin matas y 18,62/19,56 ms para la candidata: +0,58/+0,69 ms GPU, CPU de envío ~+0,05 ms. La ABBA [`grass-sculpted-vs-polyhaven.json`](./abba/grass-sculpted-vs-polyhaven.json) da 18,59/19,23 ms frente a 18,30/19,10 ms del derivado Poly Haven: diferencias de +0,29/+0,13 ms GPU dentro de la variación de estas corridas. El archivo GLB sin textura ocupa 14.916 bytes frente a ~2,5 MB del derivado CC0. La opción se mantiene **experimental**, no predeterminada: la ganancia de silueta es clara a cámara baja, pero las tomas completas todavía no demuestran la paridad visual buscada. Su SHA-256 es `771aabdf443d26697f814112ffb68fb7ff0eba9b48bbab8c60d91587fdc9919f`.
+
+Una iteración del contorno aumenta la irregularidad de la máscara únicamente cerca de su transición; las zonas claramente arenosas o cubiertas de paja conservan su material. Las capturas de [día](./savanna-mask-contour/day.png) y [noche](./savanna-mask-contour/night.png) usan la misma fixture de 16 cultivos y 10 murallas. Atenúa el borde recto sin eliminar aún la franja diagonal amplia, por lo que sigue siendo un piloto experimental y no se afirma paridad con el mockup.
+
+### Biblioteca 3D para los seis biomas
+
+La opción **experimental** `visualLab=global-grass` conserva la mata Sabana de 176 triángulos y añade cinco GLB de geometría 3D real generados por [`blender-biome-ground-details.py`](../../../tools/experiments/blender-biome-ground-details.py): Gran Río 152 triángulos/13.052 bytes, Manglares 128/11.168, Volcanes 88/8.052, Gran Cañón 104/9.292 y Desierto 72/6.796. Son hojas curvadas con color de vértices; no hay tarjetas, alpha, texturas nuevas ni sombras dinámicas. Los cinco modelos son originales y procedurales, sin asset externo ni cambio de geometría de los modelos del juego. El conjunto de seis GLB ocupa 63.276 bytes, pero cada bioma solo carga el suyo. El script Blender tiene semillas y parámetros por bioma, y exporta las variantes de forma reproducible.
+
+La distribución usa los canales de cobertura, mesoestructura, humedad y desgaste de `groundSample417`, más pendiente, agua y ocupación de la escena. La densidad es baja en terrenos áridos y se agrupa mediante un hash espacial determinista; las posiciones viven solo en los chunks residentes. No se añade colisión ni autoridad espacial. [`blender-ground-details.test.js`](../../../tests/blender-ground-details.test.js) comprueba determinismo tras descargar/regenerar, exclusión de agua, pendientes y claros desgastados, y ausencia de acumulación de instancias.
+
+La ocupación visual de un chunk residente se actualiza ahora por los eventos confirmados `CropPlaced`, `CropPicked`, `CropDestroyed`, `PlacementCommitted`, `WallChainBuilt`, `WallRemoved`, `StructureRuined`, `RepairApplied` cuando restaura una ruina, y `VillageFounded`. El observador se desconecta al destruir la escena. Cada evento marca como sucios solo los chunks dentro del radio físico local; el siguiente `WorldScene.sync()` reúne todos los cambios del fotograma, reevalúa esos chunks y reconstruye una sola vez el buffer instanciado. Un golpe que solo reduce HP no provoca trabajo. Ni las consultas especulativas ni los eventos históricos guardados se reproducen sobre la capa visual; al cargar se generan las matas desde el estado restaurado. No se consulta Wild Engine por fotograma.
+
+[`ground-detail-event-benchmark.json`](./ground-detail-event-benchmark.json) mide un lote sintético reproducible de 14 posiciones de muro entre 25 chunks residentes y 502 matas. Tras cuatro calentamientos, 30 pares construcción/retirada dieron medianas de **0,515/0,536 ms CPU**, p95 de **1,629/1,909 ms**. Se reexaminaron 136 chunks en 68 lotes (dos de media), frente a 1.700 si se hubieran regenerado los 25 cada vez; un `flush()` sin eventos tardó 0 según el contrato y no recorre celdas. La prueba usa el generador real de distribución pero muros sintéticos, y no equivale a medir el coste total de `Game.tick`. [`ground-detail-browser-event-qa.json`](./ground-detail-browser-event-qa.json) verifica en el `WorldScene` WebGL real que colocar/recoger un cultivo y colocar/retirar un muro emite invalidaciones, retira las matas solapadas y restaura exactamente su distribución. Cuatro cambios provocaron ocho reevaluaciones de chunk (4.608 celdas candidatas), 6,4 ms CPU acumulados en esa ejecución fría del navegador. El buffer de instancias completo sigue reescribiéndose tras cada lote; si las fincas extremas lo convierten en cuello de botella, habrá que medir almacenamiento instanciado por chunk antes de cambiarlo.
+
+Las capturas con idéntica semilla/cámara/16 cultivos/10 murallas están en [seis biomas de día](./global-grass-day/) y [de noche](./global-grass-night/), comparables con [base de día](./six-biome-reference/) y [base de noche](./baseline-night/). Sabana y Gran Río muestran mejor silueta y volumen; Manglares, Volcanes, Cañón y Desierto conservan legibilidad pero el cambio es sutil. Esto no alcanza todavía la densidad ni riqueza de los seis mockups. El material de suelo en esta comparación es el mismo en A y B: la diferencia mide solo las matas.
+
+[`global-grass-six-biome.json`](./abba/global-grass-six-biome.json) contiene la ABBA `0 / global-grass / global-grass / 0` en Chrome hardware WebGL2, día y noche. Cada valor es la media de las dos posiciones del mismo brazo; los resultados son de fixture, no de campaña ni de móvil. Una lectura nocturna de Cañón arrojó 5.350 ms GPU por error transitorio de consulta y se excluyó de esa media; el otro valor A fue 12,74 ms. La oscilación de Manglares impide atribuirle una ganancia.
+
+| Bioma | Matas / triángulos extra | GPU día A → B (ms) | GPU noche A → B (ms) | CPU envío día A → B (ms) |
+| --- | ---: | ---: | ---: | ---: |
+| Sabana | 458 / 80.608 | 17,88 → 18,15 | 19,17 → 19,12 | 5,37 → 5,26 |
+| Gran Río | 494 / 75.088 | 14,43 → 14,62 | 14,90 → 15,48 | 5,89 → 5,75 |
+| Manglares | 107 / 13.696 | 17,39 → 17,04 | 18,48 → 18,97 | 4,86 → 5,04 |
+| Volcanes | 222 / 19.536 | 14,63 → 14,94 | 15,50 → 15,34 | 5,98 → 5,94 |
+| Gran Cañón | 230 / 23.920 | 12,18 → 12,58 | 12,74 → 13,01 | 5,22 → 5,32 |
+| Desierto | 109 / 7.848 | 10,40 → 11,39 | 12,47 → 12,83 | 4,56 → 4,61 |
+
+La prueba añade **un draw call** por bioma. Las FPS quedaron entre 47 y 60, normalmente sin separación fiable entre A/B por límite de refresco o variación entre muestras; el informe crudo conserva cada lectura. `renderer.info.memory` mostró las mismas cantidades de texturas y una geometría adicional en cinco biomas; en Gran Río la lectura fue +7 geometrías aunque el GLB utilizado tiene una sola malla/draw, señal de preparación asíncrona del resto de la escena. No se interpreta como seis geometrías del detalle. La matriz de instancias reservó 8–32 KiB según bioma (capacidad de potencia de dos). Estos datos son memoria de recursos de Three y buffer de instancias, **no** un perfil de VRAM o RSS. El sobrecoste de Desierto ronda 1 ms GPU de día para una mejora apenas visible, motivo suficiente para mantener toda la biblioteca detrás del flag y reconsiderar su densidad o descartar ese bioma antes de adoptarla.
+
+### Licencia y reproducción del derivado 3D
+
+Fuente: [Poly Haven — Grass Medium 01](https://polyhaven.com/a/grass_medium_01), autores Rico Cilliers y Rob Tuytel, licencia [CC0](https://polyhaven.com/license). [`fetch-polyhaven-grass.py`](../../../tools/experiments/fetch-polyhaven-grass.py) descarga la fuente 1K a la carpeta temporal y comprueba el MD5 de cada archivo; [`bake-polyhaven-grass-atlas.py`](../../../tools/experiments/bake-polyhaven-grass-atlas.py) combina color seco/alpha; [`extract-polyhaven-grass.py`](../../../tools/experiments/extract-polyhaven-grass.py) usa Blender headless para seleccionar dos mallas pequeñas y reducirlas. No se distribuye la colección original de millones de triángulos. SHA-256 del GLB derivado: `9678e329809e77ccc1ba305a47a2f83eafc5ac2d20f23f7918b68f06807d9342`; del atlas RGBA: `3176fc67adeb8b4d018223a6e09b70d2cc95f3fdf55d539ba709c10c5c221493`.
+
+## Gran Cañón: variante espacial separable
+
+El código opcional `canyonOpenRight` mantiene el paredón oeste y el río y abre una explanada transitable al este, tanto en `TerrainField` como en la generación C++/WASM (código de bioma interno 6, mapeado al perfil Canyon). Los grandes props de pared orientales se omiten en ambas representaciones. El layout experimental ubica la aldea en la ribera abierta. [`canyon-one-wall-comparison.png`](./canyon-one-wall-comparison.png) muestra la diferencia topográfica, aunque su cámara no sirve para evaluar paridad artística. `tests/canyon-one-wall-experiment.test.js` verifica altura, pared oeste continua, agua infranqueable para animales, ruta nativa en la explanada y correspondencia entre props visibles y colisión. El modo normal continúa intacto. **No está conectado al estado/guardado, entrada de incursiones ni a una campaña completa**; requiere esa validación antes de considerarse jugable.
+
+## Reproducción y decisión
+
+Con el servidor Vite local en `http://127.0.0.1:5188`, `WG_VISUAL_VARIANT=0|normal|layer|layer-relief|layer-grass|global-grass node tools/experiments/capture-six-biome-visual-reference.mjs` captura día; `WG_VISUAL_NIGHT=1` captura noche. `WG_ABBA_VARIANTS=0,global-grass,global-grass,0 WG_ABBA_CASES=1,6,11,16,21,26 node tools/experiments/benchmark-visual-lab-abba.mjs` reproduce la última comparación GPU/CPU/FPS. `node tools/experiments/benchmark-ground-detail-events.mjs` mide invalidación local; `node tools/experiments/qa-ground-detail-events.mjs` comprueba la suscripción de eventos en el renderizador WebGL. `blender -b --python tools/experiments/blender-biome-ground-details.py` regenera los cinco GLB nuevos con Blender 4.5.9. Los informes son de Chrome headless con WebGL2 de hardware y una fixture controlada, no de una campaña real ni de móviles modestos. En Windows PowerShell se establecen variables mediante `$env:NOMBRE='valor'` antes de ejecutar `node`.
+
+Pasaron `npm run build`, 2 pruebas nuevas de Cañón y 33 pruebas dirigidas de terreno/render; la extensión global pasó además 11 pruebas dirigidas, incluidas las de descarga/regeneración y cambios confirmados de ocupación. No hay evidencia para activar por defecto el atlas de normales ni el parallax reforzado. El suelo por capas y las matas 3D merecen iteración artística adicional y perfiles de dispositivos modestos antes de activarlas por defecto. La variante de Cañón requiere una evaluación de gameplay separada; no debe mezclarse con una supuesta mejora puramente gráfica.
+
+### Composición offline de suelo: resultado negativo
+
+El [ensayo de claros de arena](./ground-composition/README.md) conserva 16 capturas WebGL y curvas Blender editables. No añade draws ni mapas, pero produce manchas recortadas y repetitivas; se descarta sin añadir un flag runtime ni ejecutar otra ABBA. Los materiales anteriores permanecen intactos.
+
+### Transición cromática de charcas: estudio acotado
+
+El [estudio de orilla](./pond-bank-gradient/README.md) aporta una integración discreta del borde sin nuevos draws/texturas. Incluye 16 capturas y ABBA aislada; no demuestra una mejora global ni coste cero. Se conserva solo en QA, con residencia y anchura de transición pendientes, sin activarlo en runtime.
+
+### Copas: recuperación selectiva de normal autoral
+
+El [ensayo sobre tres árboles de Sabana](./canopy-authored-normal/README.md) confirma que el mapa normal existente está muy atenuado, pero recuperar parte de su influencia no aporta separación de hojas convincente a cámara de juego. Se descarta el ajuste tras 16 capturas día/noche y control Gran Río; sin cambios runtime ni otra ABBA. La revisión de la referencia también descarta desaturar sus copas como objetivo por sí mismo.
+
+### Escala de ondas: dos mecanismos descartados
+
+El [estudio de pintura y normales de agua](./pond-wave-scale/README.md) conserva 32 capturas. Reducir la separación de trazos produce vetas; reducir la longitud de las ondas normales produce franjas de reflexión en cámara baja. Se mantienen los originales y se cambia de componente, sin más barridos de parámetros del agua.
+
+### Hierba corta nativa: sustitución modelada en Blender
+
+El [ensayo plant_02](./native-short-grass/README.md) reduce geometría manteniendo draws, pero pierde la identidad de mata seca y no mejora claramente a cámara de juego. Se conserva el original. Incluye 24 capturas finales válidas, fuentes Blender y corrección explícita del caché de grupos que invalidaba las primeras comparativas. No se publican tiempos GPU.
+
+## Escena global: contacto y relleno diurno (19 octubre)
+
+- [Contacto integrado](ground-contact-integration/README.md): descartado, efecto imperceptible a cámara de juego en seis biomas.
+- [Coherencia de sombra del suelo](ground-shade-coherence/README.md): dirección prometedora para Sabana, Gran Río y Cañón, sin adopción global; Volcanes pierde lectura y Desierto usa otra rama. 48 capturas A/B por ensayo y ABBA de iluminación sin regresión observada. Original por defecto.
+
+- [Placas de basalto autorales](basalt-plates/README.md): sustitución de suelo volcánico horneada en Blender, descartada por aspecto de pavimento y pérdida de lectura nocturna. 48 capturas con cinco biomas control; originales intactos.
+
+## Dirección vigente
+
+[Decisión global y pausa del atlas del taller](GLOBAL-DIRECTION.md): continuar la integración de relleno/sombras con límites por bioma, usando la primera comparación visual y ABBA ya publicados.

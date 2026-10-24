@@ -1,0 +1,41 @@
+# Revisión de decisiones visuales y de rendimiento
+
+Esta revisión responde a la indicación del usuario de conservar buenos resultados aunque inicialmente resulten caros. Audita informes existentes; no constituye una nueva inspección exhaustiva de capturas ni declara aprobadas visualmente por el usuario todas las candidatas.
+
+| Variante | Evidencia y motivo anterior | Estado revisado |
+|---|---|---|
+| [Manglares: sustrato completo](mangrove-height-blend/full-review/README.md) | 24 capturas; +3.669 a +4.735 ms GPU según par. El usuario aprueba el aspecto. | Referencia visual aprobada; prioridad de optimización conservando imagen. Revocado abandono anterior. |
+| [Cañón: arena seca completa](canyon-sand-dry/moving-performance/README.md) | Corrección de crestas útil; sobrecoste agrupado ~1.16 ms día / .74 ms noche. | Conservar receta completa como alternativa visual. Compararla con normal-only antes de tratar la versión barata como sustitución suficiente. |
+| [Gran Río: tierra V2](river-soil-layer-v2/README.md) | Recupera detalle y separación tierra/hierba; presupuesto no aprobado y borde amplio pendiente. | Candidata visual conservada, con coste y limitaciones por resolver; no descartada. Consultar también pruebas posteriores de movimiento. |
+| [Sabana: hojas finas](grass-fine/README.md) | Mejor forma, coste nocturno elevado y cobertura escasa. | Conservar geometría como referencia; no volver a matas aisladas como solución al objetivo posterior de cubierta continua. Motivo mixto, no solo rendimiento. |
+| [Manglares: dos escalas](mangrove-moss-scales/README.md) | Menos repetición, pero pérdida de relieve; +1.81/+2.12 ms agrupados. | Revisión artística pendiente si se retoma. No afirmar que fue descartada solo por coste ni que equivalga a la receta aprobada. |
+
+No se han eliminado estas recetas por esta revisión. Los enlaces llevan a evidencias conservadas; las cifras de distintas series no son un benchmark entre candidatas.
+
+## Criterio para siguientes iteraciones
+
+Registrar por separado: valoración visual, coste medido, errores funcionales y decisión de integración. Conservar resultados visualmente prometedores como referencias reproducibles. Un límite provisional de +0.5 ms no es motivo suficiente para abandonar una buena dirección artística. Tampoco garantiza que pueda activarse en todos los perfiles.
+
+Optimizar primero Manglares contra la receta completa aprobada, manteniendo semilla, cámara, hora y resolución. Los ahorros fuera del material deben medirse junto con la variante; no sumar diferencias de pruebas independientes. No sacrificar apariencia silenciosamente para aprobar rendimiento.
+
+La revisión inicial no demuestra que todos los descartes históricos hayan sido evaluados correctamente. Queda pendiente revisar visualmente las alternativas completas de Cañón y Gran Río frente a sus sustituciones económicas, y ampliar el inventario si aparecen otros candidatos. Los descartes por fallos visuales concretos no se rehabilitan automáticamente.
+
+
+## Cañón: revisión directa completada en aproximación cercana
+
+[144 parejas y cuatro vídeos](canyon-sand-full-review/README.md) comparan normal-only frente a receta completa. Primeros planos diurno/nocturno inspeccionados recuperan variación fina con el mapa de color; ambas mantienen ondulaciones. Conservar completa como alternativa artística, sin aprobación de coste incremental ni decisión desde cámara normal/elevada todavía. No equivale a preferencia expresa del usuario.
+
+
+### Cañón: coste incremental medido y vistas generales revisadas
+
+[Comparación directa](canyon-sand-full-review/performance/README.md): noche+.156/+.311ms GPU para receta completa; día−1.295/+.800ms, inconcluso.1920muestras válidas, escenas iguales. Reinspeccionadas normal diurna/elevada nocturna ya existentes: ondulaciones similares, variación fina adicional en completa. Conservar completa como candidata viable, pendiente coste cercano e integración; no descartarla por el benchmark histórico contra grava.
+
+
+### Cañón: candidata completa disponible y coste cercano verificado
+
+[Opciones integradas en primer plano](canyon-sand-full-integrated/close-performance/README.md):1920muestras GPU, diferencias−.226 a+.335ms, sin sobrecoste consistente en esta serie. Conservación visual e integración/streaming documentadas. Recomendada como referencia de calidad para próximas revisiones globales, con económica como alternativa; no aprobación universal de rendimiento ni main.
+
+
+## Gran Río: variación cromática amplia conservada para revisión
+
+[24capturas](river-soil-mottling/README.md) muestran cambio perceptible en suelo del poblado sin modificar cobertura ni máscaras. Conservar alternativa; manchas suaves pueden parecer sombras y oscurecen de noche. No benchmark todavía, no descarte por coste ni aprobación artística definitiva. V2 original permanece disponible.

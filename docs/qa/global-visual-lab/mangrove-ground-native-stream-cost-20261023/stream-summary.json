@@ -1,0 +1,82 @@
+[
+  {
+    "mode": "frame",
+    "cpuMs": {
+      "mean": 13.476666667312383,
+      "p95": 20,
+      "max": 55.69999998807907
+    },
+    "intervalMs": {
+      "mean": 37.440416666617,
+      "p95": 95,
+      "max": 141.4000000357628
+    },
+    "gpuMs": {
+      "mean": 25.90585475416667,
+      "p95": 32.561249,
+      "max": 41.467916
+    },
+    "generationFrames": 29,
+    "first": {
+      "bytes": 29575560,
+      "peakBytes": 35209000,
+      "tiles": 31,
+      "published": 31,
+      "cancelled": 0,
+      "rejected": 0,
+      "entries": 21,
+      "added": 31,
+      "removed": 10
+    },
+    "last": {
+      "bytes": 35209000,
+      "peakBytes": 35209000,
+      "tiles": 60,
+      "published": 60,
+      "cancelled": 0,
+      "rejected": 0,
+      "entries": 25,
+      "added": 60,
+      "removed": 35
+    },
+    "peakBytes": 35209000
+  },
+  {
+    "mode": "cadence",
+    "cpuMs": {
+      "mean": 12.54125000089407,
+      "p95": 19.30000001192093,
+      "max": 43.30000001192093
+    },
+    "intervalMs": {
+      "mean": 37.23833333328366,
+      "p95": 89.29999995231628,
+      "max": 135.5
+    },
+    "gpuMs": null,
+    "generationFrames": 29,
+    "first": {
+      "bytes": 29575560,
+      "peakBytes": 35209000,
+      "tiles": 61,
+      "published": 61,
+      "cancelled": 0,
+      "rejected": 0,
+      "entries": 21,
+      "added": 61,
+      "removed": 40
+    },
+    "last": {
+      "bytes": 35209000,
+      "peakBytes": 35209000,
+      "tiles": 90,
+      "published": 90,
+      "cancelled": 0,
+      "rejected": 0,
+      "entries": 25,
+      "added": 90,
+      "removed": 65
+    },
+    "peakBytes": 35209000
+  }
+]

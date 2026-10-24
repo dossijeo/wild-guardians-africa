@@ -1,0 +1,4 @@
+import sharp from 'sharp';import {readFile,writeFile} from 'node:fs/promises';
+const root='docs/qa/global-visual-lab/global-lighting-integrated';const {records}=JSON.parse(await readFile(root+'/constant-palette/captures.json'));const summary=[];
+for(const r of records){const a=await sharp(root+'/'+r.file).removeAlpha().raw().toBuffer(),b=await sharp(root+'/constant-palette/'+r.file).removeAlpha().raw().toBuffer();let n=0,max=0;for(let i=0;i<a.length;i+=3){const d=Math.max(...[0,1,2].map(k=>Math.abs(a[i+k]-b[i+k])));if(d>3)n++;max=Math.max(max,d)}summary.push({biome:r.biome,view:r.view,phase:r.phase,changedOver3Percent:n/(a.length/3)*100,max,errors:r.errors})}
+await writeFile(root+'/constant-palette/comparison.json',JSON.stringify(summary,null,2)+'\n');console.log(summary.map(({errors,...r})=>r));

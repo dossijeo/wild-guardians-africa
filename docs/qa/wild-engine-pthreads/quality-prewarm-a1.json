@@ -1,0 +1,727 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityAttribution=1",
+  "result": {
+    "loading": {
+      "readyMs": 28268.365000009537,
+      "phases": []
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 81,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "qualityCycle": {
+      "attribution": [
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 12,
+          "at": 32541.92000001669,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 10.340000033378601,
+          "at": 32599.55000001192,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 36.3299999833107,
+          "at": 33369.26999998093,
+          "program": {
+            "id": 89,
+            "cacheKey": "2,36,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,135169,srgb,onBeforeCompile() {\n  }"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramParameter",
+          "quality": "baja",
+          "ms": 27.580000042915344,
+          "at": 33407.22500002384,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 129.98499995470047,
+          "at": 33542.06999999285,
+          "program": {
+            "id": 90,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|illustrated-4.1.6|authored-normal|MeshStandardMaterial|resident"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 136.18000000715256,
+          "at": 33684.27500003576,
+          "program": {
+            "id": 91,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|illustrated-4.1.6|authored-normal|MeshStandardMaterial|resident"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 106.11500000953674,
+          "at": 33794.939999997616,
+          "program": {
+            "id": 92,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');}|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|illustrated-4.1.6|authored-normal|MeshStandardMaterial|resident"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 152.44499999284744,
+          "at": 33952.20499998331,
+          "program": {
+            "id": 93,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|toon-4.1.4|authored-normal|MeshStandardMaterial|resident"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 863.4750000238419,
+          "at": 34820.19499999285,
+          "program": {
+            "id": 94,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,function(shader,renderer){prior.call(this,shader,renderer);const a=shader.fragmentShader.indexOf('if(uGroundPureMoss>.5){'),b=shader.fragmentShader.indexOf('if((uBiome>4.5',a);if(a<0||b<a)throw Error('Fixed512 shader anchor changed');shader.fragmentShader='uniform sampler2D uQaGroundCache;uniform float uQaCacheResolution;\\n'+shader.fragmentShader.slice(0,a)+liveBranch+shader.fragmentShader.slice(b);shader.uniforms.uQaGroundCache=s.texture;shader.uniforms.uQaCacheResolution={value:512};}|holly-fern-ground-v1|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|mangrove-substrate-full-v1|mangrove-shore-v1|mangrove-moss-two-scales-v1|global-visual-lighting|desert-soft-v1|mangrove|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|biome-ground-4.1.10.3|base-ground|toon-4.1.4|authored-normal|MeshStandardMaterial|resident|qa-fixed512-lifecycle-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 1271.035000026226,
+          "at": 36095.55000001192,
+          "program": {
+            "id": 95,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,function(shader,renderer){previous.call(this,shader,renderer);\n   const anchor='#include <opaque_fragment>';if(!shader.fragmentShader.includes(anchor))throw Error('Mud interior output anchor missing');\n   shader.fragmentShader=shader.fragmentShader.replace(anchor,`\n    vec3 qaMudAlbedo=mudLinear;\n    float qaMudRough=max(.04,mudPacked.g*.52);\n    float qaMudLeaf=smoothstep(.018,.13,qaMudAlbedo.g-qaMudAlbedo.r*.87)*smoothstep(.06,.20,qaMudAlbedo.g);\n    vec3 qaMudReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,mudWorldN),qaMudRough):vec3(0.);\n    vec3 qaMudToon=toLinear4(africanToon4(vec3(0.),qaMudAlbedo,mudWorldN,toonV,uLightDir,qaMudReflection,qaMudRough,groundVisibility,qaMudLeaf,0.,0.,max(dot(mudWorldN,toonV),0.),worldPatternPosition(vToonWorld)));\n    outgoingLight=mix(outgoingLight,qaMudToon,mudWeight);\n   `+anchor);\n  }|holly-fern-ground-v1|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|mangrove-substrate-full-v1|mangrove-shore-v1|mangrove-moss-two-scales-v1|global-visual-lighting|desert-soft-v1|mangrove|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|biome-ground-4.1.10.3|base-ground|toon-4.1.4|authored-normal|MeshStandardMaterial|resident|global-mud-moss-full-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 266.0499999523163,
+          "at": 36369.04000002146,
+          "program": {
+            "id": 96,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');}|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|toon-4.1.4|authored-normal|MeshStandardMaterial|resident"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 39.84500002861023,
+          "at": 36412.189999997616,
+          "program": {
+            "id": 97,
+            "cacheKey": "23,24,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133121,srgb,onBeforeCompile() {\n  }"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 155.56999999284744,
+          "at": 36572.07499998808,
+          "program": {
+            "id": 98,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');}|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|toon-4.1.4|authored-normal|MeshPhysicalMaterial|resident"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 200.31999999284744,
+          "at": 36775.62999999523,
+          "program": {
+            "id": 99,
+            "cacheKey": "29,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 881.5600000023842,
+          "at": 37660.15000003576,
+          "program": {
+            "id": 100,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,far-ground-native-water-mask-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 876.2599999904633,
+          "at": 38539.18000000715,
+          "program": {
+            "id": 101,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 116.28500002622604,
+          "at": 38657.42000001669,
+          "program": {
+            "id": 102,
+            "cacheKey": "31,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 133.6599999666214,
+          "at": 38793.58500003815,
+          "program": {
+            "id": 103,
+            "cacheKey": "32,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 133.99499994516373,
+          "at": 38929.92000001669,
+          "program": {
+            "id": 104,
+            "cacheKey": "33,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 158.96499997377396,
+          "at": 39094.33500003815,
+          "program": {
+            "id": 105,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,2051,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|mangrove-shore-v1|qa-depth-bank-v2|manglares"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 182.21499997377396,
+          "at": 39279.29500001669,
+          "program": {
+            "id": 106,
+            "cacheKey": "29,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,3,srgb,onBeforeCompile() {\n  }|smooth-far-partial-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 124.98499995470047,
+          "at": 39408.34500002861,
+          "program": {
+            "id": 107,
+            "cacheKey": "31,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,3,srgb,onBeforeCompile() {\n  }|smooth-far-partial-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 113.51999998092651,
+          "at": 39524.264999985695,
+          "program": {
+            "id": 108,
+            "cacheKey": "32,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,3,srgb,onBeforeCompile() {\n  }|smooth-far-partial-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 117.61000001430511,
+          "at": 39643.34500002861,
+          "program": {
+            "id": 109,
+            "cacheKey": "33,30,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,3,srgb,onBeforeCompile() {\n  }|smooth-far-partial-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 15.125,
+          "at": 39661.62999999523,
+          "program": {
+            "id": 110,
+            "cacheKey": "23,25,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,2049,srgb,onBeforeCompile() {\n  }"
+          }
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 6349.920000016689,
+          "at": 39662.98000001907,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 6350.134999990463,
+          "at": 39662.99000000954,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 6350.199999988079,
+          "at": 39663,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 6362.870000004768,
+          "at": 39663,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 81.01499998569489,
+          "at": 40067.155000030994,
+          "program": {
+            "id": 111,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,3,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|sky-atmosphere-clouds-v1|desert-meso-filter-v1|desert-residual-wear-v1|volcanic-night-spectrum-v1|global-visual-lighting|desert-soft-v1|object|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|base-ground|illustrated-4.1.6|authored-normal|MeshStandardMaterial|resident|native-partial-blend-v1"
+          }
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 85.60499995946884,
+          "at": 40069.19999998808,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 85.8649999499321,
+          "at": 40069.21000003815,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 85.95000004768372,
+          "at": 40069.21000003815,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 89.03500002622604,
+          "at": 40069.21000003815,
+          "program": null
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "media",
+          "ms": 22.914999961853027,
+          "at": 40460.19999998808,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 23.110000014305115,
+          "at": 40460.21500003338,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 23.160000026226044,
+          "at": 40460.21500003338,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 31.27000004053116,
+          "at": 40460.22000002861,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 10.284999966621399,
+          "at": 40570.50499999523,
+          "program": null
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.060000002384186,
+          "at": 41293.57999998331,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 11.259999990463257,
+          "at": 41293.59500002861,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 11.305000007152557,
+          "at": 41293.60000002384,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 17.569999992847443,
+          "at": 41293.60000002384,
+          "program": null
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "media",
+          "ms": 12.514999985694885,
+          "at": 41938.82499998808,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 12.715000033378601,
+          "at": 41938.860000014305,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 12.764999985694885,
+          "at": 41938.87000000477,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 19.524999976158142,
+          "at": 41938.87000000477,
+          "program": null
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.004999995231628,
+          "at": 41994.47500002384,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 10.225000023841858,
+          "at": 41994.485000014305,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 10.290000021457672,
+          "at": 41994.485000014305,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 19.90499997138977,
+          "at": 41994.49000000954,
+          "program": null
+        }
+      ],
+      "attributionScope": "Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.",
+      "rows": [
+        {
+          "quality": "media",
+          "programs": 81,
+          "drawCalls": 80,
+          "recovery": {
+            "revision": 3,
+            "ms": 155.9200000166893,
+            "retained": 81
+          },
+          "retention": {
+            "retained": 81,
+            "released": 81,
+            "destroyed": 1,
+            "abandoned": 0,
+            "skipped": 0,
+            "unsupported": false
+          },
+          "settingMs": 1.4150000214576721,
+          "prewarmMs": 0,
+          "transitionMs": 353.9350000023842,
+          "frameTimes": [
+            39.57499998807907,
+            29.155000030994415,
+            27.959999978542328,
+            29.99500000476837,
+            28.810000002384186,
+            25.769999980926514,
+            24.8299999833107,
+            26.25499999523163,
+            24.060000002384186,
+            25.325000047683716,
+            24.599999964237213,
+            23.060000002384186
+          ]
+        },
+        {
+          "quality": "baja",
+          "programs": 106,
+          "drawCalls": 73,
+          "recovery": {
+            "revision": 4,
+            "ms": 6628.199999988079,
+            "retained": 96
+          },
+          "retention": {
+            "retained": 96,
+            "released": 96,
+            "destroyed": 2,
+            "abandoned": 0,
+            "skipped": 10,
+            "unsupported": false
+          },
+          "settingMs": 1.9450000524520874,
+          "prewarmMs": 0,
+          "transitionMs": 6786.59500002861,
+          "frameTimes": [
+            6380.954999983311,
+            13.4200000166893,
+            30.669999957084656,
+            7.75,
+            53.61500000953674,
+            25.4650000333786,
+            8.129999995231628,
+            75.34999996423721,
+            33.33500003814697,
+            14.924999952316284,
+            44.625,
+            90.15000003576279
+          ]
+        },
+        {
+          "quality": "media",
+          "programs": 106,
+          "drawCalls": 81,
+          "recovery": {
+            "revision": 5,
+            "ms": 437.625,
+            "retained": 96
+          },
+          "retention": {
+            "retained": 96,
+            "released": 96,
+            "destroyed": 2,
+            "abandoned": 0,
+            "skipped": 10,
+            "unsupported": false
+          },
+          "settingMs": 1.0299999713897705,
+          "prewarmMs": 0,
+          "transitionMs": 522.6999999880791,
+          "frameTimes": [
+            68.44999998807907,
+            15.584999978542328,
+            6.725000023841858,
+            73.21999996900558,
+            17.350000023841858,
+            7.344999969005585,
+            56.22500002384186,
+            26.25,
+            6.985000014305115,
+            41.139999985694885,
+            8.665000021457672,
+            22.2049999833107,
+            27.375,
+            26.485000014305115,
+            34.07499998807907
+          ]
+        },
+        {
+          "quality": "baja",
+          "programs": 105,
+          "drawCalls": 73,
+          "recovery": {
+            "revision": 6,
+            "ms": 139.39500004053116,
+            "retained": 96
+          },
+          "retention": {
+            "retained": 96,
+            "released": 96,
+            "destroyed": 1,
+            "abandoned": 0,
+            "skipped": 9,
+            "unsupported": false
+          },
+          "settingMs": 1.7350000143051147,
+          "prewarmMs": 0,
+          "transitionMs": 342.60000002384186,
+          "frameTimes": [
+            40.44499999284744,
+            13.360000014305115,
+            14.324999988079071,
+            57.99500000476837,
+            13.980000019073486,
+            4.909999966621399,
+            46.04000002145767,
+            17.860000014305115,
+            4.5450000166893005,
+            33.519999980926514,
+            12.449999988079071,
+            15.990000009536743
+          ]
+        }
+      ],
+      "lease": {
+        "retained": 81,
+        "released": 81,
+        "destroyed": 1,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "worldUnchanged": true,
+      "limitation": "The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm."
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (737,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(742,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (755,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(760,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(755,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(760,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (700,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(705,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (730,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(735,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

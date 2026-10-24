@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {residentMatrixPack,disposeResidentMatrices} from './qa-resident-matrices.js';
+const geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial();
+geometry.setAttribute('nativeVisibility',new THREE.InstancedBufferAttribute(new Float32Array(8).fill(1),1));
+const source=new THREE.InstancedMesh(geometry,material,2);source.setMatrixAt(0,new THREE.Matrix4().makeTranslation(3,0,0));source.setMatrixAt(1,new THREE.Matrix4().makeTranslation(7,0,0));
+const mesh=new THREE.InstancedMesh(geometry.clone(),material,8),g={mesh,capacity:8},owner={origin:{x:0,z:0}},group=new THREE.Group(),batch={uid:1,orders:[[0,1]]};
+const entries=[{mesh:source,group,batch,level:0}];
+const run=()=>{const stats={};residentMatrixPack(owner,g,entries,stats);return stats;};
+assert.equal(run().residentTextureUploads,1);const texture=g.qaResident.texture,version=texture.version;
+batch.orders[0]=[1,0];source.setMatrixAt(0,new THREE.Matrix4().makeTranslation(7,0,0));source.setMatrixAt(1,new THREE.Matrix4().makeTranslation(3,0,0));
+assert.equal(run().residentTextureUploads,undefined);assert.equal(texture.version,version);assert.deepEqual([...mesh.geometry.attributes.qaResidentId.array.slice(0,2)],[1,0]);
+assert.equal(g.qaResident.data[12],3);assert.equal(g.qaResident.data[28],7);
+owner.origin.x=2;assert.equal(run().residentTextureUploads,1);assert.equal(g.qaResident.data[12],5);
+let disposed=0;texture.addEventListener('dispose',()=>disposed++);disposeResidentMatrices(g);assert.equal(disposed,1);
+geometry.dispose();mesh.geometry.dispose();material.dispose();console.log('PASS stable IDs through reorder, resident texture unchanged, origin reset, texture disposal');

@@ -1,0 +1,340 @@
+{
+  "commit": "ef3a527a1a685ba0f119e6640150537ec0df74f9",
+  "quality": "media",
+  "compare": "program-retention",
+  "farCompletionGate": true,
+  "horizonBedBudget": 2,
+  "scope": "Paused real game; equivalent completed streaming work, 720p, GPU timer every third render. Not active simulation or visual acceptance.",
+  "runs": [
+    {
+      "biome": "manglares",
+      "label": "a1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 154,
+        "mean": 28.39863636363636,
+        "p95": 82.85499999999593,
+        "max": 133.16999999999825
+      },
+      "gpu": {
+        "count": 52,
+        "mean": 22.537325750000004,
+        "p95": 32.982656,
+        "max": 37.797135
+      },
+      "programRetention": null,
+      "slowGlCount": 6,
+      "slowGlMs": 261.335000038147,
+      "horizon": {
+        "count": 155,
+        "mean": 0.014645158859991259,
+        "p95": 0.02499997615814209,
+        "max": 0.034999966621398926
+      },
+      "syncChunks": {
+        "count": 155,
+        "mean": 0.9219677398281713,
+        "p95": 0.6350000500679016,
+        "max": 57.405000030994415
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.098800002336502,
+        "p95": 4.574999988079071,
+        "max": 6.459999978542328
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.055800000429153444,
+        "p95": 0.07999998331069946,
+        "max": 0.09500002861022949
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7045000064373016,
+        "p95": 1.125,
+        "max": 1.4549999833106995
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 46.3936083984375,
+        "p95": 63.565185546875,
+        "max": 69.655029296875
+      },
+      "install": {
+        "count": 50,
+        "mean": 17.10299999833107,
+        "p95": 28.310000002384186,
+        "max": 38.169999957084656
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4373.389999999999,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-programs-full-far/manglares-a1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 162,
+        "mean": 27.303734567901202,
+        "p95": 49.93500000000495,
+        "max": 99.77500000000146
+      },
+      "gpu": {
+        "count": 55,
+        "mean": 21.95839483636363,
+        "p95": 32.261457,
+        "max": 37.005052
+      },
+      "programRetention": {
+        "retained": 79,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 1,
+      "slowGlMs": 82.66500002145767,
+      "horizon": {
+        "count": 163,
+        "mean": 0.015766867830709446,
+        "p95": 0.029999971389770508,
+        "max": 0.04000002145767212
+      },
+      "syncChunks": {
+        "count": 163,
+        "mean": 1.0217484681884204,
+        "p95": 0.5049999952316284,
+        "max": 76.31499999761581
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.5399000024795533,
+        "p95": 5.975000023841858,
+        "max": 8.600000023841858
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05619999647140503,
+        "p95": 0.07999998331069946,
+        "max": 0.17499995231628418
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.717900003194809,
+        "p95": 1.0550000071525574,
+        "max": 2.5799999833106995
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 47.2690966796875,
+        "p95": 68.73486328125,
+        "max": 73.55517578125
+      },
+      "install": {
+        "count": 50,
+        "mean": 16.337399995326997,
+        "p95": 24.910000026226044,
+        "max": 33.230000019073486
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4423.2049999999945,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-programs-full-far/manglares-b1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "a2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 152,
+        "mean": 29.211842105263138,
+        "p95": 66.53499999999622,
+        "max": 116.43999999999505
+      },
+      "gpu": {
+        "count": 51,
+        "mean": 22.80924431372549,
+        "p95": 30.234322,
+        "max": 32.886041
+      },
+      "programRetention": null,
+      "slowGlCount": 6,
+      "slowGlMs": 272.12499994039536,
+      "horizon": {
+        "count": 153,
+        "mean": 0.015294116306928248,
+        "p95": 0.025000035762786865,
+        "max": 0.04499995708465576
+      },
+      "syncChunks": {
+        "count": 153,
+        "mean": 0.97549019452014,
+        "p95": 0.5649999976158142,
+        "max": 61.58499997854233
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.2121000027656557,
+        "p95": 4.699999988079071,
+        "max": 5.959999978542328
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05340000033378601,
+        "p95": 0.0700000524520874,
+        "max": 0.10500001907348633
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6919999969005585,
+        "p95": 1.1050000190734863,
+        "max": 1.5899999737739563
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 45.722080078125,
+        "p95": 61.39013671875,
+        "max": 72.425048828125
+      },
+      "install": {
+        "count": 50,
+        "mean": 16.31319999933243,
+        "p95": 26.274999976158142,
+        "max": 34.30500000715256
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4440.199999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-programs-full-far/manglares-a2.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 151,
+        "mean": 27.08999999999998,
+        "p95": 49.91000000000349,
+        "max": 116.12000000000262
+      },
+      "gpu": {
+        "count": 51,
+        "mean": 22.99019919607843,
+        "p95": 31.795156,
+        "max": 42.586924
+      },
+      "programRetention": {
+        "retained": 79,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 2,
+      "slowGlMs": 155.5600000023842,
+      "horizon": {
+        "count": 152,
+        "mean": 0.014901314126817803,
+        "p95": 0.02499997615814209,
+        "max": 0.039999961853027344
+      },
+      "syncChunks": {
+        "count": 152,
+        "mean": 0.9934539492977293,
+        "p95": 0.550000011920929,
+        "max": 61.43000000715256
+      },
+      "eviction": {
+        "count": 50,
+        "mean": 2.255999995470047,
+        "p95": 5.319999992847443,
+        "max": 6.969999969005585
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05479999661445618,
+        "p95": 0.08500003814697266,
+        "max": 0.11500000953674316
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6703000009059906,
+        "p95": 1.024999976158142,
+        "max": 1.5100000500679016
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 44.262890625,
+        "p95": 64.51513671875,
+        "max": 76.619873046875
+      },
+      "install": {
+        "count": 50,
+        "mean": 15.8125,
+        "p95": 26.47000002861023,
+        "max": 31.959999978542328
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4090.5899999999965,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-programs-full-far/manglares-b2.json"
+    }
+  ]
+}

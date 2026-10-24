@@ -1,0 +1,1000 @@
+[
+  {
+    "phase": "day",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 15.34,
+        "intervalMs": 32.71,
+        "p95IntervalMs": 39.1,
+        "calls": 190.567,
+        "triangles": 1244764.217,
+        "elapsedAdvance": 4.54029999999932,
+        "memory": {
+          "geometries": 285,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 25.639
+      },
+      "passes": {
+        "cpuRenderMs": 13.342,
+        "intervalMs": 35.363,
+        "p95IntervalMs": 58.4,
+        "calls": 155.267,
+        "triangles": 1094658.217,
+        "elapsedAdvance": 4.273499999999714,
+        "memory": {
+          "geometries": 288,
+          "textures": 136
+        },
+        "gpuQueries": 2837,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.212,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 0.947,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.547,
+            "calls": 36.96666666666667,
+            "triangles": 493769.1666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.526,
+            "calls": 14.0,
+            "triangles": 97859.26666666666,
+            "segments": 202
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.75,
+            "calls": 27.733333333333334,
+            "triangles": 140440.06666666668,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 7.811,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.311,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.422,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.4,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.341,
+            "calls": 1.0,
+            "triangles": 5981.066666666667,
+            "segments": 60
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.149,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:water": {
+            "gpuMs": 0.211,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          },
+          "screen/color:fern-ground-shadow": {
+            "gpuMs": 0.231,
+            "calls": 1.0,
+            "triangles": 1495.2666666666667,
+            "segments": 60
+          },
+          "world-depth/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 33
+          },
+          "world-depth/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 33
+          },
+          "world-depth/draw": {
+            "gpuMs": 1.915,
+            "calls": 34.916666666666664,
+            "triangles": 203945.48333333334,
+            "segments": 33
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.029,
+            "calls": 2.1,
+            "triangles": 990.6333333333333,
+            "segments": 66
+          }
+        }
+      },
+      "cpu": {
+        "cpuRenderMs": 11.572,
+        "intervalMs": 36.202,
+        "p95IntervalMs": 47.9,
+        "calls": 173.367,
+        "triangles": 1053285.967,
+        "elapsedAdvance": 4.689500000001345,
+        "memory": {
+          "geometries": 283,
+          "textures": 136
+        },
+        "inclusiveCpuMs": {
+          "renderer.screen": 5.378,
+          "buildings.captureDepth": 1.818,
+          "renderer.depth": 1.6,
+          "groups.update": 1.148,
+          "draw.screen.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.55,
+          "draw.other.MeshDepthMaterial.": 0.358,
+          "world.sync": 0.308,
+          "draw.depth.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.27,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.217,
+          "draw.screen.ShaderMaterial.": 0.212,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.207,
+          "workVfx.update": 0.2,
+          "workVfx.prepare": 0.183,
+          "draw.depth.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.128,
+          "world.syncChunks": 0.113,
+          "buildings.render": 0.112,
+          "draw.screen.MeshStandardMaterial.globalWaterSlope,paintUniforms,wetShore": 0.095,
+          "draw.screen.MeshStandardMaterial.": 0.09,
+          "draw.depth.MeshDepthMaterial.worldDepthCompatible": 0.09,
+          "draw.depth.ShaderMaterial.": 0.087,
+          "draw.screen.MeshStandardMaterial.artBounds,artSurface": 0.078,
+          "draw.other.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.078,
+          "draw.screen.MeshStandardMaterial.shader": 0.072,
+          "draw.screen.RawShaderMaterial.": 0.06,
+          "draw.screen.MeshPhysicalMaterial.": 0.055,
+          "draw.screen.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.053,
+          "locomotionVfx.prepare": 0.053,
+          "world.updateHands": 0.045,
+          "draw.screen.RawShaderMaterial.building": 0.04,
+          "renderer.mask": 0.037,
+          "draw.screen.RawShaderMaterial.water/sprites": 0.03,
+          "draw.screen.RawShaderMaterial.water/rigid": 0.028,
+          "draw.other.RawShaderMaterial.building": 0.027,
+          "draw.depth.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.025,
+          "locomotionVfx.update": 0.022,
+          "draw.other.ShaderMaterial.nativeShadowInputs": 0.022,
+          "materials.update": 0.022,
+          "draw.depth.RawShaderMaterial.building": 0.013,
+          "draw.depth.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.012,
+          "attackVfx.update": 0.01,
+          "draw.depth.RawShaderMaterial.water/rigid": 0.008,
+          "agricultureVfx.update": 0.008,
+          "draw.other.RawShaderMaterial.water/rigid": 0.008,
+          "draw.screen.RawShaderMaterial.dust/sprites": 0.007,
+          "shieldVfx.update": 0.005,
+          "materialVfx.update": 0.005,
+          "draw.screen.RawShaderMaterial.dust/rigid": 0.005,
+          "buildings.renderSmoke": 0.003,
+          "draw.depth.RawShaderMaterial.dust/rigid": 0.003,
+          "draw.other.RawShaderMaterial.dust/rigid": 0.003,
+          "agricultureVfx.prepare": 0.002,
+          "attackVfx.prepare": 0.0,
+          "shieldVfx.prepare": 0.0,
+          "materialVfx.prepare": 0.0
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 8.352,
+        "intervalMs": 31.145,
+        "p95IntervalMs": 40.4,
+        "calls": 120.667,
+        "triangles": 898121.733,
+        "elapsedAdvance": 3.890900000001011,
+        "memory": {
+          "geometries": 283,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "phase": "night",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 12.923,
+        "intervalMs": 32.832,
+        "p95IntervalMs": 44,
+        "calls": 197.75,
+        "triangles": 1283859.5,
+        "elapsedAdvance": 21.157616188912954,
+        "memory": {
+          "geometries": 305,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 26.216
+      },
+      "passes": {
+        "cpuRenderMs": 17.497,
+        "intervalMs": 36.01,
+        "p95IntervalMs": 43.6,
+        "calls": 225.083,
+        "triangles": 1317591.183,
+        "elapsedAdvance": 4.83880000000147,
+        "memory": {
+          "geometries": 314,
+          "textures": 136
+        },
+        "gpuQueries": 2950,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.218,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 1.671,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "world-depth/prepare": {
+            "gpuMs": 0.005,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "world-depth/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "world-depth/draw": {
+            "gpuMs": 3.805,
+            "calls": 75.1,
+            "triangles": 392124.5833333333,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.477,
+            "calls": 46.25,
+            "triangles": 522328.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.611,
+            "calls": 11.8,
+            "triangles": 96665.4,
+            "segments": 180
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.693,
+            "calls": 27.016666666666666,
+            "triangles": 137263.03333333333,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 8.02,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.386,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.422,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.27,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.303,
+            "calls": 1.0,
+            "triangles": 5981.066666666667,
+            "segments": 60
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.109,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.123,
+            "calls": 25.366666666666667,
+            "triangles": 11556.1,
+            "segments": 120
+          },
+          "screen/color:water": {
+            "gpuMs": 0.201,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          },
+          "screen/color:fern-ground-shadow": {
+            "gpuMs": 0.123,
+            "calls": 1.0,
+            "triangles": 1495.2666666666667,
+            "segments": 60
+          }
+        }
+      },
+      "cpu": {
+        "cpuRenderMs": 17.128,
+        "intervalMs": 39.905,
+        "p95IntervalMs": 48.3,
+        "calls": 223.5,
+        "triangles": 1325488.6,
+        "elapsedAdvance": 4.98920000000183,
+        "memory": {
+          "geometries": 307,
+          "textures": 135
+        },
+        "inclusiveCpuMs": {
+          "renderer.screen": 6.445,
+          "buildings.captureDepth": 5.215,
+          "renderer.depth": 4.573,
+          "groups.update": 1.268,
+          "locomotionVfx.prepare": 0.835,
+          "draw.depth.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.78,
+          "draw.screen.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.76,
+          "world.sync": 0.582,
+          "locomotionVfx.update": 0.472,
+          "draw.other.MeshDepthMaterial.": 0.36,
+          "draw.depth.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.358,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.352,
+          "draw.screen.ShaderMaterial.": 0.343,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.247,
+          "draw.depth.MeshDepthMaterial.worldDepthCompatible": 0.22,
+          "draw.depth.ShaderMaterial.": 0.217,
+          "draw.screen.RawShaderMaterial.dust/rigid": 0.177,
+          "draw.screen.RawShaderMaterial.dust/sprites": 0.13,
+          "buildings.render": 0.115,
+          "draw.depth.RawShaderMaterial.dust/rigid": 0.112,
+          "draw.screen.MeshStandardMaterial.globalWaterSlope,paintUniforms,wetShore": 0.098,
+          "world.syncChunks": 0.097,
+          "draw.screen.MeshStandardMaterial.artBounds,artSurface": 0.09,
+          "draw.screen.MeshStandardMaterial.shader": 0.085,
+          "draw.depth.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.083,
+          "draw.screen.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.08,
+          "draw.other.RawShaderMaterial.dust/rigid": 0.078,
+          "draw.screen.MeshPhysicalMaterial.": 0.075,
+          "draw.screen.RawShaderMaterial.": 0.07,
+          "draw.other.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.07,
+          "draw.depth.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.062,
+          "world.updateHands": 0.05,
+          "renderer.mask": 0.042,
+          "workVfx.update": 0.035,
+          "draw.screen.RawShaderMaterial.building": 0.032,
+          "draw.other.RawShaderMaterial.building": 0.027,
+          "draw.depth.RawShaderMaterial.building": 0.025,
+          "attackVfx.update": 0.022,
+          "draw.other.ShaderMaterial.nativeShadowInputs": 0.02,
+          "materials.update": 0.018,
+          "materialVfx.update": 0.008,
+          "agricultureVfx.update": 0.005,
+          "buildings.renderSmoke": 0.005,
+          "shieldVfx.update": 0.003,
+          "agricultureVfx.prepare": 0.002,
+          "materialVfx.prepare": 0.002,
+          "workVfx.prepare": 0.0,
+          "attackVfx.prepare": 0.0,
+          "shieldVfx.prepare": 0.0
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 11.955,
+        "intervalMs": 35.653,
+        "p95IntervalMs": 46.5,
+        "calls": 190.717,
+        "triangles": 1202630.217,
+        "elapsedAdvance": 4.522900000001584,
+        "memory": {
+          "geometries": 293,
+          "textures": 134
+        }
+      }
+    }
+  },
+  {
+    "phase": "day",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 14.018,
+        "intervalMs": 32.007,
+        "p95IntervalMs": 42.6,
+        "calls": 190.433,
+        "triangles": 1243194.95,
+        "elapsedAdvance": 4.323599999999473,
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 25.275
+      },
+      "passes": {
+        "cpuRenderMs": 12.897,
+        "intervalMs": 32.55,
+        "p95IntervalMs": 43.4,
+        "calls": 145.983,
+        "triangles": 1046038,
+        "elapsedAdvance": 4.09039999999959,
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "gpuQueries": 2804,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.215,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 0.939,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.586,
+            "calls": 37.11666666666667,
+            "triangles": 494491.2166666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.489,
+            "calls": 14.7,
+            "triangles": 98239.13333333333,
+            "segments": 209
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.824,
+            "calls": 27.666666666666668,
+            "triangles": 141234.65,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 7.949,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.302,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.421,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.361,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.364,
+            "calls": 1.0,
+            "triangles": 5981.066666666667,
+            "segments": 60
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.2,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:water": {
+            "gpuMs": 0.208,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          },
+          "screen/color:fern-ground-shadow": {
+            "gpuMs": 0.224,
+            "calls": 1.0,
+            "triangles": 1495.2666666666667,
+            "segments": 60
+          },
+          "world-depth/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 25
+          },
+          "world-depth/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 25
+          },
+          "world-depth/draw": {
+            "gpuMs": 1.436,
+            "calls": 25.816666666666666,
+            "triangles": 153884.46666666667,
+            "segments": 25
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.021,
+            "calls": 1.1333333333333333,
+            "triangles": 534.9333333333333,
+            "segments": 50
+          }
+        }
+      },
+      "cpu": {
+        "cpuRenderMs": 11.847,
+        "intervalMs": 34.128,
+        "p95IntervalMs": 44.4,
+        "calls": 195.1,
+        "triangles": 1165468.4,
+        "elapsedAdvance": 4.390000000001379,
+        "memory": {
+          "geometries": 285,
+          "textures": 136
+        },
+        "inclusiveCpuMs": {
+          "renderer.screen": 4.893,
+          "buildings.captureDepth": 2.982,
+          "renderer.depth": 2.623,
+          "groups.update": 0.998,
+          "draw.screen.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.62,
+          "draw.depth.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.458,
+          "draw.other.MeshDepthMaterial.": 0.332,
+          "world.sync": 0.257,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.245,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.223,
+          "draw.screen.ShaderMaterial.": 0.217,
+          "workVfx.prepare": 0.202,
+          "draw.depth.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.197,
+          "workVfx.update": 0.182,
+          "draw.depth.MeshDepthMaterial.worldDepthCompatible": 0.153,
+          "draw.depth.ShaderMaterial.": 0.127,
+          "buildings.render": 0.118,
+          "locomotionVfx.prepare": 0.115,
+          "draw.screen.MeshStandardMaterial.": 0.093,
+          "world.syncChunks": 0.092,
+          "draw.screen.MeshStandardMaterial.globalWaterSlope,paintUniforms,wetShore": 0.083,
+          "locomotionVfx.update": 0.075,
+          "draw.screen.MeshStandardMaterial.artBounds,artSurface": 0.068,
+          "draw.screen.RawShaderMaterial.": 0.067,
+          "draw.screen.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.062,
+          "draw.screen.MeshStandardMaterial.shader": 0.06,
+          "draw.other.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.058,
+          "draw.screen.MeshPhysicalMaterial.": 0.05,
+          "world.updateHands": 0.045,
+          "renderer.mask": 0.043,
+          "draw.other.ShaderMaterial.nativeShadowInputs": 0.035,
+          "draw.depth.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.035,
+          "draw.depth.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.033,
+          "draw.screen.RawShaderMaterial.building": 0.03,
+          "draw.other.RawShaderMaterial.building": 0.025,
+          "draw.screen.RawShaderMaterial.dust/rigid": 0.022,
+          "draw.depth.RawShaderMaterial.building": 0.022,
+          "materials.update": 0.022,
+          "draw.screen.RawShaderMaterial.water/rigid": 0.02,
+          "draw.other.RawShaderMaterial.water/rigid": 0.018,
+          "draw.screen.RawShaderMaterial.water/sprites": 0.018,
+          "draw.screen.RawShaderMaterial.dust/sprites": 0.017,
+          "draw.other.RawShaderMaterial.dust/rigid": 0.013,
+          "attackVfx.update": 0.01,
+          "materialVfx.update": 0.01,
+          "draw.depth.RawShaderMaterial.water/rigid": 0.008,
+          "buildings.renderSmoke": 0.008,
+          "draw.depth.RawShaderMaterial.dust/rigid": 0.008,
+          "shieldVfx.update": 0.007,
+          "agricultureVfx.update": 0.0,
+          "attackVfx.prepare": 0.0,
+          "shieldVfx.prepare": 0.0,
+          "agricultureVfx.prepare": 0.0,
+          "materialVfx.prepare": 0.0
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 7.867,
+        "intervalMs": 30.43,
+        "p95IntervalMs": 39.2,
+        "calls": 115.483,
+        "triangles": 896803.233,
+        "elapsedAdvance": 3.8411000000010063,
+        "memory": {
+          "geometries": 281,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "phase": "night",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 12.425,
+        "intervalMs": 32.528,
+        "p95IntervalMs": 42.7,
+        "calls": 197.133,
+        "triangles": 1301674.2,
+        "elapsedAdvance": 21.090916188913013,
+        "memory": {
+          "geometries": 305,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 26.229
+      },
+      "passes": {
+        "cpuRenderMs": 17.65,
+        "intervalMs": 37.205,
+        "p95IntervalMs": 44.1,
+        "calls": 225.783,
+        "triangles": 1337092.717,
+        "elapsedAdvance": 5.071600000001666,
+        "memory": {
+          "geometries": 312,
+          "textures": 136
+        },
+        "gpuQueries": 2950,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.211,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 1.678,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "world-depth/prepare": {
+            "gpuMs": 0.001,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "world-depth/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "world-depth/draw": {
+            "gpuMs": 3.86,
+            "calls": 75.3,
+            "triangles": 398624.7833333333,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.626,
+            "calls": 46.45,
+            "triangles": 528828.6666666666,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.633,
+            "calls": 11.8,
+            "triangles": 96665.4,
+            "segments": 180
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.804,
+            "calls": 27.016666666666666,
+            "triangles": 143576.03333333333,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 8.219,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.402,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.419,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.222,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.289,
+            "calls": 1.0,
+            "triangles": 5981.066666666667,
+            "segments": 60
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.082,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.15,
+            "calls": 25.666666666666668,
+            "triangles": 11744.233333333334,
+            "segments": 120
+          },
+          "screen/color:water": {
+            "gpuMs": 0.199,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          },
+          "screen/color:fern-ground-shadow": {
+            "gpuMs": 0.14,
+            "calls": 1.0,
+            "triangles": 1495.2666666666667,
+            "segments": 60
+          }
+        }
+      },
+      "cpu": {
+        "cpuRenderMs": 15.003,
+        "intervalMs": 37.587,
+        "p95IntervalMs": 43,
+        "calls": 223.317,
+        "triangles": 1341611.483,
+        "elapsedAdvance": 4.789000000001522,
+        "memory": {
+          "geometries": 307,
+          "textures": 135
+        },
+        "inclusiveCpuMs": {
+          "renderer.screen": 5.4,
+          "buildings.captureDepth": 4.782,
+          "renderer.depth": 4.178,
+          "groups.update": 1.067,
+          "locomotionVfx.prepare": 0.793,
+          "draw.screen.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.703,
+          "draw.depth.MeshStandardMaterial.artBounds,nativeObstruction,nativeSurface,nativeVolcanicGlow": 0.7,
+          "world.sync": 0.478,
+          "locomotionVfx.update": 0.423,
+          "draw.depth.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.313,
+          "draw.screen.ShaderMaterial.": 0.28,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveMudTextures,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.273,
+          "draw.other.MeshDepthMaterial.": 0.265,
+          "draw.screen.MeshStandardMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.232,
+          "draw.depth.ShaderMaterial.": 0.193,
+          "draw.depth.MeshDepthMaterial.worldDepthCompatible": 0.19,
+          "draw.screen.RawShaderMaterial.dust/rigid": 0.123,
+          "draw.screen.RawShaderMaterial.dust/sprites": 0.117,
+          "buildings.render": 0.107,
+          "world.syncChunks": 0.105,
+          "draw.depth.RawShaderMaterial.dust/rigid": 0.102,
+          "draw.screen.MeshStandardMaterial.globalWaterSlope,paintUniforms,wetShore": 0.102,
+          "draw.screen.MeshStandardMaterial.artBounds,artSurface": 0.088,
+          "draw.screen.MeshStandardMaterial.shader": 0.077,
+          "draw.screen.MeshPhysicalMaterial.": 0.077,
+          "draw.depth.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.07,
+          "draw.other.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.07,
+          "draw.screen.MeshBasicMaterial.biomeGround,canyonSand,canyonSandFull,canyonSandSoft,desertSand,groundBiome,mangroveMoss,mangroveShore,mangroveSubstrate,nativeGroundColor,retainBiomeGround,riverSoil,riverUnderlay,toonGround,volcanicAsh,volcanicDeposits,volcanicRock": 0.068,
+          "draw.screen.RawShaderMaterial.": 0.062,
+          "draw.other.RawShaderMaterial.dust/rigid": 0.053,
+          "draw.depth.MeshDepthMaterial.nativeShadowInputs,shader,worldDepthCompatible": 0.052,
+          "world.updateHands": 0.043,
+          "draw.screen.RawShaderMaterial.building": 0.04,
+          "draw.depth.RawShaderMaterial.building": 0.033,
+          "renderer.mask": 0.032,
+          "draw.other.RawShaderMaterial.building": 0.03,
+          "draw.other.ShaderMaterial.nativeShadowInputs": 0.022,
+          "workVfx.update": 0.022,
+          "materials.update": 0.018,
+          "shieldVfx.update": 0.008,
+          "attackVfx.update": 0.008,
+          "agricultureVfx.update": 0.005,
+          "materialVfx.update": 0.003,
+          "agricultureVfx.prepare": 0.003,
+          "workVfx.prepare": 0.002,
+          "shieldVfx.prepare": 0.002,
+          "attackVfx.prepare": 0.002,
+          "buildings.renderSmoke": 0.002,
+          "materialVfx.prepare": 0.0
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 12.25,
+        "intervalMs": 36.472,
+        "p95IntervalMs": 44.4,
+        "calls": 190.8,
+        "triangles": 1221662.65,
+        "elapsedAdvance": 4.656000000001313,
+        "memory": {
+          "geometries": 293,
+          "textures": 134
+        }
+      }
+    }
+  }
+]

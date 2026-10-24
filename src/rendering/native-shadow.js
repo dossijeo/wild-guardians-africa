@@ -24,7 +24,7 @@ export function ensureNativeShadowTarget(light){
 }
 
 export function updateNativeShadowUniforms(uniforms,renderer,light){
-  const shadow=light.shadow;uniforms.uNativeShadowOn.value=renderer.shadowMap.enabled&&light.castShadow&&shadow.map?.depthTexture?1:0;
+  const shadow=light.shadow;uniforms.uNativeShadowOn.value=renderer.shadowMap.enabled&&!light.userData.nativeShadowDisabled&&light.castShadow&&shadow.map?.depthTexture?1:0;
   uniforms.uNativeShadowFiltered.value=shadow.map?.depthTexture??uniforms.fallback;
   uniforms.uNativeShadowTexel.value=1/shadow.mapSize.x;
   uniforms.uNativeLightVP.value.multiplyMatrices(shadow.camera.projectionMatrix,shadow.camera.matrixWorldInverse);
@@ -37,6 +37,7 @@ export function installNativeShadow(renderer,light,uniforms){
   const restore=()=>{reset();const next=renderer.shadowMap;if(next===map)return;if(map.render===render)map.render=original;map=next;original=map.render;map.render=render;};
   canvas?.addEventListener('webglcontextlost',reset);canvas?.addEventListener('webglcontextrestored',restore);
   function render(lights,scene,camera){
+    if(light.userData.nativeShadowDisabled){cache.invalidate();updateNativeShadowUniforms(uniforms,renderer,light);return original.call(this,lights.filter(candidate=>candidate!==light),scene,camera);}
     const active=map.enabled&&(map.autoUpdate||map.needsUpdate)&&lights.includes(light)&&light.castShadow&&(light.shadow.autoUpdate||light.shadow.needsUpdate);
     if(!active){updateNativeShadowUniforms(uniforms,renderer,light);return original.call(this,lights,scene,camera);}
     ensureNativeShadowTarget(light);

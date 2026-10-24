@@ -1,0 +1,60 @@
+[
+  {
+    "record": 0,
+    "variant": "base",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 24.4177,
+    "frameMs": 31.2433,
+    "p95Ms": 39.69999998807907,
+    "cpuMs": 8.2558,
+    "cache": null
+  },
+  {
+    "record": 1,
+    "variant": "incremental",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 22.9041,
+    "frameMs": 29.1242,
+    "p95Ms": 35.299999952316284,
+    "cpuMs": 8.4642,
+    "cache": {
+      "bytes": 16969744,
+      "peakBytes": 23991008,
+      "tiles": 328,
+      "published": 39,
+      "cancelled": 6,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 2,
+    "variant": "base",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 24.331,
+    "frameMs": 31.7617,
+    "p95Ms": 39.299999952316284,
+    "cpuMs": 8.2,
+    "cache": null
+  },
+  {
+    "record": 3,
+    "variant": "incremental",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 22.8754,
+    "frameMs": 28.71,
+    "p95Ms": 34.39999997615814,
+    "cpuMs": 8.3217,
+    "cache": {
+      "bytes": 19765928,
+      "peakBytes": 23991008,
+      "tiles": 342,
+      "published": 43,
+      "cancelled": 4,
+      "rejected": 0
+    }
+  }
+]

@@ -79,9 +79,16 @@ export class Assets {
   }
   async village(payload) {
     this.assertOpen();
-    const buffer=await bytes(payload.binary.url,{signal:this.preparation.signal}),vertices=new Float32Array(buffer,0,payload.vertexBytes/4),index=new Uint32Array(buffer,payload.vertexBytes,payload.indexCount);
-    const interleaved=new THREE.InterleavedBuffer(vertices,8),map=await this.texture(payload.textures.color,true);
+    const sharedArt=this.visualLab==='village-shared-art'&&payload.id==='mapungubwe';
+    const buffer=await bytes(sharedArt?'/assets/visual-lab/mapungubwe-shared-art.bin':payload.binary.url,{signal:this.preparation.signal}),vertexBytes=sharedArt?buffer.byteLength-payload.indexCount*4:payload.vertexBytes,vertices=new Float32Array(buffer,0,vertexBytes/4),index=new Uint32Array(buffer,vertexBytes,payload.indexCount);
+    const pilotCulture=['mapungubwe','musgum'].includes(payload.id);
+    const experimentalColor=sharedArt?'/assets/visual-lab/mapungubwe-shared-art.webp':this.visualLab==='texture-detail'&&pilotCulture?`/assets/visual-lab/${payload.id}-color-detail.webp`:payload.textures.color;
+    const experimentalAtlas=this.visualLab==='normal-enhanced'&&pilotCulture?`/assets/visual-lab/${payload.id}-normal-enhanced.webp`:payload.textures.normal;
+    const interleaved=new THREE.InterleavedBuffer(vertices,8),[map,normalMap]=await Promise.all([this.texture(experimentalColor,true),this.visualLab?.startsWith('normal')&&experimentalAtlas?this.texture(experimentalAtlas):null]);
+    const repacked=['village-repacked','village-art','village-finish','village-surface','village-details'].includes(this.visualLab)&&payload.id==='mapungubwe'?await Promise.all([bytes(['village-surface','village-details'].includes(this.visualLab)?'/assets/visual-lab/mapu-0-surface.bin':this.visualLab==='village-finish'?'/assets/visual-lab/mapu-0-finish.bin':this.visualLab!=='village-repacked'?'/assets/visual-lab/mapu-0-art.bin':'/assets/visual-lab/mapu-0-repacked.bin',{signal:this.preparation.signal}),this.texture(this.visualLab==='village-details'?'/assets/visual-lab/mapu-0-color-details.webp':this.visualLab==='village-surface'?'/assets/visual-lab/mapu-0-color-surface.webp':this.visualLab==='village-finish'?'/assets/visual-lab/mapu-0-color-finish.webp':this.visualLab==='village-art'?'/assets/visual-lab/mapu-0-color-art.webp':'/assets/visual-lab/mapu-0-color-repacked.webp',true)]):null;
+    if(this.visualLab==='texture-aniso'){map.anisotropy=8;map.needsUpdate=true;}
     this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}));
+    if(normalMap){material.normalMap=normalMap;material.normalScale.setScalar(this.visualLab==='normal'?1.15:1.35);material.userData.visualLabNormal=true;material.userData.visualLabNormalDetail=this.visualLab!=='normal';material.needsUpdate=true;}
     material.userData.artSurface=5;material.userData.artBounds={min:new THREE.Vector3(),size:new THREE.Vector3(1,1,1),crown:.43};
     return payload.units.map(unit=>{
       const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(interleaved,2,6));geometry.setIndex(new THREE.BufferAttribute(index,1));geometry.setDrawRange(unit.offset,unit.count);
@@ -89,6 +96,12 @@ export class Assets {
       // Three's automatic bounds. Use the authored unit envelope for both passes.
       geometry.boundingBox=new THREE.Box3(new THREE.Vector3().fromArray(unit.min),new THREE.Vector3().fromArray(unit.max));
       geometry.boundingSphere=geometry.boundingBox.getBoundingSphere(new THREE.Sphere());
+      if(repacked&&unit.key==='mapu-0'){
+        const [packedBytes,packedMap]=repacked,vertexBytes=packedBytes.byteLength-unit.count*4,packedVertices=new Float32Array(packedBytes,0,vertexBytes/4),packedIndex=new Uint32Array(packedBytes,vertexBytes,unit.count),packedInterleaved=new THREE.InterleavedBuffer(packedVertices,8);
+        const packedGeometry=this.own(new THREE.BufferGeometry());packedGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(packedInterleaved,3,0));packedGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(packedInterleaved,3,3));packedGeometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(packedInterleaved,2,6));packedGeometry.setIndex(new THREE.BufferAttribute(packedIndex,1));packedGeometry.boundingBox=geometry.boundingBox.clone();packedGeometry.boundingSphere=geometry.boundingSphere.clone();
+        const packedMaterial=this.own(material.clone());packedMaterial.map=packedMap;packedMaterial.needsUpdate=true;
+        const packedMesh=new THREE.Mesh(packedGeometry,packedMaterial);packedMesh.userData.unit=unit;packedMesh.castShadow=packedMesh.receiveShadow=true;return packedMesh;
+      }
       const mesh=new THREE.Mesh(geometry,material);mesh.userData.unit=unit;mesh.castShadow=mesh.receiveShadow=true;return mesh;
     });
   }

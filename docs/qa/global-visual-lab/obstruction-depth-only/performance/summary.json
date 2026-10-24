@@ -1,0 +1,225 @@
+{
+  "blocks": 8,
+  "gpuSamples": 960,
+  "cadenceFrames": 1440,
+  "results": [
+    {
+      "phase": "day",
+      "values": [
+        {
+          "variant": "base",
+          "groupCpuMs": [
+            1.0872222231494055,
+            1.0799999992052713
+          ],
+          "uploadsPerFrame": [
+            11,
+            11
+          ],
+          "gpuMs": [
+            15.829375816666667,
+            16.076946091666667
+          ],
+          "cpuMs": [
+            5.007222221626176,
+            5.163888889220026
+          ],
+          "intervalMs": [
+            20.30722222228845,
+            20.06388888888889
+          ],
+          "intervalP95Ms": [
+            33.20000001788139,
+            28.69999998807907
+          ],
+          "calls": 74,
+          "triangles": 1212422,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 47.30000013113022,
+              "selectionMs": 162.29999968409538,
+              "selectionCount": 314,
+              "candidates": 16640,
+              "masked": 1636,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        },
+        {
+          "variant": "combined",
+          "groupCpuMs": [
+            0.9866666667991214,
+            1.1211111111773384
+          ],
+          "uploadsPerFrame": [
+            11,
+            11
+          ],
+          "gpuMs": [
+            14.703706949999999,
+            15.1675951
+          ],
+          "cpuMs": [
+            4.8555555545621445,
+            5.204444443020556
+          ],
+          "intervalMs": [
+            19.489999999933772,
+            19.401666666567326
+          ],
+          "intervalP95Ms": [
+            30.400000005960464,
+            32.19999998807907
+          ],
+          "calls": 74,
+          "triangles": 1212422,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 47.29999998211861,
+              "selectionMs": 156.20000022649765,
+              "selectionCount": 314,
+              "candidates": 16640,
+              "masked": 1636,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        }
+      ]
+    },
+    {
+      "phase": "night",
+      "values": [
+        {
+          "variant": "base",
+          "groupCpuMs": [
+            1.0488888892862531,
+            1.0322222221228812
+          ],
+          "uploadsPerFrame": [
+            11,
+            11
+          ],
+          "gpuMs": [
+            15.826831558333334,
+            17.356810291666665
+          ],
+          "cpuMs": [
+            4.977777777446641,
+            4.817777777380414
+          ],
+          "intervalMs": [
+            20.37166666669978,
+            19.898333333267107
+          ],
+          "intervalP95Ms": [
+            30.19999998807907,
+            32.599999994039536
+          ],
+          "calls": 74,
+          "triangles": 1212422,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 49.1000000834465,
+              "selectionMs": 265.1999997496605,
+              "selectionCount": 622,
+              "candidates": 16640,
+              "masked": 1636,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        },
+        {
+          "variant": "combined",
+          "groupCpuMs": [
+            1.0544444448418087,
+            1.0550000001986821
+          ],
+          "uploadsPerFrame": [
+            11,
+            11
+          ],
+          "gpuMs": [
+            15.55025395,
+            15.912348491666666
+          ],
+          "cpuMs": [
+            5.0466666678587595,
+            5.037222222818269
+          ],
+          "intervalMs": [
+            21.076666666567327,
+            19.875
+          ],
+          "intervalP95Ms": [
+            33.10000002384186,
+            28.5
+          ],
+          "calls": 74,
+          "triangles": 1212422,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 49.30000001192093,
+              "selectionMs": 266.5000003874302,
+              "selectionCount": 622,
+              "candidates": 16640,
+              "masked": 1636,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        }
+      ]
+    }
+  ]
+}

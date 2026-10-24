@@ -78,6 +78,7 @@ function canyonHeight(field,x,z){
  const micro=(noise(x*.13,z*.13,field.seed^9513)-.5)*.18*field.c.relief;
  if(d<=f.waterHalf+.6)return mix(level-.92,level+.13,smooth(1.7,f.waterHalf+.6,d));
  const floor=level+.13+smooth(f.waterHalf+.6,f.wallStart,d)*.68+micro;
+ if(field.canyonOpenRight&&side>0)return floor;
  const flute=(noise(z*.095,side*9,field.seed^6721)-.5)*2.0+(noise(z*.034,side*13,field.seed^6517)-.5)*1.8;
  const edge=f.wallStart+flute;
  const rise=.54*smooth(edge,edge+4.3,d)+.32*smooth(edge+6.2,edge+9.7,d)+.14*smooth(edge+12,edge+16,d);
@@ -89,7 +90,7 @@ function canyonGroundColor(field,b,x,z){
  const coarse=noise(x*.045,z*.045,field.seed^1930),grain=noise(x*.21,z*.21,field.seed^3001);
  let col=cmix(hex(b.colors.soil),hex('#dfad6d'),.20+coarse*.22);
  // Narrow the sand-to-wall blend so the join does not paint wide ring-like bands.
- const wall=smooth(cf.wallStart+.35,cf.wallStart+2.35,d);
+ const wall=field.canyonOpenRight&&dx>=0?0:smooth(cf.wallStart+.35,cf.wallStart+2.35,d);
  const undulation=noise(x*.015,z*.022,field.seed^664)*1.5;
  const stripe=(h+undulation)%5.5;
  const band=smooth(3.65,3.95,stripe)*(1-smooth(4.6,4.95,stripe));
@@ -119,6 +120,7 @@ function scatterCanyon(c,b,field,reverse=false){
  // prop density. Their real footprint cannot encroach on the river corridor.
  for(let station=Math.floor((bo.minZ-10)/31);station<=Math.ceil((bo.maxZ+10)/31);station++){
   for(const side of[-1,1]){
+   if(field.canyonOpenRight&&side>0)continue;
    const r=rand(hashCell(seed,station,side,8123));
    const z=station*31+6+r()*15,cf=canyonFrame(field,z,side);
    const slot=weighted([.54,.34,.12],r())+2; // mesa / needle / arch
@@ -136,6 +138,7 @@ function scatterCanyon(c,b,field,reverse=false){
  }
  // Upper mesas: sparse, larger silhouettes, not small props repeated everywhere.
  for(let station=Math.floor((bo.minZ-16)/97);station<=Math.ceil((bo.maxZ+16)/97);station++)for(const side of[-1,1]){
+  if(field.canyonOpenRight&&side>0)continue;
   const r=rand(hashCell(seed,station,side,8807)),z=station*97+15+r()*53,x=field.riverX(z)+side*(57+r()*20),sc=1.03+r()*.24;
   place('canyon:mesa:'+station+':'+side,2,x,z,r()*TAU,sc,sc*.92,sc,.94+r()*.08,.6);
  }
@@ -290,6 +293,7 @@ class TerrainField{
   this.wetland=config.biome==='mangrove';
   this.desert=config.biome==='desert';this.desertWind=(hashCell(this.seed,3,9,7193)/4294967296-.5)*1.30;
   this.canyon=config.biome==='canyons';
+  this.canyonOpenRight=this.canyon&&config.canyonOpenRight===true;
   this.riverLevel=this.wetland?3.32:this.canyon?3.28:3.6;
   this.featureCell=this.wetland?78:this.canyon?160:144;
   this.riverActive=!!config.river&&!this.wetland&&!this.desert;

@@ -1,0 +1,26 @@
+import {chromium} from 'playwright';
+import {mkdir,writeFile} from 'node:fs/promises';
+const out='docs/qa/global-visual-lab/mangrove-mud-moss-toon-interior/motion';await mkdir(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(',')){
+ const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1}),errors=[],steps=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+ await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch(),body=await response.text();if(!body.includes('this.raycaster=new'))throw Error('Observation anchor missing');await route.fulfill({response,body:body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new')});});
+ await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch(),body=await response.text();if(!body.includes('async function boot()'))throw Error('Close anchor missing');await route.fulfill({response,body:body.replace('async function boot()','globalThis.qaCloseWorld=clearWorld;async function boot()')});});
+ await page.addInitScript(q=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:q,farVegetation:false})),quality);
+ await page.goto('http://127.0.0.1:5190/?qa-seed=712&visualLab=global-lighting');
+ await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
+ await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
+ await frame.evaluate(()=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome:'manglares',culture:'mapungubwe'},location.origin));
+ await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&window.qaCampaignWorld?.state,null,{timeout:180000});
+ await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'menu');w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};const update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0);window.qaOriginalNormals=[...w.chunks.values()].flatMap(g=>g.children.filter(m=>m.name==='mangrove-mud-patches').map(m=>({mesh:m,normal:m.geometry.attributes.normal})));await(await import('/tools/experiments/qa-mangrove-mud-moss-toon-interior.js')).applyMaterialStudy(w);window.qaOrigin=w.controls.target.toArray();window.qaDisposals=[];window.qaSeen=new WeakSet();window.qaObserve=()=>{for(const group of w.chunks.values())for(const mesh of group.children){if(mesh.name!=='mangrove-mud-patches'||qaSeen.has(mesh.geometry))continue;qaSeen.add(mesh.geometry);const record={geometry:0,material:0};qaDisposals.push(record);mesh.geometry.addEventListener('dispose',()=>record.geometry++);mesh.material.addEventListener('dispose',()=>record.material++);}};qaObserve();});
+
+ const identity=await page.evaluate(()=>qaOriginalNormals.every(r=>r.mesh.geometry.attributes.normal===r.normal));if(!identity)throw Error('Normal attribute replaced');
+ await page.evaluate(()=>{const w=qaCampaignWorld,c=w.controls.target;const centers=[...w.chunks.values()].flatMap(g=>g.children.filter(m=>m.name==='mangrove-mud-patches').flatMap(m=>m.geometry.userData.mudCenters));centers.sort((a,b)=>Math.hypot(a.x-c.x,a.z-c.z)-Math.hypot(b.x-c.x,b.z-c.z));qaOrigin=[centers[0].x,w.nav.field.surface(centers[0].x,centers[0].z)+.5,centers[0].z];});
+ for(const phase of ['day','night'])for(const enabled of [false,true])for(let frame=0;frame<36;frame++){
+  const result=await page.evaluate(async({phase,enabled,frame})=>{const w=qaCampaignWorld,[x,y,z]=qaOrigin,t=frame/35,angle=(t-.5)*.8;w.qaMudBlend.setEnabled(enabled);w.state.day=1;w.state.time=phase==='day'?150:350;w.controls.target.set(x,y,z);w.camera.position.set(x+Math.sin(angle)*22,y+7,z+Math.cos(angle)*22);w.syncChunks();await w.whenChunksReady();for(let i=0;i<3;i++)w.render(.016);return {camera:w.camera.position.toArray(),target:w.controls.target.toArray(),calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,glError:w.renderer.getContext().getError(),data:w.renderer.domElement.toDataURL('image/png').split(',')[1]};},{phase,enabled,frame});
+  const file=`${quality}-${phase}-${enabled?'B':'A'}-${String(frame).padStart(3,'0')}.png`;await writeFile(`${out}/${file}`,Buffer.from(result.data,'base64'));delete result.data;steps.push({phase,enabled,frame,file,...result});if(result.glError)throw Error('WebGL error');
+ }
+ const normalIdentityAfter=await page.evaluate(()=>qaOriginalNormals.every(r=>r.mesh.geometry.attributes.normal===r.normal));
+ await writeFile(`${out}/${quality}.json`,JSON.stringify({identity,normalIdentityAfter,steps,errors},null,2)+'\n');if(errors.length||!normalIdentityAfter)throw Error('Motion audit failed');console.log(quality,steps.length,'motion frames');await page.close();
+}}finally{await browser.close()}

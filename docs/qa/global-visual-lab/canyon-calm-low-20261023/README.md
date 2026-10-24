@@ -1,0 +1,7 @@
+# Native calm Canyon water in low quality
+
+Source c3794f4ae. Low quality,1280x720,seed712, identical paid campaign fixture/native,elevated,reverse cameras/day150/night350; full distant backgrounds. Native baseline versus canyonWater=calm with no QA shader patch.24 real screenshots including warm-up; six final pairs checked.
+
+All camera/target/time/origin/elapsed/worker/draw/triangle controls and geometry/texture counts match. No captured JS/shader/GL errors. Day native-game view inspected: bright reflection bands reduced while river and banks remain legible. Low loses cast shadows and depth cues compared with medium; this is not the preferred art target. Night elevated/reverse pixel-exact; game view differs16pixels,max23channel levels at x258–261,y123–127 and x800–802,y409. Cause unisolated; no perfect-night-equivalence claim. Night-pixels.json retains measurements.
+
+Reproduce: WG_COVER_QUALITY=baja; loop WG_REFLECTION=baseline/native and WG_REVIEW_OUT=docs/qa/global-visual-lab/canyon-calm-low-20261023/<variant>, node tools/experiments/capture-canyon-day-reflection-20261023.mjs. python tools/experiments/review-canyon-calm-low-20261023.py assembles controls and comparisons. Images untouched except side-by-side labels. Separate cost study in ../canyon-calm-low-cost-20261023. Next gate remains long active-game camera excursion with the new option. No production change or biome completion in this pass.

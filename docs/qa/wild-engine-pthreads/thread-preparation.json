@@ -1,0 +1,135 @@
+{
+  "preparation": true,
+  "publication": false,
+  "scope": "Real pthread preparation; see result.scope for limits.",
+  "result": {
+    "rows": [
+      {
+        "biome": 0,
+        "job": 1,
+        "admissionMs": 0.8100000023841858,
+        "computedMs": 64.73486328125,
+        "queryBatches": 14,
+        "maxQueryBatchMs": 2.865000009536743,
+        "payloadEqual": true,
+        "rastersEqual": true,
+        "liveBuffersUnchanged": true,
+        "routeStable": true,
+        "suppressionPreserved": true,
+        "snapshots": {
+          "neighbors": 1,
+          "settlements": 1,
+          "removed": 1
+        },
+        "memoryBefore": 16777216,
+        "memoryAfter": 16777216
+      },
+      {
+        "biome": 1,
+        "job": 2,
+        "admissionMs": 0.029999971389770508,
+        "computedMs": 51.455078125,
+        "queryBatches": 8,
+        "maxQueryBatchMs": 2.755000054836273,
+        "payloadEqual": true,
+        "rastersEqual": true,
+        "liveBuffersUnchanged": true,
+        "routeStable": true,
+        "suppressionPreserved": true,
+        "snapshots": {
+          "neighbors": 1,
+          "settlements": 1,
+          "removed": 1
+        },
+        "memoryBefore": 16777216,
+        "memoryAfter": 16777216
+      },
+      {
+        "biome": 2,
+        "job": 3,
+        "admissionMs": 0.02499997615814209,
+        "computedMs": 58.994873046875,
+        "queryBatches": 9,
+        "maxQueryBatchMs": 2.209999978542328,
+        "payloadEqual": true,
+        "rastersEqual": true,
+        "liveBuffersUnchanged": true,
+        "routeStable": true,
+        "suppressionPreserved": true,
+        "snapshots": {
+          "neighbors": 1,
+          "settlements": 1,
+          "removed": 1
+        },
+        "memoryBefore": 16777216,
+        "memoryAfter": 16777216
+      },
+      {
+        "biome": 3,
+        "job": 4,
+        "admissionMs": 0.030000030994415283,
+        "computedMs": 55.965087890625,
+        "queryBatches": 9,
+        "maxQueryBatchMs": 1.8450000286102295,
+        "payloadEqual": true,
+        "rastersEqual": true,
+        "liveBuffersUnchanged": true,
+        "routeStable": true,
+        "suppressionPreserved": true,
+        "snapshots": {
+          "neighbors": 1,
+          "settlements": 1,
+          "removed": 1
+        },
+        "memoryBefore": 16777216,
+        "memoryAfter": 16777216
+      },
+      {
+        "biome": 4,
+        "job": 5,
+        "admissionMs": 0.04000002145767212,
+        "computedMs": 79.93505859375,
+        "queryBatches": 11,
+        "maxQueryBatchMs": 3.125,
+        "payloadEqual": true,
+        "rastersEqual": true,
+        "liveBuffersUnchanged": true,
+        "routeStable": true,
+        "suppressionPreserved": true,
+        "snapshots": {
+          "neighbors": 1,
+          "settlements": 1,
+          "removed": 1
+        },
+        "memoryBefore": 16777216,
+        "memoryAfter": 16777216
+      },
+      {
+        "biome": 5,
+        "job": 6,
+        "admissionMs": 0.019999980926513672,
+        "computedMs": 65.44482421875,
+        "queryBatches": 10,
+        "maxQueryBatchMs": 2.290000021457672,
+        "payloadEqual": true,
+        "rastersEqual": true,
+        "liveBuffersUnchanged": true,
+        "routeStable": true,
+        "suppressionPreserved": true,
+        "snapshots": {
+          "neighbors": 1,
+          "settlements": 1,
+          "removed": 1
+        },
+        "memoryBefore": 16777216,
+        "memoryAfter": 16777216
+      }
+    ],
+    "cancelState": 2,
+    "lateCancellation": true,
+    "shutdownReturnedWorker": true,
+    "shared": true,
+    "scope": "Actual pthread terrain + static navigation preparation in one WASM memory, concurrently with main-thread queries, selected-scratch regeneration and a wall edit. Byte equality against synchronous generation for six biomes/six authored profiles. No publication, live-game streaming, prepared overlays or distribution acceptance yet."
+  },
+  "errors": []
+}

@@ -1,7 +1,11 @@
+import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-scheduler.js';
+import {streamingOptions} from '../rendering/streaming-options.js';
+import {prepareTerrainChunk,discardPreparedTerrain} from '../rendering/prepare-terrain-chunk.js';
 import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
 import {WILD_ENGINE_WORLD_VERSION} from '../world/wild-engine/world-version.js';
+import {createThreadedSpatialWorld} from '../world/wild-engine/spatial-thread-runtime.js';
 import wasmUrl from '../world/wild-engine/spatial-savanna.wasm?url';
 
 export {WILD_ENGINE_WORLD_VERSION};
@@ -21,10 +25,39 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
     state.suppressed.push(...start.site.suppress);
     state.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
   }
-  const session=createSpatialGameSession(module,state,{
+  let threaded=null,fallbackReason=null;
+  const enabled=new URLSearchParams(globalThis.location?.search??'').get('wildEngineThreads')!=='0';
+  if(enabled&&globalThis.crossOriginIsolated&&typeof SharedArrayBuffer!=='undefined'){
+    try{
+      const url=new URL(`${import.meta.env.BASE_URL}wild-engine/spatial-threaded.mjs`,document.baseURI).href;
+      const {default:factory}=await import(/* @vite-ignore */ url);
+      threaded=await createThreadedSpatialWorld(factory);
+    }catch(error){fallbackReason=String(error);console.warn('Wild Engine pthread runtime unavailable; using standalone fallback',error);}
+  }else fallbackReason=enabled?'SharedArrayBuffer isolation unavailable':'Disabled for comparison';
+  if(signal?.aborted){await threaded?.dispose();throw new DOMException('Wild Engine cancelled','AbortError');}
+  let session;
+  try{
+    if(threaded){
+      const visual=streamingOptions(state.biome);
+      threaded.core.preparation?.visualOptions?.(visual.waterBed?(visual.waterShore?3:1):0);
+      const first=state.villages[0];
+      threaded.core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome);
+    }
+    session=createSpatialGameSession(module,state,{
+    ...(threaded?{core:threaded.core}:{}),
+    ...(globalFrameSchedulerEnabled()||new URLSearchParams(location.search).get('chunkInstall')==='staged'?{
+      pipeline:globalFrameSchedulerEnabled(),
+      prepareData:(data,current)=>prepareTerrainChunk(world,data,current,{scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,signal}),
+      discardData:data=>discardPreparedTerrain(world,data)
+    }:{}),
     loaded:()=>world.chunks,
     onData:data=>world.installChunk(data),
     onError:error=>world.onError?.(error)});
-  try{return {session,navigation:createSpatialNavigationMovement(session,state)};}
-  catch(error){session.dispose();throw error;}
+    const originalDispose=session.dispose;
+    session.dispose=()=>{signal?.removeEventListener('abort',abort);originalDispose();return threaded?.dispose();};
+    const abort=()=>{void session.dispose();};
+    signal?.addEventListener('abort',abort,{once:true});
+    session.runtime={backend:threaded?'pthreads':'standalone',fallbackReason};
+    return {session,navigation:createSpatialNavigationMovement(session,state)};
+  }catch(error){session?.dispose();await threaded?.dispose();throw error;}
 }

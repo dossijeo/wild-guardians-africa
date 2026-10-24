@@ -1,0 +1,390 @@
+{
+  "commit": "47d90b7cfdfc9e4e5f5646b1c7d55090afb7327c",
+  "quality": "media",
+  "compare": "far-owned-lifetime",
+  "farCompletionGate": true,
+  "horizonBedBudget": 2,
+  "scope": "Paused real game; equivalent completed streaming work, 720p, GPU timer every third render. Not active simulation or visual acceptance.",
+  "runs": [
+    {
+      "biome": "manglares",
+      "label": "a1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 144,
+        "mean": 27.13743055555556,
+        "p95": 49.90999999999622,
+        "max": 99.90499999999884
+      },
+      "gpu": {
+        "count": 49,
+        "mean": 21.403709734693876,
+        "p95": 30.595885,
+        "max": 39.043749
+      },
+      "preparedShore": {
+        "count": 32,
+        "bytes": 536460
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {},
+      "programRetention": {
+        "retained": 81,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "horizon": {
+        "count": 145,
+        "mean": 0.014206895746033767,
+        "p95": 0.02499997615814209,
+        "max": 0.04000002145767212
+      },
+      "syncChunks": {
+        "count": 145,
+        "mean": 0.3078620721553934,
+        "p95": 0.6150000095367432,
+        "max": 9.384999990463257
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 4.050000011920929,
+        "p95": 3.9200000166893005,
+        "max": 4.180000007152557
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05450000405311584,
+        "p95": 0.06999999284744263,
+        "max": 0.09500002861022949
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6875999999046326,
+        "p95": 1.0600000023841858,
+        "max": 1.8849999904632568
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 47.9761962890625,
+        "p95": 63.400146484375,
+        "max": 69.554931640625
+      },
+      "install": {
+        "count": 50,
+        "mean": 9.328399999141693,
+        "p95": 13.055000007152557,
+        "max": 20.039999961853027
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3907.790000000001,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-owned-far/manglares-a1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 150,
+        "mean": 27.381733333333347,
+        "p95": 50.095000000001164,
+        "max": 66.63999999999942
+      },
+      "gpu": {
+        "count": 51,
+        "mean": 21.55732133333334,
+        "p95": 30.543802,
+        "max": 34.242238
+      },
+      "preparedShore": {
+        "count": 32,
+        "bytes": 536460
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {},
+      "programRetention": {
+        "retained": 81,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "horizon": {
+        "count": 151,
+        "mean": 0.01486754851625455,
+        "p95": 0.025000035762786865,
+        "max": 0.04000002145767212
+      },
+      "syncChunks": {
+        "count": 151,
+        "mean": 0.3134768202604837,
+        "p95": 0.49000000953674316,
+        "max": 9.65499997138977
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 5.004999995231628,
+        "p95": 4.115000009536743,
+        "max": 5.894999980926514
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.06470000028610229,
+        "p95": 0.12000000476837158,
+        "max": 0.15500003099441528
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.701800001859665,
+        "p95": 1.0849999785423279,
+        "max": 1.3050000071525574
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 50.0822900390625,
+        "p95": 72.23486328125,
+        "max": 76.739990234375
+      },
+      "install": {
+        "count": 50,
+        "mean": 10.056499992609025,
+        "p95": 14.055000007152557,
+        "max": 22.264999985694885
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4107.260000000002,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-owned-far/manglares-b1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "a2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 156,
+        "mean": 28.03477564102566,
+        "p95": 49.93499999999767,
+        "max": 83.12000000000262
+      },
+      "gpu": {
+        "count": 53,
+        "mean": 23.448076018867923,
+        "p95": 32.329583,
+        "max": 34.209425
+      },
+      "preparedShore": {
+        "count": 32,
+        "bytes": 536460
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {},
+      "programRetention": {
+        "retained": 81,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "horizon": {
+        "count": 157,
+        "mean": 0.015732486156900975,
+        "p95": 0.025000035762786865,
+        "max": 0.04500001668930054
+      },
+      "syncChunks": {
+        "count": 157,
+        "mean": 0.309968151104678,
+        "p95": 0.6349999904632568,
+        "max": 9.964999973773956
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 4.452500015497208,
+        "p95": 4.375,
+        "max": 4.530000030994415
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05810000658035278,
+        "p95": 0.07500004768371582,
+        "max": 0.13499999046325684
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7083000016212463,
+        "p95": 1.125,
+        "max": 1.5950000286102295
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 50.5605029296875,
+        "p95": 63.31005859375,
+        "max": 78.400146484375
+      },
+      "install": {
+        "count": 50,
+        "mean": 10.562999995946884,
+        "p95": 16.52999997138977,
+        "max": 23.4549999833107
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4373.425000000003,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-owned-far/manglares-a2.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 146,
+        "mean": 27.67623287671235,
+        "p95": 49.96500000000378,
+        "max": 99.66500000000087
+      },
+      "gpu": {
+        "count": 49,
+        "mean": 22.594527102040825,
+        "p95": 30.605676,
+        "max": 36.031092
+      },
+      "preparedShore": {
+        "count": 32,
+        "bytes": 536460
+      },
+      "preparedWater": {
+        "count": 32,
+        "bytes": 576348
+      },
+      "detail": {},
+      "programRetention": {
+        "retained": 81,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "horizon": {
+        "count": 147,
+        "mean": 0.015544218270957064,
+        "p95": 0.025000035762786865,
+        "max": 0.11000001430511475
+      },
+      "syncChunks": {
+        "count": 147,
+        "mean": 0.30408162973365005,
+        "p95": 0.5049999952316284,
+        "max": 9.819999992847443
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 4.0250000059604645,
+        "p95": 3.810000002384186,
+        "max": 4.240000009536743
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.06049999833106995,
+        "p95": 0.10000002384185791,
+        "max": 0.13499999046325684
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6689999914169311,
+        "p95": 1.1200000047683716,
+        "max": 1.3349999785423279
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 48.78177734375,
+        "p95": 62.64501953125,
+        "max": 75.784912109375
+      },
+      "install": {
+        "count": 50,
+        "mean": 10.176400003433228,
+        "p95": 14.754999995231628,
+        "max": 19.930000007152557
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4040.730000000003,
+      "report": "docs/qa/wild-engine-pthreads/matrix-mangrove-owned-far/manglares-b2.json"
+    }
+  ]
+}

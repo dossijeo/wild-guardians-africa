@@ -1,0 +1,88 @@
+{
+  "rows": [
+    {
+      "biome": "sabana",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture, not a tested dusk transition. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 9.761904999999203,
+      "frames": {
+        "count": 360,
+        "mean": 27.344930555555564,
+        "p95": 50.04000000000087,
+        "max": 149.6449999999968
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7233333349227905,
+        "p95": 0.9750000238418579,
+        "max": 1
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.140666671593984,
+        "p95": 5.360000014305115,
+        "max": 7.774999976158142
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.015263157207879994,
+        "p95": 0.025000035762786865,
+        "max": 0.04500001668930054
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 19.82695575206611,
+        "p95": 29.198853,
+        "max": 44.503019
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-default-low/sabana.json"
+    },
+    {
+      "biome": "desierto",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture, not a tested dusk transition. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 6.718024999999713,
+      "frames": {
+        "count": 360,
+        "mean": 18.615152777777773,
+        "p95": 33.24499999999898,
+        "max": 66.43000000000029
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7390000025431315,
+        "p95": 0.9000000357627869,
+        "max": 1.6899999976158142
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.4486666599909466,
+        "p95": 5.6549999713897705,
+        "max": 10.629999995231628
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.07879501333527288,
+        "p95": 0.030000030994415283,
+        "max": 10.25
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 14.185608991735544,
+        "p95": 18.875051,
+        "max": 19.587187
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-default-low/desierto.json"
+    }
+  ]
+}

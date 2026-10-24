@@ -1,0 +1,730 @@
+{
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "note": "Actual menu-started campaign, global-lighting rendering, paused simulation; all variants share the same world and cameras. Full-frame renderer counters.",
+  "records": [
+    {
+      "file": "media-close-day-original.webp",
+      "view": "close",
+      "phase": "day",
+      "variant": "original",
+      "quality": "media",
+      "camera": [
+        114.09019607843138,
+        11.45417537689209,
+        31.67058823529412
+      ],
+      "target": [
+        111.09019607843138,
+        9.45417537689209,
+        27.67058823529412
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 75,
+      "triangles": 1031202,
+      "geometries": 197,
+      "textures": 64,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-day-translucent.webp",
+      "view": "close",
+      "phase": "day",
+      "variant": "translucent",
+      "quality": "media",
+      "camera": [
+        114.09019607843138,
+        11.45417537689209,
+        31.67058823529412
+      ],
+      "target": [
+        111.09019607843138,
+        9.45417537689209,
+        27.67058823529412
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 75,
+      "triangles": 1031202,
+      "geometries": 197,
+      "textures": 64,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "translucent",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": true,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-day-original2.webp",
+      "view": "close",
+      "phase": "day",
+      "variant": "original2",
+      "quality": "media",
+      "camera": [
+        114.09019607843138,
+        11.45417537689209,
+        31.67058823529412
+      ],
+      "target": [
+        111.09019607843138,
+        9.45417537689209,
+        27.67058823529412
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 75,
+      "triangles": 1031202,
+      "geometries": 197,
+      "textures": 64,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original2",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-night-original.webp",
+      "view": "close",
+      "phase": "night",
+      "variant": "original",
+      "quality": "media",
+      "camera": [
+        114.09019607843138,
+        11.45417537689209,
+        31.67058823529412
+      ],
+      "target": [
+        111.09019607843138,
+        9.45417537689209,
+        27.67058823529412
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 75,
+      "triangles": 1031202,
+      "geometries": 197,
+      "textures": 64,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-night-translucent.webp",
+      "view": "close",
+      "phase": "night",
+      "variant": "translucent",
+      "quality": "media",
+      "camera": [
+        114.09019607843138,
+        11.45417537689209,
+        31.67058823529412
+      ],
+      "target": [
+        111.09019607843138,
+        9.45417537689209,
+        27.67058823529412
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 75,
+      "triangles": 1031202,
+      "geometries": 197,
+      "textures": 64,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "translucent",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": true,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-close-night-original2.webp",
+      "view": "close",
+      "phase": "night",
+      "variant": "original2",
+      "quality": "media",
+      "camera": [
+        114.09019607843138,
+        11.45417537689209,
+        31.67058823529412
+      ],
+      "target": [
+        111.09019607843138,
+        9.45417537689209,
+        27.67058823529412
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 75,
+      "triangles": 1031202,
+      "geometries": 197,
+      "textures": 64,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original2",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-day-original.webp",
+      "view": "game",
+      "phase": "day",
+      "variant": "original",
+      "quality": "media",
+      "camera": [
+        132,
+        25.38057746887207,
+        48
+      ],
+      "target": [
+        110,
+        9.38057746887207,
+        30
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 67,
+      "triangles": 1420392,
+      "geometries": 151,
+      "textures": 59,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-day-translucent.webp",
+      "view": "game",
+      "phase": "day",
+      "variant": "translucent",
+      "quality": "media",
+      "camera": [
+        132,
+        25.38057746887207,
+        48
+      ],
+      "target": [
+        110,
+        9.38057746887207,
+        30
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 67,
+      "triangles": 1420392,
+      "geometries": 151,
+      "textures": 59,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "translucent",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": true,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-day-original2.webp",
+      "view": "game",
+      "phase": "day",
+      "variant": "original2",
+      "quality": "media",
+      "camera": [
+        132,
+        25.38057746887207,
+        48
+      ],
+      "target": [
+        110,
+        9.38057746887207,
+        30
+      ],
+      "time": 150,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 0,
+      "calls": 67,
+      "triangles": 1420392,
+      "geometries": 151,
+      "textures": 59,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original2",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-night-original.webp",
+      "view": "game",
+      "phase": "night",
+      "variant": "original",
+      "quality": "media",
+      "camera": [
+        132,
+        25.38057746887207,
+        48
+      ],
+      "target": [
+        110,
+        9.38057746887207,
+        30
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 67,
+      "triangles": 1420392,
+      "geometries": 151,
+      "textures": 59,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-night-translucent.webp",
+      "view": "game",
+      "phase": "night",
+      "variant": "translucent",
+      "quality": "media",
+      "camera": [
+        132,
+        25.38057746887207,
+        48
+      ],
+      "target": [
+        110,
+        9.38057746887207,
+        30
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 67,
+      "triangles": 1420392,
+      "geometries": 151,
+      "textures": 59,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "translucent",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": true,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    },
+    {
+      "file": "media-game-night-original2.webp",
+      "view": "game",
+      "phase": "night",
+      "variant": "original2",
+      "quality": "media",
+      "camera": [
+        132,
+        25.38057746887207,
+        48
+      ],
+      "target": [
+        110,
+        9.38057746887207,
+        30
+      ],
+      "time": 350,
+      "sun": [
+        -0.804501724269551,
+        0.5101718251465446,
+        0.30414089576044007
+      ],
+      "night": 1,
+      "calls": 67,
+      "triangles": 1420392,
+      "geometries": 151,
+      "textures": 59,
+      "structures": 0,
+      "plants": 0,
+      "chunks": 25,
+      "tufts": 192,
+      "audit": {
+        "variant": "original2",
+        "profile": {
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "density": 0.55,
+          "minGroup": 3,
+          "maxGroup": 7,
+          "scale": 1
+        },
+        "naturalGroups": true,
+        "maxVisible": 192,
+        "trianglesPerInstance": 240,
+        "transitionSeconds": 0.3,
+        "hysteresisMeters": 4,
+        "streaming": true,
+        "occupancyEvents": true,
+        "limitations": "QA only; scale transitions, no LOD; long traversal and production integration pending",
+        "enabled": false,
+        "strength": 0.32,
+        "additionalTextures": 0,
+        "additionalGeometry": 0,
+        "scope": "Illustrated directional backlight, native shadow coverage, root attenuation, zero at night"
+      },
+      "errors": []
+    }
+  ]
+}

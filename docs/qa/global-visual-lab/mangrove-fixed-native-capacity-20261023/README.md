@@ -1,0 +1,9 @@
+# Real native-chunk saturation test
+
+Intel UHD, 720p, medium, day, normal fixed camera, paused seed-712 fixture. QA temporarily requests resident radius 3 through the existing syncChunks/streaming pipeline, then restores the original method/radius in finally. The first attempt only assigned farResidentRange once, which far vegetation overwrote; the completed probe maintains the QA override at each sync. Production quality/residency rules unchanged; impostors stay enabled.
+
+Observed: 25→49→25 real native chunks. At 49, 28 material targets are cached and 21 remain on original materials (zero cache shader hooks). Resident cache 39,434,080 bytes (37.61 MiB). A synthetic ground-mask change and restoration both publish while full: 742,059 changed channels, zero restoration differences, two publications. Peak 40,842,440 bytes (38.95 MiB), below 40 MiB. Return to ordinary radius leaves 25 cached chunks, 35,209,000 bytes, no fallback and no pending jobs. No browser/GL errors.
+
+Manually inspected the expanded-scene capture after restoring the synthetic mask: green moss, local mud, shadows, shoreline and fern cover remain. No rectangular all-mud region remains. This normal camera does not show all 21 fallback chunks closely, so it does not certify every distant cache/original boundary or camera-priority allocation. Overflow workload should not be used as a performance comparison with the ordinary 25-chunk scene.
+
+Reproduce: WG_VARIANT_SEQUENCE=fixednative; WG_PHASES=day; WG_COVER_QUALITY=media; WG_MODES=cadence; WG_SAMPLES=10; WG_WARMUP=30; WG_STATIC_VIEW=1; WG_CAPACITY_CACHE_PROBE=1; WG_REVIEW_OUT=<fresh directory>; node tools/experiments/measure-mangrove-ground-hybrid-20261023.mjs. Ten-frame preamble is not benchmark evidence. The probe exercises actual streaming and native geometry, but does not time compiler/streaming stalls or exercise active gameplay.

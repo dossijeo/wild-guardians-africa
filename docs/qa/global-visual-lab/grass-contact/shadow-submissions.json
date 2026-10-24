@@ -1,0 +1,185 @@
+{
+  "note": "All passes: renderer.info.autoReset=false around one actual render per variant, shadow cache disabled; separate from GPU timing blocks.",
+  "records": [
+    {
+      "biome": "sabana",
+      "phase": "day",
+      "castShadow": false,
+      "instances": 192,
+      "calls": 101,
+      "triangles": 1750998,
+      "shadowDraws": 194,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "sabana",
+      "phase": "day",
+      "castShadow": true,
+      "instances": 192,
+      "calls": 102,
+      "triangles": 1797078,
+      "shadowDraws": 195,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "sabana",
+      "phase": "night",
+      "castShadow": false,
+      "instances": 192,
+      "calls": 101,
+      "triangles": 1750998,
+      "shadowDraws": 245,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "sabana",
+      "phase": "night",
+      "castShadow": true,
+      "instances": 192,
+      "calls": 102,
+      "triangles": 1797078,
+      "shadowDraws": 247,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "day",
+      "castShadow": false,
+      "instances": 192,
+      "calls": 96,
+      "triangles": 1246782,
+      "shadowDraws": 181,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "day",
+      "castShadow": true,
+      "instances": 192,
+      "calls": 97,
+      "triangles": 1292862,
+      "shadowDraws": 182,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "night",
+      "castShadow": false,
+      "instances": 192,
+      "calls": 96,
+      "triangles": 1246782,
+      "shadowDraws": 238,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "night",
+      "castShadow": true,
+      "instances": 192,
+      "calls": 97,
+      "triangles": 1292862,
+      "shadowDraws": 240,
+      "camera": [
+        82,
+        22.848869972229004,
+        18
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "day",
+      "castShadow": false,
+      "instances": 21,
+      "calls": 82,
+      "triangles": 1169865,
+      "shadowDraws": 131,
+      "camera": [
+        -25.868919372558594,
+        18.539999895095825,
+        120
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "day",
+      "castShadow": true,
+      "instances": 21,
+      "calls": 83,
+      "triangles": 1174905,
+      "shadowDraws": 132,
+      "camera": [
+        -25.868919372558594,
+        18.539999895095825,
+        120
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "night",
+      "castShadow": false,
+      "instances": 21,
+      "calls": 82,
+      "triangles": 1169865,
+      "shadowDraws": 195,
+      "camera": [
+        -25.868919372558594,
+        18.539999895095825,
+        120
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "night",
+      "castShadow": true,
+      "instances": 21,
+      "calls": 83,
+      "triangles": 1174905,
+      "shadowDraws": 196,
+      "camera": [
+        -25.868919372558594,
+        18.539999895095825,
+        120
+      ],
+      "errors": []
+    }
+  ]
+}

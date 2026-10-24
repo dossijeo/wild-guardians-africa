@@ -1,3 +1,4 @@
+import {smoothStandbyMaterial} from '../../src/rendering/smooth-far-transitions.js';
 import {treeTransitionRange,validateTreeTransitionPolicy} from './tree-transition-range.js';
 import {obstructionMaterial} from '../../src/rendering/obstruction.js';
 import * as THREE from 'three';
@@ -31,10 +32,10 @@ function geometryView(source,capacity){
 // Two owned banks: one prepared/immutable while its replacement uploads.
 // They render only IDs whose normal native representation is awaiting proof.
 export class NativeTreeStandby {
- constructor({scene,sources,prepare,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
+ constructor({scene,sources,prepare,smoothTransitions=false,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<(transitionHeight?.end??end)||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
+  Object.assign(this,{scene,sources,prepare,smoothTransitions,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
@@ -52,7 +53,7 @@ export class NativeTreeStandby {
    if(!wanted.size){if(this.active){this.active.root.removeFromParent();this.active=null;this.revision++;this.stats.trees=0;}continue;}
    const index=this.active===this.banks[0]?1:0;let bank=this.banks[index];const capacity=2**Math.ceil(Math.log2(Math.max(8,wanted.size))),layout=this.sources.map(source=>source.geometry.uuid+':'+source.material.uuid).join('|');
    if(bank&&(bank.capacity<capacity||bank.layout!==layout)){this.release(bank);bank=null;}
-   if(!bank){const root=new THREE.Group();root.name='native-tree-standby';bank={root,capacity,layout,meshes:this.sources.map(source=>{const mesh=new THREE.InstancedMesh(geometryView(source.geometry,capacity),source.material,capacity);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=true;mesh.frustumCulled=false;root.add(mesh);return mesh;}),entries:null,rows:[]};this.banks[index]=bank;}
+   if(!bank){const root=new THREE.Group();root.name='native-tree-standby';bank={root,capacity,layout,meshes:this.sources.map(source=>{const mesh=new THREE.InstancedMesh(geometryView(source.geometry,capacity),this.smoothTransitions?smoothStandbyMaterial(source.material):source.material,capacity);if(this.smoothTransitions)mesh.userData.materialRegistryExcluded=true;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=true;mesh.frustumCulled=false;root.add(mesh);return mesh;}),entries:null,rows:[]};this.banks[index]=bank;}
    // Keep global matrices in CPU doubles. Subtract a fixed bank anchor before
    // writing GPU floats, like native merged groups; large-world visits must not
    // lose the tree's fractional placement through a global Float32 translation.
@@ -103,7 +104,7 @@ export class NativeTreeStandby {
   }Object.assign(this.stats,{rendered,submittedInstances,maskedInstances:submittedInstances-rendered,submittedTriangles,visibleTriangles});
  }
 
- release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();}}
+ release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();if(this.smoothTransitions)mesh.material.dispose();}}
  clearStats(){this.stats.estimatedPreparedMatrixCpuBytes=0;this.stats.submittedInstances=0;this.stats.maskedInstances=0;this.stats.submittedTriangles=0;this.stats.visibleTriangles=0;this.stats.rendered=0;this.stats.trees=0;this.stats.estimatedOwnedGpuBytes=0;}
  dispose(){if(this.closed)return;this.closed=true;this.pending=null;this.active?.root.removeFromParent();this.stats.rendered=0;if(!this.busy){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}}
 }

@@ -1,0 +1,65 @@
+{
+  "note": "QA V2 soil versus integrated V2 soil, equal submitted geometry; static parity, no timing claim.",
+  "pairs": [
+    {
+      "quality": "muy_baja",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "game",
+      "calls": 63,
+      "triangles": 753468,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "muy_baja",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 70,
+      "triangles": 792091,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "muy_baja",
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 57,
+      "triangles": 686898,
+      "mae": 0.006984230324074074,
+      "changedPixels": 154
+    },
+    {
+      "quality": "muy_baja",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "game",
+      "calls": 63,
+      "triangles": 753468,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "muy_baja",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 70,
+      "triangles": 792091,
+      "mae": 0.0,
+      "changedPixels": 0
+    },
+    {
+      "quality": "muy_baja",
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 57,
+      "triangles": 686898,
+      "mae": 0.0012008101851851852,
+      "changedPixels": 29
+    }
+  ]
+}

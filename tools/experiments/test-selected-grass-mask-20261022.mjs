@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {syncSelectedGrassMask,disposeSelectedGrassMask} from './qa-selected-grass-mask-20261022.js';
+const fallback=new THREE.DataTexture(new Uint8Array([0]),1,1,THREE.RedFormat);
+const uniform=()=>({value:fallback});const a=uniform(),b=uniform();
+const group=u=>({children:[{userData:{ground:true},material:{userData:{biomeGround:{uQaCoverageMask:u}}}}]});
+const world={chunks:new Map([['0,0',group(a)],['1,0',group(b)]])},q={meshes:[{capacity:1},{capacity:1}]};
+syncSelectedGrassMask(world,q,[[[0,0,0,1],[10,0,10,1]],[]]);
+assert.notEqual(a.value,b.value);assert.ok(a.value.image.data[48*97+48]>0);assert.equal(a.value.image.data[68*97+68],0);assert.ok(b.value.image.data.every(x=>x===0));
+const uploads=q.selectedMaskStats.uploads;syncSelectedGrassMask(world,q,[[[0,0,0,1]],[]]);assert.equal(q.selectedMaskStats.uploads,uploads);
+syncSelectedGrassMask(world,q,[[],[]]);assert.ok(a.value.image.data.every(x=>x===0));
+let released=0;b.value.addEventListener('dispose',()=>released++);world.chunks.delete('1,0');syncSelectedGrassMask(world,q,[[],[]]);assert.equal(released,1);assert.equal(q.selectedMasks.size,1);
+disposeSelectedGrassMask(q);assert.equal(a.value,fallback);assert.equal(q.selectedMasks.size,0);fallback.dispose();console.log('Per-chunk ownership, capacity, empty selection, unchanged upload, eviction and disposal pass');

@@ -45,6 +45,8 @@ export class LoadingCinematic {
     if(this.done||!this.armed)return;
     if(this.world.disposed||this.diorama.disposed)return this.cancel();
     this.time+=Math.max(0,dt);const [a,b,c,d]=this.durations,{world,diorama}=this;
+    diorama.loadingSky?.setGrade(1-ease(this.time/a));
+    if(diorama.loadingSky)diorama.mist.uniforms.uLoadingTransition.value=1-ease(this.time/a);
     if(this.time<a){const t=ease(this.time/a);diorama.camera.fov=THREE.MathUtils.lerp(this.loadingFov,world.camera.fov,t);diorama.camera.updateProjectionMatrix();diorama.camera.position.lerpVectors(this.loadingEye,this.loadingSkyEye,t);diorama.camera.quaternion.slerpQuaternions(this.loadingQuaternion,this.skyQuaternion,t);diorama.render(dt,1,{ready:true});return;}
     if(this.time<a+b){diorama.camera.fov=world.camera.fov;diorama.camera.updateProjectionMatrix();diorama.camera.quaternion.copy(this.skyQuaternion);diorama.render(dt,1,{ready:true,skyOnly:true});world.camera.position.copy(this.panorama);world.camera.quaternion.copy(this.skyQuaternion);return;}
     if(!this.handedOff){this.handedOff=true;this.onHandoff();}

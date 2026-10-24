@@ -1,0 +1,7 @@
+# Mangrove shore-mask material ownership
+
+Reproduce `node tools/experiments/capture-mangrove-bank-owned-review-20261022.mjs`, Vite port 5190. Uses the previous wetland candidate and patches BiomeGround's existing material-owner counter so its shore texture is released with the final material owner, alongside the ground mask. Whole-scene disposal remains a fallback; deleting from the owned texture Set prevents duplicate texture disposal when materials are later released.
+
+All six day/night RGB captures are pixel-exact to wetland candidate captures (seed 712, media, 1280x720). No captured renderer errors. In-browser lifecycle exercise imports the patched real BiomeGround class, supplies controlled texture uniforms, and attaches two real Three.js materials through attach/retainBiomeGround. First material disposal retains the texture; final owner disposes once. Scene-first disposal followed by both materials also disposes once. Both cases end with zero registered masks. Results in lifecycle.json.
+
+This validates ownership counter behavior with controlled resources and unchanged actual scene pixels, NOT full live streaming/eviction behavior or a memory benchmark. The candidate remains QA-only. Next benchmark the corrected water+land candidate, and verify repeated live chunk eviction before any native adoption. Artistic direction remains retained but not yet comparable to all aspects of the reference.

@@ -1,0 +1,7 @@
+# Native renderer fern sprite bake
+
+Eight45degree lighting orientations,512x512day/night RGBA and separate solar shadow alpha (24images). Native approved fern geometry/material and custom depth shader. Orthographic2.8m footprint,1024native shadow map; no ground/background included in leaf images. Ground shadow uses Three ShadowMaterial separately, displayed on beige only in shadow-preview.jpg. Source foliage remains CC0: ../holly-fern-frond source attribution in public/assets/visual-lab/holly-fern-frond-20261023/source.json.
+
+Initial isolated instanced vertex path produced empty images. The offline baker now substitutes static unit-scale local position for root+pos in both color/depth shaders, freezes wind, and retains original fragment lighting/UVs. Do not claim exact full runtime vertex equivalence. debug-geometry.png is a red diagnostic of authored geometry, not a sprite. image-audit.json checks all24finalRGBA images have >1000opaque pixels and records hashes. Inspected day0 and ground-shadow0preview.
+
+Shader outputs include baked self-shadow and root shading. Solar quad is independent; orientation quantization45degrees, dynamic shadows from surrounding objects, wind and nonplanar terrain all remain runtime approximation concerns. Native version preserved. Generated using tools/experiments/run-native-fern-sprite-bake-20261023.mjs and bake-native-fern-sprites-20261023.js, with a separate disposable WebGL renderer. No Blender used for these lighting bakes.

@@ -1,0 +1,7 @@
+# Native opt-in canyon bank cover parity
+
+Enable `?visualLab=global-lighting&canyonCover=banks` alongside the existing global recipe. Only canyons accepts the option; default and other biomes remain unchanged. Native helper owns option/density/footprint logic; BlenderGroundDetails keeps existing instancing and event lifecycle. Scene allows the explicit flag through its existing lab gate. No simulation/navigation changes, no modification to original model assets. Quality-specific density remains future work; this initial opt-in reproduces the validated QA density.
+
+Reproduce Vite5190: node tools/experiments/capture-canyon-cover-native-parity-20261022.mjs. Only world-observation hook, no material or placement source overrides. Seed712/media,0/48/96/48/0 travel, day-cold/day-warm/night. All15 RGB frames exactly match corrected QA captures from canyon-cover-footprint-fixed-20261022; parity.json records each. No captured errors. Same footprint audit, counts and ownership behavior. Baseline art not claimed complete.
+
+Validation: node --test tests/blender-ground-details.test.js (4 passed). Option guards checked for missing visualLab, missing canyonCover and all five unrelated biomes. Those existing tests do not prove new module gameplay-command integration; prior actual-event-bus fixture evidence is separate. Broader native seed/quality/event validation remains required. Keep explicit option, do not add to globalNativeQuery yet. Previous benchmarks remain QA evidence; matching images/counts does not establish new native timing equivalence.

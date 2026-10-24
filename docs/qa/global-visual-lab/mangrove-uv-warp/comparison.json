@@ -1,0 +1,125 @@
+{
+  "note": "Prior global recipe versus three candidates; matched geometry in all biomes. Static comparison, not performance.",
+  "pairs": [
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "game",
+      "calls": 64,
+      "triangles": 614104,
+      "mae": 10.70764720775463,
+      "changedPixels": 613466
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "elevated",
+      "calls": 43,
+      "triangles": 496885,
+      "mae": 13.43996166087963,
+      "changedPixels": 700099
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 540732,
+      "mae": 6.550744357638889,
+      "changedPixels": 418327
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "game",
+      "calls": 64,
+      "triangles": 614104,
+      "mae": 4.525103443287037,
+      "changedPixels": 610139
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "elevated",
+      "calls": 43,
+      "triangles": 496885,
+      "mae": 5.518099320023148,
+      "changedPixels": 697042
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 63,
+      "triangles": 540732,
+      "mae": 2.866501736111111,
+      "changedPixels": 414841
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "game",
+      "calls": 61,
+      "triangles": 462480,
+      "mae": 12.216975549768518,
+      "changedPixels": 623788
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "elevated",
+      "calls": 42,
+      "triangles": 273707,
+      "mae": 15.398439670138888,
+      "changedPixels": 700535
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "reverse",
+      "calls": 59,
+      "triangles": 416897,
+      "mae": 6.762170138888889,
+      "changedPixels": 432180
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "game",
+      "calls": 61,
+      "triangles": 462480,
+      "mae": 4.889158347800926,
+      "changedPixels": 620580
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "elevated",
+      "calls": 42,
+      "triangles": 273707,
+      "mae": 5.960699146412037,
+      "changedPixels": 697774
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "reverse",
+      "calls": 59,
+      "triangles": 416897,
+      "mae": 2.947224754050926,
+      "changedPixels": 428522
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Mangrove land/water substrate combination
+
+Reproduce `node tools/experiments/capture-mangrove-bank-wetland-review-20261022.mjs`, Vite port 5190. Seed 712, media, 1280x720, three matched views, day/night. Compares sediment-only water against same water plus land-side substrate exposure. Twelve real frames, six exact camera/time/calls/triangles pairs, no captured errors.
+
+QA samples existing field.waterInfo shore distance into a 35x35 R8 texture aligned to ground-mask sampling. The substrate shader uses that distance and existing patch noise to lower moss cover near the shore, exposing the already approved soil maps and their separate lighting. This does not multiply another global darkening term or change geometry, vegetation, simulation or models. Water sediment remains the previous candidate. Sampling grids on the land and water sides differ; this is coherent underlying shore information, not identical texel-level masks.
+
+Individual daytime/night game-camera inspection shows discernible brown soil pockets where green previously met water directly. Better transition than sediment alone, without a uniform dark strip. Night remains readable. The actual shoreline contour remains smooth and shader variation cannot reproduce geometric bank silhouettes. Retain as a QA candidate, not final reference parity.
+
+Resource limitation: temporary shore textures are currently owned by BiomeGround.masks and released on whole-scene disposal, not per-material chunk eviction. This is acceptable only for this bounded static probe and must be corrected before streaming or integration. 1225 raw R8 bytes per generated uniform set, plus driver overhead; total live allocation and generation time not yet benchmarked. No FPS claim. Next fix resource lifetime, check mask continuity, then measure ABAB if visual result remains preferred.

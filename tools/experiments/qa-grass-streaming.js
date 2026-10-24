@@ -1,0 +1,84 @@
+import * as THREE from 'three';
+import {observeGameEvents} from '/src/simulation/game.js';
+import {BlenderGroundDetails,markGroundDetailEvent} from '/src/rendering/blender-ground-details.js';
+import {footprintDistance} from '/src/world/footprints.js';
+import {residentWearSampler} from './qa-ground-detail-mask.js';
+import {hashCell} from '/src/world/terrain.js';
+// QA only: stable authored islands, visibility budget, no simulation membership.
+export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/grass-clumps.glb',profiles=null,naturalGroups=false,maxVisible=192}={}){
+ if(!Number.isInteger(maxVisible)||maxVisible<1||maxVisible>192)throw Error('Invalid grass visibility budget');
+ const profile=profiles?.[world.state.biome]??(profiles?null:({'sabana':{color:[1,1,1]},'gran-rio':{color:[.42,1,.55]}}[world.state.biome]));
+ if(!profile)return {control:true};
+ const gltf=await world.assets.model(assetPath);
+ gltf.scene.updateMatrixWorld(true);let source;gltf.scene.traverse(o=>{if(o.isMesh&&!source)source=o});
+ const d=new BlenderGroundDetails(world.assets,world.scene,world.nav.field.c.biome);
+ Object.assign(d,{enabled:true,global:true,sculpted:true,detailed:true});
+ d.geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);d.material=source.material.clone();d.material.side=THREE.FrontSide;d.material.roughness=.96;d.material.color.setRGB(...profile.color);
+ d.geometry.computeBoundingBox();d.material.userData.artBounds={min:d.geometry.boundingBox.min.clone(),size:d.geometry.boundingBox.getSize(new THREE.Vector3()),crown:.43};
+ const field=world.nav.field,state=world.state;
+ // Consume the renderer's resident mask, including native campaign clearings.
+ const sample=(cx,cz)=>{
+ const wear=residentWearSampler(world,cx,cz);
+ const blockers=[...state.plants.filter(p=>p.alive!==false),...state.structures.filter(s=>s.status!=='ruined'),...state.villages];
+ const obstacles=(world.nav.obstacles??[]).filter(o=>o.kind!=='shield');
+ const occupied=(x,z)=>obstacles.some(o=>o.footprint?footprintDistance(o.footprint,x,z)<.65:Math.hypot(x-o.x,z-o.z)<(o.radius??0)+.65);
+ const allowed=(x,z)=>!occupied(x,z)&&field.slope(x,z)<=.42&&!field.waterInfo(x,z).inside&&wear(x,z)<=.27&&!blockers.some(p=>(x-p.x)**2+(z-p.z)**2<(p.kind==='wall'?2.6:p.kind==='center'?12:p.buildings?90:3.6));
+ const candidates=[];
+
+  for(let ax=cx*48-21;ax<cx*48+24;ax+=6)for(let az=cz*48-21;az<cz*48+24;az+=6){
+   const bits=hashCell(field.seed,(ax-3)/6,(az-3)/6,7191);if(bits/4294967296>(profile.density??.55))continue;
+   const angle=bits/4294967296*Math.PI*2,anchorX=ax+((bits>>>8)&255)/255*2-1,anchorZ=az+((bits>>>16)&255)/255*2-1;
+   const minimum=profile.minGroup??3,maximum=profile.maxGroup??7;
+   const members=naturalGroups?minimum+((bits>>>21)%(maximum-minimum+1)):7,placed=[];
+   for(let j=0;j<members;j++){
+    const variation=hashCell(field.seed,bits,j,7193);
+    const theta=naturalGroups?angle+j*2.399963+((variation&255)/255-.5)*.8:angle+j*Math.PI/3;
+    const r=naturalGroups ? .15+Math.sqrt(((variation>>>8)&65535)/65535)*1.2:j===0?0:1.15;
+    const x=anchorX+Math.cos(theta)*r,z=anchorZ+Math.sin(theta)*r;
+    if(naturalGroups&&placed.some(p=>(p.x-x)**2+(p.z-z)**2<.35**2))continue;
+    if(!allowed(x,z))continue;
+    placed.push({x,z});
+    candidates.push({x,z,anchorX,anchorZ,y:field.surface(x,z)+.012,bits:hashCell(field.seed,bits,j,7192)});
+   }
+  }
+ return candidates;
+ };
+ d.mesh=new THREE.InstancedMesh(d.geometry,d.material,maxVisible);d.mesh.name='qa-visible-grass-clumps';d.mesh.count=0;d.mesh.receiveShadow=true;d.mesh.frustumCulled=false;world.scene.add(d.mesh);
+ let revision=0,candidates=[];
+ d.sampleChunk=(cx,cz)=>sample(cx,cz);
+ d.rebuild=()=>{candidates=[...d.chunks.values()].flat();revision++;};
+ world.groundDetails.dispose();world.groundDetails=d;d.maxVisible=maxVisible;
+ for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);d.chunk(cx,cz,field,state);}
+ d.releaseEvents=observeGameEvents(state,event=>markGroundDetailEvent(d,state,event,id=>world.objects.get(id)?.position));
+ const old=world.scene.onBeforeRender,frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),sphere=new THREE.Sphere(new THREE.Vector3(),1.2),dummy=new THREE.Object3D();
+ const active=new Map();let signature='',desired=new Map(),last=performance.now(),first=true;
+ d.qaSetBudget=value=>{if(!Number.isInteger(value)||value<1||value>maxVisible)throw Error('Grass budget exceeds allocated capacity');d.maxVisible=value;signature='';};
+ const id=p=>p.x+','+p.z;
+ const hook=function(...args){
+  old?.apply(this,args);const camera=world.camera,now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;
+  vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);
+  const key=revision+'|'+vp.elements.join(',')+'|'+d.mesh.matrixWorld.elements.join(',');
+  if(key!==signature){
+   signature=key;frustum.setFromProjectionMatrix(vp);
+   const cx=camera.position.x-world.scene.position.x,cz=camera.position.z-world.scene.position.z;
+   const visible=[];
+   for(const p of candidates){
+    sphere.center.set(p.x,p.y+.35,p.z).applyMatrix4(d.mesh.matrixWorld);
+    if(sphere.center.distanceToSquared(camera.position)>=85**2||!frustum.intersectsSphere(sphere))continue;
+    const key=id(p),score=Math.hypot(p.anchorX-cx,p.anchorZ-cz)-(desired.has(key)?4:0);
+    visible.push({key,p,score});
+   }
+   visible.sort((a,b)=>a.score-b.score);
+   desired=new Map(visible.slice(0,d.maxVisible).map(({key,p})=>[key,p]));
+  }
+  let changed=false;
+  for(const [key,item] of active){const next=Math.max(0,Math.min(1,item.scale+(desired.has(key)?1:-1)*dt/.3));changed||=next!==item.scale;item.scale=next;if(next===0&&!desired.has(key))active.delete(key);}
+  for(const [key,p] of desired){if(active.size>=d.maxVisible)break;if(!active.has(key)){active.set(key,{p,scale:first?1:0});changed=true;}}
+  if(changed||first){let i=0;for(const {p,scale} of active.values()){dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.bits/4294967296*Math.PI*2;const smooth=scale*scale*(3-2*scale);dummy.scale.setScalar((profile.scale??1)*(.85+((p.bits>>>14)&63)/63*.3)*smooth);dummy.updateMatrix();d.mesh.setMatrixAt(i++,dummy.matrix);}d.mesh.count=d.count=active.size;d.mesh.instanceMatrix.needsUpdate=true;}
+  first=false;d.qaActive=[...active].map(([key,v])=>({id:key,scale:v.scale}));
+ };
+ world.scene.onBeforeRender=hook;
+ const dispose=d.dispose.bind(d);let disposed=false;
+ d.dispose=()=>{if(disposed)return;disposed=true;if(world.scene.onBeforeRender===hook)world.scene.onBeforeRender=old;dispose();d.geometry.dispose();d.material.dispose();active.clear();desired.clear();};
+ return {profile,naturalGroups,maxVisible,trianglesPerInstance:(d.geometry.index?.count??d.geometry.attributes.position.count)/3,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; long traversal and production integration pending'};
+}

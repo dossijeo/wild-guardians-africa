@@ -1,0 +1,9 @@
+# Canyon cover footprint and streaming correction
+
+Reproduce: Vite5190, node tools/experiments/capture-canyon-cover-footprint-fixed-20261022.mjs. Seed712/media/1280x720, native simulation paused, explicit visual QA module. Travel0/48/96/48/0 in X, daylight cold/warm and night.15 real rendered frames per variant. Observational audit transforms every actual mesh vertex through instance/world matrices and checks existing blocker exclusion radii and waterInfo. This is not exact building-mesh collision or triangle-interior proof.
+
+Original:317/313/316/313/317 instances, zero wet anchors but35 instances with vertices over water and4 inside blocker radii. Corrected:279/275/278/275/279, zero sampled wet anchors/overhangs/blocker penetrations on all15 checkpoints. Placement correction evaluates the authored footprint during generation/invalidation, not per frame.38 instances removed at the origin; one plant violated both categories. Existing terrain/navigation/simulation unchanged.
+
+Both variants:25 detail chunks throughout, exact RGB return image equality for all three loops, no captured errors. Final resource counts137 geometries/63 textures repeat on return after first loop; counts vary during travel. This is bounded stability evidence, not long-session leak freedom. Day/night origin comparison visually reviewed; remaining cover retains improved mass. Continuous camera-motion artifacts, event-driven occupied-world changes, other seeds/quality and generation latency remain unverified.
+
+Initial capture attempt produced blank framebuffer images because an awaited audit import occurred after rendering. Both full variants were recaptured with explicit render after audit. Final images verified nonblank; audit.json recomputed from final RGB captures. Do not use the initial empty capture as visual evidence. Benchmark from earlier cover variant does not establish timing for this new footprint filter or reduced instance set; no new performance claim.

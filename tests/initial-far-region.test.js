@@ -58,3 +58,19 @@ test('an already cancelled world starts neither manifest fetch nor worker',async
  const f=fixture();f.world.loading.abort();const plan=startInitialFarRegion(f.world,{}, {loadManifest:()=>assert.fail('Manifest after abort'),loadRegion:()=>assert.fail('Worker after abort')});
  await assert.rejects(plan.ready,/aborted/);await assert.rejects(plan.take(descriptor(f.world,f.species),{}),/aborted/);
 });
+
+
+test('experimental aligned preload is adopted without a duplicate worker in every biome',async()=>{
+ for(const biome of ['savanna','grand_river','mangrove','volcanoes','canyons','desert']){
+  const f=fixture(biome);f.world.toon={globalVisualLighting:true};let calls=0,requested;
+  const value={data:{trees:[]}};
+  const plan=startInitialFarRegion(f.world,{}, {loadManifest:async()=>({biomes:{[biome]:f.species}}),loadRegion:async request=>{calls++;requested=request;return value;}});
+  await plan.ready;
+  const alignedWorld={...f.world,camera:{position:{x:96,z:0}}};
+  const expected=descriptor(alignedWorld,f.species);
+  assert.deepEqual(requested,expected);
+  assert.equal(await plan.take(expected,{}),value);
+  assert.equal(calls,1);
+  assert.deepEqual(f.world.camera.position,{x:76.7,z:30.57});
+ }
+});

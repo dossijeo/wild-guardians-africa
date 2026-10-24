@@ -1,0 +1,6 @@
+import {readFile,writeFile} from 'node:fs/promises';
+const root='docs/qa/global-visual-lab/global-lighting-integrated';
+const {records}=JSON.parse(await readFile(root+'/abba-uniform.json'));
+let md='# Primera medición de la integración (paleta uniforme)\n\nABBA, dos repeticiones por variante/fase, 180 frames por muestra. La CPU de envío de esta ronda es mayor que en las anteriores; no comparar tiempos absolutos entre rondas como una mejora o regresión del código.\n\n| Caso | Fase | GPU base → integrada | CPU base → integrada |\n|---|---|---:|---:|\n';
+for(const c of [1,6,21])for(const p of ['day','night']){const avg=(v,k)=>{const rs=records.filter(r=>r.sceneCase===c&&r.phase===p&&r.variant===v);return rs.reduce((s,r)=>s+r[k],0)/rs.length};md+=`| ${c} | ${p} | ${avg('0','gpuFrameMs').toFixed(3)} → ${avg('global-lighting','gpuFrameMs').toFixed(3)} | ${avg('0','cpuSubmissionMs').toFixed(3)} → ${avg('global-lighting','cpuSubmissionMs').toFixed(3)} |\n`;}
+md+='\nLa referencia diurna de Cañón varía de 10,813 a 14,226 ms entre repeticiones: incertidumbre importante. No se considera aprobación del presupuesto global. La siguiente versión resuelve bioma/paleta al crear el material, como el parche QA, y evita selección por fragmento. Su equivalencia visual y coste requieren comprobación propia.\n';await writeFile(root+'/UNIFORM-PERFORMANCE.md',md);console.log(md);

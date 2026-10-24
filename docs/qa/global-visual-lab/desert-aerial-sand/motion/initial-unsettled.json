@@ -1,0 +1,210 @@
+{
+  "validComparison": false,
+  "reason": "Async scene loads completed at different frames; replaced by a run awaiting horizon and resident chunks at each pose.",
+  "records": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "poseMatches": true,
+      "geometryMismatches": [
+        {
+          "frame": 0,
+          "calls": [
+            42,
+            43
+          ],
+          "triangles": [
+            215138,
+            215599
+          ]
+        },
+        {
+          "frame": 1,
+          "calls": [
+            42,
+            43
+          ],
+          "triangles": [
+            215138,
+            215599
+          ]
+        },
+        {
+          "frame": 2,
+          "calls": [
+            42,
+            43
+          ],
+          "triangles": [
+            215138,
+            215599
+          ]
+        },
+        {
+          "frame": 3,
+          "calls": [
+            42,
+            43
+          ],
+          "triangles": [
+            215138,
+            215599
+          ]
+        },
+        {
+          "frame": 52,
+          "calls": [
+            47,
+            49
+          ],
+          "triangles": [
+            227528,
+            234795
+          ]
+        },
+        {
+          "frame": 53,
+          "calls": [
+            49,
+            50
+          ],
+          "triangles": [
+            234795,
+            242683
+          ]
+        },
+        {
+          "frame": 54,
+          "calls": [
+            49,
+            50
+          ],
+          "triangles": [
+            234795,
+            242683
+          ]
+        }
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "poseMatches": true,
+      "geometryMismatches": [
+        {
+          "frame": 52,
+          "calls": [
+            47,
+            49
+          ],
+          "triangles": [
+            227528,
+            234795
+          ]
+        },
+        {
+          "frame": 54,
+          "calls": [
+            49,
+            50
+          ],
+          "triangles": [
+            234795,
+            242683
+          ]
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "poseMatches": true,
+      "geometryMismatches": [
+        {
+          "frame": 52,
+          "calls": [
+            45,
+            47
+          ],
+          "triangles": [
+            217448,
+            224263
+          ]
+        },
+        {
+          "frame": 53,
+          "calls": [
+            47,
+            48
+          ],
+          "triangles": [
+            224263,
+            231459
+          ]
+        },
+        {
+          "frame": 54,
+          "calls": [
+            48,
+            49
+          ],
+          "triangles": [
+            225163,
+            232359
+          ]
+        },
+        {
+          "frame": 72,
+          "calls": [
+            47,
+            44
+          ],
+          "triangles": [
+            228831,
+            214820
+          ]
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "poseMatches": true,
+      "geometryMismatches": [
+        {
+          "frame": 52,
+          "calls": [
+            45,
+            47
+          ],
+          "triangles": [
+            217448,
+            224263
+          ]
+        },
+        {
+          "frame": 53,
+          "calls": [
+            47,
+            48
+          ],
+          "triangles": [
+            224263,
+            231459
+          ]
+        },
+        {
+          "frame": 54,
+          "calls": [
+            48,
+            49
+          ],
+          "triangles": [
+            225163,
+            232359
+          ]
+        }
+      ]
+    }
+  ]
+}

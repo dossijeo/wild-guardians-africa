@@ -1,0 +1,33 @@
+{
+  "scope": "Full frame including UI, RGB differences on 0-255 scale. Metrics supplement visual review; they do not establish correctness by themselves.",
+  "pairs": [
+    {
+      "biome": "gran-rio",
+      "iteration": 1,
+      "rgbMae255": 0.6125267650462963,
+      "maxChannelDifference": 180,
+      "changedChannelFraction": 0.016162471064814814
+    },
+    {
+      "biome": "gran-rio",
+      "iteration": 2,
+      "rgbMae255": 0.00013418692129629628,
+      "maxChannelDifference": 8,
+      "changedChannelFraction": 0.00011646412037037037
+    },
+    {
+      "biome": "gran-canon",
+      "iteration": 1,
+      "rgbMae255": 0.000009765625,
+      "maxChannelDifference": 1,
+      "changedChannelFraction": 0.000009765625
+    },
+    {
+      "biome": "gran-canon",
+      "iteration": 2,
+      "rgbMae255": 0.0000018084490740740741,
+      "maxChannelDifference": 1,
+      "changedChannelFraction": 0.0000018084490740740741
+    }
+  ]
+}

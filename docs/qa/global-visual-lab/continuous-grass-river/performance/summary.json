@@ -1,0 +1,944 @@
+{
+  "validGpuSamples": 17280,
+  "devices": [
+    "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  ],
+  "rows": [
+    {
+      "quality": "media",
+      "region": "vegetation",
+      "view": "close",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 13.5901555,
+        "gpuP95Ms": 14.959207600000001,
+        "cpuMedianMs": 7.700000017881393,
+        "cpuP95Ms": 9.804999983310697,
+        "calls": 72,
+        "triangles": 613280,
+        "geometryCount": 185,
+        "textureCount": 62
+      },
+      "B": {
+        "gpuMedianMs": 13.916197499999999,
+        "gpuP95Ms": 15.223655449999999,
+        "cpuMedianMs": 7.4000000059604645,
+        "cpuP95Ms": 9.705000017583368,
+        "calls": 73,
+        "triangles": 641760,
+        "geometryCount": 185,
+        "textureCount": 62
+      },
+      "C": {
+        "gpuMedianMs": 13.490155999999999,
+        "gpuP95Ms": 14.4202075,
+        "cpuMedianMs": 8.699999988079071,
+        "cpuP95Ms": 11.405000005662439,
+        "calls": 74,
+        "triangles": 724388,
+        "geometryCount": 185,
+        "textureCount": 62
+      },
+      "gpuDeltaC_A": -0.09999950000000091,
+      "gpuDeltaB_A": 0.3260419999999993,
+      "baselineDriftMs": -0.3329425000000015
+    },
+    {
+      "quality": "media",
+      "region": "vegetation",
+      "view": "close",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 14.7308845,
+        "gpuP95Ms": 16.0740667,
+        "cpuMedianMs": 7.0,
+        "cpuP95Ms": 9.5,
+        "calls": 72,
+        "triangles": 613280,
+        "geometryCount": 185,
+        "textureCount": 62
+      },
+      "B": {
+        "gpuMedianMs": 13.477107499999999,
+        "gpuP95Ms": 15.009967799999998,
+        "cpuMedianMs": 7.5999999940395355,
+        "cpuP95Ms": 9.900000005960464,
+        "calls": 73,
+        "triangles": 641760,
+        "geometryCount": 185,
+        "textureCount": 62
+      },
+      "C": {
+        "gpuMedianMs": 13.790911,
+        "gpuP95Ms": 14.9211476,
+        "cpuMedianMs": 7.800000011920929,
+        "cpuP95Ms": 10.204999987781045,
+        "calls": 74,
+        "triangles": 724388,
+        "geometryCount": 185,
+        "textureCount": 62
+      },
+      "gpuDeltaC_A": -0.9399735000000007,
+      "gpuDeltaB_A": -1.2537770000000013,
+      "baselineDriftMs": 0.11513099999999987
+    },
+    {
+      "quality": "media",
+      "region": "vegetation",
+      "view": "game",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 13.866822500000001,
+        "gpuP95Ms": 15.0522719,
+        "cpuMedianMs": 6.5999999940395355,
+        "cpuP95Ms": 8.31000001132488,
+        "calls": 65,
+        "triangles": 584334,
+        "geometryCount": 176,
+        "textureCount": 59
+      },
+      "B": {
+        "gpuMedianMs": 14.1355985,
+        "gpuP95Ms": 15.76134865,
+        "cpuMedianMs": 6.700000017881393,
+        "cpuP95Ms": 8.799999983608723,
+        "calls": 66,
+        "triangles": 655806,
+        "geometryCount": 176,
+        "textureCount": 59
+      },
+      "C": {
+        "gpuMedianMs": 14.849947,
+        "gpuP95Ms": 15.60985655,
+        "cpuMedianMs": 6.199999988079071,
+        "cpuP95Ms": 7.599999995529652,
+        "calls": 67,
+        "triangles": 850650,
+        "geometryCount": 176,
+        "textureCount": 59
+      },
+      "gpuDeltaC_A": 0.9831244999999988,
+      "gpuDeltaB_A": 0.268775999999999,
+      "baselineDriftMs": -0.3236454999999978
+    },
+    {
+      "quality": "media",
+      "region": "vegetation",
+      "view": "game",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 14.344764999999999,
+        "gpuP95Ms": 15.17455385,
+        "cpuMedianMs": 6.300000011920929,
+        "cpuP95Ms": 8.099999994039536,
+        "calls": 65,
+        "triangles": 584334,
+        "geometryCount": 176,
+        "textureCount": 59
+      },
+      "B": {
+        "gpuMedianMs": 13.9626815,
+        "gpuP95Ms": 15.26578075,
+        "cpuMedianMs": 6.75,
+        "cpuP95Ms": 8.900000005960464,
+        "calls": 66,
+        "triangles": 655806,
+        "geometryCount": 176,
+        "textureCount": 59
+      },
+      "C": {
+        "gpuMedianMs": 14.058905500000002,
+        "gpuP95Ms": 14.47128045,
+        "cpuMedianMs": 7.699999988079071,
+        "cpuP95Ms": 9.299999982118607,
+        "calls": 67,
+        "triangles": 850650,
+        "geometryCount": 176,
+        "textureCount": 59
+      },
+      "gpuDeltaC_A": -0.28585949999999727,
+      "gpuDeltaB_A": -0.38208349999999847,
+      "baselineDriftMs": 0.5534619999999997
+    },
+    {
+      "quality": "media",
+      "region": "vegetation",
+      "view": "elevated",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 9.6518225,
+        "gpuP95Ms": 10.299385,
+        "cpuMedianMs": 6.699999988079071,
+        "cpuP95Ms": 8.504999999701974,
+        "calls": 47,
+        "triangles": 443274,
+        "geometryCount": 167,
+        "textureCount": 59
+      },
+      "B": {
+        "gpuMedianMs": 11.1060415,
+        "gpuP95Ms": 11.701036199999999,
+        "cpuMedianMs": 7.5,
+        "cpuP95Ms": 8.729999987781037,
+        "calls": 48,
+        "triangles": 527978,
+        "geometryCount": 167,
+        "textureCount": 59
+      },
+      "C": {
+        "gpuMedianMs": 11.979817,
+        "gpuP95Ms": 12.55074155,
+        "cpuMedianMs": 7.0999999940395355,
+        "cpuP95Ms": 9.205000016093253,
+        "calls": 49,
+        "triangles": 781530,
+        "geometryCount": 167,
+        "textureCount": 59
+      },
+      "gpuDeltaC_A": 2.327994500000001,
+      "gpuDeltaB_A": 1.4542190000000002,
+      "baselineDriftMs": -0.21236999999999995
+    },
+    {
+      "quality": "media",
+      "region": "vegetation",
+      "view": "elevated",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 10.028958,
+        "gpuP95Ms": 10.5502263,
+        "cpuMedianMs": 6.9000000059604645,
+        "cpuP95Ms": 8.60499999374151,
+        "calls": 47,
+        "triangles": 443274,
+        "geometryCount": 167,
+        "textureCount": 59
+      },
+      "B": {
+        "gpuMedianMs": 11.085390499999999,
+        "gpuP95Ms": 11.9185651,
+        "cpuMedianMs": 7.5,
+        "cpuP95Ms": 9.10499999374151,
+        "calls": 48,
+        "triangles": 527978,
+        "geometryCount": 167,
+        "textureCount": 59
+      },
+      "C": {
+        "gpuMedianMs": 12.062291,
+        "gpuP95Ms": 12.676671200000001,
+        "cpuMedianMs": 7.199999988079071,
+        "cpuP95Ms": 8.905000005662439,
+        "calls": 49,
+        "triangles": 781530,
+        "geometryCount": 167,
+        "textureCount": 59
+      },
+      "gpuDeltaC_A": 2.0333330000000007,
+      "gpuDeltaB_A": 1.0564324999999997,
+      "baselineDriftMs": -0.22031250000000036
+    },
+    {
+      "quality": "media",
+      "region": "shore",
+      "view": "close",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 12.860442500000001,
+        "gpuP95Ms": 13.681697499999999,
+        "cpuMedianMs": 7.049999997019768,
+        "cpuP95Ms": 8.405000005662439,
+        "calls": 75,
+        "triangles": 856099,
+        "geometryCount": 208,
+        "textureCount": 58
+      },
+      "B": {
+        "gpuMedianMs": 13.4304945,
+        "gpuP95Ms": 14.390556550000001,
+        "cpuMedianMs": 6.9000000059604645,
+        "cpuP95Ms": 8.805000010132789,
+        "calls": 76,
+        "triangles": 929267,
+        "geometryCount": 208,
+        "textureCount": 58
+      },
+      "C": {
+        "gpuMedianMs": 13.910676500000001,
+        "gpuP95Ms": 14.80492895,
+        "cpuMedianMs": 7.0999999940395355,
+        "cpuP95Ms": 9.699999989569188,
+        "calls": 77,
+        "triangles": 1055679,
+        "geometryCount": 208,
+        "textureCount": 58
+      },
+      "gpuDeltaC_A": 1.0502339999999997,
+      "gpuDeltaB_A": 0.5700519999999987,
+      "baselineDriftMs": -0.3698959999999989
+    },
+    {
+      "quality": "media",
+      "region": "shore",
+      "view": "close",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 12.9468225,
+        "gpuP95Ms": 13.8164449,
+        "cpuMedianMs": 7.0,
+        "cpuP95Ms": 8.099999994039536,
+        "calls": 75,
+        "triangles": 856099,
+        "geometryCount": 208,
+        "textureCount": 58
+      },
+      "B": {
+        "gpuMedianMs": 13.572187,
+        "gpuP95Ms": 14.2188697,
+        "cpuMedianMs": 6.5999999940395355,
+        "cpuP95Ms": 8.199999988079071,
+        "calls": 76,
+        "triangles": 929267,
+        "geometryCount": 208,
+        "textureCount": 58
+      },
+      "C": {
+        "gpuMedianMs": 13.992187,
+        "gpuP95Ms": 14.59648915,
+        "cpuMedianMs": 6.5,
+        "cpuP95Ms": 8.204999987781045,
+        "calls": 77,
+        "triangles": 1055679,
+        "geometryCount": 208,
+        "textureCount": 58
+      },
+      "gpuDeltaC_A": 1.0453644999999998,
+      "gpuDeltaB_A": 0.6253644999999999,
+      "baselineDriftMs": -0.315234499999999
+    },
+    {
+      "quality": "media",
+      "region": "shore",
+      "view": "game",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 12.627395499999999,
+        "gpuP95Ms": 13.3142447,
+        "cpuMedianMs": 6.800000011920929,
+        "cpuP95Ms": 8.50500000119209,
+        "calls": 68,
+        "triangles": 727240,
+        "geometryCount": 201,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 13.2944785,
+        "gpuP95Ms": 13.8521691,
+        "cpuMedianMs": 6.699999988079071,
+        "cpuP95Ms": 8.400000005960464,
+        "calls": 69,
+        "triangles": 795464,
+        "geometryCount": 201,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 14.0119265,
+        "gpuP95Ms": 14.568092949999999,
+        "cpuMedianMs": 6.549999997019768,
+        "cpuP95Ms": 8.805000011622903,
+        "calls": 70,
+        "triangles": 985628,
+        "geometryCount": 201,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 1.3845310000000008,
+      "gpuDeltaB_A": 0.6670830000000016,
+      "baselineDriftMs": 0.497265500000001
+    },
+    {
+      "quality": "media",
+      "region": "shore",
+      "view": "game",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 13.869192,
+        "gpuP95Ms": 15.6282343,
+        "cpuMedianMs": 6.4000000059604645,
+        "cpuP95Ms": 8.514999999105925,
+        "calls": 68,
+        "triangles": 727240,
+        "geometryCount": 201,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 14.470129499999999,
+        "gpuP95Ms": 16.49566535,
+        "cpuMedianMs": 6.5,
+        "cpuP95Ms": 8.004999999701974,
+        "calls": 69,
+        "triangles": 795464,
+        "geometryCount": 201,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 14.811692,
+        "gpuP95Ms": 16.896478449999996,
+        "cpuMedianMs": 6.5,
+        "cpuP95Ms": 8.199999988079071,
+        "calls": 70,
+        "triangles": 985628,
+        "geometryCount": 201,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 0.9425000000000008,
+      "gpuDeltaB_A": 0.6009374999999988,
+      "baselineDriftMs": 0.6196605000000002
+    },
+    {
+      "quality": "media",
+      "region": "shore",
+      "view": "elevated",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 11.1356245,
+        "gpuP95Ms": 13.2884842,
+        "cpuMedianMs": 6.800000011920929,
+        "cpuP95Ms": 8.504999999701974,
+        "calls": 51,
+        "triangles": 574142,
+        "geometryCount": 194,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 11.928255,
+        "gpuP95Ms": 14.131216049999999,
+        "cpuMedianMs": 6.300000011920929,
+        "cpuP95Ms": 8.0,
+        "calls": 52,
+        "triangles": 665782,
+        "geometryCount": 194,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 13.4137755,
+        "gpuP95Ms": 16.59688,
+        "cpuMedianMs": 5.799999982118607,
+        "cpuP95Ms": 8.0,
+        "calls": 53,
+        "triangles": 915798,
+        "geometryCount": 194,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 2.2781509999999994,
+      "gpuDeltaB_A": 0.7926304999999996,
+      "baselineDriftMs": 0.7985415000000007
+    },
+    {
+      "quality": "media",
+      "region": "shore",
+      "view": "elevated",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 12.0887235,
+        "gpuP95Ms": 14.41821035,
+        "cpuMedianMs": 5.5,
+        "cpuP95Ms": 7.299999982118607,
+        "calls": 51,
+        "triangles": 574142,
+        "geometryCount": 194,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 12.9929685,
+        "gpuP95Ms": 15.330996499999996,
+        "cpuMedianMs": 6.0,
+        "cpuP95Ms": 7.699999988079071,
+        "calls": 52,
+        "triangles": 665782,
+        "geometryCount": 194,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 14.0077335,
+        "gpuP95Ms": 17.07046075,
+        "cpuMedianMs": 5.300000011920929,
+        "cpuP95Ms": 7.5999999940395355,
+        "calls": 53,
+        "triangles": 915798,
+        "geometryCount": 194,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 1.91901,
+      "gpuDeltaB_A": 0.9042449999999995,
+      "baselineDriftMs": -0.03817749999999975
+    },
+    {
+      "quality": "baja",
+      "region": "vegetation",
+      "view": "close",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 12.4927335,
+        "gpuP95Ms": 14.53051015,
+        "cpuMedianMs": 4.699999988079071,
+        "cpuP95Ms": 6.299999982118607,
+        "calls": 69,
+        "triangles": 493464,
+        "geometryCount": 166,
+        "textureCount": 60
+      },
+      "B": {
+        "gpuMedianMs": 12.512786,
+        "gpuP95Ms": 15.051283749999998,
+        "cpuMedianMs": 4.699999988079071,
+        "cpuP95Ms": 6.305000010132788,
+        "calls": 70,
+        "triangles": 506936,
+        "geometryCount": 166,
+        "textureCount": 60
+      },
+      "C": {
+        "gpuMedianMs": 13.048905000000001,
+        "gpuP95Ms": 15.549485899999997,
+        "cpuMedianMs": 4.549999997019768,
+        "cpuP95Ms": 6.200000017881393,
+        "calls": 70,
+        "triangles": 506936,
+        "geometryCount": 166,
+        "textureCount": 60
+      },
+      "gpuDeltaC_A": 0.5561715000000014,
+      "gpuDeltaB_A": 0.02005250000000025,
+      "baselineDriftMs": -0.04111999999999938
+    },
+    {
+      "quality": "baja",
+      "region": "vegetation",
+      "view": "close",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 12.7848165,
+        "gpuP95Ms": 15.270105249999997,
+        "cpuMedianMs": 4.0999999940395355,
+        "cpuP95Ms": 5.899999977648259,
+        "calls": 69,
+        "triangles": 493464,
+        "geometryCount": 166,
+        "textureCount": 60
+      },
+      "B": {
+        "gpuMedianMs": 13.1569,
+        "gpuP95Ms": 15.105577799999999,
+        "cpuMedianMs": 4.199999988079071,
+        "cpuP95Ms": 5.899999977648259,
+        "calls": 70,
+        "triangles": 506936,
+        "geometryCount": 166,
+        "textureCount": 60
+      },
+      "C": {
+        "gpuMedianMs": 13.4453375,
+        "gpuP95Ms": 16.020694,
+        "cpuMedianMs": 4.299999982118607,
+        "cpuP95Ms": 6.004999999701975,
+        "calls": 70,
+        "triangles": 506936,
+        "geometryCount": 166,
+        "textureCount": 60
+      },
+      "gpuDeltaC_A": 0.660521000000001,
+      "gpuDeltaB_A": 0.37208350000000046,
+      "baselineDriftMs": 1.2590624999999989
+    },
+    {
+      "quality": "baja",
+      "region": "vegetation",
+      "view": "game",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 10.773437000000001,
+        "gpuP95Ms": 13.543463299999997,
+        "cpuMedianMs": 3.9000000059604645,
+        "cpuP95Ms": 5.105000022053717,
+        "calls": 62,
+        "triangles": 463153,
+        "geometryCount": 157,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 11.970937,
+        "gpuP95Ms": 14.6616769,
+        "cpuMedianMs": 3.9000000059604645,
+        "cpuP95Ms": 5.604999993741511,
+        "calls": 63,
+        "triangles": 502089,
+        "geometryCount": 157,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 10.970859,
+        "gpuP95Ms": 13.3702312,
+        "cpuMedianMs": 3.9000000059604645,
+        "cpuP95Ms": 4.9000000059604645,
+        "calls": 63,
+        "triangles": 502089,
+        "geometryCount": 157,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 0.19742199999999954,
+      "gpuDeltaB_A": 1.197499999999998,
+      "baselineDriftMs": -0.19044300000000192
+    },
+    {
+      "quality": "baja",
+      "region": "vegetation",
+      "view": "game",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 12.192786000000002,
+        "gpuP95Ms": 14.419506899999998,
+        "cpuMedianMs": 3.699999988079071,
+        "cpuP95Ms": 4.90500000566244,
+        "calls": 62,
+        "triangles": 463153,
+        "geometryCount": 157,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 12.548489,
+        "gpuP95Ms": 15.231437,
+        "cpuMedianMs": 3.600000023841858,
+        "cpuP95Ms": 4.90500000566244,
+        "calls": 63,
+        "triangles": 502089,
+        "geometryCount": 157,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 12.984947,
+        "gpuP95Ms": 16.869309249999997,
+        "cpuMedianMs": 3.4000000059604645,
+        "cpuP95Ms": 4.705000017583369,
+        "calls": 63,
+        "triangles": 502089,
+        "geometryCount": 157,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 0.7921609999999983,
+      "gpuDeltaB_A": 0.3557029999999983,
+      "baselineDriftMs": 0.2515889999999992
+    },
+    {
+      "quality": "baja",
+      "region": "vegetation",
+      "view": "elevated",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 8.2292705,
+        "gpuP95Ms": 10.320723699999997,
+        "cpuMedianMs": 3.9000000059604645,
+        "cpuP95Ms": 5.004999999701975,
+        "calls": 49,
+        "triangles": 354419,
+        "geometryCount": 153,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 8.304713,
+        "gpuP95Ms": 12.303390349999999,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.104999993741511,
+        "calls": 50,
+        "triangles": 401459,
+        "geometryCount": 153,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 8.6362755,
+        "gpuP95Ms": 10.405100749999997,
+        "cpuMedianMs": 4.300000011920929,
+        "cpuP95Ms": 5.5,
+        "calls": 50,
+        "triangles": 401459,
+        "geometryCount": 153,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 0.40700499999999984,
+      "gpuDeltaB_A": 0.07544249999999941,
+      "baselineDriftMs": -0.2420574999999996
+    },
+    {
+      "quality": "baja",
+      "region": "vegetation",
+      "view": "elevated",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 8.507994499999999,
+        "gpuP95Ms": 10.720665999999996,
+        "cpuMedianMs": 3.699999988079071,
+        "cpuP95Ms": 4.6999999895691875,
+        "calls": 49,
+        "triangles": 354419,
+        "geometryCount": 153,
+        "textureCount": 57
+      },
+      "B": {
+        "gpuMedianMs": 9.1287235,
+        "gpuP95Ms": 11.060752349999994,
+        "cpuMedianMs": 3.7999999821186066,
+        "cpuP95Ms": 5.0,
+        "calls": 50,
+        "triangles": 401459,
+        "geometryCount": 153,
+        "textureCount": 57
+      },
+      "C": {
+        "gpuMedianMs": 8.9818225,
+        "gpuP95Ms": 10.653447349999997,
+        "cpuMedianMs": 3.7000000178813934,
+        "cpuP95Ms": 4.699999988079071,
+        "calls": 50,
+        "triangles": 401459,
+        "geometryCount": 153,
+        "textureCount": 57
+      },
+      "gpuDeltaC_A": 0.473828000000001,
+      "gpuDeltaB_A": 0.6207290000000008,
+      "baselineDriftMs": -0.7545059999999992
+    },
+    {
+      "quality": "baja",
+      "region": "shore",
+      "view": "close",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 11.614661,
+        "gpuP95Ms": 15.542457899999999,
+        "cpuMedianMs": 4.0999999940395355,
+        "cpuP95Ms": 5.504999999701975,
+        "calls": 74,
+        "triangles": 656906,
+        "geometryCount": 191,
+        "textureCount": 56
+      },
+      "B": {
+        "gpuMedianMs": 11.9224215,
+        "gpuP95Ms": 15.35260925,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.0999999940395355,
+        "calls": 75,
+        "triangles": 691018,
+        "geometryCount": 191,
+        "textureCount": 56
+      },
+      "C": {
+        "gpuMedianMs": 10.9718745,
+        "gpuP95Ms": 14.79812995,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.300000011920929,
+        "calls": 75,
+        "triangles": 691018,
+        "geometryCount": 191,
+        "textureCount": 56
+      },
+      "gpuDeltaC_A": -0.6427864999999997,
+      "gpuDeltaB_A": 0.30776050000000055,
+      "baselineDriftMs": -2.74052
+    },
+    {
+      "quality": "baja",
+      "region": "shore",
+      "view": "close",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 12.4126815,
+        "gpuP95Ms": 14.859944749999999,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.300000011920929,
+        "calls": 74,
+        "triangles": 656906,
+        "geometryCount": 191,
+        "textureCount": 56
+      },
+      "B": {
+        "gpuMedianMs": 12.540442,
+        "gpuP95Ms": 14.654400849999996,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.0,
+        "calls": 75,
+        "triangles": 691018,
+        "geometryCount": 191,
+        "textureCount": 56
+      },
+      "C": {
+        "gpuMedianMs": 12.5213535,
+        "gpuP95Ms": 15.060048599999998,
+        "cpuMedianMs": 4.0999999940395355,
+        "cpuP95Ms": 5.0,
+        "calls": 75,
+        "triangles": 691018,
+        "geometryCount": 191,
+        "textureCount": 56
+      },
+      "gpuDeltaC_A": 0.10867200000000032,
+      "gpuDeltaB_A": 0.12776050000000083,
+      "baselineDriftMs": -1.459244
+    },
+    {
+      "quality": "baja",
+      "region": "shore",
+      "view": "game",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 10.0958065,
+        "gpuP95Ms": 14.711088499999999,
+        "cpuMedianMs": 4.0999999940395355,
+        "cpuP95Ms": 5.300000011920929,
+        "calls": 63,
+        "triangles": 508916,
+        "geometryCount": 179,
+        "textureCount": 55
+      },
+      "B": {
+        "gpuMedianMs": 10.081093500000001,
+        "gpuP95Ms": 14.03368935,
+        "cpuMedianMs": 4.0999999940395355,
+        "cpuP95Ms": 5.105000022053717,
+        "calls": 64,
+        "triangles": 543484,
+        "geometryCount": 179,
+        "textureCount": 55
+      },
+      "C": {
+        "gpuMedianMs": 10.673723500000001,
+        "gpuP95Ms": 16.2233226,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.305000010132788,
+        "calls": 64,
+        "triangles": 543484,
+        "geometryCount": 179,
+        "textureCount": 55
+      },
+      "gpuDeltaC_A": 0.5779170000000011,
+      "gpuDeltaB_A": -0.014712999999998644,
+      "baselineDriftMs": -1.3177345000000003
+    },
+    {
+      "quality": "baja",
+      "region": "shore",
+      "view": "game",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 9.900832999999999,
+        "gpuP95Ms": 12.199048749999998,
+        "cpuMedianMs": 3.800000011920929,
+        "cpuP95Ms": 4.705000016093252,
+        "calls": 63,
+        "triangles": 508916,
+        "geometryCount": 179,
+        "textureCount": 55
+      },
+      "B": {
+        "gpuMedianMs": 10.4667445,
+        "gpuP95Ms": 13.2955729,
+        "cpuMedianMs": 3.800000011920929,
+        "cpuP95Ms": 4.899999976158142,
+        "calls": 64,
+        "triangles": 543484,
+        "geometryCount": 179,
+        "textureCount": 55
+      },
+      "C": {
+        "gpuMedianMs": 10.7832025,
+        "gpuP95Ms": 13.861481099999999,
+        "cpuMedianMs": 4.0,
+        "cpuP95Ms": 5.004999999701975,
+        "calls": 64,
+        "triangles": 543484,
+        "geometryCount": 179,
+        "textureCount": 55
+      },
+      "gpuDeltaC_A": 0.8823695000000011,
+      "gpuDeltaB_A": 0.5659115000000021,
+      "baselineDriftMs": -0.6961459999999988
+    },
+    {
+      "quality": "baja",
+      "region": "shore",
+      "view": "elevated",
+      "phase": "day",
+      "A": {
+        "gpuMedianMs": 7.887525999999999,
+        "gpuP95Ms": 10.836994599999999,
+        "cpuMedianMs": 3.7999999821186066,
+        "cpuP95Ms": 4.800000011920929,
+        "calls": 49,
+        "triangles": 393503,
+        "geometryCount": 175,
+        "textureCount": 55
+      },
+      "B": {
+        "gpuMedianMs": 8.053983500000001,
+        "gpuP95Ms": 10.79896305,
+        "cpuMedianMs": 3.699999988079071,
+        "cpuP95Ms": 5.205000016093252,
+        "calls": 50,
+        "triangles": 435343,
+        "geometryCount": 175,
+        "textureCount": 55
+      },
+      "C": {
+        "gpuMedianMs": 7.919817500000001,
+        "gpuP95Ms": 9.0375434,
+        "cpuMedianMs": 3.699999988079071,
+        "cpuP95Ms": 5.004999999701975,
+        "calls": 50,
+        "triangles": 435343,
+        "geometryCount": 175,
+        "textureCount": 55
+      },
+      "gpuDeltaC_A": 0.03229150000000125,
+      "gpuDeltaB_A": 0.1664575000000017,
+      "baselineDriftMs": 0.4011199999999988
+    },
+    {
+      "quality": "baja",
+      "region": "shore",
+      "view": "elevated",
+      "phase": "night",
+      "A": {
+        "gpuMedianMs": 7.8137235,
+        "gpuP95Ms": 9.318749899999998,
+        "cpuMedianMs": 3.7999999821186066,
+        "cpuP95Ms": 4.799999983608723,
+        "calls": 49,
+        "triangles": 393503,
+        "geometryCount": 175,
+        "textureCount": 55
+      },
+      "B": {
+        "gpuMedianMs": 8.0894265,
+        "gpuP95Ms": 10.07834035,
+        "cpuMedianMs": 3.800000011920929,
+        "cpuP95Ms": 4.5999999940395355,
+        "calls": 50,
+        "triangles": 435343,
+        "geometryCount": 175,
+        "textureCount": 55
+      },
+      "C": {
+        "gpuMedianMs": 8.4456765,
+        "gpuP95Ms": 11.10173665,
+        "cpuMedianMs": 3.7999999821186066,
+        "cpuP95Ms": 4.5999999940395355,
+        "calls": 50,
+        "triangles": 435343,
+        "geometryCount": 175,
+        "textureCount": 55
+      },
+      "gpuDeltaC_A": 0.6319529999999993,
+      "gpuDeltaB_A": 0.27570300000000003,
+      "baselineDriftMs": -0.18461000000000016
+    }
+  ]
+}
