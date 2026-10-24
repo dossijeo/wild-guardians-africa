@@ -1,0 +1,1618 @@
+{
+  "commit": "3f21b835393f35bc0516cb861c6d67a5fe109774",
+  "quality": "media",
+  "compare": "threads",
+  "farCompletionGate": true,
+  "horizonBedBudget": 2,
+  "scope": "Paused real game; equivalent completed streaming work, 720p, GPU timer every third render. Not active simulation or visual acceptance.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "label": "a1",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 120,
+        "mean": 37.27420833333333,
+        "p95": 83.15000000000146,
+        "max": 116.45000000000437
+      },
+      "gpu": {
+        "count": 41,
+        "mean": 22.462756975609757,
+        "p95": 32.420989,
+        "max": 45.66328
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.304099998474121,
+        "p95": 4.615000009536743,
+        "max": 7.335000038146973
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 32.51129999518395,
+        "p95": 44.685000002384186,
+        "max": 48.19999998807907
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.10210000038147,
+        "p95": 9.605000019073486,
+        "max": 12.560000002384186
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4472.904999999999,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/sabana-a1.json"
+    },
+    {
+      "biome": "sabana",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 143,
+        "mean": 26.74611888111888,
+        "p95": 49.94499999999971,
+        "max": 132.98500000000058
+      },
+      "gpu": {
+        "count": 48,
+        "mean": 19.76898554166666,
+        "p95": 29.682187,
+        "max": 30.876249
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.1388000047206877,
+        "p95": 4.694999992847443,
+        "max": 6.115000009536743
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05300000309944153,
+        "p95": 0.07500004768371582,
+        "max": 0.09499996900558472
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7303000009059906,
+        "p95": 1.090000033378601,
+        "max": 1.274999976158142
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 32.7632958984375,
+        "p95": 41.559814453125,
+        "max": 44.460205078125
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.664400000572204,
+        "p95": 8.594999969005585,
+        "max": 9.509999990463257
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3824.6949999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/sabana-b1.json"
+    },
+    {
+      "biome": "sabana",
+      "label": "a2",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 119,
+        "mean": 33.53487394957985,
+        "p95": 66.54999999999563,
+        "max": 99.7699999999968
+      },
+      "gpu": {
+        "count": 40,
+        "mean": 20.715676225,
+        "p95": 30.593853,
+        "max": 31.322029
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.346299999952316,
+        "p95": 5.4700000286102295,
+        "max": 7.450000047683716
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 29.273900005817413,
+        "p95": 36.49000000953674,
+        "max": 38.84500002861023
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.629199998378754,
+        "p95": 7.839999973773956,
+        "max": 13.379999995231628
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3990.6500000000015,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/sabana-a2.json"
+    },
+    {
+      "biome": "sabana",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 154,
+        "mean": 27.96782467532471,
+        "p95": 49.904999999998836,
+        "max": 166.34000000000378
+      },
+      "gpu": {
+        "count": 52,
+        "mean": 20.92762011538461,
+        "p95": 30.858958,
+        "max": 39.720833
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.958699996471405,
+        "p95": 6.164999961853027,
+        "max": 11.150000035762787
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.0684999918937683,
+        "p95": 0.14000004529953003,
+        "max": 0.20499998331069946
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7835999989509582,
+        "p95": 1.175000011920929,
+        "max": 1.3149999976158142
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 35.5689306640625,
+        "p95": 45.2451171875,
+        "max": 50.485107421875
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.893000004291534,
+        "p95": 10.960000038146973,
+        "max": 15.40499997138977
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4307.0450000000055,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/sabana-b2.json"
+    },
+    {
+      "biome": "desierto",
+      "label": "a1",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 119,
+        "mean": 25.852016806722684,
+        "p95": 49.909999999999854,
+        "max": 83.09500000000116
+      },
+      "gpu": {
+        "count": 40,
+        "mean": 16.212916075000003,
+        "p95": 24.581666,
+        "max": 29.848176
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.3835999965667725,
+        "p95": 4.819999992847443,
+        "max": 5.519999980926514
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 25.91609999656677,
+        "p95": 34.730000019073486,
+        "max": 42.30500000715256
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 1.2850000011920928,
+        "p95": 1.6949999928474426,
+        "max": 2.7850000262260437
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3076.3899999999994,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/desierto-a1.json"
+    },
+    {
+      "biome": "desierto",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 149,
+        "mean": 20.64181208053692,
+        "p95": 33.30500000000029,
+        "max": 116.65000000000146
+      },
+      "gpu": {
+        "count": 50,
+        "mean": 15.517423160000003,
+        "p95": 20.213385,
+        "max": 27.167083
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.8305000019073487,
+        "p95": 6.260000050067902,
+        "max": 7.475000023841858
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05359999656677246,
+        "p95": 0.09500002861022949,
+        "max": 0.12000000476837158
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.795099995136261,
+        "p95": 1.2549999952316284,
+        "max": 1.449999988079071
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 28.0453125,
+        "p95": 38.804931640625,
+        "max": 43.670166015625
+      },
+      "install": {
+        "count": 50,
+        "mean": 1.6304000055789947,
+        "p95": 2.380000054836273,
+        "max": 3.0300000309944153
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3075.630000000001,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/desierto-b1.json"
+    },
+    {
+      "biome": "desierto",
+      "label": "a2",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 112,
+        "mean": 27.617767857142844,
+        "p95": 49.919999999998254,
+        "max": 99.71500000000015
+      },
+      "gpu": {
+        "count": 38,
+        "mean": 16.121245078947368,
+        "p95": 19.019739,
+        "max": 20.098957
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.872400004863739,
+        "p95": 6.254999995231628,
+        "max": 7.995000004768372
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 27.852199999094008,
+        "p95": 35.7849999666214,
+        "max": 41.4650000333786
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 1.3948999977111816,
+        "p95": 2.084999978542328,
+        "max": 2.7299999594688416
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3093.1899999999987,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/desierto-a2.json"
+    },
+    {
+      "biome": "desierto",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 150,
+        "mean": 19.955133333333336,
+        "p95": 33.279999999998836,
+        "max": 99.63000000000102
+      },
+      "gpu": {
+        "count": 51,
+        "mean": 14.944537529411761,
+        "p95": 18.863489,
+        "max": 21.29177
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.712000000476837,
+        "p95": 6.0799999833106995,
+        "max": 8.824999988079071
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05300000309944153,
+        "p95": 0.06999999284744263,
+        "max": 0.125
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7678000020980835,
+        "p95": 1.125,
+        "max": 1.7699999809265137
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 29.0979052734375,
+        "p95": 36.030029296875,
+        "max": 39.27001953125
+      },
+      "install": {
+        "count": 50,
+        "mean": 1.5716000032424926,
+        "p95": 2.2899999618530273,
+        "max": 2.810000002384186
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2993.2700000000004,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/desierto-b2.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "a1",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 155,
+        "mean": 30.575741935483858,
+        "p95": 66.53500000000349,
+        "max": 99.75999999999476
+      },
+      "gpu": {
+        "count": 52,
+        "mean": 20.067828576923077,
+        "p95": 34.816926,
+        "max": 39.255051
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.2673999965190887,
+        "p95": 4.915000021457672,
+        "max": 6.449999988079071
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 30.445400006771088,
+        "p95": 40.41500002145767,
+        "max": 44.15499997138977
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.5023000001907345,
+        "p95": 8.215000033378601,
+        "max": 10.425000011920929
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4739.239999999998,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-rio-a1.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 140,
+        "mean": 28.26835714285714,
+        "p95": 66.59500000000116,
+        "max": 149.6600000000035
+      },
+      "gpu": {
+        "count": 47,
+        "mean": 20.722587680851063,
+        "p95": 34.281926,
+        "max": 38.57901
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.3071000027656554,
+        "p95": 5.310000002384186,
+        "max": 6.605000019073486
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05590000033378601,
+        "p95": 0.0700000524520874,
+        "max": 0.17000001668930054
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7991000008583069,
+        "p95": 1.1949999928474426,
+        "max": 1.4700000286102295
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 32.3498974609375,
+        "p95": 41.079833984375,
+        "max": 47.380126953125
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.685199995040893,
+        "p95": 7.360000014305115,
+        "max": 11.119999945163727
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3957.5699999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-rio-b1.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "a2",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 121,
+        "mean": 35.04359504132233,
+        "p95": 83.13499999999476,
+        "max": 116.77999999999884
+      },
+      "gpu": {
+        "count": 41,
+        "mean": 22.664745243902434,
+        "p95": 37.5,
+        "max": 43.758697
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.387299998998642,
+        "p95": 5.480000019073486,
+        "max": 6.969999969005585
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 30.249900002479553,
+        "p95": 36.064999997615814,
+        "max": 40.7849999666214
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.570500004291534,
+        "p95": 8.450000047683716,
+        "max": 10.224999964237213
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4240.2750000000015,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-rio-a2.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 146,
+        "mean": 28.36065068493155,
+        "p95": 50.1449999999968,
+        "max": 166.0300000000061
+      },
+      "gpu": {
+        "count": 49,
+        "mean": 21.387420448979594,
+        "p95": 33.553385,
+        "max": 37.141456
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.2292000007629396,
+        "p95": 4.665000021457672,
+        "max": 6.314999997615814
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.059999992847442625,
+        "p95": 0.08499997854232788,
+        "max": 0.09999996423721313
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7553000020980835,
+        "p95": 1.050000011920929,
+        "max": 1.1349999904632568
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 34.981416015625,
+        "p95": 42.840087890625,
+        "max": 47.580078125
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.313600000143051,
+        "p95": 10.634999990463257,
+        "max": 14.98499995470047
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4140.655000000006,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-rio-b2.json"
+    },
+    {
+      "biome": "volcanes",
+      "label": "a1",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 120,
+        "mean": 31.73166666666669,
+        "p95": 66.47000000000116,
+        "max": 116.36999999999534
+      },
+      "gpu": {
+        "count": 41,
+        "mean": 18.427045634146342,
+        "p95": 26.354113,
+        "max": 32.119322
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.2287000024318697,
+        "p95": 4.689999997615814,
+        "max": 6.280000030994415
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 29.49029999732971,
+        "p95": 35.7950000166893,
+        "max": 42.08500003814697
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.078700007200241,
+        "p95": 8.5799999833107,
+        "max": 12.810000002384186
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3807.800000000003,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/volcanes-a1.json"
+    },
+    {
+      "biome": "volcanes",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 163,
+        "mean": 23.56622699386502,
+        "p95": 49.88500000000204,
+        "max": 116.47999999999593
+      },
+      "gpu": {
+        "count": 55,
+        "mean": 17.356869272727273,
+        "p95": 25.792863,
+        "max": 26.758123
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.249099999666214,
+        "p95": 4.655000030994415,
+        "max": 6.5299999713897705
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05949999928474426,
+        "p95": 0.09000003337860107,
+        "max": 0.125
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7075999975204468,
+        "p95": 1.0250000357627869,
+        "max": 1.2400000095367432
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 32.7741015625,
+        "p95": 40.755126953125,
+        "max": 42.574951171875
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.7148999965190885,
+        "p95": 10.459999978542328,
+        "max": 12.074999988079071
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3841.2949999999983,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/volcanes-b1.json"
+    },
+    {
+      "biome": "volcanes",
+      "label": "a2",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 122,
+        "mean": 30.257622950819673,
+        "p95": 50.04000000000087,
+        "max": 99.77999999999884
+      },
+      "gpu": {
+        "count": 41,
+        "mean": 17.872602195121953,
+        "p95": 25.020885,
+        "max": 33.157291
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.320599995851517,
+        "p95": 5.360000014305115,
+        "max": 7.2299999594688416
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 28.05990000605583,
+        "p95": 33.3299999833107,
+        "max": 36.325000047683716
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.674700001478195,
+        "p95": 7.490000009536743,
+        "max": 10.259999990463257
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3691.4300000000003,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/volcanes-a2.json"
+    },
+    {
+      "biome": "volcanes",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 158,
+        "mean": 23.364968354430385,
+        "p95": 49.895000000004075,
+        "max": 132.95000000000437
+      },
+      "gpu": {
+        "count": 53,
+        "mean": 17.975387207547172,
+        "p95": 26.175675,
+        "max": 42.020206
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.2137000024318696,
+        "p95": 4.769999980926514,
+        "max": 6.935000002384186
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.054000004529953,
+        "p95": 0.07499998807907104,
+        "max": 0.10000002384185791
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7531000006198884,
+        "p95": 1.0899999737739563,
+        "max": 1.5899999737739563
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 32.2841748046875,
+        "p95": 39.375,
+        "max": 56.099853515625
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.070300002098083,
+        "p95": 8.430000007152557,
+        "max": 12.254999995231628
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3691.665000000001,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/volcanes-b2.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "a1",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 95,
+        "mean": 53.04005263157895,
+        "p95": 116.375,
+        "max": 149.6449999999968
+      },
+      "gpu": {
+        "count": 32,
+        "mean": 26.585370156249997,
+        "p95": 37.693958,
+        "max": 40.844791
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.6908999991416933,
+        "p95": 5.949999988079071,
+        "max": 6.5
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 44.7535000026226,
+        "p95": 63.55500000715256,
+        "max": 69.51500004529953
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 15.735099999904632,
+        "p95": 26.460000038146973,
+        "max": 29.555000007152557
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 5038.805,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/manglares-a1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 156,
+        "mean": 29.526987179487175,
+        "p95": 66.3550000000032,
+        "max": 99.76499999999942
+      },
+      "gpu": {
+        "count": 53,
+        "mean": 22.81512286792453,
+        "p95": 28.441041,
+        "max": 32.494635
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.3391000020503996,
+        "p95": 4.9799999594688416,
+        "max": 6.415000021457672
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.07019999623298645,
+        "p95": 0.09000003337860107,
+        "max": 0.6800000071525574
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6873999989032745,
+        "p95": 1.0649999976158142,
+        "max": 1.3700000047683716
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 47.0058935546875,
+        "p95": 62.005126953125,
+        "max": 69.264892578125
+      },
+      "install": {
+        "count": 50,
+        "mean": 17.230599999427795,
+        "p95": 27.60499995946884,
+        "max": 42.235000014305115
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4606.209999999999,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/manglares-b1.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "a2",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 97,
+        "mean": 49.544587628866026,
+        "p95": 99.66999999999825,
+        "max": 216.1400000000067
+      },
+      "gpu": {
+        "count": 33,
+        "mean": 27.525396818181814,
+        "p95": 45.585416,
+        "max": 53.89927
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 3.3308000016212462,
+        "p95": 9.930000007152557,
+        "max": 13.164999961853027
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 40.8430999982357,
+        "p95": 57.855000019073486,
+        "max": 65.81499999761581
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 14.881100001335144,
+        "p95": 24.59500002861023,
+        "max": 46.99500000476837
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4805.825000000004,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/manglares-a2.json"
+    },
+    {
+      "biome": "manglares",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 159,
+        "mean": 28.655188679245303,
+        "p95": 66.66500000000087,
+        "max": 116.47499999999854
+      },
+      "gpu": {
+        "count": 54,
+        "mean": 22.75684507407407,
+        "p95": 32.875936,
+        "max": 42.843905
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.4114999997615816,
+        "p95": 5.564999997615814,
+        "max": 6.8299999833106995
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.054900000095367434,
+        "p95": 0.07499998807907104,
+        "max": 0.10500001907348633
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6984999966621399,
+        "p95": 1.2450000047683716,
+        "max": 1.7549999952316284
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 46.132919921875,
+        "p95": 62.900146484375,
+        "max": 69.244873046875
+      },
+      "install": {
+        "count": 50,
+        "mean": 16.233700001239775,
+        "p95": 25.219999969005585,
+        "max": 31.00499999523163
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 4556.175000000003,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/manglares-b2.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "a1",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 109,
+        "mean": 26.696100917431192,
+        "p95": 49.81499999999869,
+        "max": 166.04000000000087
+      },
+      "gpu": {
+        "count": 37,
+        "mean": 9.849675567567568,
+        "p95": 16.869738,
+        "max": 19.423437
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.279400006532669,
+        "p95": 4.915000021457672,
+        "max": 5.625
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 27.010199995040892,
+        "p95": 32.5349999666214,
+        "max": 37.60000002384186
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 2.8516000008583067,
+        "p95": 10.964999973773956,
+        "max": 11.930000007152557
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2909.875,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-canon-a1.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 149,
+        "mean": 18.973120805369145,
+        "p95": 17.014999999999418,
+        "max": 182.69000000000233
+      },
+      "gpu": {
+        "count": 50,
+        "mean": 8.551685939999999,
+        "p95": 15.814375,
+        "max": 17.26802
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.372099995613098,
+        "p95": 4.745000004768372,
+        "max": 6.25
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.051399999856948854,
+        "p95": 0.09000003337860107,
+        "max": 0.125
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6980999994277954,
+        "p95": 1,
+        "max": 1.784999966621399
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 29.99630859375,
+        "p95": 36.8701171875,
+        "max": 40.169921875
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.4153999996185305,
+        "p95": 12.604999959468842,
+        "max": 19.569999992847443
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2826.9950000000026,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-canon-b1.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "a2",
+      "backend": "standalone",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 104,
+        "mean": 29.579567307692287,
+        "p95": 49.9900000000016,
+        "max": 165.79999999999927
+      },
+      "gpu": {
+        "count": 35,
+        "mean": 11.012977057142857,
+        "p95": 20.012604,
+        "max": 27.440729
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.314299999475479,
+        "p95": 4.225000023841858,
+        "max": 6.850000023841858
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 50,
+        "mean": 28.955500000715254,
+        "p95": 34.0900000333786,
+        "max": 35.894999980926514
+      },
+      "admission": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 50,
+        "mean": 2.998100001811981,
+        "p95": 10.915000021457672,
+        "max": 14.394999980926514
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3076.274999999998,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-canon-a2.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 152,
+        "mean": 18.81749999999999,
+        "p95": 16.86999999999898,
+        "max": 166.3050000000003
+      },
+      "gpu": {
+        "count": 51,
+        "mean": 8.889568588235294,
+        "p95": 17.137291,
+        "max": 17.672552
+      },
+      "programRetention": null,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "eviction": {
+        "count": 50,
+        "mean": 2.293499999046326,
+        "p95": 4.685000002384186,
+        "max": 6.199999988079071
+      },
+      "batchEviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05269999861717224,
+        "p95": 0.07999998331069946,
+        "max": 0.12000000476837158
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7555999994277954,
+        "p95": 1.300000011920929,
+        "max": 1.3550000190734863
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 30.88228515625,
+        "p95": 39.735107421875,
+        "max": 46
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.3767000031471253,
+        "p95": 10.569999992847443,
+        "max": 21.350000023841858
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2860.2599999999984,
+      "report": "docs/qa/wild-engine-pthreads/matrix-media-full-far/gran-canon-b2.json"
+    }
+  ]
+}

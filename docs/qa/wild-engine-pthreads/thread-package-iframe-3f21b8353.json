@@ -1,0 +1,142 @@
+{
+  "scope": "Built Vite dist runtime in Chrome: nested top-level URL and cross-origin iframe with explicit isolation delegation, six biomes each and worker teardown. Different localhost ports, not actual itch deployment or complete game rendering.",
+  "stackObservation": {
+    "method": "QA-only stack-size field offset parsed from emitted runtime; reserved linear stack size, not control-stack or peak stack usage",
+    "offset": 52
+  },
+  "artifacts": [
+    {
+      "name": "spatial-threaded.mjs",
+      "bytes": 49703,
+      "sha256": "8ef6ce43d623a24560913430644f62b4dbd84836e73347118efcac7eab9ac5cc"
+    },
+    {
+      "name": "spatial-threaded.wasm",
+      "bytes": 542589,
+      "sha256": "3212e74ba8de746886faa4783e4e85f50cfb387cefbe5daa109e202b94072123"
+    }
+  ],
+  "nestedTopLevel": {
+    "isolated": true,
+    "shared": true,
+    "origin": "http://127.0.0.1:57533",
+    "rows": [
+      {
+        "biome": "sabana",
+        "worker": 1,
+        "published": 257,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "desierto",
+        "worker": 1,
+        "published": 13,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "gran-rio",
+        "worker": 1,
+        "published": 107,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "volcanes",
+        "worker": 1,
+        "published": 200,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "manglares",
+        "worker": 1,
+        "published": 288,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "gran-canon",
+        "worker": 1,
+        "published": 140,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      }
+    ]
+  },
+  "crossOriginIframe": {
+    "isolated": true,
+    "shared": true,
+    "origin": "http://127.0.0.1:57533",
+    "rows": [
+      {
+        "biome": "sabana",
+        "worker": 1,
+        "published": 257,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "desierto",
+        "worker": 1,
+        "published": 13,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "gran-rio",
+        "worker": 1,
+        "published": 107,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "volcanes",
+        "worker": 1,
+        "published": 200,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "manglares",
+        "worker": 1,
+        "published": 288,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      },
+      {
+        "biome": "gran-canon",
+        "worker": 1,
+        "published": 140,
+        "pthreadStackBytes": [
+          65536
+        ],
+        "linearCapacityBytes": 16777216
+      }
+    ]
+  },
+  "errors": []
+}

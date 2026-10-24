@@ -1,0 +1,89 @@
+{
+  "scope": "Full frame including UI, RGB differences on 0-255 scale. Metrics supplement visual review; they do not establish correctness by themselves.",
+  "pairs": [
+    {
+      "biome": "sabana",
+      "iteration": 1,
+      "rgbMae255": 0.002263454861111111,
+      "maxChannelDifference": 56,
+      "changedChannelFraction": 0.0005186631944444444
+    },
+    {
+      "biome": "sabana",
+      "iteration": 2,
+      "rgbMae255": 0.0006618923611111111,
+      "maxChannelDifference": 21,
+      "changedChannelFraction": 0.0003631365740740741
+    },
+    {
+      "biome": "desierto",
+      "iteration": 1,
+      "rgbMae255": 0.0007074652777777778,
+      "maxChannelDifference": 26,
+      "changedChannelFraction": 0.00041015625
+    },
+    {
+      "biome": "desierto",
+      "iteration": 2,
+      "rgbMae255": 0.003573857060185185,
+      "maxChannelDifference": 89,
+      "changedChannelFraction": 0.0006640625
+    },
+    {
+      "biome": "gran-rio",
+      "iteration": 1,
+      "rgbMae255": 0.00010344328703703703,
+      "maxChannelDifference": 21,
+      "changedChannelFraction": 0.00007740162037037038
+    },
+    {
+      "biome": "gran-rio",
+      "iteration": 2,
+      "rgbMae255": 0.00021918402777777778,
+      "maxChannelDifference": 20,
+      "changedChannelFraction": 0.00016276041666666666
+    },
+    {
+      "biome": "volcanes",
+      "iteration": 1,
+      "rgbMae255": 0.00019495081018518518,
+      "maxChannelDifference": 23,
+      "changedChannelFraction": 0.00015769675925925925
+    },
+    {
+      "biome": "volcanes",
+      "iteration": 2,
+      "rgbMae255": 0.0015570746527777779,
+      "maxChannelDifference": 42,
+      "changedChannelFraction": 0.00041558159722222224
+    },
+    {
+      "biome": "manglares",
+      "iteration": 1,
+      "rgbMae255": 0.0042697482638888885,
+      "maxChannelDifference": 105,
+      "changedChannelFraction": 0.0007038483796296297
+    },
+    {
+      "biome": "manglares",
+      "iteration": 2,
+      "rgbMae255": 0.005074508101851852,
+      "maxChannelDifference": 128,
+      "changedChannelFraction": 0.0006825086805555556
+    },
+    {
+      "biome": "gran-canon",
+      "iteration": 1,
+      "rgbMae255": 0,
+      "maxChannelDifference": 0,
+      "changedChannelFraction": 0
+    },
+    {
+      "biome": "gran-canon",
+      "iteration": 2,
+      "rgbMae255": 0.0006275318287037037,
+      "maxChannelDifference": 15,
+      "changedChannelFraction": 0.00032624421296296297
+    }
+  ]
+}
