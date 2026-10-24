@@ -1,3 +1,4 @@
+import {PerspectiveCamera,Vector3} from 'three';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {WorldScene} from '../src/rendering/scene.js';
@@ -17,4 +18,9 @@ test('pending loading-frame yields expose coherent fog and cancellation cannot l
  const fog={native:true},waiting=[],loading=new AbortController();
  const owner={shaderFailure:{current:null},resize(){},cinematic:true,strokePreview:{render(){}},camera:{position:{toArray:()=>[0,0,0]}},nav:{field:{}},renderOrigin:{update:()=>false},controls:{target:{}},syncChunks(){},chunks:new Map(),quality:{},state:{elapsed:0},simElapsed:0,scene:{fog},loadingProgress:{ready:false},farVegetation:{enabled:true},loading,disposed:false,sync(){this.scene.fog=null;},renderFrameUpdates:WorldScene.prototype.renderFrameUpdates,drawRenderFrame(){assert.fail('cancelled draw');}};
  const pending=WorldScene.prototype.renderLoadingFrame.call(owner,{nextFrame:()=>new Promise(resolve=>waiting.push(resolve))});assert.equal(owner.scene.fog,fog);waiting[0]();await Promise.resolve();await Promise.resolve();assert.equal(waiting.length,2);assert.equal(owner.scene.fog,fog);loading.abort();waiting[1]();await assert.rejects(pending,/cancelled/);assert.equal(owner.scene.fog,fog);
+});
+
+test('material preparation progresses even when final presentation is held',()=>{
+ let baked=0;const owner={shaderFailure:{current:null},resize(){},cinematic:true,strokePreview:{render(){}},camera:new PerspectiveCamera(),nav:{field:{}},renderOrigin:{x:0,z:0,update:()=>false},controls:{target:new Vector3()},syncChunks(){},chunks:new Map(),quality:'media',state:{elapsed:0},simElapsed:0,scene:{fog:null},sync(){},assetGroups:{update(){}},toon:{uniforms:{uWorldOrigin:{value:{set(){}}}}},mangroveMaterialCache:{update(){baked++;}},prepareFrameResources:WorldScene.prototype.prepareFrameResources,renderFrameUpdates:WorldScene.prototype.renderFrameUpdates,drawRenderFrame(){}};
+ WorldScene.prototype.render.call(owner,0);assert.equal(baked,1);
 });

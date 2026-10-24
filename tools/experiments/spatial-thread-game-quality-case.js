@@ -5,6 +5,7 @@ import {compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js'
 export async function verifyGameQualityCycle(w){
  const lease=w.programLease;if(!lease?.stats.retained)throw Error('Expected default retention');
  const snapshot=()=>JSON.stringify({elapsed:w.state.elapsed,plants:w.state.plants,structures:w.state.structures,native:w.spatialSession.core.snapshot()});
+ const cacheState=()=>{const cache=w.mangroveMaterialCache;return cache?{chunks:cache.states.size,ready:[...cache.states.values()].filter(s=>s.texture.value).length,queue:{...cache.queue.stats}}:null;};
  const before=snapshot(),rows=[],enabled=new URLSearchParams(location.search).get('streamingRecovery')!=='0';
  const active=new URLSearchParams(location.search).get('qualityActive')==='1';
  const initialElapsed=w.state.elapsed,initialCreated=w.chunkStream.stats.created,originalCameraUpdate=w.updateCamera;
@@ -30,7 +31,7 @@ export async function verifyGameQualityCycle(w){
   const prewarm=new URLSearchParams(location.search).get('qualityPrewarm')==='1',draw=w.drawRenderFrame;
   const serializeRecovery=new URLSearchParams(location.search).get('qualitySerialRecovery')==='1',refresh=w.refreshStreamingPrograms;
   if(prewarm){w.drawRenderFrame=()=>{};if(serializeRecovery)w.refreshStreamingPrograms=()=>{};}
-  const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
+  const cacheBefore=cacheState();const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
   let livePreparation=null;let prewarmMs=0,prewarmInvalidations=0;const pinPrograms=new URLSearchParams(location.search).get('qualityPinPrograms')==='1',temporaryScope=pinPrograms?createProgramRetentionScope(w.renderer):null;let pinFailed=false;
   if(prewarm){const start=performance.now(),deadline=start+30000;try{
     // Drain far preparation; active QA additionally exercises concurrent scene changes.
@@ -50,7 +51,7 @@ export async function verifyGameQualityCycle(w){
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext(),glError=gl.getError();if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
-  rows.push({quality,programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
+  rows.push({quality,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;

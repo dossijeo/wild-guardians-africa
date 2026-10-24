@@ -117,3 +117,15 @@ Sabana real-renderer cross-check on Intel UHD 720p media, active simulation, sam
 | Private preparation mean latency | synchronous | 1064.99 ms |
 
 No frame-time improvement demonstrated; smaller installation cost does not compensate for deferred preparation. This corroborates the Mangroves limitation and is evidence against adopting the present admission policy. The current candidate remains disabled. Safety fixes do not imply performance acceptance. Next performance work must tackle the real synchronous render/material stalls and resource transitions, not claim success from shorter isolated installation.
+
+## Resource preparation separated from final drawing
+
+Audit found fixed512 Mangroves cache initialization/update inside `drawRenderFrame`. The QA quality-prewarm wrapper holds that function, so it also stopped cache progress during active streaming. This was a real coupling between preparation and presentation, and a confounder in held-frame quality experiments.
+
+`WorldScene.prepareFrameResources` now owns the existing cache work as the last update phase, after world-origin uniforms and before final drawing. Ordinary gameplay retains the same operation order and one cache update per frame. Cooperative loading can yield after this resource phase. No shader, cache resolution, material appearance or cache capacity was changed. Direct production callers of final drawing all already run the update phases.
+
+`quality-resource-phase-active-1.json` passes active simulation, 240 camera frames, 15 streamed chunks and all four quality changes without unexpected GL errors. Cached targets progress from 25 published to 40 while final presentation is held; all 25 resident chunks are ready at the measured boundaries. Reported resident/peak target bytes stay 35,209,000. First baja preparation takes 4413 ms; its largest RAF interval is 214.8 ms. This is not acceptance: the historical 5.3 s result is not an interleaved comparison, tails still exist, and held presentation remains unsatisfactory.
+
+42 relevant tests pass, including cache lifecycle/budget, compiler ownership and a new full-update-phase test proving resource progress with final drawing held. This separates an existing responsibility; it does not make the GPU cache draw preemptible or claim a performance improvement.
+
+Next architectural experiment: prepare target shader recipes while continuing to render the old quality, then activate. For media/baja the near ground material class is identical and the shadow recipe differs; a synchronous scoped compile adapter could select the target shadow setting and restore renderer/material state before any await. It must retain new programs, force correct old-program selection during intervening draws, handle scene churn/context/quality revisions, and measure activation stalls. This would only cover a subset: very-low material replacements, distant terrain, vegetation LOD, shadow resources and other visual systems still require explicit transaction coverage. Do not call a shadow-only prototype a completed quality transition.
