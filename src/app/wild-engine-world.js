@@ -36,6 +36,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
   let session;
   try{
     if(threaded){
+      threaded.core.preparation?.visualOptions?.(state.biome==='manglares'&&new URLSearchParams(location.search).get('waterBedWorker')!=='0'?1:0);
       const first=state.villages[0];
       threaded.core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome);
     }

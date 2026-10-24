@@ -99,7 +99,15 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     release:()=>wasm.spatial_prepare_release(),
     shutdown:()=>wasm.spatial_prepare_shutdown(),
     publish:publishPreparedChunk,
-    metric:field=>wasm.spatial_prepare_metric(field)
+    metric:field=>wasm.spatial_prepare_metric(field),
+    visualOptions:flags=>wasm.spatial_prepare_visual_options?.(flags),
+    waterBed:()=>{
+      const size=wasm.spatial_prepare_buffer_bytes(7);if(!size)return null;
+      const values=new Float64Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(8),8);
+      const [nx,nz,minX,minZ,width,height,lo,span]=values;
+      if(size!==nx*nz*4)throw Error('Invalid prepared water map');
+      return {nx,nz,minX,minZ,width,height,lo,span,bytes:new Uint8Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(7),size).slice()};
+    }
   }:null;
   function selectChunk(cx,cz){
     if(!generated)throw Error('Generate the world before selecting a chunk');
