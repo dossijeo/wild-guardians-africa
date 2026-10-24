@@ -168,8 +168,14 @@ export class WorldScene {
     this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';
     const qualityGround=this.biomeGround?.mangroveSubstrate?[...this.terrainMeshes,...[...this.chunks.values()].flatMap(group=>group.children.filter(mesh=>mesh.userData.globalMudBlend))]:this.terrainMeshes;
     updateGroundQuality(qualityGround,quality,mesh=>{configureMangroveMudMaterial(this,mesh.material);this.materialRegistry?.refresh(mesh);});
-    const shadowsEnabled=['media','alta'].includes(quality),shadowsChanged=this.renderer.shadowMap.enabled!==shadowsEnabled;
-    this.renderer.shadowMap.enabled=shadowsEnabled;
+    const shadowsEnabled=['media','alta'].includes(quality),stableShadows=new URLSearchParams(globalThis.location?.search??'').get('stableShadowPrograms')==='1';
+    const rendererShadows=stableShadows||shadowsEnabled,shadowsChanged=this.renderer.shadowMap.enabled!==rendererShadows;
+    if(stableShadows){
+      this.sun.userData.nativeShadowQualityIntensity??=this.sun.shadow.intensity;
+      this.sun.userData.nativeShadowDisabled=!shadowsEnabled;
+      this.sun.shadow.intensity=shadowsEnabled?this.sun.userData.nativeShadowQualityIntensity:0;
+    }
+    this.renderer.shadowMap.enabled=rendererShadows;
     if(shadowsChanged)this.assetGroups.invalidateMaterials();
     // Shadow defines are compiled into materials; re-enable must invalidate unshadowed programs.
     if(shadowsChanged)this.scene.traverse(object=>{for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)material.needsUpdate=true;});

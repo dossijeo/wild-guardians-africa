@@ -75,3 +75,11 @@ test('PCF reuse remains valid only while Three lighting leaves the sampled norma
  assert.equal((shader.fragmentShader.match(/nativeShadowOcclusion\(/g)||[]).length,2,'one definition and one evaluation for object direct light and cel');
  material.dispose();toon.shadowUniforms.fallback.dispose();
 });
+
+test('logical shadow disabling skips its draw and keeps valid uniforms without disabling shader variants',()=>{
+ const light=new THREE.DirectionalLight(),other=new THREE.DirectionalLight(),uniforms=createNativeShadowUniforms();light.castShadow=true;light.userData.nativeShadowDisabled=true;let submitted;
+ const renderer={shadowMap:{enabled:true,autoUpdate:true,render(lights){submitted=lights;}},renderBufferDirect(){}};
+ const release=installNativeShadow(renderer,light,uniforms);
+ renderer.shadowMap.render([light,other],new THREE.Scene(),new THREE.PerspectiveCamera());
+ assert.deepEqual(submitted,[other]);assert.equal(renderer.shadowMap.enabled,true);assert.equal(light.shadow.map,null);assert.equal(uniforms.uNativeShadowOn.value,0);assert.equal(uniforms.uNativeShadowFiltered.value,uniforms.fallback);release();
+});

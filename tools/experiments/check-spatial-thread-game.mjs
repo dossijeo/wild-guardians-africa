@@ -31,6 +31,7 @@ try{
  if(process.env.WG_FRAME_SCHEDULER_DIAGNOSTICS==='1')gameUrl.searchParams.set('frameSchedulerDiagnostics','1');
  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
  if(process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY)gameUrl.searchParams.set('qualityCompileConcurrency',process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY);
+ if(process.env.WG_THREAD_STABLE_SHADOW_PROGRAMS==='1')gameUrl.searchParams.set('stableShadowPrograms','1');
  if(process.env.WG_THREAD_QUALITY_MENU_PROTOCOL==='1')gameUrl.searchParams.set('qualityMenuProtocol','1');
  if(process.env.WG_THREAD_CROP_DEPTH_PREPARATION==='1')gameUrl.searchParams.set('cropDepthPreparation','1');
  if(process.env.WG_THREAD_CROP_DEPTH_WARM==='1')gameUrl.searchParams.set('cropDepthWarm','1');

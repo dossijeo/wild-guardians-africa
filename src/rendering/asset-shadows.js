@@ -42,7 +42,7 @@ export function installAssetShadows(renderer,chunks,ownerScene=null){
     // Some diagnostic passes disable shadows. Avoid entering the color render
     // list or allocating/updating GPU resources when no shadow is requested.
     if(ownerScene&&scene!==ownerScene)return original.call(this,lights,scene,camera);
-    if(!map.enabled||(!map.autoUpdate&&!map.needsUpdate)||!lights.length)return original.call(this,lights,scene,camera);
+    if(!map.enabled||(!map.autoUpdate&&!map.needsUpdate)||!lights.length||lights.every(light=>light.userData?.nativeShadowDisabled))return original.call(this,lights,scene,camera);
     stats.draws=stats.triangles=0;
     const materials=new Map();
     try{

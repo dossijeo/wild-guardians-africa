@@ -64,7 +64,7 @@ export class NativeVfx extends THREE.Group {
     this.updateWorldMatrix(true,false);this.inverse.copy(this.matrixWorld).invert();const u=this.uniforms;
     u.uVP.value.copy(camera.projectionMatrix).multiply(camera.matrixWorldInverse).multiply(this.matrixWorld);u.uView.value.copy(camera.matrixWorldInverse).multiply(this.matrixWorld);
     u.uEye.value.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(this.inverse);u.uRight.value.setFromMatrixColumn(camera.matrixWorld,0).transformDirection(this.inverse);u.uUp.value.setFromMatrixColumn(camera.matrixWorld,1).transformDirection(this.inverse);u.uScale.value=this.matrixWorld.getMaxScaleOnAxis();u.uNear.value=camera.near;u.uFar.value=camera.far;
-    const shadow=this.pipeline.sun?.shadow;u.uHasShadow.value=!!(this.pipeline.renderer.shadowMap.enabled&&this.pipeline.sun?.castShadow&&shadow?.map);if(shadow?.map){u.uShadow.value=shadow.map.texture;u.uShadowVP.value.copy(shadow.camera.projectionMatrix).multiply(shadow.camera.matrixWorldInverse).multiply(this.matrixWorld);u.uShadowTexel.value.set(1/shadow.mapSize.x,1/shadow.mapSize.y);}
+    const shadow=this.pipeline.sun?.shadow;u.uHasShadow.value=!!(this.pipeline.renderer.shadowMap.enabled&&!this.pipeline.sun?.userData?.nativeShadowDisabled&&this.pipeline.sun?.castShadow&&shadow?.map);if(shadow?.map){u.uShadow.value=shadow.map.texture;u.uShadowVP.value.copy(shadow.camera.projectionMatrix).multiply(shadow.camera.matrixWorldInverse).multiply(this.matrixWorld);u.uShadowTexel.value.set(1/shadow.mapSize.x,1/shadow.mapSize.y);}
   }
   prepare(camera,world=null){
     if(this.stopped)return false;

@@ -111,7 +111,7 @@ export class NativeBuilding extends THREE.Group {
     if(shadow?.map){this.uniforms.uShadow.value=shadow.map.texture;this.uniforms.uShadowSize.value=shadow.mapSize.x;this.uniforms.uLightVP.value.copy(shadow.camera.projectionMatrix).multiply(shadow.camera.matrixWorldInverse).multiply(mesh.matrixWorld);}
     this.uniforms.uNight.value=this.pipeline.night??((this.pipeline.sun?.intensity??3)<1?1:0);
     this.uniforms.uNightLight.value=this.pipeline.nightLight??1.12;
-    this.uniforms.uShadows.value=this.pipeline.renderer.shadowMap.enabled&&this.pipeline.sun?.castShadow&&shadow?.map?1:0;
+    this.uniforms.uShadows.value=this.pipeline.renderer.shadowMap.enabled&&!this.pipeline.sun?.userData?.nativeShadowDisabled&&this.pipeline.sun?.castShadow&&shadow?.map?1:0;
   }
   update(entity,elapsed){
     this.damage=centerVisualDamage(entity);this.uniforms.uDamage.value=this.damage;this.uniforms.uTime.value=elapsed;
