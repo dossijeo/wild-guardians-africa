@@ -256,3 +256,13 @@ world states can differ. Do not treat final active screenshots as exact
 image-equivalence pairs or conflate this with the frozen workload.
 The complete active series is still running. Its summary will retain options,
 hardware, created chunks and simulation progress alongside timing.
+
+### Active first pair: mixed outcome
+
+Both A1 and B1 create10chunks, settle the far background, keep actors ready
+for180frames with zero pauses and record no non-X4000 errors. B1 loading
+readiness is34,851.985ms versus37,352.705ms. However, presentation interval
+mean increases108.455 to135.060ms and P95199.695 to216.305ms. Render CPU
+mean decreases14.274 to12.666ms. This is not evidence of overall smoothness
+improvement. Simulation advances15.798s versus16.843s, so active work is not
+bit-identical. Await the second pair; do not promote based on loading alone.
