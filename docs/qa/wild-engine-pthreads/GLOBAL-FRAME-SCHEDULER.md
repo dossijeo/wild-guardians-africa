@@ -1419,3 +1419,44 @@ No reliable GPU/wholeframe conclusion from this experiment. Next gate:bounded
 validation storage,sRGB/alpha equivalence,private publication via supported Three
 APIs and real loading ABAB without readbacks. Do not adopt rawGL private probe as
 production upload manager or claim the scheduler objective complete.
+
+
+### sRGB correctness, alpha exclusion, and rejected Three copy path (2026-10-24)
+
+The private probe now allocates SRGB8_ALPHA8 for actual sRGB albedo and RGBA8 for
+linear maps. scheduler-texture-srgb-alpha.json: all bytes at all generated mip
+levels remain identical for actual lion albedo,normal,roughness. Validation retains
+only the baseline mipchain plus current trial (~42.67MiB for2048square),rather than
+six chains (~128MiB). Each reference is22369620bytes;worker pixel output16MiB extra.
+Those are calculated validation storage sizes,not measured total process memory.
+
+Added an adversarial64square semitransparent gradient. Canvas conversion differs
+in7934channel bytes across mip levels,while repeated bitmap upload remains exact.
+Therefore opaque result MUST NOT be generalized to alpha foliage/cards/sprites.
+No production texture changed. Matching encoded sRGB bytes/mips supports this
+transfer representation;no game shader screenshot or full-world A/B acceptance yet.
+
+Attempted supported Three API: private Texture with Source.dataReady=false for
+allocation,restored immediately;DataTexture + copyTextureToTexture with Box2 row
+regions. Intermediate copies suppress mip generation,finalcopy regenerates mips.
+Resources owned/disposed by Three;no private-handle mutation. Scheduler unchanged.
+Three attempts terminate at QA30s watchdog (first generic,second/third attributed);
+no successful publication. Raw reports preserve failure,not a performance win.
+
+scheduler-texture-three-transfer-diagnostic.failure.json: secondstripe102.315ms;
+its conservative cost exceeds bounded recovery policy,so pending work correctly
+cannot be treated as cheap. scheduler-texture-three-calls.failure.json instruments
+actual GL calls only within the copy: thirdstripe187.760ms,including getParameter
+UNPACK_ROW_LENGTH(3314)=90.455ms and UNPACK_IMAGE_HEIGHT(32878)=96.845ms.
+texSubImage2D max~.100ms. These are synchronous wall spans (driver/queue waits can
+contribute),not proof of GPU workload duration. The API's state reads defeat this
+cooperative slicing on this hardware. Do not solve it with artificial low estimates,
+longer watchdogs or allowing100ms scheduler units. Reject copyTextureToTexture for
+this candidate. A bounded interop path avoiding synchronous state queries needs
+separate lifecycle/equivalence validation before any production adoption.
+
+Reproduction remains WG_TEXTURE_STAGING_PROBE=1;MODE=scheduled for raw transfer
+and MODE=three for rejected Three path (actual env WG_TEXTURE_STAGING_MODE). Detailed
+GL instrumentation is QA only,restored in finally. Browser error logs contain the
+existing f_environment4 warnings;failure is explicit watchdog,not a GL upload error.
+No main merge,art changes or production defaults changed. Scheduler objective open.

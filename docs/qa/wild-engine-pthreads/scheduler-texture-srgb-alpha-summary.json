@@ -1,0 +1,177 @@
+{
+  "scope": "Diagnostic private native-color-space textures on actual renderer context. ABAB invocation timings include state reset; explicit frame waits/readbacks, not whole-game or GPU benchmark. No texture replacement. Pixel conversion and every generated mip compared. Uses SRGB8_ALPHA8 for sRGB sources; reads encoded bytes and generated mipmaps, not shader screenshots. Bounded reference plus current readback; includes adversarial alpha fixture. Does not validate context loss, production memory lifecycle or scheduler throughput.",
+  "rows": [
+    {
+      "slot": "map",
+      "colorSpace": "srgb",
+      "referenceBytes": 22369620,
+      "trials": [
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "slot": "normalMap",
+      "colorSpace": "",
+      "referenceBytes": 22369620,
+      "trials": [
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "slot": "roughnessMap",
+      "colorSpace": "",
+      "referenceBytes": 22369620,
+      "trials": [
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "slot": "alpha-control",
+      "colorSpace": "srgb",
+      "referenceBytes": 21844,
+      "trials": [
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 7934,
+          "maxDifference": 213,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 7934,
+          "maxDifference": 213,
+          "errors": []
+        },
+        {
+          "mode": "bitmap",
+          "changedBytesAllMips": 0,
+          "maxDifference": 0,
+          "errors": []
+        },
+        {
+          "mode": "pixels",
+          "changedBytesAllMips": 7934,
+          "maxDifference": 213,
+          "errors": []
+        },
+        {
+          "mode": "scheduled-stripes",
+          "changedBytesAllMips": 7934,
+          "maxDifference": 213,
+          "errors": []
+        }
+      ]
+    }
+  ]
+}
