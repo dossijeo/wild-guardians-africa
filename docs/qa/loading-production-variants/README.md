@@ -201,3 +201,17 @@ The Sabana pair was visually inspected: ground and grass coverage remain
 unchanged to inspection. These opening captures do not validate night or motion.
 The remaining original controls continue serially. A reusable comparison script
 requires all six matching profile reports before emitting the final count table.
+
+## Full low-profile control complete
+
+All six original/candidate pairs match chunk counts, link counts, late link
+counts and late contexts. Console entries also match in count and contain only
+the recorded X4000 warnings. See comparison-baja-inventory.json.
+Mangrove paired captures inspected: moss/mud coverage and fern masses preserved.
+Opening pixel measurements for all six are in comparison-baja-pixels.json;
+these do not replace night/motion/active-play validation.
+Diagnostic readiness varies in both directions, including unchanged Desert
+(22.575s original, 24.492s candidate). This is a useful negative control against
+claiming speed from separate inventory series. A second uninstrumented
+Mangrove A/B/A/B series is running under prefix manglares-pruned-repeat.
+No production default is changed.
