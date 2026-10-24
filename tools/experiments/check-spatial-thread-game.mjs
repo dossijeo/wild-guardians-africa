@@ -33,7 +33,9 @@ try{
  if(process.env.WG_THREAD_TEXTURE_TIMES==='1')await page.route('**/src/rendering/loading-textures.js*',async route=>{
   const response=await route.fetch(),source=await response.text(),anchor='renderer.initTexture(texture);';
   if(source.split(anchor).length!==2)throw Error('Texture upload witness anchor changed');
-  const body=source.replace(anchor,`{const began=performance.now();renderer.initTexture(texture);const image=texture.image;(globalThis.qaLoadingTextureUploads??=[]).push({ms:performance.now()-began,name:texture.name,width:image?.width,height:image?.height,imageType:image?.constructor?.name,src:image?.currentSrc??image?.src??null,colorSpace:texture.colorSpace,mipmaps:texture.generateMipmaps,flipY:texture.flipY,premultiplyAlpha:texture.premultiplyAlpha});}`);
+  const collect='let completed=0;';
+  if(source.split(collect).length!==2)throw Error('Texture ownership anchor changed');
+  const body="import {textureOwnership,measureTextureUpload} from '/tools/experiments/loading-texture-ownership.js';\n"+source.replace(collect,'const qaOwners=textureOwnership(scene,globalThis.qaThreadWorld?.assets);let completed=0;').replace(anchor,'measureTextureUpload(renderer,texture,qaOwners);');
   await route.fulfill({response,body});
  });
  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));

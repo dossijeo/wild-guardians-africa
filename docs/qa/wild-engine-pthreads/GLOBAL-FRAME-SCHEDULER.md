@@ -1349,3 +1349,34 @@ Built with current Vite configuration;scope excludes deployed itch.io/full game
 and actual Tauri/WebView2. JSON report retains those limitations. Production build
 passes with existing bundle/import warnings. This closes the packaged-worker
 protocol smoke test,not global distribution or scheduler acceptance.
+
+
+### Remaining atomic texture uploads: owning assets identified (2026-10-24)
+
+Extended the existing WG_THREAD_TEXTURE_TIMES diagnostic with a QA-only ownership
+index and per-renderer texture identity/version history. It matches shared Source
+objects across cloned materials and modelSources; no production behavior changed.
+Index collection is outside timed initTexture calls but adds traversal overhead.
+Do not compare this diagnostic run's loading speed to non-instrumented runs.
+
+scheduler-loading-texture-owners.json records115calls/113sources,770.275ms summed
+synchronous invocation wall time,0repeated texture objects,7already initialized.
+Largest119.505ms upload is the2048x2048lion bestiary albedo, identified through
+models.json and the actual loaded GLTF URL. Rhino packed roughness/metalness52.330ms,
+hyena normal50.740ms,sky atlas4096x2048 52.830ms. These are initial uploads, not
+claims of GPU execution duration. Expected existing shader warnings only;25chunks
+ready,0failed/queued,authoritative pthread runtime active.
+
+Two sources have multiple texture wrappers. Their later invocations take0–.025ms;
+Three already reuses the shared source allocation. Another deduplication layer
+would not address the expensive initial uploads. This scope does not exclude
+reuploads during later context restoration or quality changes.
+
+Installed Three WebGLTextures supports row updateRanges for DataTexture but the
+observed resources are ImageBitmap. A possible follow-up is private staged pixel
+uploads with worker-side conversion and atomic publication, measuring conversion,
+allocation,mipmap cost,temporary memory and exact sampling before adopting it.
+That is not implemented or assumed beneficial: changing image representation can
+alter color/alpha handling, and allocation/mipmap generation remain atomic. Simply
+putting the existing119ms initTexture into a scheduler job cannot interrupt it.
+No asset resolution,art,lighting,simulation or production default changed.
