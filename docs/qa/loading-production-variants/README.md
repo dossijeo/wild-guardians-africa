@@ -179,3 +179,14 @@ night, moving cameras, active world and profile changes remain unverified.
 Single diagnostic readiness varies (Mangroves41.203s here), reinforcing that
 isolated times must not be used as optimization acceptance. Raw data retained.
 The low-quality six-biome candidate series is now running serially.
+
+## Candidate low-profile diagnostic completion
+
+All six loads complete with25chunks. Link/late counts: Sabana77/2, River77/2,
+Mangroves83/1, Desert63/2, Volcanoes75/2, Canyon61/1. Captured console
+entries are X4000 environment-variable compiler warnings; no other recorded
+errors. These counts must be compared with the same low-profile original,
+not the earlier media baseline. A serial original control is running with
+profile-specific filenames and captures, preserving existing evidence.
+No timing acceptance or visual equivalence is claimed from these single loads.
+The candidate remains opt-in. See pruned-baja-validation.json and raw reports.

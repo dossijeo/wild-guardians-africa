@@ -7,10 +7,15 @@ out = root / 'docs/qa/loading-production-variants'
 parser=argparse.ArgumentParser()
 parser.add_argument('--candidate',action='store_true')
 parser.add_argument('--quality',choices=['baja','media','alta'],default='media')
+parser.add_argument('--full-baseline',action='store_true',help='All six original loads with profile-specific names and captures')
 args=parser.parse_args()
-biomes=['sabana','gran-rio','manglares','desierto','volcanes','gran-canon'] if args.candidate else ['sabana','gran-rio','desierto','volcanes','gran-canon']
+if args.candidate and args.full_baseline:
+    parser.error('--candidate and --full-baseline are mutually exclusive')
+biomes=['sabana','gran-rio','manglares','desierto','volcanes','gran-canon'] if args.candidate or args.full_baseline else ['sabana','gran-rio','desierto','volcanes','gran-canon']
 for biome in biomes:
     suffix='pruned-'+args.quality+'-inventory' if args.candidate else 'baseline-inventory'
+    if args.full_baseline:
+        suffix='baseline-'+args.quality+'-inventory'
     report = out / (biome + '-'+suffix+'.json')
     if report.exists() or report.with_suffix('.failure.json').exists():
         raise SystemExit('Refusing to overwrite ' + str(report))
@@ -23,6 +28,8 @@ for biome in biomes:
                WG_GUARDIAN_TAIL='1', WG_THREAD_REPORT=str(report))
     if args.candidate:
         env.update(WG_PRODUCTION_GROUND_SOURCE='1',WG_THREAD_LOADING_CAPTURE='1')
+    elif args.full_baseline:
+        env['WG_THREAD_LOADING_CAPTURE']='1'
     with report.with_suffix('.log').open('wb') as log:
         result = subprocess.run(['node', 'tools/experiments/check-spatial-thread-game.mjs'],
                                 cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT)
