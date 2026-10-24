@@ -1,3 +1,4 @@
+import {globalFrameScheduler,globalFrameSchedulerEnabled} from '/src/app/global-frame-scheduler.js';
 import {prepareLiveScenePrograms} from '/src/rendering/live-program-preparation.js';
 import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs.js';
 import {compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
@@ -36,7 +37,7 @@ export async function verifyGameQualityCycle(w){
     while(w.farVegetation?.adapters.some(a=>a.preparationPending())){if(performance.now()>deadline)throw Error('Far quality preparation timeout');await new Promise(requestAnimationFrame);}
     for(;;){
      if(performance.now()>deadline)throw Error('Quality prewarm scene did not stabilize');
-     try{const live=new URLSearchParams(location.search).get('qualityLivePreparation')==='1';const compile=live?((r,s,c,t,o)=>prepareLiveScenePrograms(r,s,c,o)):compileLoadingProgramsBatched;livePreparation=await compile(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,onSubmit:pinPrograms?span=>{if(span.label==='loading-compile-submit'&&!temporaryScope.acquire())pinFailed=true;}:undefined,cancelled:()=>w.disposed||pinFailed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});break;}
+     try{const live=new URLSearchParams(location.search).get('qualityLivePreparation')==='1';const compile=live?((r,s,c,t,o)=>prepareLiveScenePrograms(r,s,c,o)):compileLoadingProgramsBatched;livePreparation=await compile(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:pinPrograms?span=>{if(span.label==='loading-compile-submit'&&!temporaryScope.acquire())pinFailed=true;}:undefined,cancelled:()=>w.disposed||pinFailed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});break;}
      catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED'||w.disposed)throw error;prewarmInvalidations++;await new Promise(requestAnimationFrame);}
     }
     if(serializeRecovery){w.refreshStreamingPrograms=refresh;await refresh.call(w);}

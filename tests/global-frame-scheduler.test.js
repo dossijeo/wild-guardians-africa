@@ -40,3 +40,10 @@ test('an expired deadline borrows one bounded unit instead of starving; mandator
  time+=30;scheduler.beginFrame(time);time+=18;scheduler.endFrame();assert.equal(units,1);
  time+=30;scheduler.beginFrame(time);time+=4;scheduler.endFrame();assert.equal(await job,2);
 });
+
+test('ready promise continuations share one presentation budget without another frame',async()=>{
+ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time});let calls=0;
+ const work=async()=>{for(let i=0;i<5;i++)await scheduler.submit((function*(){calls++;time+=.1;return i;})(),{deadline:0});};
+ const pending=work();scheduler.beginFrame(time);time+=2;await scheduler.endFrame();await pending;
+ assert.equal(calls,5);assert.equal(scheduler.snapshot().completed,5);assert.ok(scheduler.snapshot().continuationTurns>0);
+});

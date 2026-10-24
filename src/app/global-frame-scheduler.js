@@ -6,7 +6,7 @@ export class GlobalFrameScheduler {
     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
     this.budget=0;this.cooldown=0;this.lastPolicy=-Infinity;
     this.policy={median:0,p95:0,p99:0,cpu95:0,jitter:0};
-    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0};
+    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0,continuationMs:0,continuationTurns:0};
   }
   submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal}={}) {
     if(this.jobs.has(key))this.cancel(key);
@@ -26,7 +26,7 @@ export class GlobalFrameScheduler {
   }
   beginFrame(timestamp){this.frame={timestamp,start:this.now()};}
   // Called after ALL mandatory presentation work, including simulation/UI/audio.
-  endFrame(){
+  async endFrame(){
     const frame=this.frame;if(!frame)return;this.frame=null;
     const began=this.now(),cpu=began-frame.start,interval=this.lastTimestamp===null?0:frame.timestamp-this.lastTimestamp;
     this.lastTimestamp=frame.timestamp;
@@ -53,8 +53,16 @@ export class GlobalFrameScheduler {
     const remaining=Math.max(0,frame.timestamp+period-began-period*.1);
     const base=Math.min(remaining,this.budget*(this.cooldown>0?.35:1));
     if(this.cooldown>0)this.cooldown--;
-    let work=0;
-    while(this.jobs.size){
+    let work=0,continuation=0,drainTurns=0,completedSubmission=false,units=0;
+    while(this.jobs.size||(completedSubmission&&drainTurns<32&&this.now()-began<remaining)){
+      if(!this.jobs.size){
+        // Promise-ready producers can refill this same presentation budget.
+        // Never await driver readiness or a timer here. Bound empty microtasks
+        // and charge all intervening wall time; none is considered free CPU.
+        const before=this.now();await Promise.resolve();continuation+=this.now()-before;
+        drainTurns++;this.stats.continuationTurns++;continue;
+      }
+      if(units++>=1024)break;
       const time=this.now();let selected=null,best=-Infinity,borrowed=false;
       for(const job of this.jobs.values()){
         let valid;try{valid=job.valid();}catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
@@ -79,14 +87,14 @@ export class GlobalFrameScheduler {
       try{
         const result=selected.iterator.next();
         if(result?.then)throw new TypeError('Scheduled units must be synchronous');
-        if(result.done){this.remove(selected);this.stats.completed++;selected.resolve(result.value);}
+        if(result.done){this.remove(selected);this.stats.completed++;completedSubmission=true;drainTurns=0;selected.resolve(result.value);}
         else selected.order=this.sequence++;
       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
       const duration=this.now()-start;work+=duration;if(borrowed)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
       if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
     }
-    this.stats.workMs+=work;this.stats.coordinationMs+=Math.max(0,this.now()-began-work);
+    this.stats.workMs+=work;this.stats.continuationMs+=continuation;this.stats.coordinationMs+=Math.max(0,this.now()-began-work-continuation);
   }
   snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs};}
 }
