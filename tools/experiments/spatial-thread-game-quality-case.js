@@ -1,3 +1,4 @@
+import {prepareLiveScenePrograms} from '/src/rendering/live-program-preparation.js';
 import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs.js';
 import {compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
 export async function verifyGameQualityCycle(w){
@@ -29,13 +30,13 @@ export async function verifyGameQualityCycle(w){
   const serializeRecovery=new URLSearchParams(location.search).get('qualitySerialRecovery')==='1',refresh=w.refreshStreamingPrograms;
   if(prewarm){w.drawRenderFrame=()=>{};if(serializeRecovery)w.refreshStreamingPrograms=()=>{};}
   const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
-  let prewarmMs=0,prewarmInvalidations=0;const pinPrograms=new URLSearchParams(location.search).get('qualityPinPrograms')==='1',temporaryScope=pinPrograms?createProgramRetentionScope(w.renderer):null;let pinFailed=false;
+  let livePreparation=null;let prewarmMs=0,prewarmInvalidations=0;const pinPrograms=new URLSearchParams(location.search).get('qualityPinPrograms')==='1',temporaryScope=pinPrograms?createProgramRetentionScope(w.renderer):null;let pinFailed=false;
   if(prewarm){const start=performance.now(),deadline=start+30000;try{
     // Drain far preparation; active QA additionally exercises concurrent scene changes.
     while(w.farVegetation?.adapters.some(a=>a.preparationPending())){if(performance.now()>deadline)throw Error('Far quality preparation timeout');await new Promise(requestAnimationFrame);}
     for(;;){
      if(performance.now()>deadline)throw Error('Quality prewarm scene did not stabilize');
-     try{await compileLoadingProgramsBatched(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,onSubmit:pinPrograms?span=>{if(span.label==='loading-compile-submit'&&!temporaryScope.acquire())pinFailed=true;}:undefined,cancelled:()=>w.disposed||pinFailed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});break;}
+     try{const live=new URLSearchParams(location.search).get('qualityLivePreparation')==='1';const compile=live?((r,s,c,t,o)=>prepareLiveScenePrograms(r,s,c,o)):compileLoadingProgramsBatched;livePreparation=await compile(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,onSubmit:pinPrograms?span=>{if(span.label==='loading-compile-submit'&&!temporaryScope.acquire())pinFailed=true;}:undefined,cancelled:()=>w.disposed||pinFailed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});break;}
      catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED'||w.disposed)throw error;prewarmInvalidations++;await new Promise(requestAnimationFrame);}
     }
     if(serializeRecovery){w.refreshStreamingPrograms=refresh;await refresh.call(w);}
@@ -48,7 +49,7 @@ export async function verifyGameQualityCycle(w){
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext(),glError=gl.getError();if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
-  rows.push({quality,programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
+  rows.push({quality,programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;
@@ -66,5 +67,5 @@ export async function verifyGameQualityCycle(w){
  }else if(snapshot()!==before)throw Error('World changed during quality cycle');
  if(lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
  return {attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
- }catch(error){globalThis.qaQualityFailure={message:error.message,rows,attribution};throw error;}finally{if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
+ }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
 }
