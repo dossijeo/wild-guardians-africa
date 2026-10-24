@@ -1,12 +1,14 @@
+import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs.js';
 import {compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
 export async function verifyGameExit(w){
  const retained=w.programLease;
  const handle=globalThis.qaThreadHandle,p=handle.core.preparation,session=w.spatialSession;
  let observed=false,disposalStates=[],disposePromise=null,lateInstalls=0,exitPromise=null;
+ const temporaryScope=new URLSearchParams(location.search).get('qualityPinPrograms')==='1'?createProgramRetentionScope(w.renderer):null;
  let compilation=null,compilationSettled=false;
  if(new URLSearchParams(location.search).has('exitPrewarm')){
   let enter;const entered=new Promise(r=>enter=r);
-  compilation=compileLoadingProgramsBatched(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,cancelled:()=>w.disposed,batchSize:1,nextFrame:()=>{enter();return new Promise(()=>{});}}).then(()=>({resolved:true}),error=>({resolved:false,message:error.message})).finally(()=>{compilationSettled=true;});
+  compilation=compileLoadingProgramsBatched(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,onSubmit:temporaryScope?span=>{if(span.label==='loading-compile-submit')temporaryScope.acquire();}:undefined,cancelled:()=>w.disposed,batchSize:1,nextFrame:()=>{enter();return new Promise(()=>{});}}).then(()=>({resolved:true}),error=>({resolved:false,message:error.message})).finally(()=>{temporaryScope?.dispose();compilationSettled=true;});
   await Promise.race([entered,compilation.then(()=>{throw Error('Prewarm ended before suspended frame');})]);
  }
  const start=p.start,dispose=session.dispose,install=w.installChunk;
@@ -33,5 +35,5 @@ export async function verifyGameExit(w){
  const workers=Object.keys(handle.runtime.PThread.pthreads).length+handle.runtime.PThread.unusedWorkers.length;
  if(!w.disposed||workers||lateInstalls||p.status()!==5||!document.querySelector('#native-menu'))throw Error('Game exit cleanup failed');
  if(retained&&retained.stats.released+retained.stats.abandoned!==retained.stats.retained)throw Error('Retained program references leaked');
- return {...exit,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,recoveryFinished:w.streamingProgramRefresh===null,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
+ return {...exit,temporaryProgramScope:temporaryScope?.stats??null,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,recoveryFinished:w.streamingProgramRefresh===null,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
 }

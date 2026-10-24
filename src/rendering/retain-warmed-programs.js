@@ -29,3 +29,26 @@ export function retainWarmedPrograms(renderer,{limit=96,revision=REVISION,newest
   pinned.length=0;
  }};
 }
+
+// A bounded, operation-owned collection of incremental snapshots. No GL queries.
+// Exhaustion is explicit: the caller must cancel rather than assume readiness.
+export function createProgramRetentionScope(renderer,{limit=192,revision=REVISION}={}){
+ if(!Number.isSafeInteger(limit)||limit<1)throw RangeError('Invalid temporary retention limit');
+ const seen=new Set(),leases=[],collection=renderer.info?.programs;
+ const stats={retained:0,released:0,abandoned:0,destroyed:0,exhausted:false,closed:false,unsupported:revision!=='180'||!Array.isArray(collection)};
+ return {stats,acquire(){
+  if(stats.closed||stats.exhausted||stats.unsupported)return false;
+  if(renderer.info.programs!==collection||renderer.getContext?.().isContextLost?.())return false;
+  const fresh=[...new Set(collection)].filter(p=>!seen.has(p));
+  if(fresh.some(p=>!Number.isSafeInteger(p.usedTimes)||p.usedTimes<1||typeof p.destroy!=='function')){stats.unsupported=true;return false;}
+  if(seen.size+fresh.length>limit){stats.exhausted=true;return false;}
+  if(!fresh.length)return true;
+  const selected=new Set(fresh),lease=retainWarmedPrograms(renderer,{limit:fresh.length,revision,select:p=>selected.has(p)});
+  leases.push(lease);for(const p of fresh)seen.add(p);stats.retained+=lease.stats.retained;
+  return true;
+ },dispose(){
+  if(stats.closed)return;stats.closed=true;
+  for(const lease of leases.reverse()){lease.dispose();for(const key of ['released','abandoned','destroyed'])stats[key]+=lease.stats[key];}
+  leases.length=0;seen.clear();
+ }};
+}

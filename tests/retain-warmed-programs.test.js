@@ -43,3 +43,14 @@ test('selected incremental leases avoid repinning old programs and release new o
  first.dispose();assert.equal(a.destroyed,1);assert.equal(renderer.info.programs.length,0);
  assert.throws(()=>retainWarmedPrograms(renderer,{select:null}),TypeError);
 });
+
+import {createProgramRetentionScope} from '../src/rendering/retain-warmed-programs.js';
+test('temporary scope bounds incremental ownership, reports exhaustion and releases once',()=>{
+ const a=program(),b=program(),c=program(),renderer={info:{programs:[a]}};
+ const scope=createProgramRetentionScope(renderer,{limit:2});assert(scope.acquire());assert(scope.acquire());assert.equal(a.usedTimes,2);
+ renderer.info.programs.push(b);assert(scope.acquire());renderer.info.programs.push(c);assert.equal(scope.acquire(),false);assert(scope.stats.exhausted);assert.equal(c.usedTimes,1);
+ a.usedTimes--;scope.dispose();scope.dispose();assert.equal(scope.stats.retained,2);assert.equal(scope.stats.released,2);assert.equal(a.destroyed,1);assert.equal(b.usedTimes,1);assert.equal(scope.acquire(),false);
+});
+test('temporary scope abandons old context references and rejects collection replacement',()=>{
+ const a=program(),renderer={info:{programs:[a]}};const scope=createProgramRetentionScope(renderer);scope.acquire();renderer.info.programs=[];assert.equal(scope.acquire(),false);scope.dispose();assert.equal(scope.stats.abandoned,1);assert.equal(a.destroyed,0);
+});
