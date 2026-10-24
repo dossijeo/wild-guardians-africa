@@ -6,7 +6,7 @@ function same(a,b){return !!a&&a.geometry===b.geometry&&a.materials.length===b.m
 function belongs(object,scene){for(let p=object;p;p=p.parent)if(p===scene)return true;return false;}
 // A changing scene is not a single borrowed-resource transaction. Commit each
 // completed batch separately; cancelled batches never invalidate earlier work.
-export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=8,timeout=30000,now=()=>performance.now(),compile=compileLoadingProgramsBatched,...options}={}){
+export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=8,concurrency=1,timeout=30000,now=()=>performance.now(),compile=compileLoadingProgramsBatched,...options}={}){
  const versions=new WeakMap();
  const version=material=>{
   if(!material)return undefined;
@@ -22,14 +22,15 @@ export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=
  // it for each tiny submission hides already-overdue work from global admission.
  const deadline=options.deadline??begin+250;
  const check=()=>{if(options.signal?.aborted||options.cancelled?.()||options.getEpoch?.()!==epoch)throw Error('Live program preparation cancelled');if(now()-begin>timeout){const error=Error('Live program preparation timed out');error.preparation={...stats};throw error;}};
+ if(!Number.isInteger(concurrency)||concurrency<1||concurrency>8)throw new RangeError('Invalid live program concurrency');
  if(!Number.isInteger(batchSize)||batchSize<1)throw new RangeError('Invalid live program batch size');
  for(;;){
   check();stats.rounds++;const pending=[];
   scene.traverse(object=>{if(renderable(object)&&!same(completed.get(object),snapshot(object)))pending.push(object);});
   stats.lastPending=pending.length;if(!pending.length)return stats;
-  for(let i=0;i<pending.length;i+=batchSize){
+  const prepareBatch=async i=>{
    check();const batch=pending.slice(i,i+batchSize).filter(object=>{if(belongs(object,scene))return true;stats.retiredObjects++;return false;});
-   if(!batch.length)continue;
+   if(!batch.length)return;
    let recipes=batch.map(snapshot);
    const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
    try{
@@ -39,6 +40,15 @@ export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=
     check();stats.batches++;
     for(let j=0;j<batch.length;j++)if(belongs(batch[j],scene)&&same(recipes[j],snapshot(batch[j]))){completed.set(batch[j],recipes[j]);stats.objects++;}
    }catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED')throw error;stats.invalidatedBatches++;await waitGpuFrame({check,signal:options.signal,nextFrame:options.nextFrame});}
+  };
+  // Bounded submission waves overlap driver readiness while synchronous work
+  // still passes through global admission. Drain every borrowed transaction
+  // before returning or releasing the caller's retained programs.
+  for(let i=0;i<pending.length;i+=batchSize*concurrency){
+   check();const wave=[];
+   for(let offset=0;offset<concurrency&&i+offset*batchSize<pending.length;offset++)wave.push(prepareBatch(i+offset*batchSize));
+   const settled=await Promise.allSettled(wave),failed=settled.find(result=>result.status==='rejected');
+   if(failed)throw failed.reason;
   }
   // Bound mutation churn even if all readiness promises resolve immediately.
   await waitGpuFrame({check,signal:options.signal,nextFrame:options.nextFrame});

@@ -63,6 +63,8 @@ export async function verifyGameQualityCycle(w){
  }
  try{
  for(const quality of ['media','baja','media','baja']){
+  // Match settings UI: a request for the active quality performs no work.
+  if(new URLSearchParams(location.search).get('qualityMenuProtocol')==='1'&&quality===w.quality)continue;
   phaseSamples=new Map();
   if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'begin'};
   const frameTimes=[];let previous=performance.now(),tracking=true;
@@ -78,7 +80,7 @@ export async function verifyGameQualityCycle(w){
    const originalDraw=w.drawRenderFrame;w.drawRenderFrame=function(...args){if(w.quality!==oldQuality||w.renderer.shadowMap.enabled!==oldShadow)throw Error('Staged quality leaked into presentation');draws++;return originalDraw.apply(this,args);};
    try{
     if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'prepare'};
-    const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{compileSpans.push({...span,admission:span.label==='loading-compile-admission-wait'?globalFrameScheduler.snapshot():undefined});if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});
+    const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{compileSpans.push({...span,admission:span.label==='loading-compile-admission-wait'?globalFrameScheduler.snapshot():undefined});if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,concurrency:Number(new URLSearchParams(location.search).get('qualityCompileConcurrency')??1),frameBudget:6});
     stagedPreparation={ms:performance.now()-start,draws,stats,compileSpans};
     w.drawRenderFrame=originalDraw;
     if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'activate'};

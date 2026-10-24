@@ -41,3 +41,26 @@ test('all batches retain the operation deadline instead of renewing priority',as
  await prepareLiveScenePrograms({},f.scene,{}, {now:()=>clock,batchSize:1,nextFrame:async()=>{},compile:async(r,v,c,t,o)=>{deadlines.push(o.deadline);clock+=400;}});
  assert.deepEqual(deadlines,[1250,1250]);
 });
+
+test('bounded waves submit independent batches before readiness and retain all objects',async()=>{
+ const f=fixture();for(let i=0;i<5;i++)f.add();const pending=[];let active=0,peak=0;
+ const work=prepareLiveScenePrograms({},f.scene,{}, {concurrency:2,batchSize:1,nextFrame:async()=>{},compile:()=>{active++;peak=Math.max(peak,active);return new Promise(resolve=>pending.push(()=>{active--;resolve();}));}});
+ assert.equal(pending.length,2);
+ for(let i=0;i<5;i++){
+  for(let n=0;n<30&&!pending[i];n++)await Promise.resolve();
+  assert.ok(pending[i]);pending[i]();
+ }
+ const stats=await work;assert.equal(peak,2);assert.equal(active,0);assert.equal(stats.objects,5);
+});
+test('a failed wave drains other borrowed transactions before rejecting',async()=>{
+ const f=fixture();f.add();f.add();let calls=0,finish,settled=false;
+ const work=prepareLiveScenePrograms({},f.scene,{}, {concurrency:2,batchSize:1,nextFrame:async()=>{},compile:()=>++calls===1?Promise.reject(Error('shader failure')):new Promise(resolve=>{finish=resolve;})});
+ const observed=work.then(()=>{settled=true;},()=>{settled=true;});
+ for(let i=0;i<12;i++)await Promise.resolve();assert.equal(settled,false);finish();
+ await assert.rejects(work,/shader failure/);await observed;assert.equal(settled,true);
+});
+test('concurrent shared transparent compiler mutations do not cause repeated work',async()=>{
+ const f=fixture(),a=f.add(),b=f.add();b.material=a.material;let calls=0;
+ const stats=await prepareLiveScenePrograms({},f.scene,{}, {concurrency:2,batchSize:1,nextFrame:async()=>{},compile:async(r,v,c,t,options)=>{calls++;a.material.version+=2;options.onSubmit({label:'loading-compile-submit'});}});
+ assert.equal(calls,2);assert.equal(stats.objects,2);
+});
