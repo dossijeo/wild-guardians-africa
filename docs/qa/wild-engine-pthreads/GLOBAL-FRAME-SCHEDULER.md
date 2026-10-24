@@ -932,3 +932,56 @@ The earlier~930ms texture figure was cumulative, NOT a single900ms upload.
 Priority is therefore first-render deferred diagnostics as well as structural
 texture preparation; do not attempt to explain the full1s spike by one texture.
 No production path changed in this diagnostic checkpoint.
+
+
+### Fixed512 recipe prepared too late: structural loading correction (2026-10-24)
+
+`scheduler-first-world-draw-attribution.json` with QA LOADING_DRAW_TIMES=1:
+first world draw897.8ms, MeshStandardMaterial2401vertices851.95ms, three program
+links, getProgramInfoLog875.79ms(max848.22ms). Buffer creation only1.225ms.
+Cache code patches material on its first published target, after ordinary warm
+compilation. This creates a new fixed512 recipe at first render. Success-log
+suppression alone would not ensure compilation had finished for this variant.
+
+Explicit experiment `groundCachePreparation=1`: call existing
+prepareFrameResources once before warm-compile-world. First published fixed512
+material participates in normal batched compilation/readiness/binding warmup;
+later chunks reuse its program recipe with their own cache textures. No extra
+cache resolution, texture clone, lighting change or geometry. Uses existing
+cache owner/cancellation disposal; no new scheduler or RAF. Default remains
+unchanged pending broader validation. This is ordering of real work, not a
+promise wrapped around the first render.
+
+Pilot `scheduler-ground-cache-preparation-pilot.json`: initial ground recipe
+68.68ms, first draw78.44ms, remaining slow recipes depth43.21ms and shader21.37ms;
+large ground link absent. Ready31.312s, maxRAF415.66ms. Pilot diagnostic wrapper
+is excluded from the acceptance comparison below.
+
+ABAB `scheduler-cache-recipe-{a1,b1,a2,b2}.json`, PNGs and summary: both scheduler
+bundles, Manglares media720p same frozen fixture, fresh Chrome, serial runs.
+Flags WG_THREAD_PORT=5190, DEFAULT_STREAMING=1,FROZEN=1,LOADING_TIMES=1,
+LOADING_FRAMES=1,LOADING_CAPTURE=1 (WG_THREAD_ prefix), WG_FRAME_SCHEDULER=1.
+Alternate WG_THREAD_GROUND_CACHE_PREPARATION=0/1/0/1; zero currently means absent
+URL opt-in. No farValidatedBindings or per-GL instrumentation in these runs.
+
+| Run | Ready | RAF P95 | RAF P99 | RAF max |
+|---|---:|---:|---:|---:|
+| A1 |33.775s|66.515ms|150.320ms|948.205ms|
+| B1 |31.974s|66.335ms|116.635ms|415.815ms|
+| A2 |32.234s|66.510ms|132.950ms|931.190ms|
+| B2 |31.534s|50.040ms|99.815ms|432.365ms|
+
+Two pairs consistently reduce worst presentation intervals/P99, without longer
+loading; this is real loading-frame improvement, not only a function timing.
+Not yet universal acceptance: total load speed difference has variability and
+only two pairs, P95 unchanged in first pair, residual400+ms peaks remain.
+Recipe preparation itself is65.30/73.97ms atomic GPU-facing work, still too
+large for a smooth frame and requires further preparation. GPU time not measured.
+
+All25chunks finish, zero scheduler pending. Fixed-view visual RGB MAD
+.001483/.000491 out of255, fraction pixels delta>8 .0000304/.00000651. First pair
+visually inspected, both pairs numerically compared. Ground/ferns/shadows retain
+approved appearance. No claim of all-camera/night/all-biome equivalence.
+Six targeted tests pass including first publication exposing same shader key
+as subsequent chunks with distinct texture owners, budget reserve, invalidations
+and owner events. PR159 rechecked OPEN/draft, base main unchanged.

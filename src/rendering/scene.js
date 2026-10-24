@@ -515,6 +515,8 @@ export class WorldScene {
       // Resident clipped/alpha props can be outside the opening view or on
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
+      // Prepare the first fixed512 recipe before world compilation, not on first draw.
+      if(new URLSearchParams(globalThis.location?.search??'').get('groundCachePreparation')==='1')await phase('warm-ground-cache-recipe',()=>this.prepareFrameResources());
       await phase('warm-compile-world',()=>compile(this.scene,this.camera,this.scene));if(this.disposed)return;
       if(this.streamingOptions.warmObstruction){
         this.obstructionWarmup?.dispose();this.obstructionWarmup=this.assetGroups.prepareSmoothWarmup(this.chunks);
