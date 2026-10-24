@@ -1,0 +1,61 @@
+{
+  "scope": "Initial loading only, frozen populated Manglares. RAF intervals are presentation cadence, not GPU or main-thread blocking time. Failed loads cannot satisfy throughput acceptance. Same host, serial fresh Chrome, media 720p; compare each report URL and texturePilot field for its variant.",
+  "runs": [
+    {
+      "run": "a1",
+      "status": "completed",
+      "readyMs": 38113.77999997139,
+      "presentationIntervalsMs": {
+        "p50": 16.659999999999854,
+        "p95": 50.14500000000044,
+        "p99": 133.09000000000378,
+        "maximum": 532.02
+      },
+      "schedulerCoordinationMs": 39.52499830722809,
+      "texturePilot": null,
+      "chunks": 25
+    },
+    {
+      "run": "b1",
+      "status": "completed",
+      "readyMs": 34788.31999993324,
+      "presentationIntervalsMs": {
+        "p50": 16.650000000001455,
+        "p95": 49.91999999999962,
+        "p99": 116.0,
+        "maximum": 432.4000000000001
+      },
+      "schedulerCoordinationMs": 42.60000216960907,
+      "texturePilot": null,
+      "chunks": 25
+    },
+    {
+      "run": "a2",
+      "status": "completed",
+      "readyMs": 37469.955000042915,
+      "presentationIntervalsMs": {
+        "p50": 16.670000000000073,
+        "p95": 66.50499999999738,
+        "p99": 132.78499999999985,
+        "maximum": 582.0349999999999
+      },
+      "schedulerCoordinationMs": 39.43500113487244,
+      "texturePilot": null,
+      "chunks": 25
+    },
+    {
+      "run": "b2",
+      "status": "completed",
+      "readyMs": 36133.97500002384,
+      "presentationIntervalsMs": {
+        "p50": 16.665000000000873,
+        "p95": 66.41500000000087,
+        "p99": 133.0,
+        "maximum": 448.8900000000003
+      },
+      "schedulerCoordinationMs": 44.715001940727234,
+      "texturePilot": null,
+      "chunks": 25
+    }
+  ]
+}

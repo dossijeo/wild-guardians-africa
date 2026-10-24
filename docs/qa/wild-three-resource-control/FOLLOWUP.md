@@ -166,3 +166,17 @@ Largest traced calls are118.050ms getProgramInfoLog in shadow-map rendering and
 101.780ms texSubImage2D in initializeLoadingTextures. This is correction of our
 nested-admission regression, not a demonstrated throughput optimization over
 the earlier stable renderer. Corrected uninstrumented ABAB is the next gate.
+
+## Corrected readiness waves: promising, not yet promoted
+
+After removing nested depth admission, A1/B1/A2/B2 complete in
+38.114/34.788/37.470/36.134s. B saves3.325s and1.336s in the respective pairs.
+Maximum RAF intervals532.02/432.40/582.03/448.89ms; P99
+133.09/116.00/132.78/133.00ms. All runs complete25chunks, zero pending jobs and
+zero emergency admissions. No multi-second depth stall recurs.
+These two pairs are favorable but insufficient to isolate causal throughput:
+far-assets preparation also varies materially although that subsystem is unchanged.
+Keep concurrency4 opt-in pending additional interleaved evidence and lifecycle
+validation; do not extrapolate to six biomes or active streaming.
+82 tests pass, including cancellation while two readiness waiters are outstanding:
+all waiters reject and no later batch submits. Captures and raw reports retained.

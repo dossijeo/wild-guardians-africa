@@ -164,3 +164,12 @@ test('failed loading wave drains already-submitted readiness and never submits a
 test('parallel initial compilation rejects unbounded waves and missing global admission',async()=>{
  for(const concurrency of [0,9,1.5,2])await assert.rejects(compileLoadingProgramsBatched({}, {}, {}, {}, {concurrency}),/global admission/);
 });
+
+test('cancelling an initial readiness wave releases every waiter without submitting later objects',async()=>{
+ const owner=new AbortController(),objects=Array.from({length:5},()=>({isMesh:true,material:{}}));
+ const scene={traverse:fn=>objects.forEach(fn)},gl={isContextLost:()=>false};let submissions=0;
+ const renderer={getContext:()=>gl,compile(view){submissions++;const materials=new Set();view.traverse(o=>materials.add(o.material));return materials;},properties:{get:()=>({currentProgram:{isReady:()=>false}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},scene,{scheduler:{submit:async iterator=>iterator.next().value},signal:owner.signal,batchSize:1,concurrency:2});
+ await Promise.resolve();assert.equal(submissions,2);owner.abort();
+ await assert.rejects(pending,/cancelled|abort/i);assert.equal(submissions,2);
+});
