@@ -690,3 +690,28 @@ Both first-pair real screenshots were visually inspected: water bank, ground cac
 `active-prepared-shore-night` also passed on low quality: 360 frames with active simulation, 15 incorporated chunks, eight prepared bank arrays (96900 copied bytes), zero paused frames and continued actor readiness. The night fixture fixes initial time and overrides raid camera motion for the authored route; this is a functional check, not a matched A/B benchmark or dusk-transition test. The real screenshot was inspected. Current native code additionally retains the water-only mode with no bank output.
 
 The candidate runtime was rebuilt and repackaged for web; `prepared-shore-package-runtime.json` passes six biomes under nested and cross-origin iframe deployment locally. Windows/Tauri was validated for the preceding adopted water-map checkpoint, not rebuilt for this optional bank candidate. That and additional matched low-quality measurements remain adoption gates.
+
+## Bank candidate: low-quality follow-up
+
+`matrix-mangrove-prepared-shore-low` repeats A/B/A/B at 720p on the same Intel UHD. Installation means: A 12.22/11.71 ms, B 10.34/9.94 ms. Completed itinerary: A 4340.13/4224.64 ms, B 4140.49/4090.58 ms (4.6%/3.2% shorter). Mean frames: A 24.52/24.85 ms, B 24.79/24.49 ms. Maxima: A 83.26/116.39 ms, B 99.71/83.04 ms. Both pairs have roughly 50 ms p95. Geometry/work counts match and both first-pair screenshots were inspected; RGB MAE 0.000315/0.000175 on 0–255 scale. Thus the bank candidate consistently reduces installation CPU and completion time across four medium/low pairs, but does not independently eliminate frame stalls.
+
+The recorded `getProgramInfoLog` calls still block for 20–70 ms in both variants, including recreated ground, mud and partial-obstruction programs. These timings include driver synchronization/compilation and are not shader execution GPU time. Next controlled comparison combines prepared bank attributes with the existing bounded program retention, obstruction warmup and batch eviction, **against the currently adopted water-map baseline**, not the obsolete all-synchronous baseline. This is a combined integration comparison, not attribution of its gain to any single component.
+
+## Combined prepared-bank/reuse result on the current baseline
+
+`prepared-stream-reuse` holds adopted worker water maps on in both variants. B additionally uses worker bank attributes, batch eviction, bounded warmed-program retention and obstruction warmup; A uses the present default. No scene simplification. Four runs each at 720p low and medium on Intel UHD, with matched completed scene inventories, identical camera/fixture and GPU timers without disjoint results.
+
+| Quality | Pair | A/B mean frame ms | A/B p95 ms | A/B maximum ms | A/B completed itinerary ms |
+|---|---|---|---|---|---|
+| Low | 1 | 24.27 / 23.32 | 49.98 / 33.46 | 83.18 / 83.03 | 4223.63 / 3708.06 |
+| Low | 2 | 27.29 / 23.40 | 49.98 / 33.51 | 133.03 / 66.50 | 4639.42 / 3907.86 |
+| Medium | 1 | 28.80 / 27.25 | 66.50 / 49.88 | 116.58 / 99.79 | 4406.60 / 3924.37 |
+| Medium | 2 | 28.22 / 27.67 | 66.43 / 49.95 | 116.06 / 83.19 | 4290.17 / 4123.54 |
+
+The combined candidate improves completion by 12.2%/15.8% low and 10.9%/3.9% medium, with lower p95 in all four pairs. Slow GL calls (>20 ms) fall from 5/5 and 7/6 to zero in each B run. This is evidence for the combined configuration; do not assign all gains to pthread bank work. The initial retained snapshot contains 74 low or 81 medium programs, below the cap of 96. Driver program memory cannot be measured reliably through WebGL; 16 MiB WASM capacity is not GPU memory. Warmup moves some compilation into loading, whose full overhead is not included in these streaming windows.
+
+Both first-pair images for each quality were inspected. Full-frame RGB MAE stays below 0.002/255; animated/UI pixels prevent universal exact screenshot equality. Geometry, material composition, fixed512 cache, fern density and dynamic lighting remain unchanged.
+
+`active-prepared-reuse-night` passes the combined configuration with active night simulation and continuous camera, 15 publications, batch removals, eight prepared bank arrays, no paused frames, and actors ready throughout the measured frames. This remains a finite functional test with a QA raid-camera override, not a full campaign or matched night performance claim. Thirteen targeted retention/obstruction/stream tests passed. The Windows release was rebuilt at 7d2bab914, and `prepared-shore-tauri-pthreads.json` passes the packaged shared-memory runtime for six biomes; it does not exercise the optional rendered bank configuration in Tauri.
+
+Decision: the combined configuration is a supported candidate for default adoption in Mangroves. Keep the current defaults until the adoption change itself is checked (including actual default selection, context/quality lifecycle and loading overhead). Do not generalize these performance gains to other biomes or mark the overarching pthread/streaming objective complete. The dominant remaining recorded stalls are shader synchronization and graphics/far-scene installation, not synchronous procedural chunk generation.

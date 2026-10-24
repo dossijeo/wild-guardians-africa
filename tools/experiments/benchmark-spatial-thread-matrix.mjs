@@ -7,7 +7,7 @@ import {mkdir,open,readFile,writeFile} from 'node:fs/promises';
 const biomes=(process.env.WG_MATRIX_BIOMES??'sabana,desierto,gran-rio,volcanes,manglares,gran-canon').split(',');
 const quality=process.env.WG_THREAD_QUALITY??'media';
 const compare=process.env.WG_MATRIX_COMPARE??'threads';
-assert(['threads','program-retention','chunk-eviction','horizon-bed','horizon-native-grid','obstruction-warmup','stream-reuse','water-bed-direct','water-bed-worker','water-shore-worker'].includes(compare));
+assert(['threads','program-retention','chunk-eviction','horizon-bed','horizon-native-grid','obstruction-warmup','stream-reuse','water-bed-direct','water-bed-worker','water-shore-worker','prepared-stream-reuse'].includes(compare));
 const root=process.env.WG_MATRIX_OUT??`docs/qa/wild-engine-pthreads/matrix-${quality}`;
 await mkdir(root,{recursive:true});
 const commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
@@ -23,7 +23,8 @@ for(const biome of biomes){
    WG_THREAD_LOCK_RAID_CAMERA:'0',WG_THREAD_FROZEN:'1',WG_THREAD_BENCH:'1',WG_THREAD_COMPLETE_LEGS:'1',WG_THREAD_FRAMES:'2',WG_THREAD_DISTANCE:'240',WG_THREAD_GPU:'1',
    WG_HORIZON_BED:compare==='horizon-native-grid'&&variant==='1'?'native-grid':compare==='horizon-bed'&&variant==='1'?'staged':'sync',WG_CHUNK_EVICTION:compare==='water-bed-worker'||compare==='water-bed-direct'||compare==='stream-reuse'&&variant==='1'||compare==='horizon-native-grid'||compare==='horizon-bed'||compare==='chunk-eviction'&&variant==='1'?'batch':'single',WG_THREAD_ACTIVE:'0',WG_THREAD_FAR_CHECK:'0',WG_THREAD_PIN_PROGRAMS:'0',WG_THREAD_WATER_BED_WORKER:compare==='water-bed-worker'?variant:'0',WG_THREAD_WATER_BED_DIRECT:compare==='water-bed-direct'?variant:'0',WG_THREAD_WARM_OBSTRUCTION:compare==='water-bed-worker'||compare==='water-bed-direct'?'1':compare==='obstruction-warmup'||compare==='stream-reuse'?variant:'0',WG_THREAD_RETAIN_APP:compare==='water-bed-worker'||compare==='water-bed-direct'||compare==='obstruction-warmup'?'1':compare==='program-retention'||compare==='stream-reuse'?variant:'0',WG_THREAD_ZIGZAG:'0',WG_THREAD_EDIT:'0',WG_THREAD_CONTEXT:'0',WG_THREAD_EXIT:'0',
    WG_THREAD_NO_ISOLATION:'0',WG_THREAD_BOOT_FAILURE:'0',WG_THREAD_GL_DETAIL:compare!=='threads'?'1':'0',WG_THREAD_CPU_PROFILE:'0',WG_THREAD_DEPTH_WARM:'0',WG_THREAD_DETAIL:compare==='water-bed-worker'?'1':'0',WG_CHUNK_INSTALL:'sync',WG_THREAD_REPORT:report};
-  env.WG_THREAD_WATER_SHORE_WORKER=compare==='water-shore-worker'?variant:'0';
+  env.WG_THREAD_WATER_SHORE_WORKER=compare==='water-shore-worker'||compare==='prepared-stream-reuse'?variant:'0';
+  if(compare==='prepared-stream-reuse'){env.WG_THREAD_WATER_BED_WORKER='1';env.WG_THREAD_RETAIN_APP=variant;env.WG_THREAD_WARM_OBSTRUCTION=variant;env.WG_CHUNK_EVICTION=variant==='1'?'batch':'single';env.WG_THREAD_DETAIL='1';}
   if(compare==='water-shore-worker'){env.WG_THREAD_WATER_BED_WORKER='1';env.WG_THREAD_DETAIL='1';}
   delete env.WG_THREAD_FIXTURE_FILE;delete env.WG_THREAD_SAVE_FIXTURE;
   // Refuse reused paths before spawning a browser (stream open is asynchronous).
@@ -37,7 +38,7 @@ for(const biome of biomes){
   const raw=JSON.parse(await readFile(report,'utf8')),s=raw.result.streaming;
   assert.equal(raw.result.runtime.backend,threads==='1'?'pthreads':'standalone');
   assert.equal(s.farSettled,true);assert(s.farStatus.every(a=>a.errors.length===0));
-  if(compare==='water-shore-worker'){assert(s.preparedWater.count>0);if(variant==='1')assert(s.preparedShore.count>0);else assert.equal(s.preparedShore.count,0);}
+  if(compare==='water-shore-worker'||compare==='prepared-stream-reuse'){assert(s.preparedWater.count>0);if(variant==='1')assert(s.preparedShore.count>0);else assert.equal(s.preparedShore.count,0);}
   if(compare==='water-bed-worker'){if(variant==='1')assert(s.preparedWater.count>0);else assert.equal(s.preparedWater.count,0);}
   assert.equal(s.created,50);assert.equal(s.summary.cancel.count,0);
   assert.equal(s.final.loadedChunks,25);assert.equal(s.elapsed,s.initialElapsed);
