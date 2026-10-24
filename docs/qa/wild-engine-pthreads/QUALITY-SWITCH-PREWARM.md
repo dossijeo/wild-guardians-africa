@@ -37,3 +37,22 @@ node tools/experiments/check-spatial-thread-game.mjs
 ```
 
 Raw reports: quality-switch-attribution.json and quality-switch-prewarm-probe.json. Production defaults and art are unchanged by this diagnostic checkpoint.
+
+## Follow-up: ABAB and settled captures
+
+The first sequence takes optional screenshots outside each measured transition. A1/B1/A2/B2 first-baja results:
+
+| Run | Transition wall ms | Largest RAF interval ms |
+|---|---:|---:|
+| A1 | 6786.60 | 6380.95 |
+| B1 | 4906.50 | 123.43 |
+| A2 | 6855.03 | 6424.79 |
+| B2 | 4754.12 | 128.74 |
+
+All four runs have unchanged authoritative snapshots and no unexpected browser errors. This supports responsiveness, not sustained rendered FPS: B holds the previous canvas during preparation.
+
+Immediate captures exposed a transient far-tree difference and 73 vs 72 draw calls. A separate A/B validation now waits for all near/horizon/far preparation plus 120 consecutive stable RAFs, outside measured intervals. Both settled runs show draw calls 80/72/80/72 and every far adapter idle without errors. Full-frame RGB MAE on the 0–255 scale is 0.000126, 0.001700, 0.005391 and 0.005580 across the four captures. Pixels differing by >10 in any channel stay below 0.022%. The first low-quality pair was visually inspected: ground, fern coverage, buildings and distant trees match. This establishes this paused daytime fixture only, not moving-camera, night or active-world equivalence.
+
+Reports: quality-prewarm-{a1,b1,a2,b2}.json and quality-settled-{a,b}.json. Settled screenshots: quality-settled-{a,b}-{1-media,2-baja,3-media,4-baja}.png. Enable WG_THREAD_QUALITY_CAPTURE=1 to reproduce the settled captures; settling is deliberately excluded from transition timers. The earlier four timing reports used immediate captures; the later settled pair is visual validation, not added ABAB timing repetitions.
+
+Decision remains QA-only pending active-scene ownership and cancellation validation. No production rendering or material changes in this follow-up.

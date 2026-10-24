@@ -75,6 +75,7 @@ try{
   await writeFile(process.env.WG_THREAD_SAVE_FIXTURE,JSON.stringify({timing:{navigationContext:{state:text}},concurrentEditExpectations:result.concurrentEdits},null,2)+'\n');
   result.savedFixture=process.env.WG_THREAD_SAVE_FIXTURE;
  }
+ if(process.env.WG_THREAD_QUALITY_CAPTURE==='1')await page.exposeFunction('qaCaptureQuality',async(index,quality)=>{await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,`-${index}-${quality}.png`)});});
  if(process.env.WG_THREAD_QUALITY_CYCLE==='1')result.qualityCycle=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-game-quality-case.js')).verifyGameQualityCycle(qaThreadWorld));
  if(process.env.WG_THREAD_EXIT==='1')result.exit=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-game-exit-case.js')).verifyGameExit(qaThreadWorld));
  if(process.env.WG_THREAD_CONTEXT==='1')await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/, '-before.png')});

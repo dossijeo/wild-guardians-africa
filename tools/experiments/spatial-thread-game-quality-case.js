@@ -34,6 +34,13 @@ export async function verifyGameQualityCycle(w){
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext();if(gl.getError()!==gl.NO_ERROR)throw Error('GL error after quality change');
   rows.push({quality,programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,transitionMs:performance.now()-begin,frameTimes});
+  if(globalThis.qaCaptureQuality){
+   // Screenshot settling is deliberately outside measured transition timings.
+   const deadline=performance.now()+30000;let stable=0;
+   while(stable<120){if(performance.now()>deadline)throw Error('Quality capture settling timeout');await new Promise(requestAnimationFrame);const stream=w.chunkStream.summary();const pending=stream.busy||stream.queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||w.farVegetation?.adapters.some(a=>a.preparationPending());stable=pending?0:stable+1;}
+   rows.at(-1).capture={stableFrames:stable,drawCalls:w.renderer.info.render.calls,far:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),errors:a.stats.errors}))};
+   await globalThis.qaCaptureQuality(rows.length,quality);
+  }
   if(!rows.at(-1).drawCalls)throw Error('Missing draw after quality change');
  }
  if(enabled){const previous=w.programLease;w.qualitySetting('media');await new Promise(requestAnimationFrame);w.qualitySetting('baja');await w.streamingProgramRefresh;if(!w.programLease?.stats.retained||w.quality!=='baja')throw Error('Superseded quality recovery failed');if(previous.stats.released!==previous.stats.retained)throw Error('Rapid-change lease leaked');}
