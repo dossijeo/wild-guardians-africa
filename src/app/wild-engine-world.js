@@ -46,6 +46,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
     session=createSpatialGameSession(module,state,{
     ...(threaded?{core:threaded.core}:{}),
     ...(globalFrameSchedulerEnabled()||new URLSearchParams(location.search).get('chunkInstall')==='staged'?{
+      pipeline:globalFrameSchedulerEnabled(),
       prepareData:(data,current)=>prepareTerrainChunk(world,data,current,{scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,signal}),
       discardData:data=>discardPreparedTerrain(world,data)
     }:{}),

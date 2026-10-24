@@ -12,9 +12,9 @@ test('staged preparation yields but only transfers a complete group',async()=>{
  assert.equal(yields,3);assert.equal(data.preparedGroup,f.group);assert.equal(f.state.closed,0);
  discardPreparedTerrain(f.world,data);discardPreparedTerrain(f.world,data);assert.equal(f.state.disposed,1);
 });
-for(const cause of ['obsolete','quality','teardown'])test(`staged ${cause} closes private work before another step`,async()=>{
+for(const cause of ['obsolete','quality','teardown','context','quality-roundtrip'])test(`staged ${cause} closes private work before another step`,async()=>{
  const f=fixture();let current=true;
- const data=await prepareTerrainChunk(f.world,{cx:0,cz:0},()=>current,{budgetMs:0,yieldWork:async()=>{if(cause==='obsolete')current=false;if(cause==='quality')f.world.quality='baja';if(cause==='teardown')f.world.disposed=true;}});
+ const data=await prepareTerrainChunk(f.world,{cx:0,cz:0},()=>current,{budgetMs:0,yieldWork:async()=>{if(cause==='context')f.world.glResourceEpoch={stats:{epoch:1}};if(cause==='quality-roundtrip')f.world.streamingProgramRevision=1;if(cause==='obsolete')current=false;if(cause==='quality')f.world.quality='baja';if(cause==='teardown')f.world.disposed=true;}});
  assert.equal(data,null);assert.equal(f.state.closed,1);assert.equal(f.state.steps,1);
 });
 test('scheduler failure closes the pending iterator',async()=>{

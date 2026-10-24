@@ -1,21 +1,26 @@
+const phaseCosts=new WeakMap();
 // Native generation is already complete. Only GPU-facing object construction
 // is scheduled here; no incomplete group is attached to the scene.
 export async function prepareTerrainChunk(world,data,current,{scheduler=null,signal,budgetMs=4,yieldWork=()=>new Promise(r=>setTimeout(r,0)),now=()=>performance.now()}={}){
   const steps=world.prepareTerrainSteps(data.cx,data.cz,data);
-  const quality=world.quality;
+  const quality=world.quality,epoch=world.glResourceEpoch?.stats.epoch,revision=world.streamingProgramRevision;
+  const valid=()=>current()&&!world.disposed&&world.quality===quality&&world.glResourceEpoch?.stats.epoch===epoch&&world.streamingProgramRevision===revision;
   let completed=false;const began=now();let cpuMs=0;
   try{
     if(scheduler){
+      let phase='setup';
+      if(!phaseCosts.has(world))phaseCosts.set(world,new Map());
+      const costs=phaseCosts.get(world),costKey=()=>quality+':'+phase;
       const measured={
-        next(){const start=now();const step=steps.next();const ms=now()-start;cpuMs+=ms;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,ms,done:step.done});return step;},
+        next(){const start=now();const step=steps.next();const ms=now()-start;cpuMs+=ms;costs.set(costKey(),Math.max(ms,(costs.get(costKey())??0)*.9));phase=step.value;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,ms,done:step.done});return step;},
         return(){return steps.return();}
       };
-      const result=await scheduler.submit(measured,{valid:()=>current()&&!world.disposed&&world.quality===quality,signal,priority:10,deadline:now()+250});
+      const result=await scheduler.submit(measured,{valid,signal,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now()+250});
       if(result){completed=true;world.onTerrainPreparationDone?.({cx:data.cx,cz:data.cz,cpuMs,elapsedMs:now()-began});return {...data,preparedGroup:result};}
       return null;
     }
     let started=now();
-    while(current()&&!world.disposed&&world.quality===quality){
+    while(valid()){
       const step=steps.next();
       const sliceMs=now()-started;
       if(step.done||sliceMs>=budgetMs){

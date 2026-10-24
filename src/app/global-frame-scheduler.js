@@ -6,13 +6,13 @@ export class GlobalFrameScheduler {
     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
     this.budget=0;this.cooldown=0;this.lastPolicy=-Infinity;
     this.policy={median:0,p95:0,p99:0,cpu95:0,jitter:0};
-    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0};
+    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0};
   }
-  submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,signal}={}) {
+  submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal}={}) {
     if(this.jobs.has(key))this.cancel(key);
     if(this.jobs.size>=this.maxPending)return Promise.reject(new Error('Frame scheduler backpressure'));
     return new Promise((resolve,reject)=>{
-      const job={iterator,key,valid,priority,deadline,cost:Math.max(.01,estimateMs),created:this.now(),order:this.sequence++,resolve,reject,signal};
+      const job={iterator,key,valid,priority,deadline,estimate,cost:Math.max(.01,estimateMs),created:this.now(),order:this.sequence++,resolve,reject,signal};
       job.abort=()=>this.cancel(key);this.jobs.set(key,job);
       signal?.addEventListener('abort',job.abort,{once:true});
       if(signal?.aborted)this.cancel(key);
@@ -32,7 +32,7 @@ export class GlobalFrameScheduler {
     this.lastTimestamp=frame.timestamp;
     if(interval>0&&interval<2000){this.samples.push({time:frame.timestamp,interval,cpu});}
     while(this.samples.length&&this.samples[0].time<frame.timestamp-2000)this.samples.shift();
-    if(interval>this.targetMs*1.5||cpu>this.targetMs*.85)this.cooldown=3;
+    if(interval>Math.max(this.targetMs*1.5,this.policy.p95*1.2)||cpu>this.targetMs*.85)this.cooldown=3;
     if(began-this.lastPolicy>=100){
       this.lastPolicy=began;
       const times=this.samples.map(s=>s.interval).sort((a,b)=>a-b),costs=this.samples.map(s=>s.cpu).sort((a,b)=>a-b);
@@ -42,7 +42,11 @@ export class GlobalFrameScheduler {
       // Slow presentation alone is pressure, not proof of CPU/GPU saturation.
       // Never expand the interval to count missed refreshes as available time.
       const period=Math.min(this.targetMs,median||this.targetMs);
-      const desired=this.samples.length<3?0:Math.max(0,period-cpu95-Math.max(period*.12,jitter,p99-p95));
+      // Presentation jitter can be GPU/OS pacing. Reduce ambition, but do not
+      // subtract an entire missed refresh from measured CPU capacity.
+      const cpuVariation=cpu95-q(costs,.5);
+      const pressure=Math.max(.25,Math.min(1,period/(p99||period)));
+      const desired=this.samples.length<3?0:Math.max(0,period-cpu95-Math.max(period*.12,cpuVariation))*pressure;
       this.budget=desired<this.budget?desired:this.budget+(desired-this.budget)*.2;
     }
     const period=Math.min(this.targetMs,this.policy.median||this.targetMs);
@@ -51,16 +55,24 @@ export class GlobalFrameScheduler {
     if(this.cooldown>0)this.cooldown--;
     let work=0;
     while(this.jobs.size){
-      const time=this.now();let selected=null,best=-Infinity;
+      const time=this.now();let selected=null,best=-Infinity,borrowed=false;
       for(const job of this.jobs.values()){
         let valid;try{valid=job.valid();}catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
         if(!valid){this.cancel(job.key);continue;}
         const age=time-job.created,urgent=job.deadline<=time+period;
         // Deadlines may borrow measured headroom, never unmeasured idle time.
         const allowed=urgent?remaining:base;
-        if(time-began+job.cost>allowed)continue;
+        const cost=job.estimate?.()??job.cost;
+        if(!Number.isFinite(cost)||cost<0)continue;
+        const fits=time-began+cost<=allowed;
+        // Explicit deadline debt, NOT idle time: permit one measured small unit
+        // to miss the next refresh rather than starve a required chunk forever.
+        // Bound both total synchronous CPU and elapsed presentation latency.
+        const loan=!fits&&time>=job.deadline&&work===0&&cost<=period*.5&&
+          cpu<period*.85&&cpu+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
+        if(!fits&&!loan)continue;
         const score=job.priority+age/100+(urgent?1000:0)-job.order*.000001;
-        if(score>best){selected=job;best=score;}
+        if(score>best){selected=job;best=score;borrowed=loan;}
       }
       if(!selected)break;
       const start=this.now();
@@ -70,9 +82,9 @@ export class GlobalFrameScheduler {
         if(result.done){this.remove(selected);this.stats.completed++;selected.resolve(result.value);}
         else selected.order=this.sequence++;
       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
-      const duration=this.now()-start;work+=duration;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
+      const duration=this.now()-start;work+=duration;if(borrowed)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
-      if(this.now()-began>=remaining){this.stats.overruns++;break;}
+      if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
     }
     this.stats.workMs+=work;this.stats.coordinationMs+=Math.max(0,this.now()-began-work);
   }

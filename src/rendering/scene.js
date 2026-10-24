@@ -352,13 +352,17 @@ export class WorldScene {
       group.userData.spatialAuthority='spatial-wasm';
       group.userData.spatialTerrainRevision=payload.terrainRevision;
     }
+    yield 'ground';
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
-    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);yield 'ground';if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-geometry';if(this.biomeGround.mangroveSubstrate)bindMangroveMudEdges(this,group);yield 'mud-edges';}}
+    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);if(this.mudPatches){yield 'mud-geometry';const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-edges';if(this.biomeGround.mangroveSubstrate)bindMangroveMudEdges(this,group);}}
+    yield 'water-geometry';
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
-    if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial,payload?.waterShore);yield 'bank';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);yield 'water-edges';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
+    if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);yield 'bank';prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial,payload?.waterShore);yield 'water-edges';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);yield 'water-core';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
+    yield 'prop-filter';
     const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
-    for(let i=0;i<20;i++){this.buildPropSlot(group,i,group.userData.contactInstances[i]);yield 'prop-slot';}
+    // Measured prop slots are small; group four to avoid a frame per leaf batch.
+    for(let i=0;i<20;i+=4){yield 'prop-slots';for(let j=i;j<Math.min(i+4,20);j++)this.buildPropSlot(group,j,group.userData.contactInstances[j]);}
     completed=true;return group;
     }finally{if(!completed)this.disposePreparedTerrain(group);}
   }

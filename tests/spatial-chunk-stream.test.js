@@ -259,6 +259,7 @@ test('production terrain installer accepts the same C++ payload used for navigat
   world.disposePreparedTerrain=function(group){group.traverse(object=>{if(object.isMesh)object.geometry.addEventListener('dispose',()=>abortedResources++);});disposePrepared.call(this,group);};
   const aborted=world.prepareTerrainSteps(0,0,data);
   assert.equal(aborted.next().value,'ground');
+  assert.equal(aborted.next().value,'water-geometry','Phase labels announce work before execution');
   assert.equal(world.terrainMeshes.length,0,'Private preparation must not register a visible ground mesh');
   aborted.return();assert.equal(abortedResources,1,'Abandoning preparation must release its ground geometry');
   world.disposePreparedTerrain=disposePrepared;

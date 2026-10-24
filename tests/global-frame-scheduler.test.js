@@ -25,3 +25,18 @@ test('mandatory CPU has precedence even over overdue jobs',()=>{
 test('statistics expire after two seconds and do not label intervals GPU time',()=>{
  const r=rig();r.warm();r.frame(15);assert.ok(r.scheduler.snapshot().p99>0);for(let i=0;i<140;i++)r.frame();assert.ok(r.scheduler.samples.length<=121);assert.equal(r.scheduler.snapshot().cpu95,4);
 });
+
+test('slow presentation intervals alone do not permanently starve cheap work',async()=>{
+ let time=0;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const frame=()=>{time+=33.33;scheduler.beginFrame(time);time+=4;scheduler.endFrame();};
+ for(let i=0;i<60;i++)frame();let ran=false;
+ const result=scheduler.submit((function*(){ran=true;return 1;})());frame();assert.equal(ran,true);assert.equal(await result,1);
+});
+
+test('an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins',async()=>{
+ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time});let units=0;
+ const job=scheduler.submit((function*(){units++;time+=5;yield;units++;return 2;})(),{deadline:0,estimateMs:5});
+ scheduler.beginFrame(time);time+=12;scheduler.endFrame();assert.equal(units,1);assert.equal(scheduler.snapshot().deadlineLoans,1);
+ time+=30;scheduler.beginFrame(time);time+=18;scheduler.endFrame();assert.equal(units,1);
+ time+=30;scheduler.beginFrame(time);time+=4;scheduler.endFrame();assert.equal(await job,2);
+});

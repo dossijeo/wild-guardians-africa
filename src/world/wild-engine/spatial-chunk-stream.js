@@ -3,7 +3,7 @@ import {NativeChunkStream} from '../../rendering/chunk-stream.js';
 // Shared renderer/navigation stream. Chunk work is
 // scheduled by NativeChunkStream, while one C++ world supplies both the
 // renderer payload and subsequent synchronous route/surface queries.
-export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel,prepareData=null,discardData=()=>{},preparationRevision=()=>0}){
+export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel,prepareData=null,pipeline=false,discardData=()=>{},preparationRevision=()=>0}){
   if(!core?.currentChunk())throw Error('Generate the spatial world before streaming chunks');
   const build=(_config,_profile,cx,cz)=>{
     // A resident chunk with zero props still returns 0; only a negative
@@ -62,7 +62,30 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
     }
     return null;
   }:null;
-  const stream=new NativeChunkStream({}, {},{loaded,onData,onError,build,buildAsync,
+  // Data buffers are copied out of WASM before the next native request.
+  // Only graphical staging overlaps generation; native publication stays serial.
+  const prepareAsync=pipeline&&nativeAsync&&prepareData?async(initial,current)=>{
+    let data=initial;
+    while(current()){
+      const revision=preparationRevision();
+      if(data.preparationRevisionValue!==revision){
+        if(core.selectChunk(data.cx,data.cz)<0)return null;
+        data=core.chunkPayload();
+      }
+      const prepared=await prepareData(data,()=>current()&&preparationRevision()===revision);
+      if(prepared&&current()&&preparationRevision()===revision)return prepared;
+      discardData(prepared);
+      if(!current())return null;
+      if(core.selectChunk(data.cx,data.cz)<0)return null;
+      data={...core.chunkPayload(),preparationRevisionValue:preparationRevision()};
+    }
+    return null;
+  }:null;
+  const generation=prepareAsync?async(request,current)=>{
+    const data=await nativeAsync(request,current);
+    return data?{...data,preparationRevisionValue:preparationRevision()}:null;
+  }:buildAsync;
+  const stream=new NativeChunkStream({}, {},{loaded,onData,onError,build,buildAsync:generation,prepareAsync,
     discardData:data=>{
       discardData(data);
       if(data&&!stream.dead){const key=data.cx+','+data.cz;if(!loaded().has(key)&&!stream.desired.has(key))core.removeChunk(data.cx,data.cz);}
