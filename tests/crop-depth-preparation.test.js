@@ -26,3 +26,11 @@ test('resource disposal during a yield cancels later recipes and releases listen
  await assert.rejects(prepareCropDepthPrograms(renderer,{traverse:fn=>fn(object)},null,{prepareDepth:async()=>{batches++;listeners.get('dispose')();}}),/cancelled/);
  assert.equal(batches,1);assert.equal(listeners.size,0);
 });
+
+test('disposing a borrowed crop resource aborts queued admission without another frame',async()=>{
+ let dispose;const material={customProgramCacheKey:()=> 'bioma-local-bridge-depth-v3',addEventListener:(n,f)=>{dispose=f;},removeEventListener:()=>{dispose=null;}};
+ const object={material,customDepthMaterial:material},gl={isContextLost:()=>false};let signal;
+ const pending=prepareCropDepthPrograms({getContext:()=>gl,info:{programs:[]}},{traverse:fn=>fn(object)},null,{prepareDepth:(_camera,_view,options)=>{signal=options.signal;return new Promise(resolve=>signal.addEventListener('abort',resolve,{once:true}));}});
+ assert.equal(signal.aborted,false);dispose();assert.equal(signal.aborted,true);
+ await assert.rejects(pending,/cancelled/);assert.equal(dispose,null);
+});

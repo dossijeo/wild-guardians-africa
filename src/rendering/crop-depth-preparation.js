@@ -26,11 +26,13 @@ export function withCropShadowRecipe(renderer, world, view, sources, submit) {
 // Uses the existing depth executor and loading RAF, retaining programs until
 // readiness and first-use reflection complete. Never draws or changes geometry.
 export async function prepareCropDepthPrograms(renderer,world,camera,depthPass,{
- signal,cancelled=()=>false,getEpoch=()=>0,onSubmit,nextFrame,now=()=>performance.now()
+ scheduler=null,signal:externalSignal,cancelled=()=>false,getEpoch=()=>0,onSubmit,nextFrame,now=()=>performance.now()
 }={}) {
  const start=now(),epoch=getEpoch(),gl=renderer.getContext();let lost=false,pinFailed=false;
+ const owner=new AbortController(),signal=owner.signal;
  const resources=new Set(),objects=[];
- const invalidate=()=>{lost=true;};
+ const invalidate=()=>{lost=true;owner.abort();};
+ if(externalSignal?.aborted)owner.abort();
  const invalid=()=>signal?.aborted||cancelled()||lost||pinFailed||getEpoch()!==epoch||renderer.getContext()!==gl||gl.isContextLost();
  const check=()=>{if(invalid())throw Error('Crop depth preparation cancelled');if(now()-start>30000)throw Error('Crop depth preparation timed out');};
  check();
@@ -40,6 +42,7 @@ export async function prepareCropDepthPrograms(renderer,world,camera,depthPass,{
  const sources=new WeakMap(objects.map(object=>[object,{map:object.material.map,alphaMap:object.material.alphaMap}]));
  const view={overrideMaterial:world.overrideMaterial,onBeforeRender:world.onBeforeRender,onAfterRender:world.onAfterRender,traverse:fn=>objects.forEach(fn),traverseVisible:fn=>objects.forEach(fn)};
  const scope=createProgramRetentionScope(renderer);
+ externalSignal?.addEventListener('abort',invalidate,{once:true});
  gl.canvas?.addEventListener('webglcontextlost',invalidate);
  for(const object of objects)for(const resource of [object.geometry,object.material,object.customDepthMaterial])if(resource)resources.add(resource);
  for(const resource of resources)resource.addEventListener?.('dispose',invalidate);
@@ -48,12 +51,13 @@ export async function prepareCropDepthPrograms(renderer,world,camera,depthPass,{
    if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;
    onSubmit?.(span);
   }});
-  const options={batchSize:8,signal,cancelled:invalid,nextFrame};
+  const options={scheduler,batchSize:8,signal,cancelled:invalid,nextFrame};
   await depthPass.prepareDepth(camera,view,{...options,compile});check();
   await depthPass.prepareDepth(camera,view,{...options,compile:(scene,cam)=>withCropShadowRecipe(renderer,world,scene,sources,()=>compile(scene,cam))});check();
   const bindings=await initializeProgramBindingsAsync(renderer,{cancelled:invalid,nextFrame:()=>waitGpuFrame({signal,nextFrame,check})});check();
   return {objects:objects.length,ms:now()-start,bindings,retention:scope.stats};
  } finally {
+  externalSignal?.removeEventListener('abort',invalidate);
   gl.canvas?.removeEventListener('webglcontextlost',invalidate);
   for(const resource of resources)resource.removeEventListener?.('dispose',invalidate);
   scope.dispose();
