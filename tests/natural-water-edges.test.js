@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {prepareNaturalWater,naturalWaterEdgesEnabled,balancedCanyonBankEnabled} from '../src/rendering/natural-water-edges.js';
+import {prepareNaturalWaterBed,prepareNaturalWater,naturalWaterEdgesEnabled,balancedCanyonBankEnabled} from '../src/rendering/natural-water-edges.js';
 test('natural shore owns only its texture and disposes it once',()=>{
  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute([-1,0,-1,1,0,-1,0,0,1],3));
  const material=new THREE.MeshStandardMaterial();material.onBeforeCompile=()=>{};
@@ -22,4 +22,14 @@ test('balanced bank is opt-in and exclusive to Canyon',()=>{
  assert.equal(balancedCanyonBankEnabled('gran-canon',q),true);
  for(const biome of ['sabana','gran-rio','manglares','desierto','volcanes'])assert.equal(balancedCanyonBankEnabled(biome,q),false);
  for(const search of ['', '?canyonBank=balanced','?visualLab=global-lighting&canyonBank=balanced','?waterEdges=natural&canyonBank=balanced'])assert.equal(balancedCanyonBankEnabled('gran-canon',search),false);
+});
+
+test('direct wetland mask preserves every packed byte without querying unused shore or level',()=>{
+ const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-24,24,0,-24,24,0,24,-24,0,-24,24,0,24,-24,0,24],3));
+ const mask=(x,z)=>.6+.2*Math.sin(x*.2)*Math.cos(z*.3);let queries=0;
+ const field={wetland:true,wetlandLevel:()=>1.25,waterInfo:(x,z)=>{queries++;return {mask:mask(x,z)};},wetlandMask:mask};
+ const world={state:{biome:'manglares'},nav:{field}};
+ const sample=directWetland=>prepareNaturalWaterBed(world,geometry,2,-3,{yielding:false,directWetland}).next().value;
+ const original=sample(false);assert(queries>9000);queries=0;const direct=sample(true);assert.deepEqual(direct,original);assert.equal(queries,0);
+ delete field.wetlandMask;assert.deepEqual(sample(true),original);assert(queries>0);
 });

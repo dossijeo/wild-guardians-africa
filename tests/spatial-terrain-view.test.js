@@ -24,7 +24,7 @@ for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','can
       assert.equal(info.shore,core.waterShoreAnywhere(x,z));
       assert.equal(field.fluidInside(x,z),info.inside);
       assert(Number.isFinite(field.slope(x,z)));
-      if(biome==='mangrove')assert.equal(info.mask,core.wetlandMaskAnywhere(x,z));
+      if(biome==='mangrove'){assert.equal(info.mask,core.wetlandMaskAnywhere(x,z));assert.equal(field.wetlandMask(x,z),info.mask);}
       else assert.equal(Object.hasOwn(info,'mask'),false);
     }
     assert.equal(field.canyon,biome==='canyons');

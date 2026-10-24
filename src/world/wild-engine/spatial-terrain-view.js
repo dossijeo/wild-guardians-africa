@@ -17,6 +17,7 @@ export function createSpatialTerrainView(core){
     surface,surfaceGrid:(...args)=>core.surfaceGrid?.(...args)??null,fluidInside,waterInfo,riverX:z=>core.riverCenter(z),
     riverEdge:(z,direction)=>core.riverEdge(z,direction),
     wetlandLevel:()=>core.fluidSurfaceLevel(),
+    wetlandMask:(x,z)=>core.wetlandMaskAnywhere(x,z),
     slope:(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
       surface(x,z+.8)-surface(x,z-.8))/1.6,
   };
