@@ -113,3 +113,14 @@ Reproduction: tools/wild-three/run-compile-abab.py --fixture <same saved fixture
 --prefix <new prefix>, against P2 on port5197. Both arms use ordinary texture
 uploads and disable far-image overlap; A uses concurrency1, B concurrency4.
 The default remains concurrency1. No production performance claim yet.
+
+## Initial waves ABAB: no throughput acceptance
+
+A1/B1/A2/B2 completed in35.926/39.308/37.976/36.474s, each25chunks.
+P95 intervals50.10/49.99/66.49/66.31ms; P99 132.88/116.40/133.15/116.63ms.
+Maximum intervals3176.56/3724.55/3442.20/3591.75ms affect both arms.
+The total-load differences reverse between pairs; concurrency4 is not adopted.
+Opening A1/B1 captures were inspected: ground, fern coverage, shadows, buildings
+and distant scenery retain their appearance. This is not full lifecycle proof.
+The common multi-second gap requires separate long-animation-frame attribution;
+no claim that it is GPU execution, driver waiting or caused by concurrency yet.
