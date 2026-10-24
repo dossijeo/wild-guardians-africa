@@ -156,3 +156,13 @@ getProgramParameter7.470ms. Those two calls do not explain the full continuation
 do not label the entire705ms GPU time or shader compilation.
 An identically instrumented original control is running to compare attribution.
 This narrows the cause but does not yet close the post-ready regression gate.
+
+Original-control trace reproduces the same guardian onload continuation:
+868.355ms script duration,915.450ms long-animation-frame,841.795ms blocking.
+Only guardian-context program links after ready, as in the pruned trace.
+This supports a pre-existing guardian initialization cost, not deferred world
+compilation caused by pruning. It does not prove equal tail latency statistically;
+keep raw measurements and do not subtract the guardian from end-to-end timings.
+
+The candidate is now undergoing serial media-profile inventory/capture checks
+for all six biomes, including unchanged Desert. Its source remains opt-in.
