@@ -2,6 +2,17 @@ import * as THREE from 'three';
 import {nativePropBatchVisible} from './prop-transition-residency.js';
 import {createAssetShadow} from './asset-shadows.js';
 
+export function createSmoothObstructionMaterial(base){
+            const material=base.clone(),compile=base.onBeforeCompile,cacheKey=base.customProgramCacheKey.bind(base);
+            material.side=THREE.FrontSide;material.transparent=true;material.depthWrite=false;material.alphaToCoverage=false;material.forceSinglePass=true;
+            material.onBeforeCompile=(shader,renderer)=>{compile.call(base,shader,renderer);
+              shader.fragmentShader=shader.fragmentShader.replace('if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}','if(vNativeVisibility<.002)discard;');
+              shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a*=clamp(vNativeVisibility,0.,1.);\n#include <opaque_fragment>');
+            };
+            material.customProgramCacheKey=()=>cacheKey()+'|native-partial-blend-v1';
+  return material;
+}
+
 const powerCapacity=count=>2**Math.ceil(Math.log2(Math.max(8,count)));
 function addDirtyRange(attribute,start,end){
   // A disabled/cached pass may never upload. Keep pending intervals disjoint,
@@ -59,6 +70,19 @@ export class NativeAssetGroups{
     this.materialEpoch=0;this.materialEpochs=new WeakMap();this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
     this.smoothObstruction=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';this.enabled=true;this.instanceCulling=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
+  // Compile-only representatives borrow immutable geometry. Their materials
+  // stay alive until the loading program snapshot has acquired references.
+  prepareSmoothWarmup(chunks=new Map()){
+    const group=new THREE.Group(),seen=new Set();let disposed=false;
+    const sources=[...this.colors.values()].map(value=>value.mesh);
+    for(const chunk of chunks.values())for(const batch of chunk.userData.lodBatches??[])sources.push(...batch.levels);
+    if(this.smoothObstruction)for(const mesh of sources){
+      if(seen.has(mesh.material))continue;seen.add(mesh.material);
+      const representative=new THREE.InstancedMesh(mesh.geometry,createSmoothObstructionMaterial(mesh.material),1);
+      representative.receiveShadow=true;representative.frustumCulled=false;group.add(representative);
+    }
+    return {group,dispose(){if(disposed)return;disposed=true;for(const mesh of group.children){mesh.material.dispose();mesh.dispose();}group.clear();}};
+  }
   invalidateMaterials(){this.materialEpoch++;}
   retire(cache,key,retainGeometry=false){const g=cache.get(key);for(const fade of g.smoothFades??[]){fade.removeFromParent();fade.geometry.dispose();fade.material.dispose();fade.dispose();}g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color'&&!retainGeometry)g.mesh.geometry.dispose();cache.delete(key);}
   clear(){for(const cache of [this.colors,this.shadows])for(const key of [...cache.keys()])this.retire(cache,key);this.shadowRoot.userData.lodBatches=[];}
@@ -109,13 +133,7 @@ export class NativeAssetGroups{
           if(smoothVisibility<.002)continue;
           g.smoothFades??=[];let fade=g.smoothFades[smoothFadeCount];
           if(!fade){
-            const base=source.material,material=base.clone(),compile=base.onBeforeCompile,cacheKey=base.customProgramCacheKey.bind(base);
-            material.side=THREE.FrontSide;material.transparent=true;material.depthWrite=false;material.alphaToCoverage=false;material.forceSinglePass=true;
-            material.onBeforeCompile=(shader,renderer)=>{compile.call(base,shader,renderer);
-              shader.fragmentShader=shader.fragmentShader.replace('if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}','if(vNativeVisibility<.002)discard;');
-              shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a*=clamp(vNativeVisibility,0.,1.);\n#include <opaque_fragment>');
-            };
-            material.customProgramCacheKey=()=>cacheKey()+'|native-partial-blend-v1';
+            const material=createSmoothObstructionMaterial(source.material);
             fade=new THREE.InstancedMesh(geometryView(source.geometry,1),material,1);fade.instanceMatrix.setUsage(THREE.DynamicDrawUsage);fade.instanceMatrix.onUpload(()=>fade.instanceMatrix.clearUpdateRanges());const a=fade.geometry.attributes.nativeVisibility;a.onUpload(()=>a.clearUpdateRanges());fade.name='native-obstruction-blend';fade.userData.materialRegistryExcluded=true;fade.receiveShadow=true;this.root.add(fade);g.smoothFades.push(fade);
           }
           let fadeStart=Infinity,fadeEnd=0;

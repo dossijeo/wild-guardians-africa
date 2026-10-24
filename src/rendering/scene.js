@@ -499,6 +499,10 @@ export class WorldScene {
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
       await phase('warm-compile-world',()=>compile(this.scene,this.camera,this.scene));if(this.disposed)return;
+      if(new URLSearchParams(globalThis.location?.search??'').get('warmObstruction')==='1'){
+        this.obstructionWarmup?.dispose();this.obstructionWarmup=this.assetGroups.prepareSmoothWarmup(this.chunks);
+        await phase('warm-compile-obstruction',()=>compile(this.obstructionWarmup.group,this.camera,this.scene));if(this.disposed)return;
+      }
       await phase('warm-prepare-depth',()=>this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{signal:this.loading.signal,onPrepare:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing,batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})}));if(this.disposed)return;
       this.programBindings=this.loadingProgress?await phase('warm-program-bindings',()=>initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed})):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
@@ -528,11 +532,12 @@ export class WorldScene {
     this.renderer.shadowMap.needsUpdate=true;
   }
   retainStreamingPrograms(){
-    this.releaseRetainedPrograms();
+    this.programLease?.dispose();this.programLease=null;
     if(this.disposed||new URLSearchParams(globalThis.location?.search??'').get('retainPrograms')!=='1')return;
     this.programLease=retainWarmedPrograms(this.renderer,{limit:96});
+    this.obstructionWarmup?.dispose();this.obstructionWarmup=null;
   }
-  releaseRetainedPrograms(){this.programLease?.dispose();this.programLease=null;}
+  releaseRetainedPrograms(){this.programLease?.dispose();this.programLease=null;this.obstructionWarmup?.dispose();this.obstructionWarmup=null;}
   async warmResidentDepth({nextFrame}={}){
     const cancelled=()=>this.disposed||this.loading.signal.aborted;
     const options={signal:this.loading.signal,cancelled,nextFrame,batchSize:32,onPrepare:this.onLoadingSpan};

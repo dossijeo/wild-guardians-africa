@@ -7,7 +7,7 @@ import {mkdir,open,readFile,writeFile} from 'node:fs/promises';
 const biomes=(process.env.WG_MATRIX_BIOMES??'sabana,desierto,gran-rio,volcanes,manglares,gran-canon').split(',');
 const quality=process.env.WG_THREAD_QUALITY??'media';
 const compare=process.env.WG_MATRIX_COMPARE??'threads';
-assert(['threads','program-retention','chunk-eviction','horizon-bed','horizon-native-grid'].includes(compare));
+assert(['threads','program-retention','chunk-eviction','horizon-bed','horizon-native-grid','obstruction-warmup'].includes(compare));
 const root=process.env.WG_MATRIX_OUT??`docs/qa/wild-engine-pthreads/matrix-${quality}`;
 await mkdir(root,{recursive:true});
 const commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
@@ -21,7 +21,7 @@ for(const biome of biomes){
   console.log(`${new Date().toISOString()} START ${biome} ${label}`);
   const env={...process.env,WG_THREADS:threads,WG_THREAD_BIOME:biome,WG_THREAD_QUALITY:quality,
    WG_THREAD_FROZEN:'1',WG_THREAD_BENCH:'1',WG_THREAD_COMPLETE_LEGS:'1',WG_THREAD_FRAMES:'2',WG_THREAD_DISTANCE:'240',WG_THREAD_GPU:'1',
-   WG_HORIZON_BED:compare==='horizon-native-grid'&&variant==='1'?'native-grid':compare==='horizon-bed'&&variant==='1'?'staged':'sync',WG_CHUNK_EVICTION:compare==='horizon-native-grid'||compare==='horizon-bed'||compare==='chunk-eviction'&&variant==='1'?'batch':'single',WG_THREAD_ACTIVE:'0',WG_THREAD_FAR_CHECK:'0',WG_THREAD_PIN_PROGRAMS:'0',WG_THREAD_RETAIN_APP:compare==='program-retention'?variant:'0',WG_THREAD_ZIGZAG:'0',WG_THREAD_EDIT:'0',WG_THREAD_CONTEXT:'0',WG_THREAD_EXIT:'0',
+   WG_HORIZON_BED:compare==='horizon-native-grid'&&variant==='1'?'native-grid':compare==='horizon-bed'&&variant==='1'?'staged':'sync',WG_CHUNK_EVICTION:compare==='horizon-native-grid'||compare==='horizon-bed'||compare==='chunk-eviction'&&variant==='1'?'batch':'single',WG_THREAD_ACTIVE:'0',WG_THREAD_FAR_CHECK:'0',WG_THREAD_PIN_PROGRAMS:'0',WG_THREAD_WARM_OBSTRUCTION:compare==='obstruction-warmup'?variant:'0',WG_THREAD_RETAIN_APP:compare==='obstruction-warmup'?'1':compare==='program-retention'?variant:'0',WG_THREAD_ZIGZAG:'0',WG_THREAD_EDIT:'0',WG_THREAD_CONTEXT:'0',WG_THREAD_EXIT:'0',
    WG_THREAD_NO_ISOLATION:'0',WG_THREAD_BOOT_FAILURE:'0',WG_THREAD_GL_DETAIL:compare!=='threads'?'1':'0',WG_THREAD_CPU_PROFILE:'0',WG_THREAD_DEPTH_WARM:'0',WG_THREAD_DETAIL:'0',WG_CHUNK_INSTALL:'sync',WG_THREAD_REPORT:report};
   delete env.WG_THREAD_FIXTURE_FILE;delete env.WG_THREAD_SAVE_FIXTURE;
   // Refuse reused paths before spawning a browser (stream open is asynchronous).
