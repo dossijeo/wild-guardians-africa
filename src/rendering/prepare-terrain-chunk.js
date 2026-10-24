@@ -2,7 +2,7 @@ const phaseCosts=new WeakMap();
 // Native generation is already complete. Only GPU-facing object construction
 // is scheduled here; no incomplete group is attached to the scene.
 export async function prepareTerrainChunk(world,data,current,{scheduler=null,signal,budgetMs=4,yieldWork=()=>new Promise(r=>setTimeout(r,0)),now=()=>performance.now()}={}){
-  const steps=world.prepareTerrainSteps(data.cx,data.cz,data);
+  const steps=world.prepareTerrainSteps(data.cx,data.cz,data,{asynchronous:!!scheduler});
   const quality=world.quality,epoch=world.glResourceEpoch?.stats.epoch,revision=world.streamingProgramRevision;
   const valid=()=>current()&&!world.disposed&&world.quality===quality&&world.glResourceEpoch?.stats.epoch===epoch&&world.streamingProgramRevision===revision;
   let completed=false;const began=now();let cpuMs=0;
@@ -12,7 +12,7 @@ export async function prepareTerrainChunk(world,data,current,{scheduler=null,sig
       if(!phaseCosts.has(world))phaseCosts.set(world,new Map());
       const costs=phaseCosts.get(world),costKey=()=>quality+':'+phase;
       const measured={
-        next(){const completedPhase=phase,start=now();const step=steps.next();const finished=now(),ms=finished-start,waitMs=start-lastFinished;lastFinished=finished;cpuMs+=ms;costs.set(costKey(),Math.max(ms,(costs.get(costKey())??0)*.9));phase=step.value;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,phase:completedPhase,ms,waitMs,done:step.done});return step;},
+        next(value){const completedPhase=phase,start=now();const step=steps.next(value);const finished=now(),ms=finished-start,waitMs=start-lastFinished;lastFinished=finished;cpuMs+=ms;costs.set(costKey(),Math.max(ms,(costs.get(costKey())??0)*.9));phase=step.value?.label??step.value;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,phase:completedPhase,ms,waitMs,done:step.done});return step;},
         return(){return steps.return();}
       };
       // These chunks are already demanded by streaming, not speculative prefetch.

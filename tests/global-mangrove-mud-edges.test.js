@@ -52,3 +52,16 @@ test('cancelling staged mud edges leaves original material and attributes owned 
  const steps=bindMangroveMudEdgesSteps(f.world,f.group);steps.next();steps.next();steps.return();
  assert.equal(f.mud.material,old);assert.equal(disposed,0);assert.equal(f.mud.geometry.attributes.qaMudEdge,undefined);f.dispose();
 });
+
+
+test('failed external calculation falls back to the same cooperative attributes',async()=>{
+ const a=steppedFixture(),b=steppedFixture();bindMangroveMudEdges(a.world,a.group);
+ const steps=bindMangroveMudEdgesSteps(b.world,b.group,{executor:{run:()=>Promise.reject(Error('worker unavailable'))}});
+ let step=steps.next();assert.equal(step.value.label,'mud-edges-worker');assert.equal(b.mud.geometry.attributes.qaMudEdge,undefined);
+ step=steps.next(await step.value.waitFor);while(!step.done)step=steps.next();
+ for(const name of ['color','normal','qaMudEdge'])assert.deepEqual(b.mud.geometry.attributes[name].array,a.mud.geometry.attributes[name].array);a.dispose();b.dispose();
+});
+test('cancelled external calculation aborts its owner without publishing partial attributes',()=>{
+ const f=steppedFixture();let signal;const steps=bindMangroveMudEdgesSteps(f.world,f.group,{executor:{run:(_,options)=>{signal=options.signal;return new Promise(()=>{});}}});
+ const old=f.mud.material;steps.next();steps.return();assert.equal(signal.aborted,true);assert.equal(f.mud.material,old);assert.equal(f.mud.geometry.attributes.qaMudEdge,undefined);f.dispose();
+});

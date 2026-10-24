@@ -7,15 +7,17 @@ export function bindMangroveMudEdges(world,group){
  const steps=bindMangroveMudEdgesSteps(world,group);while(!steps.next().done){}
 }
 
-export function* bindMangroveMudEdgesSteps(world,group){
+export function* bindMangroveMudEdgesSteps(world,group,{executor=null}={}){
  let attributeBytes=0;
   const ground=group.children.find(m=>m.userData.ground),mud=group.children.find(m=>m.name==='mangrove-mud-patches');if(!ground||!mud)return;
   let cpuMs=0,sliceStart=performance.now();
   function* pause(label){cpuMs+=performance.now()-sliceStart;yield label;sliceStart=performance.now();}
   const g=mud.geometry;
-  const steps=computeMudEdgeSteps({gp:ground.geometry.attributes.position,gc:ground.geometry.attributes.color,gn:ground.geometry.attributes.normal,p:g.attributes.position,origin:group.userData.nativeChunkOrigin,outlines:g.userData.mudOutlines});
+  const input={gp:ground.geometry.attributes.position,gc:ground.geometry.attributes.color,gn:ground.geometry.attributes.normal,p:g.attributes.position,origin:group.userData.nativeChunkOrigin,outlines:g.userData.mudOutlines};
   let computed;
-  try{for(;;){const step=steps.next();if(step.done){computed=step.value;break;}yield* pause(step.value);}}finally{steps.return();}
+  if(executor){const owner=new AbortController();cpuMs+=performance.now()-sliceStart;try{computed=yield {label:'mud-edges-worker',waitFor:executor.run(input,{signal:owner.signal}).catch(()=>null)};}finally{owner.abort();}sliceStart=performance.now();}
+  const steps=computed?null:computeMudEdgeSteps(input);
+  if(steps)try{for(;;){const step=steps.next();if(step.done){computed=step.value;break;}yield* pause(step.value);}}finally{steps.return();}
   const {colors,normals,edges,cacheHits,uniqueVertices,segmentTests}=computed;
   yield* pause('mud-edges-publish');
   const old=mud.material,normalAttribute=g.attributes.normal;

@@ -26,6 +26,17 @@ export class GlobalFrameScheduler {
     this.remove(job);this.stats.cancelled++;
     try{job.iterator.return?.();job.resolve(null);}catch(error){job.reject(error);}
   }
+  waitFor(job,pending){
+    if(!pending||typeof pending.then!=='function')throw new TypeError('Scheduled dependency must be a promise');
+    job.waiting=true;
+    Promise.resolve(pending).then(value=>{
+      if(this.jobs.get(job.key)!==job)return;
+      job.resumeValue=value;job.waiting=false;
+    },error=>{
+      if(this.jobs.get(job.key)!==job)return;
+      this.remove(job);try{job.iterator.return?.();}catch{}this.stats.failed++;job.reject(error);
+    });
+  }
   beginFrame(timestamp){this.frame={timestamp,start:this.now()};}
   // Called after ALL mandatory presentation work, including simulation/UI/audio.
   async endFrame(){
@@ -69,6 +80,7 @@ export class GlobalFrameScheduler {
       for(const job of this.jobs.values()){
         let valid;try{valid=job.valid();}catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
         if(!valid){this.cancel(job.key);continue;}
+        if(job.waiting)continue;
         const age=time-job.lastServed,urgent=job.deadline<=time+period;
         // Deadlines may borrow measured headroom, never unmeasured idle time.
         const allowed=urgent?remaining:base;
@@ -94,16 +106,16 @@ export class GlobalFrameScheduler {
       if(!selected)break;
       const start=this.now();selected.lastServed=start;if(oversized){this.nextOversizeRecovery=start+2000;this.stats.oversizeRecoveries++;}
       try{
-        const result=selected.iterator.next();
+        const value=selected.resumeValue;selected.resumeValue=undefined;const result=selected.iterator.next(value);
         if(result?.then)throw new TypeError('Scheduled units must be synchronous');
         if(result.done){this.remove(selected);this.stats.completed++;completedSubmission=true;drainTurns=0;selected.resolve(result.value);}
-        else selected.order=this.sequence++;
+        else {selected.order=this.sequence++;if(result.value&&typeof result.value==='object'&&'waitFor' in result.value)this.waitFor(selected,result.value.waitFor);}
       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
       const duration=this.now()-start;work+=duration;if(borrowed&&!oversized)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
       if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
     }
-    if(this.diagnostics&&work===0&&this.jobs.size){
+    if(this.diagnostics&&work===0&&[...this.jobs.values()].some(job=>!job.waiting)){
       const d=this.diagnostics,lateness=frame.start-frame.timestamp;d.idlePendingFrames++;d.cpuSum+=cpu;d.latenessSum+=lateness;d.maxLateness=Math.max(d.maxLateness,lateness);
       if(remaining===0)d.noHeadroom++;
       if(cpu>=period*.85)d.mandatoryPressure++;
@@ -113,7 +125,7 @@ export class GlobalFrameScheduler {
     }
     this.stats.workMs+=work;this.stats.continuationMs+=continuation;this.stats.coordinationMs+=Math.max(0,this.now()-began-work-continuation);
   }
-  snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
+  snapshot(){const now=this.now();let oldestMs=0,waiting=0;for(const job of this.jobs.values()){oldestMs=Math.max(oldestMs,now-job.created);if(job.waiting)waiting++;}return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,waiting,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
 }
 export const globalFrameScheduler=new GlobalFrameScheduler({diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
 const enabled=new URLSearchParams(globalThis.location?.search??'').get('frameScheduler')==='1';

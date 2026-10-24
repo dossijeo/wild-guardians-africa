@@ -95,3 +95,29 @@ test('required streamed terrain starts without a fresh grace period on late pres
  time+=17;scheduler.beginFrame(time);time+=4;await scheduler.endFrame();
  assert.equal((await result).preparedGroup,group);assert.equal(scheduler.snapshot().pending,0);
 });
+
+
+test('dependency wait frees presentation capacity and resumes only on an admitted frame',async()=>{
+ const r=rig();r.warm();let resolve,ran=0;const dependency=new Promise(done=>resolve=done);
+ const pending=r.scheduler.submit((function*(){const value=yield {waitFor:dependency};ran++;return value;})());
+ r.frame();assert.equal(r.scheduler.snapshot().waiting,1);
+ const other=r.scheduler.submit((function*(){return 3;})());r.frame();assert.equal(await other,3);assert.equal(ran,0);
+ resolve(17);await Promise.resolve();assert.equal(ran,0);r.frame();assert.equal(await pending,17);
+});
+test('cancelled dependency cannot resume or remove its replacement',async()=>{
+ const r=rig();r.warm();let resolve,closed=0;const dependency=new Promise(done=>resolve=done);
+ const old=r.scheduler.submit((function*(){try{yield {waitFor:dependency};assert.fail('stale resume');}finally{closed++;}})(),{key:'chunk'});
+ r.frame();const next=r.scheduler.submit((function*(){return 9;})(),{key:'chunk'});assert.equal(await old,null);
+ resolve(1);await Promise.resolve();r.frame();assert.equal(await next,9);assert.equal(closed,1);
+});
+test('failed dependency releases only its job and runs cleanup',async()=>{
+ const r=rig();r.warm();let reject,closed=0;const dependency=new Promise((_,fail)=>reject=fail);
+ const pending=r.scheduler.submit((function*(){try{yield {waitFor:dependency};}finally{closed++;}})());
+ r.frame();const assertion=assert.rejects(pending,/worker failed/);reject(Error('worker failed'));await assertion;
+ assert.equal(closed,1);assert.equal(r.scheduler.snapshot().waiting,0);assert.equal(r.scheduler.snapshot().failed,1);
+});
+test('terrain wrapper forwards dependency output but rejects a stale revision before publication',async()=>{
+ for(const stale of [false,true]){const r=rig();r.warm();let resolve,closed=0;const dependency=new Promise(done=>resolve=done),group={};
+ const world={quality:'media',*prepareTerrainSteps(){try{assert.equal(yield {label:'worker',waitFor:dependency},group);return group;}finally{closed++;}}};
+ const pending=prepareTerrainChunk(world,{cx:0,cz:0},()=>true,{scheduler:r.scheduler});r.frame();if(stale)world.quality='baja';resolve(group);await Promise.resolve();r.frame();const result=await pending;assert.equal(stale?result:result.preparedGroup,stale?null:group);assert.equal(closed,1);}
+});

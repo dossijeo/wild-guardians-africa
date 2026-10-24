@@ -1226,3 +1226,62 @@ Next integration must publish only for current owner/revision/context and accoun
 for cancellation,buffer lifetime,backpressure,worker startup and full-frame A/B.
 
 Vite build passes in7.01s with existing bundle-size/dynamic-import warnings.
+
+
+### Worker integrated into private terrain preparation (2026-10-24)
+
+Opt-in mudEdgeWorker=1 plus frameScheduler=1 (WG_MUD_EDGE_WORKER=1). A world-owned
+single module Worker computes only immutable mud-edge arrays. Native generation,
+mud geometry and authoritative surface/navigation remain unchanged. At most2
+requests including a cancelled in-flight request; one executes at a time. Inputs
+are copied through structured clone, outputs transferred; no live geometry buffer
+is detached. Timeout/error falls back to original cooperative computation. Disposal
+terminates worker and rejects requests. Cancelled running computation may finish
+but its result cannot settle a replacement request or publish into the scene.
+
+Global scheduler now supports yielding {waitFor:promise,label}; pending dependency
+jobs retain bounded ownership but consume no execution budget and do not block
+other jobs. Promise settlement only marks readiness; a later admitted unit resumes
+with the result after checking validity. Rejection/cancellation closes generators.
+No extra RAF, no awaiting worker work inside endFrame. Snapshot reports waiting.
+Terrain wrapper forwards resumed data and keeps world/quality/context/revision
+checks. Only asynchronous terrain staging opts into worker; synchronous entry
+points remain synchronous. Publication of material/attributes stays atomic.
+
+Serial active Manglares media720p ABAB,360frames/144m,60warmframes,Intel UHD:
+
+| run | preparation CPU mean ms | preparation elapsed mean ms | RAF P95 / P99 / max ms |
+| --- | ---: | ---: | --- |
+| A1 cooperative | 8.34 | 2308 | 216.18 / 316.04 / 398.90 |
+| B1 worker | 5.68 | 1601 | 199.63 / 265.96 / 382.52 |
+| A2 cooperative | 8.39 | 2418 | 232.84 / 316.01 / 449.06 |
+| B2 worker | 5.99 | 1597 | 216.19 / 299.26 / 482.43 |
+
+Raw scheduler-mud-worker-stream-* and summary retained. All15new chunks complete.
+Initial immutable probe (outside timed streaming) validates21real chunks byte-for-byte
+in each run. Candidate36/36worker requests complete,peak pending2,no failures.
+Loading readiness A1/B1/A2/B2=31.185/31.926/33.354/32.784s: no consistent loading
+speed improvement. GPU timer means91.34/86.40/86.23/76.40ms include pipeline bubbles;
+not a pure GPU optimization claim. Camera path is frame-based and simulation
+advances in wall time, so final active world states are not image-identical. Faster
+readiness also changes when chunks become drawable. Actual captures retained;
+byte identity is stronger evidence for the unchanged material calculation itself.
+
+Preparation latency reduction repeats (~31/34%). P95/P99 improve both pairs, but
+B2maximum worsens, and total frame times remain poor. Promising integration, NOT
+complete scheduler acceptance or default activation. No density/art reduction.
+
+Lifecycle: scheduler-mud-worker-context.json recovers with unchanged world,
+83oldprogram refs abandoned,37new retained,80draw calls,GL epoch1,unknownDeletes0,
+shared pthread16MiB. Worker21/21complete,queue0. This case did not interrupt an
+in-flight worker. scheduler-mud-worker-quality-exit.json runs active quality cycle
+then exits during native generation:worker36/36complete/closed,queue0,globalwaiting0,
+0native workers/late installs,menu restored. Active worker cancellation and stale
+results tested deterministically in units, not claimed from these real cases.
+
+51 targeted tests pass: pending dependencies,frame-owned resume,late replacement,
+rejection,revision validity,bounded worker queues,cancelled active ownership,dispose,
+cooperative fallback and byte equivalence. Vite build passes6.81s and emits the
+2.43kBworker asset. This proves packaging, not deployed itch/Tauri execution.
+Remaining: real in-flight cancellation/failure injection,night/low/fast-camera
+coverage,distribution checks,repeatable worst-frame improvement before activation.
