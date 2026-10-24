@@ -4,7 +4,7 @@ import * as THREE from 'three';
 export function createTexturePilot(renderer,assets,{scheduler,signal,check}){
  const selected=new Set(),models=['5ac817bcc','b396fba7','7de8ad720'];
  for(const [url,gltf]of assets.modelSources)if(models.some(hash=>url.includes(hash)))gltf.scene.traverse(o=>{for(const m of [o.material].flat().filter(Boolean))for(const slot of ['map','normalMap','roughnessMap'])if(m[slot])selected.add(m[slot]);});
- const stats={completed:0,fallbacks:0,units:0,maxUnitMs:0,workMs:0,extraPixelBytes:0,records:[]};let closed=false;
+ const stats={completed:0,fallbacks:0,units:0,maxUnitMs:0,workMs:0,extraPixelBytes:0,records:[]};let closed=false;globalThis.qaWildTextureProgress=stats;
  const alive=()=>{check();if(closed)throw Error('Region preparation closed');};
  async function upload(texture){
   if(!selected.has(texture)||!scheduler||!(texture.image instanceof ImageBitmap)||texture.format!==THREE.RGBAFormat||texture.type!==THREE.UnsignedByteType)return false;

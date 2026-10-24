@@ -143,3 +143,26 @@ any assumption that region upload alone solves loading latency. Conservative
 row cost after driver outliers can delay following cheap rows; investigate with
 paired controls, without calling those delays GPU time or claiming improvement.
 The initial environment failure report is retained separately.
+
+## Program and buffer decision boundary
+
+The documented848ms ground wait came from a fixed512 recipe installed after
+warm compilation. Existing groundCachePreparation prepares that recipe before
+compileAsync; its pilot reduced first draw897.8 to78.44ms. This is ordering,
+not a missing compile API. Repeating it as a fork would misattribute the gain.
+Transactional retention already reduced intermediate destroys2 to0 but did
+not consistently improve quality transitions; last-step maxima worsened.
+An internal lease API could improve encapsulation, but has no established
+additional throughput hypothesis. Do not implement a second retention system.
+
+WebGLAttributes already batches updateRanges and owns buffer lifetime. Initial
+bufferData remains atomic, but attribution measured only1.225ms creation against
+875.79ms diagnostics. No buffer patch is justified by this evidence. Render
+targets use setupRenderTarget/initRenderTarget and the same texture/state owner.
+
+Stock compileAsync polls currentProgram per material; double-sided transparent
+variants and shadow recipes require appropriately configured preparation.
+Reflection remains synchronous after KHR completion; a patch cannot preempt
+driver calls. The existing validated-binding adapter preserves link-failure
+diagnostics while suppressing success logs locally. Future program patches
+must beat those controls, not an unprepared first render.
