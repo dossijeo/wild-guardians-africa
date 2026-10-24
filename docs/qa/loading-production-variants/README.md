@@ -360,3 +360,17 @@ Do not label the whole far preparation phase shader compilation.
 Next attribution must join each compile interval to actual link events to
 distinguish new variants from repeated preparation of cached programs.
 No removal is justified merely by the compile invocation count.
+
+## Compile/link correlation rules out a large redundant-compile saving
+
+Of28far compile spans,23contain no new world program link. Those23sum
+29.515ms of observed wall spans, with maximum2.985ms; overlapping spans are
+explicitly marked in the derived report. Removing these checks cannot explain
+seconds of loading and would require extra validity logic for little benefit.
+The five remaining spans contain10links, including the already studied smooth
+key duplicate. Do not remove required impostor/ground/standby preparation based
+on invocation counts. Reproducible derivation: attribute-far-program-links.py.
+
+Original high-quality inventory/capture checks now run serially for all six
+biomes to finish profile coverage. Both experimental candidates remain off.
+No visual changes or scheduler changes are introduced by this diagnostic.
