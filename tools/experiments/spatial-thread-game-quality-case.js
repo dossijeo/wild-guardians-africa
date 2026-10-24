@@ -1,14 +1,39 @@
+import {initializeProgramBindingsAsync} from '/src/rendering/program-bindings.js';
 import {createShadowRecipeRenderer} from '/src/rendering/shadow-recipe-renderer.js';
 import {globalFrameScheduler,globalFrameSchedulerEnabled} from '/src/app/global-frame-scheduler.js';
 import {prepareLiveScenePrograms} from '/src/rendering/live-program-preparation.js';
 import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs.js';
-import {compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
+import {compileLoadingPrograms,compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
 export async function verifyGameQualityCycle(w){
  const lease=w.programLease;if(!lease?.stats.retained)throw Error('Expected default retention');
  const snapshot=()=>JSON.stringify({elapsed:w.state.elapsed,plants:w.state.plants,structures:w.state.structures,native:w.spatialSession.core.snapshot()});
  const cacheState=()=>{const cache=w.mangroveMaterialCache;return cache?{chunks:cache.states.size,ready:[...cache.states.values()].filter(s=>s.texture.value).length,queue:{...cache.queue.stats}}:null;};
  const before=snapshot(),rows=[],enabled=new URLSearchParams(location.search).get('streamingRecovery')!=='0';
  const active=new URLSearchParams(location.search).get('qualityActive')==='1';
+ let cropDepthWarm=null;
+ if(new URLSearchParams(location.search).get('cropDepthWarm')==='1'){
+  const objects=[];w.scene.traverse(o=>{if(o.customDepthMaterial?.customProgramCacheKey().includes('bioma-local-bridge-depth-v3'))objects.push(o);});
+  const view={overrideMaterial:w.scene.overrideMaterial,onBeforeRender:w.scene.onBeforeRender,onAfterRender:w.scene.onAfterRender,traverse:fn=>objects.forEach(fn),traverseVisible:fn=>objects.forEach(fn)};
+  const sources=new WeakMap(objects.map(o=>[o,{map:o.material.map,alphaMap:o.material.alphaMap}]));
+  const start=performance.now(),scope=createProgramRetentionScope(w.renderer);let pinFailed=false;
+  try{
+   await w.destructionPass.prepareDepth(w.camera,view,{batchSize:8,cancelled:()=>w.disposed||pinFailed,compile:(scene,camera)=>compileLoadingPrograms(w.renderer,scene,camera,w.scene,{cancelled:()=>w.disposed||pinFailed,onSubmit:span=>{if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;}})});
+   let shadowVariant=false;
+   if(new URLSearchParams(location.search).get('cropDepthShadowWarm')==='1'){
+    shadowVariant=true;
+    await w.destructionPass.prepareDepth(w.camera,view,{batchSize:8,cancelled:()=>w.disposed||pinFailed,compile:(scene,camera)=>{
+     const saved=new Map(),shadowEnabled=w.renderer.shadowMap.enabled,fog=w.scene.fog;
+     try{
+      w.renderer.shadowMap.enabled=true;w.scene.fog=null;
+      scene.traverse(o=>{const source=sources.get(o),m=o.material;if(!source||m!==o.customDepthMaterial)return;if(!saved.has(m))saved.set(m,{map:m.map,alphaMap:m.alphaMap});m.map=source.map;m.alphaMap=source.alphaMap;});
+      return compileLoadingPrograms(w.renderer,scene,camera,w.scene,{cancelled:()=>w.disposed||pinFailed,onSubmit:span=>{if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;}});
+     }finally{w.renderer.shadowMap.enabled=shadowEnabled;w.scene.fog=fog;for(const [m,values] of saved){Object.assign(m,values);m.needsUpdate=true;}}
+    }});
+   }
+   const bindings=await initializeProgramBindingsAsync(w.renderer,{cancelled:()=>w.disposed||pinFailed});
+   cropDepthWarm={objects:objects.length,shadowVariant,programKeys:w.renderer.info.programs.filter(p=>p.cacheKey.includes('bioma-local-bridge-depth-v3')).map(p=>p.cacheKey),ms:performance.now()-start,bindings,stats:w.destructionPass.depthWarmStats,scope:'QA pre-activation preparation of dormant crop bridge depth recipes; included as extra preparation cost, not a free performance gain.'};
+  }finally{scope.dispose();}
+ }
  const initialElapsed=w.state.elapsed,initialCreated=w.chunkStream.stats.created,originalCameraUpdate=w.updateCamera;
  let travelFrame=0,travelHandle=null,game=null;
  if(active){
@@ -97,6 +122,6 @@ export async function verifyGameQualityCycle(w){
  }else if(snapshot()!==before)throw Error('World changed during quality cycle');
  if(lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
  if(estimateFault&&(forcedJobs!==2||scheduler.snapshot().oversizeRecoveries<2))throw Error('Oversized estimate recovery was not exercised');
- return {faultInjection:estimateFault?{forcedJobs,scope:'Correctness-only: two terrain units deliberately estimated at 14 ms until first execution; not a performance benchmark.'}:null,attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
+ return {cropDepthWarm,faultInjection:estimateFault?{forcedJobs,scope:'Correctness-only: two terrain units deliberately estimated at 14 ms until first execution; not a performance benchmark.'}:null,attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
  }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(estimateFault)scheduler.submit=originalSubmit;if(phaseAttribution){w.onLoadingSpan=previousSpan;w.onTerrainPreparationSlice=previousTerrain;}if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
 }
