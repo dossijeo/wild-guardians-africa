@@ -6,11 +6,15 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
 const selectedBiome=process.env.WG_FIXTURE_BIOME??'sabana';
-const sourceDir=`docs/qa/global-visual-lab/${selectedBiome}-populated-frozen-20261022`;const out=process.env.WG_REVIEW_OUT??`docs/qa/global-visual-lab/${selectedBiome}-horizon-raised-motion-20261023`;await mkdir(out,{recursive:true});const records=[];const phases=(process.env.WG_MOTION_PHASES??'day,night').split(',');
+const fixtureDirectories={sabana:'sabana-populated-frozen-20261022','gran-rio':'gran-rio-populated-frozen-20261022',manglares:'manglares-populated-frozen-20261022',volcanes:'volcanes-populated-frozen-20261022',desierto:'desert-populated-closure-20261022','gran-canon':'gran-canon-populated-native-camera-20261022'};
+if(!fixtureDirectories[selectedBiome])throw Error('Unknown motion biome');
+const sourceDir=`docs/qa/global-visual-lab/${fixtureDirectories[selectedBiome]}`;const out=process.env.WG_REVIEW_OUT??`docs/qa/global-visual-lab/${selectedBiome}-horizon-raised-motion-20261023`;await mkdir(out,{recursive:true});const records=[];const phases=(process.env.WG_MOTION_PHASES??'day,night').split(',');
 const fixture=JSON.parse(await readFile(`${sourceDir}/native-fixture.json`,'utf8'));
 const saved=JSON.parse(fixture.timing.navigationContext.state);
+if(saved.biome!==selectedBiome)throw Error('Motion fixture biome mismatch');
 saved.tutorial.basicSkipped=true; // QA-only: do not allow onboarding to pause the active-play observation.
 const snapshot=JSON.stringify(saved);
+const canyonPose=selectedBiome==='gran-canon'?JSON.parse(await readFile('docs/qa/global-visual-lab/gran-canon-populated-native-camera-20261022/captures.json','utf8')).records.find(r=>r.variant==='native'&&r.phase==='day').frames[0]:null;
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (selectedBiome).split(',')){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
@@ -21,11 +25,13 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();const freezeAnchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(freezeAnchor).length!==2)throw Error('Missing motion capture readiness freeze anchor');body=body.replace(freezeAnchor,"Game.pause(state,'menu');"+freezeAnchor);body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
  await page.route('**/src/rendering/shader-failure.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('throw failure.current;', 'globalThis.qaShaderFailure=failure.current.details;throw failure.current;');await route.fulfill({response,body});});
  await page.addInitScript(light=>globalThis.qaMotionLight=light,process.env.WG_MOTION_SPARSE_GL==='1');
+ await page.addInitScript(enabled=>globalThis.qaCanyonMotion=enabled,!!canyonPose);
  await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true})),quality);
  await page.addInitScript(text=>localStorage.setItem('wild-guardians:slot:opening',text),snapshot);
  if(!currentReview)await page.route('**/src/rendering/mountain-arc-composition.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('baseY=-35').length!==2)throw Error('Mountain base anchor missing');await route.fulfill({response,body:body.replace('baseY=-35','baseY=-10')});});
  const query=new URLSearchParams((currentReview?globalCurrentReviewQuery:globalClosureQuery)(biome));
  if(currentReview){query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
+ if(process.env.WG_HORIZON_HANDOFF==='atomic')query.set('horizonHandoff','atomic');
  if(process.env.WG_GROUND_RESIDENT_MASK==='1')query.set('groundResidentMask','1');
  if(process.env.WG_DIAGNOSTIC_GROUND_STEP)query.delete('volcanicGround');
  const captureUrl='http://127.0.0.1:5190/?qa-seed=712&'+query;
@@ -47,7 +53,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  const w=window.qaCampaignWorld;
  delete w.groundDetails.timeOverride;
  },{biome,canyonTarget:[-47.868919372558594, 3.259999895095825, 102]});
- await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;const o=w.controls.target.toArray();window.qaSandPath=[[-40,8,20],[22,7,42],[45,9,-18]].map(([x,y,z])=>[o[0]+x,Math.max(o[1]+y,w.nav.field.surface(o[0]+x,o[2]+z)+1.2),o[2]+z]);w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();});
+ await page.evaluate(async pose=>{const w=window.qaCampaignWorld;if(pose){w.controls.target.fromArray(pose.target);window.qaSandPath=[pose.camera];w.camera.position.fromArray(pose.camera);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();return;}w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;const o=w.controls.target.toArray();window.qaSandPath=[[-40,8,20],[22,7,42],[45,9,-18]].map(([x,y,z])=>[o[0]+x,Math.max(o[1]+y,w.nav.field.surface(o[0]+x,o[2]+z)+1.2),o[2]+z]);w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();},canyonPose);
 
  for(const phase of phases){
   const result=await page.evaluate(async phase=>{
@@ -70,10 +76,10 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
      const timeout=setTimeout(()=>reject(Error('Active gameplay frame timeout')),90000);
      w.render=function(...args){
       const now=performance.now();if(!start)start=now;const elapsed=now-start,t=Math.min(1,elapsed/40000);
-      const shift=144*Math.sin(t*Math.PI)**2;w.controls.target.copy(target);w.controls.target.x+=shift;w.controls.target.z+=shift*.35;const dy=w.nav.field.surface(w.controls.target.x,w.controls.target.z)-w.nav.field.surface(target.x,target.z);w.controls.target.y+=dy;w.camera.position.copy(base);w.camera.position.x+=shift;w.camera.position.z+=shift*.35;w.camera.position.y+=dy;
+      const shift=144*Math.sin(t*Math.PI)**2;if(globalThis.qaCanyonMotion){w.camera.position.copy(base);w.camera.position.z+=shift;w.camera.position.y=Math.max(base.y,w.nav.field.surface(w.camera.position.x,w.camera.position.z)+3);w.controls.target.copy(target);w.controls.target.z+=shift;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;}else{w.controls.target.copy(target);w.controls.target.x+=shift;w.controls.target.z+=shift*.35;const dy=w.nav.field.surface(w.controls.target.x,w.controls.target.z)-w.nav.field.surface(target.x,target.z);w.controls.target.y+=dy;w.camera.position.copy(base);w.camera.position.x+=shift;w.camera.position.z+=shift*.35;w.camera.position.y+=dy;}
       const auto=w.renderer.info.autoReset;w.renderer.info.autoReset=false;w.renderer.info.reset();
       try{const value=original.apply(this,args);track.requestFrame();
-       frames.push({wallMs:elapsed,intervalMs:last?now-last:null,elapsed:w.state.elapsed,pauses:[...w.state.pauses],calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,geometry:w.renderer.info.memory.geometries,textures:w.renderer.info.memory.textures,pending:w.farVegetation.adapters.some(a=>a.preparationPending()),glError:globalThis.qaMotionLight?null:w.renderer.getContext().getError(),camera:w.camera.position.toArray(),target:w.controls.target.toArray(),origin:[w.renderOrigin.x,w.renderOrigin.z],chunkKeys:[...w.chunks.keys()].sort(),coverageChunks:w.groundDetails.audit?.().chunks??null});last=now;
+       frames.push({wallMs:elapsed,intervalMs:last?now-last:null,elapsed:w.state.elapsed,pauses:[...w.state.pauses],calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,geometry:w.renderer.info.memory.geometries,textures:w.renderer.info.memory.textures,pending:w.farVegetation.adapters.some(a=>a.preparationPending()),glError:globalThis.qaMotionLight?null:w.renderer.getContext().getError(),camera:w.camera.position.toArray(),target:w.controls.target.toArray(),origin:[w.renderOrigin.x,w.renderOrigin.z],chunkKeys:[...w.chunks.keys()].sort(),coverageChunks:w.groundDetails.audit?.().chunks??null,cameraClearance:globalThis.qaCanyonMotion?w.camera.position.y-w.nav.field.surface(w.camera.position.x,w.camera.position.z):null});last=now;
        if(elapsed>=shotIndex*5000){shots.push({wallMs:elapsed,state:snapshot(),stream:w.chunkStream.summary(),desired:[...w.chunkStream.desired.keys()],scheduler:w.frameScheduler?.snapshot(),jobs:[...(w.frameScheduler?.jobs.values()??[])].map(j=>({label:typeof j.label==='function'?j.label():j.label,age:performance.now()-j.created,waiting:!!j.waiting,cost:j.estimate?.()??j.cost})),data:w.renderer.domElement.toDataURL('image/png').split(',')[1]});shotIndex++;}
        if(t===1){clearTimeout(timeout);resolve();}return value;
       }catch(error){clearTimeout(timeout);reject(error);throw error;}finally{w.renderer.info.autoReset=auto;}
@@ -86,7 +92,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
   },phase);
   await writeFile(`${out}/${phase}.webm`,Buffer.from(result.data,'base64'));delete result.data;
   for(const [i,shot]of result.shots.entries()){await writeFile(`${out}/${phase}-${i}.png`,Buffer.from(shot.data,'base64'));delete shot.data;}
-  result.errors=[...errors];records.push({biome,quality,phase,captureUrl,currentReview,groundStep,...result});await writeFile(out+'/active-play.json',JSON.stringify({seed:712,note:'Real app Game.advanceReal loop, no direct QA ticks. Forty wall-clock seconds per phase with a144m outward-and-return target/camera excursion and50.4m lateral component; altitude follows target terrain. Material/wind clocks live, streaming enabled. Existing raid-camera manual mode held during QA excursion. Recorder and checkpoint overhead present: observations, not performance benchmark. Night continues the day state; initial visual time selected for each phase.',records},null,2));
+  result.errors=[...errors];records.push({biome,quality,phase,captureUrl,currentReview,groundStep,motionPath:canyonPose?'canyon-z':'diagonal-xz',...result});await writeFile(out+'/active-play.json',JSON.stringify({seed:712,note:'Real app Game.advanceReal loop, no direct QA ticks. Forty wall-clock seconds per phase. records.motionPath identifies either the 144m Z canyon excursion with eye-ground clearance or the 144m X/50.4m Z diagonal excursion following target altitude. Material/wind clocks live, streaming enabled. Existing raid-camera manual mode held during QA excursion. Recorder and checkpoint overhead present: observations, not performance benchmark. Night continues the day state; initial visual time selected for each phase.',records},null,2));
   if(errors.length||result.finalGlError||result.frames.some(f=>f.glError)||result.after.elapsed-result.before.elapsed<10||result.frames.some(f=>f.pauses.length)||result.coverage?.stats.overflow)throw Error('Active play validation failed');console.log(biome,phase,'active elapsed',result.after.elapsed-result.before.elapsed);
  }
  await page.close();

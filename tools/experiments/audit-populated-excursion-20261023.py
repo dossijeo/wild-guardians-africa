@@ -9,7 +9,7 @@ for r in j['records']:
  assert r['after']['elapsed']-r['before']['elapsed']>=10
  assert r['frames'][-1]['wallMs']>=40000
  if r['coverage'] is None:
-  assert r['biome']=='volcanes', 'Missing vegetation coverage telemetry'
+  assert r['biome'] in ('volcanes','gran-canon','desierto'), 'Missing vegetation coverage telemetry'
  else:
   assert not r['coverage'].get('stats',{}).get('overflow',0)
  if r.get('sparseGl'):

@@ -18,6 +18,7 @@ export class NativeHorizon{
     this.canyonShadowCaster=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonShadows')==='horizon';
     this.smoothCanyonNormals=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonNormals')==='smooth';
     this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;
+    this.canAdopt=options.canAdopt??(()=>true);this.pendingAdoption=null;
     this.spatial=options.spatial??null;this.prepareWater=options.prepareWater??null;
     this.prepareWaterBed=options.prepareWaterBed??null;this.pendingPreparation=null;
     this.preparationBudgetMs=options.preparationBudgetMs??2;this.now=options.now??(()=>performance.now());
@@ -31,14 +32,16 @@ export class NativeHorizon{
     const materialKey=JSON.stringify([config.biome,config.seed,config.relief,config.river,quality==='muy_baja']);
     if(this.pendingPreparation&&(force||this.pendingPreparation.key!==key||this.pendingPreparation.materialKey!==materialKey))this.cancelPreparation();
     if(!['canyons','desert'].includes(config.biome)){this.generator.cancel();this.clear();return region;}
+    if(this.pendingAdoption&&(force||this.pendingAdoption.key!==key||this.pendingAdoption.materialKey!==materialKey))this.pendingAdoption=null;
     let preparedData=null,preparedBed=null,waterGeometry=null;
     if(this.pendingPreparation){
+      if(this.group&&!this.canAdopt(region))return this.region;
       const pending=this.pendingPreparation,start=this.now();let step;
       do{step=pending.steps.next();}while(!step.done&&this.now()-start<this.preparationBudgetMs);
       if(!step.done)return this.region;
       preparedData=pending.data;preparedBed=step.value;waterGeometry=pending.geometry;this.pendingPreparation=null;
     }
-    const ready=preparedData??this.generator.take(key);
+    const ready=preparedData??this.pendingAdoption?.data??this.generator.take(key);
     if(!ready&&!force&&this.key===key){this.generator.cancel();if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);this.materialKey=materialKey;return this.region;}
     if(!ready&&!force&&this.spatial&&this.generator.latest?.key===key)return this.region??region;
     let data=ready;
@@ -50,6 +53,12 @@ export class NativeHorizon{
       if(this.generator.plan(task,force)||this.spatial)return this.region??region;
       data=buildHorizonData({config,profile,region,smoothNormals});
     }
+    // Keep the completed worker result without publishing a hole whose near
+    // chunks are still preparing. The caller must prefetch that destination.
+    if(this.group&&!this.canAdopt(region)){
+      this.pendingAdoption={key,materialKey,data};return this.region;
+    }
+    this.pendingAdoption=null;
     // Initial loading remains synchronous. During streaming the old horizon
     // keeps ownership of its near hole until the complete new shore map exists.
     if(this.prepareWaterBed&&this.group&&data.water.length&&!waterGeometry){
@@ -76,7 +85,7 @@ export class NativeHorizon{
   whenReady(){return this.generator.whenReady();}
   cancelPreparation(){const pending=this.pendingPreparation;if(!pending)return;this.pendingPreparation=null;pending.steps.return?.();pending.geometry.dispose();}
   clear(retained=null){
-    this.cancelPreparation();
+    this.pendingAdoption=null;this.cancelPreparation();
     if(this.group){this.scene.remove(this.group);this.group.traverse(o=>{if(o.isMesh){if(!o.userData.borrowedWaterGeometry)o.geometry.dispose();if(o.material!==retained)o.material.dispose();}});this.group=null;}
     this.key=null;this.region=null;
   }

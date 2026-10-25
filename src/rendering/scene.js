@@ -434,7 +434,14 @@ export class WorldScene {
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
     const requested=nativeNearRegion(this.camera.position,this.quality,this.farResidentRange??null);
-    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{spatial:this.spatialSession?.horizonSource,preparationBudgetMs:this.horizonBedBudget,prepareWaterBed:this.stagedHorizonBed&&this.naturalWaterEdges?(geometry,region)=>prepareNaturalWaterBed(this,geometry,region.cx,region.cz):null,prepareWater:this.naturalWaterEdges?(mesh,region,bed)=>{prepareNaturalWater(this,mesh.geometry,region.cx,region.cz,mesh.material,bed,{nativeGrid:this.nativeHorizonBed});if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}:null});
+    const atomicHorizon=this.nav.config.biome==='canyons'&&new URLSearchParams(globalThis.location?.search??'').get('horizonHandoff')==='atomic';
+    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{canAdopt:region=>{
+      if(!atomicHorizon)return true;
+      for(let z=region.cz-region.range;z<=region.cz+region.range;z++)for(let x=region.cx-region.range;x<=region.cx+region.range;x++){
+        const key=x+','+z;if(!this.chunks.has(key)||this.chunkStream?.stale.has(key))return false;
+      }
+      return true;
+    },spatial:this.spatialSession?.horizonSource,preparationBudgetMs:this.horizonBedBudget,prepareWaterBed:this.stagedHorizonBed&&this.naturalWaterEdges?(geometry,region)=>prepareNaturalWaterBed(this,geometry,region.cx,region.cz):null,prepareWater:this.naturalWaterEdges?(mesh,region,bed)=>{prepareNaturalWater(this,mesh.geometry,region.cx,region.cz,mesh.material,bed,{nativeGrid:this.nativeHorizonBed});if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}:null});
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.
@@ -450,6 +457,9 @@ export class WorldScene {
     const raidPins=raidResidentDemand(this.state??{},this.nav);
     this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(includeRaidBounds(logicalBounds,raidPins));this.nav.setRaidView?.(this.camera.position,this.controls.target);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
+    // Retain the adopted hole while preparing the destination in parallel.
+    // Only the latest requested destination is retained if the camera changes.
+    if(atomicHorizon)for(let z=horizonRequested.cz-horizonRequested.range;z<=horizonRequested.cz+horizonRequested.range;z++)for(let x=horizonRequested.cx-horizonRequested.range;x<=horizonRequested.cx+horizonRequested.range;x++)desired.add(x+','+z);
     for(const key of raidPins)desired.add(key);
     // QA gate until full lifecycle validation; native leases do not expand raid bounds.
     const workerRetention=this.workerRetentionEnabled??=(typeof location!=='undefined'&&new URLSearchParams(location.search).get('workerResidency')==='actors');
@@ -463,18 +473,18 @@ export class WorldScene {
       spatialEvictions?.push(key.split(',').map(Number));
     }
     if(spatialEvictions?.length)this.chunkStream.releaseChunks(spatialEvictions);
-    if(this.chunkStream){const key=cx+','+cz+':'+range+(raidPins.size?':'+[...raidPins].sort().join(';'):'');if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}
+    if(this.chunkStream){const key=cx+','+cz+':'+range+(atomicHorizon?':prefetch:'+horizonRequested.cx+','+horizonRequested.cz+':'+horizonRequested.range:'')+(raidPins.size?':'+[...raidPins].sort().join(';'):'');if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}
     else for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;}
     // Retain the original exact terrain for picking even beyond the visual radius.
     // Three raycasting tests the terrain meshes independently of parent visibility.
     let visibilityChanged=false;
-    if(this.farVisualRange!=null||this.farVisibilityOwned){
+    if(atomicHorizon||this.farVisualRange!=null||this.farVisibilityOwned){
       for(const group of this.chunks.values()){
         const origin=group.userData.nativeChunkOrigin;
         const visible=Math.abs(origin[0]/48-cx)<=visibleRegion.range&&Math.abs(origin[1]/48-cz)<=visibleRegion.range;
         const propsVisible=this.farVisualRange==null||Math.abs(origin[0]/48-cx)<=this.farVisualRange&&Math.abs(origin[1]/48-cz)<=this.farVisualRange;
         const treesVisible=propsVisible||this.farPropTransitionDistance!=null&&chunkInPropTransition(origin,this.camera.position,this.farPropTransitionDistance);
-        const terrainVisible=this.farPreserveTerrain?true:visible;
+        const terrainVisible=atomicHorizon?visible:this.farPreserveTerrain?true:visible;
         if(group.visible!==terrainVisible||group.userData.farPropsVisible!==propsVisible||group.userData.farTreesVisible!==treesVisible||group.userData.farTransitionTreeSlots!==this.farPropTransitionSlots){
           group.visible=terrainVisible;group.userData.farPropsVisible=propsVisible;group.userData.farTreesVisible=treesVisible;group.userData.farTransitionTreeSlots=this.farPropTransitionSlots;visibilityChanged=true;
         }

@@ -60,3 +60,18 @@ test('native grid packs identical water bytes and consumes the borrowed view wit
  assert.deepEqual(prepareNaturalWaterBed(world,geometry,-2,3,{nativeGrid:true,yielding:false}).next().value,baseline);
  geometry.dispose();
 });
+
+
+test('horizon holds completed worker data until destination chunks are ready without regenerating',()=>{
+ const worker={requests:[],postMessage(r){this.requests.push(r);},terminate(){},reply(){const r=this.requests.at(-1);this.onmessage({data:{id:r.id,data:{terrain:new Float32Array(27),water:new Float32Array(0)}}});}};
+ let ready=false;
+ const scene=new THREE.Scene(),horizon=new NativeHorizon(scene,()=>new THREE.MeshBasicMaterial(),null,null,{workerFactory:()=>worker,spatial:{revision:()=>1,snapshot:()=>({})},canAdopt:()=>ready});
+ const config={biome:'canyons',seed:712,river:true},profile={colors:{water:'#123456'}},first=nativeNearRegion({x:0,z:0}),next=nativeNearRegion({x:48,z:0});
+ horizon.update(config,profile,first,'media');worker.reply();horizon.update(config,profile,first,'media');
+ const old=horizon.group;
+ horizon.update(config,profile,next,'media');worker.reply();
+ for(let i=0;i<5;i++){assert.deepEqual(horizon.update(config,profile,next,'media'),first);assert.equal(horizon.group,old);}
+ assert.equal(worker.requests.length,2);assert.ok(horizon.pendingAdoption);
+ ready=true;assert.deepEqual(horizon.update(config,profile,next,'media'),next);assert.notEqual(horizon.group,old);assert.equal(worker.requests.length,2);assert.equal(horizon.pendingAdoption,null);
+ horizon.dispose();assert.equal(scene.children.length,0);
+});
