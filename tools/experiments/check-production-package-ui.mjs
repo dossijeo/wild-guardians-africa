@@ -29,6 +29,18 @@ try{
  const menu=page.frameLocator('#native-menu');
  await menu.getByText('JUEGO NUEVO',{exact:false}).first().waitFor({timeout:60000});
  result={url,isolated:await page.evaluate(()=>crossOriginIsolated),menuButtons:await menu.locator('button,[role=button]').allTextContents(),menuText:(await menu.locator('body').innerText()).slice(-3000)};
+ if(process.env.WG_PACKAGE_UI_FIXTURE){
+  const fixture=JSON.parse(await readFile(process.env.WG_PACKAGE_UI_FIXTURE,'utf8'));
+  // Saved-world reproduction only: same legacy storage ingress as native smoke.
+  await page.evaluate(f=>localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot),fixture);
+  await menu.getByRole('button',{name:'Continuar',exact:true}).click();
+  await menu.locator('[data-production-save="'+fixture.slotId+'"]').click({timeout:60000});
+  const started=Date.now();
+  await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
+  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:90000});
+  result.fixtureLoadMs=Date.now()-started;result.fixture=fixture.scope;
+  result.gameText=(await page.locator('body').innerText()).slice(-2500);
+ }
  if(process.env.WG_PACKAGE_UI_START==='1'){
   await menu.getByRole('button',{name:'Juego nuevo',exact:true}).click();
   // The selector is rendered during the camera journey but its parent stays inert.
@@ -64,4 +76,4 @@ try{
  await page.screenshot({path:report.replace(/\.json$/,'.png')});
  console.log(JSON.stringify(result));
 }catch(e){result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}
-finally{await writeFile(report,JSON.stringify({scope:'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers},null,2)+'\n');await browser.close();await new Promise(resolve=>server.close(resolve));}
+finally{await writeFile(report,JSON.stringify({scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers},null,2)+'\n');await browser.close();await new Promise(resolve=>server.close(resolve));}

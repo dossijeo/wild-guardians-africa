@@ -66,3 +66,12 @@ Auditoría nativa parcial y repetición de concurrencia: ver NATIVE-AUDIT.md y n
 ## Bloqueo de aceptación descubierto en Windows
 
 Run 40191688873 (head 1c7a508ea) compila pero falla el escenario de visibilidad: la carga de la partida guardada de Gran Cañón con cultivo, trabajadora y primera incursión no alcanza readiness en 420126 ms. Queda al 85 %, Preparing rendering resources, visible y enfocada, sin error explícito de carga. El fallo ocurre ANTES de minimizar. Evidencia descargada: windows-visibility-failure-1c7a.json. No atribuir aún causa a scheduler, shaders o pthreads; el informe no contiene esa atribución. No ampliar el timeout ni marcar la prueba aceptada. Siguiente paso: reproducir esa fixture de carga/restauración y observar la preparación pendiente; el arranque vacío de seis biomas y la recarga inicial de Manglares no cubren este escenario poblado.
+
+
+Reproducción poblada en Chrome: package-populated-canyon.json carga la fixture pagada generada por create_desktop_visibility_fixture.mjs a través del guardado y el menú, en 18932 ms. Es una prueba dirigida con snapshot importado; no una partida creada manualmente ni equivalente al runner WebView2 (calidad por defecto frente a muy_baja en smoke). No reproduce el bloqueo; no lo declara resuelto. Se inicia build Tauri local actual para aislar el entorno: session 61626, log desktop-build-local-r2.log. Primer intento falló por cargo fuera de PATH; se usa la instalación existente C:/Users/PC/.cargo/bin.
+
+
+CI adicional: Validate 40191688929 (1c7a508ea) termina success. Windows 40193992791 falla antes del juego en native-loading-visual-launcher.test.js por spawnSync powershell.exe ETIMEDOUT (30 s); no confundir con el timeout de readiness del run anterior. La misma prueba pasa localmente (1/1, 2,3 s) sin modificar timeout. Build local 61626 sigue vivo, rustc compilando; no reiniciado.
+
+
+Binario local actual compilado; prueba nativa lanzada con perfil WebView2 nuevo, fixture poblada y smoke original (muy_baja, límite local de carga 90 s, intervalo real minimizado 300 s). Proceso 38028, session 67003; resultado pendiente native-populated-local.json. Build instalador sigue en session 61626. No reiniciar por la ausencia temporal del informe: se escribe al finalizar.
