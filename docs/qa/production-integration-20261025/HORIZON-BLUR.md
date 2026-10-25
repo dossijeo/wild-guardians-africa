@@ -45,3 +45,10 @@ Selective fused prototype ABAB GPU means: **19.401 / 21.701 / 19.108 / 22.529 ms
 The integrated module passed controlled real-renderer tests for all six biomes: day/night; normal, horizon and elevated cameras; low/medium quality changes; resize. Mangrove also passed actual WebGL context loss/restoration, with no reported GL/page errors. All 22 targeted lifecycle/quality/render-origin/submission tests pass. The packed-copy prototype's same-frame audit found 277,117 sky pixels unchanged in both day and night. Integrated captures are in `horizon-focus-integrated/comparison.html`; these captures do not by themselves prove active-motion stability or compatibility on other hardware.
 
 Still open before release: camera-motion/streaming performance and silhouettes, broader distribution validation, the pending lighting changes, and full release acceptance. This is not a declaration that the merge objective is complete.
+
+
+## Moving-camera streaming ABAB
+
+`check-horizon-focus-motion.mjs` runs four fresh Mangrove campaigns with seed 712, medium/720p and the same 420-frame path (first 60 frames warmup). Streaming stays enabled. Complete-draw GPU means off/on/off/on: **26.72 / 29.32 / 25.99 / 26.34 ms**. Draw CPU means: **5.24 / 5.78 / 5.47 / 5.51 ms**. Draw-interval P95: **63.34 / 68.52 / 60.80 / 63.61 ms**. All 360 GPU queries per arm are valid; no disjoint, GL or page errors. Raw samples and summary: `horizon-focus-motion/`.
+
+The differing increments (+2.60 and +0.35 ms) are not evidence of a free effect: asynchronous chunk readiness changes scene work along the camera route. Use the controlled resident measurements above for isolated cost. The tutorial pauses simulation during the run, explicitly captured in before/after state; this is NOT sustained active-simulation acceptance. Streaming spikes remain and this effect does not solve them. Visual snapshots only cover endpoints, so a recorded path still needs inspection for transient silhouettes.

@@ -1,0 +1,106 @@
+{
+  "scope": "Fresh campaign per ABAB arm, same seed and 420-frame camera path, first 60 frames warmup; natural simulation state retained and pauses reported. CPU measures draw submission, GPU complete world draw; interval is draw cadence, not physical presentation. Streaming enabled; changing scene work can differ with asynchronous readiness.",
+  "limitation": "Tutorial pauses simulation during each run. This validates moving camera and streaming, not sustained active populated simulation. No physical presentation measurement. GPU query includes full world draw.",
+  "rows": [
+    {
+      "run": 0,
+      "arm": "off",
+      "cpu": {
+        "mean": 5.235736108819643,
+        "p95": 7.920000076293945,
+        "p99": 9.65499997138977,
+        "max": 10.365000009536743,
+        "count": 360
+      },
+      "gpu": {
+        "mean": 26.716025516666665,
+        "p95": 35.108645,
+        "p99": 40.280415,
+        "max": 45.988124,
+        "count": 360
+      },
+      "interval": {
+        "mean": 34.2701111111376,
+        "p95": 63.33999991416931,
+        "p99": 80.75499999523163,
+        "max": 92.2150000333786,
+        "count": 360
+      }
+    },
+    {
+      "run": 1,
+      "arm": "on",
+      "cpu": {
+        "mean": 5.782305550906393,
+        "p95": 8.355000019073486,
+        "p99": 11.320000052452087,
+        "max": 14.975000023841858,
+        "count": 360
+      },
+      "gpu": {
+        "mean": 29.31897905,
+        "p95": 39.169322,
+        "p99": 45.899218,
+        "max": 49.187551,
+        "count": 360
+      },
+      "interval": {
+        "mean": 36.9081944445769,
+        "p95": 68.5200001001358,
+        "p99": 83.51999998092651,
+        "max": 96.26499998569489,
+        "count": 360
+      }
+    },
+    {
+      "run": 2,
+      "arm": "off",
+      "cpu": {
+        "mean": 5.47309722867277,
+        "p95": 8.694999933242798,
+        "p99": 9.889999985694885,
+        "max": 11.289999961853027,
+        "count": 360
+      },
+      "gpu": {
+        "mean": 25.99437707222222,
+        "p95": 35.401509,
+        "p99": 39.276093,
+        "max": 50.425363,
+        "count": 360
+      },
+      "interval": {
+        "mean": 33.10540277792348,
+        "p95": 60.799999952316284,
+        "p99": 75.31000006198883,
+        "max": 96.125,
+        "count": 360
+      }
+    },
+    {
+      "run": 3,
+      "arm": "on",
+      "cpu": {
+        "mean": 5.513930551542176,
+        "p95": 8.004999995231628,
+        "p99": 9.75,
+        "max": 15.454999923706055,
+        "count": 360
+      },
+      "gpu": {
+        "mean": 26.341498144444444,
+        "p95": 37.404375,
+        "p99": 40.301822,
+        "max": 55.5875,
+        "count": 360
+      },
+      "interval": {
+        "mean": 33.71984722250038,
+        "p95": 63.610000014305115,
+        "p99": 84.88999998569489,
+        "max": 97.04500007629395,
+        "count": 360
+      }
+    }
+  ]
+}
