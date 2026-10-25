@@ -3,7 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const out=process.env.WG_DAYLIGHT_OUTPUT??'docs/qa/production-integration-20261025/lighting-final';await mkdir(out,{recursive:true});
 const biome=process.env.WG_LIGHT_BIOME??'manglares';
 const browser=await chromium.launch({channel:'chrome',headless:true});const records=[];
-try{for(const [run,arm] of (process.env.WG_DAYLIGHT_BENCH==='1'?['original','warm','original','warm']:['original','warm']).entries()){
+try{for(const [run,arm] of (process.env.WG_DAYLIGHT_BENCH==='1'?['original','warm','original','warm']:(process.env.WG_FERN_SWEEP==='1'?['warm']:['original','warm'])).entries()){
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();const body=await response.text();if(!body.includes('this.raycaster=new'))throw Error('World hook absent');await route.fulfill({response,body:body.replace('this.raycaster=new','globalThis.qaLightingWorld=this;this.raycaster=new')});});
  await page.addInitScript(()=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',farVegetation:true,sfx:0,music:0})));
@@ -27,6 +27,14 @@ try{for(const [run,arm] of (process.env.WG_DAYLIGHT_BENCH==='1'?['original','war
   await page.evaluate(phase=>{const w=window.qaLightingWorld;w.state.time=phase==='day'?150:350;w.render(0);},phase);await page.waitForTimeout(1500);
   const file=`${biome}-${arm}-${phase}.png`;await page.screenshot({path:`${out}/${file}`});
   records.push({run,arm,phase,file,timing:phase==='day'?timing:null,...setup,metrics:await page.evaluate(()=>{const w=window.qaLightingWorld;return {calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,memory:{...w.renderer.info.memory},coverage:w.groundDetails?.audit?.(),glError:w.renderer.getContext().getError()};}),errors:[...errors]});
+ }
+ if(process.env.WG_FERN_SWEEP==='1'){
+  for(const phase of ['day','night'])for(const scale of [1,1.25,1.5,2,3,2,1.5,1]){
+   await page.evaluate(({phase,scale,setup})=>{const w=window.qaLightingWorld;w.state.time=phase==='day'?150:350;const t=w.controls.target;w.camera.position.set(t.x+(setup.camera[0]-t.x)*scale,t.y+(setup.camera[1]-t.y)*scale,t.z+(setup.camera[2]-t.z)*scale);w.render(0);},{phase,scale,setup});
+   await page.waitForTimeout(1200);
+   await page.screenshot({path:`${out}/fern-sweep-${phase}-${records.length}.png`});
+   records.push({phase,scale,sweep:true,metrics:await page.evaluate(()=>{const w=window.qaLightingWorld;return {calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,glError:w.renderer.getContext().getError()};})});
+  }
  }
  if(errors.length||records.some(r=>r.metrics.glError))throw Error('Lighting validation errors: '+JSON.stringify(errors));
  await page.close();console.log(biome,arm,'captured');await writeFile(`${out}/${biome}.json`,JSON.stringify({scope:'Real campaign renderer, seed 712, same camera and visual time; Integrated final daylight on/off with the same scene and time. DOF disabled in both arms to isolate lighting; no timing claim.',records},null,2));
