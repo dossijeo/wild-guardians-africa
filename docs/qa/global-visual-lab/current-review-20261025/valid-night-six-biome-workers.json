@@ -279,15 +279,141 @@
     },
     {
       "biome": "volcanes",
-      "passed": false,
-      "status": "missing completed report",
-      "workers": []
+      "passed": true,
+      "sourceSha256": "bf294ff6f50df9cc9b4b5fca2230922c350a172946b40801043c94cf19e2dcaa",
+      "fixtureSha256": "e84289ba9ce0d24f341889391538d7e7a3d4d4b439d94868657374bb26d1b0ee",
+      "errors": [],
+      "workers": [
+        {
+          "id": "worker-28",
+          "status": "home",
+          "atHome": true
+        },
+        {
+          "id": "worker-30",
+          "status": "home",
+          "atHome": true
+        }
+      ],
+      "elapsed": [
+        119.99999999999746,
+        175.83049618891994
+      ],
+      "created": 175,
+      "pausedLegSamples": 0,
+      "nativeCounts": [
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26
+      ],
+      "graphicsCounts": [
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26
+      ],
+      "memoryBytes": [
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216
+      ],
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
     },
     {
       "biome": "gran-canon",
-      "passed": false,
-      "status": "missing completed report",
-      "workers": []
+      "passed": true,
+      "sourceSha256": "bba3080bf388a4432096560c5571f8f4ac7ef0b5f26bac5f87de67f4975badc4",
+      "fixtureSha256": "95c45b5487b1402128b197d8e179945eae6a0ef9233d2c3e50900ffd1a68cefe",
+      "errors": [],
+      "workers": [
+        {
+          "id": "worker-28",
+          "status": "home",
+          "atHome": true
+        },
+        {
+          "id": "worker-30",
+          "status": "home",
+          "atHome": true
+        }
+      ],
+      "elapsed": [
+        119.99999999999746,
+        274.08043500000025
+      ],
+      "created": 176,
+      "pausedLegSamples": 0,
+      "nativeCounts": [
+        28,
+        25,
+        28,
+        26,
+        29,
+        25,
+        27,
+        25,
+        27,
+        25,
+        27,
+        25
+      ],
+      "graphicsCounts": [
+        25,
+        25,
+        28,
+        26,
+        28,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      "memoryBytes": [
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216
+      ],
+      "terrainCamera": true,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
     }
   ]
 }

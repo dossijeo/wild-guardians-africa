@@ -56,3 +56,18 @@ comparison or continuous per-frame pause audit. The summary deliberately
 fails its six-biome completion assertion while the last two reports are absent.
 No production enablement or visual-equivalence conclusion follows from this
 partial result.
+
+## Completed corrected suite
+
+Volcanes and Gran Canon have now completed their resumed runs. The verifier
+passes for all six biomes: twelve settled legs each, both original workers at
+home, no unexpected errors, and zero paused leg-boundary samples. The prior
+Volcanes browser-termination failure is retained as interruption evidence.
+The corrected six-biome summary supersedes the partial summary above.
+
+This validates only the tested night/low-quality streaming scenario with the
+QA actor-residency policy enabled. It does not establish an FPS improvement,
+continuous absence of pauses, high-quality shadow equivalence, or production
+readiness. Quality transitions and comparative overhead remain pending.
+The final Manglares and Gran Canon captures were inspected; these active runs
+advance time independently and are not matched-time artistic comparisons.
