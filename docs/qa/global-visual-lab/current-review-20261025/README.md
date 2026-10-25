@@ -74,3 +74,26 @@ Una ejecución no establece mejora, regresión ni causalidad y no certifica
 fluidez. Preservar esta observación antes de cambios. El próximo diagnóstico
 debe atribuir el draw de 408 ms y contrastarlo con repetición controlada; no
 reducir cobertura ni alterar materiales aprobados para ocultar el problema.
+
+## Atribución y control de retención
+
+Repetición instrumentada del mismo recorrido: getProgramInfoLog espera 241,33 ms
+para far-ground-native-water-mask-v1:seam-v2, 214,47 ms para smooth-far-opaque-v1
+y 40,11 ms para far-ground-native-water-mask-v1. Son tiempos síncronos de llamadas,
+no GPU ocupado. No atribuir este pico a los helechos, al suelo cercano ni a la
+variante de transparencia de obstrucción sin evidencia adicional.
+
+Control con la retención existente habilitada, manteniendo los otros cuatro
+streamingOptions idénticos: 75 programas retenidos, ninguna llamada instrumentada
+superior a 20 ms y máximo draw 16,72 ms frente a 318,90 ms del diagnóstico original.
+Ambas ejecuciones instalan diez chunks, terminan asentadas y no registran errores
+nuevos. Sin embargo, RAF p95 pasa de 199,50 a 265,86 ms y máximo de 332,49 a
+565,39 ms; medias 95,61 y 100,70 ms. La retención no se promueve: eliminar ese
+bloqueo aislado no demuestra mejora integral. La simulación activa evoluciona con
+el tiempo real, por lo que estas dos pruebas no son una aceptación A/B/A/B ni
+permiten atribuir causalmente el empeoramiento a la retención.
+
+Conservar los informes originales, el resumen y las capturas de ambos finales.
+Siguiente atribución: fases completas del frame y preparación fuera del dibujo,
+con repetición intercalada antes de modificar políticas de producción. No se han
+alterado shaders, densidad, geometría, simulación ni defaults.

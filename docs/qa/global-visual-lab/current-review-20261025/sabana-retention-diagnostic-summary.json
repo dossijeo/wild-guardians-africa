@@ -1,0 +1,101 @@
+{
+  "scope": "Instrumented A/B diagnostic only; active simulation follows wall-clock time, no repeated speed acceptance. No production policy change.",
+  "runs": [
+    {
+      "report": "sabana-active-attribution.json",
+      "streamingOptions": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": false
+      },
+      "frames": {
+        "count": 180,
+        "mean": 95.61280555555555,
+        "p95": 199.5,
+        "max": 332.4850000000006
+      },
+      "draw": {
+        "count": 181,
+        "mean": 10.560027624362082,
+        "p95": 14.254999995231628,
+        "max": 318.90499997138977
+      },
+      "slowGl": [
+        {
+          "name": "getProgramInfoLog",
+          "ms": 241.32500004768372,
+          "elapsed": 122.41332999999703,
+          "program": {
+            "id": 82,
+            "name": "",
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:seam-v2"
+          }
+        },
+        {
+          "name": "getProgramInfoLog",
+          "ms": 214.46999990940094,
+          "elapsed": 134.02904999999885,
+          "program": {
+            "id": 83,
+            "name": "",
+            "cacheKey": "28,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "name": "getProgramInfoLog",
+          "ms": 40.110000014305115,
+          "elapsed": 134.02904999999885,
+          "program": {
+            "id": 87,
+            "name": "",
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,far-ground-native-water-mask-v1"
+          }
+        }
+      ],
+      "created": 10,
+      "farSettled": true,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "retention": null,
+      "errors": []
+    },
+    {
+      "report": "sabana-active-retention.json",
+      "streamingOptions": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": true
+      },
+      "frames": {
+        "count": 180,
+        "mean": 100.69549999999997,
+        "p95": 265.8600000000006,
+        "max": 565.385000000002
+      },
+      "draw": {
+        "count": 181,
+        "mean": 7.467458560321871,
+        "p95": 13.225000023841858,
+        "max": 16.7150000333786
+      },
+      "slowGl": [],
+      "created": 10,
+      "farSettled": true,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "retention": {
+        "retained": 75,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "errors": []
+    }
+  ]
+}
