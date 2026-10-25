@@ -189,3 +189,23 @@ sabana-day-night.log; no se usa como comparación válida. El capturador ahora
 comprueba la unicidad del anchor y mantiene retainStreamingPrograms al pausar,
 y acepta WG_REVIEW_QUERY explícito sin alterar la receta histórica por defecto.
 La repetición corregida termina exit0; comprobación de sintaxis correcta.
+
+## Gran Río: repetición visual actual
+
+Doce capturas en gran-rio-day-night, calidad media, día/noche y tres poses,
+con receta actual y fondos completos. Todas conservan el tiempo de simulación
+119,99999999999746; ningún error GL/console registrado. Se inspeccionó la vista
+normal final diurna/nocturna y la referencia histórica nocturna: la cubierta sigue
+siendo una masa herbácea reconocible, los caminos se distinguen y hay suelo bajo
+los objetos del fondo visible. No se observa una pérdida masiva de densidad en
+estas vistas. Noche más oscura pero mantiene lectura; no se altera su iluminación.
+
+Controles históricos de cámara/target/reloj/estado de trabajadores registrados
+en gran-rio-history-controls.json. Vista normal:105→91calls y874520→575977
+triángulos, pese a cámara y estado coincidentes. No atribuir automáticamente a
+pérdida de vegetación ni a mejora GPU: el renderer y sus optimizaciones cambiaron
+entre referencias. No es paridad de workload ni benchmark. Mantener estos datos
+para atribución si aparece un defecto visual concreto.
+
+Agua solo al fondo en vista normal: esta prueba no cierra la ribera cercana.
+Faltan movimiento continuo y revisión de otras poses; no cierre global del bioma.
