@@ -334,3 +334,28 @@ Esta revisión no demuestra paridad píxel con la imagen adjunta del usuario:
 no se conoce su estado completo. Tampoco prueba transicionesLOD, viento continuo,
 streaming o costeGPU. Preserva una referencia actual reproducible para esas
 pruebas. No se declara el bioma completado técnicamente por aprobación artística.
+
+
+## Desierto y Volcanes: referencias actuales completadas
+
+Series `desierto-day-night` y `volcanes-day-night`: 12 capturas cada una,
+calidad media, 1280x720, día/noche, tres cámaras, calentamiento y pase final.
+Los 24 registros conservan elapsed=119.99999999999746; no hay errores GL ni
+entradas de error en los cuatro registros de cada serie. Los procesos de captura
+ya no están activos y ambos informes finales existen.
+
+Inspeccionadas las vistas normales finales de día y noche. Desierto conserva
+ondulaciones y sombras de arena legibles, con edificios diferenciados del suelo.
+Volcanes conserva fracturas y relieve rocoso; de noche baja la iluminación del
+suelo mientras la lava sigue visible. No se modifica la lava ni el material
+aprobado de Desierto. Esta inspección no demuestra equivalencia píxel a píxel
+con versiones históricas ni valida por sí sola las otras dos cámaras.
+
+El capturador acepta ahora WG_REVIEW_SOURCE para reutilizar la fixture histórica
+de Desierto (`desert-populated-closure-20261022`) sin duplicar el capturador ni
+cambiar el estado guardado. Se mantiene el origen por defecto de los demás biomas.
+
+Con estas series existen referencias estáticas actuales de los seis biomas.
+Esto no cierra la validación integral: falta consolidar movimiento, streaming,
+perfiles modestos y medidas comparables de la combinación seleccionada. Estas
+capturas pausadas no son benchmarks ni justifican mejoras de FPS.

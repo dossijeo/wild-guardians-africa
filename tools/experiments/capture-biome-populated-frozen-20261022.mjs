@@ -6,7 +6,7 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises';
 const selectedBiome=process.env.WG_FIXTURE_BIOME??'sabana';
 // Explicit current-recipe override; historical captures retain their original default.
 const reviewQuery=biome=>{const q=new URLSearchParams(globalClosureQuery(biome));for(const [key,value] of new URLSearchParams(process.env.WG_REVIEW_QUERY??''))q.set(key,value);return q.toString();};
-const sourceDir=`docs/qa/global-visual-lab/${selectedBiome}-populated-frozen-20261022`;const out=process.env.WG_REVIEW_OUT??sourceDir;await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const sourceDir=process.env.WG_REVIEW_SOURCE??`docs/qa/global-visual-lab/${selectedBiome}-populated-frozen-20261022`;const out=process.env.WG_REVIEW_OUT??sourceDir;await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const fixture=JSON.parse(await readFile(`${sourceDir}/native-fixture.json`,'utf8'));
 const snapshot=fixture.timing.navigationContext.state;
 const browser=await chromium.launch({channel:'chrome',headless:true});
