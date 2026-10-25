@@ -610,3 +610,25 @@ Pendiente identificar qué cola o preparación no se asienta con el mundo pausad
 No atribuir aún el fallo a recursos perdidos ni aumentar el timeout como arreglo.
 La variante activa anterior sí completó este recorrido. El estado de fallo actual
 solo contiene el diagnóstico general; se necesita observación de colas al fallar.
+
+
+## Diagnóstico del timeout con capturas
+
+Control pausado sin capturas intermedias: sabana-paused-stream-diagnostic.json
+completa diez chunks, fondos asentados,180frames pausados, elapsed idéntico antes
+y después, sin errores nuevos. La pausa sola no reproduce el fallo.
+
+Repetición con siete capturas: sabana-visual-steps-diagnostic.failure.json vuelve
+a agotar Stream completion deadline. Diagnóstico nuevo: horizonte listo, los
+cuatro adaptadores lejanos sin preparación pendiente ni errores; chunkStream
+queued7, preparing2, busy=true, created26 (25iniciales). Scheduler pending2,
+waiting0, oldest216776ms, budget3,097ms, median16,66ms y CPU p958,35ms.
+Esto localiza el atasco en preparación/admisión de chunks, no en los fondos.
+No demuestra todavía qué unidad está bloqueada ni que las capturas sean la causa
+exclusiva; cambian la cadencia y reproducen el caso. Conservar ambos controles.
+
+La instrumentación de timeout añade estados sin alterar límites ni producción.
+Siguiente diagnóstico: identidad, coste estimado, deadline y readiness de las
+dos tareas que sobreviven pese al presupuesto disponible. No aumentar el timeout
+ni reducir vegetación para hacer pasar la prueba. La serie con capturas no sirve
+para benchmarking temporal y sigue sin superar el criterio de asentamiento.

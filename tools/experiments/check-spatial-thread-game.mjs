@@ -273,7 +273,7 @@ try{
     if(i%60===0)readiness.push({frame:i,elapsed:w.state.elapsed,ready:w.actorsReady(),pauses:[...w.state.pauses],stream:w.chunkStream.summary()});
    }
    const deadline=performance.now()+60000;
-   while(w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||farPending()){if(performance.now()>deadline)throw Error('Stream completion deadline');const now=await frame();rows.frames.push(now-last);last=now;}
+   while(w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||farPending()){if(performance.now()>deadline)throw Error('Stream completion deadline '+JSON.stringify({stream:w.chunkStream.summary(),horizon:{latest:!!w.horizon?.generator.latest,busy:!!w.horizon?.generator.busy,pending:!!w.horizon?.pendingPreparation},far:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})),scheduler:w.frameScheduler?.snapshot(),paused:w.state.pauses}));const now=await frame();rows.frames.push(now-last);last=now;}
   }finally{if(loafObserver){longAnimationFrames.push(...loafObserver.takeRecords().map(entry=>entry.toJSON()));loafObserver.disconnect();}globalThis.qaMainPhase=null;globalThis.qaMainFrame=null;game.pause(w.state,'menu');gpu?.stop();for(const undo of restore)undo();
   programLease?.dispose();
   }
