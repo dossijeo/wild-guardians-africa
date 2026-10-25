@@ -209,3 +209,23 @@ para atribución si aparece un defecto visual concreto.
 
 Agua solo al fondo en vista normal: esta prueba no cierra la ribera cercana.
 Faltan movimiento continuo y revisión de otras poses; no cierre global del bioma.
+
+## Gran Cañón: cámara nativa y revisión día/noche
+
+Doce capturas actuales en gran-canon-day-night, tres poses, día/noche y repetición
+tras calentamiento. Calidad media720p, seed712, fixture poblada original, tiempo
+simulado fijo, fondos habilitados. Sin errores GL/console registrados. El harness
+se actualiza al mismo anchor de pausa verificado usado en las otras capturas;
+conserva la cámara nativa y registra los overrides explícitos de receta.
+
+Inspección de vista normal: estratos cálidos y grava de ribera distinguibles,
+borde del agua suave, sombras sobre edificios y suelo; noche mantiene legibilidad
+sin cambiar materiales. Los reflejos diurnos muestran repetición perceptible a
+lo largo del río. Es un pendiente artístico concreto ya documentado históricamente,
+no evidencia nueva de una regresión. Evitar repetir variantes descartadas sin
+revisar antes sus informes. El contacto de pared conserva su silueta geométrica;
+no se altera el terreno autoritativo para mejorar esta imagen.
+
+No certifica movimiento, memoria, rendimiento ni equivalencia con main. Las
+capturas no incorporan ajustes artísticos nuevos. Sabana, Gran Río y Gran Cañón
+ya tienen referencias actuales día/noche bajo el mismo método de congelación.
