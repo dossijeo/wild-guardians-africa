@@ -52,3 +52,12 @@ Validation: 13 existing toon/vegetation/global-light tests plus 2 new profile st
 ## User decision: remove distant DOF
 
 After reviewing the on/off comparison, the user preferred removing the effect. Production no longer imports, constructs, prepares or renders HorizonFocus; no color/depth copy, full-screen blur pass or associated allocation remains. Warm daylight is retained. The implementation moved to `tools/experiments/horizon-focus.js`; explicit QA installers and historical captures remain reproducible. Earlier default-enabled statements above are superseded by this decision. All 22 targeted quality/render-origin/effect lifecycle tests pass after removal.
+
+
+## Release-flow interference and CI findings
+
+The first packaged-flow matrix passed Savanna, River, Mangrove and Volcano (new/save/exit/continue/pan). Desert failed with missing snapshot worker, audio and menu files because a concurrent desktop build replaced `dist` while its local test server was reading it. This is test interference, not demonstrated product failure. Preserve `final-flow-desierto.json` as negative evidence. The package UI harness now accepts `WG_PACKAGE_UI_ROOT`; reruns serve an immutable copy of the no-DOF build. Desert rerun passes with zero missing resources/errors; Canyon remains in progress at this checkpoint.
+
+CI run 40219841652 failed resident-props fixtures on the added configureHorizonFocus method and the SFX inventory's scene-source hash. Removing the DOF integration restores both contracts: all 11 resident-props/catalogue tests now pass without changing assertions or regenerating audio evidence. Latest-head CI still required.
+
+The integrated daylight ABAB timings are inconclusive: full-draw GPU means 21.505 / 30.599 / 36.976 / 31.052 ms, CPU 3.592 / 4.081 / 3.203 / 3.325 ms. The original itself shifts by 15.47 ms between runs. Preserve the raw samples under `lighting-final-benchmark`; do not claim zero cost or a regression attributable to lighting from this unstable run. Further controlled validation is required.

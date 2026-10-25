@@ -2,7 +2,7 @@ import {createServer} from 'node:http';
 import {readFile,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import {chromium} from 'playwright';
-const root=resolve('dist'),prefix='/nested/itch/game/',requests=[],errors=[],workers=[],closedWorkers=[];
+const root=resolve(process.env.WG_PACKAGE_UI_ROOT??'dist'),prefix='/nested/itch/game/',requests=[],errors=[],workers=[],closedWorkers=[];
 const isolation=process.env.WG_PACKAGE_UI_ISOLATION!=='0';
 const types={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.json':'application/json','.css':'text/css','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.glb':'model/gltf-binary','.ogg':'audio/ogg','.opus':'audio/ogg','.mp3':'audio/mpeg','.woff2':'font/woff2'};
 const server=createServer(async(req,res)=>{
@@ -32,6 +32,20 @@ try{
  await menu.getByText('JUEGO NUEVO',{exact:false}).first().waitFor({timeout:60000});
  await menu.locator('#loading').waitFor({state:'hidden',timeout:60000});
  result={url,isolated:await page.evaluate(()=>crossOriginIsolated),menuButtons:await menu.locator('button,[role=button]').allTextContents(),menuText:(await menu.locator('body').innerText()).slice(-3000)};
+ if(process.env.WG_PACKAGE_UI_LIBRARY==='1'){
+  await menu.getByRole('button',{name:'Biblioteca',exact:true}).click();
+  result.library=[];
+  for(const lab of ['crops','walls','destruction','sfx']){
+   await menu.locator('[data-production-lab='+lab+']').click();
+   const frame=menu.frameLocator('.production-lab-frame');await frame.locator('canvas').first().waitFor({timeout:60000});
+   const checks={lab};
+   if(lab==='crops'){await frame.locator('.crop-card').nth(1).click();await frame.locator('#demoBtn').click();checks.plants=await frame.locator('#countPlants').textContent();if(checks.plants!=='8')throw Error('Crop demo did not plant');}
+   if(lab==='walls'){await frame.locator('[data-material=piedra]').click();checks.material=await frame.locator('[data-material=piedra]').getAttribute('aria-checked');if(checks.material!=='true')throw Error('Wall material did not change');}
+   if(lab==='destruction'){await frame.locator('[data-stage="50"]').click({timeout:180000});await page.waitForTimeout(500);checks.damage=await frame.locator('#damageValue').textContent();if(checks.damage!=='50')throw Error('Damage demo failed');await frame.locator('#reset').click();}
+   if(lab==='sfx'){await frame.locator('#search').fill('004');checks.matches=await frame.locator('.item').count();if(!checks.matches)throw Error('Sound catalogue empty');await frame.locator('[data-action=play]').first().click();await page.waitForTimeout(700);checks.title=await frame.locator('#nowTitle').textContent();await frame.locator('#stop').click();}
+   await page.screenshot({path:report.replace(/\.json$/,'-library-'+lab+'.png')});result.library.push(checks);await menu.locator('.production-lab-header button').first().click();
+  }
+ }
  if(process.env.WG_PACKAGE_UI_FIXTURE){
   const fixture=JSON.parse(await readFile(process.env.WG_PACKAGE_UI_FIXTURE,'utf8'));
   // Saved-world reproduction only: same legacy storage ingress as native smoke.

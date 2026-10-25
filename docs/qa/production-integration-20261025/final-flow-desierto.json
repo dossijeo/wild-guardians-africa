@@ -1,0 +1,103 @@
+{
+  "diagnostics": {
+    "loadingTrace": false,
+    "softwareRequested": false,
+    "initialQuality": "media"
+  },
+  "scope": "Built package at nested path, no URL flags, route interception or source injection.",
+  "result": {
+    "url": "http://127.0.0.1:63935/nested/itch/game/",
+    "isolated": true,
+    "menuButtons": [
+      "",
+      "",
+      "Continuar",
+      "Juego nuevo",
+      "Opciones",
+      "Biblioteca",
+      "Salir",
+      "← Regresar",
+      "Omitir recorrido",
+      "Volver al santuario →",
+      "Volver a intentar"
+    ],
+    "menuText": "UNA PEQUEÑA GRANJA. UN MUNDO POR PROTEGER.\nEL SANTUARIO\nDonde comienza tu historia\nCONTINUAR\nJUEGO NUEVO\nOPCIONES\nBIBLIOTECA\nSALIR\nLA SABANA · CREPÚSCULO\n\nCada historia empieza con una semilla.\n\nTOCA LOS SÍMBOLOS LUMINOSOS\nVIAJE DEL ESPÍRITU · V2.8\nMenú listo. Cinco símbolos interactivos: Continuar, Juego nuevo, Opciones, Biblioteca y Salir.",
+    "gameText": "07:05\n1,5K\nDía 1\nVolver\nConstruir\nCultivar\nMagia\n\nEstas tierras me conocen. Soy el Espíritu que las guarda. Al anochecer, una maldición agita a los animales. Echa raíces junto al poblado: levanta un centro, siembra; tu comunidad cuidará los cultivos.\n\n×",
+    "workers": [
+      "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js",
+      "http://127.0.0.1:63935/nested/itch/game/wild-engine/spatial-threaded.mjs",
+      "http://127.0.0.1:63935/nested/itch/game/assets/biome-tangents-worker-Do-lJEut.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/building-data-worker-B-EMGaCp.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/spatial-horizon-worker-DUZIwrJt.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+      "http://127.0.0.1:63935/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js"
+    ],
+    "biome": "desierto",
+    "savedSlot": "92ac869e-5f72-4f9c-93b1-4c3eb384c235",
+    "failure": "TimeoutError: page.waitForSelector: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#stage[aria-busy=\"true\"]') to be visible\u001b[22m\n"
+  },
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+  ],
+  "requests": [
+    {
+      "url": "/nested/itch/game/assets/snapshot-decode-worker-_F8oz2iU.js",
+      "status": 404,
+      "message": "ENOENT: no such file or directory, open 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\dist\\assets\\snapshot-decode-worker-_F8oz2iU.js'"
+    },
+    {
+      "url": "/nested/itch/game/assets/audio/a162f419c816b015a6821c1c0906e869fe6d024cb1ce0c7e89efc3b328910c13.opus",
+      "status": 404,
+      "message": "ENOENT: no such file or directory, open 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\dist\\assets\\audio\\a162f419c816b015a6821c1c0906e869fe6d024cb1ce0c7e89efc3b328910c13.opus'"
+    },
+    {
+      "url": "/nested/itch/game/menu/index.html",
+      "status": 404,
+      "message": "ENOENT: no such file or directory, open 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\dist\\menu\\index.html'"
+    }
+  ],
+  "workers": [
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js",
+    "http://127.0.0.1:63935/nested/itch/game/wild-engine/spatial-threaded.mjs",
+    "http://127.0.0.1:63935/nested/itch/game/assets/biome-tangents-worker-Do-lJEut.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/building-data-worker-B-EMGaCp.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/spatial-horizon-worker-DUZIwrJt.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js"
+  ],
+  "closedWorkers": [
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/biome-tangents-worker-Do-lJEut.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/building-data-worker-B-EMGaCp.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/far-scene-worker-Bjhd2E3o.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/spatial-horizon-worker-DUZIwrJt.js",
+    "http://127.0.0.1:63935/nested/itch/game/wild-engine/spatial-threaded.mjs",
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:63935/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js"
+  ]
+}
