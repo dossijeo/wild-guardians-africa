@@ -40,3 +40,19 @@ with both workers at home (60,0), no new errors and no paused leg-boundary sampl
 Elapsed simulation advanced from 120 to 175.73. The no-retention control raises
 SpatialChunkUnavailable (72 paused frames). These protocols differ, so no FPS
 comparison is inferred. The other five night biomes require corrected reruns.
+
+## Interrupted serial validation, 2026-10-25
+
+The user requested termination of Chrome during the Volcanes run. The browser
+closed error in `volcanes-valid-night-active-roundtrips.failure.json` records
+that external interruption, not a demonstrated game regression. Gran Canon
+was not started; no benchmark process remains.
+
+The independent verifier `summarize-valid-night-workers.py` confirms completed
+corrected runs for Sabana, Gran Rio, Manglares and Desierto: twelve settled
+legs, both workers at their original home coordinates, no unexpected errors,
+and no paused leg-boundary samples. This is correctness evidence, not an FPS
+comparison or continuous per-frame pause audit. The summary deliberately
+fails its six-biome completion assertion while the last two reports are absent.
+No production enablement or visual-equivalence conclusion follows from this
+partial result.

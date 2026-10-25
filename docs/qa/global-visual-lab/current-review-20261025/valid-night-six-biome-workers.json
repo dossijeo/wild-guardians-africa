@@ -1,0 +1,293 @@
+{
+  "scope": "Correct UTF-8 source state, night/low, six active round trips per biome. Pauses sampled at leg boundaries. Actual worker home positions checked. No AB performance or artwork equivalence claim.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "passed": true,
+      "sourceSha256": "5618c1f0d2cdb7c003078b6d7ed2e99111bb65c1562a1d61a10348aae3ab890b",
+      "fixtureSha256": "09f4f2dbe067c6a0dd8b9663fc79d4f6aa4f94ae51d93a82d432c1d31141bce4",
+      "errors": [],
+      "workers": [
+        {
+          "id": "worker-28",
+          "status": "home",
+          "atHome": true
+        },
+        {
+          "id": "worker-30",
+          "status": "home",
+          "atHome": true
+        }
+      ],
+      "elapsed": [
+        119.99999999999746,
+        175.73050618891912
+      ],
+      "created": 175,
+      "pausedLegSamples": 0,
+      "nativeCounts": [
+        27,
+        26,
+        27,
+        27,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26
+      ],
+      "graphicsCounts": [
+        25,
+        26,
+        25,
+        27,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26
+      ],
+      "memoryBytes": [
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216
+      ],
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "biome": "gran-rio",
+      "passed": true,
+      "sourceSha256": "9968239d0008af1ea41a45e3bf893307822c8e36a45e6214bdd8405d50172d2e",
+      "fixtureSha256": "3635261b4fd75e358252fcbc3d39d3381d5ad8bf61cd9a9fcfa04d01cd77abc8",
+      "errors": [],
+      "workers": [
+        {
+          "id": "worker-28",
+          "status": "home",
+          "atHome": true
+        },
+        {
+          "id": "worker-30",
+          "status": "home",
+          "atHome": true
+        }
+      ],
+      "elapsed": [
+        119.99999999999746,
+        177.75957118892023
+      ],
+      "created": 176,
+      "pausedLegSamples": 0,
+      "nativeCounts": [
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26
+      ],
+      "graphicsCounts": [
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26
+      ],
+      "memoryBytes": [
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216
+      ],
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "biome": "manglares",
+      "passed": true,
+      "sourceSha256": "81b0bace2d28f8d0352d5cae1606647533d55f903718fe78a18b3461d2609cec",
+      "fixtureSha256": "10cfff20e46dfc42c978b7aaa35fe35cc2dae55ab8e86637c06121490864c3ca",
+      "errors": [],
+      "workers": [
+        {
+          "id": "worker-28",
+          "status": "home",
+          "atHome": true
+        },
+        {
+          "id": "worker-30",
+          "status": "home",
+          "atHome": true
+        }
+      ],
+      "elapsed": [
+        119.99999999999746,
+        202.30025118892942
+      ],
+      "created": 173,
+      "pausedLegSamples": 0,
+      "nativeCounts": [
+        27,
+        27,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26,
+        27,
+        26
+      ],
+      "graphicsCounts": [
+        25,
+        27,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        26,
+        26
+      ],
+      "memoryBytes": [
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216
+      ],
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "biome": "desierto",
+      "passed": true,
+      "sourceSha256": "32be46065a2220c45142bfe6b334fe097c9e3b79e4f3261f8cd23c15c90f6121",
+      "fixtureSha256": "8ed1ec353f9192be08e9b551f876963830204624c429816002a0fe40ae014e64",
+      "errors": [],
+      "workers": [
+        {
+          "id": "worker-28",
+          "status": "home",
+          "atHome": true
+        },
+        {
+          "id": "worker-30",
+          "status": "home",
+          "atHome": true
+        }
+      ],
+      "elapsed": [
+        119.99999999999746,
+        155.88518999999974
+      ],
+      "created": 176,
+      "pausedLegSamples": 0,
+      "nativeCounts": [
+        27,
+        25,
+        27,
+        25,
+        27,
+        25,
+        27,
+        25,
+        27,
+        25,
+        27,
+        25
+      ],
+      "graphicsCounts": [
+        25,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25,
+        26,
+        25
+      ],
+      "memoryBytes": [
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216,
+        16777216
+      ],
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "biome": "volcanes",
+      "passed": false,
+      "status": "missing completed report",
+      "workers": []
+    },
+    {
+      "biome": "gran-canon",
+      "passed": false,
+      "status": "missing completed report",
+      "workers": []
+    }
+  ]
+}
