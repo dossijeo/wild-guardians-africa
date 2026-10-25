@@ -23,3 +23,9 @@ python tools/experiments/audit-horizon-raised-motion-20261023.py docs/qa/global-
 ```
 
 The mask remains opt-in. Context restore, quality transitions and terrain-edge continuity remain pending. No new GPU-cost claim, no production promotion, no main merge.
+
+## Follow-up candidate: resident boundary bridge
+
+Source inspection found that the vertical bridge still drew the entire outer nearBounds rectangle even when the adjacent near chunk was absent. That is inconsistent with the resident mask: in those cells the coarse surface continues across the boundary, so no native-height bridge should be visible. The QA candidate now shares the same resident texture with the bridge shader, samples just inside the rectangle (including maximum edges), and discards bridge fragments adjacent to missing or hidden chunks. No new texture, worker job, geometry or draw call; one mask lookup per surviving edge fragment. Program key changes to resident-mask-v2.
+
+19 Node tests pass across native-far-ground, native-far-ground-seam and far-ground-visibility. Added coverage checks shared texture identity, residency updates, and no worker rebuild on visibility changes. These tests do not compile GLSL on GPU or establish visual benefit. A new live capture is being collected under volcanes-resident-seam-low; it is not yet accepted. Remaining height discontinuity between genuinely installed terrain and the coarse proxy may still be visible, and internal missing-chunk boundaries have no dedicated bridge.
