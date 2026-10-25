@@ -4,12 +4,13 @@ Preserves source topology, UVs, materials and all bones; edits feet below ankles
 import argparse,sys,json,math,hashlib
 from pathlib import Path
 import bpy
-from mathutils import Vector,Matrix
+from mathutils import Vector,Matrix,Quaternion
 args=argparse.ArgumentParser()
+args.add_argument('--head-lift',type=float,default=22,help='Anatomical head pitch correction in degrees; animated turns and nods retained')
 args.add_argument('--input',required=True);args.add_argument('--output',required=True);args.add_argument('--report',required=True);args.add_argument('--blend-dir')
 a=args.parse_args(sys.argv[sys.argv.index('--')+1:]);root=Path(__file__).resolve().parents[1]
 old_path=root/'public/assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb'
-report={'sourceSha256':hashlib.sha256(Path(a.input).read_bytes()).hexdigest(),'sourceBytes':Path(a.input).stat().st_size,'blender':bpy.app.version_string,'animationSource':str(old_path.relative_to(root)),'scope':'Foot geometry, sole weights and animation contact correction. Other geometry, UVs, materials and bones retained.'}
+report={'sourceSha256':hashlib.sha256(Path(a.input).read_bytes()).hexdigest(),'sourceBytes':Path(a.input).stat().st_size,'blender':bpy.app.version_string,'animationSource':str(old_path.relative_to(root)),'scope':'Foot geometry, sole weights, animation contact and anatomical head posture correction. Other geometry, UVs, materials and bones retained.'}
 bpy.ops.wm.read_factory_settings(use_empty=True);bpy.ops.import_scene.gltf(filepath=a.input)
 rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE');mesh=next(o for o in bpy.context.scene.objects if o.type=='MESH' and o.parent==rig)
 rig.animation_data_clear()
@@ -72,7 +73,7 @@ lowest=min(v.co.z for v in mesh.data.vertices);height=max(v.co.z for v in mesh.d
 scale=3/height
 report['scale']=scale;report['hipTranslationRatio']=ratio
 report['retarget']={'armBindCalibration':'T-pose replacement to A-pose donor using animated limb directions','bakeFps':96,'preserved':'Own target limb lengths, authored finger hierarchy and native clip duration'}
-report['headPosture']={'correctionDegrees':0,'preserved':'Native head motion; no anatomical head adjustment'}
+report['headPosture']={'headLiftDegrees':a.head_lift,'neckLiftDegrees':5,'axis':'Animated torso lateral axis','preserved':'Animated head turns and nods; authored bind skeleton and mesh retained'}
 # Evaluate donor on its original 24 fps frame coordinates; write target keys
 # at four times those coordinates and export at 96 fps, preserving duration.
 scene=bpy.context.scene;scene.render.fps=96
@@ -101,6 +102,12 @@ for name in native:
     posed=(rotation@new_rest[p.name].to_quaternion().inverted())@authored
     wanted=old.pose.bones['mixamorig:'+donor].matrix.translation-source.matrix.translation
     rotation=posed.rotation_difference(wanted)@rotation
+   if p.name in ['Neck','Head','Head_top']:
+    # Lift the neutral gaze in the animated torso frame, keeping the donor
+    # motion around that baseline rather than locking the head in world space.
+    torso=rig.pose.bones['Spine2'].matrix.to_quaternion()@new_rest['Spine2'].to_quaternion().inverted()
+    axis=torso@Vector((1,0,0));lift=5 if p.name=='Neck' else a.head_lift
+    rotation=Quaternion(axis,math.radians(-lift))@rotation
    if p.parent:
     head=p.parent.matrix@(new_rest[p.parent.name].inverted()@new_rest[p.name].translation)
    else:

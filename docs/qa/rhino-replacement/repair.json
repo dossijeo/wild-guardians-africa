@@ -3,7 +3,7 @@
   "sourceBytes": 107821688,
   "blender": "5.2.2 LTS",
   "animationSource": "public\\assets\\b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
-  "scope": "Foot geometry, sole weights and animation contact correction. Other geometry, UVs, materials and bones retained.",
+  "scope": "Foot geometry, sole weights, animation contact and anatomical head posture correction. Other geometry, UVs, materials and bones retained.",
   "before": {
     "vertices": 17125,
     "faces": 14182,
@@ -50,8 +50,10 @@
     "preserved": "Own target limb lengths, authored finger hierarchy and native clip duration"
   },
   "headPosture": {
-    "correctionDegrees": 0,
-    "preserved": "Native head motion; no anatomical head adjustment"
+    "headLiftDegrees": 22,
+    "neckLiftDegrees": 5,
+    "axis": "Animated torso lateral axis",
+    "preserved": "Animated head turns and nods; authored bind skeleton and mesh retained"
   },
   "clips": [
     {
@@ -101,6 +103,6 @@
   "after": {
     "vertices": 17125,
     "faces": 14182,
-    "bytes": 47833372
+    "bytes": 47833368
   }
 }

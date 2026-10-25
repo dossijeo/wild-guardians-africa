@@ -14,9 +14,9 @@
   ],
   "gpuReady": true,
   "warmed": [
-    "buffalo",
     "warthog",
     "hyena",
+    "buffalo",
     "lion",
     "rhino"
   ],
@@ -41,19 +41,19 @@
     {
       "species": "rhino",
       "ready": true,
-      "modelId": "9d8e5e68-8851-4304-a9bc-8044054a0703",
+      "modelId": "81a6de3d-630b-42dc-a40f-d95f5365a0d0",
       "fromSpare": true,
       "skeletons": [
-        "dac76251-d582-4833-aa46-86d74b07de1e"
+        "d73f751a-bd32-43ad-90e5-7786867edd77"
       ],
       "boneTextures": [
-        "f33a1024-e564-420f-a6cc-8465d5d9f52c"
+        "1ec949dd-de30-44f1-8261-47a61552e604"
       ],
       "geometry": [
-        "93123c48-a02b-453b-8507-24410e19dab1"
+        "0b708bb0-540b-40de-8cd8-7f33a5f40ff4"
       ],
       "materials": [
-        "9f396873-dc51-4724-89c2-1f812ba72f6f"
+        "e15e355e-b2ed-413d-a419-cb6ecace5957"
       ]
     }
   ],
@@ -142,11 +142,11 @@
       53
     ],
     "spareModelIds": [
-      "bc599003-b2ce-4ab3-b9d2-ca4d40f25278",
-      "c8e09fc9-e2a7-4d08-a9d7-62da5c2e49bd",
-      "c9273ba6-c444-40df-957e-9114325b11a9",
-      "8ef81992-16f7-46bb-b48e-e8b2109607d6",
-      "9d8e5e68-8851-4304-a9bc-8044054a0703"
+      "5e88e99d-d416-428b-82b1-c0bd9643844b",
+      "d707a599-b79d-4c72-b220-3dcd288d4c86",
+      "baf789ca-2aa9-4430-b237-4a4391c06784",
+      "5549f139-78c9-481e-9c07-0a38a21d92dc",
+      "81a6de3d-630b-42dc-a40f-d95f5365a0d0"
     ],
     "animalPrograms": [
       0,
@@ -198,8 +198,8 @@
     "creations": [],
     "newAnimalPrograms": []
   },
-  "appearanceMs": 127.48499989509583,
-  "loadingMs": 4880.790000081062,
+  "appearanceMs": 102.80499994754791,
+  "loadingMs": 3706.375,
   "errors": [],
   "timing": {
     "settle": [],
@@ -210,12 +210,12 @@
     "firstRenderCalls": [],
     "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
     "motion": {
-      "steps": 468,
+      "steps": 467,
       "heldFrames": 0,
       "spawnSpecies": [
         "rhino"
       ],
-      "simulatedSeconds": 23.400000000000002,
+      "simulatedSeconds": 23.35,
       "centerHpBefore": 600,
       "centerHpAfter": 540,
       "logicalHits": [
@@ -226,11 +226,11 @@
           "targetId": "structure-2",
           "species": "rhino",
           "presentation": {
-            "elapsed": 23.400000000000198,
+            "elapsed": 23.350000000000197,
             "animal": {
-              "x": -31.16622886893682,
-              "z": 26.67270728214598,
-              "heading": 0.12288614363462445
+              "x": -31.16569008919065,
+              "z": 26.722638657776557,
+              "heading": 0.12432590829011399
             },
             "target": {
               "x": -30.684595436780327,
@@ -250,10 +250,10 @@
           "animation": "Right_Hand_Sword_Slash",
           "ready": true,
           "position": [
-            -31.16622886893682,
-            26.67270728214598
+            -31.16569008919065,
+            26.722638657776557
           ],
-          "renderY": 3.707542977412924
+          "renderY": 3.707467199325573
         }
       ],
       "attackEffects": [
@@ -270,11 +270,11 @@
         "targetId": "structure-2",
         "species": "rhino",
         "presentation": {
-          "elapsed": 23.400000000000198,
+          "elapsed": 23.350000000000197,
           "animal": {
-            "x": -31.16622886893682,
-            "z": 26.67270728214598,
-            "heading": 0.12288614363462445
+            "x": -31.16569008919065,
+            "z": 26.722638657776557,
+            "heading": 0.12432590829011399
           },
           "target": {
             "x": -30.684595436780327,
@@ -302,8 +302,8 @@
           "firstHitThisRaid": true
         }
       },
-      "maximumGameTickMs": 11.740000009536743,
-      "medianGameTickMs": 0.23500001430511475,
+      "maximumGameTickMs": 10.149999976158142,
+      "medianGameTickMs": 0.2250000238418579,
       "renderedActors": [
         {
           "id": "animal-6",
@@ -311,14 +311,14 @@
           "status": "walking",
           "bounds": {
             "min": [
-              -32.19076059511507,
-              3.7295429774129216,
-              26.08084193625308
+              -32.18189318421445,
+              3.729467199325574,
+              26.050582789115047
             ],
             "max": [
-              -30.187816712911438,
-              6.574781936987868,
-              27.80807657716324
+              -30.206581121694693,
+              6.559213541034904,
+              27.80620797448446
             ]
           },
           "intersectsCamera": true,
@@ -332,6 +332,6 @@
     "rhino"
   ],
   "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
-  "replacementModel": "/assets/7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093.glb",
+  "replacementModel": "/assets/e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc.glb",
   "qaUrl": "http://127.0.0.1:5194/tests/browser/animal-preload.html?biome=gran-canon&motion=1&attack-species=rhino&copies=1"
 }
