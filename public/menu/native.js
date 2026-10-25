@@ -290,6 +290,40 @@ function createBackgroundRelief(){
  }
 }
 
+// Layered sanctuary art; rendered by the existing menu frame loop.
+const menuPlateFS=`#version 300 es
+precision highp float;
+in vec2 vUV; uniform sampler2D uPlate; uniform vec2 uAspect,uOffset;
+uniform float uScale,uOpacity,uHDR;
+layout(location=0) out vec4 sceneColor; layout(location=1) out vec4 glowColor;
+${lightingFunctions}
+vec3 plateInverseACES(vec3 y){vec3 a=2.51-2.43*y,b=.03-.59*y;return (-b+sqrt(max(b*b+.56*a*y,vec3(0.))))/(2.*a);}
+void main(){
+ vec2 uv=(vUV-.5)*uAspect/uScale+.5+uOffset; uv.y=1.-uv.y;
+ vec4 texel=texture(uPlate,uv); float alpha=texel.a*uOpacity;
+ if(alpha<.002)discard;
+ vec3 c=clamp(srgbToLinear(texel.rgb),0.,.94);
+ sceneColor=vec4(uHDR>.5?plateInverseACES(c):c,alpha);glowColor=vec4(0.);
+}`;
+let menuForegroundTex;
+async function loadMenuPlate(url){
+ const response=await fetch(url);if(!response.ok)throw Error('Missing menu artwork: '+url);
+ const bitmap=await createImageBitmap(await response.blob(),{premultiplyAlpha:'none',colorSpaceConversion:'none'});
+ try{return makeTexture(bitmap);}finally{bitmap.close();}
+}
+function drawMenuPlate(foreground){
+ const p=programs.plate,aspect=W/H,artAspect=1672/941;
+ gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.useProgram(p);
+ gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+ bindTex(p,'uPlate',foreground?menuForegroundTex:bgTex,0);
+ u2(p,'uAspect',Math.min(1,aspect/artAspect),Math.min(1,artAspect/aspect));
+ const movement=opts.reduced?0:1;
+ u2(p,'uOffset',parallax[0]*(foreground?.016:.004)*movement,parallax[1]*(foreground?.009:.002)*movement);
+ u1(p,'uScale',foreground?1.035+travel*.75:1.025+travel*.14);
+ u1(p,'uOpacity',foreground?1-smooth(travel/.55):1);u1(p,'uHDR',gl.hdr?1:0);
+ drawQuad();gl.depthMask(true);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
+}
+
 const progress=(p,text)=>{$('#loadbar').style.width=p+'%';$('#loadtext').textContent=text;};
 function toast(text){clearTimeout(toastTimer);$('#toast').textContent=text;$('#toast').classList.add('show');toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),4100)}
 function fail(error){console.error(error);state='error';$('#loading').style.display='grid';$('#loading').style.opacity=1;$('.loadingbox').classList.add('error');$('#loadtitle').textContent='No se pudo abrir el santuario';$('#loadtext').textContent=error?.message||'Error al inicializar la escena 3D.';}
@@ -591,13 +625,14 @@ function draw(t){
  const flies=updateFlies(opts.reduced?t*.35:t),p=programs;
  gl.bindFramebuffer(gl.FRAMEBUFFER,targets.main.fbo);gl.viewport(0,0,RW,RH);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.clearColor(.012,.017,.025,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);
  // The backdrop is a depth-tested world-space relief. It uses the SAME VP as the GLB.
- gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.useProgram(p.bg);um(p.bg,'uVP',VP);u1(p.bg,'uHDR',gl.hdr?1:0);u1(p.bg,'uSun',opts.sun);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);bindTex(p.bg,'uTerrainMask',terrainMaskTex,1);for(const layer of backdropMesh){ui(p.bg,'uLayer',layer.layer);bindTex(p.bg,'uBG',layer.layer===0?skyTex:bgTex,0);gl.bindVertexArray(layer.vao);gl.drawElements(gl.TRIANGLES,layer.count,gl.UNSIGNED_INT,0);}
+ drawMenuPlate(false);
  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.useProgram(p.ground);um(p.ground,'uVP',VP);drawQuad();gl.disable(gl.BLEND);gl.depthMask(true);
  gl.useProgram(p.mesh);um(p.mesh,'uVP',VP);um(p.mesh,'uLightVP',lightVP);u3(p.mesh,'uEye',pose.eye);u1(p.mesh,'uHDR',gl.hdr?1:0);u1(p.mesh,'uSun',opts.sun);u1(p.mesh,'uGlow',opts.glow);u1(p.mesh,'uTime',t);ui(p.mesh,'uActive',active);u1(p.mesh,'uIconOpacity',iconOpacity);u1(p.mesh,'uNormalStrength',1);u1(p.mesh,'uLightCount',opts.fireflies?({low:4,balanced:6,high:8}[opts.quality]):0);u3(p.mesh,'uFirePos[0]',heroPositions);u4(p.mesh,'uFireColor[0]',heroColors);
  bindTex(p.mesh,'uAlbedo',model.textures[1],0);bindTex(p.mesh,'uNormal',model.textures[0],1);bindTex(p.mesh,'uORM',model.textures[2],2);bindTex(p.mesh,'uShadow',shadow.texture,3);bindTex(p.mesh,'uCleanAlbedo',cleanTex,4);gl.bindVertexArray(model.vao);gl.drawElements(gl.TRIANGLES,model.count,gl.UNSIGNED_INT,0);
  gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
  if(iconOpacity>.001){gl.useProgram(p.ring);um(p.ring,'uVP',VP);u1(p.ring,'uTime',t);u1(p.ring,'uHDR',gl.hdr?1:0);u1(p.ring,'uGlow',opts.glow);u1(p.ring,'uIconOpacity',iconOpacity);bindTex(p.ring,'uGlyph',glyphTex,0);slots.forEach((s,i)=>{u3(p.ring,'uCenter',s.anchor);u3(p.ring,'uTint',s.tint);u1(p.ring,'uSize',s.size);u1(p.ring,'uActive',active===i?1:0);ui(p.ring,'uKind',i===1?1:0);drawQuad();});}
  if(flies){gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.useProgram(p.fly);um(p.fly,'uVP',VP);u3(p.fly,'uEye',pose.eye);u1(p.fly,'uHeight',RH);u1(p.fly,'uHDR',gl.hdr?1:0);gl.bindVertexArray(flyVAO);gl.bindBuffer(gl.ARRAY_BUFFER,flyBuf);gl.bufferSubData(gl.ARRAY_BUFFER,0,flyPositions);gl.bindBuffer(gl.ARRAY_BUFFER,flyColBuf);gl.bufferSubData(gl.ARRAY_BUFFER,0,flyColors);gl.drawArrays(gl.POINTS,0,flies);}
+ drawMenuPlate(true);
  gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);gl.useProgram(p.blur);gl.bindFramebuffer(gl.FRAMEBUFFER,targets.a.fbo);gl.viewport(0,0,targets.a.w,targets.a.h);bindTex(p.blur,'uTex',targets.main.textures[1],0);u2(p.blur,'uDirection',1.50/targets.a.w,0);drawQuad();gl.bindFramebuffer(gl.FRAMEBUFFER,targets.b.fbo);bindTex(p.blur,'uTex',targets.a.textures[0],0);u2(p.blur,'uDirection',0,1.50/targets.b.h);drawQuad();
  gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,RW,RH);gl.useProgram(p.composite);bindTex(p.composite,'uScene',targets.main.textures[0],0);bindTex(p.composite,'uBloom',targets.b.textures[0],1);u1(p.composite,'uHDR',gl.hdr?1:0);u1(p.composite,'uBloomStrength',.52);u1(p.composite,'uTime',t);u2(p.composite,'uViewport',W,H);drawQuad();renderCount++;
 }
@@ -611,7 +646,7 @@ function tick(now){
 }
 
 function onResize(){
- W=innerWidth;H=innerHeight;if(!ready)return;configureResolution();computeHome();createBackgroundRelief();
+ W=innerWidth;H=innerHeight;if(!ready)return;configureResolution();computeHome();
  if(travelPose){const i=Math.max(section,0);travelPose=makeRoute(i,copyPose(home));}
  updatePose();placeHotspots();uiForTravel();draw(time);
 }
@@ -628,10 +663,10 @@ async function init(){try{
  const raw=await modelBytes();progress(30,'Cargando la geometría y sus texturas…');await new Promise(r=>setTimeout(r,10));model=await parseGLB(raw,gl);
  const anis=gl.getExtension('EXT_texture_filter_anisotropic');if(anis)model.textures.forEach(t=>{gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameterf(gl.TEXTURE_2D,anis.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,gl.getParameter(anis.MAX_TEXTURE_MAX_ANISOTROPY_EXT)))});
  progress(61,'Preparando el crepúsculo y las superficies…');await new Promise(r=>setTimeout(r,10));
- programs={mesh:compile(meshVS,meshFS),depth:compile(depthVS,depthFS),bg:compile(bgVS,bgFS),ground:compile(groundVS,groundFS),ring:compile(ringVS,ringFS),fly:compile(flyVS,flyFS),blur:compile(quadVS,blurFS),composite:compile(quadVS,compositeFS)};
- quadVAO=gl.createVertexArray();bgTex=makeTexture(await imageFromData($('#backgrounddata').textContent.trim()));glyphTex=gardenGlyph();cleanTex=makeTexture(await imageFromData($('#cleandata').textContent.trim()));$('#cleandata').textContent='';skyTex=makeTexture(await imageFromData($('#skydata').textContent.trim()));terrainMaskTex=makeTexture(await imageFromData($('#terrainmaskdata').textContent.trim()));$('#skydata').textContent='';$('#terrainmaskdata').textContent='';await initSurface();
+ programs={mesh:compile(meshVS,meshFS),depth:compile(depthVS,depthFS),plate:compile(quadVS,menuPlateFS),ground:compile(groundVS,groundFS),ring:compile(ringVS,ringFS),fly:compile(flyVS,flyFS),blur:compile(quadVS,blurFS),composite:compile(quadVS,compositeFS)};
+ quadVAO=gl.createVertexArray();[bgTex,menuForegroundTex]=await Promise.all([loadMenuPlate('./art/sanctuary-valley-v1.png'),loadMenuPlate('./art/sanctuary-foreground-v1.png')]);glyphTex=gardenGlyph();cleanTex=makeTexture(await imageFromData($('#cleandata').textContent.trim()));$('#cleandata').textContent='';$('#skydata').textContent='';$('#terrainmaskdata').textContent='';await initSurface();
  flyVAO=gl.createVertexArray();gl.bindVertexArray(flyVAO);flyBuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,flyBuf);gl.bufferData(gl.ARRAY_BUFFER,flyPositions,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);flyColBuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,flyColBuf);gl.bufferData(gl.ARRAY_BUFFER,flyColors,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,4,gl.FLOAT,false,0,0);gl.bindVertexArray(null);
- prepareHotspots();configureResolution();createShadow();computeHome();createBackgroundRelief();progress(88,'Situando el paisaje y encendiendo las luciérnagas…');setupInput();syncAudioUI();startMenuMusic(true);
+ prepareHotspots();configureResolution();createShadow();computeHome();progress(88,'Situando el paisaje y encendiendo las luciérnagas…');setupInput();syncAudioUI();startMenuMusic(true);
  window.WildGuardiansMenu={navigate,back,setRenderPaused:v=>{renderPaused=!!v},renderOnce:()=>draw(time),getState:()=>({version:"2.8",iconOpacity,backgroundMode:"world-space-layered-parallax",state,section:slots[section]?.id||null,travel,options:{...opts},triangles:model.count/3,vertices:model.p.length/3,resolution:[RW,RH],HDR:gl.hdr,renderCount,estimatedFPS:Math.round(1000/frameMS),storageAvailable:storageOK}),getHotspots:()=>slots.map(s=>({id:s.id,title:s.title,anchor:[...s.anchor],screen:{...s.screen}})),setOptions:o=>{opts={...opts,...o};saveOptions();onResize();createShadow()},raycast,debugPose:()=>({home,pose}),
   debugRoute:()=>travelPose?{length:travelPose.length,duration:travelPose.duration,interpolation:"analytic-C3-reversible",finalClearance:travelPose.finalClearance,start:copyPose(travelPose.start),end:copyPose(travelPose.end),waypoints:travelPose.eyes,samples:travelPose.points.filter((p,i)=>i%8===0).map(q=>({eye:q.eye,clearance:q.eye[2]-clearanceZ(q.eye[0],q.eye[1],.20)}))}:null,
   previewJourney:(id,fraction)=>{manualPreview=true;tween=null;section=typeof id==='number'?id:slots.findIndex(s=>s.id===id);section=clamp(section,0,4);travelPose=makeRoute(section,copyPose(home));travel=clamp(fraction,0,1);state=travel>=1?'panel':(travel>0?'entering':'home');renderPanel(slots[section].id);$('#panelstage').classList.add('visible');$('#panelstage').inert=state!=='panel';root.style.setProperty('--ui',travel>0?0:1);iconOpacity=travel>0?0:1;iconTween=null;uiForTravel();updatePose();placeHotspots();draw(time||4);return {pose,travel};},
