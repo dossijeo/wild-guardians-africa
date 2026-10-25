@@ -35,3 +35,20 @@ Intel UHD 0x9A60, ANGLE D3D11, 1280x720, baja. A=step32, B=step16; resident mask
 The sign of the difference reverses between pairs. There is no demonstrated consistent penalty and no demonstrated speedup. The B2 p95 drop crosses a presentation cadence threshold and is not evidence of a general optimization. GPU elapsed includes pipeline bubbles; CPU render is a measured scope, not total CPU frame time. Loading-ready observations were 26.20/26.40/26.99/26.25 s, but these warmed sequential runs are not a controlled cold-load benchmark.
 
 This benchmark uses the normal populated camera, not the low oblique camera of the seam diagnostic. Additional projected ground during streaming, generation latency and all other camera positions remain outside its scope. Recommendation: keep step16 as a promising volcanic QA candidate; do not generalize to other biomes or claim the whole seam problem is closed. Reproduce verification with tools/experiments/summarize-volcanic-ground-step-cost.py. All raw reports and final screenshots are retained.
+
+## Oblique A/B/A/B and review selection
+
+The benchmark now accepts an explicit camera/target JSON, drains chunk and regional preparation, and only then begins its 60-frame warmup and 360-frame measurement. Pose preparation is timed separately and retains each regional worker build duration. Exact camera, target, options, time, worker state, hardware and settled-state checks pass for all four reports (summarize-volcanic-ground-step-cost.py volcanes-oblique-cost).
+
+| Run | GPU elapsed mean ms | Frame interval mean ms | Frame p95 ms | Regional ground worker ms | Pose preparation elapsed ms |
+|---|---:|---:|---:|---:|---:|
+| A1 step32 | 11.797 | 16.628 | 16.810 | 975.79 | 6782.63 |
+| B1 step16 | 11.546 | 16.628 | 16.810 | 992.09 | 2139.68 |
+| A2 step32 | 11.624 | 16.630 | 16.815 | 978.94 | 2099.55 |
+| B2 step16 | 11.335 | 16.627 | 16.825 | 977.30 | 2111.51 |
+
+No observed frame-rate penalty. Small GPU differences do not establish a general speedup. The first pose preparation is much slower; sequential caches/driver preparation confound that comparison, so no loading-speed claim. The worker figure includes native far trees and other region work, not just terrain triangulation; it does not measure main-thread blocking. The B1 oblique HUD screenshot was inspected and retains the improved central edge.
+
+Decision: select finer ground only for Volcanes in the current artistic review recipe via volcanicGround=fine. main.js supplies the existing profile override groundStep:16 only for the volcanic native biome when that flag is set. Normal game defaults and other biomes stay at 32. Explicit diagnostic step overrides remove the selection flag to preserve future A/B controls. No authoritative world or lava material changes. A real-renderer smoke capture through the new selection path, without response-patching the ground profile, is pending under volcanes-fine-integrated.
+
+Integrated smoke completed: volcanicGround=fine is present in the URL, no ground-profile response patch was used, groundStep reports 16, and camera/target/bounds/surface counts/bridge geometry exactly match the prior step16 candidate. Final GL error zero, no console errors, and the screenshot was inspected. The opt-in review selection is retained.

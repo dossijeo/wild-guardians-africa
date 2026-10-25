@@ -1,12 +1,14 @@
 """Validate the stationary A/B/A/B ground precision protocol before reporting costs."""
-import json
+import json, sys
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qsl
 root = Path('docs/qa/global-visual-lab/current-review-20261025')
+prefix = sys.argv[1] if len(sys.argv) > 1 else 'volcanes-ground-step-cost'
+assert prefix in ('volcanes-ground-step-cost', 'volcanes-oblique-cost')
 rows = []
 reference = None
 for name in ('a1', 'b1', 'a2', 'b2'):
-    report = json.loads((root / f'volcanes-ground-step-cost-{name}.json').read_text(encoding='utf-8'))
+    report = json.loads((root / f'{prefix}-{name}.json').read_text(encoding='utf-8'))
     stream = report['result']['streaming']
     query = dict(parse_qsl(urlsplit(report['url']).query))
     step = report['groundStep']
@@ -15,6 +17,12 @@ for name in ('a1', 'b1', 'a2', 'b2'):
     assert report['biome'] == 'volcanes' and report['quality'] == 'baja'
     assert not [e for e in report['errors'] if 'X4000' not in e]
     assert stream['created'] == 0 and stream['farSettled']
+    if prefix == 'volcanes-oblique-cost':
+        assert stream['options']['pose']
+        assert stream['cameraOrigin'] == stream['options']['pose']['camera']
+        assert stream['targetOrigin'] == stream['options']['pose']['target']
+        assert not stream['posePreparation']['stream']['busy']
+        assert stream['posePreparation']['stream']['queued'] == 0
     assert stream['elapsed'] == stream['initialElapsed']
     assert stream['summary']['frames']['count'] == 360
     assert stream['gpu']['supported'] and stream['gpu']['disjoint'] == 0
@@ -27,8 +35,8 @@ for name in ('a1', 'b1', 'a2', 'b2'):
     assert state == reference, name
     rows.append({'run': name, 'groundStep': step, 'presentationMs': stream['summary']['frames'],
                  'gpuElapsedMs': stream['gpu']['summary'], 'cpuScopes': stream['summary'],
-                 'hardware': stream['hardware']})
-(root / 'volcanes-ground-step-cost-summary.json').write_text(json.dumps({
+                 'hardware': stream['hardware'], 'posePreparation': stream.get('posePreparation')})
+(root / f'{prefix}-summary.json').write_text(json.dumps({
     'scope': 'Stationary, paused, 360 frames after 60 warm frames, no recording. GPU elapsed includes pipeline bubbles. No FPS improvement claim. Only ground geometry sampling changes. Moving camera and generation cost are not measured here.',
     'protocolVerified': True, 'runs': rows}, indent=2) + '\n', encoding='utf-8', newline='\n')
 for row in rows:

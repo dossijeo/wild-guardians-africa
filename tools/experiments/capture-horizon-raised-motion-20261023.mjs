@@ -14,8 +14,8 @@ const snapshot=JSON.stringify(saved);
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (selectedBiome).split(',')){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
- const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??32);if(![16,32].includes(groundStep))throw Error('Invalid motion ground step');
- if(groundStep!==32)await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('groundStep:32').length!==2)throw Error('Ground step anchor missing');await route.fulfill({response,body:body.replace('groundStep:32','groundStep:'+groundStep)});});
+ const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??(currentReview&&biome==='volcanes'?16:32));if(![16,32].includes(groundStep))throw Error('Invalid motion ground step');
+ if(process.env.WG_DIAGNOSTIC_GROUND_STEP&&groundStep!==32)await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('groundStep:32').length!==2)throw Error('Ground step anchor missing');await route.fulfill({response,body:body.replace('groundStep:32','groundStep:'+groundStep)});});
  page.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.message)});page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new');await route.fulfill({response,body});});
  await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();const freezeAnchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(freezeAnchor).length!==2)throw Error('Missing motion capture readiness freeze anchor');body=body.replace(freezeAnchor,"Game.pause(state,'menu');"+freezeAnchor);body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
@@ -27,6 +27,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  const query=new URLSearchParams((currentReview?globalCurrentReviewQuery:globalClosureQuery)(biome));
  if(currentReview){query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
  if(process.env.WG_GROUND_RESIDENT_MASK==='1')query.set('groundResidentMask','1');
+ if(process.env.WG_DIAGNOSTIC_GROUND_STEP)query.delete('volcanicGround');
  const captureUrl='http://127.0.0.1:5190/?qa-seed=712&'+query;
  await page.goto(captureUrl);
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});

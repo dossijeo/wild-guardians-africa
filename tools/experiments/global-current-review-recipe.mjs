@@ -6,6 +6,7 @@ export function globalCurrentReviewQuery(biome){
  // Keep native worker data alive when its graphical chunk leaves the camera.
  q.set('workerResidency','actors');
  if(biome==='manglares'){q.set('mangroveFerns','holly');q.set('groundCache','fixed512');}
+ if(biome==='volcanes')q.set('volcanicGround','fine');
  if(biome==='gran-canon')q.set('canyonWater','calm');
  return q.toString();
 }
