@@ -62,6 +62,8 @@ test('resident mask covers only installed visible chunks and releases its textur
   const version=texture.version;candidate.updateGroundBounds();assert.equal(texture.version,version);
   world.chunks.delete('-1,0');world.chunks.set('0,0',{visible:true});world.chunkRevision++;
   candidate.updateGroundBounds();assert.equal(pixels[0],0);assert.equal(pixels[4],255);assert.equal(texture.version,version+1);
+  world.chunks.get('0,0').visible=false;candidate.updateGroundBounds();assert.equal(pixels[4],0);
+  world.chunks.get('0,0').visible=true;candidate.updateGroundBounds();assert.equal(pixels[4],255);
   world.nearBounds=[-24,-24,120,72];candidate.updateGroundBounds();assert.equal(pixels[0],255);assert.equal(pixels[(8+1)*4],255);
   let disposed=0;texture.addEventListener('dispose',()=>disposed++);candidate.dispose();candidate.dispose();assert.equal(disposed,1);
  }finally{if(previous===undefined)delete globalThis.location;else globalThis.location=previous;}

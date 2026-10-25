@@ -38,7 +38,6 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  const residentPixels=residentMaskEnabled?new Uint8Array(8*8*4):null;
  const residentMask=residentPixels?new THREE.DataTexture(residentPixels,8,8,THREE.RGBAFormat):null;
  if(residentMask){residentMask.minFilter=THREE.NearestFilter;residentMask.magFilter=THREE.NearestFilter;residentMask.generateMipmaps=false;}
- let residentStamp=null;
  const original=material.onBeforeCompile;
  const patchGroundShader=(shader,renderer,clipNear=true)=>{
   original.call(material,shader,renderer);
@@ -65,7 +64,19 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  let seamOwner=null,lastSeamPromise=null;
  candidate.updateGroundBounds=()=>{bounds.value.set(...world.nearBounds);
-  if(residentMask){const stamp=world.chunkRevision+':'+world.nearBounds.join(',');if(stamp!==residentStamp){residentStamp=stamp;residentPixels.fill(0);const [minX,minZ,maxX,maxZ]=world.nearBounds;const width=Math.ceil((maxX-minX)/48),height=Math.ceil((maxZ-minZ)/48);if(width>8||height>8)throw Error('Far resident mask exceeds capacity');for(let z=0;z<height;z++)for(let x=0;x<width;x++){const key=`${Math.round((minX+24)/48)+x},${Math.round((minZ+24)/48)+z}`;const group=world.chunks.get(key);if(group&&group.visible!==false)residentPixels[(z*8+x)*4]=255;}residentMask.needsUpdate=true;}}
+  if(residentMask){
+   const [minX,minZ,maxX,maxZ]=world.nearBounds,width=Math.ceil((maxX-minX)/48),height=Math.ceil((maxZ-minZ)/48);
+   if(width>8||height>8)throw Error('Far resident mask exceeds capacity');
+   const cx=Math.round((minX+24)/48),cz=Math.round((minZ+24)/48);let changed=false;
+   // Visibility can change without a chunk revision. Check the bounded grid,
+   // but upload only changed bytes; no temporary buffer or scene traversal.
+   for(let z=0;z<8;z++)for(let x=0;x<8;x++){
+    const group=x<width&&z<height?world.chunks.get(`${cx+x},${cz+z}`):null;
+    const value=group&&group.visible!==false?255:0,index=(z*8+x)*4;
+    if(residentPixels[index]!==value){residentPixels[index]=value;changed=true;}
+   }
+   if(changed||residentMask.version===0)residentMask.needsUpdate=true;
+  }
   if(seamOwner){const promise=seamOwner.update();if(promise!==lastSeamPromise){lastSeamPromise=promise;promise.catch(error=>world.onError?.(error));}}};
  candidate.updateGroundBounds();
  if(seam){
