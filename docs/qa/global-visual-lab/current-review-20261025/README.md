@@ -48,3 +48,29 @@ La auditoría de variantes de carga está cerrada sin optimización adoptada; no
 repetir las candidatas rechazadas como si fueran mejoras seleccionadas. El menú
 por capas y los microeventos mantienen el orden solicitado posterior a la
 validación de biomas, agua e impostores.
+
+## Sabana: prueba nueva de streaming activo
+
+`sabana-active-stream.json` y `.png` corresponden a una ejecución nueva en
+Intel UHD, calidad media, 720p, cámara desplazada 96 unidades durante 180
+frames, simulación activa, pthreads y scheduler habilitados. Diez chunks
+instalados, actores disponibles 180/180, cero frames pausados y fondos asentados
+al terminar; sin errores nuevos aparte de las advertencias X4000 conocidas.
+La captura final muestra suelo continuo y hierba legible bajo los objetos
+visibles. No demuestra que nunca aparezca un hueco durante el movimiento.
+
+Intervalo RAF medio 94,41 ms, p95 183,15 ms, máximo 432,42 ms. Llamada render
+máxima 415,92 ms y draw máxima 408,11 ms. Instalación final de chunk media
+0,40 ms, máxima 0,77 ms; esto excluye la preparación distribuida, cuya latencia
+media hasta completar es 2119,61 ms y máxima 6638,10 ms. No sumar intervalos
+anidados ni confundir latencia de cola con CPU bloqueada.
+
+61 queries GPU válidas, sin disjoint: media 63,75 ms, p95 109,07 ms. Miden el
+intervalo GPU de WorldScene.render e incluyen burbujas del pipeline, no solo
+trabajo ocupado. La descripción heredada CPU/RAF del campo scope del harness
+es incompleta cuando WG_THREAD_GPU=1; aquí se declara explícitamente su alcance.
+
+Una ejecución no establece mejora, regresión ni causalidad y no certifica
+fluidez. Preservar esta observación antes de cambios. El próximo diagnóstico
+debe atribuir el draw de 408 ms y contrastarlo con repetición controlada; no
+reducir cobertura ni alterar materiales aprobados para ocultar el problema.
