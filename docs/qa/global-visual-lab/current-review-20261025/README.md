@@ -560,3 +560,32 @@ El baseline conserva sus fondos originales; no se afirma equivalencia del pipeli
 ni de todos los estados internos. La galería es una ayuda de revisión artística,
 no un benchmark y no una aprobación automática por diferencias de píxeles.
 No se ha revisado exhaustivamente cada vista adicional en este pase.
+
+
+## Revisión visual adicional de la galería
+
+Inspección directa de ocho PNG: main histórico y actual, Sabana/Gran Río,
+vista elevada0001, día/noche. Sabana conserva paleta seca cálida y zonas de paso;
+la versión actual añade fibras legibles y sombras de edificios más definidas.
+Gran Río separa claramente los caminos de tierra de la cobertura verde; el
+baseline tenía zonas despejadas verdes con menor separación. Por la noche la
+masa herbácea sigue legible sin convertir la escena en diurna. Son juicios
+artísticos sobre estas vistas, no resultados deducidos de diferencias de píxeles.
+Recomendación para estos encuadres: conservar la dirección actual.
+
+También inspeccionadas las vistas inversas0002 actuales: Sabana y Gran Río de
+día/noche, y los otros cuatro biomas de día. Los fondos visibles tienen terreno;
+no aparecen objetos sobre vacío azul en estos encuadres. Manglares mantiene el
+manto de helechos aprobado y transiciones locales de barro; Desierto conserva
+relieve cálido; Volcanes mantiene separación roca/ceniza/lava. En Canyon la pared
+cercana ocupa gran parte del lado izquierdo: es una limitación del encuadre
+inverso para juzgar el poblado, no una prueba de rendimiento ni razón para cambiar
+la silueta. El río y su ribera sí son visibles.
+
+Limitaciones observables: las copas lejanas de Sabana se ven más pálidas que las
+cercanas, y el fondo de Manglares tiene menos volumen vegetal que su primer plano.
+No se concluye que sean regresiones: niebla, LOD y distancia también contribuyen.
+Priorizar revisión temporal de esa transición antes de aumentar densidad o
+introducir DOF. No alterar aprobaciones de Manglares, Desierto o lava solo por
+estas observaciones estáticas. Las vistas nocturnas inversas de los otros cuatro
+biomas y las elevadas de esos cuatro no se han inspeccionado en este pase.
