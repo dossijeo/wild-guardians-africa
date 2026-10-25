@@ -431,3 +431,12 @@ Preserved failure.json; this is not a renderer failure or valid timing sample.
 The harness now enables loading-frame observation whenever guardian-tail is
 requested. Syntax check passes. Corrected report uses a new filename and is
 running; no failed output is overwritten. Production code is unchanged.
+
+## Obstruction eligibility observed
+
+Corrected Sabana diagnostic completes. Slots7/8/9(group2) and clipped slot19
+have neither batch fade nor nativeVisibility on their LOD meshes; other sampled
+slots do. QA-only filter now derives eligible material identities from actual
+coverage-bearing batch meshes, retaining all levels and merged representatives
+for those materials. Unknown/no-chunk callers retain original merged behavior.
+A filtered warmup diagnostic is running; no production filtering is enabled.
