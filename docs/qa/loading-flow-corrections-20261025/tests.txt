@@ -1,0 +1,119 @@
+TAP version 13
+# Subtest: loading audio handoff fires once before the first world presentation
+ok 1 - loading audio handoff fires once before the first world presentation
+  ---
+  duration_ms: 11.6397
+  ...
+# Subtest: camera sky handoff and travel preserve exact gameplay pose and simulation state
+ok 2 - camera sky handoff and travel preserve exact gameplay pose and simulation state
+  ---
+  duration_ms: 1.9007
+  ...
+# Subtest: reduced motion completes with the same exact final pose
+ok 3 - reduced motion completes with the same exact final pose
+  ---
+  duration_ms: 1.2911
+  ...
+# Subtest: cancelled cinematic restores the camera and rejects completion
+ok 4 - cancelled cinematic restores the camera and rejects completion
+  ---
+  duration_ms: 7.5788
+  ...
+# Subtest: reveal prewarm does not start transition or change final camera
+ok 5 - reveal prewarm does not start transition or change final camera
+  ---
+  duration_ms: 3.9079
+  ...
+# Subtest: cinematic rejects a moving orbit before capturing presentation pose
+ok 6 - cinematic rejects a moving orbit before capturing presentation pose
+  ---
+  duration_ms: 1.2632
+  ...
+# Subtest: cancel during a suspended reveal frame restores exact camera without a later draw
+ok 7 - cancel during a suspended reveal frame restores exact camera without a later draw
+  ---
+  duration_ms: 105.6972
+  ...
+# Subtest: never-resumed reveal frame fails its deadline and restores intended camera
+ok 8 - never-resumed reveal frame fails its deadline and restores intended camera
+  ---
+  duration_ms: 102.8826
+  ...
+# Subtest: root contact reuses uniform storage and synchronizes only on explicit planting invalidation
+ok 9 - root contact reuses uniform storage and synchronizes only on explicit planting invalidation
+  ---
+  duration_ms: 4.4604
+  ...
+# Subtest: approved diffuse presentation is the default and legacy comparisons remain explicit
+ok 10 - approved diffuse presentation is the default and legacy comparisons remain explicit
+  ---
+  duration_ms: 1.6326
+  ...
+# Subtest: diffuse owner releases its shadow map and fallback once and restores the world hook
+ok 11 - diffuse owner releases its shadow map and fallback once and restores the world hook
+  ---
+  duration_ms: 12.0511
+  ...
+# (node:44232) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diorama disposes its private shadow fallback exactly once without touching native owners
+ok 12 - diorama disposes its private shadow fallback exactly once without touching native owners
+  ---
+  duration_ms: 3.0743
+  ...
+# Subtest: loading-only mountain atlas arriving after either owner closes is disposed without adoption
+ok 13 - loading-only mountain atlas arriving after either owner closes is disposed without adoption
+  ---
+  duration_ms: 1.3285
+  ...
+# Subtest: presentation mountain foot feathers the actual native recipe without changing a separate world material
+ok 14 - presentation mountain foot feathers the actual native recipe without changing a separate world material
+  ---
+  duration_ms: 7.6278
+  ...
+# Subtest: cheap loading mist borrows native sky orientation/geometry and owns only its material
+ok 15 - cheap loading mist borrows native sky orientation/geometry and owns only its material
+  ---
+  duration_ms: 6.7252
+  ...
+# (node:4620) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: handoff waits for actual orbit deceleration and retains the final angle without recentering
+ok 16 - handoff waits for actual orbit deceleration and retains the final angle without recentering
+  ---
+  duration_ms: 9.1596
+  ...
+# Subtest: owner cancellation aborts handoff without recentering or enabling interaction
+ok 17 - owner cancellation aborts handoff without recentering or enabling interaction
+  ---
+  duration_ms: 1.1402
+  ...
+# Subtest: reduced motion captures its static pose without waiting for animation
+ok 18 - reduced motion captures its static pose without waiting for animation
+  ---
+  duration_ms: 0.5679
+  ...
+# Subtest: suspended orbit frame cancels immediately through its actual owner
+ok 19 - suspended orbit frame cancels immediately through its actual owner
+  ---
+  duration_ms: 1.6192
+  ...
+# Subtest: suspended orbit frame cannot leave completion waiting indefinitely
+ok 20 - suspended orbit frame cannot leave completion waiting indefinitely
+  ---
+  duration_ms: 112.8048
+  ...
+# Subtest: loading sky borrows textures and geometry without altering or disposing world materials
+ok 21 - loading sky borrows textures and geometry without altering or disposing world materials
+  ---
+  duration_ms: 3.4872
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 576.8362
