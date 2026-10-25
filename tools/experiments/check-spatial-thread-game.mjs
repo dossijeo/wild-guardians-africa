@@ -109,8 +109,8 @@ try{
  if(process.env.WG_THREAD_LIVE_PREPARATION==='1')gameUrl.searchParams.set('qualityLivePreparation','1');
  if(['0','1'].includes(process.env.WG_GUARDIAN_WARM))gameUrl.searchParams.set('guardianWarm',process.env.WG_GUARDIAN_WARM);
  if(process.env.WG_GUARDIAN_WORKER==='1')gameUrl.searchParams.set('guardianWorker','1');
- if(process.env.WG_FRAME_SCHEDULER==='1')gameUrl.searchParams.set('frameScheduler','1');
- if(process.env.WG_MUD_EDGE_WORKER==='1')gameUrl.searchParams.set('mudEdgeWorker','1');
+ if(['0','1'].includes(process.env.WG_FRAME_SCHEDULER))gameUrl.searchParams.set('frameScheduler',process.env.WG_FRAME_SCHEDULER);
+ if(['0','1'].includes(process.env.WG_MUD_EDGE_WORKER))gameUrl.searchParams.set('mudEdgeWorker',process.env.WG_MUD_EDGE_WORKER);
  if(process.env.WG_TRANSACTIONAL_PROGRAMS==='1')gameUrl.searchParams.set('transactionalPrograms','1');
  if(process.env.WG_THREAD_DEFAULT_STREAMING==='1')for(const key of ['waterBedWorker','waterShoreWorker','chunkEviction','warmObstruction','retainPrograms'])gameUrl.searchParams.delete(key);
  if(process.env.WG_THREAD_RETENTION_EXIT==='1')gameUrl.searchParams.set('retentionExit','1');

@@ -10,7 +10,7 @@ const sourceSha256=createHash('sha256').update(source).digest('hex');
 const mode=process.env.WG_PRODUCTION_PROFILE_MODE??'production';
 if(!['production','review'].includes(mode))throw Error('Expected production or review mode');
 function replace(anchor,replacement){if(source.split(anchor).length!==2)throw Error('Shared harness anchor changed: '+anchor.slice(0,70));source=source.replace(anchor,replacement);}
-replace(' await page.goto(gameUrl.href);',` gameUrl.search=${mode==='production'?"''":"globalCurrentReviewQuery(biome)"};\n await page.goto(gameUrl.href);`);
+replace(' await page.goto(gameUrl.href);',` gameUrl.search=${mode==='production'?"''":"globalCurrentReviewQuery(biome)"};\n for(const [env,key]of [['WG_FRAME_SCHEDULER','frameScheduler'],['WG_MUD_EDGE_WORKER','mudEdgeWorker']])if(['0','1'].includes(process.env[env]))gameUrl.searchParams.set(key,process.env[env]);\n await page.goto(gameUrl.href);`);
 const reportAnchor=" await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:";
 replace(reportAnchor,` result.productionVisual=await page.evaluate(()=>({search:qaThreadWorld.visualSearch,coverage:qaThreadWorld.groundDetails?.audit?.(),cache:qaThreadWorld.mangroveMaterialCache?.stats??null,sky:qaThreadWorld.sky.atmosphere,globalLighting:qaThreadWorld.toon.globalVisualLighting}));\n result.productionHarness=${JSON.stringify({mode,sourceSha256})};\n${reportAnchor}`);
 const temporary=new URL('./qa-production-profile-'+process.pid+'.mjs',import.meta.url);

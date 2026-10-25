@@ -134,5 +134,7 @@ export class GlobalFrameScheduler {
   snapshot(){const now=this.now();let oldestMs=0,waiting=0;for(const job of this.jobs.values()){oldestMs=Math.max(oldestMs,now-job.created);if(job.waiting)waiting++;}return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,waiting,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
 }
 export const globalFrameScheduler=new GlobalFrameScheduler({diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
-const enabled=new URLSearchParams(globalThis.location?.search??'').get('frameScheduler')==='1';
+// Production uses the measured scheduler bundle; QA can still select the old path.
+export const frameSchedulerRequested=search=>new URLSearchParams(search).get('frameScheduler')!=='0';
+const enabled=frameSchedulerRequested(globalThis.location?.search??'');
 export const globalFrameSchedulerEnabled=()=>enabled;

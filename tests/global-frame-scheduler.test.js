@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GlobalFrameScheduler} from '../src/app/global-frame-scheduler.js';
+import {GlobalFrameScheduler,frameSchedulerRequested} from '../src/app/global-frame-scheduler.js';
 import {prepareTerrainChunk} from '../src/rendering/prepare-terrain-chunk.js';
 function rig(){let time=0,timestamp=0;const scheduler=new GlobalFrameScheduler({now:()=>time});return {scheduler,spend:n=>time+=n,frame(cpu=4){timestamp+=1000/60;time=timestamp;scheduler.beginFrame(timestamp);time+=cpu;scheduler.endFrame();},warm(){for(let i=0;i<60;i++)this.frame();}};}
 test('only presentation advances work; a complete private group is published',async()=>{
@@ -145,4 +145,9 @@ test('exceptional recovery never runs cancelled or invalidated required work',as
  owner.abort();valid=false;time=6000;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();
  await Promise.all([cancelled,invalidated]);assert.equal(calls,0);assert.equal(closed,2);
  assert.equal(scheduler.snapshot().blockingRecoveries,0);assert.equal(scheduler.snapshot().pending,0);
+});
+
+test('production scheduling is enabled without QA flags and retains an explicit baseline control',()=>{
+ for(const query of ['', '?lang=es','?frameScheduler=1'])assert.equal(frameSchedulerRequested(query),true);
+ assert.equal(frameSchedulerRequested('?frameScheduler=0'),false);
 });

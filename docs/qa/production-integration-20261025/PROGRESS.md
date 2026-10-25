@@ -31,3 +31,14 @@ El perfil ya se conecta en main.js al crear WorldScene; precarga usa solo los va
 Validación inicial: 93 tests pasan y verificación browser-syntax pasa. Smoke de Manglares con URL vacía carga pthreads, helechos + LOD y 25 cachés fixed512. Comparación con receta revisada: 99,9502 % píxeles idénticos; ver RUNTIME-PROFILE.md. No sustituye las pruebas normales de distribución ni el A/B de rendimiento.
 
 Pendiente confirmado: GlobalFrameScheduler sigue opt-in por frameScheduler=1. Hay que revisar su activación normal y validarla antes de mergear. CI de 907c399f6 seguía en curso; Windows del padre e575ff46f pasó. No tomar ese resultado como validación del nuevo diff.
+
+
+## Scheduler y dependencias oficiales
+
+La selección normal ahora habilita scheduler y worker de bordes de barro, conservando frameScheduler=0/mudEdgeWorker=0 como controles explícitos. Se corrigió también el harness para que WG_FRAME_SCHEDULER=0 escriba realmente el control; ausencia de flag ya no significa desactivado. La aceptación integral sigue pendiente.
+
+Se reconstruyó node_modules con npm ci (lockfile intacto); antes faltaban builds de Three/Vite. Se cerraron los servidores Vite antiguos de este worktree que retenían binarios. 36 tests de integración/runtime pasaron con dependencias oficiales sin loader externo; 20 tests del scheduler pasan tras cambiar el valor predeterminado. Build y web-package pasan (999 archivos, 492.045.042 bytes; build medido antes de activar el scheduler, repetir en el commit final). Playwright 1.55.1 se instaló únicamente local --no-save para QA.
+
+mangrove-default-scheduler-r2.json/.png: URL vacía, 67 trabajos completados, 409 unidades, 0 fallidos/cancelados/pendientes; 25 chunks y cachés publicados, pthreads. El scheduler observó 5 overruns, unidad máxima 10,64 ms; no afirmar eliminación completa de picos. Captura inspeccionada: mantiene helechos/suelo aprobado. No es A/B de rendimiento ni simulación activa. Primer intento preservado como .failure.json: timeout de navegación de 30 s tras reinstalar dependencias; Vite seguía vivo, petición scene.js respondió 200 y la repetición funcionó.
+
+La guardia de versión de guardados (Wild Engine world version=1) ya existe en origin/main; no es una incompatibilidad nueva introducida por esta integración. Falta el resto de auditoría heredada, builds del nuevo head, pruebas empaquetadas sin interceptar código y matriz completa.
