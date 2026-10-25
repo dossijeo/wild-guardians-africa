@@ -385,3 +385,32 @@ instrumentada no constituye una optimización ni una comparación temporal exact
 La evidencia permite probar retención ya existente en Gran Río, como se hizo
 en Sabana, antes de modificar geometría o materiales aprobados. Se requiere
 comparación intercalada y coste de carga/memoria antes de cambiar defaults.
+
+
+## Gran Río: retención A/B/A/B
+
+A conserva defaults; B activa únicamente retainPrograms. Cuatro ejecuciones
+secuenciales con la misma fixture, calidad media720p, cámara180frames/96unidades,
+pthreads, scheduler y simulación activa. Ver informes gran-rio-retention-*.json.
+
+| Caso | Carga ms | RAF media | RAF p95 | RAF máximo | Draw máximo | GPU media |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| a1 | 24739.56 | 40.83 | 83.24 | 133.36 | 129.40 | 29.73 |
+| b1 | 25303.57 | 42.03 | 82.64 | 133.03 | 19.62 | 30.23 |
+| a2 | 24732.61 | 41.12 | 83.03 | 149.62 | 140.34 | 28.77 |
+| b2 | 24943.05 | 39.30 | 83.03 | 99.70 | 17.09 | 28.08 |
+
+Retención reduce consistentemente el máximo draw a17–20ms frente a129–140ms.
+No mejora p95; el máximo RAF mejora solo en el segundo par. No se afirma una
+mejora integral de fluidez ni se cambian defaults. Todos completan diez chunks,
+actores180/180, sin pausas, fondos asentados, queries sin disjoint y sin errores
+nuevos. La cantidad de frames de asentamiento varía180/182/184/198; la evolución
+por tiempo real no da equivalencia exacta de carga. Los tiempos GPU incluyen
+burbujas y no representan exclusivamente ocupación GPU.
+
+La retención queda como candidata técnica, sin sacrificar la calidad artística.
+No repetir indefinidamente esta microcomparación: la evidencia ya separa un
+bloqueo de programas resuelto de otros límites del frame aún presentes.
+Falta validar memoria residente y ciclo de vida antes de promoverla. Las imágenes
+finales se conservan como evidencia; no se ha realizado diff de paridad visual
+porque el mundo activo avanza durante tiempos reales diferentes.
