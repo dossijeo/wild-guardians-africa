@@ -4,6 +4,16 @@ export function installLoadingProgramInventory({traceCalls=false}={}){
  const contexts=new WeakMap(),programIdentities=new WeakMap(),getContext=HTMLCanvasElement.prototype.getContext;
  const report=globalThis.qaLoadingProgramInventory={contexts:[],links:[],deletes:[],slowCalls:[],longFrames:[],smoothSourceEquality:[]};
  const smoothSources=new Map();
+ Object.defineProperty(report,'obstructionBatches',{enumerable:true,get(){
+  const groups=new Map();
+  for(const chunk of globalThis.qaThreadWorld?.chunks?.values()??[])for(const batch of chunk.userData.lodBatches??[]){
+   const row={slot:batch.slot,group:batch.group,clip:batch.clip,fade:!!batch.fade,
+    materialKeys:batch.levels.map(level=>level.material.customProgramCacheKey()),
+    coverageAttributes:batch.meshes.map(mesh=>!!mesh.geometry.attributes.nativeVisibility)};
+   const key=JSON.stringify(row),entry=groups.get(key);if(entry)entry.batches++;else groups.set(key,{...row,batches:1});
+  }
+  return [...groups.values()];
+ }});
  // Read existing Three metadata only: no GL status query or resource creation.
  Object.defineProperty(report,'residentPrograms',{enumerable:true,get(){
   return (globalThis.qaThreadWorld?.renderer?.info.programs??[]).map(program=>({
