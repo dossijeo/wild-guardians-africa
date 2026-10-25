@@ -876,3 +876,40 @@ No se modifican assets ni receta gráfica.
 Pendiente para cerrar esta optimización: controles nocturnos y de calidad baja,
 cancelación/cambios de calidad con camas pendientes en juego real y A/B/A/B de
 rendimiento/latencia. No extrapolar seis controles diurnos a aceptación integral.
+
+
+## A/B/A/B activo: preparación síncrona frente a coalescida
+
+`river-water-abab-a1/b1/a2/b2`: A usa `WG_ASSET_WATER_SYNC=1`, una sustitución
+QA estricta que omite la precocción incremental y deja al instalador generar
+exactamente la cama original. No añade interruptores al juego. B usa la ruta
+coalescida. El resumen verifica tanto el modo registrado como presencia/ausencia
+real de fases asset-water-bed. Mismos estado inicial, trabajadores, cámara,
+objetivo, URL, hardware, calidad y opciones. Diez chunks, actores180/180,
+sin pausas, errores nuevos, tareas pendientes ni recuperaciones en los cuatro.
+
+| Ejecución | RAF media primeros180 ms | RAF p95 primeros180 ms | GPU media ms | Latencia preparación media ms | Mayor slice ms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A1 síncrona | 39,724 | 83,165 | 28,453 | 999,76 | 3,945 |
+| B1 coalescida | 40,371 | 83,130 | 28,871 | 1121,09 | 2,490 |
+| A2 síncrona | 41,480 | 83,006 | 28,934 | 1218,42 | 4,595 |
+| B2 coalescida | 39,448 | 83,155 | 28,285 | 1055,03 | 2,375 |
+
+GPU y preparación incluyen el asentamiento variable (A2 tiene191frames totales;
+los demás180), pero la columna de presentación usa solo los180intervalos del
+recorrido. Percentil inclusivo calculado sobre esos intervalos. Carga inicial:
+A1 24820ms, B1 24908ms, A2 24192ms, B2 25077ms. No se demuestra reducción de
+carga ni mejora general de FPS: medias cambian de signo y p95 es casi idéntico.
+Los máximos de dibujo siguen entre121 y151ms. La simulación activa avanza según
+tiempo real; las capturas finales no representan el mismo instante exacto.
+Inspeccionadas A2/B2: suelo, cubierta y agua conservados, con variación de viento,
+sombra y transparencia coherente con tiempos distintos; no equivalencia píxel.
+
+Decisión provisional: conservar la ruta incremental como mitigación de unidades
+largas y bloqueo de preparación, ya demostrado en el control pausado, no como
+optimización GPU/FPS. No hay regresión consistente de latencia en esta serie;
+una sola serie no establece equivalencia estadística ni cierra perfiles modestos.
+Pendiente noche/baja y ciclo de vida real. `summarize-asset-water-abab.py` reproduce
+validaciones y `asset-water-abab-summary.json`; los cuatro informes/capturas
+quedan publicados. La reducción de instrucciones aislada no se presenta como
+éxito de rendimiento global.
