@@ -762,3 +762,25 @@ experimental. Pendiente control activo y atribuir/fraccionar el último grupo:
 no se afirma que el máximo bloqueo ni el frametime hayan mejorado. Los informes,
 trazas y capturas finales están versionados; capturas intermedias de esta pareja
 quedan locales (la serie visual previa completa sí está publicada).
+
+
+## Estimaciones separadas: control activo y atribución de agua
+
+`gran-rio-phase-separated-active` completa diez chunks, actores listos 180/180,
+sin pausas, fondos asentados y cero tareas pendientes/recuperaciones excepcionales.
+GPU media 28,63 ms; presentación media 40,19 ms, p95 66,73 ms, máximo 166,28 ms.
+Preparación de chunk CPU media 4,64 ms, máximo 7,15 ms; mayor slice 3,505 ms.
+El dibujo conserva un máximo de 126,125 ms. Es control funcional del candidato,
+no A/B/A/B ni demostración causal de mejora de FPS. No capturas intermedias.
+
+La extensión opt-in de `terrain-phase-trace.js` mide `prepareNaturalAssetWater`
+sin modificar su salida. `gran-rio-asset-water-attribution` también completa diez
+chunks con simulación activa y cero recuperaciones. Las quince preparaciones de
+agua (incluida carga inicial) cuestan mediana 3,565 ms y máximo 6,24 ms; producen
+cuadrículas 99×99 de 39204 bytes. No reproduce el coste de 40–54 ms del control
+pausado con capturas. Por tanto, aún NO se atribuyen esos picos exclusivamente al
+muestreo del agua ni se reescribe esa ruta por inferencia. Falta repetir la
+atribución en el régimen que reproduce el problema y separar tiempo de ejecución
+de desplanificación/efectos de captura. Se conservan los informes completos y
+el resumen `prop-phase-active-controls.json`. No hay cambios artísticos ni nuevos
+cambios de producción en este pase.
