@@ -168,3 +168,24 @@ RAF observados, pero no mejora media ni p95; GPU medio mixto. Conservar candidat
 para eliminar recompilaciones, no descartarla ni anunciar aumento general de FPS.
 No activar por defecto todavía: faltan coste de carga/memoria, ciclo de vida y
 validación equivalente en los otros biomas. No se modifica el arte aprobado.
+
+## Sabana: capturas actuales día/noche
+
+Doce imágenes del renderer real en sabana-day-night-corrected: calentamiento y
+repetición final, día/noche, cámara de juego/elevada/inversa, calidad media,
+1280×720, seed712. Tiempo de simulación idéntico en las doce; cero errores GL
+y de consola registrados. Receta efectiva registrada en captures.json, con
+pthreads/scheduler y fondos completos. No benchmark ni cambio artístico.
+
+Inspección directa de la vista normal final: hierba continua perceptible de día,
+paleta cálida y sombras legibles; de noche permanece distinguible respecto a
+los caminos y edificios. Suelo presente bajo los objetos lejanos visibles.
+El encuadre no permite certificar skybox y las poses estáticas no prueban ausencia
+de huecos durante streaming. Las otras vistas se conservan para revisión.
+
+El primer intento falló en la aserción de tiempo congelado: el anchor antiguo
+de la pausa ya no coincidía con la inicialización actual. Log conservado en
+sabana-day-night.log; no se usa como comparación válida. El capturador ahora
+comprueba la unicidad del anchor y mantiene retainStreamingPrograms al pausar,
+y acepta WG_REVIEW_QUERY explícito sin alterar la receta histórica por defecto.
+La repetición corregida termina exit0; comprobación de sintaxis correcta.
