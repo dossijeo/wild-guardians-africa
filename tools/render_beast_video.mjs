@@ -4,7 +4,7 @@ import {once} from 'node:events';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const {chromium}=createRequire(import.meta.url)('playwright');
-const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',buffalo:'Búfalo',lion:'León'})[species];if(!label)throw Error('Unsupported review species');
+const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',buffalo:'Búfalo',lion:'León',rhino:'Rinoceronte'})[species];if(!label)throw Error('Unsupported review species');
 const out=`docs/qa/${species}-replacement`,fps=30,base=process.env.WG_QA_URL??'http://127.0.0.1:5194';
 await mkdir(out,{recursive:true});
 const library=JSON.parse(await readFile('content/manifests/animal-actions.json','utf8')).animals[species];

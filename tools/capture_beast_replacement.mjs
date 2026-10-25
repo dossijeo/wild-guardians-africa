@@ -23,7 +23,7 @@ try{
   await page.evaluate(async()=>{beastQA.state.time=150;await beastQA.setView();beastQA.pose('Walking',.2)});
   const day=await page.evaluate(()=>beastQA.capture());await sharp(Buffer.from(day.png,'base64')).jpeg({quality:92}).toFile(`${out}/${biome}-day.jpg`);delete day.png;records.push({...day,file:`${biome}-day.jpg`});
   if(biome==='sabana')for(const view of ['front','back']){
-   await page.evaluate(async view=>{await beastQA.setView(view,4.5,1.2);beastQA.pose('Walking',.2)},view);
+   await page.evaluate(async({view,species})=>{await beastQA.setView(view,species==='rhino'?5.5:4.5,species==='rhino'?1.7:1.2);beastQA.pose('Walking',.2)},{view,species});
    const detail=await page.evaluate(()=>beastQA.capture()),file=`${biome}-detail-${view}-day.jpg`;
    await sharp(Buffer.from(detail.png,'base64')).jpeg({quality:95}).toFile(`${out}/${file}`);delete detail.png;records.push({...detail,file,view});
   }

@@ -5214,6 +5214,15 @@
       "origins": [
         "Wild Guardians New/animales/león.glb#repaired-retargeted"
       ]
+    },
+    {
+      "url": "/assets/7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093.glb",
+      "bytes": 47833372,
+      "sha256": "7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/rinoceronte.glb#repaired-retargeted"
+      ]
     }
   ],
   "models": [
@@ -5615,72 +5624,48 @@
       }
     },
     {
-      "url": "/assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "url": "/assets/7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093.glb",
       "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
       "animations": [
         {
-          "name": "Walking",
-          "channels": 56
+          "name": "Running",
+          "channels": 183
         },
         {
-          "name": "Running",
-          "channels": 56
+          "name": "Walking",
+          "channels": 183
         },
         {
           "name": "Charged_Upward_Slash",
-          "channels": 56
+          "channels": 183
         },
         {
           "name": "Right_Hand_Sword_Slash",
-          "channels": 56
+          "channels": 183
         },
         {
           "name": "Weapon_Combo",
-          "channels": 56
+          "channels": 183
         },
         {
           "name": "Weapon_Combo_2",
-          "channels": 56
+          "channels": 183
         }
       ],
-      "nodes": 30,
+      "nodes": 63,
       "meshes": 1,
       "extras": {
-        "retargeting": {
-          "revision": 1,
-          "donor": "Meshy_AI_Boar_Warchief_All_Animations.glb",
-          "target": "Sunhorn Colossus / Rinoceronte",
-          "nativeUnchanged": [
-            "Running"
-          ],
-          "corrected": [
-            "Walking",
-            "Charged_Upward_Slash",
-            "Right_Hand_Sword_Slash",
-            "Weapon_Combo",
-            "Weapon_Combo_2"
-          ],
-          "method": "Bone coordinate frames calibrated from shared native Running samples. Target non-root offsets preserved. Uniform calibrated hip translation scale plus offset.",
-          "calibrationMaxAngularErrorDegrees": 0.00006560479907325776,
-          "hipTranslationScale": 1.1918714694874435,
-          "hipTranslationOffset": [
-            -0.02209374597743787,
-            0.6356294465972712,
-            -0.23360160293564705
-          ],
-          "hipCalibrationMaxError": 2.0989912052904458e-7,
-          "preserved": [
-            "mesh",
-            "skin weights",
-            "inverse bind matrices",
-            "materials",
-            "textures",
-            "native Running",
-            "channel timings",
-            "grounding logic",
-            "in-place viewer logic"
-          ]
+        "replacement": {
+          "repair": "tools/prepare_rhino.py",
+          "report": "docs/qa/rhino-replacement/repair.json",
+          "animationSourceSha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82"
         }
+      },
+      "geometrySource": "Wild Guardians New/animales/rinoceronte.glb",
+      "replacement": {
+        "repair": "tools/prepare_rhino.py",
+        "report": "docs/qa/rhino-replacement/repair.json",
+        "animationSourceSha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82"
       }
     },
     {

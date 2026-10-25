@@ -1,0 +1,106 @@
+{
+  "sourceSha256": "5e47e64934d2bf5f6a47b139d7c9e0af9764350ce46685c885bf917ef2c7479c",
+  "sourceBytes": 107821688,
+  "blender": "5.2.2 LTS",
+  "animationSource": "public\\assets\\b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+  "scope": "Foot geometry, sole weights and animation contact correction. Other geometry, UVs, materials and bones retained.",
+  "before": {
+    "vertices": 17125,
+    "faces": 14182,
+    "bones": 61
+  },
+  "feet": [
+    {
+      "side": "Left",
+      "vertices": 2145,
+      "soleVertices": 107,
+      "soleNormalBefore": [
+        -0.04735957458615303,
+        -0.3340211510658264,
+        -0.9413750171661377
+      ],
+      "correctionDegrees": 19.71623750157037,
+      "floor": -0.06631113588809967
+    },
+    {
+      "side": "Right",
+      "vertices": 2164,
+      "soleVertices": 105,
+      "soleNormalBefore": [
+        0.07831377536058426,
+        -0.33107489347457886,
+        -0.9403490424156189
+      ],
+      "correctionDegrees": 19.889737966867035,
+      "floor": -0.06747135519981384
+    }
+  ],
+  "preservation": {
+    "verticesOutsideFeetUnchanged": true,
+    "topologyUnchanged": true,
+    "bonesRetained": 61,
+    "customNormals": "Rotated with repaired feet; original elsewhere",
+    "materialsAndTextures": "Original source material parameters and texture pixels retained before runtime texture downscale"
+  },
+  "scale": 3.123749396860856,
+  "hipTranslationRatio": 0.3125702500617451,
+  "retarget": {
+    "armBindCalibration": "T-pose replacement to A-pose donor using animated limb directions",
+    "bakeFps": 96,
+    "preserved": "Own target limb lengths, authored finger hierarchy and native clip duration"
+  },
+  "headPosture": {
+    "correctionDegrees": 0,
+    "preserved": "Native head motion; no anatomical head adjustment"
+  },
+  "clips": [
+    {
+      "name": "Running",
+      "firstFrame": 1.0,
+      "lastFrame": 17.0,
+      "samples": 65,
+      "duration": 0.6666666666666666
+    },
+    {
+      "name": "Walking",
+      "firstFrame": 1.0,
+      "lastFrame": 26.0,
+      "samples": 101,
+      "duration": 1.0416666666666667
+    },
+    {
+      "name": "Charged_Upward_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 78.0,
+      "samples": 309,
+      "duration": 3.2083333333333335
+    },
+    {
+      "name": "Right_Hand_Sword_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 38.0,
+      "samples": 149,
+      "duration": 1.5416666666666667
+    },
+    {
+      "name": "Weapon_Combo",
+      "firstFrame": 1.0,
+      "lastFrame": 90.0,
+      "samples": 357,
+      "duration": 3.7083333333333335
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "firstFrame": 1.0,
+      "lastFrame": 110.0,
+      "samples": 437,
+      "duration": 4.541666666666667
+    }
+  ],
+  "canonicalTextures": "Albedo 8192 to 4096 to respect the repository resource limit; runtime pipeline uses 2048 WebP. Editable Blender retains original images.",
+  "after": {
+    "vertices": 17125,
+    "faces": 14182,
+    "bytes": 47833372
+  }
+}

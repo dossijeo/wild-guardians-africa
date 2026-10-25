@@ -289,50 +289,50 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "rhino": {
-      "url": "/assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "url": "/assets/7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093.glb",
       "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
-      "sha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82",
+      "sha256": "7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093",
       "presentation": {
         "scale": 1,
-        "bindHeight": 2.999999632209346,
+        "bindHeight": 3.00000135024716,
         "bindMin": [
-          -1.5149098517510617,
-          5.254983372755432e-8,
-          -0.5944258930167444
+          -2.295239537827477,
+          -1.8238101559740477e-7,
+          -0.5876918471688918
         ],
         "bindMax": [
-          1.5151029431464484,
-          2.99999968475918,
-          0.6120777627466218
+          2.2219789301413533,
+          3.0000011678661442,
+          1.0869482569990547
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3/script-1.js",
         "sourceScriptSha256": "de7c89474ef48b3016d5e607974bb440d4b93c70aa620a53df517b5d01cd3f06",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 13968,
-          "bindRadius": 0.7067256002314869,
+          "bodyVertices": 27975,
+          "bindRadius": 1.0872783498970946,
           "clips": {
-            "Walking": {
-              "samples": 65,
-              "radius": 1.0836355433575962
-            },
             "Running": {
               "samples": 65,
-              "radius": 1.497440261263126
+              "radius": 1.236111667429961
+            },
+            "Walking": {
+              "samples": 65,
+              "radius": 1.1782282277650158
             }
           },
           "clearance": 0.05,
-          "radius": 1.55
+          "radius": 1.29
         }
       },
       "clips": {
-        "Walking": {
-          "duration": 1.041666705161333,
+        "Running": {
+          "duration": 0.6666666455566883,
           "start": 0.0416666679084301,
           "loop": true
         },
-        "Running": {
-          "duration": 0.6666666455566883,
+        "Walking": {
+          "duration": 1.041666705161333,
           "start": 0.0416666679084301,
           "loop": true
         },

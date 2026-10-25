@@ -12,7 +12,7 @@ export const UNUSED_WORKER_LAB_MODELS=new Set([
 // the repaired 40-state crop GLB from crops-v4.json.
 export const UNUSED_CROP_LAB_MODEL='assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb';
 // Retained as retargeting provenance, superseded by repaired replacements.
-export const UNUSED_ANIMAL_LAB_MODELS=new Set(['assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb','assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb','assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb','assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb']);
+export const UNUSED_ANIMAL_LAB_MODELS=new Set(['assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb','assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb','assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb','assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb','assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb']);
 const UNUSED_LAB_MODELS=new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]);
 // Assets referenced only by tools/experiments QA routes, never the shipped app.
 // Keep originals in public for reproducible development experiments.

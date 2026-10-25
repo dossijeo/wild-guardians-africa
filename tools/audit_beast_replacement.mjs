@@ -48,7 +48,7 @@ for(const clip of clips){
   maxSupportClearance=Math.max(maxSupportClearance,support);
  }
  report.clips.push({name:clip.name,duration:clip.duration,minGround,maxRaisedFoot,maxSupportClearance,maxSoleSpread,gazePitchDegrees:[minGazePitch,maxGazePitch]});
- assert(maxSoleSpread<(['buffalo','lion'].includes(species)?.003:.01),`${clip.name}: sole tilted/warped ${maxSoleSpread}`);
+ assert(maxSoleSpread<(['buffalo','lion','rhino'].includes(species)?.003:.01),`${clip.name}: sole tilted/warped ${maxSoleSpread}`);
  if(clip.name!=='restpose')assert(minGround>=.0219,`${clip.name}: ground penetration ${minGround}`);
  assert(maxSupportClearance<.06,`${clip.name}: floating support ${maxSupportClearance}`);
  if(['Walking','Running'].includes(clip.name))assert(maxGazePitch-minGazePitch>.1,`${clip.name}: head movement frozen`);
