@@ -20,6 +20,8 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[],q
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'||m.type()==='warning'){errors.push(m.text());console.log(m.text().slice(0,500));}});
 try{
+ const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??32);if(![16,32].includes(groundStep))throw Error('Invalid QA ground step');
+ if(groundStep!==32)await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('groundStep:32').length!==2)throw Error('Ground step anchor missing');await route.fulfill({response,body:body.replace('groundStep:32','groundStep:'+groundStep)});});
  const {installLoadingVariantRoutes}=await import('./loading-variant-source-patches.js');
  await installLoadingVariantRoutes(page,{ground:process.env.WG_PRODUCTION_GROUND_SOURCE==='1',sharedSmooth:process.env.WG_SHARED_SMOOTH_PROGRAM==='1',eligibleWarmup:process.env.WG_ELIGIBLE_OBSTRUCTION_WARMUP==='1'});
  if(process.env.WG_LOADING_PROGRAM_INVENTORY==='1'){const {installLoadingProgramInventory}=await import('./loading-program-inventory.js');await page.addInitScript(installLoadingProgramInventory,{traceCalls:process.env.WG_LOADING_PROGRAM_TRACE==='1'});}
@@ -300,7 +302,7 @@ try{
  result.scheduler=await page.evaluate(async()=>{const url=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/app/global-frame-scheduler.js');if(!url)throw Error('Missing canonical scheduler module');const {globalFrameScheduler}=await import(url);return {moduleUrl:url,...globalFrameScheduler.snapshot()};});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'||process.env.WG_THREAD_CONTEXT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
- await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,terrainDeadline:process.env.WG_THREAD_TERRAIN_DEFERRED==='1'?'deferred250':'required',url:gameUrl.href,result,errors},null,2)+'\n');
+ await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,groundStep,terrainDeadline:process.env.WG_THREAD_TERRAIN_DEFERRED==='1'?'deferred250':'required',url:gameUrl.href,result,errors},null,2)+'\n');
  console.log(JSON.stringify({result,errors}));
  const unexpected=errors.filter(e=>!e.includes('f_environment4')&&!(process.env.WG_GUARDIAN_WORKER_PROBE==='1'&&e.startsWith('Canvas2D: Multiple readback operations using getImageData'))&&!(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(e.includes('503')||e.includes('pthread runtime unavailable'))));
  if(unexpected.length)throw Error('Unexpected browser errors: '+unexpected.join(' | '));
