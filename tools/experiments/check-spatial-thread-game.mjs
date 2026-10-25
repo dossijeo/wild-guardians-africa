@@ -114,6 +114,7 @@ try{
  if(process.env.WG_THREAD_QUALITY_ACTIVE==='1')gameUrl.searchParams.set('qualityActive','1');
  if(process.env.WG_THREAD_QUALITY_ATTRIBUTION==='1')gameUrl.searchParams.set('qualityAttribution','1');
  if(process.env.WG_THREAD_QUALITY_PREWARM==='1')gameUrl.searchParams.set('qualityPrewarm','1');
+ if(process.env.WG_THREAD_TERRAIN_TRACE==='1')await (await import('./terrain-phase-trace.js')).installTerrainPhaseTrace(page);
  await page.goto(gameUrl.href);
  await page.waitForSelector('#native-menu',{timeout:60000});
  const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
@@ -295,4 +296,4 @@ try{
  console.log(JSON.stringify({result,errors}));
  const unexpected=errors.filter(e=>!e.includes('f_environment4')&&!(process.env.WG_GUARDIAN_WORKER_PROBE==='1'&&e.startsWith('Canvas2D: Multiple readback operations using getImageData'))&&!(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(e.includes('503')||e.includes('pthread runtime unavailable'))));
  if(unexpected.length)throw Error('Unexpected browser errors: '+unexpected.join(' | '));
-}catch(error){let diagnosticTimer;const diagnostic=await Promise.race([page.evaluate(()=>globalThis.qaQualityFailure??null).catch(()=>null),new Promise(resolve=>{diagnosticTimer=setTimeout(()=>resolve({unavailable:'Browser diagnostic did not respond within 5s'}),5000);})]).finally(()=>clearTimeout(diagnosticTimer));await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.failure.json'),JSON.stringify({message:error.message,diagnostic,qualityStatuses,errors},null,2)+'\n');throw error;}finally{await browser.close();}
+}catch(error){let diagnosticTimer;const diagnostic=await Promise.race([page.evaluate(()=>globalThis.qaQualityFailure??null).catch(()=>null),new Promise(resolve=>{diagnosticTimer=setTimeout(()=>resolve({unavailable:'Browser diagnostic did not respond within 5s'}),5000);})]).finally(()=>clearTimeout(diagnosticTimer));await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.failure.json'),JSON.stringify({message:error.message,diagnostic,qualityStatuses,errors},null,2)+'\n');throw error;}finally{if(process.env.WG_THREAD_TERRAIN_TRACE==='1')await writeFile(process.env.WG_THREAD_REPORT.replace(/\.json$/,'.terrain-trace.json'),JSON.stringify(await page.evaluate(()=>globalThis.qaTerrainPhaseTrace??[]).catch(()=>[]),null,2)+'\n');await browser.close();}

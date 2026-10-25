@@ -370,8 +370,9 @@ export class WorldScene {
     if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);yield 'bank';prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial,payload?.waterShore);yield 'water-edges';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);yield 'water-core';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
     yield 'prop-filter';
     const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
-    // Measured prop slots are small; group four to avoid a frame per leaf batch.
-    for(let i=0;i<20;i+=4){yield 'prop-slots';for(let j=i;j<Math.min(i+4,20);j++)this.buildPropSlot(group,j,group.userData.contactInstances[j]);}
+    // Keep separate cost histories: the final water-bearing batch can take tens
+    // of milliseconds while the other groups remain sub-millisecond.
+    for(let i=0;i<20;i+=4){yield `prop-slots-${i}`;for(let j=i;j<Math.min(i+4,20);j++)this.buildPropSlot(group,j,group.userData.contactInstances[j]);}
     completed=true;return group;
     }finally{if(!completed)this.disposePreparedTerrain(group);}
   }

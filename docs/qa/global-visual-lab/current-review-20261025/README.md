@@ -717,3 +717,48 @@ ampliar el timeout para convertir el fallo en éxito. Tampoco cambiar el arte.
 Las esperas de screenshots alteran la cadencia: ninguna cifra temporal de esta
 serie representa rendimiento de juego. El control activo anterior sigue siendo
 una observación distinta, no refuta este fallo reproducido en modo pausado.
+
+
+## Separar la estimación de los cinco grupos de props
+
+Traza QA `gran-rio-phase-trace.terrain-trace.json`: 390 unidades, incluidos
+los chunks iniciales; 35 observaciones por grupo de cuatro slots. Los grupos
+0–3 tienen medianas 0,19–0,255 ms y máximos <=1,665 ms. Todos los picos de
+40–54,5 ms corresponden al último grupo (slots 16–19). Todavía no se atribuye
+el pico a una operación interna específica: el código puede construir agua en
+ese grupo, pero la traza mide el conjunto. El máximo compartido contamina las
+estimaciones de los demás grupos (hasta 54,5 ms para trabajo submilisegundo).
+
+Cambio mínimo: cada grupo conserva su propia etiqueta `prop-slots-0/4/8/12/16`.
+No cambia geometría, orden, tamaño de unidad, recursos, número de llamadas ni
+publicación atómica. Se reutiliza el estimador existente sin reducir costes a
+mano. `terrain-phase-trace.js` es instrumentación opt-in del harness, no del juego.
+Guarda trazas acotadas también en el cierre por fallo.
+
+Comparación pausada instrumentada, mismo recorrido y siete capturas:
+
+| Medida | Estimación compartida | Estimaciones por grupo |
+| --- | ---: | ---: |
+| Chunks terminados | 10 | 10 |
+| Recuperaciones excepcionales | 26 | 9 |
+| Mayor unidad síncrona (ms) | 54,53 | 53,06 |
+| Espera acumulada grupo 0 (ms) | 59187 | 48 |
+| Espera acumulada grupo 1 (ms) | 93598 | 71 |
+| Espera acumulada grupo 2 (ms) | 78381 | 89 |
+| Espera acumulada grupo 3 (ms) | 52150 | 89 |
+| Espera acumulada grupo 4 (ms) | 74230 | 75093 |
+
+Las esperas se solapan entre chunks: NO sumarlas para inferir tiempo de carga.
+No es una serie A/B/A/B ni un benchmark de FPS. Ambas terminan con cero pendientes,
+fondos listos y elapsed intacto. La primera ejecución sin traza había expirado;
+la instrumentada completa, confirmando sensibilidad a la cadencia. No ocultar
+ese control negativo. `summarize-terrain-phase-traces.py` reproduce la tabla.
+55 tests de scheduler/preparación/streaming/caché pasan. La captura final del
+candidato se inspeccionó: mantiene cobertura, caminos, suelo y sombras visibles.
+Las diferencias de animación y transparencia no permiten igualdad píxel a píxel.
+
+Se conserva la separación como corrección de clasificación de costes en la rama
+experimental. Pendiente control activo y atribuir/fraccionar el último grupo:
+no se afirma que el máximo bloqueo ni el frametime hayan mejorado. Los informes,
+trazas y capturas finales están versionados; capturas intermedias de esta pareja
+quedan locales (la serie visual previa completa sí está publicada).
