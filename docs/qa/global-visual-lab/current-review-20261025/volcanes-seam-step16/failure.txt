@@ -1,0 +1,12 @@
+node:internal/process/esm_loader:34
+      internalBinding('errors').triggerUncaughtException(
+                                ^
+
+page.evaluate: Error: GPU compilation cancelled: selected program disposed
+    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792860251973:30:97)
+    at http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792860251973:38:47
+    at C:\Users\PC\source\repos\wild-guardians-global-visual\tools\experiments\diagnose-volcanic-ground-seam.mjs:54:26 {
+  log: []
+}
+
+Node.js v20.11.0
