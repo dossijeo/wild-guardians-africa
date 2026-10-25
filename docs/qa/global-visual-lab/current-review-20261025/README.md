@@ -297,3 +297,25 @@ intacta. Esta selección permite futuras pruebas coherentes, no cambia defaults
 ni declara el bioma cerrado. Coste/movimiento históricos documentados en20261023;
 pendiente refrescar streaming activo y movimiento sobre la combinación actual.
 No se afirma mejora FPS a partir de las capturas.
+
+## Movimiento nativo actual de Canyon calm
+
+Cuatro vídeos (control/calm, día/noche),240poses solicitadas cada uno; primera
+mitad cámara fija, segunda dolly5m.960registros sin erroresGL/console, sin
+preparación lejana pendiente y con simulación conservada.480parejas coinciden
+en cámara, reloj del agua, calls ytriángulos. No es un benchmarkFPS: MediaRecorder
+usa reloj real mientras el shader avanza i/30. Vídeos y checkpointsPNG en
+canyon-motion-control y canyon-motion-calm.
+
+El checkpoint diurno de máxima aproximación fue inspeccionado: río continuo,
+reflejos menos contrastados y margen conservado. No se afirma revisión exhaustiva
+de todos los frames codificados ni streaming largo por un desplazamiento5m.
+Reaparece la discrepancia de contadores de memoria en todas las poses; ver
+capturas originales. El censo anterior no la reprodujo, por lo que la variabilidad
+sigue abierta, sin inventar causa ni ocultarla. Mantener selección de revisión,
+no cambiar defaults del juego ni afirmar equivalencia de memoria.
+
+Harness actualizado al punto de pausa real, salida configurable y opción native
+que activa canyonWater=calm sin reemplazo de fuente. Las ejecuciones usan
+pthreads/frameScheduler/ownedFarGpu y horizonBed=sync,budget2,chunkInstall=sync.
+La grabación y la supervisión de frames son QA; sin cambios de producción.

@@ -5,7 +5,8 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
 const selectedBiome='gran-canon';
-const out=`docs/qa/global-visual-lab/canyon-day-reflection-motion-20261023/${process.env.WG_REFLECTION??"baseline"}`;await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const reviewQuery=biome=>{const q=new URLSearchParams(globalClosureQuery(biome));for(const [k,v] of new URLSearchParams(process.env.WG_REVIEW_QUERY??''))q.set(k,v);if(process.env.WG_REFLECTION==='native')q.set('canyonWater','calm');return q.toString();};
+const out=process.env.WG_REVIEW_OUT??`docs/qa/global-visual-lab/canyon-day-reflection-motion-20261023/${process.env.WG_REFLECTION??"baseline"}`;await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const fixture=JSON.parse(await readFile('docs/qa/global-visual-lab/gran-canon-populated-native-camera-20261022/native-fixture.json','utf8'));
 const snapshot=fixture.timing.navigationContext.state;
 const browser=await chromium.launch({channel:'chrome',headless:true});
@@ -13,12 +14,12 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.message)});page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new');await route.fulfill({response,body});});
- await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('world.render(0);loadingOverlay?.dispose();',"Game.pause(state,'menu');world.render(0);loadingOverlay?.dispose();");body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
+ await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();const anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Motion freeze anchor changed');body=body.replace(anchor,"Game.pause(state,'menu');"+anchor);body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
  await page.route('**/src/rendering/shader-failure.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('throw failure.current;', 'globalThis.qaShaderFailure=failure.current.details;throw failure.current;');await route.fulfill({response,body});});
  await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true})),quality);
  await page.addInitScript(text=>localStorage.setItem('wild-guardians:slot:opening',text),snapshot);
  if(process.env.WG_REFLECTION==='day')await routeDayReflection(page);
- await page.goto('http://127.0.0.1:5190/?qa-seed=712&'+globalClosureQuery(biome));
+ await page.goto('http://127.0.0.1:5190/?qa-seed=712&'+reviewQuery(biome));
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
  await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
  await frame.evaluate(biome=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin),biome);
@@ -71,7 +72,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
    await writeFile(dir+'/motion.webm',Buffer.from(result.data,'base64'));delete result.data;
    for(const shot of result.shots)await writeFile(`${dir}/${String(shot.i).padStart(4,'0')}.png`,Buffer.from(shot.data,'base64'));delete result.shots;
    if(!result.stateUnchanged)throw Error('Simulation changed');if(result.frames.some(f=>f.glError)||errors.length)throw Error(JSON.stringify({errors,gl:result.frames.filter(f=>f.glError)}));
-   records.push({biome,quality,variant,phase,...result,errors:[...errors]});
+   records.push({query:reviewQuery(biome),biome,quality,variant,phase,...result,errors:[...errors]});
    await writeFile(out+'/captures.json',JSON.stringify({seed:712,resolution:[1280,720],note:'Moving full-world visual validation. Frame-index camera path; live streaming enabled; paused simulation; shader water clock advances i/30 independently, first half fixed camera then 5m dolly. Recorder uses wall-clock timestamps: not a benchmark.',records},null,2)+'\n');
    console.log(biome,quality,variant,phase,'recorded',result.wallMs);
   }
