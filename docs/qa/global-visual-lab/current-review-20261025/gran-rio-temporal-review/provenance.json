@@ -1,0 +1,25 @@
+{
+  "scope": "Sampled video frames, not full-rate video inspection or benchmark",
+  "intervalSeconds": [
+    18,
+    20
+  ],
+  "samplingFps": 4,
+  "panelSize": [
+    480,
+    270
+  ],
+  "layout": "4 columns, 2 rows, chronological left to right then next row",
+  "sources": [
+    {
+      "path": "gran-rio-resident-mask-validation\\day.webm",
+      "sha256": "0291819557f88752138ae6e20505ddf3142710190054d3401c9d50f9b17a81ee",
+      "sheet": "day-18-20.jpg"
+    },
+    {
+      "path": "gran-rio-resident-mask-validation\\night.webm",
+      "sha256": "15d01b751e33aaca5cb630151b5188c881cbec29fbb6df892266ea0df0393be3",
+      "sheet": "night-18-20.jpg"
+    }
+  ]
+}
