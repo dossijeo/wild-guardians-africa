@@ -25,6 +25,7 @@ Recurso activo: `238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d0
 
 ## Evidencias
 
+- [Vídeo de todas las animaciones](warthog-animations.mp4): 47,57 s, 1280×720, 30 fps, marcha/carrera y ataques completos de día y de noche, más vista trasera y postura de referencia. [Secuencia y procedencia](video.json). Generador: `tools/render_warthog_video.mjs`, con Playwright y FFmpeg disponibles en el entorno.
 - [Reparación de Blender](repair.json).
 - [Auditoría de animaciones y pies](animation-audit.json): 129 fases de cada clip, plantas rígidas, apoyo, movimiento de cabeza y pesos de cuello.
 - [50 capturas integradas](captures.json): seis biomas, marcha, carrera y cuatro ataques nocturnos; vistas traseras y comparación diurna. Cámara y fase deterministas, semilla 712, 1280×900. Usan `WorldScene` y el controlador de animales de producción con una incursión QA pausada.
