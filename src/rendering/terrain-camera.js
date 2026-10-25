@@ -87,6 +87,7 @@ export function stepTerrainCameraTravel(camera,controls,field,travel,point,secon
   travel.age=Math.min(travel.duration,travel.age+Math.max(0,seconds));
   const t=travel.age/travel.duration,ease=t*t*(3-2*t);
   const x=travel.start[0]+(point.x-travel.start[0])*ease,z=travel.start[1]+(point.z-travel.start[1])*ease;
-  const {pose,rawEye}=contextualPose(camera,field,[x,0,z],travel.theta,travel.phi,travel.distance);
+  const distance=THREE.MathUtils.lerp(travel.distance,travel.endDistance??travel.distance,ease);
+  const {pose,rawEye}=contextualPose(camera,field,[x,0,z],travel.theta,travel.phi,distance);
   applyPose(camera,controls,field,pose,rawEye);return t>=1;
 }

@@ -18,6 +18,7 @@ export class RaidCameraDirector {
    if(!animal)return;
    raid.cameraFocusedAnimalId=animal.id;
    this.travel={...beginTerrainCameraTravel(this.camera,this.controls,this.field),animalId:animal.id};
+   this.travel.endDistance=Math.min(this.travel.distance,18);
   }
   if(!this.travel)return;
   const animal=raid.animals.find(a=>a.id===this.travel.animalId&&active(a));
