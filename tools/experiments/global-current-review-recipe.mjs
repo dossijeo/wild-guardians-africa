@@ -8,6 +8,7 @@ export function globalCurrentReviewQuery(biome){
  // Keep coarse ground visible until the corresponding graphical chunk exists.
  if(['sabana','gran-rio','manglares','volcanes'].includes(biome))q.set('groundResidentMask','1');
  if(biome==='manglares'){q.set('mangroveFerns','holly');q.set('groundCache','fixed512');}
+ if(biome==='sabana')q.set('savannaGround','fine');
  if(biome==='volcanes')q.set('volcanicGround','fine');
  if(biome==='gran-canon'){q.set('canyonWater','calm');q.set('horizonHandoff','atomic');}
  return q.toString();

@@ -57,7 +57,7 @@ import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {prepareWildEngineWorld} from './wild-engine-world.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {WorldScene} from '../rendering/scene.js';
-import {farVegetationProfile} from '../rendering/far-vegetation-profile.js';
+import {farVegetationProfile,farGroundReviewOverrides} from '../rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from './far-world-loading.js';
 import {frameDelta} from './frame-delta.js';
 import {json} from '../rendering/assets.js';
@@ -246,7 +246,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     world.onError=e=>{if(starting&&world===prepared.world){loadingProgress?.fail(e);cancelLoading(e);}else error(e.message);};world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}Game.pause(state,'context-lost');error(CONTEXT_LOST_MESSAGE);};world.onContextRestored=()=>{Game.resume(state,'context-lost');if(commandFeedback===CONTEXT_LOST_MESSAGE){commandFeedback='';refreshCommandFeedback();}};
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
     if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation,world.farZeroVertexPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
-    await world.load(state,nav,payload,{spatialSession,farVegetation:(spatialSession&&new URLSearchParams(location.search).get('spatialFar')!=='1')||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome},nav.config.biome==='volcanoes'&&new URLSearchParams(location.search).get('volcanicGround')==='fine'?{groundStep:16}:{}),loadingProgress});assertLoading();
+    await world.load(state,nav,payload,{spatialSession,farVegetation:(spatialSession&&new URLSearchParams(location.search).get('spatialFar')!=='1')||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome},farGroundReviewOverrides(nav.config.biome,location.search)),loadingProgress});assertLoading();
     const planner=createEventDrivenTaskPlanner(spatialSession);
     planner.resetFromState(state);
     const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);

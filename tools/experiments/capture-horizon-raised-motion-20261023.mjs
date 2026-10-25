@@ -18,7 +18,7 @@ const canyonPose=selectedBiome==='gran-canon'?JSON.parse(await readFile('docs/qa
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (selectedBiome).split(',')){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
- const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??(currentReview&&biome==='volcanes'?16:32));if(![16,32].includes(groundStep))throw Error('Invalid motion ground step');
+ const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??(currentReview&&['sabana','volcanes'].includes(biome)?16:32));if(![16,32].includes(groundStep))throw Error('Invalid motion ground step');
  if(process.env.WG_DIAGNOSTIC_GROUND_STEP&&groundStep!==32)await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('groundStep:32').length!==2)throw Error('Ground step anchor missing');await route.fulfill({response,body:body.replace('groundStep:32','groundStep:'+groundStep)});});
  page.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.message)});page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new');await route.fulfill({response,body});});
@@ -34,7 +34,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  if(process.env.WG_HORIZON_HANDOFF==='atomic')query.set('horizonHandoff','atomic');
  if(process.env.WG_HORIZON_HANDOFF==='off')query.delete('horizonHandoff');
  if(process.env.WG_GROUND_RESIDENT_MASK==='1')query.set('groundResidentMask','1');
- if(process.env.WG_DIAGNOSTIC_GROUND_STEP)query.delete('volcanicGround');
+ if(process.env.WG_DIAGNOSTIC_GROUND_STEP){query.delete('volcanicGround');query.delete('savannaGround');}
  const captureUrl='http://127.0.0.1:5190/?qa-seed=712&'+query;
  await page.goto(captureUrl);
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
