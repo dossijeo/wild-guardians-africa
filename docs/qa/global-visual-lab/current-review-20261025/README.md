@@ -1,3 +1,5 @@
+> **Corrección de QA nocturna:** consultar [NIGHT-FIXTURE-CORRECTION.md](NIGHT-FIXTURE-CORRECTION.md). Las primeras partidas nocturnas derivadas tenían cadenas mal decodificadas y no validan jugabilidad ni equivalencia visual. Los controles corregidos llevan `valid-night` en el nombre.
+
 # Revisión del estado gráfico actual — 25 octubre
 
 Esta revisión utiliza las seis capturas reales de calidad alta del inventario
