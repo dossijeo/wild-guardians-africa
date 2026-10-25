@@ -410,3 +410,15 @@ override is being tested in Sabana without altering production defaults.
 The diagnostic uses explicit non-Mangrove streaming options (no retention,
 single eviction, no water-bed/shore worker), matching its original booleans.
 A success would require no late replacement link and bounded loading cost.
+
+## Existing obstruction warmup diagnostic: broader preparation
+
+Sabana warmObstruction=1 completes with85links versus83original and no late
+world link (guardian remains late). The warm phase takes718.095ms in this
+single diagnostic; readiness32,703.595ms is not an A/B speed result.
+Additional resident keys include map-bias=0 partial transparency, with and
+without native-chunk-clip, whereas the observed late key used map-bias=0.65.
+Do not globally enable the existing broad warmup as a loading optimization.
+It resolves this observed late link by preparing more variants. Whether those
+extra variants are reachable later must be established before narrowing it.
+Production policy remains unchanged. No non-X4000 errors recorded.
