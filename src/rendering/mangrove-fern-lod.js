@@ -1,7 +1,8 @@
+import {assetUrl} from './asset-url.js';
 import * as THREE from 'three';
 export async function applyFernLod(world,q){
  const loader=new THREE.TextureLoader(),root='/assets/visual-lab/holly-fern-lod-20261023/';
- const results=await Promise.allSettled(['fern-day','fern-night','shadow-solar'].map(name=>loader.loadAsync(root+name+'.png')));
+ const results=await Promise.allSettled(['fern-day','fern-night','shadow-solar'].map(name=>loader.loadAsync(assetUrl(root+name+'.png'))));
  if(results.some(r=>r.status==='rejected')||q.disposed||world.disposed||world.loading?.signal.aborted){for(const r of results)if(r.status==='fulfilled')r.value.dispose();throw Error('Fern LOD textures failed or loading cancelled');}
  const [day,night,shadow]=results.map(r=>r.value);
  for(const t of [day,night,shadow]){t.colorSpace=t===shadow?THREE.NoColorSpace:THREE.SRGBColorSpace;t.minFilter=THREE.LinearMipmapLinearFilter;t.generateMipmaps=true;t.needsUpdate=true;}

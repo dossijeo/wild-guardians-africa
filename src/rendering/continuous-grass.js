@@ -1,3 +1,4 @@
+import {assetUrl} from './asset-url.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {createCropSoilMasks,cropSoilEnabled} from './crop-soil-mask.js';
 import {syncSelectedGrassMask,disposeSelectedGrassMask} from './grass-underlay-mask.js';
@@ -68,7 +69,7 @@ export async function createContinuousGrass(world){
  const fern=mangrove&&mangroveFernEnabled(world.visualSearch);
  const cropSoil=river&&cropSoilEnabled(world.visualSearch)?createCropSoilMasks():null;
  const cupped=mangrove&&cuppedMangroveLeavesEnabled(world.visualSearch),varied=mangrove&&variedMangroveDistributionEnabled(world.visualSearch);
- const raw=await(await fetch(cupped?'/assets/visual-lab/mangrove-leaf-cupped-20261022/modules.json':mangrove?'/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json':'/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
+ const raw=await(await fetch(assetUrl(cupped?'/assets/visual-lab/mangrove-leaf-cupped-20261022/modules.json':mangrove?'/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json':'/assets/visual-lab/continuous-grass/modules.json'),{signal:world.loading?.signal})).json();
  const modules=mangrove&&!cupped?prepareMangroveLeaves(raw):raw;
  if(world.disposed||world.loading?.signal.aborted)throw Error('Coverage loading cancelled');
  const q={variant:'C',chunks:new Map(),tiles:new Map(),dirty:true,enabled:true,timeOverride:null,stats:{buildMs:0,selectionMs:0,selectionCount:0,candidates:0,masked:0,overflow:0},signature:'',near:0,far:0};

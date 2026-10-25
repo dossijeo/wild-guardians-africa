@@ -42,3 +42,14 @@ Se reconstruyó node_modules con npm ci (lockfile intacto); antes faltaban build
 mangrove-default-scheduler-r2.json/.png: URL vacía, 67 trabajos completados, 409 unidades, 0 fallidos/cancelados/pendientes; 25 chunks y cachés publicados, pthreads. El scheduler observó 5 overruns, unidad máxima 10,64 ms; no afirmar eliminación completa de picos. Captura inspeccionada: mantiene helechos/suelo aprobado. No es A/B de rendimiento ni simulación activa. Primer intento preservado como .failure.json: timeout de navegación de 30 s tras reinstalar dependencias; Vite seguía vivo, petición scene.js respondió 200 y la repetición funcionó.
 
 La guardia de versión de guardados (Wild Engine world version=1) ya existe en origin/main; no es una incompatibilidad nueva introducida por esta integración. Falta el resto de auditoría heredada, builds del nuevo head, pruebas empaquetadas sin interceptar código y matriz completa.
+
+
+## Distribución anidada: arranque normal de los seis biomas
+
+Se probó dist bajo /nested/itch/game/, sin fallback a la raíz del servidor, usando clics reales en el menú (sin flags QA, interceptación ni inyección de código). Los seis arranques terminaron con HUD, sin errores JavaScript ni solicitudes 404: package-mangrove-ui-r3.json y package-{sabana,gran-rio,desierto,volcanes,gran-canon}-ui.json.
+
+La primera prueba válida de Manglares descubrió una regresión real: modules.json se solicitaba mediante URL absoluta /assets/... fuera del paquete. Se corrigen continuous-grass, mangrove-fern-material y mangrove-fern-lod para usar el resolvedor assetUrl existente. No cambia contenido, resolución ni iluminación de los recursos. El fallo se conserva en package-mangrove-ui-r2.json; el intento anterior falló por el harness, que intentaba clicar durante la transición con el panel aún inert.
+
+Build y web-package pasan tras la corrección (999 archivos, 492045085 bytes, 841 enlaces relativos, 17 GLB runtime); diez tests dirigidos pasan. Estas pruebas no prueban todavía guardado/recarga, pérdida de contexto, Tauri ni rendimiento de streaming. El arranque de respaldo también pasa en package-mangrove-fallback.json: crossOriginIsolated=false, HUD visible, cero errores/404 y ningún worker spatial-threaded. Esto valida arranque, no rendimiento ni ciclo de vida completo del respaldo.
+
+La repetición aislada A/B/A/B de cambios de calidad ya está en isolated-quality-summary.json y ACTIVE-QUALITY-INTEGRATION.md. No hubo builds/tests concurrentes: los controles A registran máximos de unos 6,7 s al primer cambio a baja; B, 63–82 ms en ese cambio. El recorrido completo baja aproximadamente un 43 %. Son intervalos de presentación del protocolo completo, no tiempos GPU atribuibles al shader ni una afirmación general de FPS.

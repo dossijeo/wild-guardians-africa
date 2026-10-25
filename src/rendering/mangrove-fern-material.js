@@ -1,3 +1,4 @@
+import {assetUrl} from './asset-url.js';
 import * as THREE from 'three';
 import {fernClumpGeometryData} from './mangrove-fern-geometry.js';
 // Opt-in laboratory ferns: reuse native instance buffers, masks and selection.
@@ -8,7 +9,7 @@ export async function applyHollyFern(world,q){
  // Enlarged footprint + wind allowance: rebuild existing cached masks once.
  q.edgePadding=1.;q.markDirtyAt();q.flush();
  for(const attr of ['position','flatPosition','bladeRoot'])for(let i=0;i<data[attr].length;i+=3){data[attr][i]*=1.35;data[attr][i+1]*=1.6;data[attr][i+2]*=1.35;}
- const loaded=await Promise.allSettled(['color','normal'].map(k=>loader.loadAsync('/assets/visual-lab/holly-fern-frond-20261023/'+k+'.png')));
+ const loaded=await Promise.allSettled(['color','normal'].map(k=>loader.loadAsync(assetUrl('/assets/visual-lab/holly-fern-frond-20261023/'+k+'.png'))));
  if(loaded.some(r=>r.status==='rejected')||world.disposed||world.loading?.signal.aborted){for(const r of loaded)if(r.status==='fulfilled')r.value.dispose();throw new Error('Fern textures failed or loading cancelled');}
  const [coverage,normal]=loaded.map(r=>r.value);
  const dispose=q.dispose.bind(q);q.dispose=()=>{if(q.disposed)return;for(const e of q.meshes){e.mesh.customDepthMaterial?.dispose();e.mesh.customDepthMaterial=null;}coverage.dispose();normal.dispose();dispose();};

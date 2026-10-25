@@ -18,3 +18,16 @@ Repetir con check-spatial-thread-game.mjs: WG_THREAD_PORT=5190, WG_THREAD_BIOME=
 ## CI
 
 Run40189380447 (head907c399f6) terminó con 8 fallos. Se repararon los fixtures de calidad/residencia/contexto para usar los métodos actuales de retención y actualización de programas; la prueba de restauración además exige una actualización de programas. Se mantiene la comprobación de geometría, simulación, culling, intensidad y materiales. 18 tests pasan. Se regeneró el inventario SFX porque cambiaron líneas y hashes de los consumidores gráficos; 3 tests de auditoría pasan, sin cambiar rutas de audio ni sonidos. No se ha debilitado el verificador de vigencia. CI global del nuevo head continúa pendiente.
+
+## Repetición sin tareas locales concurrentes
+
+Head1c7a508ea, mismos controles y protocolo, corridas isolated-quality-*.json. Durante las cuatro pasadas no se ejecutaron builds, pruebas ni otros comandos locales de investigación.
+
+| Corrida | Cámara + asentamiento (s) | Máximo baja/media/baja (ms) | Frames avanzando | Nuevos chunks |
+|---|---:|---|---|---:|
+| a1 | 15.802 | 6772.75 / 90.67 / 93.08 | 240/240 | 15 |
+| b1 | 8.908 | 81.73 / 99.38 / 73.30 | 240/240 | 15 |
+| a2 | 15.207 | 6692.75 / 98.96 / 77.57 | 240/240 | 15 |
+| b2 | 8.612 | 63.25 / 87.95 / 72.54 | 240/240 | 15 |
+
+El tiempo total baja un 43,6 % y 43,4 % en las dos parejas; la primera transición vuelve a perder su bloqueo de ~6,7 s. Todas terminan con 240 frames avanzando, 15 chunks nuevos, 0 fallos y 0 pendientes. Esto confirma el beneficio de este conjunto en este escenario, no un aumento universal de FPS. Los tiempos incluyen los diagnósticos del protocolo; siguen sin separar GPU/CPU. Las otras condiciones de aceptación permanecen abiertas.

@@ -1,0 +1,29 @@
+{
+  "scope": "Built package at nested path, no URL flags, route interception or source injection.",
+  "result": {
+    "url": "http://127.0.0.1:55536/nested/itch/game/",
+    "isolated": true,
+    "menuButtons": [
+      "",
+      "",
+      "Continuar",
+      "Juego nuevo",
+      "Opciones",
+      "Biblioteca",
+      "Salir",
+      "← Regresar",
+      "Omitir recorrido",
+      "Volver al santuario →",
+      "Volver a intentar"
+    ],
+    "menuText": "UNA PEQUEÑA GRANJA. UN MUNDO POR PROTEGER.\nEL SANTUARIO\nDonde comienza tu historia\nCONTINUAR\nJUEGO NUEVO\nOPCIONES\nBIBLIOTECA\nSALIR\nLA SABANA · CREPÚSCULO\n\nCada historia empieza con una semilla.\n\nTOCA LOS SÍMBOLOS LUMINOSOS\nVIAJE DEL ESPÍRITU · V2.8\nUn mundo por proteger.\n\nBienvenido al santuario.",
+    "failure": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#native-menu').contentFrame().locator('iframe.production-section').contentFrame().locator('[data-culture=\"mapungubwe\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button role=\"radio\" tabindex=\"0\" type=\"button\" data-index=\"0\" data-kind=\"culture\" aria-checked=\"true\" id=\"culture-mapungubwe\" data-culture=\"mapungubwe\" class=\"biome-card culture-card\" aria-label=\"Mapungubwe. Bóvedas rojizas, piedra y motivos geométricos.\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    55 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  },
+  "errors": [],
+  "requests": [],
+  "workers": [
+    "http://127.0.0.1:55536/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:55536/nested/itch/game/assets/sky-pixels-worker-CoOE8ZAM.js",
+    "http://127.0.0.1:55536/nested/itch/game/assets/loading-image-worker-DVeVgE-E.js"
+  ]
+}
