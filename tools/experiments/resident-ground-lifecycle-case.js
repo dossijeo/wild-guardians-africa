@@ -25,5 +25,6 @@ export async function verifyResidentGroundLifecycle(w){
  await settle();const before=audit(w);await globalThis.qaCaptureResidentGround?.('before');
  const quality=await verifyGameQualityCycle(w);await settle();const afterQuality=audit(w);await globalThis.qaCaptureResidentGround?.('after-quality');
  const context=await verifyGameContextRestore(w);await settle();const afterContext=audit(w);await globalThis.qaCaptureResidentGround?.('after-context');
- return {before,afterQuality,afterContext,quality,context};
+ const staleContextNotice=[...document.querySelectorAll('.command-feedback')].some(node=>node.getClientRects().length>0&&getComputedStyle(node).visibility!=='hidden'&&node.textContent.includes('Se ha perdido el contexto gráfico. La partida está pausada.'));if(staleContextNotice)throw Error('Restored context retained obsolete loss notice');
+ return {before,afterQuality,afterContext,quality,context,staleContextNotice};
 }
