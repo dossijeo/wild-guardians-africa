@@ -32,7 +32,11 @@ for(const [species,fragment] of Object.entries(fragments)){
   bytes.copy(geometry,0,0,20);geometry.writeUInt32LE(geometry.length,8);geometry.writeUInt32LE(size,12);encoded.copy(geometry,20);tail.copy(geometry,20+size);
   const gltf=await new GLTFLoader().parseAsync(geometry.buffer.slice(geometry.byteOffset,geometry.byteOffset+geometry.length),'');gltf.scene.updateMatrixWorld(true);
   const bounds=new THREE.Box3().setFromObject(gltf.scene,true),height=bounds.max.y-bounds.min.y;
-  actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),presentation:{scale:1,bindHeight:height,bindMin:bounds.min.toArray(),bindMax:bounds.max.toArray(),sourceScript:script,sourceScriptSha256:createHash('sha256').update(scriptBytes).digest('hex'),footprint:calibrateAnimalFootprint(gltf)},clips};
+  const footprint=calibrateAnimalFootprint(gltf);
+  // A purely visual head lift must not shrink the established navigation /
+  // shield clearance. Still measure and expand if future geometry requires it.
+  footprint.radius=Math.max(footprint.radius,model.replacement?.headPosture?.minimumFootprintRadius??0);
+  actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),presentation:{scale:1,bindHeight:height,bindMin:bounds.min.toArray(),bindMax:bounds.max.toArray(),sourceScript:script,sourceScriptSha256:createHash('sha256').update(scriptBytes).digest('hex'),footprint},clips};
 }
 const manifest={schema:'wg-animal-actions/1',logicalMarker:'Complete native clip. Original bestiary labs encode no logical damage/contact markers; decorative contacts do not drive damage.',animals:actions};
 for(const path of ['content/manifests/animal-actions.json','public/content/animal-actions.json'])writeFileSync(new URL('../'+path,import.meta.url),JSON.stringify(manifest,null,2)+'\n');

@@ -5180,48 +5180,48 @@
       "derived": true
     },
     {
-      "url": "/assets/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
-      "bytes": 72728708,
-      "sha256": "238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00",
-      "mime": "application/octet-stream",
-      "origins": [
-        "Wild Guardians New/animales/facóquero.glb#repaired-retargeted"
-      ]
-    },
-    {
-      "url": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
-      "bytes": 71064552,
-      "sha256": "48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0",
-      "mime": "application/octet-stream",
-      "origins": [
-        "Wild Guardians New/animales/hiena.glb#repaired-retargeted"
-      ]
-    },
-    {
-      "url": "/assets/3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d.glb",
-      "bytes": 74392252,
-      "sha256": "3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d",
-      "mime": "application/octet-stream",
-      "origins": [
-        "Wild Guardians New/animales/búfalo.glb#repaired-retargeted"
-      ]
-    },
-    {
-      "url": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
-      "bytes": 45698076,
-      "sha256": "a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf",
-      "mime": "application/octet-stream",
-      "origins": [
-        "Wild Guardians New/animales/león.glb#repaired-retargeted"
-      ]
-    },
-    {
       "url": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
       "bytes": 48413724,
       "sha256": "39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a",
       "mime": "application/octet-stream",
       "origins": [
         "Wild Guardians New/animales/rinoceronte.glb#repaired-retargeted"
+      ]
+    },
+    {
+      "url": "/assets/ed225711dd6da89db2a38b9ca1a3de1b0f85b0dff5036b68f7477bd8d0f78903.glb",
+      "bytes": 45744996,
+      "sha256": "ed225711dd6da89db2a38b9ca1a3de1b0f85b0dff5036b68f7477bd8d0f78903",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/león.glb#repaired-retargeted"
+      ]
+    },
+    {
+      "url": "/assets/44dd1b5c14d5c58c32f1a42ffaf0404a43c4a6aeae2e6d9a5cb954ec6f17f800.glb",
+      "bytes": 74439184,
+      "sha256": "44dd1b5c14d5c58c32f1a42ffaf0404a43c4a6aeae2e6d9a5cb954ec6f17f800",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/búfalo.glb#repaired-retargeted"
+      ]
+    },
+    {
+      "url": "/assets/f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420.glb",
+      "bytes": 71077624,
+      "sha256": "f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/hiena.glb#repaired-retargeted"
+      ]
+    },
+    {
+      "url": "/assets/35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020.glb",
+      "bytes": 72741772,
+      "sha256": "35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/facóquero.glb#repaired-retargeted"
       ]
     }
   ],
@@ -5353,7 +5353,7 @@
       }
     },
     {
-      "url": "/assets/3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d.glb",
+      "url": "/assets/44dd1b5c14d5c58c32f1a42ffaf0404a43c4a6aeae2e6d9a5cb954ec6f17f800.glb",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
       "animations": [
         {
@@ -5387,18 +5387,32 @@
         "replacement": {
           "repair": "tools/prepare_buffalo.py",
           "report": "docs/qa/buffalo-replacement/repair.json",
-          "animationSourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b"
+          "animationSourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b",
+          "headPosture": {
+            "tool": "tools/experiments/lift-beast-head.mjs",
+            "headDegrees": 15,
+            "neckDegrees": 10,
+            "source": "/assets/3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d.glb",
+            "minimumFootprintRadius": 0.77
+          }
         }
       },
       "geometrySource": "Wild Guardians New/animales/búfalo.glb",
       "replacement": {
         "repair": "tools/prepare_buffalo.py",
         "report": "docs/qa/buffalo-replacement/repair.json",
-        "animationSourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b"
+        "animationSourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b",
+        "headPosture": {
+          "tool": "tools/experiments/lift-beast-head.mjs",
+          "headDegrees": 15,
+          "neckDegrees": 10,
+          "source": "/assets/3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d.glb",
+          "minimumFootprintRadius": 0.77
+        }
       }
     },
     {
-      "url": "/assets/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "url": "/assets/35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020.glb",
       "source": "Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2.html#model-data",
       "animations": [
         {
@@ -5436,14 +5450,28 @@
         "replacement": {
           "repair": "tools/prepare_warthog.py",
           "report": "docs/qa/warthog-replacement/repair.json",
-          "animationSourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869"
+          "animationSourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+          "headPosture": {
+            "tool": "tools/experiments/lift-beast-head.mjs",
+            "headDegrees": 5,
+            "neckDegrees": 3.3333333333333335,
+            "source": "/assets/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+            "minimumFootprintRadius": 1.53
+          }
         }
       },
       "geometrySource": "Wild Guardians New/animales/facóquero.glb",
       "replacement": {
         "repair": "tools/prepare_warthog.py",
         "report": "docs/qa/warthog-replacement/repair.json",
-        "animationSourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869"
+        "animationSourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+        "headPosture": {
+          "tool": "tools/experiments/lift-beast-head.mjs",
+          "headDegrees": 5,
+          "neckDegrees": 3.3333333333333335,
+          "source": "/assets/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+          "minimumFootprintRadius": 1.53
+        }
       }
     },
     {
@@ -5487,7 +5515,7 @@
       }
     },
     {
-      "url": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "url": "/assets/f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
       "animations": [
         {
@@ -5521,14 +5549,28 @@
         "replacement": {
           "repair": "tools/prepare_hyena.py",
           "report": "docs/qa/hyena-replacement/repair.json",
-          "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25"
+          "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+          "headPosture": {
+            "tool": "tools/experiments/lift-beast-head.mjs",
+            "headDegrees": 8,
+            "neckDegrees": 5.333333333333333,
+            "source": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+            "minimumFootprintRadius": 1.11
+          }
         }
       },
       "geometrySource": "Wild Guardians New/animales/hiena.glb",
       "replacement": {
         "repair": "tools/prepare_hyena.py",
         "report": "docs/qa/hyena-replacement/repair.json",
-        "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25"
+        "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+        "headPosture": {
+          "tool": "tools/experiments/lift-beast-head.mjs",
+          "headDegrees": 8,
+          "neckDegrees": 5.333333333333333,
+          "source": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+          "minimumFootprintRadius": 1.11
+        }
       }
     },
     {
@@ -5579,7 +5621,7 @@
       }
     },
     {
-      "url": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
+      "url": "/assets/ed225711dd6da89db2a38b9ca1a3de1b0f85b0dff5036b68f7477bd8d0f78903.glb",
       "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
       "animations": [
         {
@@ -5613,14 +5655,28 @@
         "replacement": {
           "repair": "tools/prepare_lion.py",
           "report": "docs/qa/lion-replacement/repair.json",
-          "animationSourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b"
+          "animationSourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+          "headPosture": {
+            "tool": "tools/experiments/lift-beast-head.mjs",
+            "headDegrees": 15,
+            "neckDegrees": 10,
+            "source": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
+            "minimumFootprintRadius": 0.82
+          }
         }
       },
       "geometrySource": "Wild Guardians New/animales/león.glb",
       "replacement": {
         "repair": "tools/prepare_lion.py",
         "report": "docs/qa/lion-replacement/repair.json",
-        "animationSourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b"
+        "animationSourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+        "headPosture": {
+          "tool": "tools/experiments/lift-beast-head.mjs",
+          "headDegrees": 15,
+          "neckDegrees": 10,
+          "source": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
+          "minimumFootprintRadius": 0.82
+        }
       }
     },
     {
