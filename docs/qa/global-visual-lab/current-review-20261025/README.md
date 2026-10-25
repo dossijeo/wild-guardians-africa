@@ -249,3 +249,18 @@ la implementación añade aritmética, no declara mapas nuevos. Registrar/atribu
 la diferencia antes de cambiar receta o afirmar equivalencia de memoria. Ningún
 error GL/console registrado. Los costes históricos y vídeos de20261023 son
 antecedentes, no benchmarks nuevos del renderer actual. No promoción por defecto.
+
+## Control repetido para atribuir residencia de calm
+
+Nueva ejecución sin calm vuelve a84texturas en las seis vistas finales;
+geometrías155/151/149iguales. Cinco imágenes RGB exactas con el primer control;
+día normal solo difiere en bounds(800,409)-(803,410). Todos los controles
+registrados coinciden. Esto reduce la hipótesis de una diferencia arbitraria
+entre dos cargas, pero todavía no identifica las cuatro texturas de calm.
+
+Revisión de african-toon.js: calm condiciona la transformación GLSL y la clave
+de programa; acquireWaterSlope depende de experimentalWater, no de calm.
+canyon-water-reflection.js no añade samplers ni construye texturas. No atribuir
+88vs84a cuatro nuevos mapas del agua sin un censo de inicialización/propiedad.
+Siguiente prueba: censo por recurso en ambas rutas, fuera de benchmarking.
+Conservar candidata artística, sin promoción ni pérdida de calidad por esta duda.
