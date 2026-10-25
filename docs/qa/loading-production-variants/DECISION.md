@@ -63,3 +63,9 @@ y aplica parches de fuente exclusivamente en su navegador QA. Los parámetros
 de URL conservados en informes son metadatos de reproducción, no opciones del
 juego normal. Nueve tests pasan; validación de reproducción real en curso.
 Esta separación no se presenta como un ahorro de carga medido.
+
+Validación real del aislamiento completada: original y suelo90enlaces, clave
+compartida89;25chunks en los tres casos, sin errores nuevos registrados aparte
+de X4000. El multiconjunto de huellas de shaders del mundo coincide con cada
+referencia previa al aislamiento. AfricanToon y smooth-far-transitions vuelven
+a coincidir con la referencia02cb81d0d. No se afirma mejora de velocidad.
