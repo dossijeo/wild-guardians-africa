@@ -281,3 +281,19 @@ rendimiento. No hay evidencia de cuatro mapas propios de calm; la diferencia
 histórica queda como variabilidad no atribuida. Mantener candidata visual,
 priorizando validación integrada de movimiento/calidad baja antes de seleccionar
 la receta. No convertir este contador aislado en rechazo artístico o bloqueo global.
+
+## Calm: baja y selección para revisión actual
+
+24capturas nuevas control/calm en calidad baja; seis parejas finales con cámara,
+reloj, trabajadores, calls, triángulos y contadores de recursos iguales. Tres
+nocturnas RGB exactas. Vista diurna normal inspeccionada: bandas menos dominantes,
+agua más tranquila; no altera orilla ni geometría. No errores registrados.
+La falta de sombras de alta calidad pertenece al perfil bajo, no a calm.
+
+Se selecciona calm para la receta artística actual de revisión, junto con
+helechos holly/caché fixed512 exclusivamente en Manglares. Módulo explícito
+`tools/experiments/global-current-review-recipe.mjs`; la receta histórica sigue
+intacta. Esta selección permite futuras pruebas coherentes, no cambia defaults
+ni declara el bioma cerrado. Coste/movimiento históricos documentados en20261023;
+pendiente refrescar streaming activo y movimiento sobre la combinación actual.
+No se afirma mejora FPS a partir de las capturas.
