@@ -12,6 +12,14 @@ export const UNUSED_WORKER_LAB_MODELS=new Set([
 // the repaired 40-state crop GLB from crops-v4.json.
 export const UNUSED_CROP_LAB_MODEL='assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb';
 const UNUSED_LAB_MODELS=new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL]);
+// The layered sanctuary no longer samples the photographic background, sky or
+// relief mask. Retain authoring originals, but exclude both original and mapped
+// runtime encodings from the two release distributions.
+export const RETIRED_MENU_ASSETS=new Set([
+ 'assets/edf8ac071ae8c889ef6bd95014334535b1144fdf7278d8a7af72415c38e42e90.jpg',
+ 'assets/a1458a9c5a3eee9dc6a0dde33da7790a12ed8a6514039305ab0006cda5357d5d.webp',
+ 'assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png'
+]);
 // Assets referenced only by tools/experiments QA routes, never the shipped app.
 // Keep originals in public for reproducible development experiments.
 export const QA_ONLY_VISUAL_DIRECTORIES=[
@@ -53,7 +61,14 @@ export function webPackagePlugin(){
         if(!target.startsWith(parent+sep))throw Error('QA archive path escapes visual assets');
         rmSync(target,{recursive:true,force:true});
       }
-      writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify({...mapping,records:mapping.records.filter(item=>!UNUSED_LAB_MODELS.has(item.source))},null,2)+'\n');
+      for(const source of RETIRED_MENU_ASSETS){
+        for(const path of [source,...mapping.records.filter(item=>item.source===source).map(item=>item.runtime)]){
+          const target=resolve(dist,path);
+          if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Retired menu path escapes package');
+          rmSync(target,{force:true});
+        }
+      }
+      writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify({...mapping,records:mapping.records.filter(item=>!UNUSED_LAB_MODELS.has(item.source)&&!RETIRED_MENU_ASSETS.has(item.source))},null,2)+'\n');
       // The four worker reference labs are retained in source but have no menu entry.
       // Exclude them from both the itch.io ZIP and the Tauri frontend bundle.
       for(const name of ['worker-older-male','worker-older-female','worker-young-male','worker-young-female']){

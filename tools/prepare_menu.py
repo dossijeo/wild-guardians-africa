@@ -29,7 +29,9 @@ code=code.replace(' gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.DEPTH_
 code=code.replace("bgTex=makeTexture(await imageFromData($('#backgrounddata').textContent.trim()));", "[bgTex,menuForegroundTex]=await Promise.all([loadMenuPlate('./art/sanctuary-valley-v1.png'),loadMenuPlate('./art/sanctuary-foreground-v1.png')]);",1)
 code=code.replace("skyTex=makeTexture(await imageFromData($('#skydata').textContent.trim()));terrainMaskTex=makeTexture(await imageFromData($('#terrainmaskdata').textContent.trim()));",'')
 code=code.replace('createBackgroundRelief();','')
-nodes=''.join(f'<script type="application/octet-stream" id="{p["id"]}">{p["url"]}</script>' for p in source['payloads'])
+for unused in ('skydata','terrainmaskdata'):
+    code=code.replace(f"$('#{unused}').textContent='';",'')
+nodes=''.join(f'<script type="application/octet-stream" id="{p["id"]}">{p["url"]}</script>' for p in source['payloads'] if p['id'] not in ('backgrounddata','skydata','terrainmaskdata'))
 out=root/'public/menu';out.mkdir(exist_ok=True)
 (out/'native.js').write_text(code,encoding='utf-8')
 (out/'index.html').write_text(markup.replace('</body>',nodes+'<script src="/menu/native.js"></script></body>'),encoding='utf-8')
