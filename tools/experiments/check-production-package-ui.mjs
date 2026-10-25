@@ -46,6 +46,14 @@ try{
    await page.screenshot({path:report.replace(/\.json$/,'-library-'+lab+'.png')});result.library.push(checks);await menu.locator('.production-lab-header button').first().click();
   }
  }
+ if(process.env.WG_PACKAGE_UI_LIBRARY==='1')await menu.locator('#panel [data-back]').click();
+ if(process.env.WG_PACKAGE_UI_OPTIONS==='1'){
+  await menu.getByRole('button',{name:'Opciones',exact:true}).click();
+  await menu.locator('#panelstage:not([inert])').waitFor({state:'visible',timeout:60000});
+  result.options={quality:await menu.locator('#production-quality').inputValue(),resolution:await menu.locator('#production-resolution').inputValue()};
+  await page.screenshot({path:report.replace(/\.json$/,'-options.png')});
+  await menu.locator('#panel [data-back]').click();
+ }
  if(process.env.WG_PACKAGE_UI_FIXTURE){
   const fixture=JSON.parse(await readFile(process.env.WG_PACKAGE_UI_FIXTURE,'utf8'));
   // Saved-world reproduction only: same legacy storage ingress as native smoke.

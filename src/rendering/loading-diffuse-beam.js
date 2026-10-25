@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {installNativeShadow} from './native-shadow.js';
 import {installLoadingContact} from './loading-contact.js';
-export function loadingDiffuseEnabled(search=globalThis.location?.search??''){return new URLSearchParams(search).get('loadingBeam')==='diffuse';}
+export function loadingDiffuseEnabled(search=globalThis.location?.search??''){const mode=new URLSearchParams(search).get('loadingBeam');return mode===null||mode==='diffuse';}
 // Loading-only analytic light and atmosphere. Reuses existing material draws.
 export function installLoadingDiffuseBeam(d){
  d.mist.day.set('#ead4b4');d.mist.night.set('#102d5b');

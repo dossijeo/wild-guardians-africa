@@ -4,8 +4,8 @@ import * as THREE from 'three';
 import {loadingDiffuseEnabled,installLoadingDiffuseBeam} from '../src/rendering/loading-diffuse-beam.js';
 import {createNativeShadowUniforms} from '../src/rendering/native-shadow.js';
 
-test('diffuse option is explicit and does not replace the original oblique option',()=>{
- assert.equal(loadingDiffuseEnabled(''),false);assert.equal(loadingDiffuseEnabled('?loadingBeam=oblique'),false);assert.equal(loadingDiffuseEnabled('?loadingBeam=diffuse'),true);
+test('approved diffuse presentation is the default and legacy comparisons remain explicit',()=>{
+ assert.equal(loadingDiffuseEnabled(''),true);assert.equal(loadingDiffuseEnabled('?loadingBeam=oblique'),false);assert.equal(loadingDiffuseEnabled('?loadingBeam=diffuse'),true);
 });
 test('diffuse owner releases its shadow map and fallback once and restores the world hook',()=>{
  const original=()=>{},renderer={shadowMap:{render:original,enabled:true,autoUpdate:true}},scene=new THREE.Scene(),ground=new THREE.Mesh(new THREE.PlaneGeometry(),new THREE.MeshStandardMaterial()),camera=new THREE.PerspectiveCamera(40,1,.1,80),sun=new THREE.DirectionalLight();scene.add(ground,sun);camera.position.set(4.8,3.1,6.4);camera.lookAt(0,1.15,0);
