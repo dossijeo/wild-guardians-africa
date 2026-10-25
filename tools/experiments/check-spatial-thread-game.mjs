@@ -124,6 +124,7 @@ try{
  if(process.env.WG_THREAD_QUALITY_ATTRIBUTION==='1')gameUrl.searchParams.set('qualityAttribution','1');
  if(process.env.WG_THREAD_QUALITY_PREWARM==='1')gameUrl.searchParams.set('qualityPrewarm','1');
  if(process.env.WG_THREAD_TERRAIN_TRACE==='1')await (await import('./terrain-phase-trace.js')).installTerrainPhaseTrace(page);
+ if(process.env.WG_PRODUCTION_VISUALS==='1')for(const key of [...gameUrl.searchParams.keys()])if(!['qualityActive','qualityMenuProtocol','qualityRequireActive'].includes(key))gameUrl.searchParams.delete(key);
  await page.goto(gameUrl.href);
  await page.waitForSelector('#native-menu',{timeout:60000});
  const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});

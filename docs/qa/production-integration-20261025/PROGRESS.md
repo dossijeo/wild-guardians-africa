@@ -100,3 +100,6 @@ Contexto real en paquete: package-mangrove-context.json registra WEBGL_lose_cont
 Suite completa actual finalizada exit 0: 4920 tests, 4858 pass, 0 fail, 62 skip, 454686 ms (full-tests-current.log). No contabilizar skips como validación. Se ejecutó como suite funcional, no en condiciones de benchmark aislado.
 
 Vista específica de vegetación normal: package-mangrove-pan-context.json y capturas antes/después. Cuatro arrastres izquierdos normales alejan la cámara del poblado; pérdida/restauración real por extensión WebGL. Ambas capturas inspeccionadas: cobertura de frondas conservada, sin pérdidas evidentes de textura/densidad; cero errores/404. Movimiento, agua y tiempo de juego siguen activos, de modo que no son imágenes idénticas ni comparación métrica de píxeles.
+
+
+Matriz activa de producción completada: PRODUCTION-ACTIVE-MATRIX.json y production-{bioma}-active.json. Se eliminan todas las recetas gráficas de URL; quedan solo tres flags del protocolo de diagnóstico de calidad/simulación. Los seis completan 240 frames con simulación avanzando, 15 chunks nuevos, cero fallidos y colas vacías al finalizar. Son fixtures pobladas instrumentadas (no UI manual); el paquete normal se validó aparte. Un recorrido por bioma no prueba mejora estadística, CPU/GPU aislados ni toda la matriz día/noche. No hubo builds/tests locales paralelos a las medidas.
