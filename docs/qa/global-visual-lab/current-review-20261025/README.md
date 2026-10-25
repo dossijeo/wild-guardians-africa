@@ -359,3 +359,29 @@ Con estas series existen referencias estáticas actuales de los seis biomas.
 Esto no cierra la validación integral: falta consolidar movimiento, streaming,
 perfiles modestos y medidas comparables de la combinación seleccionada. Estas
 capturas pausadas no son benchmarks ni justifican mejoras de FPS.
+
+
+## Gran Río: streaming activo y atribución actual
+
+`gran-rio-active-stream.json/.png`: Intel UHD 0x9A60, media720p,
+180 frames de cámara, desplazamiento96, simulación activa, diez chunks nuevos,
+actores disponibles180/180, cero frames pausados y fondos asentados al final.
+Sin errores aparte de advertencias X4000 conocidas. GPU61 queries válidas,
+sin disjoint: media29,58ms, p9537,72ms. RAF media41,66ms, p9583,13ms,
+máximo149,63ms; draw máximo138,58ms. Son magnitudes diferentes; las queries
+incluyen burbujas del pipeline. No hay comparación A/B que demuestre mejora.
+
+Captura final inspeccionada: cobertura continua, sombras de árboles y suelo
+bajo los objetos visibles. El primer plano contiene transparencia de obstrucción;
+no se declara ausencia de artefactos a lo largo del recorrido por una sola imagen.
+
+La repetición instrumentada `gran-rio-active-attribution.json` localiza esperas
+getProgramInfoLog de74,61ms (far-ground-native-water-mask-v1:seam-v2),
+76,72ms y42,09ms (smooth-far-opaque-v1). Son esperas síncronas del driver,
+no coste GPU de hierba. Sin errores nuevos. Ambos recorridos usan opciones de
+streaming por defecto del bioma, incluida retainPrograms=false. La repetición
+instrumentada no constituye una optimización ni una comparación temporal exacta.
+
+La evidencia permite probar retención ya existente en Gran Río, como se hizo
+en Sabana, antes de modificar geometría o materiales aprobados. Se requiere
+comparación intercalada y coste de carga/memoria antes de cambiar defaults.
