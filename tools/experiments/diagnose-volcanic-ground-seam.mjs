@@ -50,7 +50,9 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;const o=w.controls.target.toArray();window.qaSandPath=[[-40,8,20],[22,7,42],[45,9,-18]].map(([x,y,z])=>[o[0]+x,Math.max(o[1]+y,w.nav.field.surface(o[0]+x,o[2]+z)+1.2),o[2]+z]);w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();});
 
 
- const reference=JSON.parse(await readFile('docs/qa/global-visual-lab/current-review-20261025/volcanes-resident-seam-low/active-play.json','utf8')).records[0];
+ const referencePath=process.env.WG_DIAGNOSTIC_MOTION_FILE??'docs/qa/global-visual-lab/current-review-20261025/volcanes-resident-seam-low/active-play.json';
+ const reference=JSON.parse(await readFile(referencePath,'utf8')).records[0];
+ if(reference.biome!==biome)throw Error('Diagnostic motion reference biome mismatch');
  const frameAt=reference.frames.reduce((a,b)=>Math.abs(b.wallMs-20000)<Math.abs(a.wallMs-20000)?b:a);
  const report=await page.evaluate(async frame=>{
   const w=qaCampaignWorld;
@@ -81,7 +83,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
   return {before,withoutSeam,restored,geometry,surfaces,camera:w.camera.position.toArray(),target:w.controls.target.toArray(),bounds:w.nearBounds,origin:[w.renderOrigin.x,w.renderOrigin.z],chunks:[...w.chunks.keys()],stream:w.chunkStream.summary(),glError:w.renderer.getContext().getError()};
  },frameAt);
  for(const name of ['before','withoutSeam','restored']){await writeFile(`${out}/${name}.png`,Buffer.from(report[name],'base64'));delete report[name];}
- report.errors=errors;report.captureUrl=captureUrl;report.groundStep=groundStep;await writeFile(out+'/diagnostic.json',JSON.stringify(report,null,2));
+ report.errors=errors;report.captureUrl=captureUrl;report.groundStep=groundStep;report.reference={path:referencePath,wallMs:frameAt.wallMs,biome,quality};await writeFile(out+'/diagnostic.json',JSON.stringify(report,null,2));
  if(errors.length||report.glError)throw Error('Diagnostic renderer errors');
  console.log(JSON.stringify({geometry:report.geometry.map(g=>({columns:g.columns,maxAbsDelta:g.maxAbsDelta})),stream:report.stream}));
  await page.close();
