@@ -20,7 +20,7 @@ La comparación visual sigue mostrando una fila de iconos muy uniforme. No se de
 ## Pendientes para cerrar
 
 - Medición GPU pendiente. ABBA CPU/presentación completada: véase abajo.
-- Aparición espontánea y finalización en una partida normal, sin flags QA, y salida/reinicio con evento pendiente.
+- Aparición espontánea y salida al menú verificadas; reinicio posterior y finalización natural todavía pendientes.
 - Movimiento/orbita y oclusión en el renderer real; revisión visual de los restantes tipos del catálogo.
 - Decidir si el fuego necesita otra representación visual; no aceptar cambios solo porque funcionen técnicamente.
 - Publicar el informe final con límites y no declarar el objetivo completo antes de esas comprobaciones.
@@ -45,3 +45,11 @@ measure-microevents-resident-gpu.mjs mide drawWorldFrame completo mediante EXT_d
 Prueba normal por menú, sin URL QA ni force: el primer observador no correspondía al módulo Vite versionado (observer-missing.json, ensayo inválido). Corregido usando la URL real del módulo cargado. La partida nueva bloqueó eventos durante tutorial (tutorial-blocked.json). La fixture nocturna bloqueó durante incursión/tutorial y después quedó sin cultivos visibles (no-visible-crops.json). Son exclusiones esperadas; ninguna prueba se cuenta como aparición espontánea. La siguiente iteración planta mediante la interfaz normal, sin modificar reglas ni el director.
 
 La última corrida normal no cerró el ciclo: el selector de cultivo apuntaba al control heredado oculto (#plant-action), no al HUD nativo. Se corrige a [data-menu="grow"], pendiente de ejecutar. El timeout se conserva en microevents-normal/report.json; no se atribuye al runtime.
+
+Inspección adicional: mariposas, hierbas y desprendimientos visibles en las capturas del catálogo; mariposas poco contrastadas contra suelo dorado, pendiente de ajuste. Prueba normal: before-dawn.json conserva el intento de cultivar de noche y hiring-gate.json el bloqueo correcto en contratación. La automatización ahora espera condiciones de plantación y confirma contratación mediante su botón normal, sin saltarse las reglas.
+
+## Aparición espontánea y salida: PASS
+
+check-microevents-normal-lifecycle.mjs carga la fixture guardada desde Continuar, sin parámetros QA, sin force ni alteraciones del director. Espera la incursión y tutorial, confirma contratación normal al amanecer y planta tres cultivos mediante el HUD. El día 2 a tiempo 18.21 aparece **pollen** espontáneamente: tres anclajes válidos, 19 instancias, captura spawn.png inspeccionada sin controles QA. La instrumentación solo observa tick desde la URL exacta del módulo Vite, no cambia el mundo. La selección de partida guardada se prepara en localStorage y se declara explícitamente; no es una prueba del paquete compilado.
+
+Al salir mediante menú: disposed=true, active=null, pending=false, attached=false; cero errores. Informe microevents-normal/report.json. Los informes before-dawn y hiring-gate documentan problemas de automatización/exclusiones anteriores, no regresiones del juego. No se deduce de este caso la correcta aparición de todos los tipos ni la finalización natural: esas comprobaciones mantienen su alcance propio.
