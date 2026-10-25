@@ -1,0 +1,351 @@
+{
+  "skinEnvelope": {
+    "enabled": false,
+    "preparedMeshes": 0
+  },
+  "ok": true,
+  "biome": "gran-canon",
+  "culture": "mapungubwe",
+  "quality": "media",
+  "groupResizeCandidate": null,
+  "drawingBuffer": [
+    1280,
+    900
+  ],
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "warthog",
+    "hyena",
+    "lion",
+    "rhino"
+  ],
+  "copies": 1,
+  "plannedReserves": false,
+  "savedReserves": false,
+  "savedActive": false,
+  "savedRaidUnchangedAtLoad": null,
+  "loadReservedRigs": 5,
+  "repeatedRigResources": {
+    "lion": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "d9050469-59e7-4dd4-a083-8d66c68f9a6c",
+      "fromSpare": true,
+      "skeletons": [
+        "72891fb7-28e6-460e-861b-f698c4c47a7e",
+        "99dff720-c01c-4efb-a282-4e16c08fde7a",
+        "3369de34-2748-47d9-8fdb-614606f75669"
+      ],
+      "boneTextures": [
+        "133663c2-d69e-4c64-ac59-26d5f1bc08e3",
+        "7348e124-f68c-4ac0-a269-77e1a0c5f3a4",
+        "fec827f5-f658-40c7-85f2-a251d682ad0d"
+      ],
+      "geometry": [
+        "69829ee0-17a9-4c9c-8f3c-68f5fc9523b5",
+        "022f21f7-a586-4843-99d0-08cce8317a15",
+        "4b9c560f-9fad-4663-aa73-e775c8dcc5e2"
+      ],
+      "materials": [
+        "a81c09a7-2851-46dd-a019-274b9169cde2",
+        "cc9614d5-c628-4519-9eff-9ca96106a0f1",
+        "32d219b5-33f2-4e46-8dcc-d3e1cbd346b5"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 9,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        },
+        {
+          "id": 10,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 53,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        5,
+        8,
+        6,
+        7
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 8,
+    "programs": 58,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+    ],
+    "spareModelIds": [
+      "d80cc36c-3ba9-47d5-87ed-00164231aa9e",
+      "fcc202a6-5503-4909-8bfe-aee2c2915986",
+      "645e5628-3cbb-4b9f-90d1-5e4414fcc17b",
+      "d9050469-59e7-4dd4-a083-8d66c68f9a6c",
+      "01c5dab2-8a7b-4b96-a503-c264dc7d2715"
+    ],
+    "animalPrograms": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 9,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        },
+        {
+          "id": 10,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 53,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        5,
+        8,
+        6,
+        7
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 8,
+    "programs": 58,
+    "newPrograms": [],
+    "animalPrograms": [
+      4,
+      3
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 8,
+    "animalPrograms": [
+      4,
+      3
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 159,
+  "loadingMs": 6078.700000047684,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "creations": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 466,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "lion"
+      ],
+      "simulatedSeconds": 23.3,
+      "centerHpBefore": 600,
+      "centerHpAfter": 560,
+      "logicalHits": [
+        {
+          "id": "event-11",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-9",
+          "targetId": "structure-2",
+          "species": "lion",
+          "presentation": {
+            "elapsed": 23.300000000000196,
+            "animal": {
+              "x": -31.155482330304018,
+              "z": 27.14146477619813,
+              "heading": 0.13639893274072096
+            },
+            "target": {
+              "x": -30.684595436780327,
+              "z": 30.572305649518967,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "lion",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -31.155482330304018,
+            27.14146477619813
+          ],
+          "renderY": 3.6820791783942672
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "lion",
+          "sprites": 18
+        }
+      ],
+      "contactRequirement": "selected-species-paid-crop-or-center",
+      "firstHit": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "structure-2",
+        "species": "lion",
+        "presentation": {
+          "elapsed": 23.300000000000196,
+          "animal": {
+            "x": -31.155482330304018,
+            "z": 27.14146477619813,
+            "heading": 0.13639893274072096
+          },
+          "target": {
+            "x": -30.684595436780327,
+            "z": 30.572305649518967,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": {
+        "id": "event-10",
+        "type": "StructureHit",
+        "animalId": "animal-6",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 560,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "maximumGameTickMs": 13.009999990463257,
+      "medianGameTickMs": 0.21499991416931152,
+      "renderedActors": [
+        {
+          "id": "animal-6",
+          "species": "lion",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -31.65200785035558,
+              3.704079178394268,
+              26.520346514593037
+            ],
+            "max": [
+              -30.614540436172405,
+              5.440496250617622,
+              27.76166639248527
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 3,
+          "visibleMeshes": 3
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "lion"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "replacementModel": "/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
+  "qaUrl": "http://127.0.0.1:5218/tests/browser/animal-preload.html?biome=gran-canon&motion=1&attack-species=lion&copies=1&approved=1"
+}

@@ -33,4 +33,5 @@ Los originales están en Git, en `3c1db05fd:public<source>`; `source` figura en 
 
 Una referencia histórica `/assets/<hash-antiguo>.glb` dentro del catálogo público fue detectada por el verificador del paquete: era procedencia, no dependencia necesaria. Se expresa como `sourceSha256` para no exigir incluir el modelo descartado en las builds.
 
-Validación completa de la integración todavía en curso; consultar PROGRESS.md.
+La revisión posterior de patas conserva estas curvas de cabeza/cuello. Consultar
+README.md para los vídeos finales y FOOT-SUPPORT.md para medidas y límites.
