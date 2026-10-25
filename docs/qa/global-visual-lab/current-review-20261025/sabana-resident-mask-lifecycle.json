@@ -1,0 +1,502 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "sabana",
+  "quality": "media",
+  "groundStep": 32,
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&chunkEviction=single&ownedFarGpu=1&streamingRecovery=auto&waterShoreWorker=0&waterBedWorker=auto&waterBedDirect=0&warmObstruction=0&retainPrograms=1&groundResidentMask=1&frameScheduler=1",
+  "result": {
+    "postReady": null,
+    "contextCreations": null,
+    "programInventory": null,
+    "texturePilot": null,
+    "farDraws": null,
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 365.18499994277954,
+      "bindings": {
+        "initialized": 52,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 52,
+        "released": 52,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": null,
+      "longFrames": null,
+      "frames": null,
+      "readyMs": 24690.93499994278,
+      "phases": []
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 18.979999899864197,
+      "maxTaskMs": 12.125,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": false,
+      "waterShore": false,
+      "batchEviction": false,
+      "warmObstruction": false,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 75,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 500,
+      "residentVisiblePropRecords": 5697,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 6
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "residentGroundLifecycle": {
+      "before": [
+        {
+          "textureId": 149,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "afterQuality": [
+        {
+          "textureId": 149,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "afterContext": [
+        {
+          "textureId": 149,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "quality": {
+        "cropDepthWarm": null,
+        "faultInjection": null,
+        "attribution": [],
+        "attributionScope": "Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.",
+        "rows": [
+          {
+            "quality": "media",
+            "completionPhases": {
+              "settleFramesMs": 260.1399999856949,
+              "explicitRenderCpuMs": 6.835000038146973,
+              "chunkWaitMs": 0.029999971389770508,
+              "programWaitMs": 0.015000104904174805,
+              "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+            },
+            "terrainPhases": null,
+            "phases": null,
+            "stagedPreparation": null,
+            "cacheBefore": null,
+            "cacheAfter": null,
+            "programs": 76,
+            "drawCalls": 81,
+            "recovery": {
+              "revision": 3,
+              "ms": 10.600000023841858,
+              "retained": 76
+            },
+            "retention": {
+              "retained": 76,
+              "released": 76,
+              "destroyed": 0,
+              "abandoned": 0,
+              "skipped": 0,
+              "unsupported": false
+            },
+            "settingMs": 1.5199999809265137,
+            "prewarmMs": 0,
+            "prewarmInvalidations": 0,
+            "livePreparation": null,
+            "temporaryProgramScope": null,
+            "transitionMs": 282.79499995708466,
+            "beforeDiagnosticMs": 268.61500000953674,
+            "diagnosticMs": 14.044999957084656,
+            "frameTimes": [
+              11.965000033378601,
+              18.384999990463257,
+              30.350000023841858,
+              31.524999976158142,
+              37.735000014305115,
+              16.914999961853027,
+              20.475000023841858,
+              18.9099999666214,
+              16.480000019073486,
+              20.144999980926514,
+              18.65500009059906,
+              20.199999928474426
+            ]
+          },
+          {
+            "quality": "baja",
+            "completionPhases": {
+              "settleFramesMs": 245.97500002384186,
+              "explicitRenderCpuMs": 4.299999952316284,
+              "chunkWaitMs": 0.02499997615814209,
+              "programWaitMs": 0,
+              "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+            },
+            "terrainPhases": null,
+            "phases": null,
+            "stagedPreparation": null,
+            "cacheBefore": null,
+            "cacheAfter": null,
+            "programs": 76,
+            "drawCalls": 77,
+            "recovery": {
+              "revision": 4,
+              "ms": 53.58500003814697,
+              "retained": 76
+            },
+            "retention": {
+              "retained": 76,
+              "released": 76,
+              "destroyed": 0,
+              "abandoned": 0,
+              "skipped": 0,
+              "unsupported": false
+            },
+            "settingMs": 1.034999966621399,
+            "prewarmMs": 0,
+            "prewarmInvalidations": 0,
+            "livePreparation": null,
+            "temporaryProgramScope": null,
+            "transitionMs": 254.57500004768372,
+            "beforeDiagnosticMs": 251.40499997138977,
+            "diagnosticMs": 3.115000009536743,
+            "frameTimes": [
+              54.53999996185303,
+              41.360000014305115,
+              7.980000019073486,
+              14.729999899864197,
+              15.190000057220459,
+              14.90499997138977,
+              17.415000081062317,
+              15,
+              16.9099999666214,
+              15.664999961853027,
+              16.7150000333786,
+              16.68999993801117
+            ]
+          },
+          {
+            "quality": "media",
+            "completionPhases": {
+              "settleFramesMs": 224.75499999523163,
+              "explicitRenderCpuMs": 4.639999985694885,
+              "chunkWaitMs": 0.014999985694885254,
+              "programWaitMs": 0.015000104904174805,
+              "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+            },
+            "terrainPhases": null,
+            "phases": null,
+            "stagedPreparation": null,
+            "cacheBefore": null,
+            "cacheAfter": null,
+            "programs": 76,
+            "drawCalls": 82,
+            "recovery": {
+              "revision": 5,
+              "ms": 52.52500009536743,
+              "retained": 76
+            },
+            "retention": {
+              "retained": 76,
+              "released": 76,
+              "destroyed": 0,
+              "abandoned": 0,
+              "skipped": 0,
+              "unsupported": false
+            },
+            "settingMs": 0.6800000667572021,
+            "prewarmMs": 0,
+            "prewarmInvalidations": 0,
+            "livePreparation": null,
+            "temporaryProgramScope": null,
+            "transitionMs": 245.81000006198883,
+            "beforeDiagnosticMs": 230.1450001001358,
+            "diagnosticMs": 15.649999976158142,
+            "frameTimes": [
+              53.05999994277954,
+              9.634999990463257,
+              14.340000033378601,
+              18.115000009536743,
+              17.194999933242798,
+              13.475000023841858,
+              17.519999980926514,
+              16.00499999523163,
+              16.56500005722046,
+              16.605000019073486,
+              18.1599999666214,
+              14.889999985694885
+            ]
+          },
+          {
+            "quality": "baja",
+            "completionPhases": {
+              "settleFramesMs": 212.63499999046326,
+              "explicitRenderCpuMs": 4.810000061988831,
+              "chunkWaitMs": 0.02499997615814209,
+              "programWaitMs": 0.004999995231628418,
+              "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+            },
+            "terrainPhases": null,
+            "phases": null,
+            "stagedPreparation": null,
+            "cacheBefore": null,
+            "cacheAfter": null,
+            "programs": 76,
+            "drawCalls": 77,
+            "recovery": {
+              "revision": 6,
+              "ms": 28.865000009536743,
+              "retained": 76
+            },
+            "retention": {
+              "retained": 76,
+              "released": 76,
+              "destroyed": 0,
+              "abandoned": 0,
+              "skipped": 0,
+              "unsupported": false
+            },
+            "settingMs": 0.8949999809265137,
+            "prewarmMs": 0,
+            "prewarmInvalidations": 0,
+            "livePreparation": null,
+            "temporaryProgramScope": null,
+            "transitionMs": 220.95999991893768,
+            "beforeDiagnosticMs": 218.39999997615814,
+            "diagnosticMs": 2.5399999618530273,
+            "frameTimes": [
+              29.77500009536743,
+              8.06499993801117,
+              38.355000019073486,
+              17.514999985694885,
+              7.080000042915344,
+              11.894999980926514,
+              18.985000014305115,
+              15.225000023841858,
+              17.80999994277954,
+              15.059999942779541,
+              16.555000066757202,
+              17.399999976158142
+            ]
+          }
+        ],
+        "retentionExpected": true,
+        "lease": {
+          "retained": 75,
+          "released": 75,
+          "destroyed": 0,
+          "abandoned": 0,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "worldUnchanged": true,
+        "active": null,
+        "limitation": "The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm."
+      },
+      "context": {
+        "temporaryProgramScope": null,
+        "compilationCancellation": null,
+        "recovery": {
+          "revision": 9,
+          "ms": 1183.9750000238419,
+          "retained": 24
+        },
+        "retained": {
+          "retained": 24,
+          "released": 0,
+          "destroyed": 0,
+          "abandoned": 0,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "abandoned": {
+          "retained": 76,
+          "released": 0,
+          "destroyed": 0,
+          "abandoned": 76,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "programs": 26,
+        "drawCalls": 79,
+        "worldUnchanged": true,
+        "backend": "pthreads",
+        "nativeBytes": 16777216,
+        "glEpoch": {
+          "epoch": 1,
+          "created": 5000,
+          "staleDeletes": 7,
+          "currentDeletes": 1380,
+          "unknownDeletes": 0
+        }
+      }
+    },
+    "spatialFailures": null,
+    "workerResidency": {
+      "enabled": true,
+      "demand": 2,
+      "retained": [],
+      "graphicsKeys": [
+        "2,1",
+        "2,0",
+        "1,0",
+        "3,0",
+        "1,1",
+        "3,1",
+        "2,-1",
+        "2,2",
+        "1,-1",
+        "3,-1",
+        "1,2",
+        "0,0",
+        "3,2",
+        "0,1",
+        "4,0",
+        "4,1",
+        "0,-1",
+        "4,-1",
+        "0,2",
+        "2,3",
+        "4,2",
+        "1,3",
+        "3,3",
+        "0,3",
+        "4,3"
+      ],
+      "native": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 500,
+        "residentVisiblePropRecords": 5697,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 6
+      }
+    },
+    "qaResidentChunk": null,
+    "qaNativeResidency": null,
+    "assetWaterPreparation": "coalesced",
+    "mudWorker": null,
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792894974361",
+      "completed": 77,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 378,
+      "workMs": 267.50999903678894,
+      "coordinationMs": 47.3400000333786,
+      "maxUnitMs": 12.31499993801117,
+      "overruns": 5,
+      "deadlineLoans": 3,
+      "oversizeRecoveries": 0,
+      "blockingRecoveries": 0,
+      "continuationMs": 28.464999794960022,
+      "continuationTurns": 1390,
+      "median": 16.655000000006112,
+      "p95": 49.90999999999622,
+      "p99": 299.3050000000003,
+      "cpu95": 8.960000038146973,
+      "jitter": 33.254999999990105,
+      "budgetMs": 0.612069989729338,
+      "pending": 0,
+      "waiting": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (807,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(812,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (665,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(670,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (667,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(672,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (604,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(609,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (606,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(611,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (324,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(329,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (324,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(329,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (320,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(325,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (320,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(325,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}
