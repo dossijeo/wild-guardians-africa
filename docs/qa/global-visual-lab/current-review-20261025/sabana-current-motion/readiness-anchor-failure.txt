@@ -1,0 +1,13 @@
+node:internal/process/esm_loader:34
+      internalBinding('errors').triggerUncaughtException(
+                                ^
+
+page.evaluate: Error: Fixture advanced before pause
+    at eval (eval at evaluate (:370:30), <anonymous>:1:82)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at C:\Users\PC\source\repos\wild-guardians-global-visual\tools\experiments\capture-horizon-raised-motion-20261023.mjs:33:13 {
+  log: []
+}
+
+Node.js v20.11.0

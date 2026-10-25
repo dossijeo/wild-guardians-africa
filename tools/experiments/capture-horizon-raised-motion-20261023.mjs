@@ -1,4 +1,6 @@
 import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
+import {globalCurrentReviewQuery} from './global-current-review-recipe.mjs';
+const currentReview=process.env.WG_CURRENT_REVIEW==='1';
 import {chromium} from 'playwright';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
@@ -14,12 +16,15 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.message)});page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new');await route.fulfill({response,body});});
- await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('world.render(0);loadingOverlay?.dispose();',"Game.pause(state,'menu');world.render(0);loadingOverlay?.dispose();");body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
+ await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();const freezeAnchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(freezeAnchor).length!==2)throw Error('Missing motion capture readiness freeze anchor');body=body.replace(freezeAnchor,"Game.pause(state,'menu');"+freezeAnchor);body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
  await page.route('**/src/rendering/shader-failure.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('throw failure.current;', 'globalThis.qaShaderFailure=failure.current.details;throw failure.current;');await route.fulfill({response,body});});
  await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true})),quality);
  await page.addInitScript(text=>localStorage.setItem('wild-guardians:slot:opening',text),snapshot);
- await page.route('**/src/rendering/mountain-arc-composition.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('baseY=-35').length!==2)throw Error('Mountain base anchor missing');await route.fulfill({response,body:body.replace('baseY=-35','baseY=-10')});});
- await page.goto('http://127.0.0.1:5190/?qa-seed=712&'+globalClosureQuery(biome));
+ if(!currentReview)await page.route('**/src/rendering/mountain-arc-composition.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('baseY=-35').length!==2)throw Error('Mountain base anchor missing');await route.fulfill({response,body:body.replace('baseY=-35','baseY=-10')});});
+ const query=new URLSearchParams((currentReview?globalCurrentReviewQuery:globalClosureQuery)(biome));
+ if(currentReview){query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
+ const captureUrl='http://127.0.0.1:5190/?qa-seed=712&'+query;
+ await page.goto(captureUrl);
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
  await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
  await frame.evaluate(biome=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin),biome);
@@ -76,7 +81,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
   },phase);
   await writeFile(`${out}/${phase}.webm`,Buffer.from(result.data,'base64'));delete result.data;
   for(const [i,shot]of result.shots.entries()){await writeFile(`${out}/${phase}-${i}.png`,Buffer.from(shot.data,'base64'));delete shot.data;}
-  result.errors=[...errors];records.push({biome,quality,phase,...result});await writeFile(out+'/active-play.json',JSON.stringify({seed:712,note:'Real app Game.advanceReal loop, no direct QA ticks. Forty wall-clock seconds per phase with a144m outward-and-return target/camera excursion and50.4m lateral component; altitude follows target terrain. Material/wind clocks live, streaming enabled. Existing raid-camera manual mode held during QA excursion. Recorder and checkpoint overhead present: observations, not performance benchmark. Night continues the day state; initial visual time selected for each phase.',records},null,2));
+  result.errors=[...errors];records.push({biome,quality,phase,captureUrl,currentReview,...result});await writeFile(out+'/active-play.json',JSON.stringify({seed:712,note:'Real app Game.advanceReal loop, no direct QA ticks. Forty wall-clock seconds per phase with a144m outward-and-return target/camera excursion and50.4m lateral component; altitude follows target terrain. Material/wind clocks live, streaming enabled. Existing raid-camera manual mode held during QA excursion. Recorder and checkpoint overhead present: observations, not performance benchmark. Night continues the day state; initial visual time selected for each phase.',records},null,2));
   if(errors.length||result.frames.some(f=>f.glError)||result.after.elapsed-result.before.elapsed<10||result.frames.some(f=>f.pauses.length)||result.coverage?.stats.overflow)throw Error('Active play validation failed');console.log(biome,phase,'active elapsed',result.after.elapsed-result.before.elapsed);
  }
  await page.close();
