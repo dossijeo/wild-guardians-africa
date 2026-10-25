@@ -1,0 +1,247 @@
+TAP version 13
+# Subtest: native producer overlaps private preparation, with bounded backpressure and complete publication
+ok 1 - native producer overlaps private preparation, with bounded backpressure and complete publication
+  ---
+  duration_ms: 3.4365
+  ...
+# Subtest: camera cancellation discards pending graphics and prevents late publication
+ok 2 - camera cancellation discards pending graphics and prevents late publication
+  ---
+  duration_ms: 1.0007
+  ...
+# Subtest: forced revision and disposal reject obsolete completed groups
+ok 3 - forced revision and disposal reject obsolete completed groups
+  ---
+  duration_ms: 0.5292
+  ...
+# Subtest: spatial pipeline rereads edits without repeating native generation
+ok 4 - spatial pipeline rereads edits without repeating native generation
+  ---
+  duration_ms: 7.6665
+  ...
+# node:internal/modules/esm/resolve:264
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\node_modules\\three\\build\\three.module.js' imported from C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\chunk-stream.test.js
+#     at finalizeResolution (node:internal/modules/esm/resolve:264:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:917:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:1130:11)
+#     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)
+#     at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)
+#     at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)
+#     at link (node:internal/modules/esm/module_job:84:36) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///C:/Users/PC/source/repos/wild-guardians-global-visual/node_modules/three/build/three.module.js'
+# }
+# Node.js v20.11.0
+# Subtest: C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\chunk-stream.test.js
+not ok 2 - C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\chunk-stream.test.js
+  ---
+  duration_ms: 233.4098
+  location: 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\chunk-stream.test.js:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: only presentation advances work; a complete private group is published
+ok 6 - only presentation advances work; a complete private group is published
+  ---
+  duration_ms: 10.2451
+  ...
+# Subtest: revision invalidation closes private resources without publishing
+ok 7 - revision invalidation closes private resources without publishing
+  ---
+  duration_ms: 0.8938
+  ...
+# Subtest: replacement and abort settle cancelled jobs immediately
+ok 8 - replacement and abort settle cancelled jobs immediately
+  ---
+  duration_ms: 0.7484
+  ...
+# Subtest: mandatory CPU has precedence even over overdue jobs
+ok 9 - mandatory CPU has precedence even over overdue jobs
+  ---
+  duration_ms: 0.7794
+  ...
+# Subtest: statistics expire after two seconds and do not label intervals GPU time
+ok 10 - statistics expire after two seconds and do not label intervals GPU time
+  ---
+  duration_ms: 2.8339
+  ...
+# Subtest: slow presentation intervals alone do not permanently starve cheap work
+ok 11 - slow presentation intervals alone do not permanently starve cheap work
+  ---
+  duration_ms: 1.2795
+  ...
+# Subtest: an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+ok 12 - an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+  ---
+  duration_ms: 1.401
+  ...
+# Subtest: ready promise continuations share one presentation budget without another frame
+ok 13 - ready promise continuations share one presentation budget without another frame
+  ---
+  duration_ms: 1.4185
+  ...
+# Subtest: aging measures time without service rather than privileging an old endless job
+ok 14 - aging measures time without service rather than privileging an old endless job
+  ---
+  duration_ms: 0.65
+  ...
+# Subtest: a failing cost estimator closes only its job and leaves other work executable
+ok 15 - a failing cost estimator closes only its job and leaves other work executable
+  ---
+  duration_ms: 1.5332
+  ...
+# Subtest: admission diagnostics are optional and distinguish late callbacks from CPU work
+ok 16 - admission diagnostics are optional and distinguish late callbacks from CPU work
+  ---
+  duration_ms: 0.564
+  ...
+# Subtest: historical oversized estimates recover without permanent starvation or dropping CPU guards
+ok 17 - historical oversized estimates recover without permanent starvation or dropping CPU guards
+  ---
+  duration_ms: 0.7208
+  ...
+# Subtest: required streamed terrain starts without a fresh grace period on late presentation
+ok 18 - required streamed terrain starts without a fresh grace period on late presentation
+  ---
+  duration_ms: 1.0521
+  ...
+# Subtest: dependency wait frees presentation capacity and resumes only on an admitted frame
+ok 19 - dependency wait frees presentation capacity and resumes only on an admitted frame
+  ---
+  duration_ms: 1.5792
+  ...
+# Subtest: cancelled dependency cannot resume or remove its replacement
+ok 20 - cancelled dependency cannot resume or remove its replacement
+  ---
+  duration_ms: 1.2074
+  ...
+# Subtest: failed dependency releases only its job and runs cleanup
+ok 21 - failed dependency releases only its job and runs cleanup
+  ---
+  duration_ms: 1.6184
+  ...
+# Subtest: terrain wrapper forwards dependency output but rejects a stale revision before publication
+ok 22 - terrain wrapper forwards dependency output but rejects a stale revision before publication
+  ---
+  duration_ms: 1.9067
+  ...
+# Subtest: required opt-in recovers a poisoned shared estimate without admitting optional work
+ok 23 - required opt-in recovers a poisoned shared estimate without admitting optional work
+  ---
+  duration_ms: 0.9847
+  ...
+# Subtest: exceptional recovery never runs cancelled or invalidated required work
+ok 24 - exceptional recovery never runs cancelled or invalidated required work
+  ---
+  duration_ms: 0.7836
+  ...
+# Subtest: camera replacement keeps published target until every tile is ready; budget counts both
+ok 25 - camera replacement keeps published target until every tile is ready; budget counts both
+  ---
+  duration_ms: 4.3177
+  ...
+# Subtest: successive invalidations cancel partial stale bake and coalesce duplicate versions
+ok 26 - successive invalidations cancel partial stale bake and coalesce duplicate versions
+  ---
+  duration_ms: 0.4064
+  ...
+# Subtest: unload cancels pending work and releases resident data without late publication
+ok 27 - unload cancels pending work and releases resident data without late publication
+  ---
+  duration_ms: 1.0241
+  ...
+# Subtest: failed generation releases temporary resource but preserves prior published data
+ok 28 - failed generation releases temporary resource but preserves prior published data
+  ---
+  duration_ms: 0.6193
+  ...
+# Subtest: an owner disposed during drawing cannot publish a stale target
+ok 29 - an owner disposed during drawing cannot publish a stale target
+  ---
+  duration_ms: 0.2837
+  ...
+# Subtest: over-budget invalidation cancels obsolete pending data without evicting the resident target
+ok 30 - over-budget invalidation cancels obsolete pending data without evicting the resident target
+  ---
+  duration_ms: 0.2899
+  ...
+# Subtest: crossfade retains and budgets old target, deferring further replacements until release
+ok 31 - crossfade retains and budgets old target, deferring further replacements until release
+  ---
+  duration_ms: 0.3813
+  ...
+# Subtest: staged preparation yields but only transfers a complete group
+ok 32 - staged preparation yields but only transfers a complete group
+  ---
+  duration_ms: 4.1615
+  ...
+# Subtest: staged obsolete closes private work before another step
+ok 33 - staged obsolete closes private work before another step
+  ---
+  duration_ms: 0.416
+  ...
+# Subtest: staged quality closes private work before another step
+ok 34 - staged quality closes private work before another step
+  ---
+  duration_ms: 0.236
+  ...
+# Subtest: staged teardown closes private work before another step
+ok 35 - staged teardown closes private work before another step
+  ---
+  duration_ms: 0.189
+  ...
+# Subtest: staged context closes private work before another step
+ok 36 - staged context closes private work before another step
+  ---
+  duration_ms: 0.1744
+  ...
+# Subtest: staged quality-roundtrip closes private work before another step
+ok 37 - staged quality-roundtrip closes private work before another step
+  ---
+  duration_ms: 0.1862
+  ...
+# Subtest: scheduler failure closes the pending iterator
+ok 38 - scheduler failure closes the pending iterator
+  ---
+  duration_ms: 1.4967
+  ...
+# node:internal/modules/esm/resolve:264
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\node_modules\\three\\build\\three.module.js' imported from C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\spatial-chunk-stream.test.js
+#     at finalizeResolution (node:internal/modules/esm/resolve:264:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:917:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:1130:11)
+#     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)
+#     at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)
+#     at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)
+#     at link (node:internal/modules/esm/module_job:84:36) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///C:/Users/PC/source/repos/wild-guardians-global-visual/node_modules/three/build/three.module.js'
+# }
+# Node.js v20.11.0
+# Subtest: C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\spatial-chunk-stream.test.js
+not ok 6 - C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\spatial-chunk-stream.test.js
+  ---
+  duration_ms: 186.5828
+  location: 'C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\tests\\spatial-chunk-stream.test.js:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 37
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 316.2642

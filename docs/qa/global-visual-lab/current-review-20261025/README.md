@@ -665,3 +665,25 @@ RAF media43,60ms/p9583,24ms/máximo166,36ms, GPU media32,61ms. Sin errores nuevo
 Compatible con el orden de magnitud de referencias anteriores, pero una ejecución
 no es A/B/A/B ni demuestra ahorro. Se adopta en la rama experimental como
 corrección de liveness, no como optimización FPS. No cambia arte ni simulación.
+
+
+## Recuperación: cancelación y control en Manglares
+
+Test adicional verifica que ni abortados ni revisiones inválidas ejecutan la
+unidad excepcional, incluso después de5s vencidos. Los55tests de scheduler,
+preparación, streaming nativo/gráfico y cola de caché pasan con el cargador
+Three aislado existente:
+`node --loader file:///C:/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs --test tests/global-frame-scheduler.test.js tests/prepare-terrain-chunk.test.js tests/chunk-stream.test.js tests/chunk-stream-pipeline.test.js tests/material-bake-queue.test.js tests/spatial-chunk-stream.test.js`.
+
+Primera ejecución sin cargador:37tests pasan y dos archivos no arrancan por
+ERR_MODULE_NOT_FOUND de node_modules/three/build/three.module.js. No es un test
+funcional fallido ni se oculta: ambos TAP se conservan. No se reinstalan ni
+modifican dependencias compartidas del host para resolverlo.
+
+Manglares media720p con holly/fixed512, simulación activa y recorrido96unidades:
+10chunks, actores180/180, sin pausas, fondos listos, sin errores nuevos ni tareas
+pendientes. blockingRecoveries=0. RAF media42,66ms, p9566,64ms, máximo116,26ms;
+GPU media33,04ms.198muestras incluyen asentamiento, frente180 del control anterior:
+no afirmar ahorro causal ni comparar medias como carga idéntica. Es un control
+funcional del cambio; el aspecto no fue modificado y no se reduce vegetación.
+Informe `manglares-required-recovery-active.json` y captura final conservados.

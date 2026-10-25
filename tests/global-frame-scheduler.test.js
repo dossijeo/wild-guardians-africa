@@ -135,3 +135,14 @@ test('required opt-in recovers a poisoned shared estimate without admitting opti
  assert.equal(scheduler.snapshot().blockingRecoveries,2);
  assert.equal(scheduler.snapshot().pending,1);scheduler.cancel('optional');await optional;
 });
+
+test('exceptional recovery never runs cancelled or invalidated required work',async()=>{
+ let time=0,valid=true,calls=0,closed=0;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const iterator=()=>({next(){calls++;return {done:true};},return(){closed++;return {done:true};}});
+ const owner=new AbortController();
+ const cancelled=scheduler.submit(iterator(),{deadline:0,estimate:()=>60,allowBlockingRecovery:true,signal:owner.signal});
+ const invalidated=scheduler.submit(iterator(),{deadline:0,estimate:()=>60,allowBlockingRecovery:true,valid:()=>valid});
+ owner.abort();valid=false;time=6000;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();
+ await Promise.all([cancelled,invalidated]);assert.equal(calls,0);assert.equal(closed,2);
+ assert.equal(scheduler.snapshot().blockingRecoveries,0);assert.equal(scheduler.snapshot().pending,0);
+});
