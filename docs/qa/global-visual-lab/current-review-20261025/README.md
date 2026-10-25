@@ -913,3 +913,40 @@ Pendiente noche/baja y ciclo de vida real. `summarize-asset-water-abab.py` repro
 validaciones y `asset-water-abab-summary.json`; los cuatro informes/capturas
 quedan publicados. La reducción de instrucciones aislada no se presenta como
 éxito de rendimiento global.
+
+
+## Noche/baja: fallo de residencia reproducido y aislado
+
+`prepare-current-night-fixtures.py` deriva las seis partidas cambiando solo time
+por350 (hashes en `low-night-fixtures.json`). El harness activo omite el tutorial
+como en controles diurnos y bloquea únicamente la cámara automática de incursión
+para conservar la trayectoria de QA. Es un recorrido dirigido por el harness,
+no una reproducción certificada de todos los gestos de cámara del jugador.
+
+La serie se detuvo en Sabana: `SpatialChunkUnavailable` al regresar un trabajador.
+Coalescida y control síncrono (`WG_ASSET_WATER_SYNC=1`) fallan con93frames en pausa
+runtime-error. Sus números de GPU/frametime NO son benchmarks activos válidos.
+Diez chunks se instalan, pero eso no basta para declarar éxito de jugabilidad.
+
+Diagnóstico síncrono: start=(92,17;-8,97), end=(60;0), routeReason=end-connector;
+startProps ready, endProps unknown. El destino pertenece al chunk1,0, ausente
+entre loaded/desired tras mover la cámara. Esta evidencia adicional se obtuvo
+con WG_SPATIAL_FAILURE_DETAILS, instrumentación preexistente local del harness;
+no se incorpora esa modificación ajena en este commit. Los fallos sin detalle
+se reproducen con el harness versionado y las fixtures generadas.
+
+Prueba causal acotada `WG_QA_RESIDENT_CHUNK=1,0`: se agrega solo esa clave a desired
+mediante una sustitución QA con ancla estricta. No se cambian rutas, simulación,
+ni algoritmos nativos. El caso coalescido termina con10chunks nuevos, actores180/180,
+cero pausas/errores nuevos/pendientes y elapsed avanzando120→141,41. Quedan26chunks
+residentes. La captura final fue inspeccionada: suelo y vegetación presentes de
+noche. NO comparar sus FPS con las ejecuciones fallidas ni llamar a este pin fijo
+una solución general. `night-residency-diagnosis.json` reúne la evidencia.
+
+Conclusión: la retirada ligada a cámara descarta un destino todavía necesario
+para el retorno nocturno; no depende de la preparación incremental del agua.
+Pendiente diseñar y validar retención de datos necesarios por actores/destinos
+sin acumular geometría indefinidamente y sin cambiar reglas o navegación.
+No continuar dando por válidos los controles nocturnos hasta resolverlo. Los
+otros cinco biomas de esa serie no llegaron a ejecutarse; no hay seis validaciones
+nocturnas. Se conservan ambos fallos y el probe positivo.
