@@ -183,7 +183,9 @@ export class BuildingDestructionPass {
         };
         // Admission encloses ALL borrowed state. The returned promise waits for
         // programs outside scheduler CPU accounting, after state restoration.
-        const pending=scheduler?scheduler.submit((function*(){return execute();})(),{signal,valid:()=>{check();return true;},priority:20,deadline,estimate:()=>estimate,label:'depth-preparation'}):execute();
+        // Required readiness work: a driver outlier must not permanently poison
+        // admission. The global scheduler rate-limits exceptional retries.
+        const pending=scheduler?scheduler.submit((function*(){return execute();})(),{signal,valid:()=>{check();return true;},priority:20,deadline,estimate:()=>estimate,label:'depth-preparation',allowBlockingRecovery:true}):execute();
         await loadingAwaitWitness(witness,'loading-depth-batch-program-wait',()=>pending,now);
         check();
         for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;

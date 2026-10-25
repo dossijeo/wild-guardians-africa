@@ -39,7 +39,8 @@ try{
   await menu.locator('[data-production-save="'+fixture.slotId+'"]').click({timeout:60000});
   const started=Date.now();
   await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
-  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:90000});
+  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false'||document.body.innerText.includes('No se ha podido preparar tu mundo.'),null,{timeout:90000});
+  if(await page.locator('#stage').getAttribute('aria-busy')!=='false')throw Error('Saved world loading failed: '+(await page.locator('body').innerText()).slice(-1000));
   result.fixtureLoadMs=Date.now()-started;result.fixture=fixture.scope;
   result.gameText=(await page.locator('body').innerText()).slice(-2500);
  }

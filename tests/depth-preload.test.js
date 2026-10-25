@@ -101,7 +101,7 @@ test('global admission owns the complete depth transaction, preserving state whi
  const deadlines=[];
  for(let i=0;i<3;i++){
   while(!queue.length)await Promise.resolve();
-  const job=queue.shift();deadlines.push(job.options.deadline);assert.equal(job.options.valid(),true);
+  const job=queue.shift();deadlines.push(job.options.deadline);assert.equal(job.options.valid(),true);assert.equal(job.options.allowBlockingRecovery,true);
   const result=job.iterator.next();assert.equal(result.done,true);
   assert.equal(s.renderer.getRenderTarget(),s.prior);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);
   job.resolve(result.value);

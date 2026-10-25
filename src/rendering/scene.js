@@ -281,6 +281,7 @@ export class WorldScene {
   }
   async loadedWorkerActors(){
     for(const worker of this.state.workers??[]){
+      if(worker.status==='home')continue;
       await this.loadReady(this.objects.get(worker.id)?.userData.actorReady);
       if(!this.mixers.has(worker.id))throw Error('Trabajador guardado sin modelo: '+worker.id);
     }

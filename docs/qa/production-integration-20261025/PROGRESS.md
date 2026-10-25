@@ -117,3 +117,11 @@ Referencias artísticas nuevas recibidas: cuatro parejas original/mockup para Gr
 
 
 Cancelación normal de carga validada con paquete construido: package-mangrove-cancel.json y capturas antes/después. Cancelar al 31 % mediante #loading-cancel, retorno al menú, cierre observado de spatial-threaded.mjs y otros workers, nueva selección de Manglares y llegada al HUD. Cero errores/404. Captura final inspeccionada: poblado, suelo, agua y sombras presentes. Un ciclo no prueba ausencia de fugas acumuladas; no se usa como benchmark ni evidencia artística de helechos, fuera de la cámara inicial. Harness WG_PACKAGE_UI_CANCEL=1 conserva el recorrido normal y recoge cierres de workers.
+
+
+Matriz nocturna iniciada mediante fixtures pagadas de primera incursión (generador parametrizado por bioma, test existente pasa). Primera prueba Manglares/baja falla: package-night-manglares.json, timeout de readiness de 90 s sin errores/404. Se detiene la matriz, sin ampliar timeout. Se repite la misma fixture con colector de fases activado en package-night-manglares-trace.json. No atribuir aún causa ni declarar que reproduce exactamente CI.
+
+
+Causa local nocturna confirmada: trabajador status=home excluido correctamente de sync/actorsReady, pero loadedWorkerActors exigía su mixer. Se omiten únicamente trabajadores refugiados; actores visibles ausentes siguen produciendo error. Test de regresión pasa, build pasa y paquete Manglares/baja vuelve a cargar (32786 ms). El harness ahora detecta el error visible de carga inmediatamente, evitando confundir un aborto con una espera de 90 s. Matriz continúa sin editar reglas ni estado de los trabajadores.
+
+CI 40196284890 (4882) aporta causa distinta: windows-smoke-failure-4882.json. warm-prepare-depth pendiente 297185 ms, scheduler con un trabajo de 291910 ms, primer lote síncrono de 66,455 ms, cpu95=4,525 ms, cero blockingRecoveries. La estimación conservadora de depth-preparation excede el límite ordinario y no tenía recuperación excepcional habilitada. Se conecta esa tarea requerida al fallback existente, sin cambiar presupuestos ni habilitar trabajo opcional; conserva rate limit global de 5 s y frame CPU barato. 36 tests de profundidad/scheduler pasan. Falta confirmar el arreglo en CI real; no equiparar tests con prueba del driver. Las capturas nocturnas en curso usan build anterior a este cambio de admisión.
