@@ -73,7 +73,7 @@ try{
   const response=await route.fetch();let body=await response.text();
   if(frozen){const anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');body=body.replace(anchor,"globalThis.qaStreamingReadyAt=performance.now();Game.pause(state,'menu');"+anchor);}
   if(process.env.WG_THREAD_MAIN_PHASES==='1'||process.env.WG_THREAD_LOADING_FRAMES==='1'||process.env.WG_THREAD_QUALITY_EXECUTION==='1')body=instrumentMainFrame(body);
-  if(process.env.WG_THREAD_EXIT==='1'||process.env.WG_MUD_WORKER_LIFECYCLE==='exit')body+='\nglobalThis.qaReturnToMenu=menu;';
+  if(process.env.WG_THREAD_EXIT==='1'||process.env.WG_HORIZON_PENDING_CASE==='1'||process.env.WG_MUD_WORKER_LIFECYCLE==='exit')body+='\nglobalThis.qaReturnToMenu=menu;';
   await route.fulfill({response,body});
  });
  if(process.env.WG_THREAD_TERRAIN_DEFERRED==='1')await page.route('**/src/rendering/prepare-terrain-chunk.js*',async route=>{
@@ -319,6 +319,7 @@ try{
  result.assetWaterPreparation=process.env.WG_ASSET_WATER_SYNC==='1'?'sync':'coalesced';
  result.mudWorker=await page.evaluate(()=>qaThreadWorld.mudEdgeExecutor?{...qaThreadWorld.mudEdgeExecutor.stats,pending:qaThreadWorld.mudEdgeExecutor.jobs.size,closed:qaThreadWorld.mudEdgeExecutor.closed}:null);
  result.scheduler=await page.evaluate(async()=>{const url=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/app/global-frame-scheduler.js');if(!url)throw Error('Missing canonical scheduler module');const {globalFrameScheduler}=await import(url);return {moduleUrl:url,...globalFrameScheduler.snapshot()};});
+ if(process.env.WG_HORIZON_PENDING_CASE==='1')result.horizonPending=await page.evaluate(async()=>await (await import('/tools/experiments/canyon-handoff-pending-case.js')).verifyCanyonPendingHandoff(qaThreadWorld));
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'||process.env.WG_THREAD_CONTEXT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
  await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,groundStep,terrainDeadline:process.env.WG_THREAD_TERRAIN_DEFERRED==='1'?'deferred250':'required',url:gameUrl.href,result,errors},null,2)+'\n');
