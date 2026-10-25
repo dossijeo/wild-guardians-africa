@@ -19,6 +19,9 @@ for run in ['r1','r2']:
     assert all(k not in q for k in ['waterBedWorker','waterShoreWorker','chunkEviction','warmObstruction','retainPrograms'])
     assert q['workerResidency']=='actors' and q['frameScheduler']=='1'
     if a.biome=='manglares':assert q['groundCache']=='fixed512' and q['mangroveFerns']=='holly'
+    for biome, flag in [('sabana','savannaGround'),('gran-rio','riverGround'),('volcanes','volcanicGround')]:
+        if a.biome==biome:assert q[flag]=='fine' and d['groundStep']==16
+    if a.biome=='gran-canon':assert q['canyonWater']=='calm' and q['horizonHandoff']=='atomic'
     assert s['options']['distance']==0 and s['options']['frames']==360 and not s['options']['active']
     assert s['summary']['frames']['count']==372 and s['created']==0 and s['farSettled']
     assert s['gpu']['supported'] and s['gpu']['disjoint']==0 and s['gpu']['summary']['count']>=120
