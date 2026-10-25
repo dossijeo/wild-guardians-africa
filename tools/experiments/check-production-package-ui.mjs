@@ -72,6 +72,15 @@ try{
   await selector.locator('[data-culture="mapungubwe"]').click();
   await selector.locator('#confirmButton').click();
   await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
+  if(process.env.WG_PACKAGE_UI_PLANT==='1'){
+   await page.locator('#loading-cancel').waitFor({state:'visible',timeout:60000});
+   await page.waitForFunction(()=>Number(document.querySelector('#loading-progress')?.textContent?.match(/\d+/)?.[0])>=30,null,{timeout:120000});
+   await page.screenshot({path:report.replace(/\.json$/,'-plant-before.png')});
+   await page.mouse.click(850,450);
+   await page.waitForTimeout(1200);
+   await page.screenshot({path:report.replace(/\.json$/,'-plant-after.png')});
+   result.plantInput={x:850,y:450,scope:'Real browser pointer input; inspect images/video for the plant response. No synthetic plantAt call.'};
+  }
   if(cancelFirst&&attempt===0){
    await page.locator('#loading-cancel').waitFor({state:'visible',timeout:60000});
    await page.waitForFunction(()=>document.querySelector('#loading-progress')?.textContent?.match(/\d+/)?.[0]>=30,null,{timeout:120000});
