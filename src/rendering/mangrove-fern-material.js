@@ -1,3 +1,4 @@
+import {patchDaylightFern} from './final-daylight.js';
 import {assetUrl} from './asset-url.js';
 import * as THREE from 'three';
 import {fernClumpGeometryData} from './mangrove-fern-geometry.js';
@@ -23,7 +24,8 @@ export async function applyHollyFern(world,q){
     m.vertexShader=`in vec2 cardUv;in float frondAngle;in float frondSlope;out float vFrondSlope;out vec2 vCardUv;out float vCardAngle;out vec3 vCardBase;\n${m.vertexShader}`;
     const anchor='vCoverageColor=base*mix(dayShade,nightShade,uNight);';
     if(!m.vertexShader.includes(anchor))throw Error('Leaf shader anchor missing');
-    m.vertexShader=m.vertexShader.replace(anchor,'vFrondSlope=frondSlope*coverageAnchor.w/uCoverageSpacing;vCardUv=cardUv;vCardAngle=coverageData.x-frondAngle;vCardBase=base/(.63+.37*uv.x);'+anchor);
+    if(world.toon.finalDaylight)m.fragmentShader=patchDaylightFern(m.fragmentShader);
+  m.vertexShader=m.vertexShader.replace(anchor,'vFrondSlope=frondSlope*coverageAnchor.w/uCoverageSpacing;vCardUv=cardUv;vCardAngle=coverageData.x-frondAngle;vCardBase=base/(.63+.37*uv.x);'+anchor);
     m.fragmentShader=`in float vFrondSlope;in vec2 vCardUv;in float vCardAngle;in vec3 vCardBase;
 uniform sampler2D uLeafCoverage,uLeafNormal;
 uniform float uNight,uNightLight,uExposure;uniform vec3 uLightDir;

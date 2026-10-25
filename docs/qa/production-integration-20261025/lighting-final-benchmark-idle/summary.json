@@ -1,0 +1,121 @@
+{
+  "scope": "Four fresh campaigns, ABAB, idle host after builds, 15000ms settling plus 45 frames warmup, 180 complete-draw samples. Paused simulation and fixed camera, medium 720p. Presentation intervals are not CPU or GPU times.",
+  "rows": [
+    {
+      "run": 0,
+      "arm": "original",
+      "cpu": {
+        "mean": 3.0730833311875663,
+        "p95": 4.225000023841858,
+        "p99": 4.540000081062317,
+        "max": 4.600000023841858,
+        "samples": 180
+      },
+      "gpu": {
+        "mean": 18.177651205555556,
+        "p95": 21.420416,
+        "p99": 24.463853,
+        "max": 36.144217,
+        "samples": 180
+      },
+      "presentation": {
+        "mean": 20.37322222193082,
+        "p95": 24.81000006198883,
+        "p99": 30.424999952316284,
+        "max": 41.93999993801117,
+        "samples": 180
+      },
+      "disjoint": false,
+      "glError": 0,
+      "calls": 84,
+      "triangles": 363173
+    },
+    {
+      "run": 1,
+      "arm": "warm",
+      "cpu": {
+        "mean": 3.316749997271432,
+        "p95": 4.9049999713897705,
+        "p99": 5.679999947547913,
+        "max": 8.409999966621399,
+        "samples": 180
+      },
+      "gpu": {
+        "mean": 19.715917150000003,
+        "p95": 23.681613,
+        "p99": 33.186353,
+        "max": 33.854009,
+        "samples": 180
+      },
+      "presentation": {
+        "mean": 21.92913888891538,
+        "p95": 28.040000081062317,
+        "p99": 32.794999957084656,
+        "max": 34.96499991416931,
+        "samples": 180
+      },
+      "disjoint": false,
+      "glError": 0,
+      "calls": 84,
+      "triangles": 363173
+    },
+    {
+      "run": 2,
+      "arm": "original",
+      "cpu": {
+        "mean": 3.541333332326677,
+        "p95": 4.575000047683716,
+        "p99": 4.960000038146973,
+        "max": 5.065000057220459,
+        "samples": 180
+      },
+      "gpu": {
+        "mean": 20.49574873888888,
+        "p95": 22.738957,
+        "p99": 35.039114,
+        "max": 35.279217,
+        "samples": 180
+      },
+      "presentation": {
+        "mean": 22.850777777698305,
+        "p95": 27.43499994277954,
+        "p99": 38.22500002384186,
+        "max": 39.019999980926514,
+        "samples": 180
+      },
+      "disjoint": false,
+      "glError": 0,
+      "calls": 84,
+      "triangles": 363173
+    },
+    {
+      "run": 3,
+      "arm": "warm",
+      "cpu": {
+        "mean": 3.276111110713747,
+        "p95": 4.360000014305115,
+        "p99": 4.870000004768372,
+        "max": 4.96999990940094,
+        "samples": 180
+      },
+      "gpu": {
+        "mean": 18.776626094444445,
+        "p95": 22.207395,
+        "p99": 30.908437,
+        "max": 33.673593,
+        "samples": 180
+      },
+      "presentation": {
+        "mean": 20.972111111217075,
+        "p95": 25.235000014305115,
+        "p99": 32.13499999046326,
+        "max": 35.6949999332428,
+        "samples": 180
+      },
+      "disjoint": false,
+      "glError": 0,
+      "calls": 84,
+      "triangles": 363173
+    }
+  ]
+}

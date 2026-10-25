@@ -161,7 +161,7 @@ export function createSprite(id,frame=0){const g=new T.Group();
    const outline=new T.Shape();outline.moveTo(.035,.05);outline.bezierCurveTo(.14,.45,.44,.77,.72,.63);outline.bezierCurveTo(.9,.39,.68,.04,.32,-.08);outline.bezierCurveTo(.66,-.15,.57,-.55,.33,-.55);outline.bezierCurveTo(.1,-.51,.06,-.18,.035,.05);
    const geometry=new T.ExtrudeGeometry(outline,{depth:.04,bevelEnabled:false});
    mesh(wing,geometry,'#5b4937');
-   mesh(wing,geometry.clone(),'#e2ad68',[.028,.005,.05],[.9,.9,1]);
+   mesh(wing,geometry.clone(),'#df783f',[.028,.005,.05],[.9,.9,1]);
    rod(wing,[.07,.03,.11],[.56,.47,.11],.017,'#8b603b');
    rod(wing,[.08,-.05,.11],[.37,-.4,.11],.017,'#8b603b');
    ball(wing,'#f5e4bd',[.56,.38,.12],[.065,.09,.02],0);

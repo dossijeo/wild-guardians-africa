@@ -1,0 +1,225 @@
+{
+  "scope": "Real campaign renderer, seed 712, same camera and visual time; Integrated final daylight on/off with the same scene and time. DOF disabled in both arms to isolate lighting; no timing claim.",
+  "records": [
+    {
+      "arm": "original",
+      "phase": "day",
+      "file": "gran-rio-original-day.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "gran-rio",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&riverGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 70,
+        "triangles": 547900,
+        "memory": {
+          "geometries": 239,
+          "textures": 95
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "gran-rio",
+          "edgePadding": 0.85,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3558,
+          "far": 7377,
+          "leaves": 101712,
+          "triangles": 272496,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 99.57499980926514,
+            "selectionMs": 123.1599999666214,
+            "selectionCount": 96,
+            "candidates": 34000,
+            "masked": 12929,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "original",
+      "phase": "night",
+      "file": "gran-rio-original-night.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "gran-rio",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&riverGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 70,
+        "triangles": 547900,
+        "memory": {
+          "geometries": 239,
+          "textures": 95
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "gran-rio",
+          "edgePadding": 0.85,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3558,
+          "far": 7377,
+          "leaves": 101712,
+          "triangles": 272496,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 99.57499980926514,
+            "selectionMs": 123.1599999666214,
+            "selectionCount": 96,
+            "candidates": 34000,
+            "masked": 12929,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "warm",
+      "phase": "day",
+      "file": "gran-rio-warm-day.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "gran-rio",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&riverGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 70,
+        "triangles": 547900,
+        "memory": {
+          "geometries": 240,
+          "textures": 92
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "gran-rio",
+          "edgePadding": 0.85,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3558,
+          "far": 7377,
+          "leaves": 101712,
+          "triangles": 272496,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 107.55500054359436,
+            "selectionMs": 137.4449998140335,
+            "selectionCount": 94,
+            "candidates": 33600,
+            "masked": 12929,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "warm",
+      "phase": "night",
+      "file": "gran-rio-warm-night.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "gran-rio",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&riverGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 70,
+        "triangles": 547900,
+        "memory": {
+          "geometries": 240,
+          "textures": 92
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "gran-rio",
+          "edgePadding": 0.85,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3558,
+          "far": 7377,
+          "leaves": 101712,
+          "triangles": 272496,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 107.55500054359436,
+            "selectionMs": 137.4449998140335,
+            "selectionCount": 94,
+            "candidates": 33600,
+            "masked": 12929,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    }
+  ]
+}

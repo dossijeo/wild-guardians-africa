@@ -1,3 +1,4 @@
+import {patchDaylightFernLod} from './final-daylight.js';
 import {assetUrl} from './asset-url.js';
 import * as THREE from 'three';
 export async function applyFernLod(world,q){
@@ -20,7 +21,7 @@ export async function applyFernLod(world,q){
   for(let z=0;z<2;z++)for(let x=0;x<2;x++){const a=z*3+x;indices.push(a,a+3,a+1,a+1,a+3,a+4);}
   g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('cardUv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(indices);g.boundingSphere=null;g.boundingBox=null;
   const uniforms={...original.uniforms,uDay:{value:day},uNightMap:{value:night},uShadow:{value:shadow}};
-  e.mesh.material=new THREE.ShaderMaterial({glslVersion:THREE.GLSL3,uniforms,vertexShader:vertex,fragmentShader:fragment,side:THREE.DoubleSide,toneMapped:false});e.mesh.castShadow=false;
+  e.mesh.material=new THREE.ShaderMaterial({glslVersion:THREE.GLSL3,uniforms,vertexShader:vertex,fragmentShader:world.toon.finalDaylight?patchDaylightFernLod(fragment):fragment,side:THREE.DoubleSide,toneMapped:false});e.mesh.castShadow=false;
   const sg=new THREE.InstancedBufferGeometry();for(const name of ['coverageAnchor','coverageData','coverageSlope'])sg.setAttribute(name,g.attributes[name]);sg.setAttribute('position',new THREE.Float32BufferAttribute([-1.4,.015,-1.4,1.4,.015,-1.4,1.4,.015,1.4,-1.4,.015,1.4],3));sg.setAttribute('cardUv',new THREE.Float32BufferAttribute([0,0,1,0,1,1,0,1],2));sg.setIndex([0,2,1,0,3,2]);
   const sm=new THREE.ShaderMaterial({glslVersion:THREE.GLSL3,uniforms,vertexShader:vertex,fragmentShader:shadowFragment,transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});const mesh=new THREE.Mesh(sg,sm);mesh.frustumCulled=false;mesh.name='fern-prebaked-shadow';e.mesh.parent.add(mesh);shadows.push({mesh,source:e.mesh});
  }

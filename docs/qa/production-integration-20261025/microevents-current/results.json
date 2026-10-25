@@ -1,0 +1,962 @@
+[
+  {
+    "id": "seeds",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 14,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 4886,
+      "calls": 82,
+      "triangles": 590575,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "seeds",
+      "mode": "collect",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.759420000076294
+    }
+  },
+  {
+    "id": "birds",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 7,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 5028,
+      "calls": 77,
+      "triangles": 590561,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "birds",
+      "mode": "scatter",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.8031249999999994
+    }
+  },
+  {
+    "id": "butterflies",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 9,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 5250,
+      "calls": 77,
+      "triangles": 590565,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "butterflies",
+      "mode": "collect",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 2.194870000004767
+    }
+  },
+  {
+    "id": "beetle",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 1,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 5532,
+      "calls": 77,
+      "triangles": 590549,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "beetle",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.05127999997138977
+    }
+  },
+  {
+    "id": "locusts",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 16,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 5608,
+      "calls": 77,
+      "triangles": 590579,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "locusts",
+      "mode": "scatter",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 2.3976799999475484
+    }
+  },
+  {
+    "id": "termites",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 18,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 5938,
+      "calls": 77,
+      "triangles": 590583,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "structure-14",
+    "errors": [],
+    "gesture": {
+      "event": "termites",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8654850000143051
+    }
+  },
+  {
+    "id": "raincloud",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 33,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6104,
+      "calls": 77,
+      "triangles": 590613,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "raincloud",
+      "mode": "gather",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.0766000000238418
+    }
+  },
+  {
+    "id": "fire",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 18,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6284,
+      "calls": 77,
+      "triangles": 590583,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "fire",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.6469650000333788
+    }
+  },
+  {
+    "id": "storm",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 12,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6406,
+      "calls": 77,
+      "triangles": 590571,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "storm",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8367000000476835
+    }
+  },
+  {
+    "id": "feather",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 1,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6570,
+      "calls": 77,
+      "triangles": 590549,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "feather",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.03225
+    }
+  },
+  {
+    "id": "dew",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 20,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6646,
+      "calls": 77,
+      "triangles": 590587,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "dew",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.04275499999523163
+    }
+  },
+  {
+    "id": "flower",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 3,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6720,
+      "calls": 77,
+      "triangles": 590553,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "flower",
+      "mode": "hold",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.288764999985695
+    }
+  },
+  {
+    "id": "spirit",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 2,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6910,
+      "calls": 77,
+      "triangles": 590551,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "spirit",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.03180999994277954
+    }
+  },
+  {
+    "id": "goldenleaves",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 12,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 6984,
+      "calls": 77,
+      "triangles": 590571,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "goldenleaves",
+      "mode": "collect",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.6098799999952311
+    }
+  },
+  {
+    "id": "star",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 6,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 7214,
+      "calls": 77,
+      "triangles": 590559,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "star",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.027524999976158142
+    }
+  },
+  {
+    "id": "pollen",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 19,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 7290,
+      "calls": 77,
+      "triangles": 590585,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "pollen",
+      "mode": "gather",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.4086499999761581
+    }
+  },
+  {
+    "id": "rainbow",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 31,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 7490,
+      "calls": 77,
+      "triangles": 590609,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "rainbow",
+      "mode": "gather",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.6299149999618532
+    }
+  },
+  {
+    "id": "rareseed",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 2,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 7626,
+      "calls": 77,
+      "triangles": 590551,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "rareseed",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.0290550000667572
+    }
+  },
+  {
+    "id": "weeds",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 6,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 7702,
+      "calls": 77,
+      "triangles": 590559,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "weeds",
+      "mode": "pull",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.9081850000619889
+    }
+  },
+  {
+    "id": "ants",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 22,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 7942,
+      "calls": 77,
+      "triangles": 590591,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "ants",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.9719800000190736
+    }
+  },
+  {
+    "id": "burrow",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 8,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8126,
+      "calls": 77,
+      "triangles": 590563,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "burrow",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.903475000023842
+    }
+  },
+  {
+    "id": "dustdevil",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 14,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8274,
+      "calls": 77,
+      "triangles": 590575,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "dustdevil",
+      "mode": "swirl",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.9782349998950957
+    }
+  },
+  {
+    "id": "pathleaves",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 13,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8404,
+      "calls": 77,
+      "triangles": 590573,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "pathleaves",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8441599999666214
+    }
+  },
+  {
+    "id": "spores",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 19,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8504,
+      "calls": 77,
+      "triangles": 590585,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "spores",
+      "mode": "scatter",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.7976600000858306
+    }
+  },
+  {
+    "id": "debris",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 10,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8636,
+      "calls": 77,
+      "triangles": 590567,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "debris",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8798450000286102
+    }
+  },
+  {
+    "id": "web",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 3,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8782,
+      "calls": 77,
+      "triangles": 590553,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "web",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.4930049999952316
+    }
+  },
+  {
+    "id": "insects",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 22,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 8904,
+      "calls": 77,
+      "triangles": 590591,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "insects",
+      "mode": "scatter",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 2.7329349999427808
+    }
+  },
+  {
+    "id": "grain",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 15,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 9218,
+      "calls": 77,
+      "triangles": 590577,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "grain",
+      "mode": "gather",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.6879850000143052
+    }
+  },
+  {
+    "id": "snake",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 9,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 9360,
+      "calls": 77,
+      "triangles": 590565,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "snake",
+      "mode": "guide",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8211949999332427
+    }
+  },
+  {
+    "id": "thornseeds",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 10,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 9500,
+      "calls": 77,
+      "triangles": 590567,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "thornseeds",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.7569600000381471
+    }
+  },
+  {
+    "id": "hail",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 22,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 9642,
+      "calls": 77,
+      "triangles": 590591,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "hail",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.0486299999952318
+    }
+  },
+  {
+    "id": "vortex",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 22,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 9820,
+      "calls": 77,
+      "triangles": 590591,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "vortex",
+      "mode": "swirl",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.8999650000333785
+    }
+  },
+  {
+    "id": "gust",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 28,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 10084,
+      "calls": 77,
+      "triangles": 590603,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "gust",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8419199999570847
+    }
+  },
+  {
+    "id": "branch",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 1,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 10250,
+      "calls": 77,
+      "triangles": 590549,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "branch",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.38225499999523166
+    }
+  },
+  {
+    "id": "lightning",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 6,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 10350,
+      "calls": 77,
+      "triangles": 590559,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "lightning",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.7164599999189376
+    }
+  },
+  {
+    "id": "heat",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 7,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 10494,
+      "calls": 77,
+      "triangles": 590561,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "heat",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.6614449999332429
+    }
+  },
+  {
+    "id": "smoke",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 13,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 10640,
+      "calls": 77,
+      "triangles": 590573,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "smoke",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.0193400000333785
+    }
+  },
+  {
+    "id": "fireflies",
+    "fixture": "wet",
+    "forced": true,
+    "instances": 36,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 4987,
+      "calls": 73,
+      "triangles": 319148,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-5",
+    "errors": [],
+    "gesture": {
+      "event": "fireflies",
+      "mode": "collect",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 2.9358549998998638
+    }
+  },
+  {
+    "id": "fog",
+    "fixture": "wet",
+    "forced": true,
+    "instances": 7,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 5301,
+      "calls": 72,
+      "triangles": 319090,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-5",
+    "errors": [],
+    "gesture": {
+      "event": "fog",
+      "mode": "rub",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.6506649999618532
+    }
+  },
+  {
+    "id": "fallingdebris",
+    "fixture": "rocks",
+    "forced": true,
+    "instances": 9,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 3337,
+      "calls": 37,
+      "triangles": 221700,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "fallingdebris",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8842450000047681
+    }
+  }
+]
