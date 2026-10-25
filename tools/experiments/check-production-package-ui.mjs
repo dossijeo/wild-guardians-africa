@@ -30,6 +30,7 @@ try{
  await page.goto(url,{timeout:90000});await page.waitForSelector('#native-menu',{timeout:60000});
  const menu=page.frameLocator('#native-menu');
  await menu.getByText('JUEGO NUEVO',{exact:false}).first().waitFor({timeout:60000});
+ await menu.locator('#loading').waitFor({state:'hidden',timeout:60000});
  result={url,isolated:await page.evaluate(()=>crossOriginIsolated),menuButtons:await menu.locator('button,[role=button]').allTextContents(),menuText:(await menu.locator('body').innerText()).slice(-3000)};
  if(process.env.WG_PACKAGE_UI_FIXTURE){
   const fixture=JSON.parse(await readFile(process.env.WG_PACKAGE_UI_FIXTURE,'utf8'));

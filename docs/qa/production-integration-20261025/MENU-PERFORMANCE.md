@@ -12,3 +12,7 @@ Intel UHD 0x9A60, Chrome/ANGLE D3D11, 1280×720, 30 draws de calentamiento y 150
 Hay deriva apreciable entre repeticiones. Diferencia GPU por pareja +0,34/+0,25 ms; no afirmar equivalencia de coste ni mejora de GPU. La cadencia de dibujo permanece alrededor de 16,62 ms y P95 no empeora en estas muestras. No es latencia física de presentación ni prueba de transición/carga. El coste adicional parece moderado para la mejora visual; faltan mediciones de transición y perfil bajo antes de cerrar.
 
 Build y test:web-package aprobados (1001 archivos). Paquete en ruta anidada arranca. Prueba funcional en 1280×720,390×844,1920×810: opciones y regreso completados, cinco controles visibles. Los avisos 404 localizados son únicamente /favicon.ico del servidor de desarrollo; no hay texturas ausentes. Capturas y vídeos en menu-validation. Falta revisión final de vídeo y otras rutas de menú.
+
+## Calidad baja con recorrido
+
+A/B/A/B con entrada en Opciones en draw30 y regreso en draw100, 150 draws medidos. GPU media A1/B1/A2/B2: 5,134 / 5,741 / 4,451 / 5,063 ms. Incremento por pareja ~0,61 ms. CPU media 0,265 / 0,294 / 0,247 / 0,273 ms. Cadencia media ~33,26 ms (límite del perfil bajo existente); P95 A ~34,69 ms, B ~34,4 ms. No disjoint. Máximos GPU variables; no atribuir mejora de picos a partir de solo dos repeticiones. No mide latencia física de presentación.
