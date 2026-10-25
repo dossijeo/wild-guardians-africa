@@ -447,3 +447,28 @@ costes acumulados, sin convertir este resultado en una simplificación automáti
 
 PR159 verificada mediante GitHub CLI: OPEN, isDraft=true, head codex/global-visual-lab.
 No se ha fusionado ni alterado main.
+
+
+## Desierto y Volcanes: streaming activo actual
+
+Calidad media720p, Intel UHD, pthreads/scheduler,180frames de cámara y96unidades,
+misma metodología de Gran Río. Cada ejecución instala diez chunks, mantiene
+actores180/180, no pausa la simulación y termina con fondos asentados. Sin errores
+nuevos. Capturas finales inspeccionadas: Desierto conserva las ondulaciones y el
+terreno bajo objetos lejanos; Volcanes conserva roca, vegetación y lava. No se
+modifican materiales ni geometría. Una imagen final no valida todo el movimiento.
+
+| Bioma | RAF media ms | RAF p95 | RAF máximo | GPU media | GPU p95 | Draw máximo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Desierto | 24,57 | 49,72 | 83,07 | 17,79 | 23,12 | 82,76 |
+| Volcanes | 38,25 | 66,61 | 132,90 | 27,60 | 35,38 | 125,38 |
+
+Informes y capturas: desierto-active-stream y volcanes-active-stream. Una prueba
+por bioma, sin variante A/B: no demuestra ahorro ni causalidad de los máximos.
+No atribuir los picos de draw a compilación sin instrumentación de esa ejecución.
+Las61queries por recorrido no equivalen a ocupación GPU; incluyen burbujas.
+
+Corregida la etiqueta scope del capturador para futuras ejecuciones: antes decía
+CPU/RAF only incluso con WG_THREAD_GPU=1. Los informes originales se conservan
+intactos; su campo gpu contiene las mediciones y esta nota aclara el alcance.
+La corrección no cambia la ejecución ni sus cifras. Validado con node --check.
