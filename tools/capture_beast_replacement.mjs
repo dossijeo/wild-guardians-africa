@@ -2,14 +2,14 @@ import {createRequire} from 'node:module';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import sharp from 'sharp';
 const {chromium}=createRequire(import.meta.url)('playwright');
-const species=process.argv[2]??'hyena',base=process.env.WG_QA_URL??'http://127.0.0.1:5194',out=`docs/qa/${species}-replacement`,records=[];
+const species=process.argv[2]??'hyena',base=process.env.WG_QA_URL??'http://127.0.0.1:5194',out=process.env.WG_BEAST_QA_OUT??`docs/qa/${species}-replacement`,records=[];
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-proxy-server']});
 try{
  for(const biome of process.env.WG_SKIP_VISUAL==='1'?[]:(process.env.WG_BIOMES??'sabana,gran-rio,manglares,volcanes,gran-canon,desierto').split(',')){
   const page=await browser.newPage({viewport:{width:1280,height:900},deviceScaleFactor:1}),errors=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
-  await page.goto(`${base}/tests/browser/beast-replacement.html?species=${species}&biome=${biome}`,{waitUntil:'commit'});
+  await page.goto(`${base}/tests/browser/beast-replacement.html?species=${species}&biome=${biome}`,{waitUntil:'commit',timeout:90000});
   await page.waitForFunction(()=>window.beastQA,null,{timeout:240000});
   const initial=await page.evaluate(()=>({ready:beastQA.ready,error:beastQA.error}));if(!initial.ready)throw Error(JSON.stringify(initial));
   for(const [view,clip,phase] of [['front','Walking',.2],['back','Walking',.2],['front','Running',.3],['front','Charged_Upward_Slash',.5],['front','Right_Hand_Sword_Slash',.5],['front','Weapon_Combo',.5],['front','Weapon_Combo_2',.5]]){
@@ -31,8 +31,8 @@ try{
   await writeFile(`${out}/captures.json`,JSON.stringify({scope:'Native WorldScene and production animal controller; paused deterministic QA raid in actual biome geometry, seed 712. No performance benchmark.',resolution:[1280,900],encoding:'JPEG quality 92 from native drawing buffer PNG',records},null,2)+'\n');
  }
  const page=await browser.newPage({viewport:{width:1280,height:900},deviceScaleFactor:1});
- const raidUrl=`${base}/tests/browser/animal-preload.html?biome=gran-canon&motion=1&attack-species=${species}&copies=1`;
- await page.goto(raidUrl,{waitUntil:'commit'});
+ const raidUrl=`${base}/tests/browser/animal-preload.html?biome=gran-canon&motion=1&attack-species=${species}&copies=1&approved=1`;
+ await page.goto(raidUrl,{waitUntil:'commit',timeout:90000});
  await page.waitForFunction(()=>{try{return JSON.parse(document.querySelector('#report').textContent).ok!==undefined}catch{return false}},null,{timeout:240000});
  const raid=JSON.parse(await page.locator('#report').innerText());
  raid.replacementModel=JSON.parse(await readFile('content/manifests/animal-actions.json','utf8')).animals[species].url;raid.qaUrl=raidUrl;

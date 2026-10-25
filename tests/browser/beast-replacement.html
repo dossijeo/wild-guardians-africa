@@ -23,7 +23,7 @@ try{
  if(!point)point={x:site.center.x+5,z:site.center.z+5};
  const animal={id:'qa-new-beast',species,...point,spawn:{...point},exit:{...point},heading:.4,status:'walking',motionPhase:.2,hitsRemaining:1,radius:1.2};
  state.raid={id:'qa-preview',animals:[animal],reservations:{},encounters:[]};
- const world=new WorldScene(document.querySelector('canvas'),()=>{});world.qualitySetting(params.get('quality')??'media');world.onError=e=>errors.push(e.message);
+ const world=new WorldScene(document.querySelector('canvas'),()=>{},{approvedVisuals:true});world.qualitySetting(params.get('quality')??'media');world.onError=e=>errors.push(e.message);
  await world.load(state,nav,payload);
  world.cinematic=true;
  world.controls.enableDamping=false;

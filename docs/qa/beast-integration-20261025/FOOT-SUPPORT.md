@@ -15,6 +15,10 @@ cabeza alta y el movimiento del resto del cuerpo.
 
 ## Verificación reproducible
 
+- Para repetir la reparación, extraer con Git el GLB de `ead3780fa` a un
+  fichero temporal y ejecutar `node tools/experiments/repair-beast-foot-weights.mjs
+  <especie> <ruta-original.glb>`. La herramienta rechaza aplicar la reparación
+  dos veces sobre un mismo modelo; escribe la candidata en `.codex-tmp/beast-feet/`.
 - `node tools/experiments/audit-beast-foot-weights.mjs lion` (repetir cinco especies):
   comparación binaria con `ead3780fa`. Solo cambian bytes de WEIGHTS_0 y
   metadatos de procedencia. Posiciones, normales, UV, índices, imágenes,

@@ -5,7 +5,7 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const {chromium}=createRequire(import.meta.url)('playwright');
 const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',buffalo:'Búfalo',lion:'León',rhino:'Rinoceronte'})[species];if(!label)throw Error('Unsupported review species');
-const out=`docs/qa/${species}-replacement`,fps=30,base=process.env.WG_QA_URL??'http://127.0.0.1:5194';
+const out=process.env.WG_BEAST_QA_OUT??`docs/qa/${species}-replacement`,fps=30,base=process.env.WG_QA_URL??'http://127.0.0.1:5194';
 await mkdir(out,{recursive:true});
 const library=JSON.parse(await readFile('content/manifests/animal-actions.json','utf8')).animals[species];
 const labels={restpose:'Postura de referencia',Walking:'Marcha',Running:'Carrera',Charged_Upward_Slash:'Tajo ascendente cargado',Right_Hand_Sword_Slash:'Tajo derecho',Weapon_Combo:'Combo 1',Weapon_Combo_2:'Combo 2'};
@@ -22,7 +22,7 @@ const output=resolve(out,`${species}-animations.mp4`),browser=await chromium.lau
 let encoder,encoderLog='';const errors=[];
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base+`/tests/browser/beast-replacement.html?species=${species}&biome=sabana`,{waitUntil:'commit'});
+ await page.goto(base+`/tests/browser/beast-replacement.html?species=${species}&biome=sabana`,{waitUntil:'commit',timeout:90000});
  await page.waitForFunction(()=>window.beastQA,null,{timeout:240000});
  const ready=await page.evaluate(()=>({ready:beastQA.ready,error:beastQA.error}));if(!ready.ready)throw Error(JSON.stringify(ready));
  await page.evaluate(label=>{

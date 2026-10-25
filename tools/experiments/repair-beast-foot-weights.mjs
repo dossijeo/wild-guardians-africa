@@ -1,14 +1,16 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {readGlb,writeGlb} from '../glb-container.mjs';
 const species=process.argv[2]??'lion',library=JSON.parse(await readFile('content/manifests/animal-actions.json','utf8')).animals[species];
-const {json,bin}=readGlb(await readFile('public'+library.url)),copy=structuredClone(json);
+const source=process.argv[3]??'public'+library.url,sourceBytes=await readFile(source);
+const {json,bin}=readGlb(sourceBytes),copy=structuredClone(json);
 assert(!json.asset.extras?.wildFootWeights,'Already repaired; use the prior source model');
 for(const m of copy.materials){delete m.normalTexture;delete m.pbrMetallicRoughness?.baseColorTexture;}
 const bytes=writeGlb(copy,bin),gltf=await new GLTFLoader().parseAsync(bytes.buffer,'');gltf.scene.updateMatrixWorld(true);
-const output=new Uint8Array(bin),view=new DataView(output.buffer),seen=new Set(),report={species,source:library.url,changedVertices:0,bySide:{Left:0,Right:0},invariants:'Only existing skin-weight floats change. Positions, normals, UVs, indices, textures, skeleton and animation channels are unchanged.'};
+const output=new Uint8Array(bin),view=new DataView(output.buffer),seen=new Set(),report={species,source,changedVertices:0,bySide:{Left:0,Right:0},invariants:'Only existing skin-weight floats change. Positions, normals, UVs, indices, textures, skeleton and animation channels are unchanged.'};
 gltf.scene.traverse(mesh=>{
  if(!mesh.isSkinnedMesh)return;const association=gltf.parser.associations.get(mesh);assert(association?.meshes!==undefined);
  const primitive=json.meshes[association.meshes].primitives[association.primitives??0],index=primitive.attributes.WEIGHTS_0;
@@ -28,5 +30,5 @@ gltf.scene.traverse(mesh=>{
   }
  }
 });
-json.asset.extras={...json.asset.extras,wildFootWeights:{tool:'tools/experiments/repair-beast-foot-weights.mjs',sourceSha256:library.sha256,changedVertices:report.changedVertices,rigidBelowAnkle:-.015,authoredAboveAnkle:.06}};
+json.asset.extras={...json.asset.extras,wildFootWeights:{tool:'tools/experiments/repair-beast-foot-weights.mjs',sourceSha256:createHash('sha256').update(sourceBytes).digest('hex'),changedVertices:report.changedVertices,rigidBelowAnkle:-.015,authoredAboveAnkle:.06}};
 await mkdir('.codex-tmp/beast-feet',{recursive:true});await writeFile(`.codex-tmp/beast-feet/${species}.glb`,writeGlb(json,output));await writeFile(`.codex-tmp/beast-feet/${species}.json`,JSON.stringify(report,null,2)+'\n');console.log(report);
