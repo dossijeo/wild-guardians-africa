@@ -8,7 +8,12 @@ for r in j['records']:
  assert all(not f['glError'] and not f['pauses'] for f in r['frames'])
  assert r['after']['elapsed']-r['before']['elapsed']>=10
  assert r['frames'][-1]['wallMs']>=40000
- assert not r['coverage'].get('stats',{}).get('overflow',0)
+ if r['coverage'] is None:
+  assert r['biome']=='volcanes', 'Missing vegetation coverage telemetry'
+ else:
+  assert not r['coverage'].get('stats',{}).get('overflow',0)
+ if r.get('sparseGl'):
+  assert r['finalGlError']==0, 'Final WebGL error'
  probe=json.loads(subprocess.check_output(['C:/ffmpeg/bin/ffprobe.exe','-v','error','-count_frames','-show_entries','stream=nb_read_frames,width,height','-show_entries','format=duration','-of','json',str(p/f"{r['phase']}.webm")]))
  assert probe['streams'][0]['width']==1280 and probe['streams'][0]['height']==720
  assert float(probe['format']['duration'])>=38
