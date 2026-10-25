@@ -121,3 +121,17 @@ test('terrain wrapper forwards dependency output but rejects a stale revision be
  const world={quality:'media',*prepareTerrainSteps(){try{assert.equal(yield {label:'worker',waitFor:dependency},group);return group;}finally{closed++;}}};
  const pending=prepareTerrainChunk(world,{cx:0,cz:0},()=>true,{scheduler:r.scheduler});r.frame();if(stale)world.quality='baja';resolve(group);await Promise.resolve();r.frame();const result=await pending;assert.equal(stale?result:result.preparedGroup,stale?null:group);assert.equal(closed,1);}
 });
+
+test('required opt-in recovers a poisoned shared estimate without admitting optional work',async()=>{
+ let time=1000,calls=0;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const task=(key,allowBlockingRecovery)=>scheduler.submit((function*(){calls++;time+=4;return key;})(),{key,deadline:1000,estimate:()=>55.55,allowBlockingRecovery});
+ const optional=task('optional',false),a=task('required-a',true),b=task('required-b',true);
+ const frame=async(t,cpu)=>{time=t;scheduler.beginFrame(time);time+=cpu;await scheduler.endFrame();};
+ await frame(4000,4);assert.equal(calls,0);
+ await frame(6100,12);assert.equal(calls,0);
+ await frame(6200,4);assert.equal(calls,1);assert.equal(await a,'required-a');
+ await frame(6300,4);assert.equal(calls,1);
+ await frame(11300,4);assert.equal(await b,'required-b');assert.equal(calls,2);
+ assert.equal(scheduler.snapshot().blockingRecoveries,2);
+ assert.equal(scheduler.snapshot().pending,1);scheduler.cancel('optional');await optional;
+});

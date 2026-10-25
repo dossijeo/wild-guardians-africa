@@ -18,7 +18,7 @@ export async function prepareTerrainChunk(world,data,current,{scheduler=null,sig
       // These chunks are already demanded by streaming, not speculative prefetch.
       // Let deadline admission use bounded CPU debt immediately; a fresh 250 ms
       // grace period on every completed native job delayed even trivial setup.
-      const result=await scheduler.submit(measured,{valid,signal,label:()=>`terrain ${data.cx},${data.cz}:${phase}`,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now()});
+      const result=await scheduler.submit(measured,{valid,signal,label:()=>`terrain ${data.cx},${data.cz}:${phase}`,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now(),allowBlockingRecovery:true});
       if(result){completed=true;world.onTerrainPreparationDone?.({cx:data.cx,cz:data.cz,cpuMs,elapsedMs:now()-began});return {...data,preparedGroup:result};}
       return null;
     }

@@ -632,3 +632,36 @@ Siguiente diagnóstico: identidad, coste estimado, deadline y readiness de las
 dos tareas que sobreviven pese al presupuesto disponible. No aumentar el timeout
 ni reducir vegetación para hacer pasar la prueba. La serie con capturas no sirve
 para benchmarking temporal y sigue sin superar el criterio de asentamiento.
+
+
+## Corrección de inanición por estimación histórica de prop-slots
+
+`sabana-paused-job-costs.failure.json` confirma dos tareas terrain5,1:prop-slots y
+terrain5,-1:prop-slots, estimate55,55ms compartida frente costes propios3,58/4,40ms,
+más de213s de antigüedad. La recuperación previa exige cpu+estimate<=2periodos;
+con esa estimación ninguna ejecución puede renovar el dato.18tests del scheduler
+pasan, incluido el nuevo caso de estimación55,55 y exclusión del trabajo opcional.
+
+Se añade allowBlockingRecovery, desactivado por defecto, habilitado únicamente
+por prepareTerrainChunk para chunks ya necesarios. Tras5s de deadline vencido,
+con CPU obligatoria<medio periodo, callback dentro del periodo y ninguna unidad
+opcional ejecutada, admite una unidad aunque su estimación exceda el límite.
+Sale inmediatamente del presupuesto y espacia esta recuperación5s globalmente.
+Respeta validación, cancelación y dependencias existentes. No rebaja estimaciones
+ni presenta la deuda como tiempo libre. blockingRecoveries expone su frecuencia.
+Una llamada atómica puede aún bloquear: esto garantiza una oportunidad de avanzar
+en frames baratos, no un límite duro a su duración ni fluidez bajo saturación.
+
+Caso real con capturas `sabana-required-recovery`: diez chunks, cero pendientes,
+fondos listos, elapsed idéntico, sin errores nuevos.28recuperaciones excepcionales,
+máximo de unidad57,02ms. La captura final fue inspeccionada y conserva la cobertura.
+Las siete capturas intermedias adicionales permanecen locales; el informe y la
+captura final quedan versionados. La frecuencia bajo capturas no se vende como
+solución óptima: falta reducir la contaminación y granularidad de estimaciones.
+
+Control activo sin capturas `sabana-required-recovery-active`: diez chunks,
+actores180/180, cero pausas, cero tareas pendientes, CERO blockingRecoveries.
+RAF media43,60ms/p9583,24ms/máximo166,36ms, GPU media32,61ms. Sin errores nuevos.
+Compatible con el orden de magnitud de referencias anteriores, pero una ejecución
+no es A/B/A/B ni demuestra ahorro. Se adopta en la rama experimental como
+corrección de liveness, no como optimización FPS. No cambia arte ni simulación.
