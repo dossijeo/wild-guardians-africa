@@ -229,3 +229,23 @@ no se altera el terreno autoritativo para mejorar esta imagen.
 No certifica movimiento, memoria, rendimiento ni equivalencia con main. Las
 capturas no incorporan ajustes artísticos nuevos. Sabana, Gran Río y Gran Cañón
 ya tienen referencias actuales día/noche bajo el mismo método de congelación.
+
+## Cañón: candidata calm recuperada y contrastada
+
+La investigación previa ya descartó reemplazar el tile de pendientes como solución
+suficiente (canyon-spectral-ripples-20261023). La alternativa nativa existente
+canyonWater=calm atenúa solo la normal usada para reflexión diurna, conservando
+BRDF solar y respuesta nocturna. No se crea otra variante ni se cambia el shader.
+
+Doce capturas nuevas en gran-canon-calm. Seis parejas finales con el control
+reciente coinciden en cámara, target, reloj, trabajadores, calls y triángulos.
+Tres nocturnas RGB exactas. Inspección diurna normal: menor contraste de bandas,
+agua más tranquila, orilla/paleta/edificios preservados. Preferible candidata
+para seguir validando el defecto de reflexión; no aprobación global.
+
+Residencia difiere: geometrías iguales155/151/149según pose, pero84texturas en
+control y88en candidata. No atribuir cuatro texturas al shader sin diagnóstico;
+la implementación añade aritmética, no declara mapas nuevos. Registrar/atribuir
+la diferencia antes de cambiar receta o afirmar equivalencia de memoria. Ningún
+error GL/console registrado. Los costes históricos y vídeos de20261023 son
+antecedentes, no benchmarks nuevos del renderer actual. No promoción por defecto.
