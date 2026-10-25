@@ -6,6 +6,10 @@ manifest=json.loads((root/'content/manifests/assets.json').read_text(encoding='u
 source=next(s for s in manifest['sources'] if 'Africa_Menu_V2_8' in s['file'])
 markup=typography_markup((root/source['markup']).read_text(encoding='utf-8'))
 markup=markup.replace('</head>','<link rel="stylesheet" href="../ui-theme.css?v=2"></head>')
+# Keep the tagline readable against the illustrated, bright sky.
+markup=markup.replace('</style>',"""
+#brand .sub{width:fit-content;max-width:100%;margin:4px auto 0;padding:6px 12px;font-size:clamp(11px,.9vw,13px);line-height:1.45;font-weight:600;letter-spacing:.12em;color:#fff5df;background:#211a14e8;border:1px solid #e4be7959;border-radius:5px;text-shadow:0 1px 2px #000}
+</style>""")
 code=(root/source['code'][0]).read_text(encoding='utf-8')
 code=code.replace("const b=decode64(el.textContent);", "if(el.textContent.trim().startsWith('/assets/'))return await (await fetch(el.textContent.trim())).arrayBuffer();const b=decode64(el.textContent);")
 code=code.replace("async function imageFromData(data){", "async function imageFromData(data){if(data.startsWith('/assets/'))return await createImageBitmap(await (await fetch(data)).blob(),{premultiplyAlpha:'none',colorSpaceConversion:'none'});")
