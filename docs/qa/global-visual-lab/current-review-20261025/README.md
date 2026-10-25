@@ -542,3 +542,21 @@ laboratorio: efectivamente se usa al transparentar objetos durante la partida.
 Un par instrumentado con evolución real distinta no sustituye A/B/A/B ni valida
 memoria/ciclo de vida. Conservar evidencia positiva y negativa; no cambiar el
 aspecto aprobado para resolver una espera de preparación.
+
+
+## Galería comparativa contra main histórico
+
+[Galería de36parejas](main-current-gallery.html), seis biomas, día/noche y tres
+vistas, izquierda main b2497b0695218652672c805c40971ea830686e3a, derecha capturas
+actuales. No confundir esa referencia congelada con origin/main actual.
+`build-current-main-gallery.py` verifica las36coincidencias de cámara, target,
+origen, hora, elapsed y trabajadores, ausencia de errores registrados y existencia
+de72imágenes. `main-current-gallery.json` guarda huellas SHA256 de los originales.
+La galería enlaza PNG sin reescalar sus archivos ni retocar píxeles.
+
+Manglares muestra la selección actual holly/fixed512, no hojas redondas antiguas;
+Canyon muestra calm. Los otros biomas usan las referencias actuales ya revisadas.
+El baseline conserva sus fondos originales; no se afirma equivalencia del pipeline
+ni de todos los estados internos. La galería es una ayuda de revisión artística,
+no un benchmark y no una aprobación automática por diferencias de píxeles.
+No se ha revisado exhaustivamente cada vista adicional en este pase.
