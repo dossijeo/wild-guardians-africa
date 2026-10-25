@@ -24,6 +24,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  if(!currentReview)await page.route('**/src/rendering/mountain-arc-composition.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('baseY=-35').length!==2)throw Error('Mountain base anchor missing');await route.fulfill({response,body:body.replace('baseY=-35','baseY=-10')});});
  const query=new URLSearchParams((currentReview?globalCurrentReviewQuery:globalClosureQuery)(biome));
  if(currentReview){query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
+ if(process.env.WG_GROUND_RESIDENT_MASK==='1')query.set('groundResidentMask','1');
  const captureUrl='http://127.0.0.1:5190/?qa-seed=712&'+query;
  await page.goto(captureUrl);
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});

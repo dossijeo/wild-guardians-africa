@@ -45,3 +45,24 @@ test('native seam gets exact bilinear mask RGB, up normals and explicit water at
  const map={width:2,height:2,data:new Uint8Array([0,0,0,0,100,100,100,0,200,200,200,0,255,255,255,255])};configureNativeFarSeamGeometry(geometry,map);
  assert.equal(geometry.attributes.position.array,positions);assert.equal(geometry.attributes.color.getX(0),0);assert.ok(Math.abs(geometry.attributes.color.getX(1)-138.75/255)<1e-7);assert.equal(geometry.attributes.color.getX(2),1);assert.deepEqual([...geometry.attributes.normal.array],[0,1,0,0,1,0,0,1,0]);assert.deepEqual([...geometry.attributes.aFarWater.array],[0,0,0]);geometry.dispose();
 });
+
+
+test('resident mask covers only installed visible chunks and releases its texture once',()=>{
+ const previous=globalThis.location;globalThis.location={search:'?groundResidentMask=1'};
+ try{
+  const candidate={impostors:new THREE.Group(),dispose(){}},world={nearBounds:[-72,-24,72,72],chunkRevision:1,chunks:new Map([['-1,0',{visible:true}],['0,0',{visible:false}],['1,1',{visible:true}]]),toon:{uniforms:{uWorldOrigin:{value:new THREE.Vector2(144,0)},uNight:{value:0}}}};
+  const data={positions:new Float32Array([0,0,0,1,0,0,0,0,1]),colors:new Float32Array(9),indices:new Uint32Array([0,2,1])};
+  attachNativeFarGround(candidate,data,world);
+  const material=candidate.impostors.children[0].material,shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <clipping_planes_fragment>'};
+  material.onBeforeCompile(shader);
+  const texture=shader.uniforms.uFarResidentMask.value,pixels=texture.image.data;
+  assert.equal(pixels[0],255);assert.equal(pixels[4],0);assert.equal(pixels[(8+2)*4],255);
+  assert.equal(texture.minFilter,THREE.NearestFilter);assert.equal(texture.generateMipmaps,false);
+  assert.match(material.customProgramCacheKey(),/resident-mask-v1/);
+  const version=texture.version;candidate.updateGroundBounds();assert.equal(texture.version,version);
+  world.chunks.delete('-1,0');world.chunks.set('0,0',{visible:true});world.chunkRevision++;
+  candidate.updateGroundBounds();assert.equal(pixels[0],0);assert.equal(pixels[4],255);assert.equal(texture.version,version+1);
+  world.nearBounds=[-24,-24,120,72];candidate.updateGroundBounds();assert.equal(pixels[0],255);assert.equal(pixels[(8+1)*4],255);
+  let disposed=0;texture.addEventListener('dispose',()=>disposed++);candidate.dispose();candidate.dispose();assert.equal(disposed,1);
+ }finally{if(previous===undefined)delete globalThis.location;else globalThis.location=previous;}
+});
