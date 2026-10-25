@@ -398,3 +398,15 @@ Far quality configuration adjusts transition bands within prepared bounds
 without reloading atlases or geometry; these are not separate eagerly loaded
 quality-specific asset sets to delete. Day/night atlases support the actual
 cycle and are not discarded laboratory variants.
+
+## Follow-up: existing late obstruction program
+
+Sabana high late world program81 has native-partial-blend-v1 and is created
+from renderBufferDirect, not loading compile. streamingOptions enables
+warmObstruction by default only in Mangroves, whereas smooth obstruction is
+selected across the global-lighting scene. This explains a plausible readiness
+gap; it is not another unused laboratory variant. An existing warmObstruction=1
+override is being tested in Sabana without altering production defaults.
+The diagnostic uses explicit non-Mangrove streaming options (no retention,
+single eviction, no water-bed/shore worker), matching its original booleans.
+A success would require no late replacement link and bounded loading cost.
