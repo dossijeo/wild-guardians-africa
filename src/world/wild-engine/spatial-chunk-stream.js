@@ -1,10 +1,12 @@
 import {NativeChunkStream} from '../../rendering/chunk-stream.js';
+import {createSpatialChunkRetention} from './spatial-chunk-retention.js';
 
 // Shared renderer/navigation stream. Chunk work is
 // scheduled by NativeChunkStream, while one C++ world supplies both the
 // renderer payload and subsequent synchronous route/surface queries.
 export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel,prepareData=null,pipeline=false,discardData=()=>{},preparationRevision=()=>0}){
   if(!core?.currentChunk())throw Error('Generate the spatial world before streaming chunks');
+  const retention=createSpatialChunkRetention(core,{loaded,desired:()=>stream.desired});
   const build=(_config,_profile,cx,cz)=>{
     // A resident chunk with zero props still returns 0; only a negative
     // result means it is absent. Do not regenerate such a chunk on every read.
@@ -45,7 +47,7 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
       if(!data)return null;
       if(!current()){
         const key=request.cx+','+request.cz;
-        if(!stream.dead&&!loaded().has(key)&&!stream.desired.has(key))core.removeChunk(request.cx,request.cz);
+        if(!stream.dead&&!loaded().has(key)&&!stream.desired.has(key))retention.releaseChunk(request.cx,request.cz);
         return null;
       }
       if(!prepareData)return data;
@@ -55,7 +57,7 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
       discardData(prepared);
       if(!current()){
         const key=request.cx+','+request.cz;
-        if(!stream.dead&&!loaded().has(key)&&!stream.desired.has(key))core.removeChunk(request.cx,request.cz);
+        if(!stream.dead&&!loaded().has(key)&&!stream.desired.has(key))retention.releaseChunk(request.cx,request.cz);
         return null;
       }
       // World/quality changed while graphics were private. Read fresh payload.
@@ -88,12 +90,15 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
   const stream=new NativeChunkStream({}, {},{loaded,onData,onError,build,buildAsync:generation,prepareAsync,
     discardData:data=>{
       discardData(data);
-      if(data&&!stream.dead){const key=data.cx+','+data.cz;if(!loaded().has(key)&&!stream.desired.has(key))core.removeChunk(data.cx,data.cz);}
+      if(data&&!stream.dead){const key=data.cx+','+data.cz;if(!loaded().has(key)&&!stream.desired.has(key))retention.releaseChunk(data.cx,data.cz);}
     },
     workerFactory:()=>null,...(schedule?{schedule}:{}),...(cancel?{cancel}:{})});
   // The renderer owns its installed meshes. Releasing a spatial chunk after
   // those meshes are evicted keeps the graph and prop records bounded too.
-  stream.releaseChunk=(cx,cz)=>core.removeChunk(cx,cz);
-  stream.releaseChunks=coordinates=>core.removeChunks(coordinates);
+  stream.retention=retention;
+  stream.releaseChunk=retention.releaseChunk;
+  stream.releaseChunks=retention.releaseChunks;
+  const dispose=stream.dispose.bind(stream);
+  stream.dispose=()=>{dispose();retention.dispose();};
   return stream;
 }

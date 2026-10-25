@@ -996,3 +996,38 @@ como política final. La auditoría identifica requisitos pendientes:
 La hipótesis ahora respaldada es conservar datos autoritativos requeridos sin
 mantener recursos GPU lejanos. Falta implementar y validar su ciclo de vida general.
 No hay cambios de producción ni cierre de los controles nocturnos en este pase.
+
+## Retención explícita integrada en el stream (aún sin política automática)
+
+`spatial-chunk-retention.js` concentra la liberación nativa individual y por
+lotes. `createSpatialChunkStream` utiliza el mismo propietario al expulsar mallas,
+descartar payloads obsoletos y abandonar preparación. `stream.retention.setDemand`
+retiene claves explícitas; al retirar demanda libera las que ya no tienen dueño
+gráfico ni trabajo gráfico solicitado. Dispose es idempotente. No genera chunks,
+no programa otro ejecutor y por defecto su demanda está vacía.
+
+29 pruebas pasan (`native-retention-tests.tap`): stream y pipeline existentes,
+retención/liberación, recuperación de propiedad gráfica, descarte de payload,
+validación transaccional y un caso con WASM real. Este último cambia un poblado
+con un chunk retenido sin mallas; compara sus alturas y props con una reconstrucción
+independiente del mismo estado y después comprueba su retirada.
+
+Corrección de la auditoría anterior: `refreshSettlementChunks` en C++ SÍ recorre
+los chunks nativos residentes, regenera los afectados y actualiza sus sectores.
+No hace falta duplicar esa regeneración desde JavaScript. Sigue pendiente la
+visibilidad de esos datos en consultas JS: `queryResidentSpatialProps` usa solo
+el mapa gráfico, y `isolatedPreviewCore` también parte de sus claves. La retención
+nativa aislada no convierte esas consultas en correctas por sí sola.
+
+Validación real de la API, sin interceptar las funciones de borrado:
+`sabana-low-night-retention-api.json/.png`. La sustitución QA ahora solo llama
+setDemand(['1,0']). Resultado: 10 chunks nuevos, actores listos 180/180,
+pausedFrames=0, 25 chunks gráficos sin 1,0, 26 nativos, horizonte terminado,
+elapsed 120→143,39. Captura inspeccionada; no cambios de material ni siluetas.
+Sin errores nuevos aparte de X4000. Esto verifica el mecanismo con pthreads y
+renderer reales, NO una política general ni una mejora de FPS.
+
+La selección automática de demanda por actores/destinos, las consultas JS y las
+previsualizaciones aún deben integrarse antes de habilitarlo durante partidas
+normales. No se ha aplicado un pin fijo de producción ni ocultado errores de
+navegación. La validación nocturna global sigue abierta.

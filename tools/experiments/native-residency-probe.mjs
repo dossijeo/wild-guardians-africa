@@ -8,6 +8,12 @@ export async function installNativeResidencyProbe(page,key){
       if(source.split(anchor).length!==2)throw Error('Native residency probe anchor changed');
       source=source.replace(anchor,value);
     };
+    if(source.includes('stream.retention=retention;')){
+      replace('stream.retention=retention;',`stream.retention=retention;
+        retention.setDemand([${JSON.stringify(key)}]);
+        globalThis.qaNativeResidency={key:${JSON.stringify(key)},implementation:'stream-retention-api'};`);
+      await route.fulfill({response,body:source});return;
+    }
     replace('stream.releaseChunk=(cx,cz)=>core.removeChunk(cx,cz);',
       `const probe=globalThis.qaNativeResidency={key:${JSON.stringify(key)},retainedEvictions:0};
       const release=(cx,cz)=>{if(cx+','+cz===probe.key){probe.retainedEvictions++;return false;}return true;};
