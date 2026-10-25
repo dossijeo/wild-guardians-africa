@@ -47,3 +47,8 @@ No repetir esta matriz por rutina; reabrir solo por cambios o evidencia nueva.
 Reproducir: run-current-resident-cost.py y summarize-current-resident-cost.py,
 ambos con --biome <nombre> --quality baja --night, Vite5190. Los informes no se
 sobrescriben. Main, reglas y arte aprobado permanecen intactos.
+
+Inspección posterior del recorte: el azul también aparece en baja diurna y media
+nocturna, sobre formas pequeñas de vegetación. Por tanto no es exclusivo de baja
+nocturna. No inferir una regresión de ese perfil. Recorte nativo [780,520,1080,720],
+sin reescalado ni píxeles fuera del lienzo; la identificación del asset sigue pendiente.
