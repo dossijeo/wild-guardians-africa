@@ -19,8 +19,8 @@ La comparación visual sigue mostrando una fila de iconos muy uniforme. No se de
 
 ## Pendientes para cerrar
 
-- Medición GPU pendiente. ABBA CPU/presentación completada: véase abajo.
-- Aparición espontánea y salida al menú verificadas; reinicio posterior y finalización natural todavía pendientes.
+- Mediciones residentes CPU/GPU/presentación completadas con sus límites: véase abajo.
+- Aparición espontánea y salida al menú verificadas; finalización natural verificada en la prueba de cámara; reinicio posterior todavía pendiente.
 - Movimiento/orbita y oclusión en el renderer real; revisión visual de los restantes tipos del catálogo.
 - Decidir si el fuego necesita otra representación visual; no aceptar cambios solo porque funcionen técnicamente.
 - Publicar el informe final con límites y no declarar el objetivo completo antes de esas comprobaciones.
@@ -53,3 +53,13 @@ Inspección adicional: mariposas, hierbas y desprendimientos visibles en las cap
 check-microevents-normal-lifecycle.mjs carga la fixture guardada desde Continuar, sin parámetros QA, sin force ni alteraciones del director. Espera la incursión y tutorial, confirma contratación normal al amanecer y planta tres cultivos mediante el HUD. El día 2 a tiempo 18.21 aparece **pollen** espontáneamente: tres anclajes válidos, 19 instancias, captura spawn.png inspeccionada sin controles QA. La instrumentación solo observa tick desde la URL exacta del módulo Vite, no cambia el mundo. La selección de partida guardada se prepara en localStorage y se declara explícitamente; no es una prueba del paquete compilado.
 
 Al salir mediante menú: disposed=true, active=null, pending=false, attached=false; cero errores. Informe microevents-normal/report.json. Los informes before-dawn y hiring-gate documentan problemas de automatización/exclusiones anteriores, no regresiones del juego. No se deduce de este caso la correcta aparición de todos los tipos ni la finalización natural: esas comprobaciones mantienen su alcance propio.
+
+## Cámara y expiración: PASS
+
+microevents-camera/report.json y camera.webm: arrastre real con botón derecho y rueda, 13 hojas ancladas, deriva mundial cero durante órbita y zoom con partículas congeladas. Capturas inicial/orbit inspeccionadas. Tras descongelar: movimiento y expiración natural, outcome ignored, cero instancias. La deriva posterior 0.149 pertenece al movimiento reanudado, no al desplazamiento de cámara. No demuestra ausencia de clipping en todas las pendientes ni sustituye la prueba de oclusión por estructuras.
+
+## Mariposas: contraste aceptado
+
+Alas de ocre claro a naranja cálido; mantiene geometría, tamaño, cuatro frames, animación y física. Captura real microevents-butterfly/butterflies.png inspeccionada frente a microevents-current/butterflies.png; gesto completado sin fallback, nueve instancias, cero errores. Se conserva por mayor legibilidad sobre Sabana sin nuevas operaciones GPU.
+
+Verificación RGBA de las 64 celdas: solo cambian 8,9,10,11. La autoría parcial vía canvas cambia también RGB bajo alfa cero; esos datos ajenos fueron restaurados desde el atlas original al integrar las cuatro celdas. Corrección metodológica: la comprobación anterior del fuego usaba getbbox RGBA, que no detectaba todas las diferencias RGB con alfa idéntico; no sustentaba identidad de todos los canales. Aquel candidato fue descartado y restaurado íntegramente antes de este cambio.
