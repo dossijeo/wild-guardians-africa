@@ -53,3 +53,8 @@ La primera prueba válida de Manglares descubrió una regresión real: modules.j
 Build y web-package pasan tras la corrección (999 archivos, 492045085 bytes, 841 enlaces relativos, 17 GLB runtime); diez tests dirigidos pasan. Estas pruebas no prueban todavía guardado/recarga, pérdida de contexto, Tauri ni rendimiento de streaming. El arranque de respaldo también pasa en package-mangrove-fallback.json: crossOriginIsolated=false, HUD visible, cero errores/404 y ningún worker spatial-threaded. Esto valida arranque, no rendimiento ni ciclo de vida completo del respaldo.
 
 La repetición aislada A/B/A/B de cambios de calidad ya está en isolated-quality-summary.json y ACTIVE-QUALITY-INTEGRATION.md. No hubo builds/tests concurrentes: los controles A registran máximos de unos 6,7 s al primer cambio a baja; B, 63–82 ms en ese cambio. El recorrido completo baja aproximadamente un 43 %. Son intervalos de presentación del protocolo completo, no tiempos GPU atribuibles al shader ni una afirmación general de FPS.
+
+
+## Guardado y recarga empaquetados
+
+package-mangrove-lifecycle-r2.json: mediante UI real se guarda Manglares, se sale al menú y se continúa el slot guardado. HUD restaurado, cero errores y recursos ausentes, nuevo runtime pthread creado para la recarga. No se inyecta estado ni se intercepta código. El primer intento (package-mangrove-lifecycle.json) falló por un selector QA obsoleto (#pause); el control real es #menuButton. Esto no certifica por sí solo ausencia de fugas ni equivalencia completa del snapshot. Siguen pendientes los escenarios prolongados y el resto de la matriz.

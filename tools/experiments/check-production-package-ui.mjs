@@ -44,6 +44,22 @@ try{
   if(await page.locator('#stage').getAttribute('aria-busy')!=='false')throw Error('World loading failed: '+(await page.locator('body').innerText()).slice(-1000));
   result.gameText=(await page.locator('body').innerText()).slice(-2500);
   result.workers=workers;result.biome=biome;
+  if(process.env.WG_PACKAGE_UI_LIFECYCLE==='1'){
+   await page.locator('#menuButton').click();
+   await page.locator('#save').click();
+   await page.locator('#exit').click();
+   await page.waitForSelector('#native-menu',{timeout:60000});
+   await menu.getByRole('button',{name:'Continuar',exact:true}).click({timeout:60000});
+   const saved=menu.locator('[data-production-save]').first();
+   await saved.waitFor({state:'visible',timeout:60000});
+   result.savedSlot=await saved.getAttribute('data-production-save');
+   await saved.click();
+   await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
+   await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
+   result.reloadedGameText=(await page.locator('body').innerText()).slice(-2500);
+   result.lifecycle='save, exit to menu, continue saved slot, HUD restored';
+  }
+
  }
  await page.screenshot({path:report.replace(/\.json$/,'.png')});
  console.log(JSON.stringify(result));
