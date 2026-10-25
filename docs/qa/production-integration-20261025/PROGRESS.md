@@ -83,3 +83,12 @@ El ejecutable local fue generado, pero el empaquetado NSIS posterior falló con 
 
 
 Smoke local WebView2 completado: native-populated-local.json, ok=true, cero errores, readiness 20820,945 ms, hiddenMs=300844,56 y restauración correcta. PNG extraído aparte para no incrustar base64 en JSON. No resuelve por sí solo la diferencia con CI. Se conecta el colector acotado native-loading-trace existente únicamente cuando __desktopSmokeStarted está activo, y smoke guarda fases pendientes + snapshot del scheduler al terminar. Cinco tests del colector pasan y sintaxis válida. No se cambia timeout ni política de ejecución. Instalador r3 continúa en session 24639; incluye el código anterior a esta instrumentación.
+
+
+Pruebas actuales: 63/63 pasan en scheduler-resource-tests.log (scheduler, cola síncrona, bindings, terreno incremental, profundidad de cultivos, preparación viva de programas). Suite npm test completa iniciada session 66802, salida full-tests-current.log; aún no concluida. Instalador r3 sigue en makensis/session 24639, sin juego abierto. Captura native-populated-local.png inspeccionada: escena nocturna Gran Cañón, terreno/agua/edificios/actores visibles; no se utiliza como prueba de rendimiento o comparación artística integral.
+
+
+RENDERER-AUDIT.md registra la revisión de agrupación/culling/rangos parciales/sombras y límites de scheduler/epochs. 77/77 pruebas dirigidas adicionales pasan (asset-resource-audit-tests.log). La matriz pendiente queda enumerada; no se cierran checks visuales con tests de contratos.
+
+
+Instalador local r3 terminado exit 0: NSIS 403,11 MiB. El log desktop-build-local-r3.log confirma bundle completo. Esta build se inició antes de la instrumentación de 49bdc0fde; no presentarla como build de ese cambio diagnóstico. Suite completa session 66802 aún en ejecución, ya superó 950 subtests.
