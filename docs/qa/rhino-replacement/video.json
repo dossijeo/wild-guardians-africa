@@ -5,10 +5,10 @@
     720
   ],
   "fps": 30,
-  "frames": 1382,
-  "duration": 46.06666666666667,
-  "model": "/assets/e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc.glb",
-  "modelSha256": "e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc",
+  "frames": 2037,
+  "duration": 67.9,
+  "model": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
+  "modelSha256": "39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a",
   "scope": "Deterministic native WorldScene frames at 30 fps; production animal controller, full attacks followed by 0.75 s held final pose. Walking/running repeat at original speed; restpose is included only when present in the source library. Silent animation review, not a performance recording.",
   "segments": [
     {
@@ -178,6 +178,78 @@
       "frames": 159,
       "start": 40.766666666666666,
       "end": 46.06666666666667
+    },
+    {
+      "clip": "Charged_Upward_Slash",
+      "label": "Tajo ascendente cargado",
+      "light": "day",
+      "view": "back",
+      "clipDuration": 3.20833333209157,
+      "loop": false,
+      "seconds": 3.95833333209157,
+      "frames": 119,
+      "start": 46.06666666666667,
+      "end": 50.03333333333333
+    },
+    {
+      "clip": "Right_Hand_Sword_Slash",
+      "label": "Tajo derecho",
+      "light": "day",
+      "view": "back",
+      "clipDuration": 1.541666705161333,
+      "loop": false,
+      "seconds": 2.291666705161333,
+      "frames": 69,
+      "start": 50.03333333333333,
+      "end": 52.333333333333336
+    },
+    {
+      "clip": "Weapon_Combo",
+      "label": "Combo 1",
+      "light": "day",
+      "view": "back",
+      "clipDuration": 3.70833333209157,
+      "loop": false,
+      "seconds": 4.45833333209157,
+      "frames": 134,
+      "start": 52.333333333333336,
+      "end": 56.8
+    },
+    {
+      "clip": "Weapon_Combo_2",
+      "label": "Combo 2",
+      "light": "day",
+      "view": "back",
+      "clipDuration": 4.541666824370623,
+      "loop": false,
+      "seconds": 5.291666824370623,
+      "frames": 159,
+      "start": 56.8,
+      "end": 62.1
+    },
+    {
+      "clip": "Walking",
+      "label": "Marcha",
+      "light": "night",
+      "view": "back",
+      "clipDuration": 1.041666705161333,
+      "loop": true,
+      "seconds": 3.1250001154839993,
+      "frames": 94,
+      "start": 62.1,
+      "end": 65.23333333333333
+    },
+    {
+      "clip": "Running",
+      "label": "Carrera",
+      "light": "night",
+      "view": "back",
+      "clipDuration": 0.6666666455566883,
+      "loop": true,
+      "seconds": 2.6666665822267532,
+      "frames": 80,
+      "start": 65.23333333333333,
+      "end": 67.9
     }
   ],
   "errors": [],

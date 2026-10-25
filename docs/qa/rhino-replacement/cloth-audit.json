@@ -1,0 +1,193 @@
+{
+  "model": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
+  "referenceRef": "da18a4159",
+  "retainedBodyTriangles": 13906,
+  "bodyPositionAndUv": "All retained body triangles match da18a4159 at 1e-6 precision",
+  "unchangedPrimaryAnimationChannels": 1098,
+  "clothBones": 15,
+  "clothVertices": 828,
+  "limbWeights": 0,
+  "scope": "Production controller; 65 phases per clip; thigh/knee perturbation; stretch and floor checks. Offline baked simulation.",
+  "clips": [
+    {
+      "name": "Running",
+      "minHeight": 0.32573829960929124,
+      "motionInHipSpace": 0.3048113348979142,
+      "maxResponseToLegOnlyRotation": 0,
+      "maxEdgeExtension": 0.17924653884390448,
+      "worstEdge": {
+        "phase": 0.6615384615384615,
+        "rest": 0.18028649851277553,
+        "posed": 0.35953303735668,
+        "indices": [
+          390,
+          496
+        ],
+        "positions": [
+          [
+            0.17946697771549225,
+            0.765822172164917,
+            -0.4673613905906677
+          ],
+          [
+            0.0005125184543430805,
+            0.7834826707839966,
+            -0.45445287227630615
+          ]
+        ]
+      },
+      "loopPositionError": 2.682209014892578e-7,
+      "loopAngleError": 1.2990531157078367e-7
+    },
+    {
+      "name": "Walking",
+      "minHeight": 0.3531976531578256,
+      "motionInHipSpace": 0.2504005368582172,
+      "maxResponseToLegOnlyRotation": 0,
+      "maxEdgeExtension": 0.06505233808187386,
+      "worstEdge": {
+        "phase": 0.9846153846153847,
+        "rest": 0.1789143679745012,
+        "posed": 0.24396670605637505,
+        "indices": [
+          504,
+          820
+        ],
+        "positions": [
+          [
+            -0.1482871025800705,
+            1.0002076625823975,
+            -0.44679486751556396
+          ],
+          [
+            -0.3270498812198639,
+            1.0013976097106934,
+            -0.45406150817871094
+          ]
+        ]
+      },
+      "loopPositionError": 4.76837158203125e-7,
+      "loopAngleError": 1.6858739404357617e-7
+    },
+    {
+      "name": "Charged_Upward_Slash",
+      "minHeight": 0.22435615932617747,
+      "motionInHipSpace": 0.42410593039529904,
+      "maxResponseToLegOnlyRotation": 0,
+      "maxEdgeExtension": 0.13371414780897514,
+      "worstEdge": {
+        "phase": 0.13846153846153847,
+        "rest": 0.20976655158968452,
+        "posed": 0.34348069939865966,
+        "indices": [
+          466,
+          633
+        ],
+        "positions": [
+          [
+            -0.11726773530244827,
+            1.3253331184387207,
+            -0.39949530363082886
+          ],
+          [
+            -0.32293397188186646,
+            1.3016483783721924,
+            -0.43329527974128723
+          ]
+        ]
+      },
+      "loopPositionError": 0,
+      "loopAngleError": 0
+    },
+    {
+      "name": "Right_Hand_Sword_Slash",
+      "minHeight": 0.08510251666909165,
+      "motionInHipSpace": 0.5039403729407232,
+      "maxResponseToLegOnlyRotation": 0,
+      "maxEdgeExtension": 0.1341011311749427,
+      "worstEdge": {
+        "phase": 0.5846153846153846,
+        "rest": 0.5061473905840734,
+        "posed": 0.6402485217590161,
+        "indices": [
+          621,
+          109
+        ],
+        "positions": [
+          [
+            -0.22849537432193756,
+            1.1345396041870117,
+            -0.4117356836795807
+          ],
+          [
+            -0.26563435792922974,
+            0.6302363872528076,
+            -0.43373891711235046
+          ]
+        ]
+      },
+      "loopPositionError": 0,
+      "loopAngleError": 0
+    },
+    {
+      "name": "Weapon_Combo",
+      "minHeight": 0.27124674294555556,
+      "motionInHipSpace": 0.5599255986810996,
+      "maxResponseToLegOnlyRotation": 0,
+      "maxEdgeExtension": 0.15403588764466336,
+      "worstEdge": {
+        "phase": 0,
+        "rest": 0.358045265629665,
+        "posed": 0.5120811532743283,
+        "indices": [
+          633,
+          471
+        ],
+        "positions": [
+          [
+            -0.32293397188186646,
+            1.3016483783721924,
+            -0.43329527974128723
+          ],
+          [
+            -0.10681682825088501,
+            1.5754314661026,
+            -0.3524706959724426
+          ]
+        ]
+      },
+      "loopPositionError": 0,
+      "loopAngleError": 0
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "minHeight": 0.2621668495813079,
+      "motionInHipSpace": 0.6055707149255717,
+      "maxResponseToLegOnlyRotation": 0,
+      "maxEdgeExtension": 0.14683776323136144,
+      "worstEdge": {
+        "phase": 0,
+        "rest": 0.358045265629665,
+        "posed": 0.5048830288610264,
+        "indices": [
+          633,
+          471
+        ],
+        "positions": [
+          [
+            -0.32293397188186646,
+            1.3016483783721924,
+            -0.43329527974128723
+          ],
+          [
+            -0.10681682825088501,
+            1.5754314661026,
+            -0.3524706959724426
+          ]
+        ]
+      },
+      "loopPositionError": 0,
+      "loopAngleError": 0
+    }
+  ]
+}

@@ -5,13 +5,14 @@ Tail: damped torsional joints driven by hip inertia and a gentle active sway.
 import numpy as np,math
 
 class ClothPanel:
- def __init__(self,xmin,xmax):
+ def __init__(self,xmin,xmax,rest=None,back_plane=.052):
   rows=[]
   for z in np.linspace(.455,.135,9):
    taper=float(np.interp(z,[.135,.215,.335,.455],[.22,.48,.86,1.]))
    left,right=(xmax-(xmax-xmin)*taper,xmax) if xmax<0 else (xmin,xmin+(xmax-xmin)*taper)
    rows.extend((x,.073,z) for x in np.linspace(left,right,5))
-  self.rest=np.array(rows,dtype=float)
+  self.rest=np.array(rows if rest is None else rest,dtype=float)
+  self.back_plane=back_plane
   self.pin=np.arange(5);self.inv=np.ones(45);self.inv[self.pin]=0
   links=[]
   for row in range(9):
@@ -61,7 +62,7 @@ class ClothPanel:
     self.collide(capsules,floor)
     # Broad posterior body collider keeps the fabric behind the pelvis,
     # preventing a sheet from flipping through the body between cycles.
-    local=(self.pos-hip[:3,3])@hip[:3,:3];local[5:,1]=np.maximum(local[5:,1],.052)
+    local=(self.pos-hip[:3,3])@hip[:3,:3];local[5:,1]=np.maximum(local[5:,1],self.back_plane)
     # Short leather/fur panels retain a hanging shape. A compliant shape
     # tether prevents capsule contacts accumulating into inverted folds.
     drift=local-self.rest;length=np.linalg.norm(drift,axis=1);local=self.rest+drift*np.minimum(1,.09/np.maximum(length,1e-9))[:,None]

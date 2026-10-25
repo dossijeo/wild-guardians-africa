@@ -3,16 +3,155 @@
   "sourceBytes": 107821688,
   "blender": "5.2.2 LTS",
   "animationSource": "public\\assets\\b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
-  "scope": "Foot geometry, sole weights, animation contact and anatomical head posture correction. Other geometry, UVs, materials and bones retained.",
+  "scope": "Foot and head repairs retained; rear garment detached from thigh skin, waist rig and offline cloth simulation added. Original underlying body surface retained. Other source surfaces and materials retained.",
   "before": {
     "vertices": 17125,
     "faces": 14182,
     "bones": 61
   },
+  "cloth": {
+    "originalConnectedParts": 191,
+    "rearRibbonParts": [
+      13,
+      59,
+      60,
+      78,
+      85,
+      117,
+      125,
+      134,
+      144,
+      153,
+      154,
+      165,
+      177,
+      179,
+      182,
+      186,
+      187
+    ],
+    "coreFacesSeparated": 60,
+    "faces": 276,
+    "vertices": 370,
+    "bones": [
+      "ClothRear_C0_01",
+      "ClothRear_C0_02",
+      "ClothRear_C0_03",
+      "ClothRear_C1_01",
+      "ClothRear_C1_02",
+      "ClothRear_C1_03",
+      "ClothRear_C2_01",
+      "ClothRear_C2_02",
+      "ClothRear_C2_03",
+      "ClothRear_C3_01",
+      "ClothRear_C3_02",
+      "ClothRear_C3_03",
+      "ClothRear_C4_01",
+      "ClothRear_C4_02",
+      "ClothRear_C4_03"
+    ],
+    "waistAnchor": "Hips; upper 3 cm blend",
+    "legInfluences": 0,
+    "continuousPanel": true,
+    "solver": "Pinned 5x9 grid, five rigid bone columns, three segments each; offline simulation and clip bake",
+    "underlyingBody": "Original source surface retained; no extra skin mesh required"
+  },
+  "secondaryMotion": [
+    {
+      "fps": 96,
+      "nodes": 45,
+      "substeps": 2,
+      "iterations": 9,
+      "warmupCycles": 8,
+      "rawCycleVariation": 9.387798904853375e-09,
+      "loopBake": "Last four cycles phase-averaged, circular five-frame filter, local endpoint closure",
+      "shapeTether": 0.09,
+      "maxUpwardFold": 0.04,
+      "posteriorLimit": "Curved, rest surface minus 2 cm",
+      "contacts": "Radial capsules following hips, thighs and calves",
+      "runtimeSimulation": false,
+      "clip": "Running"
+    },
+    {
+      "fps": 96,
+      "nodes": 45,
+      "substeps": 2,
+      "iterations": 9,
+      "warmupCycles": 8,
+      "rawCycleVariation": 1.3512977865416735e-10,
+      "loopBake": "Last four cycles phase-averaged, circular five-frame filter, local endpoint closure",
+      "shapeTether": 0.09,
+      "maxUpwardFold": 0.04,
+      "posteriorLimit": "Curved, rest surface minus 2 cm",
+      "contacts": "Radial capsules following hips, thighs and calves",
+      "runtimeSimulation": false,
+      "clip": "Walking"
+    },
+    {
+      "fps": 96,
+      "nodes": 45,
+      "substeps": 2,
+      "iterations": 9,
+      "warmupCycles": 0,
+      "rawCycleVariation": 0,
+      "loopBake": "Direct simulated attack with one-second preroll",
+      "shapeTether": 0.09,
+      "maxUpwardFold": 0.04,
+      "posteriorLimit": "Curved, rest surface minus 2 cm",
+      "contacts": "Radial capsules following hips, thighs and calves",
+      "runtimeSimulation": false,
+      "clip": "Charged_Upward_Slash"
+    },
+    {
+      "fps": 96,
+      "nodes": 45,
+      "substeps": 2,
+      "iterations": 9,
+      "warmupCycles": 0,
+      "rawCycleVariation": 0,
+      "loopBake": "Direct simulated attack with one-second preroll",
+      "shapeTether": 0.09,
+      "maxUpwardFold": 0.04,
+      "posteriorLimit": "Curved, rest surface minus 2 cm",
+      "contacts": "Radial capsules following hips, thighs and calves",
+      "runtimeSimulation": false,
+      "clip": "Right_Hand_Sword_Slash"
+    },
+    {
+      "fps": 96,
+      "nodes": 45,
+      "substeps": 2,
+      "iterations": 9,
+      "warmupCycles": 0,
+      "rawCycleVariation": 0,
+      "loopBake": "Direct simulated attack with one-second preroll",
+      "shapeTether": 0.09,
+      "maxUpwardFold": 0.04,
+      "posteriorLimit": "Curved, rest surface minus 2 cm",
+      "contacts": "Radial capsules following hips, thighs and calves",
+      "runtimeSimulation": false,
+      "clip": "Weapon_Combo"
+    },
+    {
+      "fps": 96,
+      "nodes": 45,
+      "substeps": 2,
+      "iterations": 9,
+      "warmupCycles": 0,
+      "rawCycleVariation": 0,
+      "loopBake": "Direct simulated attack with one-second preroll",
+      "shapeTether": 0.09,
+      "maxUpwardFold": 0.04,
+      "posteriorLimit": "Curved, rest surface minus 2 cm",
+      "contacts": "Radial capsules following hips, thighs and calves",
+      "runtimeSimulation": false,
+      "clip": "Weapon_Combo_2"
+    }
+  ],
   "feet": [
     {
       "side": "Left",
-      "vertices": 2145,
+      "vertices": 2143,
       "soleVertices": 107,
       "soleNormalBefore": [
         -0.04735957458615303,
@@ -24,7 +163,7 @@
     },
     {
       "side": "Right",
-      "vertices": 2164,
+      "vertices": 2161,
       "soleVertices": 105,
       "soleNormalBefore": [
         0.07831377536058426,
@@ -37,10 +176,11 @@
   ],
   "preservation": {
     "verticesOutsideFeetUnchanged": true,
-    "topologyUnchanged": true,
-    "bonesRetained": 61,
+    "bodyTopologyAfterClothSeparationUnchanged": true,
     "customNormals": "Rotated with repaired feet; original elsewhere",
-    "materialsAndTextures": "Original source material parameters and texture pixels retained before runtime texture downscale"
+    "materialsAndTextures": "Original source material parameters and texture pixels retained before runtime texture downscale",
+    "originalBonesRetained": 61,
+    "totalBones": 76
   },
   "scale": 3.123749396860856,
   "hipTranslationRatio": 0.3125702500617451,
@@ -101,8 +241,9 @@
   ],
   "canonicalTextures": "Albedo 8192 to 4096 to respect the repository resource limit; runtime pipeline uses 2048 WebP. Editable Blender retains original images.",
   "after": {
-    "vertices": 17125,
+    "vertices": 17158,
     "faces": 14182,
-    "bytes": 47833368
+    "bones": 76,
+    "bytes": 48413724
   }
 }

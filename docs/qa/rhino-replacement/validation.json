@@ -1,5 +1,5 @@
 {
-  "model": "/assets/e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc.glb",
+  "model": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
   "originalSourceIntact": true,
   "tests": {
     "passed": 108,
@@ -10,11 +10,30 @@
   "assetIntegrity": "pass",
   "webAssetVerification": "pass: no glTF errors; geometry and animation byte-exact; albedo PSNR 37.55 dB relative to canonical 4K source",
   "animationSamples": 774,
+  "clothSamples": 390,
   "maxSoleHeightSpread": 0.0010432749213521442,
   "minSoleHeight": 0.02199999999999967,
   "maxSupportClearance": 0.022000000000000332,
+  "headPosture": {
+    "headLiftDegrees": 22,
+    "neckLiftDegrees": 5,
+    "primaryAnimationChannelsByteExact": 1098,
+    "referenceRef": "da18a4159"
+  },
+  "retainedBodyTriangles": 13906,
+  "cloth": {
+    "bones": 15,
+    "limbWeights": 0,
+    "maxLegOnlyRotationResponse": 0,
+    "maxEdgeExtension": 0.17924653884390448,
+    "minimumHeight": 0.08510251666909165,
+    "runtimeSimulation": false
+  },
+  "sharedLionSolverDefaultComparison": "pass: both panels byte-identical across 404 integration steps",
   "captures": 50,
   "feetCloseups": 4,
+  "rearCloseups": 18,
+  "headProfileCapture": "head-profile.jpg",
   "nightBiomes": [
     "desierto",
     "gran-canon",
@@ -26,50 +45,10 @@
   "nativeRaid": "pass: movement, attack and hit 600 to 540; no new downloads or animal GPU programs",
   "video": {
     "file": "rhino-animations.mp4",
-    "duration": 46.06666666666667,
-    "frames": 1382,
+    "duration": 67.9,
+    "frames": 2037,
     "fps": 30,
     "fullFFmpegDecode": "pass"
   },
-  "limits": "Desktop Chrome visual checks; deterministic video is not a mobile FPS measurement.",
-  "headPosture": {
-    "beforeRef": "392fabde8",
-    "beforeModel": "/assets/7800dcc879caf848db0b22c48c2e2f89cba937642ec3ea0fab60c88a8ab6d093.glb",
-    "model": "/assets/e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc.glb",
-    "geometry": "Byte-identical attributes, indices and inverse bind matrices",
-    "unchangedNonHeadAnimationChannels": 1044,
-    "attributeBuffersChecked": 5,
-    "indexBuffersChecked": 1,
-    "materialsAndImages": "Unchanged",
-    "footMetrics": "Identical across all six clips / 774 poses",
-    "headLiftDegrees": 22,
-    "neckLiftDegrees": 5,
-    "gazeDefinition": "Animated bone delta relative to authored bind orientation; diagnostic forward axis, not eye tracking",
-    "locomotion": [
-      {
-        "name": "Running",
-        "beforePitchDegrees": [
-          -8.049955141190555,
-          -2.3778798835432897
-        ],
-        "afterPitchDegrees": [
-          13.498033609587752,
-          19.387868451845556
-        ]
-      },
-      {
-        "name": "Walking",
-        "beforePitchDegrees": [
-          -15.391137362951829,
-          -9.692041999770833
-        ],
-        "afterPitchDegrees": [
-          6.531385767055929,
-          12.290567896722436
-        ]
-      }
-    ],
-    "profile": "head-profile.jpg"
-  },
-  "headProfileCapture": "head-profile.jpg"
+  "limits": "Offline baked cloth; no realtime environment response. Desktop Chrome checks; deterministic video does not measure mobile FPS."
 }

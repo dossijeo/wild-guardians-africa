@@ -1,22 +1,27 @@
 """Blender headless foot repair and native-animation retarget for rhino.
-Preserves source topology, UVs, materials and all bones; edits feet below ankles.
+Preserves source body surfaces, UVs and materials; repairs feet/head and frees the rear garment.
 """
 import argparse,sys,json,math,hashlib
 from pathlib import Path
-import bpy
+import bpy,numpy as np
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from rhino_cloth_motion import prepare_cloth,simulate,bake
 from mathutils import Vector,Matrix,Quaternion
 args=argparse.ArgumentParser()
 args.add_argument('--head-lift',type=float,default=22,help='Anatomical head pitch correction in degrees; animated turns and nods retained')
 args.add_argument('--input',required=True);args.add_argument('--output',required=True);args.add_argument('--report',required=True);args.add_argument('--blend-dir')
 a=args.parse_args(sys.argv[sys.argv.index('--')+1:]);root=Path(__file__).resolve().parents[1]
 old_path=root/'public/assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb'
-report={'sourceSha256':hashlib.sha256(Path(a.input).read_bytes()).hexdigest(),'sourceBytes':Path(a.input).stat().st_size,'blender':bpy.app.version_string,'animationSource':str(old_path.relative_to(root)),'scope':'Foot geometry, sole weights, animation contact and anatomical head posture correction. Other geometry, UVs, materials and bones retained.'}
+report={'sourceSha256':hashlib.sha256(Path(a.input).read_bytes()).hexdigest(),'sourceBytes':Path(a.input).stat().st_size,'blender':bpy.app.version_string,'animationSource':str(old_path.relative_to(root)),'scope':'Foot and head repairs retained; rear garment detached from thigh skin, waist rig and offline cloth simulation added. Original underlying body surface retained. Other source surfaces and materials retained.'}
 bpy.ops.wm.read_factory_settings(use_empty=True);bpy.ops.import_scene.gltf(filepath=a.input)
 rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE');mesh=next(o for o in bpy.context.scene.objects if o.type=='MESH' and o.parent==rig)
 rig.animation_data_clear()
 for p in rig.pose.bones:p.matrix_basis=Matrix.Identity(4)
 rig.data.pose_position='REST';bpy.context.view_layer.update()
 report['before']={'vertices':len(mesh.data.vertices),'faces':len(mesh.data.polygons),'bones':len(rig.data.bones)}
+cloth,cloth_names,cloth_report=prepare_cloth(mesh,rig)
+report['cloth']=cloth_report;report['secondaryMotion']=[]
+body_before={'vertices':len(mesh.data.vertices),'faces':len(mesh.data.polygons)}
 original_positions=[v.co.copy() for v in mesh.data.vertices];normals=[n.vector.copy() for n in mesh.data.corner_normals];rotations={};sole_ids=[];feet=[]
 for side,sign in [('Left',1),('Right',-1)]:
  group=mesh.vertex_groups[side+'Foot'];ankle=rig.data.bones[side+'Foot'].head_local.copy()
@@ -47,8 +52,8 @@ for side,sign in [('Left',1),('Right',-1)]:
 mesh.data.update()
 mesh.data.normals_split_custom_set([rotations[loop.vertex_index]@normals[i] if loop.vertex_index in rotations else normals[i] for i,loop in enumerate(mesh.data.loops)])
 report['feet']=feet
-report['preservation']={'verticesOutsideFeetUnchanged':all(v.co==original_positions[v.index] for v in mesh.data.vertices if v.index not in rotations),'topologyUnchanged':len(mesh.data.vertices)==report['before']['vertices'] and len(mesh.data.polygons)==report['before']['faces'],'bonesRetained':len(rig.data.bones),'customNormals':'Rotated with repaired feet; original elsewhere','materialsAndTextures':'Original source material parameters and texture pixels retained before runtime texture downscale'}
-assert report['preservation']['verticesOutsideFeetUnchanged'] and report['preservation']['topologyUnchanged']
+report['preservation']={'verticesOutsideFeetUnchanged':all(v.co==original_positions[v.index] for v in mesh.data.vertices if v.index not in rotations),'bodyTopologyAfterClothSeparationUnchanged':len(mesh.data.vertices)==body_before['vertices'] and len(mesh.data.polygons)==body_before['faces'],'originalBonesRetained':report['before']['bones'],'totalBones':len(rig.data.bones),'customNormals':'Rotated with repaired feet; original elsewhere','materialsAndTextures':'Original source material parameters and texture pixels retained before runtime texture downscale'}
+assert report['preservation']['verticesOutsideFeetUnchanged'] and report['preservation']['bodyTopologyAfterClothSeparationUnchanged']
 rig.data.pose_position='POSE'
 new_objects=set(bpy.context.scene.objects)
 bpy.ops.import_scene.gltf(filepath=str(old_path))
@@ -83,6 +88,7 @@ for name in native:
  action=lookup(name);old.animation_data.action=action
  first,last=action.frame_range;first=float(first);last=float(last)
  target=bpy.data.actions.new('retarget_'+name);target.use_fake_user=True;rig.animation_data.action=target
+ samples=[]
  frames=sorted(set([first,last]+[f/4 for f in range(math.ceil(first*4),math.floor(last*4)+1)]))
  for frame in frames:
   scene.frame_set(int(frame),subframe=frame-int(frame));bpy.context.view_layer.update()
@@ -126,10 +132,25 @@ for name in native:
   bottom=min(evaluated.data.vertices[i].co.z for i in sole_ids)
   hips=rig.pose.bones['Hips'];matrix=hips.matrix.copy();matrix.translation.z+=lowest-bottom;hips.matrix=matrix
   bpy.context.view_layer.update()
+  hd=rig.pose.bones['Hips'].matrix@new_rest['Hips'].inverted();capsules=[]
+  for side in ['Left','Right']:
+   for start,end,radius in [('UpLeg','Leg',.105),('Leg','Foot',.08)]:capsules.append((np.array(rig.pose.bones[side+start].matrix.translation),np.array(rig.pose.bones[side+end].matrix.translation),radius))
+  samples.append({'hip':np.array(hd),'capsules':capsules})
   for p in rig.pose.bones:
    p.keyframe_insert('rotation_quaternion',frame=frame*4,group=p.name)
    p.keyframe_insert('location',frame=frame*4,group=p.name)
   if frame==frames[0]:print(name,'first baked',flush=True)
+ motion,physics=simulate(samples,name in ['Walking','Running'],lowest)
+ for index,frame in enumerate(frames):
+  scene.frame_set(round(frame*4));bpy.context.view_layer.update();bake(rig,cloth_names,new_rest,motion[index],frame*4)
+ if name in ['Walking','Running']:
+  for layer in target.layers:
+   for strip in layer.strips:
+    for bag in strip.channelbags:
+     for curve in bag.fcurves:
+      if 'ClothRear_' in curve.data_path:
+       keys=curve.keyframe_points;keys[-1].co.y=keys[0].co.y;keys[-1].handle_left.y=keys[0].co.y;keys[-1].handle_right.y=keys[0].co.y
+ physics['clip']=name;report['secondaryMotion'].append(physics);print(name,'cloth baked',flush=True)
  new_actions.append((name,target))
  report['clips'].append({'name':name,'firstFrame':first,'lastFrame':last,'samples':len(frames),'duration':(last-first)/24})
 old.animation_data.action=None
@@ -145,7 +166,8 @@ for name,action in new_actions:
 # Mesh is parented to the armature: transform datablocks once, avoiding a
 # doubled parent/child scale. Scale local translation animation lanes as well.
 transform=Matrix.Translation((0,0,-lowest*scale))@Matrix.Scale(scale,4)
-mesh.data.transform(transform);rig.data.transform(transform)
+for obj in [mesh,cloth]:obj.data.transform(transform)
+rig.data.transform(transform)
 for name,action in new_actions:
  for layer in action.layers:
   for strip in layer.strips:
@@ -156,11 +178,11 @@ for name,action in new_actions:
        key.co.y*=scale;key.handle_left.y*=scale;key.handle_right.y*=scale
 for p in rig.pose.bones:p.matrix_basis=Matrix.Identity(4)
 bpy.ops.object.select_all(action='DESELECT')
-for obj in [mesh,rig]:obj.select_set(True)
+for obj in [mesh,cloth,rig]:obj.select_set(True)
 bpy.context.view_layer.objects.active=rig
 # Export each muted NLA track as its own named clip.
 for name,action in new_actions:action.name=name
-for obj in [mesh,rig]:obj.select_set(True)
+for obj in [mesh,cloth,rig]:obj.select_set(True)
 Path(a.output).parent.mkdir(parents=True,exist_ok=True)
 # Preserve full-resolution textures in the editable Blender source.
 if a.blend_dir:
@@ -169,6 +191,6 @@ for image in bpy.data.images:
  if image.size[0]>4096:image.scale(4096,4096)
 report['canonicalTextures']='Albedo 8192 to 4096 to respect the repository resource limit; runtime pipeline uses 2048 WebP. Editable Blender retains original images.'
 bpy.ops.export_scene.gltf(filepath=a.output,export_format='GLB',use_selection=True,export_animations=True,export_animation_mode='NLA_TRACKS',export_nla_strips=True,export_force_sampling=True,export_frame_range=False,export_yup=True,export_skins=True,export_all_influences=False,export_materials='EXPORT',export_image_format='AUTO',export_extras=True)
-report['after']={'vertices':len(mesh.data.vertices),'faces':len(mesh.data.polygons),'bytes':Path(a.output).stat().st_size}
+report['after']={'vertices':sum(len(o.data.vertices) for o in [mesh,cloth]),'faces':sum(len(o.data.polygons) for o in [mesh,cloth]),'bones':len(rig.data.bones),'bytes':Path(a.output).stat().st_size}
 Path(a.report).parent.mkdir(parents=True,exist_ok=True);Path(a.report).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(report),flush=True)

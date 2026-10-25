@@ -4,35 +4,38 @@ Rama `codex/beast-models`. Original externo intacto: `C:\Users\PC\Desktop\Wild G
 
 ## Resultado
 
-- Corrección de las plantas inclinadas 19.72° y 19.89°, rotando cada pie alrededor de su tobillo con transición hacia la parte superior. La banda inferior de talón y dedos se aplana y queda ligada únicamente a su hueso `Foot`; así se eliminan las influencias residuales de pantorrilla que doblaban el apoyo durante la marcha.
-- Orientación horizontal y contacto horneados en las seis animaciones a 96 fps, conservando sus duraciones. En 774 poses del controlador de producción, la diferencia máxima de altura dentro de una planta es **0.00104327 unidades** y el pie de apoyo permanece a 0,022 del suelo local, dentro de la precisión numérica del controlador.
-- Animaciones transferidas desde el rinoceronte anterior, con compensación A/T en brazos y manos. Se conservan las longitudes del nuevo esqueleto y la jerarquía de sus 61 huesos. Se corrige la mirada agachada de la transferencia: cabeza elevada 22° y cuello 5° respecto al eje lateral del torso animado, conservando giros y asentimientos en los seis clips. No se fija la cabeza en coordenadas del mundo. La malla y la ligadura original permanecen idénticas; 1.044 canales de animación ajenos a cabeza/cuello son idénticos byte a byte, igual que las medidas de apoyo en las 774 poses.
-- Topología, UV y materiales conservados: 17.125 vértices importados, 14.182 caras. Las posiciones fuera de los pies permanecen idénticas antes de la normalización uniforme a la altura de 3 unidades utilizada por el rinoceronte anterior. Las normales originales se rotan con la reparación de los pies y se conservan en el resto del cuerpo.
-- Se recalibran la huella y los contactos de pasos. Se mantiene la [iluminación de bestias aprobada](../beast-lighting/README.md), sin cambios de luces globales.
+- Plantas corregidas 19.72° y 19.89°, con transición hacia los tobillos y pesos rígidos de `Foot` en la banda inferior. La orientación horizontal y el apoyo permanecen horneados a 96 fps en las seis animaciones. En 774 poses, desviación máxima dentro de una planta **0.00104327 unidades**, con el apoyo a 0,022 del suelo local.
+- Cabeza elevada 22° y cuello 5° respecto al eje lateral del torso animado. Se conservan los giros, asentimientos y duraciones de los seis clips. Esta corrección y el resto de los **1.098 canales de animación originales** son idénticos byte a byte respecto a `da18a4159`.
+- Se separan **17 piezas traseras** y **60 caras del panel central** del cuerpo: 276 caras de tela con sus UV originales. Se eliminan todas sus influencias de muslos, pantorrillas y pies. Se conservan las superficies originales bajo la tela; no se añade otra malla de piel.
+- Faldón sujeto a `Hips` en su borde superior. Quince huesos propios siguen una rejilla continua de 5×9 masas, con gravedad, inercia, restricciones de estiramiento/flexión, límites de forma y contactos radiales con cápsulas animadas de las piernas. La superficie de reposo se curva alrededor de la cadera para permitir el movimiento lateral de las tiras. Se usan transformaciones óseas rígidas, sin escalas heredadas que deformen la tela.
+- Simulación **fuera del juego**, horneada en marcha, carrera y cuatro ataques. Marcha/carrera calientan ocho ciclos, promedian los cuatro últimos y filtran circularmente antes de cerrar las curvas. La variación entre ciclos se registra en `repair.json`; no hay simulación en tiempo real ni respuesta a colisiones del escenario.
+- Los **13.906 triángulos conservados del cuerpo** mantienen posición y UV respecto a `da18a4159`, comprobadas a 0,000001 unidades. Las normales originales se conservan salvo la reparación de pies. Los 61 huesos originales permanecen, más 15 de tela: 76 en total. Hay dos mallas, cuerpo y faldón.
+- La tela flexible queda excluida del apoyo y de la huella rígida de navegación; se recalibran contactos y huella. Se mantiene la [iluminación de bestias aprobada](../beast-lighting/README.md), sin cambios globales.
 
 | Recurso | Bytes |
 | --- | ---: |
 | Original externo | 107,821,688 |
-| Fuente reparada y animada | 47,833,368 |
-| GLB final de ejecución | **7,408,220** |
+| Fuente reparada y animada | 48,413,724 |
+| GLB final de ejecución | **7,921,396** |
 
-Reducción de descarga del **93.13 %**. Geometría y animaciones Meshopt sin pérdida; texturas finales de albedo y normal a 2048 en WebP. El albedo de la fuente GLB intermedia se reduce de 8K a 4K para respetar el límite de recursos del repositorio; el original externo y el Blender editable conservan las imágenes originales. La normal reducida se codifica sin pérdida. La comprobación PSNR compara contra la fuente GLB intermedia de 4K.
+Reducción de descarga del **92.65 %**. Geometría y animaciones Meshopt sin pérdida; albedo y normal a 2048 en WebP. El albedo de la fuente GLB intermedia se reduce de 8K a 4K para respetar el límite del repositorio; el original externo y el Blender editable conservan las imágenes originales. Normal reducido codificado sin pérdida. PSNR comparado contra el GLB intermedio de 4K.
 
-Recurso activo: `e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc.glb`. Runtime SHA-256 `f41b2fb0c5b038e7a4c385c1baf292288efa627687284b051e8c337256594630`. El donante queda en el repositorio como procedencia y se excluye del paquete final.
+Recurso activo: `39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb`. Runtime SHA-256 `cb3b3a915db2c74e2050afb50ec014693512aca84c4f094350d72020c1bab40e`. Donante conservado como procedencia y excluido del paquete final.
 
 ## Evidencias
 
-- Cabeza: [antes](head-before.jpg), [perfil corregido](head-profile.jpg), [comparación y conservación de geometría/animación](head-posture-audit.json). La referencia previa es el commit `392fabde8`; `head-before-audit.json` conserva sus mediciones.
+- [Vídeo de los seis clips](rhino-animations.mp4), con vistas delanteras/traseras, cuatro ataques completos, marcha/carrera y día/noche. [Secuencia y modelo](video.json).
+- Faldones: [antes](cloth-before.jpg), [original sin animar](cloth-source-back.png), [selección inicial del panel y tiras interiores](cloth-selection.png), [18 primeros planos traseros](secondary-captures.json) y [auditoría](cloth-audit.json). La selección final incluye también las tiras laterales posteriores descritas en `repair.json`.
+- [Cabeza de perfil](head-profile.jpg), [pies originales inclinados](feet-before.png), [cuatro perfiles de pies](feet-captures.json), [informe Blender](repair.json), [apoyo y mirada](animation-audit.json), [validación final](validation.json).
+- [50 capturas en los seis biomas](captures.json): [Sabana](sabana-front-Walking.jpg), [Gran Río](gran-rio-front-Walking.jpg), [Manglares](manglares-front-Walking.jpg), [Volcanes](volcanes-front-Walking.jpg), [Gran Cañón](gran-canon-front-Walking.jpg), [Desierto](desierto-front-Walking.jpg).
+- [Incursión real](native-raid.json) y [captura](native-raid.jpg).
+- Evidencia histórica de la corrección de cabeza: [antes](head-before.jpg), [mediciones anteriores](head-before-audit.json) y [auditoría del cambio de postura](head-posture-audit.json), correspondiente a `da18a4159`. La auditoría actual de tela verifica que aquella animación sigue intacta.
 
-- [Vídeo de las seis animaciones](rhino-animations.mp4), con marcha, carrera, cuatro ataques, día/noche y vistas traseras. [Secuencia y procedencia](video.json).
-- [Pies originales inclinados](feet-before.png), [perfil izquierdo](feet-left-0.2.jpg), [perfil derecho](feet-right-0.7.jpg) y [datos de los cuatro primeros planos](feet-captures.json).
-- [Informe Blender](repair.json), [auditoría de apoyo](animation-audit.json), [validación final](validation.json) y [50 capturas integradas](captures.json).
-- [Sabana](sabana-front-Walking.jpg), [Gran Río](gran-rio-front-Walking.jpg), [Manglares](manglares-front-Walking.jpg), [Volcanes](volcanes-front-Walking.jpg), [Gran Cañón](gran-canon-front-Walking.jpg) y [Desierto](desierto-front-Walking.jpg).
-- [Incursión nativa](native-raid.json) y [captura](native-raid.jpg).
+La auditoría secundaria evalúa 390 poses y perturba únicamente muslos/rodillas: la tela responde **0 unidades**. Se comprueban estiramiento, suelo y cierre de bucles. El motor compartido conserva sus resultados predeterminados para el león: comparación exacta de ambos paneles durante 404 pasos de integración.
 
-108 pruebas dirigidas, compilación Vite, paquete e integridad aprobados. glTF sin errores, geometría y animaciones idénticas byte a byte tras descomprimir; PSNR de albedo 37,55 dB respecto a la fuente intermedia. Incursión nativa: movimiento, ataque y primer daño 600→540, sin descargas ni programas GPU nuevos del animal. Vídeo de 46,07 s, 1280×720, 30 fps, decodificado completo sin errores.
+108 pruebas dirigidas, compilación Vite, paquete e integridad aprobados. glTF sin errores; geometría/animación idénticas tras descomprimir y PSNR de albedo 37,55 dB respecto al GLB intermedio. Incursión: movimiento, ataque y primer daño 600→540, sin nuevas descargas ni programas GPU del animal. Vídeo de 67,9 s, 1280×720, 30 fps, decodificado completo sin errores.
 
-Revisión en Chrome de escritorio; las capturas y el vídeo determinista no son una medición de FPS móvil.
+Revisión visual en Chrome de escritorio. Vídeo determinista y capturas no miden FPS móvil. El faldón no utiliza física en tiempo real.
 
 ## Reproducción
 
@@ -43,8 +46,10 @@ node tools/compress_web_assets.mjs <nombre-impreso.glb>
 node tools/calibrate_animal_actions.mjs
 node tools/calibrate_footsteps.mjs
 node tools/audit_beast_replacement.mjs rhino
-node tools/audit_rhino_head.mjs
+node tools/audit_rhino_cloth.mjs
 node tools/verify_web_assets.mjs <nombre-impreso.glb>
 ```
 
-Con Vite iniciado, `tests/browser/beast-replacement.html?species=rhino&biome=sabana` permite revisar los clips. `node tools/capture_beast_replacement.mjs rhino`, `node tools/capture_beast_feet.mjs rhino` y `node tools/render_beast_video.mjs rhino` generan las evidencias con Playwright/Chrome y FFmpeg. `WG_QA_URL` selecciona servidor.
+`rhino_cloth_motion.py` contiene selección y rig específicos. Reutiliza las restricciones del solver del león sin cambiar sus valores predeterminados.
+
+Con Vite iniciado, `tests/browser/beast-replacement.html?species=rhino&biome=sabana` permite revisar los clips. `node tools/capture_beast_replacement.mjs rhino`, `node tools/capture_beast_feet.mjs rhino`, `node tools/capture_rhino_secondary.mjs` y `node tools/render_beast_video.mjs rhino` generan las evidencias con Playwright/Chrome y FFmpeg. `WG_QA_URL` selecciona servidor.

@@ -14,9 +14,9 @@
   ],
   "gpuReady": true,
   "warmed": [
-    "warthog",
-    "hyena",
     "buffalo",
+    "hyena",
+    "warthog",
     "lion",
     "rhino"
   ],
@@ -41,19 +41,23 @@
     {
       "species": "rhino",
       "ready": true,
-      "modelId": "81a6de3d-630b-42dc-a40f-d95f5365a0d0",
+      "modelId": "d0bc3f08-425d-4146-b8c4-c466917415c1",
       "fromSpare": true,
       "skeletons": [
-        "d73f751a-bd32-43ad-90e5-7786867edd77"
+        "9486bf30-8f88-4626-8546-da2559efb547",
+        "ae97bd3e-56bd-4944-b43f-a45e8a64b22f"
       ],
       "boneTextures": [
-        "1ec949dd-de30-44f1-8261-47a61552e604"
+        "2cbc5aeb-4fcb-4828-b650-7ba4f38efc83",
+        "e6b733ce-fc14-4d5b-8e5d-5e913fa6efb4"
       ],
       "geometry": [
-        "0b708bb0-540b-40de-8cd8-7f33a5f40ff4"
+        "5acbbc75-b9f5-4696-91d5-e0ce562fa815",
+        "a14605da-c1c8-4dd1-8220-5fc4bcba3212"
       ],
       "materials": [
-        "e15e355e-b2ed-413d-a419-cb6ecace5957"
+        "7c585a68-86e2-4a98-8ed3-06f05b7da013",
+        "24b24014-47b6-4d17-ab2a-e201a5d92ec6"
       ]
     }
   ],
@@ -142,11 +146,11 @@
       53
     ],
     "spareModelIds": [
-      "5e88e99d-d416-428b-82b1-c0bd9643844b",
-      "d707a599-b79d-4c72-b220-3dcd288d4c86",
-      "baf789ca-2aa9-4430-b237-4a4391c06784",
-      "5549f139-78c9-481e-9c07-0a38a21d92dc",
-      "81a6de3d-630b-42dc-a40f-d95f5365a0d0"
+      "cd9616d7-a8f7-4436-84ae-35e861ac42cc",
+      "cb361c94-02df-4796-9c61-525827a78540",
+      "41785dec-1470-4801-b2ed-c8e5345ab5d6",
+      "50eb7cf6-9c6d-42b3-8db7-e2733ed595d2",
+      "d0bc3f08-425d-4146-b8c4-c466917415c1"
     ],
     "animalPrograms": [
       0,
@@ -198,8 +202,8 @@
     "creations": [],
     "newAnimalPrograms": []
   },
-  "appearanceMs": 102.80499994754791,
-  "loadingMs": 3706.375,
+  "appearanceMs": 167.72500002384186,
+  "loadingMs": 5375.629999995232,
   "errors": [],
   "timing": {
     "settle": [],
@@ -302,8 +306,8 @@
           "firstHitThisRaid": true
         }
       },
-      "maximumGameTickMs": 10.149999976158142,
-      "medianGameTickMs": 0.2250000238418579,
+      "maximumGameTickMs": 13.144999980926514,
+      "medianGameTickMs": 0.23000001907348633,
       "renderedActors": [
         {
           "id": "animal-6",
@@ -322,8 +326,8 @@
             ]
           },
           "intersectsCamera": true,
-          "meshes": 1,
-          "visibleMeshes": 1
+          "meshes": 2,
+          "visibleMeshes": 2
         }
       ]
     }
@@ -332,6 +336,6 @@
     "rhino"
   ],
   "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
-  "replacementModel": "/assets/e259880e3924f0bcba90692ebb0c810b2e5bf1f0c1ecce87348111c270d4b2fc.glb",
+  "replacementModel": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
   "qaUrl": "http://127.0.0.1:5194/tests/browser/animal-preload.html?biome=gran-canon&motion=1&attack-species=rhino&copies=1"
 }
