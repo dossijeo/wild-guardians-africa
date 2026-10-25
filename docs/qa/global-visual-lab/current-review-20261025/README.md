@@ -319,3 +319,18 @@ Harness actualizado al punto de pausa real, salida configurable y opción native
 que activa canyonWater=calm sin reemplazo de fuente. Las ejecuciones usan
 pthreads/frameScheduler/ownedFarGpu y horizonBed=sync,budget2,chunkInstall=sync.
 La grabación y la supervisión de frames son QA; sin cambios de producción.
+
+## Manglares: conservar la aprobación artística
+
+Doce capturas actuales día/noche y tres poses en manglares-day-night, calidad
+media720p, receta holly/fixed512, pthreads/scheduler y fondos completos. Tiempo
+simulado idéntico, sin erroresGL/console registrados. Inspección normal diurna y
+nocturna: suelo verde con manchas de barro localizadas, helechos densos y legibles,
+contacto de ribera conservado; no aparece el fallo de suelo totalmente embarrado.
+No se modifica densidad, pigmento, iluminación ni geometría. Se mantiene la
+aprobación del usuario, sin reabrir comparaciones con hojas redondas descartadas.
+
+Esta revisión no demuestra paridad píxel con la imagen adjunta del usuario:
+no se conoce su estado completo. Tampoco prueba transicionesLOD, viento continuo,
+streaming o costeGPU. Preserva una referencia actual reproducible para esas
+pruebas. No se declara el bioma completado técnicamente por aprobación artística.
