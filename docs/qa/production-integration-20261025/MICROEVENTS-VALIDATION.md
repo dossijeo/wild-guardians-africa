@@ -17,13 +17,15 @@ Curvas en lugar de polígonos angulares en las cinco celdas de llama (19–23); 
 
 La comparación visual sigue mostrando una fila de iconos muy uniforme. No se demuestra una mejora suficiente de integración: se retira el candidato de runtime y atlas, conservando evidencia y la opción de autoría parcial para futuras iteraciones. No se modifica la formación de partículas para ocultar este problema porque también cambiaría las posiciones de interacción.
 
-## Pendientes para cerrar
+## Cierre de la validación
 
-- Mediciones residentes CPU/GPU/presentación completadas con sus límites: véase abajo.
-- Aparición espontánea y salida al menú verificadas; finalización natural verificada en la prueba de cámara; reinicio posterior todavía pendiente.
-- Movimiento/orbita y oclusión en el renderer real; revisión visual de los restantes tipos del catálogo.
-- Decidir si el fuego necesita otra representación visual; no aceptar cambios solo porque funcionen técnicamente.
-- Publicar el informe final con límites y no declarar el objetivo completo antes de esas comprobaciones.
+La matriz prevista queda cubierta mediante catálogo, casos representativos en movimiento, ciclo normal, tests y mediciones. Alcance y límites se detallan abajo y en FINAL-DELIVERY.md; no se promete ausencia de clipping para cualquier cámara o pendiente imaginable.
+
+- CPU/GPU/presentación residentes: medidos por separado, sin afirmar mejoras dentro del ruido.
+- Aparición espontánea, salida y recarga: PASS; controlador nuevo y anterior desconectado.
+- Órbita/zoom y expiración: PASS; comparación mundial congelada, después animación real.
+- Revisión de las 40 capturas: formas reconocibles en zonas de cultivos; revisión adicional de imágenes completas para anclajes especiales. Mariposas mejoradas.
+- Fuego: conservar el original. Es una señal interactiva estilizada, no una simulación de incendio; la alternativa evaluada no mejora suficientemente su integración. No cambiar formación/hit targets para maquillar la prueba.
 
 ## ABBA de presentación y CPU
 
@@ -63,3 +65,11 @@ microevents-camera/report.json y camera.webm: arrastre real con botón derecho y
 Alas de ocre claro a naranja cálido; mantiene geometría, tamaño, cuatro frames, animación y física. Captura real microevents-butterfly/butterflies.png inspeccionada frente a microevents-current/butterflies.png; gesto completado sin fallback, nueve instancias, cero errores. Se conserva por mayor legibilidad sobre Sabana sin nuevas operaciones GPU.
 
 Verificación RGBA de las 64 celdas: solo cambian 8,9,10,11. La autoría parcial vía canvas cambia también RGB bajo alfa cero; esos datos ajenos fueron restaurados desde el atlas original al integrar las cuatro celdas. Corrección metodológica: la comprobación anterior del fuego usaba getbbox RGBA, que no detectaba todas las diferencias RGB con alfa idéntico; no sustentaba identidad de todos los canales. Aquel candidato fue descartado y restaurado íntegramente antes de este cambio.
+
+## Recarga y distribución finales
+
+microevents-normal/report.json: restart fresh=true, disposed=false, attached=true, oldDetached=true; errors=[] después de salir durante polen y continuar desde el menú. No URL QA ni force; observador de tick documentado. Captura restarted.png.
+
+Build actual PASS y test:web-package PASS: 1001 archivos, 495994626 bytes, 840 enlaces relativos, 17 GLB de runtime. La ruta empaquetada normal de menú/nueva partida/guardado/continuar está registrada en menu-layered-game-lifecycle.json, sin errores o recursos ausentes.
+
+Autoría reproducible: con Vite activo, node tools/render_microevent_sprites.mjs butterfly y node tools/generate_microevent_assets.mjs. La regeneración parcial conserva RGBA de las demás celdas; ejecutada, hash PNG idéntico E2CC924FC2E3921F17D86D63E7F418F05EBA0F2EB15164ABF2DCF198A8FB02DD.

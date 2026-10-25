@@ -16,3 +16,7 @@ Build y test:web-package aprobados (1001 archivos). Paquete en ruta anidada arra
 ## Calidad baja con recorrido
 
 A/B/A/B con entrada en Opciones en draw30 y regreso en draw100, 150 draws medidos. GPU media A1/B1/A2/B2: 5,134 / 5,741 / 4,451 / 5,063 ms. Incremento por pareja ~0,61 ms. CPU media 0,265 / 0,294 / 0,247 / 0,273 ms. Cadencia media ~33,26 ms (límite del perfil bajo existente); P95 A ~34,69 ms, B ~34,4 ms. No disjoint. Máximos GPU variables; no atribuir mejora de picos a partir de solo dos repeticiones. No mide latencia física de presentación.
+
+## Integración funcional del paquete
+
+menu-layered-game-lifecycle.json: nueva partida Manglares, guardar, salir, continuar mismo slot y HUD restaurado. errors=[] y requests404=[]. Workers incluyen spatial-threaded. Se conservan luces coloreadas y tótem original. Coste GPU adicional documentado; no afirmar coste cero. El encuadre vertical recorta personajes del primer plano para conservar controles legibles. Siguiente entregable: microeventos.
