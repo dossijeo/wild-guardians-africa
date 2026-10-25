@@ -142,3 +142,29 @@ Continuar la validación visual de día/noche y movimiento sin convertir su
 cadencia en un benchmark. No reducir arte aprobado, ni adoptar retención como
 mejora integral, a partir de esta serie. El muestreo original se conserva en
 gpu-idle-contention.json para que el límite sea verificable.
+
+## Repetición A/B/A/B tras cerrar Chrome por petición del usuario
+
+PID 29484 cerrado tras verificar chrome.exe --type=gpu-process. Nueva serie
+secuencial, misma receta/semilla/calidad media/720p, 180 poses y recorrido96,
+simulación activa. A=retención desactivada, B=activada; resto de streamingOptions
+idénticos. El muestreo concurrente parcial identifica Chrome como el harness,
+no el proceso anterior. No cubre toda la serie ni elimina actividad del escritorio.
+
+| Run | RAF medio | RAF p95 | RAF máximo | Draw máximo | GPU intervalo medio |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A1 | 44.75 | 83.20 | 166.49 | 161.27 | 33.25 |
+| B1 | 44.07 | 83.29 | 149.73 | 21.38 | 32.29 |
+| A2 | 43.70 | 99.65 | 166.38 | 152.34 | 31.81 |
+| B2 | 44.99 | 99.76 | 116.58 | 18.50 | 32.95 |
+
+Milisegundos. Todas completan streaming sin errores nuevos, actores disponibles
+180/180 y sin pausas. Queries sin disjoint. A1 necesita11frames adicionales para
+asentarse; las otras180. La simulación evoluciona con reloj real: no es paridad
+exacta de trabajo. Reproductor de resumen: summarize-current-retention-abab.py.
+
+La retención reduce consistentemente el máximo dentro del dibujo y los máximos
+RAF observados, pero no mejora media ni p95; GPU medio mixto. Conservar candidata
+para eliminar recompilaciones, no descartarla ni anunciar aumento general de FPS.
+No activar por defecto todavía: faltan coste de carga/memoria, ciclo de vida y
+validación equivalente en los otros biomas. No se modifica el arte aprobado.

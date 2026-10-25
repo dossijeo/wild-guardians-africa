@@ -1,0 +1,147 @@
+{
+  "scope": "Interleaved active simulation, 180 authored camera frames plus settling. Wall-clock world evolution and settling sample counts vary; GPU queries include pipeline bubbles. Not exact workload parity.",
+  "runs": [
+    {
+      "run": "a1",
+      "source": "sabana-clean-retention-a1.json",
+      "created": 10,
+      "frames": {
+        "count": 191,
+        "mean": 44.749476439790584,
+        "p95": 83.20000000000437,
+        "max": 166.49000000000524
+      },
+      "gpu": {
+        "count": 64,
+        "mean": 33.24517221875001,
+        "p95": 46.210416,
+        "max": 54.344166
+      },
+      "draw": {
+        "count": 192,
+        "mean": 11.11296875278155,
+        "p95": 16.145000100135803,
+        "max": 161.2699999809265
+      },
+      "elapsed": 128.43134999999643,
+      "retention": null,
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": false
+      }
+    },
+    {
+      "run": "b1",
+      "source": "sabana-clean-retention-b1.json",
+      "created": 10,
+      "frames": {
+        "count": 180,
+        "mean": 44.06508333333331,
+        "p95": 83.29499999999825,
+        "max": 149.72999999999593
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 32.290873262295094,
+        "p95": 42.769583,
+        "max": 55.977239
+      },
+      "draw": {
+        "count": 181,
+        "mean": 9.018176799979658,
+        "p95": 13.93999993801117,
+        "max": 21.37999999523163
+      },
+      "elapsed": 127.84979999999628,
+      "retention": {
+        "retained": 75,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": true
+      }
+    },
+    {
+      "run": "a2",
+      "source": "sabana-clean-retention-a2.json",
+      "created": 10,
+      "frames": {
+        "count": 180,
+        "mean": 43.696500000000015,
+        "p95": 99.64999999999418,
+        "max": 166.375
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 31.805306311475405,
+        "p95": 41.794894,
+        "max": 66.764165
+      },
+      "draw": {
+        "count": 181,
+        "mean": 10.922099448040704,
+        "p95": 15.254999995231628,
+        "max": 152.33500003814697
+      },
+      "elapsed": 127.71683499999632,
+      "retention": null,
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": false
+      }
+    },
+    {
+      "run": "b2",
+      "source": "sabana-clean-retention-b2.json",
+      "created": 10,
+      "frames": {
+        "count": 180,
+        "mean": 44.9887777777778,
+        "p95": 99.76499999999942,
+        "max": 116.58000000000175
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 32.94894024590164,
+        "p95": 45.036509,
+        "max": 57.584686
+      },
+      "draw": {
+        "count": 181,
+        "mean": 8.930165752521535,
+        "p95": 14.835000038146973,
+        "max": 18.50499999523163
+      },
+      "elapsed": 128.04868999999633,
+      "retention": {
+        "retained": 75,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": true
+      }
+    }
+  ]
+}
