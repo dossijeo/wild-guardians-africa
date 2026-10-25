@@ -1,0 +1,35 @@
+{
+  "model": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+  "originalSourceIntact": true,
+  "tests": {
+    "passed": 107,
+    "failed": 0
+  },
+  "viteBuild": "pass",
+  "webPackage": "pass",
+  "assetIntegrity": "pass",
+  "webAssetVerification": "pass: no glTF errors; geometry and animations byte-exact; albedo PSNR 39.35 dB",
+  "animationSamples": 774,
+  "maxSoleHeightSpread": 0.002291646208947104,
+  "captures": 50,
+  "nightBiomes": [
+    "sabana",
+    "gran-rio",
+    "manglares",
+    "volcanes",
+    "gran-canon",
+    "desierto"
+  ],
+  "nativeRaid": "pass: movement, attack, logical hit 600 to 575; no new downloads or animal programs",
+  "lightingABPairs": 30,
+  "maxOutsideActorPixelDifferences": 51,
+  "lightingScope": "Beast materials only; identical global lights and exposure; image comparison tolerance documented in ../beast-lighting/README.md",
+  "video": {
+    "file": "hyena-animations.mp4",
+    "frames": 1382,
+    "fps": 30,
+    "duration": 46.06666666666667,
+    "decode": "ffmpeg full decode passed"
+  },
+  "limits": "Desktop Chrome visual checks; deterministic animation video, not an FPS benchmark."
+}

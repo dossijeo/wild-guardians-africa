@@ -5187,6 +5187,15 @@
       "origins": [
         "Wild Guardians New/animales/facóquero.glb#repaired-retargeted"
       ]
+    },
+    {
+      "url": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "bytes": 71064552,
+      "sha256": "48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/hiena.glb#repaired-retargeted"
+      ]
     }
   ],
   "models": [
@@ -5475,51 +5484,48 @@
       }
     },
     {
-      "url": "/assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "url": "/assets/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
       "animations": [
         {
-          "name": "Walking",
-          "channels": 56
+          "name": "Running",
+          "channels": 63
         },
         {
-          "name": "Running",
-          "channels": 56
+          "name": "Walking",
+          "channels": 63
         },
         {
           "name": "Charged_Upward_Slash",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Right_Hand_Sword_Slash",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Weapon_Combo",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Weapon_Combo_2",
-          "channels": 56
+          "channels": 63
         }
       ],
-      "nodes": 30,
+      "nodes": 23,
       "meshes": 1,
       "extras": {
-        "sourceModel": "Meshy_AI_Sunfang_Hyena_Totem_Running.glb",
-        "retargeting": {
-          "native": [
-            "Running"
-          ],
-          "transferred": [
-            "Walking",
-            "Charged_Upward_Slash",
-            "Right_Hand_Sword_Slash",
-            "Weapon_Combo",
-            "Weapon_Combo_2"
-          ],
-          "donor": "Meshy_AI_Boar_Warchief_All_Animations.glb"
+        "replacement": {
+          "repair": "tools/prepare_hyena.py",
+          "report": "docs/qa/hyena-replacement/repair.json",
+          "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25"
         }
+      },
+      "geometrySource": "Wild Guardians New/animales/hiena.glb",
+      "replacement": {
+        "repair": "tools/prepare_hyena.py",
+        "report": "docs/qa/hyena-replacement/repair.json",
+        "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25"
       }
     },
     {

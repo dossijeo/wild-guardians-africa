@@ -1,0 +1,51 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><link rel="icon" href="data:,"><title>Facóquero · revisión integrada</title>
+<style>body{margin:0;background:#172019;color:#fff;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}#status{position:fixed;top:10px;left:10px;background:#172019d9;padding:10px;border-radius:6px}button,select{margin:4px;padding:5px}</style>
+<canvas></canvas><div id="status">Cargando mundo y facóquero…</div>
+<script type="module">
+import * as Game from '/src/simulation/game.js';
+import {WorldScene} from '/src/rendering/scene.js';
+import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
+import {findInitialLocationAsync} from '/src/world/villages.js';
+import {json} from '/src/rendering/assets.js';
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',species=params.get('species')??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',lion:'León',buffalo:'Búfalo',rhino:'Rinoceronte'})[species],errors=[];
+if(!label)throw Error('Unknown species');
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+try{
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const state=Game.newGame({seed:712,biome,culture:'mapungubwe',slotId:'warthog-qa'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);state.tutorial.step='done';
+ state.time=350;state.elapsed=350;
+ let point=null;
+ for(let r=12;r<22&&!point;r+=1)for(let i=0;i<16&&!point;i++){
+  const x=site.center.x+Math.cos(i*Math.PI/8)*r,z=site.center.z+Math.sin(i*Math.PI/8)*r;
+  if(nav.walkable(x,z,1.2)&&nav.field.slope(x,z)<.15)point={x,z};
+ }
+ if(!point)point={x:site.center.x+5,z:site.center.z+5};
+ const animal={id:'qa-new-beast',species,...point,spawn:{...point},exit:{...point},heading:.4,status:'walking',motionPhase:.2,hitsRemaining:1,radius:1.2};
+ state.raid={id:'qa-preview',animals:[animal],reservations:{},encounters:[]};
+ const world=new WorldScene(document.querySelector('canvas'),()=>{});world.qualitySetting(params.get('quality')??'media');world.onError=e=>errors.push(e.message);
+ await world.load(state,nav,payload);
+ world.cinematic=true;
+ world.controls.enableDamping=false;
+ world.controls.target.set(point.x,nav.actorSurface(point.x,point.z)+1.2,point.z);
+ const setView=async(view='front',distance=7,height=2.5)=>{
+  const angle=view==='back'?Math.PI+.4:.4;
+  world.camera.position.set(point.x+Math.sin(angle)*distance,world.controls.target.y+height,point.z+Math.cos(angle)*distance);
+  world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();
+  world.syncChunks();await world.whenChunksReady();await world.horizon.whenReady();world.syncChunks();await world.whenChunksReady();world.render(0);
+ };
+ await setView();
+ const library=(await json('/content/animal-actions.json')).animals[species];
+ const pose=(clip='Walking',phase=.2)=>{
+  if(['Walking','Running'].includes(clip)){animal.status=clip==='Running'?'entering':'walking';animal.motionPhase=library.clips[clip].duration*phase;}
+  else {animal.status='attacking';animal.animation=clip;animal.attackId=clip;animal.attackDuration=library.clips[clip].duration;animal.attackRemaining=animal.attackDuration*(1-phase);}
+  world.render(0);
+ };
+ const capture=()=>{world.render(0);return {biome,species,time:state.time,errors,model:library.url,clip:animal.animation??(animal.status==='entering'?'Running':'Walking'),position:[point.x,nav.actorSurface(point.x,point.z),point.z],camera:world.camera.position.toArray(),target:world.controls.target.toArray(),glError:world.renderer.getContext().getError(),calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,png:world.renderer.domElement.toDataURL('image/png').split(',')[1]};};
+ window.beastQA={world,state,animal,pose,setView,capture,ready:true};
+ document.querySelector('#status').innerHTML=`${biome} · ${label} · noche <select id="clip">${Object.keys(library.clips).filter(n=>n!=='restpose').map(n=>`<option>${n}</option>`).join('')}</select><button id="front">Frente</button><button id="back">Melena</button><button id="light">Día / noche</button>`;
+ document.querySelector('#clip').value='Walking';
+ document.querySelector('#clip').onchange=e=>pose(e.target.value,.35);document.querySelector('#front').onclick=()=>setView();document.querySelector('#back').onclick=()=>setView('back');document.querySelector('#light').onclick=()=>{state.time=state.time===350?150:350;world.render(0)};
+ pose();
+}catch(e){window.beastQA={ready:false,error:e.stack,errors};document.querySelector('#status').textContent=e.stack;}
+</script></html>

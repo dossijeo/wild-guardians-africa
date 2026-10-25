@@ -10,7 +10,7 @@ Rama `codex/beast-models`, creada desde `origin/main` (`568f3b8ef`). Fuente exte
 - Siete clips transferidos desde el facóquero anterior, conservando nombres, duraciones y eventos lógicos de ataque. Se recalibran huella de navegación y contactos de pasos para la nueva anatomía.
 - Cabeza elevada 18° y cuello 5° alrededor del eje lateral animado del torso. La mirada de marcha oscila entre −1,0° y +4,6° respecto al frente de reposo; en carrera, entre +6,1° y +11,8°. Los giros, inclinaciones y anticipaciones de los ataques siguen animados. `restpose` conserva la postura original.
 - Normales suaves interpoladas con límite de arista de 55°. Se conservan silueta, aristas mayores y facetas pintadas en el albedo. Se mantiene el renderizador de producción; no se introduce un material Gouraud distinto.
-- Material específico del facóquero con reflejo especular reducido y relleno nocturno tenue. Los demás animales conservan su sombreado.
+- Ajuste inicial específico del facóquero con reflejo especular reducido y relleno nocturno tenue. Posteriormente se incorpora el [contraste de materiales para las cinco bestias](../beast-lighting/README.md); estas capturas conservan la revisión inicial.
 
 | Recurso | Tamaño |
 | --- | ---: |
