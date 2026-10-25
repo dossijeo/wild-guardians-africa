@@ -516,3 +516,29 @@ six-biome-streaming-summary utiliza ahora esta referencia válida visualmente y
 registra el tipo de trayectoria de cada bioma. Es un inventario, no A/B entre
 biomas ni validación temporal exhaustiva. Se conserva la selección calm del agua;
 el final sobre meseta no prueba la apariencia del río durante todo el recorrido.
+
+
+## Canyon: pico atribuido a primera transición transparente
+
+Repetición con cámara sobre relieve, GL detail y fases de main:
+`gran-canon-terrain-camera-attribution`. getProgramInfoLog273,02ms para
+native-partial-blend-v1 de native-asset-surface-v4. No existe ninguna clave
+native-partial-blend entre initialPrograms. Es primera preparación observada,
+no evidencia de un programa previamente preparado que simplemente se perdió.
+Render máximo289,19ms, draw284,78ms, RAF máximo299,32ms. GPU media21,01ms.
+No atribuir esa espera al relieve o al agua calm. La instrumentación de main
+excluye el trabajo posterior de scheduler.endFrame y no cubre toda la CPU.
+
+Control `gran-canon-obstruction-warm-control` activa únicamente las opciones
+existentes warmObstruction y retainPrograms; conserva geometría/materiales y
+trayectoria. No registra llamadas GL superiores20ms; draw máximo6,79ms y
+RAF máximo116,36ms. Retiene62programas. Carga25,98s frente24,62s; RAF p95
+49,89ms frente33,66ms; medias29,93 frente29,37ms. Ambos sin errores nuevos.
+
+Conclusión limitada: preparar la variante necesaria elimina la espera observada
+durante esta prueba, pero no demuestra mejora integral de p95 ni throughput.
+No se adopta por defecto. No eliminar esa variante como si fuera exclusiva de
+laboratorio: efectivamente se usa al transparentar objetos durante la partida.
+Un par instrumentado con evolución real distinta no sustituye A/B/A/B ni valida
+memoria/ciclo de vida. Conservar evidencia positiva y negativa; no cambiar el
+aspecto aprobado para resolver una espera de preparación.
