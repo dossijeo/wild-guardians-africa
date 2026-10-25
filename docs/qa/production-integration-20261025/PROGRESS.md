@@ -61,3 +61,8 @@ package-mangrove-lifecycle-r2.json: mediante UI real se guarda Manglares, se sal
 
 
 Auditoría nativa parcial y repetición de concurrencia: ver NATIVE-AUDIT.md y native-{cancellation,lifecycle,routes}.json. Pasan seis biomas, ocho ciclos de edición/publicación/retirada por bioma y diferencial de rutas de seis perfiles. No equivalen a una campaña prolongada ni cierran todavía la auditoría arquitectónica completa.
+
+
+## Bloqueo de aceptación descubierto en Windows
+
+Run 40191688873 (head 1c7a508ea) compila pero falla el escenario de visibilidad: la carga de la partida guardada de Gran Cañón con cultivo, trabajadora y primera incursión no alcanza readiness en 420126 ms. Queda al 85 %, Preparing rendering resources, visible y enfocada, sin error explícito de carga. El fallo ocurre ANTES de minimizar. Evidencia descargada: windows-visibility-failure-1c7a.json. No atribuir aún causa a scheduler, shaders o pthreads; el informe no contiene esa atribución. No ampliar el timeout ni marcar la prueba aceptada. Siguiente paso: reproducir esa fixture de carga/restauración y observar la preparación pendiente; el arranque vacío de seis biomas y la recarga inicial de Manglares no cubren este escenario poblado.
