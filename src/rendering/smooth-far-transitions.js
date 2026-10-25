@@ -64,8 +64,5 @@ export function smoothStandbyMaterial(source){
   if(!shader.fragmentShader.includes(anchor))throw Error('Smooth standby coverage anchor missing');
   shader.fragmentShader=shader.fragmentShader.replace(anchor,'if(vNativeVisibility<.002)discard;').replace('#include <opaque_fragment>','diffuseColor.a*=clamp(vNativeVisibility,0.,1.);\n#include <opaque_fragment>');
  };
- // QA candidate: both visibility-alpha recipes emit the same shader patch.
- // Three still keys all render-state/geometry-dependent program parameters.
- const sharedKey=new URLSearchParams(globalThis.location?.search??'').get('sharedSmoothProgram')==='1';
- material.customProgramCacheKey=()=>key+(sharedKey?'|native-partial-blend-v1':'|smooth-standby-v1');return material;
+ material.customProgramCacheKey=()=>key+'|smooth-standby-v1';return material;
 }

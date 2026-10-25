@@ -16,6 +16,8 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[],q
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'||m.type()==='warning'){errors.push(m.text());console.log(m.text().slice(0,500));}});
 try{
+ const {installLoadingVariantRoutes}=await import('./loading-variant-source-patches.js');
+ await installLoadingVariantRoutes(page,{ground:process.env.WG_PRODUCTION_GROUND_SOURCE==='1',sharedSmooth:process.env.WG_SHARED_SMOOTH_PROGRAM==='1'});
  if(process.env.WG_LOADING_PROGRAM_INVENTORY==='1'){const {installLoadingProgramInventory}=await import('./loading-program-inventory.js');await page.addInitScript(installLoadingProgramInventory,{traceCalls:process.env.WG_LOADING_PROGRAM_TRACE==='1'});}
  if(process.env.WG_GUARDIAN_DIAGNOSTICS==='1')await page.route('**/src/ui/guardian.js*',async route=>{const response=await route.fetch(),source=await response.text(),anchor='this.ready=this.load();';if(source.split(anchor).length!==2)throw Error('Guardian QA anchor changed');await route.fulfill({response,body:source.replace(anchor,'globalThis.qaGuardian=this;this.ready=this.load().then(()=>{if(!this.disposed&&(this.mesh||this.canvasWorker?.readyState))globalThis.qaGuardianArtReadyAt=performance.now();});')});});
  if(process.env.WG_CONTEXT_CREATION_TIMES==='1')await page.addInitScript(()=>{

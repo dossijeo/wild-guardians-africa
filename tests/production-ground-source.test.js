@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {groundMaterialFunctions} from '../src/rendering/biome-material-source.js';
-import {withoutLegacyGroundRecipe} from '../src/rendering/production-ground-source.js';
+import {withoutLegacyGroundRecipe} from '../tools/experiments/production-ground-source.js';
 
 test('removing historical ground recipe preserves the entire active recipe and declarations',()=>{
  const result=withoutLegacyGroundRecipe(groundMaterialFunctions,{biome:'mangrove'});

@@ -54,3 +54,12 @@ como solución a los segundos de carga. Si se continúa optimizando la carga,
 el foco debe ser el camino crítico medido de preparación, esperas e instalación
 de recursos, conservando la comprobación de primeros frames y streaming.
 No se debe presentar esta auditoría como una mejora de rendimiento entregada.
+
+## Aislamiento posterior
+
+Las candidatas ya no se activan desde el código de producción mediante URL.
+El harness conserva WG_PRODUCTION_GROUND_SOURCE=1 y WG_SHARED_SMOOTH_PROGRAM=1
+y aplica parches de fuente exclusivamente en su navegador QA. Los parámetros
+de URL conservados en informes son metadatos de reproducción, no opciones del
+juego normal. Nueve tests pasan; validación de reproducción real en curso.
+Esta separación no se presenta como un ahorro de carga medido.
