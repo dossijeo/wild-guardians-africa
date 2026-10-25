@@ -5,7 +5,7 @@ import {replaceWarmedPrograms} from './retain-warmed-programs.js';
 import {createMangroveMaterialCache,mangroveMaterialCacheEnabled} from './mangrove-material-cache.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {waterOpaqueCoreEnabled,prepareOpaqueCore} from './water-opaque-core.js';
-import {naturalWaterEdgesEnabled,prepareNaturalWaterBed,prepareNaturalWater,prepareNaturalAssetWater} from './natural-water-edges.js';
+import {naturalWaterEdgesEnabled,prepareNaturalWaterBed,prepareNaturalWater,prepareNaturalAssetWater,prepareNaturalAssetWaterBed} from './natural-water-edges.js';
 import {regionalWaterEnabled} from './world-atmosphere.js';
 import {prepareMangroveBank} from './mangrove-shore.js';
 import {continuousGrassEnabled,createContinuousGrass} from './continuous-grass.js';
@@ -370,9 +370,18 @@ export class WorldScene {
     if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);yield 'bank';prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial,payload?.waterShore);yield 'water-edges';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);yield 'water-core';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
     yield 'prop-filter';
     const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
+    // Prepare CPU shore data cooperatively while the group is still private.
+    // Use exactly the same sampling grid and material as the synchronous path.
+    const assetWaterBeds=new Map();
+    if(asynchronous&&this.naturalWaterEdges)for(let i=0;i<20;i++){
+      if(!this.waterPrototypes[i]||!group.userData.contactInstances[i].length)continue;
+      const bedSteps=prepareNaturalAssetWaterBed(this,cx,cz),label=`asset-water-bed-${i}`;
+      try{yield label;for(;;){const step=bedSteps.next();if(step.done){assetWaterBeds.set(i,step.value);break;}yield label;}}
+      finally{bedSteps.return();}
+    }
     // Keep separate cost histories: the final water-bearing batch can take tens
     // of milliseconds while the other groups remain sub-millisecond.
-    for(let i=0;i<20;i+=4){yield `prop-slots-${i}`;for(let j=i;j<Math.min(i+4,20);j++)this.buildPropSlot(group,j,group.userData.contactInstances[j]);}
+    for(let i=0;i<20;i+=4){yield `prop-slots-${i}`;for(let j=i;j<Math.min(i+4,20);j++)this.buildPropSlot(group,j,group.userData.contactInstances[j],assetWaterBeds.get(j));}
     completed=true;return group;
     }finally{if(!completed)this.disposePreparedTerrain(group);}
   }
@@ -388,12 +397,12 @@ export class WorldScene {
     for(const child of group.children)if(child.userData.ground)this.terrainMeshes.push(child);
     return group;
   }
-  buildPropSlot(group,i,instances) {
+  buildPropSlot(group,i,instances,preparedWaterBed=null) {
     const [x,z]=group.userData.nativeChunkOrigin,cx=x/48,cz=z/48,x0=x-24,z0=z-24;
       if(!instances.length)return;
       const asset=nativeAssetSurface(this.pack,this.pack.assets[i],i);
       createAssetLod(group,this.prototypes[i],instances,asset,i,nativeAssetClipRequired(i,this.state.biome)?[x0,z0,x0+48,z0+48]:null);
-      if(this.waterPrototypes[i]){const water=new THREE.InstancedMesh(this.waterPrototypes[i],paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,[x0,z0,x0+48,z0+48],this.fluidLighting),instances.length);const dummy=new THREE.Object3D();instances.forEach((p,j)=>{dummy.position.set(p.x-cx*48,p.y,p.z-cz*48);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();water.setMatrixAt(j,dummy.matrix);});water.receiveShadow=true;water.userData.nativeFluid='asset';water.userData.nativePropSlot=i;if(this.naturalWaterEdges)prepareNaturalAssetWater(this,water,cx,cz);group.add(water);}
+      if(this.waterPrototypes[i]){const water=new THREE.InstancedMesh(this.waterPrototypes[i],paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,[x0,z0,x0+48,z0+48],this.fluidLighting),instances.length);const dummy=new THREE.Object3D();instances.forEach((p,j)=>{dummy.position.set(p.x-cx*48,p.y,p.z-cz*48);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();water.setMatrixAt(j,dummy.matrix);});water.receiveShadow=true;water.userData.nativeFluid='asset';water.userData.nativePropSlot=i;if(this.naturalWaterEdges)prepareNaturalAssetWater(this,water,cx,cz,preparedWaterBed);group.add(water);}
   }
   syncResidentProps() {
     if(!this.nav||!this.prototypes)return {chunks:0,slots:0};

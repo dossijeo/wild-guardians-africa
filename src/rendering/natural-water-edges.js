@@ -80,9 +80,16 @@ float qaShoreNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix
  geometry.userData.naturalWaterBed={nx,nz,bytes:bytes.byteLength,minX,minZ,width,height,lo,span};
 }
 
-export function prepareNaturalAssetWater(world,mesh,cx,cz){
+export function* prepareNaturalAssetWaterBed(world,cx,cz,{now=()=>performance.now(),sliceMs=.75}={}){
  const proxy=new THREE.BufferGeometry();proxy.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-24,24,0,24],3));
- prepareNaturalWater(world,proxy,cx,cz,mesh.material);
+ const steps=prepareNaturalWaterBed(world,proxy,cx,cz);
+ // Coalesce cheap sample blocks; the global scheduler still owns the frame budget.
+ try{let start=now();for(;;){const step=steps.next();if(step.done)return step.value;if(now()-start>=sliceMs){yield;start=now();}}}
+ finally{steps.return();proxy.dispose();}
+}
+export function prepareNaturalAssetWater(world,mesh,cx,cz,preparedBed=null){
+ const proxy=new THREE.BufferGeometry();proxy.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-24,24,0,24],3));
+ prepareNaturalWater(world,proxy,cx,cz,mesh.material,preparedBed);
  if(proxy.userData.naturalWaterMaterial)mesh.userData.naturalWaterBed=proxy.userData.naturalWaterBed;
  if(mesh.material!==undefined&&proxy.userData.naturalWaterMaterial){
  const g=mesh.geometry,p=g.attributes.position,d=new Float32Array(p.count);

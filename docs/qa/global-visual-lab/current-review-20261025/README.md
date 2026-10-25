@@ -784,3 +784,50 @@ atribución en el régimen que reproduce el problema y separar tiempo de ejecuci
 de desplanificación/efectos de captura. Se conservan los informes completos y
 el resumen `prop-phase-active-controls.json`. No hay cambios artísticos ni nuevos
 cambios de producción en este pase.
+
+
+## Agua de props: atribución pausada y prototipo incremental
+
+`gran-rio-paused-water-attribution` reproduce el coste: agua de props 37,68–60,03 ms
+en los seis chunks nuevos que la contienen; el grupo completo alcanza 60,37 ms.
+La cuadrícula sigue siendo 99×99. El mismo trabajo activo costaba 1,78–6,24 ms.
+La hipótesis sobre consultas de altura no residentes aún no está demostrada;
+no se modifican C++, navegación ni simulación. Lo confirmado es la llamada
+síncrona larga de preparación visual en este régimen.
+
+`prepareNaturalAssetWaterBed` reutiliza el generador existente, conserva sus
+muestras y bytes, y libera su proxy al terminar o cancelar. El grupo gráfico
+sigue privado hasta completarse. `prepareNaturalAssetWater` acepta esos datos y
+conserva su ruta síncrona para otros llamadores. No cambian shaders, resolución,
+texturas finales ni draws. Memoria temporal por cama: cuadrícula float ~38,3 KiB
+más bytes RGBA ~38,3 KiB, además del pequeño proxy; estas estructuras ya existían
+en la ruta síncrona, ahora pueden vivir entre frames. No es medición de VRAM pico.
+
+Primer candidato, cesión cada 128 consultas, prueba pausada con capturas:
+10 chunks, cero pendientes y recuperaciones 9→0; máximo de unidad 60,43→14,26 ms;
+latencia media de preparación 11806→936 ms. Captura final inspeccionada conserva
+suelo, cobertura y ribera. No constituye mejora de FPS: las capturas alteran
+la cadencia. Informes `gran-rio-incremental-asset-water` y control anterior.
+
+En activo, ceder tan a menudo pasó de114 a630 slices. La primera ejecución mostró
+latencia media1594 ms frente1154 del control síncrono; una repetición dio1044 ms.
+No atribuir causalmente toda la diferencia al fraccionamiento. Esa repetición
+se lanzó tras fallar la aplicación automática del cambio y fue renombrada
+`gran-rio-incremental-water-active-repeat` para no presentarla como coalescida.
+
+El candidato final agrupa bloques baratos hasta .75 ms de trabajo observado por
+cesión (límite de granularidad, NO presupuesto global de frame; un bloque atómico
+puede excederlo). El GlobalFrameScheduler sigue decidiendo admisión y presupuesto.
+Activo `gran-rio-coalesced-water-active`: 136 slices, diez chunks, actores180/180,
+sin pausas ni pendientes/recuperaciones; latencia media1165 ms, GPU media28,49 ms,
+RAF p9566,735 ms. Sin evidencia de mejora de FPS; máximo RAF149,625 ms. La serie
+no es A/B/A/B y el número de frames de asentamiento varía. No ocultar negativos.
+
+63 tests pasan, incluidos equivalencia byte a byte en cinco biomas, shader idéntico,
+atributo de ribera idéntico, ausencia de nuevas consultas al instalar datos ya
+preparados, cancelación y agrupación de bloques baratos. Se conserva como prototipo
+en la rama experimental. Pendientes: repetir el caso pausado con la agrupación
+final, validar otros biomas/ciclo de vida y pruebas intercaladas de rendimiento.
+No afirmar aceptación global ni fluidez completa. `asset-water-incremental-comparison.json`
+conserva métricas y opciones. Las capturas intermedias permanecen locales;
+se publican informes, trazas y capturas finales.
