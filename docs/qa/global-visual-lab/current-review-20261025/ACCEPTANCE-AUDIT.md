@@ -24,7 +24,7 @@ Mantener la selección artística completa y el perfil medio como referencia vis
 
 ## Pendientes acotados antes de declarar cierre
 
-1. Identificar en el renderer los pequeños elementos azules de Sabana antes de calificarlos como defecto o decoración. Se ven también de día y en media: no son una regresión demostrada de baja nocturna. No corregirlos a ciegas.
+1. RESUELTO: aislamiento en renderer atribuye los elementos azules a plant_02 del asset original; el suelo no presenta huecos en esa región. Véase current-resident-cost/SABANA-BLUE-ISOLATION.md. Conservar el modelo.
 2. Completar la reconciliación de los recorridos restantes con la selección nativa. Mantener separados controles históricos y receta actual. Solo repetir una prueba si cambia un comportamiento relevante, no por fecha del informe.
 3. Consolidar la recomendación de integración final, distinguiendo flags QA de valores efectivos del juego y comparativa histórica de main actual. La galería histórica sigue siendo válida para su commit; no renombrarla como comparación con producción actual.
 4. Revisar los límites artísticos restantes de cielo/fondos y transiciones usando evidencia representativa. Las capturas con HUD que ocultan el cielo no prueban la calidad del skybox.
