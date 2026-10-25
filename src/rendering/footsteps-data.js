@@ -564,8 +564,8 @@ export const FOOTSTEPS = {
       }
     },
     "warthog": {
-      "url": "/assets/35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020.glb",
-      "sha256": "35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020",
+      "url": "/assets/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
+      "sha256": "6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
@@ -646,8 +646,8 @@ export const FOOTSTEPS = {
       }
     },
     "hyena": {
-      "url": "/assets/f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420.glb",
-      "sha256": "f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420",
+      "url": "/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+      "sha256": "e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
@@ -728,8 +728,8 @@ export const FOOTSTEPS = {
       }
     },
     "buffalo": {
-      "url": "/assets/44dd1b5c14d5c58c32f1a42ffaf0404a43c4a6aeae2e6d9a5cb954ec6f17f800.glb",
-      "sha256": "44dd1b5c14d5c58c32f1a42ffaf0404a43c4a6aeae2e6d9a5cb954ec6f17f800",
+      "url": "/assets/0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
+      "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
@@ -802,8 +802,8 @@ export const FOOTSTEPS = {
       }
     },
     "lion": {
-      "url": "/assets/ed225711dd6da89db2a38b9ca1a3de1b0f85b0dff5036b68f7477bd8d0f78903.glb",
-      "sha256": "ed225711dd6da89db2a38b9ca1a3de1b0f85b0dff5036b68f7477bd8d0f78903",
+      "url": "/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
+      "sha256": "539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
@@ -892,8 +892,8 @@ export const FOOTSTEPS = {
       }
     },
     "rhino": {
-      "url": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
-      "sha256": "39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a",
+      "url": "/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+      "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,

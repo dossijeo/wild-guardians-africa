@@ -83,6 +83,23 @@ for(const [species,library] of Object.entries(A.animals))test(`${species}: origi
   const parent=new THREE.Group();parent.position.set(20,5,10);parent.add(gltf.scene);
   const data={model:gltf.scene,mixer:new THREE.AnimationMixer(gltf.scene),clips,groundSamples:animalGroundSamples(gltf.scene)};
   assert.ok(data.groundSamples.length>0);
+  // Use independently selected rigid sole vertices, not the grounder's sample
+  // list: mixed calf/foot weights previously lifted a flat sole off the floor.
+  const soles={LeftFoot:[],RightFoot:[]};
+  gltf.scene.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const p=mesh.geometry.attributes.position,w=mesh.geometry.attributes.skinWeight,j=mesh.geometry.attributes.skinIndex;
+    for(const name of Object.keys(soles)){const joint=mesh.skeleton.bones.findIndex(b=>b.name===name);let bottom=Infinity;
+      for(let i=0;i<p.count;i++)if(j.getX(i)===joint&&w.getX(i)>.999)bottom=Math.min(bottom,p.getY(i));
+      for(let i=0;i<p.count;i++)if(j.getX(i)===joint&&w.getX(i)>.999&&Math.abs(p.getY(i)-bottom)<1e-5)soles[name].push({mesh,index:i});
+    }
+  });
+  const walking=clips.find(c=>c.name==='Walking');
+  for(let phase=0;phase<33;phase++){
+    applyAnimalPose(data,{species,status:'walking',motionPhase:walking.duration*(phase+.3)/33},0);gltf.scene.updateMatrixWorld(true);
+    const inverse=parent.matrixWorld.clone().invert(),centers=[],heights=[];
+    for(const points of Object.values(soles)){assert(points.length>=3);const vertices=points.map(({mesh,index})=>mesh.getVertexPosition(index,new THREE.Vector3()).applyMatrix4(mesh.matrixWorld).applyMatrix4(inverse));const lo=Math.min(...vertices.map(v=>v.y)),hi=Math.max(...vertices.map(v=>v.y));assert(hi-lo<.003,`${species}: sole tilted during walking`);heights.push(lo);centers.push(vertices.reduce((sum,v)=>sum+v.x/vertices.length,0));}
+    assert(Math.min(...heights)>=.022-1e-5&&Math.min(...heights)<.024,`${species}: planted foot floating or penetrating`);
+    assert(centers[0]-centers[1]>.1,`${species}: feet crossed during walking`);
+  }
   for(const name of attacks){
     const clip=clips.find(c=>c.name===name),duration=library.clips[name].duration;
     assert.ok(Math.abs(clip.duration-duration)<1e-6);assert.equal(Math.min(...clip.tracks.map(t=>t.times[0])),0);

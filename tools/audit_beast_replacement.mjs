@@ -6,13 +6,14 @@ import {readGlb,writeGlb} from './glb-container.mjs';
 import {prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '../src/rendering/animal-actions.js';
 const species=process.argv[2]??'hyena';
 const root=new URL('../',import.meta.url),library=JSON.parse(await readFile(new URL('content/manifests/animal-actions.json',root),'utf8')).animals[species];
-const {json,bin}=readGlb(await readFile(new URL('public'+library.url,root)));
+const modelPath=process.env.WG_BEAST_QA_MODEL??'public'+library.url;
+const {json,bin}=readGlb(await readFile(new URL(modelPath,root)));
 for(const m of json.materials){delete m.normalTexture;delete m.pbrMetallicRoughness.baseColorTexture;}
 const bytes=writeGlb(json,bin),gltf=await new GLTFLoader().parseAsync(bytes.buffer,''),model=gltf.scene;
 model.updateMatrixWorld(true);
 const clips=prepareAnimalClips(gltf.animations),data={model,mixer:new THREE.AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)};
 const meshes=[];model.traverse(m=>{if(m.isSkinnedMesh)meshes.push(m);});
-const v=new THREE.Vector3(),report={url:library.url,clips:[],soleVertices:[],scope:'Native production animation controller, 129 phases per clip. Geometry-only GLTF load in Node; GPU and textures checked separately in game.'};
+const v=new THREE.Vector3(),report={url:library.url,modelPath,clips:[],soleVertices:[],scope:'Native production animation controller, 129 phases per clip. Geometry-only GLTF load in Node; GPU and textures checked separately in game.'};
 const head=model.getObjectByName('Head'),bindHead=head.getWorldQuaternion(new THREE.Quaternion()),headQ=new THREE.Quaternion(),gaze=new THREE.Vector3();
 for(const name of ['LeftFoot','RightFoot']){
  const points=[];
@@ -52,8 +53,9 @@ for(const clip of clips){
  assert(maxSoleSpread<(['buffalo','lion','rhino'].includes(species)?.003:.01),`${clip.name}: sole tilted/warped ${maxSoleSpread}`);
  if(clip.name!=='restpose')assert(minGround>=.0219,`${clip.name}: ground penetration ${minGround}`);
  assert(maxSupportClearance<.06,`${clip.name}: floating support ${maxSupportClearance}`);
+ if(process.env.WG_QA_STRICT_SUPPORT==='1'&&clip.name==='Walking')assert(maxSupportClearance<.024,`${clip.name}: stance sole not planted ${maxSupportClearance}`);
  if(['Walking','Running'].includes(clip.name))assert(maxGazePitch-minGazePitch>.1,`${clip.name}: head movement frozen`);
 }
 for(const sole of report.soleVertices)delete sole.points;
-await writeFile(new URL(`docs/qa/${species}-replacement/animation-audit.json`,root),JSON.stringify(report,null,2)+'\n');
+await writeFile(new URL(`${process.env.WG_BEAST_QA_OUT??`docs/qa/${species}-replacement`}/animation-audit.json`,root),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report,null,2));

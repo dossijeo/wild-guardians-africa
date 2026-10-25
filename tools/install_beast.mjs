@@ -18,6 +18,7 @@ if(json.asset.extras?.wildHeadPosture){
  // Provenance is a hash, not a runtime dependency on the superseded model.
  model.replacement.headPosture={...posture,sourceSha256:source.split('/').at(-1).replace('.glb',''),minimumFootprintRadius:previousActions.animals[species].presentation.footprint.radius};
 }
+if(json.asset.extras?.wildFootWeights)model.replacement.footWeights=json.asset.extras.wildFootWeights;
 if(!manifest.resources.some(r=>r.url===url))manifest.resources.push({url,bytes:bytes.length,sha256:sha,mime:'application/octet-stream',origins:[`${model.geometrySource}#repaired-retargeted`]});
 if(previous&&previous!==url){
  if(!/^\/assets\/[a-f0-9]{64}\.glb$/.test(previous))throw Error('Unexpected previous replacement path');
