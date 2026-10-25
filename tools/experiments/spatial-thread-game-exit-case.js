@@ -3,6 +3,21 @@ import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs
 import {compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
 export async function verifyGameExit(w){
  const retained=w.programLease;
+ let nativeRetentionBefore=null;
+ if(new URLSearchParams(location.search).get('retentionExit')==='1'){
+  if(!w.workerRetentionEnabled)throw Error('Worker retention must be enabled');
+  w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
+  if(w.raidCamera)w.raidCamera.update=()=>{};
+  w.controls.target.x+=96;w.camera.position.x+=96;
+  const deadline=performance.now()+60000;
+  for(;;){
+   await new Promise(requestAnimationFrame);
+   const summary=w.chunkStream.summary(),keys=[...w.chunkStream.retention.keys()];
+   if(keys.length&&!summary.busy&&!summary.queued){nativeRetentionBefore={...w.chunkStream.retention.summary(),keys,graphics:w.chunks.size,native:w.spatialSession.core.metrics().loadedChunks};break;}
+   if(performance.now()>deadline)throw Error('No settled native-only retention before exit');
+  }
+ }
+
  const handle=globalThis.qaThreadHandle,p=handle.core.preparation,session=w.spatialSession;
  let observed=false,disposalStates=[],disposePromise=null,lateInstalls=0,exitPromise=null;
  const temporaryScope=new URLSearchParams(location.search).get('qualityPinPrograms')==='1'?createProgramRetentionScope(w.renderer):null;
@@ -22,9 +37,9 @@ export async function verifyGameExit(w){
   const deadline=performance.now()+10000;while(p.status()===1){if(performance.now()>deadline)throw Error('Start timeout');await new Promise(r=>setTimeout(r,0));}
   if(p.status()!==2)throw Error('Missed running phase');
   const compilationPendingBeforeExit=!!compilation&&!compilationSettled;
-  const before=p.status(),begin=performance.now();w.qualitySetting(w.quality==='baja'?'media':'baja');const recovery=w.streamingProgramRefresh;await Promise.resolve();await Promise.resolve();if(!w.streamingProgramRefreshAbort)throw Error('Recovery did not start before exit');await globalThis.qaReturnToMenu();await disposePromise;await recovery;
+  const recoveryExpected=!!w.streamingOptions?.retainPrograms&&!!w.streamingRetentionStarted&&new URLSearchParams(location.search).get('streamingRecovery')!=='0';const before=p.status(),begin=performance.now();w.qualitySetting(w.quality==='baja'?'media':'baja');const recovery=w.streamingProgramRefresh;await Promise.resolve();await Promise.resolve();if(recoveryExpected&&!w.streamingProgramRefreshAbort)throw Error('Recovery did not start before exit');await globalThis.qaReturnToMenu();await disposePromise;await recovery;
   const compilationCancellation=compilation?await compilation:null;if(compilationCancellation?.resolved)throw Error('Exit prewarm unexpectedly resolved');
-  return {before,compilationPendingBeforeExit,compilationCancellation,elapsedMs:performance.now()-begin};
+  return {before,recoveryExpected,compilationPendingBeforeExit,compilationCancellation,elapsedMs:performance.now()-begin};
  })();}return id;};
  if(new URLSearchParams(location.search).get('exitPrewarm')==='direct'||scheduled){
   if(compilationSettled)throw Error('Prewarm no longer pending at exit');
@@ -39,5 +54,8 @@ export async function verifyGameExit(w){
  const workers=Object.keys(handle.runtime.PThread.pthreads).length+handle.runtime.PThread.unusedWorkers.length;
  if(!w.disposed||workers||lateInstalls||p.status()!==5||!document.querySelector('#native-menu'))throw Error('Game exit cleanup failed');
  if(retained&&retained.stats.released+retained.stats.abandoned!==retained.stats.retained)throw Error('Retained program references leaked');
- return {...exit,queuedBeforeExit,schedulerAfterExit:globalFrameScheduler.snapshot(),temporaryProgramScope:temporaryScope?.stats??null,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,recoveryFinished:w.streamingProgramRefresh===null,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
+ const nativeRetentionAfter=w.chunkStream.retention.summary();
+ if(nativeRetentionBefore&&(nativeRetentionAfter.demand||nativeRetentionAfter.retained))throw Error('Native retention survived world disposal');
+ if(w.streamingProgramRefresh)throw Error('Streaming recovery survived world disposal');
+ return {...exit,nativeRetentionBefore,nativeRetentionAfter,queuedBeforeExit,schedulerAfterExit:globalFrameScheduler.snapshot(),temporaryProgramScope:temporaryScope?.stats??null,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,recoveryFinished:w.streamingProgramRefresh==null,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
 }

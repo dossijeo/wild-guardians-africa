@@ -1,0 +1,336 @@
+{
+  "scope": "Two biomes, three paused round trips each, and exit after quality change with native work. Resource counts are not memory bytes. No AB performance or exhaustive leak conclusion.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "exit": {
+        "before": 2,
+        "recoveryExpected": false,
+        "compilationPendingBeforeExit": false,
+        "compilationCancellation": null,
+        "elapsedMs": 500.50999999046326,
+        "nativeRetentionBefore": {
+          "demand": 2,
+          "retained": 1,
+          "keys": [
+            "1,0"
+          ],
+          "graphics": 25,
+          "native": 26
+        },
+        "nativeRetentionAfter": {
+          "demand": 0,
+          "retained": 0
+        },
+        "queuedBeforeExit": 0,
+        "schedulerAfterExit": {
+          "completed": 87,
+          "cancelled": 2,
+          "failed": 0,
+          "units": 525,
+          "workMs": 316.72000002861023,
+          "coordinationMs": 49.98499858379364,
+          "maxUnitMs": 13.865000009536743,
+          "overruns": 25,
+          "deadlineLoans": 21,
+          "oversizeRecoveries": 0,
+          "blockingRecoveries": 0,
+          "continuationMs": 30.575000286102295,
+          "continuationTurns": 1491,
+          "median": 16.669999999998254,
+          "p95": 49.81999999999971,
+          "p99": 182.9800000000032,
+          "cpu95": 15.419999957084656,
+          "jitter": 33.150000000001455,
+          "budgetMs": 0,
+          "pending": 0,
+          "waiting": 0,
+          "oldestMs": 0
+        },
+        "temporaryProgramScope": null,
+        "programRetention": null,
+        "disposalStates": [
+          0,
+          5
+        ],
+        "worldDisposed": true,
+        "recoveryFinished": false,
+        "workers": 0,
+        "lateInstalls": 0,
+        "nativeStatus": 5,
+        "menu": true,
+        "stream": {
+          "created": 35,
+          "discarded": 2,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 1
+        }
+      },
+      "roundTrips": [
+        {
+          "leg": 0,
+          "displacement": 144,
+          "created": 15,
+          "resident": 27,
+          "nativeOnly": [
+            "2,0",
+            "1,0"
+          ],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 147,
+            "textures": 87,
+            "programs": 60
+          }
+        },
+        {
+          "leg": 1,
+          "displacement": 0,
+          "created": 30,
+          "resident": 25,
+          "nativeOnly": [],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 145,
+            "textures": 95,
+            "programs": 60
+          }
+        },
+        {
+          "leg": 2,
+          "displacement": 144,
+          "created": 45,
+          "resident": 27,
+          "nativeOnly": [
+            "2,0",
+            "1,0"
+          ],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 142,
+            "textures": 87,
+            "programs": 60
+          }
+        },
+        {
+          "leg": 3,
+          "displacement": 0,
+          "created": 60,
+          "resident": 25,
+          "nativeOnly": [],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 139,
+            "textures": 95,
+            "programs": 60
+          }
+        },
+        {
+          "leg": 4,
+          "displacement": 144,
+          "created": 75,
+          "resident": 27,
+          "nativeOnly": [
+            "2,0",
+            "1,0"
+          ],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 142,
+            "textures": 87,
+            "programs": 60
+          }
+        },
+        {
+          "leg": 5,
+          "displacement": 0,
+          "created": 90,
+          "resident": 25,
+          "nativeOnly": [],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 139,
+            "textures": 95,
+            "programs": 60
+          }
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "exit": {
+        "before": 2,
+        "recoveryExpected": true,
+        "compilationPendingBeforeExit": false,
+        "compilationCancellation": null,
+        "elapsedMs": 320.64999997615814,
+        "nativeRetentionBefore": {
+          "demand": 2,
+          "retained": 1,
+          "keys": [
+            "1,0"
+          ],
+          "graphics": 25,
+          "native": 26
+        },
+        "nativeRetentionAfter": {
+          "demand": 0,
+          "retained": 0
+        },
+        "queuedBeforeExit": 0,
+        "schedulerAfterExit": {
+          "completed": 77,
+          "cancelled": 0,
+          "failed": 0,
+          "units": 1321,
+          "workMs": 589.860001206398,
+          "coordinationMs": 60.264999985694885,
+          "maxUnitMs": 11.495000004768372,
+          "overruns": 41,
+          "deadlineLoans": 37,
+          "oversizeRecoveries": 0,
+          "blockingRecoveries": 0,
+          "continuationMs": 35.97499942779541,
+          "continuationTurns": 1231,
+          "median": 16.889999999999418,
+          "p95": 33.400000000001455,
+          "p99": 83.08000000000175,
+          "cpu95": 13.105000019073486,
+          "jitter": 16.510000000002037,
+          "budgetMs": 0,
+          "pending": 0,
+          "waiting": 0,
+          "oldestMs": 0
+        },
+        "temporaryProgramScope": null,
+        "programRetention": {
+          "retained": 76,
+          "released": 76,
+          "destroyed": 8,
+          "abandoned": 0,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "disposalStates": [
+          3,
+          5
+        ],
+        "worldDisposed": true,
+        "recoveryFinished": true,
+        "workers": 0,
+        "lateInstalls": 0,
+        "nativeStatus": 5,
+        "menu": true,
+        "stream": {
+          "created": 35,
+          "discarded": 1,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 1
+        }
+      },
+      "roundTrips": [
+        {
+          "leg": 0,
+          "displacement": 144,
+          "created": 15,
+          "resident": 27,
+          "nativeOnly": [
+            "2,0",
+            "1,0"
+          ],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 136,
+            "textures": 155,
+            "programs": 76
+          }
+        },
+        {
+          "leg": 1,
+          "displacement": 0,
+          "created": 30,
+          "resident": 25,
+          "nativeOnly": [],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 127,
+            "textures": 156,
+            "programs": 76
+          }
+        },
+        {
+          "leg": 2,
+          "displacement": 144,
+          "created": 45,
+          "resident": 27,
+          "nativeOnly": [
+            "2,0",
+            "1,0"
+          ],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 132,
+            "textures": 155,
+            "programs": 76
+          }
+        },
+        {
+          "leg": 3,
+          "displacement": 0,
+          "created": 60,
+          "resident": 25,
+          "nativeOnly": [],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 127,
+            "textures": 156,
+            "programs": 76
+          }
+        },
+        {
+          "leg": 4,
+          "displacement": 144,
+          "created": 75,
+          "resident": 27,
+          "nativeOnly": [
+            "2,0",
+            "1,0"
+          ],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 132,
+            "textures": 155,
+            "programs": 76
+          }
+        },
+        {
+          "leg": 5,
+          "displacement": 0,
+          "created": 90,
+          "resident": 25,
+          "nativeOnly": [],
+          "memoryBytes": 16777216,
+          "resources": {
+            "geometries": 127,
+            "textures": 156,
+            "programs": 76
+          }
+        }
+      ]
+    }
+  ]
+}

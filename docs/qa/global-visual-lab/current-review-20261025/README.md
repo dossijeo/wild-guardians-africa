@@ -1084,3 +1084,55 @@ comprobación de liberación cuando cambian actores/destinos. La demanda conserv
 rutas conocidas; no certifica corredores alternativos todavía no generados.
 No se declara resuelto todo caso de navegación hacia territorio no residente.
 La equivalencia artística global y el objetivo general continúan abiertos.
+
+## Ciclo de vida: salida y tres idas/vueltas en Sabana y Manglares
+
+Se amplía el test de salida con `WG_THREAD_RETENTION_EXIT=1`: primero mueve la
+cámara 96 m y espera residencia nativa sin malla. Después, el test existente
+inicia otro trabajo pthread, cambia baja→media y sale al menú. En ambos biomas
+quedan demanda/retención=0, pthreads=0, instalaciones tardías=0, scheduler pending=0
+ y estado nativo 5. Había un chunk retenido, 25 gráficos y 26 nativos antes de salir.
+Los tiempos transcurridos de la operación fueron 500,51 ms (Sabana) y 320,65 ms
+(Manglares): incluyen la salida completa y esperas; NO son tiempo CPU bloqueado
+ni una mejora A/B. Sabana no usa retención de programas; Manglares sí, y también
+termina su recuperación y libera sus referencias.
+
+Se conserva `sabana-worker-retention-exit.failure.json`: el primer intento se
+paró por una precondición antigua del test (exigir recuperación de programas
+cuando retainPrograms está desactivado). La aserción ahora depende de la opción
+real; no se elimina cuando esa función está activa. El primer informe válido de
+Sabana conserva recoveryFinished=false por comparar undefined===null; no había
+recuperación solicitada (recoveryExpected=false). Se corrige la observación para
+aceptar null/undefined como inactivo y además fallar si queda una promesa pendiente.
+Manglares verifica la ruta con recuperación realmente habilitada.
+
+Recorridos `*-worker-retention-roundtrips.json/.png`: seis tramos alternando
+144 m y origen, esperando final de cada tramo, simulación pausada en elapsed=120,
+720p/baja. Son tres idas y vueltas por bioma, 90 instalaciones por caso. No
+sustituyen a los controles nocturnos activos ni son benchmarks de FPS.
+
+| Bioma | Nativos lejos/regreso | Texturas lejos/regreso | Programas |
+|---|---|---|---|
+| Sabana | 27 / 25 en los tres ciclos | 87 / 95 en los tres ciclos | 60 |
+| Manglares | 27 / 25 en los tres ciclos | 155 / 156 en los tres ciclos | 76 |
+
+Se conservan dos chunks solo nativos al alejarse y ninguno al volver. Las
+geometrías no crecen entre ciclos equivalentes (sus recuentos iniciales descienden
+antes de estabilizarse). Memoria lineal WASM: 16 MiB en cada muestra. Los recuentos
+Three no son bytes de VRAM, y la capacidad lineal WASM no mide uso interno del heap.
+No se afirma ausencia de fugas en sesiones largas. Capturas finales inspeccionadas:
+suelo, hierba/helechos y edificios presentes; baja mantiene su perfil sin sombras
+solares, no debe confundirse con el aspecto aprobado de calidad media.
+
+Reproducir con WG_CURRENT_REVIEW=1, WG_THREADS=1, WG_THREAD_FROZEN=1,
+WG_FRAME_SCHEDULER=1, WG_THREAD_DEFAULT_STREAMING=1, WG_THREAD_QUALITY=baja,
+WG_WORKER_RESIDENCY=actors, WG_THREAD_PORT=5190 y el bioma correspondiente.
+Para salida: WG_THREAD_EXIT=1 y WG_THREAD_RETENTION_EXIT=1, sin BENCH.
+Para recorrido: WG_THREAD_BENCH=1, WG_THREAD_COMPLETE_LEGS=1,
+WG_THREAD_FRAMES=6 y WG_THREAD_DISTANCE=144, sin EXIT ni ACTIVE.
+El verificador `summarize-worker-residency-lifecycle.py` comprueba informes originales
+y produce `worker-residency-lifecycle-summary.json` con límites explícitos.
+
+Pendiente: ciclos largos con simulación activa y variación de demanda, cambios de
+calidad completados sin salir, recreación y comparación de coste antes de activar
+la variante por defecto. No se ha modificado producción en este pase de QA.

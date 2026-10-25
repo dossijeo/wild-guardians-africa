@@ -107,6 +107,7 @@ try{
  if(process.env.WG_MUD_EDGE_WORKER==='1')gameUrl.searchParams.set('mudEdgeWorker','1');
  if(process.env.WG_TRANSACTIONAL_PROGRAMS==='1')gameUrl.searchParams.set('transactionalPrograms','1');
  if(process.env.WG_THREAD_DEFAULT_STREAMING==='1')for(const key of ['waterBedWorker','waterShoreWorker','chunkEviction','warmObstruction','retainPrograms'])gameUrl.searchParams.delete(key);
+ if(process.env.WG_THREAD_RETENTION_EXIT==='1')gameUrl.searchParams.set('retentionExit','1');
  if(process.env.WG_THREAD_EXIT_PREWARM)gameUrl.searchParams.set('exitPrewarm',process.env.WG_THREAD_EXIT_PREWARM);
  if(process.env.WG_THREAD_CONTEXT_PREWARM==='1')gameUrl.searchParams.set('contextPrewarm','1');
  if(process.env.WG_THREAD_QUALITY_PIN_PROGRAMS==='1')gameUrl.searchParams.set('qualityPinPrograms','1');
@@ -269,7 +270,7 @@ try{
        [...w.chunkStream.desired.keys()].every(key=>w.chunks.has(key));
       stable=complete?stable+1:0;
      }
-     legs.push({leg:i,displacement,created:w.chunkStream.stats.created-initialCreated,resident:core.metrics().loadedChunks,keys:[...w.chunks.keys()].sort()});
+     legs.push({leg:i,displacement,created:w.chunkStream.stats.created-initialCreated,resident:core.metrics().loadedChunks,keys:[...w.chunks.keys()].sort(),nativeOnly:[...w.chunkStream.retention.keys()].filter(key=>!w.chunks.has(key)),memoryBytes:core.metrics().memoryBytes,resources:{...w.renderer.info.memory,programs:w.renderer.info.programs.length}});
     }
     if(w.actorsReady())actorsReadyFrames++;
     if(w.state.pauses.length)pausedFrames++;
