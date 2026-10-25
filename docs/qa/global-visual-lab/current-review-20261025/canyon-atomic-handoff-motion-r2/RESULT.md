@@ -13,3 +13,11 @@ Day installed chunk count ranges 25–29, compared with 19–25 in baseline. Thi
 Fifteen horizon/generator/staged-bed tests pass, including repeated held-worker-result updates without extra generation. These unit tests do not establish whole-game correctness.
 
 First attempt was interrupted by development-page reload while files were corrected (Execution context was destroyed). It is not a measurement; r2 ran with source fixed and completed both phases. The QA option is not enabled in the current review recipe.
+
+## Follow-up inspection and test coverage
+
+Inspected all nine night contact-sheet checkpoints: no large rectangular sky opening visible. This is not a full-frame video inspection and does not certify fine seams or transition smoothness.
+
+Added a passing lifecycle unit test using marked worker results to prove held data is discarded on camera change, terrain revision and quality change, and that disposal clears retained data. Five staged-bed/handoff tests pass. Browser context restoration and forced near-chunk rebuild still need real-game coverage.
+
+The capture harness now records the adopted horizon region, missing/hidden chunks inside its hole, and pending adoption on every frame. This added telemetry is NOT present in this r2 run and must not be inferred retroactively from its global chunk count. The next run can assert coverage across every sampled frame while real chunk preparation is pending.

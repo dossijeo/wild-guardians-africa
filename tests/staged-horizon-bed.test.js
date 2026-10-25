@@ -75,3 +75,20 @@ test('horizon holds completed worker data until destination chunks are ready wit
  ready=true;assert.deepEqual(horizon.update(config,profile,next,'media'),next);assert.notEqual(horizon.group,old);assert.equal(worker.requests.length,2);assert.equal(horizon.pendingAdoption,null);
  horizon.dispose();assert.equal(scene.children.length,0);
 });
+
+
+test('held horizon result is invalidated by camera, terrain revision, quality and disposal',()=>{
+ const worker={requests:[],postMessage(r){this.requests.push(r);},terminate(){},reply(marker){const r=this.requests.at(-1);const terrain=new Float32Array(27);terrain[1]=marker;this.onmessage({data:{id:r.id,data:{terrain,water:new Float32Array(0)}}});}};
+ let revision=1,ready=false;
+ const scene=new THREE.Scene(),h=new NativeHorizon(scene,()=>new THREE.MeshBasicMaterial(),null,null,{workerFactory:()=>worker,spatial:{revision:()=>revision,snapshot:()=>({})},canAdopt:()=>ready});
+ const config={biome:'canyons',seed:712,river:true},profile={colors:{water:'#123456'}},a=nativeNearRegion({x:0,z:0}),b=nativeNearRegion({x:48,z:0}),c=nativeNearRegion({x:96,z:0});
+ const update=(region,quality='media')=>h.update(config,profile,region,quality);
+ update(a);worker.reply(1);update(a);const original=h.group;
+ update(b);worker.reply(2);update(b);const obsolete=h.pendingAdoption.data;
+ update(c);assert.equal(h.pendingAdoption,null);assert.equal(h.group,original);worker.reply(3);update(c);assert.notEqual(h.pendingAdoption.data,obsolete);
+ revision++;update(c);assert.equal(h.pendingAdoption,null);worker.reply(4);update(c);assert.equal(h.pendingAdoption.data.terrain[1],4);
+ update(c,'muy_baja');assert.equal(h.pendingAdoption,null);worker.reply(5);update(c,'muy_baja');
+ ready=true;update(c,'muy_baja');assert.deepEqual(h.region,c);assert.equal(h.group.children[0].geometry.attributes.position.getY(0),5);assert.equal(h.group.children[0].material.isMeshBasicMaterial,true);
+ ready=false;update(b,'muy_baja');worker.reply(6);update(b,'muy_baja');assert.ok(h.pendingAdoption);
+ h.dispose();h.dispose();assert.equal(h.pendingAdoption,null);assert.equal(scene.children.length,0);
+});
