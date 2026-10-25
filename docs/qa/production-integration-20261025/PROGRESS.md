@@ -103,3 +103,17 @@ Vista específica de vegetación normal: package-mangrove-pan-context.json y cap
 
 
 Matriz activa de producción completada: PRODUCTION-ACTIVE-MATRIX.json y production-{bioma}-active.json. Se eliminan todas las recetas gráficas de URL; quedan solo tres flags del protocolo de diagnóstico de calidad/simulación. Los seis completan 240 frames con simulación avanzando, 15 chunks nuevos, cero fallidos y colas vacías al finalizar. Son fixtures pobladas instrumentadas (no UI manual); el paquete normal se validó aparte. Un recorrido por bioma no prueba mejora estadística, CPU/GPU aislados ni toda la matriz día/noche. No hubo builds/tests locales paralelos a las medidas.
+
+
+Segundo fallo nativo de CI confirmado: run 40194212402 (84cb19096), smoke sin fixture, 420081 ms, 84 % Preparing rendering resources; windows-smoke-failure-84cb.json. La traza aún no existía en ese commit. Se inicia diagnóstico local SwiftShader (session 71737, package-software-canyon.json/log) con el paquete reconstruido y colector nativo activado explícitamente para QA. No se presume que CI use SwiftShader y no es benchmark Intel UHD. No ampliar timeout ni inferir causa hasta leer fases pendientes.
+
+
+La reproducción con flags SwiftShader y calidad por defecto terminó sin fallo (package-software-canyon.json), pero ese primer informe no registró identidad efectiva de GPU ni traza de éxito; no usarlo como prueba del backend. Se añade captura de ambos y se repite con preferencias muy_baja como smoke: session 96558, package-software-canyon-lowest.json/log. Es QA explícito (colector activado y preferencia de calidad inicial), no ruta completamente sin instrumentación. Fetch confirma origin/main sigue siendo ancestro (0 commits exclusivos main), PR159 OPEN/DRAFT/MERGEABLE; esto no equivale a aceptación para merge.
+
+
+SwiftShader muy_baja completado: package-software-canyon-lowest.json confirma ANGLE Vulkan SwiftShader Device (Subzero), sin errores ni recursos ausentes y sin fases pendientes al terminar. Es diagnóstico de compatibilidad/carga, no benchmark Intel UHD ni resolución del timeout de WebView2 CI. Run Windows 40196284890 confirmado en desktop:build; no reiniciar ni ampliar timeout.
+
+Referencias artísticas nuevas recibidas: cuatro parejas original/mockup para Gran Río, Sabana, Manglares y Volcanes. Dirección: luz cálida, mayor separación entre luz y sombra y fondo suavizado. Mantener encuadre: el desenfoque solicitado corresponde a DOF, no a cambiar FOV. Evaluar DOF separado por su coste GPU y legibilidad, sin prometer coste cero. Conservar ciclo día/noche (no convertir mediodía permanentemente en atardecer), helechos holly/LOD/fixed512 de Manglares, lava aprobada; cambios mínimos en Desierto/Gran Cañón. No usar hojas redondas del mockup como selección final. Comparación controlada imagen/frametime requerida antes de adoptar. Este pase no sustituye los pendientes de integración, menú y microeventos.
+
+
+Cancelación normal de carga validada con paquete construido: package-mangrove-cancel.json y capturas antes/después. Cancelar al 31 % mediante #loading-cancel, retorno al menú, cierre observado de spatial-threaded.mjs y otros workers, nueva selección de Manglares y llegada al HUD. Cero errores/404. Captura final inspeccionada: poblado, suelo, agua y sombras presentes. Un ciclo no prueba ausencia de fugas acumuladas; no se usa como benchmark ni evidencia artística de helechos, fuera de la cámara inicial. Harness WG_PACKAGE_UI_CANCEL=1 conserva el recorrido normal y recoge cierres de workers.
