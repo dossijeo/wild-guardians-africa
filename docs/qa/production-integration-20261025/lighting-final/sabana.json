@@ -1,0 +1,225 @@
+{
+  "scope": "Real campaign renderer, seed 712, same camera and visual time; Integrated final daylight on/off with the same scene and time. DOF disabled in both arms to isolate lighting; no timing claim.",
+  "records": [
+    {
+      "arm": "original",
+      "phase": "day",
+      "file": "sabana-original-day.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "sabana",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&savannaGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 70,
+        "triangles": 638318,
+        "memory": {
+          "geometries": 247,
+          "textures": 92
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "sabana",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3158,
+          "far": 4885,
+          "leaves": 76976,
+          "triangles": 228560,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 81.69499969482422,
+            "selectionMs": 91.82999968528748,
+            "selectionCount": 89,
+            "candidates": 34000,
+            "masked": 21828,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "original",
+      "phase": "night",
+      "file": "sabana-original-night.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "sabana",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&savannaGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 70,
+        "triangles": 638318,
+        "memory": {
+          "geometries": 247,
+          "textures": 92
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "sabana",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3158,
+          "far": 4885,
+          "leaves": 76976,
+          "triangles": 228560,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 81.69499969482422,
+            "selectionMs": 91.82999968528748,
+            "selectionCount": 89,
+            "candidates": 34000,
+            "masked": 21828,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "warm",
+      "phase": "day",
+      "file": "sabana-warm-day.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "sabana",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&savannaGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 70,
+        "triangles": 638318,
+        "memory": {
+          "geometries": 249,
+          "textures": 89
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "sabana",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3158,
+          "far": 4885,
+          "leaves": 76976,
+          "triangles": 228560,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 56.730000138282776,
+            "selectionMs": 73.22499978542328,
+            "selectionCount": 96,
+            "candidates": 33600,
+            "masked": 21799,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "warm",
+      "phase": "night",
+      "file": "sabana-warm-night.png",
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "sabana",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&savannaGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 70,
+        "triangles": 638318,
+        "memory": {
+          "geometries": 249,
+          "textures": 89
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": null,
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "sabana",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 3158,
+          "far": 4885,
+          "leaves": 76976,
+          "triangles": 228560,
+          "chunks": 25,
+          "cachedTiles": 82,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 56.730000138282776,
+            "selectionMs": 73.22499978542328,
+            "selectionCount": 96,
+            "candidates": 33600,
+            "masked": 21799,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "glError": 0
+      },
+      "errors": []
+    }
+  ]
+}
