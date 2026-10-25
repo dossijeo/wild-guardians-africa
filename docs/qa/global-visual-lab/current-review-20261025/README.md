@@ -950,3 +950,49 @@ sin acumular geometría indefinidamente y sin cambiar reglas o navegación.
 No continuar dando por válidos los controles nocturnos hasta resolverlo. Los
 otros cinco biomas de esa serie no llegaron a ejecutarse; no hay seis validaciones
 nocturnas. Se conservan ambos fallos y el probe positivo.
+
+## Separación diagnóstica de residencia nativa y gráfica
+
+Dos ejecuciones adicionales de Sabana/noche/baja con
+`WG_QA_NATIVE_RESIDENT_CHUNK=1,0` conservan únicamente los datos nativos al
+expulsar ese chunk. No agregan la clave a desired ni impiden retirar sus mallas.
+Ambas completan 10 chunks nuevos, 180/180 frames con actores listos, cero pausas,
+horizonte lejano terminado y ningún error adicional al aviso conocido X4000.
+La repetición instrumentada verifica 25 chunks gráficos (sin 1,0) y 26 nativos;
+se intercepta una expulsión. La memoria lineal WASM sigue en 16 MiB, pero esto
+NO mide el incremento exacto de memoria usada dentro del heap ni su pico.
+
+Informes/capturas: `sabana-low-night-native-residency-{probe,repeat}.{json,png}`.
+Resumen con aserciones: `native-residency-diagnosis.json`. Primera captura
+inspeccionada: suelo y vegetación presentes, HUD nocturno e incursión activa.
+No son equivalencia píxel a píxel: la simulación avanza según tiempo real.
+No se atribuye mejora de rendimiento frente a los controles que se pausaban.
+
+Reproducir con el harness `check-spatial-thread-game.mjs`, Vite en 5190:
+WG_THREAD_PORT=5190, WG_CURRENT_REVIEW=1, WG_THREADS=1,
+WG_THREAD_BENCH=1, WG_THREAD_FROZEN=1, WG_THREAD_ACTIVE=1, WG_THREAD_GPU=1,
+WG_FRAME_SCHEDULER=1, WG_THREAD_DEFAULT_STREAMING=1,
+WG_THREAD_BIOME=sabana, WG_THREAD_QUALITY=baja, WG_THREAD_LOCK_RAID_CAMERA=1,
+WG_THREAD_FIXTURE_FILE=.codex-tmp/current-night-fixtures/sabana.json,
+WG_QA_NATIVE_RESIDENT_CHUNK=1,0 y WG_THREAD_REPORT con la ruta de salida.
+Generar antes las fixtures mediante prepare-current-night-fixtures.py.
+No activar WG_QA_RESIDENT_CHUNK ni WG_SPATIAL_FAILURE_DETAILS para estos casos.
+
+La API de liberación en spatial-chunk-stream.js permite separar ambas residencias
+sin cambiar rutas ni materiales. Sin embargo, el probe fijo NO debe incorporarse
+como política final. La auditoría identifica requisitos pendientes:
+
+- Unificar las liberaciones por expulsión, cancelación y descarte de preparación;
+  actualmente hay llamadas directas a core.removeChunk además de releaseChunk(s).
+- Definir demanda por actores/destinos y liberación acotada cuando cese; retener
+  solamente un destino no garantiza que todos los corredores futuros existan.
+- Invalidar/regenerar datos nativos retenidos tras cambios de poblado. El stream
+  actual ignora invalidaciones fuera de loaded/desired gráficos.
+- Incluir la residencia nativa necesaria en las copias espaciales de previsualización:
+  isolatedPreviewCore recorre actualmente streamOptions.loaded(), las mallas.
+- Preservar activeBounds y las reglas de incursión; no añadir estos datos a raidPins
+  como atajo, porque también expandiría los límites de navegación de incursiones.
+
+La hipótesis ahora respaldada es conservar datos autoritativos requeridos sin
+mantener recursos GPU lejanos. Falta implementar y validar su ciclo de vida general.
+No hay cambios de producción ni cierre de los controles nocturnos en este pase.
