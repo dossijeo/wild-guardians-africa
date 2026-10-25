@@ -73,6 +73,25 @@ try{
   }
 
  }
+ if(process.env.WG_PACKAGE_UI_CONTEXT==='1'){
+  await page.screenshot({path:report.replace(/\.json$/,'-before-loss.png')});
+  result.context=await page.evaluate(async()=>{
+   const canvas=document.querySelector('#world'),gl=canvas?.getContext('webgl2');
+   const extension=gl?.getExtension('WEBGL_lose_context');
+   if(!extension)throw Error('Context-loss extension unavailable');
+   const events=[],began=performance.now();
+   await new Promise((resolve,reject)=>{
+    const timeout=setTimeout(()=>reject(Error('Context restoration timed out')),30000);
+    canvas.addEventListener('webglcontextlost',()=>{events.push('lost');setTimeout(()=>extension.restoreContext(),250);},{once:true});
+    canvas.addEventListener('webglcontextrestored',()=>{events.push('restored');clearTimeout(timeout);resolve();},{once:true});
+    extension.loseContext();
+   });
+   return {events,elapsedMs:performance.now()-began};
+  });
+  await page.waitForTimeout(3000);
+  result.context.stageBusy=await page.locator('#stage').getAttribute('aria-busy');
+ }
+ if(errors.length||requests.length)throw Error('Package run reported errors or missing resources: '+JSON.stringify({errors,requests}));
  await page.screenshot({path:report.replace(/\.json$/,'.png')});
  console.log(JSON.stringify(result));
 }catch(e){result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}

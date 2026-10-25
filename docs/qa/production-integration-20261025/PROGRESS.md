@@ -92,3 +92,6 @@ RENDERER-AUDIT.md registra la revisión de agrupación/culling/rangos parciales/
 
 
 Instalador local r3 terminado exit 0: NSIS 403,11 MiB. El log desktop-build-local-r3.log confirma bundle completo. Esta build se inició antes de la instrumentación de 49bdc0fde; no presentarla como build de ese cambio diagnóstico. Suite completa session 66802 aún en ejecución, ya superó 950 subtests.
+
+
+Contexto real en paquete: package-mangrove-context.json registra WEBGL_lose_context lost/restored (450,87 ms entre llamada y evento), stage no ocupado y cero errores/404. Captura posterior inspeccionada: suelo, agua, edificios y sombras presentes. La prueba usa arranque normal y extensión de pérdida de contexto, espera 3 s tras restauración. No mide tiempo GPU ni prueba ausencia de fugas; cámara inicial de poblado no permite certificar la capa de helechos. Conservar pendiente una vista específica de vegetación. El harness ahora falla explícitamente ante errores/recursos ausentes, además de guardarlos en JSON.
