@@ -73,6 +73,15 @@ try{
   }
 
  }
+ if(process.env.WG_PACKAGE_UI_PAN==='1'){
+  for(let i=0;i<4;i++){
+   await page.mouse.move(600,220);await page.mouse.down();
+   await page.mouse.move(600,510,{steps:25});await page.mouse.up();
+   await page.waitForTimeout(700);
+  }
+  await page.waitForTimeout(3000);
+  result.cameraInput='Four left-button vertical drags, normal OrbitControls pan';
+ }
  if(process.env.WG_PACKAGE_UI_CONTEXT==='1'){
   await page.screenshot({path:report.replace(/\.json$/,'-before-loss.png')});
   result.context=await page.evaluate(async()=>{

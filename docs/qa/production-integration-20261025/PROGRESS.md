@@ -95,3 +95,8 @@ Instalador local r3 terminado exit 0: NSIS 403,11 MiB. El log desktop-build-loca
 
 
 Contexto real en paquete: package-mangrove-context.json registra WEBGL_lose_context lost/restored (450,87 ms entre llamada y evento), stage no ocupado y cero errores/404. Captura posterior inspeccionada: suelo, agua, edificios y sombras presentes. La prueba usa arranque normal y extensión de pérdida de contexto, espera 3 s tras restauración. No mide tiempo GPU ni prueba ausencia de fugas; cámara inicial de poblado no permite certificar la capa de helechos. Conservar pendiente una vista específica de vegetación. El harness ahora falla explícitamente ante errores/recursos ausentes, además de guardarlos en JSON.
+
+
+Suite completa actual finalizada exit 0: 4920 tests, 4858 pass, 0 fail, 62 skip, 454686 ms (full-tests-current.log). No contabilizar skips como validación. Se ejecutó como suite funcional, no en condiciones de benchmark aislado.
+
+Vista específica de vegetación normal: package-mangrove-pan-context.json y capturas antes/después. Cuatro arrastres izquierdos normales alejan la cámara del poblado; pérdida/restauración real por extensión WebGL. Ambas capturas inspeccionadas: cobertura de frondas conservada, sin pérdidas evidentes de textura/densidad; cero errores/404. Movimiento, agua y tiempo de juego siguen activos, de modo que no son imágenes idénticas ni comparación métrica de píxeles.
