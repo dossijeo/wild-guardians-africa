@@ -4,11 +4,11 @@ Selection: final daylight enabled for Sabana, Gran Rio, Manglares and Volcanes; 
 
 | Requirement | Current evidence | Remaining gate |
 | --- | --- | --- |
-| Daylight comparison | lighting-final/comparison.html, 16 real day/night on/off captures | Controlled timing and fern LOD movement review |
+| Daylight comparison | lighting-final/comparison.html, 16 real day/night on/off captures | Idle-host ABAB recorded; no consistent regression. Stepped day/night LOD review completed; no universal artifact-free claim. |
 | No DOF | 79f58d197, scene route restored, experimental module outside production | No further artistic change requested |
 | Library development | final-library-development/report.json, 16 cases/four viewports | Complete for linked demonstrations |
 | Production Library | final-library-pruned.json, four functional demos/no missing resources | Complete for reduced package |
-| New game, save, continue | Six-biome final-flow/final-no-dof-flow reports; daytime Mangrove final-day-transition | Four earlier biome flows predate DOF removal; distinguish exact versions |
+| New game, save, continue | FINAL-PRUNED-FLOW-MATRIX.json, six final-pruned-flow reports | Final reduced package: all six pass new game, save, exit, Continue and camera input |
 | Loading day/night | FINAL-DAY-TRANSITION.md, FINAL-NIGHT-TRANSITION.md and videos | Reviewed actual transition frames, not every biome/time combination |
 | Interactive loading | FINAL-INTERACTIVE-LOADING.md, real pointer before/after | Five visible plants, flow ready/no errors |
 | Native runtime | final-native-pruned-smoke.json | Passed real WebView2 smoke at low quality |
