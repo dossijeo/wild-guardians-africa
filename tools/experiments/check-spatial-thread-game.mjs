@@ -300,14 +300,16 @@ try{
     if(i%60===0)readiness.push({frame:i,elapsed:w.state.elapsed,ready:w.actorsReady(),pauses:[...w.state.pauses],stream:w.chunkStream.summary()});
    }
    const deadline=performance.now()+60000;
-   while(w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||w.horizon?.pendingAdoption||farPending()){if(performance.now()>deadline)throw Error('Stream completion deadline '+JSON.stringify({stream:w.chunkStream.summary(),horizon:{latest:!!w.horizon?.generator.latest,busy:!!w.horizon?.generator.busy,pending:!!w.horizon?.pendingPreparation},far:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})),scheduler:w.frameScheduler?.snapshot(),jobs:[...(w.frameScheduler?.jobs.values()??[])].map(j=>({label:typeof j.label==='function'?j.label():j.label,cost:j.cost,estimate:j.estimate?.(),deadline:j.deadline,age:performance.now()-j.created,waiting:!!j.waiting})),paused:w.state.pauses}));const now=await frame();rows.frames.push(now-last);last=now;}
+   const streamPending=()=>w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||w.horizon?.pendingAdoption||farPending();
+   // A transient empty queue can precede the next standby bank preparation.
+   for(let stable=0;stable<12;stable=streamPending()?0:stable+1){if(performance.now()>deadline)throw Error('Stream completion deadline '+JSON.stringify({stream:w.chunkStream.summary(),horizon:{latest:!!w.horizon?.generator.latest,busy:!!w.horizon?.generator.busy,pending:!!w.horizon?.pendingPreparation},far:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})),scheduler:w.frameScheduler?.snapshot(),jobs:[...(w.frameScheduler?.jobs.values()??[])].map(j=>({label:typeof j.label==='function'?j.label():j.label,cost:j.cost,estimate:j.estimate?.(),deadline:j.deadline,age:performance.now()-j.created,waiting:!!j.waiting})),paused:w.state.pauses}));const now=await frame();rows.frames.push(now-last);last=now;}
   }finally{if(loafObserver){longAnimationFrames.push(...loafObserver.takeRecords().map(entry=>entry.toJSON()));loafObserver.disconnect();}globalThis.qaMainPhase=null;globalThis.qaMainFrame=null;game.pause(w.state,'menu');gpu?.stop();for(const undo of restore)undo();
   programLease?.dispose();
   }
   const gpuResult=gpu?await gpu.finish():null;
 
   if(options.zigzag&&core.preparation&&rows.cancel.length===0)throw Error('Zigzag did not exercise native cancellation');
-  if(w.chunkStream.summary().failed||w.chunkStream.summary().busy||w.chunkStream.summary().queued)throw Error('Stream did not settle cleanly');
+  if(w.chunkStream.summary().failed||w.chunkStream.summary().busy||w.chunkStream.summary().queued||farPending())throw Error('Stream did not settle cleanly after GPU query collection');
   const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {count:values.length,mean:values.reduce((a,b)=>a+b,0)/(values.length||1),p95:sorted[Math.floor((sorted.length-1)*.95)]??null,max:sorted.at(-1)??null};};
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   if(options.active&&w.state.elapsed<=initialElapsed)throw Error('Active simulation did not advance');
