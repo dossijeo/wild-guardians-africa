@@ -218,50 +218,50 @@
       }
     },
     "lion": {
-      "url": "/assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "url": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
       "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
-      "sha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+      "sha256": "a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf",
       "presentation": {
         "scale": 1,
-        "bindHeight": 1.8099999647005807,
+        "bindHeight": 1.81000025589583,
         "bindMin": [
-          -0.9272147826296192,
-          -3.094386672084967e-8,
-          -0.3137237522116196
+          -1.0785419836593455,
+          1.8311670255123415e-7,
+          -0.5336184325889677
         ],
         "bindMax": [
-          0.9256164030477584,
-          1.8099999337567139,
-          0.3049231128226246
+          1.098148679037297,
+          1.8100004390125324,
+          0.2865323469090436
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Leon_Bestiario_Corregido_v2/script-1.js",
         "sourceScriptSha256": "757c7e2898ba70c5622d5648e200ff19273785452ccab340c78759a36000bd94",
         "footprint": {
-          "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 14049,
-          "bindRadius": 0.4165557637026854,
+          "method": "dominant skin weight excluding Shoulder/Arm/Hand/Tail/ClothRear; native in-place Walking/Running; radial body cylinder",
+          "bodyVertices": 12643,
+          "bindRadius": 0.4760489271249138,
           "clips": {
-            "Walking": {
-              "samples": 65,
-              "radius": 0.7641619177814347
-            },
             "Running": {
               "samples": 65,
-              "radius": 0.7998726124433984
+              "radius": 0.7011821047213957
+            },
+            "Walking": {
+              "samples": 65,
+              "radius": 0.7660683282304349
             }
           },
           "clearance": 0.05,
-          "radius": 0.85
+          "radius": 0.82
         }
       },
       "clips": {
-        "Walking": {
-          "duration": 1.041666705161333,
+        "Running": {
+          "duration": 0.6666666455566883,
           "start": 0.0416666679084301,
           "loop": true
         },
-        "Running": {
-          "duration": 0.6666666455566883,
+        "Walking": {
+          "duration": 1.041666705161333,
           "start": 0.0416666679084301,
           "loop": true
         },

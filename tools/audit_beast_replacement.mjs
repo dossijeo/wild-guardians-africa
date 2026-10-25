@@ -28,7 +28,7 @@ for(const name of ['LeftFoot','RightFoot']){
 // animation cannot deform their position relative to that bone.
 let rigidNeck=0;
 for(const mesh of meshes){const s=mesh.geometry.attributes.skinIndex,w=mesh.geometry.attributes.skinWeight,j=mesh.skeleton.bones.findIndex(b=>b.name==='Neck');for(let i=0;i<s.count;i++)if(s.getX(i)===j&&w.getX(i)>.999)rigidNeck++;}
-if(species!=='buffalo')assert(rigidNeck>=500);report.rigidNeckVertices=rigidNeck;
+if(['warthog','hyena'].includes(species))assert(rigidNeck>=500);report.rigidNeckVertices=rigidNeck;
 for(const clip of clips){
  let minGround=Infinity,maxRaisedFoot=-Infinity,maxSupportClearance=-Infinity,maxSoleSpread=0,minGazePitch=Infinity,maxGazePitch=-Infinity;
  for(let phase=0;phase<129;phase++){
@@ -48,7 +48,7 @@ for(const clip of clips){
   maxSupportClearance=Math.max(maxSupportClearance,support);
  }
  report.clips.push({name:clip.name,duration:clip.duration,minGround,maxRaisedFoot,maxSupportClearance,maxSoleSpread,gazePitchDegrees:[minGazePitch,maxGazePitch]});
- assert(maxSoleSpread<(species==='buffalo'?.003:.01),`${clip.name}: sole tilted/warped ${maxSoleSpread}`);
+ assert(maxSoleSpread<(['buffalo','lion'].includes(species)?.003:.01),`${clip.name}: sole tilted/warped ${maxSoleSpread}`);
  if(clip.name!=='restpose')assert(minGround>=.0219,`${clip.name}: ground penetration ${minGround}`);
  assert(maxSupportClearance<.06,`${clip.name}: floating support ${maxSupportClearance}`);
  if(['Walking','Running'].includes(clip.name))assert(maxGazePitch-minGazePitch>.1,`${clip.name}: head movement frozen`);

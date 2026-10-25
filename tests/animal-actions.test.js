@@ -123,3 +123,16 @@ for(const [species,library] of Object.entries(A.animals))test(`${species}: origi
   t.diagnostic(JSON.stringify({species,groundingComparisonPoses:72,maximumGroundError}));
   assert.deepEqual(JSON.parse(readFileSync(new URL('../public/content/animal-actions.json',import.meta.url),'utf8')),A);
 });
+
+// Flexible appendages use their own baked motion and cannot become a rigid
+// navigation obstacle or raise the actor when a loose tip reaches the floor.
+test('secondary cloth and tail are excluded from grounding and walking body clearance',()=>{
+ const geometry=new THREE.BufferGeometry();
+ geometry.setAttribute('position',new THREE.Float32BufferAttribute([.1,0,0,.1,.1,0,100,-2,0,100,-1,0,-100,-3,0,-100,-2,0],3));
+ geometry.setAttribute('skinIndex',new THREE.Uint16BufferAttribute([0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,2,0,0,0,2,0,0,0],4));
+ geometry.setAttribute('skinWeight',new THREE.Float32BufferAttribute(Array.from({length:6},()=>[1,0,0,0]).flat(),4));
+ const root=new THREE.Group(),bones=['LeftFoot','Tail_01','ClothRear_L_Inner_03'].map(name=>{const b=new THREE.Bone();b.name=name;root.add(b);return b;});
+ const mesh=new THREE.SkinnedMesh(geometry,new THREE.MeshStandardMaterial());root.add(mesh);root.updateMatrixWorld(true);mesh.bind(new THREE.Skeleton(bones));
+ assert.deepEqual(animalGroundSamples(root).map(s=>s.index),[0]);
+ const body=animalBodyVertices(root);assert.deepEqual(body[0].vertices,[0,1]);assert(Math.abs(bodyRadiusAt(root,body)-.1)<1e-6);
+});

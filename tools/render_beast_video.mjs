@@ -4,7 +4,7 @@ import {once} from 'node:events';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const {chromium}=createRequire(import.meta.url)('playwright');
-const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',buffalo:'Búfalo'})[species];if(!label)throw Error('Unsupported review species');
+const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',buffalo:'Búfalo',lion:'León'})[species];if(!label)throw Error('Unsupported review species');
 const out=`docs/qa/${species}-replacement`,fps=30,base=process.env.WG_QA_URL??'http://127.0.0.1:5194';
 await mkdir(out,{recursive:true});
 const library=JSON.parse(await readFile('content/manifests/animal-actions.json','utf8')).animals[species];
@@ -16,6 +16,7 @@ for(const name of ['Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo
 add('Walking','day','back',2);add('Running','day','back',3);
 add('Walking','night','front',2);add('Running','night','front',3);
 for(const name of ['Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo','Weapon_Combo_2'])add(name,'night');
+if(species==='lion'){for(const name of ['Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo','Weapon_Combo_2'])add(name,'day','back');add('Walking','night','back',3);add('Running','night','back',4);}
 let totalFrames=0;for(const s of segments){s.frames=Math.ceil(s.seconds*fps);s.start=totalFrames/fps;totalFrames+=s.frames;s.end=totalFrames/fps;}
 const output=resolve(out,`${species}-animations.mp4`),browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-proxy-server']});
 let encoder,encoderLog='';const errors=[];

@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import {prepareAnimalClips} from '../src/rendering/animal-actions.js';
 
 // Navigation uses a rotation-independent body cylinder. Arms and carried
-// weapons are presentation/contact geometry, not the actor's walking body.
+// weapons, flexible cloth and tails are presentation/contact geometry, not
+// the actor's walking body.
 export function animalBodyVertices(scene){
   const meshes=[];
   scene.traverse(mesh=>{
@@ -12,7 +13,7 @@ export function animalBodyVertices(scene){
       let dominant=0;
       for(let j=1;j<4;j++)if(weights.getComponent(i,j)>weights.getComponent(i,dominant))dominant=j;
       const name=mesh.skeleton.bones[indices.getComponent(i,dominant)].name;
-      if(!/Shoulder|Arm|Hand/.test(name))vertices.push(i);
+      if(!/Shoulder|Arm|Hand|^Tail_|^ClothRear_/.test(name))vertices.push(i);
     }
     if(vertices.length)meshes.push({mesh,vertices});
   });
@@ -41,5 +42,6 @@ export function calibrateAnimalFootprint(gltf){
   mixer.stopAllAction();
   // Five centimetres of numerical/pose sampling clearance; round outward.
   const clearance=.05,radius=Math.ceil((maximum+clearance)*100)/100;
-  return {method:'dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder',bodyVertices:body.reduce((n,b)=>n+b.vertices.length,0),bindRadius,clips,clearance,radius};
+  let secondary=false;gltf.scene.traverse(o=>{if(o.isBone&&/^(Tail_|ClothRear_)/.test(o.name))secondary=true;});
+  return {method:'dominant skin weight excluding Shoulder/Arm/Hand'+(secondary?'/Tail/ClothRear':'')+'; native in-place Walking/Running; radial body cylinder',bodyVertices:body.reduce((n,b)=>n+b.vertices.length,0),bindRadius,clips,clearance,radius};
 }

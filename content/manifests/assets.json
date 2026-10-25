@@ -5205,6 +5205,15 @@
       "origins": [
         "Wild Guardians New/animales/búfalo.glb#repaired-retargeted"
       ]
+    },
+    {
+      "url": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
+      "bytes": 45698076,
+      "sha256": "a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/león.glb#repaired-retargeted"
+      ]
     }
   ],
   "models": [
@@ -5561,50 +5570,48 @@
       }
     },
     {
-      "url": "/assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "url": "/assets/a34a6f6146279bf889cb07275ddfda07e7bed2779cdeed82e7d295342b4f8baf.glb",
       "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
       "animations": [
         {
-          "name": "Walking",
-          "channels": 56
+          "name": "Running",
+          "channels": 234
         },
         {
-          "name": "Running",
-          "channels": 56
+          "name": "Walking",
+          "channels": 234
         },
         {
           "name": "Charged_Upward_Slash",
-          "channels": 56
+          "channels": 234
         },
         {
           "name": "Right_Hand_Sword_Slash",
-          "channels": 56
+          "channels": 234
         },
         {
           "name": "Weapon_Combo",
-          "channels": 56
+          "channels": 234
         },
         {
           "name": "Weapon_Combo_2",
-          "channels": 56
+          "channels": 234
         }
       ],
-      "nodes": 30,
-      "meshes": 1,
+      "nodes": 81,
+      "meshes": 2,
       "extras": {
-        "retargeting": {
-          "revision": "Lion anatomy v2",
-          "donor": "Meshy_AI_Boar_Warchief_All_Animations.glb",
-          "target": "Meshy_AI_Sunmane_Warchief_Running.glb",
-          "method": "Constant per-joint world-space basis calibration from the shared Running clip, with target anatomical offsets",
-          "headfrontNativeOffset": [
-            0.00963292270898819,
-            0.018878459930419922,
-            0.17361696064472198
-          ],
-          "maxCalibrationErrorDegrees": 0.00004315175430305765,
-          "nativeRunningUnchanged": true
+        "replacement": {
+          "repair": "tools/prepare_lion.py",
+          "report": "docs/qa/lion-replacement/repair.json",
+          "animationSourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b"
         }
+      },
+      "geometrySource": "Wild Guardians New/animales/león.glb",
+      "replacement": {
+        "repair": "tools/prepare_lion.py",
+        "report": "docs/qa/lion-replacement/repair.json",
+        "animationSourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b"
       }
     },
     {
