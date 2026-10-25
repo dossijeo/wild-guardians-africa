@@ -19,11 +19,11 @@ export function approvedVisualProfile(biome){
  if(!Object.hasOwn(BIOMES,biome))throw new Error('Unknown visual profile biome: '+biome);
  return Object.freeze({...COMMON,...BIOMES[biome]});
 }
-export function approvedVisualSearch(biome,search=''){
+export function approvedVisualSearch(biome=null,search=''){
  const explicit=new URLSearchParams(search);
  // An explicit laboratory/legacy selection remains a complete QA control.
  if(explicit.has('visualLab'))return explicit.toString();
- const result=new URLSearchParams(approvedVisualProfile(biome));
+ const result=new URLSearchParams(biome===null?COMMON:approvedVisualProfile(biome));
  for(const [key,value]of explicit)result.set(key,value);
  return result.toString();
 }

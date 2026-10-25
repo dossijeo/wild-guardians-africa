@@ -48,7 +48,7 @@ void main(){if(texture(uLeafCoverage,vCardUv).a<.5)discard;fernDepth=packDepthTo
  }
  const stats={get instances(){return q.near+q.far;},updates:0,selectionMs:0};
  q.cardStudy={representation:'native-holly-fern-balanced',get shadowResolution(){return world.sun.shadow.mapSize.x;},castsNativeShadow:true,sizeXZ:1.35,sizeY:1.6,colorContrast:1.12,edgePadding:1,frondsPerClump:4,trianglesPerClump:32,textureCount:2,textureBytesEstimate:2*1024*1024*4*4/3,normal:'upward ambient; baked normal transformed by analytic curved-frond tangent and instance height',reuseNativeInstanceBuffers:true,extraSelectionPass:false,stats};
- const audit=q.audit.bind(q);q.audit=()=>({...audit(),cardStudy:{...q.cardStudy,stats:{...stats}},leaves:(q.near+q.far)*4,castShadow:true,baseMeshesReplaced:true});
+ const audit=q.audit.bind(q);q.audit=()=>({...audit(),leafShape:'holly-fronds',cardStudy:{...q.cardStudy,stats:{...stats}},leaves:(q.near+q.far)*4,castShadow:true,baseMeshesReplaced:true});
  const {applyFernLod}=await import('./mangrove-fern-lod.js');await applyFernLod(world,q);
  return q.cardStudy;
 }

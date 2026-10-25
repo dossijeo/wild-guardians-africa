@@ -3,6 +3,7 @@ import {MudEdgeExecutor} from './mangrove-mud-edge-executor.js';
 import {prepareCropDepthPrograms} from './crop-depth-preparation.js';
 import {streamingOptions} from './streaming-options.js';
 import {replaceWarmedPrograms} from './retain-warmed-programs.js';
+import {approvedVisualSearch} from './approved-visual-profile.js';
 import {createMangroveMaterialCache,mangroveMaterialCacheEnabled} from './mangrove-material-cache.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {waterOpaqueCoreEnabled,prepareOpaqueCore} from './water-opaque-core.js';
@@ -98,28 +99,30 @@ const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
-  constructor(canvas,onPick) {
+  constructor(canvas,onPick,{approvedVisuals=false,visualSearch=globalThis.location?.search??''}={}) {
+    this.approvedVisuals=approvedVisuals;this.requestedVisualSearch=visualSearch;
+    this.visualSearch=approvedVisuals?approvedVisualSearch(null,visualSearch):visualSearch;
     // Noncasting far uploads retain the live lighting/shadow recipe while
     // avoiding another draw of all resident geometry. QA may opt out explicitly.
     this.farIsolatedPreparation=true;
     // Gameplay preparations also need owned readiness polling: quality changes
     // and world exit can dispose their materials before compilation completes.
-    this.farOwnedCompilation=new URLSearchParams(globalThis.location?.search??'').get('ownedFarGpu')!=='0';this.farOwnedWaits=this.farOwnedCompilation;
+    this.farOwnedCompilation=new URLSearchParams(this.visualSearch).get('ownedFarGpu')!=='0';this.farOwnedWaits=this.farOwnedCompilation;
     this.batchChunkEviction=false;
-    this.nativeHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='native-grid';
-    this.stagedHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='staged';
-    const bedBudget=Number(new URLSearchParams(globalThis.location?.search??'').get('horizonBedBudget')??2);
+    this.nativeHorizonBed=new URLSearchParams(this.visualSearch).get('horizonBed')==='native-grid';
+    this.stagedHorizonBed=new URLSearchParams(this.visualSearch).get('horizonBed')==='staged';
+    const bedBudget=Number(new URLSearchParams(this.visualSearch).get('horizonBedBudget')??2);
     this.horizonBedBudget=Number.isFinite(bedBudget)?Math.max(.5,Math.min(8,bedBudget)):2;
     // Approved G recipe: submit-CPU16 pacing and owned initial far preparation.
     this.loadingCpuBudget=true;
-    this.loading=new AbortController();this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();const visualLab=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.visualLabGroundDetails=['grass','ph-grass','layer-grass','layer-grass-sculpted','global-grass','global-grass-beds'].includes(visualLab);this.assets.visualLab=['normal','normal-relief','normal-enhanced','texture-detail','texture-aniso','village-repacked','village-art','village-shared-art','village-finish','village-surface','village-details'].includes(visualLab)?visualLab:null;this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>this.nav?.field.canyon&&this.nav.field.waterInfo(x,z).inside?'water':residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.wateringEmitters=new Map();this.waterMouth=new THREE.Vector3();this.waterDirection=new THREE.Vector3();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
+    this.loading=new AbortController();this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon({visualSearch:this.visualSearch});this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();const visualLab=new URLSearchParams(this.visualSearch).get('visualLab');this.visualLabGroundDetails=['grass','ph-grass','layer-grass','layer-grass-sculpted','global-grass','global-grass-beds'].includes(visualLab);this.assets.visualLab=['normal','normal-relief','normal-enhanced','texture-detail','texture-aniso','village-repacked','village-art','village-shared-art','village-finish','village-surface','village-details'].includes(visualLab)?visualLab:null;this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>this.nav?.field.canyon&&this.nav.field.waterInfo(x,z).inside?'water':residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.wateringEmitters=new Map();this.waterMouth=new THREE.Vector3();this.waterDirection=new THREE.Vector3();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene,{visualSearch:this.visualSearch});this.sky=new NativeSky({visualSearch:this.visualSearch});
     this.camera=new THREE.PerspectiveCamera(42,1,.1,500);this.camera.position.set(40,35,50);
     const guardedRenderer=createRendererWithGlEpoch(canvas,()=>new THREE.WebGLRenderer({canvas,antialias:true,alpha:false}));this.renderer=guardedRenderer.renderer;this.glResourceEpoch=guardedRenderer.guard;this.shaderFailure=installShaderFailureGuard(this.renderer);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     this.renderer.setClearColor('#cbd5be');this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1;
     this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=true;configureTerrainControls(this.controls);this.releaseCameraIntent=installTerrainCameraIntent(this.camera,this.controls,()=>this.nav?.field);this.controls.enableRotate=true;this.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.sun.castShadow=true;this.sun.shadow.mapSize.set(1024,1024);configureShadowCamera(this.sun);updateShadowCamera(this.sun,this.controls.target);this.sun.shadow.bias=0;this.releaseNativeShadow=installNativeShadow(this.renderer,this.sun,this.toon.shadowUniforms);this.releaseAssetShadows=installAssetShadows(this.renderer,()=>this.assetGroups.enabled?this.assetGroups.shadowChunks:this.chunks,this.scene);
     this.scene.add(this.sun,this.sun.target);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.ambient);
-    this.destructionPass=new BuildingDestructionPass(this.renderer,this.sun,this.ambient);this.destructionPass.worldOriginUniform=this.toon.uniforms.uWorldOrigin;this.destructionPass.fineNoiseUniform=this.toon.uniforms.uFineNoise;this.buildingTemplates=new Map();
+    this.destructionPass=new BuildingDestructionPass(this.renderer,this.sun,this.ambient);this.destructionPass.visualSearch=this.visualSearch;this.destructionPass.worldOriginUniform=this.toon.uniforms.uWorldOrigin;this.destructionPass.fineNoiseUniform=this.toon.uniforms.uFineNoise;this.buildingTemplates=new Map();
     this.raycaster=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.terrainMeshes=[];
     this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
     this.spellPreview=new SpellPreview(this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
@@ -140,6 +143,11 @@ export class WorldScene {
     canvas.addEventListener('pointercancel',e=>tap.up(e,true),listenerOptions);
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>{this.restoreCachedGraphics();this.onContextRestored?.();},listenerOptions);
+  }
+  configureVisualBiome(biome){
+    if(this.state&&this.state.biome!==biome)throw Error('A loaded scene cannot change biome');
+    this.visualSearch=this.approvedVisuals?approvedVisualSearch(biome,this.requestedVisualSearch):this.requestedVisualSearch;
+    this.toon.visualSearch=this.visualSearch;
   }
   resize() {const r=this.canvas.getBoundingClientRect(),resolution=nativeRenderResolution(r.width,r.height,devicePixelRatio,this.quality,this.pixelRatioLimit),aspect=resolution.width/resolution.height;this.renderResolution=resolution;if(this.canvas.width!==resolution.width||this.canvas.height!==resolution.height)this.renderer.setSize(resolution.width,resolution.height,false);if(this.camera.aspect!==aspect){this.camera.aspect=aspect;this.camera.updateProjectionMatrix();}}
   showWallStroke(points){
@@ -170,7 +178,7 @@ export class WorldScene {
     this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';
     const qualityGround=this.biomeGround?.mangroveSubstrate?[...this.terrainMeshes,...[...this.chunks.values()].flatMap(group=>group.children.filter(mesh=>mesh.userData.globalMudBlend))]:this.terrainMeshes;
     updateGroundQuality(qualityGround,quality,mesh=>{configureMangroveMudMaterial(this,mesh.material);this.materialRegistry?.refresh(mesh);});
-    const shadowPreparation=new URLSearchParams(globalThis.location?.search??'').get('stableShadowPrograms');
+    const shadowPreparation=new URLSearchParams(this.visualSearch).get('stableShadowPrograms');
     const shadowsEnabled=['media','alta'].includes(quality),stableShadows=shadowPreparation==='1'||(shadowPreparation!=='0'&&!!this.frameScheduler);
     const rendererShadows=stableShadows||shadowsEnabled,shadowsChanged=this.renderer.shadowMap.enabled!==rendererShadows;
     if(stableShadows){
@@ -182,7 +190,7 @@ export class WorldScene {
     if(shadowsChanged)this.assetGroups.invalidateMaterials();
     // Shadow defines are compiled into materials; re-enable must invalidate unshadowed programs.
     if(shadowsChanged)this.scene.traverse(object=>{for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)material.needsUpdate=true;});
-    resizeShadowMap(this.sun,mangroveFernEnabled()&&this.state?.biome==='manglares'&&shadowsEnabled?'alta':quality);this.resize();
+    resizeShadowMap(this.sun,mangroveFernEnabled(this.visualSearch)&&this.state?.biome==='manglares'&&shadowsEnabled?'alta':quality);this.resize();
     this.refreshStreamingPrograms();
   }
   async loadReady(pending,releaseLate){
@@ -204,12 +212,13 @@ export class WorldScene {
     {farVegetation=false,loadingProgress=null,spatialSession=null}={}) {
     if(spatialSession&&nav.field!==spatialSession.field)
       throw TypeError('Spatial scene and navigation must share one terrain authority');
+    this.configureVisualBiome(state.biome);
     this.spatialSession=spatialSession;
     this.loadingProgress=loadingProgress;
     const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
     const milestone=id=>phase('load-milestone:'+id,()=>this.loadingMilestone(id));
-    await phase('load-sky',()=>this.loadReady(this.sky.load()));this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.streamingOptions=streamingOptions(state.biome);this.batchChunkEviction=this.streamingOptions.batchEviction;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await phase('load-biome-models',()=>this.loadReady(this.assets.biome(this.pack)));this.biomeGround=new BiomeGround();await phase('load-biome-ground',()=>this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field,{settlementSource:this.spatialSession?.horizonSource})));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.naturalWaterEdges=naturalWaterEdgesEnabled();this.waterOpaqueCore=waterOpaqueCoreEnabled(this.state.biome);this.fluidLighting={biome:this.state.biome,regionalWaterBiome:regionalWaterEnabled()?this.state.biome:null,globalWaterSurface:this.toon.globalVisualLighting&&!['volcanes','desierto'].includes(this.state.biome),textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
-    this.groundDetails=new BlenderGroundDetails(this.assets,this.scene,BIOME_IDS[state.biome]);this.groundDetails.enabled&&=(this.visualLabGroundDetails||this.groundDetails.bankCover);await phase('load-ground-details',()=>this.loadReady(this.groundDetails.load()));
+    await phase('load-sky',()=>this.loadReady(this.sky.load()));this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.streamingOptions=streamingOptions(state.biome,this.visualSearch);this.batchChunkEviction=this.streamingOptions.batchEviction;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await phase('load-biome-models',()=>this.loadReady(this.assets.biome(this.pack)));this.biomeGround=new BiomeGround({visualSearch:this.visualSearch});await phase('load-biome-ground',()=>this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field,{settlementSource:this.spatialSession?.horizonSource})));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.naturalWaterEdges=naturalWaterEdgesEnabled(this.visualSearch);this.waterOpaqueCore=waterOpaqueCoreEnabled(this.state.biome,this.visualSearch);this.fluidLighting={visualSearch:this.visualSearch,biome:this.state.biome,regionalWaterBiome:regionalWaterEnabled(this.visualSearch)?this.state.biome:null,globalWaterSurface:this.toon.globalVisualLighting&&!['volcanes','desierto'].includes(this.state.biome),textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
+    this.groundDetails=new BlenderGroundDetails(this.assets,this.scene,BIOME_IDS[state.biome],{visualSearch:this.visualSearch});this.groundDetails.enabled&&=(this.visualLabGroundDetails||this.groundDetails.bankCover);await phase('load-ground-details',()=>this.loadReady(this.groundDetails.load()));
     if(this.groundDetails.enabled)this.groundDetails.releaseEvents=observeGameEvents(state,event=>markGroundDetailEvent(this.groundDetails,state,event,id=>this.objects.get(id)?.position));
     this.villagePrototypes=await phase('load-village-models',()=>this.loadReady(this.assets.village(villagePayload)));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
@@ -239,7 +248,7 @@ export class WorldScene {
     this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
-    if(continuousGrassEnabled(state.biome)){
+    if(continuousGrassEnabled(state.biome,this.visualSearch)){
       const coverage=await phase('load-continuous-grass',()=>this.loadReady(createContinuousGrass(this),layer=>layer.dispose()));
       this.groundDetails.dispose();this.groundDetails=coverage;
     }
@@ -365,7 +374,7 @@ export class WorldScene {
     yield 'ground';
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
-    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);if(this.mudPatches){yield 'mud-geometry';const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-edges';if(this.biomeGround.mangroveSubstrate)yield* bindMangroveMudEdgesSteps(this,group,{executor:asynchronous&&new URLSearchParams(globalThis.location?.search??'').get('mudEdgeWorker')==='1'?(this.mudEdgeExecutor??=new MudEdgeExecutor()):null});}}
+    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);if(this.mudPatches){yield 'mud-geometry';const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-edges';if(this.biomeGround.mangroveSubstrate)yield* bindMangroveMudEdgesSteps(this,group,{executor:asynchronous&&new URLSearchParams(this.visualSearch).get('mudEdgeWorker')==='1'?(this.mudEdgeExecutor??=new MudEdgeExecutor()):null});}}
     yield 'water-geometry';
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
     if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);yield 'bank';prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial,payload?.waterShore);yield 'water-edges';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);yield 'water-core';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
@@ -434,8 +443,8 @@ export class WorldScene {
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
     const requested=nativeNearRegion(this.camera.position,this.quality,this.farResidentRange??null);
-    const atomicHorizon=this.nav.config.biome==='canyons'&&new URLSearchParams(globalThis.location?.search??'').get('horizonHandoff')==='atomic';
-    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{canAdopt:region=>{
+    const atomicHorizon=this.nav.config.biome==='canyons'&&new URLSearchParams(this.visualSearch).get('horizonHandoff')==='atomic';
+    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{visualSearch:this.visualSearch,canAdopt:region=>{
       if(!atomicHorizon)return true;
       for(let z=region.cz-region.range;z<=region.cz+region.range;z++)for(let x=region.cx-region.range;x<=region.cx+region.range;x++){
         const key=x+','+z;if(!this.chunks.has(key)||this.chunkStream?.stale.has(key))return false;
@@ -462,7 +471,7 @@ export class WorldScene {
     if(atomicHorizon)for(let z=horizonRequested.cz-horizonRequested.range;z<=horizonRequested.cz+horizonRequested.range;z++)for(let x=horizonRequested.cx-horizonRequested.range;x<=horizonRequested.cx+horizonRequested.range;x++)desired.add(x+','+z);
     for(const key of raidPins)desired.add(key);
     // QA gate until full lifecycle validation; native leases do not expand raid bounds.
-    const workerRetention=this.workerRetentionEnabled??=(typeof location!=='undefined'&&new URLSearchParams(location.search).get('workerResidency')==='actors');
+    const workerRetention=this.workerRetentionEnabled??=(new URLSearchParams(this.visualSearch).get('workerResidency')==='actors');
     let retentionUpdated=false;
     const updateRetention=workerRetention?()=>{this.chunkStream?.retention?.setDemand(workerChunkDemand(this.state??{}));retentionUpdated=true;this.workerRetentionTick=Math.floor(this.state?.elapsed??0);}:null;
     if(workerRetention&&this.workerRetentionTick!==Math.floor(this.state?.elapsed??0))updateRetention();
@@ -544,7 +553,7 @@ export class WorldScene {
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
       // Prepare the first fixed512 recipe before world compilation, not on first draw.
-      const cachePreparation=new URLSearchParams(globalThis.location?.search??'').get('groundCachePreparation');
+      const cachePreparation=new URLSearchParams(this.visualSearch).get('groundCachePreparation');
       if(cachePreparation==='1'||(cachePreparation!=='0'&&this.frameScheduler))await phase('warm-ground-cache-recipe',()=>this.prepareFrameResources());
       await phase('warm-compile-world',()=>compile(this.scene,this.camera,this.scene));if(this.disposed)return;
       if(this.streamingOptions.warmObstruction){
@@ -552,7 +561,7 @@ export class WorldScene {
         await phase('warm-compile-obstruction',()=>compile(this.obstructionWarmup.group,this.camera,this.scene));if(this.disposed)return;
       }
       await phase('warm-prepare-depth',()=>this.destructionPass.prepareDepth(this.camera,this.scene,{scheduler:this.frameScheduler,compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{signal:this.loading.signal,onPrepare:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing,batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})}));if(this.disposed)return;
-      const cropPreparation=new URLSearchParams(globalThis.location?.search??'').get('cropDepthPreparation');
+      const cropPreparation=new URLSearchParams(this.visualSearch).get('cropDepthPreparation');
       if(cropPreparation==='1'||(cropPreparation!=='0'&&!!this.frameScheduler)){
         this.cropDepthPreparation=await phase('warm-crop-depth',()=>prepareCropDepthPrograms(this.renderer,this.scene,this.camera,this.destructionPass,{scheduler:this.frameScheduler,signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onSubmit:this.onLoadingSpan}));if(this.disposed)return;
       }
@@ -591,10 +600,10 @@ export class WorldScene {
     this.programLease=replaceWarmedPrograms(this.renderer,this.programLease,{limit:96,newestFirst});
     this.obstructionWarmup?.dispose();this.obstructionWarmup=null;
   }
-  transactionalPrograms(){const query=new URLSearchParams(globalThis.location?.search??'');return query.get('transactionalPrograms')==='1'&&query.get('streamingRecovery')!=='0'&&this.streamingOptions?.retainPrograms&&!this.disposed&&!this.renderer.getContext().isContextLost();}
+  transactionalPrograms(){const query=new URLSearchParams(this.visualSearch);return query.get('transactionalPrograms')==='1'&&query.get('streamingRecovery')!=='0'&&this.streamingOptions?.retainPrograms&&!this.disposed&&!this.renderer.getContext().isContextLost();}
   releaseRetainedPrograms({preserve=false}={}){this.streamingProgramRefreshAbort?.abort();this.streamingProgramRevision=(this.streamingProgramRevision??0)+1;if(!preserve){this.programLease?.dispose();this.programLease=null;}this.obstructionWarmup?.dispose();this.obstructionWarmup=null;}
   refreshStreamingPrograms(){
-    if(new URLSearchParams(globalThis.location?.search??'').get('streamingRecovery')==='0'||!this.streamingRetentionStarted||!this.streamingOptions?.retainPrograms||this.disposed||this.renderer.getContext().isContextLost())return;
+    if(new URLSearchParams(this.visualSearch).get('streamingRecovery')==='0'||!this.streamingRetentionStarted||!this.streamingOptions?.retainPrograms||this.disposed||this.renderer.getContext().isContextLost())return;
     this.streamingProgramRefreshRequested=true;
     if(this.streamingProgramRefresh)return this.streamingProgramRefresh;
     this.streamingProgramRefresh=(async()=>{
@@ -838,7 +847,7 @@ export class WorldScene {
     finally{stages.return();}
   }
   render(dt) {if(this.onLoadingSpan){const stages=this.renderFrameUpdates(dt);try{let stage=0;while(!loadingSyncWitness(this.onLoadingSpan,'world-frame-stage:'+stage++,()=>stages.next()).done){}return loadingSyncWitness(this.onLoadingSpan,'world-frame-draw',()=>this.drawRenderFrame());}finally{stages.return();}}for(const step of this.renderFrameUpdates(dt)){}return this.drawRenderFrame();}
-  prepareFrameResources() {if(!this.mangroveMaterialCache&&this.biomeGround?.mangroveSubstrate&&this.biomeGround?.mangroveShore&&mangroveMaterialCacheEnabled())this.mangroveMaterialCache=createMangroveMaterialCache(this);this.mangroveMaterialCache?.update();}
+  prepareFrameResources() {if(!this.mangroveMaterialCache&&this.biomeGround?.mangroveSubstrate&&this.biomeGround?.mangroveShore&&mangroveMaterialCacheEnabled(this.visualSearch))this.mangroveMaterialCache=createMangroveMaterialCache(this);this.mangroveMaterialCache?.update();}
   drawRenderFrame() {this.beforeMicroeventDraw?.();return this.presentationDraw?this.presentationDraw(()=>this.drawWorldFrame()):this.drawWorldFrame();}
   drawWorldFrame() {return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:()=>[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);
 // The existing sky draw advances Three geometry updates before shadowless depth capture.

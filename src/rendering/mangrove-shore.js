@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 export function prepareMangroveBank(world,geometry,cx,cz,material=world.fluidMaterial,preparedShore=null){
- if(world.state.biome!=='manglares'||!mangroveShoreEnabled())return;
+ if(world.state.biome!=='manglares'||!mangroveShoreEnabled(world.visualSearch))return;
  const pos=geometry.attributes.position,data=preparedShore??new Float32Array(pos.count),field=world.nav.field;
  if(data.length!==pos.count)throw Error('Invalid prepared water shore');
  if(!preparedShore)for(let i=0;i<pos.count;i++){const info=field.waterInfo(pos.getX(i)+cx*48,pos.getZ(i)+cz*48);data[i]=info.inside?info.shore:0;}

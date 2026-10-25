@@ -32,9 +32,9 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   geometry.computeVertexNormals();
   const water=data.water??new Float32Array(data.positions.length/3);if(!data.water&&world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;geometry.setAttribute('aFarWater',new THREE.BufferAttribute(water,1));
   world.biomeGround.attach(material,0,0,null,{mapped:false});const u=material.userData.biomeGround;u.uGroundMapped.value=0;u.uGroundMicro.value=0;u.uGroundRelief.value=0;
-  farToon=new AfricanToon();Object.assign(farToon.uniforms,world.toon.uniforms,{uFineNoise:{value:0},uGroundDetail:{value:0}});farToon.environmentUniforms=world.toon.environmentUniforms;farToon.material(material);
+  farToon=new AfricanToon({visualSearch:world.visualSearch});Object.assign(farToon.uniforms,world.toon.uniforms,{uFineNoise:{value:0},uGroundDetail:{value:0}});farToon.environmentUniforms=world.toon.environmentUniforms;farToon.material(material);
  }
- const residentMaskEnabled=new URLSearchParams(globalThis.location?.search??'').get('groundResidentMask')==='1';
+ const residentMaskEnabled=new URLSearchParams(world.visualSearch??globalThis.location?.search??'').get('groundResidentMask')==='1';
  const residentPixels=residentMaskEnabled?new Uint8Array(8*8*4):null;
  const residentMask=residentPixels?new THREE.DataTexture(residentPixels,8,8,THREE.RGBAFormat):null;
  if(residentMask){residentMask.minFilter=THREE.NearestFilter;residentMask.magFilter=THREE.NearestFilter;residentMask.generateMipmaps=false;}
@@ -83,7 +83,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   // Basic/fog ground requires no world lights or shadow casters. Upload this
   // small replacement alone rather than redraw the resident world per border.
   const warmScene=mapped?world.scene:new THREE.Scene();
-  const ownedSeam=new URLSearchParams(globalThis.location?.search??'').get('seamOwned')==='1';
+  const ownedSeam=new URLSearchParams(world.visualSearch??globalThis.location?.search??'').get('seamOwned')==='1';
   const prepareSeam=async(root,stale)=>{if(!mapped)warmScene.fog=world.scene.fog;const previous=root.onBeforeRender;root.onBeforeRender=function(renderer,scene,...args){if(scene===warmScene)candidate.groundSeamStats.warmDraws=(candidate.groundSeamStats.warmDraws??0)+1;previous.call(this,renderer,scene,...args);};try{return await prepareNativeFarGpu(world.renderer,root,warmScene,world.camera,[colorMap],{cooperative:!!world.loadingProgress&&!world.loadingProgress.ready,cancelled:stale,isolateRoot:world.farZeroVertexPreparation===true||ownedSeam&&world.farIsolatedPreparation===true,zeroVertices:world.farZeroVertexPreparation===true,ownedCompilation:ownedSeam&&world.farOwnedCompilation===true,ownedWaits:ownedSeam&&world.farOwnedWaits===true,measureDraw:world.onLoadingGpuDraw});}finally{root.onBeforeRender=previous;}};
   seamOwner=attachNativeGroundSeam(candidate,data,world,{cancelled,configureGeometry:mapped?geometry=>configureNativeFarSeamGeometry(geometry,data.colorMap):null,streamFactory:seamStreamFactory,prepare:seamPrepare??prepareSeam,createMaterial:()=>{const seamMaterial=cloneRuntimeMaterial(material);seamMaterial.side=THREE.DoubleSide;seamMaterial.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer,false);seamMaterial.customProgramCacheKey=()=>material.customProgramCacheKey()+':seam-v2';return seamMaterial;}});candidate.groundSeamReady=seamOwner.update();lastSeamPromise=candidate.groundSeamReady;
  }

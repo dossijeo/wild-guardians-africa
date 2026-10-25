@@ -52,7 +52,7 @@ export function prepareNativeBuilding(gltf,building,{source=buildingInput(gltf),
   return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),
     dispose(){if(disposed)return;disposed=true;body.dispose();ash.dispose();noise.dispose();original.dispose();for(const texture of new Set(Object.values(mesh.material).filter(v=>v?.isTexture)))texture.dispose();mesh.material.dispose();}};
 }
-function shaderMaterial(uniforms,fragmentShader){
+function shaderMaterial(uniforms,fragmentShader,visualSearch){
   if(fragmentShader===destructionFragment){
     // The lab fog belongs to its standalone camera. Use the enclosing world
     // distance/color instead, while retaining its material and damage shading.
@@ -62,7 +62,7 @@ function shaderMaterial(uniforms,fragmentShader){
     const start=fragmentShader.indexOf(' float dist=length(uEye-vWorld);'),end=fragmentShader.indexOf('\n}',start);
     fragmentShader=fragmentShader.slice(0,start)+' float fog=smoothstep(uWorldFogRange.x,uWorldFogRange.y,length(uEye-vWorld)*uWorldScale);\n fragColor=vec4(mix(toSRGB(tonemap(color)),uWorldFogColor,fog),1.);'+fragmentShader.slice(end);
   }
-  if(fragmentShader.includes('uWorldFogColor'))fragmentShader=toonDestruction(fragmentShader);
+  if(fragmentShader.includes('uWorldFogColor'))fragmentShader=toonDestruction(fragmentShader,visualSearch);
   return new THREE.RawShaderMaterial({vertexShader:glsl(destructionVertex),fragmentShader:glsl(fragmentShader),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
 }
 export class NativeBuilding extends THREE.Group {
@@ -73,7 +73,7 @@ export class NativeBuilding extends THREE.Group {
     this.uniforms={uFineNoise:pipeline.fineNoiseUniform??value(1),uWorldOrigin:pipeline.worldOriginUniform??value(new THREE.Vector2()),uVP:value(new THREE.Matrix4()),uLightVP:value(new THREE.Matrix4()),uDamage:value(0),uInner:value(0),uMode:value(0),uHoles:value(Array.from({length:8},()=>new THREE.Vector4())),uNoise:value(template.noise),uEye:value(new THREE.Vector3()),uSun:value(new THREE.Vector3(-8,13,9).normalize()),uAlbedo:value(material.map),uNormalMap:value(material.normalMap),uMR:value(material.roughnessMap),uShadow:value(null),uIntactDepth:value(pipeline.target.depthTexture),uOpeningMask:value(pipeline.target.texture),uResolution:value(new THREE.Vector2(1,1)),uAshAge:value(0),uRepair:value(template.building.repairPlaster?1:0),uTime:value(0),uShadowSize:value(1024),uShadows:value(0),uEmbers:value(1),uQuality:value(1)};
     Object.assign(this.uniforms,{uWorldFogColor:value(new THREE.Color()),uWorldFogRange:value(new THREE.Vector2(1e8,1e9)),uWorldScale:value(template.scale),uWorldSun:value(1),uWorldAmbient:value(1),uToonModel:value(new THREE.Matrix4()),uNight:value(0),uNightLight:value(1),uExposure:value(1),uKind:value(0),uSurfaceType:value(1)});
     Object.assign(this.uniforms,pipeline.environmentUniforms??{uEnvEndpoints:value(1),uNativeEnvEnabled:value(0),uEnvDay:value(null),uEnvNight:value(null),uEnvYaw:value(0)});
-    this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment));
+    this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment,pipeline.visualSearch));
     const depthFragment=destructionDepthFragment.replace('uniform int uMode;uniform float uUncut;','uniform int uMode;uniform float uUncut;\n#include <packing>\nout vec4 packedDepth;').replace('if(damageField(vOriginal)<0.)discard;}','if(damageField(vOriginal)<0.)discard;packedDepth=packDepthToRGBA(gl_FragCoord.z);}');
     this.outer.customDepthMaterial=shaderMaterial({...this.uniforms,uUncut:value(0)},depthFragment);this.outer.castShadow=true;this.outer.material.shadowSide=THREE.DoubleSide;
     this.outer.customDepthMaterial.userData.worldDepthCompatible=true;
@@ -83,8 +83,8 @@ export class NativeBuilding extends THREE.Group {
     this.outer.userData.nativeShadowCallback=this.outer.onBeforeShadow;
     this.outer.customDepthMaterial.userData.nativeShadowInputs=()=>['uDamage','uInner','uMode','uHoles','uNoise','uUncut'].map(k=>this.outer.customDepthMaterial.uniforms[k].value);
     const innerUniforms={...this.uniforms,uInner:value(1)},ashUniforms={...this.uniforms,uMode:value(2)};
-    this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
-    this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment));
+    this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment,pipeline.visualSearch));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
+    this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment,pipeline.visualSearch));
     // QA opt-in only: combined depth readbacks still differ at some angles.
     // Gameplay keeps the native color recipe until equivalence is established.
     if(pipeline.auxiliaryDepth===true)for(const mesh of [this.inner,this.ash]){

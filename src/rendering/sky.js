@@ -12,8 +12,8 @@ export function skyNight(state){
 }
 
 export class NativeSky {
-  constructor(){
-    this.atmosphere=skyAtmosphereEnabled();
+  constructor({visualSearch=globalThis.location?.search??''}={}){
+    this.atmosphere=skyAtmosphereEnabled(visualSearch);
     this.loading=new AbortController();this.disposed=false;
     this.scene=new THREE.Scene();this.textures=[];this.environmentTextures=[];this.materials=[];
     this.geometry=new THREE.BufferGeometry();this.geometry.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0,0,0,0],3));

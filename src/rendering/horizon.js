@@ -14,7 +14,7 @@ const waterRgb=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255);
 export class NativeHorizon{
   constructor(scene,waterMaterial,onMaterialChange=null,groundMaterial=null,options={}){
     this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;
-    const visualOptions=new URLSearchParams(globalThis.location?.search??'');
+    const visualOptions=new URLSearchParams(options.visualSearch??globalThis.location?.search??'');
     this.canyonShadowCaster=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonShadows')==='horizon';
     this.smoothCanyonNormals=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonNormals')==='smooth';
     this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;

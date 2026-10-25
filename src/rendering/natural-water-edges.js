@@ -40,7 +40,7 @@ export function prepareNaturalWater(world,geometry,cx,cz,source,preparedBed=null
  const {bytes,nx,nz,minX,minZ,width,height,lo,span}=bed;
  const texture=new THREE.DataTexture(bytes,nx,nz,THREE.RGBAFormat);texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.unpackAlignment=1;texture.needsUpdate=true;
  const material=source,compile=source.onBeforeCompile,key=source.customProgramCacheKey();
- const balancedBank=balancedCanyonBankEnabled(world.state.biome);
+ const balancedBank=balancedCanyonBankEnabled(world.state.biome,world.visualSearch);
  material.transparent=true;material.depthWrite=false;material.forceSinglePass=true;
  material.userData.paintUniforms=source.userData.paintUniforms;
  material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);

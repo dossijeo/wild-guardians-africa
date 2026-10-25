@@ -11,7 +11,7 @@ Manglares: HELECHOS holly aprobados con LOD + caché fija 512², musgo/barro loc
 - [x] Confirmar autorización de fusión condicionada a validación. PR159 todavía draft, sin merge.
 - [x] Confirmar que la selección actual depende de flags QA y que fusionar sin conectarla no publica el arte validado.
 - [x] Añadir approved-visual-profile.js como configuración independiente de herramientas QA, por bioma y sin estado global de mundo activo. Cuatro pruebas confirman selección, controles explícitos y aislamiento entre biomas.
-- [ ] Conectar el perfil a la preparación del mundo, materiales, fondos y streaming. Revisar inicialización anticipada antes de conocer el bioma; evitar estado global que mezcle partidas/cancelaciones.
+- [x] Conectar el perfil a la preparación del mundo, materiales, fondos y streaming. Revisar inicialización anticipada antes de conocer el bioma; evitar estado global que mezcle partidas/cancelaciones.
 - [ ] Validar la ausencia de la antigua capa de hojas redondas en Manglares en arranque normal, cambios de calidad y recarga. La retirada del selector cupped se debe verificar visualmente, no solo por la tabla de opciones.
 - [ ] Revisar activación del scheduler y configuración normal de pthreads/fallback; no activar experimentos negativos.
 - [ ] Resolver CI y validar build web/itch/Tauri, carga y funcionamiento sin parámetros QA.
@@ -26,4 +26,8 @@ Manglares: HELECHOS holly aprobados con LOD + caché fija 512², musgo/barro loc
 
 Mockup: C:/Users/PC/source/repos/wild-guardians-africa/.codex-attachments/0279997d-6aac-4ade-95a2-a23950b2a73a/a1a676f7-d77c-42e6-8ba4-1472f953264f/13762.png.
 
-La primera implementación es solo el perfil y sus pruebas; NO está activado en producción todavía. No presentar este commit como solución completa del bloqueo.
+El perfil ya se conecta en main.js al crear WorldScene; precarga usa solo los valores comunes y prepareWildEngineWorld/load resuelven el bioma antes de crear sus materiales. La URL explícita visualLab conserva el control QA. Se eliminó la receta atmosférica global fijada durante la importación. La configuración viaja por instancia a suelo, agua, cielo, grupos, destrucción, horizonte y cobertura.
+
+Validación inicial: 93 tests pasan y verificación browser-syntax pasa. Smoke de Manglares con URL vacía carga pthreads, helechos + LOD y 25 cachés fixed512. Comparación con receta revisada: 99,9502 % píxeles idénticos; ver RUNTIME-PROFILE.md. No sustituye las pruebas normales de distribución ni el A/B de rendimiento.
+
+Pendiente confirmado: GlobalFrameScheduler sigue opt-in por frameScheduler=1. Hay que revisar su activación normal y validarla antes de mergear. CI de 907c399f6 seguía en curso; Windows del padre e575ff46f pasó. No tomar ese resultado como validación del nuevo diff.

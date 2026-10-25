@@ -13,6 +13,7 @@ export {WILD_ENGINE_WORLD_VERSION};
 // The same native world supplies rendered chunks, static collisions and routes.
 // A saved game rebuilds its derived sectors from the seed and confirmed changes.
 export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=false}={}){
+  world.configureVisualBiome?.(state.biome);
   if(loaded&&state.wildEngineWorldVersion!==WILD_ENGINE_WORLD_VERSION)
     throw Error('Esta partida utiliza el generador de terreno anterior y no es compatible con Wild Engine. Inicia una partida nueva.');
   const response=await fetch(wasmUrl,{signal});
@@ -38,7 +39,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
   let session;
   try{
     if(threaded){
-      const visual=streamingOptions(state.biome);
+      const visual=streamingOptions(state.biome,world.visualSearch);
       threaded.core.preparation?.visualOptions?.(visual.waterBed?(visual.waterShore?3:1):0);
       const first=state.villages[0];
       threaded.core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome);

@@ -17,7 +17,7 @@ const textureStorageEstimate=(texture,width,height)=>{const image=texture.image;
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,smoothTransitions=smoothFarTransitionsEnabled(),parallelAssets=false,initialRegion=null,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,smoothTransitions=smoothFarTransitionsEnabled(world.visualSearch),parallelAssets=false,initialRegion=null,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
  if(typeof parallelAssets!=='boolean')throw Error('Invalid parallel far assets option');
  const phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,'far-assets:'+label,run);

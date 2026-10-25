@@ -29,8 +29,12 @@ import {volcanicFunctions} from './volcanic-source.js';
 import {createNativeShadowUniforms,patchNativeShadow} from './native-shadow.js';
 import {recordNativeDepthHook,recordNativeFluidDepthHook} from './depth-recipes.js';
 
-const atmosphereCacheKey=skyAtmosphereEnabled()?'|sky-atmosphere-clouds-v1':'';
-const endpointFunctions=endpointEnvironment(environmentFunctions),endpointFluidFunctions=endpointEnvironment(fluidLightingFunctions);
+const environmentRecipes=new Map();
+function environmentRecipe(search){
+  const atmosphere=skyAtmosphereEnabled(search);
+  if(!environmentRecipes.has(atmosphere))environmentRecipes.set(atmosphere,Object.freeze({atmosphereCacheKey:atmosphere?'|sky-atmosphere-clouds-v1':'',endpointFunctions:endpointEnvironment(environmentFunctions,{atmosphere}),endpointFluidFunctions:endpointEnvironment(fluidLightingFunctions,{atmosphere})}));
+  return environmentRecipes.get(atmosphere);
+}
 const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnosticPigment(volcanicFunctions);
 // Experimental village-only relief: retain the authored palette and broad toon
 // bands while allowing the existing tangent-space atlas to affect fine light.
@@ -41,13 +45,15 @@ const normalDetailLightingFunctions=artLightingFunctions.replace(
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
-  constructor(){
-    this.canyonWarmFloor=canyonWarmFloorEnabled();
-    this.globalVisualLighting=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';
-    this.volcanicNightSpectrum=this.globalVisualLighting&&new URLSearchParams(globalThis.location?.search??'').get('volcanicNight')==='spectrum';
-    this.volcanicNightAmbient=this.globalVisualLighting&&new URLSearchParams(globalThis.location?.search??'').get('volcanicNight')==='ambient'||this.volcanicNightSpectrum;
-    this.desertResidualWear=this.globalVisualLighting&&new URLSearchParams(globalThis.location?.search??'').get('sandWear')==='residual';
-    this.desertMeso=desertMesoEnabled();
+  constructor({visualSearch=globalThis.location?.search??''}={}){
+    this.visualSearch=visualSearch;
+    this.environmentRecipe=environmentRecipe(visualSearch);
+    this.canyonWarmFloor=canyonWarmFloorEnabled(visualSearch);
+    this.globalVisualLighting=new URLSearchParams(visualSearch).get('visualLab')==='global-lighting';
+    this.volcanicNightSpectrum=this.globalVisualLighting&&new URLSearchParams(visualSearch).get('volcanicNight')==='spectrum';
+    this.volcanicNightAmbient=this.globalVisualLighting&&new URLSearchParams(visualSearch).get('volcanicNight')==='ambient'||this.volcanicNightSpectrum;
+    this.desertResidualWear=this.globalVisualLighting&&new URLSearchParams(visualSearch).get('sandWear')==='residual';
+    this.desertMeso=desertMesoEnabled(visualSearch);
     this.uniforms={uEnvEndpoints:{value:1},uFineNoise:{value:1},uWorldOrigin:{value:new THREE.Vector2()},uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
     this.artUniforms={uArtSun:{value:new THREE.Vector3()},uArtShade:{value:new THREE.Vector3()},uArtFoliage:{value:new THREE.Vector3()},uArtParams:{value:new THREE.Vector4()},uArtShape:{value:new THREE.Vector4()},uArtHighlight:{value:0},uArtVolcanicGlow:{value:0}};
     this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
@@ -57,6 +63,7 @@ export class AfricanToon {
   environment(textures,yaw){const u=this.environmentUniforms;u.uEnvDay.value=textures?.[0]??null;u.uEnvNight.value=textures?.[1]??null;u.uNativeEnvEnabled.value=textures?.length===2?1:0;this.environmentYaw=yaw;u.uEnvYaw.value=yaw?.value??0;}
   update(night,sun,biome){this.uniforms.uBiome.value=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].indexOf(biome);this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=Number(night);this.uniforms.uNightLight.value=globalNightLight(this.globalVisualLighting,biome);this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();this.environmentUniforms.uEnvYaw.value=this.environmentYaw?.value??0;const art=ART_PROFILES[['savanna','grand_river','mangrove','volcanoes','canyons','desert'][this.uniforms.uBiome.value]]??ART_PROFILES.savanna;for(const [key,value] of Object.entries({uArtSun:art.sun,uArtShade:art.shade,uArtFoliage:art.foliage,uArtParams:art.params,uArtShape:art.shape}))this.artUniforms[key].value.fromArray(value);}
   material(material){
+    const {endpointFunctions,atmosphereCacheKey}=this.environmentRecipe;
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
     const original=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
@@ -178,7 +185,7 @@ export class AfricanToon {
       const compile=material.onBeforeCompile;
       material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchCanyonWarmFloor(shader.fragmentShader);};
     }
-    const fernGround=mangroveFernEnabled()&&material.userData.toonGround&&material.userData.mangroveSubstrate;
+    const fernGround=mangroveFernEnabled(this.visualSearch)&&material.userData.toonGround&&material.userData.mangroveSubstrate;
     if(fernGround){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchFernGround(shader.fragmentShader);};}
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
     material.customProgramCacheKey=()=>cache()+(fernGround?'|holly-fern-ground-v1':'')+atmosphereCacheKey+(material.userData.volcanicDeposits?'|volcanic-deposits-broad-v1':'')+(warmFloor?'|canyon-warm-floor-v1':'')+(this.desertMeso?'|desert-meso-filter-v1':'')+(this.desertResidualWear?'|desert-residual-wear-v1':'')+(this.volcanicNightSpectrum?'|volcanic-night-spectrum-v1':this.volcanicNightAmbient?'|volcanic-night-ambient-v1':'')+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.riverUnderlay?'|river-underlay-persistent-v1':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.mangroveShore?'|mangrove-shore-v1':'')+(material.userData.mangroveMoss?'|mangrove-moss-two-scales-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.canyonSandSoft?'|canyon-sand-soft-v1':'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
@@ -190,12 +197,14 @@ export class AfricanToon {
 }
 
 // DEST keeps its original damage field, textures, cut-outs, collapse and emission.
-export function toonDestruction(fragment){
+export function toonDestruction(fragment,visualSearch=globalThis.location?.search??''){
+  const {endpointFunctions}=environmentRecipe(visualSearch);
   return fragment.replace('out vec4 fragColor;', worldPatternFunctions+'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uEnvEndpoints,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+diagnosticToon+'\n'+endpointFunctions+'\nout vec4 fragColor;')
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),rough):vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),worldPatternPosition((uToonModel*vec4(vWorld,1.)).xyz))+toSRGB(emit)');
 }
 
-export function toonDebris(vertex,fragment){
+export function toonDebris(vertex,fragment,visualSearch=globalThis.location?.search??''){
+  const {endpointFunctions}=environmentRecipe(visualSearch);
   vertex=vertex.replace('uniform mat4 uVP;', 'out vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uVP;')
     .replace('vColor=aColor*(', 'vDebrisPosition=p;vDebrisNormal=n;vDebrisBase=aColor;vColor=aColor*(');
   const declarations=worldPatternFunctions+'in vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uToonModel;uniform vec3 uEye,uSun;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uEnvEndpoints,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n';
@@ -206,10 +215,12 @@ export function toonDebris(vertex,fragment){
 }
 
 export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null,clipOutside=false){
+  const visualSearch=lighting?.visualSearch??globalThis.location?.search??'';
+  const {endpointFluidFunctions,atmosphereCacheKey}=environmentRecipe(visualSearch);
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
   const originalDepthHook=material.onBeforeCompile;
   const experimentalWater=!!lighting?.globalWaterSurface&&!lava;
-  const calmCanyon=experimentalWater&&canyonWaterReflectionEnabled(lighting?.biome);
+  const calmCanyon=experimentalWater&&canyonWaterReflectionEnabled(lighting?.biome,visualSearch);
   const waterSlope=experimentalWater?acquireWaterSlope(lighting,material):null;
   if(waterSlope)material.userData.globalWaterSlope=waterSlope;
   const shadowUniforms=lighting?.shadowUniforms??createNativeShadowUniforms();if(!lighting?.shadowUniforms)material.addEventListener('dispose',()=>shadowUniforms.fallback.dispose());

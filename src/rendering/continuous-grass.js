@@ -65,9 +65,9 @@ export function continuousGrassEnabled(biome,search=globalThis.location?.search?
 export async function createContinuousGrass(world){
  const river=world.state.biome==='gran-rio',mangrove=world.state.biome==='manglares';
  if(!river&&!mangrove&&world.state.biome!=='sabana')throw Error('Unsupported continuous coverage biome');
- const fern=mangrove&&mangroveFernEnabled();
- const cropSoil=river&&cropSoilEnabled()?createCropSoilMasks():null;
- const cupped=mangrove&&cuppedMangroveLeavesEnabled(),varied=mangrove&&variedMangroveDistributionEnabled();
+ const fern=mangrove&&mangroveFernEnabled(world.visualSearch);
+ const cropSoil=river&&cropSoilEnabled(world.visualSearch)?createCropSoilMasks():null;
+ const cupped=mangrove&&cuppedMangroveLeavesEnabled(world.visualSearch),varied=mangrove&&variedMangroveDistributionEnabled(world.visualSearch);
  const raw=await(await fetch(cupped?'/assets/visual-lab/mangrove-leaf-cupped-20261022/modules.json':mangrove?'/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json':'/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
  const modules=mangrove&&!cupped?prepareMangroveLeaves(raw):raw;
  if(world.disposed||world.loading?.signal.aborted)throw Error('Coverage loading cancelled');

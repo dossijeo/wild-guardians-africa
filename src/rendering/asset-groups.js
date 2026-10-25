@@ -65,10 +65,10 @@ export function nativeChunkBounds(group){
 }
 
 export class NativeAssetGroups{
-  constructor(scene){
+  constructor(scene,{visualSearch=globalThis.location?.search??''}={}){
     this.scene=scene;this.root=new THREE.Group();this.root.name='native_merged_assets';scene.add(this.root);
     this.materialEpoch=0;this.materialEpochs=new WeakMap();this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
-    this.smoothObstruction=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';this.enabled=true;this.instanceCulling=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
+    this.smoothObstruction=new URLSearchParams(visualSearch).get('visualLab')==='global-lighting';this.enabled=true;this.instanceCulling=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
   // Compile-only representatives borrow immutable geometry. Their materials
   // stay alive until the loading program snapshot has acquired references.

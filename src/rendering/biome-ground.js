@@ -18,23 +18,23 @@ import {chunkBounds} from './water-source.js';
 // Texture uploads in the lab are raw RGBA8. Color conversion happens once in
 // its lighting recipe; normal and packed AO/roughness/height remain raw too.
 export class BiomeGround {
-  constructor(){this.textures=[];this.layerTextures=[];this.masks=new Set();this.loading=new AbortController();this.disposed=false;}
+  constructor({visualSearch=globalThis.location?.search??''}={}){this.visualSearch=visualSearch;this.textures=[];this.layerTextures=[];this.masks=new Set();this.loading=new AbortController();this.disposed=false;}
   async load(assets,biome,profile,field,{settlementSource=null}={}){
     this.assertOpen();this.profile=profile;this.field=field;
     const tiles=await json('/content/ground-materials.json',{signal:this.loading.signal});
-    this.layeredSavanna=biome==='savanna'&&['layer','layer-relief','layer-grass','layer-grass-sculpted'].includes(new URLSearchParams(globalThis.location?.search??'').get('visualLab'));
-    this.layeredRelief=this.layeredSavanna&&new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='layer-relief';
-    this.riverYards=biome==='grand_river'&&riverYardsEnabled();this.riverYardSites=this.riverYards?createRiverYardSites(field,settlementSource):null;
-    this.mangroveShore=biome==='mangrove'&&mangroveShoreEnabled();
-    this.riverSoil=biome==='grand_river'&&riverSoilEnabled();
-    this.riverBank=this.riverSoil&&riverBankEnabled();
-    this.riverUnderlay=this.riverSoil&&new URLSearchParams(globalThis.location?.search??'').get('riverUnderlay')==='persistent';
-    this.mangroveMoss=biome==='mangrove'&&mangroveMossEnabled();
-    this.mangroveSubstrate=biome==='mangrove'&&mangroveSubstrateEnabled();
-    this.desertSand=biome==='desert'&&desertSandEnabled();
-    this.canyonSand=biome==='canyons'&&canyonSandEnabled();this.canyonSandFull=this.canyonSand&&canyonSandFull();this.canyonSandSoft=this.canyonSand&&canyonSandSoft();
-    this.volcanicRock=biome==='volcanoes'&&volcanicRockEnabled();this.volcanicDeposits=this.volcanicRock&&volcanicDepositsEnabled();
-    this.volcanicAsh=this.volcanicRock?'mask':biome==='volcanoes'?volcanicAshMode():null;
+    this.layeredSavanna=biome==='savanna'&&['layer','layer-relief','layer-grass','layer-grass-sculpted'].includes(new URLSearchParams(this.visualSearch).get('visualLab'));
+    this.layeredRelief=this.layeredSavanna&&new URLSearchParams(this.visualSearch).get('visualLab')==='layer-relief';
+    this.riverYards=biome==='grand_river'&&riverYardsEnabled(this.visualSearch);this.riverYardSites=this.riverYards?createRiverYardSites(field,settlementSource):null;
+    this.mangroveShore=biome==='mangrove'&&mangroveShoreEnabled(this.visualSearch);
+    this.riverSoil=biome==='grand_river'&&riverSoilEnabled(this.visualSearch);
+    this.riverBank=this.riverSoil&&riverBankEnabled(this.visualSearch);
+    this.riverUnderlay=this.riverSoil&&new URLSearchParams(this.visualSearch).get('riverUnderlay')==='persistent';
+    this.mangroveMoss=biome==='mangrove'&&mangroveMossEnabled(this.visualSearch);
+    this.mangroveSubstrate=biome==='mangrove'&&mangroveSubstrateEnabled(this.visualSearch);
+    this.desertSand=biome==='desert'&&desertSandEnabled(this.visualSearch);
+    this.canyonSand=biome==='canyons'&&canyonSandEnabled(this.visualSearch);this.canyonSandFull=this.canyonSand&&canyonSandFull(this.visualSearch);this.canyonSandSoft=this.canyonSand&&canyonSandSoft(this.visualSearch);
+    this.volcanicRock=biome==='volcanoes'&&volcanicRockEnabled(this.visualSearch);this.volcanicDeposits=this.volcanicRock&&volcanicDepositsEnabled(this.visualSearch);
+    this.volcanicAsh=this.volcanicRock?'mask':biome==='volcanoes'?volcanicAshMode(this.visualSearch):null;
     this.tile=this.desertSand?{...tiles[biome],normal:DESERT_SAND_NORMAL_PATH,scale:1/30,normalBoost:1,relief:0,jitter:0}:tiles[biome];this.assertOpen();if(this.canyonSand)this.tile={...this.tile,scale:.08};if(this.volcanicRock)this.tile={...this.tile,scale:.06,relief:.44};
     try{
       for(const role of ['base','normal','arh']){
@@ -45,7 +45,7 @@ export class BiomeGround {
         map.wrapS=map.wrapT=THREE.RepeatWrapping;map.minFilter=THREE.LinearMipmapLinearFilter;map.magFilter=THREE.LinearFilter;map.generateMipmaps=true;map.anisotropy=8;map.needsUpdate=true;
         this.textures.push(map);
       }
-      if(biome==='canyons'&&new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting'){
+      if(biome==='canyons'&&new URLSearchParams(this.visualSearch).get('visualLab')==='global-lighting'){
         const source=await assets.texture(CANYON_ROCK_PATH,false);this.assertOpen();
         this.cliffRock=source.clone();this.cliffRock.wrapS=this.cliffRock.wrapT=THREE.RepeatWrapping;
         this.cliffRock.minFilter=THREE.LinearMipmapLinearFilter;this.cliffRock.magFilter=THREE.LinearFilter;
