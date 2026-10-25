@@ -1,6 +1,6 @@
-<!doctype html><html lang="es"><meta charset="utf-8"><link rel="icon" href="data:,"><title>Facóquero · revisión integrada</title>
+<!doctype html><html lang="es"><meta charset="utf-8"><link rel="icon" href="data:,"><title>Bestias · revisión integrada</title>
 <style>body{margin:0;background:#172019;color:#fff;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}#status{position:fixed;top:10px;left:10px;background:#172019d9;padding:10px;border-radius:6px}button,select{margin:4px;padding:5px}</style>
-<canvas></canvas><div id="status">Cargando mundo y facóquero…</div>
+<canvas></canvas><div id="status">Cargando mundo y bestia…</div>
 <script type="module">
 import * as Game from '/src/simulation/game.js';
 import {WorldScene} from '/src/rendering/scene.js';
@@ -12,7 +12,7 @@ if(!label)throw Error('Unknown species');
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
  const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
- const state=Game.newGame({seed:712,biome,culture:'mapungubwe',slotId:'warthog-qa'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ const state=Game.newGame({seed:712,biome,culture:'mapungubwe',slotId:'beast-qa'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);state.tutorial.step='done';
  state.time=350;state.elapsed=350;
  let point=null;
@@ -41,7 +41,7 @@ try{
   else {animal.status='attacking';animal.animation=clip;animal.attackId=clip;animal.attackDuration=library.clips[clip].duration;animal.attackRemaining=animal.attackDuration*(1-phase);}
   world.render(0);
  };
- const capture=()=>{world.render(0);return {biome,species,time:state.time,errors,model:library.url,clip:animal.animation??(animal.status==='entering'?'Running':'Walking'),position:[point.x,nav.actorSurface(point.x,point.z),point.z],camera:world.camera.position.toArray(),target:world.controls.target.toArray(),glError:world.renderer.getContext().getError(),calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,png:world.renderer.domElement.toDataURL('image/png').split(',')[1]};};
+ const capture=()=>{world.render(0);return {biome,species,time:state.time,errors,model:library.url,clip:animal.status==='attacking'?animal.animation:(animal.status==='entering'?'Running':'Walking'),position:[point.x,nav.actorSurface(point.x,point.z),point.z],camera:world.camera.position.toArray(),target:world.controls.target.toArray(),glError:world.renderer.getContext().getError(),calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,png:world.renderer.domElement.toDataURL('image/png').split(',')[1]};};
  window.beastQA={world,state,animal,pose,setView,capture,ready:true};
  document.querySelector('#status').innerHTML=`${biome} · ${label} · noche <select id="clip">${Object.keys(library.clips).filter(n=>n!=='restpose').map(n=>`<option>${n}</option>`).join('')}</select><button id="front">Frente</button><button id="back">Melena</button><button id="light">Día / noche</button>`;
  document.querySelector('#clip').value='Walking';

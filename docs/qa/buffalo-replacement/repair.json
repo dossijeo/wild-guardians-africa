@@ -1,0 +1,119 @@
+{
+  "sourceSha256": "a6d9f553c5f96c5ec566fc2e335ae97b9f9a99a4b1e752db9b6c4def8ff4a4cb",
+  "sourceBytes": 72214136,
+  "blender": "5.2.2 LTS",
+  "animationSource": "public\\assets\\88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+  "scope": "Foot geometry, sole weights and animation contact correction; one corrupt wrist point repaired. Other geometry, UVs, materials and bones retained.",
+  "before": {
+    "vertices": 11459,
+    "faces": 15743,
+    "bones": 61
+  },
+  "wristPoint": {
+    "geometricPoints": 1,
+    "splitVertices": [
+      1456,
+      1457
+    ],
+    "reason": "Crossed leg/opposite-hand weights and stretched wrist faces in source",
+    "reconstruction": "Adjacent wrist ring centroid and mean RightHand/RightForeArm weights",
+    "position": [
+      -0.4853862524032593,
+      -0.04085096716880798,
+      0.5689160227775574
+    ]
+  },
+  "feet": [
+    {
+      "side": "Left",
+      "vertices": 589,
+      "soleVertices": 55,
+      "soleNormalBefore": [
+        -0.16221006214618683,
+        -0.6063960790634155,
+        -0.778441846370697
+      ],
+      "correctionDegrees": 38.88186613338933,
+      "floor": -0.09989312995563854
+    },
+    {
+      "side": "Right",
+      "vertices": 610,
+      "soleVertices": 62,
+      "soleNormalBefore": [
+        0.2098693698644638,
+        -0.593944251537323,
+        -0.7766498923301697
+      ],
+      "correctionDegrees": 39.04511106964722,
+      "floor": -0.10094052240733177
+    }
+  ],
+  "preservation": {
+    "verticesOutsideFeetAndWristUnchanged": true,
+    "topologyUnchanged": true,
+    "bonesRetained": 61,
+    "customNormals": "Rotated with repaired feet; reconstructed at wrist point; original elsewhere",
+    "materialsAndTextures": "Original source material parameters and texture pixels retained before runtime texture downscale"
+  },
+  "scale": 2.29727217344603,
+  "hipTranslationRatio": 0.3267602298966649,
+  "retarget": {
+    "armBindCalibration": "T-pose replacement to A-pose donor using animated limb directions",
+    "bakeFps": 96,
+    "preserved": "Own target limb lengths, authored finger hierarchy and native clip duration"
+  },
+  "headPosture": {
+    "correctionDegrees": 0,
+    "preserved": "Native head motion; no anatomical head adjustment"
+  },
+  "clips": [
+    {
+      "name": "Running",
+      "firstFrame": 1.0,
+      "lastFrame": 17.0,
+      "samples": 65,
+      "duration": 0.6666666666666666
+    },
+    {
+      "name": "Walking",
+      "firstFrame": 1.0,
+      "lastFrame": 26.0,
+      "samples": 101,
+      "duration": 1.0416666666666667
+    },
+    {
+      "name": "Charged_Upward_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 78.0,
+      "samples": 309,
+      "duration": 3.2083333333333335
+    },
+    {
+      "name": "Right_Hand_Sword_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 38.0,
+      "samples": 149,
+      "duration": 1.5416666666666667
+    },
+    {
+      "name": "Weapon_Combo",
+      "firstFrame": 1.0,
+      "lastFrame": 90.0,
+      "samples": 357,
+      "duration": 3.7083333333333335
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "firstFrame": 1.0,
+      "lastFrame": 110.0,
+      "samples": 437,
+      "duration": 4.541666666666667
+    }
+  ],
+  "after": {
+    "vertices": 11459,
+    "faces": 15743,
+    "bytes": 74392252
+  }
+}

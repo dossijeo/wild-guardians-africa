@@ -4,7 +4,7 @@ import {once} from 'node:events';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const {chromium}=createRequire(import.meta.url)('playwright');
-const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero'})[species];if(!label)throw Error('Unsupported review species');
+const species=process.argv[2]??'hyena',label=({hyena:'Hiena',warthog:'Facóquero',buffalo:'Búfalo'})[species];if(!label)throw Error('Unsupported review species');
 const out=`docs/qa/${species}-replacement`,fps=30,base=process.env.WG_QA_URL??'http://127.0.0.1:5194';
 await mkdir(out,{recursive:true});
 const library=JSON.parse(await readFile('content/manifests/animal-actions.json','utf8')).animals[species];
@@ -33,7 +33,7 @@ try{
    ctx.fillStyle='#f7ebd3';ctx.font='600 27px system-ui';ctx.fillText(label.toUpperCase()+' · '+segment.label,26,36);
    ctx.font='18px system-ui';ctx.fillStyle='#c9ccb9';ctx.fillText(`${segment.clip}  ·  ${segment.light==='day'?'Día':'Noche'}  ·  ${segment.view==='back'?'Vista trasera':'Vista frontal'}  ·  velocidad real`,26,66);
    ctx.fillStyle='rgba(14,21,18,.8)';ctx.fillRect(0,688,1280,32);ctx.fillStyle='#d6b878';ctx.fillRect(0,688,1280*(frame+1)/totalFrames,3);
-   ctx.fillStyle='#f7ebd3';ctx.font='15px system-ui';ctx.fillText('Wild Guardians · modelo integrado · cabeza corregida y normales suaves',26,710);
+   ctx.fillStyle='#f7ebd3';ctx.font='15px system-ui';ctx.fillText('Wild Guardians · modelo integrado · animaciones y apoyo de pies',26,710);
    ctx.textAlign='right';ctx.fillText(`${(frame/30).toFixed(1)} / ${(totalFrames/30).toFixed(1)} s`,1254,710);ctx.textAlign='left';
    return canvas.toDataURL('image/jpeg',.94).split(',')[1];
   }};

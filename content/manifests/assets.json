@@ -5196,6 +5196,15 @@
       "origins": [
         "Wild Guardians New/animales/hiena.glb#repaired-retargeted"
       ]
+    },
+    {
+      "url": "/assets/3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d.glb",
+      "bytes": 74392252,
+      "sha256": "3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/búfalo.glb#repaired-retargeted"
+      ]
     }
   ],
   "models": [
@@ -5326,72 +5335,48 @@
       }
     },
     {
-      "url": "/assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "url": "/assets/3e2578a28b4005dc4a25f0cfecc8e2ee3aafb8eee75bfc2ccb9c2216c714b36d.glb",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
       "animations": [
         {
-          "name": "Walking",
-          "channels": 56
+          "name": "Running",
+          "channels": 183
         },
         {
-          "name": "Running",
-          "channels": 56
+          "name": "Walking",
+          "channels": 183
         },
         {
           "name": "Charged_Upward_Slash",
-          "channels": 56
+          "channels": 183
         },
         {
           "name": "Right_Hand_Sword_Slash",
-          "channels": 56
+          "channels": 183
         },
         {
           "name": "Weapon_Combo",
-          "channels": 56
+          "channels": 183
         },
         {
           "name": "Weapon_Combo_2",
-          "channels": 56
+          "channels": 183
         }
       ],
-      "nodes": 30,
+      "nodes": 63,
       "meshes": 1,
       "extras": {
-        "retargeting": {
-          "revision": 3,
-          "donor": "Meshy_AI_Boar_Warchief_All_Animations.glb",
-          "target": "Sunhorn Chieftain / Búfalo",
-          "nativeUnchanged": [
-            "Running"
-          ],
-          "corrected": [
-            "Walking",
-            "Charged_Upward_Slash",
-            "Right_Hand_Sword_Slash",
-            "Weapon_Combo",
-            "Weapon_Combo_2"
-          ],
-          "method": "Bone coordinate frames calibrated from 20 paired native Running samples. Target non-root offsets preserved. Uniform calibrated hip translation scale plus offset.",
-          "calibrationMaxAngularErrorDegrees": 0.00004594703627151031,
-          "hipTranslationScale": 0.9450193288186202,
-          "hipTranslationOffset": [
-            -0.02122471998153538,
-            0.32154751611465915,
-            0.06885118603628344
-          ],
-          "hipCalibrationMaxError": 1.2708420271678733e-7,
-          "preserved": [
-            "mesh",
-            "skin weights",
-            "inverse bind matrices",
-            "materials",
-            "textures",
-            "native Running",
-            "channel timings",
-            "grounding logic",
-            "in-place viewer logic"
-          ]
+        "replacement": {
+          "repair": "tools/prepare_buffalo.py",
+          "report": "docs/qa/buffalo-replacement/repair.json",
+          "animationSourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b"
         }
+      },
+      "geometrySource": "Wild Guardians New/animales/búfalo.glb",
+      "replacement": {
+        "repair": "tools/prepare_buffalo.py",
+        "report": "docs/qa/buffalo-replacement/repair.json",
+        "animationSourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b"
       }
     },
     {
