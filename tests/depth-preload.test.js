@@ -1,3 +1,4 @@
+import {GlobalFrameScheduler} from '../src/app/global-frame-scheduler.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Scene,Mesh,BoxGeometry,MeshStandardMaterial,PerspectiveCamera} from 'three';
@@ -114,4 +115,23 @@ test('cancelled depth admission cannot submit stale borrowed materials',async()=
  const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,cancelled:()=>stop,compile:()=>assert.fail('stale compile')});
  stop=true;assert.throws(()=>queued.options.valid(),/cancelled/);queued.iterator.return();resolve(null);
  await assert.rejects(preparing,/cancelled/);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);s.cleanup();
+});
+
+
+test('required depth batches recover after a CI-sized submission outlier',async()=>{
+ const s=setup();let clock=0,calls=0,finished=false;
+ const scheduler=new GlobalFrameScheduler({now:()=>clock});
+ const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,now:()=>clock,compile:()=>{
+  calls++;clock+=calls===1?66.455:1;return Promise.resolve();
+ }}).then(()=>{finished=true;});
+ // CI presented at ~78 ms intervals while mandatory CPU remained ~4.5 ms.
+ for(let frame=0;frame<220&&!finished;frame++){
+  clock=frame*78.125;scheduler.beginFrame(clock);clock+=4.525;
+  await scheduler.endFrame();await Promise.resolve();await Promise.resolve();
+  assert.equal(s.renderer.getRenderTarget(),s.prior);
+  assert.deepEqual(s.world.children.map(m=>m.material),s.originals);
+ }
+ assert.equal(finished,true,'required depth preparation must not starve');
+ await preparing;assert.equal(calls,3);assert.ok(scheduler.snapshot().blockingRecoveries>=1);
+ assert.equal(scheduler.snapshot().pending,0);s.cleanup();
 });
