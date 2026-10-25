@@ -1,0 +1,233 @@
+{
+  "scope": "Single active controls, not A/B/A/B; different worlds and settling lengths. GPU elapsed is not pure GPU busy time. No claim of overall speedup or complete lifecycle coverage.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "source": "sabana-coalesced-water-active.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "cameraPath": "fixed-height",
+      "frames": {
+        "count": 180,
+        "mean": 42.95741666666666,
+        "p95": 83.22499999999854,
+        "max": 166.20999999999913
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 31.334075770491804,
+        "p95": 41.294946,
+        "max": 46.048957
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 5.743000030517578,
+        "p95": 7.7550002336502075,
+        "max": 13.284999966621399
+      },
+      "latency": {
+        "count": 10,
+        "mean": 1159.644000005722,
+        "p95": 3745.689999938011,
+        "max": 4725.7300000190735
+      },
+      "slices": {
+        "count": 136,
+        "mean": 0.42227941400864544,
+        "p95": 1.0699999332427979,
+        "max": 3.9049999713897705
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "biome": "gran-rio",
+      "source": "gran-rio-coalesced-water-active.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "cameraPath": "fixed-height",
+      "frames": {
+        "count": 187,
+        "mean": 40.10363636363635,
+        "p95": 66.7349999999933,
+        "max": 149.625
+      },
+      "gpu": {
+        "count": 63,
+        "mean": 28.488044492063487,
+        "p95": 36.585311,
+        "max": 45.015571
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 5.634500086307526,
+        "p95": 7.164999842643738,
+        "max": 11.480000019073486
+      },
+      "latency": {
+        "count": 10,
+        "mean": 1164.608999991417,
+        "p95": 4154.09500002861,
+        "max": 4591.335000038147
+      },
+      "slices": {
+        "count": 136,
+        "mean": 0.4143014769343769,
+        "p95": 1.4900000095367432,
+        "max": 3.5999999046325684
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "biome": "manglares",
+      "source": "manglares-coalesced-water-active.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "cameraPath": "fixed-height",
+      "frames": {
+        "count": 218,
+        "mean": 41.95144495412845,
+        "p95": 67.08000000000175,
+        "max": 116.66500000000087
+      },
+      "gpu": {
+        "count": 73,
+        "mean": 33.665898000000006,
+        "p95": 45.044322,
+        "max": 55.371405
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 13.004000103473663,
+        "p95": 16.99500048160553,
+        "max": 18.205000519752502
+      },
+      "latency": {
+        "count": 10,
+        "mean": 1503.2820000052452,
+        "p95": 4360.899999976158,
+        "max": 4421.009999990463
+      },
+      "slices": {
+        "count": 403,
+        "mean": 0.3226799033120016,
+        "p95": 1.3050000667572021,
+        "max": 6.389999985694885
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "biome": "desierto",
+      "source": "desierto-coalesced-water-active.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "cameraPath": "fixed-height",
+      "frames": {
+        "count": 180,
+        "mean": 23.096083333333322,
+        "p95": 33.36500000000524,
+        "max": 66.4800000000032
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 16.994632819672134,
+        "p95": 22.232291,
+        "max": 26.541353
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 1.6669999957084656,
+        "p95": 2.095000147819519,
+        "max": 2.6599998474121094
+      },
+      "latency": {
+        "count": 10,
+        "mean": 75.92849999666214,
+        "p95": 143.8049999475479,
+        "max": 173.07500004768372
+      },
+      "slices": {
+        "count": 90,
+        "mean": 0.18522222174538505,
+        "p95": 0.9450000524520874,
+        "max": 1.8600000143051147
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "biome": "volcanes",
+      "source": "volcanes-coalesced-water-active.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "cameraPath": "fixed-height",
+      "frames": {
+        "count": 180,
+        "mean": 36.028916666666674,
+        "p95": 66.50499999999738,
+        "max": 132.98500000000058
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 25.894501131147532,
+        "p95": 32.524426,
+        "max": 48.473174
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 5.749500107765198,
+        "p95": 7.3750001192092896,
+        "max": 11.335000157356262
+      },
+      "latency": {
+        "count": 10,
+        "mean": 899.3950000166893,
+        "p95": 2201.9500000476837,
+        "max": 2258.289999961853
+      },
+      "slices": {
+        "count": 135,
+        "mean": 0.4258888968714961,
+        "p95": 1.5500000715255737,
+        "max": 3.975000023841858
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "biome": "gran-canon",
+      "source": "gran-canon-coalesced-water-active.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&waterCore=opaque&canyonBank=balanced&canyonWater=calm&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "cameraPath": "terrain-following",
+      "frames": {
+        "count": 180,
+        "mean": 28.359749999999984,
+        "p95": 33.41000000000349,
+        "max": 332.6050000000032
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 20.82409227868852,
+        "p95": 25.971197,
+        "max": 27.845155
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 1.7390000224113464,
+        "p95": 2.1750000715255737,
+        "max": 2.9750001430511475
+      },
+      "latency": {
+        "count": 10,
+        "mean": 51.639000022411345,
+        "p95": 92.28999996185303,
+        "max": 144.05000007152557
+      },
+      "slices": {
+        "count": 90,
+        "mean": 0.19322222471237183,
+        "p95": 0.9600000381469727,
+        "max": 1.8650000095367432
+      },
+      "blockingRecoveries": 0
+    }
+  ]
+}

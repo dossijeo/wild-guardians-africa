@@ -831,3 +831,48 @@ final, validar otros biomas/ciclo de vida y pruebas intercaladas de rendimiento.
 No afirmar aceptación global ni fluidez completa. `asset-water-incremental-comparison.json`
 conserva métricas y opciones. Las capturas intermedias permanecen locales;
 se publican informes, trazas y capturas finales.
+
+
+## Candidato coalescido: repetición pausada y controles activos de seis biomas
+
+`gran-rio-coalesced-water-paused` completa diez chunks, cero pendientes y cero
+recuperaciones excepcionales, elapsed intacto. Máximo de unidad16,83 ms (control
+síncrono60,43); latencia de preparación media4774 ms (síncrono11806, primer
+incremental936). No afirmar que la coalescencia gana en todas las condiciones:
+reduce coordinación en activo pero esta observación pausada tarda más que la
+primera incremental. Las capturas perturban la cadencia. Los parámetros de las
+15 camas (límites, dimensiones, rango de alturas y bytes) coinciden exactamente
+con la traza síncrona; esto NO es hash de sus texeles. La equivalencia de bytes
+se comprueba por tests; aquí la captura final también fue inspeccionada.
+
+Controles activos secuenciales, Intel UHD, media720p, receta actual y pthreads:
+
+| Bioma | GPU media ms | Presentación p95 ms | Recuperaciones excepcionales |
+| --- | ---: | ---: | ---: |
+| Sabana | 31,33 | 83,22 | 0 |
+| Gran Río | 28,49 | 66,73 | 0 |
+| Manglares | 33,67 | 67,08 | 0 |
+| Desierto | 16,99 | 33,37 | 0 |
+| Volcanes | 25,89 | 66,50 | 0 |
+| Gran Cañón | 20,82 | 33,41 | 0 |
+
+Todos completan diez chunks, actores180/180, ninguna pausa durante el recorrido,
+fondos listos y scheduler sin pendientes. Sin errores nuevos (se conservan los
+avisos X4000 conocidos). Cañón usa cámara ajustada al relieve con180muestras de
+altura positivas; el resto mantiene la traslación de cámara anterior. Son escenas
+y tiempos de asentamiento distintos, NO comparaciones A/B ni ranking de motores.
+GPU elapsed incluye burbujas de ejecución. Manglares no cumple20–23ms GPU.
+`summarize-coalesced-water-controls.py` verifica las condiciones y produce
+`coalesced-water-six-biome-controls.json`.
+
+Inspección final de este pase: Sabana conserva cubierta dorada y suelo visible;
+Manglares conserva helechos, suelo verde/barro localizado y ribera; Desierto
+mantiene las dunas aprobadas; Volcanes conserva roca oscura/ceniza/lava; Cañón
+muestra suelo continuo bajo props. La vista final de Cañón no encuadra el río,
+por lo que NO valida sus orillas. Gran Río fue inspeccionado en el control pausado
+final; su captura activa permanece conservada, sin nueva inspección específica.
+No se modifican assets ni receta gráfica.
+
+Pendiente para cerrar esta optimización: controles nocturnos y de calidad baja,
+cancelación/cambios de calidad con camas pendientes en juego real y A/B/A/B de
+rendimiento/latencia. No extrapolar seis controles diurnos a aceptación integral.
