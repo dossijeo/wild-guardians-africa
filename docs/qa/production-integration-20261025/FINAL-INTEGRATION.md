@@ -47,3 +47,8 @@ The coherent Mangrove lighting pilot extends the earlier test to continuous gras
 Sixteen real integrated captures: `lighting-final/comparison.html`, day/night on/off for all four biomes, same seed/camera/quality, DOF disabled to isolate lighting. No reported GL/page errors. Mangrove night images are pixel-identical; mean absolute nighttime channel deltas (0–255) are River 0.0004, Savanna 0.0056, Volcano 0.0033. Animated details are not frozen in every subsystem, so these small differences are not attributed to the light constants. Ground and ferns remain legible; the result adopts warmer daylight without claiming pixel-equivalence to the mockups.
 
 Validation: 13 existing toon/vegetation/global-light tests plus 2 new profile stability/night-endpoint tests pass. Build/package validator passes: **983 files / 477,438,491 bytes**. Tauri release executable compiled, installer still being produced at this checkpoint; that desktop build predates this lighting patch and must be rebuilt for final acceptance. The full flow and merge gates remain open.
+
+
+## User decision: remove distant DOF
+
+After reviewing the on/off comparison, the user preferred removing the effect. Production no longer imports, constructs, prepares or renders HorizonFocus; no color/depth copy, full-screen blur pass or associated allocation remains. Warm daylight is retained. The implementation moved to `tools/experiments/horizon-focus.js`; explicit QA installers and historical captures remain reproducible. Earlier default-enabled statements above are superseded by this decision. All 22 targeted quality/render-origin/effect lifecycle tests pass after removal.

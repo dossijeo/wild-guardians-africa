@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {HorizonFocus} from '../src/rendering/horizon-focus.js';
+import {HorizonFocus} from '../tools/experiments/horizon-focus.js';
 const mock=()=>{const pending=[];return {pending,initialized:0,compileAsync(){return new Promise(resolve=>pending.push(resolve));},getDrawingBufferSize(v){return v.set(1280,720);},initRenderTarget(){this.initialized++;}};};
 const configure=(f,quality='media')=>f.configure({enabled:true,quality,biome:'manglares'});
 test('low quality releases the render target; reenabling prepares resources before drawing',async()=>{

@@ -11,6 +11,7 @@ try{for(const [run,arm] of ['off','on','off','on'].entries()){
  await menu.locator('body').evaluate((_,biome)=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome,culture:'mapungubwe'},location.origin),biome);
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&window.qaLightingWorld?.state,null,{timeout:240000});
 
+ await page.evaluate(async()=>{const {installHorizonFocus}=await import('/tools/experiments/horizon-focus.js');await installHorizonFocus(window.qaLightingWorld);});
  const result=await page.evaluate(async arm=>{
   const w=window.qaLightingWorld,gl=w.renderer.getContext(),ext=gl.getExtension('EXT_disjoint_timer_query_webgl2');
   w.horizonFocus.enabled=arm==='on';

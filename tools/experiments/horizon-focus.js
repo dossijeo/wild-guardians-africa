@@ -81,3 +81,18 @@ export class HorizonFocus {
  }
  dispose(){if(this.disposed)return;this.disposed=true;this.generation++;this.target?.dispose();this.geometry.dispose();this.material.dispose();this.target=null;this.stats.bytes=0;}
 }
+
+
+// QA only: production does not import or allocate this effect.
+export async function installHorizonFocus(world){
+ const focus=new HorizonFocus(world.renderer),abort=new AbortController();
+ world.horizonFocus=focus;
+ const configure=()=>focus.configure({enabled:true,quality:world.quality,biome:world.state.biome});
+ configure();await focus.prepare();
+ const draw=world.drawWorldFrame,quality=world.qualitySetting,dispose=world.dispose;
+ world.drawWorldFrame=function(...args){const result=draw.apply(this,args);focus.render(this.camera,this.camera.position.distanceTo(this.controls.target));return result;};
+ world.qualitySetting=function(...args){const result=quality.apply(this,args);configure();void focus.prepare();return result;};
+ world.canvas.addEventListener('webglcontextrestored',()=>{focus.reset();void focus.prepare();},{signal:abort.signal});
+ world.dispose=function(...args){abort.abort();focus.dispose();return dispose.apply(this,args);};
+ return focus;
+}

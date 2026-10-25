@@ -52,3 +52,8 @@ Still open before release: camera-motion/streaming performance and silhouettes, 
 `check-horizon-focus-motion.mjs` runs four fresh Mangrove campaigns with seed 712, medium/720p and the same 420-frame path (first 60 frames warmup). Streaming stays enabled. Complete-draw GPU means off/on/off/on: **26.72 / 29.32 / 25.99 / 26.34 ms**. Draw CPU means: **5.24 / 5.78 / 5.47 / 5.51 ms**. Draw-interval P95: **63.34 / 68.52 / 60.80 / 63.61 ms**. All 360 GPU queries per arm are valid; no disjoint, GL or page errors. Raw samples and summary: `horizon-focus-motion/`.
 
 The differing increments (+2.60 and +0.35 ms) are not evidence of a free effect: asynchronous chunk readiness changes scene work along the camera route. Use the controlled resident measurements above for isolated cost. The tutorial pauses simulation during the run, explicitly captured in before/after state; this is NOT sustained active-simulation acceptance. Streaming spikes remain and this effect does not solve them. Visual snapshots only cover endpoints, so a recorded path still needs inspection for transient silhouettes.
+
+
+## User decision: remove distant DOF
+
+After reviewing the on/off comparison, the user preferred removing the effect. Production no longer imports, constructs, prepares or renders HorizonFocus; no color/depth copy, full-screen blur pass or associated allocation remains. Warm daylight is retained. The implementation moved to `tools/experiments/horizon-focus.js`; explicit QA installers and historical captures remain reproducible. Earlier default-enabled statements above are superseded by this decision. All 22 targeted quality/render-origin/effect lifecycle tests pass after removal.
