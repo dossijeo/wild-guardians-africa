@@ -1,0 +1,183 @@
+{
+  "sourceSha256": "922af2a4d78eb7447359ae6ac6d1bbd86729ac3ffa2cd29c44f92f0398192321",
+  "blender": "5.2.2 LTS",
+  "animationSource": "public\\assets\\7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+  "collapsedUnanimatedFingerBones": 40,
+  "before": {
+    "vertices": 19310,
+    "faces": 15545
+  },
+  "collar": {
+    "vertices": 1298,
+    "bone": "Neck",
+    "weight": 1,
+    "previousLimbInfluences": 1152,
+    "restShapeRestoredFromSuppliedPose": true,
+    "maxRestCorrection": 0.21152349918708338
+  },
+  "maneSpineWeights": {
+    "vertices": 363,
+    "limbInfluences": 0,
+    "chain": [
+      "Spine1",
+      "Spine2",
+      "Neck",
+      "Head"
+    ]
+  },
+  "manePatches": [
+    {
+      "edges": 17,
+      "faces": 3,
+      "center": [
+        0.06249802187085152,
+        0.1274072676897049,
+        0.507330060005188
+      ]
+    },
+    {
+      "edges": 19,
+      "faces": 1,
+      "center": [
+        -0.10332383960485458,
+        0.08423826843500137,
+        0.4459058940410614
+      ]
+    },
+    {
+      "edges": 8,
+      "faces": 1,
+      "center": [
+        -0.1721295863389969,
+        -0.015742795541882515,
+        0.5827735662460327
+      ]
+    },
+    {
+      "edges": 15,
+      "faces": 1,
+      "center": [
+        -0.04243175685405731,
+        -0.0912281796336174,
+        0.9330422282218933
+      ]
+    },
+    {
+      "edges": 5,
+      "faces": 1,
+      "center": [
+        -0.08522762358188629,
+        -0.13386666774749756,
+        0.917852520942688
+      ]
+    },
+    {
+      "edges": 5,
+      "faces": 1,
+      "center": [
+        0.08983981609344482,
+        0.009039733558893204,
+        0.8531404733657837
+      ]
+    },
+    {
+      "edges": 13,
+      "faces": 2,
+      "center": [
+        -0.13317877054214478,
+        -0.09158312529325485,
+        0.6817216277122498
+      ]
+    }
+  ],
+  "feet": [
+    {
+      "side": "Left",
+      "vertices": 197,
+      "solePitchDegrees": 19.261159795479152,
+      "floor": -0.003843795508146286
+    },
+    {
+      "side": "Right",
+      "vertices": 203,
+      "solePitchDegrees": 22.65543912415147,
+      "floor": -0.010951772332191467
+    }
+  ],
+  "maneBacking": {
+    "vertices": 262,
+    "center": [
+      0,
+      0.055,
+      0.53
+    ],
+    "radii": [
+      0.09,
+      0.045,
+      0.16
+    ],
+    "weights": "Head/Neck/Spine2/Spine1 only"
+  },
+  "shading": {
+    "method": "Interpolated smooth normals, 55 degree crease limit",
+    "smoothFaces": 15835,
+    "preserved": "Creases above 55 degrees on teeth, claws and mane; silhouette and painted texture unchanged"
+  },
+  "scale": 2.0727532122381405,
+  "hipTranslationRatio": 0.42771386563052155,
+  "headPosture": {
+    "headLiftDegrees": 12,
+    "neckLiftDegrees": 3,
+    "axis": "Animated torso lateral axis",
+    "preserved": "Relative animated head turns and nods; bind skeleton retained"
+  },
+  "clips": [
+    {
+      "name": "Running",
+      "firstFrame": 1.0,
+      "lastFrame": 17.0,
+      "samples": 17,
+      "duration": 0.6666666666666666
+    },
+    {
+      "name": "Walking",
+      "firstFrame": 1.0,
+      "lastFrame": 26.0,
+      "samples": 26,
+      "duration": 1.0416666666666667
+    },
+    {
+      "name": "Charged_Upward_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 78.0,
+      "samples": 78,
+      "duration": 3.2083333333333335
+    },
+    {
+      "name": "Right_Hand_Sword_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 38.0,
+      "samples": 38,
+      "duration": 1.5416666666666667
+    },
+    {
+      "name": "Weapon_Combo",
+      "firstFrame": 1.0,
+      "lastFrame": 90.0,
+      "samples": 90,
+      "duration": 3.7083333333333335
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "firstFrame": 1.0,
+      "lastFrame": 110.0,
+      "samples": 110,
+      "duration": 4.541666666666667
+    }
+  ],
+  "after": {
+    "vertices": 8192,
+    "faces": 15835,
+    "bytes": 71064552
+  }
+}

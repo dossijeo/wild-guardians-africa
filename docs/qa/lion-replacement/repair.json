@@ -1,0 +1,262 @@
+{
+  "locomotionStance": {
+    "method": "Two-bone IK, ipsilateral pelvis-space foot tracks, forward knee pole",
+    "lateralDonorMotionRetained": 0.15
+  },
+  "sourceSha256": "b985b5b21b23f41866598635adb0a580b8698f53eb4100a8742b9f89891daf75",
+  "sourceBytes": 105334576,
+  "blender": "5.2.2 LTS",
+  "animationSource": "public\\assets\\5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+  "secondaryMotion": [
+    {
+      "solver": "Pinned mass grids with stretch/shear/bend constraints and animated thigh/calf capsule collisions; damped tail joints with hip inertia and active sway",
+      "fps": 96,
+      "clothNodes": 90,
+      "clothSubsteps": 2,
+      "constraintIterations": 9,
+      "warmupCycles": 8,
+      "stationaryPrerollSeconds": 0,
+      "rawCycleVariation": [
+        0.0023253765011594174,
+        0.0003829991314528426
+      ],
+      "loopBake": "Last four simulated cycles phase-averaged, five-frame circular filter in pelvis space, hip-relative endpoint closure",
+      "shapeTetherMaxDistance": 0.09,
+      "maxUpwardFold": 0.04,
+      "restShapeBendingStiffness": 18,
+      "velocityDampingPerSecond": 8,
+      "runtimeSimulation": false,
+      "clip": "Running"
+    },
+    {
+      "solver": "Pinned mass grids with stretch/shear/bend constraints and animated thigh/calf capsule collisions; damped tail joints with hip inertia and active sway",
+      "fps": 96,
+      "clothNodes": 90,
+      "clothSubsteps": 2,
+      "constraintIterations": 9,
+      "warmupCycles": 8,
+      "stationaryPrerollSeconds": 0,
+      "rawCycleVariation": [
+        0.0009300655569645593,
+        2.697818346256319e-08
+      ],
+      "loopBake": "Last four simulated cycles phase-averaged, five-frame circular filter in pelvis space, hip-relative endpoint closure",
+      "shapeTetherMaxDistance": 0.09,
+      "maxUpwardFold": 0.04,
+      "restShapeBendingStiffness": 18,
+      "velocityDampingPerSecond": 8,
+      "runtimeSimulation": false,
+      "clip": "Walking"
+    },
+    {
+      "solver": "Pinned mass grids with stretch/shear/bend constraints and animated thigh/calf capsule collisions; damped tail joints with hip inertia and active sway",
+      "fps": 96,
+      "clothNodes": 90,
+      "clothSubsteps": 2,
+      "constraintIterations": 9,
+      "warmupCycles": 0,
+      "stationaryPrerollSeconds": 1,
+      "rawCycleVariation": [],
+      "loopBake": "Direct simulated attack",
+      "shapeTetherMaxDistance": 0.09,
+      "maxUpwardFold": 0.04,
+      "restShapeBendingStiffness": 18,
+      "velocityDampingPerSecond": 8,
+      "runtimeSimulation": false,
+      "clip": "Charged_Upward_Slash"
+    },
+    {
+      "solver": "Pinned mass grids with stretch/shear/bend constraints and animated thigh/calf capsule collisions; damped tail joints with hip inertia and active sway",
+      "fps": 96,
+      "clothNodes": 90,
+      "clothSubsteps": 2,
+      "constraintIterations": 9,
+      "warmupCycles": 0,
+      "stationaryPrerollSeconds": 1,
+      "rawCycleVariation": [],
+      "loopBake": "Direct simulated attack",
+      "shapeTetherMaxDistance": 0.09,
+      "maxUpwardFold": 0.04,
+      "restShapeBendingStiffness": 18,
+      "velocityDampingPerSecond": 8,
+      "runtimeSimulation": false,
+      "clip": "Right_Hand_Sword_Slash"
+    },
+    {
+      "solver": "Pinned mass grids with stretch/shear/bend constraints and animated thigh/calf capsule collisions; damped tail joints with hip inertia and active sway",
+      "fps": 96,
+      "clothNodes": 90,
+      "clothSubsteps": 2,
+      "constraintIterations": 9,
+      "warmupCycles": 0,
+      "stationaryPrerollSeconds": 1,
+      "rawCycleVariation": [],
+      "loopBake": "Direct simulated attack",
+      "shapeTetherMaxDistance": 0.09,
+      "maxUpwardFold": 0.04,
+      "restShapeBendingStiffness": 18,
+      "velocityDampingPerSecond": 8,
+      "runtimeSimulation": false,
+      "clip": "Weapon_Combo"
+    },
+    {
+      "solver": "Pinned mass grids with stretch/shear/bend constraints and animated thigh/calf capsule collisions; damped tail joints with hip inertia and active sway",
+      "fps": 96,
+      "clothNodes": 90,
+      "clothSubsteps": 2,
+      "constraintIterations": 9,
+      "warmupCycles": 0,
+      "stationaryPrerollSeconds": 1,
+      "rawCycleVariation": [],
+      "loopBake": "Direct simulated attack",
+      "shapeTetherMaxDistance": 0.09,
+      "maxUpwardFold": 0.04,
+      "restShapeBendingStiffness": 18,
+      "velocityDampingPerSecond": 8,
+      "runtimeSimulation": false,
+      "clip": "Weapon_Combo_2"
+    }
+  ],
+  "before": {
+    "vertices": 19801,
+    "faces": 15454,
+    "bones": 61
+  },
+  "manePatches": [
+    {
+      "edges": 11,
+      "faces": 1,
+      "center": [
+        -0.002644689055159688,
+        0.2169552594423294,
+        0.7919837236404419
+      ]
+    },
+    {
+      "edges": 5,
+      "faces": 1,
+      "center": [
+        -0.14440715312957764,
+        0.17164964973926544,
+        0.6324359774589539
+      ]
+    }
+  ],
+  "feet": [
+    {
+      "side": "Left",
+      "vertices": 526,
+      "soleVertices": 36,
+      "floor": -0.04685750603675842,
+      "correctionDegrees": 26.22606006365826
+    },
+    {
+      "side": "Right",
+      "vertices": 534,
+      "soleVertices": 30,
+      "floor": -0.04533800482749939,
+      "correctionDegrees": 25.592826395517207
+    }
+  ],
+  "tail": {
+    "vertices": 385,
+    "bones": [
+      "Tail_01",
+      "Tail_02",
+      "Tail_03",
+      "Tail_04",
+      "Tail_05"
+    ],
+    "legInfluences": 0,
+    "waistPinnedRoot": true,
+    "waistBulbVertices": 27,
+    "waistBulbWeights": "Hips 1.0; no thigh influences"
+  },
+  "cloth": {
+    "faces": 371,
+    "vertices": 295,
+    "bones": [
+      "ClothRear_L_Inner_01",
+      "ClothRear_L_Inner_02",
+      "ClothRear_L_Inner_03",
+      "ClothRear_L_Outer_01",
+      "ClothRear_L_Outer_02",
+      "ClothRear_L_Outer_03",
+      "ClothRear_R_Inner_01",
+      "ClothRear_R_Inner_02",
+      "ClothRear_R_Inner_03",
+      "ClothRear_R_Outer_01",
+      "ClothRear_R_Outer_02",
+      "ClothRear_R_Outer_03"
+    ],
+    "legInfluences": 0,
+    "separatePanels": true,
+    "boneScale": "Rigid transforms only; no nonuniform inherited scale",
+    "attachment": "Waist/Hips top edge; independent two-column, three-segment chains per rear panel",
+    "bodyUnderCloth": "Posterior thigh fur half-shells close the fused source surface underneath freed panels"
+  },
+  "scale": 1.8477070220751526,
+  "hipTranslationRatio": 0.49921369843696994,
+  "retarget": {
+    "armBindCalibration": "T-pose replacement to A-pose donor using animated limb directions",
+    "bakeFps": 96,
+    "preserved": "Own target limb lengths, authored finger hierarchy and native clip duration"
+  },
+  "headPosture": {
+    "correctionDegrees": 0,
+    "preserved": "Native head motion; no anatomical head adjustment"
+  },
+  "clips": [
+    {
+      "name": "Running",
+      "firstFrame": 1.0,
+      "lastFrame": 17.0,
+      "samples": 65,
+      "duration": 0.6666666666666666
+    },
+    {
+      "name": "Walking",
+      "firstFrame": 1.0,
+      "lastFrame": 26.0,
+      "samples": 101,
+      "duration": 1.0416666666666667
+    },
+    {
+      "name": "Charged_Upward_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 78.0,
+      "samples": 309,
+      "duration": 3.2083333333333335
+    },
+    {
+      "name": "Right_Hand_Sword_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 38.0,
+      "samples": 149,
+      "duration": 1.5416666666666667
+    },
+    {
+      "name": "Weapon_Combo",
+      "firstFrame": 1.0,
+      "lastFrame": 90.0,
+      "samples": 357,
+      "duration": 3.7083333333333335
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "firstFrame": 1.0,
+      "lastFrame": 110.0,
+      "samples": 437,
+      "duration": 4.541666666666667
+    }
+  ],
+  "canonicalTextures": "Albedo 8192 to 4096; original normal 4096. Runtime pipeline then downsizes both to 2048 WebP.",
+  "after": {
+    "bodyVertices": 7979,
+    "clothVertices": 295,
+    "faces": 15672,
+    "bones": 78,
+    "bytes": 45698076
+  },
+  "maneSkin": "Authored upper-body skin retained; source shoulder fur is not reclassified as mane"
+}

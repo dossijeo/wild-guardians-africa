@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
+import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,UNUSED_ANIMAL_LAB_MODELS,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
@@ -30,11 +30,11 @@ for(const record of spiritManifest.records){
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
 for(const item of manifest.records){
  assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');
- assert.equal(await exists(resolve(root,item.runtime)),!new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL]).has(item.source),'Incorrect runtime GLB inventory: '+item.source);
+ assert.equal(await exists(resolve(root,item.runtime)),!new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]).has(item.source),'Incorrect runtime GLB inventory: '+item.source);
 }
 const packagedModels=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8'));
 const packagedAssets=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
-for(const source of [...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL]){
+for(const source of [...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]){
  assert(!packagedModels.some(model=>model.url.replace(/^\//,'')===source),'Unused worker lab model listed in runtime catalogue');
  assert(!packagedAssets.records.some(item=>item.source===source),'Unused worker lab model listed in runtime asset map');
 }

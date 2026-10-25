@@ -1,0 +1,1655 @@
+{
+  "scope": "Same paused native WorldScene, camera, geometry, textures, time and lights; switch only the beast material uniform. Pixel comparison uses original lossless drawing buffers before JPEG encoding. Tolerance: 1 RGB level; at most 0.01% of framebuffer pixels outside actor bounds may differ at raster edges. Exact outside counts are reported, not treated as pixel-identical backgrounds.",
+  "records": [
+    {
+      "species": "warthog",
+      "biome": "sabana",
+      "view": "close",
+      "before": "warthog-sabana-close-before.jpg",
+      "after": "warthog-sabana-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 81517,
+      "changedOutsideActorBounds": 6,
+      "actorBounds": {
+        "left": 343,
+        "right": 837,
+        "top": 190,
+        "bottom": 746
+      },
+      "beforeMeanChangedLuminance": 31.049642825419077,
+      "afterMeanChangedLuminance": 52.55847874921874,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "sabana",
+      "view": "game",
+      "before": "warthog-sabana-game-before.jpg",
+      "after": "warthog-sabana-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 18189,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 494,
+        "right": 744,
+        "top": 290,
+        "bottom": 601
+      },
+      "beforeMeanChangedLuminance": 30.563789037329805,
+      "afterMeanChangedLuminance": 51.646832953983946,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "gran-rio",
+      "view": "close",
+      "before": "warthog-gran-rio-close-before.jpg",
+      "after": "warthog-gran-rio-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 81550,
+      "changedOutsideActorBounds": 51,
+      "actorBounds": {
+        "left": 343,
+        "right": 837,
+        "top": 190,
+        "bottom": 746
+      },
+      "beforeMeanChangedLuminance": 30.773438496624053,
+      "afterMeanChangedLuminance": 52.26707274555563,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "gran-rio",
+      "view": "game",
+      "before": "warthog-gran-rio-game-before.jpg",
+      "after": "warthog-gran-rio-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 18189,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 494,
+        "right": 744,
+        "top": 290,
+        "bottom": 601
+      },
+      "beforeMeanChangedLuminance": 29.902559349056695,
+      "afterMeanChangedLuminance": 50.98580068173151,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "manglares",
+      "view": "close",
+      "before": "warthog-manglares-close-before.jpg",
+      "after": "warthog-manglares-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 80828,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 343,
+        "right": 837,
+        "top": 190,
+        "bottom": 746
+      },
+      "beforeMeanChangedLuminance": 31.239858853363536,
+      "afterMeanChangedLuminance": 52.686053872420516,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "manglares",
+      "view": "game",
+      "before": "warthog-manglares-game-before.jpg",
+      "after": "warthog-manglares-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 18156,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 494,
+        "right": 744,
+        "top": 290,
+        "bottom": 601
+      },
+      "beforeMeanChangedLuminance": 30.0110123705659,
+      "afterMeanChangedLuminance": 50.80512519277425,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "volcanes",
+      "view": "close",
+      "before": "warthog-volcanes-close-before.jpg",
+      "after": "warthog-volcanes-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 81498,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 343,
+        "right": 837,
+        "top": 190,
+        "bottom": 746
+      },
+      "beforeMeanChangedLuminance": 30.465991670957383,
+      "afterMeanChangedLuminance": 51.98127318952671,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "volcanes",
+      "view": "game",
+      "before": "warthog-volcanes-game-before.jpg",
+      "after": "warthog-volcanes-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 18189,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 494,
+        "right": 744,
+        "top": 290,
+        "bottom": 601
+      },
+      "beforeMeanChangedLuminance": 29.16525408763502,
+      "afterMeanChangedLuminance": 50.24822946836088,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "gran-canon",
+      "view": "close",
+      "before": "warthog-gran-canon-close-before.jpg",
+      "after": "warthog-gran-canon-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 81500,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 343,
+        "right": 837,
+        "top": 190,
+        "bottom": 746
+      },
+      "beforeMeanChangedLuminance": 31.47835079999697,
+      "afterMeanChangedLuminance": 52.44230478773099,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "gran-canon",
+      "view": "game",
+      "before": "warthog-gran-canon-game-before.jpg",
+      "after": "warthog-gran-canon-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 18189,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 494,
+        "right": 744,
+        "top": 290,
+        "bottom": 601
+      },
+      "beforeMeanChangedLuminance": 31.004757083951525,
+      "afterMeanChangedLuminance": 51.57411274946463,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "desierto",
+      "view": "close",
+      "before": "warthog-desierto-close-before.jpg",
+      "after": "warthog-desierto-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 81497,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 343,
+        "right": 837,
+        "top": 190,
+        "bottom": 746
+      },
+      "beforeMeanChangedLuminance": 31.498767247870774,
+      "afterMeanChangedLuminance": 52.51786654969027,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              80.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "warthog",
+      "biome": "desierto",
+      "view": "game",
+      "before": "warthog-desierto-game-before.jpg",
+      "after": "warthog-desierto-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "changedPixels": 18188,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 494,
+        "right": 744,
+        "top": 290,
+        "bottom": 601
+      },
+      "beforeMeanChangedLuminance": 31.363935814822415,
+      "afterMeanChangedLuminance": 51.98676744007091,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              80.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "sabana",
+      "view": "close",
+      "before": "hyena-sabana-close-before.jpg",
+      "after": "hyena-sabana-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 49994,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 481,
+        "right": 784,
+        "top": 289,
+        "bottom": 761
+      },
+      "beforeMeanChangedLuminance": 24.81012662719654,
+      "afterMeanChangedLuminance": 50.90419571948709,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "sabana",
+      "view": "game",
+      "before": "hyena-sabana-game-before.jpg",
+      "after": "hyena-sabana-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 9784,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 564,
+        "right": 715,
+        "top": 363,
+        "bottom": 610
+      },
+      "beforeMeanChangedLuminance": 25.34520049059698,
+      "afterMeanChangedLuminance": 50.92631993049942,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "gran-rio",
+      "view": "close",
+      "before": "hyena-gran-rio-close-before.jpg",
+      "after": "hyena-gran-rio-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 49999,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 481,
+        "right": 784,
+        "top": 289,
+        "bottom": 761
+      },
+      "beforeMeanChangedLuminance": 24.358103534071912,
+      "afterMeanChangedLuminance": 50.449608432169505,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "gran-rio",
+      "view": "game",
+      "before": "hyena-gran-rio-game-before.jpg",
+      "after": "hyena-gran-rio-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 9784,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 564,
+        "right": 715,
+        "top": 363,
+        "bottom": 610
+      },
+      "beforeMeanChangedLuminance": 24.36164427636979,
+      "afterMeanChangedLuminance": 49.94229934587155,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "manglares",
+      "view": "close",
+      "before": "hyena-manglares-close-before.jpg",
+      "after": "hyena-manglares-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 48585,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 481,
+        "right": 784,
+        "top": 289,
+        "bottom": 761
+      },
+      "beforeMeanChangedLuminance": 24.696180677163923,
+      "afterMeanChangedLuminance": 51.200168587013245,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "manglares",
+      "view": "game",
+      "before": "hyena-manglares-game-before.jpg",
+      "after": "hyena-manglares-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 9555,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 564,
+        "right": 715,
+        "top": 363,
+        "bottom": 610
+      },
+      "beforeMeanChangedLuminance": 24.170789324960857,
+      "afterMeanChangedLuminance": 50.03600265829466,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "volcanes",
+      "view": "close",
+      "before": "hyena-volcanes-close-before.jpg",
+      "after": "hyena-volcanes-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 49999,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 481,
+        "right": 784,
+        "top": 289,
+        "bottom": 761
+      },
+      "beforeMeanChangedLuminance": 23.743914938299927,
+      "afterMeanChangedLuminance": 49.83521822836552,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "volcanes",
+      "view": "game",
+      "before": "hyena-volcanes-game-before.jpg",
+      "after": "hyena-volcanes-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 9785,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 564,
+        "right": 715,
+        "top": 363,
+        "bottom": 610
+      },
+      "beforeMeanChangedLuminance": 22.90166648952496,
+      "afterMeanChangedLuminance": 48.480782054165196,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              72.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "gran-canon",
+      "view": "close",
+      "before": "hyena-gran-canon-close-before.jpg",
+      "after": "hyena-gran-canon-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 49999,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 481,
+        "right": 784,
+        "top": 289,
+        "bottom": 761
+      },
+      "beforeMeanChangedLuminance": 25.297940610813036,
+      "afterMeanChangedLuminance": 50.74039395988002,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "gran-canon",
+      "view": "game",
+      "before": "hyena-gran-canon-game-before.jpg",
+      "after": "hyena-gran-canon-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 9784,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 564,
+        "right": 715,
+        "top": 363,
+        "bottom": 610
+      },
+      "beforeMeanChangedLuminance": 25.642045298446597,
+      "afterMeanChangedLuminance": 50.67892477514384,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "desierto",
+      "view": "close",
+      "before": "hyena-desierto-close-before.jpg",
+      "after": "hyena-desierto-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 50000,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 481,
+        "right": 784,
+        "top": 289,
+        "bottom": 761
+      },
+      "beforeMeanChangedLuminance": 25.435617500000486,
+      "afterMeanChangedLuminance": 50.989612592000626,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              80.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "hyena",
+      "biome": "desierto",
+      "view": "game",
+      "before": "hyena-desierto-game-before.jpg",
+      "after": "hyena-desierto-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0.glb",
+      "changedPixels": 9784,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 564,
+        "right": 715,
+        "top": 363,
+        "bottom": 610
+      },
+      "beforeMeanChangedLuminance": 26.347596852003417,
+      "afterMeanChangedLuminance": 51.433219685201244,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -97.08041382469224,
+              122.4412380351707,
+              80.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "lion",
+      "biome": "gran-canon",
+      "view": "close",
+      "before": "lion-gran-canon-close-before.jpg",
+      "after": "lion-gran-canon-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "changedPixels": 34978,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 509,
+        "right": 761,
+        "top": 307,
+        "bottom": 718
+      },
+      "beforeMeanChangedLuminance": 34.30816955800862,
+      "afterMeanChangedLuminance": 73.20519677511663,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "lion",
+      "biome": "gran-canon",
+      "view": "game",
+      "before": "lion-gran-canon-game-before.jpg",
+      "after": "lion-gran-canon-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "changedPixels": 7715,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 574,
+        "right": 704,
+        "top": 366,
+        "bottom": 584
+      },
+      "beforeMeanChangedLuminance": 33.417060842514395,
+      "afterMeanChangedLuminance": 71.28201708360393,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "buffalo",
+      "biome": "gran-canon",
+      "view": "close",
+      "before": "buffalo-gran-canon-close-before.jpg",
+      "after": "buffalo-gran-canon-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "changedPixels": 72658,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 439,
+        "right": 809,
+        "top": 223,
+        "bottom": 757
+      },
+      "beforeMeanChangedLuminance": 24.207744661291635,
+      "afterMeanChangedLuminance": 46.77004539073847,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "buffalo",
+      "biome": "gran-canon",
+      "view": "game",
+      "before": "buffalo-gran-canon-game-before.jpg",
+      "after": "buffalo-gran-canon-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "changedPixels": 15641,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 543,
+        "right": 729,
+        "top": 321,
+        "bottom": 607
+      },
+      "beforeMeanChangedLuminance": 24.65136234256099,
+      "afterMeanChangedLuminance": 45.54668114570782,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "rhino",
+      "biome": "gran-canon",
+      "view": "close",
+      "before": "rhino-gran-canon-close-before.jpg",
+      "after": "rhino-gran-canon-close-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "changedPixels": 109244,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 394,
+        "right": 839,
+        "top": 85,
+        "bottom": 755
+      },
+      "beforeMeanChangedLuminance": 31.49112693053987,
+      "afterMeanChangedLuminance": 74.38630743290187,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    },
+    {
+      "species": "rhino",
+      "biome": "gran-canon",
+      "view": "game",
+      "before": "rhino-gran-canon-game-before.jpg",
+      "after": "rhino-gran-canon-game-after.jpg",
+      "model": "http://127.0.0.1:5194/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "changedPixels": 25081,
+      "changedOutsideActorBounds": 0,
+      "actorBounds": {
+        "left": 521,
+        "right": 748,
+        "top": 245,
+        "bottom": 606
+      },
+      "beforeMeanChangedLuminance": 32.01387654399793,
+      "afterMeanChangedLuminance": 75.61346022885844,
+      "globalLightingUnchanged": true,
+      "globalLighting": {
+        "lights": [
+          {
+            "type": "DirectionalLight",
+            "color": [
+              1,
+              0.76052450467022,
+              0.3915724777393922
+            ],
+            "intensity": 0.3999999999999999,
+            "position": [
+              -217.08041382469224,
+              122.4412380351707,
+              112.99381498250561
+            ]
+          },
+          {
+            "type": "HemisphereLight",
+            "color": [
+              0.8307698767709715,
+              0.8796223968851662,
+              0.6938717612856897
+            ],
+            "intensity": 1.1,
+            "position": [
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "exposure": 1,
+        "night": 1,
+        "nightLight": 1.12
+      },
+      "errors": []
+    }
+  ]
+}
