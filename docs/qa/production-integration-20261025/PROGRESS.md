@@ -147,3 +147,6 @@ Smoke nativo Manglares actualizado finalizado exit 0: native-mangrove-depth-reco
 
 
 Controles de distribución actuales: verify:balance PASS; verify:browser-syntax 181 archivos/176 scripts, cero fallos; tools/package_itch.py genera ZIP de 433913256 bytes y valida CRCs. Audit SFX detectó inventario obsoleto por el hash de scene.js tras fix de trabajadores home. Regenerado y diff revisado: cambia solo ese hash, sin asignaciones/sonidos; --check pasa (126 originales, 101 asignados, 25 no asignados). No es validación auditiva ni cierra microeventos.
+
+
+Comparación GPU reciente: GPU-PROFILE-COMPARISON.json y gpu-profile-*.json. Intel UHD D3D11, consultas válidas sin disjoint, misma fixture pausada/cámara 96 m/180 frames/calidad media/720p; receta revisada frente a perfil normal en orden A/B/A/B. GPU media A 26,014/25,514 ms, B 26,592/26,145; CPU render A 10,007/10,468, B 10,509/10,238 ms. No afirmar ganancia ni regresión significativa con dos repeticiones y diferencias pequeñas. Diez chunks nuevos por pasada, far asentado, sin fallos de streaming. Presentación máxima 83–100 ms, así que no afirmar ausencia de tirones. 22 mensajes por pasada corresponden a avisos ANGLE X4000 environment4; conservados, no silenciados. Este ensayo no cubre simulación activa ni comparación contra main; complementa la matriz activa anterior.
