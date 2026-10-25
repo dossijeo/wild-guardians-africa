@@ -38,5 +38,5 @@ for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-
   rows.push({biome,queries,cycles:8,resetRejected:true,transientEditsPreserved:true,bytes:memory.buffer.byteLength});
  }finally{await handle.dispose();}
 }
-await writeFile('docs/qa/wild-engine-pthreads/thread-lifecycle.json',JSON.stringify({scope:'Native shared runtime reset, edit/retry, publish/remove cycles with concurrent main-thread queries; not active game actor or frame benchmark',rows},null,2)+'\n');
+await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-lifecycle.json',JSON.stringify({scope:'Native shared runtime reset, edit/retry, publish/remove cycles with concurrent main-thread queries; not active game actor or frame benchmark',rows},null,2)+'\n');
 console.log('Six-biome lifecycle cycles passed');

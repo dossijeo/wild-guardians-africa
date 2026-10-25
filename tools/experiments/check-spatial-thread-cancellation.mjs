@@ -22,6 +22,6 @@ try{
  const deadline=performance.now()+10000;while(cancellations<3){assert(performance.now()<deadline);await new Promise(r=>setTimeout(r,0));}
  plan(4);await stream.whenIdle();assert(loaded.has('4,0'));assert.equal(cancellations,3);
  assert.deepEqual(errors,[]);assert.equal(stream.summary().failed,0);
- await writeFile('docs/qa/wild-engine-pthreads/thread-stream-cancellation.json',JSON.stringify({scope:'Real pthread queue cancellation for obsolete camera demand and forced epoch; not timing benchmark',cancellations,releases,stream:stream.summary(),loaded:[...loaded.keys()],errors},null,2)+'\n');
+ await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-stream-cancellation.json',JSON.stringify({scope:'Real pthread queue cancellation for obsolete camera demand and forced epoch; not timing benchmark',cancellations,releases,stream:stream.summary(),loaded:[...loaded.keys()],errors},null,2)+'\n');
  console.log('Native cancellation and subsequent queue jobs passed');
 }finally{stream.dispose();await handle.dispose();}

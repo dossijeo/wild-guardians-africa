@@ -57,5 +57,5 @@ for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-
   rows.push({biome,editStatus,stages,gateStatus,gatePoint,gateChecks});
  }finally{await handle.dispose();}
 }
-await writeFile('docs/qa/wild-engine-pthreads/thread-route-differential.json',JSON.stringify({scope:'Native route differential against standalone for all six actor profiles; no live actor movement or raid simulation',rows},null,2)+'\n');
+await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-route-differential.json',JSON.stringify({scope:'Native route differential against standalone for all six actor profiles; no live actor movement or raid simulation',rows},null,2)+'\n');
 console.log(JSON.stringify(rows));

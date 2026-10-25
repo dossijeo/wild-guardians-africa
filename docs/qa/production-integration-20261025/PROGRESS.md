@@ -58,3 +58,6 @@ La repetición aislada A/B/A/B de cambios de calidad ya está en isolated-qualit
 ## Guardado y recarga empaquetados
 
 package-mangrove-lifecycle-r2.json: mediante UI real se guarda Manglares, se sale al menú y se continúa el slot guardado. HUD restaurado, cero errores y recursos ausentes, nuevo runtime pthread creado para la recarga. No se inyecta estado ni se intercepta código. El primer intento (package-mangrove-lifecycle.json) falló por un selector QA obsoleto (#pause); el control real es #menuButton. Esto no certifica por sí solo ausencia de fugas ni equivalencia completa del snapshot. Siguen pendientes los escenarios prolongados y el resto de la matriz.
+
+
+Auditoría nativa parcial y repetición de concurrencia: ver NATIVE-AUDIT.md y native-{cancellation,lifecycle,routes}.json. Pasan seis biomas, ocho ciclos de edición/publicación/retirada por bioma y diferencial de rutas de seis perfiles. No equivalen a una campaña prolongada ni cierran todavía la auditoría arquitectónica completa.
