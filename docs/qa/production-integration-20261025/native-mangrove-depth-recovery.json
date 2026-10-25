@@ -1,0 +1,4698 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 48000,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 576,
+        "width": 1024
+      },
+      "displayedProgress": null,
+      "failure": null,
+      "focused": true,
+      "phaseLabel": null,
+      "readyGateReached": true,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "false",
+      "visibility": "visible",
+      "worldWaitMs": 28550.974999904633
+    },
+    "loadingBudget": {
+      "policy": "local-smoke",
+      "worldTimeoutMs": 90000
+    },
+    "manualSaveFeedback": "confirmed-after-IndexedDB-commit",
+    "menu": "http://tauri.localhost/menu/index.html",
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "nativeLoadingTrace": {
+      "phases": {
+        "closed": false,
+        "completed": [
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-sky",
+            "lastEnd": 4019.2099999189377,
+            "lastStart": 3780.2149999141698,
+            "maxElapsedMs": 238.99500000476837,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 238.99500000476837
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-catalogues",
+            "lastEnd": 4033.5199999809265,
+            "lastStart": 4019.4049999713898,
+            "maxElapsedMs": 14.115000009536743,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 14.115000009536743
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-maize-model",
+            "lastEnd": 4460.484999895096,
+            "lastStart": 4033.5849999189377,
+            "maxElapsedMs": 426.89999997615814,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 426.89999997615814
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-maize-bridges",
+            "lastEnd": 4652.289999961853,
+            "lastStart": 4034.664999961853,
+            "maxElapsedMs": 617.625,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 617.625
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-soil-texture",
+            "lastEnd": 4705.870000004768,
+            "lastStart": 4652.314999938011,
+            "maxElapsedMs": 53.5550000667572,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 53.5550000667572
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-mountain-atlas",
+            "lastEnd": 4751.574999928474,
+            "lastStart": 4706.789999961853,
+            "maxElapsedMs": 44.7849999666214,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 44.7849999666214
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-prepare-maize-batch",
+            "lastEnd": 4781.794999957085,
+            "lastStart": 4753.799999952316,
+            "maxElapsedMs": 27.99500000476837,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 27.99500000476837
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-compile-maize",
+            "lastEnd": 5013.429999947548,
+            "lastStart": 4782.724999904633,
+            "maxElapsedMs": 230.70500004291537,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 230.70500004291537
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-upload-maize-soil",
+            "lastEnd": 5102.814999938011,
+            "lastStart": 5013.554999947548,
+            "maxElapsedMs": 89.25999999046326,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 89.25999999046326
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-compile-sky",
+            "lastEnd": 5189.189999938011,
+            "lastStart": 5102.870000004768,
+            "maxElapsedMs": 86.3199999332428,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 86.3199999332428
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-compile-mist",
+            "lastEnd": 5210.504999995232,
+            "lastStart": 5189.294999957085,
+            "maxElapsedMs": 21.210000038146973,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 21.210000038146973
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-upload-mist",
+            "lastEnd": 5213.2699999809265,
+            "lastStart": 5210.544999957085,
+            "maxElapsedMs": 2.725000023841858,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 2.725000023841858
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-warm-day-night-sky",
+            "lastEnd": 5222.109999895096,
+            "lastStart": 5213.284999966621,
+            "maxElapsedMs": 8.824999928474426,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 8.824999928474426
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "diorama-final-fence",
+            "lastEnd": 5246.334999918938,
+            "lastStart": 5222.129999995232,
+            "maxElapsedMs": 24.204999923706055,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 24.204999923706055
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-sky",
+            "lastEnd": 5464.534999966621,
+            "lastStart": 5463.594999909401,
+            "maxElapsedMs": 0.940000057220459,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.940000057220459
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:sky",
+            "lastEnd": 5470.634999990463,
+            "lastStart": 5464.614999890327,
+            "maxElapsedMs": 6.020000100135803,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 6.020000100135803
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-biome-models",
+            "lastEnd": 5879.284999966621,
+            "lastStart": 5479.75,
+            "maxElapsedMs": 399.5349999666214,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 399.5349999666214
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-biome-ground",
+            "lastEnd": 6111.65499997139,
+            "lastStart": 5879.384999990463,
+            "maxElapsedMs": 232.2699999809265,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 232.2699999809265
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:biome",
+            "lastEnd": 6144.604999899864,
+            "lastStart": 6137.814999938011,
+            "maxElapsedMs": 6.789999961853027,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 6.789999961853027
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-ground-details",
+            "lastEnd": 6145.079999923706,
+            "lastStart": 6144.9349999427795,
+            "maxElapsedMs": 0.14499998092651367,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.14499998092651367
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-village-models",
+            "lastEnd": 6307.409999966621,
+            "lastStart": 6145.114999890327,
+            "maxElapsedMs": 162.29500007629397,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 162.29500007629397
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:buildings",
+            "lastEnd": 6748.089999914169,
+            "lastStart": 6745.7699999809265,
+            "maxElapsedMs": 2.319999933242798,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 2.319999933242798
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-animal-models",
+            "lastEnd": 7268.52999997139,
+            "lastStart": 6755.034999966621,
+            "maxElapsedMs": 513.4950000047684,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 513.4950000047684
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:animals",
+            "lastEnd": 7269.679999947548,
+            "lastStart": 7268.549999952316,
+            "maxElapsedMs": 1.1299999952316284,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1.1299999952316284
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-crop-model",
+            "lastEnd": 7269.959999918938,
+            "lastStart": 7269.870000004768,
+            "maxElapsedMs": 0.08999991416931152,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.08999991416931152
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-crop-bridges",
+            "lastEnd": 7282.694999933243,
+            "lastStart": 7282.5599999427795,
+            "maxElapsedMs": 0.13499999046325684,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.13499999046325684
+          },
+          {
+            "count": 73,
+            "failed": 0,
+            "label": "loading-crop-construction-step",
+            "lastEnd": 7428.129999995232,
+            "lastStart": 7428.125,
+            "maxElapsedMs": 2.2300000190734863,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 43.44999980926514
+          },
+          {
+            "count": 9,
+            "failed": 0,
+            "label": "loading-crop-frame-wait",
+            "lastEnd": 7424.414999961853,
+            "lastStart": 7412.944999933243,
+            "maxElapsedMs": 12.93499994277954,
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "totalElapsedMs": 101.29000008106232
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-crop-batch",
+            "lastEnd": 7428.134999990463,
+            "lastStart": 7282.704999923706,
+            "maxElapsedMs": 145.4300000667572,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 145.4300000667572
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:crops",
+            "lastEnd": 7441.40499997139,
+            "lastStart": 7428.159999966621,
+            "maxElapsedMs": 13.245000004768372,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 13.245000004768372
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:walls",
+            "lastEnd": 7640.264999985695,
+            "lastStart": 7627.449999928474,
+            "maxElapsedMs": 12.81500005722046,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 12.81500005722046
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:vfx",
+            "lastEnd": 7773.954999923706,
+            "lastStart": 7764.109999895096,
+            "maxElapsedMs": 9.84500002861023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 9.84500002861023
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-chunks-horizon-ready",
+            "lastEnd": 8273.83999991417,
+            "lastStart": 7777.084999918938,
+            "maxElapsedMs": 496.7549999952316,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 496.7549999952316
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:chunks",
+            "lastEnd": 8289.15499997139,
+            "lastStart": 8274.574999928474,
+            "maxElapsedMs": 14.580000042915344,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 14.580000042915344
+          },
+          {
+            "count": 155,
+            "failed": 0,
+            "label": "sync-crop-update",
+            "lastEnd": 32240.46499991417,
+            "lastStart": 32240.39999997616,
+            "maxElapsedMs": 0.26999998092651367,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 7.495000600814819
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "restore-sync",
+            "lastEnd": 8294.52999997139,
+            "lastStart": 8289.71499991417,
+            "maxElapsedMs": 4.815000057220459,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 4.815000057220459
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "actor-prepare:animal:warthog",
+            "lastEnd": 8315.899999976158,
+            "lastStart": 8306.919999957085,
+            "maxElapsedMs": 8.980000019073486,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 8.980000019073486
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-continuous-grass",
+            "lastEnd": 8354.834999918938,
+            "lastStart": 8294.604999899864,
+            "maxElapsedMs": 60.230000019073486,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 60.230000019073486
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "hands-constructor",
+            "lastEnd": 8359.074999928474,
+            "lastStart": 8358.21499991417,
+            "maxElapsedMs": 0.8600000143051147,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.8600000143051147
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-hands-ready",
+            "lastEnd": 8365.269999980927,
+            "lastStart": 8359.099999904633,
+            "maxElapsedMs": 6.170000076293945,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 6.170000076293945
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-active-animal-actors",
+            "lastEnd": 8365.495000004768,
+            "lastStart": 8365.284999966621,
+            "maxElapsedMs": 0.21000003814697263,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.21000003814697263
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-worker-actors",
+            "lastEnd": 8365.58999991417,
+            "lastStart": 8365.509999990463,
+            "maxElapsedMs": 0.07999992370605469,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.07999992370605469
+          },
+          {
+            "count": 193,
+            "failed": 0,
+            "label": "loading-compile-submit",
+            "lastEnd": 27495.599999904633,
+            "lastStart": 27494.804999947548,
+            "maxElapsedMs": 7.079999923706055,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 154.20999896526337
+          },
+          {
+            "count": 193,
+            "failed": 0,
+            "label": "loading-compile-readiness-wait",
+            "lastEnd": 27516.769999980927,
+            "lastStart": 27495.614999890327,
+            "maxElapsedMs": 1599.5600000619888,
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "totalElapsedMs": 6946.860000491142
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "initial-far-region-worker",
+            "lastEnd": 8837.77999997139,
+            "lastStart": 7781.859999895096,
+            "maxElapsedMs": 1055.920000076294,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1055.920000076294
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-compile-staging",
+            "lastEnd": 8858.444999933243,
+            "lastStart": 8374.02999997139,
+            "maxElapsedMs": 484.414999961853,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 484.414999961853
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-compile-destruction",
+            "lastEnd": 8891.149999976158,
+            "lastStart": 8858.459999918938,
+            "maxElapsedMs": 32.69000005722046,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 32.69000005722046
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-ground-cache-recipe",
+            "lastEnd": 8964.879999995232,
+            "lastStart": 8891.259999990463,
+            "maxElapsedMs": 73.62000000476837,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 73.62000000476837
+          },
+          {
+            "count": 9,
+            "failed": 0,
+            "label": "loading-budget-frame-wait",
+            "lastEnd": 16307.474999904633,
+            "lastStart": 16277.269999980928,
+            "maxElapsedMs": 30.204999923706055,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded.",
+            "totalElapsedMs": 41.58999979496002
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-compile-world",
+            "lastEnd": 13041.924999952316,
+            "lastStart": 8964.889999985695,
+            "maxElapsedMs": 4077.0349999666214,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 4077.0349999666214
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-compile-obstruction",
+            "lastEnd": 13235.419999957085,
+            "lastStart": 13042.604999899864,
+            "maxElapsedMs": 192.8150000572205,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 192.8150000572205
+          },
+          {
+            "count": 64,
+            "failed": 0,
+            "label": "loading-depth-batch-submit",
+            "lastEnd": 27495.669999957085,
+            "lastStart": 27494.679999947548,
+            "maxElapsedMs": 8.589999914169312,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 77.24499988555908
+          },
+          {
+            "count": 64,
+            "failed": 0,
+            "label": "loading-depth-batch-program-wait",
+            "lastEnd": 27516.799999952316,
+            "lastStart": 27495.674999952316,
+            "maxElapsedMs": 1616.304999947548,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 2187.5750000476837
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-prepare-depth",
+            "lastEnd": 15193.620000004768,
+            "lastStart": 13235.429999947548,
+            "maxElapsedMs": 1958.1900000572205,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1958.1900000572205
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-crop-depth",
+            "lastEnd": 15475.889999985697,
+            "lastStart": 15193.679999947548,
+            "maxElapsedMs": 282.210000038147,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 282.210000038147
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-program-bindings",
+            "lastEnd": 15476.044999957085,
+            "lastStart": 15475.954999923706,
+            "maxElapsedMs": 0.09000003337860107,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.09000003337860107
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-upload-textures",
+            "lastEnd": 16085.984999895096,
+            "lastStart": 15476.049999952316,
+            "maxElapsedMs": 609.9349999427795,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 609.9349999427795
+          },
+          {
+            "count": 124,
+            "failed": 0,
+            "label": "loading-screen-upload-submit",
+            "lastEnd": 16318.924999952316,
+            "lastStart": 16318.509999990463,
+            "maxElapsedMs": 60.1800000667572,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 164.63500046730042
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "loading-screen-upload-final-submit",
+            "lastEnd": 16324.71499991417,
+            "lastStart": 16319.0949999094,
+            "maxElapsedMs": 5.620000004768372,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 5.620000004768372
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-draw-batches",
+            "lastEnd": 16324.759999990463,
+            "lastStart": 16086.044999957085,
+            "maxElapsedMs": 238.7150000333786,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 238.7150000333786
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-depth-capture",
+            "lastEnd": 16332.724999904633,
+            "lastStart": 16324.769999980928,
+            "maxElapsedMs": 7.954999923706055,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 7.954999923706055
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "warm-final-fence",
+            "lastEnd": 16478.28499996662,
+            "lastStart": 16332.739999890327,
+            "maxElapsedMs": 145.54500007629397,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 145.54500007629397
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-warm-gpu",
+            "lastEnd": 16479.979999899864,
+            "lastStart": 8365.75,
+            "maxElapsedMs": 8114.229999899864,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 8114.229999899864
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:gpu",
+            "lastEnd": 16489.269999980927,
+            "lastStart": 16480.009999990463,
+            "maxElapsedMs": 9.259999990463257,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 9.259999990463257
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:manifest",
+            "lastEnd": 16503.539999961853,
+            "lastStart": 16503.484999895096,
+            "maxElapsedMs": 0.05500006675720215,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 0.05500006675720215
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:night:2",
+            "lastEnd": 16532.2199999094,
+            "lastStart": 16504.53499996662,
+            "maxElapsedMs": 27.68499994277954,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 27.68499994277954
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:day:2",
+            "lastEnd": 16540.12000000477,
+            "lastStart": 16504.489999890327,
+            "maxElapsedMs": 35.63000011444092,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 35.63000011444092
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:night:1",
+            "lastEnd": 16544.68499994278,
+            "lastStart": 16504.424999952316,
+            "maxElapsedMs": 40.25999999046326,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 40.25999999046326
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:day:1",
+            "lastEnd": 16560.079999923706,
+            "lastStart": 16504.359999895096,
+            "maxElapsedMs": 55.72000002861023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 55.72000002861023
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:night:0",
+            "lastEnd": 16571.394999980927,
+            "lastStart": 16504.164999961853,
+            "maxElapsedMs": 67.23000001907349,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 67.23000001907349
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:day:3",
+            "lastEnd": 16574.56499993801,
+            "lastStart": 16504.574999928474,
+            "maxElapsedMs": 69.99000000953674,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 69.99000000953674
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:night:3",
+            "lastEnd": 16574.68499994278,
+            "lastStart": 16504.625,
+            "maxElapsedMs": 70.05999994277954,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 70.05999994277954
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:day:0",
+            "lastEnd": 16579.77999997139,
+            "lastStart": 16503.709999918938,
+            "maxElapsedMs": 76.07000005245209,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 76.07000005245209
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:backdrop",
+            "lastEnd": 16583.71499991417,
+            "lastStart": 16504.694999933243,
+            "maxElapsedMs": 79.01999998092651,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 79.01999998092651
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "initial-far-region-fallback",
+            "lastEnd": 17652.074999928474,
+            "lastStart": 16588,
+            "maxElapsedMs": 1064.0749999284744,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1064.0749999284744
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-worker:slot0",
+            "lastEnd": 17652.164999961853,
+            "lastStart": 16587.50499999523,
+            "maxElapsedMs": 1064.6599999666214,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1064.6599999666214
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-create:slot0",
+            "lastEnd": 17654.375,
+            "lastStart": 17652.454999923706,
+            "maxElapsedMs": 1.920000076293945,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 1.920000076293945
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-attach-ground:slot0",
+            "lastEnd": 17659.75,
+            "lastStart": 17654.384999990463,
+            "maxElapsedMs": 5.365000009536743,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 5.365000009536743
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-ground-seam:slot0",
+            "lastEnd": 19021.929999947548,
+            "lastStart": 17659.824999928474,
+            "maxElapsedMs": 1362.1050000190735,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1362.1050000190735
+          },
+          {
+            "count": 6,
+            "failed": 0,
+            "label": "far-gpu:texture-uploads:slot0",
+            "lastEnd": 30113.084999918938,
+            "lastStart": 30113.084999918938,
+            "maxElapsedMs": 42.49000000953674,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 67.65499997138977
+          },
+          {
+            "count": 4,
+            "failed": 0,
+            "label": "far-gpu:queue-admission:slot0",
+            "lastEnd": 27964.0949999094,
+            "lastStart": 27947.519999980927,
+            "maxElapsedMs": 3225.8450000286102,
+            "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time.",
+            "totalElapsedMs": 3458.7549999952316
+          },
+          {
+            "count": 5,
+            "failed": 0,
+            "label": "far-gpu:compile:slot0",
+            "lastEnd": 30113.264999985695,
+            "lastStart": 30113.0949999094,
+            "maxElapsedMs": 1269.2149999141693,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 1271.445000052452
+          },
+          {
+            "count": 5,
+            "failed": 0,
+            "label": "far-gpu:draw:slot0",
+            "lastEnd": 30113.889999985695,
+            "lastStart": 30113.269999980927,
+            "maxElapsedMs": 154.375,
+            "scope": "Synchronous draw submission CPU wall time, not GPU time.",
+            "totalElapsedMs": 159.25499987602234
+          },
+          {
+            "count": 5,
+            "failed": 0,
+            "label": "far-gpu:fence:slot0",
+            "lastEnd": 30199.00499999523,
+            "lastStart": 30113.894999980927,
+            "maxElapsedMs": 85.11000001430511,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 248.53500020504
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-gpu-ready:slot0",
+            "lastEnd": 20511.304999947548,
+            "lastStart": 17659.764999985695,
+            "maxElapsedMs": 2851.539999961853,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 2851.539999961853
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:attach:0",
+            "lastEnd": 20512.134999990463,
+            "lastStart": 16583.849999904633,
+            "maxElapsedMs": 3928.2850000858302,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 3928.2850000858302
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-worker:slot1",
+            "lastEnd": 21326.77499997616,
+            "lastStart": 20512.424999952316,
+            "maxElapsedMs": 814.3500000238419,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 814.3500000238419
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-create:slot1",
+            "lastEnd": 21327.724999904633,
+            "lastStart": 21326.889999985695,
+            "maxElapsedMs": 0.8349999189376831,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.8349999189376831
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-attach-ground:slot1",
+            "lastEnd": 21327.739999890327,
+            "lastStart": 21327.739999890327,
+            "maxElapsedMs": 0,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0
+          },
+          {
+            "count": 7,
+            "failed": 0,
+            "label": "far-gpu:texture-uploads:slot1",
+            "lastEnd": 30196.4699999094,
+            "lastStart": 30196.46499991417,
+            "maxElapsedMs": 40.269999980926514,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 48.514999985694885
+          },
+          {
+            "count": 4,
+            "failed": 0,
+            "label": "far-gpu:queue-admission:slot1",
+            "lastEnd": 28036.674999952316,
+            "lastStart": 27947.634999990463,
+            "maxElapsedMs": 3174.6699999570847,
+            "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time.",
+            "totalElapsedMs": 3479.884999871254
+          },
+          {
+            "count": 6,
+            "failed": 0,
+            "label": "far-gpu:compile:slot1",
+            "lastEnd": 30197.37999999523,
+            "lastStart": 30196.474999904633,
+            "maxElapsedMs": 177.5350000858307,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 181.99000012874603
+          },
+          {
+            "count": 6,
+            "failed": 0,
+            "label": "far-gpu:draw:slot1",
+            "lastEnd": 30198.134999990463,
+            "lastStart": 30197.384999990463,
+            "maxElapsedMs": 4.019999980926514,
+            "scope": "Synchronous draw submission CPU wall time, not GPU time.",
+            "totalElapsedMs": 10.31499993801117
+          },
+          {
+            "count": 6,
+            "failed": 0,
+            "label": "far-gpu:fence:slot1",
+            "lastEnd": 30290.78499996662,
+            "lastStart": 30198.139999985695,
+            "maxElapsedMs": 92.64499998092651,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 369.90500009059906
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-gpu-ready:slot1",
+            "lastEnd": 21592.389999985695,
+            "lastStart": 21327.74500000477,
+            "maxElapsedMs": 264.6449999809265,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 264.6449999809265
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:attach:1",
+            "lastEnd": 21592.57499992847,
+            "lastStart": 20512.15499997139,
+            "maxElapsedMs": 1080.4199999570849,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1080.4199999570849
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-worker:slot2",
+            "lastEnd": 22315.00499999523,
+            "lastStart": 21592.9699999094,
+            "maxElapsedMs": 722.0350000858307,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 722.0350000858307
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-create:slot2",
+            "lastEnd": 22316.259999990463,
+            "lastStart": 22315.30999994278,
+            "maxElapsedMs": 0.9500000476837158,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.9500000476837158
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-attach-ground:slot2",
+            "lastEnd": 22316.27499997616,
+            "lastStart": 22316.269999980927,
+            "maxElapsedMs": 0.004999995231628418,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.004999995231628418
+          },
+          {
+            "count": 9,
+            "failed": 0,
+            "label": "far-gpu:texture-uploads:slot2",
+            "lastEnd": 30300.044999957085,
+            "lastStart": 30300.044999957085,
+            "maxElapsedMs": 31.205000042915344,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 31.225000023841854
+          },
+          {
+            "count": 4,
+            "failed": 0,
+            "label": "far-gpu:queue-admission:slot2",
+            "lastEnd": 28113.114999890327,
+            "lastStart": 27947.819999933243,
+            "maxElapsedMs": 201.5599999427795,
+            "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time.",
+            "totalElapsedMs": 384.4849998950958
+          },
+          {
+            "count": 8,
+            "failed": 0,
+            "label": "far-gpu:compile:slot2",
+            "lastEnd": 30301.27999997139,
+            "lastStart": 30300.049999952316,
+            "maxElapsedMs": 168.25499999523163,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 208.65000009536743
+          },
+          {
+            "count": 8,
+            "failed": 0,
+            "label": "far-gpu:draw:slot2",
+            "lastEnd": 30302.14999997616,
+            "lastStart": 30301.294999957085,
+            "maxElapsedMs": 4.759999990463257,
+            "scope": "Synchronous draw submission CPU wall time, not GPU time.",
+            "totalElapsedMs": 16.144999861717224
+          },
+          {
+            "count": 7,
+            "failed": 0,
+            "label": "far-gpu:fence:slot2",
+            "lastEnd": 30454.364999890327,
+            "lastStart": 30302.15499997139,
+            "maxElapsedMs": 3056.560000061989,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 3525.955000281334
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-gpu-ready:slot2",
+            "lastEnd": 22573.049999952316,
+            "lastStart": 22316.27499997616,
+            "maxElapsedMs": 256.77499997615814,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 256.77499997615814
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:attach:2",
+            "lastEnd": 22573.634999990463,
+            "lastStart": 21592.58999991417,
+            "maxElapsedMs": 981.045000076294,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 981.045000076294
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-worker:slot3",
+            "lastEnd": 23334.474999904633,
+            "lastStart": 22573.919999957085,
+            "maxElapsedMs": 760.5549999475479,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 760.5549999475479
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-create:slot3",
+            "lastEnd": 23336.354999899864,
+            "lastStart": 23334.639999985695,
+            "maxElapsedMs": 1.7149999141693115,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 1.7149999141693115
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-attach-ground:slot3",
+            "lastEnd": 23336.40999996662,
+            "lastStart": 23336.394999980927,
+            "maxElapsedMs": 0.014999985694885254,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.014999985694885254
+          },
+          {
+            "count": 12,
+            "failed": 0,
+            "label": "far-gpu:texture-uploads:slot3",
+            "lastEnd": 32130.7199999094,
+            "lastStart": 32130.7199999094,
+            "maxElapsedMs": 30.21999990940094,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 30.22499990463257
+          },
+          {
+            "count": 5,
+            "failed": 0,
+            "label": "far-gpu:queue-admission:slot3",
+            "lastEnd": 28293.854999899864,
+            "lastStart": 27948.514999985695,
+            "maxElapsedMs": 3114.4500000476837,
+            "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time.",
+            "totalElapsedMs": 3924.835000038147
+          },
+          {
+            "count": 11,
+            "failed": 0,
+            "label": "far-gpu:compile:slot3",
+            "lastEnd": 32132.304999947548,
+            "lastStart": 32130.729999899864,
+            "maxElapsedMs": 168,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 179.8550000190735
+          },
+          {
+            "count": 11,
+            "failed": 0,
+            "label": "far-gpu:draw:slot3",
+            "lastEnd": 32134.289999961853,
+            "lastStart": 32132.31499993801,
+            "maxElapsedMs": 3.415000081062317,
+            "scope": "Synchronous draw submission CPU wall time, not GPU time.",
+            "totalElapsedMs": 15.669999957084656
+          },
+          {
+            "count": 8,
+            "failed": 0,
+            "label": "far-gpu:fence:slot3",
+            "lastEnd": 30454.454999923702,
+            "lastStart": 30302.984999895096,
+            "maxElapsedMs": 151.47000002861023,
+            "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.",
+            "totalElapsedMs": 618.879999756813
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-region-gpu-ready:slot3",
+            "lastEnd": 23587.039999961853,
+            "lastStart": 23336.43499994278,
+            "maxElapsedMs": 250.6050000190735,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 250.6050000190735
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "far-assets:attach:3",
+            "lastEnd": 23587.459999918938,
+            "lastStart": 22573.65999996662,
+            "maxElapsedMs": 1013.7999999523164,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 1013.7999999523164
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-far-assets",
+            "lastEnd": 23588.27999997139,
+            "lastStart": 16501.96499991417,
+            "maxElapsedMs": 7086.3150000572205,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 7086.3150000572205
+          },
+          {
+            "count": 1,
+            "failed": 0,
+            "label": "load-milestone:far-assets",
+            "lastEnd": 23604.204999923702,
+            "lastStart": 23588.299999952316,
+            "maxElapsedMs": 15.90499997138977,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalElapsedMs": 15.90499997138977
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:0",
+            "lastEnd": 28043.68499994278,
+            "lastStart": 28043.43999993801,
+            "maxElapsedMs": 3.740000009536743,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 4.260000109672546
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:1",
+            "lastEnd": 28065.334999918938,
+            "lastStart": 28060.06499993801,
+            "maxElapsedMs": 5.715000033378601,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 15.464999914169312
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:2",
+            "lastEnd": 28078.044999957085,
+            "lastStart": 28077.33999991417,
+            "maxElapsedMs": 1.6799999475479126,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 3.384999990463257
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:3",
+            "lastEnd": 28097.93499994278,
+            "lastStart": 28093.875,
+            "maxElapsedMs": 14.504999995231628,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 21.46999990940094
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:4",
+            "lastEnd": 28112.644999980927,
+            "lastStart": 28110.625,
+            "maxElapsedMs": 8.514999985694885,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 13.959999918937685
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:5",
+            "lastEnd": 28128.19999992847,
+            "lastStart": 28127.69999992847,
+            "maxElapsedMs": 3.1899999380111694,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 4.049999952316284
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:6",
+            "lastEnd": 28143.58999991417,
+            "lastStart": 28143.584999918938,
+            "maxElapsedMs": 0.019999980926513672,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.029999971389770508
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:7",
+            "lastEnd": 28160.549999952316,
+            "lastStart": 28160.084999918938,
+            "maxElapsedMs": 0.4650000333786011,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 1.21999990940094
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-stage:8",
+            "lastEnd": 28177.65999996662,
+            "lastStart": 28177.65499997139,
+            "maxElapsedMs": 0.004999995231628418,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 0.014999985694885254
+          },
+          {
+            "count": 3,
+            "failed": 0,
+            "label": "loading-frame-draw",
+            "lastEnd": 28183.49500000477,
+            "lastStart": 28177.674999952316,
+            "maxElapsedMs": 3039.5950000286102,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalElapsedMs": 3054.3150000572205
+          }
+        ],
+        "droppedLabels": 1544,
+        "droppedPending": 0,
+        "pending": [],
+        "scope": "Bounded optional phase attribution. Nested/overlapping elapsed spans must not be summed as exclusive CPU/GPU time. Pending phases identify waits, not their underlying bottleneck."
+      },
+      "scheduler": {
+        "blockingRecoveries": 0,
+        "budgetMs": 0,
+        "cancelled": 0,
+        "completed": 65,
+        "continuationMs": 30.045000433921818,
+        "continuationTurns": 1246,
+        "coordinationMs": 44.71500241756439,
+        "cpu95": 21.93499994277954,
+        "deadlineLoans": 0,
+        "failed": 0,
+        "jitter": 16.635000000009313,
+        "maxUnitMs": 9.254999995231628,
+        "median": 33.214999999967404,
+        "oldestMs": 0,
+        "overruns": 0,
+        "oversizeRecoveries": 0,
+        "p95": 49.84999999997672,
+        "p99": 66.76499999995576,
+        "pending": 0,
+        "units": 407,
+        "waiting": 0,
+        "workMs": 242.81999850273132
+      }
+    },
+    "saveBackend": "IndexedDB",
+    "saveKeys": [
+      "wild-guardians:tutorial-profile:v1",
+      "wild-guardians:settings"
+    ],
+    "storage": true,
+    "visibility": {
+      "hiddenEnd": {
+        "commandIds": [
+          "spatial-opening-center",
+          "desktop-visibility-seed",
+          "desktop-visibility-hire",
+          "desktop-visibility-shield"
+        ],
+        "completedNights": 0,
+        "cooldowns": {
+          "growth": 0,
+          "multiply": 0,
+          "shield": 87.29389499998125
+        },
+        "crates": [],
+        "day": 1,
+        "dayPlan": {
+          "at": 55.76028734600793,
+          "done": true
+        },
+        "elapsed": 373.3061050000237,
+        "ledger": {
+          "balance": {
+            "d": "1",
+            "n": "648"
+          },
+          "entries": {
+            "desktop-visibility-hire": {
+              "d": "1",
+              "n": "-40"
+            },
+            "desktop-visibility-seed": {
+              "d": "1",
+              "n": "-12"
+            },
+            "spatial-opening-center": {
+              "d": "1",
+              "n": "-800"
+            }
+          }
+        },
+        "nightPlan": {
+          "actors": [
+            {
+              "hits": 2,
+              "species": "warthog"
+            }
+          ],
+          "at": 370.5022702361457,
+          "attraction": 32,
+          "done": true,
+          "group": [
+            "warthog"
+          ],
+          "introductory": true,
+          "night": 1,
+          "pressureFacts": {
+            "areaCap": 1,
+            "budget": 2,
+            "candidateVersion": 5,
+            "capturedValue": 32,
+            "composition": {
+              "warthog": 1
+            },
+            "compositionAdjustments": [],
+            "effectiveValue": 32,
+            "experimentId": "v1-pressure",
+            "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+            "introductory": true,
+            "night": 1,
+            "observedValue": 32,
+            "potential": 2,
+            "pressure": 0.005317296980148541,
+            "qRaisedForRangeSafety": false,
+            "referenceEnvelope": null,
+            "targetAnimals": 1
+          },
+          "pressureVersion": 1,
+          "waves": [
+            [
+              {
+                "hits": 2,
+                "species": "warthog"
+              }
+            ]
+          ]
+        },
+        "plants": [
+          {
+            "alive": true,
+            "attackHitPoints": 1,
+            "centerId": "structure-2",
+            "growth": 252.09999999998033,
+            "harvestRequested": false,
+            "id": "plant-3",
+            "species": "yuca",
+            "toleranceBonus": 0,
+            "water": [
+              {
+                "at": 0,
+                "status": "manual",
+                "wait": 0
+              },
+              {
+                "at": 240,
+                "status": "manual",
+                "wait": 0
+              }
+            ],
+            "x": 88.5,
+            "z": -6
+          }
+        ],
+        "postgame": false,
+        "raid": {
+          "animals": [
+            {
+              "approach": {
+                "id": "approach-structure-2-direct-0",
+                "x": 83,
+                "z": 3.723249063230765
+              },
+              "approachShieldId": null,
+              "attackId": null,
+              "attackRemaining": 0,
+              "destinationId": "approach-structure-2-direct-0",
+              "dynamicStallSeconds": 0,
+              "exit": {
+                "x": 83,
+                "z": 37.53660442187269
+              },
+              "heading": -1.5707963267948966,
+              "hitApplied": false,
+              "hitsRemaining": 2,
+              "id": "animal-9",
+              "mobileProgressAt": 370.6120850000251,
+              "mobileProgressDistance": 31.184728461349156,
+              "mobileRecoveryAttempts": 0,
+              "mobileRecoveryDestinationId": "approach-structure-2-direct-0",
+              "mobileRecoveryVersion": 3,
+              "motionPhase": 2.8038347638893995,
+              "path": [
+                {
+                  "x": 72,
+                  "z": 35
+                },
+                {
+                  "x": 72,
+                  "z": 34
+                },
+                {
+                  "x": 72,
+                  "z": 33
+                },
+                {
+                  "x": 72,
+                  "z": 32
+                },
+                {
+                  "x": 72,
+                  "z": 31
+                },
+                {
+                  "x": 72,
+                  "z": 30
+                },
+                {
+                  "x": 72,
+                  "z": 29
+                },
+                {
+                  "x": 72,
+                  "z": 28
+                },
+                {
+                  "x": 72,
+                  "z": 27
+                },
+                {
+                  "x": 72,
+                  "z": 26
+                },
+                {
+                  "x": 72,
+                  "z": 25
+                },
+                {
+                  "x": 72,
+                  "z": 24
+                },
+                {
+                  "x": 72,
+                  "z": 23
+                },
+                {
+                  "x": 72,
+                  "z": 22
+                },
+                {
+                  "x": 72,
+                  "z": 21
+                },
+                {
+                  "x": 72,
+                  "z": 20
+                },
+                {
+                  "x": 72,
+                  "z": 19
+                },
+                {
+                  "x": 72,
+                  "z": 18
+                },
+                {
+                  "x": 72,
+                  "z": 17
+                },
+                {
+                  "x": 72,
+                  "z": 16
+                },
+                {
+                  "x": 72,
+                  "z": 15
+                },
+                {
+                  "x": 72,
+                  "z": 14
+                },
+                {
+                  "x": 72,
+                  "z": 13
+                },
+                {
+                  "x": 72,
+                  "z": 12
+                },
+                {
+                  "x": 72,
+                  "z": 11
+                },
+                {
+                  "x": 73,
+                  "z": 11
+                },
+                {
+                  "x": 74,
+                  "z": 11
+                },
+                {
+                  "x": 75,
+                  "z": 11
+                },
+                {
+                  "x": 76,
+                  "z": 11
+                },
+                {
+                  "x": 77,
+                  "z": 11
+                },
+                {
+                  "x": 78,
+                  "z": 11
+                },
+                {
+                  "x": 79,
+                  "z": 11
+                },
+                {
+                  "x": 80,
+                  "z": 11
+                },
+                {
+                  "x": 81,
+                  "z": 11
+                },
+                {
+                  "x": 82,
+                  "z": 11
+                },
+                {
+                  "x": 83,
+                  "z": 11
+                },
+                {
+                  "x": 83,
+                  "z": 10
+                },
+                {
+                  "x": 83,
+                  "z": 9
+                },
+                {
+                  "x": 83,
+                  "z": 8
+                },
+                {
+                  "x": 83,
+                  "z": 7
+                },
+                {
+                  "x": 83,
+                  "z": 6
+                },
+                {
+                  "x": 83,
+                  "z": 5
+                },
+                {
+                  "x": 83,
+                  "z": 4
+                },
+                {
+                  "x": 83,
+                  "z": 3.723249063230765
+                }
+              ],
+              "pathVersion": 3,
+              "radius": 1.1,
+              "reservation": "center:structure-2:animal-9",
+              "spawn": {
+                "x": 83,
+                "z": 34.53660442187269
+              },
+              "species": "warthog",
+              "status": "entering",
+              "targetId": "structure-2",
+              "x": 72.80882347534822,
+              "z": 35
+            }
+          ],
+          "cameraFocusedAnimalId": "animal-9",
+          "daytime": false,
+          "encounterContacts": [],
+          "encounterHits": [],
+          "encounterPositions": {
+            "animal-9": {
+              "x": 72.87205547534822,
+              "z": 35
+            },
+            "worker-6": {
+              "x": 60,
+              "z": 0
+            }
+          },
+          "encounters": [],
+          "id": "raid-1-night",
+          "introCropLimit": 0,
+          "introCropsDestroyed": 0,
+          "introPlantCount": 1,
+          "pressureFacts": {
+            "areaCap": 1,
+            "budget": 2,
+            "candidateVersion": 5,
+            "capturedValue": 32,
+            "composition": {
+              "warthog": 1
+            },
+            "compositionAdjustments": [],
+            "effectiveValue": 32,
+            "experimentId": "v1-pressure",
+            "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+            "introductory": true,
+            "night": 1,
+            "observedValue": 32,
+            "potential": 2,
+            "pressure": 0.005317296980148541,
+            "qRaisedForRangeSafety": false,
+            "referenceEnvelope": null,
+            "targetAnimals": 1
+          },
+          "reservations": {
+            "center:structure-2:animal-9": "animal-9"
+          },
+          "targetReservationVersion": 2,
+          "waitQueue": [],
+          "waitRevision": 1,
+          "waveIndex": 0,
+          "waves": [
+            [
+              {
+                "hits": 2,
+                "species": "warthog"
+              }
+            ]
+          ]
+        },
+        "result": null,
+        "rng": 951087663,
+        "spells": [
+          {
+            "id": "spell-10",
+            "kind": "shield",
+            "radius": 1.95,
+            "remaining": 17.29389499998095,
+            "x": 98,
+            "z": 0
+          }
+        ],
+        "structures": [
+          {
+            "collapseRemaining": 0,
+            "cost": 800,
+            "created": 1,
+            "culture": "mapungubwe",
+            "gate": false,
+            "hp": 600,
+            "id": "structure-2",
+            "kind": "center",
+            "material": "zarzas",
+            "maxHp": 600,
+            "status": "intact",
+            "villageId": "village-1",
+            "x": 83,
+            "yaw": 0,
+            "z": 0
+          }
+        ],
+        "suppressed": [],
+        "tasks": [],
+        "time": 373.3061050000336,
+        "villages": [
+          {
+            "buildings": [
+              {
+                "footprint": [
+                  {
+                    "x": 44.96129512786865,
+                    "z": -3.436000108718872
+                  },
+                  {
+                    "x": 46.57422351837158,
+                    "z": -5.238048553466797
+                  },
+                  {
+                    "x": 46.63852787017822,
+                    "z": -5.265056610107422
+                  },
+                  {
+                    "x": 47.70713520050049,
+                    "z": -5.214911937713623
+                  },
+                  {
+                    "x": 50.82051181793213,
+                    "z": -4.868832111358643
+                  },
+                  {
+                    "x": 50.866111755371094,
+                    "z": -4.850368022918701
+                  },
+                  {
+                    "x": 50.89644813537598,
+                    "z": -4.805168151855469
+                  },
+                  {
+                    "x": 50.551055908203125,
+                    "z": 0.8681122660636902
+                  },
+                  {
+                    "x": 50.52923107147217,
+                    "z": 1.0748320817947388
+                  },
+                  {
+                    "x": 50.50051212310791,
+                    "z": 1.0997602939605713
+                  },
+                  {
+                    "x": 50.428751945495605,
+                    "z": 1.1099680662155151
+                  },
+                  {
+                    "x": 49.26847934722901,
+                    "z": 1.2663201093673706
+                  },
+                  {
+                    "x": 48.891326904296875,
+                    "z": 1.2657122611999512
+                  },
+                  {
+                    "x": 48.72604751586914,
+                    "z": 1.2616801261901855
+                  },
+                  {
+                    "x": 47.65767860412598,
+                    "z": 1.1543843746185305
+                  },
+                  {
+                    "x": 46.25851058959961,
+                    "z": 0.6470722556114197
+                  },
+                  {
+                    "x": 46.21515083312988,
+                    "z": 0.6137121915817261
+                  },
+                  {
+                    "x": 44.821006774902344,
+                    "z": -0.9077599048614502
+                  },
+                  {
+                    "x": 44.79857540130615,
+                    "z": -1.0324480533599854
+                  },
+                  {
+                    "x": 44.798831939697266,
+                    "z": -1.0390400886535645
+                  }
+                ],
+                "key": "mapu-0",
+                "kind": "Edificio",
+                "radius": 4.467743662426524,
+                "unit": "mapu-0",
+                "x": 47.847511768341064,
+                "z": -1.9993682503700256
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 48.13686275482178,
+                    "z": 8.090847969055176
+                  },
+                  {
+                    "x": 47.82219123840332,
+                    "z": 6.8477277755737305
+                  },
+                  {
+                    "x": 47.82391929626465,
+                    "z": 6.782671928405762
+                  },
+                  {
+                    "x": 47.899407386779785,
+                    "z": 5.443056106567383
+                  },
+                  {
+                    "x": 48.53991985321045,
+                    "z": 4.023552417755127
+                  },
+                  {
+                    "x": 48.57376003265381,
+                    "z": 4.001456260681152
+                  },
+                  {
+                    "x": 48.62819194793701,
+                    "z": 3.995360374450683
+                  },
+                  {
+                    "x": 50.11367988586426,
+                    "z": 3.931040763854981
+                  },
+                  {
+                    "x": 50.79540824890137,
+                    "z": 3.940000295639038
+                  },
+                  {
+                    "x": 51.36011219024658,
+                    "z": 4.0067524909973145
+                  },
+                  {
+                    "x": 52.542463302612305,
+                    "z": 4.297088146209717
+                  },
+                  {
+                    "x": 52.57684803009033,
+                    "z": 4.356847763061523
+                  },
+                  {
+                    "x": 52.565807819366455,
+                    "z": 4.669616222381592
+                  },
+                  {
+                    "x": 52.52415990829468,
+                    "z": 5.29310417175293
+                  },
+                  {
+                    "x": 52.21031999588013,
+                    "z": 8.537775993347168
+                  },
+                  {
+                    "x": 52.18057584762573,
+                    "z": 8.58465576171875
+                  },
+                  {
+                    "x": 52.096895694732666,
+                    "z": 8.60217571258545
+                  },
+                  {
+                    "x": 50.85849571228027,
+                    "z": 8.765329360961914
+                  },
+                  {
+                    "x": 50.56929588317871,
+                    "z": 8.755727767944336
+                  },
+                  {
+                    "x": 49.651150703430176,
+                    "z": 8.690688133239746
+                  },
+                  {
+                    "x": 49.58078384399414,
+                    "z": 8.685552597045898
+                  },
+                  {
+                    "x": 48.16612720489502,
+                    "z": 8.178159713745117
+                  }
+                ],
+                "key": "mapu-2",
+                "kind": "Edificio",
+                "radius": 3.390321055846096,
+                "unit": "mapu-2",
+                "x": 50.199519634246826,
+                "z": 6.348185062408447
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 53.36203145980835,
+                    "z": 13.497183799743652
+                  },
+                  {
+                    "x": 53.1791033744812,
+                    "z": 11.281553268432615
+                  },
+                  {
+                    "x": 53.27763223648071,
+                    "z": 10.227680206298828
+                  },
+                  {
+                    "x": 53.27977561950683,
+                    "z": 10.213199615478516
+                  },
+                  {
+                    "x": 53.81502342224121,
+                    "z": 8.669872283935547
+                  },
+                  {
+                    "x": 53.859599590301514,
+                    "z": 8.610367774963379
+                  },
+                  {
+                    "x": 53.88827180862427,
+                    "z": 8.599664688110352
+                  },
+                  {
+                    "x": 57.57633590698242,
+                    "z": 8.773632049560547
+                  },
+                  {
+                    "x": 58.43939185142517,
+                    "z": 8.821887969970703
+                  },
+                  {
+                    "x": 58.572863936424255,
+                    "z": 8.837488174438477
+                  },
+                  {
+                    "x": 58.60660803318024,
+                    "z": 8.894512176513672
+                  },
+                  {
+                    "x": 58.52116799354553,
+                    "z": 11.85644817352295
+                  },
+                  {
+                    "x": 58.464767932891846,
+                    "z": 12.868160247802734
+                  },
+                  {
+                    "x": 58.45211184024811,
+                    "z": 12.923105239868164
+                  },
+                  {
+                    "x": 58.43591988086701,
+                    "z": 12.948368072509766
+                  },
+                  {
+                    "x": 57.4443199634552,
+                    "z": 14.408687591552734
+                  },
+                  {
+                    "x": 57.391167879104614,
+                    "z": 14.440672874450684
+                  },
+                  {
+                    "x": 56.0143518447876,
+                    "z": 14.474272727966309
+                  },
+                  {
+                    "x": 55.60059213638306,
+                    "z": 14.47361660003662
+                  },
+                  {
+                    "x": 55.16444778442383,
+                    "z": 14.39675235748291
+                  },
+                  {
+                    "x": 53.999295711517334,
+                    "z": 14.152832984924316
+                  },
+                  {
+                    "x": 53.93222379684448,
+                    "z": 14.133919715881348
+                  },
+                  {
+                    "x": 53.39785623550415,
+                    "z": 13.56305694580078
+                  }
+                ],
+                "key": "mapu-3",
+                "kind": "Edificio",
+                "radius": 3.999025707661179,
+                "unit": "mapu-3",
+                "x": 55.89285570383072,
+                "z": 11.53696870803833
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 56.95511984825134,
+                    "z": -9.150959968566896
+                  },
+                  {
+                    "x": 56.47983980178833,
+                    "z": -9.183055877685549
+                  },
+                  {
+                    "x": 55.283135414123535,
+                    "z": -9.289313316345217
+                  },
+                  {
+                    "x": 55.02451181411743,
+                    "z": -9.633135795593262
+                  },
+                  {
+                    "x": 54.55145597457886,
+                    "z": -10.384271621704102
+                  },
+                  {
+                    "x": 54.366607666015625,
+                    "z": -10.75443172454834
+                  },
+                  {
+                    "x": 54.06705570220947,
+                    "z": -11.49926471710205
+                  },
+                  {
+                    "x": 54.02193546295166,
+                    "z": -11.639200210571287
+                  },
+                  {
+                    "x": 54.02476739883423,
+                    "z": -11.65932846069336
+                  },
+                  {
+                    "x": 54.251872062683105,
+                    "z": -13.084783554077148
+                  },
+                  {
+                    "x": 54.28588819503784,
+                    "z": -13.175105094909668
+                  },
+                  {
+                    "x": 54.40788793563843,
+                    "z": -13.373616218566896
+                  },
+                  {
+                    "x": 54.57756805419922,
+                    "z": -13.58388900756836
+                  },
+                  {
+                    "x": 55.285327434539795,
+                    "z": -14.184896469116213
+                  },
+                  {
+                    "x": 55.59732818603515,
+                    "z": -14.305456161499023
+                  },
+                  {
+                    "x": 55.84059190750122,
+                    "z": -14.377887725830078
+                  },
+                  {
+                    "x": 57.01515197753906,
+                    "z": -14.36988925933838
+                  },
+                  {
+                    "x": 57.22065567970276,
+                    "z": -14.333439826965332
+                  },
+                  {
+                    "x": 57.30283188819885,
+                    "z": -14.316593170166016
+                  },
+                  {
+                    "x": 57.524192094802856,
+                    "z": -14.25528049468994
+                  },
+                  {
+                    "x": 58.57574391365051,
+                    "z": -13.631793022155762
+                  },
+                  {
+                    "x": 59.01123201847077,
+                    "z": -12.79014492034912
+                  },
+                  {
+                    "x": 59.20838391780853,
+                    "z": -12.298463821411133
+                  },
+                  {
+                    "x": 59.226512014865875,
+                    "z": -12.240927696228027
+                  },
+                  {
+                    "x": 59.24547201395035,
+                    "z": -12.159568786621094
+                  },
+                  {
+                    "x": 59.22659200429917,
+                    "z": -12.06227207183838
+                  },
+                  {
+                    "x": 58.60520005226135,
+                    "z": -10.942928314208984
+                  },
+                  {
+                    "x": 58.49843192100525,
+                    "z": -10.750848770141602
+                  },
+                  {
+                    "x": 58.4644638299942,
+                    "z": -10.71488094329834
+                  },
+                  {
+                    "x": 56.969088077545166,
+                    "z": -9.153057098388672
+                  }
+                ],
+                "key": "mapu-4",
+                "kind": "Edificio",
+                "radius": 3.6947972839950096,
+                "unit": "mapu-4",
+                "x": 56.63370373845101,
+                "z": -11.764423847198486
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 54.84105587005615,
+                    "z": -2.66648006439209
+                  },
+                  {
+                    "x": 54.85529565811157,
+                    "z": -2.8581762313842773
+                  },
+                  {
+                    "x": 55.313711643218994,
+                    "z": -4.214752197265625
+                  },
+                  {
+                    "x": 55.33224010467529,
+                    "z": -4.231679916381836
+                  },
+                  {
+                    "x": 55.49121570587158,
+                    "z": -4.250976085662842
+                  },
+                  {
+                    "x": 57.74147200584411,
+                    "z": -4.21343994140625
+                  },
+                  {
+                    "x": 57.92188811302185,
+                    "z": -4.194079875946045
+                  },
+                  {
+                    "x": 59.08076798915863,
+                    "z": -3.9268958568573
+                  },
+                  {
+                    "x": 59.34289592504501,
+                    "z": -3.860879898071289
+                  },
+                  {
+                    "x": 59.68273600935936,
+                    "z": -3.76476788520813
+                  },
+                  {
+                    "x": 59.71705597639084,
+                    "z": -3.7496960163116455
+                  },
+                  {
+                    "x": 59.780447989702225,
+                    "z": -3.720223903656006
+                  },
+                  {
+                    "x": 59.8500480055809,
+                    "z": -3.6863200664520264
+                  },
+                  {
+                    "x": 59.98577599879354,
+                    "z": -3.59769606590271
+                  },
+                  {
+                    "x": 60.136592000722885,
+                    "z": -3.459967851638794
+                  },
+                  {
+                    "x": 60.407200038433075,
+                    "z": -3.164703845977783
+                  },
+                  {
+                    "x": 60.56300801038742,
+                    "z": -2.9728636741638184
+                  },
+                  {
+                    "x": 60.64756798744202,
+                    "z": -2.8345117568969727
+                  },
+                  {
+                    "x": 61.04380798339844,
+                    "z": -2.07371187210083
+                  },
+                  {
+                    "x": 61.12358403205872,
+                    "z": -1.9083679914474487
+                  },
+                  {
+                    "x": 61.36475205421448,
+                    "z": -1.2520798444747925
+                  },
+                  {
+                    "x": 61.403615951538086,
+                    "z": -1.0703998804092407
+                  },
+                  {
+                    "x": 61.40382409095764,
+                    "z": -0.9652798175811768
+                  },
+                  {
+                    "x": 61.397168040275574,
+                    "z": -0.8411678671836853
+                  },
+                  {
+                    "x": 61.19291198253632,
+                    "z": 0.6469122171401978
+                  },
+                  {
+                    "x": 61.14451217651367,
+                    "z": 0.8439841866493225
+                  },
+                  {
+                    "x": 60.66963201761246,
+                    "z": 1.9851680994033811
+                  },
+                  {
+                    "x": 60.63803207874298,
+                    "z": 2.042367935180664
+                  },
+                  {
+                    "x": 59.354575991630554,
+                    "z": 2.445296287536621
+                  },
+                  {
+                    "x": 59.1399519443512,
+                    "z": 2.510704517364502
+                  },
+                  {
+                    "x": 58.84569585323334,
+                    "z": 2.551680326461792
+                  },
+                  {
+                    "x": 58.66559982299805,
+                    "z": 2.5526881217956543
+                  },
+                  {
+                    "x": 58.58795201778412,
+                    "z": 2.548592329025269
+                  },
+                  {
+                    "x": 58.18990385532379,
+                    "z": 2.478288412094116
+                  },
+                  {
+                    "x": 57.785264015197754,
+                    "z": 2.3814401626586914
+                  },
+                  {
+                    "x": 57.21219205856323,
+                    "z": 2.241696357727051
+                  },
+                  {
+                    "x": 57.03190398216248,
+                    "z": 2.1964001655578613
+                  },
+                  {
+                    "x": 56.98167967796326,
+                    "z": 2.1762561798095703
+                  },
+                  {
+                    "x": 56.80254411697388,
+                    "z": 2.088144302368164
+                  },
+                  {
+                    "x": 56.64086389541626,
+                    "z": 1.979536175727844
+                  },
+                  {
+                    "x": 56.622495889663696,
+                    "z": 1.9664162397384644
+                  },
+                  {
+                    "x": 56.21199989318848,
+                    "z": 1.6330721378326416
+                  },
+                  {
+                    "x": 56.17484784126282,
+                    "z": 1.593888282775879
+                  },
+                  {
+                    "x": 56.0588960647583,
+                    "z": 1.4299681186676023
+                  },
+                  {
+                    "x": 55.900479793548584,
+                    "z": 1.1149600744247437
+                  },
+                  {
+                    "x": 55.54585552215576,
+                    "z": 0.3454081416130066
+                  },
+                  {
+                    "x": 55.427247524261475,
+                    "z": 0.07921616733074188
+                  },
+                  {
+                    "x": 55.30809545516968,
+                    "z": -0.22972789406776428
+                  },
+                  {
+                    "x": 55.30614376068115,
+                    "z": -0.23665586113929749
+                  },
+                  {
+                    "x": 54.84439992904663,
+                    "z": -2.591104030609131
+                  }
+                ],
+                "key": "mapu-5",
+                "kind": "Zona com\u00fan",
+                "radius": 4.726514925638296,
+                "unit": "mapu-5",
+                "x": 58.1224399805069,
+                "z": -0.8491439819335938
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 61.00536000728607,
+                    "z": 6.391871929168701
+                  },
+                  {
+                    "x": 60.29764801263809,
+                    "z": 6.465344429016113
+                  },
+                  {
+                    "x": 60.206464007496834,
+                    "z": 6.464784622192383
+                  },
+                  {
+                    "x": 60.19233599305153,
+                    "z": 6.464288711547852
+                  },
+                  {
+                    "x": 60.17041599750519,
+                    "z": 6.460303783416748
+                  },
+                  {
+                    "x": 60.081808000802994,
+                    "z": 6.416272163391113
+                  },
+                  {
+                    "x": 60.04278400167823,
+                    "z": 6.385248184204102
+                  },
+                  {
+                    "x": 60.005295999813825,
+                    "z": 6.333280563354492
+                  },
+                  {
+                    "x": 59.97623999975622,
+                    "z": 6.26788854598999
+                  },
+                  {
+                    "x": 59.54398399591446,
+                    "z": 5.263728141784668
+                  },
+                  {
+                    "x": 59.52683201432228,
+                    "z": 5.185311794281006
+                  },
+                  {
+                    "x": 59.50449600815773,
+                    "z": 5.003968238830566
+                  },
+                  {
+                    "x": 59.50193598866463,
+                    "z": 4.963840484619141
+                  },
+                  {
+                    "x": 59.50135999917984,
+                    "z": 4.884800434112549
+                  },
+                  {
+                    "x": 59.52742397785187,
+                    "z": 4.649504661560059
+                  },
+                  {
+                    "x": 59.556975960731506,
+                    "z": 4.545760631561279
+                  },
+                  {
+                    "x": 60.010816000401974,
+                    "z": 3.4977123737335205
+                  },
+                  {
+                    "x": 60.046912003308535,
+                    "z": 3.4385125637054443
+                  },
+                  {
+                    "x": 60.13518400490284,
+                    "z": 3.3702402114868164
+                  },
+                  {
+                    "x": 60.167247995734215,
+                    "z": 3.350992202758789
+                  },
+                  {
+                    "x": 60.2255519926548,
+                    "z": 3.3399205207824707
+                  },
+                  {
+                    "x": 60.29753598570824,
+                    "z": 3.3406245708465576
+                  },
+                  {
+                    "x": 60.90078401565552,
+                    "z": 3.3674404621124268
+                  },
+                  {
+                    "x": 60.95999997854233,
+                    "z": 3.3717122077941895
+                  },
+                  {
+                    "x": 61.02096009254456,
+                    "z": 3.391216278076172
+                  },
+                  {
+                    "x": 61.367696046829224,
+                    "z": 3.5327203273773193
+                  },
+                  {
+                    "x": 61.93289601802826,
+                    "z": 3.811216592788696
+                  },
+                  {
+                    "x": 62.01020812988281,
+                    "z": 3.8672804832458496
+                  },
+                  {
+                    "x": 62.37335991859436,
+                    "z": 4.551424026489258
+                  },
+                  {
+                    "x": 62.39014434814453,
+                    "z": 4.5899200439453125
+                  },
+                  {
+                    "x": 62.41438388824463,
+                    "z": 4.650256633758545
+                  },
+                  {
+                    "x": 62.39904022216797,
+                    "z": 4.769312381744385
+                  },
+                  {
+                    "x": 62.3723521232605,
+                    "z": 4.843616485595703
+                  },
+                  {
+                    "x": 62.07200002670288,
+                    "z": 5.5525126457214355
+                  },
+                  {
+                    "x": 62.022128105163574,
+                    "z": 5.618400573730469
+                  },
+                  {
+                    "x": 61.72318410873413,
+                    "z": 5.903279781341553
+                  },
+                  {
+                    "x": 61.616992115974426,
+                    "z": 6.002448558807373
+                  },
+                  {
+                    "x": 61.14284801483154,
+                    "z": 6.3261284828186035
+                  }
+                ],
+                "key": "mapu-6",
+                "kind": "Zona com\u00fan",
+                "radius": 2.136233998443324,
+                "unit": "mapu-6",
+                "x": 60.957871943712234,
+                "z": 4.902632474899292
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 59.51273599267006,
+                    "z": -10.899791717529297
+                  },
+                  {
+                    "x": 59.51689597964287,
+                    "z": -11.761695861816406
+                  },
+                  {
+                    "x": 60.50875198841095,
+                    "z": -13.23136043548584
+                  },
+                  {
+                    "x": 60.524224042892456,
+                    "z": -13.248608589172363
+                  },
+                  {
+                    "x": 60.55468797683716,
+                    "z": -13.252753257751465
+                  },
+                  {
+                    "x": 64.3348798751831,
+                    "z": -13.09372901916504
+                  },
+                  {
+                    "x": 64.36388778686523,
+                    "z": -13.03585720062256
+                  },
+                  {
+                    "x": 64.35294389724731,
+                    "z": -12.061375617980955
+                  },
+                  {
+                    "x": 63.959920167922974,
+                    "z": -8.575743675231934
+                  },
+                  {
+                    "x": 63.95032024383545,
+                    "z": -8.54684829711914
+                  },
+                  {
+                    "x": 63.94379234313965,
+                    "z": -8.528608322143555
+                  },
+                  {
+                    "x": 63.903584003448486,
+                    "z": -8.504783630371094
+                  },
+                  {
+                    "x": 62.427664279937744,
+                    "z": -8.405920028686523
+                  },
+                  {
+                    "x": 62.400415897369385,
+                    "z": -8.404256820678711
+                  },
+                  {
+                    "x": 61.47265601158142,
+                    "z": -8.45612907409668
+                  },
+                  {
+                    "x": 60.179296016693115,
+                    "z": -8.597921371459961
+                  },
+                  {
+                    "x": 60.15192000567913,
+                    "z": -8.614095687866211
+                  },
+                  {
+                    "x": 60.13512000441551,
+                    "z": -8.647104263305664
+                  },
+                  {
+                    "x": 59.54787200689316,
+                    "z": -9.882336616516112
+                  },
+                  {
+                    "x": 59.53665599226952,
+                    "z": -9.906657218933104
+                  }
+                ],
+                "key": "mapu-7",
+                "kind": "Edificio",
+                "radius": 3.429343648230309,
+                "unit": "mapu-7",
+                "x": 61.93831188976765,
+                "z": -10.828505039215088
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 63.35702419281006,
+                    "z": 6.892416477203369
+                  },
+                  {
+                    "x": 63.35870432853699,
+                    "z": 6.858240127563477
+                  },
+                  {
+                    "x": 63.48617625236511,
+                    "z": 4.543935775756836
+                  },
+                  {
+                    "x": 63.61140823364258,
+                    "z": 4.46619176864624
+                  },
+                  {
+                    "x": 63.63375997543335,
+                    "z": 4.455520153045654
+                  },
+                  {
+                    "x": 65.11096048355103,
+                    "z": 3.807488203048706
+                  },
+                  {
+                    "x": 65.15246391296387,
+                    "z": 3.792960405349731
+                  },
+                  {
+                    "x": 65.22857618331909,
+                    "z": 3.774448156356811
+                  },
+                  {
+                    "x": 66.74248027801514,
+                    "z": 3.8265764713287354
+                  },
+                  {
+                    "x": 68.18796825408936,
+                    "z": 3.979168176651001
+                  },
+                  {
+                    "x": 68.19624042510986,
+                    "z": 3.9804162979125977
+                  },
+                  {
+                    "x": 69.22723293304443,
+                    "z": 4.4318718910217285
+                  },
+                  {
+                    "x": 69.25595188140869,
+                    "z": 4.448736190795898
+                  },
+                  {
+                    "x": 69.3025131225586,
+                    "z": 4.484032154083252
+                  },
+                  {
+                    "x": 69.30729675292969,
+                    "z": 4.488816261291504
+                  },
+                  {
+                    "x": 69.43028831481934,
+                    "z": 5.918479919433594
+                  },
+                  {
+                    "x": 69.42596817016602,
+                    "z": 6.0501604080200195
+                  },
+                  {
+                    "x": 68.96740818023682,
+                    "z": 8.64185619354248
+                  },
+                  {
+                    "x": 68.9574728012085,
+                    "z": 8.661392211914062
+                  },
+                  {
+                    "x": 68.94115161895752,
+                    "z": 8.66977596282959
+                  },
+                  {
+                    "x": 68.92736053466797,
+                    "z": 8.672945022583008
+                  },
+                  {
+                    "x": 68.85982418060303,
+                    "z": 8.678592681884766
+                  },
+                  {
+                    "x": 66.07908821105957,
+                    "z": 8.449872016906738
+                  },
+                  {
+                    "x": 65.28446435928345,
+                    "z": 8.380017280578613
+                  },
+                  {
+                    "x": 65.24958419799805,
+                    "z": 8.356063842773438
+                  },
+                  {
+                    "x": 63.49843215942383,
+                    "z": 7.07692813873291
+                  },
+                  {
+                    "x": 63.39132809638977,
+                    "z": 6.982719898223877
+                  }
+                ],
+                "key": "mapu-8",
+                "kind": "Edificio",
+                "radius": 3.9030491485168017,
+                "unit": "mapu-8",
+                "x": 66.3936562538147,
+                "z": 6.226520419120789
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 71.37648105621338,
+                    "z": 2.162224531173706
+                  },
+                  {
+                    "x": 70.61574459075928,
+                    "z": 2.1164803504943848
+                  },
+                  {
+                    "x": 66.66865634918213,
+                    "z": 1.6460001468658447
+                  },
+                  {
+                    "x": 66.36745643615723,
+                    "z": 1.3187521696090698
+                  },
+                  {
+                    "x": 66.33878469467163,
+                    "z": 1.2774722576141355
+                  },
+                  {
+                    "x": 66.06497621536255,
+                    "z": -3.459967851638794
+                  },
+                  {
+                    "x": 66.05929660797119,
+                    "z": -3.607759952545166
+                  },
+                  {
+                    "x": 66.06235218048096,
+                    "z": -4.178127765655518
+                  },
+                  {
+                    "x": 66.11720037460327,
+                    "z": -9.25158405303955
+                  },
+                  {
+                    "x": 66.15724802017212,
+                    "z": -9.320816040039062
+                  },
+                  {
+                    "x": 66.17751979827881,
+                    "z": -9.333999633789062
+                  },
+                  {
+                    "x": 66.94049644470215,
+                    "z": -9.346080780029297
+                  },
+                  {
+                    "x": 67.79851245880127,
+                    "z": -9.34928035736084
+                  },
+                  {
+                    "x": 71.90588760375977,
+                    "z": -8.342928886413574
+                  },
+                  {
+                    "x": 71.95243263244629,
+                    "z": -8.323649406433105
+                  },
+                  {
+                    "x": 71.96848106384277,
+                    "z": -8.300944328308105
+                  },
+                  {
+                    "x": 71.97980880737305,
+                    "z": -8.270896911621094
+                  },
+                  {
+                    "x": 73.09262466430664,
+                    "z": -4.167263984680176
+                  },
+                  {
+                    "x": 73.08113670349121,
+                    "z": -3.7383201122283936
+                  },
+                  {
+                    "x": 73.03785705566406,
+                    "z": -2.8999998569488525
+                  },
+                  {
+                    "x": 72.29321575164795,
+                    "z": 0.9643681645393372
+                  },
+                  {
+                    "x": 72.28564834594727,
+                    "z": 0.9898722171783448
+                  },
+                  {
+                    "x": 72.2622241973877,
+                    "z": 1.0244001150131226
+                  },
+                  {
+                    "x": 71.42270469665527,
+                    "z": 2.1284005641937256
+                  }
+                ],
+                "key": "mapu-9",
+                "kind": "Edificio",
+                "radius": 6.745043520000262,
+                "unit": "mapu-9",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 73.40542507171631,
+                    "z": 2.912480592727661
+                  },
+                  {
+                    "x": 75.10915279388428,
+                    "z": 2.9070725440979004
+                  },
+                  {
+                    "x": 75.11640071868896,
+                    "z": 3.1021602153778076
+                  },
+                  {
+                    "x": 75.12438488006592,
+                    "z": 4.393728256225586
+                  },
+                  {
+                    "x": 75.1229133605957,
+                    "z": 4.604703903198242
+                  },
+                  {
+                    "x": 75.10076904296875,
+                    "z": 4.623072624206543
+                  },
+                  {
+                    "x": 74.71895980834961,
+                    "z": 4.780496597290039
+                  },
+                  {
+                    "x": 74.63995265960693,
+                    "z": 4.783504009246826
+                  },
+                  {
+                    "x": 73.64638423919678,
+                    "z": 4.794704437255859
+                  },
+                  {
+                    "x": 73.41534519195557,
+                    "z": 4.6235198974609375
+                  },
+                  {
+                    "x": 73.39905738830566,
+                    "z": 4.609840393066406
+                  },
+                  {
+                    "x": 73.39499282836914,
+                    "z": 4.55350399017334
+                  },
+                  {
+                    "x": 73.40041732788086,
+                    "z": 3.098496437072754
+                  }
+                ],
+                "key": "mapu-10",
+                "kind": "Estructura",
+                "radius": 1.2800342800623632,
+                "unit": "mapu-10",
+                "x": 74.25968885421753,
+                "z": 3.85088849067688
+              }
+            ],
+            "center": {
+              "culture": "mapungubwe",
+              "kind": "center",
+              "x": 83,
+              "z": 0
+            },
+            "culture": "mapungubwe",
+            "entry": {
+              "x": 60,
+              "z": 0
+            },
+            "id": "village-1",
+            "suppress": [],
+            "x": 60,
+            "z": 0
+          }
+        ],
+        "workers": [
+          {
+            "actionRemaining": -0.0333333333333343,
+            "centerId": "structure-2",
+            "contractDay": 1,
+            "crateId": null,
+            "destinationId": "home-village-1",
+            "dynamicStallSeconds": 0,
+            "heading": 0,
+            "hits": 0,
+            "id": "worker-6",
+            "idleState": null,
+            "incapacitated": false,
+            "mobileProgressAt": 341.8999999999996,
+            "mobileProgressDistance": 0.0386457079160966,
+            "mobileRecoveryAttempts": 0,
+            "mobileRecoveryDestinationId": "home-village-1",
+            "mobileRecoveryVersion": 2,
+            "path": null,
+            "pathVersion": 2,
+            "personId": "person-5",
+            "profile": "youngFemale",
+            "recovering": false,
+            "runRemaining": 105.80409353316266,
+            "running": false,
+            "status": "home",
+            "taskApproach": null,
+            "taskId": null,
+            "villageId": "village-1",
+            "walkPhase": 157.51938446607647,
+            "x": 60,
+            "z": 0
+          }
+        ]
+      },
+      "hiddenMs": 300952.2649999857,
+      "hiddenStart": {
+        "commandIds": [
+          "spatial-opening-center",
+          "desktop-visibility-seed",
+          "desktop-visibility-hire",
+          "desktop-visibility-shield"
+        ],
+        "completedNights": 0,
+        "cooldowns": {
+          "growth": 0,
+          "multiply": 0,
+          "shield": 87.29389499998125
+        },
+        "crates": [],
+        "day": 1,
+        "dayPlan": {
+          "at": 55.76028734600793,
+          "done": true
+        },
+        "elapsed": 373.3061050000237,
+        "ledger": {
+          "balance": {
+            "d": "1",
+            "n": "648"
+          },
+          "entries": {
+            "desktop-visibility-hire": {
+              "d": "1",
+              "n": "-40"
+            },
+            "desktop-visibility-seed": {
+              "d": "1",
+              "n": "-12"
+            },
+            "spatial-opening-center": {
+              "d": "1",
+              "n": "-800"
+            }
+          }
+        },
+        "nightPlan": {
+          "actors": [
+            {
+              "hits": 2,
+              "species": "warthog"
+            }
+          ],
+          "at": 370.5022702361457,
+          "attraction": 32,
+          "done": true,
+          "group": [
+            "warthog"
+          ],
+          "introductory": true,
+          "night": 1,
+          "pressureFacts": {
+            "areaCap": 1,
+            "budget": 2,
+            "candidateVersion": 5,
+            "capturedValue": 32,
+            "composition": {
+              "warthog": 1
+            },
+            "compositionAdjustments": [],
+            "effectiveValue": 32,
+            "experimentId": "v1-pressure",
+            "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+            "introductory": true,
+            "night": 1,
+            "observedValue": 32,
+            "potential": 2,
+            "pressure": 0.005317296980148541,
+            "qRaisedForRangeSafety": false,
+            "referenceEnvelope": null,
+            "targetAnimals": 1
+          },
+          "pressureVersion": 1,
+          "waves": [
+            [
+              {
+                "hits": 2,
+                "species": "warthog"
+              }
+            ]
+          ]
+        },
+        "plants": [
+          {
+            "alive": true,
+            "attackHitPoints": 1,
+            "centerId": "structure-2",
+            "growth": 252.09999999998033,
+            "harvestRequested": false,
+            "id": "plant-3",
+            "species": "yuca",
+            "toleranceBonus": 0,
+            "water": [
+              {
+                "at": 0,
+                "status": "manual",
+                "wait": 0
+              },
+              {
+                "at": 240,
+                "status": "manual",
+                "wait": 0
+              }
+            ],
+            "x": 88.5,
+            "z": -6
+          }
+        ],
+        "postgame": false,
+        "raid": {
+          "animals": [
+            {
+              "approach": {
+                "id": "approach-structure-2-direct-0",
+                "x": 83,
+                "z": 3.723249063230765
+              },
+              "approachShieldId": null,
+              "attackId": null,
+              "attackRemaining": 0,
+              "destinationId": "approach-structure-2-direct-0",
+              "dynamicStallSeconds": 0,
+              "exit": {
+                "x": 83,
+                "z": 37.53660442187269
+              },
+              "heading": -1.5707963267948966,
+              "hitApplied": false,
+              "hitsRemaining": 2,
+              "id": "animal-9",
+              "mobileProgressAt": 370.6120850000251,
+              "mobileProgressDistance": 31.184728461349156,
+              "mobileRecoveryAttempts": 0,
+              "mobileRecoveryDestinationId": "approach-structure-2-direct-0",
+              "mobileRecoveryVersion": 3,
+              "motionPhase": 2.8038347638893995,
+              "path": [
+                {
+                  "x": 72,
+                  "z": 35
+                },
+                {
+                  "x": 72,
+                  "z": 34
+                },
+                {
+                  "x": 72,
+                  "z": 33
+                },
+                {
+                  "x": 72,
+                  "z": 32
+                },
+                {
+                  "x": 72,
+                  "z": 31
+                },
+                {
+                  "x": 72,
+                  "z": 30
+                },
+                {
+                  "x": 72,
+                  "z": 29
+                },
+                {
+                  "x": 72,
+                  "z": 28
+                },
+                {
+                  "x": 72,
+                  "z": 27
+                },
+                {
+                  "x": 72,
+                  "z": 26
+                },
+                {
+                  "x": 72,
+                  "z": 25
+                },
+                {
+                  "x": 72,
+                  "z": 24
+                },
+                {
+                  "x": 72,
+                  "z": 23
+                },
+                {
+                  "x": 72,
+                  "z": 22
+                },
+                {
+                  "x": 72,
+                  "z": 21
+                },
+                {
+                  "x": 72,
+                  "z": 20
+                },
+                {
+                  "x": 72,
+                  "z": 19
+                },
+                {
+                  "x": 72,
+                  "z": 18
+                },
+                {
+                  "x": 72,
+                  "z": 17
+                },
+                {
+                  "x": 72,
+                  "z": 16
+                },
+                {
+                  "x": 72,
+                  "z": 15
+                },
+                {
+                  "x": 72,
+                  "z": 14
+                },
+                {
+                  "x": 72,
+                  "z": 13
+                },
+                {
+                  "x": 72,
+                  "z": 12
+                },
+                {
+                  "x": 72,
+                  "z": 11
+                },
+                {
+                  "x": 73,
+                  "z": 11
+                },
+                {
+                  "x": 74,
+                  "z": 11
+                },
+                {
+                  "x": 75,
+                  "z": 11
+                },
+                {
+                  "x": 76,
+                  "z": 11
+                },
+                {
+                  "x": 77,
+                  "z": 11
+                },
+                {
+                  "x": 78,
+                  "z": 11
+                },
+                {
+                  "x": 79,
+                  "z": 11
+                },
+                {
+                  "x": 80,
+                  "z": 11
+                },
+                {
+                  "x": 81,
+                  "z": 11
+                },
+                {
+                  "x": 82,
+                  "z": 11
+                },
+                {
+                  "x": 83,
+                  "z": 11
+                },
+                {
+                  "x": 83,
+                  "z": 10
+                },
+                {
+                  "x": 83,
+                  "z": 9
+                },
+                {
+                  "x": 83,
+                  "z": 8
+                },
+                {
+                  "x": 83,
+                  "z": 7
+                },
+                {
+                  "x": 83,
+                  "z": 6
+                },
+                {
+                  "x": 83,
+                  "z": 5
+                },
+                {
+                  "x": 83,
+                  "z": 4
+                },
+                {
+                  "x": 83,
+                  "z": 3.723249063230765
+                }
+              ],
+              "pathVersion": 3,
+              "radius": 1.1,
+              "reservation": "center:structure-2:animal-9",
+              "spawn": {
+                "x": 83,
+                "z": 34.53660442187269
+              },
+              "species": "warthog",
+              "status": "entering",
+              "targetId": "structure-2",
+              "x": 72.80882347534822,
+              "z": 35
+            }
+          ],
+          "cameraFocusedAnimalId": "animal-9",
+          "daytime": false,
+          "encounterContacts": [],
+          "encounterHits": [],
+          "encounterPositions": {
+            "animal-9": {
+              "x": 72.87205547534822,
+              "z": 35
+            },
+            "worker-6": {
+              "x": 60,
+              "z": 0
+            }
+          },
+          "encounters": [],
+          "id": "raid-1-night",
+          "introCropLimit": 0,
+          "introCropsDestroyed": 0,
+          "introPlantCount": 1,
+          "pressureFacts": {
+            "areaCap": 1,
+            "budget": 2,
+            "candidateVersion": 5,
+            "capturedValue": 32,
+            "composition": {
+              "warthog": 1
+            },
+            "compositionAdjustments": [],
+            "effectiveValue": 32,
+            "experimentId": "v1-pressure",
+            "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+            "introductory": true,
+            "night": 1,
+            "observedValue": 32,
+            "potential": 2,
+            "pressure": 0.005317296980148541,
+            "qRaisedForRangeSafety": false,
+            "referenceEnvelope": null,
+            "targetAnimals": 1
+          },
+          "reservations": {
+            "center:structure-2:animal-9": "animal-9"
+          },
+          "targetReservationVersion": 2,
+          "waitQueue": [],
+          "waitRevision": 1,
+          "waveIndex": 0,
+          "waves": [
+            [
+              {
+                "hits": 2,
+                "species": "warthog"
+              }
+            ]
+          ]
+        },
+        "result": null,
+        "rng": 951087663,
+        "spells": [
+          {
+            "id": "spell-10",
+            "kind": "shield",
+            "radius": 1.95,
+            "remaining": 17.29389499998095,
+            "x": 98,
+            "z": 0
+          }
+        ],
+        "structures": [
+          {
+            "collapseRemaining": 0,
+            "cost": 800,
+            "created": 1,
+            "culture": "mapungubwe",
+            "gate": false,
+            "hp": 600,
+            "id": "structure-2",
+            "kind": "center",
+            "material": "zarzas",
+            "maxHp": 600,
+            "status": "intact",
+            "villageId": "village-1",
+            "x": 83,
+            "yaw": 0,
+            "z": 0
+          }
+        ],
+        "suppressed": [],
+        "tasks": [],
+        "time": 373.3061050000336,
+        "villages": [
+          {
+            "buildings": [
+              {
+                "footprint": [
+                  {
+                    "x": 44.96129512786865,
+                    "z": -3.436000108718872
+                  },
+                  {
+                    "x": 46.57422351837158,
+                    "z": -5.238048553466797
+                  },
+                  {
+                    "x": 46.63852787017822,
+                    "z": -5.265056610107422
+                  },
+                  {
+                    "x": 47.70713520050049,
+                    "z": -5.214911937713623
+                  },
+                  {
+                    "x": 50.82051181793213,
+                    "z": -4.868832111358643
+                  },
+                  {
+                    "x": 50.866111755371094,
+                    "z": -4.850368022918701
+                  },
+                  {
+                    "x": 50.89644813537598,
+                    "z": -4.805168151855469
+                  },
+                  {
+                    "x": 50.551055908203125,
+                    "z": 0.8681122660636902
+                  },
+                  {
+                    "x": 50.52923107147217,
+                    "z": 1.0748320817947388
+                  },
+                  {
+                    "x": 50.50051212310791,
+                    "z": 1.0997602939605713
+                  },
+                  {
+                    "x": 50.428751945495605,
+                    "z": 1.1099680662155151
+                  },
+                  {
+                    "x": 49.26847934722901,
+                    "z": 1.2663201093673706
+                  },
+                  {
+                    "x": 48.891326904296875,
+                    "z": 1.2657122611999512
+                  },
+                  {
+                    "x": 48.72604751586914,
+                    "z": 1.2616801261901855
+                  },
+                  {
+                    "x": 47.65767860412598,
+                    "z": 1.1543843746185305
+                  },
+                  {
+                    "x": 46.25851058959961,
+                    "z": 0.6470722556114197
+                  },
+                  {
+                    "x": 46.21515083312988,
+                    "z": 0.6137121915817261
+                  },
+                  {
+                    "x": 44.821006774902344,
+                    "z": -0.9077599048614502
+                  },
+                  {
+                    "x": 44.79857540130615,
+                    "z": -1.0324480533599854
+                  },
+                  {
+                    "x": 44.798831939697266,
+                    "z": -1.0390400886535645
+                  }
+                ],
+                "key": "mapu-0",
+                "kind": "Edificio",
+                "radius": 4.467743662426524,
+                "unit": "mapu-0",
+                "x": 47.847511768341064,
+                "z": -1.9993682503700256
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 48.13686275482178,
+                    "z": 8.090847969055176
+                  },
+                  {
+                    "x": 47.82219123840332,
+                    "z": 6.8477277755737305
+                  },
+                  {
+                    "x": 47.82391929626465,
+                    "z": 6.782671928405762
+                  },
+                  {
+                    "x": 47.899407386779785,
+                    "z": 5.443056106567383
+                  },
+                  {
+                    "x": 48.53991985321045,
+                    "z": 4.023552417755127
+                  },
+                  {
+                    "x": 48.57376003265381,
+                    "z": 4.001456260681152
+                  },
+                  {
+                    "x": 48.62819194793701,
+                    "z": 3.995360374450683
+                  },
+                  {
+                    "x": 50.11367988586426,
+                    "z": 3.931040763854981
+                  },
+                  {
+                    "x": 50.79540824890137,
+                    "z": 3.940000295639038
+                  },
+                  {
+                    "x": 51.36011219024658,
+                    "z": 4.0067524909973145
+                  },
+                  {
+                    "x": 52.542463302612305,
+                    "z": 4.297088146209717
+                  },
+                  {
+                    "x": 52.57684803009033,
+                    "z": 4.356847763061523
+                  },
+                  {
+                    "x": 52.565807819366455,
+                    "z": 4.669616222381592
+                  },
+                  {
+                    "x": 52.52415990829468,
+                    "z": 5.29310417175293
+                  },
+                  {
+                    "x": 52.21031999588013,
+                    "z": 8.537775993347168
+                  },
+                  {
+                    "x": 52.18057584762573,
+                    "z": 8.58465576171875
+                  },
+                  {
+                    "x": 52.096895694732666,
+                    "z": 8.60217571258545
+                  },
+                  {
+                    "x": 50.85849571228027,
+                    "z": 8.765329360961914
+                  },
+                  {
+                    "x": 50.56929588317871,
+                    "z": 8.755727767944336
+                  },
+                  {
+                    "x": 49.651150703430176,
+                    "z": 8.690688133239746
+                  },
+                  {
+                    "x": 49.58078384399414,
+                    "z": 8.685552597045898
+                  },
+                  {
+                    "x": 48.16612720489502,
+                    "z": 8.178159713745117
+                  }
+                ],
+                "key": "mapu-2",
+                "kind": "Edificio",
+                "radius": 3.390321055846096,
+                "unit": "mapu-2",
+                "x": 50.199519634246826,
+                "z": 6.348185062408447
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 53.36203145980835,
+                    "z": 13.497183799743652
+                  },
+                  {
+                    "x": 53.1791033744812,
+                    "z": 11.281553268432615
+                  },
+                  {
+                    "x": 53.27763223648071,
+                    "z": 10.227680206298828
+                  },
+                  {
+                    "x": 53.27977561950683,
+                    "z": 10.213199615478516
+                  },
+                  {
+                    "x": 53.81502342224121,
+                    "z": 8.669872283935547
+                  },
+                  {
+                    "x": 53.859599590301514,
+                    "z": 8.610367774963379
+                  },
+                  {
+                    "x": 53.88827180862427,
+                    "z": 8.599664688110352
+                  },
+                  {
+                    "x": 57.57633590698242,
+                    "z": 8.773632049560547
+                  },
+                  {
+                    "x": 58.43939185142517,
+                    "z": 8.821887969970703
+                  },
+                  {
+                    "x": 58.572863936424255,
+                    "z": 8.837488174438477
+                  },
+                  {
+                    "x": 58.60660803318024,
+                    "z": 8.894512176513672
+                  },
+                  {
+                    "x": 58.52116799354553,
+                    "z": 11.85644817352295
+                  },
+                  {
+                    "x": 58.464767932891846,
+                    "z": 12.868160247802734
+                  },
+                  {
+                    "x": 58.45211184024811,
+                    "z": 12.923105239868164
+                  },
+                  {
+                    "x": 58.43591988086701,
+                    "z": 12.948368072509766
+                  },
+                  {
+                    "x": 57.4443199634552,
+                    "z": 14.408687591552734
+                  },
+                  {
+                    "x": 57.391167879104614,
+                    "z": 14.440672874450684
+                  },
+                  {
+                    "x": 56.0143518447876,
+                    "z": 14.474272727966309
+                  },
+                  {
+                    "x": 55.60059213638306,
+                    "z": 14.47361660003662
+                  },
+                  {
+                    "x": 55.16444778442383,
+                    "z": 14.39675235748291
+                  },
+                  {
+                    "x": 53.999295711517334,
+                    "z": 14.152832984924316
+                  },
+                  {
+                    "x": 53.93222379684448,
+                    "z": 14.133919715881348
+                  },
+                  {
+                    "x": 53.39785623550415,
+                    "z": 13.56305694580078
+                  }
+                ],
+                "key": "mapu-3",
+                "kind": "Edificio",
+                "radius": 3.999025707661179,
+                "unit": "mapu-3",
+                "x": 55.89285570383072,
+                "z": 11.53696870803833
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 56.95511984825134,
+                    "z": -9.150959968566896
+                  },
+                  {
+                    "x": 56.47983980178833,
+                    "z": -9.183055877685549
+                  },
+                  {
+                    "x": 55.283135414123535,
+                    "z": -9.289313316345217
+                  },
+                  {
+                    "x": 55.02451181411743,
+                    "z": -9.633135795593262
+                  },
+                  {
+                    "x": 54.55145597457886,
+                    "z": -10.384271621704102
+                  },
+                  {
+                    "x": 54.366607666015625,
+                    "z": -10.75443172454834
+                  },
+                  {
+                    "x": 54.06705570220947,
+                    "z": -11.49926471710205
+                  },
+                  {
+                    "x": 54.02193546295166,
+                    "z": -11.639200210571287
+                  },
+                  {
+                    "x": 54.02476739883423,
+                    "z": -11.65932846069336
+                  },
+                  {
+                    "x": 54.251872062683105,
+                    "z": -13.084783554077148
+                  },
+                  {
+                    "x": 54.28588819503784,
+                    "z": -13.175105094909668
+                  },
+                  {
+                    "x": 54.40788793563843,
+                    "z": -13.373616218566896
+                  },
+                  {
+                    "x": 54.57756805419922,
+                    "z": -13.58388900756836
+                  },
+                  {
+                    "x": 55.285327434539795,
+                    "z": -14.184896469116213
+                  },
+                  {
+                    "x": 55.59732818603515,
+                    "z": -14.305456161499023
+                  },
+                  {
+                    "x": 55.84059190750122,
+                    "z": -14.377887725830078
+                  },
+                  {
+                    "x": 57.01515197753906,
+                    "z": -14.36988925933838
+                  },
+                  {
+                    "x": 57.22065567970276,
+                    "z": -14.333439826965332
+                  },
+                  {
+                    "x": 57.30283188819885,
+                    "z": -14.316593170166016
+                  },
+                  {
+                    "x": 57.524192094802856,
+                    "z": -14.25528049468994
+                  },
+                  {
+                    "x": 58.57574391365051,
+                    "z": -13.631793022155762
+                  },
+                  {
+                    "x": 59.01123201847077,
+                    "z": -12.79014492034912
+                  },
+                  {
+                    "x": 59.20838391780853,
+                    "z": -12.298463821411133
+                  },
+                  {
+                    "x": 59.226512014865875,
+                    "z": -12.240927696228027
+                  },
+                  {
+                    "x": 59.24547201395035,
+                    "z": -12.159568786621094
+                  },
+                  {
+                    "x": 59.22659200429917,
+                    "z": -12.06227207183838
+                  },
+                  {
+                    "x": 58.60520005226135,
+                    "z": -10.942928314208984
+                  },
+                  {
+                    "x": 58.49843192100525,
+                    "z": -10.750848770141602
+                  },
+                  {
+                    "x": 58.4644638299942,
+                    "z": -10.71488094329834
+                  },
+                  {
+                    "x": 56.969088077545166,
+                    "z": -9.153057098388672
+                  }
+                ],
+                "key": "mapu-4",
+                "kind": "Edificio",
+                "radius": 3.6947972839950096,
+                "unit": "mapu-4",
+                "x": 56.63370373845101,
+                "z": -11.764423847198486
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 54.84105587005615,
+                    "z": -2.66648006439209
+                  },
+                  {
+                    "x": 54.85529565811157,
+                    "z": -2.8581762313842773
+                  },
+                  {
+                    "x": 55.313711643218994,
+                    "z": -4.214752197265625
+                  },
+                  {
+                    "x": 55.33224010467529,
+                    "z": -4.231679916381836
+                  },
+                  {
+                    "x": 55.49121570587158,
+                    "z": -4.250976085662842
+                  },
+                  {
+                    "x": 57.74147200584411,
+                    "z": -4.21343994140625
+                  },
+                  {
+                    "x": 57.92188811302185,
+                    "z": -4.194079875946045
+                  },
+                  {
+                    "x": 59.08076798915863,
+                    "z": -3.9268958568573
+                  },
+                  {
+                    "x": 59.34289592504501,
+                    "z": -3.860879898071289
+                  },
+                  {
+                    "x": 59.68273600935936,
+                    "z": -3.76476788520813
+                  },
+                  {
+                    "x": 59.71705597639084,
+                    "z": -3.7496960163116455
+                  },
+                  {
+                    "x": 59.780447989702225,
+                    "z": -3.720223903656006
+                  },
+                  {
+                    "x": 59.8500480055809,
+                    "z": -3.6863200664520264
+                  },
+                  {
+                    "x": 59.98577599879354,
+                    "z": -3.59769606590271
+                  },
+                  {
+                    "x": 60.136592000722885,
+                    "z": -3.459967851638794
+                  },
+                  {
+                    "x": 60.407200038433075,
+                    "z": -3.164703845977783
+                  },
+                  {
+                    "x": 60.56300801038742,
+                    "z": -2.9728636741638184
+                  },
+                  {
+                    "x": 60.64756798744202,
+                    "z": -2.8345117568969727
+                  },
+                  {
+                    "x": 61.04380798339844,
+                    "z": -2.07371187210083
+                  },
+                  {
+                    "x": 61.12358403205872,
+                    "z": -1.9083679914474487
+                  },
+                  {
+                    "x": 61.36475205421448,
+                    "z": -1.2520798444747925
+                  },
+                  {
+                    "x": 61.403615951538086,
+                    "z": -1.0703998804092407
+                  },
+                  {
+                    "x": 61.40382409095764,
+                    "z": -0.9652798175811768
+                  },
+                  {
+                    "x": 61.397168040275574,
+                    "z": -0.8411678671836853
+                  },
+                  {
+                    "x": 61.19291198253632,
+                    "z": 0.6469122171401978
+                  },
+                  {
+                    "x": 61.14451217651367,
+                    "z": 0.8439841866493225
+                  },
+                  {
+                    "x": 60.66963201761246,
+                    "z": 1.9851680994033811
+                  },
+                  {
+                    "x": 60.63803207874298,
+                    "z": 2.042367935180664
+                  },
+                  {
+                    "x": 59.354575991630554,
+                    "z": 2.445296287536621
+                  },
+                  {
+                    "x": 59.1399519443512,
+                    "z": 2.510704517364502
+                  },
+                  {
+                    "x": 58.84569585323334,
+                    "z": 2.551680326461792
+                  },
+                  {
+                    "x": 58.66559982299805,
+                    "z": 2.5526881217956543
+                  },
+                  {
+                    "x": 58.58795201778412,
+                    "z": 2.548592329025269
+                  },
+                  {
+                    "x": 58.18990385532379,
+                    "z": 2.478288412094116
+                  },
+                  {
+                    "x": 57.785264015197754,
+                    "z": 2.3814401626586914
+                  },
+                  {
+                    "x": 57.21219205856323,
+                    "z": 2.241696357727051
+                  },
+                  {
+                    "x": 57.03190398216248,
+                    "z": 2.1964001655578613
+                  },
+                  {
+                    "x": 56.98167967796326,
+                    "z": 2.1762561798095703
+                  },
+                  {
+                    "x": 56.80254411697388,
+                    "z": 2.088144302368164
+                  },
+                  {
+                    "x": 56.64086389541626,
+                    "z": 1.979536175727844
+                  },
+                  {
+                    "x": 56.622495889663696,
+                    "z": 1.9664162397384644
+                  },
+                  {
+                    "x": 56.21199989318848,
+                    "z": 1.6330721378326416
+                  },
+                  {
+                    "x": 56.17484784126282,
+                    "z": 1.593888282775879
+                  },
+                  {
+                    "x": 56.0588960647583,
+                    "z": 1.4299681186676023
+                  },
+                  {
+                    "x": 55.900479793548584,
+                    "z": 1.1149600744247437
+                  },
+                  {
+                    "x": 55.54585552215576,
+                    "z": 0.3454081416130066
+                  },
+                  {
+                    "x": 55.427247524261475,
+                    "z": 0.07921616733074188
+                  },
+                  {
+                    "x": 55.30809545516968,
+                    "z": -0.22972789406776428
+                  },
+                  {
+                    "x": 55.30614376068115,
+                    "z": -0.23665586113929749
+                  },
+                  {
+                    "x": 54.84439992904663,
+                    "z": -2.591104030609131
+                  }
+                ],
+                "key": "mapu-5",
+                "kind": "Zona com\u00fan",
+                "radius": 4.726514925638296,
+                "unit": "mapu-5",
+                "x": 58.1224399805069,
+                "z": -0.8491439819335938
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 61.00536000728607,
+                    "z": 6.391871929168701
+                  },
+                  {
+                    "x": 60.29764801263809,
+                    "z": 6.465344429016113
+                  },
+                  {
+                    "x": 60.206464007496834,
+                    "z": 6.464784622192383
+                  },
+                  {
+                    "x": 60.19233599305153,
+                    "z": 6.464288711547852
+                  },
+                  {
+                    "x": 60.17041599750519,
+                    "z": 6.460303783416748
+                  },
+                  {
+                    "x": 60.081808000802994,
+                    "z": 6.416272163391113
+                  },
+                  {
+                    "x": 60.04278400167823,
+                    "z": 6.385248184204102
+                  },
+                  {
+                    "x": 60.005295999813825,
+                    "z": 6.333280563354492
+                  },
+                  {
+                    "x": 59.97623999975622,
+                    "z": 6.26788854598999
+                  },
+                  {
+                    "x": 59.54398399591446,
+                    "z": 5.263728141784668
+                  },
+                  {
+                    "x": 59.52683201432228,
+                    "z": 5.185311794281006
+                  },
+                  {
+                    "x": 59.50449600815773,
+                    "z": 5.003968238830566
+                  },
+                  {
+                    "x": 59.50193598866463,
+                    "z": 4.963840484619141
+                  },
+                  {
+                    "x": 59.50135999917984,
+                    "z": 4.884800434112549
+                  },
+                  {
+                    "x": 59.52742397785187,
+                    "z": 4.649504661560059
+                  },
+                  {
+                    "x": 59.556975960731506,
+                    "z": 4.545760631561279
+                  },
+                  {
+                    "x": 60.010816000401974,
+                    "z": 3.4977123737335205
+                  },
+                  {
+                    "x": 60.046912003308535,
+                    "z": 3.4385125637054443
+                  },
+                  {
+                    "x": 60.13518400490284,
+                    "z": 3.3702402114868164
+                  },
+                  {
+                    "x": 60.167247995734215,
+                    "z": 3.350992202758789
+                  },
+                  {
+                    "x": 60.2255519926548,
+                    "z": 3.3399205207824707
+                  },
+                  {
+                    "x": 60.29753598570824,
+                    "z": 3.3406245708465576
+                  },
+                  {
+                    "x": 60.90078401565552,
+                    "z": 3.3674404621124268
+                  },
+                  {
+                    "x": 60.95999997854233,
+                    "z": 3.3717122077941895
+                  },
+                  {
+                    "x": 61.02096009254456,
+                    "z": 3.391216278076172
+                  },
+                  {
+                    "x": 61.367696046829224,
+                    "z": 3.5327203273773193
+                  },
+                  {
+                    "x": 61.93289601802826,
+                    "z": 3.811216592788696
+                  },
+                  {
+                    "x": 62.01020812988281,
+                    "z": 3.8672804832458496
+                  },
+                  {
+                    "x": 62.37335991859436,
+                    "z": 4.551424026489258
+                  },
+                  {
+                    "x": 62.39014434814453,
+                    "z": 4.5899200439453125
+                  },
+                  {
+                    "x": 62.41438388824463,
+                    "z": 4.650256633758545
+                  },
+                  {
+                    "x": 62.39904022216797,
+                    "z": 4.769312381744385
+                  },
+                  {
+                    "x": 62.3723521232605,
+                    "z": 4.843616485595703
+                  },
+                  {
+                    "x": 62.07200002670288,
+                    "z": 5.5525126457214355
+                  },
+                  {
+                    "x": 62.022128105163574,
+                    "z": 5.618400573730469
+                  },
+                  {
+                    "x": 61.72318410873413,
+                    "z": 5.903279781341553
+                  },
+                  {
+                    "x": 61.616992115974426,
+                    "z": 6.002448558807373
+                  },
+                  {
+                    "x": 61.14284801483154,
+                    "z": 6.3261284828186035
+                  }
+                ],
+                "key": "mapu-6",
+                "kind": "Zona com\u00fan",
+                "radius": 2.136233998443324,
+                "unit": "mapu-6",
+                "x": 60.957871943712234,
+                "z": 4.902632474899292
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 59.51273599267006,
+                    "z": -10.899791717529297
+                  },
+                  {
+                    "x": 59.51689597964287,
+                    "z": -11.761695861816406
+                  },
+                  {
+                    "x": 60.50875198841095,
+                    "z": -13.23136043548584
+                  },
+                  {
+                    "x": 60.524224042892456,
+                    "z": -13.248608589172363
+                  },
+                  {
+                    "x": 60.55468797683716,
+                    "z": -13.252753257751465
+                  },
+                  {
+                    "x": 64.3348798751831,
+                    "z": -13.09372901916504
+                  },
+                  {
+                    "x": 64.36388778686523,
+                    "z": -13.03585720062256
+                  },
+                  {
+                    "x": 64.35294389724731,
+                    "z": -12.061375617980955
+                  },
+                  {
+                    "x": 63.959920167922974,
+                    "z": -8.575743675231934
+                  },
+                  {
+                    "x": 63.95032024383545,
+                    "z": -8.54684829711914
+                  },
+                  {
+                    "x": 63.94379234313965,
+                    "z": -8.528608322143555
+                  },
+                  {
+                    "x": 63.903584003448486,
+                    "z": -8.504783630371094
+                  },
+                  {
+                    "x": 62.427664279937744,
+                    "z": -8.405920028686523
+                  },
+                  {
+                    "x": 62.400415897369385,
+                    "z": -8.404256820678711
+                  },
+                  {
+                    "x": 61.47265601158142,
+                    "z": -8.45612907409668
+                  },
+                  {
+                    "x": 60.179296016693115,
+                    "z": -8.597921371459961
+                  },
+                  {
+                    "x": 60.15192000567913,
+                    "z": -8.614095687866211
+                  },
+                  {
+                    "x": 60.13512000441551,
+                    "z": -8.647104263305664
+                  },
+                  {
+                    "x": 59.54787200689316,
+                    "z": -9.882336616516112
+                  },
+                  {
+                    "x": 59.53665599226952,
+                    "z": -9.906657218933104
+                  }
+                ],
+                "key": "mapu-7",
+                "kind": "Edificio",
+                "radius": 3.429343648230309,
+                "unit": "mapu-7",
+                "x": 61.93831188976765,
+                "z": -10.828505039215088
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 63.35702419281006,
+                    "z": 6.892416477203369
+                  },
+                  {
+                    "x": 63.35870432853699,
+                    "z": 6.858240127563477
+                  },
+                  {
+                    "x": 63.48617625236511,
+                    "z": 4.543935775756836
+                  },
+                  {
+                    "x": 63.61140823364258,
+                    "z": 4.46619176864624
+                  },
+                  {
+                    "x": 63.63375997543335,
+                    "z": 4.455520153045654
+                  },
+                  {
+                    "x": 65.11096048355103,
+                    "z": 3.807488203048706
+                  },
+                  {
+                    "x": 65.15246391296387,
+                    "z": 3.792960405349731
+                  },
+                  {
+                    "x": 65.22857618331909,
+                    "z": 3.774448156356811
+                  },
+                  {
+                    "x": 66.74248027801514,
+                    "z": 3.8265764713287354
+                  },
+                  {
+                    "x": 68.18796825408936,
+                    "z": 3.979168176651001
+                  },
+                  {
+                    "x": 68.19624042510986,
+                    "z": 3.9804162979125977
+                  },
+                  {
+                    "x": 69.22723293304443,
+                    "z": 4.4318718910217285
+                  },
+                  {
+                    "x": 69.25595188140869,
+                    "z": 4.448736190795898
+                  },
+                  {
+                    "x": 69.3025131225586,
+                    "z": 4.484032154083252
+                  },
+                  {
+                    "x": 69.30729675292969,
+                    "z": 4.488816261291504
+                  },
+                  {
+                    "x": 69.43028831481934,
+                    "z": 5.918479919433594
+                  },
+                  {
+                    "x": 69.42596817016602,
+                    "z": 6.0501604080200195
+                  },
+                  {
+                    "x": 68.96740818023682,
+                    "z": 8.64185619354248
+                  },
+                  {
+                    "x": 68.9574728012085,
+                    "z": 8.661392211914062
+                  },
+                  {
+                    "x": 68.94115161895752,
+                    "z": 8.66977596282959
+                  },
+                  {
+                    "x": 68.92736053466797,
+                    "z": 8.672945022583008
+                  },
+                  {
+                    "x": 68.85982418060303,
+                    "z": 8.678592681884766
+                  },
+                  {
+                    "x": 66.07908821105957,
+                    "z": 8.449872016906738
+                  },
+                  {
+                    "x": 65.28446435928345,
+                    "z": 8.380017280578613
+                  },
+                  {
+                    "x": 65.24958419799805,
+                    "z": 8.356063842773438
+                  },
+                  {
+                    "x": 63.49843215942383,
+                    "z": 7.07692813873291
+                  },
+                  {
+                    "x": 63.39132809638977,
+                    "z": 6.982719898223877
+                  }
+                ],
+                "key": "mapu-8",
+                "kind": "Edificio",
+                "radius": 3.9030491485168017,
+                "unit": "mapu-8",
+                "x": 66.3936562538147,
+                "z": 6.226520419120789
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 71.37648105621338,
+                    "z": 2.162224531173706
+                  },
+                  {
+                    "x": 70.61574459075928,
+                    "z": 2.1164803504943848
+                  },
+                  {
+                    "x": 66.66865634918213,
+                    "z": 1.6460001468658447
+                  },
+                  {
+                    "x": 66.36745643615723,
+                    "z": 1.3187521696090698
+                  },
+                  {
+                    "x": 66.33878469467163,
+                    "z": 1.2774722576141355
+                  },
+                  {
+                    "x": 66.06497621536255,
+                    "z": -3.459967851638794
+                  },
+                  {
+                    "x": 66.05929660797119,
+                    "z": -3.607759952545166
+                  },
+                  {
+                    "x": 66.06235218048096,
+                    "z": -4.178127765655518
+                  },
+                  {
+                    "x": 66.11720037460327,
+                    "z": -9.25158405303955
+                  },
+                  {
+                    "x": 66.15724802017212,
+                    "z": -9.320816040039062
+                  },
+                  {
+                    "x": 66.17751979827881,
+                    "z": -9.333999633789062
+                  },
+                  {
+                    "x": 66.94049644470215,
+                    "z": -9.346080780029297
+                  },
+                  {
+                    "x": 67.79851245880127,
+                    "z": -9.34928035736084
+                  },
+                  {
+                    "x": 71.90588760375977,
+                    "z": -8.342928886413574
+                  },
+                  {
+                    "x": 71.95243263244629,
+                    "z": -8.323649406433105
+                  },
+                  {
+                    "x": 71.96848106384277,
+                    "z": -8.300944328308105
+                  },
+                  {
+                    "x": 71.97980880737305,
+                    "z": -8.270896911621094
+                  },
+                  {
+                    "x": 73.09262466430664,
+                    "z": -4.167263984680176
+                  },
+                  {
+                    "x": 73.08113670349121,
+                    "z": -3.7383201122283936
+                  },
+                  {
+                    "x": 73.03785705566406,
+                    "z": -2.8999998569488525
+                  },
+                  {
+                    "x": 72.29321575164795,
+                    "z": 0.9643681645393372
+                  },
+                  {
+                    "x": 72.28564834594727,
+                    "z": 0.9898722171783448
+                  },
+                  {
+                    "x": 72.2622241973877,
+                    "z": 1.0244001150131226
+                  },
+                  {
+                    "x": 71.42270469665527,
+                    "z": 2.1284005641937256
+                  }
+                ],
+                "key": "mapu-9",
+                "kind": "Edificio",
+                "radius": 6.745043520000262,
+                "unit": "mapu-9",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567
+              },
+              {
+                "footprint": [
+                  {
+                    "x": 73.40542507171631,
+                    "z": 2.912480592727661
+                  },
+                  {
+                    "x": 75.10915279388428,
+                    "z": 2.9070725440979004
+                  },
+                  {
+                    "x": 75.11640071868896,
+                    "z": 3.1021602153778076
+                  },
+                  {
+                    "x": 75.12438488006592,
+                    "z": 4.393728256225586
+                  },
+                  {
+                    "x": 75.1229133605957,
+                    "z": 4.604703903198242
+                  },
+                  {
+                    "x": 75.10076904296875,
+                    "z": 4.623072624206543
+                  },
+                  {
+                    "x": 74.71895980834961,
+                    "z": 4.780496597290039
+                  },
+                  {
+                    "x": 74.63995265960693,
+                    "z": 4.783504009246826
+                  },
+                  {
+                    "x": 73.64638423919678,
+                    "z": 4.794704437255859
+                  },
+                  {
+                    "x": 73.41534519195557,
+                    "z": 4.6235198974609375
+                  },
+                  {
+                    "x": 73.39905738830566,
+                    "z": 4.609840393066406
+                  },
+                  {
+                    "x": 73.39499282836914,
+                    "z": 4.55350399017334
+                  },
+                  {
+                    "x": 73.40041732788086,
+                    "z": 3.098496437072754
+                  }
+                ],
+                "key": "mapu-10",
+                "kind": "Estructura",
+                "radius": 1.2800342800623632,
+                "unit": "mapu-10",
+                "x": 74.25968885421753,
+                "z": 3.85088849067688
+              }
+            ],
+            "center": {
+              "culture": "mapungubwe",
+              "kind": "center",
+              "x": 83,
+              "z": 0
+            },
+            "culture": "mapungubwe",
+            "entry": {
+              "x": 60,
+              "z": 0
+            },
+            "id": "village-1",
+            "suppress": [],
+            "x": 60,
+            "z": 0
+          }
+        ],
+        "workers": [
+          {
+            "actionRemaining": -0.0333333333333343,
+            "centerId": "structure-2",
+            "contractDay": 1,
+            "crateId": null,
+            "destinationId": "home-village-1",
+            "dynamicStallSeconds": 0,
+            "heading": 0,
+            "hits": 0,
+            "id": "worker-6",
+            "idleState": null,
+            "incapacitated": false,
+            "mobileProgressAt": 341.8999999999996,
+            "mobileProgressDistance": 0.0386457079160966,
+            "mobileRecoveryAttempts": 0,
+            "mobileRecoveryDestinationId": "home-village-1",
+            "mobileRecoveryVersion": 2,
+            "path": null,
+            "pathVersion": 2,
+            "personId": "person-5",
+            "profile": "youngFemale",
+            "recovering": false,
+            "runRemaining": 105.80409353316266,
+            "running": false,
+            "status": "home",
+            "taskApproach": null,
+            "taskId": null,
+            "villageId": "village-1",
+            "walkPhase": 157.51938446607647,
+            "x": 60,
+            "z": 0
+          }
+        ]
+      },
+      "passed": true,
+      "resumedSimulatedSeconds": 2.0121299999988764,
+      "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.",
+      "transitions": [
+        {
+          "at": 37096.139999985695,
+          "state": "hidden"
+        },
+        {
+          "at": 347109.75999999046,
+          "state": "visible"
+        }
+      ],
+      "visibleMenuPauses": [
+        "menu"
+      ],
+      "visibleMs": 2018.350000023842
+    },
+    "webgl2": true,
+    "worker": true,
+    "world": {
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "height": 576,
+      "width": 1024
+    }
+  },
+  "errors": [],
+  "ok": true,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0"
+}

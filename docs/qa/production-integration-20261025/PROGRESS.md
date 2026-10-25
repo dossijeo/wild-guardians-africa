@@ -13,7 +13,7 @@ Manglares: HELECHOS holly aprobados con LOD + caché fija 512², musgo/barro loc
 - [x] Añadir approved-visual-profile.js como configuración independiente de herramientas QA, por bioma y sin estado global de mundo activo. Cuatro pruebas confirman selección, controles explícitos y aislamiento entre biomas.
 - [x] Conectar el perfil a la preparación del mundo, materiales, fondos y streaming. Revisar inicialización anticipada antes de conocer el bioma; evitar estado global que mezcle partidas/cancelaciones.
 - [ ] Validar la ausencia de la antigua capa de hojas redondas en Manglares en arranque normal, cambios de calidad y recarga. La retirada del selector cupped se debe verificar visualmente, no solo por la tabla de opciones.
-- [ ] Revisar activación del scheduler y configuración normal de pthreads/fallback; no activar experimentos negativos.
+- [x] Revisar activación del scheduler y configuración normal de pthreads/fallback: rutas normales verificadas con y sin aislamiento; controles QA preservados. Fallback de profundidad pendiente de confirmación en CI.
 - [ ] Resolver CI y validar build web/itch/Tauri, carga y funcionamiento sin parámetros QA.
 - [ ] Auditar diferencias arquitectónicas/heredadas y cambios locales no publicados antes de decidir qué forma parte de la fusión. No añadirlos indiscriminadamente.
 - [ ] Comparar partida normal con selección revisada: seis biomas, día/noche, carga/streaming/cámara/calidad, CPU/GPU/presentación, cancelación y reinicio.
@@ -130,3 +130,17 @@ CI 40196284890 (4882) aporta causa distinta: windows-smoke-failure-4882.json. wa
 Matriz nocturna terminada y seis capturas inspeccionadas: NIGHT-PACKAGE-MATRIX.json. Paquete real, calidad baja mediante preferencia, partidas importadas creadas con simulación nativa hasta la primera incursión, ruta normal Continuar. Cero errores/404. Carga wall: Manglares 32786 ms, Sabana 23193, Gran Río 23515, Desierto 17932, Volcanes 24598, Gran Cañón 25939. Una ejecución por bioma no es benchmark A/B; cámara de incursión y diálogo presentes, no validación exhaustiva de toda la vegetación. Build incluye fix trabajador home, anterior al fallback de profundidad. Terreno, edificios, agua/lava y fondo presentes en las vistas; no se modificó iluminación.
 
 Prueba integrada de profundidad con GlobalFrameScheduler real: primera llamada simulada 66,455 ms, presentación 78,125 ms, CPU obligatoria 4,525 ms (valores observados en CI). Tres lotes terminan, materiales/target restaurados entre frames y cola vacía; recuperación excepcional observada. 17/17 tests de depth-preload pasan. Esto demuestra admisión del caso modelado, no rendimiento WebView2 real. CI del fix 29cef0ec4 sigue pendiente detrás de la ejecución previa.
+
+
+Build web actual y test:web-package pasan tras ambos fixes: 999 archivos, 492046919 bytes, 841 enlaces relativos y 17 GLB runtime. Instalador actualizado en ejecución, desktop-build-depth-recovery.log (session 32096); no lanzar el exe hasta finalizar NSIS. Evidencia nocturna y test integrado publicados en 67c38ea84.
+
+Auditoría adicional de alcance autoritativo: git diff origin/main...HEAD no modifica src/simulation ni src/persistence. terrain.js/spatial-canyon-layout.js/spatial-initial-site.js conservan canyonOpenRight=false por defecto; no hay activación desde main.js, scene.js o spatial-game-session.js. La variante de una pared queda experimental. spatial-terrain-view añade consultas de grid/máscara delegadas al core. La retención de metadatos de props sigue revisiones y restaura la selección del chunk tras refrescar, sin conservar geometría GPU. Esta revisión complementa NATIVE-AUDIT.md, no sustituye las pruebas de rutas y residencia ya documentadas.
+
+
+Build desktop actual terminada exit 0 (desktop-build-depth-recovery.log), incluido NSIS. Smoke nativo iniciado tras cerrar empaquetado, PID 33876/session 33368, perfil WebView2 nuevo, fixture night-fixture-manglares.json, informe native-mangrove-depth-recovery.json. Incluye carga, guardado, 300 s minimizado y restauración; no interpretar ausencia del informe antes de finalizar como fallo. Sin benchmarks/tests locales concurrentes.
+
+
+Auditoría de cambios locales heredados: seis archivos QA/documentales siguen fuera de los commits de integración (GLOBAL-DIRECTION, abba/report, facade-probes, thread-game-loading, check-spatial-thread-game, measure-mangrove-ground-hybrid). No hay cambios locales de runtime sin publicar. Se preservan intactos; copia binaria y hashes en .codex-qa/premerge-preserved/local-existing.patch/.json. El apunte antiguo de helechos en GLOBAL-DIRECTION no invalida la selección aprobada actual. PR159 continúa OPEN/DRAFT/MERGEABLE con head67c38ea84; mergeable no significa validada.
+
+
+Smoke nativo Manglares actualizado finalizado exit 0: native-mangrove-depth-recovery.json, ok=true, cero errores, readiness 28550,975 ms, HUD restaurado. PNG extraído aparte. Verificación real de guardado/minimización/restauración incluida; no demuestra corrección de las condiciones específicas del runner CI. CI Windows obsoleto 40198170193 (6b0, sin fix) cancelado explícitamente para liberar la cola del head actual; evidencia negativa completa 4882 ya conservada. No se canceló la validación de tests todavía activa.
