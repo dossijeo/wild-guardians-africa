@@ -37,3 +37,11 @@ Intel UHD D3D11, Chrome, calidad media, 1280×720, escena QA congelada, 12 frame
 | A sin microeventos | 16.70 | 33.380 | — | — |
 
 No se observa una regresión clara en esos intervalos; no se afirma mejora, equivalencia estadística ni coste GPU nulo. Muestra corta, un tipo, simulación congelada. El candidato de fuego no interviene en este evento. La instrumentación QA forma parte del coste del controlador observado.
+
+## GPU residente y límites de la partida normal
+
+measure-microevents-resident-gpu.mjs mide drawWorldFrame completo mediante EXT_disjoint_timer_query_webgl2: 30 frames de calentamiento y 120 consultas por brazo, sin disjoint. Escena congelada con raincloud; se alterna únicamente la visibilidad de su mesh (el controlador permanece). GPU media A/B/B/A: 16.365 / 16.743 / 16.040 / 18.174 ms. Deriva mayor que el efecto aparente; no se demuestra diferencia consistente. Esto no sustituye streaming/simulación activa ni cuantifica un coste aislado preciso. microevents-gpu.json conserva todas las muestras.
+
+Prueba normal por menú, sin URL QA ni force: el primer observador no correspondía al módulo Vite versionado (observer-missing.json, ensayo inválido). Corregido usando la URL real del módulo cargado. La partida nueva bloqueó eventos durante tutorial (tutorial-blocked.json). La fixture nocturna bloqueó durante incursión/tutorial y después quedó sin cultivos visibles (no-visible-crops.json). Son exclusiones esperadas; ninguna prueba se cuenta como aparición espontánea. La siguiente iteración planta mediante la interfaz normal, sin modificar reglas ni el director.
+
+La última corrida normal no cerró el ciclo: el selector de cultivo apuntaba al control heredado oculto (#plant-action), no al HUD nativo. Se corrige a [data-menu="grow"], pendiente de ejecutar. El timeout se conserva en microevents-normal/report.json; no se atribuye al runtime.

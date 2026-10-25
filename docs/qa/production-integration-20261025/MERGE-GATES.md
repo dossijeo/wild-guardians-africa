@@ -30,8 +30,8 @@ Avisos ANGLE X4000 documentados, sin ruta GLSL no inicializada identificada; uni
 1. Pantalla de inicio siguiendo 13762.png: capas/parallax, acercamiento al seleccionar, partículas coloreadas iluminando tótem.
 2. Microeventos: diseño, visibilidad en cultivos, movimiento, clipping, interacción, lifecycle y coste. Sustitución de sprites autorizada.
 
-Estos dos entregables siguen sin realizarse y el objetivo global NO está completado.
+Actualización posterior: el menú está implementado y validado (MENU-PERFORMANCE.md y MENU-SUBTITLE.md). Los microeventos siguen en validación (MICROEVENTS-VALIDATION.md). El objetivo global NO está completado.
 
 ## Confirmación final
 
-GitHub confirmó MERGED. Windows pasó arranque, minimización/restauración y salida/reinicio persistido; informes smoke y visibility ok=true, errors=[]. Sus cargas remotas fueron 235,3 s y 163,1 s: evidencia funcional del runner, no benchmark Intel UHD. Se preservaron los cambios locales existentes. Menú y microeventos siguen pendientes.
+GitHub confirmó MERGED. Windows pasó arranque, minimización/restauración y salida/reinicio persistido; informes smoke y visibility ok=true, errors=[]. Sus cargas remotas fueron 235,3 s y 163,1 s: evidencia funcional del runner, no benchmark Intel UHD. Se preservaron los cambios locales existentes. Estado posterior de menú y microeventos: véase la actualización anterior.
