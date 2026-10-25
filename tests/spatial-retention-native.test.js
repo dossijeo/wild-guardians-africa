@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {createSpatialChunkStream} from '../src/world/wild-engine/spatial-chunk-stream.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {villageLayout} from '../src/world/villages.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 test('retained native chunks receive settlement updates without graphical residency',()=>{
@@ -24,4 +26,28 @@ test('retained native chunks receive settlement updates without graphical reside
   stream.retention.setDemand([]);
   assert.equal(core.selectChunk(1,0),-1);assert.equal(core.metrics().loadedChunks,1);
   stream.dispose();
+});
+test('retained props and isolated previews remain available after mesh eviction, then release',async()=>{
+  const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url)))[0];
+  const state={seed:'712',biome:'sabana',villages:[{id:'v1',x:0,z:0,buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  const {stream,core}=session;
+  stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}],['1,0',{cx:1,cz:0,score:1}]]));
+  await stream.whenIdle();
+  const expected=session.queryPropsAt(48,0,2);
+  assert.equal(expected.status,'ready');
+  stream.retention.setDemand(['1,0']);loaded.delete('1,0');stream.releaseChunk(1,0);
+  stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));
+  assert.deepEqual(session.queryPropsAt(48,0,2),expected);
+  session.withWallPreview([],[],()=>{
+    assert.notEqual(session.core,core);assert(session.core.selectChunk(1,0)>=0);
+  });
+  assert.equal(session.core,core);
+  state.villages.push({id:'v2',x:48,z:0,buildings:villageLayout(pack,48,0)});
+  session.syncState(state);
+  assert.equal(session.queryPropsAt(48,0,2).status,'ready','native-only metadata updated by settlement event');
+  await stream.whenIdle();
+  stream.retention.setDemand([]);
+  assert.equal(core.selectChunk(1,0),-1);assert.equal(session.queryPropsAt(48,0,2).status,'unknown');
+  assert.equal(loaded.has('1,0'),false);session.dispose();
 });

@@ -1,3 +1,4 @@
+import {workerChunkDemand} from './worker-chunk-residency.js';
 import {MudEdgeExecutor} from './mangrove-mud-edge-executor.js';
 import {prepareCropDepthPrograms} from './crop-depth-preparation.js';
 import {streamingOptions} from './streaming-options.js';
@@ -450,8 +451,14 @@ export class WorldScene {
     this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(includeRaidBounds(logicalBounds,raidPins));this.nav.setRaidView?.(this.camera.position,this.controls.target);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     for(const key of raidPins)desired.add(key);
+    // QA gate until full lifecycle validation; native leases do not expand raid bounds.
+    const workerRetention=this.workerRetentionEnabled??=(typeof location!=='undefined'&&new URLSearchParams(location.search).get('workerResidency')==='actors');
+    let retentionUpdated=false;
+    const updateRetention=workerRetention?()=>{this.chunkStream?.retention?.setDemand(workerChunkDemand(this.state??{}));retentionUpdated=true;this.workerRetentionTick=Math.floor(this.state?.elapsed??0);}:null;
+    if(workerRetention&&this.workerRetentionTick!==Math.floor(this.state?.elapsed??0))updateRetention();
     const spatialEvictions=this.batchChunkEviction&&this.chunkStream?.releaseChunks?[]:null;
     for(const [key,group] of this.chunks)if(force||!desired.has(key)){
+      if(workerRetention&&!retentionUpdated)updateRetention();
       this.removeInstalledChunk(key,group,{releaseSpatial:spatialEvictions===null});
       spatialEvictions?.push(key.split(',').map(Number));
     }

@@ -31,6 +31,8 @@ export function createSpatialGameSession(module,state,streamOptions){
   const field=createSpatialTerrainView(core);
   const villages=new Map();
   const chunkRevisions=new Map();
+  // Only prop metadata survives graphics eviction, never geometry or GPU resources.
+  const nativeProps=new Map(),retainedProps=new Map();
   let terrainRevision=0;
   let stream=null;
   function installVillage(village,gameState,initial=false){
@@ -66,7 +68,19 @@ export function createSpatialGameSession(module,state,streamOptions){
       if(!Number.isFinite(level))throw Error('Could not create spatial settlement');
       for(const {cx,cz} of core.changedChunks())changed.add(`${cx},${cz}`);
     }
-    for(const key of changed)chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);
+    const selectedChunk=core.currentChunk();let refreshedRetained=false;
+    for(const key of changed){
+      const revision=(chunkRevisions.get(key)??0)+1;chunkRevisions.set(key,revision);
+      // C++ already rebuilt these resident chunks. Refresh only retained JS props.
+      if(retainedProps.has(key)){
+        const [cx,cz]=key.split(',').map(Number);
+        if(core.selectChunk(cx,cz)<0)throw Error('Retained spatial chunk disappeared');
+        refreshedRetained=true;
+        const metadata={authority:'spatial-wasm',terrainRevision:revision,instances:core.instances()};
+        nativeProps.set(key,metadata);retainedProps.set(key,metadata);
+      }
+    }
+    if(refreshedRetained&&selectedChunk)core.selectChunk(selectedChunk.cx,selectedChunk.cz);
     villages.set(village.id,addSpatialVillageBuildings(core,village));
     terrainRevision++;
     if(stream)stream.invalidate([...changed]);
@@ -94,7 +108,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     const scratch=createSpatialWorld(module);
     const current=confirmedCore.currentChunk();
     scratch.restoreState(confirmedCore.snapshot(),current.cx,current.cz);
-    for(const name of streamOptions.loaded().keys()){
+    for(const name of new Set([...streamOptions.loaded().keys(),...retainedProps.keys()])){
       const [cx,cz]=name.split(',').map(Number);
       if(Number.isInteger(cx)&&Number.isInteger(cz))scratch.addChunk(cx,cz);
     }
@@ -144,6 +158,24 @@ export function createSpatialGameSession(module,state,streamOptions){
   selectProfile(WORKER_SPATIAL_PROFILE);
   selectProfile(ANIMAL_SPATIAL_PROFILES.warthog);
   stream=createSpatialChunkStream(core,{...streamOptions,
+    onRetain:(cx,cz)=>{
+      const key=`${cx},${cz}`,revision=chunkRevisions.get(key)??0;
+      let metadata=nativeProps.get(key);
+      if(!metadata||metadata.terrainRevision!==revision){
+        const selected=core.currentChunk();
+        if(core.selectChunk(cx,cz)>=0){
+          metadata={authority:'spatial-wasm',terrainRevision:revision,instances:core.instances()};
+          nativeProps.set(key,metadata);
+        }
+        if(selected)core.selectChunk(selected.cx,selected.cz);
+      }
+      if(metadata?.terrainRevision===revision)retainedProps.set(key,metadata);
+      streamOptions.onRetain?.(cx,cz);
+    },
+    onRelease:(cx,cz)=>{
+      const key=`${cx},${cz}`;nativeProps.delete(key);retainedProps.delete(key);
+      streamOptions.onRelease?.(cx,cz);
+    },
     preparationRevision:()=>terrainRevision+props.revision(),
     ...(streamOptions.prepareData?{prepareData:(data,current)=>{
       data.terrainRevision=chunkRevisions.get(`${data.cx},${data.cz}`)??0;
@@ -151,6 +183,9 @@ export function createSpatialGameSession(module,state,streamOptions){
     }}:{}),
     onData:data=>{
       data.terrainRevision=chunkRevisions.get(`${data.cx},${data.cz}`)??0;
+      const key=`${data.cx},${data.cz}`;
+      nativeProps.set(key,{authority:data.authority,terrainRevision:data.terrainRevision,instances:data.instances});
+      retainedProps.delete(key);
       streamOptions.onData(data);
     }});
   function syncState(next){
@@ -434,7 +469,7 @@ export function createSpatialGameSession(module,state,streamOptions){
   };
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
     streamOptions.loaded(),props.suppressed,x,z,radius,
-    key=>chunkRevisions.get(key)??0);
+    key=>chunkRevisions.get(key)??0,retainedProps);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
     routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
@@ -442,5 +477,5 @@ export function createSpatialGameSession(module,state,streamOptions){
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
     wallLocalOverlay,wallWorkerReachability,wallCutSolidFaces,
     withVillageEntryPreview,
-    dispose:()=>{previewCore=null;stream.dispose();}};
+    dispose:()=>{previewCore=null;stream.dispose();nativeProps.clear();retainedProps.clear();}};
 }

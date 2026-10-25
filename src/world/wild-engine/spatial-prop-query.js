@@ -1,6 +1,6 @@
 // Query the prop records delivered by the authoritative spatial chunk stream.
 // Missing chunks are unknown, never silently treated as empty buildable land.
-export function queryResidentSpatialProps(loaded,suppressed,x,z,radius,terrainRevision=null){
+export function queryResidentSpatialProps(loaded,suppressed,x,z,radius,terrainRevision=null,retained=null){
   if(!(loaded instanceof Map)||!(suppressed instanceof Set)||
      ![x,z,radius].every(Number.isFinite)||radius<0)
     throw TypeError('Expected loaded spatial chunks and a finite query');
@@ -8,7 +8,7 @@ export function queryResidentSpatialProps(loaded,suppressed,x,z,radius,terrainRe
   const minZ=Math.floor((z-radius+24)/48),maxZ=Math.floor((z+radius+24)/48);
   const reach=radius+8,props=[],missing=[];
   for(let cz=minZ;cz<=maxZ;cz++)for(let cx=minX;cx<=maxX;cx++){
-    const key=`${cx},${cz}`,chunk=loaded.get(key);
+    const key=`${cx},${cz}`,chunk=loaded.get(key)??retained?.get(key);
     const expected=typeof terrainRevision==='function'?terrainRevision(key):terrainRevision;
     const trusted=(expected===null||
       (chunk?.terrainRevision??chunk?.userData?.spatialTerrainRevision)===expected)&&

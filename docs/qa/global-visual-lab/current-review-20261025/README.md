@@ -1031,3 +1031,56 @@ La selección automática de demanda por actores/destinos, las consultas JS y la
 previsualizaciones aún deben integrarse antes de habilitarlo durante partidas
 normales. No se ha aplicado un pin fijo de producción ni ocultado errores de
 navegación. La validación nocturna global sigue abierta.
+
+## Demanda de trabajadores y consultas sin mallas: seis controles nocturnos
+
+La variante `?workerResidency=actors` calcula demanda a partir de posiciones,
+hogares referenciados, centros, destinos de aproximación y segmentos de rutas
+actuales. Se actualiza al expulsar chunks y una vez por segundo simulado para
+liberar demanda terminada. No usa un chunk fijo, no genera datos ausentes, no
+modifica rutas ni activeBounds, y no agrega mallas a desired. Está desactivada
+por defecto mientras se valida su ciclo de vida completo.
+
+La sesión espacial conserva solo referencias a metadatos de props, autoridad y
+revisión; no retiene grupos Three, geometría ni buffers GPU. Las consultas usan
+estos metadatos cuando falta la malla. Las previsualizaciones espaciales incluyen
+sus claves. Al cambiar un poblado se releen los props de los chunks que C++ ya
+actualizó, preservando el chunk seleccionado. El descarte o fin de retención
+elimina las referencias. Los tests también verifican que datos liberados vuelvan
+a ser unknown: nunca se convierten en terreno vacío ficticio.
+
+62 pruebas pasan en `worker-retention-tests.tap`, incluyendo streaming/pipeline,
+retención, consultas de props, previsualizaciones de muros/centros, puertas,
+contrato de navegación y generación con el WASM real. No se ha cambiado ningún
+algoritmo de pathfinding, movimiento ni reglas de incursiones.
+
+Controles reales Intel UHD, 720p, baja, noche, seed 712, simulación activa y cámara
+móvil: `*-low-night-worker-residency.json/.png`. Se usa WG_WORKER_RESIDENCY=actors,
+con los demás parámetros del probe anterior y SIN los dos pines fijos de QA.
+Los seis terminan con 180 frames de actores listos, cero pausas por error,
+horizonte terminado y ningún error nuevo aparte de X4000. Las seis capturas
+finales se inspeccionaron: terreno y vegetación presentes. Son controles de
+integración, no comparación artística idéntica ni evidencia de ahorro de FPS.
+
+| Bioma | Chunks nuevos | Gráficos finales | Nativos finales | Retenidos sin malla |
+|---|---:|---:|---:|---|
+| Sabana | 10 | 25 | 26 | 1,0 |
+| Gran Río | 10 | 25 | 26 | 1,0 |
+| Manglares | 10 | 25 | 26 | 1,0 |
+| Desierto | 10 | 25 | 26 | 1,0 |
+| Volcanes | 10 | 25 | 26 | 1,0 |
+| Gran Cañón | 11 | 26 | 26 | ninguno |
+
+Gran Cañón usa cámara adaptada al terreno y contiene un chunk gráfico adicional
+fuera del rectángulo, conforme a la demanda gráfica existente de incursiones;
+la política nueva no modifica ese conjunto. No se han igualado artificialmente
+los recuentos. Su captura final no muestra una ribera: no valida las orillas.
+`worker-residency-six-biome-controls.json` conserva los recuentos y métricas reales.
+Las seis memorias lineales siguen en 16 MiB; eso no mide uso interno ni picos.
+
+Pendiente antes de activar por defecto: recorridos largos, cambios de calidad,
+cancelación/salida y recreación real con retención, medición de coste/memoria y
+comprobación de liberación cuando cambian actores/destinos. La demanda conserva
+rutas conocidas; no certifica corredores alternativos todavía no generados.
+No se declara resuelto todo caso de navegación hacia territorio no residente.
+La equivalencia artística global y el objetivo general continúan abiertos.

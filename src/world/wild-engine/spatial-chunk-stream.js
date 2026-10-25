@@ -4,9 +4,9 @@ import {createSpatialChunkRetention} from './spatial-chunk-retention.js';
 // Shared renderer/navigation stream. Chunk work is
 // scheduled by NativeChunkStream, while one C++ world supplies both the
 // renderer payload and subsequent synchronous route/surface queries.
-export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel,prepareData=null,pipeline=false,discardData=()=>{},preparationRevision=()=>0}){
+export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel,prepareData=null,pipeline=false,discardData=()=>{},preparationRevision=()=>0,onRetain,onRelease}){
   if(!core?.currentChunk())throw Error('Generate the spatial world before streaming chunks');
-  const retention=createSpatialChunkRetention(core,{loaded,desired:()=>stream.desired});
+  const retention=createSpatialChunkRetention(core,{loaded,desired:()=>stream.desired,onRetain,onRelease});
   const build=(_config,_profile,cx,cz)=>{
     // A resident chunk with zero props still returns 0; only a negative
     // result means it is absent. Do not regenerate such a chunk on every read.
