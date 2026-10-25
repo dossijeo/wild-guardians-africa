@@ -414,3 +414,36 @@ bloqueo de programas resuelto de otros límites del frame aún presentes.
 Falta validar memoria residente y ciclo de vida antes de promoverla. Las imágenes
 finales se conservan como evidencia; no se ha realizado diff de paridad visual
 porque el mundo activo avanza durante tiempos reales diferentes.
+
+
+## Manglares: streaming actual en baja y media
+
+Dos ejecuciones independientes con la selección holly/fixed512, defaults del
+bioma, pthreads y scheduler. Intel UHD0x9A60,720p, cámara180frames/96unidades,
+simulación activa. Ambas completan diez chunks, actores180/180, cero frames
+pausados, fondos asentados;61 queries GPU válidas sin disjoint y sin errores
+nuevos. Informes manglares-low-active-stream y manglares-medium-active-stream.
+
+| Calidad | RAF media ms | RAF p95 | RAF máximo | GPU media | GPU p95 | Draw máximo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| baja | 34.55 | 66.35 | 99.78 | 26.62 | 35.01 | 15.07 |
+| media | 40.56 | 66.62 | 132.98 | 32.53 | 45.72 | 19.13 |
+
+Las dos imágenes finales fueron inspeccionadas: ribera continua, helechos densos,
+suelo verde y barro localizado. Media conserva sombras que baja omite por su
+perfil. No se reduce cobertura ni se cambia el material. Las vistas no prueban
+la ausencia de saltos durante todo el recorrido ni paridad exacta entre perfiles.
+
+CPU de actualización de caché: máximos1,15ms baja y0,81ms media; no equivalen al
+coste GPU del bake. No se ha instrumentado memoria residente en estas ejecuciones.
+La implementación limita su cola a40MiB, pero ese límite de código no sustituye
+una medición de VRAM ni representa toda la memoria del renderer.
+
+Una ejecución por perfil no es A/B/A/B ni demuestra regresión respecto al pasado.
+La evolución de simulación depende del tiempo real. Los intervalos GPU incluyen
+burbujas del pipeline. Media32,53ms durante este recorrido no demuestra alcanzar
+el objetivo orientativo20–23ms; conservar arte aprobado y seguir atribuyendo los
+costes acumulados, sin convertir este resultado en una simplificación automática.
+
+PR159 verificada mediante GitHub CLI: OPEN, isDraft=true, head codex/global-visual-lab.
+No se ha fusionado ni alterado main.
