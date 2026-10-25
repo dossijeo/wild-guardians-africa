@@ -2,6 +2,8 @@ import {instrumentMainFrame} from './main-frame-attribution.js';
 import {chromium} from 'playwright';
 import {readFile,writeFile} from 'node:fs/promises';
 import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
+// Post-ready cadence reads the final loading-frame sample.
+if(process.env.WG_GUARDIAN_TAIL==='1')process.env.WG_THREAD_LOADING_FRAMES='1';
 const threaded=process.env.WG_THREADS!=='0',benchmark=process.env.WG_THREAD_BENCH==='1',frozen=process.env.WG_THREAD_FROZEN==='1';
 const biome=process.env.WG_THREAD_BIOME??'manglares';
 const quality=process.env.WG_THREAD_QUALITY??'media';

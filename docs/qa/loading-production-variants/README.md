@@ -422,3 +422,12 @@ Do not globally enable the existing broad warmup as a loading optimization.
 It resolves this observed late link by preparing more variants. Whether those
 extra variants are reachable later must be established before narrowing it.
 Production policy remains unchanged. No non-X4000 errors recorded.
+
+## Eligibility diagnostic harness repair
+
+The first Sabana eligibility run failed in QA report collection: guardian-tail
+requested qaLoadingFrames without enabling loading-frame instrumentation.
+Preserved failure.json; this is not a renderer failure or valid timing sample.
+The harness now enables loading-frame observation whenever guardian-tail is
+requested. Syntax check passes. Corrected report uses a new filename and is
+running; no failed output is overwritten. Production code is unchanged.
