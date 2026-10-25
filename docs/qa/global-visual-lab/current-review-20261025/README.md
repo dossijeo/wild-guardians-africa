@@ -97,3 +97,26 @@ Conservar los informes originales, el resumen y las capturas de ambos finales.
 Siguiente atribución: fases completas del frame y preparación fuera del dibujo,
 con repetición intercalada antes de modificar políticas de producción. No se han
 alterado shaders, densidad, geometría, simulación ni defaults.
+
+## Fases del bucle principal con retención
+
+Nueva repetición instrumentada: RAF máximo 266,25 ms, p95 182,93 ms; callback
+principal máximo 44,90 ms. Máximos por tramo: simulación 6,13 ms, render 42,68 ms,
+audio 1,01 ms, interfaz 6,17 ms. Estos máximos no son sumables ni simultáneos.
+La instrumentación del callback termina antes de endFrame del scheduler; no
+presentar 44,90 ms como cota de todo el trabajo del hilo principal.
+
+Los dos LoAF más largos duran 259,50/255,85 ms, con blockingDuration=0 y scripts
+atribuidos de 14,51/19,20 ms. El tiempo anterior a renderStart domina esas entradas.
+Esto contradice atribuir automáticamente esos intervalos a preparación JavaScript
+síncrona. No identifica por sí solo si domina GPU, compositor, planificación del
+navegador, contención externa o trabajo no atribuido por LoAF.
+
+61 queries GPU sin disjoint: media 79,94 ms, p95 146,80 ms, máximo 202,52 ms.
+No equivalen a GPU ocupado y esta ejecución no permite comparación causal con
+la anterior. Antes de cambiar el scheduler, repetir con observación concurrente
+de uso GPU/procesos y una referencia intercalada. No hay justificación actual
+para degradar vegetación ni atribuir la latencia a la simulación.
+
+La retención sigue siendo solo un control experimental. Esta prueba no certifica
+fluidez, estabilidad nocturna, equivalencia de todos los biomas o cierre global.
