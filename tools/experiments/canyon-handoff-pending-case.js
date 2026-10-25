@@ -15,6 +15,18 @@ export async function verifyCanyonPendingHandoff(w){
   h.canAdopt=()=>false;move(48);await wait(()=>!!h.pendingAdoption);
   await wait(()=>!w.chunkStream.summary().busy&&!w.chunkStream.summary().queued&&[...w.chunkStream.desired.keys()].every(key=>w.chunks.has(key)));
   const held=snapshot();if(h.group!==oldGroup||JSON.stringify(h.region)!==oldRegion)throw Error('Horizon published before permission');
+  const region=h.region,keys=[...w.chunks.keys()].filter(key=>{const [x,z]=key.split(',').map(Number);return Math.abs(x-region.cx)<=region.range&&Math.abs(z-region.cz)<=region.range;}).slice(0,3);
+  const previous=new Map(keys.map(key=>[key,w.chunks.get(key)]));
+  w.chunkStream.invalidate(keys);
+  if(keys.some(key=>w.chunks.get(key)!==previous.get(key)))throw Error('Invalidation removed installed terrain synchronously');
+  let invalidationFrames=0;const end=performance.now()+60000;
+  while(keys.some(key=>w.chunkStream.stale.has(key))){
+   if(performance.now()>end)throw Error('Invalidation did not complete');
+   for(let z=region.cz-region.range;z<=region.cz+region.range;z++)for(let x=region.cx-region.range;x<=region.cx+region.range;x++)if(!w.chunks.get(x+','+z)?.visible)throw Error('Invalidation uncovered adopted hole');
+   invalidationFrames++;await frame();
+  }
+  if(keys.some(key=>w.chunks.get(key)===previous.get(key)))throw Error('Invalidation did not replace each selected group');
+  const invalidation={keys,frames:invalidationFrames,replaced:keys.length,coveragePreserved:true};
   const obsolete=h.pendingAdoption.data;move(0);await wait(()=>!h.pendingAdoption&&!h.generator.latest&&!h.generator.busy);
   if(h.group!==oldGroup)throw Error('Reversed destination replaced original horizon');
   h.canAdopt=original;move(48);await wait(()=>JSON.stringify(h.region)!==oldRegion&&!h.pendingAdoption&&!w.chunkStream.summary().busy&&!w.chunkStream.summary().queued);
@@ -22,6 +34,6 @@ export async function verifyCanyonPendingHandoff(w){
   h.canAdopt=()=>false;move(96);await wait(()=>!!h.pendingAdoption);const atExit=snapshot();
   exiting=true;await globalThis.qaReturnToMenu();await new Promise(r=>setTimeout(r,250));
   if(!w.disposed||h.pendingAdoption||h.pendingPreparation||h.group||!h.generator.dead||lateInstalls||!document.querySelector('#native-menu'))throw Error('Pending horizon survived exit');
-  return {scope:'Frozen simulation, injected adoption delay; backing-array bytes are not GPU residency or peak driver allocation.',before,held,adopted,atExit,reversalDiscarded:true,worldDisposed:w.disposed,pendingReleased:!h.pendingAdoption,lateInstalls,menu:true};
+  return {scope:'Frozen simulation, injected adoption delay; backing-array bytes are not GPU residency or peak driver allocation.',before,held,adopted,atExit,invalidation,reversalDiscarded:true,worldDisposed:w.disposed,pendingReleased:!h.pendingAdoption,lateInstalls,menu:true};
  }finally{h.canAdopt=original;w.installChunk=install;}
 }

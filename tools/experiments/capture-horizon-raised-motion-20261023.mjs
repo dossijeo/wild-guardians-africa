@@ -32,6 +32,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  const query=new URLSearchParams((currentReview?globalCurrentReviewQuery:globalClosureQuery)(biome));
  if(currentReview){query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
  if(process.env.WG_HORIZON_HANDOFF==='atomic')query.set('horizonHandoff','atomic');
+ if(process.env.WG_HORIZON_HANDOFF==='off')query.delete('horizonHandoff');
  if(process.env.WG_GROUND_RESIDENT_MASK==='1')query.set('groundResidentMask','1');
  if(process.env.WG_DIAGNOSTIC_GROUND_STEP)query.delete('volcanicGround');
  const captureUrl='http://127.0.0.1:5190/?qa-seed=712&'+query;
