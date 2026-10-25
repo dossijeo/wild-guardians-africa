@@ -494,3 +494,25 @@ alterar su control histórico. Incluye canyonWater=calm; validado syntax check.
 El resumen six-biome-streaming-summary marca Canyon visuallyValid=false y
 conserva las cifras sin presentarlas como aceptación. Los otros cinco registros
 son observaciones en mundos diferentes, no un benchmark A/B entre biomas.
+
+
+## Gran Cañón: corrección de trayectoria de QA verificada
+
+WG_THREAD_TERRAIN_CAMERA=1 utiliza nativeCameraPose con el mismo ángulo1,18,
+orientación0 y distancia34 de las vistas estáticas; recalcula target/eye sobre
+el relieve en cada paso. El resto de pruebas conserva la trayectoria histórica.
+Se registran las180poses: altura sobre superficie13,41–20unidades. La imagen
+final muestra terreno, rocas, vegetación y sombras; desaparece el fondo azul de
+la trayectoria fija. Esto confirma que corregir la cámara de QA resuelve aquel
+resultado final, sin alterar el renderer. No certifica cada píxel de toda la ruta.
+
+Diez chunks, actores180/180, sin pausas, fondos asentados, sin errores nuevos.
+GPU61queries: media21,36ms, p9527,36ms. RAF media29,47ms, p9534,49ms,
+máximo282,73ms. El pico sigue pendiente de atribución; no declarar fluidez.
+La cifra inválida10,34ms anterior permanece en su informe negativo y no debe
+compararse como una optimización: la cámara visible y la carga dibujada cambian.
+
+six-biome-streaming-summary utiliza ahora esta referencia válida visualmente y
+registra el tipo de trayectoria de cada bioma. Es un inventario, no A/B entre
+biomas ni validación temporal exhaustiva. Se conserva la selección calm del agua;
+el final sobre meseta no prueba la apariencia del río durante todo el recorrido.
