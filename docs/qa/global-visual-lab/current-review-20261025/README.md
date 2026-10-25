@@ -589,3 +589,24 @@ Priorizar revisión temporal de esa transición antes de aumentar densidad o
 introducir DOF. No alterar aprobaciones de Manglares, Desierto o lava solo por
 estas observaciones estáticas. Las vistas nocturnas inversas de los otros cuatro
 biomas y las elevadas de esos cuatro no se han inspeccionado en este pase.
+
+
+## Sabana: muestreo visual del recorrido, fallo de asentamiento
+
+WG_THREAD_VISUAL_STEPS=1 añade capturas QA a0/30/60/90/120/150/179. No cambia
+producción. Se ejecutó con simulación pausada y GPU timer desactivado para revisar
+cobertura. Los siete PNG se guardaron, pero después el harness falló con Stream
+completion deadline. Conservar sabana-visual-steps.failure.json; no hay informe
+final de éxito ni cifras de rendimiento válidas. La captura introduce esperas y
+altera la cadencia, por lo que tampoco sería comparable a los benchmarks activos.
+
+Inspeccionados puntos0–150: continuidad de hierba cercana, suelo visible bajo
+objetos y transparencia de obstrucción al atravesar copas. No se identifican
+huecos grandes de terreno en esas muestras. No se certifica transiciónLOD suave
+entre ellas: separación30frames y cámara cambiante no permiten esa conclusión.
+El punto179 se conserva pero no fue inspeccionado en este pase.
+
+Pendiente identificar qué cola o preparación no se asienta con el mundo pausado.
+No atribuir aún el fallo a recursos perdidos ni aumentar el timeout como arreglo.
+La variante activa anterior sí completó este recorrido. El estado de fallo actual
+solo contiene el diagnóstico general; se necesita observación de colas al fallar.
