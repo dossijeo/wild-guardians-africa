@@ -472,3 +472,25 @@ Corregida la etiqueta scope del capturador para futuras ejecuciones: antes decí
 CPU/RAF only incluso con WG_THREAD_GPU=1. Los informes originales se conservan
 intactos; su campo gpu contiene las mediciones y esta nota aclara el alcance.
 La corrección no cambia la ejecución ni sus cifras. Validado con node --check.
+
+
+## Gran Cañón: recorrido inválido visualmente, conservar como prueba negativa
+
+`gran-canon-active-stream` completa las comprobaciones mecánicas del streaming,
+pero su captura final muestra casi todo fondo azul. Por tanto NO se acepta su
+GPU media10,34ms como coste representativo de la escena. No hay equivalencia
+visual válida ni se declara completada la ronda de seis biomas.
+
+Inspección del harness: sustituye updateCamera por lookAt y desplaza ojo/target
+solo en X, conservando Y durante96unidades. Omite la protección del relieve que
+sí usa el capturador estático de Canyon mediante nativeCameraPose. Esto identifica
+un defecto de trayectoria de QA compatible con el fallo; todavía no prueba que
+sea la única causa ni descarta huecos de terreno. Siguiente prueba debe usar una
+trayectoria que siga el terreno y registrar la altura sobre la superficie.
+No modificar materiales ni producción para ocultar una cámara de prueba inválida.
+
+WG_CURRENT_REVIEW=1 conecta explícitamente la receta actual al harness sin
+alterar su control histórico. Incluye canyonWater=calm; validado syntax check.
+El resumen six-biome-streaming-summary marca Canyon visuallyValid=false y
+conserva las cifras sin presentarlas como aceptación. Los otros cinco registros
+son observaciones en mundos diferentes, no un benchmark A/B entre biomas.
