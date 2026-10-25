@@ -75,3 +75,11 @@ CI adicional: Validate 40191688929 (1c7a508ea) termina success. Windows 40193992
 
 
 Binario local actual compilado; prueba nativa lanzada con perfil WebView2 nuevo, fixture poblada y smoke original (muy_baja, límite local de carga 90 s, intervalo real minimizado 300 s). Proceso 38028, session 67003; resultado pendiente native-populated-local.json. Build instalador sigue en session 61626. No reiniciar por la ausencia temporal del informe: se escribe al finalizar.
+
+
+Auditoría de residencia: spatial-game-session conserva metadatos de props (no geometrías) al retirar gráficos, los refresca por revisiones de poblado, incluye chunks retenidos en previews de muros y libera mapas al destruir la sesión. Pasan 12 tests actuales de spatial-worker-gate-residency, spatial-prop-query, spatial-chunk-stream y chunk-stream-pipeline (residency-tests.log). Esta batería de ~1 s se ejecutó mientras corría el smoke nativo; ese smoke se usará como evidencia funcional, no como benchmark aislado.
+
+El ejecutable local fue generado, pero el empaquetado NSIS posterior falló con os error 32 al solaparse con el ejecutable de prueba abierto. No afirmar que desktop:build haya pasado; repetir empaquetado después de cerrar el smoke, sin reiniciar el smoke activo (PID 38028/session 67003 confirmado vivo).
+
+
+Smoke local WebView2 completado: native-populated-local.json, ok=true, cero errores, readiness 20820,945 ms, hiddenMs=300844,56 y restauración correcta. PNG extraído aparte para no incrustar base64 en JSON. No resuelve por sí solo la diferencia con CI. Se conecta el colector acotado native-loading-trace existente únicamente cuando __desktopSmokeStarted está activo, y smoke guarda fases pendientes + snapshot del scheduler al terminar. Cinco tests del colector pasan y sintaxis válida. No se cambia timeout ni política de ejecución. Instalador r3 continúa en session 24639; incluye el código anterior a esta instrumentación.

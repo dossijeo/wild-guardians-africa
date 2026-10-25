@@ -1,3 +1,4 @@
+import {createNativeLoadingTrace} from './native-loading-trace.js';
 import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-scheduler.js';
 import {createDesktopExit} from './desktop-exit.js';
 import {preloadScreenOverlays} from '../ui/screen-overlays.js';
@@ -101,6 +102,13 @@ function prepareLoadingScene(){
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
  try{owner=new WorldScene(canvas,onPick,{approvedVisuals:true});owner.frameScheduler=globalFrameSchedulerEnabled()?globalFrameScheduler:null;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
+ if(globalThis.__desktopSmokeStarted){
+  const trace=createNativeLoadingTrace({enabled:true}),previous=owner.onLoadingSpan;
+  owner.onLoadingSpan=span=>{previous?.(span);trace.witness(span);};
+  owner.onLoadingSpan.onAwaitStart=trace.witness.onAwaitStart;
+  owner.onLoadingSpan.onAwaitEnd=trace.witness.onAwaitEnd;
+  globalThis.__wildGuardiansNativeLoadingSnapshot=()=>({phases:trace.snapshot({at:performance.now()}),scheduler:globalFrameScheduler.snapshot()});
+ }
  diorama=new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
  preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
