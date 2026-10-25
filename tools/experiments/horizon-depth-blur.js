@@ -1,10 +1,10 @@
 // QA-only prototype: keep the existing screen rendering/color pipeline intact.
 // Capture its pixels, reuse native depth recipes, then blur distant geometry.
 import * as THREE from 'three';
-export function installHorizonDepthBlur(world,{depthMode='capture'}={}){
+export function installHorizonDepthBlur(world,{depthMode='capture',selective=false}={}){
  const r=world.renderer,size=new THREE.Vector2(),scene=new THREE.Scene(),camera=new THREE.Camera();
  let color=null,width=0,height=0,closed=false;
- const copyDepth=depthMode==='copy-packed'?new THREE.WebGLRenderTarget(1,1,{depthBuffer:true,stencilBuffer:true,depthTexture:new THREE.DepthTexture(1,1,THREE.UnsignedInt248Type)}):null;
+ const copyDepth=depthMode.startsWith('copy-packed')?new THREE.WebGLRenderTarget(1,1,{depthBuffer:true,stencilBuffer:true,depthTexture:new THREE.DepthTexture(1,1,THREE.UnsignedInt248Type)}):null;
  if(copyDepth)copyDepth.depthTexture.format=THREE.DepthStencilFormat;
  const uniforms={colorMap:{value:null},depthMap:{value:null},pixel:{value:new THREE.Vector2()},nearFar:{value:new THREE.Vector2()},focus:{value:new THREE.Vector2(45,140)},radius:{value:2.5},debug:{value:0}};
  const material=new THREE.ShaderMaterial({uniforms,depthTest:false,depthWrite:false,toneMapped:false,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:`
@@ -29,19 +29,25 @@ void main(){
  }
  gl_FragColor=vec4(mix(original.rgb,sum/weight,amount),original.a);
 }`});
+ if(selective){
+  material.fragmentShader=material.fragmentShader
+   .replace('vec4 original=texture2D(colorMap,vUv);float depth=', 'float depth=')
+   .replace('gl_FragColor=debug>1.5?vec4(1.):debug>.5?vec4(0.,0.,0.,1.):original;return;', 'if(debug<.5)discard;gl_FragColor=debug>1.5?vec4(1.):vec4(0.,0.,0.,1.);return;')
+   .replace('if(amount<.001){gl_FragColor=original;return;}', 'if(amount<.001)discard;vec4 original=texture2D(colorMap,vUv);');
+ }
  const geometry=new THREE.PlaneGeometry(2,2);scene.add(new THREE.Mesh(geometry,material));
  const original=world.drawWorldFrame;
- const api={depthMode,enabled:true,uniforms,stats:{frames:0,textureBytes:0},dispose(){if(closed)return;closed=true;if(world.drawWorldFrame===draw)world.drawWorldFrame=original;color?.dispose();copyDepth?.dispose();geometry.dispose();material.dispose();}};
+ const api={depthMode,enabled:true,setDepthMode(mode){if(!copyDepth||!['copy-packed','copy-packed-fused'].includes(mode))throw Error('Unsupported comparison mode');depthMode=mode;this.depthMode=mode;width=0;},uniforms,stats:{frames:0,textureBytes:0},dispose(){if(closed)return;closed=true;if(world.drawWorldFrame===draw)world.drawWorldFrame=original;color?.dispose();copyDepth?.dispose();geometry.dispose();material.dispose();}};
  function draw(...args){const result=original.apply(this,args);if(closed||!api.enabled)return result;
-  r.getDrawingBufferSize(size);if(size.x!==width||size.y!==height){color?.dispose();width=size.x;height=size.y;color=new THREE.FramebufferTexture(width,height);color.minFilter=color.magFilter=THREE.LinearFilter;color.colorSpace=THREE.NoColorSpace;uniforms.colorMap.value=color;uniforms.pixel.value.set(1/width,1/height);api.stats.textureBytes=width*height*4;}
+  r.getDrawingBufferSize(size);if(size.x!==width||size.y!==height){color?.dispose();width=size.x;height=size.y;if(depthMode==='copy-packed-fused'){uniforms.colorMap.value=copyDepth.texture;}else{color=new THREE.FramebufferTexture(width,height);color.minFilter=color.magFilter=THREE.LinearFilter;color.colorSpace=THREE.NoColorSpace;uniforms.colorMap.value=color;}uniforms.pixel.value.set(1/width,1/height);api.stats.textureBytes=width*height*(depthMode==='copy-packed-fused'?8:depthMode.startsWith('copy-packed')?12:4);}
   // No promise can make this extra depth pass free: benchmark it explicitly.
   const gl=r.getContext(),audit=api.auditNext===true;api.auditNext=false;const read=()=>{const a=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,a);return a;};const before=audit?read():null;
-  r.copyFramebufferToTexture(color);if(depthMode.startsWith('copy')){
+  if(color)r.copyFramebufferToTexture(color);if(depthMode.startsWith('copy')){
    const previous=r.getRenderTarget(),target=copyDepth??world.destructionPass.smokeDepth;
    if(previous)throw Error('Depth-copy pilot requires the screen framebuffer');
    if(target.width!==width||target.height!==height)target.setSize(width,height);
    r.setRenderTarget(target);const readBinding=gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-   try{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,null);gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.DEPTH_BUFFER_BIT,gl.NEAREST);}
+   try{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,null);gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.DEPTH_BUFFER_BIT|(depthMode==='copy-packed-fused'?gl.COLOR_BUFFER_BIT:0),gl.NEAREST);}
    finally{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,readBinding);r.setRenderTarget(previous);}
   }else world.destructionPass.captureDepth(world.camera,world.scene);
   uniforms.depthMap.value=(copyDepth??world.destructionPass.smokeDepth).depthTexture;uniforms.nearFar.value.set(world.camera.near,world.camera.far);

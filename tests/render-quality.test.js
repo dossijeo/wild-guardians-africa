@@ -54,7 +54,7 @@ test('live world quality and resize preserve simulation, ground geometry and exi
  const geometry=new THREE.PlaneGeometry(),ground=new THREE.Mesh(geometry,nativeGroundMaterial('media')),chunk=new THREE.Group();chunk.add(ground);
  const state={money:217,plants:[{id:'crop',growth:13,waterRemaining:7}],workers:[{id:'worker',taskId:'sow'}],time:150},snapshot=JSON.stringify(state),chunks=new Map([['0,0',chunk]]);
  const scene=new THREE.Scene();scene.add(chunk);
- let materialInvalidations=0;const world={refreshStreamingPrograms(){},assetGroups:{invalidateMaterials(){materialInvalidations++;}},scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
+ let materialInvalidations=0;const world={configureHorizonFocus:WorldScene.prototype.configureHorizonFocus,refreshStreamingPrograms(){},assetGroups:{invalidateMaterials(){materialInvalidations++;}},scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
  let releasedPrograms=0;world.programLease={dispose(){releasedPrograms++;}};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{value:2,configurable:true});
  try{
@@ -93,7 +93,7 @@ for(const search of ['?stableShadowPrograms=1','','?stableShadowPrograms=0'])tes
  const stable=search!=='?stableShadowPrograms=0';
  const previous=Object.getOwnPropertyDescriptor(globalThis,'location');Object.defineProperty(globalThis,'location',{value:{search},configurable:true});
  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(),nativeGroundMaterial('media')),scene=new THREE.Scene();scene.add(mesh);
- const world={visualSearch:search,transactionalPrograms:WorldScene.prototype.transactionalPrograms,frameScheduler:search==='?stableShadowPrograms=1'?null:{},releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){if(stable)assert.fail('unnecessary invalidation');}}};
+ const world={visualSearch:search,configureHorizonFocus:WorldScene.prototype.configureHorizonFocus,transactionalPrograms:WorldScene.prototype.transactionalPrograms,frameScheduler:search==='?stableShadowPrograms=1'?null:{},releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){if(stable)assert.fail('unnecessary invalidation');}}};
  const material=mesh.material,version=material.version;world.sun.shadow.intensity=.8;
  try{
   WorldScene.prototype.qualitySetting.call(world,'baja');assert.equal(world.renderer.shadowMap.enabled,stable);assert.equal(world.sun.userData.nativeShadowDisabled,stable?true:undefined);assert.equal(world.sun.shadow.intensity,stable?0:.8);
