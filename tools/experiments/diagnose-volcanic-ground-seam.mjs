@@ -55,7 +55,16 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
   const w=qaCampaignWorld;
   w.state.time=170;w.camera.position.fromArray(frame.camera);w.controls.target.fromArray(frame.target);
   w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();
-  const {prepareInitialFarWorld}=await import('/src/app/far-world-loading.js');await prepareInitialFarWorld(w);
+  // This is an already loaded world. Drain streaming without rerunning the
+  // initial depth warmup while old regional materials are being replaced.
+  const deadline=performance.now()+90000;let stable=0;
+  while(stable<3){
+   if(performance.now()>deadline)throw Error('Diagnostic far streaming timeout');
+   await new Promise(requestAnimationFrame);w.render(0);
+   const adapters=w.farVegetation.adapters,failures=adapters.flatMap(a=>a.stats.errors);
+   if(failures.length)throw Error('Far streaming failed: '+failures.join('; '));
+   stable=adapters.length&&adapters.every(a=>a.layer.current&&!a.preparationPending())?stable+1:0;
+  }
   for(let i=0;i<60;i++){await new Promise(requestAnimationFrame);w.render(0);}
   const seams=[];w.scene.traverse(m=>{if(m.userData.farGroundSeam)seams.push(m);});
   const geometry=seams.map(m=>{
