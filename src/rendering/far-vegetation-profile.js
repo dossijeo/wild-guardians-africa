@@ -10,7 +10,6 @@ export function farVegetationProfile({quality,biome},overrides={}){
 
 // Artistic review selections only; normal profiles keep their original spacing.
 export function farGroundReviewOverrides(biome,search=''){
- const q=new URLSearchParams(search);
- const fine=biome==='volcanoes'&&q.get('volcanicGround')==='fine'||biome==='savanna'&&q.get('savannaGround')==='fine';
- return fine?{groundStep:16}:{};
+ const flag={volcanoes:'volcanicGround',savanna:'savannaGround',grand_river:'riverGround'}[biome];
+ return flag&&new URLSearchParams(search).get(flag)==='fine'?{groundStep:16}:{};
 }

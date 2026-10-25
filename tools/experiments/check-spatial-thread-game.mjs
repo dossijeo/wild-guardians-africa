@@ -20,7 +20,7 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[],q
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'||m.type()==='warning'){errors.push(m.text());console.log(m.text().slice(0,500));}});
 try{
- const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??(process.env.WG_CURRENT_REVIEW==='1'&&['sabana','volcanes'].includes(biome)?16:32));if(![16,32].includes(groundStep))throw Error('Invalid QA ground step');
+ const groundStep=Number(process.env.WG_DIAGNOSTIC_GROUND_STEP??(process.env.WG_CURRENT_REVIEW==='1'&&['sabana','gran-rio','volcanes'].includes(biome)?16:32));if(![16,32].includes(groundStep))throw Error('Invalid QA ground step');
  if(process.env.WG_DIAGNOSTIC_GROUND_STEP&&groundStep!==32)await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('groundStep:32').length!==2)throw Error('Ground step anchor missing');await route.fulfill({response,body:body.replace('groundStep:32','groundStep:'+groundStep)});});
  const {installLoadingVariantRoutes}=await import('./loading-variant-source-patches.js');
  await installLoadingVariantRoutes(page,{ground:process.env.WG_PRODUCTION_GROUND_SOURCE==='1',sharedSmooth:process.env.WG_SHARED_SMOOTH_PROGRAM==='1',eligibleWarmup:process.env.WG_ELIGIBLE_OBSTRUCTION_WARMUP==='1'});
@@ -89,7 +89,7 @@ try{
  if(process.env.WG_HORIZON_HANDOFF==='atomic')gameUrl.searchParams.set('horizonHandoff','atomic');
  if(process.env.WG_HORIZON_HANDOFF==='off')gameUrl.searchParams.delete('horizonHandoff');
  if(['actors','off'].includes(process.env.WG_WORKER_RESIDENCY))gameUrl.searchParams.set('workerResidency',process.env.WG_WORKER_RESIDENCY);
- if(process.env.WG_DIAGNOSTIC_GROUND_STEP){gameUrl.searchParams.delete('volcanicGround');gameUrl.searchParams.delete('savannaGround');}
+ if(process.env.WG_DIAGNOSTIC_GROUND_STEP){gameUrl.searchParams.delete('volcanicGround');gameUrl.searchParams.delete('savannaGround');gameUrl.searchParams.delete('riverGround');}
  if(['0','1'].includes(process.env.WG_GROUND_RESIDENT_MASK))gameUrl.searchParams.set('groundResidentMask',process.env.WG_GROUND_RESIDENT_MASK);
  if(process.env.WG_PRODUCTION_GROUND_SOURCE==='1')gameUrl.searchParams.set('productionGroundSource','1');
  if(process.env.WG_SHARED_SMOOTH_PROGRAM==='1')gameUrl.searchParams.set('sharedSmoothProgram','1');

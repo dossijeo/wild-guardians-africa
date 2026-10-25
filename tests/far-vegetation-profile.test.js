@@ -14,6 +14,7 @@ test('finer review ground is explicit and scoped to the selected biome',()=>{
   assert.deepEqual(farGroundReviewOverrides(biome,''),{});
   assert.deepEqual(farGroundReviewOverrides(biome,'?savannaGround=fine'),biome==='savanna'?{groundStep:16}:{});
   assert.deepEqual(farGroundReviewOverrides(biome,'?volcanicGround=fine'),biome==='volcanoes'?{groundStep:16}:{});
+  assert.deepEqual(farGroundReviewOverrides(biome,'?riverGround=fine'),biome==='grand_river'?{groundStep:16}:{});
  }
  assert.deepEqual(farGroundReviewOverrides('savanna','?savannaGround=off'),{});
  assert.equal(farVegetationProfile({quality:'baja',biome:'savanna'}).groundStep,32);
