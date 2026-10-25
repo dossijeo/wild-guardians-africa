@@ -30,7 +30,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  await page.addInitScript(text=>localStorage.setItem('wild-guardians:slot:opening',text),snapshot);
  if(!currentReview)await page.route('**/src/rendering/mountain-arc-composition.js*',async route=>{const response=await route.fetch();const body=await response.text();if(body.split('baseY=-35').length!==2)throw Error('Mountain base anchor missing');await route.fulfill({response,body:body.replace('baseY=-35','baseY=-10')});});
  const query=new URLSearchParams((currentReview?globalCurrentReviewQuery:globalClosureQuery)(biome));
- if(currentReview){query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
+ if(currentReview){if(process.env.WG_MOTION_RECIPE_EXACT!=='1')query.set('mountainBase','raised');query.set('wildEngineThreads','1');query.set('frameScheduler','1');}
  if(process.env.WG_HORIZON_HANDOFF==='atomic')query.set('horizonHandoff','atomic');
  if(process.env.WG_HORIZON_HANDOFF==='off')query.delete('horizonHandoff');
  if(process.env.WG_GROUND_RESIDENT_MASK==='1')query.set('groundResidentMask','1');
