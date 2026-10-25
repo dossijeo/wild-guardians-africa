@@ -5178,6 +5178,15 @@
       "source": "Bioma_Cultivos_Lab_V4_Culling.html",
       "encoding": "glb",
       "derived": true
+    },
+    {
+      "url": "/assets/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
+      "bytes": 72728708,
+      "sha256": "238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00",
+      "mime": "application/octet-stream",
+      "origins": [
+        "Wild Guardians New/animales/facóquero.glb#repaired-retargeted"
+      ]
     }
   ],
   "models": [
@@ -5377,41 +5386,53 @@
       }
     },
     {
-      "url": "/assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "url": "/assets/238fc4b1e01b17b7beb0f2a3e193f11a80d4a4f202fd972d4938531a47ff4d00.glb",
       "source": "Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2.html#model-data",
       "animations": [
         {
           "name": "Running",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Walking",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Charged_Upward_Slash",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Right_Hand_Sword_Slash",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Weapon_Combo",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Weapon_Combo_2",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "restpose",
-          "channels": 56
+          "channels": 63
         }
       ],
-      "nodes": 30,
+      "nodes": 23,
       "meshes": 1,
-      "extras": {}
+      "extras": {
+        "replacement": {
+          "repair": "tools/prepare_warthog.py",
+          "report": "docs/qa/warthog-replacement/repair.json",
+          "animationSourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869"
+        }
+      },
+      "geometrySource": "Wild Guardians New/animales/facóquero.glb",
+      "replacement": {
+        "repair": "tools/prepare_warthog.py",
+        "report": "docs/qa/warthog-replacement/repair.json",
+        "animationSourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869"
+      }
     },
     {
       "url": "/assets/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",

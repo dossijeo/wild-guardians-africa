@@ -5,6 +5,20 @@ import {createHash} from 'node:crypto';
 import * as THREE from 'three';
 import {AfricanToon,paintedWaterMaterial,toonDestruction} from '../src/rendering/african-toon.js';
 import {toonFunctions,waterFunctions} from '../src/rendering/african-toon-source.js';
+import {prepareAnimalModel} from '../src/rendering/animal-actions.js';
+
+test('replacement warthog shading has a separate GPU program and leaves other species unchanged',()=>{
+ const toon=new AfricanToon(),materials=[];
+ for(const species of ['warthog','hyena']){
+  const material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),root=new THREE.Group();root.add(mesh);
+  prepareAnimalModel(root,species);toon.apply(root);
+  const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});materials.push({material,shader});
+ }
+ assert.notEqual(materials[0].material.customProgramCacheKey(),materials[1].material.customProgramCacheKey());
+ assert.notEqual(materials[0].shader.fragmentShader,materials[1].shader.fragmentShader);
+ assert.equal(materials[0].shader.uniforms.uNight,materials[1].shader.uniforms.uNight);
+ assert.equal(materials[1].material.userData.warthogSurface,undefined);
+});
 test('user source is preserved byte-for-byte and extracted function bodies are authentic',()=>{
   const bytes=readFileSync('content/shaders/1-African_Toon_Shader_V4_1_4.frag.glsl');
   const provenance=JSON.parse(readFileSync('content/shaders/provenance.json'));

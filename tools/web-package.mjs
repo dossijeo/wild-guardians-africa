@@ -11,7 +11,9 @@ export const UNUSED_WORKER_LAB_MODELS=new Set([
 // Superseded crop lab payload; both gameplay and the linked Library lab use
 // the repaired 40-state crop GLB from crops-v4.json.
 export const UNUSED_CROP_LAB_MODEL='assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb';
-const UNUSED_LAB_MODELS=new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL]);
+// Retained as retargeting provenance, superseded by the repaired new warthog.
+export const UNUSED_ANIMAL_LAB_MODELS=new Set(['assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb']);
+const UNUSED_LAB_MODELS=new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]);
 // Assets referenced only by tools/experiments QA routes, never the shipped app.
 // Keep originals in public for reproducible development experiments.
 export const QA_ONLY_VISUAL_DIRECTORIES=[

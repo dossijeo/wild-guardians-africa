@@ -5,6 +5,9 @@ import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 export function prepareAnimalModel(model,species){
   model.scale.setScalar(ANIMAL_ACTIONS.animals[species].presentation.scale);
   model.position.y=0;
+  if(species==='warthog')model.traverse(mesh=>{
+    if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])material.userData.warthogSurface=true;
+  });
   return model;
 }
 
