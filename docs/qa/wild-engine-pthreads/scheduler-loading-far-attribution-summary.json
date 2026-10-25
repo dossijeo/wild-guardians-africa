@@ -1,0 +1,190 @@
+{
+  "scope": "Exploratory witness spans collected until post-readiness snapshot; overlapping waits and completed spans only. Not exclusive CPU/GPU time, not total loading frametime distribution. draw spans alone report synchronous CPU submission wall time.",
+  "groups": {
+    "far-region-worker:slot0": {
+      "count": 1,
+      "sumMs": 834.6999999880791,
+      "maxMs": 834.6999999880791
+    },
+    "far-region-create:slot0": {
+      "count": 1,
+      "sumMs": 2.2800000309944153,
+      "maxMs": 2.2800000309944153
+    },
+    "far-region-attach-ground:slot0": {
+      "count": 1,
+      "sumMs": 5.240000009536743,
+      "maxMs": 5.240000009536743
+    },
+    "far-region-ground-seam:slot0": {
+      "count": 1,
+      "sumMs": 1365.6399999856949,
+      "maxMs": 1365.6399999856949
+    },
+    "far-gpu:texture-uploads:slot0": {
+      "count": 6,
+      "sumMs": 78.68000000715256,
+      "maxMs": 41.70999997854233
+    },
+    "far-gpu:queue-admission:slot0": {
+      "count": 4,
+      "sumMs": 2071.850000023842,
+      "maxMs": 1679.960000038147
+    },
+    "far-gpu:compile:slot0": {
+      "count": 5,
+      "sumMs": 1181.4550000429153,
+      "maxMs": 1178.824999988079
+    },
+    "far-gpu:draw:slot0": {
+      "count": 5,
+      "sumMs": 124.11999994516373,
+      "maxMs": 117.39499998092651
+    },
+    "far-gpu:fence:slot0": {
+      "count": 5,
+      "sumMs": 572.0950000286102,
+      "maxMs": 160.68000000715256
+    },
+    "far-region-gpu-ready:slot0": {
+      "count": 1,
+      "sumMs": 2721.1150000095367,
+      "maxMs": 2721.1150000095367
+    },
+    "far-region-worker:slot1": {
+      "count": 1,
+      "sumMs": 885.4350000023842,
+      "maxMs": 885.4350000023842
+    },
+    "far-region-create:slot1": {
+      "count": 1,
+      "sumMs": 1.4700000286102295,
+      "maxMs": 1.4700000286102295
+    },
+    "far-region-attach-ground:slot1": {
+      "count": 1,
+      "sumMs": 0,
+      "maxMs": 0
+    },
+    "far-gpu:texture-uploads:slot1": {
+      "count": 7,
+      "sumMs": 43.42500001192093,
+      "maxMs": 36.139999985694885
+    },
+    "far-gpu:queue-admission:slot1": {
+      "count": 4,
+      "sumMs": 2195.1949999928474,
+      "maxMs": 1547.8349999785423
+    },
+    "far-gpu:compile:slot1": {
+      "count": 6,
+      "sumMs": 156.7600000500679,
+      "maxMs": 153.17500001192093
+    },
+    "far-gpu:draw:slot1": {
+      "count": 6,
+      "sumMs": 14.790000021457672,
+      "maxMs": 5.814999997615814
+    },
+    "far-gpu:fence:slot1": {
+      "count": 6,
+      "sumMs": 830.1299999952316,
+      "maxMs": 320.0649999976158
+    },
+    "far-region-gpu-ready:slot1": {
+      "count": 1,
+      "sumMs": 226.42500001192093,
+      "maxMs": 226.42500001192093
+    },
+    "far-region-worker:slot2": {
+      "count": 1,
+      "sumMs": 717.9850000143051,
+      "maxMs": 717.9850000143051
+    },
+    "far-region-create:slot2": {
+      "count": 1,
+      "sumMs": 1.574999988079071,
+      "maxMs": 1.574999988079071
+    },
+    "far-region-attach-ground:slot2": {
+      "count": 1,
+      "sumMs": 0.004999995231628418,
+      "maxMs": 0.004999995231628418
+    },
+    "far-gpu:texture-uploads:slot2": {
+      "count": 9,
+      "sumMs": 31.835000038146973,
+      "maxMs": 31.810000002384186
+    },
+    "far-gpu:queue-admission:slot2": {
+      "count": 4,
+      "sumMs": 1288.1049999594688,
+      "maxMs": 723.6549999713898
+    },
+    "far-gpu:compile:slot2": {
+      "count": 8,
+      "sumMs": 337.01500004529953,
+      "maxMs": 177.25999999046326
+    },
+    "far-gpu:draw:slot2": {
+      "count": 8,
+      "sumMs": 90.66999995708466,
+      "maxMs": 65.02999997138977
+    },
+    "far-gpu:fence:slot2": {
+      "count": 7,
+      "sumMs": 1718.4299998283386,
+      "maxMs": 989.8699999451637
+    },
+    "far-region-gpu-ready:slot2": {
+      "count": 1,
+      "sumMs": 367.4200000166893,
+      "maxMs": 367.4200000166893
+    },
+    "far-region-worker:slot3": {
+      "count": 1,
+      "sumMs": 717.3100000023842,
+      "maxMs": 717.3100000023842
+    },
+    "far-region-create:slot3": {
+      "count": 1,
+      "sumMs": 1.7299999594688416,
+      "maxMs": 1.7299999594688416
+    },
+    "far-region-attach-ground:slot3": {
+      "count": 1,
+      "sumMs": 0.004999995231628418,
+      "maxMs": 0.004999995231628418
+    },
+    "far-gpu:texture-uploads:slot3": {
+      "count": 9,
+      "sumMs": 34.92500001192093,
+      "maxMs": 34.91500002145767
+    },
+    "far-gpu:queue-admission:slot3": {
+      "count": 4,
+      "sumMs": 2381.5450000166893,
+      "maxMs": 1189.5950000286102
+    },
+    "far-gpu:compile:slot3": {
+      "count": 8,
+      "sumMs": 176.15499997138977,
+      "maxMs": 166.72500002384186
+    },
+    "far-gpu:draw:slot3": {
+      "count": 8,
+      "sumMs": 16.97000014781952,
+      "maxMs": 9.485000014305115
+    },
+    "far-gpu:fence:slot3": {
+      "count": 7,
+      "sumMs": 1264.0849999785423,
+      "maxMs": 368.98499995470047
+    },
+    "far-region-gpu-ready:slot3": {
+      "count": 1,
+      "sumMs": 289.6899999976158,
+      "maxMs": 289.6899999976158
+    }
+  }
+}

@@ -1,0 +1,9 @@
+# Mangrove live distribution audit
+
+Reproduce extraction: node tools/experiments/audit-mangrove-distribution-20261022.mjs with Vite5190. Real selected recipe, seed712, medium, normal camera, paused daytime. Read-only extraction of resident renderer masks, cached accepted roots, actual selected instance buffers and heights. No engine queries added to rendering and no production changes.
+
+8119 cached accepted roots;1743 near/2841 far selected, zero overflow. Cached roots include tiles prepared earlier and are not a visibility map. The right-hand diagnostic plot shows cached roots and8m tile lines; outer rectangular cache boundaries cannot alone prove visible culling defects. Left mask uses scaled grayscale with high values clipped, not a literal0.42 range.
+
+Important correction to prior source inference: BiomeGround uses provided native mask bytes, falling back to ground-mask.js only when absent. spatial-savanna.cpp build mask gives wetland coverage up to0.96. Live mask byte quartiles178/235/245, maximum245. Accepted root coverage spans0.205..0.961; see summary.json for saturated fraction. All8119 accepted root slopes are exactly zero. Therefore slope-size fading has no effect on these roots, and the old JavaScript wetland0.42 cap does not describe this native scene. The earlier source-only hypothesis is superseded.
+
+Existing shader reaches full coverage growth at0.48; much of this native surface is saturated. Coverage masks alone therefore give little gradual size variation across the dense patches. Regular0.5m root lattice and repeated modules remain other contributors, not yet causally isolated. Next test renderer-only spatial modulation of size/presence calibrated to native coverage while preserving water/wear/occupancy exclusions. Do not change simulation masks or increase density as a substitute.

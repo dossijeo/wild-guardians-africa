@@ -1,0 +1,125 @@
+{
+  "note": "Ground versus patch-style soil lighting; height blend and linear tint in both; matched geometry per pair. Static comparison, not performance.",
+  "pairs": [
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "near",
+      "calls": 63,
+      "triangles": 587421,
+      "mae": 6.592312644675926,
+      "changedPixels": 227730
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "mid",
+      "calls": 62,
+      "triangles": 608848,
+      "mae": 6.400593894675926,
+      "changedPixels": 205118
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 61,
+      "triangles": 619421,
+      "mae": 5.744360894097222,
+      "changedPixels": 165818
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "near",
+      "calls": 63,
+      "triangles": 587421,
+      "mae": 2.5864619502314814,
+      "changedPixels": 228007
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "mid",
+      "calls": 62,
+      "triangles": 608848,
+      "mae": 2.2641485821759257,
+      "changedPixels": 205302
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 61,
+      "triangles": 619421,
+      "mae": 1.7999609375,
+      "changedPixels": 166037
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "near",
+      "calls": 59,
+      "triangles": 416280,
+      "mae": 6.652775969328704,
+      "changedPixels": 230886
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "mid",
+      "calls": 60,
+      "triangles": 429156,
+      "mae": 6.454275173611111,
+      "changedPixels": 207635
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 59,
+      "triangles": 445482,
+      "mae": 5.7584400318287035,
+      "changedPixels": 166642
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "near",
+      "calls": 59,
+      "triangles": 416280,
+      "mae": 2.6079213686342593,
+      "changedPixels": 231255
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "mid",
+      "calls": 60,
+      "triangles": 429156,
+      "mae": 2.281477864583333,
+      "changedPixels": 207878
+    },
+    {
+      "quality": "baja",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 59,
+      "triangles": 445482,
+      "mae": 1.8049171730324074,
+      "changedPixels": 166873
+    }
+  ]
+}

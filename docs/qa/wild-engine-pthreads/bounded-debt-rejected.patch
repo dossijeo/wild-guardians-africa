@@ -1,0 +1,92 @@
+diff --git a/src/app/global-frame-scheduler.js b/src/app/global-frame-scheduler.js
+index 0fd16c0d7..4d4b0d092 100644
+--- a/src/app/global-frame-scheduler.js
++++ b/src/app/global-frame-scheduler.js
+@@ -1,7 +1,8 @@
+ // Presentation owns this scheduler. No timers, RAF loop or native execution.
+ // CPU measurements are wall durations of synchronous JS, never GPU timings.
+ export class GlobalFrameScheduler {
+-  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128}={}) {
++  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128,diagnostics=false}={}) {
++    this.diagnostics=diagnostics?{idlePendingFrames:0,noHeadroom:0,mandatoryPressure:0,lateCallback:0,policyLimited:0,elapsedGuard:0,cpuSum:0,latenessSum:0,maxLateness:0}:null;
+     this.now=now;this.targetMs=targetMs;this.maxPending=maxPending;
+     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
+     this.budget=0;this.cooldown=0;this.lastPolicy=-Infinity;
+@@ -54,8 +55,9 @@ export class GlobalFrameScheduler {
+     const remaining=Math.max(0,frame.timestamp+period-began-period*.1);
+     const base=Math.min(remaining,this.budget*(this.cooldown>0?.35:1));
+     if(this.cooldown>0)this.cooldown--;
+-    let work=0,continuation=0,drainTurns=0,completedSubmission=false,units=0;
+-    while(this.jobs.size||(completedSubmission&&drainTurns<32&&this.now()-began<remaining)){
++    let work=0,continuation=0,drainTurns=0,completedSubmission=false,units=0,borrowedWork=false;
++    const debtBatch=period*.12;
++    while(this.jobs.size||(completedSubmission&&drainTurns<32&&this.now()-began<Math.max(remaining,borrowedWork?debtBatch:0))){
+       if(!this.jobs.size){
+         // Promise-ready producers can refill this same presentation budget.
+         // Never await driver readiness or a timer here. Bound empty microtasks
+@@ -77,9 +79,11 @@ export class GlobalFrameScheduler {
+         const fits=time-began+cost<=allowed;
+         // Explicit deadline debt, NOT idle time: permit one measured small unit
+         // to miss the next refresh rather than starve a required chunk forever.
++        // Tiny overdue continuations may share at most 12% of a refresh;
++        // this is explicit bounded debt, not measured idle headroom.
+         // Bound both total synchronous CPU and elapsed presentation latency.
+-        const loan=!fits&&time>=job.deadline&&work===0&&cost<=period*.5&&
+-          cpu<period*.85&&cpu+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
++        const loan=!fits&&time>=job.deadline&&(work===0||(borrowedWork&&time-began+cost<=debtBatch))&&cost<=period*.5&&
++          cpu<period*.85&&cpu+(time-began)+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
+         if(!fits&&!loan)continue;
+         const score=job.priority+age/100+(urgent?1000:0)-job.order*.000001;
+         if(score>best){selected=job;best=score;borrowed=loan;}
+@@ -92,14 +96,22 @@ export class GlobalFrameScheduler {
+         if(result.done){this.remove(selected);this.stats.completed++;completedSubmission=true;drainTurns=0;selected.resolve(result.value);}
+         else selected.order=this.sequence++;
+       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
+-      const duration=this.now()-start;work+=duration;if(borrowed)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
++      const duration=this.now()-start;work+=duration;if(borrowed){this.stats.deadlineLoans++;borrowedWork=true;}this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
+       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
+-      if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
++      if(this.now()-began>=Math.max(remaining,borrowedWork?debtBatch:0)){this.stats.overruns++;break;}
++    }
++    if(this.diagnostics&&work===0&&this.jobs.size){
++      const d=this.diagnostics,lateness=frame.start-frame.timestamp;d.idlePendingFrames++;d.cpuSum+=cpu;d.latenessSum+=lateness;d.maxLateness=Math.max(d.maxLateness,lateness);
++      if(remaining===0)d.noHeadroom++;
++      if(cpu>=period*.85)d.mandatoryPressure++;
++      if(lateness>=period*.5)d.lateCallback++;
++      if(base<.25&&remaining>=.25)d.policyLimited++;
++      if(this.now()-frame.timestamp+.25>period*2)d.elapsedGuard++;
+     }
+     this.stats.workMs+=work;this.stats.continuationMs+=continuation;this.stats.coordinationMs+=Math.max(0,this.now()-began-work-continuation);
+   }
+-  snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs};}
++  snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
+ }
+-export const globalFrameScheduler=new GlobalFrameScheduler();
++export const globalFrameScheduler=new GlobalFrameScheduler({diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
+ const enabled=new URLSearchParams(globalThis.location?.search??'').get('frameScheduler')==='1';
+ export const globalFrameSchedulerEnabled=()=>enabled;
+diff --git a/tests/global-frame-scheduler.test.js b/tests/global-frame-scheduler.test.js
+index 5605d8f3a..1eac2dceb 100644
+--- a/tests/global-frame-scheduler.test.js
++++ b/tests/global-frame-scheduler.test.js
+@@ -61,3 +61,20 @@ test('a failing cost estimator closes only its job and leaves other work executa
+  const good=scheduler.submit((function*(){ran=true;return 1;})(),{deadline:0});scheduler.beginFrame(time);time+=2;await scheduler.endFrame();await rejection;await good;
+  assert.equal(closed,true);assert.equal(ran,true);assert.equal(scheduler.snapshot().failed,1);assert.equal(scheduler.snapshot().pending,0);
+ });
++
++
++test('tiny overdue continuations share bounded deadline debt without one frame per batch',async()=>{
++ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time});let calls=0;
++ const work=async()=>{for(let i=0;i<30;i++)await scheduler.submit((function*(){calls++;time+=.2;return i;})(),{deadline:0,estimateMs:.2});};
++ const pending=work();scheduler.beginFrame(time-10);time+=8;await scheduler.endFrame();
++ assert.ok(calls>1&&calls<=10);assert.ok(scheduler.snapshot().workMs<=2.01);
++ for(let i=0;i<30;i++){time+=17;scheduler.beginFrame(time);time+=4;await scheduler.endFrame();}await pending;
++});
++
++test('admission diagnostics are optional and distinguish late callbacks from CPU work',async()=>{
++ let time=100;const scheduler=new GlobalFrameScheduler({now:()=>time,diagnostics:true});
++ const result=scheduler.submit((function*(){return 1;})(),{key:'job'});
++ scheduler.beginFrame(70);time+=2;await scheduler.endFrame();const d=scheduler.snapshot().admissionDiagnostics;
++ assert.equal(d.idlePendingFrames,1);assert.equal(d.noHeadroom,1);assert.equal(d.mandatoryPressure,0);assert.equal(d.latenessSum,30);assert.equal(d.cpuSum,2);
++ scheduler.cancel('job');await result;assert.equal(new GlobalFrameScheduler().snapshot().admissionDiagnostics,undefined);
++});

@@ -7,3 +7,9 @@ export function farVegetationProfile({quality,biome},overrides={}){
  const authoredSize={minimumHeight:24,start:200,end:240};
  return {...{qualityDriven:true,backdropHQ:true,start:distances[0],end:distances[1],visualRange:quality==='alta'?2:1,preserveTerrain:true,logicalStandbyPreload:true,logicalPreloadMargin:16,logicalSizePreload:true,transitionHeight:authoredSize,cullZeroImpostors:true,densityStart:270,densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,importanceHeight:16,importanceMaxBoost:4,groundStep:32,groundColorStep:4,groundWash:0,nativeWaterMask:true,groundSeam:true,simplifiedFarGround:false,includeFarGround:!['canyons','desert'].includes(biome),fogStart:90,fogEnd:480,fogDayColor:'#b3b5c0',fogNightColor:'#3f4140'},...overrides};
 }
+
+// Artistic review selections only; normal profiles keep their original spacing.
+export function farGroundReviewOverrides(biome,search=''){
+ const flag={volcanoes:'volcanicGround',savanna:'savannaGround',grand_river:'riverGround'}[biome];
+ return flag&&new URLSearchParams(search).get(flag)==='fine'?{groundStep:16}:{};
+}

@@ -1,0 +1,60 @@
+{
+  "scope": "Single active streaming observation, no A/B causal or improvement claim; GPU elapsed queries include pipeline bubbles.",
+  "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "created": 10,
+  "actorsReadyFrames": 180,
+  "pausedFrames": 0,
+  "farSettled": true,
+  "frames": {
+    "count": 180,
+    "mean": 94.4116666666667,
+    "p95": 183.15000000000146,
+    "max": 432.4150000000009
+  },
+  "renderCall": {
+    "count": 181,
+    "mean": 13.88919889597603,
+    "p95": 19.304999947547913,
+    "max": 415.91999995708466
+  },
+  "drawCall": {
+    "count": 181,
+    "mean": 8.980276244121361,
+    "p95": 11.974999904632568,
+    "max": 408.1100000143051
+  },
+  "installationCall": {
+    "count": 10,
+    "mean": 0.40249998569488527,
+    "p95": 0.6699999570846558,
+    "max": 0.7699999809265137
+  },
+  "preparationLatency": {
+    "count": 10,
+    "mean": 2119.6054999947546,
+    "p95": 6146.6900000572205,
+    "max": 6638.09500002861
+  },
+  "gpu": {
+    "supported": true,
+    "sampleEvery": 3,
+    "submitted": 61,
+    "skipped": 0,
+    "disjoint": false,
+    "summary": {
+      "count": 61,
+      "mean": 63.74751183606558,
+      "p95": 109.070155,
+      "max": 135.914686
+    }
+  },
+  "slowDraws": [
+    {
+      "ms": 408.1100000143051,
+      "programs": 76,
+      "elapsed": 122.41423999999706,
+      "pauses": []
+    }
+  ],
+  "unexpectedErrors": []
+}

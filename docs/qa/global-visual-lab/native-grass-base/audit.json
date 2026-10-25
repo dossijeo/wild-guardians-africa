@@ -1,0 +1,247 @@
+{
+  "captures": [
+    {
+      "view": "close",
+      "hour": "day",
+      "returnPixels": 0,
+      "changedPixels": 2933,
+      "sameCounters": true,
+      "samePose": true
+    },
+    {
+      "view": "close",
+      "hour": "night",
+      "returnPixels": 0,
+      "changedPixels": 2917,
+      "sameCounters": true,
+      "samePose": true
+    },
+    {
+      "view": "game",
+      "hour": "day",
+      "returnPixels": 0,
+      "changedPixels": 1430,
+      "sameCounters": true,
+      "samePose": true
+    },
+    {
+      "view": "game",
+      "hour": "night",
+      "returnPixels": 5,
+      "changedPixels": 1435,
+      "sameCounters": true,
+      "samePose": true
+    }
+  ],
+  "errors": [],
+  "benchmarks": [
+    {
+      "quality": "media",
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpuMean": 19.16915587916667,
+        "gpuP95": 22.4261859,
+        "cpuMean": 3.4391666679332653,
+        "cpuP95": 4.699999988079071,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "dry": {
+        "gpuMean": 18.560915075000004,
+        "gpuP95": 22.0996162,
+        "cpuMean": 3.262500000372529,
+        "cpuP95": 4.200000017881393,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "deltaPercent": -3.173018196527433
+    },
+    {
+      "quality": "media",
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpuMean": 18.75730951666667,
+        "gpuP95": 21.2094414,
+        "cpuMean": 3.3583333333333334,
+        "cpuP95": 4.4000000059604645,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "dry": {
+        "gpuMean": 18.69607650416667,
+        "gpuP95": 21.6130903,
+        "cpuMean": 3.267500000571211,
+        "cpuP95": 4.099999995529652,
+        "calls": 74,
+        "triangles": 1620251,
+        "textures": 59,
+        "geometries": 158
+      },
+      "deltaPercent": -0.326448803574908
+    },
+    {
+      "quality": "media",
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpuMean": 20.758674616666667,
+        "gpuP95": 23.86724865,
+        "cpuMean": 3.4791666665424903,
+        "cpuP95": 4.305000010132788,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "dry": {
+        "gpuMean": 20.43819385833334,
+        "gpuP95": 23.09664705,
+        "cpuMean": 3.6087500005960464,
+        "cpuP95": 4.40500000566244,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "deltaPercent": -1.5438401740543783
+    },
+    {
+      "quality": "media",
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpuMean": 20.9026468875,
+        "gpuP95": 24.3682048,
+        "cpuMean": 2.8895833329608043,
+        "cpuP95": 3.5999999940395355,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "dry": {
+        "gpuMean": 22.251072625,
+        "gpuP95": 25.954550899999997,
+        "cpuMean": 3.069583333780368,
+        "cpuP95": 3.7999999836087226,
+        "calls": 71,
+        "triangles": 1718723,
+        "textures": 59,
+        "geometries": 155
+      },
+      "deltaPercent": 6.450980800457229
+    },
+    {
+      "quality": "baja",
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpuMean": 13.792978825,
+        "gpuP95": 15.7753134,
+        "cpuMean": 3.3875,
+        "cpuP95": 4.299999983608723,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 55,
+        "geometries": 140
+      },
+      "dry": {
+        "gpuMean": 14.042564733333334,
+        "gpuP95": 16.315001399999996,
+        "cpuMean": 3.427499999602636,
+        "cpuP95": 4.4000000059604645,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 55,
+        "geometries": 140
+      },
+      "deltaPercent": 1.8095141847166207
+    },
+    {
+      "quality": "baja",
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpuMean": 15.0846294625,
+        "gpuP95": 17.46723565,
+        "cpuMean": 2.9374999995032947,
+        "cpuP95": 3.7049999892711623,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 55,
+        "geometries": 140
+      },
+      "dry": {
+        "gpuMean": 15.553764416666668,
+        "gpuP95": 18.7007721,
+        "cpuMean": 3.0654166668653486,
+        "cpuP95": 4.099999995529652,
+        "calls": 73,
+        "triangles": 1227612,
+        "textures": 55,
+        "geometries": 140
+      },
+      "deltaPercent": 3.1100197411737973
+    },
+    {
+      "quality": "baja",
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpuMean": 15.418770575,
+        "gpuP95": 18.91318344999999,
+        "cpuMean": 3.257083333780368,
+        "cpuP95": 4.410000005364415,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 55,
+        "geometries": 138
+      },
+      "dry": {
+        "gpuMean": 15.712964704166666,
+        "gpuP95": 18.9019749,
+        "cpuMean": 3.28458333350718,
+        "cpuP95": 4.399999977648259,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 55,
+        "geometries": 138
+      },
+      "deltaPercent": 1.90802585547043
+    },
+    {
+      "quality": "baja",
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpuMean": 15.209978341666666,
+        "gpuP95": 17.104366749999997,
+        "cpuMean": 2.959583333879709,
+        "cpuP95": 3.805000010132788,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 55,
+        "geometries": 138
+      },
+      "dry": {
+        "gpuMean": 15.847118395833332,
+        "gpuP95": 18.694360399999994,
+        "cpuMean": 2.9791666654249034,
+        "cpuP95": 3.9050000056624397,
+        "calls": 71,
+        "triangles": 1251268,
+        "textures": 55,
+        "geometries": 138
+      },
+      "deltaPercent": 4.188960956119625
+    }
+  ]
+}

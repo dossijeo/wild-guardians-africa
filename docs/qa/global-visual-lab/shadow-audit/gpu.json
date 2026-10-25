@@ -1,0 +1,253 @@
+{
+  "origin": "http://127.0.0.1:5188",
+  "cases": [
+    1,
+    6,
+    11,
+    16,
+    21,
+    26
+  ],
+  "records": [
+    {
+      "biome": "sabana",
+      "supported": true,
+      "phases": {
+        "static": {
+          "draws": 1,
+          "hits": 23,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 1,
+            "medianDraw": 5.7375,
+            "p95Draw": 5.7375,
+            "meanPerFrame": 0.23910583333333332
+          }
+        },
+        "movingActor": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 24,
+            "medianDraw": 5.08901,
+            "p95Draw": 10.070156,
+            "meanPerFrame": 5.6315554583333345
+          }
+        },
+        "movingCamera": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 72,
+            "drawSamples": 24,
+            "medianDraw": 4.289531,
+            "p95Draw": 5.778645,
+            "meanPerFrame": 3.8706635833333336
+          }
+        }
+      },
+      "disjoint": false
+    },
+    {
+      "biome": "gran-rio",
+      "supported": true,
+      "phases": {
+        "static": {
+          "draws": 1,
+          "hits": 23,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 1,
+            "medianDraw": 4.871458,
+            "p95Draw": 4.871458,
+            "meanPerFrame": 0.20300774999999996
+          }
+        },
+        "movingActor": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 24,
+            "medianDraw": 4.900625,
+            "p95Draw": 7.927187,
+            "meanPerFrame": 5.544355041666667
+          }
+        },
+        "movingCamera": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 72,
+            "drawSamples": 24,
+            "medianDraw": 4.087552,
+            "p95Draw": 5.040468,
+            "meanPerFrame": 3.543376208333333
+          }
+        }
+      },
+      "disjoint": false
+    },
+    {
+      "biome": "manglares",
+      "supported": true,
+      "phases": {
+        "static": {
+          "draws": 1,
+          "hits": 23,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 1,
+            "medianDraw": 5.051979,
+            "p95Draw": 5.051979,
+            "meanPerFrame": 0.21053812500000002
+          }
+        },
+        "movingActor": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 24,
+            "medianDraw": 4.690104,
+            "p95Draw": 7.799322,
+            "meanPerFrame": 5.172989916666667
+          }
+        },
+        "movingCamera": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 72,
+            "drawSamples": 24,
+            "medianDraw": 3.892447,
+            "p95Draw": 5.07375,
+            "meanPerFrame": 3.4098670833333333
+          }
+        }
+      },
+      "disjoint": false
+    },
+    {
+      "biome": "volcanes",
+      "supported": true,
+      "phases": {
+        "static": {
+          "draws": 1,
+          "hits": 23,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 1,
+            "medianDraw": 4.908281,
+            "p95Draw": 4.908281,
+            "meanPerFrame": 0.20454637499999997
+          }
+        },
+        "movingActor": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 24,
+            "medianDraw": 3.816614,
+            "p95Draw": 7.073958,
+            "meanPerFrame": 4.211855000000001
+          }
+        },
+        "movingCamera": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 72,
+            "drawSamples": 24,
+            "medianDraw": 3.430572,
+            "p95Draw": 3.74401,
+            "meanPerFrame": 2.883901416666666
+          }
+        }
+      },
+      "disjoint": false
+    },
+    {
+      "biome": "gran-canon",
+      "supported": true,
+      "phases": {
+        "static": {
+          "draws": 1,
+          "hits": 23,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 1,
+            "medianDraw": 3.163645,
+            "p95Draw": 3.163645,
+            "meanPerFrame": 0.13185104166666664
+          }
+        },
+        "movingActor": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 24,
+            "medianDraw": 2.972916,
+            "p95Draw": 6.50177,
+            "meanPerFrame": 3.572160958333333
+          }
+        },
+        "movingCamera": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 72,
+            "drawSamples": 24,
+            "medianDraw": 2.058072,
+            "p95Draw": 2.663281,
+            "meanPerFrame": 1.786826625
+          }
+        }
+      },
+      "disjoint": false
+    },
+    {
+      "biome": "desierto",
+      "supported": true,
+      "phases": {
+        "static": {
+          "draws": 1,
+          "hits": 23,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 1,
+            "medianDraw": 2.345104,
+            "p95Draw": 2.345104,
+            "meanPerFrame": 0.09774083333333333
+          }
+        },
+        "movingActor": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 48,
+            "drawSamples": 24,
+            "medianDraw": 2.20427,
+            "p95Draw": 4.247343,
+            "meanPerFrame": 2.53196125
+          }
+        },
+        "movingCamera": {
+          "draws": 24,
+          "hits": 0,
+          "gpuMs": {
+            "samples": 72,
+            "drawSamples": 24,
+            "medianDraw": 2.049791,
+            "p95Draw": 3.943541,
+            "meanPerFrame": 2.196004166666667
+          }
+        }
+      },
+      "disjoint": false
+    }
+  ]
+}

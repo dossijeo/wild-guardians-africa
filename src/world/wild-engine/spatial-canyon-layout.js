@@ -3,10 +3,10 @@ import {centerFootprint} from '../centers.js';
 // Place authored village units on the native wet banks. The visual buildings
 // and the native collision graph consume this one layout; no JS terrain recipe
 // is consulted while locating the canyon settlement.
-export function spatialCanyonLayout(payload,field,z){
+export function spatialCanyonLayout(payload,field,z,{canyonOpenRight=false}={}){
   const rows=[z,z],buildings=[];
   for(const [i,unit] of payload.units.entries()){
-    const side=i%2?-1:1,index=side===1?0:1;
+    const side=canyonOpenRight?1:i%2?-1:1,index=canyonOpenRight?i%2:side===1?0:1;
     const width=(unit.max[0]-unit.min[0])*16;
     const depth=(unit.max[2]-unit.min[2])*16;
     const yaw=width>depth?Math.PI/2:0;
@@ -15,7 +15,7 @@ export function spatialCanyonLayout(payload,field,z){
     let edge=0;
     for(let dz=-hz-1;dz<=hz+1;dz+=.5)
       edge=Math.max(edge,side*(field.riverEdge(bz+dz,side)-field.riverX(bz))+.9);
-    const x=field.riverX(bz)+side*(edge+hx+1.25);
+    const x=field.riverX(bz)+side*(edge+hx+1.25+(canyonOpenRight&&index?25:0));
     const c=Math.cos(yaw),n=Math.sin(yaw);
     const cx=(unit.min[0]+unit.max[0])*8,cz=(unit.min[2]+unit.max[2])*8;
     const hull=unit.hull??[[unit.min[0],unit.min[2]],[unit.max[0],unit.min[2]],

@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: experimental constant palettes cannot reuse a shader program across biomes
+ok 1 - experimental constant palettes cannot reuse a shader program across biomes
+  ---
+  duration_ms: 3.1233
+  ...
+# Subtest: dry roughness is opt-in and limited to mapped Savanna, River and Canyon ground
+ok 2 - dry roughness is opt-in and limited to mapped Savanna, River and Canyon ground
+  ---
+  duration_ms: 6.6822
+  ...
+# Subtest: experimental water uses shared slope data while default and lava retain their shader
+ok 3 - experimental water uses shared slope data while default and lava retain their shader
+  ---
+  duration_ms: 21.9637
+  ...
+# Subtest: numerical slope maps are deterministic, filtered and bounded
+ok 4 - numerical slope maps are deterministic, filtered and bounded
+  ---
+  duration_ms: 11.1744
+  ...
+# Subtest: paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+ok 5 - paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+  ---
+  duration_ms: 5.9032
+  ...
+# Subtest: entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+ok 6 - entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+  ---
+  duration_ms: 2.1022
+  ...
+# Subtest: explicit refresh handles material arrays, replacement and late metadata without stale references
+ok 7 - explicit refresh handles material arrays, replacement and late metadata without stale references
+  ---
+  duration_ms: 1.0325
+  ...
+# Subtest: resident and unchanged-region horizon quality replacements are registered immediately
+ok 8 - resident and unchanged-region horizon quality replacements are registered immediately
+  ---
+  duration_ms: 186.7777
+  ...
+# Subtest: QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+ok 9 - QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+  ---
+  duration_ms: 0.6264
+  ...
+# Subtest: temporary excluded pass roots never register nested materials or leave event listeners
+ok 10 - temporary excluded pass roots never register nested materials or leave event listeners
+  ---
+  duration_ms: 0.8132
+  ...
+# Subtest: PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+ok 11 - PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+  ---
+  duration_ms: 2.1533
+  ...
+# Subtest: shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+ok 12 - shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+  ---
+  duration_ms: 1.9238
+  ...
+# Subtest: native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+ok 13 - native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+  ---
+  duration_ms: 2.2758
+  ...
+# Subtest: disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+ok 14 - disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+  ---
+  duration_ms: 2.9175
+  ...
+# Subtest: Standard direct lighting uses native PCF while spot and point shadows keep their own source
+ok 15 - Standard direct lighting uses native PCF while spot and point shadows keep their own source
+  ---
+  duration_ms: 0.2633
+  ...
+# Subtest: ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+ok 16 - ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+  ---
+  duration_ms: 2.8672
+  ...
+# Subtest: independent water retains one valid fallback across shader recompiles and releases it with the material
+ok 17 - independent water retains one valid fallback across shader recompiles and releases it with the material
+  ---
+  duration_ms: 0.6322
+  ...
+# Subtest: PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+ok 18 - PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+  ---
+  duration_ms: 0.5646
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 421.3198

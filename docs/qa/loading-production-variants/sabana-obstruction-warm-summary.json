@@ -1,0 +1,19 @@
+{
+  "scope": "Single diagnostic; existing warmup is broader than the observed late variant, not an accepted loading optimization.",
+  "links": 85,
+  "lateWorld": 0,
+  "readyMs": 32703.59500002861,
+  "warmPhase": [
+    {
+      "label": "warm-compile-obstruction",
+      "ms": 718.0950000286102
+    }
+  ],
+  "options": {
+    "waterBed": false,
+    "waterShore": false,
+    "batchEviction": false,
+    "warmObstruction": true,
+    "retainPrograms": false
+  }
+}

@@ -1,0 +1,3 @@
+# Partial-scene diagnostic only
+
+This ABAB run began before the user required full 2D backgrounds. It uses farVegetation:false and must NOT be used as final-scene performance evidence. It is retained for traceability, not an acceptance gate. Native deep blue vs previous olive, otherwise equal scene options. 60 warmup + 90 samples, separate GPU timer and cadence passes. See benchmarks.json and summary.json. Reproduce using tools/experiments/measure-mangrove-deep-water-cost-20261022.mjs. The full-background successor is measure-mangrove-deep-water-full-cost-20261022.mjs; its results are pending.

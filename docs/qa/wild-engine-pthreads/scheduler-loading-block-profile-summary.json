@@ -1,0 +1,585 @@
+{
+  "scope": "Sampling attribution, cumulative self-time per profile node. Not an exact single-call duration or GPU measurement. Profiler enabled only for diagnosis; not comparable performance acceptance.",
+  "rows": [
+    {
+      "sampledSelfMs": 29011.962999999938,
+      "frame": {
+        "functionName": "(idle)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 2068.362000000002,
+      "frame": {
+        "functionName": "(program)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 929.9370000000006,
+      "frame": {
+        "functionName": "texSubImage2D",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "texSubImage2D",
+        "uploadTexture",
+        "setTexture2D",
+        "WebGLRenderer.initTexture",
+        "initializeLoadingTextures",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 914.7789999999994,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "renderObject",
+        "renderObjects",
+        "renderScene",
+        "WebGLRenderer.render",
+        "",
+        "withRenderOrigin",
+        "drawWorldFrame",
+        "drawRenderFrame",
+        "renderLoadingFrame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 795.2530000000002,
+      "frame": {
+        "functionName": "getContext",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "SpriteMesh",
+        "GuardianMesh",
+        "load",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 698.5509999999997,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "initializeProgramBindingsAsync",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 222.95500000000004,
+      "frame": {
+        "functionName": "getContext",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "trackedContext",
+        "getContext",
+        "WebGLRenderer",
+        "",
+        "createRendererWithGlEpoch",
+        "WorldScene",
+        "prepareLoadingScene",
+        "startGame",
+        "",
+        "safe",
+        "",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 173.21199999999996,
+      "frame": {
+        "functionName": "(garbage collector)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 122.28000000000006,
+      "frame": {
+        "functionName": "frame",
+        "scriptId": "11",
+        "url": "http://127.0.0.1:5190/src/app/main.js?t=1792860275959",
+        "lineNumber": 552,
+        "columnNumber": 14
+      },
+      "ancestors": [
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 113.17400000000002,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "draw",
+        "renderObject",
+        "renderObject",
+        "renderObject",
+        "WebGLShadowMap.render",
+        "render",
+        "render",
+        "WebGLRenderer.render",
+        "",
+        "withScreenTarget",
+        "renderScreenPreload",
+        "renderScreenPreloadBatched",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 110.00000000000003,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "renderObject",
+        "renderObjects",
+        "renderScene",
+        "WebGLRenderer.render",
+        "",
+        "withScreenTarget",
+        "uploadDraw",
+        "submit",
+        "draw",
+        "withGpuRootIsolation",
+        "compileDrawAndFence",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 99.81600000000003,
+      "frame": {
+        "functionName": "getBoundingClientRect",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "resize",
+        "render",
+        "frame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 93.09100000000001,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "renderObject",
+        "renderObjects",
+        "renderScene",
+        "WebGLRenderer.render",
+        "draw",
+        "step",
+        "update",
+        "prepareFrameResources",
+        "renderFrameUpdates",
+        "renderLoadingFrame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 78.73299999999999,
+      "frame": {
+        "functionName": "texSubImage2D",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "texSubImage2D",
+        "uploadTexture",
+        "setTexture2D",
+        "setValueT1",
+        "upload",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "renderObject",
+        "renderObjects",
+        "renderScene",
+        "WebGLRenderer.render",
+        "",
+        "withScreenTarget",
+        "renderScreenPreload",
+        "renderScreenPreloadBatched",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 76.84300000000002,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "renderObject",
+        "renderObjects",
+        "renderScene",
+        "WebGLRenderer.render",
+        "",
+        "withScreenTarget",
+        "renderScreenPreload",
+        "",
+        "loadingSyncWitness",
+        "sync",
+        "prepare",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 73.99500000000002,
+      "frame": {
+        "functionName": "texSubImage2D",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "texSubImage2D",
+        "uploadTexture",
+        "setTexture2D",
+        "WebGLRenderer.initTexture",
+        "prepareNativeFarGpu",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 69.267,
+      "frame": {
+        "functionName": "bindMangroveMudEdgesSteps",
+        "scriptId": "130",
+        "url": "http://127.0.0.1:5190/src/rendering/global-mangrove-mud-edges.js?t=1792848036832",
+        "lineNumber": 14,
+        "columnNumber": 42
+      },
+      "ancestors": [
+        "prepareTerrainSteps",
+        "next",
+        "endFrame",
+        "frame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 66.524,
+      "frame": {
+        "functionName": "",
+        "scriptId": "292",
+        "url": "http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9",
+        "lineNumber": 23481,
+        "columnNumber": 33
+      },
+      "ancestors": [
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 62.695000000000014,
+      "frame": {
+        "functionName": "getShaderInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "initializeProgramBindingsAsync",
+        "warmResidentDepth",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 62.303000000000004,
+      "frame": {
+        "functionName": "URLSearchParams",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "frame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 61.03599999999999,
+      "frame": {
+        "functionName": "snapshot",
+        "scriptId": "197",
+        "url": "http://127.0.0.1:5190/src/app/loading-downloads.js",
+        "lineNumber": 20,
+        "columnNumber": 9
+      },
+      "ancestors": [
+        "refresh",
+        "frame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 55.06099999999999,
+      "frame": {
+        "functionName": "texSubImage2D",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "texSubImage2D",
+        "uploadTexture",
+        "setTexture2D",
+        "WebGLRenderer.initTexture",
+        "prepareNativeFarGpu",
+        "prepare",
+        "",
+        "loadingAwaitWitness",
+        "request",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 54.39300000000001,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "initializeProgramBindingsAsync",
+        "warmResidentDepth",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 51.964,
+      "frame": {
+        "functionName": "getProgramInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "draw",
+        "renderObject",
+        "renderObject",
+        "renderObject",
+        "renderObject",
+        "renderObject",
+        "renderObject",
+        "renderObject",
+        "WebGLShadowMap.render",
+        "render",
+        "render",
+        "WebGLRenderer.render",
+        "",
+        "withScreenTarget",
+        "renderScreenPreload",
+        "renderScreenPreloadBatched",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 51.914,
+      "frame": {
+        "functionName": "snapshot",
+        "scriptId": "197",
+        "url": "http://127.0.0.1:5190/src/app/loading-downloads.js",
+        "lineNumber": 20,
+        "columnNumber": 9
+      },
+      "ancestors": [
+        "snapshot",
+        "refreshLoadingOverlay",
+        "frame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 49.19500000000001,
+      "frame": {
+        "functionName": "getShaderInfoLog",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "onFirstUse",
+        "WebGLProgram.getUniforms",
+        "initializeProgramBindingsAsync",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 47.11500000000001,
+      "frame": {
+        "functionName": "",
+        "scriptId": "298",
+        "url": "http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792860251973",
+        "lineNumber": 37,
+        "columnNumber": 21
+      },
+      "ancestors": [
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 46.258,
+      "frame": {
+        "functionName": "texSubImage2D",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "texSubImage2D",
+        "uploadTexture",
+        "setTexture2D",
+        "setValueT1",
+        "upload",
+        "setProgram",
+        "WebGLRenderer.renderBufferDirect",
+        "renderObject",
+        "renderObjects",
+        "renderScene",
+        "WebGLRenderer.render",
+        "",
+        "withScreenTarget",
+        "renderScreenPreload",
+        "",
+        "loadingSyncWitness",
+        "sync",
+        "prepare",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 42.90400000000001,
+      "frame": {
+        "functionName": "render",
+        "scriptId": "23",
+        "url": "http://127.0.0.1:5190/src/rendering/loading-diorama.js?t=1792860252555",
+        "lineNumber": 112,
+        "columnNumber": 8
+      },
+      "ancestors": [
+        "frame",
+        "(root)"
+      ]
+    },
+    {
+      "sampledSelfMs": 41.385000000000005,
+      "frame": {
+        "functionName": "getProgramParameter",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      },
+      "ancestors": [
+        "WebGLProgram.isReady",
+        "poll",
+        "",
+        "(root)"
+      ]
+    }
+  ]
+}

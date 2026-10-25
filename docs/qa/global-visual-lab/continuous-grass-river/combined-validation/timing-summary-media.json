@@ -1,0 +1,113 @@
+{
+  "samples": 2880,
+  "rows": [
+    {
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpuMedian": 16.076796,
+        "cpuMedian": 6.699999988079071,
+        "triangles": 199580,
+        "calls": 77
+      },
+      "distance": {
+        "gpuMedian": 17.783879,
+        "cpuMedian": 5.200000017881393,
+        "triangles": 198332,
+        "calls": 77
+      },
+      "gpuDelta": 1.7070829999999972,
+      "baselineDrift": 3.6163544999999964
+    },
+    {
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpuMedian": 17.027577,
+        "cpuMedian": 6.600000008940697,
+        "triangles": 199580,
+        "calls": 77
+      },
+      "distance": {
+        "gpuMedian": 17.961951499999998,
+        "cpuMedian": 4.899999991059303,
+        "triangles": 198332,
+        "calls": 77
+      },
+      "gpuDelta": 0.934374499999997,
+      "baselineDrift": 3.619895500000002
+    },
+    {
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpuMedian": 15.884921000000002,
+        "cpuMedian": 5.8499999940395355,
+        "triangles": 258388,
+        "calls": 70
+      },
+      "distance": {
+        "gpuMedian": 17.44203,
+        "cpuMedian": 4.4000000059604645,
+        "triangles": 170508,
+        "calls": 70
+      },
+      "gpuDelta": 1.557108999999997,
+      "baselineDrift": 4.321509999999998
+    },
+    {
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpuMedian": 18.4650245,
+        "cpuMedian": 5.9000000059604645,
+        "triangles": 258388,
+        "calls": 70
+      },
+      "distance": {
+        "gpuMedian": 17.918931,
+        "cpuMedian": 5.4000000059604645,
+        "triangles": 170508,
+        "calls": 70
+      },
+      "gpuDelta": -0.5460934999999978,
+      "baselineDrift": 4.531718999999999
+    },
+    {
+      "view": "elevated",
+      "phase": "day",
+      "original": {
+        "gpuMedian": 14.983671000000001,
+        "cpuMedian": 5.5,
+        "triangles": 341656,
+        "calls": 53
+      },
+      "distance": {
+        "gpuMedian": 12.982265,
+        "cpuMedian": 5.25,
+        "triangles": 91640,
+        "calls": 52
+      },
+      "gpuDelta": -2.001406000000001,
+      "baselineDrift": 3.782787000000001
+    },
+    {
+      "view": "elevated",
+      "phase": "night",
+      "original": {
+        "gpuMedian": 15.368176,
+        "cpuMedian": 5.3499999940395355,
+        "triangles": 341656,
+        "calls": 53
+      },
+      "distance": {
+        "gpuMedian": 13.7034625,
+        "cpuMedian": 5.300000011920929,
+        "triangles": 91640,
+        "calls": 52
+      },
+      "gpuDelta": -1.6647134999999995,
+      "baselineDrift": 4.254713499999998
+    }
+  ]
+}

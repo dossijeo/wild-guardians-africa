@@ -1,0 +1,553 @@
+{
+  "message": "page.evaluate: Error: Diagnostic program query GL error 0x501\n    at object.<computed> (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:643)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:38:47",
+  "diagnostic": {
+    "message": "Diagnostic program query GL error 0x501",
+    "rows": [
+      {
+        "quality": "media",
+        "programs": 82,
+        "drawCalls": 81,
+        "recovery": {
+          "revision": 3,
+          "ms": 99.53000003099442,
+          "retained": 81
+        },
+        "retention": {
+          "retained": 81,
+          "released": 81,
+          "destroyed": 1,
+          "abandoned": 0,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "settingMs": 2.7950000166893005,
+        "prewarmMs": 211.8149999976158,
+        "prewarmInvalidations": 0,
+        "transitionMs": 819.835000038147,
+        "frameTimes": [
+          24.384999990463257,
+          37.72500002384186,
+          32.839999973773956,
+          23.74500000476837,
+          13.285000026226044,
+          15.019999980926514,
+          20.87000000476837,
+          10.5450000166893,
+          20.77999997138977,
+          14.935000002384186,
+          38.4200000166893,
+          27.694999992847443,
+          16.914999961853027,
+          22.235000014305115,
+          14.915000021457672,
+          49.50999999046326,
+          51.49000000953674,
+          44.91499996185303,
+          30.105000019073486,
+          81.9549999833107,
+          61.77000004053116,
+          18.009999990463257
+        ]
+      }
+    ],
+    "attribution": [
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileLoadingPrograms (http://127.0.0.1:5190/src/rendering/loading-programs.js?t=1792839742365:21:9)\n    at compileLoadingProgramsBatched (http://127.0.0.1:5190/src/rendering/loading-programs.js?t=1792839742365:50:9)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792839742384:569:27"
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramParameter",
+        "quality": "media",
+        "ms": 16.37999999523163,
+        "at": 32569.194999992847,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:38:47"
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramParameter",
+        "quality": "media",
+        "ms": 19.26500004529953,
+        "at": 32612.134999990463,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileLoadingPrograms (http://127.0.0.1:5190/src/rendering/loading-programs.js?t=1792839742365:21:9)\n    at compileLoadingProgramsBatched (http://127.0.0.1:5190/src/rendering/loading-programs.js?t=1792839742365:50:9)\n    at async Module.verifyGameQualityCycle (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:35:10)\n    at async eval (eval at evaluate (:370:30), <anonymous>:1:10)\n    at async <anonymous>:396:30"
+      },
+      {
+        "kind": "renderer",
+        "name": "render",
+        "quality": "media",
+        "ms": 21.564999997615814,
+        "at": 32775.14499998093,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 22.639999985694885,
+        "at": 32775.15499997139,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 22.77999997138977,
+        "at": 32775.15999996662,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 27.019999980926514,
+        "at": 32775.16499996185,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 16.9099999666214,
+        "at": 32793.39499998093,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 13.964999973773956,
+        "at": 32818.15499997139,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 11.060000002384186,
+        "at": 32841.80000001192,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 11.150000035762787,
+        "at": 32841.80500000715,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 18.5450000166893,
+        "at": 32841.80500000715,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 13.535000026226044,
+        "at": 32856.80500000715,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 14.860000014305115,
+        "at": 32905.99000000954,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 17.5,
+        "at": 32949.344999969006,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "renderer",
+        "name": "render",
+        "quality": "media",
+        "ms": 13.959999978542328,
+        "at": 32993.94999998808,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 23.905000030994415,
+        "at": 33001.50499999523,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 23.99500000476837,
+        "at": 33001.50499999523,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 31.50499999523163,
+        "at": 33001.514999985695,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 14.789999961853027,
+        "at": 33032.34999996424,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 14.849999964237213,
+        "at": 33032.34999996424,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 21.625,
+        "at": 33032.34999996424,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 17.959999978542328,
+        "at": 33108.65499997139,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 18.060000002384186,
+        "at": 33108.65999996662,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 23.644999980926514,
+        "at": 33108.65999996662,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 13.52999997138977,
+        "at": 33167.01999998093,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 13.599999964237213,
+        "at": 33167.02499997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 17.42500001192093,
+        "at": 33167.02499997616,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawWorldFrame",
+        "quality": "media",
+        "ms": 11.949999988079071,
+        "at": 33194.58499997854,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "drawRenderFrame",
+        "quality": "media",
+        "ms": 12.004999995231628,
+        "at": 33194.58499997854,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 16.819999992847443,
+        "at": 33194.58499997854,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "media",
+        "ms": 11.7950000166893,
+        "at": 33206.810000002384,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileDrawAndFence (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:73:34)\n    at prepareNativeFarGpu (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:96:122)\n    at NativeTreeStandby.prepare (http://127.0.0.1:5190/tools/experiments/attach-native-far-world.js?t=1792839742384:61:327)\n    at NativeTreeStandby.run (http://127.0.0.1:5190/tools/experiments/native-tree-standby.js?t=1792839742384:72:15)\n    at NativeTreeStandby.request (http://127.0.0.1:5190/tools/experiments/native-tree-standby.js?t=1792839742384:43:162)\n    at scheduleLogicalPreload (http://127.0.0.1:5190/tools/experiments/attach-native-far-world.js?t=1792839742384:74:96)"
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 12.955000042915344,
+        "at": 33360.37000000477,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileDrawAndFence (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:73:34)\n    at prepareNativeFarGpu (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:96:122)\n    at http://127.0.0.1:5190/tools/experiments/attach-native-far-world.js?t=1792839742384:93:110"
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileDrawAndFence (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:73:34)\n    at prepareNativeFarGpu (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:96:122)\n    at NativeTreeStandby.prepare (http://127.0.0.1:5190/tools/experiments/attach-native-far-world.js?t=1792839742384:61:327)\n    at NativeTreeStandby.run (http://127.0.0.1:5190/tools/experiments/native-tree-standby.js?t=1792839742384:72:15)\n    at NativeTreeStandby.run (http://127.0.0.1:5190/tools/experiments/native-tree-standby.js?t=1792839742384:79:189)"
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 10.064999997615814,
+        "at": 33407.45499998331,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramInfoLog",
+        "quality": "baja",
+        "ms": 20.615000009536743,
+        "at": 33570.94499999285,
+        "stack": null,
+        "program": {
+          "id": 95,
+          "cacheKey": "23,24,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133121,srgb,onBeforeCompile() {\n  }"
+        }
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at onFirstUse (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35323:14)\n    at WebGLProgram.getUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35362:7)\n    at setProgram (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40945:34)\n    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40317:23)\n    at renderObject (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40762:15)\n    at renderObjects (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40744:11)\n    at renderScene (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40658:37)\n    at WebGLRenderer.render (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40569:9)\n    at object.<computed> [as render] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:419)"
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at new WebGLUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:34729:18)\n    at onFirstUse (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35356:22)\n    at WebGLProgram.getUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35362:7)\n    at setProgram (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40945:34)\n    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40317:23)\n    at renderObject (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40762:15)\n    at renderObjects (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40744:11)\n    at renderScene (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40658:37)\n    at WebGLRenderer.render (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40569:9)"
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at fetchAttributeLocations (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:34875:16)\n    at onFirstUse (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35357:24)\n    at WebGLProgram.getUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35362:7)\n    at setProgram (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40945:34)\n    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40317:23)\n    at renderObject (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40762:15)\n    at renderObjects (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40744:11)\n    at renderScene (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40658:37)\n    at WebGLRenderer.render (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40569:9)"
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramInfoLog",
+        "quality": "baja",
+        "ms": 26.75499999523163,
+        "at": 33608.99500000477,
+        "stack": null,
+        "program": {
+          "id": 96,
+          "cacheKey": "23,25,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,2049,srgb,onBeforeCompile() {\n  }"
+        }
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at onFirstUse (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35323:14)\n    at WebGLProgram.getUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35362:7)\n    at setProgram (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40945:34)\n    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40317:23)\n    at renderObject (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40762:15)\n    at renderObjects (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40744:11)\n    at renderScene (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40660:42)\n    at WebGLRenderer.render (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40569:9)\n    at object.<computed> [as render] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:419)"
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at new WebGLUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:34729:18)\n    at onFirstUse (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35356:22)\n    at WebGLProgram.getUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35362:7)\n    at setProgram (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40945:34)\n    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40317:23)\n    at renderObject (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40762:15)\n    at renderObjects (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40744:11)\n    at renderScene (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40660:42)\n    at WebGLRenderer.render (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40569:9)"
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at fetchAttributeLocations (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:34875:16)\n    at onFirstUse (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35357:24)\n    at WebGLProgram.getUniforms (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35362:7)\n    at setProgram (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40945:34)\n    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40317:23)\n    at renderObject (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40762:15)\n    at renderObjects (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40744:11)\n    at renderScene (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40660:42)\n    at WebGLRenderer.render (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40569:9)"
+      },
+      {
+        "kind": "renderer",
+        "name": "render",
+        "quality": "baja",
+        "ms": 78.12999999523163,
+        "at": 33617.20499998331,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "syncChunks",
+        "quality": "baja",
+        "ms": 12.59500002861023,
+        "at": 33676.38499999046,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 23.185000002384186,
+        "at": 33686.81999999285,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileLoadingPrograms (http://127.0.0.1:5190/src/rendering/loading-programs.js?t=1792839742365:21:9)\n    at compileLoadingProgramsBatched (http://127.0.0.1:5190/src/rendering/loading-programs.js?t=1792839742365:50:9)\n    at Module.verifyGameQualityCycle (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:35:16)\n    at async eval (eval at evaluate (:370:30), <anonymous>:1:10)\n    at async <anonymous>:396:30"
+      },
+      {
+        "kind": "scene",
+        "name": "render",
+        "quality": "baja",
+        "ms": 12.75,
+        "at": 33786.90499997139,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "program-query-stack",
+        "name": "getProgramParameter",
+        "ms": 0,
+        "stack": "Error: program query\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:197)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at compileGpuPreparation (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:34:3)\n    at compileDrawAndFence (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:73:34)\n    at prepareNativeFarGpu (http://127.0.0.1:5190/tools/experiments/prepare-native-far-gpu.js?t=1792839742384:96:122)\n    at prepareSeam (http://127.0.0.1:5190/tools/experiments/native-far-ground.js?t=1792839742384:66:332)\n    at http://127.0.0.1:5190/tools/experiments/native-far-ground-seam.js:34:25"
+      },
+      {
+        "kind": "gl",
+        "name": "getProgramParameter",
+        "quality": "baja",
+        "ms": 114.93000000715256,
+        "at": 35131.15499997139,
+        "stack": null,
+        "program": null
+      },
+      {
+        "kind": "query-gl-error",
+        "ms": 0,
+        "code": 1281,
+        "stack": "Error: program query GL error\n    at object.<computed> [as getProgramParameter] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:17:593)\n    at WebGLProgram.isReady (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:35376:25)\n    at poll (http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:30:221)\n    at http://127.0.0.1:5190/tools/experiments/compile-gpu-preparation.js?t=1792839741804:38:47"
+      }
+    ]
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (737,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(742,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (755,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(760,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(755,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(760,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected.",
+    "[.WebGL-0x62f400186400] GL_INVALID_VALUE: glGetProgramiv: Program object expected."
+  ]
+}

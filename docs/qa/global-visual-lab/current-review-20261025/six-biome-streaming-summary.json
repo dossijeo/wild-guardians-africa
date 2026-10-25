@@ -1,0 +1,293 @@
+{
+  "scope": "Single observations collected at different times. Same authored camera duration/distance, different worlds and wall-clock simulation progression. Not paired performance comparisons. GPU elapsed includes pipeline bubbles; native memory excludes GPU and JS memory.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "visuallyValid": true,
+      "visualLimitation": "Final screenshot only; not exhaustive motion inspection.",
+      "cameraPath": "Fixed-height translation",
+      "source": "sabana-clean-retention-a1.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&chunkEviction=single&ownedFarGpu=1&streamingRecovery=auto&waterShoreWorker=0&waterBedWorker=auto&waterBedDirect=0&warmObstruction=0&retainPrograms=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 10,
+      "raf": {
+        "count": 191,
+        "mean": 44.749476439790584,
+        "p95": 83.20000000000437,
+        "max": 166.49000000000524
+      },
+      "gpu": {
+        "count": 64,
+        "mean": 33.24517221875001,
+        "p95": 46.210416,
+        "max": 54.344166
+      },
+      "draw": {
+        "count": 192,
+        "mean": 11.11296875278155,
+        "p95": 16.145000100135803,
+        "max": 161.2699999809265
+      },
+      "nativeBefore": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 500,
+        "residentVisiblePropRecords": 5697,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 6
+      },
+      "nativeAfter": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 524,
+        "residentVisiblePropRecords": 6205,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1024,
+        "haloProps": 4
+      }
+    },
+    {
+      "biome": "gran-rio",
+      "visuallyValid": true,
+      "visualLimitation": "Final screenshot only; not exhaustive motion inspection.",
+      "cameraPath": "Fixed-height translation",
+      "source": "gran-rio-active-stream.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 10,
+      "raf": {
+        "count": 180,
+        "mean": 41.664416666666675,
+        "p95": 83.12999999999738,
+        "max": 149.62999999999738
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 29.581055098360657,
+        "p95": 37.722395,
+        "max": 42.386978
+      },
+      "draw": {
+        "count": 181,
+        "mean": 11.492790052903949,
+        "p95": 16.990000009536743,
+        "max": 138.58000004291534
+      },
+      "nativeBefore": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 528,
+        "residentVisiblePropRecords": 2754,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 7
+      },
+      "nativeAfter": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 552,
+        "residentVisiblePropRecords": 2852,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1024,
+        "haloProps": 4
+      }
+    },
+    {
+      "biome": "manglares",
+      "visuallyValid": true,
+      "visualLimitation": "Final screenshot only; not exhaustive motion inspection.",
+      "cameraPath": "Fixed-height translation",
+      "source": "manglares-medium-active-stream.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 10,
+      "raf": {
+        "count": 180,
+        "mean": 40.55527777777776,
+        "p95": 66.625,
+        "max": 132.97999999999593
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 32.52954908196722,
+        "p95": 45.724791,
+        "max": 53.500416
+      },
+      "draw": {
+        "count": 181,
+        "mean": 8.65895028074802,
+        "p95": 14.950000047683716,
+        "max": 19.134999990463257
+      },
+      "nativeBefore": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 269,
+        "residentVisiblePropRecords": 5713,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 4
+      },
+      "nativeAfter": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 310,
+        "residentVisiblePropRecords": 6856,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 992,
+        "haloProps": 3
+      }
+    },
+    {
+      "biome": "desierto",
+      "visuallyValid": true,
+      "visualLimitation": "Final screenshot only; not exhaustive motion inspection.",
+      "cameraPath": "Fixed-height translation",
+      "source": "desierto-active-stream.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 10,
+      "raf": {
+        "count": 180,
+        "mean": 24.57427777777779,
+        "p95": 49.724999999998545,
+        "max": 83.06500000000233
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 17.793157393442627,
+        "p95": 23.116978,
+        "max": 27.012447
+      },
+      "draw": {
+        "count": 181,
+        "mean": 6.684834254380748,
+        "p95": 9.264999985694885,
+        "max": 82.76499998569489
+      },
+      "nativeBefore": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 115,
+        "residentVisiblePropRecords": 287,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 1
+      },
+      "nativeAfter": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 87,
+        "residentVisiblePropRecords": 281,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1024,
+        "haloProps": 0
+      }
+    },
+    {
+      "biome": "volcanes",
+      "visuallyValid": true,
+      "visualLimitation": "Final screenshot only; not exhaustive motion inspection.",
+      "cameraPath": "Fixed-height translation",
+      "source": "volcanes-active-stream.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 10,
+      "raf": {
+        "count": 180,
+        "mean": 38.245500000000014,
+        "p95": 66.61499999999796,
+        "max": 132.89999999999418
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 27.600430950819668,
+        "p95": 35.380363,
+        "max": 40.356562
+      },
+      "draw": {
+        "count": 181,
+        "mean": 9.86234806914356,
+        "p95": 13.230000019073486,
+        "max": 125.38499999046326
+      },
+      "nativeBefore": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 595,
+        "residentVisiblePropRecords": 4474,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 7
+      },
+      "nativeAfter": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 658,
+        "residentVisiblePropRecords": 4874,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1024,
+        "haloProps": 4
+      }
+    },
+    {
+      "biome": "gran-canon",
+      "visuallyValid": true,
+      "visualLimitation": "Final screenshot only; not exhaustive motion inspection.",
+      "cameraPath": "Terrain-following native pose",
+      "source": "gran-canon-terrain-camera-stream.json",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&waterCore=opaque&canyonBank=balanced&canyonWater=calm&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&qualityRequireActive=1&frameScheduler=1",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 10,
+      "raf": {
+        "count": 180,
+        "mean": 29.4698888888889,
+        "p95": 34.48999999999796,
+        "max": 282.7299999999959
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 21.356043163934437,
+        "p95": 27.361301,
+        "max": 34.545884
+      },
+      "draw": {
+        "count": 182,
+        "mean": 5.044615384641585,
+        "p95": 4.860000014305115,
+        "max": 279.21999990940094
+      },
+      "nativeBefore": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 231,
+        "residentVisiblePropRecords": 2386,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 560,
+        "haloProps": 1
+      },
+      "nativeAfter": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 254,
+        "residentVisiblePropRecords": 2493,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1024,
+        "haloProps": 5
+      }
+    }
+  ]
+}

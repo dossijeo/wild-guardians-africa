@@ -1,0 +1,365 @@
+{
+  "scope": "Active 720p Manglares Intel UHD, stable shadows and dormant crop depth preparation ON in all cases. Scheduler OFF/ON/OFF/ON. 360 frames, 144m. CPU GL instrumentation enabled, GPU timers separate. Wall-time simulation changes final states; no image-equivalence claim. Scheduler counters lifetime, not isolated overhead.",
+  "rows": [
+    {
+      "case": "A1",
+      "readyMs": 28257.49500000477,
+      "frames": {
+        "count": 360,
+        "mean": 27.713222222222228,
+        "p95": 49.91500000000087,
+        "max": 83.16500000000087,
+        "p99": 66.6649999999936
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.612608413223136,
+        "p95": 33.250468,
+        "max": 41.874582
+      },
+      "install": {
+        "count": 15,
+        "mean": 12.695666666825613,
+        "p95": 17.709999978542328,
+        "max": 26.964999973773956
+      },
+      "preparationLatency": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "preparationCpu": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "slices": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "draw": {
+        "count": 361,
+        "mean": 4.367174515268479,
+        "p95": 9.169999957084656,
+        "max": 12.889999985694885
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "slowGl": [],
+      "schedulerLifetime": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792852003739",
+        "completed": 0,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 0,
+        "workMs": 0,
+        "coordinationMs": 0,
+        "maxUnitMs": 0,
+        "overruns": 0,
+        "deadlineLoans": 0,
+        "oversizeRecoveries": 0,
+        "continuationMs": 0,
+        "continuationTurns": 0,
+        "median": 0,
+        "p95": 0,
+        "p99": 0,
+        "cpu95": 0,
+        "jitter": 0,
+        "budgetMs": 0,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "cropPreparation": {
+        "objects": 32,
+        "ms": 388.8899999856949,
+        "bindings": {
+          "initialized": 56,
+          "unsupported": 0
+        },
+        "retention": {
+          "retained": 56,
+          "released": 56,
+          "abandoned": 0,
+          "destroyed": 0,
+          "exhausted": false,
+          "closed": true,
+          "unsupported": false
+        }
+      }
+    },
+    {
+      "case": "B1",
+      "readyMs": 28273.839999973774,
+      "frames": {
+        "count": 360,
+        "mean": 28.683583333333345,
+        "p95": 49.93000000000029,
+        "max": 99.79499999999825,
+        "p99": 67.01499999999942
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.863279404958675,
+        "p95": 30.462916,
+        "max": 35.424478
+      },
+      "install": {
+        "count": 15,
+        "mean": 0.5273333311080932,
+        "p95": 0.9549999833106995,
+        "max": 2.5699999928474426
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 680.7836666663487,
+        "p95": 1070.9850000143051,
+        "max": 1524.8700000047684
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.00800000031789,
+        "p95": 11.36000007390976,
+        "max": 12.52999997138977
+      },
+      "slices": {
+        "count": 601,
+        "mean": 0.22482529118929845,
+        "p95": 0.6499999761581421,
+        "max": 4.245000004768372
+      },
+      "draw": {
+        "count": 361,
+        "mean": 4.543531855552811,
+        "p95": 8.835000038146973,
+        "max": 12.925000011920929
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "slowGl": [],
+      "schedulerLifetime": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792852003739",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 495.21500062942505,
+        "coordinationMs": 50.39499831199646,
+        "maxUnitMs": 9.509999990463257,
+        "overruns": 79,
+        "deadlineLoans": 74,
+        "oversizeRecoveries": 0,
+        "continuationMs": 32.58499997854233,
+        "continuationTurns": 1290,
+        "median": 33.04500000000553,
+        "p95": 49.8550000000032,
+        "p99": 49.89999999999418,
+        "cpu95": 8.84500002861023,
+        "jitter": 16.80999999999767,
+        "budgetMs": 1.7976441418932934,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "cropPreparation": {
+        "objects": 32,
+        "ms": 269.960000038147,
+        "bindings": {
+          "initialized": 56,
+          "unsupported": 0
+        },
+        "retention": {
+          "retained": 56,
+          "released": 56,
+          "abandoned": 0,
+          "destroyed": 0,
+          "exhausted": false,
+          "closed": true,
+          "unsupported": false
+        }
+      }
+    },
+    {
+      "case": "A2",
+      "readyMs": 28030.650000035763,
+      "frames": {
+        "count": 360,
+        "mean": 27.57523611111111,
+        "p95": 49.92000000000553,
+        "max": 99.83000000000175,
+        "p99": 66.60499999999593
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.630984727272725,
+        "p95": 32.684842,
+        "max": 42.422239
+      },
+      "install": {
+        "count": 15,
+        "mean": 10.94666666984558,
+        "p95": 16.334999978542328,
+        "max": 19.0349999666214
+      },
+      "preparationLatency": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "preparationCpu": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "slices": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "draw": {
+        "count": 361,
+        "mean": 4.473324101717519,
+        "p95": 9.425000011920929,
+        "max": 13.760000050067902
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "slowGl": [],
+      "schedulerLifetime": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792852003739",
+        "completed": 0,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 0,
+        "workMs": 0,
+        "coordinationMs": 0,
+        "maxUnitMs": 0,
+        "overruns": 0,
+        "deadlineLoans": 0,
+        "oversizeRecoveries": 0,
+        "continuationMs": 0,
+        "continuationTurns": 0,
+        "median": 0,
+        "p95": 0,
+        "p99": 0,
+        "cpu95": 0,
+        "jitter": 0,
+        "budgetMs": 0,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "cropPreparation": {
+        "objects": 32,
+        "ms": 399.45500004291534,
+        "bindings": {
+          "initialized": 56,
+          "unsupported": 0
+        },
+        "retention": {
+          "retained": 56,
+          "released": 56,
+          "abandoned": 0,
+          "destroyed": 0,
+          "exhausted": false,
+          "closed": true,
+          "unsupported": false
+        }
+      }
+    },
+    {
+      "case": "B2",
+      "readyMs": 31084.15499997139,
+      "frames": {
+        "count": 360,
+        "mean": 28.176166666666663,
+        "p95": 49.91500000000087,
+        "max": 83.16999999999825,
+        "p99": 66.68499999999767
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 22.282261446280998,
+        "p95": 33.550519,
+        "max": 42.978488
+      },
+      "install": {
+        "count": 15,
+        "mean": 0.5786666631698608,
+        "p95": 2.125,
+        "max": 2.1449999809265137
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 768.8083333293597,
+        "p95": 1953.2250000238419,
+        "max": 2023.574999988079
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.31433334350586,
+        "p95": 12.384999990463257,
+        "max": 14.71999990940094
+      },
+      "slices": {
+        "count": 601,
+        "mean": 0.23247088211745073,
+        "p95": 0.7850000262260437,
+        "max": 4.115000009536743
+      },
+      "draw": {
+        "count": 361,
+        "mean": 4.497728533691977,
+        "p95": 9.324999988079071,
+        "max": 13.294999957084656
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "slowGl": [],
+      "schedulerLifetime": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792852003739",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 505.76499927043915,
+        "coordinationMs": 66.0349999666214,
+        "maxUnitMs": 10.314999997615814,
+        "overruns": 82,
+        "deadlineLoans": 79,
+        "oversizeRecoveries": 0,
+        "continuationMs": 30.805000066757202,
+        "continuationTurns": 1126,
+        "median": 16.709999999999127,
+        "p95": 33.27499999999418,
+        "p99": 49.83499999999913,
+        "cpu95": 6.4200000166893005,
+        "jitter": 16.564999999995052,
+        "budgetMs": 2.6609125172756913,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "cropPreparation": {
+        "objects": 32,
+        "ms": 274.85999995470047,
+        "bindings": {
+          "initialized": 56,
+          "unsupported": 0
+        },
+        "retention": {
+          "retained": 56,
+          "released": 56,
+          "abandoned": 0,
+          "destroyed": 0,
+          "exhausted": false,
+          "closed": true,
+          "unsupported": false
+        }
+      }
+    }
+  ]
+}

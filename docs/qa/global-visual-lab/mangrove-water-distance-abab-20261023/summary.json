@@ -1,0 +1,86 @@
+{
+  "runs": [
+    {
+      "run": 0,
+      "variant": "fixednativewaterlegacy",
+      "cpu": {
+        "mean": 14.334583335618179,
+        "p95": 20.69999998807907,
+        "max": 50.69999998807907
+      },
+      "frame": {
+        "mean": 39.53833333328366,
+        "p95": 92.60000002384186,
+        "max": 150.5999999642372
+      },
+      "errors": []
+    },
+    {
+      "run": 1,
+      "variant": "fixednative",
+      "cpu": {
+        "mean": 13.850416664530833,
+        "p95": 21.099999964237213,
+        "max": 42.09999996423721
+      },
+      "frame": {
+        "mean": 38.496666666616996,
+        "p95": 94.10000002384186,
+        "max": 122.19999998807907
+      },
+      "errors": []
+    },
+    {
+      "run": 2,
+      "variant": "fixednativewaterlegacy",
+      "cpu": {
+        "mean": 12.657499999552964,
+        "p95": 19.5,
+        "max": 51.69999998807907
+      },
+      "frame": {
+        "mean": 37.828750000149014,
+        "p95": 83.60000002384186,
+        "max": 135.5
+      },
+      "errors": []
+    },
+    {
+      "run": 3,
+      "variant": "fixednative",
+      "cpu": {
+        "mean": 13.247916665673255,
+        "p95": 21.30000001192093,
+        "max": 49.69999998807907
+      },
+      "frame": {
+        "mean": 37.67249999990066,
+        "p95": 85.89999997615814,
+        "max": 135.39999997615814
+      },
+      "errors": []
+    }
+  ],
+  "comparisons": [
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "cameraEqual": true,
+      "workloadDifferentFrames": 23,
+      "changedPixels": 11,
+      "mae": 2.468532986111111e-05
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "cameraEqual": true,
+      "workloadDifferentFrames": 16,
+      "changedPixels": 50,
+      "mae": 0.00023600260416666667
+    }
+  ]
+}

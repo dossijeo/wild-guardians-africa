@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "539e82b34b8f9f84f45b0502fc32ee3026b85db2",
+  "scope": "Rebuilt production source at this commit; QA harness/doc changes uncommitted. Tauri --no-bundle, native Windows/WebView2 checks; no installer or actual itch upload.",
+  "artifacts": [
+    {
+      "path": "src-tauri/target/release/wild-guardians-africa.exe",
+      "bytes": 424354816,
+      "sha256": "eb09e5058d5ec3a84fb7c5e1f6a74be47eb2b83f21842dc7cea6b81226fb793a"
+    },
+    {
+      "path": "test-results/wild-guardians-itch.zip",
+      "bytes": 433881955,
+      "sha256": "a015a586b3c719ee97f03fa8d336d8490d01fec60bf0dd09a710d9785ca83b05"
+    }
+  ],
+  "reports": [
+    "tauri-pthreads-current-20261024.json",
+    "tauri-game-current-20261024.json"
+  ]
+}

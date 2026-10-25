@@ -1,0 +1,1080 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "gran-rio",
+  "quality": "media",
+  "result": {
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": null,
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 528,
+      "residentVisiblePropRecords": 2754,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 7
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "farGround": {
+      "initial": {
+        "origin": {
+          "x": 0,
+          "z": 0
+        },
+        "stream": {
+          "created": 25,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "stale": 0,
+          "epoch": 0
+        },
+        "nearBounds": [
+          -24,
+          -72,
+          216,
+          168
+        ],
+        "camera": [
+          99.70247532024266,
+          22.023772089667386,
+          30.57367599590944
+        ],
+        "target": [
+          83,
+          6.848869972229004,
+          0
+        ],
+        "farEnabled": true,
+        "adapters": [
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 5,
+              "stalePreparations": 1,
+              "preparationAttempts": 6,
+              "fencedPreparations": 5,
+              "rejectedPacking": 0,
+              "signatureChanges": 6,
+              "packingChanges": 8,
+              "cachedTextures": 25,
+              "textureUploads": 0,
+              "logicalPreloads": 10,
+              "logicalPreloadEntries": 14,
+              "errors": [],
+              "coverage": 6,
+              "prepared": 6,
+              "signature": "0:0|0:0:8b9ddd13-68e1-4ab8-b1e1-9adea6616cf2:d1acbde0-cbe6-42d3-84e4-d45bec57d7de:3|0:2:fe382a9e-e1f2-4df1-bfa8-7cd2ef88c851:d1acbde0-cbe6-42d3-84e4-d45bec57d7de:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 2,
+                "rendered": 0,
+                "submittedInstances": 0,
+                "maskedInstances": 0,
+                "submittedTriangles": 0,
+                "visibleTriangles": 0,
+                "trees": 20,
+                "estimatedOwnedGpuBytes": 1707708,
+                "estimatedPreparedMatrixCpuBytes": 9216,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 538
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 7,
+              "stalePreparations": 1,
+              "preparationAttempts": 8,
+              "fencedPreparations": 7,
+              "rejectedPacking": 0,
+              "signatureChanges": 7,
+              "packingChanges": 12,
+              "cachedTextures": 35,
+              "textureUploads": 0,
+              "logicalPreloads": 11,
+              "logicalPreloadEntries": 11,
+              "errors": [],
+              "coverage": 18,
+              "prepared": 18,
+              "signature": "0:0|1:0:3db9007c-e538-4140-8ddf-3aa5a6bc5918:c688af44-e7bf-414b-8107-4fa1737fa624:3|1:1:a7df05ae-4fd7-4786-a6b7-3b2d6bc045be:c688af44-e7bf-414b-8107-4fa1737fa624:3|1:2:8c9c5fdb-d057-435c-8b66-c926e08b6171:c688af44-e7bf-414b-8107-4fa1737fa624:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 4,
+                "rendered": 0,
+                "submittedInstances": 0,
+                "maskedInstances": 0,
+                "submittedTriangles": 0,
+                "visibleTriangles": 0,
+                "trees": 29,
+                "estimatedOwnedGpuBytes": 1801920,
+                "estimatedPreparedMatrixCpuBytes": 12288,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 534
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 4,
+              "stalePreparations": 2,
+              "preparationAttempts": 6,
+              "fencedPreparations": 4,
+              "rejectedPacking": 0,
+              "signatureChanges": 8,
+              "packingChanges": 9,
+              "cachedTextures": 20,
+              "textureUploads": 0,
+              "logicalPreloads": 12,
+              "logicalPreloadEntries": 11,
+              "errors": [],
+              "coverage": 9,
+              "prepared": 9,
+              "signature": "0:0|2:0:02f6f30f-d204-47a2-aa53-2994330e82e7:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3|2:1:340f6580-8f07-4702-80c1-5de4e5be478a:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3|2:2:7a601686-4ac1-41e7-b5ff-1415837f674f:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 2,
+                "rendered": 1,
+                "submittedInstances": 1,
+                "maskedInstances": 0,
+                "submittedTriangles": 1204,
+                "visibleTriangles": 1204,
+                "trees": 20,
+                "estimatedOwnedGpuBytes": 2180448,
+                "estimatedPreparedMatrixCpuBytes": 9216,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 513
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 5,
+              "stalePreparations": 1,
+              "preparationAttempts": 6,
+              "fencedPreparations": 5,
+              "rejectedPacking": 0,
+              "signatureChanges": 7,
+              "packingChanges": 9,
+              "cachedTextures": 25,
+              "textureUploads": 0,
+              "logicalPreloads": 11,
+              "logicalPreloadEntries": 15,
+              "errors": [],
+              "coverage": 11,
+              "prepared": 11,
+              "signature": "0:0|3:0:bdfcf394-d866-4011-b93c-4c59db890c94:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3|3:1:106c2378-26eb-435a-a253-cce9e784b143:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3|3:2:dbf39457-21fe-4ddb-8dd3-275e2d72be31:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 2,
+                "rendered": 2,
+                "submittedInstances": 2,
+                "maskedInstances": 0,
+                "submittedTriangles": 2802,
+                "visibleTriangles": 2802,
+                "trees": 26,
+                "estimatedOwnedGpuBytes": 2406444,
+                "estimatedPreparedMatrixCpuBytes": 9216,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 508
+          }
+        ],
+        "ground": [
+          {
+            "vertices": 2877,
+            "indices": 16932,
+            "drawRange": {
+              "start": 0,
+              "count": null
+            },
+            "min": [
+              -336,
+              3.0100882053375244,
+              -432
+            ],
+            "max": [
+              528,
+              14.839482307434082,
+              432
+            ],
+            "ancestors": [
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Scene",
+                "visible": true,
+                "name": ""
+              }
+            ],
+            "side": 0,
+            "opacity": 1,
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "uniforms": {
+              "uWorldOrigin": [
+                0,
+                0
+              ],
+              "uFarNearBounds": [
+                -24,
+                -72,
+                216,
+                168
+              ],
+              "uFarGroundOrigin": [
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "vertices": 2170,
+            "indices": 6486,
+            "drawRange": {
+              "start": 0,
+              "count": null
+            },
+            "min": [
+              -24,
+              2.9700000286102295,
+              -72
+            ],
+            "max": [
+              216,
+              11.444997787475586,
+              168
+            ],
+            "ancestors": [
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Scene",
+                "visible": true,
+                "name": ""
+              }
+            ],
+            "side": 2,
+            "opacity": 1,
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "uniforms": {
+              "uWorldOrigin": [
+                0,
+                0
+              ],
+              "uFarNearBounds": [
+                -24,
+                -72,
+                216,
+                168
+              ],
+              "uFarGroundOrigin": [
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "settled": {
+        "origin": {
+          "x": 0,
+          "z": 0
+        },
+        "stream": {
+          "created": 25,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "stale": 0,
+          "epoch": 0
+        },
+        "nearBounds": [
+          -24,
+          -72,
+          216,
+          168
+        ],
+        "camera": [
+          99.70247532024266,
+          22.023772089667386,
+          30.57367599590944
+        ],
+        "target": [
+          83,
+          6.848869972229004,
+          0
+        ],
+        "farEnabled": true,
+        "adapters": [
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 5,
+              "stalePreparations": 1,
+              "preparationAttempts": 6,
+              "fencedPreparations": 5,
+              "rejectedPacking": 0,
+              "signatureChanges": 6,
+              "packingChanges": 8,
+              "cachedTextures": 25,
+              "textureUploads": 0,
+              "logicalPreloads": 10,
+              "logicalPreloadEntries": 14,
+              "errors": [],
+              "coverage": 6,
+              "prepared": 6,
+              "signature": "0:0|0:0:8b9ddd13-68e1-4ab8-b1e1-9adea6616cf2:d1acbde0-cbe6-42d3-84e4-d45bec57d7de:3|0:2:fe382a9e-e1f2-4df1-bfa8-7cd2ef88c851:d1acbde0-cbe6-42d3-84e4-d45bec57d7de:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 2,
+                "rendered": 0,
+                "submittedInstances": 0,
+                "maskedInstances": 0,
+                "submittedTriangles": 0,
+                "visibleTriangles": 0,
+                "trees": 20,
+                "estimatedOwnedGpuBytes": 1707708,
+                "estimatedPreparedMatrixCpuBytes": 9216,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 538
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 7,
+              "stalePreparations": 1,
+              "preparationAttempts": 8,
+              "fencedPreparations": 7,
+              "rejectedPacking": 0,
+              "signatureChanges": 7,
+              "packingChanges": 12,
+              "cachedTextures": 35,
+              "textureUploads": 0,
+              "logicalPreloads": 11,
+              "logicalPreloadEntries": 11,
+              "errors": [],
+              "coverage": 18,
+              "prepared": 18,
+              "signature": "0:0|1:0:3db9007c-e538-4140-8ddf-3aa5a6bc5918:c688af44-e7bf-414b-8107-4fa1737fa624:3|1:1:a7df05ae-4fd7-4786-a6b7-3b2d6bc045be:c688af44-e7bf-414b-8107-4fa1737fa624:3|1:2:8c9c5fdb-d057-435c-8b66-c926e08b6171:c688af44-e7bf-414b-8107-4fa1737fa624:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 4,
+                "rendered": 0,
+                "submittedInstances": 0,
+                "maskedInstances": 0,
+                "submittedTriangles": 0,
+                "visibleTriangles": 0,
+                "trees": 29,
+                "estimatedOwnedGpuBytes": 1801920,
+                "estimatedPreparedMatrixCpuBytes": 12288,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 534
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 4,
+              "stalePreparations": 2,
+              "preparationAttempts": 6,
+              "fencedPreparations": 4,
+              "rejectedPacking": 0,
+              "signatureChanges": 8,
+              "packingChanges": 9,
+              "cachedTextures": 20,
+              "textureUploads": 0,
+              "logicalPreloads": 12,
+              "logicalPreloadEntries": 11,
+              "errors": [],
+              "coverage": 9,
+              "prepared": 9,
+              "signature": "0:0|2:0:02f6f30f-d204-47a2-aa53-2994330e82e7:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3|2:1:340f6580-8f07-4702-80c1-5de4e5be478a:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3|2:2:7a601686-4ac1-41e7-b5ff-1415837f674f:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 2,
+                "rendered": 1,
+                "submittedInstances": 1,
+                "maskedInstances": 0,
+                "submittedTriangles": 1204,
+                "visibleTriangles": 1204,
+                "trees": 20,
+                "estimatedOwnedGpuBytes": 2180448,
+                "estimatedPreparedMatrixCpuBytes": 9216,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 513
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 1,
+              "nativePreparations": 5,
+              "stalePreparations": 1,
+              "preparationAttempts": 6,
+              "fencedPreparations": 5,
+              "rejectedPacking": 0,
+              "signatureChanges": 7,
+              "packingChanges": 9,
+              "cachedTextures": 25,
+              "textureUploads": 0,
+              "logicalPreloads": 11,
+              "logicalPreloadEntries": 15,
+              "errors": [],
+              "coverage": 11,
+              "prepared": 11,
+              "signature": "0:0|3:0:bdfcf394-d866-4011-b93c-4c59db890c94:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3|3:1:106c2378-26eb-435a-a253-cce9e784b143:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3|3:2:dbf39457-21fe-4ddb-8dd3-275e2d72be31:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 2,
+                "rendered": 2,
+                "submittedInstances": 2,
+                "maskedInstances": 0,
+                "submittedTriangles": 2802,
+                "visibleTriangles": 2802,
+                "trees": 26,
+                "estimatedOwnedGpuBytes": 2406444,
+                "estimatedPreparedMatrixCpuBytes": 9216,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 508
+          }
+        ],
+        "ground": [
+          {
+            "vertices": 2877,
+            "indices": 16932,
+            "drawRange": {
+              "start": 0,
+              "count": null
+            },
+            "min": [
+              -336,
+              3.0100882053375244,
+              -432
+            ],
+            "max": [
+              528,
+              14.839482307434082,
+              432
+            ],
+            "ancestors": [
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Scene",
+                "visible": true,
+                "name": ""
+              }
+            ],
+            "side": 0,
+            "opacity": 1,
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "uniforms": {
+              "uWorldOrigin": [
+                0,
+                0
+              ],
+              "uFarNearBounds": [
+                -24,
+                -72,
+                216,
+                168
+              ],
+              "uFarGroundOrigin": [
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "vertices": 2170,
+            "indices": 6486,
+            "drawRange": {
+              "start": 0,
+              "count": null
+            },
+            "min": [
+              -24,
+              2.9700000286102295,
+              -72
+            ],
+            "max": [
+              216,
+              11.444997787475586,
+              168
+            ],
+            "ancestors": [
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Scene",
+                "visible": true,
+                "name": ""
+              }
+            ],
+            "side": 2,
+            "opacity": 1,
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "uniforms": {
+              "uWorldOrigin": [
+                0,
+                0
+              ],
+              "uFarNearBounds": [
+                -24,
+                -72,
+                216,
+                168
+              ],
+              "uFarGroundOrigin": [
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "travel": {
+        "origin": {
+          "x": 96,
+          "z": 0
+        }
+      },
+      "afterTravel": {
+        "origin": {
+          "x": 96,
+          "z": 0
+        },
+        "stream": {
+          "created": 75,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "stale": 0,
+          "epoch": 0
+        },
+        "nearBounds": [
+          -24,
+          -72,
+          216,
+          168
+        ],
+        "camera": [
+          99.70247532024266,
+          22.023772089667386,
+          30.57367599590944
+        ],
+        "target": [
+          83,
+          6.848869972229004,
+          0
+        ],
+        "farEnabled": true,
+        "adapters": [
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 3,
+              "nativePreparations": 15,
+              "stalePreparations": 1,
+              "preparationAttempts": 16,
+              "fencedPreparations": 15,
+              "rejectedPacking": 0,
+              "signatureChanges": 14,
+              "packingChanges": 20,
+              "cachedTextures": 75,
+              "textureUploads": 0,
+              "logicalPreloads": 65,
+              "logicalPreloadEntries": 14,
+              "errors": [],
+              "coverage": 6,
+              "prepared": 6,
+              "signature": "0:2|0:0:feb7a75f-0bd0-4683-a6f5-f222e99a87a1:d1acbde0-cbe6-42d3-84e4-d45bec57d7de:3|0:2:7e3821d9-7da5-4553-bf26-23bb44641e2a:d1acbde0-cbe6-42d3-84e4-d45bec57d7de:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 6,
+                "rendered": 0,
+                "submittedInstances": 0,
+                "maskedInstances": 0,
+                "submittedTriangles": 0,
+                "visibleTriangles": 0,
+                "trees": 90,
+                "estimatedOwnedGpuBytes": 1750140,
+                "estimatedPreparedMatrixCpuBytes": 49152,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 538
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 3,
+              "nativePreparations": 18,
+              "stalePreparations": 2,
+              "preparationAttempts": 20,
+              "fencedPreparations": 18,
+              "rejectedPacking": 0,
+              "signatureChanges": 17,
+              "packingChanges": 27,
+              "cachedTextures": 90,
+              "textureUploads": 0,
+              "logicalPreloads": 66,
+              "logicalPreloadEntries": 11,
+              "errors": [],
+              "coverage": 18,
+              "prepared": 18,
+              "signature": "0:2|1:0:300f8848-acd5-4dba-a6e8-a6d376809162:c688af44-e7bf-414b-8107-4fa1737fa624:3|1:1:a6a5fc56-fefb-4180-978e-e55487926cd4:c688af44-e7bf-414b-8107-4fa1737fa624:3|1:2:460cc6c8-3eb7-42c9-8724-eedc1d0263b3:c688af44-e7bf-414b-8107-4fa1737fa624:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 9,
+                "rendered": 0,
+                "submittedInstances": 0,
+                "maskedInstances": 0,
+                "submittedTriangles": 0,
+                "visibleTriangles": 0,
+                "trees": 109,
+                "estimatedOwnedGpuBytes": 1841088,
+                "estimatedPreparedMatrixCpuBytes": 49152,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 534
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 3,
+              "nativePreparations": 14,
+              "stalePreparations": 3,
+              "preparationAttempts": 17,
+              "fencedPreparations": 14,
+              "rejectedPacking": 0,
+              "signatureChanges": 17,
+              "packingChanges": 23,
+              "cachedTextures": 70,
+              "textureUploads": 0,
+              "logicalPreloads": 66,
+              "logicalPreloadEntries": 11,
+              "errors": [],
+              "coverage": 9,
+              "prepared": 9,
+              "signature": "0:2|2:0:2602ef13-f289-4638-ab59-ab0861f1d2c9:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3|2:1:3f44135b-77f8-4043-8dba-87484d77c849:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3|2:2:5bcb9b91-c55a-4957-881a-5257a43eda4a:3be408a4-2a62-4b73-9bc2-17aea18ecc90:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 5,
+                "rendered": 1,
+                "submittedInstances": 1,
+                "maskedInstances": 0,
+                "submittedTriangles": 1204,
+                "visibleTriangles": 1204,
+                "trees": 86,
+                "estimatedOwnedGpuBytes": 2222880,
+                "estimatedPreparedMatrixCpuBytes": 49152,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 513
+          },
+          {
+            "status": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "stats": {
+              "cancelledRegions": 0,
+              "regions": 3,
+              "nativePreparations": 15,
+              "stalePreparations": 3,
+              "preparationAttempts": 18,
+              "fencedPreparations": 15,
+              "rejectedPacking": 0,
+              "signatureChanges": 17,
+              "packingChanges": 24,
+              "cachedTextures": 75,
+              "textureUploads": 0,
+              "logicalPreloads": 65,
+              "logicalPreloadEntries": 15,
+              "errors": [],
+              "coverage": 11,
+              "prepared": 11,
+              "signature": "0:2|3:0:a4d840ce-96c9-4ddf-85b8-237fe9d02ed3:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3|3:1:230445ff-189a-441a-9cd0-ceed26725de7:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3|3:2:a078fba6-5e35-4760-a3ff-8468c99c1118:c1bfe785-d7f9-4b1d-9fde-e776aff3953c:3",
+              "standby": {
+                "cancelledPreparations": 0,
+                "preparations": 5,
+                "rendered": 2,
+                "submittedInstances": 2,
+                "maskedInstances": 0,
+                "submittedTriangles": 2802,
+                "visibleTriangles": 2802,
+                "trees": 81,
+                "estimatedOwnedGpuBytes": 2448876,
+                "estimatedPreparedMatrixCpuBytes": 49152,
+                "errors": []
+              }
+            },
+            "key": "96:0:1",
+            "trees": 508
+          }
+        ],
+        "ground": [
+          {
+            "vertices": 2877,
+            "indices": 16932,
+            "drawRange": {
+              "start": 0,
+              "count": null
+            },
+            "min": [
+              -336,
+              3.0100882053375244,
+              -432
+            ],
+            "max": [
+              528,
+              14.839482307434082,
+              432
+            ],
+            "ancestors": [
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Scene",
+                "visible": true,
+                "name": ""
+              }
+            ],
+            "side": 0,
+            "opacity": 1,
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "uniforms": {
+              "uWorldOrigin": [
+                96,
+                0
+              ],
+              "uFarNearBounds": [
+                -24,
+                -72,
+                216,
+                168
+              ],
+              "uFarGroundOrigin": [
+                96,
+                0
+              ]
+            }
+          },
+          {
+            "vertices": 2170,
+            "indices": 6486,
+            "drawRange": {
+              "start": 0,
+              "count": null
+            },
+            "min": [
+              -24,
+              2.9700000286102295,
+              -72
+            ],
+            "max": [
+              216,
+              11.444997787475586,
+              168
+            ],
+            "ancestors": [
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Mesh",
+                "visible": true,
+                "name": ""
+              },
+              {
+                "type": "Scene",
+                "visible": true,
+                "name": ""
+              }
+            ],
+            "side": 2,
+            "opacity": 1,
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "uniforms": {
+              "uWorldOrigin": [
+                96,
+                0
+              ],
+              "uFarNearBounds": [
+                -24,
+                -72,
+                216,
+                168
+              ],
+              "uFarGroundOrigin": [
+                96,
+                0
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (810,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (665,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(670,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (667,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(672,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (604,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(609,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (606,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(611,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (326,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (326,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (322,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(327,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (322,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(327,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

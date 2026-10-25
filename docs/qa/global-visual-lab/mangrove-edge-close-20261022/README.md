@@ -1,0 +1,9 @@
+# Dense leaf edge retention: close-view decision
+
+Run node tools/experiments/capture-mangrove-edge-close-20261022.mjs, then python tools/experiments/compare-mangrove-edge-close-20261022.py (Vite 5190). Two independent fresh campaigns, seed 712, Mangrove, media, 1280x720, original dense recipe with full far impostors and mountains. QA routes pause before the first game frame and freeze visual clocks. Only candidate changes the wear taper in the leaf shader; no production source changes.
+
+24 captures form 12 original/candidate pairs, warmup/final, day/night, close/game/reverse cameras. Pose, target, time, origin, draw calls and triangles match exactly for every pair; no recorded errors. No actor-state serialization comparison or performance claim. Final pair images show original left and candidate right.
+
+Close daytime and nighttime pairs inspected at full scene scale. Candidate preserves the strong, large visible leaves and slightly extends the fringe, but the broad perimeter still looks cut out and follows the same spatial constraint. The prior reverse/game pairs also retain broad straight patches. This does not solve the artistic issue. Do not promote the candidate or invest in its performance optimization on the basis of this negligible improvement.
+
+Retain original dense leaves. Reduced-size and pigment camouflage variants remain rejected. Next causal experiment must change the shape of the visual coverage boundary while preserving protected paths, water, occupancy and visible leaf presence; modifying growth at the existing boundary alone is insufficient. No conclusion that all straight edges are bugs: intentional paths need to remain clear. Motion and cost validation are not required to reject this insufficient visual result; they remain necessary for any future accepted candidate.

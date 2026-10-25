@@ -1,0 +1,338 @@
+[
+  {
+    "run": 0,
+    "phase": "day",
+    "sceneAudit": {
+      "origin": [
+        0,
+        0
+      ],
+      "target": [
+        83,
+        16.29186954498291,
+        0
+      ],
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "objects": 4,
+      "memory": {
+        "geometries": 163,
+        "textures": 84
+      },
+      "far": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "workload": [
+        66,
+        322890,
+        163,
+        84
+      ]
+    },
+    "passes": [
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 1,
+        "triangles": 1,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at NativeSky.render (http://127.0.0.1:5190/src/rendering/sky.js?t=1792663178546:44:76)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:1244\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)"
+      },
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 102,
+        "triangles": 570312,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:697:82\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)\n    at WorldScene.moving (eval at evaluate (:370:30), <anonymous>:4:129)"
+      }
+    ]
+  },
+  {
+    "run": 0,
+    "phase": "night",
+    "sceneAudit": {
+      "origin": [
+        0,
+        0
+      ],
+      "target": [
+        83,
+        16.29186954498291,
+        0
+      ],
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "objects": 4,
+      "memory": {
+        "geometries": 163,
+        "textures": 84
+      },
+      "far": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "workload": [
+        64,
+        328279,
+        163,
+        84
+      ]
+    },
+    "passes": [
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 1,
+        "triangles": 1,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at NativeSky.render (http://127.0.0.1:5190/src/rendering/sky.js?t=1792663178546:44:76)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:1244\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)"
+      },
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 100,
+        "triangles": 575701,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:697:82\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)\n    at WorldScene.moving (eval at evaluate (:370:30), <anonymous>:4:129)"
+      }
+    ]
+  },
+  {
+    "run": 1,
+    "phase": "day",
+    "sceneAudit": {
+      "origin": [
+        0,
+        0
+      ],
+      "target": [
+        83,
+        16.29186954498291,
+        0
+      ],
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "objects": 4,
+      "memory": {
+        "geometries": 165,
+        "textures": 84
+      },
+      "far": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "workload": [
+        68,
+        324952,
+        165,
+        84
+      ]
+    },
+    "passes": [
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 1,
+        "triangles": 1,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at NativeSky.render (http://127.0.0.1:5190/src/rendering/sky.js?t=1792663178546:44:76)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:1244\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)"
+      },
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": {
+          "name": "",
+          "width": 1280,
+          "height": 720
+        },
+        "calls": 56,
+        "triangles": 319639,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at http://127.0.0.1:5190/src/rendering/buildings.js?t=1792663178546:209:75\n    at withDepthCaptureMaterials (http://127.0.0.1:5190/src/rendering/depth-capture.js:80:5)\n    at BuildingDestructionPass.captureDepth (http://127.0.0.1:5190/src/rendering/buildings.js?t=1792663178546:209:30)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:697:31\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)"
+      },
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 105,
+        "triangles": 574430,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:697:82\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)\n    at WorldScene.moving (eval at evaluate (:370:30), <anonymous>:4:129)"
+      }
+    ]
+  },
+  {
+    "run": 1,
+    "phase": "night",
+    "sceneAudit": {
+      "origin": [
+        0,
+        0
+      ],
+      "target": [
+        83,
+        16.29186954498291,
+        0
+      ],
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "objects": 4,
+      "memory": {
+        "geometries": 165,
+        "textures": 84
+      },
+      "far": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "workload": [
+        66,
+        330341,
+        165,
+        84
+      ]
+    },
+    "passes": [
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 1,
+        "triangles": 1,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at NativeSky.render (http://127.0.0.1:5190/src/rendering/sky.js?t=1792663178546:44:76)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:1244\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)"
+      },
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": {
+          "name": "",
+          "width": 1280,
+          "height": 720
+        },
+        "calls": 59,
+        "triangles": 329217,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at http://127.0.0.1:5190/src/rendering/buildings.js?t=1792663178546:209:75\n    at withDepthCaptureMaterials (http://127.0.0.1:5190/src/rendering/depth-capture.js:80:5)\n    at BuildingDestructionPass.captureDepth (http://127.0.0.1:5190/src/rendering/buildings.js?t=1792663178546:209:30)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:697:31\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)"
+      },
+      {
+        "scene": "",
+        "type": "Scene",
+        "target": null,
+        "calls": 103,
+        "triangles": 579819,
+        "stack": "Error\n    at renderer.render (http://127.0.0.1:5190/tools/experiments/qa-campaign-frame-measure.js:13:203)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:697:82\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:695:28)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:82\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)\n    at GameJuice.world.presentationDraw (http://127.0.0.1:5190/src/ui/game-juice.js:14:150)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:694:56)\n    at WorldScene.render (http://127.0.0.1:5190/src/rendering/scene.js?t=1792693026506:693:374)\n    at WorldScene.moving (eval at evaluate (:370:30), <anonymous>:4:129)"
+      }
+    ]
+  }
+]

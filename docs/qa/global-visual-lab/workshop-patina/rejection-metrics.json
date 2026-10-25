@@ -1,0 +1,20 @@
+{
+  "decision": "Rejected; retain F",
+  "captures": 10,
+  "matchingCameras": true,
+  "textureBytes": 710792,
+  "textureMiBEstimate": 21.333333333333332,
+  "extraMemoryVsF": 0,
+  "geometry": "Exact E binary reused; no UV or vertex edits",
+  "neighbors": {
+    "day": true,
+    "night": true
+  },
+  "CPU_GPU": "Not benchmarked; visual rejection precedes performance study",
+  "rearRayNominalWidthInTexelsAcrossSelectedFaces": {
+    "p10": 1.5802422881126403,
+    "median": 2.5394680500030518,
+    "p90": 3.279446506500243,
+    "note": "Jacobian estimate across selected faces, not ray coverage weighted"
+  }
+}

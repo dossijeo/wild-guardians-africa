@@ -7,6 +7,20 @@ test('initial loading waits for every prepared region using render zero only',as
  await prepareInitialFarWorld(world,{now:()=>0,nextFrame:async()=>{adapters[frames++].layer.current={prepared:true};}});
  assert.deepEqual(world.renders,[0,0,0]);assert.equal(frames,2);
 });
+
+test('final depth warmup waits for installed far regions and propagates cancellation',async()=>{
+ for(const cancel of [false,true]){
+  const {world,adapters}=fixture();let warmed=0;
+  world.warmResidentDepth=async({nextFrame})=>{
+   assert(adapters.every(a=>a.layer.current));warmed++;
+   if(cancel)world.loading.abort();
+   await nextFrame();
+  };
+  const pending=prepareInitialFarWorld(world,{now:()=>0,nextFrame:async()=>{adapters.forEach(a=>a.layer.current={prepared:true});}});
+  if(cancel)await assert.rejects(pending,/cancelled/);else await pending;
+  assert.equal(warmed,1);
+ }
+});
 test('no horizon skips loading while disposal, owner replacement and resource errors reject',async()=>{
  await prepareInitialFarWorld({farVegetation:null});
  for(const change of [w=>{w.disposed=true;},w=>w.loading.abort(),w=>{w.farVegetation=null;},(w,a)=>a[0].stats.errors.push('GPU failure')]){

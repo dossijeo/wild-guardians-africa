@@ -1,0 +1,308 @@
+TAP version 13
+# (node:44808) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native producer overlaps private preparation, with bounded backpressure and complete publication
+ok 1 - native producer overlaps private preparation, with bounded backpressure and complete publication
+  ---
+  duration_ms: 4.9952
+  ...
+# Subtest: camera cancellation discards pending graphics and prevents late publication
+ok 2 - camera cancellation discards pending graphics and prevents late publication
+  ---
+  duration_ms: 1.747
+  ...
+# Subtest: forced revision and disposal reject obsolete completed groups
+ok 3 - forced revision and disposal reject obsolete completed groups
+  ---
+  duration_ms: 0.7886
+  ...
+# Subtest: spatial pipeline rereads edits without repeating native generation
+ok 4 - spatial pipeline rereads edits without repeating native generation
+  ---
+  duration_ms: 10.3169
+  ...
+# (node:35540) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35540) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (node:35540) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+ok 5 - real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+  ---
+  duration_ms: 1311.5966
+  ...
+# Subtest: queue dispatches one nearest scored request and ignores late IDs without completing the active job
+ok 6 - queue dispatches one nearest scored request and ignores late IDs without completing the active job
+  ---
+  duration_ms: 1.1521
+  ...
+# Subtest: travel and forced rebuild discard obsolete responses and regenerate the current epoch
+ok 7 - travel and forced rebuild discard obsolete responses and regenerate the current epoch
+  ---
+  duration_ms: 0.3668
+  ...
+# Subtest: invalidating a loaded chunk refreshes it without counting stale data as ready
+ok 8 - invalidating a loaded chunk refreshes it without counting stale data as ready
+  ---
+  duration_ms: 0.3711
+  ...
+# Subtest: a newer invalidation rejects an in-flight stale refresh
+ok 9 - a newer invalidation rejects an in-flight stale refresh
+  ---
+  duration_ms: 0.2696
+  ...
+# Subtest: invalidation leaves offscreen work alone and discards an in-flight changed chunk
+ok 10 - invalidation leaves offscreen work alone and discards an in-flight changed chunk
+  ---
+  duration_ms: 0.3547
+  ...
+# Subtest: worker failure preserves pending work in asynchronous local mode and dispose cancels it
+ok 11 - worker failure preserves pending work in asynchronous local mode and dispose cancels it
+  ---
+  duration_ms: 0.384
+  ...
+# Subtest: generation and installation failures settle waiters and coordinate mismatches never enter the world
+ok 12 - generation and installation failures settle waiters and coordinate mismatches never enter the world
+  ---
+  duration_ms: 0.8126
+  ...
+# Subtest: scene installs transferred data without regenerating terrain or navigation population on the main thread
+ok 13 - scene installs transferred data without regenerating terrain or navigation population on the main thread
+  ---
+  duration_ms: 56.3272
+  ...
+# Subtest: initial readiness follows the native nine-chunk threshold while the outer queue continues
+ok 14 - initial readiness follows the native nine-chunk threshold while the outer queue continues
+  ---
+  duration_ms: 1.1112
+  ...
+# Subtest: late asynchronous prepared graphics are disposed after stream teardown
+ok 15 - late asynchronous prepared graphics are disposed after stream teardown
+  ---
+  duration_ms: 3.3543
+  ...
+# Subtest: cancelled async request is retried when its demand returns before completion
+ok 16 - cancelled async request is retried when its demand returns before completion
+  ---
+  duration_ms: 0.6065
+  ...
+# (node:32076) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only presentation advances work; a complete private group is published
+ok 17 - only presentation advances work; a complete private group is published
+  ---
+  duration_ms: 7.3801
+  ...
+# Subtest: revision invalidation closes private resources without publishing
+ok 18 - revision invalidation closes private resources without publishing
+  ---
+  duration_ms: 0.623
+  ...
+# Subtest: replacement and abort settle cancelled jobs immediately
+ok 19 - replacement and abort settle cancelled jobs immediately
+  ---
+  duration_ms: 0.4917
+  ...
+# Subtest: mandatory CPU has precedence even over overdue jobs
+ok 20 - mandatory CPU has precedence even over overdue jobs
+  ---
+  duration_ms: 0.7206
+  ...
+# Subtest: statistics expire after two seconds and do not label intervals GPU time
+ok 21 - statistics expire after two seconds and do not label intervals GPU time
+  ---
+  duration_ms: 1.8662
+  ...
+# Subtest: slow presentation intervals alone do not permanently starve cheap work
+ok 22 - slow presentation intervals alone do not permanently starve cheap work
+  ---
+  duration_ms: 1.0919
+  ...
+# Subtest: an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+ok 23 - an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+  ---
+  duration_ms: 0.8394
+  ...
+# Subtest: ready promise continuations share one presentation budget without another frame
+ok 24 - ready promise continuations share one presentation budget without another frame
+  ---
+  duration_ms: 1.3943
+  ...
+# Subtest: aging measures time without service rather than privileging an old endless job
+ok 25 - aging measures time without service rather than privileging an old endless job
+  ---
+  duration_ms: 0.5521
+  ...
+# Subtest: a failing cost estimator closes only its job and leaves other work executable
+ok 26 - a failing cost estimator closes only its job and leaves other work executable
+  ---
+  duration_ms: 1.3751
+  ...
+# Subtest: admission diagnostics are optional and distinguish late callbacks from CPU work
+ok 27 - admission diagnostics are optional and distinguish late callbacks from CPU work
+  ---
+  duration_ms: 0.4932
+  ...
+# Subtest: historical oversized estimates recover without permanent starvation or dropping CPU guards
+ok 28 - historical oversized estimates recover without permanent starvation or dropping CPU guards
+  ---
+  duration_ms: 0.5817
+  ...
+# Subtest: required streamed terrain starts without a fresh grace period on late presentation
+ok 29 - required streamed terrain starts without a fresh grace period on late presentation
+  ---
+  duration_ms: 0.8146
+  ...
+# Subtest: dependency wait frees presentation capacity and resumes only on an admitted frame
+ok 30 - dependency wait frees presentation capacity and resumes only on an admitted frame
+  ---
+  duration_ms: 1.2577
+  ...
+# Subtest: cancelled dependency cannot resume or remove its replacement
+ok 31 - cancelled dependency cannot resume or remove its replacement
+  ---
+  duration_ms: 0.6308
+  ...
+# Subtest: failed dependency releases only its job and runs cleanup
+ok 32 - failed dependency releases only its job and runs cleanup
+  ---
+  duration_ms: 1.7577
+  ...
+# Subtest: terrain wrapper forwards dependency output but rejects a stale revision before publication
+ok 33 - terrain wrapper forwards dependency output but rejects a stale revision before publication
+  ---
+  duration_ms: 1.2379
+  ...
+# Subtest: required opt-in recovers a poisoned shared estimate without admitting optional work
+ok 34 - required opt-in recovers a poisoned shared estimate without admitting optional work
+  ---
+  duration_ms: 0.7323
+  ...
+# Subtest: exceptional recovery never runs cancelled or invalidated required work
+ok 35 - exceptional recovery never runs cancelled or invalidated required work
+  ---
+  duration_ms: 0.6248
+  ...
+# (node:23036) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera replacement keeps published target until every tile is ready; budget counts both
+ok 36 - camera replacement keeps published target until every tile is ready; budget counts both
+  ---
+  duration_ms: 2.9675
+  ...
+# Subtest: successive invalidations cancel partial stale bake and coalesce duplicate versions
+ok 37 - successive invalidations cancel partial stale bake and coalesce duplicate versions
+  ---
+  duration_ms: 0.4003
+  ...
+# Subtest: unload cancels pending work and releases resident data without late publication
+ok 38 - unload cancels pending work and releases resident data without late publication
+  ---
+  duration_ms: 0.8106
+  ...
+# Subtest: failed generation releases temporary resource but preserves prior published data
+ok 39 - failed generation releases temporary resource but preserves prior published data
+  ---
+  duration_ms: 0.593
+  ...
+# Subtest: an owner disposed during drawing cannot publish a stale target
+ok 40 - an owner disposed during drawing cannot publish a stale target
+  ---
+  duration_ms: 0.4538
+  ...
+# Subtest: over-budget invalidation cancels obsolete pending data without evicting the resident target
+ok 41 - over-budget invalidation cancels obsolete pending data without evicting the resident target
+  ---
+  duration_ms: 0.2689
+  ...
+# Subtest: crossfade retains and budgets old target, deferring further replacements until release
+ok 42 - crossfade retains and budgets old target, deferring further replacements until release
+  ---
+  duration_ms: 0.3442
+  ...
+# (node:13868) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: staged preparation yields but only transfers a complete group
+ok 43 - staged preparation yields but only transfers a complete group
+  ---
+  duration_ms: 4.5579
+  ...
+# Subtest: staged obsolete closes private work before another step
+ok 44 - staged obsolete closes private work before another step
+  ---
+  duration_ms: 0.4997
+  ...
+# Subtest: staged quality closes private work before another step
+ok 45 - staged quality closes private work before another step
+  ---
+  duration_ms: 0.3134
+  ...
+# Subtest: staged teardown closes private work before another step
+ok 46 - staged teardown closes private work before another step
+  ---
+  duration_ms: 0.1056
+  ...
+# Subtest: staged context closes private work before another step
+ok 47 - staged context closes private work before another step
+  ---
+  duration_ms: 0.1757
+  ...
+# Subtest: staged quality-roundtrip closes private work before another step
+ok 48 - staged quality-roundtrip closes private work before another step
+  ---
+  duration_ms: 0.1055
+  ...
+# Subtest: scheduler failure closes the pending iterator
+ok 49 - scheduler failure closes the pending iterator
+  ---
+  duration_ms: 1.1207
+  ...
+# (node:38976) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38976) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: a Sabana game state renders and routes from one spatial authority through topology events
+ok 50 - a Sabana game state renders and routes from one spatial authority through topology events
+  ---
+  duration_ms: 234.8873
+  ...
+# Subtest: the same game-state session streams and routes in all six biomes
+ok 51 - the same game-state session streams and routes in all six biomes
+  ---
+  duration_ms: 421.7601
+  ...
+# Subtest: chunk selection distinguishes an absent chunk from a resident chunk with zero props
+ok 52 - chunk selection distinguishes an absent chunk from a resident chunk with zero props
+  ---
+  duration_ms: 4.0541
+  ...
+# Subtest: one resident C++ world supplies streamed render chunks and actor routes
+ok 53 - one resident C++ world supplies streamed render chunks and actor routes
+  ---
+  duration_ms: 47.6391
+  ...
+# Subtest: stream cancellation does not generate chunks that were never requested by the renderer
+ok 54 - stream cancellation does not generate chunks that were never requested by the renderer
+  ---
+  duration_ms: 23.6868
+  ...
+# Subtest: production terrain installer accepts the same C++ payload used for navigation
+ok 55 - production terrain installer accepts the same C++ payload used for navigation
+  ---
+  duration_ms: 64.1358
+  ...
+1..55
+# tests 55
+# suites 0
+# pass 55
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2010.8946

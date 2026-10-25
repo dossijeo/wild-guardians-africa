@@ -7,8 +7,8 @@ import {gatePortalPoints} from '../gate-passages.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
-export function createSpatialWorld(module){
-  const wasm=new WebAssembly.Instance(module,{
+export function createSpatialWorld(module,{exports:runtimeExports}={}){
+  const wasm=runtimeExports??new WebAssembly.Instance(module,{
     env:{emscripten_notify_memory_growth(){}},
     // Current Emscripten standalone builds may import this even though the
     // game never exits the spatial module. Older binaries omit the import.
@@ -70,10 +70,11 @@ export function createSpatialWorld(module){
     const pairs=new Int32Array(wasm.memory.buffer,wasm.spatial_changed_chunks_ptr(),count*2);
     return Array.from({length:count},(_,i)=>({cx:pairs[i*2],cz:pairs[i*2+1]}));
   }
-  function generate(seed,cx,cz,biome='savanna'){
+  function generate(seed,cx,cz,biome='savanna',{canyonOpenRight=false}={}){
     const name=BIOME_IDS[biome]??biome;
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
-    const count=wasm.spatial_generate_biome(seed>>>0,SPATIAL_BIOME_CODES[name],cx|0,cz|0);
+    if(canyonOpenRight&&name!=='canyons')throw RangeError('One-wall variant requires canyons');
+    const count=wasm.spatial_generate_biome(seed>>>0,canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     workerPortalRoutes=[];chunkRevision++;
     return chunk;
@@ -84,6 +85,31 @@ export function createSpatialWorld(module){
     if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);chunkRevision++;}
     return result>0?result-1:result;
   }
+  // Publication already selected the prepared buffers; never call selectChunk
+  // here, because the synchronous selection path regenerates visual data.
+  function publishPreparedChunk(id,cx,cz){
+    const result=wasm.spatial_prepare_publish(id);
+    if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);chunkRevision++;}
+    return result;
+  }
+  const preparation=wasm.spatial_prepare_start?{
+    start:(cx,cz)=>wasm.spatial_prepare_start(cx|0,cz|0),
+    status:()=>wasm.spatial_prepare_status(),
+    cancel:()=>wasm.spatial_prepare_cancel(),
+    release:()=>wasm.spatial_prepare_release(),
+    shutdown:()=>wasm.spatial_prepare_shutdown(),
+    publish:publishPreparedChunk,
+    metric:field=>wasm.spatial_prepare_metric(field),
+    visualOptions:flags=>wasm.spatial_prepare_visual_options?.(flags),
+    waterShore:()=>{const size=wasm.spatial_prepare_buffer_bytes(9);return size?new Float32Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(9),size/4).slice():null;},
+    waterBed:()=>{
+      const size=wasm.spatial_prepare_buffer_bytes(7);if(!size)return null;
+      const values=new Float64Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(8),8);
+      const [nx,nz,minX,minZ,width,height,lo,span]=values;
+      if(size!==nx*nz*4)throw Error('Invalid prepared water map');
+      return {nx,nz,minX,minZ,width,height,lo,span,bytes:new Uint8Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(7),size).slice()};
+    }
+  }:null;
   function selectChunk(cx,cz){
     if(!generated)throw Error('Generate the world before selecting a chunk');
     const result=wasm.spatial_select_chunk(cx|0,cz|0);
@@ -100,6 +126,25 @@ export function createSpatialWorld(module){
       if(chunk?.cx===(cx|0)&&chunk?.cz===(cz|0)){
         const last=chunks.at(-1);
         chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;
+      }
+    }
+    return removed;
+  }
+  function removeChunks(coordinates){
+    if(!Array.isArray(coordinates)||coordinates.length>4096||coordinates.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isInteger(n)||n<-2147483648||n>2147483647)))throw TypeError('Invalid chunk removal batch');
+    if(!coordinates.length)return 0;
+    if(!wasm.spatial_remove_chunks)return coordinates.reduce((count,[x,z])=>count+removeChunk(x,z),0);
+    const pointer=wasm.spatial_remove_chunks_ptr(coordinates.length);
+    if(!pointer)throw Error('Could not allocate chunk removal batch');
+    const data=new Int32Array(wasm.memory.buffer,pointer,coordinates.length*2);
+    coordinates.forEach((p,i)=>data.set(p,i*2));
+    const removed=wasm.spatial_remove_chunks(coordinates.length);
+    if(removed<0)throw Error('Native chunk removal failed');
+    if(removed){
+      const keys=new Set(coordinates.map(([x,z])=>x+','+z));
+      chunkRevision+=removed;chunks=chunks.filter(([x,z])=>!keys.has(x+','+z));
+      if(chunk&&keys.has(chunk.cx+','+chunk.cz)){
+        const last=chunks.at(-1);chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;
       }
     }
     return removed;
@@ -278,7 +323,7 @@ export function createSpatialWorld(module){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
@@ -491,6 +536,12 @@ export function createSpatialWorld(module){
     propBlocked:(x,z)=>Boolean(wasm.spatial_prop_blocked(x,z)),
     surface,slope,
     surfaceAnywhere:(x,z)=>wasm.spatial_surface_anywhere(x,z),
+    // Borrowed view, valid until the next grid query or WASM memory growth.
+    surfaceGrid:(minX,minZ,width,height,nx,nz)=>{
+      if(![minX,minZ,width,height].every(Number.isFinite)||!Number.isInteger(nx)||!Number.isInteger(nz)||nx<2||nz<2||nx>513||nz>513)return null;
+      const pointer=wasm.spatial_surface_grid?.(minX,minZ,width,height,nx,nz);
+      return pointer?new Float32Array(wasm.memory.buffer,pointer,nx*nz):null;
+    },
     fluidLevel:(x,z)=>wasm.spatial_fluid_level(x,z),
     fluidLevelAnywhere:(x,z)=>wasm.spatial_fluid_level_anywhere(x,z),
     waterShoreAnywhere:(x,z)=>wasm.spatial_water_shore_anywhere(x,z),

@@ -1,0 +1,118 @@
+[
+  {
+    "record": 0,
+    "variant": "cache512",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 16.5112,
+    "frameMs": 21.5383,
+    "p95Ms": 25.599999964237213,
+    "cpuMs": 6.6283,
+    "cache": null
+  },
+  {
+    "record": 1,
+    "variant": "cache512",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 17.3262,
+    "frameMs": 23.5742,
+    "p95Ms": 31,
+    "cpuMs": 6.52,
+    "cache": null
+  },
+  {
+    "record": 2,
+    "variant": "fixedlifecycle",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 16.4485,
+    "frameMs": 21.0917,
+    "p95Ms": 25.900000035762787,
+    "cpuMs": 5.8667,
+    "cache": {
+      "bytes": 35209000,
+      "peakBytes": 35209000,
+      "tiles": 25,
+      "published": 25,
+      "cancelled": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 3,
+    "variant": "fixedlifecycle",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 17.3466,
+    "frameMs": 22.5675,
+    "p95Ms": 27.19999998807907,
+    "cpuMs": 6.29,
+    "cache": {
+      "bytes": 35209000,
+      "peakBytes": 35209000,
+      "tiles": 25,
+      "published": 25,
+      "cancelled": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 4,
+    "variant": "cache512",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 16.1735,
+    "frameMs": 22.1558,
+    "p95Ms": 25.099999964237213,
+    "cpuMs": 5.7667,
+    "cache": null
+  },
+  {
+    "record": 5,
+    "variant": "cache512",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 17.2888,
+    "frameMs": 22.6442,
+    "p95Ms": 26.19999998807907,
+    "cpuMs": 5.5917,
+    "cache": null
+  },
+  {
+    "record": 6,
+    "variant": "fixedlifecycle",
+    "phase": "day",
+    "samples": 120,
+    "gpuMs": 16.5029,
+    "frameMs": 21.635,
+    "p95Ms": 25.900000035762787,
+    "cpuMs": 6.0167,
+    "cache": {
+      "bytes": 35209000,
+      "peakBytes": 35209000,
+      "tiles": 25,
+      "published": 25,
+      "cancelled": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "record": 7,
+    "variant": "fixedlifecycle",
+    "phase": "night",
+    "samples": 120,
+    "gpuMs": 16.6495,
+    "frameMs": 22.2383,
+    "p95Ms": 27.80000001192093,
+    "cpuMs": 6.1283,
+    "cache": {
+      "bytes": 35209000,
+      "peakBytes": 35209000,
+      "tiles": 25,
+      "published": 25,
+      "cancelled": 0,
+      "rejected": 0
+    }
+  }
+]

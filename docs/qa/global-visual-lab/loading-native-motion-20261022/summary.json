@@ -1,0 +1,327 @@
+{
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "rows": [
+    {
+      "phase": "day",
+      "motion": "static",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 5.6540099999999995,
+      "gpu_p95": 7.762812,
+      "cpu_median": 0.5,
+      "calls": [
+        6
+      ],
+      "triangles": [
+        16002
+      ],
+      "blocks": [
+        3.3183585,
+        6.8477855
+      ],
+      "repeat_drift": 1.063606298113962
+    },
+    {
+      "phase": "day",
+      "motion": "static",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 5.1226555000000005,
+      "gpu_p95": 6.805832,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        3.6857545,
+        6.076119
+      ],
+      "repeat_drift": 0.6485414316118994
+    },
+    {
+      "phase": "day",
+      "motion": "wind",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 7.000833,
+      "gpu_p95": 8.387134,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        5.8102855,
+        7.177082499999999
+      ],
+      "repeat_drift": 0.23523749392349114
+    },
+    {
+      "phase": "day",
+      "motion": "wind",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 3.7407545,
+      "gpu_p95": 4.833697,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        3.8696089999999996,
+        3.6792175
+      ],
+      "repeat_drift": 0.05174782409574852
+    },
+    {
+      "phase": "day",
+      "motion": "orbit",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 6.204322,
+      "gpu_p95": 7.967031,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        7.409686499999999,
+        3.99427
+      ],
+      "repeat_drift": 0.8550790257043213
+    },
+    {
+      "phase": "day",
+      "motion": "orbit",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 5.9506505,
+      "gpu_p95": 8.177604,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        7.040754,
+        3.864192
+      ],
+      "repeat_drift": 0.8220507676637185
+    },
+    {
+      "phase": "day",
+      "motion": "both",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 3.8406245,
+      "gpu_p95": 4.895676,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        3.672473,
+        3.8920565
+      ],
+      "repeat_drift": 0.05979172617470563
+    },
+    {
+      "phase": "day",
+      "motion": "both",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 7.5472909999999995,
+      "gpu_p95": 10.31677,
+      "cpu_median": 0.5999999642372131,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        7.0879165,
+        8.069660500000001
+      ],
+      "repeat_drift": 0.13850953238515173
+    },
+    {
+      "phase": "night",
+      "motion": "static",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 8.467682,
+      "gpu_p95": 10.52875,
+      "cpu_median": 0.5,
+      "calls": [
+        6
+      ],
+      "triangles": [
+        16002
+      ],
+      "blocks": [
+        6.212524500000001,
+        9.16328
+      ],
+      "repeat_drift": 0.4749688311088349
+    },
+    {
+      "phase": "night",
+      "motion": "static",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 7.147265,
+      "gpu_p95": 10.1275,
+      "cpu_median": 0.5999999642372131,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        8.4038015,
+        5.421171
+      ],
+      "repeat_drift": 0.5501819625317113
+    },
+    {
+      "phase": "night",
+      "motion": "wind",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 4.4779155,
+      "gpu_p95": 5.966353,
+      "cpu_median": 0.45000001788139343,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        4.675624,
+        4.311171
+      ],
+      "repeat_drift": 0.08453689264471298
+    },
+    {
+      "phase": "night",
+      "motion": "wind",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 6.2138015,
+      "gpu_p95": 8.437395,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        4.050885,
+        7.3746345
+      ],
+      "repeat_drift": 0.8204995945330464
+    },
+    {
+      "phase": "night",
+      "motion": "orbit",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 7.032838,
+      "gpu_p95": 11.11177,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        4.1566145,
+        9.249217999999999
+      ],
+      "repeat_drift": 1.2251806127318274
+    },
+    {
+      "phase": "night",
+      "motion": "orbit",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 8.603045999999999,
+      "gpu_p95": 9.983697,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        7.4359365,
+        9.142942000000001
+      ],
+      "repeat_drift": 0.22956160263068415
+    },
+    {
+      "phase": "night",
+      "motion": "both",
+      "forced": false,
+      "samples": 48,
+      "gpu_median": 7.5700775,
+      "gpu_p95": 10.187343,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        9.197369,
+        4.798619
+      ],
+      "repeat_drift": 0.9166699835931962
+    },
+    {
+      "phase": "night",
+      "motion": "both",
+      "forced": true,
+      "samples": 48,
+      "gpu_median": 7.2606765,
+      "gpu_p95": 11.589479,
+      "cpu_median": 0.5,
+      "calls": [
+        7
+      ],
+      "triangles": [
+        29882
+      ],
+      "blocks": [
+        10.4436965,
+        4.283072000000001
+      ],
+      "repeat_drift": 1.4383658504923567
+    }
+  ],
+  "errors": [],
+  "disjoint": 0
+}

@@ -28,6 +28,7 @@
     try {
       const stage = document.querySelector('#stage'), world = document.querySelector('#world');
       const progress = document.querySelector('.interactive-loading-track');
+      report.checks.nativeLoadingTrace = window.__wildGuardiansNativeLoadingSnapshot?.() ?? null;
       report.checks.loadingAtFinish = {
         worldWaitMs: worldStartedAt === null ? null : (worldReadyAt ?? performance.now()) - worldStartedAt,
         readyGateReached: worldReadyAt !== null,

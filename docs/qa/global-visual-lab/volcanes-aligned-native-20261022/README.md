@@ -1,0 +1,13 @@
+# Native fix: consistent initial distant-region sampling
+
+The experimental renderer now aligns its initial distant-region center to the same96-unit grid used after camera travel. Both early data preload and the eventual region tracker use nativeFarInitialCenter. Only globalVisualLighting enables alignment; default/legacy exact camera anchors remain unchanged. No changes to terrain authority, simulation, density, silhouettes, opacity or quality settings.
+
+Cause evidence: volcanes-draw-passes-20261022 reconciles the original−44-triangle difference entirely to changed distant terrain/seam and impostor sampling. The route-only candidate in volcanes-aligned-far-region-20261022 removed that difference. This directory verifies the actual source implementation without replacing either region module in QA.
+
+Reproduce: `node tools/experiments/audit-volcano-aligned-native-20261022.mjs`, then set `WG_ROUNDTRIP_DIR=docs/qa/global-visual-lab/volcanes-aligned-native-20261022` and run `python tools/experiments/compare-volcano-populated-roundtrip-20261022.py`.
+
+Ten medium-quality day/night stops, seed712,1280x720,full backgrounds,populated frozen fixture. Two192-unit excursions per phase; state unchanged, no browser/GL errors. Home frames now all render102calls/603198triangles (final world pass), including initial startup. Initial day to first return still changes10935pixels/max delta41 because render origin changes0→96; this matches the magnitude of isolated rebasing and replaces the former stronger far-lava discrepancy14544pixels/delta171. Second day return is RGB-identical. Night returns change2pixels/delta2 then0pixels. Inspected both day/night side-by-sides: settlement, foliage and far lava retain their appearance across returns. Resource plateau175geometries/90textures at home after initial cache retirement, not proof of long-term leak freedom.
+
+Validation:17 distinct Node tests passed across far-initial-center, far-region-tracker, initial-far-region and world-load-initial-far. Includes aligned early-data adoption without a second worker for all six biome descriptors, legacy behavior, cancellation and region hysteresis. This is not a six-biome rendered validation; repeat combined visual checks on the new initial sampling before closing the other biomes. The route candidate requires the pre-fix source; use this native runner for current code.
+
+No FPS/GPU improvement claimed. Old provisional Volcanoes resource benchmark remains provisional. The change corrects sampling consistency rather than reducing graphical quality. Global visual/active-play/long-streaming acceptance remains open.

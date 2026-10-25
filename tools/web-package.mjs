@@ -12,6 +12,13 @@ export const UNUSED_WORKER_LAB_MODELS=new Set([
 // the repaired 40-state crop GLB from crops-v4.json.
 export const UNUSED_CROP_LAB_MODEL='assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb';
 const UNUSED_LAB_MODELS=new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL]);
+// Assets referenced only by tools/experiments QA routes, never the shipped app.
+// Keep originals in public for reproducible development experiments.
+export const QA_ONLY_VISUAL_DIRECTORIES=[
+ 'ground-fiber-bake','ground-pom','moss-composite','fern-composite-lod-20261023',
+ 'holly-fern-cards-20261023','mangrove-leaf-cards-20261023',
+ 'continuous-grass-cards','continuous-grass-flow'
+];
 export function publicText(text,path,manifest){
   if(path==='content/models.json'){
     const models=JSON.parse(text);
@@ -40,6 +47,11 @@ export function webPackagePlugin(){
         const target=resolve(dist,item.runtime);
         if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Unused lab model path escapes package');
         rmSync(target,{force:true});
+      }
+      for(const name of QA_ONLY_VISUAL_DIRECTORIES){
+        const parent=resolve(dist,'assets/visual-lab'),target=resolve(parent,name);
+        if(!target.startsWith(parent+sep))throw Error('QA archive path escapes visual assets');
+        rmSync(target,{recursive:true,force:true});
       }
       writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify({...mapping,records:mapping.records.filter(item=>!UNUSED_LAB_MODELS.has(item.source))},null,2)+'\n');
       // The four worker reference labs are retained in source but have no menu entry.

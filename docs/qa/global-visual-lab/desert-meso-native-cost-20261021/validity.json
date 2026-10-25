@@ -1,0 +1,9 @@
+{
+  "performanceComparisonValid": false,
+  "reason": "External GPU workload resumed during ABBA; control GPU day mean drifted from 10.103 to 16.819 ms.",
+  "gpuQueriesValid": 720,
+  "cadenceSamples": 720,
+  "matchedGeometryAndCameras": true,
+  "stateUnchanged": true,
+  "recommendation": "Retain visual candidate; repeat cost measurement under exclusive GPU availability."
+}

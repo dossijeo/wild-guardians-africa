@@ -1,0 +1,2019 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&stableShadowPrograms=1&qualityMenuProtocol=1&qualityPhases=1&qualityActive=1&qualityAttribution=1",
+  "result": {
+    "cropDepthPreparation": null,
+    "loading": {
+      "readyMs": 28330.80000001192,
+      "phases": []
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 1,
+      "cpuMs": 18.889999985694885,
+      "maxTaskMs": 14.0450000166893,
+      "pending": 0,
+      "global": false
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 81,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "qualityCycle": {
+      "cropDepthWarm": null,
+      "faultInjection": null,
+      "attribution": [
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 15.600000023841858,
+          "at": 32615.259999990463,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 16.189999997615814,
+          "at": 32615.27999997139,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 16.30999994277954,
+          "at": 32615.28499996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 24.884999990463257,
+          "at": 32615.305000007153,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.474999964237213,
+          "at": 32661.80000001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 18.524999976158142,
+          "at": 32732.144999980927,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.4200000166893,
+          "at": 32775.37999999523,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.700000047683716,
+          "at": 32808.17000001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.7049999833107,
+          "at": 32822.57499998808,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.629999995231628,
+          "at": 32874.514999985695,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.0450000166893,
+          "at": 32908.06999999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "media",
+          "ms": 17.81500005722046,
+          "at": 33115.60000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 24.735000014305115,
+          "at": 33121.314999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 24.819999992847443,
+          "at": 33121.31999999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 32.110000014305115,
+          "at": 33121.31999999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 10.775000035762787,
+          "at": 33149.92000001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 10.830000042915344,
+          "at": 33149.92000001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 16.150000035762787,
+          "at": 33149.93000000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 10.775000035762787,
+          "at": 33167.67500001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 10.840000033378601,
+          "at": 33167.67500001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 15.884999990463257,
+          "at": 33167.685000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 11.509999990463257,
+          "at": 33187.75999999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 11.569999992847443,
+          "at": 33187.764999985695,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 16.40499997138977,
+          "at": 33187.77499997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 16.164999961853027,
+          "at": 33209.58499997854,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 10.0450000166893,
+          "at": 33255.610000014305,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 10.100000023841858,
+          "at": 33255.61500000954,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 13.480000019073486,
+          "at": 33255.625,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 14.680000007152557,
+          "at": 33302.939999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 11.380000054836273,
+          "at": 33385.35000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 11.435000002384186,
+          "at": 33385.35500001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 17.22000002861023,
+          "at": 33385.36500000954,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 11.524999976158142,
+          "at": 33405.97500002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 11.600000023841858,
+          "at": 33405.97500002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 14.680000007152557,
+          "at": 33405.98000001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 10.964999973773956,
+          "at": 33468.094999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 11,
+          "at": 33468.094999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 15.195000052452087,
+          "at": 33468.10500001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 12.2950000166893,
+          "at": 33520.37000000477,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 12.335000038146973,
+          "at": 33520.37000000477,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 15.384999990463257,
+          "at": 33520.37999999523,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 13.9549999833107,
+          "at": 33647.52499997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 14.10999995470047,
+          "at": 33647.53499996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 22.780000030994415,
+          "at": 33647.54500001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 12.22000002861023,
+          "at": 33670.560000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 12.274999976158142,
+          "at": 33670.564999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 16.519999980926514,
+          "at": 33670.56999999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 18.24500000476837,
+          "at": 33898.15499997139,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 10.290000021457672,
+          "at": 33919.564999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 10.355000019073486,
+          "at": 33919.56999999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.620000004768372,
+          "at": 33919.58499997854,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.475000023841858,
+          "at": 33941.80500000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 15.240000009536743,
+          "at": 34028.17500001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.955000042915344,
+          "at": 34040.36500000954,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.72000002861023,
+          "at": 34086.18000000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.114999949932098,
+          "at": 34130.03499996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.300000011920929,
+          "at": 34179.39499998093,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.365000009536743,
+          "at": 34223.61500000954,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "syncChunks",
+          "quality": "baja",
+          "ms": 12.185000002384186,
+          "at": 34270.01999998093,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 28.790000021457672,
+          "at": 34286.439999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 11.004999995231628,
+          "at": 34327.75999999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 11.125,
+          "at": 34327.764999985695,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 16.110000014305115,
+          "at": 34327.79500001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.974999964237213,
+          "at": 34343.839999973774,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.59500002861023,
+          "at": 34379.42000001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.110000014305115,
+          "at": 34495.29000002146,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.259999990463257,
+          "at": 34552.42500001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 15.199999988079071,
+          "at": 34587.07499998808,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "media",
+          "ms": 16.685000002384186,
+          "at": 34754.55000001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "media",
+          "ms": 22.67500001192093,
+          "at": 34759.625,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "media",
+          "ms": 22.740000009536743,
+          "at": 34759.625,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "media",
+          "ms": 33.57499998807907,
+          "at": 34759.63499999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 74.75999999046326,
+          "at": 34886.235000014305,
+          "stack": null,
+          "program": {
+            "id": 93,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:seam-v2"
+          }
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 94.21499997377396,
+          "at": 34889.15999996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 99.43000000715256,
+          "at": 34892.64499998093,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 99.50999999046326,
+          "at": 34892.64999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 107.41999995708466,
+          "at": 34892.65999996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.754999995231628,
+          "at": 34912.310000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.839999973773956,
+          "at": 34937.94499999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.030000030994415,
+          "at": 34953.87000000477,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.27999997138977,
+          "at": 34993.44999998808,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.360000014305115,
+          "at": 35008.360000014305,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.030000030994415,
+          "at": 35052.79000002146,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.564999997615814,
+          "at": 35102.90499997139,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.09500002861023,
+          "at": 35145.23000001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.815000057220459,
+          "at": 35188.35500001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.355000019073486,
+          "at": 35242.060000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.805000007152557,
+          "at": 35283.185000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.925000011920929,
+          "at": 35335.47500002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.369999945163727,
+          "at": 35383.219999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.285000026226044,
+          "at": 35468.189999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.399999976158142,
+          "at": 35554.82999998331,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.759999990463257,
+          "at": 35648.389999985695,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.355000019073486,
+          "at": 35695.61500000954,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.914999961853027,
+          "at": 35775.83499997854,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.050000011920929,
+          "at": 35903.32999998331,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.209999978542328,
+          "at": 35975.060000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.964999973773956,
+          "at": 36077.25999999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.780000030994415,
+          "at": 36149.98000001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.985000014305115,
+          "at": 36210.32999998331,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.209999978542328,
+          "at": 36251.64999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.350000023841858,
+          "at": 36421.60500001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 129.26499998569489,
+          "at": 36615.089999973774,
+          "stack": null,
+          "program": {
+            "id": 96,
+            "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,3201,3,139265,srgb,bioma-local-bridge-depth-v3"
+          }
+        },
+        {
+          "kind": "renderer",
+          "name": "render",
+          "quality": "baja",
+          "ms": 136.62999999523163,
+          "at": 36619.564999997616,
+          "stack": "Error: slow auxiliary draw\n    at object.<computed> [as render] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:59:1309)\n    at http://127.0.0.1:5190/src/rendering/buildings.js?t=1792852127810:217:75\n    at withDepthCaptureMaterials (http://127.0.0.1:5190/src/rendering/depth-capture.js:80:5)\n    at BuildingDestructionPass.captureDepth (http://127.0.0.1:5190/src/rendering/buildings.js?t=1792852127810:217:30)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792852196834:811:31\n    at withRenderOrigin (http://127.0.0.1:5190/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5190/src/rendering/scene.js?t=1792852196834:809:28)\n    at object.<computed> [as drawWorldFrame] (http://127.0.0.1:5190/tools/experiments/spatial-thread-game-quality-case.js:59:746)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792852196834:808:112\n    at GameJuice.draw (http://127.0.0.1:5190/src/ui/game-juice.js:63:170)",
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 143.84499996900558,
+          "at": 36625.969999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 143.88999998569489,
+          "at": 36625.969999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 147.87999999523163,
+          "at": 36625.98000001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.004999995231628,
+          "at": 36665.969999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.120000004768372,
+          "at": 36711.94999998808,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.7950000166893,
+          "at": 36865.63499999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.620000004768372,
+          "at": 36906.39999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.725000023841858,
+          "at": 36975.37999999523,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.344999969005585,
+          "at": 37033.50999999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.174999952316284,
+          "at": 37133.094999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.774999976158142,
+          "at": 37167.44499999285,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.259999990463257,
+          "at": 37198.65999996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.819999992847443,
+          "at": 37231.69999998808,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.584999978542328,
+          "at": 37266.65999996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.494999945163727,
+          "at": 37308.28499996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 12.884999990463257,
+          "at": 37418.07999998331,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 13.034999966621399,
+          "at": 37418.07999998331,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 18.214999973773956,
+          "at": 37418.089999973774,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 15.010000050067902,
+          "at": 37487.17000001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 15.100000023841858,
+          "at": 37487.17500001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 24.540000021457672,
+          "at": 37487.18000000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 12.835000038146973,
+          "at": 37577.04500001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 12.975000023841858,
+          "at": 37577.04500001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 17.725000023841858,
+          "at": 37577.05500000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 12.415000021457672,
+          "at": 37594.80000001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 12.465000033378601,
+          "at": 37594.80500000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 15.860000014305115,
+          "at": 37594.810000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.875,
+          "at": 37610.875,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.900000035762787,
+          "at": 37634.24500000477,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 16.299999952316284,
+          "at": 37681.65999996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "syncChunks",
+          "quality": "baja",
+          "ms": 12.0799999833107,
+          "at": 37719.15499997139,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 26.830000042915344,
+          "at": 37733.67500001192,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 10.0799999833107,
+          "at": 37766.344999969006,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 10.150000035762787,
+          "at": 37766.35000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.75,
+          "at": 37766.35500001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 18.455000042915344,
+          "at": 37830.11500000954,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 11.400000035762787,
+          "at": 37862.064999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 11.464999973773956,
+          "at": 37862.064999997616,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 16.115000009536743,
+          "at": 37862.07499998808,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawWorldFrame",
+          "quality": "baja",
+          "ms": 12.775000035762787,
+          "at": 37919.85500001907,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "drawRenderFrame",
+          "quality": "baja",
+          "ms": 12.850000023841858,
+          "at": 37919.860000014305,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 23.780000030994415,
+          "at": 37919.87000000477,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.844999969005585,
+          "at": 37945.15499997139,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 14.59500002861023,
+          "at": 38007.00499999523,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 13.6700000166893,
+          "at": 38065.685000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.02999997138977,
+          "at": 38105.27999997139,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.755000054836273,
+          "at": 38140.47500002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.129999995231628,
+          "at": 38203.90999996662,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.645000040531158,
+          "at": 38295.42000001669,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.9549999833107,
+          "at": 38326.18000000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.685000002384186,
+          "at": 38431.18000000715,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.689999997615814,
+          "at": 38514.13499999046,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.209999978542328,
+          "at": 38687.810000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.960000038146973,
+          "at": 38714.060000002384,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 12.284999966621399,
+          "at": 39538.76999998093,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.334999978542328,
+          "at": 39757.95999997854,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 11.089999973773956,
+          "at": 39875.00499999523,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 17.935000002384186,
+          "at": 40084.214999973774,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.240000009536743,
+          "at": 40127.74500000477,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "scene",
+          "name": "render",
+          "quality": "baja",
+          "ms": 10.439999997615814,
+          "at": 40463.55000001192,
+          "stack": null,
+          "program": null
+        }
+      ],
+      "attributionScope": "Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.",
+      "rows": [
+        {
+          "quality": "baja",
+          "terrainPhases": {},
+          "phases": {
+            "world-frame-stage:0": {
+              "count": 13,
+              "totalMs": 6.264999985694885,
+              "p95Ms": 0.675000011920929,
+              "maxMs": 0.8849999904632568
+            },
+            "world-frame-stage:1": {
+              "count": 13,
+              "totalMs": 25.164999902248383,
+              "p95Ms": 3.724999964237213,
+              "maxMs": 4.360000014305115
+            },
+            "world-frame-stage:2": {
+              "count": 13,
+              "totalMs": 9.830000042915344,
+              "p95Ms": 1.1299999952316284,
+              "maxMs": 1.3550000190734863
+            },
+            "world-frame-stage:3": {
+              "count": 13,
+              "totalMs": 13.769999921321869,
+              "p95Ms": 1.850000023841858,
+              "maxMs": 2.314999997615814
+            },
+            "world-frame-stage:4": {
+              "count": 13,
+              "totalMs": 16.675000071525574,
+              "p95Ms": 1.9449999928474426,
+              "maxMs": 2.3399999737739563
+            },
+            "world-frame-stage:5": {
+              "count": 13,
+              "totalMs": 7.295000076293945,
+              "p95Ms": 0.9550000429153442,
+              "maxMs": 1
+            },
+            "world-frame-stage:6": {
+              "count": 13,
+              "totalMs": 0.034999966621398926,
+              "p95Ms": 0.004999995231628418,
+              "maxMs": 0.004999995231628418
+            },
+            "world-frame-stage:7": {
+              "count": 13,
+              "totalMs": 0.11500000953674316,
+              "p95Ms": 0.014999985694885254,
+              "maxMs": 0.01500004529953003
+            },
+            "world-frame-stage:8": {
+              "count": 13,
+              "totalMs": 0.004999995231628418,
+              "p95Ms": 0,
+              "maxMs": 0.004999995231628418
+            },
+            "world-frame-draw": {
+              "count": 13,
+              "totalMs": 81.16999989748001,
+              "p95Ms": 7.745000004768372,
+              "maxMs": 16.37000000476837
+            }
+          },
+          "stagedPreparation": null,
+          "cacheBefore": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 25,
+              "published": 25,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          },
+          "cacheAfter": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 25,
+              "published": 25,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          },
+          "programs": 82,
+          "drawCalls": 77,
+          "recovery": {
+            "revision": 3,
+            "ms": 415.57499998807907,
+            "retained": 82
+          },
+          "retention": {
+            "retained": 82,
+            "released": 82,
+            "destroyed": 2,
+            "abandoned": 0,
+            "skipped": 0,
+            "unsupported": false
+          },
+          "settingMs": 2.274999976158142,
+          "prewarmMs": 0,
+          "prewarmInvalidations": 0,
+          "livePreparation": null,
+          "temporaryProgramScope": null,
+          "transitionMs": 512.6000000238419,
+          "frameTimes": [
+            56.75,
+            34.19999998807907,
+            26.3850000500679,
+            44.125,
+            48.58499997854233,
+            27.144999980926514,
+            14.25,
+            21.615000009536743,
+            30.525000035762787,
+            33.314999997615814,
+            39.299999952316284,
+            32.105000019073486
+          ]
+        },
+        {
+          "quality": "media",
+          "terrainPhases": {},
+          "phases": {
+            "world-frame-stage:0": {
+              "count": 13,
+              "totalMs": 5.285000026226044,
+              "p95Ms": 0.5350000262260437,
+              "maxMs": 1.3849999904632568
+            },
+            "world-frame-stage:1": {
+              "count": 13,
+              "totalMs": 20.150000035762787,
+              "p95Ms": 3.1049999594688416,
+              "maxMs": 3.25
+            },
+            "world-frame-stage:2": {
+              "count": 13,
+              "totalMs": 5.379999935626984,
+              "p95Ms": 0.5900000333786011,
+              "maxMs": 0.6649999618530273
+            },
+            "world-frame-stage:3": {
+              "count": 13,
+              "totalMs": 11.96999990940094,
+              "p95Ms": 1.1800000071525574,
+              "maxMs": 2.824999988079071
+            },
+            "world-frame-stage:4": {
+              "count": 13,
+              "totalMs": 15.335000038146973,
+              "p95Ms": 2.209999978542328,
+              "maxMs": 2.884999990463257
+            },
+            "world-frame-stage:5": {
+              "count": 13,
+              "totalMs": 7.464999973773956,
+              "p95Ms": 0.9800000190734863,
+              "maxMs": 1.875
+            },
+            "world-frame-stage:6": {
+              "count": 13,
+              "totalMs": 0.019999980926513672,
+              "p95Ms": 0.004999995231628418,
+              "maxMs": 0.004999995231628418
+            },
+            "world-frame-stage:7": {
+              "count": 13,
+              "totalMs": 0.08000004291534424,
+              "p95Ms": 0.014999985694885254,
+              "maxMs": 0.01500004529953003
+            },
+            "world-frame-stage:8": {
+              "count": 13,
+              "totalMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "world-frame-draw": {
+              "count": 13,
+              "totalMs": 160.3600001335144,
+              "p95Ms": 14.10999995470047,
+              "maxMs": 24.819999992847443
+            }
+          },
+          "stagedPreparation": null,
+          "cacheBefore": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 25,
+              "published": 25,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          },
+          "cacheAfter": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 25,
+              "published": 25,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          },
+          "programs": 82,
+          "drawCalls": 82,
+          "recovery": {
+            "revision": 4,
+            "ms": 328.2150000333786,
+            "retained": 82
+          },
+          "retention": {
+            "retained": 82,
+            "released": 82,
+            "destroyed": 2,
+            "abandoned": 0,
+            "skipped": 0,
+            "unsupported": false
+          },
+          "settingMs": 1.399999976158142,
+          "prewarmMs": 0,
+          "prewarmInvalidations": 0,
+          "livePreparation": null,
+          "temporaryProgramScope": null,
+          "transitionMs": 738.9199999570847,
+          "frameTimes": [
+            45.27000004053116,
+            20.735000014305115,
+            17.80999994277954,
+            20.555000007152557,
+            29.5100000500679,
+            37.7849999666214,
+            47.32499998807907,
+            86.98000001907349,
+            23.009999990463257,
+            55.230000019073486,
+            52.44999998807907,
+            133.0199999809265
+          ]
+        },
+        {
+          "quality": "baja",
+          "terrainPhases": {},
+          "phases": {
+            "world-frame-stage:0": {
+              "count": 17,
+              "totalMs": 20.064999878406525,
+              "p95Ms": 1.0049999952316284,
+              "maxMs": 12.370000004768372
+            },
+            "world-frame-stage:1": {
+              "count": 17,
+              "totalMs": 25.47999995946884,
+              "p95Ms": 2.915000021457672,
+              "maxMs": 3.334999978542328
+            },
+            "world-frame-stage:2": {
+              "count": 17,
+              "totalMs": 9.899999916553497,
+              "p95Ms": 0.8849999904632568,
+              "maxMs": 1.6800000071525574
+            },
+            "world-frame-stage:3": {
+              "count": 17,
+              "totalMs": 24.80000001192093,
+              "p95Ms": 2.8399999737739563,
+              "maxMs": 5.194999992847443
+            },
+            "world-frame-stage:4": {
+              "count": 17,
+              "totalMs": 20.30999994277954,
+              "p95Ms": 1.699999988079071,
+              "maxMs": 1.8100000023841858
+            },
+            "world-frame-stage:5": {
+              "count": 17,
+              "totalMs": 5.440000057220459,
+              "p95Ms": 0.6150000095367432,
+              "maxMs": 0.7599999904632568
+            },
+            "world-frame-stage:6": {
+              "count": 17,
+              "totalMs": 0.030000030994415283,
+              "p95Ms": 0.004999995231628418,
+              "maxMs": 0.005000054836273193
+            },
+            "world-frame-stage:7": {
+              "count": 17,
+              "totalMs": 2.0549999475479126,
+              "p95Ms": 0.5199999809265137,
+              "maxMs": 0.7699999809265137
+            },
+            "world-frame-stage:8": {
+              "count": 17,
+              "totalMs": 0.005000054836273193,
+              "p95Ms": 0,
+              "maxMs": 0.005000054836273193
+            },
+            "world-frame-draw": {
+              "count": 17,
+              "totalMs": 140.2049999833107,
+              "p95Ms": 10.355000019073486,
+              "maxMs": 11.139999985694885
+            }
+          },
+          "stagedPreparation": null,
+          "cacheBefore": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 25,
+              "published": 25,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          },
+          "cacheAfter": {
+            "chunks": 25,
+            "ready": 24,
+            "queue": {
+              "bytes": 33800640,
+              "peakBytes": 35209000,
+              "tiles": 29,
+              "published": 29,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          },
+          "programs": 82,
+          "drawCalls": 74,
+          "recovery": {
+            "revision": 5,
+            "ms": 262.1850000023842,
+            "retained": 82
+          },
+          "retention": {
+            "retained": 82,
+            "released": 82,
+            "destroyed": 2,
+            "abandoned": 0,
+            "skipped": 0,
+            "unsupported": false
+          },
+          "settingMs": 1.2099999785423279,
+          "prewarmMs": 0,
+          "prewarmInvalidations": 0,
+          "livePreparation": null,
+          "temporaryProgramScope": null,
+          "transitionMs": 899.7849999666214,
+          "frameTimes": [
+            76.21499997377396,
+            28.75,
+            13.700000047683716,
+            38.94999998807907,
+            47.67500001192093,
+            15.909999966621399,
+            41.81999999284744,
+            44.59500002861023,
+            48.67500001192093,
+            44.40499997138977,
+            68.87999999523163,
+            35.780000030994415,
+            51.564999997615814,
+            115.4899999499321,
+            56.705000042915344,
+            35.27499997615814
+          ]
+        }
+      ],
+      "lease": {
+        "retained": 81,
+        "released": 81,
+        "destroyed": 1,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "worldUnchanged": null,
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.33436999999644,
+        "travelFrame": 240,
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "limitation": "The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm."
+    },
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792852003739",
+      "completed": 0,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 0,
+      "workMs": 0,
+      "coordinationMs": 0,
+      "maxUnitMs": 0,
+      "overruns": 0,
+      "deadlineLoans": 0,
+      "oversizeRecoveries": 0,
+      "continuationMs": 0,
+      "continuationTurns": 0,
+      "median": 0,
+      "p95": 0,
+      "p99": 0,
+      "cpu95": 0,
+      "jitter": 0,
+      "budgetMs": 0,
+      "pending": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

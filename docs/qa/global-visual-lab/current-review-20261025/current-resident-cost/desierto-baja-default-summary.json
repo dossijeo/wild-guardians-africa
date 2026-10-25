@@ -1,0 +1,157 @@
+{
+  "scope": "Two serial resident paused runs, not A/B or a loading benchmark. GPU elapsed includes pipeline bubbles. CPU render includes draw. Screenshots are taken after timing.",
+  "conditions": {
+    "options": {
+      "axis": "x",
+      "pose": null,
+      "visualSteps": false,
+      "terrainCamera": false,
+      "mainPhases": false,
+      "lockRaidCamera": false,
+      "completeLegs": false,
+      "pinPrograms": false,
+      "zigzag": false,
+      "active": false,
+      "gpu": true,
+      "depthWarm": false,
+      "glDetail": false,
+      "frames": 360,
+      "distance": 0
+    },
+    "cameraOrigin": [
+      99.70247532024266,
+      30.746771662421292,
+      30.57367599590944
+    ],
+    "targetOrigin": [
+      83,
+      15.57186954498291,
+      0
+    ],
+    "initialElapsed": 119.99999999999746,
+    "workersBefore": [
+      {
+        "id": "worker-28",
+        "x": 92.38861409473105,
+        "z": -9.561344167902778,
+        "status": "acting"
+      },
+      {
+        "id": "worker-30",
+        "x": 92.44451732174221,
+        "z": -11,
+        "status": "walking"
+      }
+    ],
+    "baseline": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 115,
+      "residentVisiblePropRecords": 287,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 1
+    },
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "query": {
+      "visualLab": "global-lighting",
+      "skyAtmosphere": "clouds",
+      "grassCoverage": "continuous",
+      "riverSoil": "1",
+      "riverYards": "islands",
+      "mangroveSubstrate": "full",
+      "mangroveMoss": "layered",
+      "canyonSand": "full",
+      "canyonSandBlend": "soft",
+      "canyonNormals": "smooth",
+      "canyonFloor": "warm",
+      "canyonShadows": "horizon",
+      "sandRelief": "1",
+      "sandWear": "residual",
+      "sandMeso": "1",
+      "volcanicAsh": "mask",
+      "volcanicRock": "layered",
+      "volcanicNight": "spectrum",
+      "spatialFar": "1",
+      "farTransitions": "smooth",
+      "waterEdges": "natural",
+      "waterPalette": "regional",
+      "riverBank": "soil",
+      "mangroveShore": "sediment",
+      "workerResidency": "actors",
+      "mangroveFerns": "holly",
+      "groundCache": "fixed512",
+      "wildEngineThreads": "1",
+      "chunkInstall": "sync",
+      "horizonBedBudget": "2",
+      "horizonBed": "sync",
+      "ownedFarGpu": "1",
+      "streamingRecovery": "auto",
+      "waterBedDirect": "0",
+      "frameScheduler": "1"
+    },
+    "streamingOptions": {
+      "waterBed": false,
+      "waterShore": false,
+      "batchEviction": false,
+      "warmObstruction": false,
+      "retainPrograms": false
+    }
+  },
+  "runs": [
+    {
+      "run": "r1",
+      "gpu": {
+        "count": 125,
+        "mean": 14.137775343999998,
+        "p95": 17.06,
+        "max": 27.360677
+      },
+      "cpuRender": {
+        "count": 373,
+        "mean": 3.998297587476531,
+        "p95": 5.100000023841858,
+        "max": 6.25
+      },
+      "presentation": {
+        "count": 372,
+        "mean": 16.76272849462366,
+        "p95": 16.890000000003056,
+        "max": 33.340000000000146
+      },
+      "readyMs": 20358.774999976158
+    },
+    {
+      "run": "r2",
+      "gpu": {
+        "count": 125,
+        "mean": 13.989995816000002,
+        "p95": 15.342864,
+        "max": 18.56276
+      },
+      "cpuRender": {
+        "count": 373,
+        "mean": 3.711018764621131,
+        "p95": 4.689999938011169,
+        "max": 5.375
+      },
+      "presentation": {
+        "count": 372,
+        "mean": 16.62825268817204,
+        "p95": 16.85000000000582,
+        "max": 17.139999999999418
+      },
+      "readyMs": 20611.644999980927
+    }
+  ],
+  "pixelComparison": {
+    "meanAbsoluteRGB": 0.004568142361111111,
+    "bounds": [
+      218,
+      207,
+      1137,
+      496
+    ]
+  }
+}

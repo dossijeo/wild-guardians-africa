@@ -1,3 +1,4 @@
+import {skyAtmosphereEnabled,patchSkyAtmosphere} from './sky-atmosphere.js';
 import * as THREE from 'three';
 import {bytes,json} from './assets.js';
 import {SKY_VERTEX,SKY_FRAGMENT} from './sky-source.js';
@@ -11,7 +12,8 @@ export function skyNight(state){
 }
 
 export class NativeSky {
-  constructor(){
+  constructor({visualSearch=globalThis.location?.search??''}={}){
+    this.atmosphere=skyAtmosphereEnabled(visualSearch);
     this.loading=new AbortController();this.disposed=false;
     this.scene=new THREE.Scene();this.textures=[];this.environmentTextures=[];this.materials=[];
     this.geometry=new THREE.BufferGeometry();this.geometry.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0,0,0,0],3));
@@ -28,7 +30,7 @@ export class NativeSky {
       env.internalFormat='RGBA8';env.minFilter=THREE.LinearMipmapLinearFilter;env.magFilter=THREE.LinearFilter;env.wrapS=THREE.RepeatWrapping;env.wrapT=THREE.ClampToEdgeWrapping;env.flipY=false;env.generateMipmaps=true;env.needsUpdate=true;this.environmentTextures.push(env);
       const texture=new THREE.DataTexture(image.pixels,image.width,image.height,THREE.RGBAFormat,THREE.UnsignedByteType);
       texture.minFilter=texture.magFilter=THREE.NearestFilter;texture.wrapS=THREE.RepeatWrapping;texture.wrapT=THREE.ClampToEdgeWrapping;texture.flipY=false;texture.unpackAlignment=1;texture.needsUpdate=true;this.textures.push(texture);
-      const material=new THREE.RawShaderMaterial({glslVersion:THREE.GLSL3,vertexShader:SKY_VERTEX.replace('#version 300 es',''),fragmentShader:SKY_FRAGMENT.replace('#version 300 es',''),uniforms:{...this.uniforms,uPanorama:{value:texture},uSkyExposure:{value:i?.62:1.33},uSkySaturation:{value:i?1.10:1.28},uSkyKind:{value:i},uSkyOpacity:{value:1}},depthWrite:false,depthTest:false,transparent:!!i,blending:i?THREE.NormalBlending:THREE.NoBlending,toneMapped:false});
+      const material=new THREE.RawShaderMaterial({glslVersion:THREE.GLSL3,vertexShader:SKY_VERTEX.replace('#version 300 es',''),fragmentShader:(this.atmosphere?patchSkyAtmosphere(SKY_FRAGMENT):SKY_FRAGMENT).replace('#version 300 es',''),uniforms:{...this.uniforms,uPanorama:{value:texture},uSkyExposure:{value:i?.62:1.33},uSkySaturation:{value:i?1.10:1.28},uSkyKind:{value:i},uSkyOpacity:{value:1}},depthWrite:false,depthTest:false,transparent:!!i,blending:i?THREE.NormalBlending:THREE.NoBlending,toneMapped:false});
       const mesh=new THREE.Mesh(this.geometry,material);mesh.frustumCulled=false;mesh.renderOrder=i;this.scene.add(mesh);this.materials.push(material);
     });
   }

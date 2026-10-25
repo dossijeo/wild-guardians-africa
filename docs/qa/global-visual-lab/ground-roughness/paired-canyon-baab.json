@@ -1,0 +1,3679 @@
+{
+  "mode": "fill",
+  "cases": [
+    21
+  ],
+  "order": [
+    1,
+    0,
+    0,
+    1
+  ],
+  "note": "Same page, original and material-study programs; explicit order recorded; global-lighting baseline.",
+  "records": [
+    {
+      "sceneCase": 21,
+      "phase": "night",
+      "variant": 1,
+      "view": "side",
+      "camera": {
+        "position": [
+          21.315404563219673,
+          47.75693384519364,
+          42.07230564951897
+        ],
+        "target": [
+          -0.6845954367803273,
+          38.65693384519364,
+          42.07230564951897
+        ]
+      },
+      "report": {
+        "schema": 2,
+        "cameraStable": true,
+        "noiseExperiment": {
+          "enabled": false,
+          "textureBytes": 262144,
+          "patchedPrograms": 80,
+          "pattern": null,
+          "scope": "QA only; finite-period quantized fine noise; original coarse noise and authored bands/palette retained"
+        },
+        "pairedNoiseGpu": null,
+        "pairedNoiseSubmission": null,
+        "pairedGpu": null,
+        "pairedSubmission": null,
+        "groundComparison": {
+          "referenceCommit": "043d68b",
+          "mode": "pure moss plus independent mud meshes",
+          "mudMeshes": [],
+          "pattern": null
+        },
+        "materialRegistry": {
+          "enabled": true,
+          "includingWarmup": true,
+          "nodes": 1125,
+          "materials": 200,
+          "waters": 2,
+          "discoveredNodes": 0,
+          "refreshedMeshes": 0,
+          "legacyScans": 0,
+          "waterWrites": 0
+        },
+        "cropBufferUploads": {
+          "includingWarmup": true,
+          "matrixVersions": 0,
+          "growthVersions": 0
+        },
+        "gpuTimer": {
+          "supported": true,
+          "reason": null,
+          "disjointEvents": 0,
+          "discarded": 0,
+          "overflowSkipped": 0,
+          "foreignQuerySkipped": 0,
+          "allocationFailures": 0,
+          "unresolvedAtDispose": 0,
+          "contextLost": false,
+          "pending": 0,
+          "samples": [
+            {
+              "frame": 0,
+              "ms": 17.379791
+            },
+            {
+              "frame": 1,
+              "ms": 14.842552
+            },
+            {
+              "frame": 2,
+              "ms": 15.498489
+            },
+            {
+              "frame": 3,
+              "ms": 15.402968
+            },
+            {
+              "frame": 4,
+              "ms": 16.005416
+            },
+            {
+              "frame": 5,
+              "ms": 15.444635
+            },
+            {
+              "frame": 6,
+              "ms": 14.205416
+            },
+            {
+              "frame": 7,
+              "ms": 14.887239
+            },
+            {
+              "frame": 8,
+              "ms": 15.119322
+            },
+            {
+              "frame": 9,
+              "ms": 15.035416
+            },
+            {
+              "frame": 10,
+              "ms": 14.54427
+            },
+            {
+              "frame": 11,
+              "ms": 14.885572
+            },
+            {
+              "frame": 12,
+              "ms": 14.75276
+            },
+            {
+              "frame": 13,
+              "ms": 14.416406
+            },
+            {
+              "frame": 14,
+              "ms": 14.78401
+            },
+            {
+              "frame": 15,
+              "ms": 15.026302
+            },
+            {
+              "frame": 16,
+              "ms": 14.204895
+            },
+            {
+              "frame": 17,
+              "ms": 14.843281
+            },
+            {
+              "frame": 18,
+              "ms": 14.824427
+            },
+            {
+              "frame": 19,
+              "ms": 14.709114
+            },
+            {
+              "frame": 20,
+              "ms": 14.828645
+            },
+            {
+              "frame": 21,
+              "ms": 14.796302
+            },
+            {
+              "frame": 22,
+              "ms": 14.475885
+            },
+            {
+              "frame": 23,
+              "ms": 14.038385
+            },
+            {
+              "frame": 24,
+              "ms": 15.000468
+            },
+            {
+              "frame": 25,
+              "ms": 14.122552
+            },
+            {
+              "frame": 26,
+              "ms": 14.770468
+            },
+            {
+              "frame": 27,
+              "ms": 14.534635
+            },
+            {
+              "frame": 28,
+              "ms": 15.415052
+            },
+            {
+              "frame": 29,
+              "ms": 14.92052
+            },
+            {
+              "frame": 30,
+              "ms": 14.977239
+            },
+            {
+              "frame": 31,
+              "ms": 14.943697
+            },
+            {
+              "frame": 32,
+              "ms": 14.764166
+            },
+            {
+              "frame": 33,
+              "ms": 14.398541
+            },
+            {
+              "frame": 34,
+              "ms": 15.125833
+            },
+            {
+              "frame": 35,
+              "ms": 14.504635
+            },
+            {
+              "frame": 36,
+              "ms": 14.493072
+            },
+            {
+              "frame": 37,
+              "ms": 14.517031
+            },
+            {
+              "frame": 38,
+              "ms": 14.958177
+            },
+            {
+              "frame": 39,
+              "ms": 14.54526
+            },
+            {
+              "frame": 40,
+              "ms": 14.971875
+            },
+            {
+              "frame": 41,
+              "ms": 14.73276
+            },
+            {
+              "frame": 42,
+              "ms": 15.602031
+            },
+            {
+              "frame": 43,
+              "ms": 14.894947
+            },
+            {
+              "frame": 44,
+              "ms": 15.777291
+            },
+            {
+              "frame": 45,
+              "ms": 15.05427
+            },
+            {
+              "frame": 46,
+              "ms": 15.672239
+            },
+            {
+              "frame": 47,
+              "ms": 15.134427
+            },
+            {
+              "frame": 48,
+              "ms": 15.465729
+            },
+            {
+              "frame": 49,
+              "ms": 15.13526
+            },
+            {
+              "frame": 50,
+              "ms": 15.475625
+            },
+            {
+              "frame": 51,
+              "ms": 16.417395
+            },
+            {
+              "frame": 52,
+              "ms": 16.430156
+            },
+            {
+              "frame": 53,
+              "ms": 15.376979
+            },
+            {
+              "frame": 54,
+              "ms": 15.797239
+            },
+            {
+              "frame": 55,
+              "ms": 15.56125
+            },
+            {
+              "frame": 56,
+              "ms": 17.148958
+            },
+            {
+              "frame": 57,
+              "ms": 19.619218
+            },
+            {
+              "frame": 58,
+              "ms": 18.655572
+            },
+            {
+              "frame": 59,
+              "ms": 16.17901
+            },
+            {
+              "frame": 60,
+              "ms": 20.126875
+            },
+            {
+              "frame": 61,
+              "ms": 16.845989
+            },
+            {
+              "frame": 62,
+              "ms": 15.290052
+            },
+            {
+              "frame": 63,
+              "ms": 15.614843
+            },
+            {
+              "frame": 64,
+              "ms": 15.585885
+            },
+            {
+              "frame": 65,
+              "ms": 15.299114
+            },
+            {
+              "frame": 66,
+              "ms": 16.118958
+            },
+            {
+              "frame": 67,
+              "ms": 15.7025
+            },
+            {
+              "frame": 68,
+              "ms": 15.39276
+            },
+            {
+              "frame": 69,
+              "ms": 15.228489
+            },
+            {
+              "frame": 70,
+              "ms": 15.029375
+            },
+            {
+              "frame": 71,
+              "ms": 15.742968
+            },
+            {
+              "frame": 72,
+              "ms": 15.431145
+            },
+            {
+              "frame": 73,
+              "ms": 15.571197
+            },
+            {
+              "frame": 74,
+              "ms": 15.760781
+            },
+            {
+              "frame": 75,
+              "ms": 15.483437
+            },
+            {
+              "frame": 76,
+              "ms": 15.501927
+            },
+            {
+              "frame": 77,
+              "ms": 15.345885
+            },
+            {
+              "frame": 78,
+              "ms": 15.784895
+            },
+            {
+              "frame": 79,
+              "ms": 15.540104
+            },
+            {
+              "frame": 80,
+              "ms": 15.605312
+            },
+            {
+              "frame": 81,
+              "ms": 16.197395
+            },
+            {
+              "frame": 82,
+              "ms": 15.296197
+            },
+            {
+              "frame": 83,
+              "ms": 15.856093
+            },
+            {
+              "frame": 84,
+              "ms": 15.229583
+            },
+            {
+              "frame": 85,
+              "ms": 15.604895
+            },
+            {
+              "frame": 86,
+              "ms": 15.644739
+            },
+            {
+              "frame": 87,
+              "ms": 18.457343
+            },
+            {
+              "frame": 88,
+              "ms": 17.178958
+            },
+            {
+              "frame": 89,
+              "ms": 15.087916
+            },
+            {
+              "frame": 90,
+              "ms": 18.658802
+            },
+            {
+              "frame": 91,
+              "ms": 18.297447
+            },
+            {
+              "frame": 92,
+              "ms": 16.698437
+            },
+            {
+              "frame": 93,
+              "ms": 18.475208
+            },
+            {
+              "frame": 94,
+              "ms": 18.003489
+            },
+            {
+              "frame": 95,
+              "ms": 18.814427
+            },
+            {
+              "frame": 96,
+              "ms": 17.395677
+            },
+            {
+              "frame": 97,
+              "ms": 16.96401
+            },
+            {
+              "frame": 98,
+              "ms": 17.970781
+            },
+            {
+              "frame": 99,
+              "ms": 21.052968
+            },
+            {
+              "frame": 100,
+              "ms": 16.237656
+            },
+            {
+              "frame": 101,
+              "ms": 18.296979
+            },
+            {
+              "frame": 102,
+              "ms": 17.21427
+            },
+            {
+              "frame": 103,
+              "ms": 17.253593
+            },
+            {
+              "frame": 104,
+              "ms": 16.958177
+            },
+            {
+              "frame": 105,
+              "ms": 17.45302
+            },
+            {
+              "frame": 106,
+              "ms": 17.70375
+            },
+            {
+              "frame": 107,
+              "ms": 16.29526
+            },
+            {
+              "frame": 108,
+              "ms": 16.973177
+            },
+            {
+              "frame": 109,
+              "ms": 15.168229
+            },
+            {
+              "frame": 110,
+              "ms": 17.061302
+            },
+            {
+              "frame": 111,
+              "ms": 16.555885
+            },
+            {
+              "frame": 112,
+              "ms": 19.40125
+            },
+            {
+              "frame": 113,
+              "ms": 18.984895
+            },
+            {
+              "frame": 114,
+              "ms": 18.21276
+            },
+            {
+              "frame": 115,
+              "ms": 21.331875
+            },
+            {
+              "frame": 116,
+              "ms": 17.725885
+            },
+            {
+              "frame": 117,
+              "ms": 16.239843
+            },
+            {
+              "frame": 118,
+              "ms": 16.893072
+            },
+            {
+              "frame": 119,
+              "ms": 17.693437
+            },
+            {
+              "frame": 120,
+              "ms": 16.542083
+            },
+            {
+              "frame": 121,
+              "ms": 16.813645
+            },
+            {
+              "frame": 122,
+              "ms": 18.273385
+            },
+            {
+              "frame": 123,
+              "ms": 16.346458
+            },
+            {
+              "frame": 124,
+              "ms": 17.733593
+            },
+            {
+              "frame": 125,
+              "ms": 16.866406
+            },
+            {
+              "frame": 126,
+              "ms": 16.824947
+            },
+            {
+              "frame": 127,
+              "ms": 15.732812
+            },
+            {
+              "frame": 128,
+              "ms": 18.66302
+            },
+            {
+              "frame": 129,
+              "ms": 17.154166
+            },
+            {
+              "frame": 130,
+              "ms": 17.00651
+            },
+            {
+              "frame": 131,
+              "ms": 17.53901
+            },
+            {
+              "frame": 132,
+              "ms": 16.664166
+            },
+            {
+              "frame": 133,
+              "ms": 17.425208
+            },
+            {
+              "frame": 134,
+              "ms": 17.731927
+            },
+            {
+              "frame": 135,
+              "ms": 16.102604
+            },
+            {
+              "frame": 136,
+              "ms": 17.233489
+            },
+            {
+              "frame": 137,
+              "ms": 15.887447
+            },
+            {
+              "frame": 138,
+              "ms": 15.381666
+            },
+            {
+              "frame": 139,
+              "ms": 20.425
+            },
+            {
+              "frame": 140,
+              "ms": 16.982239
+            },
+            {
+              "frame": 141,
+              "ms": 14.98375
+            },
+            {
+              "frame": 142,
+              "ms": 16.30875
+            },
+            {
+              "frame": 143,
+              "ms": 17.901666
+            },
+            {
+              "frame": 144,
+              "ms": 17.2875
+            },
+            {
+              "frame": 145,
+              "ms": 15.581614
+            },
+            {
+              "frame": 146,
+              "ms": 15.390625
+            },
+            {
+              "frame": 147,
+              "ms": 15.474218
+            },
+            {
+              "frame": 148,
+              "ms": 14.553802
+            },
+            {
+              "frame": 149,
+              "ms": 15.102135
+            },
+            {
+              "frame": 150,
+              "ms": 16.11901
+            },
+            {
+              "frame": 151,
+              "ms": 15.440833
+            },
+            {
+              "frame": 152,
+              "ms": 15.904947
+            },
+            {
+              "frame": 153,
+              "ms": 15.354166
+            },
+            {
+              "frame": 154,
+              "ms": 15.967239
+            },
+            {
+              "frame": 155,
+              "ms": 16.214375
+            },
+            {
+              "frame": 156,
+              "ms": 15.542552
+            },
+            {
+              "frame": 157,
+              "ms": 15.800572
+            },
+            {
+              "frame": 158,
+              "ms": 15.351822
+            },
+            {
+              "frame": 159,
+              "ms": 15.592031
+            },
+            {
+              "frame": 160,
+              "ms": 16.106718
+            },
+            {
+              "frame": 161,
+              "ms": 15.98677
+            },
+            {
+              "frame": 162,
+              "ms": 15.53875
+            },
+            {
+              "frame": 163,
+              "ms": 15.40026
+            },
+            {
+              "frame": 164,
+              "ms": 15.448125
+            },
+            {
+              "frame": 165,
+              "ms": 15.798958
+            },
+            {
+              "frame": 166,
+              "ms": 18.589895
+            },
+            {
+              "frame": 167,
+              "ms": 19.457604
+            },
+            {
+              "frame": 168,
+              "ms": 15.105156
+            },
+            {
+              "frame": 169,
+              "ms": 19.688802
+            },
+            {
+              "frame": 170,
+              "ms": 15.710312
+            },
+            {
+              "frame": 171,
+              "ms": 15.639427
+            },
+            {
+              "frame": 172,
+              "ms": 15.659062
+            },
+            {
+              "frame": 173,
+              "ms": 15.579687
+            },
+            {
+              "frame": 174,
+              "ms": 15.756458
+            },
+            {
+              "frame": 175,
+              "ms": 15.206822
+            },
+            {
+              "frame": 176,
+              "ms": 15.680208
+            },
+            {
+              "frame": 177,
+              "ms": 15.682708
+            },
+            {
+              "frame": 178,
+              "ms": 15.238125
+            },
+            {
+              "frame": 179,
+              "ms": 15.023177
+            }
+          ]
+        },
+        "gpuElapsedMs": {
+          "count": 180,
+          "mean": 16.13380365555556,
+          "p50": 15.644739,
+          "p95": 18.814427,
+          "max": 21.331875
+        },
+        "recordedAt": "2026-10-20T00:21:43.359Z",
+        "scenario": {
+          "organicGround": false,
+          "case": 21,
+          "biome": "gran-canon",
+          "culture": "mapungubwe",
+          "seed": 712,
+          "camera": [
+            21.315404563219673,
+            47.75693384519364,
+            42.07230564951897
+          ],
+          "target": [
+            -0.6845954367803273,
+            38.65693384519364,
+            42.07230564951897
+          ],
+          "quality": "media",
+          "pixelRatioLimit": null,
+          "hdrEndpoints": true,
+          "lightCulling": true,
+          "shadowChunks": 21,
+          "culledShadowChunks": 4,
+          "centerCulling": true,
+          "centerDamage": 0,
+          "unitBounds": true,
+          "fineNoise": true,
+          "shadows": true,
+          "shadowMapSize": [
+            1024,
+            1024
+          ],
+          "renderOrigin": {
+            "x": 0,
+            "z": 0,
+            "revision": 0
+          },
+          "batching": true,
+          "view": "village",
+          "night": true,
+          "phase": null,
+          "simulatedElapsed": 0,
+          "workers": 4,
+          "animals": 5,
+          "plants": 16,
+          "chunks": 25
+        },
+        "shadowCache": {
+          "enabled": true,
+          "includingWarmup": true,
+          "draws": 1,
+          "hits": 209,
+          "untracked": 0
+        },
+        "device": {
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+          "platform": "Win32",
+          "hardwareConcurrency": 16,
+          "deviceMemoryGiB": 32,
+          "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "glVendor": "Google Inc. (Intel)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "canvas": [
+            1280,
+            720
+          ],
+          "dpr": 1,
+          "hiddenDuringRun": false
+        },
+        "warmupFrames": 30,
+        "cpuSubmissionMs": {
+          "count": 180,
+          "mean": 5.402777778108915,
+          "p50": 5.0999999940395355,
+          "p95": 7.200000002980232,
+          "max": 8.700000002980232
+        },
+        "frameIntervalMs": {
+          "count": 180,
+          "mean": 17.73833333333333,
+          "p50": 16.600000000000364,
+          "p95": 33.19999999999709,
+          "max": 33.400000000001455
+        },
+        "averageObservedFps": 56.37508221366157,
+        "submittedCalls": {
+          "count": 180,
+          "mean": 86,
+          "p50": 86,
+          "p95": 86,
+          "max": 86
+        },
+        "submittedTriangles": {
+          "count": 180,
+          "mean": 600693,
+          "p50": 600693,
+          "p95": 600693,
+          "max": 600693
+        },
+        "threeResourceCounts": {
+          "cameraPose": "21.315405,47.756934,42.072306,-0.684595,38.656934,42.072306",
+          "noiseVolume": 0,
+          "organicGround": false,
+          "calls": 86,
+          "triangles": 600693,
+          "lines": 0,
+          "points": 0,
+          "geometries": 125,
+          "textures": 81,
+          "programs": 58
+        },
+        "simulationUnchanged": true,
+        "errors": [],
+        "limits": "Isolated static QA scene, all render passes counted, CPU submission includes sync/LOD/VFX GPU elapsed queries wrap those same passes when supported; no GPU fence/finish or memory-bytes claim. Frame cadence includes browser scheduling. Three resource counts are not resident GPU bytes; no navigation/audio/gameplay timing or mobile hardware claim."
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "sceneCase": 21,
+      "phase": "night",
+      "variant": 0,
+      "view": "side",
+      "camera": {
+        "position": [
+          21.315404563219673,
+          47.75693384519364,
+          42.07230564951897
+        ],
+        "target": [
+          -0.6845954367803273,
+          38.65693384519364,
+          42.07230564951897
+        ]
+      },
+      "report": {
+        "schema": 2,
+        "cameraStable": true,
+        "noiseExperiment": {
+          "enabled": false,
+          "textureBytes": 262144,
+          "patchedPrograms": 80,
+          "pattern": null,
+          "scope": "QA only; finite-period quantized fine noise; original coarse noise and authored bands/palette retained"
+        },
+        "pairedNoiseGpu": null,
+        "pairedNoiseSubmission": null,
+        "pairedGpu": null,
+        "pairedSubmission": null,
+        "groundComparison": {
+          "referenceCommit": "043d68b",
+          "mode": "pure moss plus independent mud meshes",
+          "mudMeshes": [],
+          "pattern": null
+        },
+        "materialRegistry": {
+          "enabled": true,
+          "includingWarmup": true,
+          "nodes": 1125,
+          "materials": 200,
+          "waters": 2,
+          "discoveredNodes": 0,
+          "refreshedMeshes": 0,
+          "legacyScans": 0,
+          "waterWrites": 0
+        },
+        "cropBufferUploads": {
+          "includingWarmup": true,
+          "matrixVersions": 0,
+          "growthVersions": 0
+        },
+        "gpuTimer": {
+          "supported": true,
+          "reason": null,
+          "disjointEvents": 0,
+          "discarded": 0,
+          "overflowSkipped": 0,
+          "foreignQuerySkipped": 0,
+          "allocationFailures": 0,
+          "unresolvedAtDispose": 0,
+          "contextLost": false,
+          "pending": 0,
+          "samples": [
+            {
+              "frame": 0,
+              "ms": 15.042812
+            },
+            {
+              "frame": 1,
+              "ms": 14.554635
+            },
+            {
+              "frame": 2,
+              "ms": 15.38125
+            },
+            {
+              "frame": 3,
+              "ms": 14.756302
+            },
+            {
+              "frame": 4,
+              "ms": 14.255729
+            },
+            {
+              "frame": 5,
+              "ms": 15.775312
+            },
+            {
+              "frame": 6,
+              "ms": 14.399739
+            },
+            {
+              "frame": 7,
+              "ms": 14.913281
+            },
+            {
+              "frame": 8,
+              "ms": 14.937447
+            },
+            {
+              "frame": 9,
+              "ms": 15.27052
+            },
+            {
+              "frame": 10,
+              "ms": 14.082291
+            },
+            {
+              "frame": 11,
+              "ms": 14.965208
+            },
+            {
+              "frame": 12,
+              "ms": 14.915729
+            },
+            {
+              "frame": 13,
+              "ms": 15.110729
+            },
+            {
+              "frame": 14,
+              "ms": 14.712291
+            },
+            {
+              "frame": 15,
+              "ms": 15.546354
+            },
+            {
+              "frame": 16,
+              "ms": 14.655729
+            },
+            {
+              "frame": 17,
+              "ms": 15.037604
+            },
+            {
+              "frame": 18,
+              "ms": 14.947916
+            },
+            {
+              "frame": 19,
+              "ms": 15.269531
+            },
+            {
+              "frame": 20,
+              "ms": 14.480781
+            },
+            {
+              "frame": 21,
+              "ms": 15.08276
+            },
+            {
+              "frame": 22,
+              "ms": 14.495885
+            },
+            {
+              "frame": 23,
+              "ms": 14.603541
+            },
+            {
+              "frame": 24,
+              "ms": 14.486666
+            },
+            {
+              "frame": 25,
+              "ms": 14.728802
+            },
+            {
+              "frame": 26,
+              "ms": 14.225833
+            },
+            {
+              "frame": 27,
+              "ms": 14.796145
+            },
+            {
+              "frame": 28,
+              "ms": 14.618541
+            },
+            {
+              "frame": 29,
+              "ms": 14.533645
+            },
+            {
+              "frame": 30,
+              "ms": 14.565156
+            },
+            {
+              "frame": 31,
+              "ms": 14.089583
+            },
+            {
+              "frame": 32,
+              "ms": 14.490208
+            },
+            {
+              "frame": 33,
+              "ms": 15.970885
+            },
+            {
+              "frame": 34,
+              "ms": 15.012812
+            },
+            {
+              "frame": 35,
+              "ms": 14.413229
+            },
+            {
+              "frame": 36,
+              "ms": 14.731093
+            },
+            {
+              "frame": 37,
+              "ms": 14.613645
+            },
+            {
+              "frame": 38,
+              "ms": 17.459843
+            },
+            {
+              "frame": 39,
+              "ms": 17.628125
+            },
+            {
+              "frame": 40,
+              "ms": 15.894531
+            },
+            {
+              "frame": 41,
+              "ms": 17.031979
+            },
+            {
+              "frame": 42,
+              "ms": 14.849843
+            },
+            {
+              "frame": 43,
+              "ms": 16.471666
+            },
+            {
+              "frame": 44,
+              "ms": 14.627552
+            },
+            {
+              "frame": 45,
+              "ms": 14.754479
+            },
+            {
+              "frame": 46,
+              "ms": 14.656562
+            },
+            {
+              "frame": 47,
+              "ms": 14.199791
+            },
+            {
+              "frame": 48,
+              "ms": 14.693437
+            },
+            {
+              "frame": 49,
+              "ms": 13.941666
+            },
+            {
+              "frame": 50,
+              "ms": 14.826666
+            },
+            {
+              "frame": 51,
+              "ms": 14.783125
+            },
+            {
+              "frame": 52,
+              "ms": 15.279583
+            },
+            {
+              "frame": 53,
+              "ms": 14.7
+            },
+            {
+              "frame": 54,
+              "ms": 14.481302
+            },
+            {
+              "frame": 55,
+              "ms": 14.788281
+            },
+            {
+              "frame": 56,
+              "ms": 14.81677
+            },
+            {
+              "frame": 57,
+              "ms": 14.806458
+            },
+            {
+              "frame": 58,
+              "ms": 15.14177
+            },
+            {
+              "frame": 59,
+              "ms": 14.839322
+            },
+            {
+              "frame": 60,
+              "ms": 14.965052
+            },
+            {
+              "frame": 61,
+              "ms": 14.647083
+            },
+            {
+              "frame": 62,
+              "ms": 14.945677
+            },
+            {
+              "frame": 63,
+              "ms": 14.453229
+            },
+            {
+              "frame": 64,
+              "ms": 14.674739
+            },
+            {
+              "frame": 65,
+              "ms": 15.409687
+            },
+            {
+              "frame": 66,
+              "ms": 15.452552
+            },
+            {
+              "frame": 67,
+              "ms": 15.02026
+            },
+            {
+              "frame": 68,
+              "ms": 14.736822
+            },
+            {
+              "frame": 69,
+              "ms": 17.487656
+            },
+            {
+              "frame": 70,
+              "ms": 17.12026
+            },
+            {
+              "frame": 71,
+              "ms": 17.400104
+            },
+            {
+              "frame": 72,
+              "ms": 17.741197
+            },
+            {
+              "frame": 73,
+              "ms": 17.876041
+            },
+            {
+              "frame": 74,
+              "ms": 17.457135
+            },
+            {
+              "frame": 75,
+              "ms": 18.479895
+            },
+            {
+              "frame": 76,
+              "ms": 17.033072
+            },
+            {
+              "frame": 77,
+              "ms": 16.190052
+            },
+            {
+              "frame": 78,
+              "ms": 17.599739
+            },
+            {
+              "frame": 79,
+              "ms": 15.613697
+            },
+            {
+              "frame": 80,
+              "ms": 14.552864
+            },
+            {
+              "frame": 81,
+              "ms": 21.076927
+            },
+            {
+              "frame": 82,
+              "ms": 17.07776
+            },
+            {
+              "frame": 83,
+              "ms": 17.194739
+            },
+            {
+              "frame": 84,
+              "ms": 16.285989
+            },
+            {
+              "frame": 85,
+              "ms": 17.199218
+            },
+            {
+              "frame": 86,
+              "ms": 16.137135
+            },
+            {
+              "frame": 87,
+              "ms": 16.328125
+            },
+            {
+              "frame": 88,
+              "ms": 19.481562
+            },
+            {
+              "frame": 89,
+              "ms": 17.397708
+            },
+            {
+              "frame": 90,
+              "ms": 17.009062
+            },
+            {
+              "frame": 91,
+              "ms": 16.803177
+            },
+            {
+              "frame": 92,
+              "ms": 17.034322
+            },
+            {
+              "frame": 93,
+              "ms": 16.611875
+            },
+            {
+              "frame": 94,
+              "ms": 17.388854
+            },
+            {
+              "frame": 95,
+              "ms": 19.609531
+            },
+            {
+              "frame": 96,
+              "ms": 16.613645
+            },
+            {
+              "frame": 97,
+              "ms": 19.789062
+            },
+            {
+              "frame": 98,
+              "ms": 17.039687
+            },
+            {
+              "frame": 99,
+              "ms": 18.099583
+            },
+            {
+              "frame": 100,
+              "ms": 18.227968
+            },
+            {
+              "frame": 101,
+              "ms": 17.611875
+            },
+            {
+              "frame": 102,
+              "ms": 17.812291
+            },
+            {
+              "frame": 103,
+              "ms": 15.894166
+            },
+            {
+              "frame": 104,
+              "ms": 16.40052
+            },
+            {
+              "frame": 105,
+              "ms": 15.194687
+            },
+            {
+              "frame": 106,
+              "ms": 17.493645
+            },
+            {
+              "frame": 107,
+              "ms": 16.937187
+            },
+            {
+              "frame": 108,
+              "ms": 15.848958
+            },
+            {
+              "frame": 109,
+              "ms": 17.571614
+            },
+            {
+              "frame": 110,
+              "ms": 17.198281
+            },
+            {
+              "frame": 111,
+              "ms": 17.080364
+            },
+            {
+              "frame": 112,
+              "ms": 18.921354
+            },
+            {
+              "frame": 113,
+              "ms": 17.614062
+            },
+            {
+              "frame": 114,
+              "ms": 16.986041
+            },
+            {
+              "frame": 115,
+              "ms": 15.652291
+            },
+            {
+              "frame": 116,
+              "ms": 18.777239
+            },
+            {
+              "frame": 117,
+              "ms": 16.810104
+            },
+            {
+              "frame": 118,
+              "ms": 17.071822
+            },
+            {
+              "frame": 119,
+              "ms": 16.191354
+            },
+            {
+              "frame": 120,
+              "ms": 17.68625
+            },
+            {
+              "frame": 121,
+              "ms": 16.899687
+            },
+            {
+              "frame": 122,
+              "ms": 17.658333
+            },
+            {
+              "frame": 123,
+              "ms": 16.349322
+            },
+            {
+              "frame": 124,
+              "ms": 16.139791
+            },
+            {
+              "frame": 125,
+              "ms": 16.197552
+            },
+            {
+              "frame": 126,
+              "ms": 15.553593
+            },
+            {
+              "frame": 127,
+              "ms": 16.340052
+            },
+            {
+              "frame": 128,
+              "ms": 16.219895
+            },
+            {
+              "frame": 129,
+              "ms": 15.054739
+            },
+            {
+              "frame": 130,
+              "ms": 15.453437
+            },
+            {
+              "frame": 131,
+              "ms": 16.197552
+            },
+            {
+              "frame": 132,
+              "ms": 16.577604
+            },
+            {
+              "frame": 133,
+              "ms": 15.87625
+            },
+            {
+              "frame": 134,
+              "ms": 15.580312
+            },
+            {
+              "frame": 135,
+              "ms": 15.096822
+            },
+            {
+              "frame": 136,
+              "ms": 15.578854
+            },
+            {
+              "frame": 137,
+              "ms": 15.174895
+            },
+            {
+              "frame": 138,
+              "ms": 15.338281
+            },
+            {
+              "frame": 139,
+              "ms": 15.029375
+            },
+            {
+              "frame": 140,
+              "ms": 15.737187
+            },
+            {
+              "frame": 141,
+              "ms": 14.876822
+            },
+            {
+              "frame": 142,
+              "ms": 15.719218
+            },
+            {
+              "frame": 143,
+              "ms": 15.204895
+            },
+            {
+              "frame": 144,
+              "ms": 15.719166
+            },
+            {
+              "frame": 145,
+              "ms": 15.273125
+            },
+            {
+              "frame": 146,
+              "ms": 15.340208
+            },
+            {
+              "frame": 147,
+              "ms": 15.655885
+            },
+            {
+              "frame": 148,
+              "ms": 15.522916
+            },
+            {
+              "frame": 149,
+              "ms": 15.416718
+            },
+            {
+              "frame": 150,
+              "ms": 18.812656
+            },
+            {
+              "frame": 151,
+              "ms": 17.011614
+            },
+            {
+              "frame": 152,
+              "ms": 17.540364
+            },
+            {
+              "frame": 153,
+              "ms": 15.921406
+            },
+            {
+              "frame": 154,
+              "ms": 16.903229
+            },
+            {
+              "frame": 155,
+              "ms": 15.812656
+            },
+            {
+              "frame": 156,
+              "ms": 14.689843
+            },
+            {
+              "frame": 157,
+              "ms": 15.493177
+            },
+            {
+              "frame": 158,
+              "ms": 15.365625
+            },
+            {
+              "frame": 159,
+              "ms": 15.866041
+            },
+            {
+              "frame": 160,
+              "ms": 16.248645
+            },
+            {
+              "frame": 161,
+              "ms": 16.80276
+            },
+            {
+              "frame": 162,
+              "ms": 18.533854
+            },
+            {
+              "frame": 163,
+              "ms": 17.272187
+            },
+            {
+              "frame": 164,
+              "ms": 16.814843
+            },
+            {
+              "frame": 165,
+              "ms": 16.146822
+            },
+            {
+              "frame": 166,
+              "ms": 19.719427
+            },
+            {
+              "frame": 167,
+              "ms": 18.875989
+            },
+            {
+              "frame": 168,
+              "ms": 16.118854
+            },
+            {
+              "frame": 169,
+              "ms": 17.096145
+            },
+            {
+              "frame": 170,
+              "ms": 17.84526
+            },
+            {
+              "frame": 171,
+              "ms": 16.699218
+            },
+            {
+              "frame": 172,
+              "ms": 16.262187
+            },
+            {
+              "frame": 173,
+              "ms": 20.186822
+            },
+            {
+              "frame": 174,
+              "ms": 19.482447
+            },
+            {
+              "frame": 175,
+              "ms": 18.598593
+            },
+            {
+              "frame": 176,
+              "ms": 19.739843
+            },
+            {
+              "frame": 177,
+              "ms": 20.422031
+            },
+            {
+              "frame": 178,
+              "ms": 18.11526
+            },
+            {
+              "frame": 179,
+              "ms": 21.802343
+            }
+          ]
+        },
+        "gpuElapsedMs": {
+          "count": 180,
+          "mean": 16.178565800000005,
+          "p50": 15.812656,
+          "p95": 19.481562,
+          "max": 21.802343
+        },
+        "recordedAt": "2026-10-20T00:21:47.665Z",
+        "scenario": {
+          "organicGround": false,
+          "case": 21,
+          "biome": "gran-canon",
+          "culture": "mapungubwe",
+          "seed": 712,
+          "camera": [
+            21.315404563219673,
+            47.75693384519364,
+            42.07230564951897
+          ],
+          "target": [
+            -0.6845954367803273,
+            38.65693384519364,
+            42.07230564951897
+          ],
+          "quality": "media",
+          "pixelRatioLimit": null,
+          "hdrEndpoints": true,
+          "lightCulling": true,
+          "shadowChunks": 21,
+          "culledShadowChunks": 4,
+          "centerCulling": true,
+          "centerDamage": 0,
+          "unitBounds": true,
+          "fineNoise": true,
+          "shadows": true,
+          "shadowMapSize": [
+            1024,
+            1024
+          ],
+          "renderOrigin": {
+            "x": 0,
+            "z": 0,
+            "revision": 0
+          },
+          "batching": true,
+          "view": "village",
+          "night": true,
+          "phase": null,
+          "simulatedElapsed": 0,
+          "workers": 4,
+          "animals": 5,
+          "plants": 16,
+          "chunks": 25
+        },
+        "shadowCache": {
+          "enabled": true,
+          "includingWarmup": true,
+          "draws": 0,
+          "hits": 210,
+          "untracked": 0
+        },
+        "device": {
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+          "platform": "Win32",
+          "hardwareConcurrency": 16,
+          "deviceMemoryGiB": 32,
+          "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "glVendor": "Google Inc. (Intel)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "canvas": [
+            1280,
+            720
+          ],
+          "dpr": 1,
+          "hiddenDuringRun": false
+        },
+        "warmupFrames": 30,
+        "cpuSubmissionMs": {
+          "count": 180,
+          "mean": 5.210000000149011,
+          "p50": 5.0999999940395355,
+          "p95": 6.600000008940697,
+          "max": 7.100000008940697
+        },
+        "frameIntervalMs": {
+          "count": 180,
+          "mean": 17.643888888888878,
+          "p50": 16.600000000002183,
+          "p95": 33.20000000000073,
+          "max": 33.400000000001455
+        },
+        "averageObservedFps": 56.676847507793106,
+        "submittedCalls": {
+          "count": 180,
+          "mean": 86,
+          "p50": 86,
+          "p95": 86,
+          "max": 86
+        },
+        "submittedTriangles": {
+          "count": 180,
+          "mean": 600693,
+          "p50": 600693,
+          "p95": 600693,
+          "max": 600693
+        },
+        "threeResourceCounts": {
+          "cameraPose": "21.315405,47.756934,42.072306,-0.684595,38.656934,42.072306",
+          "noiseVolume": 0,
+          "organicGround": false,
+          "calls": 86,
+          "triangles": 600693,
+          "lines": 0,
+          "points": 0,
+          "geometries": 125,
+          "textures": 81,
+          "programs": 58
+        },
+        "simulationUnchanged": true,
+        "errors": [],
+        "limits": "Isolated static QA scene, all render passes counted, CPU submission includes sync/LOD/VFX GPU elapsed queries wrap those same passes when supported; no GPU fence/finish or memory-bytes claim. Frame cadence includes browser scheduling. Three resource counts are not resident GPU bytes; no navigation/audio/gameplay timing or mobile hardware claim."
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "sceneCase": 21,
+      "phase": "night",
+      "variant": 0,
+      "view": "side",
+      "camera": {
+        "position": [
+          21.315404563219673,
+          47.75693384519364,
+          42.07230564951897
+        ],
+        "target": [
+          -0.6845954367803273,
+          38.65693384519364,
+          42.07230564951897
+        ]
+      },
+      "report": {
+        "schema": 2,
+        "cameraStable": true,
+        "noiseExperiment": {
+          "enabled": false,
+          "textureBytes": 262144,
+          "patchedPrograms": 80,
+          "pattern": null,
+          "scope": "QA only; finite-period quantized fine noise; original coarse noise and authored bands/palette retained"
+        },
+        "pairedNoiseGpu": null,
+        "pairedNoiseSubmission": null,
+        "pairedGpu": null,
+        "pairedSubmission": null,
+        "groundComparison": {
+          "referenceCommit": "043d68b",
+          "mode": "pure moss plus independent mud meshes",
+          "mudMeshes": [],
+          "pattern": null
+        },
+        "materialRegistry": {
+          "enabled": true,
+          "includingWarmup": true,
+          "nodes": 1125,
+          "materials": 200,
+          "waters": 2,
+          "discoveredNodes": 0,
+          "refreshedMeshes": 0,
+          "legacyScans": 0,
+          "waterWrites": 0
+        },
+        "cropBufferUploads": {
+          "includingWarmup": true,
+          "matrixVersions": 0,
+          "growthVersions": 0
+        },
+        "gpuTimer": {
+          "supported": true,
+          "reason": null,
+          "disjointEvents": 0,
+          "discarded": 0,
+          "overflowSkipped": 0,
+          "foreignQuerySkipped": 0,
+          "allocationFailures": 0,
+          "unresolvedAtDispose": 0,
+          "contextLost": false,
+          "pending": 0,
+          "samples": [
+            {
+              "frame": 0,
+              "ms": 15.331302
+            },
+            {
+              "frame": 1,
+              "ms": 19.061875
+            },
+            {
+              "frame": 2,
+              "ms": 25.133333
+            },
+            {
+              "frame": 3,
+              "ms": 17.085468
+            },
+            {
+              "frame": 4,
+              "ms": 17.465729
+            },
+            {
+              "frame": 5,
+              "ms": 15.102916
+            },
+            {
+              "frame": 6,
+              "ms": 23.765208
+            },
+            {
+              "frame": 7,
+              "ms": 20.238854
+            },
+            {
+              "frame": 8,
+              "ms": 22.69
+            },
+            {
+              "frame": 9,
+              "ms": 17.615937
+            },
+            {
+              "frame": 10,
+              "ms": 19.052343
+            },
+            {
+              "frame": 11,
+              "ms": 20.086145
+            },
+            {
+              "frame": 12,
+              "ms": 15.552552
+            },
+            {
+              "frame": 13,
+              "ms": 20.000104
+            },
+            {
+              "frame": 14,
+              "ms": 17.91302
+            },
+            {
+              "frame": 15,
+              "ms": 19.074427
+            },
+            {
+              "frame": 16,
+              "ms": 15.879947
+            },
+            {
+              "frame": 17,
+              "ms": 17.157395
+            },
+            {
+              "frame": 18,
+              "ms": 17.060989
+            },
+            {
+              "frame": 19,
+              "ms": 16.071197
+            },
+            {
+              "frame": 20,
+              "ms": 15.999791
+            },
+            {
+              "frame": 21,
+              "ms": 19.045052
+            },
+            {
+              "frame": 22,
+              "ms": 17.355729
+            },
+            {
+              "frame": 23,
+              "ms": 15.806562
+            },
+            {
+              "frame": 24,
+              "ms": 17.790104
+            },
+            {
+              "frame": 25,
+              "ms": 17.670781
+            },
+            {
+              "frame": 26,
+              "ms": 16.559635
+            },
+            {
+              "frame": 27,
+              "ms": 15.751406
+            },
+            {
+              "frame": 28,
+              "ms": 16.494114
+            },
+            {
+              "frame": 29,
+              "ms": 16.57776
+            },
+            {
+              "frame": 30,
+              "ms": 17.29927
+            },
+            {
+              "frame": 31,
+              "ms": 16.474322
+            },
+            {
+              "frame": 32,
+              "ms": 18.397916
+            },
+            {
+              "frame": 33,
+              "ms": 17.032812
+            },
+            {
+              "frame": 34,
+              "ms": 15.830104
+            },
+            {
+              "frame": 35,
+              "ms": 15.842916
+            },
+            {
+              "frame": 36,
+              "ms": 15.387864
+            },
+            {
+              "frame": 37,
+              "ms": 16.953437
+            },
+            {
+              "frame": 38,
+              "ms": 17.203177
+            },
+            {
+              "frame": 39,
+              "ms": 15.335104
+            },
+            {
+              "frame": 40,
+              "ms": 13.996979
+            },
+            {
+              "frame": 41,
+              "ms": 14.495364
+            },
+            {
+              "frame": 42,
+              "ms": 14.111302
+            },
+            {
+              "frame": 43,
+              "ms": 14.950989
+            },
+            {
+              "frame": 44,
+              "ms": 15.474739
+            },
+            {
+              "frame": 45,
+              "ms": 14.968802
+            },
+            {
+              "frame": 46,
+              "ms": 14.909635
+            },
+            {
+              "frame": 47,
+              "ms": 15.089531
+            },
+            {
+              "frame": 48,
+              "ms": 15.302291
+            },
+            {
+              "frame": 49,
+              "ms": 15.102916
+            },
+            {
+              "frame": 50,
+              "ms": 15.055729
+            },
+            {
+              "frame": 51,
+              "ms": 14.752187
+            },
+            {
+              "frame": 52,
+              "ms": 14.799062
+            },
+            {
+              "frame": 53,
+              "ms": 14.986197
+            },
+            {
+              "frame": 54,
+              "ms": 14.383281
+            },
+            {
+              "frame": 55,
+              "ms": 15.439322
+            },
+            {
+              "frame": 56,
+              "ms": 15.249062
+            },
+            {
+              "frame": 57,
+              "ms": 15.165
+            },
+            {
+              "frame": 58,
+              "ms": 14.672187
+            },
+            {
+              "frame": 59,
+              "ms": 14.470208
+            },
+            {
+              "frame": 60,
+              "ms": 14.747447
+            },
+            {
+              "frame": 61,
+              "ms": 15.21875
+            },
+            {
+              "frame": 62,
+              "ms": 14.777343
+            },
+            {
+              "frame": 63,
+              "ms": 14.965833
+            },
+            {
+              "frame": 64,
+              "ms": 14.59052
+            },
+            {
+              "frame": 65,
+              "ms": 14.487864
+            },
+            {
+              "frame": 66,
+              "ms": 14.547031
+            },
+            {
+              "frame": 67,
+              "ms": 13.866041
+            },
+            {
+              "frame": 68,
+              "ms": 14.577864
+            },
+            {
+              "frame": 69,
+              "ms": 15.946927
+            },
+            {
+              "frame": 70,
+              "ms": 18.963906
+            },
+            {
+              "frame": 71,
+              "ms": 16.606875
+            },
+            {
+              "frame": 72,
+              "ms": 16.202604
+            },
+            {
+              "frame": 73,
+              "ms": 14.804479
+            },
+            {
+              "frame": 74,
+              "ms": 14.334635
+            },
+            {
+              "frame": 75,
+              "ms": 16.085208
+            },
+            {
+              "frame": 76,
+              "ms": 15.234635
+            },
+            {
+              "frame": 77,
+              "ms": 14.456822
+            },
+            {
+              "frame": 78,
+              "ms": 15.323697
+            },
+            {
+              "frame": 79,
+              "ms": 14.528281
+            },
+            {
+              "frame": 80,
+              "ms": 14.473541
+            },
+            {
+              "frame": 81,
+              "ms": 14.266145
+            },
+            {
+              "frame": 82,
+              "ms": 14.519427
+            },
+            {
+              "frame": 83,
+              "ms": 14.542031
+            },
+            {
+              "frame": 84,
+              "ms": 15.619062
+            },
+            {
+              "frame": 85,
+              "ms": 14.369947
+            },
+            {
+              "frame": 86,
+              "ms": 14.858125
+            },
+            {
+              "frame": 87,
+              "ms": 14.845625
+            },
+            {
+              "frame": 88,
+              "ms": 14.875989
+            },
+            {
+              "frame": 89,
+              "ms": 14.932291
+            },
+            {
+              "frame": 90,
+              "ms": 14.406562
+            },
+            {
+              "frame": 91,
+              "ms": 15.003593
+            },
+            {
+              "frame": 92,
+              "ms": 14.983645
+            },
+            {
+              "frame": 93,
+              "ms": 15.164947
+            },
+            {
+              "frame": 94,
+              "ms": 14.966145
+            },
+            {
+              "frame": 95,
+              "ms": 14.660989
+            },
+            {
+              "frame": 96,
+              "ms": 14.880364
+            },
+            {
+              "frame": 97,
+              "ms": 15.078645
+            },
+            {
+              "frame": 98,
+              "ms": 16.088802
+            },
+            {
+              "frame": 99,
+              "ms": 15.556718
+            },
+            {
+              "frame": 100,
+              "ms": 15.125364
+            },
+            {
+              "frame": 101,
+              "ms": 14.349531
+            },
+            {
+              "frame": 102,
+              "ms": 14.590104
+            },
+            {
+              "frame": 103,
+              "ms": 14.739895
+            },
+            {
+              "frame": 104,
+              "ms": 15.279635
+            },
+            {
+              "frame": 105,
+              "ms": 14.473177
+            },
+            {
+              "frame": 106,
+              "ms": 15.046041
+            },
+            {
+              "frame": 107,
+              "ms": 15.33677
+            },
+            {
+              "frame": 108,
+              "ms": 15.18276
+            },
+            {
+              "frame": 109,
+              "ms": 15.013854
+            },
+            {
+              "frame": 110,
+              "ms": 15.165625
+            },
+            {
+              "frame": 111,
+              "ms": 15.211718
+            },
+            {
+              "frame": 112,
+              "ms": 15.479479
+            },
+            {
+              "frame": 113,
+              "ms": 14.815989
+            },
+            {
+              "frame": 114,
+              "ms": 14.991927
+            },
+            {
+              "frame": 115,
+              "ms": 15.675729
+            },
+            {
+              "frame": 116,
+              "ms": 16.134531
+            },
+            {
+              "frame": 117,
+              "ms": 15.359322
+            },
+            {
+              "frame": 118,
+              "ms": 16.069062
+            },
+            {
+              "frame": 119,
+              "ms": 15.805052
+            },
+            {
+              "frame": 120,
+              "ms": 16.061041
+            },
+            {
+              "frame": 121,
+              "ms": 14.952083
+            },
+            {
+              "frame": 122,
+              "ms": 15.363593
+            },
+            {
+              "frame": 123,
+              "ms": 15.162656
+            },
+            {
+              "frame": 124,
+              "ms": 15.779583
+            },
+            {
+              "frame": 125,
+              "ms": 15.860052
+            },
+            {
+              "frame": 126,
+              "ms": 15.25901
+            },
+            {
+              "frame": 127,
+              "ms": 15.314166
+            },
+            {
+              "frame": 128,
+              "ms": 15.318072
+            },
+            {
+              "frame": 129,
+              "ms": 15.659427
+            },
+            {
+              "frame": 130,
+              "ms": 29.414114
+            },
+            {
+              "frame": 131,
+              "ms": 19.304687
+            },
+            {
+              "frame": 132,
+              "ms": 21.637447
+            },
+            {
+              "frame": 133,
+              "ms": 19.585364
+            },
+            {
+              "frame": 134,
+              "ms": 20.163177
+            },
+            {
+              "frame": 135,
+              "ms": 20.506614
+            },
+            {
+              "frame": 136,
+              "ms": 21.177187
+            },
+            {
+              "frame": 137,
+              "ms": 19.932395
+            },
+            {
+              "frame": 138,
+              "ms": 17.224427
+            },
+            {
+              "frame": 139,
+              "ms": 20.037135
+            },
+            {
+              "frame": 140,
+              "ms": 16.935781
+            },
+            {
+              "frame": 141,
+              "ms": 17.836614
+            },
+            {
+              "frame": 142,
+              "ms": 20.795
+            },
+            {
+              "frame": 143,
+              "ms": 17.571354
+            },
+            {
+              "frame": 144,
+              "ms": 15.016145
+            },
+            {
+              "frame": 145,
+              "ms": 15.057968
+            },
+            {
+              "frame": 146,
+              "ms": 15.348125
+            },
+            {
+              "frame": 147,
+              "ms": 15.514218
+            },
+            {
+              "frame": 148,
+              "ms": 15.909791
+            },
+            {
+              "frame": 149,
+              "ms": 16.030052
+            },
+            {
+              "frame": 150,
+              "ms": 15.858177
+            },
+            {
+              "frame": 151,
+              "ms": 15.376979
+            },
+            {
+              "frame": 152,
+              "ms": 14.948958
+            },
+            {
+              "frame": 153,
+              "ms": 15.31
+            },
+            {
+              "frame": 154,
+              "ms": 15.648177
+            },
+            {
+              "frame": 155,
+              "ms": 15.636145
+            },
+            {
+              "frame": 156,
+              "ms": 15.614635
+            },
+            {
+              "frame": 157,
+              "ms": 15.82802
+            },
+            {
+              "frame": 158,
+              "ms": 15.583854
+            },
+            {
+              "frame": 159,
+              "ms": 15.342187
+            },
+            {
+              "frame": 160,
+              "ms": 14.854791
+            },
+            {
+              "frame": 161,
+              "ms": 15.06177
+            },
+            {
+              "frame": 162,
+              "ms": 14.998802
+            },
+            {
+              "frame": 163,
+              "ms": 15.171458
+            },
+            {
+              "frame": 164,
+              "ms": 14.936406
+            },
+            {
+              "frame": 165,
+              "ms": 15.328541
+            },
+            {
+              "frame": 166,
+              "ms": 15.644739
+            },
+            {
+              "frame": 167,
+              "ms": 15.00875
+            },
+            {
+              "frame": 168,
+              "ms": 15.297968
+            },
+            {
+              "frame": 169,
+              "ms": 15.365677
+            },
+            {
+              "frame": 170,
+              "ms": 15.39276
+            },
+            {
+              "frame": 171,
+              "ms": 15.062291
+            },
+            {
+              "frame": 172,
+              "ms": 16.787864
+            },
+            {
+              "frame": 173,
+              "ms": 15.144375
+            },
+            {
+              "frame": 174,
+              "ms": 16.216302
+            },
+            {
+              "frame": 175,
+              "ms": 15.324947
+            },
+            {
+              "frame": 176,
+              "ms": 15.204322
+            },
+            {
+              "frame": 177,
+              "ms": 15.12125
+            },
+            {
+              "frame": 178,
+              "ms": 14.666354
+            },
+            {
+              "frame": 179,
+              "ms": 14.400468
+            }
+          ]
+        },
+        "gpuElapsedMs": {
+          "count": 180,
+          "mean": 16.108836361111102,
+          "p50": 15.335104,
+          "p95": 20.163177,
+          "max": 29.414114
+        },
+        "recordedAt": "2026-10-20T00:21:52.005Z",
+        "scenario": {
+          "organicGround": false,
+          "case": 21,
+          "biome": "gran-canon",
+          "culture": "mapungubwe",
+          "seed": 712,
+          "camera": [
+            21.315404563219673,
+            47.75693384519364,
+            42.07230564951897
+          ],
+          "target": [
+            -0.6845954367803273,
+            38.65693384519364,
+            42.07230564951897
+          ],
+          "quality": "media",
+          "pixelRatioLimit": null,
+          "hdrEndpoints": true,
+          "lightCulling": true,
+          "shadowChunks": 21,
+          "culledShadowChunks": 4,
+          "centerCulling": true,
+          "centerDamage": 0,
+          "unitBounds": true,
+          "fineNoise": true,
+          "shadows": true,
+          "shadowMapSize": [
+            1024,
+            1024
+          ],
+          "renderOrigin": {
+            "x": 0,
+            "z": 0,
+            "revision": 0
+          },
+          "batching": true,
+          "view": "village",
+          "night": true,
+          "phase": null,
+          "simulatedElapsed": 0,
+          "workers": 4,
+          "animals": 5,
+          "plants": 16,
+          "chunks": 25
+        },
+        "shadowCache": {
+          "enabled": true,
+          "includingWarmup": true,
+          "draws": 0,
+          "hits": 210,
+          "untracked": 0
+        },
+        "device": {
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+          "platform": "Win32",
+          "hardwareConcurrency": 16,
+          "deviceMemoryGiB": 32,
+          "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "glVendor": "Google Inc. (Intel)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "canvas": [
+            1280,
+            720
+          ],
+          "dpr": 1,
+          "hiddenDuringRun": false
+        },
+        "warmupFrames": 30,
+        "cpuSubmissionMs": {
+          "count": 180,
+          "mean": 5.287222222652701,
+          "p50": 5,
+          "p95": 7.4000000059604645,
+          "max": 9.400000005960464
+        },
+        "frameIntervalMs": {
+          "count": 180,
+          "mean": 17.64333333333333,
+          "p50": 16.600000000002183,
+          "p95": 33.10000000000218,
+          "max": 33.69999999999709
+        },
+        "averageObservedFps": 56.67863215567732,
+        "submittedCalls": {
+          "count": 180,
+          "mean": 86,
+          "p50": 86,
+          "p95": 86,
+          "max": 86
+        },
+        "submittedTriangles": {
+          "count": 180,
+          "mean": 600693,
+          "p50": 600693,
+          "p95": 600693,
+          "max": 600693
+        },
+        "threeResourceCounts": {
+          "cameraPose": "21.315405,47.756934,42.072306,-0.684595,38.656934,42.072306",
+          "noiseVolume": 0,
+          "organicGround": false,
+          "calls": 86,
+          "triangles": 600693,
+          "lines": 0,
+          "points": 0,
+          "geometries": 125,
+          "textures": 81,
+          "programs": 58
+        },
+        "simulationUnchanged": true,
+        "errors": [],
+        "limits": "Isolated static QA scene, all render passes counted, CPU submission includes sync/LOD/VFX GPU elapsed queries wrap those same passes when supported; no GPU fence/finish or memory-bytes claim. Frame cadence includes browser scheduling. Three resource counts are not resident GPU bytes; no navigation/audio/gameplay timing or mobile hardware claim."
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "sceneCase": 21,
+      "phase": "night",
+      "variant": 1,
+      "view": "side",
+      "camera": {
+        "position": [
+          21.315404563219673,
+          47.75693384519364,
+          42.07230564951897
+        ],
+        "target": [
+          -0.6845954367803273,
+          38.65693384519364,
+          42.07230564951897
+        ]
+      },
+      "report": {
+        "schema": 2,
+        "cameraStable": true,
+        "noiseExperiment": {
+          "enabled": false,
+          "textureBytes": 262144,
+          "patchedPrograms": 80,
+          "pattern": null,
+          "scope": "QA only; finite-period quantized fine noise; original coarse noise and authored bands/palette retained"
+        },
+        "pairedNoiseGpu": null,
+        "pairedNoiseSubmission": null,
+        "pairedGpu": null,
+        "pairedSubmission": null,
+        "groundComparison": {
+          "referenceCommit": "043d68b",
+          "mode": "pure moss plus independent mud meshes",
+          "mudMeshes": [],
+          "pattern": null
+        },
+        "materialRegistry": {
+          "enabled": true,
+          "includingWarmup": true,
+          "nodes": 1125,
+          "materials": 200,
+          "waters": 2,
+          "discoveredNodes": 0,
+          "refreshedMeshes": 0,
+          "legacyScans": 0,
+          "waterWrites": 0
+        },
+        "cropBufferUploads": {
+          "includingWarmup": true,
+          "matrixVersions": 0,
+          "growthVersions": 0
+        },
+        "gpuTimer": {
+          "supported": true,
+          "reason": null,
+          "disjointEvents": 0,
+          "discarded": 0,
+          "overflowSkipped": 0,
+          "foreignQuerySkipped": 0,
+          "allocationFailures": 0,
+          "unresolvedAtDispose": 0,
+          "contextLost": false,
+          "pending": 0,
+          "samples": [
+            {
+              "frame": 0,
+              "ms": 16.150208
+            },
+            {
+              "frame": 1,
+              "ms": 16.150312
+            },
+            {
+              "frame": 2,
+              "ms": 16.249479
+            },
+            {
+              "frame": 3,
+              "ms": 17.392395
+            },
+            {
+              "frame": 4,
+              "ms": 16.198854
+            },
+            {
+              "frame": 5,
+              "ms": 19.064843
+            },
+            {
+              "frame": 6,
+              "ms": 18.091718
+            },
+            {
+              "frame": 7,
+              "ms": 15.80427
+            },
+            {
+              "frame": 8,
+              "ms": 17.64401
+            },
+            {
+              "frame": 9,
+              "ms": 16.742916
+            },
+            {
+              "frame": 10,
+              "ms": 20.336406
+            },
+            {
+              "frame": 11,
+              "ms": 14.748229
+            },
+            {
+              "frame": 12,
+              "ms": 14.381979
+            },
+            {
+              "frame": 13,
+              "ms": 15.037135
+            },
+            {
+              "frame": 14,
+              "ms": 17.046822
+            },
+            {
+              "frame": 15,
+              "ms": 15.730104
+            },
+            {
+              "frame": 16,
+              "ms": 14.180833
+            },
+            {
+              "frame": 17,
+              "ms": 15.442968
+            },
+            {
+              "frame": 18,
+              "ms": 14.281666
+            },
+            {
+              "frame": 19,
+              "ms": 14.676197
+            },
+            {
+              "frame": 20,
+              "ms": 14.563802
+            },
+            {
+              "frame": 21,
+              "ms": 15.252604
+            },
+            {
+              "frame": 22,
+              "ms": 15.026614
+            },
+            {
+              "frame": 23,
+              "ms": 16.088385
+            },
+            {
+              "frame": 24,
+              "ms": 15.542916
+            },
+            {
+              "frame": 25,
+              "ms": 15.301145
+            },
+            {
+              "frame": 26,
+              "ms": 14.708645
+            },
+            {
+              "frame": 27,
+              "ms": 14.962552
+            },
+            {
+              "frame": 28,
+              "ms": 15.900937
+            },
+            {
+              "frame": 29,
+              "ms": 16.20651
+            },
+            {
+              "frame": 30,
+              "ms": 14.331302
+            },
+            {
+              "frame": 31,
+              "ms": 14.943541
+            },
+            {
+              "frame": 32,
+              "ms": 14.348802
+            },
+            {
+              "frame": 33,
+              "ms": 14.508645
+            },
+            {
+              "frame": 34,
+              "ms": 14.767552
+            },
+            {
+              "frame": 35,
+              "ms": 14.861718
+            },
+            {
+              "frame": 36,
+              "ms": 14.445052
+            },
+            {
+              "frame": 37,
+              "ms": 15.104895
+            },
+            {
+              "frame": 38,
+              "ms": 14.792708
+            },
+            {
+              "frame": 39,
+              "ms": 14.832812
+            },
+            {
+              "frame": 40,
+              "ms": 14.384583
+            },
+            {
+              "frame": 41,
+              "ms": 15.112864
+            },
+            {
+              "frame": 42,
+              "ms": 14.354895
+            },
+            {
+              "frame": 43,
+              "ms": 14.623229
+            },
+            {
+              "frame": 44,
+              "ms": 14.615208
+            },
+            {
+              "frame": 45,
+              "ms": 14.488697
+            },
+            {
+              "frame": 46,
+              "ms": 14.584739
+            },
+            {
+              "frame": 47,
+              "ms": 14.101562
+            },
+            {
+              "frame": 48,
+              "ms": 14.073854
+            },
+            {
+              "frame": 49,
+              "ms": 14.007968
+            },
+            {
+              "frame": 50,
+              "ms": 15.313593
+            },
+            {
+              "frame": 51,
+              "ms": 14.569114
+            },
+            {
+              "frame": 52,
+              "ms": 15.092135
+            },
+            {
+              "frame": 53,
+              "ms": 15.163854
+            },
+            {
+              "frame": 54,
+              "ms": 17.148489
+            },
+            {
+              "frame": 55,
+              "ms": 19.596458
+            },
+            {
+              "frame": 56,
+              "ms": 16.646458
+            },
+            {
+              "frame": 57,
+              "ms": 14.053229
+            },
+            {
+              "frame": 58,
+              "ms": 14.067083
+            },
+            {
+              "frame": 59,
+              "ms": 16.377447
+            },
+            {
+              "frame": 60,
+              "ms": 14.871927
+            },
+            {
+              "frame": 61,
+              "ms": 14.128125
+            },
+            {
+              "frame": 62,
+              "ms": 14.47927
+            },
+            {
+              "frame": 63,
+              "ms": 13.724843
+            },
+            {
+              "frame": 64,
+              "ms": 15.135729
+            },
+            {
+              "frame": 65,
+              "ms": 14.385104
+            },
+            {
+              "frame": 66,
+              "ms": 14.649479
+            },
+            {
+              "frame": 67,
+              "ms": 14.64177
+            },
+            {
+              "frame": 68,
+              "ms": 15.316927
+            },
+            {
+              "frame": 69,
+              "ms": 14.724114
+            },
+            {
+              "frame": 70,
+              "ms": 14.862604
+            },
+            {
+              "frame": 71,
+              "ms": 14.511406
+            },
+            {
+              "frame": 72,
+              "ms": 16.133072
+            },
+            {
+              "frame": 73,
+              "ms": 15.752708
+            },
+            {
+              "frame": 74,
+              "ms": 15.050208
+            },
+            {
+              "frame": 75,
+              "ms": 14.686718
+            },
+            {
+              "frame": 76,
+              "ms": 16.609791
+            },
+            {
+              "frame": 77,
+              "ms": 15.602708
+            },
+            {
+              "frame": 78,
+              "ms": 17.757916
+            },
+            {
+              "frame": 79,
+              "ms": 15.991406
+            },
+            {
+              "frame": 80,
+              "ms": 16.509739
+            },
+            {
+              "frame": 81,
+              "ms": 15.96151
+            },
+            {
+              "frame": 82,
+              "ms": 15.81
+            },
+            {
+              "frame": 83,
+              "ms": 14.12776
+            },
+            {
+              "frame": 84,
+              "ms": 15.007343
+            },
+            {
+              "frame": 85,
+              "ms": 15.192135
+            },
+            {
+              "frame": 86,
+              "ms": 14.848645
+            },
+            {
+              "frame": 87,
+              "ms": 14.552656
+            },
+            {
+              "frame": 88,
+              "ms": 14.772187
+            },
+            {
+              "frame": 89,
+              "ms": 15.012656
+            },
+            {
+              "frame": 90,
+              "ms": 15.018802
+            },
+            {
+              "frame": 91,
+              "ms": 14.765989
+            },
+            {
+              "frame": 92,
+              "ms": 14.474375
+            },
+            {
+              "frame": 93,
+              "ms": 14.7075
+            },
+            {
+              "frame": 94,
+              "ms": 14.992135
+            },
+            {
+              "frame": 95,
+              "ms": 14.073541
+            },
+            {
+              "frame": 96,
+              "ms": 15.061927
+            },
+            {
+              "frame": 97,
+              "ms": 14.392239
+            },
+            {
+              "frame": 98,
+              "ms": 15.050833
+            },
+            {
+              "frame": 99,
+              "ms": 15.274322
+            },
+            {
+              "frame": 100,
+              "ms": 15.228281
+            },
+            {
+              "frame": 101,
+              "ms": 14.863593
+            },
+            {
+              "frame": 102,
+              "ms": 14.94302
+            },
+            {
+              "frame": 103,
+              "ms": 15.12901
+            },
+            {
+              "frame": 104,
+              "ms": 15.798281
+            },
+            {
+              "frame": 105,
+              "ms": 14.890104
+            },
+            {
+              "frame": 106,
+              "ms": 16.371979
+            },
+            {
+              "frame": 107,
+              "ms": 15.438958
+            },
+            {
+              "frame": 108,
+              "ms": 15.683802
+            },
+            {
+              "frame": 109,
+              "ms": 15.807187
+            },
+            {
+              "frame": 110,
+              "ms": 15.481822
+            },
+            {
+              "frame": 111,
+              "ms": 15.021145
+            },
+            {
+              "frame": 112,
+              "ms": 15.460833
+            },
+            {
+              "frame": 113,
+              "ms": 15.771875
+            },
+            {
+              "frame": 114,
+              "ms": 14.66802
+            },
+            {
+              "frame": 115,
+              "ms": 14.850104
+            },
+            {
+              "frame": 116,
+              "ms": 19.589479
+            },
+            {
+              "frame": 117,
+              "ms": 17.521562
+            },
+            {
+              "frame": 118,
+              "ms": 17.626927
+            },
+            {
+              "frame": 119,
+              "ms": 15.781145
+            },
+            {
+              "frame": 120,
+              "ms": 14.99302
+            },
+            {
+              "frame": 121,
+              "ms": 15.630729
+            },
+            {
+              "frame": 122,
+              "ms": 15.363177
+            },
+            {
+              "frame": 123,
+              "ms": 15.694791
+            },
+            {
+              "frame": 124,
+              "ms": 15.340364
+            },
+            {
+              "frame": 125,
+              "ms": 16.730937
+            },
+            {
+              "frame": 126,
+              "ms": 16.5925
+            },
+            {
+              "frame": 127,
+              "ms": 16.883229
+            },
+            {
+              "frame": 128,
+              "ms": 15.925781
+            },
+            {
+              "frame": 129,
+              "ms": 16.254687
+            },
+            {
+              "frame": 130,
+              "ms": 14.949218
+            },
+            {
+              "frame": 131,
+              "ms": 15.546354
+            },
+            {
+              "frame": 132,
+              "ms": 17.341406
+            },
+            {
+              "frame": 133,
+              "ms": 15.710572
+            },
+            {
+              "frame": 134,
+              "ms": 15.040781
+            },
+            {
+              "frame": 135,
+              "ms": 15.970468
+            },
+            {
+              "frame": 136,
+              "ms": 15.326145
+            },
+            {
+              "frame": 137,
+              "ms": 15.711458
+            },
+            {
+              "frame": 138,
+              "ms": 15.549895
+            },
+            {
+              "frame": 139,
+              "ms": 16.034635
+            },
+            {
+              "frame": 140,
+              "ms": 16.124062
+            },
+            {
+              "frame": 141,
+              "ms": 14.79427
+            },
+            {
+              "frame": 142,
+              "ms": 15.188385
+            },
+            {
+              "frame": 143,
+              "ms": 15.620104
+            },
+            {
+              "frame": 144,
+              "ms": 14.828697
+            },
+            {
+              "frame": 145,
+              "ms": 16.294583
+            },
+            {
+              "frame": 146,
+              "ms": 18.297135
+            },
+            {
+              "frame": 147,
+              "ms": 15.913437
+            },
+            {
+              "frame": 148,
+              "ms": 16.435
+            },
+            {
+              "frame": 149,
+              "ms": 15.604895
+            },
+            {
+              "frame": 150,
+              "ms": 15.352447
+            },
+            {
+              "frame": 151,
+              "ms": 16.205416
+            },
+            {
+              "frame": 152,
+              "ms": 15.009895
+            },
+            {
+              "frame": 153,
+              "ms": 15.331666
+            },
+            {
+              "frame": 154,
+              "ms": 14.953125
+            },
+            {
+              "frame": 155,
+              "ms": 14.921302
+            },
+            {
+              "frame": 156,
+              "ms": 14.800937
+            },
+            {
+              "frame": 157,
+              "ms": 15.681562
+            },
+            {
+              "frame": 158,
+              "ms": 14.913125
+            },
+            {
+              "frame": 159,
+              "ms": 15.093177
+            },
+            {
+              "frame": 160,
+              "ms": 14.568072
+            },
+            {
+              "frame": 161,
+              "ms": 15.296666
+            },
+            {
+              "frame": 162,
+              "ms": 16.130937
+            },
+            {
+              "frame": 163,
+              "ms": 15.680104
+            },
+            {
+              "frame": 164,
+              "ms": 14.583697
+            },
+            {
+              "frame": 165,
+              "ms": 15.568229
+            },
+            {
+              "frame": 166,
+              "ms": 15.48177
+            },
+            {
+              "frame": 167,
+              "ms": 20.45052
+            },
+            {
+              "frame": 168,
+              "ms": 19.765677
+            },
+            {
+              "frame": 169,
+              "ms": 15.263281
+            },
+            {
+              "frame": 170,
+              "ms": 15.396041
+            },
+            {
+              "frame": 171,
+              "ms": 15.295416
+            },
+            {
+              "frame": 172,
+              "ms": 18.031875
+            },
+            {
+              "frame": 173,
+              "ms": 18.921197
+            },
+            {
+              "frame": 174,
+              "ms": 15.184739
+            },
+            {
+              "frame": 175,
+              "ms": 17.426197
+            },
+            {
+              "frame": 176,
+              "ms": 19.288489
+            },
+            {
+              "frame": 177,
+              "ms": 15.921406
+            },
+            {
+              "frame": 178,
+              "ms": 15.551145
+            },
+            {
+              "frame": 179,
+              "ms": 15.127447
+            }
+          ]
+        },
+        "gpuElapsedMs": {
+          "count": 180,
+          "mean": 15.575852544444446,
+          "p50": 15.263281,
+          "p95": 18.091718,
+          "max": 20.45052
+        },
+        "recordedAt": "2026-10-20T00:21:56.245Z",
+        "scenario": {
+          "organicGround": false,
+          "case": 21,
+          "biome": "gran-canon",
+          "culture": "mapungubwe",
+          "seed": 712,
+          "camera": [
+            21.315404563219673,
+            47.75693384519364,
+            42.07230564951897
+          ],
+          "target": [
+            -0.6845954367803273,
+            38.65693384519364,
+            42.07230564951897
+          ],
+          "quality": "media",
+          "pixelRatioLimit": null,
+          "hdrEndpoints": true,
+          "lightCulling": true,
+          "shadowChunks": 21,
+          "culledShadowChunks": 4,
+          "centerCulling": true,
+          "centerDamage": 0,
+          "unitBounds": true,
+          "fineNoise": true,
+          "shadows": true,
+          "shadowMapSize": [
+            1024,
+            1024
+          ],
+          "renderOrigin": {
+            "x": 0,
+            "z": 0,
+            "revision": 0
+          },
+          "batching": true,
+          "view": "village",
+          "night": true,
+          "phase": null,
+          "simulatedElapsed": 0,
+          "workers": 4,
+          "animals": 5,
+          "plants": 16,
+          "chunks": 25
+        },
+        "shadowCache": {
+          "enabled": true,
+          "includingWarmup": true,
+          "draws": 0,
+          "hits": 210,
+          "untracked": 0
+        },
+        "device": {
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+          "platform": "Win32",
+          "hardwareConcurrency": 16,
+          "deviceMemoryGiB": 32,
+          "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "glVendor": "Google Inc. (Intel)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "canvas": [
+            1280,
+            720
+          ],
+          "dpr": 1,
+          "hiddenDuringRun": false
+        },
+        "warmupFrames": 30,
+        "cpuSubmissionMs": {
+          "count": 180,
+          "mean": 5.093888888508081,
+          "p50": 5,
+          "p95": 6.5,
+          "max": 7.299999997019768
+        },
+        "frameIntervalMs": {
+          "count": 180,
+          "mean": 16.907222222222217,
+          "p50": 16.600000000002183,
+          "p95": 16.80000000000291,
+          "max": 33.29999999999927
+        },
+        "averageObservedFps": 59.14632142739791,
+        "submittedCalls": {
+          "count": 180,
+          "mean": 86,
+          "p50": 86,
+          "p95": 86,
+          "max": 86
+        },
+        "submittedTriangles": {
+          "count": 180,
+          "mean": 600693,
+          "p50": 600693,
+          "p95": 600693,
+          "max": 600693
+        },
+        "threeResourceCounts": {
+          "cameraPose": "21.315405,47.756934,42.072306,-0.684595,38.656934,42.072306",
+          "noiseVolume": 0,
+          "organicGround": false,
+          "calls": 86,
+          "triangles": 600693,
+          "lines": 0,
+          "points": 0,
+          "geometries": 125,
+          "textures": 81,
+          "programs": 58
+        },
+        "simulationUnchanged": true,
+        "errors": [],
+        "limits": "Isolated static QA scene, all render passes counted, CPU submission includes sync/LOD/VFX GPU elapsed queries wrap those same passes when supported; no GPU fence/finish or memory-bytes claim. Frame cadence includes browser scheduling. Three resource counts are not resident GPU bytes; no navigation/audio/gameplay timing or mobile hardware claim."
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    }
+  ]
+}

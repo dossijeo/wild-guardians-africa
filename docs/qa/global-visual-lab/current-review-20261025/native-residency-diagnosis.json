@@ -1,0 +1,86 @@
+{
+  "scope": "Diagnostic fixed native chunk pin only; not a production solution or performance comparison.",
+  "runs": [
+    {
+      "run": "probe",
+      "probe": {
+        "key": "1,0",
+        "retainedEvictions": 1
+      },
+      "elapsed": 146.17971118891325,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "created": 10,
+      "farSettled": true,
+      "native": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 26,
+        "residentPropRecords": 529,
+        "residentVisiblePropRecords": 6215,
+        "loadedSectors": 416,
+        "sectorSlots": 416,
+        "sectorUpdates": 1004,
+        "haloProps": 4
+      }
+    },
+    {
+      "run": "repeat",
+      "probe": {
+        "key": "1,0",
+        "retainedEvictions": 1,
+        "graphicsKeys": [
+          "2,1",
+          "2,0",
+          "3,0",
+          "3,1",
+          "2,-1",
+          "2,2",
+          "3,-1",
+          "3,2",
+          "4,0",
+          "4,1",
+          "4,-1",
+          "2,3",
+          "4,2",
+          "3,3",
+          "4,3",
+          "5,1",
+          "5,0",
+          "5,-1",
+          "5,2",
+          "5,3",
+          "6,0",
+          "6,1",
+          "6,-1",
+          "6,3",
+          "6,2"
+        ],
+        "native": {
+          "memoryBytes": 16777216,
+          "loadedChunks": 26,
+          "residentPropRecords": 529,
+          "residentVisiblePropRecords": 6215,
+          "loadedSectors": 416,
+          "sectorSlots": 416,
+          "sectorUpdates": 1004,
+          "haloProps": 4
+        }
+      },
+      "elapsed": 141.30719118891187,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "created": 10,
+      "farSettled": true,
+      "native": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 26,
+        "residentPropRecords": 529,
+        "residentVisiblePropRecords": 6215,
+        "loadedSectors": 416,
+        "sectorSlots": 416,
+        "sectorUpdates": 1004,
+        "haloProps": 4
+      }
+    }
+  ]
+}

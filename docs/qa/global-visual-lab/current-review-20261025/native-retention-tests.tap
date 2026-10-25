@@ -1,0 +1,175 @@
+TAP version 13
+# (node:25436) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native producer overlaps private preparation, with bounded backpressure and complete publication
+ok 1 - native producer overlaps private preparation, with bounded backpressure and complete publication
+  ---
+  duration_ms: 5.0773
+  ...
+# Subtest: camera cancellation discards pending graphics and prevents late publication
+ok 2 - camera cancellation discards pending graphics and prevents late publication
+  ---
+  duration_ms: 2.1935
+  ...
+# Subtest: forced revision and disposal reject obsolete completed groups
+ok 3 - forced revision and disposal reject obsolete completed groups
+  ---
+  duration_ms: 0.9099
+  ...
+# Subtest: spatial pipeline rereads edits without repeating native generation
+ok 4 - spatial pipeline rereads edits without repeating native generation
+  ---
+  duration_ms: 17.0028
+  ...
+# (node:44144) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:44144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (node:44144) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+ok 5 - real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+  ---
+  duration_ms: 1363.1232
+  ...
+# Subtest: queue dispatches one nearest scored request and ignores late IDs without completing the active job
+ok 6 - queue dispatches one nearest scored request and ignores late IDs without completing the active job
+  ---
+  duration_ms: 1.1218
+  ...
+# Subtest: travel and forced rebuild discard obsolete responses and regenerate the current epoch
+ok 7 - travel and forced rebuild discard obsolete responses and regenerate the current epoch
+  ---
+  duration_ms: 0.3375
+  ...
+# Subtest: invalidating a loaded chunk refreshes it without counting stale data as ready
+ok 8 - invalidating a loaded chunk refreshes it without counting stale data as ready
+  ---
+  duration_ms: 0.3953
+  ...
+# Subtest: a newer invalidation rejects an in-flight stale refresh
+ok 9 - a newer invalidation rejects an in-flight stale refresh
+  ---
+  duration_ms: 0.2762
+  ...
+# Subtest: invalidation leaves offscreen work alone and discards an in-flight changed chunk
+ok 10 - invalidation leaves offscreen work alone and discards an in-flight changed chunk
+  ---
+  duration_ms: 0.3589
+  ...
+# Subtest: worker failure preserves pending work in asynchronous local mode and dispose cancels it
+ok 11 - worker failure preserves pending work in asynchronous local mode and dispose cancels it
+  ---
+  duration_ms: 0.37
+  ...
+# Subtest: generation and installation failures settle waiters and coordinate mismatches never enter the world
+ok 12 - generation and installation failures settle waiters and coordinate mismatches never enter the world
+  ---
+  duration_ms: 0.8571
+  ...
+# Subtest: scene installs transferred data without regenerating terrain or navigation population on the main thread
+ok 13 - scene installs transferred data without regenerating terrain or navigation population on the main thread
+  ---
+  duration_ms: 47.0669
+  ...
+# Subtest: initial readiness follows the native nine-chunk threshold while the outer queue continues
+ok 14 - initial readiness follows the native nine-chunk threshold while the outer queue continues
+  ---
+  duration_ms: 0.6188
+  ...
+# Subtest: late asynchronous prepared graphics are disposed after stream teardown
+ok 15 - late asynchronous prepared graphics are disposed after stream teardown
+  ---
+  duration_ms: 4.0177
+  ...
+# Subtest: cancelled async request is retried when its demand returns before completion
+ok 16 - cancelled async request is retried when its demand returns before completion
+  ---
+  duration_ms: 0.6623
+  ...
+# (node:42736) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native retention leaves graphical ownership empty and releases when demand ends
+ok 17 - native retention leaves graphical ownership empty and releases when demand ends
+  ---
+  duration_ms: 3.6812
+  ...
+# Subtest: batch eviction respects native demand and does not duplicate release
+ok 18 - batch eviction respects native demand and does not duplicate release
+  ---
+  duration_ms: 0.9086
+  ...
+# Subtest: returning graphical demand or installed chunks prevent premature release
+ok 19 - returning graphical demand or installed chunks prevent premature release
+  ---
+  duration_ms: 0.3768
+  ...
+# Subtest: retention does not generate absent chunks, and validates demand transactionally
+ok 20 - retention does not generate absent chunks, and validates demand transactionally
+  ---
+  duration_ms: 0.9369
+  ...
+# Subtest: stream eviction and obsolete payload cleanup share the same native owner
+ok 21 - stream eviction and obsolete payload cleanup share the same native owner
+  ---
+  duration_ms: 1.5431
+  ...
+# Subtest: dispose releases native-only leases once and leaves graphic owners intact
+ok 22 - dispose releases native-only leases once and leaves graphic owners intact
+  ---
+  duration_ms: 0.3677
+  ...
+# (node:15372) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:15372) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: a Sabana game state renders and routes from one spatial authority through topology events
+ok 23 - a Sabana game state renders and routes from one spatial authority through topology events
+  ---
+  duration_ms: 260.5252
+  ...
+# Subtest: the same game-state session streams and routes in all six biomes
+ok 24 - the same game-state session streams and routes in all six biomes
+  ---
+  duration_ms: 421.7113
+  ...
+# Subtest: chunk selection distinguishes an absent chunk from a resident chunk with zero props
+ok 25 - chunk selection distinguishes an absent chunk from a resident chunk with zero props
+  ---
+  duration_ms: 4.4564
+  ...
+# Subtest: one resident C++ world supplies streamed render chunks and actor routes
+ok 26 - one resident C++ world supplies streamed render chunks and actor routes
+  ---
+  duration_ms: 64.9337
+  ...
+# Subtest: stream cancellation does not generate chunks that were never requested by the renderer
+ok 27 - stream cancellation does not generate chunks that were never requested by the renderer
+  ---
+  duration_ms: 21.0835
+  ...
+# Subtest: production terrain installer accepts the same C++ payload used for navigation
+ok 28 - production terrain installer accepts the same C++ payload used for navigation
+  ---
+  duration_ms: 58.4963
+  ...
+# (node:36796) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: retained native chunks receive settlement updates without graphical residency
+ok 29 - retained native chunks receive settlement updates without graphical residency
+  ---
+  duration_ms: 174.1659
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2195.644

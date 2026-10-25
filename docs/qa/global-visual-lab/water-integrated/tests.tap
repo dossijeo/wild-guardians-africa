@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 1 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 19.2692
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 2 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 8.7678
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 3 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 7.0702
+  ...
+# Subtest: grouped depth opt-in preserves separate shadow recipe and restores material array identity after draw failure
+ok 4 - grouped depth opt-in preserves separate shadow recipe and restores material array identity after draw failure
+  ---
+  duration_ms: 6.0023
+  ...
+# Subtest: grouped stock depths preserve per-group alpha and side, while one unknown group keeps the entire original route
+ok 5 - grouped stock depths preserve per-group alpha and side, while one unknown group keeps the entire original route
+  ---
+  duration_ms: 1.6287
+  ...
+# Subtest: grouped authored depth rejects any mismatched side or alpha and retains original depth ownership
+ok 6 - grouped authored depth rejects any mismatched side or alpha and retains original depth ownership
+  ---
+  duration_ms: 0.7171
+  ...
+# Subtest: authored depth route shares live deformation uniforms and restores original objects and materials after failure
+ok 7 - authored depth route shares live deformation uniforms and restores original objects and materials after failure
+  ---
+  duration_ms: 0.4316
+  ...
+# Subtest: unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+ok 8 - unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+  ---
+  duration_ms: 2.1233
+  ...
+# Subtest: transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+ok 9 - transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+  ---
+  duration_ms: 0.3766
+  ...
+# Subtest: hidden ancestors skip depth preparation while shared visible materials and restoration remain correct
+ok 10 - hidden ancestors skip depth preparation while shared visible materials and restoration remain correct
+  ---
+  duration_ms: 0.8335
+  ...
+# Subtest: empty batches keep children and shared nonempty owners prepared; revealing them restores normal eligibility
+ok 11 - empty batches keep children and shared nonempty owners prepared; revealing them restores normal eligibility
+  ---
+  duration_ms: 1.1986
+  ...
+# Subtest: zero draw ranges do not override InstancedMesh precedence or guess unknown render hooks
+ok 12 - zero draw ranges do not override InstancedMesh precedence or guess unknown render hooks
+  ---
+  duration_ms: 1.1793
+  ...
+# Subtest: scene callbacks and override materials retain original empty-owner preparation
+ok 13 - scene callbacks and override materials retain original empty-owner preparation
+  ---
+  duration_ms: 0.7816
+  ...
+# Subtest: empty-batch experiment is disabled by default after its measured CPU tradeoff
+ok 14 - empty-batch experiment is disabled by default after its measured CPU tradeoff
+  ---
+  duration_ms: 0.3593
+  ...
+# Subtest: single-traversal alpha opt-in keeps shared native alpha silhouettes and restores every owner after failure
+ok 15 - single-traversal alpha opt-in keeps shared native alpha silhouettes and restores every owner after failure
+  ---
+  duration_ms: 0.7259
+  ...
+# Subtest: alpha opt-in retains unknown/rasterization exceptions and authored-depth precedence
+ok 16 - alpha opt-in retains unknown/rasterization exceptions and authored-depth precedence
+  ---
+  duration_ms: 2.2953
+  ...
+# Subtest: shared standard compatibility is checked once per capture and refreshed after raster or hook changes
+ok 17 - shared standard compatibility is checked once per capture and refreshed after raster or hook changes
+  ---
+  duration_ms: 1.4893
+  ...
+# Subtest: authored depths retain individual compatibility even when they share a source with standard owners
+ok 18 - authored depths retain individual compatibility even when they share a source with standard owners
+  ---
+  duration_ms: 0.4462
+  ...
+# Subtest: experimental constant palettes cannot reuse a shader program across biomes
+ok 19 - experimental constant palettes cannot reuse a shader program across biomes
+  ---
+  duration_ms: 4.9214
+  ...
+# Subtest: experimental water uses shared slope data while default and lava retain their shader
+ok 20 - experimental water uses shared slope data while default and lava retain their shader
+  ---
+  duration_ms: 25.9193
+  ...
+# Subtest: numerical slope maps are deterministic, filtered and bounded
+ok 21 - numerical slope maps are deterministic, filtered and bounded
+  ---
+  duration_ms: 17.5256
+  ...
+# Subtest: ground surface, Fresnel and BRDF preserve the supplied shader recipes
+ok 22 - ground surface, Fresnel and BRDF preserve the supplied shader recipes
+  ---
+  duration_ms: 4.0497
+  ...
+# Subtest: both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+ok 23 - both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+  ---
+  duration_ms: 3.1301
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 229.738

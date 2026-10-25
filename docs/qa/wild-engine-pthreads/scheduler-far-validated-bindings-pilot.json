@@ -1,0 +1,1957 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&farValidatedBindings=1&frameScheduler=1",
+  "result": {
+    "farDraws": [
+      {
+        "slot": 0,
+        "ms": 1.5800000429153442,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 16,
+            "ms": 0.0849999189376831,
+            "maxMs": 0.02499997615814209
+          },
+          "drawElementsInstanced": {
+            "count": 2,
+            "ms": 0.030000030994415283,
+            "maxMs": 0.030000030994415283
+          },
+          "drawElements": {
+            "count": 2,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 1,
+        "ms": 1.0450000166893005,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 10,
+            "ms": 0.04500001668930054,
+            "maxMs": 0.025000035762786865
+          },
+          "drawElementsInstanced": {
+            "count": 2,
+            "ms": 0.0350000262260437,
+            "maxMs": 0.0350000262260437
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 0.8300000429153442,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 10,
+            "ms": 0.039999961853027344,
+            "maxMs": 0.014999985694885254
+          },
+          "drawElementsInstanced": {
+            "count": 2,
+            "ms": 0.009999990463256836,
+            "maxMs": 0.009999990463256836
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.7799999713897705,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 10,
+            "ms": 0.030000030994415283,
+            "maxMs": 0.020000040531158447
+          },
+          "drawElementsInstanced": {
+            "count": 2,
+            "ms": 0.014999985694885254,
+            "maxMs": 0.014999985694885254
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 1.6449999809265137,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 7,
+            "ms": 0.04499995708465576,
+            "maxMs": 0.014999985694885254
+          },
+          "drawElementsInstanced": {
+            "count": 1,
+            "ms": 0.019999980926513672,
+            "maxMs": 0.019999980926513672
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.7300000190734863,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 7,
+            "ms": 0.07499998807907104,
+            "maxMs": 0.0350000262260437
+          },
+          "drawElementsInstanced": {
+            "count": 1,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 1,
+        "ms": 1.8149999976158142,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 7,
+            "ms": 0.125,
+            "maxMs": 0.04000002145767212
+          },
+          "drawElementsInstanced": {
+            "count": 1,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 0,
+        "ms": 0.7199999690055847,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 7,
+            "ms": 0.05500000715255737,
+            "maxMs": 0.01500004529953003
+          },
+          "drawElementsInstanced": {
+            "count": 1,
+            "ms": 0,
+            "maxMs": 0
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 0.9750000238418579,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 21,
+            "ms": 0.0899999737739563,
+            "maxMs": 0.020000040531158447
+          },
+          "drawElementsInstanced": {
+            "count": 3,
+            "ms": 0,
+            "maxMs": 0
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.9599999785423279,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 21,
+            "ms": 0.09500002861022949,
+            "maxMs": 0.02499997615814209
+          },
+          "drawElementsInstanced": {
+            "count": 3,
+            "ms": 0,
+            "maxMs": 0
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 1,
+        "ms": 0.8650000095367432,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 7,
+            "ms": 0.07500004768371582,
+            "maxMs": 0.020000040531158447
+          },
+          "drawElementsInstanced": {
+            "count": 1,
+            "ms": 0,
+            "maxMs": 0
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 0,
+        "ms": 0.9049999713897705,
+        "failed": false,
+        "api": {
+          "bufferData": {
+            "count": 7,
+            "ms": 0.10000008344650269,
+            "maxMs": 0.030000030994415283
+          },
+          "drawElementsInstanced": {
+            "count": 1,
+            "ms": 0,
+            "maxMs": 0
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 0,
+        "ms": 2.840000033378601,
+        "failed": false,
+        "api": {
+          "bufferSubData": {
+            "count": 12,
+            "ms": 0.11500000953674316,
+            "maxMs": 0.025000035762786865
+          },
+          "bufferData": {
+            "count": 13,
+            "ms": 0.030000030994415283,
+            "maxMs": 0.009999990463256836
+          },
+          "drawElementsInstanced": {
+            "count": 15,
+            "ms": 0.009999990463256836,
+            "maxMs": 0.009999990463256836
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 1,
+        "ms": 5.219999969005585,
+        "failed": false,
+        "api": {
+          "bufferSubData": {
+            "count": 6,
+            "ms": 0.2800000309944153,
+            "maxMs": 0.07499998807907104
+          },
+          "drawElementsInstanced": {
+            "count": 15,
+            "ms": 0.034999966621398926,
+            "maxMs": 0.009999990463256836
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 1.1449999809265137,
+        "failed": false,
+        "api": {
+          "bufferSubData": {
+            "count": 5,
+            "ms": 0.014999985694885254,
+            "maxMs": 0.009999990463256836
+          },
+          "bufferData": {
+            "count": 23,
+            "ms": 0.10999995470046997,
+            "maxMs": 0.014999985694885254
+          },
+          "drawElementsInstanced": {
+            "count": 13,
+            "ms": 0.014999985694885254,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 1.0649999976158142,
+        "failed": false,
+        "api": {
+          "drawElementsInstanced": {
+            "count": 13,
+            "ms": 0,
+            "maxMs": 0
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 0.6200000047683716,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.4249999523162842,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 1,
+        "ms": 0.3450000286102295,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 0.27000004053115845,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.2549999952316284,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 0,
+        "ms": 0.47499996423721313,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 0.39500004053115845,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.3149999976158142,
+        "failed": false,
+        "api": {},
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 1,
+        "ms": 0.6000000238418579,
+        "failed": false,
+        "api": {
+          "drawElementsInstanced": {
+            "count": 5,
+            "ms": 0.009999990463256836,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 2,
+        "ms": 0.75,
+        "failed": false,
+        "api": {
+          "drawElementsInstanced": {
+            "count": 6,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": 3,
+        "ms": 0.5949999690055847,
+        "failed": false,
+        "api": {
+          "drawElementsInstanced": {
+            "count": 6,
+            "ms": 0.010000050067901611,
+            "maxMs": 0.005000054836273193
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      }
+    ],
+    "farPreparationSpans": [
+      {
+        "label": "far-region-worker:slot0",
+        "start": 17435.834999978542,
+        "end": 18292.12000000477,
+        "duration": 856.285000026226,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-create:slot0",
+        "start": 18292.42500001192,
+        "end": 18294.555000007153,
+        "duration": 2.1299999952316284,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-region-attach-ground:slot0",
+        "start": 18294.560000002384,
+        "end": 18300.214999973774,
+        "duration": 5.6549999713897705,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-region-ground-seam:slot0",
+        "start": 18300.32999998331,
+        "end": 19634.17500001192,
+        "duration": 1333.8450000286102,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot0",
+        "start": 19634.30000001192,
+        "end": 19695.214999973774,
+        "duration": 60.91499996185303,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot0",
+        "start": 19695.280000030994,
+        "end": 19805.19999998808,
+        "duration": 109.91999995708466,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 19807.54500001669,
+        "end": 19807.560000002384,
+        "duration": 0.014999985694885254,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 20016.194999992847,
+        "end": 20016.435000002384,
+        "duration": 0.24000000953674316,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 20016.490000009537,
+        "end": 20016.605000019073,
+        "duration": 0.11500000953674316,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 20843.67000001669,
+        "end": 20843.889999985695,
+        "duration": 0.21999996900558472,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot0",
+        "start": 19805.22000002861,
+        "end": 20843.980000019073,
+        "duration": 1038.7599999904633,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot0",
+        "start": 20843.99500000477,
+        "end": 20846.655000030994,
+        "duration": 2.6600000262260437,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot0",
+        "start": 20846.665000021458,
+        "end": 21031.384999990463,
+        "duration": 184.71999996900558,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-region-gpu-ready:slot0",
+        "start": 18300.240000009537,
+        "end": 21031.444999992847,
+        "duration": 2731.2049999833107,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-worker:slot1",
+        "start": 21032.310000002384,
+        "end": 21761.514999985695,
+        "duration": 729.2049999833107,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-create:slot1",
+        "start": 21761.569999992847,
+        "end": 21762.139999985695,
+        "duration": 0.5699999928474426,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-region-attach-ground:slot1",
+        "start": 21762.144999980927,
+        "end": 21762.149999976158,
+        "duration": 0.004999995231628418,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 21762.355000019073,
+        "end": 21799.165000021458,
+        "duration": 36.810000002384186,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot1",
+        "start": 21799.19999998808,
+        "end": 21824.030000030994,
+        "duration": 24.830000042915344,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 22012.314999997616,
+        "end": 22012.415000021458,
+        "duration": 0.10000002384185791,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 22012.42000001669,
+        "end": 22012.47000002861,
+        "duration": 0.050000011920928955,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot1",
+        "start": 21824.055000007153,
+        "end": 22012.509999990463,
+        "duration": 188.4549999833107,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot1",
+        "start": 22012.514999985695,
+        "end": 22014.09500002861,
+        "duration": 1.5800000429153442,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot1",
+        "start": 22014.100000023842,
+        "end": 22093.644999980927,
+        "duration": 79.54499995708466,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-region-gpu-ready:slot1",
+        "start": 21762.149999976158,
+        "end": 22093.685000002384,
+        "duration": 331.53500002622604,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-worker:slot2",
+        "start": 22094.139999985695,
+        "end": 22832.59500002861,
+        "duration": 738.4550000429153,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-create:slot2",
+        "start": 22832.92500001192,
+        "end": 22834.37000000477,
+        "duration": 1.4449999928474426,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-region-attach-ground:slot2",
+        "start": 22834.375,
+        "end": 22834.375,
+        "duration": 0,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 22834.87000000477,
+        "end": 22862.774999976158,
+        "duration": 27.90499997138977,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot2",
+        "start": 22862.805000007153,
+        "end": 22863.910000026226,
+        "duration": 1.1050000190734863,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 23018.839999973774,
+        "end": 23018.980000019073,
+        "duration": 0.14000004529953003,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 23018.990000009537,
+        "end": 23019.060000002384,
+        "duration": 0.06999999284744263,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 22863.935000002384,
+        "end": 23019.134999990463,
+        "duration": 155.19999998807907,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 23019.134999990463,
+        "end": 23020.769999980927,
+        "duration": 1.6349999904632568,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 23020.774999976158,
+        "end": 23121.834999978542,
+        "duration": 101.06000000238419,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-region-gpu-ready:slot2",
+        "start": 22834.384999990463,
+        "end": 23121.860000014305,
+        "duration": 287.47500002384186,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-worker:slot3",
+        "start": 23122.555000007153,
+        "end": 23822.74500000477,
+        "duration": 700.1899999976158,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-region-create:slot3",
+        "start": 23822.899999976158,
+        "end": 23823.80000001192,
+        "duration": 0.9000000357627869,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-region-attach-ground:slot3",
+        "start": 23823.805000007153,
+        "end": 23823.810000002384,
+        "duration": 0.004999995231628418,
+        "failed": false,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 23824.069999992847,
+        "end": 23859.384999990463,
+        "duration": 35.314999997615814,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot3",
+        "start": 23859.399999976158,
+        "end": 23861.819999992847,
+        "duration": 2.4200000166893005,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 24018.69999998808,
+        "end": 24019.865000009537,
+        "duration": 1.1650000214576721,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 24031.04500001669,
+        "end": 24031.155000030994,
+        "duration": 0.11000001430511475,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 23861.82999998331,
+        "end": 24031.19999998808,
+        "duration": 169.37000000476837,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 24031.20499998331,
+        "end": 24032.34500002861,
+        "duration": 1.14000004529953,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 24032.34500002861,
+        "end": 24102.209999978542,
+        "duration": 69.8649999499321,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-region-gpu-ready:slot3",
+        "start": 23823.814999997616,
+        "end": 24102.25499999523,
+        "duration": 278.4399999976158,
+        "failed": false,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 24275.144999980927,
+        "end": 24275.17000001669,
+        "duration": 0.025000035762786865,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 24276.839999973774,
+        "end": 24276.839999973774,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot0",
+        "start": 24279.230000019073,
+        "end": 24279.230000019073,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 24279.569999992847,
+        "end": 24279.569999992847,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 24279.980000019073,
+        "end": 24279.980000019073,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 24280.430000007153,
+        "end": 24280.430000007153,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 24273.985000014305,
+        "end": 24282.694999992847,
+        "duration": 8.709999978542328,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot2",
+        "start": 24275.185000002384,
+        "end": 24294.314999997616,
+        "duration": 19.12999999523163,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot0",
+        "start": 24271.915000021458,
+        "end": 24322.485000014305,
+        "duration": 50.56999999284744,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 24492.839999973774,
+        "end": 24493.105000019073,
+        "duration": 0.26500004529953003,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 24294.319999992847,
+        "end": 24493.17500001192,
+        "duration": 198.8550000190735,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 24493.185000002384,
+        "end": 24496.17000001669,
+        "duration": 2.9850000143051147,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 24496.17000001669,
+        "end": 25499.339999973774,
+        "duration": 1003.1699999570847,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 25499.95499998331,
+        "end": 25499.959999978542,
+        "duration": 0.004999995231628418,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot3",
+        "start": 24276.850000023842,
+        "end": 25500.834999978542,
+        "duration": 1223.9849999547005,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 25501.44999998808,
+        "end": 25501.45499998331,
+        "duration": 0.004999995231628418,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 25500.839999973774,
+        "end": 25501.47000002861,
+        "duration": 0.6300000548362732,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 25501.47000002861,
+        "end": 25502.519999980927,
+        "duration": 1.0499999523162842,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 25502.519999980927,
+        "end": 25771.09500002861,
+        "duration": 268.5750000476837,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 25772.035000026226,
+        "end": 25772.035000026226,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot1",
+        "start": 24282.70499998331,
+        "end": 25786.115000009537,
+        "duration": 1503.410000026226,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 25787.134999990463,
+        "end": 25787.144999980927,
+        "duration": 0.009999990463256836,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot1",
+        "start": 25786.125,
+        "end": 25787.180000007153,
+        "duration": 1.0550000071525574,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot1",
+        "start": 25787.189999997616,
+        "end": 25790.009999990463,
+        "duration": 2.8199999928474426,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot1",
+        "start": 25790.014999985695,
+        "end": 25846.615000009537,
+        "duration": 56.60000002384186,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 25847.20499998331,
+        "end": 25847.20499998331,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot0",
+        "start": 24322.50499999523,
+        "end": 25872.384999990463,
+        "duration": 1549.8799999952316,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 25873.100000023842,
+        "end": 25873.110000014305,
+        "duration": 0.009999990463256836,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot0",
+        "start": 25872.394999980927,
+        "end": 25873.125,
+        "duration": 0.7300000190734863,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot0",
+        "start": 25873.12999999523,
+        "end": 25874.20499998331,
+        "duration": 1.074999988079071,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot0",
+        "start": 25874.209999978542,
+        "end": 25946.45499998331,
+        "duration": 72.24500000476837,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot0",
+        "start": 25946.894999980927,
+        "end": 25946.894999980927,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot2",
+        "start": 25499.964999973774,
+        "end": 25973.32499998808,
+        "duration": 473.3600000143051,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 25974.100000023842,
+        "end": 25974.105000019073,
+        "duration": 0.004999995231628418,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 25973.32999998331,
+        "end": 25974.134999990463,
+        "duration": 0.8050000071525574,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 25974.134999990463,
+        "end": 25975.475000023842,
+        "duration": 1.340000033378601,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 25975.480000019073,
+        "end": 26046.194999992847,
+        "duration": 70.71499997377396,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot3",
+        "start": 25772.05000001192,
+        "end": 26071.32499998808,
+        "duration": 299.27499997615814,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 26072.009999990463,
+        "end": 26072.014999985695,
+        "duration": 0.004999995231628418,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 26071.32999998331,
+        "end": 26072.04500001669,
+        "duration": 0.7150000333786011,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 26072.04500001669,
+        "end": 26073.32499998808,
+        "duration": 1.2799999713897705,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 26073.32499998808,
+        "end": 26149.25499999523,
+        "duration": 75.93000000715256,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot1",
+        "start": 25847.209999978542,
+        "end": 26162.730000019073,
+        "duration": 315.52000004053116,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 26163.435000002384,
+        "end": 26163.439999997616,
+        "duration": 0.004999995231628418,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot1",
+        "start": 26162.740000009537,
+        "end": 26163.47000002861,
+        "duration": 0.7300000190734863,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot1",
+        "start": 26163.47000002861,
+        "end": 26164.625,
+        "duration": 1.1549999713897705,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot1",
+        "start": 26164.62999999523,
+        "end": 26229.030000030994,
+        "duration": 64.40000003576279,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot0",
+        "start": 25946.905000030994,
+        "end": 26246.314999997616,
+        "duration": 299.4099999666214,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 26247.37999999523,
+        "end": 26247.384999990463,
+        "duration": 0.004999995231628418,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot0",
+        "start": 26246.32999998331,
+        "end": 26247.509999990463,
+        "duration": 1.1800000071525574,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot0",
+        "start": 26247.509999990463,
+        "end": 26248.814999997616,
+        "duration": 1.3050000071525574,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot0",
+        "start": 26248.819999992847,
+        "end": 26312.435000002384,
+        "duration": 63.61500000953674,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot0",
+        "start": 29824.45499998331,
+        "end": 29824.45499998331,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 29824.57999998331,
+        "end": 29824.57999998331,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 29824.780000030994,
+        "end": 29824.780000030994,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 29824.99500000477,
+        "end": 29824.99500000477,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot0",
+        "start": 29824.47000002861,
+        "end": 29842.019999980927,
+        "duration": 17.549999952316284,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 29842.910000026226,
+        "end": 29842.910000026226,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 29842.92500001192,
+        "end": 29842.92500001192,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 29842.92500001192,
+        "end": 29842.92500001192,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot0",
+        "start": 29842.935000002384,
+        "end": 29842.935000002384,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot0",
+        "start": 29842.030000030994,
+        "end": 29842.959999978542,
+        "duration": 0.9299999475479126,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot0",
+        "start": 29842.964999973774,
+        "end": 29846.25,
+        "duration": 3.2850000262260437,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot0",
+        "start": 29846.25499999523,
+        "end": 29977.47000002861,
+        "duration": 131.2150000333786,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot1",
+        "start": 29824.59500002861,
+        "end": 30013.319999992847,
+        "duration": 188.7249999642372,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 30014.764999985695,
+        "end": 30014.774999976158,
+        "duration": 0.009999990463256836,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 30014.79500001669,
+        "end": 30014.79500001669,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 30014.810000002384,
+        "end": 30014.810000002384,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot1",
+        "start": 30014.82499998808,
+        "end": 30014.82499998808,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot1",
+        "start": 30013.350000023842,
+        "end": 30014.87000000477,
+        "duration": 1.5199999809265137,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot1",
+        "start": 30014.87999999523,
+        "end": 30020.915000021458,
+        "duration": 6.035000026226044,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot1",
+        "start": 30020.92000001669,
+        "end": 30272.894999980927,
+        "duration": 251.9749999642372,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot2",
+        "start": 29824.780000030994,
+        "end": 30286.415000021458,
+        "duration": 461.63499999046326,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 30287.25,
+        "end": 30287.259999990463,
+        "duration": 0.009999990463256836,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 30287.269999980927,
+        "end": 30287.269999980927,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 30287.274999976158,
+        "end": 30287.280000030994,
+        "duration": 0.005000054836273193,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot2",
+        "start": 30287.290000021458,
+        "end": 30287.290000021458,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 30286.42500001192,
+        "end": 30287.314999997616,
+        "duration": 0.8899999856948853,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 30287.319999992847,
+        "end": 30288.865000009537,
+        "duration": 1.5450000166893005,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 30288.865000009537,
+        "end": 30482.444999992847,
+        "duration": 193.5799999833107,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:queue-admission:slot3",
+        "start": 29825,
+        "end": 30610.834999978542,
+        "duration": 785.8349999785423,
+        "scope": "Awaited queue admission and explicit RAF boundary, not CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 30611.855000019073,
+        "end": 30611.855000019073,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 30611.865000009537,
+        "end": 30611.87000000477,
+        "duration": 0.004999995231628418,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 30611.884999990463,
+        "end": 30611.884999990463,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:validated-bindings:slot3",
+        "start": 30611.899999976158,
+        "end": 30611.899999976158,
+        "duration": 0,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 30610.84500002861,
+        "end": 30611.92500001192,
+        "duration": 1.0799999833106995,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 30611.935000002384,
+        "end": 30613.42500001192,
+        "duration": 1.4900000095367432,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 30613.430000007153,
+        "end": 30702.584999978542,
+        "duration": 89.15499997138977,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 31855.685000002384,
+        "end": 31855.685000002384,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 31856.32999998331,
+        "end": 31856.32999998331,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 31855.689999997616,
+        "end": 31856.740000009537,
+        "duration": 1.050000011920929,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 31856.75,
+        "end": 31857.62999999523,
+        "duration": 0.8799999952316284,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 31856.339999973774,
+        "end": 31857.694999992847,
+        "duration": 1.3550000190734863,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 31857.69999998808,
+        "end": 31858.339999973774,
+        "duration": 0.6399999856948853,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 31857.634999990463,
+        "end": 31942.055000007153,
+        "duration": 84.4200000166893,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 31858.339999973774,
+        "end": 31942.12000000477,
+        "duration": 83.78000003099442,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 32302.850000023842,
+        "end": 32302.850000023842,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 32303.115000009537,
+        "end": 32303.12000000477,
+        "duration": 0.004999995231628418,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 32303.269999980927,
+        "end": 32303.269999980927,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot1",
+        "start": 32302.855000019073,
+        "end": 32303.360000014305,
+        "duration": 0.5049999952316284,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot1",
+        "start": 32303.365000009537,
+        "end": 32303.889999985695,
+        "duration": 0.5249999761581421,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 32303.125,
+        "end": 32303.95499998331,
+        "duration": 0.8299999833106995,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 32303.959999978542,
+        "end": 32304.375,
+        "duration": 0.4150000214576721,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 32303.274999976158,
+        "end": 32304.410000026226,
+        "duration": 1.1350000500679016,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 32304.415000021458,
+        "end": 32304.79500001669,
+        "duration": 0.3799999952316284,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot0",
+        "start": 32320.905000030994,
+        "end": 32320.905000030994,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot0",
+        "start": 32320.910000026226,
+        "end": 32321.189999997616,
+        "duration": 0.2799999713897705,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot0",
+        "start": 32321.194999992847,
+        "end": 32321.889999985695,
+        "duration": 0.6949999928474426,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 32336.12000000477,
+        "end": 32336.12000000477,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 32336.5,
+        "end": 32336.5,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 32336.12999999523,
+        "end": 32336.665000021458,
+        "duration": 0.5350000262260437,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 32336.67000001669,
+        "end": 32337.32999998331,
+        "duration": 0.6599999666213989,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 32336.509999990463,
+        "end": 32337.37999999523,
+        "duration": 0.8700000047683716,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 32337.384999990463,
+        "end": 32337.819999992847,
+        "duration": 0.4350000023841858,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot1",
+        "start": 32303.889999985695,
+        "end": 32389.00499999523,
+        "duration": 85.11500000953674,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot1",
+        "start": 32456.889999985695,
+        "end": 32456.894999980927,
+        "duration": 0.004999995231628418,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot1",
+        "start": 32456.899999976158,
+        "end": 32457.319999992847,
+        "duration": 0.42000001668930054,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot1",
+        "start": 32457.319999992847,
+        "end": 32458.180000007153,
+        "duration": 0.8600000143051147,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot0",
+        "start": 32321.889999985695,
+        "end": 32458.34500002861,
+        "duration": 136.45500004291534,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 32337.32999998331,
+        "end": 32469.709999978542,
+        "duration": 132.37999999523163,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 32337.82499998808,
+        "end": 32469.780000030994,
+        "duration": 131.95500004291534,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot2",
+        "start": 32573.964999973774,
+        "end": 32573.964999973774,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:texture-uploads:slot3",
+        "start": 32574.82499998808,
+        "end": 32574.82499998808,
+        "duration": 0,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot2",
+        "start": 32573.975000023842,
+        "end": 32575.314999997616,
+        "duration": 1.3399999737739563,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot2",
+        "start": 32575.32499998808,
+        "end": 32576.44999998808,
+        "duration": 1.125,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:compile:slot3",
+        "start": 32574.834999978542,
+        "end": 32576.509999990463,
+        "duration": 1.675000011920929,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:draw:slot3",
+        "start": 32576.519999980927,
+        "end": 32577.375,
+        "duration": 0.8550000190734863,
+        "scope": "Synchronous draw submission CPU wall time, not GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot1",
+        "start": 32458.180000007153,
+        "end": 32719.189999997616,
+        "duration": 261.00999999046326,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot2",
+        "start": 32576.45499998331,
+        "end": 32905.31999999285,
+        "duration": 328.86500000953674,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      },
+      {
+        "label": "far-gpu:fence:slot3",
+        "start": 32577.375,
+        "end": 32905.37000000477,
+        "duration": 327.9950000047684,
+        "scope": "Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time."
+      }
+    ],
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 775.6949999928474,
+      "bindings": {
+        "initialized": 56,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 56,
+        "released": 56,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "readyMs": 33325.42500001192,
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 0.9249999523162842
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 2.060000002384186
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 350.97000002861023
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 182.87000000476837
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 7.210000038146973
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.10999995470046997
+        },
+        {
+          "label": "load-village-models",
+          "ms": 91.76999998092651
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 1.3600000143051147
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 437.9099999666214
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.1449999809265137
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.09000003337860107
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.18000000715255737
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 138.0450000166893
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 14.644999980926514
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 19.084999978542328
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 7.269999980926514
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 591.0400000214577
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 11.495000004768372
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 126.61500000953674
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 17.589999973773956
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.1600000262260437
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 102.81000000238419
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 748.8100000023842
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 31.819999992847443
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3622.9200000166893
+        },
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 167.41999995708466
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1931.0649999976158
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 776.25
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.08499997854232788
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 1178.2300000190735
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 969.4749999642372
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 359.4000000357628
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 9808.444999992847
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 1.7900000214576721
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 6725.954999983311
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 14.084999978542328
+        }
+      ]
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 13.355000078678131,
+      "maxTaskMs": 8.450000047683716,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 918,
+      "workMs": 312.5700000524521,
+      "coordinationMs": 28.044998705387115,
+      "maxUnitMs": 8.525000035762787,
+      "overruns": 11,
+      "deadlineLoans": 8,
+      "oversizeRecoveries": 0,
+      "continuationMs": 41.064999997615814,
+      "continuationTurns": 866,
+      "median": 66.67499999999563,
+      "p95": 99.8949999999968,
+      "p99": 116.66999999999825,
+      "cpu95": 6.655000030994415,
+      "jitter": 33.220000000001164,
+      "budgetMs": 1.9609166632095976,
+      "pending": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

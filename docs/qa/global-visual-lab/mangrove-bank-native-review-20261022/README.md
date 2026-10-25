@@ -1,0 +1,9 @@
+# Mangrove bank art review
+
+Run `node tools/experiments/capture-mangrove-bank-native-review-20261022.mjs` with Vite port 5190. Native global recipe, seed 712, media, 1280x720, three fixed camera offsets, day/night, paused simulation/wind. Deterministic search selects land within 2 units of shore, away from settlement, with four of eight surrounding samples wet. Location and cameras are saved in captures.json. No runtime material replacements. Six real frames, no captured errors; counters are not timing measurements.
+
+The first day/night view and original Mangrove mockup were individually inspected. art-review.jpg places them together at preserved aspect ratio; different composition and world layout mean this is artistic comparison, not pixel parity.
+
+Findings: current bank vegetation already contains many overlapping leafy groups and recognizable roots. More global plant density would not address the dominant deficiency. The land-water boundary is smooth and hard, with saturated green directly meeting broad blue water; the reference has muddy shallow transitions, broken local edge detail and darker depth beneath roots. Daylight reference foliage also has warmer highlights, but changing all ambient light would risk current readability. Night bank/water separation remains legible, though the smooth edge is especially obvious.
+
+Next visual experiment: depth-aware shallow-water and wet substrate transition on the existing surface, preserving authoritative geometry, root silhouettes and current vegetation. Separate shore color/roughness from bulk water; test day/night against this camera. Investigate whether existing rendered shore/depth data can drive it before adding work. Do not approximate the reference by globally raising vegetation density or copying its world layout. No implementation or performance improvement claimed in this camera-selection pass.

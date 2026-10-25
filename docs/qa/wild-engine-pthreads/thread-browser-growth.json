@@ -1,0 +1,118 @@
+{
+  "scope": "Actual Chrome native runtime pressure test; no game renderer or GPU accounting",
+  "result": {
+    "isolated": true,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "report": {
+      "scope": "Native Mangroves allocation pressure with all six navigation profiles. No renderer, not frame/GPU benchmark; linear capacity is not live allocation or peak RSS.",
+      "passes": [
+        {
+          "pass": 0,
+          "regionOffsetX": 0,
+          "initial": 16777216,
+          "peak": 41943040,
+          "afterRemoval": 41943040,
+          "queries": 2981,
+          "chunks": 143,
+          "metrics": {
+            "memoryBytes": 41943040,
+            "loadedChunks": 1,
+            "residentPropRecords": 14,
+            "residentVisiblePropRecords": 265,
+            "loadedSectors": 16,
+            "sectorSlots": 2304,
+            "sectorUpdates": 6712,
+            "haloProps": 1
+          }
+        },
+        {
+          "pass": 1,
+          "regionOffsetX": 0,
+          "initial": 41943040,
+          "peak": 41943040,
+          "afterRemoval": 41943040,
+          "queries": 2952,
+          "chunks": 143,
+          "metrics": {
+            "memoryBytes": 41943040,
+            "loadedChunks": 1,
+            "residentPropRecords": 14,
+            "residentVisiblePropRecords": 265,
+            "loadedSectors": 16,
+            "sectorSlots": 2304,
+            "sectorUpdates": 13408,
+            "haloProps": 1
+          }
+        },
+        {
+          "pass": 2,
+          "regionOffsetX": 24,
+          "initial": 41943040,
+          "peak": 41943040,
+          "afterRemoval": 41943040,
+          "queries": 3055,
+          "chunks": 143,
+          "metrics": {
+            "memoryBytes": 41943040,
+            "loadedChunks": 1,
+            "residentPropRecords": 14,
+            "residentVisiblePropRecords": 265,
+            "loadedSectors": 16,
+            "sectorSlots": 2304,
+            "sectorUpdates": 20088,
+            "haloProps": 1
+          }
+        }
+      ],
+      "growth": [
+        {
+          "pass": 0,
+          "cx": 1,
+          "cz": 5,
+          "before": 16777216,
+          "prepared": 20185088,
+          "published": 20185088
+        },
+        {
+          "pass": 0,
+          "cx": 1,
+          "cz": 6,
+          "before": 20185088,
+          "prepared": 24248320,
+          "published": 24248320
+        },
+        {
+          "pass": 0,
+          "cx": 3,
+          "cz": 7,
+          "before": 24248320,
+          "prepared": 24248320,
+          "published": 29097984
+        },
+        {
+          "pass": 0,
+          "cx": 8,
+          "cz": 8,
+          "before": 29097984,
+          "prepared": 34930688,
+          "published": 34930688
+        },
+        {
+          "pass": 0,
+          "cx": 5,
+          "cz": 10,
+          "before": 34930688,
+          "prepared": 34930688,
+          "published": 41943040
+        }
+      ],
+      "initialBytes": 16777216,
+      "finalBytes": 41943040
+    },
+    "workersAfterDisposal": {
+      "running": 0,
+      "unused": 0
+    }
+  },
+  "errors": []
+}

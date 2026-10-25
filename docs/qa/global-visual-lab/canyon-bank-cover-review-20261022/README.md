@@ -1,0 +1,9 @@
+# Canyon bank cover: wider authored module
+
+Reproduce asset: `C:/Users/PC/tools/blender/blender-5.2.2-windows-x64/blender.exe -b --python tools/experiments/blender-canyon-bank-cover-20261022.py`. Reproduce comparison with Vite5190: `node tools/experiments/capture-canyon-bank-cover-20261022.mjs`.
+
+New original procedural Blender asset: public/assets/visual-lab/canyons-bank-cover-sculpted-ground-detail.glb. Derived from the repository's authored ribbon generator, no third-party asset/texture or external license dependency.26 curved leaves with2 segments replace13 leaves with4 segments:104 triangles in both. Wider/shorter leaves, broader footprint, muted olive/ochre vertex palette, no crossed billboards or alpha texture.9324-byte GLB, one primitive, no external images. Local bounds x[-.3124,.2319], y[0,.2288], z[-.2956,.2821]. Existing game models untouched.
+
+Twelve real campaign captures seed712/media/1280x720, three cameras day/night. Six pairs match camera, target, clock,317 instances, calls and submitted triangles exactly. No captured errors. Comparison sheets: previous thin module left, new cover right. All paired views reviewed: clearly more readable masses along the bank and behind buildings, including night. Retain as candidate; still separate low plants, not continuous cover or a finished riverbank. No density or instance-scale increase. Occupancy/water/slope/wear exclusions unchanged; larger footprint still needs explicit proximity/placement audit before native adoption.
+
+GPU/CPU ABAB stored in canyon-bank-cover-cost-20261022. Same triangle counts are not a cost guarantee: wider leaves alter raster coverage. Streaming, further seeds/quality settings, movement artifacts and lifecycle integration remain outstanding. QA only; original/global default recipe unchanged.

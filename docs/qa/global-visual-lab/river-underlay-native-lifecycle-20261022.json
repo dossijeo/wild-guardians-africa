@@ -1,0 +1,122 @@
+{
+  "stream": [
+    {
+      "phase": "day-cold",
+      "returnRGBExact": false,
+      "returnMaskHashesExact": false
+    },
+    {
+      "phase": "day-warm",
+      "returnRGBExact": true,
+      "returnMaskHashesExact": true
+    }
+  ],
+  "occupancy": [
+    {
+      "phase": "day",
+      "crop": {
+        "centerSetup": {
+          "x": 79.83156862745099,
+          "z": 15.827254901960787
+        },
+        "site": [
+          96.18725490196078,
+          24.201764705882354
+        ],
+        "before": 97,
+        "after": 0,
+        "events": [
+          "CropPlaced"
+        ],
+        "dirtyAfterEvent": true,
+        "dirtyAfterSync": false,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "gran-rio",
+          "edgePadding": 0.85,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 4029,
+          "far": 7121,
+          "leaves": 105316,
+          "triangles": 298708,
+          "chunks": 25,
+          "cachedTiles": 40,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 166.8999999165535,
+            "selectionMs": 269.40000027418137,
+            "selectionCount": 90,
+            "candidates": 58800,
+            "masked": 17378,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "note": "Real plant command; paused immediately after synchronous command. Cached module anchors checked within crop exclusion radius, not animated blade extents.",
+        "maskAfter": 0
+      }
+    },
+    {
+      "phase": "night",
+      "crop": {
+        "centerSetup": {
+          "x": 79.83156862745099,
+          "z": 15.827254901960787
+        },
+        "site": [
+          96.18725490196078,
+          24.201764705882354
+        ],
+        "before": 97,
+        "after": 0,
+        "events": [
+          "CropPlaced"
+        ],
+        "dirtyAfterEvent": true,
+        "dirtyAfterSync": false,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "gran-rio",
+          "edgePadding": 0.85,
+          "nearDistance": 24,
+          "moduleSpacing": 0.4,
+          "near": 4029,
+          "far": 7121,
+          "leaves": 105316,
+          "triangles": 298708,
+          "chunks": 25,
+          "cachedTiles": 40,
+          "bufferBytes": 1207752,
+          "stats": {
+            "buildMs": 166.8999999165535,
+            "selectionMs": 269.40000027418137,
+            "selectionCount": 90,
+            "candidates": 58800,
+            "masked": 17378,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        },
+        "note": "Real plant command; paused immediately after synchronous command. Cached module anchors checked within crop exclusion radius, not animated blade extents.",
+        "maskAfter": 0
+      }
+    }
+  ],
+  "quality": [
+    {
+      "phase": "day",
+      "restoredRGBExact": true
+    },
+    {
+      "phase": "night",
+      "restoredRGBExact": true
+    }
+  ]
+}

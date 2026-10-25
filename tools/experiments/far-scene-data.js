@@ -5,12 +5,12 @@ import {groundColor} from '../../src/rendering/terrain-source.js';
 import {sampleSavannaAcacias,sampleFarTrees,treeAtlasAnchor} from './far-tree-sampling.js';
 import {farGroundData} from './far-ground-data.js';
 import {fitFarGroundContacts} from './far-ground-contacts.js';
-export function buildFarSceneData({config,profile,treeBounds,groundBounds,step=4,suppressed=[],treesOnly=false,treeBase=null,treeBases=null,slots=null,waterSurface=false,nativeWaterSamples=false,colorMapStep=null,groundWash=.25,groundPalette=null}){
+export function buildFarSceneData({config,profile,treeBounds,groundBounds,step=4,suppressed=[],treesOnly=false,treeBase=null,treeBases=null,slots=null,waterSurface=false,nativeWaterSamples=false,colorMapStep=null,groundWash=.25,groundPalette=null},native=null){
  if(!Number.isFinite(groundWash)||groundWash<0||groundWash>1)throw Error('Invalid far ground wash');
  const palette=groundPalette===null?null:nativeSavannaPalette(groundPalette);if(palette&&config.biome!=='savanna')throw Error('Native far palette QA only supports Sabana');
- const field=new TerrainField(config);
- const landColorAt=(x,z)=>{const original=groundColor(field,profile,x,z);return palette?palette(field,profile,x,z,original):original;};
- const trees=slots?sampleFarTrees(config,profile,treeBounds,{field,suppressed:new Set(suppressed),slots}):sampleSavannaAcacias(config,profile,treeBounds,{field,suppressed:new Set(suppressed)});
+ const field=native?.field??new TerrainField(config);
+ const landColorAt=(x,z)=>{const original=native?native.colorAt(x,z):groundColor(field,profile,x,z);return palette?palette(field,profile,x,z,original):original;};
+ const trees=native?native.trees:slots?sampleFarTrees(config,profile,treeBounds,{field,suppressed:new Set(suppressed),slots}):sampleSavannaAcacias(config,profile,treeBounds,{field,suppressed:new Set(suppressed)});
  const colorAt=(x,z)=>waterSurface&&field.waterInfo(x,z).inside?hex(profile.colors.water):landColorAt(x,z);
  let ground=treesOnly?null:farGroundData(field,groundBounds,{step,colorAt,wash:groundWash,heightAt:waterSurface?(x,z)=>{const water=field.waterInfo(x,z);return water.inside?Math.max(field.surface(x,z),water.level):field.surface(x,z);}:null});
  if(ground&&(treeBase||treeBases))ground=fitFarGroundContacts(ground,trees.map(t=>treeAtlasAnchor(t,treeBases?.[t.slot]??treeBase)));

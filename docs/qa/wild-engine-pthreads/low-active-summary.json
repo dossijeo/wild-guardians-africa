@@ -1,0 +1,177 @@
+{
+  "scope": "Intel UHD 720p low Mangroves active ABAB; GPU intervals include pipeline bubbles; final active states differ",
+  "runs": [
+    {
+      "run": "a1",
+      "backend": "standalone",
+      "frames": {
+        "count": 600,
+        "mean": 27.57540833333334,
+        "p95": 66.51499999999942,
+        "max": 116.38499999999476
+      },
+      "gpu": {
+        "count": 201,
+        "mean": 21.132806855721373,
+        "p95": 31.003957,
+        "max": 41.65005
+      },
+      "generation": {
+        "count": 25,
+        "mean": 48.051599996089934,
+        "p95": 64.61500000953674,
+        "max": 75.08999997377396
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 25,
+        "mean": 14.628000004291534,
+        "p95": 20.905000030994415,
+        "max": 42.09500002861023
+      },
+      "gpuDetails": {
+        "supported": true,
+        "sampleEvery": 3,
+        "submitted": 201,
+        "skipped": 0,
+        "disjoint": false
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 25
+    },
+    {
+      "run": "b1",
+      "backend": "pthreads",
+      "frames": {
+        "count": 600,
+        "mean": 25.746400000000005,
+        "p95": 49.904999999998836,
+        "max": 182.95999999999913
+      },
+      "gpu": {
+        "count": 201,
+        "mean": 20.602015497512436,
+        "p95": 29.203697,
+        "max": 40.813384
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 25,
+        "mean": 0.7920000004768372,
+        "p95": 1.1399999856948853,
+        "max": 1.9050000309944153
+      },
+      "install": {
+        "count": 25,
+        "mean": 15.777599997520447,
+        "p95": 21.289999961853027,
+        "max": 40.96000003814697
+      },
+      "gpuDetails": {
+        "supported": true,
+        "sampleEvery": 3,
+        "submitted": 201,
+        "skipped": 0,
+        "disjoint": false
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 25
+    },
+    {
+      "run": "a2",
+      "backend": "standalone",
+      "frames": {
+        "count": 600,
+        "mean": 27.35377500000001,
+        "p95": 66.49500000000262,
+        "max": 199.44000000000233
+      },
+      "gpu": {
+        "count": 201,
+        "mean": 20.98432684079603,
+        "p95": 31.714322,
+        "max": 38.140416
+      },
+      "generation": {
+        "count": 25,
+        "mean": 47.30400000810623,
+        "p95": 60.5450000166893,
+        "max": 62.605000019073486
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 25,
+        "mean": 14.70780000448227,
+        "p95": 27.52000004053116,
+        "max": 29.875
+      },
+      "gpuDetails": {
+        "supported": true,
+        "sampleEvery": 3,
+        "submitted": 201,
+        "skipped": 0,
+        "disjoint": false
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 25
+    },
+    {
+      "run": "b2",
+      "backend": "pthreads",
+      "frames": {
+        "count": 600,
+        "mean": 25.330783333333336,
+        "p95": 49.895000000004075,
+        "max": 182.97499999999854
+      },
+      "gpu": {
+        "count": 201,
+        "mean": 20.339320383084583,
+        "p95": 30.813801,
+        "max": 40.108592
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publication": {
+        "count": 25,
+        "mean": 0.7340000033378601,
+        "p95": 0.9050000309944153,
+        "max": 1.1899999976158142
+      },
+      "install": {
+        "count": 25,
+        "mean": 15.905000002384186,
+        "p95": 23.514999985694885,
+        "max": 35.7600000500679
+      },
+      "gpuDetails": {
+        "supported": true,
+        "sampleEvery": 3,
+        "submitted": 201,
+        "skipped": 0,
+        "disjoint": false
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 25
+    }
+  ]
+}

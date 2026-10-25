@@ -1,0 +1,16 @@
+diff --git a/tools/experiments/check-spatial-thread-game.mjs b/tools/experiments/check-spatial-thread-game.mjs
+index 57e89bf44..a0a1fd061 100644
+--- a/tools/experiments/check-spatial-thread-game.mjs
++++ b/tools/experiments/check-spatial-thread-game.mjs
+@@ -24,6 +24,11 @@ try{
+  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
+  await page.addInitScript(({text,quality})=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true}));},{text:fixture.timing.navigationContext.state,quality});
+  if(frozen)await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();const body=await response.text(),anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');await route.fulfill({response,body:body.replace(anchor,"globalThis.qaStreamingReadyAt=performance.now();Game.pause(state,'menu');"+anchor)+(process.env.WG_THREAD_EXIT==='1'?'\nglobalThis.qaReturnToMenu=menu;':'')});});
++ if(process.env.WG_THREAD_MUD_GRID_BATCH==='1')await page.route('**/src/rendering/global-mangrove-mud-edges.js*',async route=>{
++  const response=await route.fetch(),source=await response.text(),anchor="if(i%256===0)yield* pause('mud-edges-grid')";
++  if(source.split(anchor).length!==2)throw Error('Missing mud grid batch anchor');
++  await route.fulfill({response,body:source.replace(anchor,"if(i%2048===0)yield* pause('mud-edges-grid')")});
++ });
+  if(process.env.WG_THREAD_TERRAIN_DEFERRED==='1')await page.route('**/src/rendering/prepare-terrain-chunk.js*',async route=>{
+   const response=await route.fetch(),source=await response.text(),anchor='deadline:now()';
+   if(source.split(anchor).length!==2)throw Error('Missing terrain deadline anchor');

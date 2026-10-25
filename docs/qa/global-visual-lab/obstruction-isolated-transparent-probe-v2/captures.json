@@ -1,0 +1,173 @@
+{
+  "study": "Smooth FrontSide versus per-object isolated nearest-surface depth",
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "oblique",
+    "reverse"
+  ],
+  "note": "Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "biome": "sabana",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "isolated": {
+            "targets": 0,
+            "depthDraws": 0,
+            "width": 1280,
+            "height": 720
+          },
+          "partial": 0,
+          "samples": 4,
+          "i": 0,
+          "camera": [
+            157,
+            26.15012969970703,
+            63
+          ],
+          "target": [
+            135,
+            10.150129699707032,
+            45
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4876,
+            "leaves": 39008,
+            "triangles": 39008,
+            "chunks": 25,
+            "cachedTiles": 55,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 34.099999994039536,
+              "selectionMs": 40.70000001788139,
+              "selectionCount": 7,
+              "candidates": 14080,
+              "masked": 1605,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 69,
+          "triangles": 1274920
+        },
+        {
+          "isolated": {
+            "targets": 2,
+            "depthDraws": 2,
+            "width": 1280,
+            "height": 720
+          },
+          "partial": 2,
+          "samples": 4,
+          "i": 9,
+          "camera": [
+            151.85714285714286,
+            20.49298684256417,
+            63
+          ],
+          "target": [
+            135,
+            10.150129699707032,
+            45
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.75,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4762,
+            "leaves": 38096,
+            "triangles": 38096,
+            "chunks": 25,
+            "cachedTiles": 57,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 35,
+              "selectionMs": 44.099999994039536,
+              "selectionCount": 8,
+              "candidates": 14592,
+              "masked": 1605,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 72,
+          "triangles": 1198803
+        },
+        {
+          "isolated": {
+            "targets": 2,
+            "depthDraws": 12,
+            "width": 1280,
+            "height": 720
+          },
+          "partial": 2,
+          "samples": 4,
+          "i": 17,
+          "camera": [
+            147.28571428571428,
+            15.464415413992745,
+            63
+          ],
+          "target": [
+            135,
+            10.150129699707032,
+            45
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 3.416666666666667,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4951,
+            "leaves": 39608,
+            "triangles": 39608,
+            "chunks": 25,
+            "cachedTiles": 58,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 35.5,
+              "selectionMs": 46.20000001788139,
+              "selectionCount": 9,
+              "candidates": 14848,
+              "masked": 1605,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 77,
+          "triangles": 1341539
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

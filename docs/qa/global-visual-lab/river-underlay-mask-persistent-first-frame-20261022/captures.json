@@ -1,0 +1,1188 @@
+{
+  "study": "Persistent underlay quality and deliberately reduced capacity recovery; not a benchmark.",
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "elevated",
+    "reverse"
+  ],
+  "note": "Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "persistent",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "step": "media",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 86.19999992847443,
+              "selectionMs": 165.50000047683716,
+              "selectionCount": 89,
+              "candidates": 26800,
+              "masked": 9832,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 3,
+            "cpuMs": 49,
+            "uploads": 15,
+            "uploadBytes": 141135,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 89,
+            "rebuilds": 3,
+            "persistentCpuMs": 52.300000071525574
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 1,
+          "step": "baja",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "baja",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5793,
+            "leaves": 46344,
+            "triangles": 46344,
+            "chunks": 25,
+            "cachedTiles": 31,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 101.69999986886978,
+              "selectionMs": 189.3000004887581,
+              "selectionCount": 90,
+              "candidates": 34736,
+              "masked": 10788,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            40
+          ],
+          "selectedMask": {
+            "updates": 4,
+            "cpuMs": 56.200000047683716,
+            "uploads": 24,
+            "uploadBytes": 225816,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 90,
+            "rebuilds": 4,
+            "persistentCpuMs": 59.800000071525574
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 65,
+          "triangles": 625845
+        },
+        {
+          "i": 2,
+          "step": "muy_baja",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": false,
+            "quality": "muy_baja",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5793,
+            "leaves": 46344,
+            "triangles": 46344,
+            "chunks": 25,
+            "cachedTiles": 0,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 101.69999986886978,
+              "selectionMs": 189.3000004887581,
+              "selectionCount": 90,
+              "candidates": 34736,
+              "masked": 10788,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            0,
+            40
+          ],
+          "selectedMask": {
+            "updates": 4,
+            "cpuMs": 56.200000047683716,
+            "uploads": 24,
+            "uploadBytes": 225816,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 90,
+            "rebuilds": 4,
+            "persistentCpuMs": 59.800000071525574
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 64,
+          "triangles": 579501
+        },
+        {
+          "i": 3,
+          "step": "media-restored",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 125.8999999165535,
+              "selectionMs": 220.00000047683716,
+              "selectionCount": 91,
+              "candidates": 50736,
+              "masked": 14134,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 61.000000059604645,
+            "uploads": 30,
+            "uploadBytes": 282270,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 91,
+            "rebuilds": 5,
+            "persistentCpuMs": 65.1000000834465
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 4,
+          "step": "overflow",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 1,
+            "far": 1,
+            "leaves": 20,
+            "triangles": 68,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 125.8999999165535,
+              "selectionMs": 222.50000047683716,
+              "selectionCount": 92,
+              "candidates": 50736,
+              "masked": 14134,
+              "overflow": 11634
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            0,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 61.000000059604645,
+            "uploads": 30,
+            "uploadBytes": 282270,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 92,
+            "rebuilds": 5,
+            "persistentCpuMs": 65.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 579569
+        },
+        {
+          "i": 5,
+          "step": "capacity-restored",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 125.8999999165535,
+              "selectionMs": 223.8000004887581,
+              "selectionCount": 93,
+              "candidates": 50736,
+              "masked": 14134,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 61.000000059604645,
+            "uploads": 30,
+            "uploadBytes": 282270,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 93,
+            "rebuilds": 5,
+            "persistentCpuMs": 65.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 6,
+          "step": "hidden",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": false,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 125.8999999165535,
+              "selectionMs": 223.8000004887581,
+              "selectionCount": 93,
+              "candidates": 50736,
+              "masked": 14134,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            0,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 61.000000059604645,
+            "uploads": 30,
+            "uploadBytes": 282270,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 93,
+            "rebuilds": 5,
+            "persistentCpuMs": 65.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 64,
+          "triangles": 579501
+        },
+        {
+          "i": 7,
+          "step": "visible",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 125.8999999165535,
+              "selectionMs": 223.8000004887581,
+              "selectionCount": 93,
+              "candidates": 50736,
+              "masked": 14134,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 61.000000059604645,
+            "uploads": 30,
+            "uploadBytes": 282270,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 93,
+            "rebuilds": 5,
+            "persistentCpuMs": 65.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "persistent",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "step": "media",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 125.8999999165535,
+              "selectionMs": 223.8000004887581,
+              "selectionCount": 93,
+              "candidates": 50736,
+              "masked": 14134,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 61.000000059604645,
+            "uploads": 30,
+            "uploadBytes": 282270,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 93,
+            "rebuilds": 5,
+            "persistentCpuMs": 65.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 1,
+          "step": "baja",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "baja",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5793,
+            "leaves": 46344,
+            "triangles": 46344,
+            "chunks": 25,
+            "cachedTiles": 31,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 140.09999990463257,
+              "selectionMs": 249.40000051259995,
+              "selectionCount": 94,
+              "candidates": 58672,
+              "masked": 15090,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            40
+          ],
+          "selectedMask": {
+            "updates": 6,
+            "cpuMs": 72.00000005960464,
+            "uploads": 36,
+            "uploadBytes": 338724,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 94,
+            "rebuilds": 6,
+            "persistentCpuMs": 76.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 65,
+          "triangles": 625845
+        },
+        {
+          "i": 2,
+          "step": "muy_baja",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": false,
+            "quality": "muy_baja",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5793,
+            "leaves": 46344,
+            "triangles": 46344,
+            "chunks": 25,
+            "cachedTiles": 0,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 140.09999990463257,
+              "selectionMs": 249.40000051259995,
+              "selectionCount": 94,
+              "candidates": 58672,
+              "masked": 15090,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            0,
+            40
+          ],
+          "selectedMask": {
+            "updates": 6,
+            "cpuMs": 72.00000005960464,
+            "uploads": 36,
+            "uploadBytes": 338724,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 94,
+            "rebuilds": 6,
+            "persistentCpuMs": 76.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 64,
+          "triangles": 579501
+        },
+        {
+          "i": 3,
+          "step": "media-restored",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 164.29999995231628,
+              "selectionMs": 281.90000051259995,
+              "selectionCount": 95,
+              "candidates": 74672,
+              "masked": 18436,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 7,
+            "cpuMs": 78.70000004768372,
+            "uploads": 42,
+            "uploadBytes": 395178,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 95,
+            "rebuilds": 7,
+            "persistentCpuMs": 83.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 4,
+          "step": "overflow",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 1,
+            "far": 1,
+            "leaves": 20,
+            "triangles": 68,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 164.29999995231628,
+              "selectionMs": 282.5000005364418,
+              "selectionCount": 96,
+              "candidates": 74672,
+              "masked": 18436,
+              "overflow": 11634
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            0,
+            48
+          ],
+          "selectedMask": {
+            "updates": 7,
+            "cpuMs": 78.70000004768372,
+            "uploads": 42,
+            "uploadBytes": 395178,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 96,
+            "rebuilds": 7,
+            "persistentCpuMs": 83.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 579569
+        },
+        {
+          "i": 5,
+          "step": "capacity-restored",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 164.29999995231628,
+              "selectionMs": 283.40000051259995,
+              "selectionCount": 97,
+              "candidates": 74672,
+              "masked": 18436,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 7,
+            "cpuMs": 78.70000004768372,
+            "uploads": 42,
+            "uploadBytes": 395178,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 97,
+            "rebuilds": 7,
+            "persistentCpuMs": 83.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 6,
+          "step": "hidden",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": false,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 164.29999995231628,
+              "selectionMs": 283.40000051259995,
+              "selectionCount": 97,
+              "candidates": 74672,
+              "masked": 18436,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            0,
+            48
+          ],
+          "selectedMask": {
+            "updates": 7,
+            "cpuMs": 78.70000004768372,
+            "uploads": 42,
+            "uploadBytes": 395178,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 97,
+            "rebuilds": 7,
+            "persistentCpuMs": 83.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 64,
+          "triangles": 579501
+        },
+        {
+          "i": 7,
+          "step": "visible",
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 164.29999995231628,
+              "selectionMs": 283.40000051259995,
+              "selectionCount": 97,
+              "candidates": 74672,
+              "masked": 18436,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 7,
+            "cpuMs": 78.70000004768372,
+            "uploads": 42,
+            "uploadBytes": 395178,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 97,
+            "rebuilds": 7,
+            "persistentCpuMs": 83.20000004768372
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import {GlobalFrameScheduler} from '../src/app/global-frame-scheduler.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Scene,Mesh,BoxGeometry,MeshStandardMaterial,PerspectiveCamera} from 'three';
@@ -90,4 +91,47 @@ test('depth CPU candidate retains cancellation during its real suspended frame',
  const s=setup(),owner=new AbortController();let calls=0,clock=0;
  const pending=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,cpuBudget:true,frameBudget:16,signal:owner.signal,now:()=>clock,compile:()=>{calls++;clock+=8;return Promise.resolve();},nextFrame:()=>new Promise(()=>{})});
  await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,2);owner.abort();await assert.rejects(pending,/cancelled/);assert.equal(calls,2);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);s.cleanup();
+});
+
+
+test('global admission owns the complete depth transaction, preserving state while queued and waiting',async()=>{
+ const s=setup(),queue=[];let barriers=0,submissions=0;
+ const scheduler={submit(iterator,options){return new Promise((resolve,reject)=>queue.push({iterator,options,resolve,reject}));}};
+ const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,nextFrame:async()=>{barriers++;},compile:()=>{submissions++;assert.equal(s.renderer.getRenderTarget(),s.pipeline.smokeDepth);return Promise.resolve();}});
+ assert.equal(submissions,0);assert.equal(s.renderer.getRenderTarget(),s.prior);
+ const deadlines=[];
+ for(let i=0;i<3;i++){
+  while(!queue.length)await Promise.resolve();
+  const job=queue.shift();deadlines.push(job.options.deadline);assert.equal(job.options.valid(),true);assert.equal(job.options.allowBlockingRecovery,true);
+  const result=job.iterator.next();assert.equal(result.done,true);
+  assert.equal(s.renderer.getRenderTarget(),s.prior);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);
+  job.resolve(result.value);
+ }
+ await preparing;assert.equal(barriers,0);assert.equal(submissions,3);assert.equal(new Set(deadlines).size,1);s.cleanup();
+});
+test('cancelled depth admission cannot submit stale borrowed materials',async()=>{
+ const s=setup();let stop=false,queued,resolve;
+ const scheduler={submit(iterator,options){queued={iterator,options};return new Promise(r=>{resolve=r;});}};
+ const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,cancelled:()=>stop,compile:()=>assert.fail('stale compile')});
+ stop=true;assert.throws(()=>queued.options.valid(),/cancelled/);queued.iterator.return();resolve(null);
+ await assert.rejects(preparing,/cancelled/);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);s.cleanup();
+});
+
+
+test('required depth batches recover after a CI-sized submission outlier',async()=>{
+ const s=setup();let clock=0,calls=0,finished=false;
+ const scheduler=new GlobalFrameScheduler({now:()=>clock});
+ const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,scheduler,now:()=>clock,compile:()=>{
+  calls++;clock+=calls===1?66.455:1;return Promise.resolve();
+ }}).then(()=>{finished=true;});
+ // CI presented at ~78 ms intervals while mandatory CPU remained ~4.5 ms.
+ for(let frame=0;frame<220&&!finished;frame++){
+  clock=frame*78.125;scheduler.beginFrame(clock);clock+=4.525;
+  await scheduler.endFrame();await Promise.resolve();await Promise.resolve();
+  assert.equal(s.renderer.getRenderTarget(),s.prior);
+  assert.deepEqual(s.world.children.map(m=>m.material),s.originals);
+ }
+ assert.equal(finished,true,'required depth preparation must not starve');
+ await preparing;assert.equal(calls,3);assert.ok(scheduler.snapshot().blockingRecoveries>=1);
+ assert.equal(scheduler.snapshot().pending,0);s.cleanup();
 });

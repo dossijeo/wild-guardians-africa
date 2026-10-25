@@ -1,0 +1,130 @@
+import {createServer} from 'node:http';
+import {readFile,writeFile} from 'node:fs/promises';
+import {resolve,extname,sep} from 'node:path';
+import {chromium} from 'playwright';
+const root=resolve('dist'),prefix='/nested/itch/game/',requests=[],errors=[],workers=[],closedWorkers=[];
+const isolation=process.env.WG_PACKAGE_UI_ISOLATION!=='0';
+const types={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.json':'application/json','.css':'text/css','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.glb':'model/gltf-binary','.ogg':'audio/ogg','.opus':'audio/ogg','.mp3':'audio/mpeg','.woff2':'font/woff2'};
+const server=createServer(async(req,res)=>{
+ const url=new URL(req.url,'http://localhost');
+ if(url.pathname==='/favicon.ico'){res.writeHead(204);res.end();return;}
+ try{
+  if(!url.pathname.startsWith(prefix))throw Error('Outside package prefix');
+  const path=resolve(root,decodeURIComponent(url.pathname.slice(prefix.length))||'index.html');
+  if(!path.startsWith(root+sep))throw Error('Outside package');
+  const bytes=await readFile(path);
+  res.writeHead(200,{'Content-Type':types[extname(path)]??'application/octet-stream',...(isolation?{'Cross-Origin-Opener-Policy':'same-origin','Cross-Origin-Embedder-Policy':'require-corp'}:{})});res.end(bytes);
+ }catch(error){requests.push({url:url.pathname,status:404,message:error.message});res.writeHead(404);res.end('Not found');}
+});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const browser=await chromium.launch({channel:'chrome',headless:true,...(process.env.WG_PACKAGE_UI_SOFTWARE==='1'?{args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']}:{})});
+const page=await browser.newPage({viewport:{width:1280,height:720}});
+page.on('worker',worker=>{workers.push(worker.url());worker.on('close',()=>closedWorkers.push(worker.url()));});
+page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+const report=process.env.WG_PACKAGE_UI_REPORT??'docs/qa/production-integration-20261025/package-ui.json';
+let result={};
+if(process.env.WG_PACKAGE_UI_TRACE==='1')await page.addInitScript(()=>{globalThis.__desktopSmokeStarted=true;});
+if(process.env.WG_PACKAGE_UI_QUALITY)await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,sfx:0,music:0})),process.env.WG_PACKAGE_UI_QUALITY);
+try{
+ const url=`http://127.0.0.1:${server.address().port}${prefix}`;
+ await page.goto(url,{timeout:90000});await page.waitForSelector('#native-menu',{timeout:60000});
+ const menu=page.frameLocator('#native-menu');
+ await menu.getByText('JUEGO NUEVO',{exact:false}).first().waitFor({timeout:60000});
+ result={url,isolated:await page.evaluate(()=>crossOriginIsolated),menuButtons:await menu.locator('button,[role=button]').allTextContents(),menuText:(await menu.locator('body').innerText()).slice(-3000)};
+ if(process.env.WG_PACKAGE_UI_FIXTURE){
+  const fixture=JSON.parse(await readFile(process.env.WG_PACKAGE_UI_FIXTURE,'utf8'));
+  // Saved-world reproduction only: same legacy storage ingress as native smoke.
+  await page.evaluate(f=>localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot),fixture);
+  await menu.getByRole('button',{name:'Continuar',exact:true}).click();
+  await menu.locator('[data-production-save="'+fixture.slotId+'"]').click({timeout:60000});
+  const started=Date.now();
+  await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
+  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false'||document.body.innerText.includes('No se ha podido preparar tu mundo.'),null,{timeout:90000});
+  if(await page.locator('#stage').getAttribute('aria-busy')!=='false')throw Error('Saved world loading failed: '+(await page.locator('body').innerText()).slice(-1000));
+  result.fixtureLoadMs=Date.now()-started;result.fixture=fixture.scope;
+  result.gameText=(await page.locator('body').innerText()).slice(-2500);
+ }
+ if(process.env.WG_PACKAGE_UI_START==='1'){
+  const biome=process.env.WG_PACKAGE_UI_BIOME??'manglares';
+  const cancelFirst=process.env.WG_PACKAGE_UI_CANCEL==='1';
+  for(let attempt=0;attempt<(cancelFirst?2:1);attempt++){
+  await menu.getByRole('button',{name:'Juego nuevo',exact:true}).click();
+  // The selector is rendered during the camera journey but its parent stays inert.
+  await menu.locator('#panelstage:not([inert])').waitFor({state:'visible',timeout:60000});
+  const selector=menu.frameLocator('iframe.production-section');
+  await selector.locator('[data-biome="'+biome+'"]').click({timeout:60000});
+  await selector.locator('#confirmButton').click();
+  await selector.locator('[data-culture="mapungubwe"]').click();
+  await selector.locator('#confirmButton').click();
+  await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
+  if(cancelFirst&&attempt===0){
+   await page.locator('#loading-cancel').waitFor({state:'visible',timeout:60000});
+   await page.waitForFunction(()=>document.querySelector('#loading-progress')?.textContent?.match(/\d+/)?.[0]>=30,null,{timeout:120000});
+   result.cancel={progress:await page.locator('#loading-progress').innerText(),workersCreated:workers.length};
+   await page.screenshot({path:report.replace(/\.json$/,'-before-cancel.png')});
+   await page.locator('#loading-cancel').click();
+   await menu.getByRole('button',{name:'Juego nuevo',exact:true}).waitFor({state:'visible',timeout:60000});
+   await page.waitForTimeout(1500);
+   result.cancel.closedWorkersBeforeRestart=closedWorkers.slice();
+   continue;
+  }
+  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false'||document.body.innerText.includes('No se ha podido preparar tu mundo.'),null,{timeout:180000});
+  if(await page.locator('#stage').getAttribute('aria-busy')!=='false')throw Error('World loading failed: '+(await page.locator('body').innerText()).slice(-1000));
+  result.gameText=(await page.locator('body').innerText()).slice(-2500);
+  result.workers=workers;result.biome=biome;
+  }
+  if(cancelFirst)result.cancel.restarted=true;
+  if(process.env.WG_PACKAGE_UI_LIFECYCLE==='1'){
+   await page.locator('#menuButton').click();
+   await page.locator('#save').click();
+   await page.locator('#exit').click();
+   await page.waitForSelector('#native-menu',{timeout:60000});
+   await menu.getByRole('button',{name:'Continuar',exact:true}).click({timeout:60000});
+   const saved=menu.locator('[data-production-save]').first();
+   await saved.waitFor({state:'visible',timeout:60000});
+   result.savedSlot=await saved.getAttribute('data-production-save');
+   await saved.click();
+   await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
+   await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
+   result.reloadedGameText=(await page.locator('body').innerText()).slice(-2500);
+   result.lifecycle='save, exit to menu, continue saved slot, HUD restored';
+  }
+
+ }
+ if(process.env.WG_PACKAGE_UI_PAN==='1'){
+  for(let i=0;i<4;i++){
+   await page.mouse.move(600,220);await page.mouse.down();
+   await page.mouse.move(600,510,{steps:25});await page.mouse.up();
+   await page.waitForTimeout(700);
+  }
+  await page.waitForTimeout(3000);
+  result.cameraInput='Four left-button vertical drags, normal OrbitControls pan';
+ }
+ if(process.env.WG_PACKAGE_UI_CONTEXT==='1'){
+  await page.screenshot({path:report.replace(/\.json$/,'-before-loss.png')});
+  result.context=await page.evaluate(async()=>{
+   const canvas=document.querySelector('#world'),gl=canvas?.getContext('webgl2');
+   const extension=gl?.getExtension('WEBGL_lose_context');
+   if(!extension)throw Error('Context-loss extension unavailable');
+   const events=[],began=performance.now();
+   await new Promise((resolve,reject)=>{
+    const timeout=setTimeout(()=>reject(Error('Context restoration timed out')),30000);
+    canvas.addEventListener('webglcontextlost',()=>{events.push('lost');setTimeout(()=>extension.restoreContext(),250);},{once:true});
+    canvas.addEventListener('webglcontextrestored',()=>{events.push('restored');clearTimeout(timeout);resolve();},{once:true});
+    extension.loseContext();
+   });
+   return {events,elapsedMs:performance.now()-began};
+  });
+  await page.waitForTimeout(3000);
+  result.context.stageBusy=await page.locator('#stage').getAttribute('aria-busy');
+ }
+ if(process.env.WG_PACKAGE_UI_TRACE==='1'){
+  result.loadingTrace=await page.evaluate(()=>globalThis.__wildGuardiansNativeLoadingSnapshot?.());
+  result.backend=await page.evaluate(()=>{const gl=document.querySelector('#world')?.getContext('webgl2'),debug=gl?.getExtension('WEBGL_debug_renderer_info');return debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null;});
+  result.requestedQuality=process.env.WG_PACKAGE_UI_QUALITY??'default';
+ }
+ if(errors.length||requests.length)throw Error('Package run reported errors or missing resources: '+JSON.stringify({errors,requests}));
+ await page.screenshot({path:report.replace(/\.json$/,'.png')});
+ console.log(JSON.stringify(result));
+}catch(e){result.loadingTrace=await page.evaluate(()=>globalThis.__wildGuardiansNativeLoadingSnapshot?.()).catch(()=>null);result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}
+finally{await writeFile(report,JSON.stringify({diagnostics:{loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await browser.close();await new Promise(resolve=>server.close(resolve));}

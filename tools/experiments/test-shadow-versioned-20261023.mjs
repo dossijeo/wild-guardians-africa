@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import * as THREE from 'three';
+import {patchVersionedShadow} from './qa-shadow-versioned-patch-20261023.mjs';
+const source=patchVersionedShadow(await readFile('src/rendering/shadow-cache.js','utf8')).replace("from 'three'",'from '+JSON.stringify(import.meta.resolve('three')));
+const {shadowSnapshot,ShadowCache}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),light=new THREE.DirectionalLight(),g=new THREE.InstancedBufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,1,0,0,0,1,0],3));g.setAttribute('coverageAnchor',new THREE.InstancedBufferAttribute(new Float32Array(8),4));g.instanceCount=2;g.userData.qaVersionedShadow=true;const mesh=new THREE.Mesh(g,new THREE.MeshBasicMaterial());mesh.castShadow=true;scene.add(mesh,light,light.target);scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+const cache=new ShadowCache(),snapshot=()=>shadowSnapshot({shadowMap:{type:THREE.PCFShadowMap}},light,scene,camera),commit=()=>{const s=snapshot();assert.ok(s);cache.commit(s);};commit();assert.ok(cache.matches(snapshot()));
+g.attributes.coverageAnchor.array[0]=1;g.attributes.coverageAnchor.needsUpdate=true;assert.equal(cache.matches(snapshot()),false);commit();assert.ok(cache.matches(snapshot()));
+g.instanceCount=1;assert.equal(cache.matches(snapshot()),false);commit();g.attributes.coverageAnchor.array=new Float32Array(8);assert.equal(cache.matches(snapshot()),false);commit();g.attributes.coverageAnchor.meshPerAttribute=2;assert.equal(cache.matches(snapshot()),false);commit();
+g.userData.qaVersionedShadow=false;commit();g.attributes.coverageAnchor.array[0]=3;assert.equal(cache.matches(snapshot()),false,'non-opt-in still checks active values');
+console.log('PASS: unchanged, uploaded mutation, active count, storage replacement, divisor, conservative default');g.dispose();mesh.material.dispose();

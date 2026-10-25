@@ -1,0 +1,117 @@
+{
+  "origin": "http://127.0.0.1:5189",
+  "variants": [
+    "normal-relief",
+    "normal-enhanced"
+  ],
+  "cases": [
+    1,
+    3
+  ],
+  "records": [
+    {
+      "sceneCase": 1,
+      "variant": "normal-relief",
+      "camera": "close",
+      "phase": "day",
+      "filename": "case-01-normal-relief-close-day.webp",
+      "drawCalls": 65,
+      "triangles": 669724,
+      "cpuMs": 5.393888889253139,
+      "gpuMs": 14.520122483333333,
+      "fps": 59.80265125087213,
+      "errors": []
+    },
+    {
+      "sceneCase": 1,
+      "variant": "normal-relief",
+      "camera": "close",
+      "phase": "night",
+      "filename": "case-01-normal-relief-close-night.webp",
+      "drawCalls": 65,
+      "triangles": 669724,
+      "cpuMs": 4.934999999817875,
+      "gpuMs": 15.286176361111103,
+      "fps": 60.136308966991905,
+      "errors": []
+    },
+    {
+      "sceneCase": 1,
+      "variant": "normal-enhanced",
+      "camera": "close",
+      "phase": "day",
+      "filename": "case-01-normal-enhanced-close-day.webp",
+      "drawCalls": 65,
+      "triangles": 669724,
+      "cpuMs": 5.4311111111607815,
+      "gpuMs": 15.062883222222222,
+      "fps": 59.47857119254536,
+      "errors": []
+    },
+    {
+      "sceneCase": 1,
+      "variant": "normal-enhanced",
+      "camera": "close",
+      "phase": "night",
+      "filename": "case-01-normal-enhanced-close-night.webp",
+      "drawCalls": 65,
+      "triangles": 669724,
+      "cpuMs": 4.9294444444278875,
+      "gpuMs": 15.570980450000002,
+      "fps": 58.82929698990095,
+      "errors": []
+    },
+    {
+      "sceneCase": 3,
+      "variant": "normal-relief",
+      "camera": "close",
+      "phase": "day",
+      "filename": "case-03-normal-relief-close-day.webp",
+      "drawCalls": 74,
+      "triangles": 841456,
+      "cpuMs": 5.4938888881769445,
+      "gpuMs": 15.084141599999988,
+      "fps": 59.15020866879173,
+      "errors": []
+    },
+    {
+      "sceneCase": 3,
+      "variant": "normal-relief",
+      "camera": "close",
+      "phase": "night",
+      "filename": "case-03-normal-relief-close-night.webp",
+      "drawCalls": 74,
+      "triangles": 841456,
+      "cpuMs": 4.996111111425691,
+      "gpuMs": 15.796491094444448,
+      "fps": 57.579731934359096,
+      "errors": []
+    },
+    {
+      "sceneCase": 3,
+      "variant": "normal-enhanced",
+      "camera": "close",
+      "phase": "day",
+      "filename": "case-03-normal-enhanced-close-day.webp",
+      "drawCalls": 74,
+      "triangles": 841456,
+      "cpuMs": 5.1272222225864725,
+      "gpuMs": 15.681060033333319,
+      "fps": 57.27376861397481,
+      "errors": []
+    },
+    {
+      "sceneCase": 3,
+      "variant": "normal-enhanced",
+      "camera": "close",
+      "phase": "night",
+      "filename": "case-03-normal-enhanced-close-night.webp",
+      "drawCalls": 74,
+      "triangles": 841456,
+      "cpuMs": 4.72777777802613,
+      "gpuMs": 16.07346600555556,
+      "fps": 56.972842944862954,
+      "errors": []
+    }
+  ]
+}

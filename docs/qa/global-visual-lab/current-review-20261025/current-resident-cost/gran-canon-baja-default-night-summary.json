@@ -1,0 +1,173 @@
+{
+  "scope": "Two serial resident paused runs, not A/B or a loading benchmark. GPU elapsed includes pipeline bubbles. CPU render includes draw. Screenshots are taken after timing.",
+  "conditions": {
+    "options": {
+      "axis": "x",
+      "pose": {
+        "camera": [
+          -25.08912754058838,
+          16.91928654060472,
+          194.00891007139165
+        ],
+        "target": [
+          -25.08912754058838,
+          3.9678425121307375,
+          162.57230564951897
+        ],
+        "time": 350
+      },
+      "visualSteps": false,
+      "terrainCamera": false,
+      "mainPhases": false,
+      "lockRaidCamera": false,
+      "completeLegs": false,
+      "pinPrograms": false,
+      "zigzag": false,
+      "active": false,
+      "gpu": true,
+      "depthWarm": false,
+      "glDetail": false,
+      "frames": 360,
+      "distance": 0
+    },
+    "cameraOrigin": [
+      -25.08912754058838,
+      16.91928654060472,
+      194.00891007139165
+    ],
+    "targetOrigin": [
+      -25.08912754058838,
+      3.9678425121307375,
+      162.57230564951897
+    ],
+    "initialElapsed": 119.99999999999746,
+    "workersBefore": [
+      {
+        "id": "worker-28",
+        "x": -18.800402760747815,
+        "z": 169.28032883533044,
+        "status": "idle"
+      },
+      {
+        "id": "worker-30",
+        "x": -20.481975921047226,
+        "z": 170.35150092241767,
+        "status": "idle"
+      }
+    ],
+    "baseline": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 231,
+      "residentVisiblePropRecords": 2386,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 1
+    },
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "query": {
+      "visualLab": "global-lighting",
+      "skyAtmosphere": "clouds",
+      "grassCoverage": "continuous",
+      "riverSoil": "1",
+      "riverYards": "islands",
+      "mangroveSubstrate": "full",
+      "mangroveMoss": "layered",
+      "canyonSand": "full",
+      "canyonSandBlend": "soft",
+      "canyonNormals": "smooth",
+      "canyonFloor": "warm",
+      "canyonShadows": "horizon",
+      "sandRelief": "1",
+      "sandWear": "residual",
+      "sandMeso": "1",
+      "volcanicAsh": "mask",
+      "volcanicRock": "layered",
+      "volcanicNight": "spectrum",
+      "spatialFar": "1",
+      "farTransitions": "smooth",
+      "waterEdges": "natural",
+      "waterPalette": "regional",
+      "riverBank": "soil",
+      "mangroveShore": "sediment",
+      "waterCore": "opaque",
+      "canyonBank": "balanced",
+      "workerResidency": "actors",
+      "canyonWater": "calm",
+      "horizonHandoff": "atomic",
+      "mangroveFerns": "holly",
+      "groundCache": "fixed512",
+      "wildEngineThreads": "1",
+      "chunkInstall": "sync",
+      "horizonBedBudget": "2",
+      "horizonBed": "sync",
+      "ownedFarGpu": "1",
+      "streamingRecovery": "auto",
+      "waterBedDirect": "0",
+      "frameScheduler": "1"
+    },
+    "streamingOptions": {
+      "waterBed": false,
+      "waterShore": false,
+      "batchEviction": false,
+      "warmObstruction": false,
+      "retainPrograms": false
+    }
+  },
+  "runs": [
+    {
+      "run": "r1",
+      "gpu": {
+        "count": 125,
+        "mean": 14.039812872,
+        "p95": 16.134218,
+        "max": 27.115937
+      },
+      "cpuRender": {
+        "count": 373,
+        "mean": 4.293632708989263,
+        "p95": 5.460000038146973,
+        "max": 6.6549999713897705
+      },
+      "presentation": {
+        "count": 372,
+        "mean": 16.67336021505376,
+        "p95": 16.845000000001164,
+        "max": 33.19999999999709
+      },
+      "readyMs": 25322.169999957085
+    },
+    {
+      "run": "r2",
+      "gpu": {
+        "count": 125,
+        "mean": 13.900134952000009,
+        "p95": 15.347135,
+        "max": 30.023437
+      },
+      "cpuRender": {
+        "count": 373,
+        "mean": 4.32494638209049,
+        "p95": 5.550000071525574,
+        "max": 7.269999980926514
+      },
+      "presentation": {
+        "count": 372,
+        "mean": 16.628615591397853,
+        "p95": 16.81999999999971,
+        "max": 17.209999999999127
+      },
+      "readyMs": 29085.069999933243
+    }
+  ],
+  "pixelComparison": {
+    "meanAbsoluteRGB": 0.00014793113425925925,
+    "bounds": [
+      1107,
+      470,
+      1131,
+      490
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "scope": "Frozen populated Manglares media720p; first5s post-ready presentation intervals, not GPU. Main versus early-prepared worker. Reproduce B with WG_GUARDIAN_WARM=1; early preparation is no longer default.",
+  "decision": "Reject automatic early preparation: readiness and P95 regress in both pairs. Retain explicit QA only.",
+  "runs": [
+    {
+      "run": "a1",
+      "readyMs": 31473.290000021458,
+      "samples": 60,
+      "p95Ms": 149.9100000000035,
+      "p99Ms": 498.25999999999476,
+      "maxMs": 498.25999999999476,
+      "guardian": {
+        "artReadyAt": 33864.939999997616,
+        "readyRelativeToWorldMs": 567.2300000190735,
+        "backend": "main",
+        "ready": true,
+        "stats": null,
+        "fallback": null
+      }
+    },
+    {
+      "run": "b1",
+      "readyMs": 32773.75,
+      "samples": 46,
+      "p95Ms": 166.2300000000032,
+      "p99Ms": 598.5749999999971,
+      "maxMs": 598.5749999999971,
+      "guardian": {
+        "artReadyAt": 4891.6449999809265,
+        "readyRelativeToWorldMs": -29761.910000026226,
+        "backend": "worker",
+        "ready": true,
+        "stats": {
+          "submitted": 1,
+          "completed": 1,
+          "coalesced": 0,
+          "setupMs": 281.0199999809265,
+          "failed": 0
+        },
+        "fallback": null
+      }
+    },
+    {
+      "run": "a2",
+      "readyMs": 32939.78499996662,
+      "samples": 76,
+      "p95Ms": 132.95999999999913,
+      "p99Ms": 614.9649999999965,
+      "maxMs": 614.9649999999965,
+      "guardian": {
+        "artReadyAt": 35433.12000000477,
+        "readyRelativeToWorldMs": 705.5250000357628,
+        "backend": "main",
+        "ready": true,
+        "stats": null,
+        "fallback": null
+      }
+    },
+    {
+      "run": "b2",
+      "readyMs": 33822.139999985695,
+      "samples": 48,
+      "p95Ms": 182.84500000000116,
+      "p99Ms": 548.7099999999991,
+      "maxMs": 548.7099999999991,
+      "guardian": {
+        "artReadyAt": 4879.1449999809265,
+        "readyRelativeToWorldMs": -30778.240000009537,
+        "backend": "worker",
+        "ready": true,
+        "stats": {
+          "submitted": 1,
+          "completed": 1,
+          "coalesced": 0,
+          "setupMs": 313.2549999952316,
+          "failed": 0
+        },
+        "fallback": null
+      }
+    }
+  ]
+}

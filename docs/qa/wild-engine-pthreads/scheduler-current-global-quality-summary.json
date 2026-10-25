@@ -1,0 +1,333 @@
+{
+  "revision": "6603a7428",
+  "control": "Same experimental checkout with frameScheduler absent, original cooperative preparation; NOT main branch.",
+  "candidate": "frameScheduler=1 plus mudEdgeWorker=1. Includes stable shadow and initial cache/depth preparation. Guardian worker off. Not isolation of scheduler policy alone.",
+  "protocol": "Chrome actual renderer, populated Manglares media720p, active simulation, 240-frame camera travel, low/media/low quality, repeated ABAB. Same fixtures; wall-time simulation states differ.",
+  "limits": "12-37 samples per transition; tail quantiles weak, preserve counts/max. No GPU queries in this series. GL correctness queries timed separately but affect later pacing. First control peak consistent; causal attribution needs prior shader evidence, not this series alone.",
+  "runs": [
+    {
+      "run": "a1",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 276.8600000143051,
+          "p99Ms": 276.8600000143051,
+          "maxMs": 6653.795000016689,
+          "beforeDiagnosticMs": 7837.959999978542,
+          "diagnosticMs": 656.0450000166893,
+          "settingMs": 3.5949999690055847
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 318.69999998807907,
+          "p99Ms": 318.69999998807907,
+          "maxMs": 438.05000001192093,
+          "beforeDiagnosticMs": 1823.8600000143051,
+          "diagnosticMs": 637.6850000023842,
+          "settingMs": 1.4050000309944153
+        },
+        {
+          "quality": "baja",
+          "samples": 13,
+          "p95Ms": 158.39500004053116,
+          "p99Ms": 158.39500004053116,
+          "maxMs": 219.5549999475479,
+          "beforeDiagnosticMs": 1127.4350000023842,
+          "diagnosticMs": 217.14500004053116,
+          "settingMs": 1.6300000548362732
+        }
+      ],
+      "active": {
+        "initialElapsed": 127.29136000004617,
+        "elapsed": 144.6133550000536,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 0,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 0,
+        "workMs": 0,
+        "coordinationMs": 0,
+        "maxUnitMs": 0,
+        "overruns": 0,
+        "deadlineLoans": 0,
+        "oversizeRecoveries": 0,
+        "continuationMs": 0,
+        "continuationTurns": 0,
+        "median": 0,
+        "p95": 0,
+        "p99": 0,
+        "cpu95": 0,
+        "jitter": 0,
+        "budgetMs": 0,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    },
+    {
+      "run": "b1",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 105.74000000953674,
+          "p99Ms": 105.74000000953674,
+          "maxMs": 202.58499997854233,
+          "beforeDiagnosticMs": 1113.574999988079,
+          "diagnosticMs": 415.0400000214577,
+          "settingMs": 2.975000023841858
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 165.18000000715256,
+          "p99Ms": 165.18000000715256,
+          "maxMs": 221.14999997615814,
+          "beforeDiagnosticMs": 1318.8099999427795,
+          "diagnosticMs": 540.9150000214577,
+          "settingMs": 1.2399999499320984
+        },
+        {
+          "quality": "baja",
+          "samples": 35,
+          "p95Ms": 227.375,
+          "p99Ms": 258.19999998807907,
+          "maxMs": 344.74000000953674,
+          "beforeDiagnosticMs": 5089.604999959469,
+          "diagnosticMs": 585.8700000047684,
+          "settingMs": 0.8399999737739563
+        }
+      ],
+      "active": {
+        "initialElapsed": 126.51257499999384,
+        "elapsed": 146.00780500000207,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 628,
+        "workMs": 329.38999968767166,
+        "coordinationMs": 34.63500154018402,
+        "maxUnitMs": 10.27999997138977,
+        "overruns": 47,
+        "deadlineLoans": 42,
+        "oversizeRecoveries": 0,
+        "continuationMs": 612.905000269413,
+        "continuationTurns": 1068,
+        "median": 99.73500000000058,
+        "p95": 116.36000000000058,
+        "p99": 116.38000000000466,
+        "cpu95": 9.445000052452087,
+        "jitter": 16.625,
+        "budgetMs": 0.6977306760946913,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    },
+    {
+      "run": "a2",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 235.02999997138977,
+          "p99Ms": 235.02999997138977,
+          "maxMs": 6750.104999899864,
+          "beforeDiagnosticMs": 7586.285000085831,
+          "diagnosticMs": 421.2649999856949,
+          "settingMs": 3.315000057220459
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 193.17000007629395,
+          "p99Ms": 193.17000007629395,
+          "maxMs": 285.7350000143051,
+          "beforeDiagnosticMs": 1517.2299998998642,
+          "diagnosticMs": 660.7150000333786,
+          "settingMs": 1.75
+        },
+        {
+          "quality": "baja",
+          "samples": 14,
+          "p95Ms": 248.25999999046326,
+          "p99Ms": 248.25999999046326,
+          "maxMs": 349.0550000667572,
+          "beforeDiagnosticMs": 1386.3450000286102,
+          "diagnosticMs": 151.43499994277954,
+          "settingMs": 1.1200000047683716
+        }
+      ],
+      "active": {
+        "initialElapsed": 126.67015500001528,
+        "elapsed": 145.37363000002335,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 0,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 0,
+        "workMs": 0,
+        "coordinationMs": 0,
+        "maxUnitMs": 0,
+        "overruns": 0,
+        "deadlineLoans": 0,
+        "oversizeRecoveries": 0,
+        "continuationMs": 0,
+        "continuationTurns": 0,
+        "median": 0,
+        "p95": 0,
+        "p99": 0,
+        "cpu95": 0,
+        "jitter": 0,
+        "budgetMs": 0,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    },
+    {
+      "run": "b2",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 198.56499993801117,
+          "p99Ms": 198.56499993801117,
+          "maxMs": 383.210000038147,
+          "beforeDiagnosticMs": 1758.0550000667572,
+          "diagnosticMs": 419.9649999141693,
+          "settingMs": 1.8250000476837158
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 111.05499994754791,
+          "p99Ms": 111.05499994754791,
+          "maxMs": 125.28999996185303,
+          "beforeDiagnosticMs": 944.7300000190735,
+          "diagnosticMs": 520.8999999761581,
+          "settingMs": 0.7549999952316284
+        },
+        {
+          "quality": "baja",
+          "samples": 37,
+          "p95Ms": 181.22000002861023,
+          "p99Ms": 196.50499999523163,
+          "maxMs": 250.00499999523163,
+          "beforeDiagnosticMs": 4443.3099999427795,
+          "diagnosticMs": 332.36500000953674,
+          "settingMs": 0.8550000190734863
+        }
+      ],
+      "active": {
+        "initialElapsed": 120.40716500001169,
+        "elapsed": 141.3173350000167,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 628,
+        "workMs": 325.420000910759,
+        "coordinationMs": 31.099998831748962,
+        "maxUnitMs": 8.615000009536743,
+        "overruns": 54,
+        "deadlineLoans": 47,
+        "oversizeRecoveries": 0,
+        "continuationMs": 396.8800001144409,
+        "continuationTurns": 1165,
+        "median": 83.13500000000204,
+        "p95": 117.34500000000116,
+        "p99": 183.01000000000204,
+        "cpu95": 8.31499993801117,
+        "jitter": 34.20999999999913,
+        "budgetMs": 1.3879581764940385,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "scope": "Current candidate then explicit cache-preparation0 control, same active fixture/protocol. Functional comparison, not repeated statistical acceptance; simulation evolves with real elapsed time.",
+  "rows": [
+    {
+      "variant": "candidate",
+      "rows": [
+        {
+          "quality": "baja",
+          "transitionMs": 2031.660000026226,
+          "maxFrameMs": 227.5199999809265,
+          "cacheBytes": 35209000
+        },
+        {
+          "quality": "media",
+          "transitionMs": 2130.4599999785423,
+          "maxFrameMs": 392.4599999785423,
+          "cacheBytes": 35209000
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 5604.149999976158,
+          "maxFrameMs": 359.19499999284744,
+          "cacheBytes": 33800640
+        }
+      ],
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 141.14797000000232,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "pending": 0
+    },
+    {
+      "variant": "control",
+      "rows": [
+        {
+          "quality": "baja",
+          "transitionMs": 2100.714999973774,
+          "maxFrameMs": 247.88499999046326,
+          "cacheBytes": 35209000
+        },
+        {
+          "quality": "media",
+          "transitionMs": 2156.435000002384,
+          "maxFrameMs": 312.5649999976158,
+          "cacheBytes": 35209000
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 6153.585000038147,
+          "maxFrameMs": 270.59500002861023,
+          "cacheBytes": 32392280
+        }
+      ],
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 139.34320000000122,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "pending": 0
+    }
+  ]
+}

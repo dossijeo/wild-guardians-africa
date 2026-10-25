@@ -1,0 +1,476 @@
+{
+  "commit": "3a94a28bc9270994bd544141af63eb600e761503",
+  "quality": "media",
+  "compare": "program-retention",
+  "scope": "Paused real game; equivalent completed streaming work, 720p, GPU timer every third render. Not active simulation or visual acceptance.",
+  "runs": [
+    {
+      "biome": "gran-rio",
+      "label": "a1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 103,
+        "mean": 33.09533980582524,
+        "p95": 83.11000000000058,
+        "max": 133
+      },
+      "gpu": {
+        "count": 35,
+        "mean": 23.397683428571423,
+        "p95": 33.843175,
+        "max": 51.278697
+      },
+      "programRetention": null,
+      "slowGlCount": 7,
+      "slowGlMs": 376.0349999666214,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.06290000081062316,
+        "p95": 0.10000002384185791,
+        "max": 0.1600000262260437
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.816899995803833,
+        "p95": 1.1299999952316284,
+        "max": 1.5649999976158142
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 34.28001953125,
+        "p95": 42.969970703125,
+        "max": 46.364990234375
+      },
+      "install": {
+        "count": 50,
+        "mean": 5.4258999979496005,
+        "p95": 10.019999980926514,
+        "max": 15.339999973773956
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3408.8199999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-rio-a1.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 98,
+        "mean": 30.202704081632632,
+        "p95": 66.44999999999709,
+        "max": 99.97000000000116
+      },
+      "gpu": {
+        "count": 33,
+        "mean": 22.895846484848484,
+        "p95": 35.388124,
+        "max": 41.330416
+      },
+      "programRetention": {
+        "retained": 73,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 2,
+      "slowGlMs": 100.19499999284744,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05469999670982361,
+        "p95": 0.09499996900558472,
+        "max": 0.12999999523162842
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.729799997806549,
+        "p95": 1.1649999618530273,
+        "max": 1.350000023841858
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 32.018095703125,
+        "p95": 41.300048828125,
+        "max": 45.115234375
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.687999992370606,
+        "p95": 8.275000035762787,
+        "max": 13.084999978542328
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2959.864999999998,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-rio-b1.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "a2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 99,
+        "mean": 30.575656565656544,
+        "p95": 66.61499999999796,
+        "max": 149.6750000000029
+      },
+      "gpu": {
+        "count": 34,
+        "mean": 21.76553214705883,
+        "p95": 30.913436,
+        "max": 32.435676
+      },
+      "programRetention": null,
+      "slowGlCount": 6,
+      "slowGlMs": 337.9800000190735,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05069999933242798,
+        "p95": 0.07499998807907104,
+        "max": 0.10499995946884155
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7562000048160553,
+        "p95": 1.1300000548362732,
+        "max": 1.76500004529953
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 30.7031640625,
+        "p95": 36.559814453125,
+        "max": 39.784912109375
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.46909999370575,
+        "p95": 7.9549999833106995,
+        "max": 10.629999995231628
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3026.989999999998,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-rio-a2.json"
+    },
+    {
+      "biome": "gran-rio",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 101,
+        "mean": 30.128514851485107,
+        "p95": 83.11999999999534,
+        "max": 116.34999999999854
+      },
+      "gpu": {
+        "count": 34,
+        "mean": 23.54527014705882,
+        "p95": 34.634634,
+        "max": 42.476822
+      },
+      "programRetention": {
+        "retained": 73,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 2,
+      "slowGlMs": 184.78999996185303,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.059400002956390384,
+        "p95": 0.11000001430511475,
+        "max": 0.14500004053115845
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7701000034809112,
+        "p95": 1.2099999785423279,
+        "max": 1.8100000023841858
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 32.765419921875,
+        "p95": 42.224853515625,
+        "max": 43.775146484375
+      },
+      "install": {
+        "count": 50,
+        "mean": 4.688600007295609,
+        "p95": 8.59500002861023,
+        "max": 12.160000026226044
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3042.979999999996,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-rio-b2.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "a1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 148,
+        "mean": 19.101790540540556,
+        "p95": 16.92000000000189,
+        "max": 166.4200000000019
+      },
+      "gpu": {
+        "count": 50,
+        "mean": 8.57140266,
+        "p95": 16.967343,
+        "max": 19.305781
+      },
+      "programRetention": null,
+      "slowGlCount": 1,
+      "slowGlMs": 24.240000009536743,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.04639999985694885,
+        "p95": 0.06499999761581421,
+        "max": 0.0899999737739563
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7375999963283539,
+        "p95": 1.340000033378601,
+        "max": 1.6049999594688416
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 29.726015625,
+        "p95": 35.344970703125,
+        "max": 40.420166015625
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.1492999982833862,
+        "p95": 9.764999985694885,
+        "max": 17.165000021457672
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2827.0650000000023,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-canon-a1.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 145,
+        "mean": 18.57765517241378,
+        "p95": 16.984999999996944,
+        "max": 132.95999999999913
+      },
+      "gpu": {
+        "count": 49,
+        "mean": 9.620228040816325,
+        "p95": 18.678697,
+        "max": 26.946822
+      },
+      "programRetention": {
+        "retained": 60,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.04690000176429748,
+        "p95": 0.0700000524520874,
+        "max": 0.14499998092651367
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7517000043392181,
+        "p95": 1.2750000357627869,
+        "max": 1.7099999785423279
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 29.300185546875,
+        "p95": 35.6201171875,
+        "max": 38.31494140625
+      },
+      "install": {
+        "count": 50,
+        "mean": 2.964600007534027,
+        "p95": 10.800000011920929,
+        "max": 14.965000033378601
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2693.7599999999984,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-canon-b1.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "a2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 145,
+        "mean": 19.380586206896535,
+        "p95": 17.044999999998254,
+        "max": 166.16500000000087
+      },
+      "gpu": {
+        "count": 49,
+        "mean": 9.03054781632653,
+        "p95": 15.784583,
+        "max": 29.981145
+      },
+      "programRetention": null,
+      "slowGlCount": 2,
+      "slowGlMs": 47.22500002384186,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.046700003147125246,
+        "p95": 0.06499999761581421,
+        "max": 0.12999999523162842
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.8139999961853027,
+        "p95": 1.3050000071525574,
+        "max": 2.0799999833106995
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 30.434208984375,
+        "p95": 37.080078125,
+        "max": 37.68994140625
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.0895000040531158,
+        "p95": 10.395000040531158,
+        "max": 13.240000009536743
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2810.1849999999977,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-canon-a2.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 144,
+        "mean": 18.82378472222222,
+        "p95": 17.00500000000102,
+        "max": 133.03499999999985
+      },
+      "gpu": {
+        "count": 49,
+        "mean": 8.477836326530614,
+        "p95": 18.642238,
+        "max": 20.580259
+      },
+      "programRetention": {
+        "retained": 60,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.051099997758865354,
+        "p95": 0.0899999737739563,
+        "max": 0.09999996423721313
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.741800000667572,
+        "p95": 1.14000004529953,
+        "max": 1.7199999690055847
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 29.750517578125,
+        "p95": 37.824951171875,
+        "max": 44.91015625
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.056599999666214,
+        "p95": 10.200000047683716,
+        "max": 14.689999997615814
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2710.625,
+      "report": "docs/qa/wild-engine-pthreads/matrix-program-retention/gran-canon-b2.json"
+    }
+  ]
+}

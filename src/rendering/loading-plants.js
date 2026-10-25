@@ -7,12 +7,12 @@ export class LoadingPlants {
     for(const [x,z] of [[-.96,1.22],[-1.18,-.74],[1,.5],[.81,-1.42]])this.plant(x,z,{initial:true});
   }
   plant(x,z,{initial=false}={}) {
-    if(!this.accepting||!Number.isFinite(x)||!Number.isFinite(z)||this.plants.length>=this.capacity||Math.hypot(x,z)>this.radius||this.plants.some(p=>Math.hypot(p.x-x,p.z-z)<this.spacing))return null;
+    if((!initial&&this.validPosition&&!this.validPosition(x,z))||!this.accepting||!Number.isFinite(x)||!Number.isFinite(z)||this.plants.length>=this.capacity||Math.hypot(x,z)>this.radius||this.plants.some(p=>Math.hypot(p.x-x,p.z-z)<this.spacing))return null;
     const id='loading-maize-'+(this.plants.length+1),p={id,species:'maiz',x,z,rotation:this.plants.length*2.399963229728653,growth:0,born:initial?-this.catchupSeconds:this.time};this.plants.push(p);return p;
   }
   plantNearby(x,z) {
     if(!this.accepting||this.plants.length>=this.capacity)return null;
-    const target=nearbyPlantPlacement(x,z,{plants:this.plants,spacing:this.spacing,boundaryRadius:this.radius,valid:(a,b)=>Math.hypot(a,b)<=this.radius});
+    const target=nearbyPlantPlacement(x,z,{plants:this.plants,spacing:this.spacing,boundaryRadius:this.radius,valid:(a,b)=>Math.hypot(a,b)<=this.radius&&(!this.validPosition||this.validPosition(a,b))});
     return target?this.plant(target.x,target.z):null;
   }
   update(dt,target,{ready=false}={}) {

@@ -1,0 +1,336 @@
+{
+  "study": "River yard coverage after real center placement and crop command",
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "oblique",
+    "reverse"
+  ],
+  "note": "Paused campaign seed 712. Actual center and crop commands modify this QA session. Three views day/night after mutation; not a before/after comparison or benchmark.",
+  "records": [
+    {
+      "maskAudit": {
+        "sites": [
+          {
+            "x": 60,
+            "z": 0,
+            "hx": 28.404998779296875,
+            "hz": 15.724272727966309,
+            "clearRadius": 32.46685553722938,
+            "softRadius": 38.46685553722938,
+            "haloRadius": 45.46685553722938
+          }
+        ],
+        "site": {
+          "x": 60,
+          "z": 0,
+          "hx": 28.404998779296875,
+          "hz": 15.724272727966309,
+          "clearRadius": 32.46685553722938,
+          "softRadius": 38.46685553722938,
+          "haloRadius": 45.46685553722938
+        },
+        "biome": "grand_river",
+        "siteCount": 1
+      },
+      "biome": "gran-rio",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5550,
+            "leaves": 44400,
+            "triangles": 44400,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 31,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 87.79999989271164,
+              "selectionMs": 88.7999999821186,
+              "selectionCount": 4,
+              "candidates": 25344,
+              "masked": 3568,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 518743
+        },
+        {
+          "i": 1,
+          "camera": [
+            99.83156862745099,
+            12.571262741088868,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4808,
+            "leaves": 38464,
+            "triangles": 38464,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 37,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 90.29999989271164,
+              "selectionMs": 92.09999999403954,
+              "selectionCount": 5,
+              "candidates": 26880,
+              "masked": 4404,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 71,
+          "triangles": 586870
+        },
+        {
+          "i": 2,
+          "camera": [
+            69.83156862745099,
+            16.571262741088866,
+            37.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5024,
+            "leaves": 40192,
+            "triangles": 40192,
+            "waterTriangles": 1691,
+            "waterBucketReferences": 5196,
+            "chunks": 25,
+            "cachedTiles": 38,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 92.3999999165535,
+              "selectionMs": 95.90000000596046,
+              "selectionCount": 11,
+              "candidates": 27136,
+              "masked": 4654,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 58,
+          "triangles": 544669
+        }
+      ],
+      "errors": []
+    },
+    {
+      "maskAudit": {
+        "sites": [
+          {
+            "x": 60,
+            "z": 0,
+            "hx": 28.404998779296875,
+            "hz": 15.724272727966309,
+            "clearRadius": 32.46685553722938,
+            "softRadius": 38.46685553722938,
+            "haloRadius": 45.46685553722938
+          }
+        ],
+        "site": {
+          "x": 60,
+          "z": 0,
+          "hx": 28.404998779296875,
+          "hz": 15.724272727966309,
+          "clearRadius": 32.46685553722938,
+          "softRadius": 38.46685553722938,
+          "haloRadius": 45.46685553722938
+        },
+        "biome": "grand_river",
+        "siteCount": 1
+      },
+      "biome": "gran-rio",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5550,
+            "leaves": 44400,
+            "triangles": 44400,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 38,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 93.09999993443489,
+              "selectionMs": 98.90000003576279,
+              "selectionCount": 17,
+              "candidates": 27136,
+              "masked": 4654,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 518743
+        },
+        {
+          "i": 1,
+          "camera": [
+            99.83156862745099,
+            12.571262741088868,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4808,
+            "leaves": 38464,
+            "triangles": 38464,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 38,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 93.09999993443489,
+              "selectionMs": 99.60000002384186,
+              "selectionCount": 18,
+              "candidates": 27136,
+              "masked": 4654,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 71,
+          "triangles": 586870
+        },
+        {
+          "i": 2,
+          "camera": [
+            69.83156862745099,
+            16.571262741088866,
+            37.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 5024,
+            "leaves": 40192,
+            "triangles": 40192,
+            "waterTriangles": 1691,
+            "waterBucketReferences": 5196,
+            "chunks": 25,
+            "cachedTiles": 38,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 93.59999993443489,
+              "selectionMs": 102.70000004768372,
+              "selectionCount": 24,
+              "candidates": 27136,
+              "masked": 4654,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 58,
+          "triangles": 544669
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "scope": "Two serial resident paused runs, not A/B or a loading benchmark. GPU elapsed includes pipeline bubbles. CPU render includes draw. Screenshots are taken after timing.",
+  "conditions": {
+    "options": {
+      "axis": "x",
+      "pose": null,
+      "visualSteps": false,
+      "terrainCamera": false,
+      "mainPhases": false,
+      "lockRaidCamera": false,
+      "completeLegs": false,
+      "pinPrograms": false,
+      "zigzag": false,
+      "active": false,
+      "gpu": true,
+      "depthWarm": false,
+      "glDetail": false,
+      "frames": 360,
+      "distance": 0
+    },
+    "cameraOrigin": [
+      99.70247532024266,
+      18.67490205068118,
+      30.57367599590944
+    ],
+    "targetOrigin": [
+      83,
+      3.499999933242798,
+      0
+    ],
+    "initialElapsed": 119.99999999999746,
+    "workersBefore": [
+      {
+        "id": "worker-28",
+        "x": 89.2736051038211,
+        "z": -7.901560026403565,
+        "status": "acting"
+      },
+      {
+        "id": "worker-30",
+        "x": 87.7564653439287,
+        "z": -7.841555534920514,
+        "status": "idle"
+      }
+    ],
+    "baseline": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "query": {
+      "visualLab": "global-lighting",
+      "skyAtmosphere": "clouds",
+      "grassCoverage": "continuous",
+      "riverSoil": "1",
+      "riverYards": "islands",
+      "mangroveSubstrate": "full",
+      "mangroveMoss": "layered",
+      "canyonSand": "full",
+      "canyonSandBlend": "soft",
+      "canyonNormals": "smooth",
+      "canyonFloor": "warm",
+      "canyonShadows": "horizon",
+      "sandRelief": "1",
+      "sandWear": "residual",
+      "sandMeso": "1",
+      "volcanicAsh": "mask",
+      "volcanicRock": "layered",
+      "volcanicNight": "spectrum",
+      "spatialFar": "1",
+      "farTransitions": "smooth",
+      "waterEdges": "natural",
+      "waterPalette": "regional",
+      "riverBank": "soil",
+      "mangroveShore": "sediment",
+      "mangroveLeaves": "cupped",
+      "workerResidency": "actors",
+      "groundResidentMask": "1",
+      "mangroveFerns": "holly",
+      "groundCache": "fixed512",
+      "wildEngineThreads": "1",
+      "chunkInstall": "sync",
+      "horizonBedBudget": "2",
+      "horizonBed": "sync",
+      "ownedFarGpu": "1",
+      "streamingRecovery": "auto",
+      "waterBedDirect": "0",
+      "frameScheduler": "1"
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    }
+  },
+  "runs": [
+    {
+      "run": "r1",
+      "gpu": {
+        "count": 125,
+        "mean": 18.97571110400001,
+        "p95": 21.378541,
+        "max": 23.789322
+      },
+      "cpuRender": {
+        "count": 373,
+        "mean": 4.4165013424512845,
+        "p95": 5.759999990463257,
+        "max": 7.305000066757202
+      },
+      "presentation": {
+        "count": 372,
+        "mean": 21.1879435483871,
+        "p95": 33.38500000000204,
+        "max": 34.07499999999709
+      },
+      "readyMs": 32094.139999985695
+    },
+    {
+      "run": "r2",
+      "gpu": {
+        "count": 125,
+        "mean": 19.051604455999996,
+        "p95": 22.136978,
+        "max": 34.163228
+      },
+      "cpuRender": {
+        "count": 373,
+        "mean": 4.4275201041321335,
+        "p95": 5.689999938011169,
+        "max": 6.850000023841858
+      },
+      "presentation": {
+        "count": 372,
+        "mean": 20.920443548387095,
+        "p95": 33.354999999995925,
+        "max": 33.66500000000087
+      },
+      "readyMs": 31725.18500006199
+    }
+  ],
+  "pixelComparison": {
+    "meanAbsoluteRGB": 1.8084490740740741e-06,
+    "bounds": [
+      219,
+      207,
+      222,
+      208
+    ]
+  }
+}

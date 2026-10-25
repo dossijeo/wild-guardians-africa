@@ -101,7 +101,7 @@ test('generation and installation failures settle waiters and coordinate mismatc
 test('scene installs transferred data without regenerating terrain or navigation population on the main thread',()=>{
  const pack=JSON.parse(readFileSync('public/content/biome-grand_river.json','utf8')),config={seed:'712',biome:'grand_river',relief:1,density:1,river:true,n:1,layers:Array(6).fill(true)},data=buildNativeChunk(config,pack.profile,0,0),suppressed=new Set([data.instances.flat()[0].id]);
  const g=new THREE.BoxGeometry(2,3,2);g.computeBoundingBox();const material=new THREE.MeshStandardMaterial(),prototypes=Array.from({length:20},()=>[0,1,2].map(()=>new THREE.Mesh(g,material)));
- const world={buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:new TerrainField(config),suppressed,chunk(){throw new Error('Main generation must not run');}},pack,prototypes,quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'gran-rio'}};
+ const world={prepareTerrainSteps:WorldScene.prototype.prepareTerrainSteps,disposePreparedTerrain:WorldScene.prototype.disposePreparedTerrain,toon:{globalVisualLighting:false},buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:new TerrainField(config),suppressed,chunk(){throw new Error('Main generation must not run');}},pack,prototypes,quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'gran-rio'}};
  const group=WorldScene.prototype.terrain.call(world,0,0,data),ground=world.terrainMeshes[0];assert.equal(ground.geometry.attributes.position.data.array,data.terrain);
  assert.deepEqual(group.userData.contactInstances,data.instances.map(list=>list.filter(p=>!suppressed.has(p.id))));
  const water=group.children.find(m=>m.userData.nativeFluid==='chunk');if(data.water.length)assert.equal(water.geometry.attributes.position.array,data.water);
@@ -113,4 +113,25 @@ test('initial readiness follows the native nine-chunk threshold while the outer 
  const f=fixture();f.plan(Array.from({length:12},(_,i)=>[i,0,i]));const ready=f.stream.whenReady();let done=false;ready.then(()=>done=true);
  for(let i=0;i<8;i++)f.reply();await Promise.resolve();assert.equal(done,false);f.reply();assert.deepEqual(await ready,{cancelled:false});assert.equal(f.loaded.size,9);assert.equal(f.stream.busy.cx,9);assert.equal(f.stream.queue.length,2);
  f.stream.dispose();const smaller=fixture();smaller.plan([[0,0,0],[1,0,1]]);const short=smaller.stream.whenReady();smaller.reply();smaller.reply();assert.deepEqual(await short,{cancelled:false});smaller.stream.dispose();
+});
+
+
+test('late asynchronous prepared graphics are disposed after stream teardown',async()=>{
+ let complete;const discarded=[],installed=[];
+ const stream=new NativeChunkStream({}, {},{loaded:()=>new Map(),onData:data=>installed.push(data),workerFactory:()=>null,
+  buildAsync:()=>new Promise(resolve=>{complete=resolve;}),discardData:data=>discarded.push(data)});
+ stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));await Promise.resolve();
+ stream.dispose();const data={cx:0,cz:0,preparedGroup:{}};complete(data);
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(installed,[]);assert.deepEqual(discarded,[data]);
+});
+
+test('cancelled async request is retried when its demand returns before completion',async()=>{
+ const loaded=new Map(),errors=[];let complete,calls=0;
+ const stream=new NativeChunkStream({}, {},{loaded:()=>loaded,onData:data=>loaded.set('0,0',data),onError:e=>errors.push(e),workerFactory:()=>null,
+  buildAsync:()=>{calls++;return calls===1?new Promise(resolve=>{complete=resolve;}):Promise.resolve({cx:0,cz:0});}});
+ const jobs=new Map([['0,0',{cx:0,cz:0,score:0}]]);
+ stream.plan(jobs);await Promise.resolve();stream.plan(new Map());stream.plan(jobs);
+ complete(null);await stream.whenIdle();
+ assert.equal(calls,2);assert.equal(loaded.size,1);assert.deepEqual(errors,[]);assert.equal(stream.stats.discarded,1);stream.dispose();
 });

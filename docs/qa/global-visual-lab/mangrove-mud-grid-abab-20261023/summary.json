@@ -1,0 +1,178 @@
+{
+  "runs": [
+    {
+      "run": 0,
+      "variant": "fixednativelegacy",
+      "cpu": {
+        "mean": 14.12166666512688,
+        "p95": 21.299999952316284,
+        "max": 45
+      },
+      "frame": {
+        "mean": 40.67333333343267,
+        "p95": 104.19999998807907,
+        "max": 130.39999997615814
+      },
+      "first": {
+        "bytes": 29575560,
+        "peakBytes": 35209000,
+        "tiles": 31,
+        "published": 31,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 21,
+        "added": 31,
+        "removed": 10
+      },
+      "last": {
+        "bytes": 35209000,
+        "peakBytes": 35209000,
+        "tiles": 60,
+        "published": 60,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 25,
+        "added": 60,
+        "removed": 35
+      },
+      "errors": [],
+      "glError": 0
+    },
+    {
+      "run": 1,
+      "variant": "fixednative",
+      "cpu": {
+        "mean": 13.128333333134652,
+        "p95": 20.399999976158142,
+        "max": 43.69999998807907
+      },
+      "frame": {
+        "mean": 38.20125000004967,
+        "p95": 93.09999996423721,
+        "max": 137
+      },
+      "first": {
+        "bytes": 29575560,
+        "peakBytes": 35209000,
+        "tiles": 31,
+        "published": 31,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 21,
+        "added": 31,
+        "removed": 10
+      },
+      "last": {
+        "bytes": 35209000,
+        "peakBytes": 35209000,
+        "tiles": 60,
+        "published": 60,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 25,
+        "added": 60,
+        "removed": 35
+      },
+      "errors": [],
+      "glError": 0
+    },
+    {
+      "run": 2,
+      "variant": "fixednativelegacy",
+      "cpu": {
+        "mean": 12.929166668405136,
+        "p95": 19.600000023841858,
+        "max": 40.90000003576279
+      },
+      "frame": {
+        "mean": 38.87625000004967,
+        "p95": 95.89999997615814,
+        "max": 133.69999998807907
+      },
+      "first": {
+        "bytes": 29575560,
+        "peakBytes": 35209000,
+        "tiles": 31,
+        "published": 31,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 21,
+        "added": 31,
+        "removed": 10
+      },
+      "last": {
+        "bytes": 35209000,
+        "peakBytes": 35209000,
+        "tiles": 60,
+        "published": 60,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 25,
+        "added": 60,
+        "removed": 35
+      },
+      "errors": [],
+      "glError": 0
+    },
+    {
+      "run": 3,
+      "variant": "fixednative",
+      "cpu": {
+        "mean": 13.13250000104308,
+        "p95": 20.5,
+        "max": 52.30000001192093
+      },
+      "frame": {
+        "mean": 37.70625,
+        "p95": 91.60000002384186,
+        "max": 144.5
+      },
+      "first": {
+        "bytes": 29575560,
+        "peakBytes": 35209000,
+        "tiles": 31,
+        "published": 31,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 21,
+        "added": 31,
+        "removed": 10
+      },
+      "last": {
+        "bytes": 35209000,
+        "peakBytes": 35209000,
+        "tiles": 60,
+        "published": 60,
+        "cancelled": 0,
+        "rejected": 0,
+        "entries": 25,
+        "added": 60,
+        "removed": 35
+      },
+      "errors": [],
+      "glError": 0
+    }
+  ],
+  "comparisons": [
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "sameCamera": true,
+      "differentWorkloadFrames": 17,
+      "imageMae": 1.9259982638888888e-05,
+      "changedPixels": 5
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "sameCamera": true,
+      "differentWorkloadFrames": 20,
+      "imageMae": 0.00024576822916666665,
+      "changedPixels": 21
+    }
+  ]
+}

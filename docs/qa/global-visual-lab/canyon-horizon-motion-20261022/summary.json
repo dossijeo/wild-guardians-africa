@@ -1,0 +1,193 @@
+{
+  "runs": [
+    {
+      "run": 0,
+      "variant": "baseline",
+      "cpuMs": {
+        "median": 5.0,
+        "p95": 7.100000023841858,
+        "max": 42.19999998807907
+      },
+      "rafIntervalMs": {
+        "median": 16.799999952316284,
+        "p95": 43.09999996423721,
+        "max": 60.10000002384186
+      },
+      "jobLatencyMs": {
+        "median": 92.59999996423721,
+        "p95": 105.30000001192093,
+        "max": 114.70000004768372
+      },
+      "normalMs": {
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangleRange": [
+        299839,
+        563508
+      ],
+      "settled": {
+        "calls": 41,
+        "triangles": 431335,
+        "camera": [
+          -6.380144119262695,
+          12.27999997138977,
+          294
+        ],
+        "target": [
+          5.042055606842041,
+          4.2799999713897705,
+          454
+        ]
+      },
+      "workerActive": true
+    },
+    {
+      "run": 1,
+      "variant": "depth",
+      "cpuMs": {
+        "median": 4.899999976158142,
+        "p95": 7.199999988079071,
+        "max": 41.40000003576279
+      },
+      "rafIntervalMs": {
+        "median": 16.69999998807907,
+        "p95": 41.90000003576279,
+        "max": 59.700000047683716
+      },
+      "jobLatencyMs": {
+        "median": 121.5,
+        "p95": 130.4000000357628,
+        "max": 132.39999997615814
+      },
+      "normalMs": {
+        "median": 15.300000011920929,
+        "p95": 17.30000001192093,
+        "max": 28.19999998807907
+      },
+      "triangleRange": [
+        299839,
+        563508
+      ],
+      "settled": {
+        "calls": 41,
+        "triangles": 431335,
+        "camera": [
+          -6.380144119262695,
+          12.27999997138977,
+          294
+        ],
+        "target": [
+          5.042055606842041,
+          4.2799999713897705,
+          454
+        ]
+      },
+      "workerActive": true
+    },
+    {
+      "run": 2,
+      "variant": "baseline",
+      "cpuMs": {
+        "median": 4.700000047683716,
+        "p95": 6.400000035762787,
+        "max": 35.80000001192093
+      },
+      "rafIntervalMs": {
+        "median": 16.69999998807907,
+        "p95": 35,
+        "max": 53.30000001192093
+      },
+      "jobLatencyMs": {
+        "median": 94.39999997615814,
+        "p95": 107.60000002384186,
+        "max": 113
+      },
+      "normalMs": {
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "triangleRange": [
+        299839,
+        563508
+      ],
+      "settled": {
+        "calls": 41,
+        "triangles": 431335,
+        "camera": [
+          -6.380144119262695,
+          12.27999997138977,
+          294
+        ],
+        "target": [
+          5.042055606842041,
+          4.2799999713897705,
+          454
+        ]
+      },
+      "workerActive": true
+    },
+    {
+      "run": 3,
+      "variant": "depth",
+      "cpuMs": {
+        "median": 4.800000011920929,
+        "p95": 6.700000047683716,
+        "max": 40
+      },
+      "rafIntervalMs": {
+        "median": 16.69999998807907,
+        "p95": 35.59999996423721,
+        "max": 56.5
+      },
+      "jobLatencyMs": {
+        "median": 109.40000003576279,
+        "p95": 112.30000001192093,
+        "max": 122.09999996423721
+      },
+      "normalMs": {
+        "median": 12.800000011920929,
+        "p95": 15.800000011920929,
+        "max": 25.899999976158142
+      },
+      "triangleRange": [
+        299839,
+        563508
+      ],
+      "settled": {
+        "calls": 41,
+        "triangles": 431335,
+        "camera": [
+          -6.380144119262695,
+          12.27999997138977,
+          294
+        ],
+        "target": [
+          5.042055606842041,
+          4.2799999713897705,
+          454
+        ]
+      },
+      "workerActive": true
+    }
+  ],
+  "repeatImages": [
+    {
+      "runs": [
+        0,
+        2
+      ],
+      "settledImageIdentical": true
+    },
+    {
+      "runs": [
+        1,
+        3
+      ],
+      "settledImageIdentical": true
+    }
+  ],
+  "note": "CPU submission and RAF intervals are not GPU timings. Live stream geometry residency must be considered before comparing performance."
+}

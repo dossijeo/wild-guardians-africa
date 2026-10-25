@@ -1,0 +1,162 @@
+{
+  "scope": "Serial ABAB, active Manglares baja720p night450 seed712,360frames/144m,60warmframes. QA locks raid camera to the same authored path. Different wall-time evolution means not pixel-equivalence or deterministic end-state comparison. No consistent worst-frame acceptance.",
+  "fixture": "docs/qa/wild-engine-pthreads/active-default-mangrove-night-controlled/night-fixture.json",
+  "rows": [
+    {
+      "run": "a1",
+      "readyMs": 32746.539999961853,
+      "initialElapsed": 450,
+      "elapsed": 480.94503499997387,
+      "pausedFrames": 0,
+      "created": 15,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 8.098000009854635,
+        "p95": 10.574999809265137,
+        "max": 11.00000011920929
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 2343.855999994278,
+        "p95": 4894.129999995232,
+        "max": 5070.444999992847
+      },
+      "frames": {
+        "count": 360,
+        "mean": 107.20805555555556,
+        "p95": 199.5500000000029,
+        "max": 365.88000000000466,
+        "p99": 299.29499999999825
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 77.22118009090913,
+        "p95": 140.57979,
+        "max": 257.374738
+      },
+      "worker": null
+    },
+    {
+      "run": "b1",
+      "readyMs": 32954.625,
+      "initialElapsed": 450,
+      "elapsed": 481.0417749999742,
+      "pausedFrames": 0,
+      "created": 15,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 5.965666643778483,
+        "p95": 7.919999957084656,
+        "max": 8.744999825954437
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 1478.2043333450954,
+        "p95": 2233.8199999928474,
+        "max": 2556.400000035763
+      },
+      "frames": {
+        "count": 360,
+        "mean": 100.37155555555556,
+        "p95": 166.37000000000262,
+        "max": 249.38500000000204,
+        "p99": 216.25
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 73.53364085950412,
+        "p95": 125.347395,
+        "max": 181.757707
+      },
+      "worker": {
+        "submitted": 36,
+        "completed": 36,
+        "cancelled": 0,
+        "failed": 0,
+        "postCpuMs": 3.6600000262260437,
+        "computeMs": 166.2199998497963,
+        "peakPending": 2,
+        "pending": 0,
+        "closed": false
+      }
+    },
+    {
+      "run": "a2",
+      "readyMs": 33566.34000003338,
+      "initialElapsed": 450,
+      "elapsed": 480.9796399999735,
+      "pausedFrames": 0,
+      "created": 15,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 8.224666643142701,
+        "p95": 10.160000085830688,
+        "max": 10.8299999833107
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 2481.303999996185,
+        "p95": 4725.829999983311,
+        "max": 5225.935000002384
+      },
+      "frames": {
+        "count": 360,
+        "mean": 103.2816666666667,
+        "p95": 182.83000000000175,
+        "max": 365.38500000000204,
+        "p99": 216.33499999999913
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 78.0951433801653,
+        "p95": 145.14354,
+        "max": 306.751821
+      },
+      "worker": null
+    },
+    {
+      "run": "b2",
+      "readyMs": 32629.67500001192,
+      "initialElapsed": 450,
+      "elapsed": 478.4391899999763,
+      "pausedFrames": 0,
+      "created": 15,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 5.722666688760122,
+        "p95": 7.020000159740448,
+        "max": 8.68999993801117
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 1941.9623333295187,
+        "p95": 3073.264999985695,
+        "max": 3147.8799999952316
+      },
+      "frames": {
+        "count": 360,
+        "mean": 93.11923611111109,
+        "p95": 182.95999999999913,
+        "max": 415.72000000000116,
+        "p99": 249.375
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 64.52631085950412,
+        "p95": 114.155677,
+        "max": 151.856562
+      },
+      "worker": {
+        "submitted": 36,
+        "completed": 36,
+        "cancelled": 0,
+        "failed": 0,
+        "postCpuMs": 3.579999804496765,
+        "computeMs": 173.12999987602234,
+        "peakPending": 2,
+        "pending": 0,
+        "closed": false
+      }
+    }
+  ]
+}

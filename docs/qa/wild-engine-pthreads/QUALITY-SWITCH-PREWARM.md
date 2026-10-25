@@ -1,0 +1,139 @@
+# Quality-switch shader readiness probe
+
+Date: 2026-10-24. Production base: 53afadae9. QA-only experiment; no change to production quality switching.
+
+The approved prepared-water and streaming reuse improvements remain enabled on codex/global-visual-lab. This probe investigates the separate first media-to-baja stall discovered during lifecycle validation.
+
+## Results
+
+| Run | First baja transition wall ms | Preparation wall ms | Largest RAF interval ms | Programs | Draw calls |
+|---|---:|---:|---:|---:|---:|
+| quality-switch-attribution | 6485.77 | 0.00 | 6073.89 | 106 | 73 |
+| quality-switch-prewarm-probe | 4576.69 | 4212.43 | 162.40 | 118 | 72 |
+
+Synchronous attribution identifies driver program-readiness waits during the first render: getProgramInfoLog alone spends about 3.8 seconds across ground, mud and two far-ground variants. Nested timing records overlap and must not be summed. These are CPU wall timings, not GPU execution timings.
+
+The prototype suppresses world drawing while preparing scene programs asynchronously, keeping the previous canvas image. RAF callbacks continue. It first drains far preparation, listens for material disposal, and restores drawing in finally. World snapshots remain unchanged and both runs pass the existing GL/lifetime checks. Only the previously known f_environment4 shader warnings occur.
+
+## Limitations and decision
+
+One baseline and one prototype run, not an ABAB performance claim. Paused populated Mangroves, 720p, same fixture. The first low-quality draw differs by one call (73 vs 72), and retained/compiled program inventory differs (106 vs 118). No screenshot equivalence proof has been collected for this probe. The extra asynchronous preparation also increases subsequent already-warm transition duration. RAF responsiveness while the old world image is held must not be reported as game render FPS.
+
+Keep the prototype QA-only. Before adoption, validate visual equivalence and implement safe ownership/cancellation for scene changes, material disposal, exit and context loss during the transition. Borrowing a live streaming scene across awaits is not yet a production-safe architecture. The established streaming improvements are independent and stay adopted.
+
+## Reproduce
+
+Run the local worktree Vite server on port 5190, then in PowerShell:
+
+```powershell
+$env:WG_THREAD_PORT='5190'
+$env:WG_THREAD_FROZEN='1'
+$env:WG_THREAD_DEFAULT_STREAMING='1'
+$env:WG_THREAD_QUALITY_CYCLE='1'
+$env:WG_THREAD_QUALITY_ATTRIBUTION='1'
+$env:WG_THREAD_QUALITY_PREWARM='0' # baseline; set 1 for prototype
+$env:WG_THREAD_REPORT='docs/qa/wild-engine-pthreads/quality-switch-repeat.json'
+node tools/experiments/check-spatial-thread-game.mjs
+```
+
+Raw reports: quality-switch-attribution.json and quality-switch-prewarm-probe.json. Production defaults and art are unchanged by this diagnostic checkpoint.
+
+## Follow-up: ABAB and settled captures
+
+The first sequence takes optional screenshots outside each measured transition. A1/B1/A2/B2 first-baja results:
+
+| Run | Transition wall ms | Largest RAF interval ms |
+|---|---:|---:|
+| A1 | 6786.60 | 6380.95 |
+| B1 | 4906.50 | 123.43 |
+| A2 | 6855.03 | 6424.79 |
+| B2 | 4754.12 | 128.74 |
+
+All four runs have unchanged authoritative snapshots and no unexpected browser errors. This supports responsiveness, not sustained rendered FPS: B holds the previous canvas during preparation.
+
+Immediate captures exposed a transient far-tree difference and 73 vs 72 draw calls. A separate A/B validation now waits for all near/horizon/far preparation plus 120 consecutive stable RAFs, outside measured intervals. Both settled runs show draw calls 80/72/80/72 and every far adapter idle without errors. Full-frame RGB MAE on the 0ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ255 scale is 0.000126, 0.001700, 0.005391 and 0.005580 across the four captures. Pixels differing by >10 in any channel stay below 0.022%. The first low-quality pair was visually inspected: ground, fern coverage, buildings and distant trees match. This establishes this paused daytime fixture only, not moving-camera, night or active-world equivalence.
+
+Reports: quality-prewarm-{a1,b1,a2,b2}.json and quality-settled-{a,b}.json. Settled screenshots: quality-settled-{a,b}-{1-media,2-baja,3-media,4-baja}.png. Enable WG_THREAD_QUALITY_CAPTURE=1 to reproduce the settled captures; settling is deliberately excluded from transition timers. The earlier four timing reports used immediate captures; the later settled pair is visual validation, not added ABAB timing repetitions.
+
+Decision remains QA-only pending active-scene ownership and cancellation validation. No production rendering or material changes in this follow-up.
+
+## Borrowed-resource invalidation
+
+The first guarded browser run aborted as designed: NativeAssetGroups.prepare disposed a BufferGeometry while asynchronous quality compilation was pending, despite paused simulation. Its log is quality-prewarm-resource-guard.log. This disproves the assumption that draining far preparation alone makes the borrowed scene stable.
+
+Added opt-in guardResourceDisposal to the batched compiler: subscribe to unique geometry/material disposal across all batches, cancel owned readiness/frame waits, remove listeners on every terminal path, and report BORROWED_RESOURCE_DISPOSED distinctly. No production caller enables it yet. This protects disposal, not arbitrary object/material replacement or scene membership changes.
+
+QA now retries only that invalidation using a fresh scene snapshot under the original 30-second outer deadline; unrelated errors still propagate. quality-prewarm-resource-retry.json passes the real Chrome cycle with unchanged authoritative state and no unexpected warnings/errors. Invalidation counts: 0/1/1/1; prewarm wall time: 137/4218/300/95 ms; largest RAF intervals: 24/146/53/29 ms (rounded). This is a safety smoke, not another ABAB timing claim.
+
+44 relevant tests pass, covering pending-driver cancellation, later-batch material/geometry disposal, suspended-frame cancellation and listener cleanup after success, submission failure and external abort. Production adoption remains blocked by incomplete active-world/exit/context validation, not by a requirement for user approval. The graphical defaults remain unchanged.
+
+## Context loss while waiting between batches
+
+Added context-loss ownership across the entire optional guarded batch operation, including cooperative frame waits. Previously, the per-submission listener ended before that inter-batch wait. A unit test deliberately suspends that frame forever and verifies loss cancels it before another submission; all 45 relevant tests pass.
+
+The real Chrome test uses actual scene materials and intentionally suspends the frame after the first compiled batch, then invokes WEBGL_lose_context through Three. quality-prewarm-context.json records rejection with `Loading frame cancelled`, abandonment of all 81 old retained program references, successful restoration with 81 draw calls, unchanged authoritative world and 16 MiB shared WASM capacity. No unexpected browser errors occurred. Before/after PNGs accompany the report. This tests real context teardown/restoration with an injected scheduling pause, not spontaneous hardware loss or the complete active quality transaction.
+
+Reproduce with WG_THREAD_CONTEXT=1, WG_THREAD_CONTEXT_PREWARM=1, WG_THREAD_FROZEN=1 and WG_THREAD_DEFAULT_STREAMING=1 on port 5190. Do not enable the quality-cycle flag for this isolated lifetime case. Production prewarming remains disabled; exit and active-world quality transitions remain to validate.
+
+## Exit lifetime validation
+
+Two real Chrome runs distinguish different timing conditions:
+
+- quality-prewarm-exit.json: a native generation job reaches running state 2 before exit. The borrowed compilation was already cancelled by resource disposal during camera travel; therefore this run is NOT proof of cancellation at exit. It does prove coexistence with native-job teardown: zero workers, zero late installs, native state 5, all 81 retained references released, no unexpected errors.
+- quality-prewarm-exit-direct.json: the compiler has submitted the first actual scene batch and is waiting on an intentionally suspended frame. The test asserts it is still pending immediately before calling the real menu return. It rejects on scene-resource disposal, returns to the menu, releases all 81 retained references and leaves zero workers/late installs, state 5. Native generation was idle in this second case. The legacy `recoveryFinished:false` field reflects an undefined recovery promise (no quality recovery was started), not a pending recovery job.
+
+Measured exit wall times were 339 and 312 ms, respectively; these are single lifecycle smokes and not exit-performance benchmarks. No production path changes were needed. Repeat with WG_THREAD_EXIT=1 and WG_THREAD_EXIT_PREWARM=1 for concurrent generation, or `direct` for the precise pending-compilation exit. Keep WG_THREAD_FROZEN=1 and WG_THREAD_DEFAULT_STREAMING=1, port 5190. The intentionally suspended frame is confined to the tested compilation, not the game's RAF.
+
+Context restoration and exit now have targeted real-browser evidence. A complete active-simulation/moving-camera quality transaction, including bounded retries and replacing scene resources, remains unvalidated and disabled by default.
+
+## Active simulation and moving-camera result: not ready to adopt
+
+Added opt-in qualityActive QA. It resumes the canonical game module, moves the camera 144 world units over 240 RAF callbacks, exercises the same four quality changes, restores the camera callback and pause afterward, and requires actual simulation advancement plus newly installed chunks and a clean settled stream. It explicitly does NOT assert unchanged state or visual equivalence while simulation runs.
+
+quality-prewarm-active.json: simulation elapsed 120 -> 126.90, 15 chunks installed, zero failures/queued/busy at completion, no unexpected browser errors. However, first baja preparation restarts 59 times on resource disposal and the largest RAF interval is 985 ms. The attribution repeat restarts 61 times and peaks at 983 ms. Both complete, but repeated full-scene snapshot/recompilation is unsuitable as a final active-world design.
+
+quality-prewarm-active-attribution.json attributes the major stall to a renderer.render outside the main scene render wrapper (980 ms), including getProgramInfoLog waits of 832 ms for the full original Mangroves ground material and 117 ms for far-ground-native-water-mask-v1:seam-v2. This indicates an auxiliary preparation render still encounters unready variants despite suppressing the main world draw. Timings are nested CPU wall times, not summed GPU timings. The exact auxiliary caller still needs tracing before a production fix.
+
+Decision: keep quality prewarming QA-only. Paused-case results remain valid; they do not justify adoption in the active case. Next work must cover auxiliary render readiness and avoid restarting all preparation on each scene disposal. No density, materials, illumination or simulation rules were changed.
+
+Reproduce with WG_THREAD_QUALITY_CYCLE=1, WG_THREAD_QUALITY_PREWARM=1, WG_THREAD_QUALITY_ACTIVE=1, WG_THREAD_ACTIVE=1 (fixture tutorial skipped), WG_THREAD_FROZEN=1 (controlled initial state), WG_THREAD_DEFAULT_STREAMING=1, port 5190. Add WG_THREAD_QUALITY_ATTRIBUTION=1 for nested synchronous call diagnostics. These runs are correctness/attribution probes, not ABAB performance acceptance.
+
+## Auxiliary seam trace and unresolved GL timing failure
+
+The active stack trace identifies native-far-ground.js prepareSeam -> prepareNativeFarGpu -> uploadDraw as the unisolated auxiliary draw (2281 ms in quality-prewarm-active-stack2.json). Its invocation omitted the world's isolated-root and owned readiness/wait flags. Added candidate `seamOwned=1`, propagated from WG_THREAD_SEAM_OWNED=1; default behavior is preserved until validated.
+
+Repeated active runs exposed GL_INVALID_VALUE / glGetProgramiv errors. Error timing is NOT fully understood. Explicitly detecting Three WebGLProgram.program becoming undefined before polling is now covered by a unit test; cancellation is propagated through the owned far-preparation path. This defensive check alone did NOT resolve the real-browser failure. 54 relevant unit tests pass, which is not evidence that the browser race is fixed.
+
+The launcher now saves .failure.json with quality rows, attribution and browser warnings rather than losing evidence on rejection. Representative rejected artifact: quality-prewarm-seam-program-guard.failure.json. The exact query trace is quality-prewarm-query-error.failure.json; it detects an error at a readiness query, but cannot exclude an earlier command causing the error.
+
+A diagnostic checking getError after every GL call completed without errors (quality-prewarm-first-gl-error.json). Those synchronous queries alter scheduling and may hide the race; that run is NOT performance or correctness acceptance. It is reproducible via WG_THREAD_QUALITY_STRICT_GL=1 plus attribution. The strict observer has been removed from ordinary attribution. The historical strict run used the seam candidate before it was gated; specify WG_THREAD_SEAM_OWNED=1 to reproduce that configuration now.
+
+Keep prewarming and seam candidate QA-only. The next task is to isolate the program lifetime/driver scheduling issue without a synchronizing observer, then address the repeated scene invalidations. No artistic change or production quality-transition adoption is justified by this checkpoint.
+
+## Non-synchronizing controls
+
+quality-prewarm-deletion-trace.failure.json reproduces GL_INVALID_VALUE with a JavaScript WeakMap tracking deleteProgram calls. No subsequent accesses to those recorded deleted handles appear in the observed GL methods. This does not cover every possible GL command or prove a driver bug, but it contradicts the simple observed-use-after-delete hypothesis. No extra GL queries were used.
+
+quality-active-control-no-prewarm.json runs the same active quality/moving-camera sequence with seamOwned=1 and qualityPrewarm disabled; it passes. This is a single diagnostic control, not a performance acceptance test. It narrows the repeated failure to the prewarm scenario rather than proving the existing quality path universally correct.
+
+quality-prewarm-serial-recovery.failure.json postpones streaming-program recovery until scene prewarming completes. The error remains, so merely serializing those two preparations is not a solution. This experiment is opt-in with WG_THREAD_QUALITY_SERIAL_RECOVERY=1 and never affects production defaults. Its overridden callback is restored on completion/failure.
+
+These negative results are retained to avoid repeating discarded hypotheses. The prewarm prototype remains unadopted. The source of GL_INVALID_VALUE is unresolved; no claim of a completed renderer optimization is made.
+
+## Temporary program lifetime experiment: positive active evidence
+
+WG_THREAD_QUALITY_PIN_PROGRAMS=1 now retains programs after each compile submission until the quality preparation ends, then releases them in finally. This is QA-only. The first broad-retention run passed (quality-prewarm-temporary-pins.json), with 15 chunks installed and no unexpected errors, but acquired 121146 reference increments in its first baja transition: unsuitable implementation overhead, not 121146 unique programs or GPU allocations.
+
+Added optional `select` predicate to retainWarmedPrograms to permit retaining only newly encountered programs. Existing callers keep the same default behavior. The QA uses a per-transition identity set, so each program is retained once; the snapshot adapter still owns reference-count cleanup. Two active repeats (quality-prewarm-unique-pins-1.json and -2.json) pass without unexpected GL errors: 15 chunks each, simulation advancement, settled streaming. First baja retains/releases 118 unique references in both runs. The other steps retain/release 82/108/108. All temporary acquired references are released in the reports.
+
+First baja still restarts 62 and 52 times on scene invalidation; largest RAF gaps are 220 and 72 ms respectively. These are diagnostic repeats, not matched ABAB acceptance and not proof of stable frame rate. The previous canvas remains held during prewarm. Retention changes scheduling and lifetime; results support pursuing explicit temporary ownership, not a definitive claim about an ANGLE bug or the exact cause of the earlier error.
+
+The selected-lease unit test verifies independent ownership of newly encountered programs, no double pinning of earlier ones and correct destruction after the last material/reference is released. Before adoption: reduce redundant whole-scene retries, bound temporary unique-program budget, validate exit/context loss with these extra leases, and repeat equivalence and performance checks. No production quality-prewarm default changed.
+
+## Bounded scope and lifecycle checkpoint
+
+createProgramRetentionScope caps total unique retained programs at 192, exposes exhaustion, avoids duplicate retention and releases operation-owned snapshots idempotently. It issues no GL queries. The limit counts programs, not measurable driver bytes. Existing production callers are unchanged; only QA uses this new scope.
+
+quality-prewarm-bounded-pins.json passes active streaming with 82/118/108/108 acquired and released references across quality steps. quality-bounded-pins-context.json and quality-bounded-pins-exit.json validate cancellation with 81 temporary references abandoned after context replacement/renderer teardown; both scopes close, no old-context deletes occur through their leases. Restored context draws 81 calls with unchanged world; exit leaves zero workers and zero late installs. No unexpected browser errors. 42 relevant tests pass, including cap exhaustion and independent/context-replaced release.
+
+The user's new priority is a Global Frame Scheduler. This ownership mechanism is an available building block, not an adopted active prewarm transaction. Repeated whole-scene retries remain unresolved and must be addressed within that architecture.

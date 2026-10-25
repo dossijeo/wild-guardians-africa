@@ -1,7 +1,14 @@
 // Request centres move on a coarse grid, with spatial hysteresis and a short
 // settling interval. Sampling/generation is never performed by this tracker.
+const FAR_REGION_STEP=96;
+// Align experimental startup sampling with subsequent settled region requests.
+// Legacy callers retain their exact initial camera anchor.
+export function nativeFarInitialCenter(position,aligned=false){
+ const {x,z}=position;if(![x,z].every(Number.isFinite))throw Error('Invalid initial far region center');
+ return aligned?{x:Math.round(x/FAR_REGION_STEP)*FAR_REGION_STEP,z:Math.round(z/FAR_REGION_STEP)*FAR_REGION_STEP}:{x,z};
+}
 export class FarRegionTracker{
- constructor({step=96,hysteresis=16,settleMs=150,x=0,z=0}={}){
+ constructor({step=FAR_REGION_STEP,hysteresis=16,settleMs=150,x=0,z=0}={}){
   if(![step,hysteresis,settleMs,x,z].every(Number.isFinite)||step<=0||hysteresis<0||hysteresis>=step/2||settleMs<0)throw Error('Invalid far region tracking settings');
   this.step=step;this.hysteresis=hysteresis;this.settleMs=settleMs;this.center={x,z};this.candidate=null;
  }

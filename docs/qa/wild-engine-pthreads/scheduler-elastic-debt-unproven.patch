@@ -1,0 +1,98 @@
+diff --git a/src/app/global-frame-scheduler.js b/src/app/global-frame-scheduler.js
+index b84bd2dc4..44d105b45 100644
+--- a/src/app/global-frame-scheduler.js
++++ b/src/app/global-frame-scheduler.js
+@@ -1,9 +1,9 @@
+ // Presentation owns this scheduler. No timers, RAF loop or native execution.
+ // CPU measurements are wall durations of synchronous JS, never GPU timings.
+ export class GlobalFrameScheduler {
+-  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128,diagnostics=false}={}) {
++  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128,diagnostics=false,deadlineBurst=false}={}) {
+     this.diagnostics=diagnostics?{idlePendingFrames:0,noHeadroom:0,mandatoryPressure:0,lateCallback:0,policyLimited:0,elapsedGuard:0,cpuSum:0,latenessSum:0,maxLateness:0}:null;
+-    this.now=now;this.targetMs=targetMs;this.maxPending=maxPending;
++    this.deadlineBurst=deadlineBurst;this.now=now;this.targetMs=targetMs;this.maxPending=maxPending;
+     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
+     this.budget=0;this.nextOversizeRecovery=0;this.cooldown=0;this.lastPolicy=-Infinity;
+     this.policy={median:0,p95:0,p99:0,cpu95:0,jitter:0};
+@@ -55,7 +55,10 @@ export class GlobalFrameScheduler {
+     const remaining=Math.max(0,frame.timestamp+period-began-period*.1);
+     const base=Math.min(remaining,this.budget*(this.cooldown>0?.35:1));
+     if(this.cooldown>0)this.cooldown--;
+-    let work=0,continuation=0,drainTurns=0,completedSubmission=false,units=0;
++    // Explicit overdue debt, not inferred idle time. The rolling mandatory CPU
++    // tail limits a burst; elapsed-time and immediate CPU guards still apply.
++    const debtCap=this.deadlineBurst?Math.min(period*.25,Math.max(0,period-this.policy.cpu95-period*.12)):0;
++    let work=0,continuation=0,drainTurns=0,completedSubmission=false,units=0,debt=false;
+     while(this.jobs.size||(completedSubmission&&drainTurns<32&&this.now()-began<remaining)){
+       if(!this.jobs.size){
+         // Promise-ready producers can refill this same presentation budget.
+@@ -79,8 +82,9 @@ export class GlobalFrameScheduler {
+         // Explicit deadline debt, NOT idle time: permit one measured small unit
+         // to miss the next refresh rather than starve a required chunk forever.
+         // Bound both total synchronous CPU and elapsed presentation latency.
+-        const loan=!fits&&time>=job.deadline&&work===0&&cost<=period*.5&&
+-          cpu<period*.85&&cpu+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
++        const additionalDebt=debt&&time-began+cost<=debtCap;
++        const loan=!fits&&time>=job.deadline&&(work===0||additionalDebt)&&cost<=period*.5&&
++          cpu<period*.85&&cpu+(time-began)+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
+         // A conservative historical outlier must not poison a required unit
+         // forever. After one observation window overdue, allow ONE bounded
+         // oversized retry on a cheap CPU frame, globally rate-limited. This is
+@@ -101,7 +105,10 @@ export class GlobalFrameScheduler {
+       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
+       const duration=this.now()-start;work+=duration;if(borrowed&&!oversized)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
+       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
+-      if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
++      if(borrowed){
++        this.stats.overruns++;debt=true;
++        if(oversized||!this.deadlineBurst||this.now()-began>=debtCap)break;
++      }else if(this.now()-began>=remaining)break;
+     }
+     if(this.diagnostics&&work===0&&this.jobs.size){
+       const d=this.diagnostics,lateness=frame.start-frame.timestamp;d.idlePendingFrames++;d.cpuSum+=cpu;d.latenessSum+=lateness;d.maxLateness=Math.max(d.maxLateness,lateness);
+@@ -115,6 +122,6 @@ export class GlobalFrameScheduler {
+   }
+   snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
+ }
+-export const globalFrameScheduler=new GlobalFrameScheduler({diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
++export const globalFrameScheduler=new GlobalFrameScheduler({deadlineBurst:new URLSearchParams(globalThis.location?.search??'').get('schedulerDeadlineBurst')==='1',diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
+ const enabled=new URLSearchParams(globalThis.location?.search??'').get('frameScheduler')==='1';
+ export const globalFrameSchedulerEnabled=()=>enabled;
+diff --git a/tests/global-frame-scheduler.test.js b/tests/global-frame-scheduler.test.js
+index c9b0242ef..2922cf1c6 100644
+--- a/tests/global-frame-scheduler.test.js
++++ b/tests/global-frame-scheduler.test.js
+@@ -83,3 +83,21 @@ test('historical oversized estimates recover without permanent starvation or dro
+  time=3300;await frame(4);assert.equal(calls,1);
+  time=5300;await frame(4);assert.equal(await b,'b');assert.equal(calls,2);assert.equal(scheduler.snapshot().pending,0);
+ });
++
++
++test('overdue bursts charge coordination and remain bounded by measured CPU tail',async()=>{
++ let time=1000,units=0;const scheduler=new GlobalFrameScheduler({now:()=>time,deadlineBurst:true});
++ scheduler.policy.cpu95=12;scheduler.lastPolicy=time;
++ const job=scheduler.submit((function*(){for(let i=0;i<30;i++){time+=.4;units++;yield;}})(),{key:'burst',deadline:0,estimate:()=>.4});
++ // Callback arrives late: there is no remaining refresh headroom.
++ scheduler.beginFrame(time-16);time+=4;await scheduler.endFrame();
++ assert.ok(units>1&&units<=6);assert.ok(time<=1006.67);
++ scheduler.cancel('burst');await job;
++});
++test('burst stops at elapsed guard and cannot borrow under mandatory CPU pressure',async()=>{
++ let time=1000,units=0;const scheduler=new GlobalFrameScheduler({now:()=>time,deadlineBurst:true});
++ const job=scheduler.submit((function*(){while(true){units++;time+=.4;yield;}})(),{key:'burst',deadline:0,estimate:()=>.4});
++ scheduler.beginFrame(time);time+=17;await scheduler.endFrame();assert.equal(units,0);
++ time+=30;scheduler.beginFrame(time-30);time+=4;await scheduler.endFrame();assert.equal(units,0);
++ scheduler.cancel('burst');await job;
++});
+diff --git a/tools/experiments/check-spatial-thread-game.mjs b/tools/experiments/check-spatial-thread-game.mjs
+index 833074987..287a871bc 100644
+--- a/tools/experiments/check-spatial-thread-game.mjs
++++ b/tools/experiments/check-spatial-thread-game.mjs
+@@ -28,6 +28,7 @@ try{
+  await page.route('**/@vite/client',async route=>{const response=await route.fetch();const source=await response.text(),anchor='transport.connect(createHMRHandler(handleMessage));';if(!source.includes(anchor))throw Error('Missing HMR anchor');await route.fulfill({response,body:source.replace(anchor,'// QA: freeze module versions during measurement.')});});
+  await page.route('**/src/rendering/scene.js*',async route=>{const r=await route.fetch();let s=await r.text();if(process.env.WG_THREAD_DETAIL==='1')for(const name of ['prepareMangroveBank','prepareNaturalWater','prepareNaturalAssetWater','prepareOpaqueCore','nativeTerrainBuffer']){const pattern=new RegExp('(import\\s*\\{[^}]*?)\\b'+name+'\\b');if(!pattern.test(s))throw Error('Missing import '+name);s=s.replace(pattern,'$1'+name+' as qaOriginal_'+name);s+='\nfunction '+name+'(...args){const t=performance.now();try{return qaOriginal_'+name+'(...args);}finally{globalThis.qaThreadDetail?.('+JSON.stringify(name)+',performance.now()-t);}}\n';}if(process.env.WG_THREAD_LOADING_TIMES==='1'){const phase='const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);';if(s.split(phase).length!==3)throw Error('Loading phase anchors changed');s=s.replaceAll(phase,'const phase=async(label,run)=>{const t=performance.now();try{return await loadingAwaitWitness(this.onLoadingSpan,label,run);}finally{(globalThis.qaLoadingPhases??=[]).push({label,ms:performance.now()-t});}};');}if(process.env.WG_THREAD_RECOVERY_SUSPEND_FRAME==='1'){const wait='await waitGpuFrame({check,signal:owner.signal});';if(!s.includes(wait))throw Error('Missing recovery frame anchor');s=s.replace(wait,'await waitGpuFrame({check,signal:owner.signal,nextFrame:()=>new Promise(()=>{})});');}if(!s.includes('this.raycaster=new'))throw Error('Missing world observation anchor');await route.fulfill({response:r,body:s.replace('this.raycaster=new','globalThis.qaThreadWorld=this;this.raycaster=new')});});
+  const gameUrl=new URL(`http://127.0.0.1:${process.env.WG_THREAD_PORT??5192}/?`+globalClosureQuery(biome)+'&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads='+(threaded?'1':'0')+'&chunkInstall='+(process.env.WG_CHUNK_INSTALL??'sync')+'&horizonBedBudget='+(process.env.WG_HORIZON_BED_BUDGET??'2')+'&horizonBed='+(process.env.WG_HORIZON_BED??'sync')+'&chunkEviction='+(process.env.WG_CHUNK_EVICTION??'single')+'&ownedFarGpu='+(process.env.WG_THREAD_OWNED_FAR??'1')+'&streamingRecovery='+(process.env.WG_THREAD_RECOVERY??'auto')+'&waterShoreWorker='+(process.env.WG_THREAD_WATER_SHORE_WORKER??'0')+'&waterBedWorker='+(process.env.WG_THREAD_WATER_BED_WORKER??'auto')+'&waterBedDirect='+(process.env.WG_THREAD_WATER_BED_DIRECT??'0')+'&warmObstruction='+(process.env.WG_THREAD_WARM_OBSTRUCTION??'0')+'&retainPrograms='+(process.env.WG_THREAD_RETAIN_APP??'0'));
++ if(process.env.WG_SCHEDULER_DEADLINE_BURST==='1')gameUrl.searchParams.set('schedulerDeadlineBurst','1');
+  if(process.env.WG_FRAME_SCHEDULER_DIAGNOSTICS==='1')gameUrl.searchParams.set('frameSchedulerDiagnostics','1');
+  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
+  if(process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY)gameUrl.searchParams.set('qualityCompileConcurrency',process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY);

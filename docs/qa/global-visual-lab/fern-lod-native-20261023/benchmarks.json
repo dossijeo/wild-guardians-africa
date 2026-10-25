@@ -1,0 +1,7182 @@
+{
+  "seed": 712,
+  "note": "Native approved LOD integration. No fern or ground source interception. Wind .25; near geometry retained. One day/night smoke and measurement; not a new performance comparison. Normal game camera, fixed or 8m movement by environment; day/night ABAB; paused saved scene, GPU and cadence measured separately. No claim about live simulation or total-game FPS.",
+  "records": [
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "variant": "native",
+      "phase": "day",
+      "motion": "moving",
+      "gpu": {
+        "frames": [
+          {
+            "frame": 0,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 36.80000001192093,
+            "calls": 133,
+            "triangles": 932217,
+            "coverageInstances": {
+              "near": 1480,
+              "far": 636
+            },
+            "camera": [
+              109.59244879761732,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 1,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 34.19999998807907,
+            "calls": 133,
+            "triangles": 931371,
+            "coverageInstances": {
+              "near": 1466,
+              "far": 641
+            },
+            "camera": [
+              109.31221865876908,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 2,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 35.10000002384186,
+            "calls": 132,
+            "triangles": 918050,
+            "coverageInstances": {
+              "near": 1323,
+              "far": 646
+            },
+            "camera": [
+              109.02432155251138,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 3,
+            "cpuMs": 9.800000011920929,
+            "intervalMs": 29.099999964237213,
+            "calls": 132,
+            "triangles": 921392,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.7292693493929,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 4,
+            "cpuMs": 7.5,
+            "intervalMs": 29.600000023841858,
+            "calls": 134,
+            "triangles": 913194,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.42758664146345,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 5,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 30.399999976158142,
+            "calls": 134,
+            "triangles": 910166,
+            "coverageInstances": {
+              "near": 1328,
+              "far": 654
+            },
+            "camera": [
+              108.11980980956841,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 6,
+            "cpuMs": 8.100000023841858,
+            "intervalMs": 30,
+            "calls": 134,
+            "triangles": 900272,
+            "coverageInstances": {
+              "near": 1172,
+              "far": 663
+            },
+            "camera": [
+              107.8064860696832,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 7,
+            "cpuMs": 7.5,
+            "intervalMs": 31.700000047683716,
+            "calls": 134,
+            "triangles": 899201,
+            "coverageInstances": {
+              "near": 1173,
+              "far": 667
+            },
+            "camera": [
+              107.48817249998322,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 8,
+            "cpuMs": 9.399999976158142,
+            "intervalMs": 30.599999964237213,
+            "calls": 133,
+            "triangles": 898996,
+            "coverageInstances": {
+              "near": 1175,
+              "far": 671
+            },
+            "camera": [
+              107.16543505037916,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 9,
+            "cpuMs": 8.599999964237213,
+            "intervalMs": 29,
+            "calls": 133,
+            "triangles": 899723,
+            "coverageInstances": {
+              "near": 1176,
+              "far": 674
+            },
+            "camera": [
+              106.83884753627875,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 10,
+            "cpuMs": 6.899999976158142,
+            "intervalMs": 33.80000001192093,
+            "calls": 133,
+            "triangles": 898151,
+            "coverageInstances": {
+              "near": 1177,
+              "far": 680
+            },
+            "camera": [
+              106.50899061836391,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 11,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 29.19999998807907,
+            "calls": 133,
+            "triangles": 896684,
+            "coverageInstances": {
+              "near": 1178,
+              "far": 685
+            },
+            "camera": [
+              106.17645077019723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 12,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 27.600000023841858,
+            "calls": 132,
+            "triangles": 895192,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 690
+            },
+            "camera": [
+              105.84181923549336,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 13,
+            "cpuMs": 8.599999964237213,
+            "intervalMs": 27.80000001192093,
+            "calls": 132,
+            "triangles": 894868,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 695
+            },
+            "camera": [
+              105.5056909769093,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 14,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 27,
+            "calls": 132,
+            "triangles": 894236,
+            "coverageInstances": {
+              "near": 1181,
+              "far": 697
+            },
+            "camera": [
+              105.1686636182225,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 15,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 27.299999952316284,
+            "calls": 132,
+            "triangles": 892769,
+            "coverageInstances": {
+              "near": 1182,
+              "far": 702
+            },
+            "camera": [
+              104.83133638177752,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 16,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 30.200000047683716,
+            "calls": 132,
+            "triangles": 889845,
+            "coverageInstances": {
+              "near": 1183,
+              "far": 710
+            },
+            "camera": [
+              104.4943090230907,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 17,
+            "cpuMs": 9.5,
+            "intervalMs": 28.599999964237213,
+            "calls": 132,
+            "triangles": 889338,
+            "coverageInstances": {
+              "near": 1185,
+              "far": 711
+            },
+            "camera": [
+              104.15818076450662,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 18,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 26.900000035762787,
+            "calls": 131,
+            "triangles": 887223,
+            "coverageInstances": {
+              "near": 1186,
+              "far": 715
+            },
+            "camera": [
+              103.82354922980277,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 19,
+            "cpuMs": 7,
+            "intervalMs": 27.5,
+            "calls": 131,
+            "triangles": 885746,
+            "coverageInstances": {
+              "near": 1187,
+              "far": 719
+            },
+            "camera": [
+              103.49100938163609,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 20,
+            "cpuMs": 9.800000011920929,
+            "intervalMs": 26.5,
+            "calls": 130,
+            "triangles": 885380,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              103.16115246372125,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 21,
+            "cpuMs": 6.5,
+            "intervalMs": 26.69999998807907,
+            "calls": 128,
+            "triangles": 880064,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              102.83456494962084,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 22,
+            "cpuMs": 10.099999964237213,
+            "intervalMs": 27.899999976158142,
+            "calls": 125,
+            "triangles": 879746,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 733
+            },
+            "camera": [
+              102.51182750001678,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 23,
+            "cpuMs": 8,
+            "intervalMs": 25.100000023841858,
+            "calls": 124,
+            "triangles": 877091,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              102.1935139303168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 24,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 26,
+            "calls": 123,
+            "triangles": 874428,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              101.88019019043159,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 25,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 24,
+            "calls": 122,
+            "triangles": 864765,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 747
+            },
+            "camera": [
+              101.57241335853655,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 26,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 26.30000001192093,
+            "calls": 121,
+            "triangles": 863745,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 753
+            },
+            "camera": [
+              101.2707306506071,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 27,
+            "cpuMs": 10.300000011920929,
+            "intervalMs": 24.299999952316284,
+            "calls": 122,
+            "triangles": 867061,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 757
+            },
+            "camera": [
+              100.97567844748862,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 28,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 24,
+            "calls": 120,
+            "triangles": 865287,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.68778134123092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 29,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 24.900000035762787,
+            "calls": 120,
+            "triangles": 865431,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.40755120238268,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 30,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 27.399999976158142,
+            "calls": 120,
+            "triangles": 856329,
+            "coverageInstances": {
+              "near": 901,
+              "far": 767
+            },
+            "camera": [
+              100.13548626990435,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 31,
+            "cpuMs": 10.5,
+            "intervalMs": 26.5,
+            "calls": 119,
+            "triangles": 856562,
+            "coverageInstances": {
+              "near": 901,
+              "far": 770
+            },
+            "camera": [
+              99.87207026531739,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 32,
+            "cpuMs": 12.199999988079071,
+            "intervalMs": 27,
+            "calls": 120,
+            "triangles": 858969,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.61777153266513,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 33,
+            "cpuMs": 10.199999988079071,
+            "intervalMs": 28,
+            "calls": 121,
+            "triangles": 861330,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.3730422058141,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 34,
+            "cpuMs": 9.900000035762787,
+            "intervalMs": 26.5,
+            "calls": 121,
+            "triangles": 850623,
+            "coverageInstances": {
+              "near": 757,
+              "far": 782
+            },
+            "camera": [
+              99.13831740457653,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 35,
+            "cpuMs": 10.900000035762787,
+            "intervalMs": 25.100000023841858,
+            "calls": 121,
+            "triangles": 850826,
+            "coverageInstances": {
+              "near": 757,
+              "far": 785
+            },
+            "camera": [
+              98.91401446108318,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 36,
+            "cpuMs": 9,
+            "intervalMs": 24.399999976158142,
+            "calls": 121,
+            "triangles": 849632,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.70053217778214,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 37,
+            "cpuMs": 9.099999964237213,
+            "intervalMs": 25.30000001192093,
+            "calls": 120,
+            "triangles": 849048,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.49825011838249,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 38,
+            "cpuMs": 6.700000047683716,
+            "intervalMs": 24.399999976158142,
+            "calls": 119,
+            "triangles": 850024,
+            "coverageInstances": {
+              "near": 757,
+              "far": 790
+            },
+            "camera": [
+              98.30752793300393,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 39,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 25,
+            "calls": 119,
+            "triangles": 852153,
+            "coverageInstances": {
+              "near": 757,
+              "far": 793
+            },
+            "camera": [
+              98.12870471873208,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 40,
+            "cpuMs": 7.5,
+            "intervalMs": 21.80000001192093,
+            "calls": 118,
+            "triangles": 852369,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.9620984167161,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 41,
+            "cpuMs": 5.600000023841858,
+            "intervalMs": 24.5,
+            "calls": 118,
+            "triangles": 852546,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.80800524688102,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 42,
+            "cpuMs": 7.899999976158142,
+            "intervalMs": 25.30000001192093,
+            "calls": 117,
+            "triangles": 842019,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.66669918125947,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 43,
+            "cpuMs": 6.199999988079071,
+            "intervalMs": 22.19999998807907,
+            "calls": 116,
+            "triangles": 841884,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.53843145687945,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 44,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 22.30000001192093,
+            "calls": 116,
+            "triangles": 842940,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.42343012907403,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 45,
+            "cpuMs": 6.5,
+            "intervalMs": 23.19999998807907,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.32189966600731,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 46,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 22.100000023841858,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.23402058513747,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 47,
+            "cpuMs": 6,
+            "intervalMs": 22.399999976158142,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.1599491322633,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 48,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 22.80000001192093,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.09981700372497,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 49,
+            "cpuMs": 5.900000035762787,
+            "intervalMs": 25.100000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.05373111225258,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 50,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 23.599999964237213,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.02177339687935,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 51,
+            "cpuMs": 6.400000035762787,
+            "intervalMs": 22.400000035762787,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00400067725701,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 52,
+            "cpuMs": 5.899999976158142,
+            "intervalMs": 22.19999998807907,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00044455263246,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 53,
+            "cpuMs": 6.899999976158142,
+            "intervalMs": 22.599999964237213,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.01111134566548,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 54,
+            "cpuMs": 5.800000011920929,
+            "intervalMs": 22.100000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.03598209118736,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 55,
+            "cpuMs": 5.900000035762787,
+            "intervalMs": 20.600000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.07501256992016,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 56,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 25.19999998807907,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.12813338709702,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 57,
+            "cpuMs": 6,
+            "intervalMs": 23.099999964237213,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.19525009584355,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 58,
+            "cpuMs": 6.199999988079071,
+            "intervalMs": 21.80000001192093,
+            "calls": 116,
+            "triangles": 843000,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.27624336510087,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 59,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 23.80000001192093,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.37096919179196,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 60,
+            "cpuMs": 6.599999964237213,
+            "intervalMs": 22.100000023841858,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.47925915685376,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 61,
+            "cpuMs": 7.899999976158142,
+            "intervalMs": 23.399999976158142,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.60092072468024,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 62,
+            "cpuMs": 6.300000011920929,
+            "intervalMs": 22.100000023841858,
+            "calls": 117,
+            "triangles": 842069,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.73573758544359,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 63,
+            "cpuMs": 6.399999976158142,
+            "intervalMs": 21.899999976158142,
+            "calls": 118,
+            "triangles": 852701,
+            "coverageInstances": {
+              "near": 757,
+              "far": 798
+            },
+            "camera": [
+              97.88347003968525,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 64,
+            "cpuMs": 7.099999964237213,
+            "intervalMs": 23.399999976158142,
+            "calls": 118,
+            "triangles": 852359,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.04385542449278,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 65,
+            "cpuMs": 6,
+            "intervalMs": 23,
+            "calls": 119,
+            "triangles": 852173,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.21660858050492,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 66,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 22.100000023841858,
+            "calls": 120,
+            "triangles": 851648,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.4014223589146,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 67,
+            "cpuMs": 7.299999952316284,
+            "intervalMs": 22.5,
+            "calls": 121,
+            "triangles": 851128,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.59796816756818,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 68,
+            "cpuMs": 6.600000023841858,
+            "intervalMs": 23.19999998807907,
+            "calls": 121,
+            "triangles": 850786,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.80589655519044,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 69,
+            "cpuMs": 8.399999976158142,
+            "intervalMs": 22.19999998807907,
+            "calls": 123,
+            "triangles": 854198,
+            "coverageInstances": {
+              "near": 757,
+              "far": 783
+            },
+            "camera": [
+              99.02483783269612,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 70,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 25.200000047683716,
+            "calls": 123,
+            "triangles": 855116,
+            "coverageInstances": {
+              "near": 757,
+              "far": 780
+            },
+            "camera": [
+              99.25440273048363,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 71,
+            "cpuMs": 6.300000011920929,
+            "intervalMs": 22.899999976158142,
+            "calls": 121,
+            "triangles": 861471,
+            "coverageInstances": {
+              "near": 901,
+              "far": 776
+            },
+            "camera": [
+              99.49418309054224,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 72,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 41.60000002384186,
+            "calls": 121,
+            "triangles": 861566,
+            "coverageInstances": {
+              "near": 901,
+              "far": 771
+            },
+            "camera": [
+              99.74375259214204,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 73,
+            "cpuMs": 12.699999988079071,
+            "intervalMs": 17.19999998807907,
+            "calls": 121,
+            "triangles": 858144,
+            "coverageInstances": {
+              "near": 901,
+              "far": 769
+            },
+            "camera": [
+              100.00266750981675,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 74,
+            "cpuMs": 7.299999952316284,
+            "intervalMs": 19.80000001192093,
+            "calls": 121,
+            "triangles": 867523,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 766
+            },
+            "camera": [
+              100.27046750229131,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 75,
+            "cpuMs": 7.900000035762787,
+            "intervalMs": 19.5,
+            "calls": 121,
+            "triangles": 867483,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.54667643095195,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 76,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 26.299999952316284,
+            "calls": 121,
+            "triangles": 869133,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 759
+            },
+            "camera": [
+              100.83080320640317,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 77,
+            "cpuMs": 6.5,
+            "intervalMs": 22.80000001192093,
+            "calls": 121,
+            "triangles": 869093,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 755
+            },
+            "camera": [
+              101.12234266160691,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 78,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 28.100000023841858,
+            "calls": 121,
+            "triangles": 867615,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 750
+            },
+            "camera": [
+              101.42077645005092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 79,
+            "cpuMs": 10.400000035762787,
+            "intervalMs": 21.80000001192093,
+            "calls": 121,
+            "triangles": 867565,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 745
+            },
+            "camera": [
+              101.72557396735012,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 80,
+            "cpuMs": 8,
+            "intervalMs": 23.899999976158142,
+            "calls": 124,
+            "triangles": 878433,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 741
+            },
+            "camera": [
+              102.03619329464172,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 81,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 24.80000001192093,
+            "calls": 125,
+            "triangles": 881878,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 735
+            },
+            "camera": [
+              102.35208216209723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 82,
+            "cpuMs": 7.200000047683716,
+            "intervalMs": 23.5,
+            "calls": 125,
+            "triangles": 881516,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 730
+            },
+            "camera": [
+              102.67267893083806,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 83,
+            "cpuMs": 10.400000035762787,
+            "intervalMs": 26,
+            "calls": 130,
+            "triangles": 886730,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 724
+            },
+            "camera": [
+              102.9974135915089,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 84,
+            "cpuMs": 9.600000023841858,
+            "intervalMs": 26.099999964237213,
+            "calls": 130,
+            "triangles": 886700,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.32570877773365,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 85,
+            "cpuMs": 6.300000011920929,
+            "intervalMs": 26.700000047683716,
+            "calls": 131,
+            "triangles": 888741,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.65698079265168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 86,
+            "cpuMs": 8,
+            "intervalMs": 25.19999998807907,
+            "calls": 132,
+            "triangles": 890538,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 710
+            },
+            "camera": [
+              103.99064064670955,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 87,
+            "cpuMs": 9.699999988079071,
+            "intervalMs": 27.30000001192093,
+            "calls": 132,
+            "triangles": 891115,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.32609510486301,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 88,
+            "cpuMs": 7.5,
+            "intervalMs": 24.099999964237213,
+            "calls": 132,
+            "triangles": 893008,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.66274774132722,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 89,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 26.19999998807907,
+            "calls": 132,
+            "triangles": 895634,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 692
+            },
+            "camera": [
+              105,
+              20.219999933242796,
+              18
+            ]
+          }
+        ],
+        "gpu": {
+          "supported": true,
+          "reason": null,
+          "disjointEvents": 0,
+          "discarded": 0,
+          "overflowSkipped": 0,
+          "foreignQuerySkipped": 0,
+          "allocationFailures": 0,
+          "unresolvedAtDispose": 0,
+          "contextLost": false,
+          "pending": 0,
+          "samples": [
+            {
+              "frame": 0,
+              "ms": 26.630624
+            },
+            {
+              "frame": 1,
+              "ms": 26.184843
+            },
+            {
+              "frame": 2,
+              "ms": 26.428957
+            },
+            {
+              "frame": 3,
+              "ms": 26.240937
+            },
+            {
+              "frame": 4,
+              "ms": 25.275468
+            },
+            {
+              "frame": 5,
+              "ms": 25.78776
+            },
+            {
+              "frame": 6,
+              "ms": 29.499218
+            },
+            {
+              "frame": 7,
+              "ms": 25.444009
+            },
+            {
+              "frame": 8,
+              "ms": 24.201301
+            },
+            {
+              "frame": 9,
+              "ms": 23.690207
+            },
+            {
+              "frame": 10,
+              "ms": 23.999947
+            },
+            {
+              "frame": 11,
+              "ms": 24.189166
+            },
+            {
+              "frame": 12,
+              "ms": 24.191197
+            },
+            {
+              "frame": 13,
+              "ms": 23.975156
+            },
+            {
+              "frame": 14,
+              "ms": 24.476249
+            },
+            {
+              "frame": 15,
+              "ms": 23.560885
+            },
+            {
+              "frame": 16,
+              "ms": 22.169947
+            },
+            {
+              "frame": 17,
+              "ms": 23.69302
+            },
+            {
+              "frame": 18,
+              "ms": 22.442447
+            },
+            {
+              "frame": 19,
+              "ms": 21.569582
+            },
+            {
+              "frame": 20,
+              "ms": 21.002343
+            },
+            {
+              "frame": 21,
+              "ms": 22.556821
+            },
+            {
+              "frame": 22,
+              "ms": 20.354686
+            },
+            {
+              "frame": 23,
+              "ms": 21.136509
+            },
+            {
+              "frame": 24,
+              "ms": 20.851197
+            },
+            {
+              "frame": 25,
+              "ms": 21.464843
+            },
+            {
+              "frame": 26,
+              "ms": 22.171822
+            },
+            {
+              "frame": 27,
+              "ms": 21.075937
+            },
+            {
+              "frame": 28,
+              "ms": 23.205728
+            },
+            {
+              "frame": 29,
+              "ms": 23.320624
+            },
+            {
+              "frame": 30,
+              "ms": 20.889635
+            },
+            {
+              "frame": 31,
+              "ms": 20.072395
+            },
+            {
+              "frame": 32,
+              "ms": 20.938436
+            },
+            {
+              "frame": 33,
+              "ms": 20.907708
+            },
+            {
+              "frame": 34,
+              "ms": 21.278385
+            },
+            {
+              "frame": 35,
+              "ms": 20.60276
+            },
+            {
+              "frame": 36,
+              "ms": 19.426614
+            },
+            {
+              "frame": 37,
+              "ms": 18.729686
+            },
+            {
+              "frame": 38,
+              "ms": 18.948853
+            },
+            {
+              "frame": 39,
+              "ms": 18.560989
+            },
+            {
+              "frame": 40,
+              "ms": 19.707707
+            },
+            {
+              "frame": 41,
+              "ms": 19.820467
+            },
+            {
+              "frame": 42,
+              "ms": 18.816457
+            },
+            {
+              "frame": 43,
+              "ms": 20.298176
+            },
+            {
+              "frame": 44,
+              "ms": 19.22901
+            },
+            {
+              "frame": 45,
+              "ms": 21.12302
+            },
+            {
+              "frame": 46,
+              "ms": 20.042812
+            },
+            {
+              "frame": 47,
+              "ms": 18.252655
+            },
+            {
+              "frame": 48,
+              "ms": 20.292864
+            },
+            {
+              "frame": 49,
+              "ms": 18.877395
+            },
+            {
+              "frame": 50,
+              "ms": 17.990729
+            },
+            {
+              "frame": 51,
+              "ms": 18.215832
+            },
+            {
+              "frame": 52,
+              "ms": 19.954687
+            },
+            {
+              "frame": 53,
+              "ms": 20.039478
+            },
+            {
+              "frame": 54,
+              "ms": 19.718593
+            },
+            {
+              "frame": 55,
+              "ms": 20.498801
+            },
+            {
+              "frame": 56,
+              "ms": 19.704947
+            },
+            {
+              "frame": 57,
+              "ms": 19.435625
+            },
+            {
+              "frame": 58,
+              "ms": 19.242395
+            },
+            {
+              "frame": 59,
+              "ms": 20.072031
+            },
+            {
+              "frame": 60,
+              "ms": 19.200259
+            },
+            {
+              "frame": 61,
+              "ms": 18.858229
+            },
+            {
+              "frame": 62,
+              "ms": 19.970155
+            },
+            {
+              "frame": 63,
+              "ms": 20.211978
+            },
+            {
+              "frame": 64,
+              "ms": 18.634634
+            },
+            {
+              "frame": 65,
+              "ms": 20.09802
+            },
+            {
+              "frame": 66,
+              "ms": 20.592238
+            },
+            {
+              "frame": 67,
+              "ms": 19.394166
+            },
+            {
+              "frame": 68,
+              "ms": 19.006457
+            },
+            {
+              "frame": 69,
+              "ms": 19.420468
+            },
+            {
+              "frame": 70,
+              "ms": 20.350832
+            },
+            {
+              "frame": 71,
+              "ms": 20.48552
+            },
+            {
+              "frame": 72,
+              "ms": 20.568853
+            },
+            {
+              "frame": 73,
+              "ms": 20.57901
+            },
+            {
+              "frame": 74,
+              "ms": 20.360936
+            },
+            {
+              "frame": 75,
+              "ms": 20.315519
+            },
+            {
+              "frame": 76,
+              "ms": 21.245832
+            },
+            {
+              "frame": 77,
+              "ms": 19.801197
+            },
+            {
+              "frame": 78,
+              "ms": 19.477291
+            },
+            {
+              "frame": 79,
+              "ms": 21.450833
+            },
+            {
+              "frame": 80,
+              "ms": 21.99078
+            },
+            {
+              "frame": 81,
+              "ms": 22.525624
+            },
+            {
+              "frame": 82,
+              "ms": 20.79979
+            },
+            {
+              "frame": 83,
+              "ms": 21.716822
+            },
+            {
+              "frame": 84,
+              "ms": 21.884791
+            },
+            {
+              "frame": 85,
+              "ms": 22.931822
+            },
+            {
+              "frame": 86,
+              "ms": 24.50552
+            },
+            {
+              "frame": 87,
+              "ms": 26.213958
+            },
+            {
+              "frame": 88,
+              "ms": 24.491718
+            },
+            {
+              "frame": 89,
+              "ms": 22.331874
+            }
+          ]
+        },
+        "stateUnchanged": true,
+        "glError": 0,
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "cupped",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1189,
+          "far": 692,
+          "leaves": 7524,
+          "triangles": 43584,
+          "chunks": 25,
+          "cachedTiles": 54,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 76.70000010728836,
+            "selectionMs": 97.90000003576279,
+            "selectionCount": 184,
+            "candidates": 8140,
+            "masked": 4764,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 1881,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "mud": null,
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "resolution": [
+          1280,
+          720
+        ]
+      },
+      "cadence": {
+        "frames": [
+          {
+            "frame": 0,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 37,
+            "calls": 133,
+            "triangles": 932217,
+            "coverageInstances": {
+              "near": 1480,
+              "far": 636
+            },
+            "camera": [
+              109.59244879761732,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 1,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 33.39999997615814,
+            "calls": 133,
+            "triangles": 931371,
+            "coverageInstances": {
+              "near": 1466,
+              "far": 641
+            },
+            "camera": [
+              109.31221865876908,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 2,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 35.30000001192093,
+            "calls": 132,
+            "triangles": 918050,
+            "coverageInstances": {
+              "near": 1323,
+              "far": 646
+            },
+            "camera": [
+              109.02432155251138,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 3,
+            "cpuMs": 9.199999988079071,
+            "intervalMs": 26.5,
+            "calls": 132,
+            "triangles": 921392,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.7292693493929,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 4,
+            "cpuMs": 10,
+            "intervalMs": 33.10000002384186,
+            "calls": 134,
+            "triangles": 913194,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.42758664146345,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 5,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 32.5,
+            "calls": 134,
+            "triangles": 910166,
+            "coverageInstances": {
+              "near": 1328,
+              "far": 654
+            },
+            "camera": [
+              108.11980980956841,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 6,
+            "cpuMs": 8.099999964237213,
+            "intervalMs": 31.899999976158142,
+            "calls": 134,
+            "triangles": 900272,
+            "coverageInstances": {
+              "near": 1172,
+              "far": 663
+            },
+            "camera": [
+              107.8064860696832,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 7,
+            "cpuMs": 11,
+            "intervalMs": 34.5,
+            "calls": 134,
+            "triangles": 899201,
+            "coverageInstances": {
+              "near": 1173,
+              "far": 667
+            },
+            "camera": [
+              107.48817249998322,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 8,
+            "cpuMs": 13.200000047683716,
+            "intervalMs": 33.69999998807907,
+            "calls": 133,
+            "triangles": 898996,
+            "coverageInstances": {
+              "near": 1175,
+              "far": 671
+            },
+            "camera": [
+              107.16543505037916,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 9,
+            "cpuMs": 8.799999952316284,
+            "intervalMs": 33.700000047683716,
+            "calls": 133,
+            "triangles": 899723,
+            "coverageInstances": {
+              "near": 1176,
+              "far": 674
+            },
+            "camera": [
+              106.83884753627875,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 10,
+            "cpuMs": 8.100000023841858,
+            "intervalMs": 34.09999996423721,
+            "calls": 133,
+            "triangles": 898151,
+            "coverageInstances": {
+              "near": 1177,
+              "far": 680
+            },
+            "camera": [
+              106.50899061836391,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 11,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 29.30000001192093,
+            "calls": 133,
+            "triangles": 896684,
+            "coverageInstances": {
+              "near": 1178,
+              "far": 685
+            },
+            "camera": [
+              106.17645077019723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 12,
+            "cpuMs": 8,
+            "intervalMs": 29.30000001192093,
+            "calls": 132,
+            "triangles": 895192,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 690
+            },
+            "camera": [
+              105.84181923549336,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 13,
+            "cpuMs": 9.400000035762787,
+            "intervalMs": 29.599999964237213,
+            "calls": 132,
+            "triangles": 894868,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 695
+            },
+            "camera": [
+              105.5056909769093,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 14,
+            "cpuMs": 9.300000011920929,
+            "intervalMs": 30.900000035762787,
+            "calls": 132,
+            "triangles": 894236,
+            "coverageInstances": {
+              "near": 1181,
+              "far": 697
+            },
+            "camera": [
+              105.1686636182225,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 15,
+            "cpuMs": 7.5,
+            "intervalMs": 29.69999998807907,
+            "calls": 132,
+            "triangles": 892769,
+            "coverageInstances": {
+              "near": 1182,
+              "far": 702
+            },
+            "camera": [
+              104.83133638177752,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 16,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 28.5,
+            "calls": 132,
+            "triangles": 889845,
+            "coverageInstances": {
+              "near": 1183,
+              "far": 710
+            },
+            "camera": [
+              104.4943090230907,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 17,
+            "cpuMs": 8.900000035762787,
+            "intervalMs": 27.69999998807907,
+            "calls": 132,
+            "triangles": 889338,
+            "coverageInstances": {
+              "near": 1185,
+              "far": 711
+            },
+            "camera": [
+              104.15818076450662,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 18,
+            "cpuMs": 7.599999964237213,
+            "intervalMs": 27.100000023841858,
+            "calls": 131,
+            "triangles": 887223,
+            "coverageInstances": {
+              "near": 1186,
+              "far": 715
+            },
+            "camera": [
+              103.82354922980277,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 19,
+            "cpuMs": 7.5,
+            "intervalMs": 26.69999998807907,
+            "calls": 131,
+            "triangles": 885746,
+            "coverageInstances": {
+              "near": 1187,
+              "far": 719
+            },
+            "camera": [
+              103.49100938163609,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 20,
+            "cpuMs": 8.799999952316284,
+            "intervalMs": 28.600000023841858,
+            "calls": 130,
+            "triangles": 885380,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              103.16115246372125,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 21,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 28.19999998807907,
+            "calls": 128,
+            "triangles": 880064,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              102.83456494962084,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 22,
+            "cpuMs": 9.400000035762787,
+            "intervalMs": 27.399999976158142,
+            "calls": 125,
+            "triangles": 879746,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 733
+            },
+            "camera": [
+              102.51182750001678,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 23,
+            "cpuMs": 10.5,
+            "intervalMs": 27.400000035762787,
+            "calls": 124,
+            "triangles": 877091,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              102.1935139303168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 24,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 26.899999976158142,
+            "calls": 123,
+            "triangles": 874428,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              101.88019019043159,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 25,
+            "cpuMs": 8.599999964237213,
+            "intervalMs": 26.100000023841858,
+            "calls": 122,
+            "triangles": 864765,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 747
+            },
+            "camera": [
+              101.57241335853655,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 26,
+            "cpuMs": 8.399999976158142,
+            "intervalMs": 27.899999976158142,
+            "calls": 121,
+            "triangles": 863745,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 753
+            },
+            "camera": [
+              101.2707306506071,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 27,
+            "cpuMs": 10.100000023841858,
+            "intervalMs": 25.899999976158142,
+            "calls": 122,
+            "triangles": 867061,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 757
+            },
+            "camera": [
+              100.97567844748862,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 28,
+            "cpuMs": 7.400000035762787,
+            "intervalMs": 25,
+            "calls": 120,
+            "triangles": 865287,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.68778134123092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 29,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 25.100000023841858,
+            "calls": 120,
+            "triangles": 865431,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.40755120238268,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 30,
+            "cpuMs": 9.400000035762787,
+            "intervalMs": 25.30000001192093,
+            "calls": 120,
+            "triangles": 856329,
+            "coverageInstances": {
+              "near": 901,
+              "far": 767
+            },
+            "camera": [
+              100.13548626990435,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 31,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 26.19999998807907,
+            "calls": 119,
+            "triangles": 856562,
+            "coverageInstances": {
+              "near": 901,
+              "far": 770
+            },
+            "camera": [
+              99.87207026531739,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 32,
+            "cpuMs": 10.300000011920929,
+            "intervalMs": 25.69999998807907,
+            "calls": 120,
+            "triangles": 858969,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.61777153266513,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 33,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 31.5,
+            "calls": 121,
+            "triangles": 861330,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.3730422058141,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 34,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 27,
+            "calls": 121,
+            "triangles": 850623,
+            "coverageInstances": {
+              "near": 757,
+              "far": 782
+            },
+            "camera": [
+              99.13831740457653,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 35,
+            "cpuMs": 9.600000023841858,
+            "intervalMs": 24.19999998807907,
+            "calls": 121,
+            "triangles": 850826,
+            "coverageInstances": {
+              "near": 757,
+              "far": 785
+            },
+            "camera": [
+              98.91401446108318,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 36,
+            "cpuMs": 8.100000023841858,
+            "intervalMs": 27.80000001192093,
+            "calls": 121,
+            "triangles": 849632,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.70053217778214,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 37,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 25.5,
+            "calls": 120,
+            "triangles": 849048,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.49825011838249,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 38,
+            "cpuMs": 8,
+            "intervalMs": 26,
+            "calls": 119,
+            "triangles": 850024,
+            "coverageInstances": {
+              "near": 757,
+              "far": 790
+            },
+            "camera": [
+              98.30752793300393,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 39,
+            "cpuMs": 10.599999964237213,
+            "intervalMs": 29.600000023841858,
+            "calls": 119,
+            "triangles": 852153,
+            "coverageInstances": {
+              "near": 757,
+              "far": 793
+            },
+            "camera": [
+              98.12870471873208,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 40,
+            "cpuMs": 9.899999976158142,
+            "intervalMs": 27.5,
+            "calls": 118,
+            "triangles": 852369,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.9620984167161,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 41,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 27.19999998807907,
+            "calls": 118,
+            "triangles": 852546,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.80800524688102,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 42,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 29,
+            "calls": 117,
+            "triangles": 842019,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.66669918125947,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 43,
+            "cpuMs": 6.5,
+            "intervalMs": 24,
+            "calls": 116,
+            "triangles": 841884,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.53843145687945,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 44,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 23.899999976158142,
+            "calls": 116,
+            "triangles": 842940,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.42343012907403,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 45,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 23.30000001192093,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.32189966600731,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 46,
+            "cpuMs": 6.900000035762787,
+            "intervalMs": 24.69999998807907,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.23402058513747,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 47,
+            "cpuMs": 8.699999988079071,
+            "intervalMs": 24.600000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.1599491322633,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 48,
+            "cpuMs": 9.800000011920929,
+            "intervalMs": 27,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.09981700372497,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 49,
+            "cpuMs": 10.100000023841858,
+            "intervalMs": 28.100000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.05373111225258,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 50,
+            "cpuMs": 10.5,
+            "intervalMs": 28.399999976158142,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.02177339687935,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 51,
+            "cpuMs": 9.700000047683716,
+            "intervalMs": 28.399999976158142,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00400067725701,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 52,
+            "cpuMs": 9,
+            "intervalMs": 27.600000023841858,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00044455263246,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 53,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 27.899999976158142,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.01111134566548,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 54,
+            "cpuMs": 6.899999976158142,
+            "intervalMs": 24.200000047683716,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.03598209118736,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 55,
+            "cpuMs": 7.5,
+            "intervalMs": 23.899999976158142,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.07501256992016,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 56,
+            "cpuMs": 6.5,
+            "intervalMs": 23.80000001192093,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.12813338709702,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 57,
+            "cpuMs": 6.200000047683716,
+            "intervalMs": 24.099999964237213,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.19525009584355,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 58,
+            "cpuMs": 7.900000035762787,
+            "intervalMs": 22,
+            "calls": 116,
+            "triangles": 843000,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.27624336510087,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 59,
+            "cpuMs": 6.899999976158142,
+            "intervalMs": 22.900000035762787,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.37096919179196,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 60,
+            "cpuMs": 6.399999976158142,
+            "intervalMs": 23.80000001192093,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.47925915685376,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 61,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 23.599999964237213,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.60092072468024,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 62,
+            "cpuMs": 7,
+            "intervalMs": 22.900000035762787,
+            "calls": 117,
+            "triangles": 842069,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.73573758544359,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 63,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 24.799999952316284,
+            "calls": 118,
+            "triangles": 852701,
+            "coverageInstances": {
+              "near": 757,
+              "far": 798
+            },
+            "camera": [
+              97.88347003968525,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 64,
+            "cpuMs": 6.700000047683716,
+            "intervalMs": 23.5,
+            "calls": 118,
+            "triangles": 852359,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.04385542449278,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 65,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 23.600000023841858,
+            "calls": 119,
+            "triangles": 852173,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.21660858050492,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 66,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 24.30000001192093,
+            "calls": 120,
+            "triangles": 851648,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.4014223589146,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 67,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 24,
+            "calls": 121,
+            "triangles": 851128,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.59796816756818,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 68,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 22.80000001192093,
+            "calls": 121,
+            "triangles": 850786,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.80589655519044,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 69,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 24.299999952316284,
+            "calls": 123,
+            "triangles": 854198,
+            "coverageInstances": {
+              "near": 757,
+              "far": 783
+            },
+            "camera": [
+              99.02483783269612,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 70,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 25.700000047683716,
+            "calls": 123,
+            "triangles": 855116,
+            "coverageInstances": {
+              "near": 757,
+              "far": 780
+            },
+            "camera": [
+              99.25440273048363,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 71,
+            "cpuMs": 7.200000047683716,
+            "intervalMs": 23.799999952316284,
+            "calls": 121,
+            "triangles": 861471,
+            "coverageInstances": {
+              "near": 901,
+              "far": 776
+            },
+            "camera": [
+              99.49418309054224,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 72,
+            "cpuMs": 8.399999976158142,
+            "intervalMs": 30.200000047683716,
+            "calls": 121,
+            "triangles": 861566,
+            "coverageInstances": {
+              "near": 901,
+              "far": 771
+            },
+            "camera": [
+              99.74375259214204,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 73,
+            "cpuMs": 10.300000011920929,
+            "intervalMs": 28.599999964237213,
+            "calls": 121,
+            "triangles": 858144,
+            "coverageInstances": {
+              "near": 901,
+              "far": 769
+            },
+            "camera": [
+              100.00266750981675,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 74,
+            "cpuMs": 10.699999988079071,
+            "intervalMs": 27.30000001192093,
+            "calls": 121,
+            "triangles": 867523,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 766
+            },
+            "camera": [
+              100.27046750229131,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 75,
+            "cpuMs": 8.200000047683716,
+            "intervalMs": 24.899999976158142,
+            "calls": 121,
+            "triangles": 867483,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.54667643095195,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 76,
+            "cpuMs": 12.199999988079071,
+            "intervalMs": 25.600000023841858,
+            "calls": 121,
+            "triangles": 869133,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 759
+            },
+            "camera": [
+              100.83080320640317,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 77,
+            "cpuMs": 7.400000035762787,
+            "intervalMs": 48.39999997615814,
+            "calls": 122,
+            "triangles": 869801,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 755
+            },
+            "camera": [
+              101.12234266160691,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 78,
+            "cpuMs": 10.800000011920929,
+            "intervalMs": 41.10000002384186,
+            "calls": 121,
+            "triangles": 868323,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 750
+            },
+            "camera": [
+              101.42077645005092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 79,
+            "cpuMs": 11.599999964237213,
+            "intervalMs": 40.10000002384186,
+            "calls": 121,
+            "triangles": 867565,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 745
+            },
+            "camera": [
+              101.72557396735012,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 80,
+            "cpuMs": 12,
+            "intervalMs": 35.09999996423721,
+            "calls": 124,
+            "triangles": 878433,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 741
+            },
+            "camera": [
+              102.03619329464172,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 81,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 30.80000001192093,
+            "calls": 125,
+            "triangles": 881878,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 735
+            },
+            "camera": [
+              102.35208216209723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 82,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 30.69999998807907,
+            "calls": 125,
+            "triangles": 881516,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 730
+            },
+            "camera": [
+              102.67267893083806,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 83,
+            "cpuMs": 10.900000035762787,
+            "intervalMs": 28.19999998807907,
+            "calls": 130,
+            "triangles": 886730,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 724
+            },
+            "camera": [
+              102.9974135915089,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 84,
+            "cpuMs": 9.599999964237213,
+            "intervalMs": 29.400000035762787,
+            "calls": 130,
+            "triangles": 886700,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.32570877773365,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 85,
+            "cpuMs": 7,
+            "intervalMs": 30.099999964237213,
+            "calls": 131,
+            "triangles": 888741,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.65698079265168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 86,
+            "cpuMs": 7.5,
+            "intervalMs": 31.100000023841858,
+            "calls": 132,
+            "triangles": 890538,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 710
+            },
+            "camera": [
+              103.99064064670955,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 87,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 30.80000001192093,
+            "calls": 132,
+            "triangles": 891115,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.32609510486301,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 88,
+            "cpuMs": 7.5,
+            "intervalMs": 30.19999998807907,
+            "calls": 132,
+            "triangles": 893008,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.66274774132722,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 89,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 32.80000001192093,
+            "calls": 132,
+            "triangles": 895634,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 692
+            },
+            "camera": [
+              105,
+              20.219999933242796,
+              18
+            ]
+          }
+        ],
+        "gpu": null,
+        "stateUnchanged": true,
+        "glError": 0,
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "cupped",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1189,
+          "far": 692,
+          "leaves": 7524,
+          "triangles": 43584,
+          "chunks": 25,
+          "cachedTiles": 54,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 76.70000010728836,
+            "selectionMs": 127.69999986886978,
+            "selectionCount": 284,
+            "candidates": 8140,
+            "masked": 4764,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 1881,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "mud": null,
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "resolution": [
+          1280,
+          720
+        ]
+      },
+      "sceneAudit": {
+        "biomeUniform": 2,
+        "windStrength": [
+          0.25,
+          0.25
+        ],
+        "cameraMode": "moving",
+        "fernShadowEnabled": [
+          true,
+          false
+        ],
+        "shadowResolution": 2048,
+        "shadowCacheBefore": {
+          "draws": 208,
+          "hits": 274,
+          "untracked": 0
+        },
+        "cardStudy": {
+          "representation": "native-holly-fern-balanced",
+          "shadowResolution": 2048,
+          "castsNativeShadow": true,
+          "sizeXZ": 1.35,
+          "sizeY": 1.6,
+          "colorContrast": 1.12,
+          "edgePadding": 1,
+          "frondsPerClump": 4,
+          "trianglesPerClump": 32,
+          "textureCount": 2,
+          "textureBytesEstimate": 11184810.666666666,
+          "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+          "reuseNativeInstanceBuffers": true,
+          "extraSelectionPass": false,
+          "stats": {
+            "instances": 1881,
+            "updates": 0,
+            "selectionMs": 0
+          },
+          "prelit": {
+            "nearAndFar": false,
+            "nearNative": true,
+            "orientations": 8,
+            "atlasWidth": 2048,
+            "atlasHeight": 256,
+            "solarShadowOpacity": 0.55,
+            "solarShadowQuad": true,
+            "liveNormalSampling": false,
+            "liveShadowCasting": false,
+            "liveWind": false,
+            "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+          }
+        },
+        "residentMasks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "origin": [
+          0,
+          0
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ],
+        "chunks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "objects": 4,
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "actionRemaining": 2.7999999999999994
+          },
+          {
+            "id": "worker-30",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "actionRemaining": -1.970645868709653e-15
+          }
+        ],
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "far": {
+          "logicalStandbyPreload": true,
+          "species": 4,
+          "estimatedAtlasTextureBytes": 44739242.666666664,
+          "estimatedBackdropTextureBytes": 5592405.333333333,
+          "errors": []
+        },
+        "farEnabled": true,
+        "instanceCulling": true,
+        "workload": [
+          92,
+          405640,
+          279,
+          136
+        ]
+      },
+      "capture": {
+        "camera": [
+          105,
+          20.219999933242796,
+          18
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ]
+      },
+      "shadowCacheAfter": {
+        "draws": 512,
+        "hits": 274,
+        "untracked": 0
+      },
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "variant": "native",
+      "phase": "night",
+      "motion": "moving",
+      "gpu": {
+        "frames": [
+          {
+            "frame": 0,
+            "cpuMs": 7.900000035762787,
+            "intervalMs": 36.30000001192093,
+            "calls": 133,
+            "triangles": 932217,
+            "coverageInstances": {
+              "near": 1480,
+              "far": 636
+            },
+            "camera": [
+              109.59244879761732,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 1,
+            "cpuMs": 7.799999952316284,
+            "intervalMs": 34.5,
+            "calls": 133,
+            "triangles": 931371,
+            "coverageInstances": {
+              "near": 1466,
+              "far": 641
+            },
+            "camera": [
+              109.31221865876908,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 2,
+            "cpuMs": 7.599999964237213,
+            "intervalMs": 35.89999997615814,
+            "calls": 132,
+            "triangles": 918050,
+            "coverageInstances": {
+              "near": 1323,
+              "far": 646
+            },
+            "camera": [
+              109.02432155251138,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 3,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 29.19999998807907,
+            "calls": 132,
+            "triangles": 921392,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.7292693493929,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 4,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 30.30000001192093,
+            "calls": 134,
+            "triangles": 913194,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.42758664146345,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 5,
+            "cpuMs": 8.699999988079071,
+            "intervalMs": 30,
+            "calls": 134,
+            "triangles": 910166,
+            "coverageInstances": {
+              "near": 1328,
+              "far": 654
+            },
+            "camera": [
+              108.11980980956841,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 6,
+            "cpuMs": 8.700000047683716,
+            "intervalMs": 29.30000001192093,
+            "calls": 134,
+            "triangles": 900272,
+            "coverageInstances": {
+              "near": 1172,
+              "far": 663
+            },
+            "camera": [
+              107.8064860696832,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 7,
+            "cpuMs": 7.200000047683716,
+            "intervalMs": 33.5,
+            "calls": 134,
+            "triangles": 899201,
+            "coverageInstances": {
+              "near": 1173,
+              "far": 667
+            },
+            "camera": [
+              107.48817249998322,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 8,
+            "cpuMs": 9.399999976158142,
+            "intervalMs": 29.5,
+            "calls": 133,
+            "triangles": 898996,
+            "coverageInstances": {
+              "near": 1175,
+              "far": 671
+            },
+            "camera": [
+              107.16543505037916,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 9,
+            "cpuMs": 6.399999976158142,
+            "intervalMs": 29.399999976158142,
+            "calls": 133,
+            "triangles": 899723,
+            "coverageInstances": {
+              "near": 1176,
+              "far": 674
+            },
+            "camera": [
+              106.83884753627875,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 10,
+            "cpuMs": 6.300000011920929,
+            "intervalMs": 29.600000023841858,
+            "calls": 133,
+            "triangles": 898151,
+            "coverageInstances": {
+              "near": 1177,
+              "far": 680
+            },
+            "camera": [
+              106.50899061836391,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 11,
+            "cpuMs": 7.200000047683716,
+            "intervalMs": 31.5,
+            "calls": 133,
+            "triangles": 896684,
+            "coverageInstances": {
+              "near": 1178,
+              "far": 685
+            },
+            "camera": [
+              106.17645077019723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 12,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 28.099999964237213,
+            "calls": 132,
+            "triangles": 895192,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 690
+            },
+            "camera": [
+              105.84181923549336,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 13,
+            "cpuMs": 7.899999976158142,
+            "intervalMs": 28.30000001192093,
+            "calls": 132,
+            "triangles": 894868,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 695
+            },
+            "camera": [
+              105.5056909769093,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 14,
+            "cpuMs": 6.600000023841858,
+            "intervalMs": 28.30000001192093,
+            "calls": 132,
+            "triangles": 894236,
+            "coverageInstances": {
+              "near": 1181,
+              "far": 697
+            },
+            "camera": [
+              105.1686636182225,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 15,
+            "cpuMs": 7.5,
+            "intervalMs": 27.69999998807907,
+            "calls": 132,
+            "triangles": 892769,
+            "coverageInstances": {
+              "near": 1182,
+              "far": 702
+            },
+            "camera": [
+              104.83133638177752,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 16,
+            "cpuMs": 6.600000023841858,
+            "intervalMs": 26.900000035762787,
+            "calls": 132,
+            "triangles": 889845,
+            "coverageInstances": {
+              "near": 1183,
+              "far": 710
+            },
+            "camera": [
+              104.4943090230907,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 17,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 27.099999964237213,
+            "calls": 132,
+            "triangles": 889338,
+            "coverageInstances": {
+              "near": 1185,
+              "far": 711
+            },
+            "camera": [
+              104.15818076450662,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 18,
+            "cpuMs": 6.900000035762787,
+            "intervalMs": 26.900000035762787,
+            "calls": 131,
+            "triangles": 887223,
+            "coverageInstances": {
+              "near": 1186,
+              "far": 715
+            },
+            "camera": [
+              103.82354922980277,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 19,
+            "cpuMs": 6.300000011920929,
+            "intervalMs": 26.799999952316284,
+            "calls": 131,
+            "triangles": 885746,
+            "coverageInstances": {
+              "near": 1187,
+              "far": 719
+            },
+            "camera": [
+              103.49100938163609,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 20,
+            "cpuMs": 7.900000035762787,
+            "intervalMs": 26.80000001192093,
+            "calls": 130,
+            "triangles": 885380,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              103.16115246372125,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 21,
+            "cpuMs": 6.099999964237213,
+            "intervalMs": 27.400000035762787,
+            "calls": 128,
+            "triangles": 880064,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              102.83456494962084,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 22,
+            "cpuMs": 8.599999964237213,
+            "intervalMs": 24.5,
+            "calls": 125,
+            "triangles": 879746,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 733
+            },
+            "camera": [
+              102.51182750001678,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 23,
+            "cpuMs": 6.099999964237213,
+            "intervalMs": 25.599999964237213,
+            "calls": 124,
+            "triangles": 877091,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              102.1935139303168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 24,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 25.19999998807907,
+            "calls": 123,
+            "triangles": 874428,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              101.88019019043159,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 25,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 24.400000035762787,
+            "calls": 122,
+            "triangles": 864765,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 747
+            },
+            "camera": [
+              101.57241335853655,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 26,
+            "cpuMs": 6.5,
+            "intervalMs": 30.5,
+            "calls": 121,
+            "triangles": 863745,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 753
+            },
+            "camera": [
+              101.2707306506071,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 27,
+            "cpuMs": 9.099999964237213,
+            "intervalMs": 23.80000001192093,
+            "calls": 122,
+            "triangles": 867061,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 757
+            },
+            "camera": [
+              100.97567844748862,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 28,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 23.599999964237213,
+            "calls": 120,
+            "triangles": 865287,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.68778134123092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 29,
+            "cpuMs": 6,
+            "intervalMs": 24.69999998807907,
+            "calls": 120,
+            "triangles": 865431,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.40755120238268,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 30,
+            "cpuMs": 10,
+            "intervalMs": 26.600000023841858,
+            "calls": 120,
+            "triangles": 856329,
+            "coverageInstances": {
+              "near": 901,
+              "far": 767
+            },
+            "camera": [
+              100.13548626990435,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 31,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 28,
+            "calls": 119,
+            "triangles": 856562,
+            "coverageInstances": {
+              "near": 901,
+              "far": 770
+            },
+            "camera": [
+              99.87207026531739,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 32,
+            "cpuMs": 9.899999976158142,
+            "intervalMs": 24.899999976158142,
+            "calls": 120,
+            "triangles": 858969,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.61777153266513,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 33,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 23.30000001192093,
+            "calls": 121,
+            "triangles": 861330,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.3730422058141,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 34,
+            "cpuMs": 9,
+            "intervalMs": 31.69999998807907,
+            "calls": 121,
+            "triangles": 850623,
+            "coverageInstances": {
+              "near": 757,
+              "far": 782
+            },
+            "camera": [
+              99.13831740457653,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 35,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 34.700000047683716,
+            "calls": 121,
+            "triangles": 850826,
+            "coverageInstances": {
+              "near": 757,
+              "far": 785
+            },
+            "camera": [
+              98.91401446108318,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 36,
+            "cpuMs": 8.100000023841858,
+            "intervalMs": 31.5,
+            "calls": 121,
+            "triangles": 849632,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.70053217778214,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 37,
+            "cpuMs": 7.5,
+            "intervalMs": 27.399999976158142,
+            "calls": 120,
+            "triangles": 849048,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.49825011838249,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 38,
+            "cpuMs": 6.700000047683716,
+            "intervalMs": 28.30000001192093,
+            "calls": 119,
+            "triangles": 850024,
+            "coverageInstances": {
+              "near": 757,
+              "far": 790
+            },
+            "camera": [
+              98.30752793300393,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 39,
+            "cpuMs": 14.299999952316284,
+            "intervalMs": 29.30000001192093,
+            "calls": 119,
+            "triangles": 852153,
+            "coverageInstances": {
+              "near": 757,
+              "far": 793
+            },
+            "camera": [
+              98.12870471873208,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 40,
+            "cpuMs": 9.5,
+            "intervalMs": 30.399999976158142,
+            "calls": 118,
+            "triangles": 852369,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.9620984167161,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 41,
+            "cpuMs": 5.699999988079071,
+            "intervalMs": 30.399999976158142,
+            "calls": 118,
+            "triangles": 852546,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.80800524688102,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 42,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 27.400000035762787,
+            "calls": 117,
+            "triangles": 842019,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.66669918125947,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 43,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 27.599999964237213,
+            "calls": 116,
+            "triangles": 841884,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.53843145687945,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 44,
+            "cpuMs": 7.799999952316284,
+            "intervalMs": 30.700000047683716,
+            "calls": 116,
+            "triangles": 842940,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.42343012907403,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 45,
+            "cpuMs": 8.5,
+            "intervalMs": 26.69999998807907,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.32189966600731,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 46,
+            "cpuMs": 9.100000023841858,
+            "intervalMs": 25.599999964237213,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.23402058513747,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 47,
+            "cpuMs": 6.5,
+            "intervalMs": 26.100000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.1599491322633,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 48,
+            "cpuMs": 7.599999964237213,
+            "intervalMs": 25,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.09981700372497,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 49,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 23.600000023841858,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.05373111225258,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 50,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 27.899999976158142,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.02177339687935,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 51,
+            "cpuMs": 9.300000011920929,
+            "intervalMs": 24.19999998807907,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00400067725701,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 52,
+            "cpuMs": 6,
+            "intervalMs": 23,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00044455263246,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 53,
+            "cpuMs": 5.699999988079071,
+            "intervalMs": 21.900000035762787,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.01111134566548,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 54,
+            "cpuMs": 5.5,
+            "intervalMs": 21.69999998807907,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.03598209118736,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 55,
+            "cpuMs": 6.5,
+            "intervalMs": 21.80000001192093,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.07501256992016,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 56,
+            "cpuMs": 5.899999976158142,
+            "intervalMs": 22.099999964237213,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.12813338709702,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 57,
+            "cpuMs": 5.900000035762787,
+            "intervalMs": 22.5,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.19525009584355,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 58,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 21.80000001192093,
+            "calls": 116,
+            "triangles": 843000,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.27624336510087,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 59,
+            "cpuMs": 5.899999976158142,
+            "intervalMs": 23.30000001192093,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.37096919179196,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 60,
+            "cpuMs": 6.399999976158142,
+            "intervalMs": 22.399999976158142,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.47925915685376,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 61,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 21.900000035762787,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.60092072468024,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 62,
+            "cpuMs": 5.699999988079071,
+            "intervalMs": 22.299999952316284,
+            "calls": 117,
+            "triangles": 842069,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.73573758544359,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 63,
+            "cpuMs": 6.5,
+            "intervalMs": 21.200000047683716,
+            "calls": 118,
+            "triangles": 852701,
+            "coverageInstances": {
+              "near": 757,
+              "far": 798
+            },
+            "camera": [
+              97.88347003968525,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 64,
+            "cpuMs": 7,
+            "intervalMs": 21.69999998807907,
+            "calls": 118,
+            "triangles": 852359,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.04385542449278,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 65,
+            "cpuMs": 6.400000035762787,
+            "intervalMs": 22.5,
+            "calls": 119,
+            "triangles": 852173,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.21660858050492,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 66,
+            "cpuMs": 9.5,
+            "intervalMs": 26,
+            "calls": 120,
+            "triangles": 851648,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.4014223589146,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 67,
+            "cpuMs": 5.800000011920929,
+            "intervalMs": 26.399999976158142,
+            "calls": 121,
+            "triangles": 851128,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.59796816756818,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 68,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 21.900000035762787,
+            "calls": 121,
+            "triangles": 850786,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.80589655519044,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 69,
+            "cpuMs": 9.800000011920929,
+            "intervalMs": 22.69999998807907,
+            "calls": 123,
+            "triangles": 854198,
+            "coverageInstances": {
+              "near": 757,
+              "far": 783
+            },
+            "camera": [
+              99.02483783269612,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 70,
+            "cpuMs": 6.900000035762787,
+            "intervalMs": 30.30000001192093,
+            "calls": 123,
+            "triangles": 855116,
+            "coverageInstances": {
+              "near": 757,
+              "far": 780
+            },
+            "camera": [
+              99.25440273048363,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 71,
+            "cpuMs": 7.5,
+            "intervalMs": 23.19999998807907,
+            "calls": 121,
+            "triangles": 861471,
+            "coverageInstances": {
+              "near": 901,
+              "far": 776
+            },
+            "camera": [
+              99.49418309054224,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 72,
+            "cpuMs": 8.699999988079071,
+            "intervalMs": 42.19999998807907,
+            "calls": 121,
+            "triangles": 861566,
+            "coverageInstances": {
+              "near": 901,
+              "far": 771
+            },
+            "camera": [
+              99.74375259214204,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 73,
+            "cpuMs": 10.600000023841858,
+            "intervalMs": 10.399999976158142,
+            "calls": 121,
+            "triangles": 858144,
+            "coverageInstances": {
+              "near": 901,
+              "far": 769
+            },
+            "camera": [
+              100.00266750981675,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 74,
+            "cpuMs": 6.199999988079071,
+            "intervalMs": 34.10000002384186,
+            "calls": 121,
+            "triangles": 867523,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 766
+            },
+            "camera": [
+              100.27046750229131,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 75,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 25.80000001192093,
+            "calls": 121,
+            "triangles": 867483,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.54667643095195,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 76,
+            "cpuMs": 6.900000035762787,
+            "intervalMs": 26.099999964237213,
+            "calls": 121,
+            "triangles": 869133,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 759
+            },
+            "camera": [
+              100.83080320640317,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 77,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 23.400000035762787,
+            "calls": 121,
+            "triangles": 869093,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 755
+            },
+            "camera": [
+              101.12234266160691,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 78,
+            "cpuMs": 8.699999988079071,
+            "intervalMs": 28.399999976158142,
+            "calls": 121,
+            "triangles": 867615,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 750
+            },
+            "camera": [
+              101.42077645005092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 79,
+            "cpuMs": 7.700000047683716,
+            "intervalMs": 23.600000023841858,
+            "calls": 121,
+            "triangles": 867565,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 745
+            },
+            "camera": [
+              101.72557396735012,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 80,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 26,
+            "calls": 124,
+            "triangles": 878433,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 741
+            },
+            "camera": [
+              102.03619329464172,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 81,
+            "cpuMs": 6.899999976158142,
+            "intervalMs": 26.30000001192093,
+            "calls": 125,
+            "triangles": 881878,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 735
+            },
+            "camera": [
+              102.35208216209723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 82,
+            "cpuMs": 7.400000035762787,
+            "intervalMs": 26,
+            "calls": 125,
+            "triangles": 881516,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 730
+            },
+            "camera": [
+              102.67267893083806,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 83,
+            "cpuMs": 13.599999964237213,
+            "intervalMs": 26.399999976158142,
+            "calls": 130,
+            "triangles": 886730,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 724
+            },
+            "camera": [
+              102.9974135915089,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 84,
+            "cpuMs": 8.400000035762787,
+            "intervalMs": 26.69999998807907,
+            "calls": 130,
+            "triangles": 886700,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.32570877773365,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 85,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 27.69999998807907,
+            "calls": 131,
+            "triangles": 888741,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.65698079265168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 86,
+            "cpuMs": 8.599999964237213,
+            "intervalMs": 28.900000035762787,
+            "calls": 132,
+            "triangles": 890538,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 710
+            },
+            "camera": [
+              103.99064064670955,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 87,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 29.30000001192093,
+            "calls": 132,
+            "triangles": 891115,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.32609510486301,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 88,
+            "cpuMs": 6.5,
+            "intervalMs": 26.399999976158142,
+            "calls": 132,
+            "triangles": 893008,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.66274774132722,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 89,
+            "cpuMs": 7.5,
+            "intervalMs": 24.399999976158142,
+            "calls": 132,
+            "triangles": 895634,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 692
+            },
+            "camera": [
+              105,
+              20.219999933242796,
+              18
+            ]
+          }
+        ],
+        "gpu": {
+          "supported": true,
+          "reason": null,
+          "disjointEvents": 0,
+          "discarded": 0,
+          "overflowSkipped": 0,
+          "foreignQuerySkipped": 0,
+          "allocationFailures": 0,
+          "unresolvedAtDispose": 0,
+          "contextLost": false,
+          "pending": 0,
+          "samples": [
+            {
+              "frame": 0,
+              "ms": 26.029218
+            },
+            {
+              "frame": 1,
+              "ms": 25.920572
+            },
+            {
+              "frame": 2,
+              "ms": 27.56578
+            },
+            {
+              "frame": 3,
+              "ms": 27.256874
+            },
+            {
+              "frame": 4,
+              "ms": 26.832551
+            },
+            {
+              "frame": 5,
+              "ms": 26.057186
+            },
+            {
+              "frame": 6,
+              "ms": 26.840676
+            },
+            {
+              "frame": 7,
+              "ms": 26.841875
+            },
+            {
+              "frame": 8,
+              "ms": 26.665468
+            },
+            {
+              "frame": 9,
+              "ms": 24.586093
+            },
+            {
+              "frame": 10,
+              "ms": 25.214531
+            },
+            {
+              "frame": 11,
+              "ms": 24.712291
+            },
+            {
+              "frame": 12,
+              "ms": 23.595259
+            },
+            {
+              "frame": 13,
+              "ms": 24.086145
+            },
+            {
+              "frame": 14,
+              "ms": 24.722708
+            },
+            {
+              "frame": 15,
+              "ms": 22.76802
+            },
+            {
+              "frame": 16,
+              "ms": 23.162499
+            },
+            {
+              "frame": 17,
+              "ms": 23.934583
+            },
+            {
+              "frame": 18,
+              "ms": 22.680415
+            },
+            {
+              "frame": 19,
+              "ms": 22.386457
+            },
+            {
+              "frame": 20,
+              "ms": 22.444686
+            },
+            {
+              "frame": 21,
+              "ms": 22.855624
+            },
+            {
+              "frame": 22,
+              "ms": 22.05651
+            },
+            {
+              "frame": 23,
+              "ms": 22.103696
+            },
+            {
+              "frame": 24,
+              "ms": 20.763697
+            },
+            {
+              "frame": 25,
+              "ms": 20.966458
+            },
+            {
+              "frame": 26,
+              "ms": 23.544686
+            },
+            {
+              "frame": 27,
+              "ms": 22.879791
+            },
+            {
+              "frame": 28,
+              "ms": 22.74604
+            },
+            {
+              "frame": 29,
+              "ms": 21.250676
+            },
+            {
+              "frame": 30,
+              "ms": 22.273958
+            },
+            {
+              "frame": 31,
+              "ms": 32.296145
+            },
+            {
+              "frame": 32,
+              "ms": 27.693176
+            },
+            {
+              "frame": 33,
+              "ms": 22.318436
+            },
+            {
+              "frame": 34,
+              "ms": 26.104478
+            },
+            {
+              "frame": 35,
+              "ms": 25.921041
+            },
+            {
+              "frame": 36,
+              "ms": 26.324739
+            },
+            {
+              "frame": 37,
+              "ms": 24.769374
+            },
+            {
+              "frame": 38,
+              "ms": 22.758384
+            },
+            {
+              "frame": 39,
+              "ms": 25.106458
+            },
+            {
+              "frame": 40,
+              "ms": 23.459374
+            },
+            {
+              "frame": 41,
+              "ms": 23.133593
+            },
+            {
+              "frame": 42,
+              "ms": 22.85953
+            },
+            {
+              "frame": 43,
+              "ms": 22.538333
+            },
+            {
+              "frame": 44,
+              "ms": 22.423437
+            },
+            {
+              "frame": 45,
+              "ms": 21.10026
+            },
+            {
+              "frame": 46,
+              "ms": 21.345728
+            },
+            {
+              "frame": 47,
+              "ms": 22.140572
+            },
+            {
+              "frame": 48,
+              "ms": 20.759635
+            },
+            {
+              "frame": 49,
+              "ms": 19.284895
+            },
+            {
+              "frame": 50,
+              "ms": 19.395936
+            },
+            {
+              "frame": 51,
+              "ms": 20.389322
+            },
+            {
+              "frame": 52,
+              "ms": 19.463645
+            },
+            {
+              "frame": 53,
+              "ms": 19.208228
+            },
+            {
+              "frame": 54,
+              "ms": 20.468593
+            },
+            {
+              "frame": 55,
+              "ms": 18.388437
+            },
+            {
+              "frame": 56,
+              "ms": 20.188228
+            },
+            {
+              "frame": 57,
+              "ms": 19.862342
+            },
+            {
+              "frame": 58,
+              "ms": 19.504947
+            },
+            {
+              "frame": 59,
+              "ms": 19.990103
+            },
+            {
+              "frame": 60,
+              "ms": 19.572551
+            },
+            {
+              "frame": 61,
+              "ms": 19.854583
+            },
+            {
+              "frame": 62,
+              "ms": 22.08953
+            },
+            {
+              "frame": 63,
+              "ms": 22.836666
+            },
+            {
+              "frame": 64,
+              "ms": 20.335988
+            },
+            {
+              "frame": 65,
+              "ms": 20.573124
+            },
+            {
+              "frame": 66,
+              "ms": 25.128749
+            },
+            {
+              "frame": 67,
+              "ms": 19.650572
+            },
+            {
+              "frame": 68,
+              "ms": 21.580676
+            },
+            {
+              "frame": 69,
+              "ms": 20.572708
+            },
+            {
+              "frame": 70,
+              "ms": 32.76927
+            },
+            {
+              "frame": 71,
+              "ms": 22.761978
+            },
+            {
+              "frame": 72,
+              "ms": 20.72979
+            },
+            {
+              "frame": 73,
+              "ms": 21.292916
+            },
+            {
+              "frame": 74,
+              "ms": 21.672238
+            },
+            {
+              "frame": 75,
+              "ms": 20.74703
+            },
+            {
+              "frame": 76,
+              "ms": 22.37427
+            },
+            {
+              "frame": 77,
+              "ms": 22.865103
+            },
+            {
+              "frame": 78,
+              "ms": 23.771718
+            },
+            {
+              "frame": 79,
+              "ms": 21.264635
+            },
+            {
+              "frame": 80,
+              "ms": 23.368592
+            },
+            {
+              "frame": 81,
+              "ms": 24.949739
+            },
+            {
+              "frame": 82,
+              "ms": 24.824999
+            },
+            {
+              "frame": 83,
+              "ms": 23.519426
+            },
+            {
+              "frame": 84,
+              "ms": 24.41078
+            },
+            {
+              "frame": 85,
+              "ms": 21.993072
+            },
+            {
+              "frame": 86,
+              "ms": 22.657604
+            },
+            {
+              "frame": 87,
+              "ms": 24.278801
+            },
+            {
+              "frame": 88,
+              "ms": 23.625937
+            },
+            {
+              "frame": 89,
+              "ms": 25.093228
+            }
+          ]
+        },
+        "stateUnchanged": true,
+        "glError": 0,
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "cupped",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1189,
+          "far": 692,
+          "leaves": 7524,
+          "triangles": 43584,
+          "chunks": 25,
+          "cachedTiles": 54,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 76.70000010728836,
+            "selectionMs": 157.89999955892563,
+            "selectionCount": 380,
+            "candidates": 8140,
+            "masked": 4764,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 1881,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "mud": null,
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "resolution": [
+          1280,
+          720
+        ]
+      },
+      "cadence": {
+        "frames": [
+          {
+            "frame": 0,
+            "cpuMs": 9.899999976158142,
+            "intervalMs": 37.10000002384186,
+            "calls": 133,
+            "triangles": 932217,
+            "coverageInstances": {
+              "near": 1480,
+              "far": 636
+            },
+            "camera": [
+              109.59244879761732,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 1,
+            "cpuMs": 9,
+            "intervalMs": 34.89999997615814,
+            "calls": 133,
+            "triangles": 931371,
+            "coverageInstances": {
+              "near": 1466,
+              "far": 641
+            },
+            "camera": [
+              109.31221865876908,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 2,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 35.80000001192093,
+            "calls": 132,
+            "triangles": 918050,
+            "coverageInstances": {
+              "near": 1323,
+              "far": 646
+            },
+            "camera": [
+              109.02432155251138,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 3,
+            "cpuMs": 10.5,
+            "intervalMs": 29.30000001192093,
+            "calls": 132,
+            "triangles": 921392,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.7292693493929,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 4,
+            "cpuMs": 9.199999988079071,
+            "intervalMs": 32.19999998807907,
+            "calls": 134,
+            "triangles": 913194,
+            "coverageInstances": {
+              "near": 1326,
+              "far": 647
+            },
+            "camera": [
+              108.42758664146345,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 5,
+            "cpuMs": 8.5,
+            "intervalMs": 32.39999997615814,
+            "calls": 134,
+            "triangles": 910166,
+            "coverageInstances": {
+              "near": 1328,
+              "far": 654
+            },
+            "camera": [
+              108.11980980956841,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 6,
+            "cpuMs": 9.600000023841858,
+            "intervalMs": 34.60000002384186,
+            "calls": 134,
+            "triangles": 900272,
+            "coverageInstances": {
+              "near": 1172,
+              "far": 663
+            },
+            "camera": [
+              107.8064860696832,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 7,
+            "cpuMs": 8.699999988079071,
+            "intervalMs": 34.89999997615814,
+            "calls": 134,
+            "triangles": 899201,
+            "coverageInstances": {
+              "near": 1173,
+              "far": 667
+            },
+            "camera": [
+              107.48817249998322,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 8,
+            "cpuMs": 9.899999976158142,
+            "intervalMs": 31.200000047683716,
+            "calls": 133,
+            "triangles": 898996,
+            "coverageInstances": {
+              "near": 1175,
+              "far": 671
+            },
+            "camera": [
+              107.16543505037916,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 9,
+            "cpuMs": 8.900000035762787,
+            "intervalMs": 32.09999996423721,
+            "calls": 133,
+            "triangles": 899723,
+            "coverageInstances": {
+              "near": 1176,
+              "far": 674
+            },
+            "camera": [
+              106.83884753627875,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 10,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 32.19999998807907,
+            "calls": 133,
+            "triangles": 898151,
+            "coverageInstances": {
+              "near": 1177,
+              "far": 680
+            },
+            "camera": [
+              106.50899061836391,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 11,
+            "cpuMs": 8.200000047683716,
+            "intervalMs": 32,
+            "calls": 133,
+            "triangles": 896684,
+            "coverageInstances": {
+              "near": 1178,
+              "far": 685
+            },
+            "camera": [
+              106.17645077019723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 12,
+            "cpuMs": 7.5,
+            "intervalMs": 34.30000001192093,
+            "calls": 132,
+            "triangles": 895192,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 690
+            },
+            "camera": [
+              105.84181923549336,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 13,
+            "cpuMs": 9.599999964237213,
+            "intervalMs": 33.10000002384186,
+            "calls": 132,
+            "triangles": 894868,
+            "coverageInstances": {
+              "near": 1179,
+              "far": 695
+            },
+            "camera": [
+              105.5056909769093,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 14,
+            "cpuMs": 8.300000011920929,
+            "intervalMs": 31.19999998807907,
+            "calls": 132,
+            "triangles": 894236,
+            "coverageInstances": {
+              "near": 1181,
+              "far": 697
+            },
+            "camera": [
+              105.1686636182225,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 15,
+            "cpuMs": 7.099999964237213,
+            "intervalMs": 29.30000001192093,
+            "calls": 132,
+            "triangles": 892769,
+            "coverageInstances": {
+              "near": 1182,
+              "far": 702
+            },
+            "camera": [
+              104.83133638177752,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 16,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 30.69999998807907,
+            "calls": 132,
+            "triangles": 889845,
+            "coverageInstances": {
+              "near": 1183,
+              "far": 710
+            },
+            "camera": [
+              104.4943090230907,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 17,
+            "cpuMs": 10.800000011920929,
+            "intervalMs": 41.39999997615814,
+            "calls": 132,
+            "triangles": 889338,
+            "coverageInstances": {
+              "near": 1185,
+              "far": 711
+            },
+            "camera": [
+              104.15818076450662,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 18,
+            "cpuMs": 9.600000023841858,
+            "intervalMs": 35.60000002384186,
+            "calls": 131,
+            "triangles": 887223,
+            "coverageInstances": {
+              "near": 1186,
+              "far": 715
+            },
+            "camera": [
+              103.82354922980277,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 19,
+            "cpuMs": 8.800000011920929,
+            "intervalMs": 32.80000001192093,
+            "calls": 131,
+            "triangles": 885746,
+            "coverageInstances": {
+              "near": 1187,
+              "far": 719
+            },
+            "camera": [
+              103.49100938163609,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 20,
+            "cpuMs": 8.899999976158142,
+            "intervalMs": 34,
+            "calls": 130,
+            "triangles": 885380,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              103.16115246372125,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 21,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 32.19999998807907,
+            "calls": 128,
+            "triangles": 880064,
+            "coverageInstances": {
+              "near": 1188,
+              "far": 722
+            },
+            "camera": [
+              102.83456494962084,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 22,
+            "cpuMs": 10.399999976158142,
+            "intervalMs": 32,
+            "calls": 125,
+            "triangles": 879746,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 733
+            },
+            "camera": [
+              102.51182750001678,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 23,
+            "cpuMs": 8,
+            "intervalMs": 34.39999997615814,
+            "calls": 124,
+            "triangles": 877091,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              102.1935139303168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 24,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 31.900000035762787,
+            "calls": 123,
+            "triangles": 874428,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 740
+            },
+            "camera": [
+              101.88019019043159,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 25,
+            "cpuMs": 8.599999964237213,
+            "intervalMs": 35,
+            "calls": 122,
+            "triangles": 864765,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 747
+            },
+            "camera": [
+              101.57241335853655,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 26,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 31.69999998807907,
+            "calls": 121,
+            "triangles": 863745,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 753
+            },
+            "camera": [
+              101.2707306506071,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 27,
+            "cpuMs": 9.800000011920929,
+            "intervalMs": 33.19999998807907,
+            "calls": 122,
+            "triangles": 867061,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 757
+            },
+            "camera": [
+              100.97567844748862,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 28,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 32.10000002384186,
+            "calls": 120,
+            "triangles": 865287,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.68778134123092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 29,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 35.09999996423721,
+            "calls": 120,
+            "triangles": 865431,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.40755120238268,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 30,
+            "cpuMs": 10.100000023841858,
+            "intervalMs": 32.5,
+            "calls": 120,
+            "triangles": 856329,
+            "coverageInstances": {
+              "near": 901,
+              "far": 767
+            },
+            "camera": [
+              100.13548626990435,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 31,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 31.30000001192093,
+            "calls": 119,
+            "triangles": 856562,
+            "coverageInstances": {
+              "near": 901,
+              "far": 770
+            },
+            "camera": [
+              99.87207026531739,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 32,
+            "cpuMs": 8.100000023841858,
+            "intervalMs": 28.80000001192093,
+            "calls": 120,
+            "triangles": 858969,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.61777153266513,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 33,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 28.30000001192093,
+            "calls": 121,
+            "triangles": 861330,
+            "coverageInstances": {
+              "near": 901,
+              "far": 773
+            },
+            "camera": [
+              99.3730422058141,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 34,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 29.69999998807907,
+            "calls": 121,
+            "triangles": 850623,
+            "coverageInstances": {
+              "near": 757,
+              "far": 782
+            },
+            "camera": [
+              99.13831740457653,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 35,
+            "cpuMs": 7.899999976158142,
+            "intervalMs": 28,
+            "calls": 121,
+            "triangles": 850826,
+            "coverageInstances": {
+              "near": 757,
+              "far": 785
+            },
+            "camera": [
+              98.91401446108318,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 36,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 30,
+            "calls": 121,
+            "triangles": 849632,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.70053217778214,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 37,
+            "cpuMs": 8.5,
+            "intervalMs": 25.600000023841858,
+            "calls": 120,
+            "triangles": 849048,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.49825011838249,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 38,
+            "cpuMs": 7,
+            "intervalMs": 25.299999952316284,
+            "calls": 119,
+            "triangles": 850024,
+            "coverageInstances": {
+              "near": 757,
+              "far": 790
+            },
+            "camera": [
+              98.30752793300393,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 39,
+            "cpuMs": 9.300000011920929,
+            "intervalMs": 25.400000035762787,
+            "calls": 119,
+            "triangles": 852153,
+            "coverageInstances": {
+              "near": 757,
+              "far": 793
+            },
+            "camera": [
+              98.12870471873208,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 40,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 25.19999998807907,
+            "calls": 118,
+            "triangles": 852369,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.9620984167161,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 41,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 25.399999976158142,
+            "calls": 118,
+            "triangles": 852546,
+            "coverageInstances": {
+              "near": 757,
+              "far": 796
+            },
+            "camera": [
+              97.80800524688102,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 42,
+            "cpuMs": 6.400000035762787,
+            "intervalMs": 28,
+            "calls": 117,
+            "triangles": 842019,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.66669918125947,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 43,
+            "cpuMs": 7.100000023841858,
+            "intervalMs": 22,
+            "calls": 116,
+            "triangles": 841884,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.53843145687945,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 44,
+            "cpuMs": 8.600000023841858,
+            "intervalMs": 25.5,
+            "calls": 116,
+            "triangles": 842940,
+            "coverageInstances": {
+              "near": 597,
+              "far": 799
+            },
+            "camera": [
+              97.42343012907403,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 45,
+            "cpuMs": 8,
+            "intervalMs": 25.80000001192093,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.32189966600731,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 46,
+            "cpuMs": 6.799999952316284,
+            "intervalMs": 26.400000035762787,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.23402058513747,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 47,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 26.19999998807907,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.1599491322633,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 48,
+            "cpuMs": 6.199999988079071,
+            "intervalMs": 23.30000001192093,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.09981700372497,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 49,
+            "cpuMs": 7.5,
+            "intervalMs": 25.19999998807907,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.05373111225258,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 50,
+            "cpuMs": 6,
+            "intervalMs": 37.89999997615814,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.02177339687935,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 51,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 27.80000001192093,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00400067725701,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 52,
+            "cpuMs": 6,
+            "intervalMs": 25.399999976158142,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.00044455263246,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 53,
+            "cpuMs": 7.600000023841858,
+            "intervalMs": 23.5,
+            "calls": 115,
+            "triangles": 830665,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.01111134566548,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 54,
+            "cpuMs": 6.199999988079071,
+            "intervalMs": 24.700000047683716,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.03598209118736,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 55,
+            "cpuMs": 7.5,
+            "intervalMs": 23.19999998807907,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.07501256992016,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 56,
+            "cpuMs": 6.400000035762787,
+            "intervalMs": 24.599999964237213,
+            "calls": 115,
+            "triangles": 832131,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.12813338709702,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 57,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 24.100000023841858,
+            "calls": 115,
+            "triangles": 831876,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.19525009584355,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 58,
+            "cpuMs": 6.800000011920929,
+            "intervalMs": 24.399999976158142,
+            "calls": 116,
+            "triangles": 843000,
+            "coverageInstances": {
+              "near": 597,
+              "far": 805
+            },
+            "camera": [
+              97.27624336510087,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 59,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 23.100000023841858,
+            "calls": 116,
+            "triangles": 842990,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.37096919179196,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 60,
+            "cpuMs": 6.5,
+            "intervalMs": 23.899999976158142,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.47925915685376,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 61,
+            "cpuMs": 6.300000011920929,
+            "intervalMs": 24.80000001192093,
+            "calls": 116,
+            "triangles": 841934,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.60092072468024,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 62,
+            "cpuMs": 7.5,
+            "intervalMs": 23.900000035762787,
+            "calls": 117,
+            "triangles": 842069,
+            "coverageInstances": {
+              "near": 597,
+              "far": 804
+            },
+            "camera": [
+              97.73573758544359,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 63,
+            "cpuMs": 7,
+            "intervalMs": 23.69999998807907,
+            "calls": 118,
+            "triangles": 852701,
+            "coverageInstances": {
+              "near": 757,
+              "far": 798
+            },
+            "camera": [
+              97.88347003968525,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 64,
+            "cpuMs": 7.300000011920929,
+            "intervalMs": 23.899999976158142,
+            "calls": 118,
+            "triangles": 852359,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.04385542449278,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 65,
+            "cpuMs": 6.600000023841858,
+            "intervalMs": 24.69999998807907,
+            "calls": 119,
+            "triangles": 852173,
+            "coverageInstances": {
+              "near": 757,
+              "far": 795
+            },
+            "camera": [
+              98.21660858050492,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 66,
+            "cpuMs": 9.800000011920929,
+            "intervalMs": 24.30000001192093,
+            "calls": 120,
+            "triangles": 851648,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.4014223589146,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 67,
+            "cpuMs": 6.699999988079071,
+            "intervalMs": 26.100000023841858,
+            "calls": 121,
+            "triangles": 851128,
+            "coverageInstances": {
+              "near": 757,
+              "far": 789
+            },
+            "camera": [
+              98.59796816756818,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 68,
+            "cpuMs": 7.899999976158142,
+            "intervalMs": 25.19999998807907,
+            "calls": 121,
+            "triangles": 850786,
+            "coverageInstances": {
+              "near": 757,
+              "far": 786
+            },
+            "camera": [
+              98.80589655519044,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 69,
+            "cpuMs": 7.5,
+            "intervalMs": 24.30000001192093,
+            "calls": 123,
+            "triangles": 854198,
+            "coverageInstances": {
+              "near": 757,
+              "far": 783
+            },
+            "camera": [
+              99.02483783269612,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 70,
+            "cpuMs": 8.700000047683716,
+            "intervalMs": 25.099999964237213,
+            "calls": 123,
+            "triangles": 855116,
+            "coverageInstances": {
+              "near": 757,
+              "far": 780
+            },
+            "camera": [
+              99.25440273048363,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 71,
+            "cpuMs": 6.899999976158142,
+            "intervalMs": 24.600000023841858,
+            "calls": 121,
+            "triangles": 861471,
+            "coverageInstances": {
+              "near": 901,
+              "far": 776
+            },
+            "camera": [
+              99.49418309054224,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 72,
+            "cpuMs": 7.399999976158142,
+            "intervalMs": 28.30000001192093,
+            "calls": 121,
+            "triangles": 861566,
+            "coverageInstances": {
+              "near": 901,
+              "far": 771
+            },
+            "camera": [
+              99.74375259214204,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 73,
+            "cpuMs": 10.100000023841858,
+            "intervalMs": 24.599999964237213,
+            "calls": 121,
+            "triangles": 858144,
+            "coverageInstances": {
+              "near": 901,
+              "far": 769
+            },
+            "camera": [
+              100.00266750981675,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 74,
+            "cpuMs": 9.100000023841858,
+            "intervalMs": 24,
+            "calls": 121,
+            "triangles": 867523,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 766
+            },
+            "camera": [
+              100.27046750229131,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 75,
+            "cpuMs": 10.199999988079071,
+            "intervalMs": 27.100000023841858,
+            "calls": 121,
+            "triangles": 867483,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 762
+            },
+            "camera": [
+              100.54667643095195,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 76,
+            "cpuMs": 7.5,
+            "intervalMs": 27.30000001192093,
+            "calls": 121,
+            "triangles": 869133,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 759
+            },
+            "camera": [
+              100.83080320640317,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 77,
+            "cpuMs": 7.199999988079071,
+            "intervalMs": 28.399999976158142,
+            "calls": 122,
+            "triangles": 869801,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 755
+            },
+            "camera": [
+              101.12234266160691,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 78,
+            "cpuMs": 10.899999976158142,
+            "intervalMs": 26.30000001192093,
+            "calls": 121,
+            "triangles": 868323,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 750
+            },
+            "camera": [
+              101.42077645005092,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 79,
+            "cpuMs": 7.799999952316284,
+            "intervalMs": 26.100000023841858,
+            "calls": 121,
+            "triangles": 867565,
+            "coverageInstances": {
+              "near": 1044,
+              "far": 745
+            },
+            "camera": [
+              101.72557396735012,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 80,
+            "cpuMs": 8.199999988079071,
+            "intervalMs": 25.399999976158142,
+            "calls": 124,
+            "triangles": 878433,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 741
+            },
+            "camera": [
+              102.03619329464172,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 81,
+            "cpuMs": 7.699999988079071,
+            "intervalMs": 26,
+            "calls": 125,
+            "triangles": 881878,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 735
+            },
+            "camera": [
+              102.35208216209723,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 82,
+            "cpuMs": 8.5,
+            "intervalMs": 27.69999998807907,
+            "calls": 125,
+            "triangles": 881516,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 730
+            },
+            "camera": [
+              102.67267893083806,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 83,
+            "cpuMs": 9.300000011920929,
+            "intervalMs": 26.80000001192093,
+            "calls": 130,
+            "triangles": 886730,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 724
+            },
+            "camera": [
+              102.9974135915089,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 84,
+            "cpuMs": 8.799999952316284,
+            "intervalMs": 29.100000023841858,
+            "calls": 130,
+            "triangles": 886700,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.32570877773365,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 85,
+            "cpuMs": 8.900000035762787,
+            "intervalMs": 30.799999952316284,
+            "calls": 131,
+            "triangles": 888741,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 721
+            },
+            "camera": [
+              103.65698079265168,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 86,
+            "cpuMs": 9.699999988079071,
+            "intervalMs": 29.900000035762787,
+            "calls": 132,
+            "triangles": 890538,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 710
+            },
+            "camera": [
+              103.99064064670955,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 87,
+            "cpuMs": 9.300000011920929,
+            "intervalMs": 27.69999998807907,
+            "calls": 132,
+            "triangles": 891115,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.32609510486301,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 88,
+            "cpuMs": 6.900000035762787,
+            "intervalMs": 26.19999998807907,
+            "calls": 132,
+            "triangles": 893008,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 705
+            },
+            "camera": [
+              104.66274774132722,
+              20.219999933242796,
+              18
+            ]
+          },
+          {
+            "frame": 89,
+            "cpuMs": 7.800000011920929,
+            "intervalMs": 28.69999998807907,
+            "calls": 132,
+            "triangles": 895634,
+            "coverageInstances": {
+              "near": 1189,
+              "far": 692
+            },
+            "camera": [
+              105,
+              20.219999933242796,
+              18
+            ]
+          }
+        ],
+        "gpu": null,
+        "stateUnchanged": true,
+        "glError": 0,
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "cupped",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1189,
+          "far": 692,
+          "leaves": 7524,
+          "triangles": 43584,
+          "chunks": 25,
+          "cachedTiles": 54,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 76.70000010728836,
+            "selectionMs": 186.79999953508377,
+            "selectionCount": 480,
+            "candidates": 8140,
+            "masked": 4764,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 1881,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "mud": null,
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "resolution": [
+          1280,
+          720
+        ]
+      },
+      "sceneAudit": {
+        "biomeUniform": 2,
+        "windStrength": [
+          0.25,
+          0.25
+        ],
+        "cameraMode": "moving",
+        "fernShadowEnabled": [
+          true,
+          false
+        ],
+        "shadowResolution": 2048,
+        "shadowCacheBefore": {
+          "draws": 512,
+          "hits": 484,
+          "untracked": 0
+        },
+        "cardStudy": {
+          "representation": "native-holly-fern-balanced",
+          "shadowResolution": 2048,
+          "castsNativeShadow": true,
+          "sizeXZ": 1.35,
+          "sizeY": 1.6,
+          "colorContrast": 1.12,
+          "edgePadding": 1,
+          "frondsPerClump": 4,
+          "trianglesPerClump": 32,
+          "textureCount": 2,
+          "textureBytesEstimate": 11184810.666666666,
+          "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+          "reuseNativeInstanceBuffers": true,
+          "extraSelectionPass": false,
+          "stats": {
+            "instances": 1881,
+            "updates": 0,
+            "selectionMs": 0
+          },
+          "prelit": {
+            "nearAndFar": false,
+            "nearNative": true,
+            "orientations": 8,
+            "atlasWidth": 2048,
+            "atlasHeight": 256,
+            "solarShadowOpacity": 0.55,
+            "solarShadowQuad": true,
+            "liveNormalSampling": false,
+            "liveShadowCasting": false,
+            "liveWind": false,
+            "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+          }
+        },
+        "residentMasks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "origin": [
+          0,
+          0
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ],
+        "chunks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "objects": 4,
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "actionRemaining": 2.7999999999999994
+          },
+          {
+            "id": "worker-30",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "actionRemaining": -1.970645868709653e-15
+          }
+        ],
+        "memory": {
+          "geometries": 286,
+          "textures": 136
+        },
+        "far": {
+          "logicalStandbyPreload": true,
+          "species": 4,
+          "estimatedAtlasTextureBytes": 44739242.666666664,
+          "estimatedBackdropTextureBytes": 5592405.333333333,
+          "errors": []
+        },
+        "farEnabled": true,
+        "instanceCulling": true,
+        "workload": [
+          92,
+          405816,
+          286,
+          136
+        ]
+      },
+      "capture": {
+        "camera": [
+          105,
+          20.219999933242796,
+          18
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ]
+      },
+      "shadowCacheAfter": {
+        "draws": 816,
+        "hits": 484,
+        "untracked": 0
+      },
+      "errors": []
+    }
+  ]
+}

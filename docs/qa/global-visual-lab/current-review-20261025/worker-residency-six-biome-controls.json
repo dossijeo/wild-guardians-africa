@@ -1,0 +1,148 @@
+{
+  "scope": "Six night/low active streaming smoke controls. QA workerResidency=actors. Not AB performance or visual equivalence acceptance. Canyon includes an additional graphical chunk; do not treat counts as identical across biomes.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "graphics": 25,
+      "native": 26,
+      "retained": [
+        "1,0"
+      ],
+      "demand": 2,
+      "linearMemoryBytes": 16777216,
+      "elapsed": 141.7063061889121,
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "count": 61,
+        "mean": 21.267768688524594,
+        "p95": 29.244686,
+        "max": 35.263175
+      },
+      "frame": null,
+      "scope": "Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. Not equivalence acceptance. CPU/RAF plus GPU elapsed queries when supported; GPU intervals include pipeline bubbles, not exclusively busy time."
+    },
+    {
+      "biome": "gran-rio",
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "graphics": 25,
+      "native": 26,
+      "retained": [
+        "1,0"
+      ],
+      "demand": 2,
+      "linearMemoryBytes": 16777216,
+      "elapsed": 141.57343118891174,
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "count": 61,
+        "mean": 19.754762393442626,
+        "p95": 25.895728,
+        "max": 33.354582
+      },
+      "frame": null,
+      "scope": "Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. Not equivalence acceptance. CPU/RAF plus GPU elapsed queries when supported; GPU intervals include pipeline bubbles, not exclusively busy time."
+    },
+    {
+      "biome": "manglares",
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "graphics": 25,
+      "native": 26,
+      "retained": [
+        "1,0"
+      ],
+      "demand": 2,
+      "linearMemoryBytes": 16777216,
+      "elapsed": 142.20526118891217,
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "count": 61,
+        "mean": 23.860314852459016,
+        "p95": 31.318541,
+        "max": 35.285051
+      },
+      "frame": null,
+      "scope": "Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. Not equivalence acceptance. CPU/RAF plus GPU elapsed queries when supported; GPU intervals include pipeline bubbles, not exclusively busy time."
+    },
+    {
+      "biome": "desierto",
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "graphics": 25,
+      "native": 26,
+      "retained": [
+        "1,0"
+      ],
+      "demand": 2,
+      "linearMemoryBytes": 16777216,
+      "elapsed": 138.12404999999725,
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "count": 61,
+        "mean": 14.300111754098353,
+        "p95": 16.245989,
+        "max": 17.629478
+      },
+      "frame": null,
+      "scope": "Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. Not equivalence acceptance. CPU/RAF plus GPU elapsed queries when supported; GPU intervals include pipeline bubbles, not exclusively busy time."
+    },
+    {
+      "biome": "volcanes",
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "graphics": 25,
+      "native": 26,
+      "retained": [
+        "1,0"
+      ],
+      "demand": 2,
+      "linearMemoryBytes": 16777216,
+      "elapsed": 140.85823618891212,
+      "terrainCamera": false,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "count": 61,
+        "mean": 17.431769836065573,
+        "p95": 21.777499,
+        "max": 24.829895
+      },
+      "frame": null,
+      "scope": "Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. Not equivalence acceptance. CPU/RAF plus GPU elapsed queries when supported; GPU intervals include pipeline bubbles, not exclusively busy time."
+    },
+    {
+      "biome": "gran-canon",
+      "created": 11,
+      "actorsReadyFrames": 180,
+      "pausedFrames": 0,
+      "graphics": 26,
+      "native": 26,
+      "retained": [],
+      "demand": 4,
+      "linearMemoryBytes": 16777216,
+      "elapsed": 140.87571618891224,
+      "terrainCamera": true,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "count": 61,
+        "mean": 18.461318229508198,
+        "p95": 21.762135,
+        "max": 37.933176
+      },
+      "frame": null,
+      "scope": "Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. Not equivalence acceptance. CPU/RAF plus GPU elapsed queries when supported; GPU intervals include pipeline bubbles, not exclusively busy time."
+    }
+  ],
+  "validity": "INVALID for gameplay and equivalent artwork: corrupted night fixture strings. See NIGHT-FIXTURE-CORRECTION.md. Preserve as negative evidence."
+}

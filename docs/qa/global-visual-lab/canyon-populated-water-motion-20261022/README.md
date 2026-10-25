@@ -1,0 +1,7 @@
+# Inhabited Canyon animated water and camera
+
+Run capture-canyon-populated-water-motion-20261022.mjs with Vite5190. Exact populated Canyon fixture, native normal camera, media/full backgrounds. Simulation stays paused and untouched. QA drives materialRegistry shader time from0 to239/30 seconds independently. First120 requested frames fixed camera; second120 perform a5m inward/outward dolly. Streaming remains enabled; no far-preparation pending frames observed in this short path. No production renderer changes.
+
+Day/night WebM videos1280x720,240 requested frames each,235/234 encoded frames verified with ffprobe; wall-clock durations6.042/6.391seconds. Shader time spans7.967seconds, so playback is not real-time speed or an FPS benchmark. Recorder misses some requests; do not claim all240 encoded. State/GL/page checks pass. Geometries151->150 during day,150->150 night;textures95 throughout. No long-distance streaming or global leak claim.
+
+Five PNG checkpoints per video (0,60,120,180,239) reviewed in contact sheets; sixth tile deliberately blank. They show continuous bank integration during the modest dolly and changing water detail. Daytime distant highlights remain repetitive; night retains blue water with subtler moving flecks. This is sampled visual review, not exhaustive every-frame video certification. Videos available for review; no reason from this limited test to discard the approved bank treatment. Combined profile benchmark remains provisional due to resource-count differences in separate runs.

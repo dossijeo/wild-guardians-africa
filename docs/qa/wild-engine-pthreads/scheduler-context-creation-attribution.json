@@ -1,0 +1,6067 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+  "result": {
+    "contextCreations": [
+      {
+        "start": 1895.7749999761581,
+        "ms": 356.460000038147,
+        "type": "webgl2",
+        "canvas": 1,
+        "known": false,
+        "id": "",
+        "className": "loading-prepared-canvas",
+        "width": 300,
+        "height": 150,
+        "created": true,
+        "stack": "Error\n    at HTMLCanvasElement.getContext (<anonymous>:4:473)\n    at HTMLCanvasElement.trackedContext [as getContext] (http://127.0.0.1:5190/src/rendering/gl-resource-epoch.js:24:53)\n    at getContext (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40023:21)\n    at new WebGLRenderer (http://127.0.0.1:5190/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=953a9de9:40042:15)\n    at http://127.0.0.1:5190/src/rendering/scene.js?t=1792867461720:116:64\n    at createRendererWithGlEpoch (http://127.0.0.1:5190/src/rendering/gl-resource-epoch.js:26:23)\n    at new WorldScene (http://127.0.0.1:5190/src/rendering/scene.js?t=1792867461720:116:27)\n    at prepareLoadingScene (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:103:12)\n    at startGame (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:194:14)\n    at http://127.0.0.1:5190/src/app/main.js?t=1792867461720:167:40"
+      },
+      {
+        "start": 2266.485000014305,
+        "ms": 0.09499996900558472,
+        "type": "2d",
+        "canvas": 2,
+        "known": false,
+        "id": "",
+        "className": "",
+        "width": 300,
+        "height": 150,
+        "created": true,
+        "stack": "Error\n    at HTMLCanvasElement.getContext (<anonymous>:4:473)\n    at new WallStrokePreview (http://127.0.0.1:5190/src/rendering/wall-stroke-preview.js:9:69)\n    at new WorldScene (http://127.0.0.1:5190/src/rendering/scene.js?t=1792867461720:125:24)\n    at prepareLoadingScene (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:103:12)\n    at startGame (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:194:14)\n    at http://127.0.0.1:5190/src/app/main.js?t=1792867461720:167:40\n    at safe (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:144:77)\n    at http://127.0.0.1:5190/src/app/main.js?t=1792867461720:160:3"
+      },
+      {
+        "start": 4304.860000014305,
+        "ms": 0.034999966621398926,
+        "type": "2d",
+        "canvas": 3,
+        "known": false,
+        "id": "",
+        "className": "loading-frame",
+        "width": 132,
+        "height": 52,
+        "created": true,
+        "stack": "Error\n    at HTMLCanvasElement.getContext (<anonymous>:4:473)\n    at paintLoadingFrame (http://127.0.0.1:5190/src/ui/loading-frame.js:8:59)\n    at LoadingOverlay.paintFrames (http://127.0.0.1:5190/src/ui/loading-overlay.js:15:93)\n    at startGame (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:206:41)"
+      },
+      {
+        "start": 34455.82999998331,
+        "ms": 0.04000002145767212,
+        "type": "2d",
+        "canvas": 4,
+        "known": false,
+        "id": "",
+        "className": "juice-overlay",
+        "width": 300,
+        "height": 150,
+        "created": true,
+        "stack": "Error\n    at HTMLCanvasElement.getContext (<anonymous>:4:473)\n    at new ScreenOverlays (http://127.0.0.1:5190/src/ui/screen-overlays.js:8:396)\n    at new GameJuice (http://127.0.0.1:5190/src/ui/game-juice.js:14:17)\n    at startGame (http://127.0.0.1:5190/src/app/main.js?t=1792867461720:270:538)"
+      },
+      {
+        "start": 34489.814999997616,
+        "ms": 624.7849999666214,
+        "type": "webgl",
+        "canvas": 5,
+        "known": false,
+        "id": "guardian-avatar",
+        "className": "",
+        "width": 300,
+        "height": 150,
+        "created": true,
+        "stack": "Error\n    at HTMLCanvasElement.getContext (<anonymous>:4:473)\n    at new SpriteMesh (http://127.0.0.1:5190/src/ui/guardian-native.js:11:22)\n    at new GuardianMesh (http://127.0.0.1:5190/src/ui/guardian-native.js:131:3)\n    at NativeGuardian.load (http://127.0.0.1:5190/src/ui/guardian.js:33:17)"
+      },
+      {
+        "start": 35168.17500001192,
+        "ms": 0.06999999284744263,
+        "type": "2d",
+        "canvas": 6,
+        "known": false,
+        "id": "guardian-magic",
+        "className": "",
+        "width": 300,
+        "height": 150,
+        "created": true,
+        "stack": "Error\n    at HTMLCanvasElement.getContext (<anonymous>:4:473)\n    at new GuardianMagic (http://127.0.0.1:5190/src/ui/guardian-native.js:209:57)\n    at NativeGuardian.load (http://127.0.0.1:5190/src/ui/guardian.js:33:64)"
+      }
+    ],
+    "texturePilot": null,
+    "farDraws": null,
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 1106.324999988079,
+      "bindings": {
+        "initialized": 59,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 59,
+        "released": 59,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": null,
+      "longFrames": null,
+      "frames": [
+        {
+          "timestamp": 1864.94,
+          "ms": 0.10000002384185791,
+          "lateness": 416.19999998569483
+        },
+        {
+          "timestamp": 2280.625,
+          "ms": 0.09499996900558472,
+          "lateness": 5.314999997615814
+        },
+        {
+          "timestamp": 2297.25,
+          "ms": 0.07499998807907104,
+          "lateness": 1.2450000047683716
+        },
+        {
+          "timestamp": 2314.045,
+          "ms": 0.10000002384185791,
+          "lateness": 0.6499999928473699
+        },
+        {
+          "timestamp": 2330.645,
+          "ms": 0.11000001430511475,
+          "lateness": 0.4549999642372313
+        },
+        {
+          "timestamp": 2347.125,
+          "ms": 0.10499995946884155,
+          "lateness": 0.42000001668930054
+        },
+        {
+          "timestamp": 2363.85,
+          "ms": 0.13999998569488525,
+          "lateness": 0.46499999761590516
+        },
+        {
+          "timestamp": 2380.48,
+          "ms": 0.11000001430511475,
+          "lateness": 5.334999997615796
+        },
+        {
+          "timestamp": 2413.81,
+          "ms": 0.11000001430511475,
+          "lateness": 12.444999995231683
+        },
+        {
+          "timestamp": 2496.935,
+          "ms": 0.07499998807907104,
+          "lateness": 5.810000004768426
+        },
+        {
+          "timestamp": 2530.24,
+          "ms": 0.1549999713897705,
+          "lateness": 4.264999995231847
+        },
+        {
+          "timestamp": 2563.285,
+          "ms": 0.125,
+          "lateness": 5.284999992847588
+        },
+        {
+          "timestamp": 2613.28,
+          "ms": 0.12999999523162842,
+          "lateness": 1.8400000047681715
+        },
+        {
+          "timestamp": 2663.17,
+          "ms": 0.08499997854232788,
+          "lateness": 3.890000002384113
+        },
+        {
+          "timestamp": 2696.345,
+          "ms": 0.09499996900558472,
+          "lateness": 2.5850000071527575
+        },
+        {
+          "timestamp": 2713.015,
+          "ms": 0.10999995470046997,
+          "lateness": 0.4100000119210563
+        },
+        {
+          "timestamp": 2762.86,
+          "ms": 0.09499996900558472,
+          "lateness": 4.639999999999873
+        },
+        {
+          "timestamp": 2812.795,
+          "ms": 0.13999998569488525,
+          "lateness": 2.8750000166892278
+        },
+        {
+          "timestamp": 2879.355,
+          "ms": 0.08000004291534424,
+          "lateness": 40.36499996900557
+        },
+        {
+          "timestamp": 2945.805,
+          "ms": 0.12000000476837158,
+          "lateness": 6.495000011921093
+        },
+        {
+          "timestamp": 2979.13,
+          "ms": 0.06499999761581421,
+          "lateness": 30.62499999523152
+        },
+        {
+          "timestamp": 2995.705,
+          "ms": 0.06499999761581421,
+          "lateness": 17.13499997377403
+        },
+        {
+          "timestamp": 3029.01,
+          "ms": 0.08499997854232788,
+          "lateness": 12.735000004768153
+        },
+        {
+          "timestamp": 3095.485,
+          "ms": 0.125,
+          "lateness": 3.8850000047682443
+        },
+        {
+          "timestamp": 3112.185,
+          "ms": 0.15999996662139893,
+          "lateness": 1.6800000095367977
+        },
+        {
+          "timestamp": 3162.125,
+          "ms": 0.08000004291534424,
+          "lateness": 5.719999969005585
+        },
+        {
+          "timestamp": 3212.035,
+          "ms": 0.0700000524520874,
+          "lateness": 46.06499996423736
+        },
+        {
+          "timestamp": 3261.72,
+          "ms": 0.0549999475479126,
+          "lateness": 2.705000011921129
+        },
+        {
+          "timestamp": 3311.655,
+          "ms": 0.1549999713897705,
+          "lateness": 6.520000011920729
+        },
+        {
+          "timestamp": 3394.8,
+          "ms": 0.13999998569488525,
+          "lateness": 6.310000014304933
+        },
+        {
+          "timestamp": 3411.35,
+          "ms": 0.10500001907348633,
+          "lateness": 0.4999999642373041
+        },
+        {
+          "timestamp": 3478.37,
+          "ms": 0.11500000953674316,
+          "lateness": 7.6850000071526665
+        },
+        {
+          "timestamp": 3544.445,
+          "ms": 0.08000004291534424,
+          "lateness": 13.659999959468678
+        },
+        {
+          "timestamp": 3644.29,
+          "ms": 0.19499999284744263,
+          "lateness": 9.880000016689337
+        },
+        {
+          "timestamp": 3660.95,
+          "ms": 0.06000000238418579,
+          "lateness": 176.68999998569507
+        },
+        {
+          "timestamp": 3827.06,
+          "ms": 0.06499999761581421,
+          "lateness": 12.07999998569494
+        },
+        {
+          "timestamp": 3843.715,
+          "ms": 0.05500000715255737,
+          "lateness": 0.3199999666212534
+        },
+        {
+          "timestamp": 3860.555,
+          "ms": 0.13999998569488525,
+          "lateness": 0.5050000023843495
+        },
+        {
+          "timestamp": 3877.07,
+          "ms": 0.08000004291534424,
+          "lateness": 0.3349999713896068
+        },
+        {
+          "timestamp": 4026.76,
+          "ms": 0.07499998807907104,
+          "lateness": 7.249999990463039
+        },
+        {
+          "timestamp": 4043.275,
+          "ms": 0.10499995946884155,
+          "lateness": 0.5900000095366522
+        },
+        {
+          "timestamp": 4059.985,
+          "ms": 0.06999999284744263,
+          "lateness": 8.334999992847315
+        },
+        {
+          "timestamp": 4076.61,
+          "ms": 0.21000003814697266,
+          "lateness": 0.854999973773829
+        },
+        {
+          "timestamp": 4143.065,
+          "ms": 0.15500003099441528,
+          "lateness": 13.474999961853428
+        },
+        {
+          "timestamp": 4176.39,
+          "ms": 0.08499997854232788,
+          "lateness": 1.6700000023838584
+        },
+        {
+          "timestamp": 4193.05,
+          "ms": 0.0549999475479126,
+          "lateness": 14.310000014304933
+        },
+        {
+          "timestamp": 4309.36,
+          "ms": 1.8050000071525574,
+          "lateness": 16.95999999284777
+        },
+        {
+          "timestamp": 4325.93,
+          "ms": 1.5099999904632568,
+          "lateness": 3.0000000071522663
+        },
+        {
+          "timestamp": 4342.58,
+          "ms": 1.5149999856948853,
+          "lateness": 0.22000001192100171
+        },
+        {
+          "timestamp": 4442.36,
+          "ms": 1.2599999904632568,
+          "lateness": 14.604999973774284
+        },
+        {
+          "timestamp": 4458.94,
+          "ms": 1.175000011920929,
+          "lateness": 9.209999976158542
+        },
+        {
+          "timestamp": 4475.605,
+          "ms": 0.8850000500679016,
+          "lateness": 74.92999996662184
+        },
+        {
+          "timestamp": 4558.76,
+          "ms": 1.1200000047683716,
+          "lateness": 0.27999996185280907
+        },
+        {
+          "timestamp": 4575.35,
+          "ms": 5.51500004529953,
+          "lateness": 0.25499995946847775
+        },
+        {
+          "timestamp": 4675.345,
+          "ms": 1.7200000286102295,
+          "lateness": 9.259999959468587
+        },
+        {
+          "timestamp": 4691.9,
+          "ms": 0.8650000095367432,
+          "lateness": 0.3149999737743201
+        },
+        {
+          "timestamp": 4708.555,
+          "ms": 2.009999990463257,
+          "lateness": 0.4950000119206379
+        },
+        {
+          "timestamp": 4725.125,
+          "ms": 1.3650000095367432,
+          "lateness": 0.5
+        },
+        {
+          "timestamp": 4741.98,
+          "ms": 1.300000011920929,
+          "lateness": 0.5150000047688081
+        },
+        {
+          "timestamp": 4758.295,
+          "ms": 4.235000014305115,
+          "lateness": 4.784999983310627
+        },
+        {
+          "timestamp": 4775.08,
+          "ms": 1.2049999833106995,
+          "lateness": 8.045000000000073
+        },
+        {
+          "timestamp": 4808.275,
+          "ms": 0.9100000262260437,
+          "lateness": 1.4849999904636206
+        },
+        {
+          "timestamp": 4824.825,
+          "ms": 1.1050000190734863,
+          "lateness": 6.614999997615996
+        },
+        {
+          "timestamp": 4841.505,
+          "ms": 0.9950000047683716,
+          "lateness": 0.3199999880789619
+        },
+        {
+          "timestamp": 4858.055,
+          "ms": 0.9449999928474426,
+          "lateness": 9.14499998807878
+        },
+        {
+          "timestamp": 4874.69,
+          "ms": 0.7299999594688416,
+          "lateness": 14.555000004768772
+        },
+        {
+          "timestamp": 4908.205,
+          "ms": 1.3100000023841858,
+          "lateness": 8.249999983310772
+        },
+        {
+          "timestamp": 4924.705,
+          "ms": 1.0350000262260437,
+          "lateness": 0.43999998092658643
+        },
+        {
+          "timestamp": 4941.225,
+          "ms": 0.875,
+          "lateness": 4.734999978541964
+        },
+        {
+          "timestamp": 4958.135,
+          "ms": 0.6200000047683716,
+          "lateness": 2.4899999999997817
+        },
+        {
+          "timestamp": 4974.495,
+          "ms": 0.9600000381469727,
+          "lateness": 1.8499999690056939
+        },
+        {
+          "timestamp": 4991.16,
+          "ms": 0.6899999976158142,
+          "lateness": 3.5999999904634024
+        },
+        {
+          "timestamp": 5008.07,
+          "ms": 0.9649999737739563,
+          "lateness": 0.5599999952319195
+        },
+        {
+          "timestamp": 5024.33,
+          "ms": 1.4800000190734863,
+          "lateness": 7.184999985694958
+        },
+        {
+          "timestamp": 5041.08,
+          "ms": 0.9049999713897705,
+          "lateness": 13.590000016689373
+        },
+        {
+          "timestamp": 5074.27,
+          "ms": 0.9200000166893005,
+          "lateness": 1.6099999952311919
+        },
+        {
+          "timestamp": 5091.05,
+          "ms": 1.6049999594688416,
+          "lateness": 0.44000000953656127
+        },
+        {
+          "timestamp": 5107.73,
+          "ms": 1.1100000143051147,
+          "lateness": 0.7499999594692781
+        },
+        {
+          "timestamp": 5124.17,
+          "ms": 1.1949999928474426,
+          "lateness": 2.6549999880789983
+        },
+        {
+          "timestamp": 5140.88,
+          "ms": 0.7950000166893005,
+          "lateness": 0.24499999999989086
+        },
+        {
+          "timestamp": 5157.32,
+          "ms": 0.7100000381469727,
+          "lateness": 0.20499997615843313
+        },
+        {
+          "timestamp": 5173.99,
+          "ms": 0.9299999475479126,
+          "lateness": 0.24500001430533302
+        },
+        {
+          "timestamp": 5190.785,
+          "ms": 0.8700000047683716,
+          "lateness": 6.939999964237359
+        },
+        {
+          "timestamp": 5207.415,
+          "ms": 1.4950000047683716,
+          "lateness": 0.4099999880791074
+        },
+        {
+          "timestamp": 5223.945,
+          "ms": 1.2000000476837158,
+          "lateness": 11.21499996662169
+        },
+        {
+          "timestamp": 5240.59,
+          "ms": 0.7150000333786011,
+          "lateness": 21.764999959468696
+        },
+        {
+          "timestamp": 5290.425,
+          "ms": 1.4050000309944153,
+          "lateness": 10.294999969005403
+        },
+        {
+          "timestamp": 5323.785,
+          "ms": 0.8799999952316284,
+          "lateness": 7.525000002384331
+        },
+        {
+          "timestamp": 5357.165,
+          "ms": 0.9449999928474426,
+          "lateness": 4.4849999761581785
+        },
+        {
+          "timestamp": 5373.69,
+          "ms": 0.7800000309944153,
+          "lateness": 9.534999964237613
+        },
+        {
+          "timestamp": 5390.225,
+          "ms": 1.2350000143051147,
+          "lateness": 0.3599999785419641
+        },
+        {
+          "timestamp": 5406.845,
+          "ms": 1.1650000214576721,
+          "lateness": 11.284999995231374
+        },
+        {
+          "timestamp": 5423.61,
+          "ms": 1.4749999642372131,
+          "lateness": 3.695000007152885
+        },
+        {
+          "timestamp": 5473.365,
+          "ms": 1.3550000190734863,
+          "lateness": 9.70999998807929
+        },
+        {
+          "timestamp": 5490.145,
+          "ms": 0.7049999833106995,
+          "lateness": 0.8599999952311919
+        },
+        {
+          "timestamp": 5506.64,
+          "ms": 1.100000023841858,
+          "lateness": 6.9449999785420005
+        },
+        {
+          "timestamp": 5523.235,
+          "ms": 1.125,
+          "lateness": 14.25500000953707
+        },
+        {
+          "timestamp": 5573.195,
+          "ms": 1.1100000143051147,
+          "lateness": 0.6849999952319195
+        },
+        {
+          "timestamp": 5589.705,
+          "ms": 0.9600000381469727,
+          "lateness": 1.6299999785424006
+        },
+        {
+          "timestamp": 5606.34,
+          "ms": 0.8550000190734863,
+          "lateness": 0.5099999642370676
+        },
+        {
+          "timestamp": 5622.92,
+          "ms": 1.1449999809265137,
+          "lateness": 0.3399999904631841
+        },
+        {
+          "timestamp": 5639.55,
+          "ms": 1.2149999737739563,
+          "lateness": 0.27499998807888915
+        },
+        {
+          "timestamp": 5656.23,
+          "ms": 0.7049999833106995,
+          "lateness": 21.399999995232065
+        },
+        {
+          "timestamp": 5672.87,
+          "ms": 0.7049999833106995,
+          "lateness": 30.50000000476848
+        },
+        {
+          "timestamp": 5706.175,
+          "ms": 0.7050000429153442,
+          "lateness": 42.55499995946866
+        },
+        {
+          "timestamp": 5739.445,
+          "ms": 0.8999999761581421,
+          "lateness": 65.55500000000029
+        },
+        {
+          "timestamp": 5789.35,
+          "ms": 0.8399999737739563,
+          "lateness": 19.03999998569452
+        },
+        {
+          "timestamp": 5822.55,
+          "ms": 2.924999952316284,
+          "lateness": 4.185000014304933
+        },
+        {
+          "timestamp": 5839.115,
+          "ms": 1.350000023841858,
+          "lateness": 0.28499997615836037
+        },
+        {
+          "timestamp": 5855.795,
+          "ms": 1.1850000023841858,
+          "lateness": 8.380000011920856
+        },
+        {
+          "timestamp": 5872.38,
+          "ms": 1.1299999952316284,
+          "lateness": 1.569999988078962
+        },
+        {
+          "timestamp": 5889.02,
+          "ms": 0.8899999856948853,
+          "lateness": 17.28500000715212
+        },
+        {
+          "timestamp": 5905.685,
+          "ms": 0.8400000333786011,
+          "lateness": 19.04499995946844
+        },
+        {
+          "timestamp": 5955.5,
+          "ms": 0.7050000429153442,
+          "lateness": 64.91499996185303
+        },
+        {
+          "timestamp": 6005.59,
+          "ms": 0.925000011920929,
+          "lateness": 29.905000004768226
+        },
+        {
+          "timestamp": 6022.035,
+          "ms": 1.0600000023841858,
+          "lateness": 16.474999990463402
+        },
+        {
+          "timestamp": 6055.555,
+          "ms": 0.7350000143051147,
+          "lateness": 3.0349999737736653
+        },
+        {
+          "timestamp": 6072.12,
+          "ms": 0.8299999833106995,
+          "lateness": 0.27999997615825123
+        },
+        {
+          "timestamp": 6088.515,
+          "ms": 0.7800000309944153,
+          "lateness": 0.24999998569455784
+        },
+        {
+          "timestamp": 6105.29,
+          "ms": 1.699999988079071,
+          "lateness": 0.4600000000000364
+        },
+        {
+          "timestamp": 6121.94,
+          "ms": 0.8799999952316284,
+          "lateness": 0.26499998331109964
+        },
+        {
+          "timestamp": 6171.755,
+          "ms": 0.85999995470047,
+          "lateness": 11.675000007152448
+        },
+        {
+          "timestamp": 6188.335,
+          "ms": 1.125,
+          "lateness": 1.4999999785422915
+        },
+        {
+          "timestamp": 6205.015,
+          "ms": 0.9050000309944153,
+          "lateness": 11.569999978542
+        },
+        {
+          "timestamp": 6238.205,
+          "ms": 0.8550000190734863,
+          "lateness": 0.4549999666214717
+        },
+        {
+          "timestamp": 6254.83,
+          "ms": 0.824999988079071,
+          "lateness": 0.4050000143051875
+        },
+        {
+          "timestamp": 6288.125,
+          "ms": 1.1850000023841858,
+          "lateness": 6.199999988079071
+        },
+        {
+          "timestamp": 6304.9,
+          "ms": 1.159999966621399,
+          "lateness": 9.350000000000364
+        },
+        {
+          "timestamp": 6321.715,
+          "ms": 0.8200000524520874,
+          "lateness": 13.199999961852882
+        },
+        {
+          "timestamp": 6354.74,
+          "ms": 1.5950000286102295,
+          "lateness": 7.794999966621617
+        },
+        {
+          "timestamp": 6371.25,
+          "ms": 0.7150000333786011,
+          "lateness": 2.8949999809265137
+        },
+        {
+          "timestamp": 6388.02,
+          "ms": 1.2549999952316284,
+          "lateness": 10.764999966620962
+        },
+        {
+          "timestamp": 6454.38,
+          "ms": 0.7899999618530273,
+          "lateness": 10.24499999999989
+        },
+        {
+          "timestamp": 6471,
+          "ms": 0.6800000071525574,
+          "lateness": 1.5849999785423279
+        },
+        {
+          "timestamp": 6504.295,
+          "ms": 0.9449999928474426,
+          "lateness": 8.440000014305042
+        },
+        {
+          "timestamp": 6520.89,
+          "ms": 0.875,
+          "lateness": 14.480000004768044
+        },
+        {
+          "timestamp": 6537.51,
+          "ms": 1.2049999833106995,
+          "lateness": 13.879999985694667
+        },
+        {
+          "timestamp": 6554.355,
+          "ms": 1.125,
+          "lateness": 14.49499996423765
+        },
+        {
+          "timestamp": 6570.985,
+          "ms": 1.1850000023841858,
+          "lateness": 14.919999971390098
+        },
+        {
+          "timestamp": 6587.55,
+          "ms": 0.8200000524520874,
+          "lateness": 6.799999964237031
+        },
+        {
+          "timestamp": 6620.66,
+          "ms": 0.925000011920929,
+          "lateness": 2.0499999785424734
+        },
+        {
+          "timestamp": 6637.295,
+          "ms": 1.5,
+          "lateness": 0.3449999856948125
+        },
+        {
+          "timestamp": 6653.9,
+          "ms": 1.2049999833106995,
+          "lateness": 7.364999985695249
+        },
+        {
+          "timestamp": 6670.565,
+          "ms": 1.2599999904632568,
+          "lateness": 2.279999969005985
+        },
+        {
+          "timestamp": 6687.155,
+          "ms": 1.2699999809265137,
+          "lateness": 10.965000004768626
+        },
+        {
+          "timestamp": 6720.475,
+          "ms": 1.1349999904632568,
+          "lateness": 10.010000014304751
+        },
+        {
+          "timestamp": 6753.84,
+          "ms": 1,
+          "lateness": 3.689999971389625
+        },
+        {
+          "timestamp": 6770.465,
+          "ms": 0.7599999904632568,
+          "lateness": 0.7349999880789255
+        },
+        {
+          "timestamp": 6787.15,
+          "ms": 0.9150000214576721,
+          "lateness": 2.1849999785426917
+        },
+        {
+          "timestamp": 6803.585,
+          "ms": 1.1100000143051147,
+          "lateness": 13.47500000238415
+        },
+        {
+          "timestamp": 6870.21,
+          "ms": 1.1100000143051147,
+          "lateness": 0.8099999809264773
+        },
+        {
+          "timestamp": 6886.84,
+          "ms": 0.8299999833106995,
+          "lateness": 0.4749999976156687
+        },
+        {
+          "timestamp": 6903.395,
+          "ms": 1.0699999928474426,
+          "lateness": 0.4399999785418913
+        },
+        {
+          "timestamp": 6920.075,
+          "ms": 0.8849999904632568,
+          "lateness": 0.37499998807925294
+        },
+        {
+          "timestamp": 6936.57,
+          "ms": 0.7950000166893005,
+          "lateness": 6.244999997616105
+        },
+        {
+          "timestamp": 6953.445,
+          "ms": 1.3549999594688416,
+          "lateness": 0.5450000095370342
+        },
+        {
+          "timestamp": 6969.925,
+          "ms": 1.2950000166893005,
+          "lateness": 11.479999971389589
+        },
+        {
+          "timestamp": 6986.575,
+          "ms": 0.7050000429153442,
+          "lateness": 0.5149999737741382
+        },
+        {
+          "timestamp": 7019.785,
+          "ms": 1.0049999952316284,
+          "lateness": 12.749999966621544
+        },
+        {
+          "timestamp": 7053.08,
+          "ms": 0.8400000333786011,
+          "lateness": 1.8199999761582148
+        },
+        {
+          "timestamp": 7069.65,
+          "ms": 1.2950000166893005,
+          "lateness": 0.3549999952319922
+        },
+        {
+          "timestamp": 7086.27,
+          "ms": 0.8100000023841858,
+          "lateness": 10.79000000238375
+        },
+        {
+          "timestamp": 7119.49,
+          "ms": 0.8100000023841858,
+          "lateness": 12.699999997616032
+        },
+        {
+          "timestamp": 7202.695,
+          "ms": 1.0600000023841858,
+          "lateness": 2.2849999594691326
+        },
+        {
+          "timestamp": 7219.285,
+          "ms": 1.0649999976158142,
+          "lateness": 0.5649999642373587
+        },
+        {
+          "timestamp": 7236.105,
+          "ms": 0.8849999904632568,
+          "lateness": 0.48499997377439286
+        },
+        {
+          "timestamp": 7252.59,
+          "ms": 0.8700000047683716,
+          "lateness": 0.33500001192078344
+        },
+        {
+          "timestamp": 7302.495,
+          "ms": 0.98499995470047,
+          "lateness": 13.435000007152667
+        },
+        {
+          "timestamp": 7319.05,
+          "ms": 0.9450000524520874,
+          "lateness": 0.7999999642370312
+        },
+        {
+          "timestamp": 7335.72,
+          "ms": 1.1649999618530273,
+          "lateness": 13.335000007152303
+        },
+        {
+          "timestamp": 7352.325,
+          "ms": 0.6850000023841858,
+          "lateness": 14.449999976158324
+        },
+        {
+          "timestamp": 7402.295,
+          "ms": 0.7949999570846558,
+          "lateness": 2.2600000071524846
+        },
+        {
+          "timestamp": 7518.605,
+          "ms": 1.1649999618530273,
+          "lateness": 0.7050000023846223
+        },
+        {
+          "timestamp": 7535.38,
+          "ms": 1.0699999928474426,
+          "lateness": 1.1199999999998909
+        },
+        {
+          "timestamp": 7551.845,
+          "ms": 0.9200000166893005,
+          "lateness": 13.66999998569463
+        },
+        {
+          "timestamp": 7585.235,
+          "ms": 0.8849999904632568,
+          "lateness": 8.279999985695213
+        },
+        {
+          "timestamp": 7618.345,
+          "ms": 1.4449999928474426,
+          "lateness": 14.71999999761556
+        },
+        {
+          "timestamp": 7668.31,
+          "ms": 1.7049999833106995,
+          "lateness": 0.9850000166889004
+        },
+        {
+          "timestamp": 7701.565,
+          "ms": 1.4100000262260437,
+          "lateness": 1.2249999618534275
+        },
+        {
+          "timestamp": 7734.86,
+          "ms": 1.5600000023841858,
+          "lateness": 15.070000007152885
+        },
+        {
+          "timestamp": 7751.465,
+          "ms": 0.7950000166893005,
+          "lateness": 11.039999995231483
+        },
+        {
+          "timestamp": 7801.405,
+          "ms": 1.2200000286102295,
+          "lateness": 0.2999999833109541
+        },
+        {
+          "timestamp": 7834.5,
+          "ms": 0.9550000429153442,
+          "lateness": 10.344999969005585
+        },
+        {
+          "timestamp": 7884.42,
+          "ms": 0.8550000190734863,
+          "lateness": 9.534999983310627
+        },
+        {
+          "timestamp": 7901.14,
+          "ms": 1.2450000047683716,
+          "lateness": 14.1499999618527
+        },
+        {
+          "timestamp": 7934.395,
+          "ms": 0.9150000214576721,
+          "lateness": 6.579999964236777
+        },
+        {
+          "timestamp": 7951,
+          "ms": 0.8100000023841858,
+          "lateness": 1.7149999737739563
+        },
+        {
+          "timestamp": 7967.66,
+          "ms": 1.1049999594688416,
+          "lateness": 12.830000009536889
+        },
+        {
+          "timestamp": 8000.915,
+          "ms": 0.8899999856948853,
+          "lateness": 2.945000014305151
+        },
+        {
+          "timestamp": 8017.495,
+          "ms": 1.0199999809265137,
+          "lateness": 0.5249999809266228
+        },
+        {
+          "timestamp": 8034.085,
+          "ms": 1.1850000023841858,
+          "lateness": 9.314999976158106
+        },
+        {
+          "timestamp": 8050.725,
+          "ms": 1.1650000214576721,
+          "lateness": 0.37999995946847775
+        },
+        {
+          "timestamp": 8067.38,
+          "ms": 1.199999988079071,
+          "lateness": 3.444999988078962
+        },
+        {
+          "timestamp": 8100.635,
+          "ms": 0.699999988079071,
+          "lateness": 4.160000016689082
+        },
+        {
+          "timestamp": 8167.29,
+          "ms": 1.2100000381469727,
+          "lateness": 5.419999978542364
+        },
+        {
+          "timestamp": 8183.89,
+          "ms": 0.8449999690055847,
+          "lateness": 8.420000002383858
+        },
+        {
+          "timestamp": 8200.37,
+          "ms": 0.8849999904632568,
+          "lateness": 0.9749999690047844
+        },
+        {
+          "timestamp": 8217.09,
+          "ms": 0.9449999928474426,
+          "lateness": 0.3199999666212534
+        },
+        {
+          "timestamp": 8250.27,
+          "ms": 1.0149999856948853,
+          "lateness": 6.905000011920492
+        },
+        {
+          "timestamp": 8283.49,
+          "ms": 1.0449999570846558,
+          "lateness": 8.00500000476859
+        },
+        {
+          "timestamp": 8300.14,
+          "ms": 0.9549999833106995,
+          "lateness": 0.535000011921511
+        },
+        {
+          "timestamp": 8333.44,
+          "ms": 1.0350000262260437,
+          "lateness": 0.5199999785418186
+        },
+        {
+          "timestamp": 8350.075,
+          "ms": 0.9199999570846558,
+          "lateness": 0.41500000953601557
+        },
+        {
+          "timestamp": 8366.795,
+          "ms": 0.925000011920929,
+          "lateness": 0.26999999761574145
+        },
+        {
+          "timestamp": 8383.3,
+          "ms": 1.074999988079071,
+          "lateness": 14.560000014305842
+        },
+        {
+          "timestamp": 8433.21,
+          "ms": 1.0449999570846558,
+          "lateness": 5.280000009537616
+        },
+        {
+          "timestamp": 8466.45,
+          "ms": 0.949999988079071,
+          "lateness": 85.42000000476764
+        },
+        {
+          "timestamp": 8549.575,
+          "ms": 0.7000000476837158,
+          "lateness": 4.084999966620671
+        },
+        {
+          "timestamp": 8566.26,
+          "ms": 1.090000033378601,
+          "lateness": 0.33999996423699486
+        },
+        {
+          "timestamp": 8582.97,
+          "ms": 1.2199999690055847,
+          "lateness": 0.47499999284809746
+        },
+        {
+          "timestamp": 8616.195,
+          "ms": 0.8449999690055847,
+          "lateness": 4.540000014305406
+        },
+        {
+          "timestamp": 8649.485,
+          "ms": 1.7300000190734863,
+          "lateness": 0.7249999785417458
+        },
+        {
+          "timestamp": 8666.075,
+          "ms": 1.0699999928474426,
+          "lateness": 7.610000002383458
+        },
+        {
+          "timestamp": 8682.585,
+          "ms": 1.0449999570846558,
+          "lateness": 0.4100000047692447
+        },
+        {
+          "timestamp": 8699.295,
+          "ms": 1.1200000047683716,
+          "lateness": 10.97999997615807
+        },
+        {
+          "timestamp": 8715.87,
+          "ms": 0.76500004529953,
+          "lateness": 3.78499997138897
+        },
+        {
+          "timestamp": 8765.8,
+          "ms": 0.7599999904632568,
+          "lateness": 14.854999971390498
+        },
+        {
+          "timestamp": 8782.375,
+          "ms": 0.6499999761581421,
+          "lateness": 5.754999995231628
+        },
+        {
+          "timestamp": 8799.04,
+          "ms": 0.75,
+          "lateness": 13.089999995230755
+        },
+        {
+          "timestamp": 8832.23,
+          "ms": 1.0550000071525574,
+          "lateness": 14.200000007152994
+        },
+        {
+          "timestamp": 8865.62,
+          "ms": 1.2099999785423279,
+          "lateness": 2.6299999999991996
+        },
+        {
+          "timestamp": 8882.14,
+          "ms": 0.9300000071525574,
+          "lateness": 0.5249999618536094
+        },
+        {
+          "timestamp": 8898.765,
+          "ms": 1.0800000429153442,
+          "lateness": 10.954999969006167
+        },
+        {
+          "timestamp": 8915.5,
+          "ms": 0.9749999642372131,
+          "lateness": 2.439999997615814
+        },
+        {
+          "timestamp": 8965.325,
+          "ms": 0.9049999713897705,
+          "lateness": 0.9850000023834582
+        },
+        {
+          "timestamp": 8981.985,
+          "ms": 0.7800000309944153,
+          "lateness": 0.29999996662081685
+        },
+        {
+          "timestamp": 8998.62,
+          "ms": 1.4850000143051147,
+          "lateness": 0.4799999642364128
+        },
+        {
+          "timestamp": 9015.22,
+          "ms": 0.9800000190734863,
+          "lateness": 0.46999999761646905
+        },
+        {
+          "timestamp": 9031.94,
+          "ms": 1.125,
+          "lateness": 13.814999995231119
+        },
+        {
+          "timestamp": 9048.49,
+          "ms": 0.8050000071525574,
+          "lateness": 0.28499997615836037
+        },
+        {
+          "timestamp": 9065.145,
+          "ms": 0.875,
+          "lateness": 10.604999999999563
+        },
+        {
+          "timestamp": 9098.92,
+          "ms": 0.7000000476837158,
+          "lateness": 1.9949999618529546
+        },
+        {
+          "timestamp": 9115.145,
+          "ms": 0.7900000214576721,
+          "lateness": 1.4399999785418913
+        },
+        {
+          "timestamp": 9164.905,
+          "ms": 0.8350000381469727,
+          "lateness": 9.749999971389116
+        },
+        {
+          "timestamp": 9198.145,
+          "ms": 1.5600000023841858,
+          "lateness": 14.03500000715212
+        },
+        {
+          "timestamp": 9231.395,
+          "ms": 1.149999976158142,
+          "lateness": 5.919999997615378
+        },
+        {
+          "timestamp": 9248.045,
+          "ms": 1.2649999856948853,
+          "lateness": 0.690000014305042
+        },
+        {
+          "timestamp": 9264.69,
+          "ms": 1.4300000071525574,
+          "lateness": 14.834999976157633
+        },
+        {
+          "timestamp": 9298.015,
+          "ms": 1.5400000214576721,
+          "lateness": 6.179999992848025
+        },
+        {
+          "timestamp": 9314.735,
+          "ms": 0.85999995470047,
+          "lateness": 15.13500000476779
+        },
+        {
+          "timestamp": 9331.08,
+          "ms": 0.9749999642372131,
+          "lateness": 9.590000016689373
+        },
+        {
+          "timestamp": 9364.375,
+          "ms": 1.0250000357627869,
+          "lateness": 2.349999964237213
+        },
+        {
+          "timestamp": 9381.005,
+          "ms": 1.0049999952316284,
+          "lateness": 0.37000000000080036
+        },
+        {
+          "timestamp": 9397.78,
+          "ms": 0.9200000166893005,
+          "lateness": 5.81499996900493
+        },
+        {
+          "timestamp": 9414.32,
+          "ms": 0.875,
+          "lateness": 13.504999988079362
+        },
+        {
+          "timestamp": 9464.235,
+          "ms": 0.8799999952316284,
+          "lateness": 15.394999995231046
+        },
+        {
+          "timestamp": 9480.795,
+          "ms": 0.8050000071525574,
+          "lateness": 4.709999995231556
+        },
+        {
+          "timestamp": 9497.61,
+          "ms": 1.1049999594688416,
+          "lateness": 15.375000014304533
+        },
+        {
+          "timestamp": 9514.1,
+          "ms": 1.0149999856948853,
+          "lateness": 9.359999978541964
+        },
+        {
+          "timestamp": 9547.275,
+          "ms": 0.9399999976158142,
+          "lateness": 6.679999983311063
+        },
+        {
+          "timestamp": 9563.925,
+          "ms": 1.0899999737739563,
+          "lateness": 0.5849999904639844
+        },
+        {
+          "timestamp": 9580.535,
+          "ms": 0.9850000143051147,
+          "lateness": 11.219999995231774
+        },
+        {
+          "timestamp": 9597.18,
+          "ms": 0.7450000047683716,
+          "lateness": 2.069999999999709
+        },
+        {
+          "timestamp": 9613.89,
+          "ms": 1.074999988079071,
+          "lateness": 13.170000002384768
+        },
+        {
+          "timestamp": 9630.51,
+          "ms": 1.1100000143051147,
+          "lateness": 5.394999971389552
+        },
+        {
+          "timestamp": 9647.115,
+          "ms": 0.8199999928474426,
+          "lateness": 14.774999985695104
+        },
+        {
+          "timestamp": 9663.785,
+          "ms": 0.875,
+          "lateness": 7.429999973774102
+        },
+        {
+          "timestamp": 9680.355,
+          "ms": 1.4850000143051147,
+          "lateness": 15.094999988079508
+        },
+        {
+          "timestamp": 9713.685,
+          "ms": 1.6100000143051147,
+          "lateness": 8.904999973774466
+        },
+        {
+          "timestamp": 9730.305,
+          "ms": 0.8050000071525574,
+          "lateness": 2.354999966621108
+        },
+        {
+          "timestamp": 9746.93,
+          "ms": 0.9750000238418579,
+          "lateness": 13.899999983310408
+        },
+        {
+          "timestamp": 9780.06,
+          "ms": 1.0149999856948853,
+          "lateness": 10.954999985695395
+        },
+        {
+          "timestamp": 9796.725,
+          "ms": 0.9549999833106995,
+          "lateness": 11.479999983310336
+        },
+        {
+          "timestamp": 9846.945,
+          "ms": 1.1800000071525574,
+          "lateness": 1.3099999952319195
+        },
+        {
+          "timestamp": 9863.3,
+          "ms": 1.0149999856948853,
+          "lateness": 0.3949999928481702
+        },
+        {
+          "timestamp": 9879.915,
+          "ms": 1.1600000262260437,
+          "lateness": 11.799999973773083
+        },
+        {
+          "timestamp": 9913.195,
+          "ms": 0.8950000405311584,
+          "lateness": 5.094999961853318
+        },
+        {
+          "timestamp": 9929.74,
+          "ms": 0.8650000095367432,
+          "lateness": 7.440000007152776
+        },
+        {
+          "timestamp": 9946.335,
+          "ms": 0.6949999928474426,
+          "lateness": 8.410000004769245
+        },
+        {
+          "timestamp": 9963.11,
+          "ms": 0.6549999713897705,
+          "lateness": 7.570000007151975
+        },
+        {
+          "timestamp": 9979.61,
+          "ms": 0.9149999618530273,
+          "lateness": 12.750000014304533
+        },
+        {
+          "timestamp": 10012.86,
+          "ms": 0.8650000095367432,
+          "lateness": 6.674999966620817
+        },
+        {
+          "timestamp": 10046.19,
+          "ms": 0.9649999737739563,
+          "lateness": 1.740000007152048
+        },
+        {
+          "timestamp": 10062.83,
+          "ms": 0.9449999928474426,
+          "lateness": 0.44499997615821485
+        },
+        {
+          "timestamp": 10079.67,
+          "ms": 1.2350000143051147,
+          "lateness": 7.6699999737738835
+        },
+        {
+          "timestamp": 10096.075,
+          "ms": 0.7450000047683716,
+          "lateness": 0.5099999785416003
+        },
+        {
+          "timestamp": 10146.015,
+          "ms": 1.1050000190734863,
+          "lateness": 4.304999992848025
+        },
+        {
+          "timestamp": 10162.495,
+          "ms": 0.9750000238418579,
+          "lateness": 0.5399999666205986
+        },
+        {
+          "timestamp": 10179.13,
+          "ms": 1.0300000309944153,
+          "lateness": 0.3249999833114998
+        },
+        {
+          "timestamp": 10195.95,
+          "ms": 1.2400000095367432,
+          "lateness": 2.0099999785416003
+        },
+        {
+          "timestamp": 10245.775,
+          "ms": 0.8950000405311584,
+          "lateness": 7.129999971390134
+        },
+        {
+          "timestamp": 10262.4,
+          "ms": 1.0199999809265137,
+          "lateness": 10.585000014305479
+        },
+        {
+          "timestamp": 10278.985,
+          "ms": 1.0600000023841858,
+          "lateness": 0.6449999952310463
+        },
+        {
+          "timestamp": 10295.64,
+          "ms": 0.9150000214576721,
+          "lateness": 10.999999985695467
+        },
+        {
+          "timestamp": 10312.285,
+          "ms": 0.8449999690055847,
+          "lateness": 4.395000007152703
+        },
+        {
+          "timestamp": 10345.425,
+          "ms": 0.8500000238418579,
+          "lateness": 0.30499995946956915
+        },
+        {
+          "timestamp": 10362.055,
+          "ms": 0.8650000095367432,
+          "lateness": 7.634999997615523
+        },
+        {
+          "timestamp": 10378.785,
+          "ms": 1.1649999618530273,
+          "lateness": 1.0150000119210745
+        },
+        {
+          "timestamp": 10395.39,
+          "ms": 1.1049999594688416,
+          "lateness": 10.470000014305697
+        },
+        {
+          "timestamp": 10411.995,
+          "ms": 1.0799999833106995,
+          "lateness": 3.2500000047675712
+        },
+        {
+          "timestamp": 10445.275,
+          "ms": 1.1299999952316284,
+          "lateness": 1.9849999904636206
+        },
+        {
+          "timestamp": 10461.815,
+          "ms": 1.1949999928474426,
+          "lateness": 7.899999973773447
+        },
+        {
+          "timestamp": 10478.45,
+          "ms": 1.0849999785423279,
+          "lateness": 0.49999998807834345
+        },
+        {
+          "timestamp": 10495.07,
+          "ms": 1.534999966621399,
+          "lateness": 0.680000000000291
+        },
+        {
+          "timestamp": 10528.405,
+          "ms": 0.8500000238418579,
+          "lateness": 6.804999978541673
+        },
+        {
+          "timestamp": 10578.34,
+          "ms": 1.0750000476837158,
+          "lateness": 4.389999959468696
+        },
+        {
+          "timestamp": 10594.96,
+          "ms": 1.5200000405311584,
+          "lateness": 0.45499996185390046
+        },
+        {
+          "timestamp": 10611.605,
+          "ms": 0.7700000405311584,
+          "lateness": 1.309999961853464
+        },
+        {
+          "timestamp": 10628.19,
+          "ms": 1.1949999928474426,
+          "lateness": 0.5849999761576328
+        },
+        {
+          "timestamp": 10644.965,
+          "ms": 1.100000023841858,
+          "lateness": 6.3599999880789255
+        },
+        {
+          "timestamp": 10661.99,
+          "ms": 0.9900000095367432,
+          "lateness": 12.50500000476859
+        },
+        {
+          "timestamp": 10694.625,
+          "ms": 1.1899999976158142,
+          "lateness": 3.6449999809265137
+        },
+        {
+          "timestamp": 10711.27,
+          "ms": 0.8049999475479126,
+          "lateness": 0.5300000119204924
+        },
+        {
+          "timestamp": 10728.08,
+          "ms": 0.7999999523162842,
+          "lateness": 0.47500000715263013
+        },
+        {
+          "timestamp": 10744.655,
+          "ms": 1.5750000476837158,
+          "lateness": 0.4449999642365583
+        },
+        {
+          "timestamp": 10761.125,
+          "ms": 1,
+          "lateness": 12.394999980926514
+        },
+        {
+          "timestamp": 10794.375,
+          "ms": 1.074999988079071,
+          "lateness": 0.8299999833106995
+        },
+        {
+          "timestamp": 10811.035,
+          "ms": 0.7699999809265137,
+          "lateness": 0.3599999809266592
+        },
+        {
+          "timestamp": 10827.77,
+          "ms": 0.8299999833106995,
+          "lateness": 0.8049999880786345
+        },
+        {
+          "timestamp": 10844.305,
+          "ms": 1.3100000023841858,
+          "lateness": 0.51999998807878
+        },
+        {
+          "timestamp": 10861.095,
+          "ms": 1.0999999642372131,
+          "lateness": 0.3300000119215838
+        },
+        {
+          "timestamp": 10877.65,
+          "ms": 0.9350000023841858,
+          "lateness": 4.854999995231992
+        },
+        {
+          "timestamp": 10894.255,
+          "ms": 0.7250000238418579,
+          "lateness": 0.33999996900638507
+        },
+        {
+          "timestamp": 10910.915,
+          "ms": 0.8600000143051147,
+          "lateness": 13.964999995230755
+        },
+        {
+          "timestamp": 10944.225,
+          "ms": 0.875,
+          "lateness": 10.974999988078707
+        },
+        {
+          "timestamp": 11010.605,
+          "ms": 1.2100000381469727,
+          "lateness": 9.864999969006021
+        },
+        {
+          "timestamp": 11027.26,
+          "ms": 1.100000023841858,
+          "lateness": 5.559999992847224
+        },
+        {
+          "timestamp": 11043.825,
+          "ms": 1.0649999976158142,
+          "lateness": 6.470000016688573
+        },
+        {
+          "timestamp": 11060.545,
+          "ms": 1.1549999713897705,
+          "lateness": 1.3200000095366704
+        },
+        {
+          "timestamp": 11077.1,
+          "ms": 0.9549999833106995,
+          "lateness": 16.16499998569452
+        },
+        {
+          "timestamp": 11110.46,
+          "ms": 1.0199999809265137,
+          "lateness": 12.775000014305988
+        },
+        {
+          "timestamp": 11126.975,
+          "ms": 1.1200000047683716,
+          "lateness": 12.909999990462893
+        },
+        {
+          "timestamp": 11210.12,
+          "ms": 1.4799999594688416,
+          "lateness": 0.3650000143043144
+        },
+        {
+          "timestamp": 11226.72,
+          "ms": 1.3950000405311584,
+          "lateness": 0.37499996900623955
+        },
+        {
+          "timestamp": 11243.37,
+          "ms": 0.9050000309944153,
+          "lateness": 6.279999976157342
+        },
+        {
+          "timestamp": 11260.085,
+          "ms": 1.090000033378601,
+          "lateness": 0.4449999713906436
+        },
+        {
+          "timestamp": 11276.765,
+          "ms": 1.1299999952316284,
+          "lateness": 11.439999983311282
+        },
+        {
+          "timestamp": 11309.975,
+          "ms": 0.9150000214576721,
+          "lateness": 5.784999990462893
+        },
+        {
+          "timestamp": 11343.235,
+          "ms": 1.1399999856948853,
+          "lateness": 1.9599999928468606
+        },
+        {
+          "timestamp": 11359.835,
+          "ms": 1.1049999594688416,
+          "lateness": 0.34000001192180207
+        },
+        {
+          "timestamp": 11376.495,
+          "ms": 0.824999988079071,
+          "lateness": 0.44999999284664227
+        },
+        {
+          "timestamp": 11409.74,
+          "ms": 0.6800000071525574,
+          "lateness": 12.389999995231847
+        },
+        {
+          "timestamp": 11526.155,
+          "ms": 1.1100000143051147,
+          "lateness": 10.059999973773301
+        },
+        {
+          "timestamp": 11542.89,
+          "ms": 0.6899999976158142,
+          "lateness": 2.9750000095373252
+        },
+        {
+          "timestamp": 11576.035,
+          "ms": 1.5400000214576721,
+          "lateness": 9.93499996900573
+        },
+        {
+          "timestamp": 11642.455,
+          "ms": 0.9900000095367432,
+          "lateness": 2.3249999713898433
+        },
+        {
+          "timestamp": 11659.08,
+          "ms": 1.6549999713897705,
+          "lateness": 0.41500000476844434
+        },
+        {
+          "timestamp": 11675.83,
+          "ms": 1.4200000166893005,
+          "lateness": 0.44499997615821485
+        },
+        {
+          "timestamp": 11692.46,
+          "ms": 1.1450000405311584,
+          "lateness": 2.2649999642380862
+        },
+        {
+          "timestamp": 11742.285,
+          "ms": 1.0550000071525574,
+          "lateness": 12.299999978542473
+        },
+        {
+          "timestamp": 11775.575,
+          "ms": 0.9049999713897705,
+          "lateness": 11.665000009536016
+        },
+        {
+          "timestamp": 11792.1,
+          "ms": 0.73499995470047,
+          "lateness": 0.26500000953637937
+        },
+        {
+          "timestamp": 11825.365,
+          "ms": 1.0149999856948853,
+          "lateness": 7.760000000000218
+        },
+        {
+          "timestamp": 11842.02,
+          "ms": 0.8700000047683716,
+          "lateness": 12.704999964236777
+        },
+        {
+          "timestamp": 11875.375,
+          "ms": 1.0950000286102295,
+          "lateness": 14.159999966621399
+        },
+        {
+          "timestamp": 11891.985,
+          "ms": 1.3799999952316284,
+          "lateness": 3.474999978541746
+        },
+        {
+          "timestamp": 11908.565,
+          "ms": 0.8799999952316284,
+          "lateness": 4.954999980926004
+        },
+        {
+          "timestamp": 11941.795,
+          "ms": 0.9049999713897705,
+          "lateness": 10.964999990463184
+        },
+        {
+          "timestamp": 11975.02,
+          "ms": 0.875,
+          "lateness": 4.769999961852591
+        },
+        {
+          "timestamp": 11991.745,
+          "ms": 0.60999995470047,
+          "lateness": 16.55500001192013
+        },
+        {
+          "timestamp": 12024.905,
+          "ms": 1.1550000309944153,
+          "lateness": 9.309999973773301
+        },
+        {
+          "timestamp": 12041.565,
+          "ms": 0.9599999785423279,
+          "lateness": 0.43000000476786226
+        },
+        {
+          "timestamp": 12058.215,
+          "ms": 0.8100000023841858,
+          "lateness": 3.179999980926368
+        },
+        {
+          "timestamp": 12091.52,
+          "ms": 0.8650000095367432,
+          "lateness": 4.725000004767935
+        },
+        {
+          "timestamp": 12141.345,
+          "ms": 0.7900000214576721,
+          "lateness": 14.289999990463912
+        },
+        {
+          "timestamp": 12157.965,
+          "ms": 0.6650000214576721,
+          "lateness": 3.489999983310554
+        },
+        {
+          "timestamp": 12174.73,
+          "ms": 1.2599999904632568,
+          "lateness": 7.515000004768808
+        },
+        {
+          "timestamp": 12191.18,
+          "ms": 0.8199999928474426,
+          "lateness": 10.959999985694594
+        },
+        {
+          "timestamp": 12208.05,
+          "ms": 1.1549999713897705,
+          "lateness": 2.2099999904639844
+        },
+        {
+          "timestamp": 12224.585,
+          "ms": 0.9750000238418579,
+          "lateness": 13.699999966622272
+        },
+        {
+          "timestamp": 12241.225,
+          "ms": 0.9399999976158142,
+          "lateness": 7.479999983310336
+        },
+        {
+          "timestamp": 12257.97,
+          "ms": 0.8050000071525574,
+          "lateness": 12.054999976158797
+        },
+        {
+          "timestamp": 12274.435,
+          "ms": 0.7350000143051147,
+          "lateness": 4.154999973774466
+        },
+        {
+          "timestamp": 12291.025,
+          "ms": 1.0299999713897705,
+          "lateness": 12.520000016689664
+        },
+        {
+          "timestamp": 12307.685,
+          "ms": 0.8999999761581421,
+          "lateness": 5.51499998807958
+        },
+        {
+          "timestamp": 12341.03,
+          "ms": 0.824999988079071,
+          "lateness": 0.5800000143044599
+        },
+        {
+          "timestamp": 12357.49,
+          "ms": 0.824999988079071,
+          "lateness": 0.3050000166895188
+        },
+        {
+          "timestamp": 12390.945,
+          "ms": 0.7800000309944153,
+          "lateness": 5.399999969005876
+        },
+        {
+          "timestamp": 12424.16,
+          "ms": 0.9950000047683716,
+          "lateness": 14.869999971389916
+        },
+        {
+          "timestamp": 12540.455,
+          "ms": 0.7850000262260437,
+          "lateness": 0.309999985694958
+        },
+        {
+          "timestamp": 12573.815,
+          "ms": 0.8850000500679016,
+          "lateness": 9.034999964236704
+        },
+        {
+          "timestamp": 12606.93,
+          "ms": 0.98499995470047,
+          "lateness": 3.685000009536452
+        },
+        {
+          "timestamp": 12623.57,
+          "ms": 1.3799999952316284,
+          "lateness": 0.4049999642375042
+        },
+        {
+          "timestamp": 12640.195,
+          "ms": 0.9449999928474426,
+          "lateness": 13.725000016689592
+        },
+        {
+          "timestamp": 12690.06,
+          "ms": 0.9950000047683716,
+          "lateness": 8.349999966621908
+        },
+        {
+          "timestamp": 12706.71,
+          "ms": 0.7099999785423279,
+          "lateness": 2.9799999976166873
+        },
+        {
+          "timestamp": 12723.38,
+          "ms": 0.9850000143051147,
+          "lateness": 14.014999980927314
+        },
+        {
+          "timestamp": 12739.95,
+          "ms": 1.1950000524520874,
+          "lateness": 7.404999959468114
+        },
+        {
+          "timestamp": 12756.67,
+          "ms": 1.074999988079071,
+          "lateness": 14.519999997615741
+        },
+        {
+          "timestamp": 12773.295,
+          "ms": 0.824999988079071,
+          "lateness": 7.1449999976157414
+        },
+        {
+          "timestamp": 12789.91,
+          "ms": 0.7450000047683716,
+          "lateness": 11.594999995231774
+        },
+        {
+          "timestamp": 12806.645,
+          "ms": 0.9099999666213989,
+          "lateness": 2.100000004767935
+        },
+        {
+          "timestamp": 12823.235,
+          "ms": 0.9649999737739563,
+          "lateness": 6.149999990462675
+        },
+        {
+          "timestamp": 12839.77,
+          "ms": 0.9299999475479126,
+          "lateness": 11.530000011920492
+        },
+        {
+          "timestamp": 12889.79,
+          "ms": 0.7599999904632568,
+          "lateness": 4.459999999999127
+        },
+        {
+          "timestamp": 12906.27,
+          "ms": 1.1800000071525574,
+          "lateness": 1.1399999666209624
+        },
+        {
+          "timestamp": 12922.905,
+          "ms": 0.7849999666213989,
+          "lateness": 0.33500000953608833
+        },
+        {
+          "timestamp": 12939.555,
+          "ms": 0.8849999904632568,
+          "lateness": 0.37500000715226633
+        },
+        {
+          "timestamp": 12956.205,
+          "ms": 0.7699999809265137,
+          "lateness": 15.72500000715263
+        },
+        {
+          "timestamp": 12972.78,
+          "ms": 0.5399999618530273,
+          "lateness": 0.4550000143044599
+        },
+        {
+          "timestamp": 13022.57,
+          "ms": 0.7850000262260437,
+          "lateness": 8.784999959469133
+        },
+        {
+          "timestamp": 13055.98,
+          "ms": 1.125,
+          "lateness": 1.149999995232065
+        },
+        {
+          "timestamp": 13089.225,
+          "ms": 0.7649999856948853,
+          "lateness": 7.799999976157778
+        },
+        {
+          "timestamp": 13105.845,
+          "ms": 0.6600000262260437,
+          "lateness": 0.8149999666220538
+        },
+        {
+          "timestamp": 13139.27,
+          "ms": 1.0199999809265137,
+          "lateness": 2.535000007152121
+        },
+        {
+          "timestamp": 13172.375,
+          "ms": 0.8149999976158142,
+          "lateness": 4.430000007152557
+        },
+        {
+          "timestamp": 13222.155,
+          "ms": 0.7549999952316284,
+          "lateness": 7.465000004767717
+        },
+        {
+          "timestamp": 13238.84,
+          "ms": 0.8449999690055847,
+          "lateness": 1.3499999976156687
+        },
+        {
+          "timestamp": 13255.395,
+          "ms": 0.9799999594688416,
+          "lateness": 15.525000016688864
+        },
+        {
+          "timestamp": 13272.065,
+          "ms": 0.6349999904632568,
+          "lateness": 8.805000004767862
+        },
+        {
+          "timestamp": 13288.695,
+          "ms": 0.9000000357627869,
+          "lateness": 11.699999980926805
+        },
+        {
+          "timestamp": 13305.46,
+          "ms": 0.699999988079071,
+          "lateness": 3.965000011921802
+        },
+        {
+          "timestamp": 13322.095,
+          "ms": 0.7599999904632568,
+          "lateness": 11.16999998569554
+        },
+        {
+          "timestamp": 13338.66,
+          "ms": 0.9749999642372131,
+          "lateness": 3.770000007152703
+        },
+        {
+          "timestamp": 13371.975,
+          "ms": 0.800000011920929,
+          "lateness": 0.7499999642368493
+        },
+        {
+          "timestamp": 13388.59,
+          "ms": 1.2149999737739563,
+          "lateness": 0.29999998569473973
+        },
+        {
+          "timestamp": 13405.29,
+          "ms": 1.225000023841858,
+          "lateness": 4.68499996423634
+        },
+        {
+          "timestamp": 13421.825,
+          "ms": 0.8500000238418579,
+          "lateness": 0.6299999833099719
+        },
+        {
+          "timestamp": 13455.105,
+          "ms": 1.1150000095367432,
+          "lateness": 8.554999966621835
+        },
+        {
+          "timestamp": 13471.745,
+          "ms": 0.8400000333786011,
+          "lateness": 3.044999961852227
+        },
+        {
+          "timestamp": 13504.97,
+          "ms": 1.2649999856948853,
+          "lateness": 11.270000009537398
+        },
+        {
+          "timestamp": 13521.56,
+          "ms": 1.074999988079071,
+          "lateness": 0.4049999737744656
+        },
+        {
+          "timestamp": 13538.18,
+          "ms": 0.7050000429153442,
+          "lateness": 9.84999997138948
+        },
+        {
+          "timestamp": 13554.73,
+          "ms": 0.9850000143051147,
+          "lateness": 12.41499998092695
+        },
+        {
+          "timestamp": 13621.305,
+          "ms": 1.2199999690055847,
+          "lateness": 0.3100000095364521
+        },
+        {
+          "timestamp": 13638.225,
+          "ms": 1.050000011920929,
+          "lateness": 0.34999998807870725
+        },
+        {
+          "timestamp": 13654.71,
+          "ms": 0.8149999976158142,
+          "lateness": 0.2850000047692447
+        },
+        {
+          "timestamp": 13671.32,
+          "ms": 0.75,
+          "lateness": 0.24000000238447683
+        },
+        {
+          "timestamp": 13688.18,
+          "ms": 0.9600000381469727,
+          "lateness": 0.2949999642369221
+        },
+        {
+          "timestamp": 13704.54,
+          "ms": 1.059999942779541,
+          "lateness": 0.3800000166884274
+        },
+        {
+          "timestamp": 13721.165,
+          "ms": 0.7599999904632568,
+          "lateness": 8.924999973773083
+        },
+        {
+          "timestamp": 13738.035,
+          "ms": 0.625,
+          "lateness": 0.34999999046340236
+        },
+        {
+          "timestamp": 13754.51,
+          "ms": 0.9799999594688416,
+          "lateness": 13.850000014304896
+        },
+        {
+          "timestamp": 13771.02,
+          "ms": 0.9300000071525574,
+          "lateness": 6.910000007152121
+        },
+        {
+          "timestamp": 13787.625,
+          "ms": 0.6850000023841858,
+          "lateness": 12.229999959468842
+        },
+        {
+          "timestamp": 13820.88,
+          "ms": 0.8100000023841858,
+          "lateness": 6.4850000095375435
+        },
+        {
+          "timestamp": 13854.225,
+          "ms": 0.9050000309944153,
+          "lateness": 1.3049999713894067
+        },
+        {
+          "timestamp": 13870.67,
+          "ms": 0.7450000047683716,
+          "lateness": 14.92999996423714
+        },
+        {
+          "timestamp": 13920.55,
+          "ms": 0.9149999618530273,
+          "lateness": 7.010000002384913
+        },
+        {
+          "timestamp": 13937.165,
+          "ms": 1.1899999976158142,
+          "lateness": 0.3999999976149411
+        },
+        {
+          "timestamp": 13970.43,
+          "ms": 0.8449999690055847,
+          "lateness": 10.56500000476808
+        },
+        {
+          "timestamp": 13987.115,
+          "ms": 0.6700000166893005,
+          "lateness": 2.2749999856951035
+        },
+        {
+          "timestamp": 14037.055,
+          "ms": 0.7800000309944153,
+          "lateness": 3.344999976157851
+        },
+        {
+          "timestamp": 14053.645,
+          "ms": 1.125,
+          "lateness": 0.6550000119204924
+        },
+        {
+          "timestamp": 14070.28,
+          "ms": 1.2350000143051147,
+          "lateness": 0.3149999690049299
+        },
+        {
+          "timestamp": 14086.88,
+          "ms": 1.0450000166893005,
+          "lateness": 12.52499997139057
+        },
+        {
+          "timestamp": 14120.225,
+          "ms": 1.1700000166893005,
+          "lateness": 4.624999964236849
+        },
+        {
+          "timestamp": 14153.37,
+          "ms": 1.0800000429153442,
+          "lateness": 12.724999969004784
+        },
+        {
+          "timestamp": 14169.975,
+          "ms": 1.0149999856948853,
+          "lateness": 4.445000016688937
+        },
+        {
+          "timestamp": 14186.615,
+          "ms": 1.225000023841858,
+          "lateness": 0.3349999880792893
+        },
+        {
+          "timestamp": 14203.315,
+          "ms": 0.8149999976158142,
+          "lateness": 11.709999976157633
+        },
+        {
+          "timestamp": 14219.88,
+          "ms": 1.2450000047683716,
+          "lateness": 14.54500001192173
+        },
+        {
+          "timestamp": 14253.15,
+          "ms": 0.75,
+          "lateness": 11.679999983311063
+        },
+        {
+          "timestamp": 14286.535,
+          "ms": 1.0099999904632568,
+          "lateness": 4.119999971389916
+        },
+        {
+          "timestamp": 14303.135,
+          "ms": 0.9599999785423279,
+          "lateness": 0.6050000095365249
+        },
+        {
+          "timestamp": 14319.63,
+          "ms": 1.3100000023841858,
+          "lateness": 0.5999999594696419
+        },
+        {
+          "timestamp": 14336.455,
+          "ms": 1.0850000381469727,
+          "lateness": 0.32499997138984327
+        },
+        {
+          "timestamp": 14386.385,
+          "ms": 0.9449999928474426,
+          "lateness": 4.879999985694667
+        },
+        {
+          "timestamp": 14402.8,
+          "ms": 1.050000011920929,
+          "lateness": 0.48999996185375494
+        },
+        {
+          "timestamp": 14419.445,
+          "ms": 1.2450000047683716,
+          "lateness": 10.274999969005876
+        },
+        {
+          "timestamp": 14452.745,
+          "ms": 0.9749999642372131,
+          "lateness": 0.2400000143043144
+        },
+        {
+          "timestamp": 14485.965,
+          "ms": 1.1899999976158142,
+          "lateness": 4.67499998569474
+        },
+        {
+          "timestamp": 14502.63,
+          "ms": 0.7199999690055847,
+          "lateness": 0.43000000238498615
+        },
+        {
+          "timestamp": 14519.235,
+          "ms": 0.7200000286102295,
+          "lateness": 0.35999996900500264
+        },
+        {
+          "timestamp": 14535.91,
+          "ms": 0.9900000095367432,
+          "lateness": 0.6099999809266592
+        },
+        {
+          "timestamp": 14569.225,
+          "ms": 0.7999999523162842,
+          "lateness": 0.19500001668893674
+        },
+        {
+          "timestamp": 14585.84,
+          "ms": 0.8300000429153442,
+          "lateness": 0.26499995946869603
+        },
+        {
+          "timestamp": 14602.485,
+          "ms": 0.8550000190734863,
+          "lateness": 0.41999997138918843
+        },
+        {
+          "timestamp": 14619.115,
+          "ms": 0.6650000214576721,
+          "lateness": 0.21999997854254616
+        },
+        {
+          "timestamp": 14635.76,
+          "ms": 0.925000011920929,
+          "lateness": 0.30499999761559593
+        },
+        {
+          "timestamp": 14652.475,
+          "ms": 0.7049999833106995,
+          "lateness": 0.38500001430475095
+        },
+        {
+          "timestamp": 14669.06,
+          "ms": 1.175000011920929,
+          "lateness": 0.4400000000005093
+        },
+        {
+          "timestamp": 14685.555,
+          "ms": 0.8949999809265137,
+          "lateness": 0.3999999833104084
+        },
+        {
+          "timestamp": 14702.165,
+          "ms": 1.0799999833106995,
+          "lateness": 0.41999997854145477
+        },
+        {
+          "timestamp": 14718.755,
+          "ms": 0.9399999976158142,
+          "lateness": 8.165000016690101
+        },
+        {
+          "timestamp": 14735.52,
+          "ms": 0.8550000190734863,
+          "lateness": 0.41999999761537765
+        },
+        {
+          "timestamp": 14751.98,
+          "ms": 1.0049999952316284,
+          "lateness": 11.880000014305551
+        },
+        {
+          "timestamp": 14768.64,
+          "ms": 0.9050000309944153,
+          "lateness": 10.759999976158724
+        },
+        {
+          "timestamp": 14818.535,
+          "ms": 0.9950000047683716,
+          "lateness": 4.234999980926659
+        },
+        {
+          "timestamp": 14835.215,
+          "ms": 0.8549999594688416,
+          "lateness": 0.5950000023840403
+        },
+        {
+          "timestamp": 14851.825,
+          "ms": 1.2100000381469727,
+          "lateness": 0.5249999642364855
+        },
+        {
+          "timestamp": 14868.45,
+          "ms": 0.9150000214576721,
+          "lateness": 0.5249999642364855
+        },
+        {
+          "timestamp": 14885.125,
+          "ms": 1.0299999713897705,
+          "lateness": 16.25499999523163
+        },
+        {
+          "timestamp": 14901.63,
+          "ms": 0.5949999690055847,
+          "lateness": 1.8600000095375435
+        },
+        {
+          "timestamp": 14918.4,
+          "ms": 0.925000011920929,
+          "lateness": 0.5149999618533911
+        },
+        {
+          "timestamp": 14934.885,
+          "ms": 1.0800000429153442,
+          "lateness": 0.27499996662118065
+        },
+        {
+          "timestamp": 14951.57,
+          "ms": 0.7749999761581421,
+          "lateness": 0.6949999856951763
+        },
+        {
+          "timestamp": 14984.98,
+          "ms": 0.6899999976158142,
+          "lateness": 15.325000007152994
+        },
+        {
+          "timestamp": 15001.485,
+          "ms": 0.5199999809265137,
+          "lateness": 0.8899999999994179
+        },
+        {
+          "timestamp": 15018.215,
+          "ms": 0.9599999785423279,
+          "lateness": 5.3599999880789255
+        },
+        {
+          "timestamp": 15034.8,
+          "ms": 0.8300000429153442,
+          "lateness": 0.42499996423794073
+        },
+        {
+          "timestamp": 15051.345,
+          "ms": 0.8100000023841858,
+          "lateness": 2.2599999594694964
+        },
+        {
+          "timestamp": 15068.01,
+          "ms": 0.8600000143051147,
+          "lateness": 6.014999976157924
+        },
+        {
+          "timestamp": 15084.65,
+          "ms": 0.8400000333786011,
+          "lateness": 0.5649999737743201
+        },
+        {
+          "timestamp": 15101.3,
+          "ms": 0.7100000381469727,
+          "lateness": 6.104999971390498
+        },
+        {
+          "timestamp": 15118.085,
+          "ms": 0.8050000071525574,
+          "lateness": 11.814999976159015
+        },
+        {
+          "timestamp": 15151.09,
+          "ms": 0.925000011920929,
+          "lateness": 5.874999973773811
+        },
+        {
+          "timestamp": 15167.84,
+          "ms": 1.1150000095367432,
+          "lateness": 14.474999997615669
+        },
+        {
+          "timestamp": 15184.34,
+          "ms": 0.60999995470047,
+          "lateness": 1.3350000119207834
+        },
+        {
+          "timestamp": 15200.97,
+          "ms": 0.7450000047683716,
+          "lateness": 11.955000011921584
+        },
+        {
+          "timestamp": 15234.195,
+          "ms": 0.8550000190734863,
+          "lateness": 4.33999996662169
+        },
+        {
+          "timestamp": 15250.835,
+          "ms": 0.9350000023841858,
+          "lateness": 0.5799999618539005
+        },
+        {
+          "timestamp": 15267.56,
+          "ms": 0.9700000286102295,
+          "lateness": 2.0799999856953946
+        },
+        {
+          "timestamp": 15284.25,
+          "ms": 0.8650000095367432,
+          "lateness": 0.375
+        },
+        {
+          "timestamp": 15318.225,
+          "ms": 0.7599999904632568,
+          "lateness": 14.779999995231265
+        },
+        {
+          "timestamp": 15334.09,
+          "ms": 0.7400000095367432,
+          "lateness": 0.5699999666212534
+        },
+        {
+          "timestamp": 15367.31,
+          "ms": 0.7149999737739563,
+          "lateness": 8.375000002384695
+        },
+        {
+          "timestamp": 15417.14,
+          "ms": 0.8199999928474426,
+          "lateness": 4.0649999833112815
+        },
+        {
+          "timestamp": 15500.295,
+          "ms": 0.7300000190734863,
+          "lateness": 13.519999997615741
+        },
+        {
+          "timestamp": 15516.995,
+          "ms": 0.7250000238418579,
+          "lateness": 0.3999999809257133
+        },
+        {
+          "timestamp": 15533.62,
+          "ms": 0.9100000262260437,
+          "lateness": 11.639999990462456
+        },
+        {
+          "timestamp": 15600.11,
+          "ms": 0.7899999618530273,
+          "lateness": 12.26000000476779
+        },
+        {
+          "timestamp": 15616.75,
+          "ms": 0.85999995470047,
+          "lateness": 3.800000011920929
+        },
+        {
+          "timestamp": 15666.555,
+          "ms": 1.225000023841858,
+          "lateness": 17.409999973773665
+        },
+        {
+          "timestamp": 15733.105,
+          "ms": 0.6899999976158142,
+          "lateness": 11.654999990463693
+        },
+        {
+          "timestamp": 15766.3,
+          "ms": 1.1200000047683716,
+          "lateness": 12.26999999284817
+        },
+        {
+          "timestamp": 15783.08,
+          "ms": 1.0099999904632568,
+          "lateness": 6.864999992847515
+        },
+        {
+          "timestamp": 15799.585,
+          "ms": 0.7250000238418579,
+          "lateness": 5.019999959469715
+        },
+        {
+          "timestamp": 15816.275,
+          "ms": 0.6650000214576721,
+          "lateness": 7.889999961853391
+        },
+        {
+          "timestamp": 15833.025,
+          "ms": 0.8600000143051147,
+          "lateness": 15.574999964237577
+        },
+        {
+          "timestamp": 15849.6,
+          "ms": 1.074999988079071,
+          "lateness": 7.774999999999636
+        },
+        {
+          "timestamp": 15866.185,
+          "ms": 0.8650000095367432,
+          "lateness": 15.194999995232138
+        },
+        {
+          "timestamp": 15899.47,
+          "ms": 0.6150000095367432,
+          "lateness": 7.525000004769026
+        },
+        {
+          "timestamp": 15916.12,
+          "ms": 0.5449999570846558,
+          "lateness": 0.3750000047675712
+        },
+        {
+          "timestamp": 15932.725,
+          "ms": 0.7250000238418579,
+          "lateness": 8.974999988078707
+        },
+        {
+          "timestamp": 15965.985,
+          "ms": 0.7649999856948853,
+          "lateness": 2.1449999952310463
+        },
+        {
+          "timestamp": 15982.51,
+          "ms": 0.6200000047683716,
+          "lateness": 5.114999999999782
+        },
+        {
+          "timestamp": 15999.155,
+          "ms": 1.5649999976158142,
+          "lateness": 0.4149999928467878
+        },
+        {
+          "timestamp": 16015.87,
+          "ms": 0.5950000286102295,
+          "lateness": 10.104999964236413
+        },
+        {
+          "timestamp": 16049.11,
+          "ms": 0.7300000190734863,
+          "lateness": 2.7699999952310463
+        },
+        {
+          "timestamp": 16065.7,
+          "ms": 1.0300000309944153,
+          "lateness": 0.27999995946811396
+        },
+        {
+          "timestamp": 16082.385,
+          "ms": 0.6150000095367432,
+          "lateness": 4.894999971389552
+        },
+        {
+          "timestamp": 16098.905,
+          "ms": 1.034999966621399,
+          "lateness": 5.960000009536088
+        },
+        {
+          "timestamp": 16115.71,
+          "ms": 0.9649999737739563,
+          "lateness": 0.23499999284831574
+        },
+        {
+          "timestamp": 16132.3,
+          "ms": 0.949999988079071,
+          "lateness": 7.704999995232356
+        },
+        {
+          "timestamp": 16148.84,
+          "ms": 0.6150000095367432,
+          "lateness": 11.59500000238404
+        },
+        {
+          "timestamp": 16165.49,
+          "ms": 0.875,
+          "lateness": 2.4599999880792893
+        },
+        {
+          "timestamp": 16182.085,
+          "ms": 0.9350000023841858,
+          "lateness": 11.34500000715343
+        },
+        {
+          "timestamp": 16215.415,
+          "ms": 0.9799999594688416,
+          "lateness": 3.2050000047674985
+        },
+        {
+          "timestamp": 16232.065,
+          "ms": 0.5649999976158142,
+          "lateness": 6.605000016688791
+        },
+        {
+          "timestamp": 16248.595,
+          "ms": 0.6599999666213989,
+          "lateness": 0.28499999523228325
+        },
+        {
+          "timestamp": 16265.335,
+          "ms": 1.01500004529953,
+          "lateness": 0.7699999594697147
+        },
+        {
+          "timestamp": 16281.985,
+          "ms": 0.6399999856948853,
+          "lateness": 5.219999983310117
+        },
+        {
+          "timestamp": 16298.565,
+          "ms": 1.3650000095367432,
+          "lateness": 0.32499998569437594
+        },
+        {
+          "timestamp": 16315.165,
+          "ms": 0.5049999952316284,
+          "lateness": 8.799999973773083
+        },
+        {
+          "timestamp": 16365.055,
+          "ms": 0.9599999785423279,
+          "lateness": 6.889999992847152
+        },
+        {
+          "timestamp": 16398.355,
+          "ms": 0.5450000166893005,
+          "lateness": 7.739999969006021
+        },
+        {
+          "timestamp": 16414.83,
+          "ms": 0.6899999976158142,
+          "lateness": 10.514999969003838
+        },
+        {
+          "timestamp": 16664.38,
+          "ms": 0.5400000214576721,
+          "lateness": 10.084999973772938
+        },
+        {
+          "timestamp": 16697.52,
+          "ms": 0.6200000047683716,
+          "lateness": 10.619999985694449
+        },
+        {
+          "timestamp": 16730.795,
+          "ms": 0.559999942779541,
+          "lateness": 5.250000016691047
+        },
+        {
+          "timestamp": 16764.03,
+          "ms": 0.6050000190734863,
+          "lateness": 11.374999971390935
+        },
+        {
+          "timestamp": 16930.285,
+          "ms": 0.5600000023841858,
+          "lateness": 8.27999999761596
+        },
+        {
+          "timestamp": 16946.93,
+          "ms": 0.6600000262260437,
+          "lateness": 10.154999978542037
+        },
+        {
+          "timestamp": 16980.315,
+          "ms": 1.2350000143051147,
+          "lateness": 10.644999978543638
+        },
+        {
+          "timestamp": 17013.595,
+          "ms": 0.6599999666213989,
+          "lateness": 13.075000016688136
+        },
+        {
+          "timestamp": 17080.015,
+          "ms": 0.8650000095367432,
+          "lateness": 0.7300000047689537
+        },
+        {
+          "timestamp": 17279.61,
+          "ms": 1.0049999952316284,
+          "lateness": 0.8150000119203469
+        },
+        {
+          "timestamp": 17296.325,
+          "ms": 0.875,
+          "lateness": 5.939999985694158
+        },
+        {
+          "timestamp": 17312.875,
+          "ms": 0.5450000166893005,
+          "lateness": 8.714999973773956
+        },
+        {
+          "timestamp": 17329.39,
+          "ms": 0.6749999523162842,
+          "lateness": 12.905000016689883
+        },
+        {
+          "timestamp": 17362.88,
+          "ms": 0.8650000095367432,
+          "lateness": 7.569999988078052
+        },
+        {
+          "timestamp": 17462.62,
+          "ms": 0.7750000357627869,
+          "lateness": 9.044999961854046
+        },
+        {
+          "timestamp": 17595.56,
+          "ms": 0.7749999761581421,
+          "lateness": 5.194999995230319
+        },
+        {
+          "timestamp": 17612.31,
+          "ms": 1.434999942779541,
+          "lateness": 16.23500001668799
+        },
+        {
+          "timestamp": 17711.905,
+          "ms": 0.6600000262260437,
+          "lateness": 9.739999980927678
+        },
+        {
+          "timestamp": 17811.66,
+          "ms": 0.8849999904632568,
+          "lateness": 8.789999988079217
+        },
+        {
+          "timestamp": 17828.275,
+          "ms": 0.6749999523162842,
+          "lateness": 11.83500001430366
+        },
+        {
+          "timestamp": 17844.89,
+          "ms": 0.9800000190734863,
+          "lateness": 14.704999969006167
+        },
+        {
+          "timestamp": 18110.935,
+          "ms": 0.5999999642372131,
+          "lateness": 16.06999999523032
+        },
+        {
+          "timestamp": 18210.745,
+          "ms": 0.8149999976158142,
+          "lateness": 9.45499998808009
+        },
+        {
+          "timestamp": 18227.44,
+          "ms": 0.8450000286102295,
+          "lateness": 12.399999973775266
+        },
+        {
+          "timestamp": 18293.91,
+          "ms": 1.074999988079071,
+          "lateness": 9.239999976158288
+        },
+        {
+          "timestamp": 18310.475,
+          "ms": 0.7300000190734863,
+          "lateness": 14.474999988080526
+        },
+        {
+          "timestamp": 18377.07,
+          "ms": 1.3100000023841858,
+          "lateness": 14.360000007152848
+        },
+        {
+          "timestamp": 18427.115,
+          "ms": 1.5400000214576721,
+          "lateness": 5.83499998807747
+        },
+        {
+          "timestamp": 18559.895,
+          "ms": 1.2900000214576721,
+          "lateness": 3.049999992847006
+        },
+        {
+          "timestamp": 18609.93,
+          "ms": 1.1550000309944153,
+          "lateness": 2.094999976157851
+        },
+        {
+          "timestamp": 18726.23,
+          "ms": 0.925000011920929,
+          "lateness": 8.864999969006021
+        },
+        {
+          "timestamp": 18742.845,
+          "ms": 1.6500000357627869,
+          "lateness": 13.629999964236049
+        },
+        {
+          "timestamp": 18759.52,
+          "ms": 1.1100000143051147,
+          "lateness": 6.61499999046282
+        },
+        {
+          "timestamp": 18776.085,
+          "ms": 1.0949999690055847,
+          "lateness": 14.600000002385059
+        },
+        {
+          "timestamp": 18809.36,
+          "ms": 0.800000011920929,
+          "lateness": 10.544999971389188
+        },
+        {
+          "timestamp": 18825.965,
+          "ms": 0.8950000405311584,
+          "lateness": 1.5699999666212534
+        },
+        {
+          "timestamp": 18842.63,
+          "ms": 0.7799999713897705,
+          "lateness": 10.244999999998981
+        },
+        {
+          "timestamp": 18875.84,
+          "ms": 0.89000004529953,
+          "lateness": 7.634999964237068
+        },
+        {
+          "timestamp": 18909.115,
+          "ms": 1.274999976158142,
+          "lateness": 14.644999990461656
+        },
+        {
+          "timestamp": 18925.76,
+          "ms": 0.9650000333786011,
+          "lateness": 0.27999996185462805
+        },
+        {
+          "timestamp": 18942.52,
+          "ms": 1.0450000166893005,
+          "lateness": 7.23999999046282
+        },
+        {
+          "timestamp": 18959.045,
+          "ms": 1.574999988079071,
+          "lateness": 15.524999992849189
+        },
+        {
+          "timestamp": 19009,
+          "ms": 0.925000011920929,
+          "lateness": 6.5
+        },
+        {
+          "timestamp": 19025.52,
+          "ms": 1.149999976158142,
+          "lateness": 7.410000007152121
+        },
+        {
+          "timestamp": 19042.22,
+          "ms": 1.0200000405311584,
+          "lateness": 0.3849999594676774
+        },
+        {
+          "timestamp": 19075.49,
+          "ms": 0.7800000309944153,
+          "lateness": 4.594999978540727
+        },
+        {
+          "timestamp": 19092.02,
+          "ms": 1.3100000023841858,
+          "lateness": 0.6249999809260771
+        },
+        {
+          "timestamp": 19108.675,
+          "ms": 0.9350000023841858,
+          "lateness": 0.3599999666221265
+        },
+        {
+          "timestamp": 19125.35,
+          "ms": 0.9749999642372131,
+          "lateness": 3.835000002385641
+        },
+        {
+          "timestamp": 19142.05,
+          "ms": 0.8350000381469727,
+          "lateness": 2.2999999642379407
+        },
+        {
+          "timestamp": 19175.15,
+          "ms": 1.5099999904632568,
+          "lateness": 3.564999973772501
+        },
+        {
+          "timestamp": 19208.395,
+          "ms": 0.9550000429153442,
+          "lateness": 4.579999964236777
+        },
+        {
+          "timestamp": 19225.03,
+          "ms": 1.5199999809265137,
+          "lateness": 0.4600000095379073
+        },
+        {
+          "timestamp": 19242.28,
+          "ms": 1.3499999642372131,
+          "lateness": 14.335000009537907
+        },
+        {
+          "timestamp": 19275.03,
+          "ms": 0.8700000047683716,
+          "lateness": 6.664999992848607
+        },
+        {
+          "timestamp": 19324.89,
+          "ms": 0.7749999761581421,
+          "lateness": 0.4850000000005821
+        },
+        {
+          "timestamp": 19341.57,
+          "ms": 0.8149999976158142,
+          "lateness": 8.680000000000291
+        },
+        {
+          "timestamp": 19391.41,
+          "ms": 1.1650000214576721,
+          "lateness": 5.80999996900573
+        },
+        {
+          "timestamp": 19408.025,
+          "ms": 1.0550000071525574,
+          "lateness": 0.45499995946738636
+        },
+        {
+          "timestamp": 19458.115,
+          "ms": 1.175000011920929,
+          "lateness": 7.169999966619798
+        },
+        {
+          "timestamp": 19508.375,
+          "ms": 1.3299999833106995,
+          "lateness": 9.694999992847443
+        },
+        {
+          "timestamp": 19557.725,
+          "ms": 1.0350000262260437,
+          "lateness": 10.189999961854483
+        },
+        {
+          "timestamp": 19641.245,
+          "ms": 0.8600000143051147,
+          "lateness": 1.5299999761591607
+        },
+        {
+          "timestamp": 19657.425,
+          "ms": 0.9100000262260437,
+          "lateness": 2.2349999666221265
+        },
+        {
+          "timestamp": 19674.015,
+          "ms": 1.675000011920929,
+          "lateness": 15.689999983311282
+        },
+        {
+          "timestamp": 19723.905,
+          "ms": 1.3350000381469727,
+          "lateness": 4.564999969006749
+        },
+        {
+          "timestamp": 19773.765,
+          "ms": 0.8199999928474426,
+          "lateness": 10.410000011921511
+        },
+        {
+          "timestamp": 19823.665,
+          "ms": 1.300000011920929,
+          "lateness": 5.239999971388897
+        },
+        {
+          "timestamp": 19840.335,
+          "ms": 1.0299999713897705,
+          "lateness": 0.46000001669017365
+        },
+        {
+          "timestamp": 19857.08,
+          "ms": 0.8100000023841858,
+          "lateness": 7.494999988077325
+        },
+        {
+          "timestamp": 19873.575,
+          "ms": 0.7749999761581421,
+          "lateness": 9.174999999999272
+        },
+        {
+          "timestamp": 19906.83,
+          "ms": 0.9000000357627869,
+          "lateness": 5.774999959467095
+        },
+        {
+          "timestamp": 19923.575,
+          "ms": 1.465000033378601,
+          "lateness": 0.40499995946811396
+        },
+        {
+          "timestamp": 19940.21,
+          "ms": 1.1349999904632568,
+          "lateness": 5.8450000071534305
+        },
+        {
+          "timestamp": 19956.71,
+          "ms": 1.2700000405311584,
+          "lateness": 0.4449999713906436
+        },
+        {
+          "timestamp": 19990.045,
+          "ms": 0.8050000071525574,
+          "lateness": 0.2600000071543036
+        },
+        {
+          "timestamp": 20006.695,
+          "ms": 1.1649999618530273,
+          "lateness": 0.6000000166895916
+        },
+        {
+          "timestamp": 20023.3,
+          "ms": 0.8499999642372131,
+          "lateness": 0.38000000715328497
+        },
+        {
+          "timestamp": 20039.925,
+          "ms": 0.8700000047683716,
+          "lateness": 0.37500001192165655
+        },
+        {
+          "timestamp": 20056.595,
+          "ms": 1.4700000286102295,
+          "lateness": 0.36999997377279215
+        },
+        {
+          "timestamp": 20073.22,
+          "ms": 0.9549999833106995,
+          "lateness": 0.40499999999883585
+        },
+        {
+          "timestamp": 20089.84,
+          "ms": 1.2549999952316284,
+          "lateness": 0.46000001192078344
+        },
+        {
+          "timestamp": 20106.445,
+          "ms": 1.2249999642372131,
+          "lateness": 0.555000000000291
+        },
+        {
+          "timestamp": 20123.1,
+          "ms": 0.9100000262260437,
+          "lateness": 0.47499998808052624
+        },
+        {
+          "timestamp": 20139.715,
+          "ms": 0.9700000286102295,
+          "lateness": 0.3849999642370676
+        },
+        {
+          "timestamp": 20156.35,
+          "ms": 0.815000057220459,
+          "lateness": 0.7549999594702967
+        },
+        {
+          "timestamp": 20189.605,
+          "ms": 0.9449999928474426,
+          "lateness": 10.489999969006021
+        },
+        {
+          "timestamp": 20206.185,
+          "ms": 1.1049999594688416,
+          "lateness": 5.56499999999869
+        },
+        {
+          "timestamp": 20222.84,
+          "ms": 0.8400000333786011,
+          "lateness": 0.4449999666212534
+        },
+        {
+          "timestamp": 20256.11,
+          "ms": 2.199999988079071,
+          "lateness": 5.264999999999418
+        },
+        {
+          "timestamp": 20272.855,
+          "ms": 0.8300000429153442,
+          "lateness": 0.3099999618534639
+        },
+        {
+          "timestamp": 20289.24,
+          "ms": 0.7199999690055847,
+          "lateness": 0.38000000476677087
+        },
+        {
+          "timestamp": 20306.06,
+          "ms": 0.8600000143051147,
+          "lateness": 7.274999978541018
+        },
+        {
+          "timestamp": 20322.68,
+          "ms": 1.1050000190734863,
+          "lateness": 3.604999966621108
+        },
+        {
+          "timestamp": 20355.955,
+          "ms": 1.5399999618530273,
+          "lateness": 1.0950000119191827
+        },
+        {
+          "timestamp": 20372.52,
+          "ms": 0.9350000023841858,
+          "lateness": 0.5499999928470061
+        },
+        {
+          "timestamp": 20405.815,
+          "ms": 0.7250000238418579,
+          "lateness": 7.539999959470151
+        },
+        {
+          "timestamp": 20422.395,
+          "ms": 1.0799999833106995,
+          "lateness": 4.840000014304678
+        },
+        {
+          "timestamp": 20488.905,
+          "ms": 0.949999988079071,
+          "lateness": 8.335000009537907
+        },
+        {
+          "timestamp": 20505.54,
+          "ms": 0.8200000524520874,
+          "lateness": 0.43499996423634
+        },
+        {
+          "timestamp": 20522.075,
+          "ms": 0.9399999976158142,
+          "lateness": 7.100000011920201
+        },
+        {
+          "timestamp": 20572.045,
+          "ms": 0.7949999570846558,
+          "lateness": 5.375000016691047
+        },
+        {
+          "timestamp": 20605.23,
+          "ms": 1.1699999570846558,
+          "lateness": 6.940000016689737
+        },
+        {
+          "timestamp": 20621.91,
+          "ms": 0.8200000524520874,
+          "lateness": 0.31499996423735865
+        },
+        {
+          "timestamp": 20638.565,
+          "ms": 1.0999999642372131,
+          "lateness": 7.555000004769681
+        },
+        {
+          "timestamp": 20655.45,
+          "ms": 0.9500000476837158,
+          "lateness": 0.529999959468114
+        },
+        {
+          "timestamp": 20704.97,
+          "ms": 1.3950000405311584,
+          "lateness": 0.6799999761569779
+        },
+        {
+          "timestamp": 20721.585,
+          "ms": 1.0049999952316284,
+          "lateness": 5.660000004769245
+        },
+        {
+          "timestamp": 20738.3,
+          "ms": 0.7299999594688416,
+          "lateness": 0.5700000047690992
+        },
+        {
+          "timestamp": 20754.985,
+          "ms": 1.0699999928474426,
+          "lateness": 0.7649999999994179
+        },
+        {
+          "timestamp": 20771.595,
+          "ms": 1,
+          "lateness": 0.46500000238302164
+        },
+        {
+          "timestamp": 20804.75,
+          "ms": 0.8050000071525574,
+          "lateness": 3.490000009536743
+        },
+        {
+          "timestamp": 20821.505,
+          "ms": 1.5049999952316284,
+          "lateness": 0.5699999880780524
+        },
+        {
+          "timestamp": 20838.09,
+          "ms": 1.1800000071525574,
+          "lateness": 2.5449999904631113
+        },
+        {
+          "timestamp": 20854.62,
+          "ms": 0.7150000333786011,
+          "lateness": 0.35499996423823177
+        },
+        {
+          "timestamp": 20871.25,
+          "ms": 0.824999988079071,
+          "lateness": 0.6299999952316284
+        },
+        {
+          "timestamp": 20888.225,
+          "ms": 0.8899999856948853,
+          "lateness": 0.4049999952330836
+        },
+        {
+          "timestamp": 20904.62,
+          "ms": 1.0649999976158142,
+          "lateness": 12.394999985695904
+        },
+        {
+          "timestamp": 20921.255,
+          "ms": 1.1800000071525574,
+          "lateness": 5.809999997614796
+        },
+        {
+          "timestamp": 20938.145,
+          "ms": 0.7250000238418579,
+          "lateness": 0.509999971389334
+        },
+        {
+          "timestamp": 20954.43,
+          "ms": 0.64000004529953,
+          "lateness": 9.664999969005294
+        },
+        {
+          "timestamp": 20971.085,
+          "ms": 0.5649999976158142,
+          "lateness": 7.934999980927387
+        },
+        {
+          "timestamp": 20987.635,
+          "ms": 1.2149999737739563,
+          "lateness": 0.6050000095383439
+        },
+        {
+          "timestamp": 21087.52,
+          "ms": 1.524999976158142,
+          "lateness": 5.790000002383749
+        },
+        {
+          "timestamp": 21104.17,
+          "ms": 0.6899999976158142,
+          "lateness": 0.42499996900733095
+        },
+        {
+          "timestamp": 21120.675,
+          "ms": 0.9199999570846558,
+          "lateness": 0.630000007153285
+        },
+        {
+          "timestamp": 21138.25,
+          "ms": 1.1449999809265137,
+          "lateness": 10
+        },
+        {
+          "timestamp": 21154.085,
+          "ms": 0.73499995470047,
+          "lateness": 14.535000004769245
+        },
+        {
+          "timestamp": 21187.305,
+          "ms": 1.3100000023841858,
+          "lateness": 14.430000014304824
+        },
+        {
+          "timestamp": 21203.965,
+          "ms": 0.6899999976158142,
+          "lateness": 10.569999966621253
+        },
+        {
+          "timestamp": 21237.205,
+          "ms": 1.4300000071525574,
+          "lateness": 7.869999988077325
+        },
+        {
+          "timestamp": 21270.395,
+          "ms": 0.9850000143051147,
+          "lateness": 1.7499999809260771
+        },
+        {
+          "timestamp": 21287.15,
+          "ms": 0.9449999928474426,
+          "lateness": 3.314999973772501
+        },
+        {
+          "timestamp": 21303.73,
+          "ms": 1.0099999904632568,
+          "lateness": 16.08499999761625
+        },
+        {
+          "timestamp": 21336.895,
+          "ms": 1.2450000047683716,
+          "lateness": 12.179999988078634
+        },
+        {
+          "timestamp": 21370.26,
+          "ms": 1.1399999856948853,
+          "lateness": 7.420000007154158
+        },
+        {
+          "timestamp": 21386.845,
+          "ms": 0.9600000381469727,
+          "lateness": 2.179999976156978
+        },
+        {
+          "timestamp": 21403.49,
+          "ms": 0.9550000429153442,
+          "lateness": 15.609999964235612
+        },
+        {
+          "timestamp": 21436.63,
+          "ms": 1.215000033378601,
+          "lateness": 7.409999961852009
+        },
+        {
+          "timestamp": 21453.27,
+          "ms": 0.7549999952316284,
+          "lateness": 8.494999985694449
+        },
+        {
+          "timestamp": 21486.635,
+          "ms": 2.034999966621399,
+          "lateness": 8.184999992849043
+        },
+        {
+          "timestamp": 21503.36,
+          "ms": 1.0600000023841858,
+          "lateness": 2.8349999928468606
+        },
+        {
+          "timestamp": 21519.925,
+          "ms": 0.8700000047683716,
+          "lateness": 15.479999971390498
+        },
+        {
+          "timestamp": 21553.12,
+          "ms": 1.2350000143051147,
+          "lateness": 7.759999995232647
+        },
+        {
+          "timestamp": 21569.72,
+          "ms": 1.4749999642372131,
+          "lateness": 11.26500001430395
+        },
+        {
+          "timestamp": 21586.475,
+          "ms": 1.125,
+          "lateness": 4.460000002385641
+        },
+        {
+          "timestamp": 21619.79,
+          "ms": 0.8899999856948853,
+          "lateness": 1.274999997614941
+        },
+        {
+          "timestamp": 21636.235,
+          "ms": 1.2950000166893005,
+          "lateness": 0.41499997615756
+        },
+        {
+          "timestamp": 21652.84,
+          "ms": 1.0049999952316284,
+          "lateness": 13.569999966621253
+        },
+        {
+          "timestamp": 21686.07,
+          "ms": 1.0849999785423279,
+          "lateness": 11.18499999523192
+        },
+        {
+          "timestamp": 21719.395,
+          "ms": 0.9699999690055847,
+          "lateness": 12.840000014304678
+        },
+        {
+          "timestamp": 21736.06,
+          "ms": 1.034999966621399,
+          "lateness": 2.125000002382876
+        },
+        {
+          "timestamp": 21752.585,
+          "ms": 0.9399999976158142,
+          "lateness": 0.38999996423808625
+        },
+        {
+          "timestamp": 21769.19,
+          "ms": 1.6899999976158142,
+          "lateness": 0.43000000476968125
+        },
+        {
+          "timestamp": 21785.86,
+          "ms": 0.9449999928474426,
+          "lateness": 5.594999983310117
+        },
+        {
+          "timestamp": 21852.465,
+          "ms": 1.3600000143051147,
+          "lateness": 8.759999964237068
+        },
+        {
+          "timestamp": 21869.17,
+          "ms": 0.8649999499320984,
+          "lateness": 0.8200000095384894
+        },
+        {
+          "timestamp": 21885.74,
+          "ms": 1.5300000309944153,
+          "lateness": 7.234999964235612
+        },
+        {
+          "timestamp": 21902.29,
+          "ms": 0.875,
+          "lateness": 13.214999995230755
+        },
+        {
+          "timestamp": 21918.895,
+          "ms": 0.9150000214576721,
+          "lateness": 6.759999971389334
+        },
+        {
+          "timestamp": 21935.585,
+          "ms": 0.7750000357627869,
+          "lateness": 10.939999976159015
+        },
+        {
+          "timestamp": 21952.235,
+          "ms": 1.2450000047683716,
+          "lateness": 15.174999966620817
+        },
+        {
+          "timestamp": 21985.47,
+          "ms": 0.9550000429153442,
+          "lateness": 8.244999973772792
+        },
+        {
+          "timestamp": 22002.135,
+          "ms": 0.9099999666213989,
+          "lateness": 0.7900000119225297
+        },
+        {
+          "timestamp": 22018.84,
+          "ms": 0.6850000023841858,
+          "lateness": 11.984999988078926
+        },
+        {
+          "timestamp": 22035.235,
+          "ms": 0.9549999833106995,
+          "lateness": 11.594999983310117
+        },
+        {
+          "timestamp": 22051.92,
+          "ms": 0.8199999928474426,
+          "lateness": 3.8349999952333746
+        },
+        {
+          "timestamp": 22068.53,
+          "ms": 1.0699999928474426,
+          "lateness": 14.349999995232793
+        },
+        {
+          "timestamp": 22101.79,
+          "ms": 0.8650000095367432,
+          "lateness": 4.314999959467968
+        },
+        {
+          "timestamp": 22118.525,
+          "ms": 0.8600000143051147,
+          "lateness": 0.4949999809250585
+        },
+        {
+          "timestamp": 22135.02,
+          "ms": 0.9699999690055847,
+          "lateness": 11.275000016688864
+        },
+        {
+          "timestamp": 22185.045,
+          "ms": 0.8600000143051147,
+          "lateness": 8.414999978544074
+        },
+        {
+          "timestamp": 22218.26,
+          "ms": 0.8399999737739563,
+          "lateness": 7.855000009538344
+        },
+        {
+          "timestamp": 22234.925,
+          "ms": 0.875,
+          "lateness": 0.37500001192165655
+        },
+        {
+          "timestamp": 22251.515,
+          "ms": 0.8600000143051147,
+          "lateness": 5.7399999952322105
+        },
+        {
+          "timestamp": 22268.18,
+          "ms": 0.9950000047683716,
+          "lateness": 16.949999995231337
+        },
+        {
+          "timestamp": 22318.135,
+          "ms": 1.2450000047683716,
+          "lateness": 0.879999985696486
+        },
+        {
+          "timestamp": 22334.555,
+          "ms": 1.0350000262260437,
+          "lateness": 1.2149999809262226
+        },
+        {
+          "timestamp": 22351.48,
+          "ms": 1.1150000095367432,
+          "lateness": 9.830000002384622
+        },
+        {
+          "timestamp": 22368.08,
+          "ms": 0.6499999761581421,
+          "lateness": 132.09000001668755
+        },
+        {
+          "timestamp": 22500.855,
+          "ms": 0.675000011920929,
+          "lateness": 0.6649999809269502
+        },
+        {
+          "timestamp": 22517.495,
+          "ms": 1.0699999928474426,
+          "lateness": 0.5500000166903192
+        },
+        {
+          "timestamp": 22534.115,
+          "ms": 1.3899999856948853,
+          "lateness": 0.33499998807747033
+        },
+        {
+          "timestamp": 22550.88,
+          "ms": 0.8200000524520874,
+          "lateness": 0.4699999642361945
+        },
+        {
+          "timestamp": 22567.815,
+          "ms": 1.4350000023841858,
+          "lateness": 0.4149999594701512
+        },
+        {
+          "timestamp": 22584.045,
+          "ms": 1.4300000071525574,
+          "lateness": 0.4349999594705878
+        },
+        {
+          "timestamp": 22600.625,
+          "ms": 1.1050000190734863,
+          "lateness": 0.2749999761581421
+        },
+        {
+          "timestamp": 22617.3,
+          "ms": 1.23499995470047,
+          "lateness": 8.56500000953747
+        },
+        {
+          "timestamp": 22634.295,
+          "ms": 0.8149999976158142,
+          "lateness": 2.4299999642389594
+        },
+        {
+          "timestamp": 22650.76,
+          "ms": 1.1550000309944153,
+          "lateness": 10.949999978543929
+        },
+        {
+          "timestamp": 22683.77,
+          "ms": 1.1100000143051147,
+          "lateness": 7.119999985694449
+        },
+        {
+          "timestamp": 22700.405,
+          "ms": 0.875,
+          "lateness": 13.539999992848607
+        },
+        {
+          "timestamp": 22733.66,
+          "ms": 1.1899999976158142,
+          "lateness": 3.0800000095368887
+        },
+        {
+          "timestamp": 22750.285,
+          "ms": 1.0450000166893005,
+          "lateness": 0.369999971389916
+        },
+        {
+          "timestamp": 22766.915,
+          "ms": 0.7450000047683716,
+          "lateness": 13.469999990462384
+        },
+        {
+          "timestamp": 22816.82,
+          "ms": 1.2999999523162842,
+          "lateness": 8.045000009537034
+        },
+        {
+          "timestamp": 22850.06,
+          "ms": 0.8350000381469727,
+          "lateness": 10.479999961851718
+        },
+        {
+          "timestamp": 22866.69,
+          "ms": 1.1100000143051147,
+          "lateness": 6.529999969006894
+        },
+        {
+          "timestamp": 22883.335,
+          "ms": 0.9750000238418579,
+          "lateness": 0.39499995946971467
+        },
+        {
+          "timestamp": 22899.995,
+          "ms": 0.9700000286102295,
+          "lateness": 10.969999973774975
+        },
+        {
+          "timestamp": 22933.19,
+          "ms": 0.8250000476837158,
+          "lateness": 2.2199999666227086
+        },
+        {
+          "timestamp": 22966.485,
+          "ms": 1.3550000190734863,
+          "lateness": 0.8649999642366311
+        },
+        {
+          "timestamp": 22983.065,
+          "ms": 1.0450000166893005,
+          "lateness": 0.32999998092782334
+        },
+        {
+          "timestamp": 22999.74,
+          "ms": 0.8199999928474426,
+          "lateness": 0.40499998092491296
+        },
+        {
+          "timestamp": 23016.365,
+          "ms": 1.215000033378601,
+          "lateness": 12.094999978540727
+        },
+        {
+          "timestamp": 23049.645,
+          "ms": 0.9200000166893005,
+          "lateness": 15.119999985694449
+        },
+        {
+          "timestamp": 23066.375,
+          "ms": 0.7900000214576721,
+          "lateness": 9.389999985694885
+        },
+        {
+          "timestamp": 23082.96,
+          "ms": 1,
+          "lateness": 6.3299999618539005
+        },
+        {
+          "timestamp": 23099.495,
+          "ms": 0.9749999642372131,
+          "lateness": 16.740000014306133
+        },
+        {
+          "timestamp": 23132.72,
+          "ms": 0.7150000333786011,
+          "lateness": 11.109999983309535
+        },
+        {
+          "timestamp": 23149.38,
+          "ms": 2.049999952316284,
+          "lateness": 15.855000014304096
+        },
+        {
+          "timestamp": 23199.235,
+          "ms": 0.7599999904632568,
+          "lateness": 4.750000014304533
+        },
+        {
+          "timestamp": 23215.87,
+          "ms": 0.8500000238418579,
+          "lateness": 0.35499996423823177
+        },
+        {
+          "timestamp": 23232.635,
+          "ms": 1.1299999952316284,
+          "lateness": 13.084999969007185
+        },
+        {
+          "timestamp": 23265.895,
+          "ms": 0.8450000286102295,
+          "lateness": 2.184999983310263
+        },
+        {
+          "timestamp": 23299.015,
+          "ms": 0.925000011920929,
+          "lateness": 1.8899999713903526
+        },
+        {
+          "timestamp": 23315.745,
+          "ms": 1.0049999952316284,
+          "lateness": 0.42500001669031917
+        },
+        {
+          "timestamp": 23332.43,
+          "ms": 0.9150000214576721,
+          "lateness": 5.514999992847152
+        },
+        {
+          "timestamp": 23348.975,
+          "ms": 1.1649999618530273,
+          "lateness": 0.4000000000014552
+        },
+        {
+          "timestamp": 23398.835,
+          "ms": 0.9149999618530273,
+          "lateness": 5.710000016690174
+        },
+        {
+          "timestamp": 23415.53,
+          "ms": 0.800000011920929,
+          "lateness": 0.42999997854349203
+        },
+        {
+          "timestamp": 23448.68,
+          "ms": 1.0149999856948853,
+          "lateness": 11.26999998807878
+        },
+        {
+          "timestamp": 23481.92,
+          "ms": 0.8849999904632568,
+          "lateness": 22.659999983312446
+        },
+        {
+          "timestamp": 23515.28,
+          "ms": 0.5400000214576721,
+          "lateness": 6.624999971390935
+        },
+        {
+          "timestamp": 23531.86,
+          "ms": 1.4050000309944153,
+          "lateness": 0.5999999785417458
+        },
+        {
+          "timestamp": 23565.175,
+          "ms": 1.01500004529953,
+          "lateness": 1.229999971390498
+        },
+        {
+          "timestamp": 23615.05,
+          "ms": 1.1949999928474426,
+          "lateness": 12.354999971390498
+        },
+        {
+          "timestamp": 23631.74,
+          "ms": 0.8649999499320984,
+          "lateness": 14.6800000166877
+        },
+        {
+          "timestamp": 23681.605,
+          "ms": 0.8199999928474426,
+          "lateness": 0.8150000166897371
+        },
+        {
+          "timestamp": 23714.85,
+          "ms": 0.8050000071525574,
+          "lateness": 4.145000004769827
+        },
+        {
+          "timestamp": 23764.85,
+          "ms": 0.7750000357627869,
+          "lateness": 16.74499996900704
+        },
+        {
+          "timestamp": 23781.24,
+          "ms": 0.5849999785423279,
+          "lateness": 1.704999992845842
+        },
+        {
+          "timestamp": 23798.645,
+          "ms": 0.8149999976158142,
+          "lateness": 1.2200000095363066
+        },
+        {
+          "timestamp": 23814.59,
+          "ms": 1.6550000309944153,
+          "lateness": 11.50499996900544
+        },
+        {
+          "timestamp": 23831.13,
+          "ms": 0.7799999713897705,
+          "lateness": 3.564999992846424
+        },
+        {
+          "timestamp": 23864.4,
+          "ms": 1.074999988079071,
+          "lateness": 6.4949999809250585
+        },
+        {
+          "timestamp": 23881.125,
+          "ms": 0.875,
+          "lateness": 7.789999961853027
+        },
+        {
+          "timestamp": 23897.635,
+          "ms": 1.0600000023841858,
+          "lateness": 0.33999996423881385
+        },
+        {
+          "timestamp": 23914.36,
+          "ms": 0.7699999809265137,
+          "lateness": 8.844999983310117
+        },
+        {
+          "timestamp": 23965.295,
+          "ms": 1.0799999833106995,
+          "lateness": 10.719999985696631
+        },
+        {
+          "timestamp": 23997.475,
+          "ms": 0.9550000429153442,
+          "lateness": 9.689999961854483
+        },
+        {
+          "timestamp": 24030.795,
+          "ms": 0.8350000381469727,
+          "lateness": 5.789999978544074
+        },
+        {
+          "timestamp": 24047.38,
+          "ms": 0.7749999761581421,
+          "lateness": 0.6100000095357245
+        },
+        {
+          "timestamp": 24063.975,
+          "ms": 1.0099999904632568,
+          "lateness": 8.349999988080526
+        },
+        {
+          "timestamp": 24080.565,
+          "ms": 1.3100000023841858,
+          "lateness": 0.4350000000013097
+        },
+        {
+          "timestamp": 24113.86,
+          "ms": 1.3250000476837158,
+          "lateness": 13.864999964236631
+        },
+        {
+          "timestamp": 24147.09,
+          "ms": 1.050000011920929,
+          "lateness": 8.04999998569474
+        },
+        {
+          "timestamp": 24163.85,
+          "ms": 0.9050000309944153,
+          "lateness": 11.799999976159597
+        },
+        {
+          "timestamp": 24197.025,
+          "ms": 0.9300000071525574,
+          "lateness": 6.36499998569343
+        },
+        {
+          "timestamp": 24213.715,
+          "ms": 0.7149999737739563,
+          "lateness": 0.5399999952314829
+        },
+        {
+          "timestamp": 24230.305,
+          "ms": 0.8700000047683716,
+          "lateness": 11.094999976157851
+        },
+        {
+          "timestamp": 24247.065,
+          "ms": 0.9749999642372131,
+          "lateness": 3.064999995232938
+        },
+        {
+          "timestamp": 24280.25,
+          "ms": 0.824999988079071,
+          "lateness": 3.6549999713897705
+        },
+        {
+          "timestamp": 24296.855,
+          "ms": 0.699999988079071,
+          "lateness": 6.794999976158579
+        },
+        {
+          "timestamp": 24313.39,
+          "ms": 1.0449999570846558,
+          "lateness": 10.980000004768954
+        },
+        {
+          "timestamp": 24346.7,
+          "ms": 0.8650000095367432,
+          "lateness": 13.454999971389043
+        },
+        {
+          "timestamp": 24363.255,
+          "ms": 0.8999999761581421,
+          "lateness": 5.559999997614796
+        },
+        {
+          "timestamp": 24413.205,
+          "ms": 1.0800000429153442,
+          "lateness": 15.459999961851281
+        },
+        {
+          "timestamp": 24463.155,
+          "ms": 0.9049999713897705,
+          "lateness": 2.220000000001164
+        },
+        {
+          "timestamp": 24496.485,
+          "ms": 0.85999995470047,
+          "lateness": 2.255000009536161
+        },
+        {
+          "timestamp": 24513.01,
+          "ms": 0.8400000333786011,
+          "lateness": 0.34499995947044226
+        },
+        {
+          "timestamp": 24529.665,
+          "ms": 0.6949999928474426,
+          "lateness": 8.919999978541455
+        },
+        {
+          "timestamp": 24563.005,
+          "ms": 0.6149999499320984,
+          "lateness": 12.42000001191991
+        },
+        {
+          "timestamp": 24579.625,
+          "ms": 0.625,
+          "lateness": 11.164999961853027
+        },
+        {
+          "timestamp": 24596.23,
+          "ms": 0.8849999904632568,
+          "lateness": 0.42499997139020707
+        },
+        {
+          "timestamp": 24612.67,
+          "ms": 0.7899999618530273,
+          "lateness": 6.385000007154304
+        },
+        {
+          "timestamp": 24629.43,
+          "ms": 1.1650000214576721,
+          "lateness": 0.3349999856945942
+        },
+        {
+          "timestamp": 24646.035,
+          "ms": 0.9050000309944153,
+          "lateness": 12.314999964237359
+        },
+        {
+          "timestamp": 24662.555,
+          "ms": 0.8299999833106995,
+          "lateness": 11.469999976157851
+        },
+        {
+          "timestamp": 24695.815,
+          "ms": 0.7049999833106995,
+          "lateness": 11.01499998331201
+        },
+        {
+          "timestamp": 24712.455,
+          "ms": 0.8049999475479126,
+          "lateness": 3.4650000166875543
+        },
+        {
+          "timestamp": 24729.05,
+          "ms": 0.9549999833106995,
+          "lateness": 7.97499997615887
+        },
+        {
+          "timestamp": 24745.815,
+          "ms": 0.6850000023841858,
+          "lateness": 7.0199999785436376
+        },
+        {
+          "timestamp": 24762.435,
+          "ms": 1.0649999976158142,
+          "lateness": 0.3299999856935756
+        },
+        {
+          "timestamp": 24778.955,
+          "ms": 0.8199999928474426,
+          "lateness": 11.379999978540582
+        },
+        {
+          "timestamp": 24812.44,
+          "ms": 0.8250000476837158,
+          "lateness": 4.409999964238523
+        },
+        {
+          "timestamp": 24845.525,
+          "ms": 1.284999966621399,
+          "lateness": 2.224999999998545
+        },
+        {
+          "timestamp": 24862.145,
+          "ms": 0.6649999618530273,
+          "lateness": 0.22999999999956344
+        },
+        {
+          "timestamp": 24878.73,
+          "ms": 1.0199999809265137,
+          "lateness": 7.580000002384622
+        },
+        {
+          "timestamp": 24895.345,
+          "ms": 1.0350000262260437,
+          "lateness": 0.2899999904620927
+        },
+        {
+          "timestamp": 24912.005,
+          "ms": 0.9799999594688416,
+          "lateness": 14.110000009535725
+        },
+        {
+          "timestamp": 24945.37,
+          "ms": 0.7199999690055847,
+          "lateness": 7.324999992848461
+        },
+        {
+          "timestamp": 24962.115,
+          "ms": 0.9199999570846558,
+          "lateness": 3.630000004766771
+        },
+        {
+          "timestamp": 24978.685,
+          "ms": 0.7049999833106995,
+          "lateness": 6.610000016687991
+        },
+        {
+          "timestamp": 24995.21,
+          "ms": 0.7549999952316284,
+          "lateness": 11.42499999046413
+        },
+        {
+          "timestamp": 25011.82,
+          "ms": 0.8699999451637268,
+          "lateness": 2.915000014305406
+        },
+        {
+          "timestamp": 25028.565,
+          "ms": 0.8899999856948853,
+          "lateness": 11.629999992848752
+        },
+        {
+          "timestamp": 25045.18,
+          "ms": 1.274999976158142,
+          "lateness": 2.6150000166890095
+        },
+        {
+          "timestamp": 25061.645,
+          "ms": 0.6699999570846558,
+          "lateness": 10.275000016688864
+        },
+        {
+          "timestamp": 25078.39,
+          "ms": 0.6899999976158142,
+          "lateness": 0.43999998331128154
+        },
+        {
+          "timestamp": 25095.01,
+          "ms": 1.149999976158142,
+          "lateness": 8.804999997617415
+        },
+        {
+          "timestamp": 25111.705,
+          "ms": 0.8349999785423279,
+          "lateness": 11.059999985693139
+        },
+        {
+          "timestamp": 25128.26,
+          "ms": 0.7599999904632568,
+          "lateness": 2.0350000166909012
+        },
+        {
+          "timestamp": 25178.205,
+          "ms": 1.0949999690055847,
+          "lateness": 9.169999999998254
+        },
+        {
+          "timestamp": 25194.95,
+          "ms": 0.6599999666213989,
+          "lateness": 1.4100000143043872
+        },
+        {
+          "timestamp": 25211.415,
+          "ms": 1.175000011920929,
+          "lateness": 13.174999973773083
+        },
+        {
+          "timestamp": 25228.355,
+          "ms": 0.949999988079071,
+          "lateness": 9.984999973774393
+        },
+        {
+          "timestamp": 25244.88,
+          "ms": 1.1050000190734863,
+          "lateness": 2.0349999618520087
+        },
+        {
+          "timestamp": 25261.285,
+          "ms": 0.9750000238418579,
+          "lateness": 10.85999998092666
+        },
+        {
+          "timestamp": 25294.58,
+          "ms": 1.215000033378601,
+          "lateness": 2.5649999809247674
+        },
+        {
+          "timestamp": 25311.405,
+          "ms": 0.6800000071525574,
+          "lateness": 0.4499999594700057
+        },
+        {
+          "timestamp": 25344.345,
+          "ms": 1.050000011920929,
+          "lateness": 8.044999985693721
+        },
+        {
+          "timestamp": 25360.985,
+          "ms": 0.7749999761581421,
+          "lateness": 1.514999999999418
+        },
+        {
+          "timestamp": 25410.845,
+          "ms": 1.0550000071525574,
+          "lateness": 10.74999996900442
+        },
+        {
+          "timestamp": 25427.475,
+          "ms": 0.6550000309944153,
+          "lateness": 9.809999966622854
+        },
+        {
+          "timestamp": 25444.24,
+          "ms": 1.0450000166893005,
+          "lateness": 16.1349999999984
+        },
+        {
+          "timestamp": 25460.74,
+          "ms": 0.8100000023841858,
+          "lateness": 8.274999985693285
+        },
+        {
+          "timestamp": 25477.355,
+          "ms": 0.6200000047683716,
+          "lateness": 0.3049999666218355
+        },
+        {
+          "timestamp": 25510.735,
+          "ms": 0.7549999952316284,
+          "lateness": 5.549999966620817
+        },
+        {
+          "timestamp": 25527.405,
+          "ms": 1.1549999713897705,
+          "lateness": 0.5900000047695357
+        },
+        {
+          "timestamp": 25577.105,
+          "ms": 0.6050000190734863,
+          "lateness": 17.04499997615858
+        },
+        {
+          "timestamp": 25593.77,
+          "ms": 0.5400000214576721,
+          "lateness": 13.064999978541891
+        },
+        {
+          "timestamp": 25610.465,
+          "ms": 1.0299999713897705,
+          "lateness": 11.099999997615669
+        },
+        {
+          "timestamp": 25627.07,
+          "ms": 0.9300000071525574,
+          "lateness": 5.3349999713900615
+        },
+        {
+          "timestamp": 25643.745,
+          "ms": 0.7850000262260437,
+          "lateness": 0.5299999761591607
+        },
+        {
+          "timestamp": 25660.345,
+          "ms": 0.6200000047683716,
+          "lateness": 12.455000011919765
+        },
+        {
+          "timestamp": 25693.685,
+          "ms": 0.6800000071525574,
+          "lateness": 1.4549999856935756
+        },
+        {
+          "timestamp": 25743.68,
+          "ms": 1.2049999833106995,
+          "lateness": 1.3750000071522663
+        },
+        {
+          "timestamp": 25760.13,
+          "ms": 0.6449999809265137,
+          "lateness": 10.665000016688282
+        },
+        {
+          "timestamp": 25776.89,
+          "ms": 0.8550000190734863,
+          "lateness": 0.3649999952322105
+        },
+        {
+          "timestamp": 25793.355,
+          "ms": 0.7100000381469727,
+          "lateness": 30.429999966621835
+        },
+        {
+          "timestamp": 25810.075,
+          "ms": 0.7700000405311584,
+          "lateness": 15.079999971389043
+        },
+        {
+          "timestamp": 25826.755,
+          "ms": 0.5149999856948853,
+          "lateness": 0.2950000119199103
+        },
+        {
+          "timestamp": 25876.545,
+          "ms": 1.01500004529953,
+          "lateness": 7.559999959470588
+        },
+        {
+          "timestamp": 25909.935,
+          "ms": 0.9150000214576721,
+          "lateness": 1.2049999856935756
+        },
+        {
+          "timestamp": 25926.55,
+          "ms": 1.2699999809265137,
+          "lateness": 0.6200000166900281
+        },
+        {
+          "timestamp": 25943.125,
+          "ms": 0.9300000071525574,
+          "lateness": 0.6850000023841858
+        },
+        {
+          "timestamp": 25959.705,
+          "ms": 0.8700000047683716,
+          "lateness": 0.4299999904615106
+        },
+        {
+          "timestamp": 25992.96,
+          "ms": 1.2799999713897705,
+          "lateness": 13.030000009537616
+        },
+        {
+          "timestamp": 26009.47,
+          "ms": 0.6449999809265137,
+          "lateness": 14.789999990462093
+        },
+        {
+          "timestamp": 26042.84,
+          "ms": 0.89000004529953,
+          "lateness": 6.139999959468696
+        },
+        {
+          "timestamp": 26076.035,
+          "ms": 1.1450000405311584,
+          "lateness": 9.374999966621544
+        },
+        {
+          "timestamp": 26092.695,
+          "ms": 0.5550000071525574,
+          "lateness": 0.4250000047686626
+        },
+        {
+          "timestamp": 26109.355,
+          "ms": 0.675000011920929,
+          "lateness": 12.114999969006021
+        },
+        {
+          "timestamp": 26225.815,
+          "ms": 0.5799999833106995,
+          "lateness": 4.2699999785436376
+        },
+        {
+          "timestamp": 26242.295,
+          "ms": 0.8849999904632568,
+          "lateness": 0.27499999284918886
+        },
+        {
+          "timestamp": 26259.055,
+          "ms": 1.090000033378601,
+          "lateness": 2.7749999833104084
+        },
+        {
+          "timestamp": 26275.635,
+          "ms": 1.5450000166893005,
+          "lateness": 0.504999985696486
+        },
+        {
+          "timestamp": 26425.355,
+          "ms": 1.2400000095367432,
+          "lateness": 4.834999997616251
+        },
+        {
+          "timestamp": 26441.935,
+          "ms": 1.1050000190734863,
+          "lateness": 13.139999988077761
+        },
+        {
+          "timestamp": 26475.11,
+          "ms": 1.3050000071525574,
+          "lateness": 10.74499995946826
+        },
+        {
+          "timestamp": 26491.74,
+          "ms": 1.0849999785423279,
+          "lateness": 3.5899999833090988
+        },
+        {
+          "timestamp": 26508.35,
+          "ms": 0.949999988079071,
+          "lateness": 11.13500001430657
+        },
+        {
+          "timestamp": 26541.745,
+          "ms": 1.4599999785423279,
+          "lateness": 4.384999995232647
+        },
+        {
+          "timestamp": 26558.295,
+          "ms": 1.3799999952316284,
+          "lateness": 14.109999971391517
+        },
+        {
+          "timestamp": 26591.585,
+          "ms": 0.89000004529953,
+          "lateness": 12.384999969006458
+        },
+        {
+          "timestamp": 26641.4,
+          "ms": 0.8799999952316284,
+          "lateness": 0.5850000143036596
+        },
+        {
+          "timestamp": 26691.435,
+          "ms": 0.8349999785423279,
+          "lateness": 13.620000007151248
+        },
+        {
+          "timestamp": 26758.05,
+          "ms": 0.9750000238418579,
+          "lateness": 7.089999985695613
+        },
+        {
+          "timestamp": 26807.655,
+          "ms": 0.8199999928474426,
+          "lateness": 2.5150000166904647
+        },
+        {
+          "timestamp": 26840.945,
+          "ms": 0.9399999976158142,
+          "lateness": 2.6849999952319195
+        },
+        {
+          "timestamp": 26874.145,
+          "ms": 1.0499999523162842,
+          "lateness": 0.3400000143046782
+        },
+        {
+          "timestamp": 26890.865,
+          "ms": 0.800000011920929,
+          "lateness": 12.654999980924913
+        },
+        {
+          "timestamp": 26907.53,
+          "ms": 1.4549999833106995,
+          "lateness": 14.354999990464421
+        },
+        {
+          "timestamp": 26940.715,
+          "ms": 1.074999988079071,
+          "lateness": 9.89500001430497
+        },
+        {
+          "timestamp": 26990.575,
+          "ms": 1.2299999594688416,
+          "lateness": 10.299999999999272
+        },
+        {
+          "timestamp": 27023.865,
+          "ms": 0.940000057220459,
+          "lateness": 11.23999995946724
+        },
+        {
+          "timestamp": 27040.58,
+          "ms": 0.8100000023841858,
+          "lateness": 13.744999988077325
+        },
+        {
+          "timestamp": 27090.415,
+          "ms": 0.8499999642372131,
+          "lateness": 8.515000007151684
+        },
+        {
+          "timestamp": 27123.69,
+          "ms": 0.8149999976158142,
+          "lateness": 2.5550000047696813
+        },
+        {
+          "timestamp": 27173.555,
+          "ms": 1.0149999856948853,
+          "lateness": 0.31999999999970896
+        },
+        {
+          "timestamp": 27190.14,
+          "ms": 0.7100000381469727,
+          "lateness": 15.009999976158724
+        },
+        {
+          "timestamp": 27223.485,
+          "ms": 1.0899999737739563,
+          "lateness": 9.950000002383604
+        },
+        {
+          "timestamp": 27240.1,
+          "ms": 0.7750000357627869,
+          "lateness": 12.99499996900704
+        },
+        {
+          "timestamp": 27273.29,
+          "ms": 1.0949999690055847,
+          "lateness": 11.515000007151684
+        },
+        {
+          "timestamp": 27306.595,
+          "ms": 0.8149999976158142,
+          "lateness": 4.669999985693721
+        },
+        {
+          "timestamp": 27323.25,
+          "ms": 1.1949999928474426,
+          "lateness": 16.444999992847443
+        },
+        {
+          "timestamp": 27339.875,
+          "ms": 1.2350000143051147,
+          "lateness": 14.284999966621399
+        },
+        {
+          "timestamp": 27406.415,
+          "ms": 0.7799999713897705,
+          "lateness": 13.15499999284657
+        },
+        {
+          "timestamp": 27456.195,
+          "ms": 1.1899999976158142,
+          "lateness": 13.494999997616105
+        },
+        {
+          "timestamp": 27506.17,
+          "ms": 0.8199999928474426,
+          "lateness": 8.075000004770118
+        },
+        {
+          "timestamp": 27539.305,
+          "ms": 1.524999976158142,
+          "lateness": 8.14499998807878
+        },
+        {
+          "timestamp": 27605.94,
+          "ms": 1.1899999976158142,
+          "lateness": 1.1449999785436376
+        },
+        {
+          "timestamp": 27672.35,
+          "ms": 1.3700000047683716,
+          "lateness": 0.33000000715401256
+        },
+        {
+          "timestamp": 27688.985,
+          "ms": 1.5899999737739563,
+          "lateness": 0.6250000143045327
+        },
+        {
+          "timestamp": 27738.845,
+          "ms": 1.375,
+          "lateness": 3.335000007151393
+        },
+        {
+          "timestamp": 27772.095,
+          "ms": 0.8100000023841858,
+          "lateness": 13.224999992846278
+        },
+        {
+          "timestamp": 27788.735,
+          "ms": 0.9599999785423279,
+          "lateness": 10.95999999284686
+        },
+        {
+          "timestamp": 27821.995,
+          "ms": 1.449999988079071,
+          "lateness": 14.930000011921948
+        },
+        {
+          "timestamp": 27855.26,
+          "ms": 1.2450000047683716,
+          "lateness": 9.339999964238814
+        },
+        {
+          "timestamp": 27888.53,
+          "ms": 1.4300000071525574,
+          "lateness": 4.034999997616978
+        },
+        {
+          "timestamp": 27905.135,
+          "ms": 1.159999966621399,
+          "lateness": 0.35000001430671546
+        },
+        {
+          "timestamp": 27922.125,
+          "ms": 1.0850000381469727,
+          "lateness": 10.709999978542328
+        },
+        {
+          "timestamp": 27954.965,
+          "ms": 0.8500000238418579,
+          "lateness": 9.804999980926368
+        },
+        {
+          "timestamp": 27988.27,
+          "ms": 1.0200000405311584,
+          "lateness": 13.954999964236777
+        },
+        {
+          "timestamp": 28021.525,
+          "ms": 0.9200000166893005,
+          "lateness": 5.5699999690041295
+        },
+        {
+          "timestamp": 28038.235,
+          "ms": 0.9150000214576721,
+          "lateness": 5.91499997615756
+        },
+        {
+          "timestamp": 28054.85,
+          "ms": 1.0450000166893005,
+          "lateness": 0.3749999642386683
+        },
+        {
+          "timestamp": 28071.495,
+          "ms": 0.7800000309944153,
+          "lateness": 14.089999978543347
+        },
+        {
+          "timestamp": 28104.645,
+          "ms": 0.9449999928474426,
+          "lateness": 13.595000009536307
+        },
+        {
+          "timestamp": 28137.935,
+          "ms": 0.7300000190734863,
+          "lateness": 7.589999976156832
+        },
+        {
+          "timestamp": 28171.26,
+          "ms": 1.1349999904632568,
+          "lateness": 1.2499999904648575
+        },
+        {
+          "timestamp": 28187.955,
+          "ms": 1.0049999952316284,
+          "lateness": 2.0449999999982538
+        },
+        {
+          "timestamp": 28204.57,
+          "ms": 1.3650000095367432,
+          "lateness": 13.33999996662169
+        },
+        {
+          "timestamp": 28237.76,
+          "ms": 1.125,
+          "lateness": 11.610000004769972
+        },
+        {
+          "timestamp": 28254.485,
+          "ms": 0.9699999690055847,
+          "lateness": 4.514999999999418
+        },
+        {
+          "timestamp": 28271.055,
+          "ms": 0.9099999666213989,
+          "lateness": 11.44000000476808
+        },
+        {
+          "timestamp": 28304.295,
+          "ms": 1.375,
+          "lateness": 11.734999971391517
+        },
+        {
+          "timestamp": 28320.92,
+          "ms": 0.9599999785423279,
+          "lateness": 12.250000016691047
+        },
+        {
+          "timestamp": 28354.185,
+          "ms": 0.7450000047683716,
+          "lateness": 12.634999992846133
+        },
+        {
+          "timestamp": 28387.435,
+          "ms": 0.9149999618530273,
+          "lateness": 8.800000014303805
+        },
+        {
+          "timestamp": 28437.275,
+          "ms": 0.7250000238418579,
+          "lateness": 0.8099999785408727
+        },
+        {
+          "timestamp": 28470.565,
+          "ms": 0.7949999570846558,
+          "lateness": 12.85500001669061
+        },
+        {
+          "timestamp": 28520.39,
+          "ms": 0.8299999833106995,
+          "lateness": 5.4899999952322105
+        },
+        {
+          "timestamp": 28536.99,
+          "ms": 0.7800000309944153,
+          "lateness": 0.5999999737723556
+        },
+        {
+          "timestamp": 28553.605,
+          "ms": 2.0899999737739563,
+          "lateness": 14.784999985695322
+        },
+        {
+          "timestamp": 28570.26,
+          "ms": 0.6349999904632568,
+          "lateness": 6.514999976159743
+        },
+        {
+          "timestamp": 28603.615,
+          "ms": 1.215000033378601,
+          "lateness": 4.404999980924913
+        },
+        {
+          "timestamp": 28620.23,
+          "ms": 0.7450000047683716,
+          "lateness": 0.5150000047688081
+        },
+        {
+          "timestamp": 28636.88,
+          "ms": 1.5099999904632568,
+          "lateness": 0.42500000715153874
+        },
+        {
+          "timestamp": 28653.76,
+          "ms": 1.2299999594688416,
+          "lateness": 0.3600000047699723
+        },
+        {
+          "timestamp": 28719.915,
+          "ms": 1.0149999856948853,
+          "lateness": 5.484999976157269
+        },
+        {
+          "timestamp": 28736.55,
+          "ms": 1.0049999952316284,
+          "lateness": 0.40499998331142706
+        },
+        {
+          "timestamp": 28753.165,
+          "ms": 0.8650000095367432,
+          "lateness": 3.7050000047674985
+        },
+        {
+          "timestamp": 28769.87,
+          "ms": 0.85999995470047,
+          "lateness": 0.6800000119219476
+        },
+        {
+          "timestamp": 28819.835,
+          "ms": 0.875,
+          "lateness": 6.939999976159015
+        },
+        {
+          "timestamp": 28869.63,
+          "ms": 0.6100000143051147,
+          "lateness": 8.62499999523061
+        },
+        {
+          "timestamp": 28902.865,
+          "ms": 0.5550000071525574,
+          "lateness": 4.8999999856932845
+        },
+        {
+          "timestamp": 28919.46,
+          "ms": 1,
+          "lateness": 0.35999999284831574
+        },
+        {
+          "timestamp": 28952.825,
+          "ms": 0.7950000166893005,
+          "lateness": 3.4499999761574145
+        },
+        {
+          "timestamp": 28986.095,
+          "ms": 0.5699999928474426,
+          "lateness": 5.450000016688136
+        },
+        {
+          "timestamp": 29002.73,
+          "ms": 0.76500004529953,
+          "lateness": 12.809999961853464
+        },
+        {
+          "timestamp": 29069.15,
+          "ms": 0.6549999713897705,
+          "lateness": 2.4600000143036596
+        },
+        {
+          "timestamp": 29102.37,
+          "ms": 0.7050000429153442,
+          "lateness": 1.3549999642382318
+        },
+        {
+          "timestamp": 29168.945,
+          "ms": 0.7300000190734863,
+          "lateness": 5.074999980926805
+        },
+        {
+          "timestamp": 29185.63,
+          "ms": 0.9000000357627869,
+          "lateness": 0.26499998092549504
+        },
+        {
+          "timestamp": 29235.525,
+          "ms": 1.0799999833106995,
+          "lateness": 5.020000016687845
+        },
+        {
+          "timestamp": 29252.12,
+          "ms": 1.1349999904632568,
+          "lateness": 0.7149999785433465
+        },
+        {
+          "timestamp": 29268.665,
+          "ms": 1.0299999713897705,
+          "lateness": 0.9049999928465695
+        },
+        {
+          "timestamp": 29285.575,
+          "ms": 0.9199999570846558,
+          "lateness": 0.29000000953601557
+        },
+        {
+          "timestamp": 29301.92,
+          "ms": 1.300000011920929,
+          "lateness": 13.034999983312446
+        },
+        {
+          "timestamp": 29318.56,
+          "ms": 0.925000011920929,
+          "lateness": 15.64499998330939
+        },
+        {
+          "timestamp": 29351.895,
+          "ms": 0.6949999928474426,
+          "lateness": 3.109999995231192
+        },
+        {
+          "timestamp": 29368.495,
+          "ms": 0.8499999642372131,
+          "lateness": 0.4300000119219476
+        },
+        {
+          "timestamp": 29385.135,
+          "ms": 0.8499999642372131,
+          "lateness": 0.41500001192252967
+        },
+        {
+          "timestamp": 29401.72,
+          "ms": 0.8100000023841858,
+          "lateness": 0.3549999880779069
+        },
+        {
+          "timestamp": 29418.4,
+          "ms": 0.7350000143051147,
+          "lateness": 0.45499995946738636
+        },
+        {
+          "timestamp": 29435.02,
+          "ms": 1.4550000429153442,
+          "lateness": 14.19499997377352
+        },
+        {
+          "timestamp": 29468.245,
+          "ms": 0.8299999833106995,
+          "lateness": 9.430000011921948
+        },
+        {
+          "timestamp": 29484.83,
+          "ms": 1.3449999690055847,
+          "lateness": 0.4650000166875543
+        },
+        {
+          "timestamp": 29501.475,
+          "ms": 0.7099999785423279,
+          "lateness": 7.9149999856963404
+        },
+        {
+          "timestamp": 29518.145,
+          "ms": 0.7699999809265137,
+          "lateness": 0.3699999856944487
+        },
+        {
+          "timestamp": 29534.705,
+          "ms": 0.8349999785423279,
+          "lateness": 7.35500000238244
+        },
+        {
+          "timestamp": 29551.39,
+          "ms": 1.0200000405311584,
+          "lateness": 0.46499995946942363
+        },
+        {
+          "timestamp": 29568.045,
+          "ms": 0.675000011920929,
+          "lateness": 7.659999983312446
+        },
+        {
+          "timestamp": 29584.75,
+          "ms": 1.2149999737739563,
+          "lateness": 0.5
+        },
+        {
+          "timestamp": 29601.255,
+          "ms": 1.01500004529953,
+          "lateness": 0.4699999642361945
+        },
+        {
+          "timestamp": 29618.135,
+          "ms": 1.4449999928474426,
+          "lateness": 0.6050000095383439
+        },
+        {
+          "timestamp": 29634.475,
+          "ms": 0.9650000333786011,
+          "lateness": 0.4349999666228541
+        },
+        {
+          "timestamp": 29651.17,
+          "ms": 1.050000011920929,
+          "lateness": 0.5949999856966315
+        },
+        {
+          "timestamp": 29668.225,
+          "ms": 0.7200000286102295,
+          "lateness": 0.7399999737754115
+        },
+        {
+          "timestamp": 29684.35,
+          "ms": 0.7599999904632568,
+          "lateness": 0.32000001669075573
+        },
+        {
+          "timestamp": 29700.995,
+          "ms": 0.7000000476837158,
+          "lateness": 0.6099999594698602
+        },
+        {
+          "timestamp": 29717.685,
+          "ms": 0.8100000023841858,
+          "lateness": 14.039999964235903
+        },
+        {
+          "timestamp": 29750.9,
+          "ms": 1.225000023841858,
+          "lateness": 9.674999988077616
+        },
+        {
+          "timestamp": 29784.22,
+          "ms": 0.7549999952316284,
+          "lateness": 9.659999995230464
+        },
+        {
+          "timestamp": 29800.785,
+          "ms": 0.7050000429153442,
+          "lateness": 8.429999973774102
+        },
+        {
+          "timestamp": 29817.665,
+          "ms": 0.8149999976158142,
+          "lateness": 9.770000002383313
+        },
+        {
+          "timestamp": 29850.785,
+          "ms": 0.7400000095367432,
+          "lateness": 5.6249999666215444
+        },
+        {
+          "timestamp": 29933.815,
+          "ms": 0.8450000286102295,
+          "lateness": 15.949999985696195
+        },
+        {
+          "timestamp": 29967.19,
+          "ms": 0.875,
+          "lateness": 8.154999969006894
+        },
+        {
+          "timestamp": 29983.885,
+          "ms": 0.699999988079071,
+          "lateness": 14.184999992849043
+        },
+        {
+          "timestamp": 30000.405,
+          "ms": 1.1200000047683716,
+          "lateness": 7.0250000071537215
+        },
+        {
+          "timestamp": 30017.135,
+          "ms": 0.7950000166893005,
+          "lateness": 12.624999990464858
+        },
+        {
+          "timestamp": 30050.345,
+          "ms": 0.8999999761581421,
+          "lateness": 4.335000007151393
+        },
+        {
+          "timestamp": 30066.95,
+          "ms": 1.7000000476837158,
+          "lateness": 0.46499996185229975
+        },
+        {
+          "timestamp": 30083.57,
+          "ms": 1.449999988079071,
+          "lateness": 1.2250000166895916
+        },
+        {
+          "timestamp": 30100.245,
+          "ms": 1.6349999904632568,
+          "lateness": 0.5349999713907891
+        },
+        {
+          "timestamp": 30233.185,
+          "ms": 1.5950000286102295,
+          "lateness": 11.21999997138846
+        },
+        {
+          "timestamp": 30249.975,
+          "ms": 1.0799999833106995,
+          "lateness": 0.2700000047698268
+        },
+        {
+          "timestamp": 30266.465,
+          "ms": 1.2699999809265137,
+          "lateness": 2.804999980926368
+        },
+        {
+          "timestamp": 30283.145,
+          "ms": 1.0649999976158142,
+          "lateness": 0.41500000238374923
+        },
+        {
+          "timestamp": 30299.72,
+          "ms": 0.8149999976158142,
+          "lateness": 7.794999985693721
+        },
+        {
+          "timestamp": 30316.305,
+          "ms": 1.2450000047683716,
+          "lateness": 0.39499998807878
+        },
+        {
+          "timestamp": 30332.92,
+          "ms": 0.7649999856948853,
+          "lateness": 5.164999978544074
+        },
+        {
+          "timestamp": 30349.485,
+          "ms": 1.3450000286102295,
+          "lateness": 0.3499999785417458
+        },
+        {
+          "timestamp": 30366.205,
+          "ms": 1.125,
+          "lateness": 0.8550000023824396
+        },
+        {
+          "timestamp": 30382.9,
+          "ms": 1.1150000095367432,
+          "lateness": 3.064999973772501
+        },
+        {
+          "timestamp": 30399.575,
+          "ms": 0.8100000023841858,
+          "lateness": 9.619999992846715
+        },
+        {
+          "timestamp": 30416.125,
+          "ms": 0.9000000357627869,
+          "lateness": 5.959999978542328
+        },
+        {
+          "timestamp": 30432.805,
+          "ms": 0.9049999713897705,
+          "lateness": 12.875000007152266
+        },
+        {
+          "timestamp": 30466.115,
+          "ms": 0.7799999713897705,
+          "lateness": 6.764999995230028
+        },
+        {
+          "timestamp": 30482.75,
+          "ms": 1.425000011920929,
+          "lateness": 0.5249999761581421
+        },
+        {
+          "timestamp": 30499.135,
+          "ms": 1.1699999570846558,
+          "lateness": 0.41500001192252967
+        },
+        {
+          "timestamp": 30515.785,
+          "ms": 0.8449999690055847,
+          "lateness": 0.3400000000001455
+        },
+        {
+          "timestamp": 30532.505,
+          "ms": 0.8450000286102295,
+          "lateness": 0.6599999618520087
+        },
+        {
+          "timestamp": 30549.1,
+          "ms": 0.925000011920929,
+          "lateness": 0.3449999928488978
+        },
+        {
+          "timestamp": 30565.775,
+          "ms": 1.034999966621399,
+          "lateness": 0.33500001430365955
+        },
+        {
+          "timestamp": 30582.385,
+          "ms": 0.6949999928474426,
+          "lateness": 0.36999999523322913
+        },
+        {
+          "timestamp": 30598.93,
+          "ms": 1.2400000095367432,
+          "lateness": 0.4499999952313374
+        },
+        {
+          "timestamp": 30615.655,
+          "ms": 0.8100000023841858,
+          "lateness": 0.3649999809276778
+        },
+        {
+          "timestamp": 30632.2,
+          "ms": 0.8399999737739563,
+          "lateness": 0.4850000023834582
+        },
+        {
+          "timestamp": 30648.945,
+          "ms": 0.675000011920929,
+          "lateness": 0.58999996662169
+        },
+        {
+          "timestamp": 30665.605,
+          "ms": 1.2249999642372131,
+          "lateness": 0.4450000119213655
+        },
+        {
+          "timestamp": 30682.215,
+          "ms": 1.2549999952316284,
+          "lateness": 0.49499997854218236
+        },
+        {
+          "timestamp": 30698.71,
+          "ms": 1.065000057220459,
+          "lateness": 0.6449999594697147
+        },
+        {
+          "timestamp": 30715.48,
+          "ms": 0.7100000381469727,
+          "lateness": 0.4999999594692781
+        },
+        {
+          "timestamp": 30732.125,
+          "ms": 0.7800000309944153,
+          "lateness": 0.5149999856948853
+        },
+        {
+          "timestamp": 30748.615,
+          "ms": 0.6150000095367432,
+          "lateness": 0.4149999713881698
+        },
+        {
+          "timestamp": 30765.21,
+          "ms": 1.7850000262260437,
+          "lateness": 0.5049999737748294
+        },
+        {
+          "timestamp": 30781.89,
+          "ms": 1.0849999785423279,
+          "lateness": 0.7250000095373252
+        },
+        {
+          "timestamp": 30798.505,
+          "ms": 0.7900000214576721,
+          "lateness": 0.4749999594678229
+        },
+        {
+          "timestamp": 30815.095,
+          "ms": 1.1699999570846558,
+          "lateness": 0.40000000476720743
+        },
+        {
+          "timestamp": 30831.855,
+          "ms": 0.5499999523162842,
+          "lateness": 0.2600000095371797
+        },
+        {
+          "timestamp": 30848.375,
+          "ms": 0.8050000071525574,
+          "lateness": 0.5299999713897705
+        },
+        {
+          "timestamp": 30865.005,
+          "ms": 0.8400000333786011,
+          "lateness": 0.5899999690045661
+        },
+        {
+          "timestamp": 30881.655,
+          "ms": 0.5300000309944153,
+          "lateness": 0.42999997854349203
+        },
+        {
+          "timestamp": 30898.235,
+          "ms": 0.5549999475479126,
+          "lateness": 0.4400000119203469
+        },
+        {
+          "timestamp": 30914.855,
+          "ms": 0.47499996423721313,
+          "lateness": 0.4450000119213655
+        },
+        {
+          "timestamp": 30931.575,
+          "ms": 0.6449999809265137,
+          "lateness": 0.3849999785416003
+        },
+        {
+          "timestamp": 30948.305,
+          "ms": 0.5600000023841858,
+          "lateness": 0.6349999976155232
+        },
+        {
+          "timestamp": 30965.235,
+          "ms": 0.5450000166893005,
+          "lateness": 0.39499999523104634
+        },
+        {
+          "timestamp": 30981.465,
+          "ms": 0.875,
+          "lateness": 0.5200000143049692
+        },
+        {
+          "timestamp": 30998.065,
+          "ms": 0.9549999833106995,
+          "lateness": 0.7599999880803807
+        },
+        {
+          "timestamp": 31014.805,
+          "ms": 0.5899999737739563,
+          "lateness": 0.5799999904629658
+        },
+        {
+          "timestamp": 31031.26,
+          "ms": 0.684999942779541,
+          "lateness": 0.5350000166909012
+        },
+        {
+          "timestamp": 31048.175,
+          "ms": 0.6899999976158142,
+          "lateness": 0.33999998569561285
+        },
+        {
+          "timestamp": 31064.575,
+          "ms": 0.800000011920929,
+          "lateness": 0.49499999284671503
+        },
+        {
+          "timestamp": 31081.26,
+          "ms": 0.4399999976158142,
+          "lateness": 0.29000001192252967
+        },
+        {
+          "timestamp": 31097.915,
+          "ms": 0.48000001907348633,
+          "lateness": 0.3999999976149411
+        },
+        {
+          "timestamp": 31114.49,
+          "ms": 0.49000000953674316,
+          "lateness": 0.4450000023825851
+        },
+        {
+          "timestamp": 31131.21,
+          "ms": 0.5999999642372131,
+          "lateness": 0.5400000000008731
+        },
+        {
+          "timestamp": 31147.65,
+          "ms": 0.625,
+          "lateness": 1.6799999833092443
+        },
+        {
+          "timestamp": 31164.45,
+          "ms": 0.550000011920929,
+          "lateness": 0.3600000023834582
+        },
+        {
+          "timestamp": 31180.935,
+          "ms": 0.5049999952316284,
+          "lateness": 0.34499997138846084
+        },
+        {
+          "timestamp": 31197.67,
+          "ms": 0.5400000214576721,
+          "lateness": 0.35999997139151674
+        },
+        {
+          "timestamp": 31214.355,
+          "ms": 0.39499998092651367,
+          "lateness": 0.39000000476880814
+        },
+        {
+          "timestamp": 31230.855,
+          "ms": 10.615000009536743,
+          "lateness": 0.33000000238462235
+        },
+        {
+          "timestamp": 31247.735,
+          "ms": 5.870000004768372,
+          "lateness": 0.5100000047677895
+        },
+        {
+          "timestamp": 31264.21,
+          "ms": 5.695000052452087,
+          "lateness": 0.5199999594697147
+        },
+        {
+          "timestamp": 31280.685,
+          "ms": 5.615000009536743,
+          "lateness": 0.38499999284613295
+        },
+        {
+          "timestamp": 31297.44,
+          "ms": 5.105000019073486,
+          "lateness": 1.5149999833120091
+        },
+        {
+          "timestamp": 31314.075,
+          "ms": 6.485000014305115,
+          "lateness": 0.5599999904625292
+        },
+        {
+          "timestamp": 31330.575,
+          "ms": 5.134999990463257,
+          "lateness": 0.6000000119202014
+        },
+        {
+          "timestamp": 31347.255,
+          "ms": 7.745000004768372,
+          "lateness": 0.9599999737729377
+        },
+        {
+          "timestamp": 31363.9,
+          "ms": 6.610000014305115,
+          "lateness": 0.6099999904618016
+        },
+        {
+          "timestamp": 31380.465,
+          "ms": 4.439999997615814,
+          "lateness": 0.42999998092636815
+        },
+        {
+          "timestamp": 31413.85,
+          "ms": 5.430000007152557,
+          "lateness": 11.314999961854483
+        },
+        {
+          "timestamp": 31463.745,
+          "ms": 6.485000014305115,
+          "lateness": 0.7299999642382318
+        },
+        {
+          "timestamp": 31496.985,
+          "ms": 4.324999988079071,
+          "lateness": 15.139999999999418
+        },
+        {
+          "timestamp": 31530.16,
+          "ms": 6.800000011920929,
+          "lateness": 1.1299999618531729
+        },
+        {
+          "timestamp": 31546.795,
+          "ms": 5.7049999833106995,
+          "lateness": 0.7299999761598883
+        },
+        {
+          "timestamp": 31563.405,
+          "ms": 5.040000021457672,
+          "lateness": 0.43999996900674887
+        },
+        {
+          "timestamp": 31613.31,
+          "ms": 4.784999966621399,
+          "lateness": 8.06499999999869
+        },
+        {
+          "timestamp": 31629.965,
+          "ms": 5.394999980926514,
+          "lateness": 3.929999980926368
+        },
+        {
+          "timestamp": 31646.555,
+          "ms": 6.0950000286102295,
+          "lateness": 0.3349999856945942
+        },
+        {
+          "timestamp": 31663.205,
+          "ms": 6.879999995231628,
+          "lateness": 0.3400000166875543
+        },
+        {
+          "timestamp": 31679.9,
+          "ms": 5.865000009536743,
+          "lateness": 1.7599999666199437
+        },
+        {
+          "timestamp": 31696.485,
+          "ms": 6.339999973773956,
+          "lateness": 2.565000011920347
+        },
+        {
+          "timestamp": 31713.22,
+          "ms": 4.834999978542328,
+          "lateness": 0.4249999809253495
+        },
+        {
+          "timestamp": 31729.9,
+          "ms": 5.475000023841858,
+          "lateness": 7.109999990461802
+        },
+        {
+          "timestamp": 31746.465,
+          "ms": 4.9549999833106995,
+          "lateness": 9.17499998569474
+        },
+        {
+          "timestamp": 31763.145,
+          "ms": 4.939999997615814,
+          "lateness": 1.100000004767935
+        },
+        {
+          "timestamp": 31779.545,
+          "ms": 4.060000002384186,
+          "lateness": 7.630000011922675
+        },
+        {
+          "timestamp": 31796.27,
+          "ms": 3.2549999952316284,
+          "lateness": 0.25499997615770553
+        },
+        {
+          "timestamp": 31812.845,
+          "ms": 4.25,
+          "lateness": 4.499999969004421
+        },
+        {
+          "timestamp": 31846.17,
+          "ms": 4.300000011920929,
+          "lateness": 5.854999976159888
+        },
+        {
+          "timestamp": 31862.7,
+          "ms": 5.2299999594688416,
+          "lateness": 0.5350000143043872
+        },
+        {
+          "timestamp": 31879.455,
+          "ms": 5.3549999594688416,
+          "lateness": 0.41000000953499693
+        },
+        {
+          "timestamp": 31896.05,
+          "ms": 4.615000009536743,
+          "lateness": 0.6549999833114271
+        },
+        {
+          "timestamp": 31912.65,
+          "ms": 3.9700000286102295,
+          "lateness": 0.3799999713883153
+        },
+        {
+          "timestamp": 31929.28,
+          "ms": 3.600000023841858,
+          "lateness": 0.43999996900674887
+        },
+        {
+          "timestamp": 31945.925,
+          "ms": 4.105000019073486,
+          "lateness": 0.42999995946956915
+        },
+        {
+          "timestamp": 31962.535,
+          "ms": 4.389999985694885,
+          "lateness": 0.5750000143052603
+        },
+        {
+          "timestamp": 31979.185,
+          "ms": 5.0200000405311584,
+          "lateness": 0.5449999594675319
+        },
+        {
+          "timestamp": 31995.875,
+          "ms": 5.444999992847443,
+          "lateness": 0.4599999785423279
+        },
+        {
+          "timestamp": 32012.43,
+          "ms": 4.550000011920929,
+          "lateness": 0.4799999666211079
+        },
+        {
+          "timestamp": 32029.075,
+          "ms": 4.120000004768372,
+          "lateness": 0.6100000023834582
+        },
+        {
+          "timestamp": 32045.78,
+          "ms": 3.85999995470047,
+          "lateness": 0.4000000071537215
+        },
+        {
+          "timestamp": 32062.39,
+          "ms": 5.615000009536743,
+          "lateness": 0.4949999904638389
+        },
+        {
+          "timestamp": 32079.02,
+          "ms": 5.129999995231628,
+          "lateness": 0.400000016688864
+        },
+        {
+          "timestamp": 32095.66,
+          "ms": 4.784999966621399,
+          "lateness": 0.4600000047685171
+        },
+        {
+          "timestamp": 32112.14,
+          "ms": 4.810000002384186,
+          "lateness": 2.704999969006167
+        },
+        {
+          "timestamp": 32145.4,
+          "ms": 5.264999985694885,
+          "lateness": 2.1049999952301732
+        },
+        {
+          "timestamp": 32162.02,
+          "ms": 7.699999988079071,
+          "lateness": 0.509999971389334
+        },
+        {
+          "timestamp": 32178.83,
+          "ms": 8.2950000166893,
+          "lateness": 14.369999988077325
+        },
+        {
+          "timestamp": 32261.75,
+          "ms": 5.2049999833106995,
+          "lateness": 6.959999978542328
+        },
+        {
+          "timestamp": 32311.715,
+          "ms": 5.664999961853027,
+          "lateness": 5.655000004768226
+        },
+        {
+          "timestamp": 32428.065,
+          "ms": 6.439999997615814,
+          "lateness": 14.274999973775266
+        },
+        {
+          "timestamp": 32494.76,
+          "ms": 7.050000011920929,
+          "lateness": 14.204999973775557
+        },
+        {
+          "timestamp": 32627.725,
+          "ms": 8.02999997138977,
+          "lateness": 9.775000000001455
+        },
+        {
+          "timestamp": 32728.165,
+          "ms": 5.444999992847443,
+          "lateness": 6.474999985694012
+        },
+        {
+          "timestamp": 32844.065,
+          "ms": 8.439999997615814,
+          "lateness": 10.764999983308371
+        },
+        {
+          "timestamp": 32960.155,
+          "ms": 6.0450000166893005,
+          "lateness": 8.749999971390935
+        },
+        {
+          "timestamp": 32977.005,
+          "ms": 10.84500002861023,
+          "lateness": 1.7749999713923899
+        },
+        {
+          "timestamp": 33060.04,
+          "ms": 7.990000009536743,
+          "lateness": 0.31499995946796844
+        },
+        {
+          "timestamp": 33176.51,
+          "ms": 4.914999961853027,
+          "lateness": 3.5350000166872633
+        },
+        {
+          "timestamp": 33193.48,
+          "ms": 6.610000014305115,
+          "lateness": 0.5849999976126128
+        },
+        {
+          "timestamp": 33259.655,
+          "ms": 5.9549999833106995,
+          "lateness": 11.914999992848607
+        },
+        {
+          "timestamp": 33342.755,
+          "ms": 9.840000033378601,
+          "lateness": 8.209999973776576
+        },
+        {
+          "timestamp": 33459.175,
+          "ms": 6.014999985694885,
+          "lateness": 12.159999978539417
+        },
+        {
+          "timestamp": 33608.665,
+          "ms": 5.850000023841858,
+          "lateness": 2.5649999594679684
+        },
+        {
+          "timestamp": 33725.19,
+          "ms": 7.064999997615814,
+          "lateness": 1.1750000095344149
+        },
+        {
+          "timestamp": 33791.655,
+          "ms": 7.585000038146973,
+          "lateness": 13.944999964238377
+        },
+        {
+          "timestamp": 33891.445,
+          "ms": 6.460000038146973,
+          "lateness": 5.649999969005876
+        },
+        {
+          "timestamp": 34008.11,
+          "ms": 6.135000050067902,
+          "lateness": 5.2449999594682595
+        },
+        {
+          "timestamp": 34107.58,
+          "ms": 5.819999992847443,
+          "lateness": 3.684999985693139
+        },
+        {
+          "timestamp": 34224.125,
+          "ms": 7.245000004768372,
+          "lateness": 10.349999964237213
+        },
+        {
+          "timestamp": 34307.095,
+          "ms": 5.6549999713897705,
+          "lateness": 15.14000001430395
+        },
+        {
+          "timestamp": 34323.815,
+          "ms": 3.9300000071525574,
+          "lateness": 4.534999964234885
+        },
+        {
+          "timestamp": 34440.265,
+          "ms": 5.929999947547913,
+          "lateness": 1.0950000143056968
+        }
+      ],
+      "readyMs": 32593.67000001669,
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 0.875
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.4300000071525574
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 352.8850000500679
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 180.6350000500679
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 1.5649999976158142
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.10999995470046997
+        },
+        {
+          "label": "load-village-models",
+          "ms": 91.3649999499321
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.099999964237213
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 423.58000004291534
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.399999976158142
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.13999998569488525
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.125
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 166.69499999284744
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 18.759999990463257
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 4.674999952316284
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 1.550000011920929
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 603.6299999952316
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 8.035000026226044
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 117.53500002622604
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 11.019999980926514
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.13999998569488525
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 226.875
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 731.3700000047684
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 98.625
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 106.39499998092651
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 4491.864999949932
+        },
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 245.23500001430511
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1912.0849999785423
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 1106.8650000095367
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.06999999284744263
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 1326.3450000286102
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 716.8299999833107
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 381.17500001192093
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 11132.260000050068
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 21.314999997615814
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 7096.650000035763
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 15.219999969005585
+        }
+      ]
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 12.839999973773956,
+      "maxTaskMs": 7.319999992847443,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "mudWorker": null,
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 918,
+      "workMs": 304.210000872612,
+      "coordinationMs": 28.66999888420105,
+      "maxUnitMs": 7.489999949932098,
+      "overruns": 11,
+      "deadlineLoans": 5,
+      "oversizeRecoveries": 0,
+      "continuationMs": 76.75999963283539,
+      "continuationTurns": 813,
+      "median": 66.48500000000058,
+      "p95": 83.15499999999884,
+      "p99": 83.20500000000175,
+      "cpu95": 6.600000023841858,
+      "jitter": 16.669999999998254,
+      "budgetMs": 2.0166666607062025,
+      "pending": 0,
+      "waiting": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

@@ -1,0 +1,1792 @@
+{
+  "study": "Ordered obstruction dither versus depth-only nearest-surface blending, far vegetation disabled",
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "oblique",
+    "reverse"
+  ],
+  "note": "Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. 9 deterministic poses, visual dt 1/30; automatic world render suspended during capture; not a performance benchmark.",
+  "records": [
+    {
+      "biome": "gran-rio",
+      "quality": "baja",
+      "variant": "base",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 0,
+          "camera": [
+            -5.811223983764648,
+            19.870000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3753,
+            "leaves": 30024,
+            "triangles": 30024,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 83.90000012516975,
+              "selectionMs": 85.00000005960464,
+              "selectionCount": 13,
+              "candidates": 19968,
+              "masked": 6698,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 605749
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 1,
+          "camera": [
+            -8.311223983764648,
+            17.120000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.033333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4175,
+            "leaves": 33400,
+            "triangles": 33400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 85.1000000834465,
+              "selectionMs": 88.70000004768372,
+              "selectionCount": 14,
+              "candidates": 20480,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 651407
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 2,
+          "camera": [
+            -10.811223983764648,
+            14.370000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.066666666666667,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3800,
+            "leaves": 30400,
+            "triangles": 30400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 85.1000000834465,
+              "selectionMs": 91.10000005364418,
+              "selectionCount": 15,
+              "candidates": 20480,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 664612
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 3,
+          "camera": [
+            -13.311223983764648,
+            11.620000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.1,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4075,
+            "leaves": 32600,
+            "triangles": 32600,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 85.1000000834465,
+              "selectionMs": 91.30000004172325,
+              "selectionCount": 16,
+              "candidates": 20480,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 702878
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9231244325637817
+            ],
+            [
+              "0,1:4:0",
+              0.9946705102920532
+            ]
+          ],
+          "samples": 4,
+          "i": 4,
+          "camera": [
+            -15.811223983764648,
+            8.87000002861023,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.1333333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4445,
+            "leaves": 35560,
+            "triangles": 35560,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 68,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 85.6000000834465,
+              "selectionMs": 92.30000004172325,
+              "selectionCount": 17,
+              "candidates": 20736,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 728728
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9391230344772339
+            ]
+          ],
+          "samples": 4,
+          "i": 5,
+          "camera": [
+            -23.31122398376465,
+            9.87000002861023,
+            34.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.1666666666666665,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4116,
+            "leaves": 32928,
+            "triangles": 32928,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 69,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 86.20000007748604,
+              "selectionMs": 93.50000002980232,
+              "selectionCount": 18,
+              "candidates": 20992,
+              "masked": 7242,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 714138
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9517921805381775
+            ]
+          ],
+          "samples": 4,
+          "i": 6,
+          "camera": [
+            -30.81122398376465,
+            10.87000002861023,
+            35.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4069,
+            "leaves": 32552,
+            "triangles": 32552,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 41,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 88.5,
+              "selectionMs": 94.40000003576279,
+              "selectionCount": 19,
+              "candidates": 21504,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 674364
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9618247151374817
+            ]
+          ],
+          "samples": 4,
+          "i": 7,
+          "camera": [
+            -38.31122398376465,
+            11.87000002861023,
+            36.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.2333333333333334,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4073,
+            "leaves": 32584,
+            "triangles": 32584,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 42,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 89.2999999821186,
+              "selectionMs": 95.90000003576279,
+              "selectionCount": 20,
+              "candidates": 21760,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 644881
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9697694182395935
+            ]
+          ],
+          "samples": 4,
+          "i": 8,
+          "camera": [
+            -45.81122398376465,
+            12.87000002861023,
+            37.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.2666666666666666,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3972,
+            "leaves": 31776,
+            "triangles": 31776,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 90.2999999821186,
+              "selectionMs": 97.50000002980232,
+              "selectionCount": 21,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 71,
+          "triangles": 683705
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "quality": "baja",
+      "variant": "base",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 0,
+          "camera": [
+            -5.811223983764648,
+            19.870000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3753,
+            "leaves": 30024,
+            "triangles": 30024,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91,
+              "selectionMs": 103.40000000596046,
+              "selectionCount": 27,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 605749
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 1,
+          "camera": [
+            -8.311223983764648,
+            17.120000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.033333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4175,
+            "leaves": 33400,
+            "triangles": 33400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91,
+              "selectionMs": 104,
+              "selectionCount": 28,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 651407
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 2,
+          "camera": [
+            -10.811223983764648,
+            14.370000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.066666666666667,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3800,
+            "leaves": 30400,
+            "triangles": 30400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91,
+              "selectionMs": 104.5,
+              "selectionCount": 29,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 664612
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 3,
+          "camera": [
+            -13.311223983764648,
+            11.620000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.1,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4075,
+            "leaves": 32600,
+            "triangles": 32600,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91,
+              "selectionMs": 105.2999999821186,
+              "selectionCount": 30,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 702878
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9231244325637817
+            ],
+            [
+              "0,1:4:0",
+              0.9946705102920532
+            ]
+          ],
+          "samples": 4,
+          "i": 4,
+          "camera": [
+            -15.811223983764648,
+            8.87000002861023,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.1333333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4445,
+            "leaves": 35560,
+            "triangles": 35560,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91,
+              "selectionMs": 105.59999999403954,
+              "selectionCount": 31,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 728728
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9391230344772339
+            ]
+          ],
+          "samples": 4,
+          "i": 5,
+          "camera": [
+            -23.31122398376465,
+            9.87000002861023,
+            34.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.1666666666666665,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4116,
+            "leaves": 32928,
+            "triangles": 32928,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91,
+              "selectionMs": 106.19999998807907,
+              "selectionCount": 32,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 714138
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9517921805381775
+            ]
+          ],
+          "samples": 4,
+          "i": 6,
+          "camera": [
+            -30.81122398376465,
+            10.87000002861023,
+            35.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4069,
+            "leaves": 32552,
+            "triangles": 32552,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91.2999999821186,
+              "selectionMs": 106.5,
+              "selectionCount": 33,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 674364
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9618247151374817
+            ]
+          ],
+          "samples": 4,
+          "i": 7,
+          "camera": [
+            -38.31122398376465,
+            11.87000002861023,
+            36.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.2333333333333334,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4073,
+            "leaves": 32584,
+            "triangles": 32584,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91.2999999821186,
+              "selectionMs": 106.90000000596046,
+              "selectionCount": 34,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 644881
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9697694182395935
+            ]
+          ],
+          "samples": 4,
+          "i": 8,
+          "camera": [
+            -45.81122398376465,
+            12.87000002861023,
+            37.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.2666666666666666,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3972,
+            "leaves": 31776,
+            "triangles": 31776,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 91.2999999821186,
+              "selectionMs": 107.40000000596046,
+              "selectionCount": 35,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 71,
+          "triangles": 683705
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 0,
+          "camera": [
+            -5.811223983764648,
+            19.870000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3753,
+            "leaves": 30024,
+            "triangles": 30024,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 67.79999986290932,
+              "selectionMs": 64.80000007152557,
+              "selectionCount": 13,
+              "candidates": 19968,
+              "masked": 6698,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 605749
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 1,
+          "camera": [
+            -8.311223983764648,
+            17.120000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.033333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4175,
+            "leaves": 33400,
+            "triangles": 33400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 69.59999984502792,
+              "selectionMs": 69.50000008940697,
+              "selectionCount": 14,
+              "candidates": 20480,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 651407
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 2,
+          "camera": [
+            -10.811223983764648,
+            14.370000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.066666666666667,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3800,
+            "leaves": 30400,
+            "triangles": 30400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 69.59999984502792,
+              "selectionMs": 71.00000008940697,
+              "selectionCount": 15,
+              "candidates": 20480,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 664612
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 3,
+          "camera": [
+            -13.311223983764648,
+            11.620000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.1,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4075,
+            "leaves": 32600,
+            "triangles": 32600,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 69.59999984502792,
+              "selectionMs": 71.40000006556511,
+              "selectionCount": 16,
+              "candidates": 20480,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 702878
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9231244325637817
+            ],
+            [
+              "0,1:4:0",
+              0.9946705102920532
+            ]
+          ],
+          "samples": 4,
+          "i": 4,
+          "camera": [
+            -15.811223983764648,
+            8.87000002861023,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.1333333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4445,
+            "leaves": 35560,
+            "triangles": 35560,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 68,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 70.19999983906746,
+              "selectionMs": 72.40000006556511,
+              "selectionCount": 17,
+              "candidates": 20736,
+              "masked": 7075,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 69,
+          "triangles": 735596
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9391230344772339
+            ]
+          ],
+          "samples": 4,
+          "i": 5,
+          "camera": [
+            -23.31122398376465,
+            9.87000002861023,
+            34.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.1666666666666665,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4116,
+            "leaves": 32928,
+            "triangles": 32928,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 69,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 70.49999985098839,
+              "selectionMs": 73.40000006556511,
+              "selectionCount": 18,
+              "candidates": 20992,
+              "masked": 7242,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 712654
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9517921805381775
+            ]
+          ],
+          "samples": 4,
+          "i": 6,
+          "camera": [
+            -30.81122398376465,
+            10.87000002861023,
+            35.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4069,
+            "leaves": 32552,
+            "triangles": 32552,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 41,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 73.19999983906746,
+              "selectionMs": 74.50000005960464,
+              "selectionCount": 19,
+              "candidates": 21504,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 673591
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9618247151374817
+            ]
+          ],
+          "samples": 4,
+          "i": 7,
+          "camera": [
+            -38.31122398376465,
+            11.87000002861023,
+            36.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.2333333333333334,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4073,
+            "leaves": 32584,
+            "triangles": 32584,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 42,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 73.99999982118607,
+              "selectionMs": 76.00000005960464,
+              "selectionCount": 20,
+              "candidates": 21760,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 645654
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9697694182395935
+            ]
+          ],
+          "samples": 4,
+          "i": 8,
+          "camera": [
+            -45.81122398376465,
+            12.87000002861023,
+            37.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "windTime": 2.2666666666666666,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3972,
+            "leaves": 31776,
+            "triangles": 31776,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 74.59999984502792,
+              "selectionMs": 77.10000005364418,
+              "selectionCount": 21,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 73,
+          "triangles": 684478
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 0,
+          "camera": [
+            -5.811223983764648,
+            19.870000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3753,
+            "leaves": 30024,
+            "triangles": 30024,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.39999979734421,
+              "selectionMs": 81.70000004768372,
+              "selectionCount": 27,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 605749
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 1,
+          "camera": [
+            -8.311223983764648,
+            17.120000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.033333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4175,
+            "leaves": 33400,
+            "triangles": 33400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.39999979734421,
+              "selectionMs": 82.10000005364418,
+              "selectionCount": 28,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 651407
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 2,
+          "camera": [
+            -10.811223983764648,
+            14.370000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.066666666666667,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3800,
+            "leaves": 30400,
+            "triangles": 30400,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.39999979734421,
+              "selectionMs": 82.50000005960464,
+              "selectionCount": 29,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 664612
+        },
+        {
+          "obstruction": [],
+          "samples": 4,
+          "i": 3,
+          "camera": [
+            -13.311223983764648,
+            11.620000028610228,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.1,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4075,
+            "leaves": 32600,
+            "triangles": 32600,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.39999979734421,
+              "selectionMs": 82.80000007152557,
+              "selectionCount": 30,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 67,
+          "triangles": 702878
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9231244325637817
+            ],
+            [
+              "0,1:4:0",
+              0.9946705102920532
+            ]
+          ],
+          "samples": 4,
+          "i": 4,
+          "camera": [
+            -15.811223983764648,
+            8.87000002861023,
+            33.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.1333333333333333,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4445,
+            "leaves": 35560,
+            "triangles": 35560,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.39999979734421,
+              "selectionMs": 83.30000007152557,
+              "selectionCount": 31,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 69,
+          "triangles": 735596
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9391230344772339
+            ]
+          ],
+          "samples": 4,
+          "i": 5,
+          "camera": [
+            -23.31122398376465,
+            9.87000002861023,
+            34.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.1666666666666665,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4116,
+            "leaves": 32928,
+            "triangles": 32928,
+            "waterTriangles": 1706,
+            "waterBucketReferences": 5195,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.39999979734421,
+              "selectionMs": 83.80000007152557,
+              "selectionCount": 32,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 712654
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9517921805381775
+            ]
+          ],
+          "samples": 4,
+          "i": 6,
+          "camera": [
+            -30.81122398376465,
+            10.87000002861023,
+            35.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.2,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4069,
+            "leaves": 32552,
+            "triangles": 32552,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.79999977350235,
+              "selectionMs": 84.30000007152557,
+              "selectionCount": 33,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 673591
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9618247151374817
+            ]
+          ],
+          "samples": 4,
+          "i": 7,
+          "camera": [
+            -38.31122398376465,
+            11.87000002861023,
+            36.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.2333333333333334,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4073,
+            "leaves": 32584,
+            "triangles": 32584,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.79999977350235,
+              "selectionMs": 84.80000007152557,
+              "selectionCount": 34,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 66,
+          "triangles": 645654
+        },
+        {
+          "obstruction": [
+            [
+              "0,1:13:0",
+              0.9697694182395935
+            ]
+          ],
+          "samples": 4,
+          "i": 8,
+          "camera": [
+            -45.81122398376465,
+            12.87000002861023,
+            37.827254901960785
+          ],
+          "target": [
+            -27.81122398376465,
+            3.8700000286102294,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "windTime": 2.2666666666666666,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 3972,
+            "leaves": 31776,
+            "triangles": 31776,
+            "waterTriangles": 1693,
+            "waterBucketReferences": 5171,
+            "chunks": 25,
+            "cachedTiles": 43,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 75.79999977350235,
+              "selectionMs": 85.30000007152557,
+              "selectionCount": 35,
+              "candidates": 22016,
+              "masked": 7384,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 73,
+          "triangles": 684478
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

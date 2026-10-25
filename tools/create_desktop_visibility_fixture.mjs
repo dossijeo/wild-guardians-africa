@@ -10,8 +10,8 @@ import {activeChunkRegion} from '../src/world/active-region.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {serialize} from '../src/persistence/snapshots.js';
 
-export async function createDesktopVisibilityFixture(){
-  const opening=await createSpatialCampaignOpening({seed:712,biome:'gran-canon',culture:'mapungubwe',slotId:'qa-desktop-visibility-712'});
+export async function createDesktopVisibilityFixture({biome='gran-canon'}={}){
+  const opening=await createSpatialCampaignOpening({seed:712,biome,culture:'mapungubwe',slotId:'qa-desktop-visibility-712'});
   const {state:s,nav}=opening;
   s.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
   try{
@@ -38,5 +38,5 @@ export async function createDesktopVisibilityFixture(){
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const target=process.argv[2]??'test-results/desktop-visibility-fixture.json';mkdirSync(dirname(target),{recursive:true});
-  writeFileSync(target,JSON.stringify(await createDesktopVisibilityFixture(),null,2)+'\n');console.log('Prepared native paid visibility fixture: '+target);
+  writeFileSync(target,JSON.stringify(await createDesktopVisibilityFixture({biome:process.env.WG_FIXTURE_BIOME??'gran-canon'}),null,2)+'\n');console.log('Prepared native paid visibility fixture: '+target);
 }

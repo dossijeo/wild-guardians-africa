@@ -1,0 +1,50 @@
+{
+  "rows": [
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture and QA override of raid-camera movement, not a tested dusk transition or normal night-camera interaction. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 10.659719999999467,
+      "frames": {
+        "count": 360,
+        "mean": 29.931291666666667,
+        "p95": 50.11000000000058,
+        "max": 182.83499999999913
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.6326666752497355,
+        "p95": 0.875,
+        "max": 0.9449999928474426
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.003333330154419,
+        "p95": 6.73499995470047,
+        "max": 7.039999961853027
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.01617728623657015,
+        "p95": 0.029999971389770508,
+        "max": 0.050000011920928955
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 22.646382851239665,
+        "p95": 33.262186,
+        "max": 42.281927
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-prepared-water-default/manglares.json",
+      "preparedWater": {
+        "count": 8,
+        "bytes": 109820
+      }
+    }
+  ]
+}

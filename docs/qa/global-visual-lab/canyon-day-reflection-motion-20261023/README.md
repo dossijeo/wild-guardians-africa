@@ -1,0 +1,11 @@
+# Canyon day reflection motion and native promotion
+
+Baseline and day-only candidate, same saved populated scene/native camera, medium1280x720, seed712, full distant backgrounds. Four videos: baseline/candidate, day/night. Each records240 requested renderer frames: first120 fixed, then5m dolly out/back. Water shader clock0..239/30; simulation paused; live streaming remains enabled. No shader geometry changes.
+
+960 recorded frame audits: no JS/shader/GL errors; no pending far preparation; paired camera, water time, draw calls and triangles match on all frames. Saved simulation state unchanged. MediaRecorder encodes234/234/234/233 frames with wall durations5.28–5.49s, while shader time spans7.967s: **not a real-time FPS benchmark or synchronized wall-clock playback comparison**. PNG checkpoints provide frame-index comparisons. Day contact frames0/120/180 inspected: highlights evolve, water is calmer, no obvious layer disappearance or abrupt angle boundary in these sampled images. Not an exhaustive video-artifact or long-distance streaming/leak certification.
+
+Retain as explicit Canyon lab option `&canyonWater=calm`, requiring visualLab=global-lighting and the existing water-surface experiment. Default and other biomes unaffected. Direct solar BRDF, palette and bank integration unchanged. Night uses original normal directly. New helper and cache key isolate shader programs. Existing medium A/B/A/B cost study: no consistent GPU penalty (day -.080/+.148ms), no FPS optimization claim.
+
+Native integration: see ../canyon-day-reflection-populated-20261023/native-equivalence.json. All scene state, draw and resource controls match QA. Five final pairs pixel-exact; native daytime game view differs in3pixels,max5channel levels, cause unisolated. Three native night views are exact. Two gating/contract tests pass, production Vite build passes with pre-existing chunk/import warnings. These checks justify exposing a reviewed opt-in, not claiming complete Canyon/six-biome validation. Active-game long-range streaming and low quality remain future gates.
+
+Reproduce motion: WG_REFLECTION=baseline then day, node tools/experiments/capture-canyon-day-reflection-motion-20261023.mjs. Native static: WG_REFLECTION=native, node tools/experiments/capture-canyon-day-reflection-20261023.mjs. Vite5190. Main and simulation untouched.

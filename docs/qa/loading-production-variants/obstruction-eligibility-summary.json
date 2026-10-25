@@ -1,0 +1,94 @@
+{
+  "scope": "Single diagnostic observations, not interleaved performance evidence. No production change adopted.",
+  "runs": [
+    {
+      "report": "sabana-baseline-inventory.json",
+      "links": 83,
+      "lateLinks": [
+        {
+          "context": 0,
+          "id": 81
+        },
+        {
+          "context": 1,
+          "id": 0
+        }
+      ],
+      "readyMs": 27266.335000038147,
+      "obstructionWarmup": [],
+      "unexpectedErrors": []
+    },
+    {
+      "report": "sabana-obstruction-warm-diagnostic.json",
+      "links": 85,
+      "lateLinks": [
+        {
+          "context": 1,
+          "id": 0
+        }
+      ],
+      "readyMs": 32703.59500002861,
+      "obstructionWarmup": [
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 718.0950000286102
+        }
+      ],
+      "unexpectedErrors": []
+    },
+    {
+      "report": "sabana-obstruction-eligible-warm.json",
+      "links": 84,
+      "lateLinks": [
+        {
+          "context": 1,
+          "id": 0
+        }
+      ],
+      "readyMs": 28501.4050000906,
+      "obstructionWarmup": [
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 259.6799999475479
+        }
+      ],
+      "unexpectedErrors": []
+    },
+    {
+      "report": "manglares-baseline-inventory.json",
+      "links": 90,
+      "lateLinks": [
+        {
+          "context": 1,
+          "id": 0
+        }
+      ],
+      "readyMs": 39466.049999952316,
+      "obstructionWarmup": [
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 194.5
+        }
+      ],
+      "unexpectedErrors": []
+    },
+    {
+      "report": "manglares-obstruction-eligible-warm.json",
+      "links": 90,
+      "lateLinks": [
+        {
+          "context": 1,
+          "id": 0
+        }
+      ],
+      "readyMs": 39260.450000047684,
+      "obstructionWarmup": [
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 227.90499997138977
+        }
+      ],
+      "unexpectedErrors": []
+    }
+  ]
+}

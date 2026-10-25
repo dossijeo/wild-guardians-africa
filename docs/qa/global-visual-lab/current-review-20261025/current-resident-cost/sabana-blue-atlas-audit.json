@@ -1,0 +1,160 @@
+{
+  "method": "Nearest base-level RGB samples at LOD0 vertex UVs, flipY=false; threshold B>1.25R, G>1.15R, B>80. Counts are vertices, not area or visible pixels.",
+  "limitations": "No interpolation, mipmaps, lighting, occlusion or screen-space attribution. Does not prove these assets caused the screenshot pixels.",
+  "sources": {
+    "public\\content\\biome-savanna.json": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411",
+    "public\\assets\\ac473b68ac331ef6b0366fc69a8f9d7d93a8e971a0a29d980f4fcefaf113904e.webp": "ac473b68ac331ef6b0366fc69a8f9d7d93a8e971a0a29d980f4fcefaf113904e",
+    "public\\assets\\4e10ebce0a685de1093c67c72bad0d59267ff103364876ebb92a7a159ee914a8.bin": "4e10ebce0a685de1093c67c72bad0d59267ff103364876ebb92a7a159ee914a8",
+    "src\\rendering\\assets.js": "15a09b554a48115b21ad7834b34ba8c87dd0ffb38a905b2d4c2ca1ca7d4794ea"
+  },
+  "assets": [
+    {
+      "slot": "tree_01",
+      "name": "Acacia paraguas",
+      "vertices": 16259,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "tree_02",
+      "name": "Acacia irregular",
+      "vertices": 9753,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "tree_03",
+      "name": "Baobab",
+      "vertices": 9168,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "tree_04",
+      "name": "Árbol seco",
+      "vertices": 4887,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "shrub_01",
+      "name": "Arbusto espinoso",
+      "vertices": 22089,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "shrub_02",
+      "name": "Arbusto bajo seco",
+      "vertices": 6701,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "shrub_03",
+      "name": "Matorral denso",
+      "vertices": 24111,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "plant_01",
+      "name": "Hierba amarilla alta",
+      "vertices": 8945,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "plant_02",
+      "name": "Hierba seca corta",
+      "vertices": 5438,
+      "cyanSamples": 19,
+      "meanCyanRGB": [
+        97.52631578947368,
+        153.1578947368421,
+        175.21052631578948
+      ]
+    },
+    {
+      "slot": "plant_03",
+      "name": "Macollas de hierba",
+      "vertices": 11795,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "rock_01",
+      "name": "Roca redondeada",
+      "vertices": 1383,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "rock_02",
+      "name": "Roca rojiza erosionada",
+      "vertices": 2111,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "rock_03",
+      "name": "Grupo de piedras",
+      "vertices": 1907,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "debris_01",
+      "name": "Tronco caído",
+      "vertices": 3825,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "debris_02",
+      "name": "Ramas secas",
+      "vertices": 2251,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "debris_03",
+      "name": "Huesos",
+      "vertices": 1293,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "debris_04",
+      "name": "Árbol muerto / fragmentos",
+      "vertices": 3353,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "special_01",
+      "name": "Termitero",
+      "vertices": 2075,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "special_02",
+      "name": "Pequeño kopje",
+      "vertices": 3947,
+      "cyanSamples": 0,
+      "meanCyanRGB": null
+    },
+    {
+      "slot": "special_03",
+      "name": "Charca estacional",
+      "vertices": 2604,
+      "cyanSamples": 23,
+      "meanCyanRGB": [
+        106.17391304347827,
+        150.04347826086956,
+        166.56521739130434
+      ]
+    }
+  ]
+}

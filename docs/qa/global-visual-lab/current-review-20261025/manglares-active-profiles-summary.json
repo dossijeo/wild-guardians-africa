@@ -1,0 +1,77 @@
+{
+  "scope": "Single active run per quality; not ABAB, not identical wall-clock evolution, GPU elapsed includes bubbles.",
+  "runs": [
+    {
+      "source": "manglares-low-active-stream.json",
+      "quality": "baja",
+      "readyMs": 34164.86500000954,
+      "frames": {
+        "count": 180,
+        "mean": 34.54974999999997,
+        "p95": 66.35499999999593,
+        "max": 99.77999999999884
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 26.62195598360656,
+        "p95": 35.007238,
+        "max": 39.289947
+      },
+      "draw": {
+        "count": 181,
+        "mean": 7.086160215225009,
+        "p95": 11.77999997138977,
+        "max": 15.070000052452087
+      },
+      "cacheCpu": {
+        "count": 181,
+        "mean": 0.029088395735176888,
+        "p95": 0.2849999666213989,
+        "max": 1.1549999713897705
+      },
+      "options": {
+        "waterBed": true,
+        "waterShore": true,
+        "batchEviction": true,
+        "warmObstruction": true,
+        "retainPrograms": true
+      }
+    },
+    {
+      "source": "manglares-medium-active-stream.json",
+      "quality": "media",
+      "readyMs": 32111.87000000477,
+      "frames": {
+        "count": 180,
+        "mean": 40.55527777777776,
+        "p95": 66.625,
+        "max": 132.97999999999593
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 32.52954908196722,
+        "p95": 45.724791,
+        "max": 53.500416
+      },
+      "draw": {
+        "count": 181,
+        "mean": 8.65895028074802,
+        "p95": 14.950000047683716,
+        "max": 19.134999990463257
+      },
+      "cacheCpu": {
+        "count": 181,
+        "mean": 0.02787292859830909,
+        "p95": 0.26499998569488525,
+        "max": 0.8100000619888306
+      },
+      "options": {
+        "waterBed": true,
+        "waterShore": true,
+        "batchEviction": true,
+        "warmObstruction": true,
+        "retainPrograms": true
+      }
+    }
+  ]
+}

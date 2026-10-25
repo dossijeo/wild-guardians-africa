@@ -1,0 +1,9 @@
+# Ciclo de vida y resolución del fundido aislado
+
+QA Sabana baja seed712, día/noche,36 posiciones por fase. Control con targets permanentes frente a pool, ambos a1280x720,960x540 en pasos12–23 y retorno1280x720. Cámara y opacidades exactas.72 parejas:67 exactas, cinco con hasta9 píxeles distintos. No se declara equivalencia absoluta; metadata y diferencias en summary.json. Cero errores WebGL registrados. Láminas alrededor de los cambios de resolución publicadas.
+
+Se añaden `trim()` para liberar targets libres y `dispose()` idempotente para restaurar renderer, callbacks de material y liberar recursos auxiliares. No se recorta un target asignado a un objeto visible. La prueba termina con3 targets (1 asignado,2 libres), trim deja1, dispose deja0; reinstalar crea1. Los contadores describen recursos del helper, no certifican ausencia de toda fuga del navegador ni miden VRAM real.
+
+La primera prueba de reinstalación detectó3017 píxeles distintos en el árbol del borde derecho: restaurar callbacks con needsUpdate no invalidaba la caché de programa/uniformes de Three para la misma clave. Corregido liberando los recursos de programa del material reutilizable después de retirar el listener propio y restaurar sus callbacks. La prueba corregida exige imagen antes/después de reinstalar idéntica y pasa. La doble llamada a dispose también pasa. Una ejecución intermedia fue interrumpida por recarga Vite y no se utiliza como evidencia.
+
+Reproducir con Vite5190: `node tools/experiments/capture-obstruction-isolated-lifecycle.mjs`; `python tools/experiments/audit-obstruction-isolated-lifecycle.py`. No benchmark temporal. El recorte es explícito; queda pendiente elegir cuándo invocarlo durante uso normal. Falta validar humo real, streaming prolongado y otras geometrías antes de integrar en el laboratorio principal. La versión permanece QA; no se altera main.

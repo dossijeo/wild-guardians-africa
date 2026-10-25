@@ -1,0 +1,12 @@
+{
+  "scope": "Full engine compiled with Emscripten pthread runtime, one preloaded worker and shared linear memory. Generation is still synchronous here: this proves browser runtime boot only, not parallel generation, itch.io deployment, Vite packaging or Tauri compatibility.",
+  "result": {
+    "isolated": true,
+    "shared": true,
+    "bytes": 16777216,
+    "pool": 1,
+    "props": 265,
+    "sectors": 16
+  },
+  "errors": []
+}

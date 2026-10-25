@@ -53,20 +53,24 @@ test('live ground switches keep geometry and shared materials, release replaced 
 test('live world quality and resize preserve simulation, ground geometry and existing chunk objects',()=>{
  const geometry=new THREE.PlaneGeometry(),ground=new THREE.Mesh(geometry,nativeGroundMaterial('media')),chunk=new THREE.Group();chunk.add(ground);
  const state={money:217,plants:[{id:'crop',growth:13,waterRemaining:7}],workers:[{id:'worker',taskId:'sow'}],time:150},snapshot=JSON.stringify(state),chunks=new Map([['0,0',chunk]]);
- const world={state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
+ const scene=new THREE.Scene();scene.add(chunk);
+ let materialInvalidations=0;const world={refreshStreamingPrograms(){},assetGroups:{invalidateMaterials(){materialInvalidations++;}},scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
+ let releasedPrograms=0;world.programLease={dispose(){releasedPrograms++;}};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{value:2,configurable:true});
  try{
   for(const quality of ['muy_baja','baja','media','alta','media']){
-   WorldScene.prototype.qualitySetting.call(world,quality);assert.equal(world.chunks,chunks);assert.equal(chunks.get('0,0'),chunk);assert.equal(ground.geometry,geometry);assert.equal(JSON.stringify(state),snapshot);
+   world.transactionalPrograms=WorldScene.prototype.transactionalPrograms;world.refreshStreamingPrograms??=WorldScene.prototype.refreshStreamingPrograms;world.releaseRetainedPrograms=WorldScene.prototype.releaseRetainedPrograms;WorldScene.prototype.qualitySetting.call(world,quality);assert.equal(releasedPrograms,1);assert.equal(world.programLease,null);assert.equal(world.chunks,chunks);assert.equal(chunks.get('0,0'),chunk);assert.equal(ground.geometry,geometry);assert.equal(JSON.stringify(state),snapshot);
    assert.equal(!!ground.material.isMeshBasicMaterial,quality==='muy_baja');assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));assert.equal(world.toon.uniforms.uGroundDetail.value,quality==='muy_baja'?0:1);
    assert.deepEqual(world.renderer.size,[world.renderResolution.width,world.renderResolution.height]);assert.equal(world.camera.aspect,world.renderResolution.width/world.renderResolution.height);assert.ok(world.renderResolution.width*world.renderResolution.height<2605000);
   }
+  assert.equal(materialInvalidations,2,'only the two shadow-enable transitions invalidate grouped materials');
  }finally{if(previous)Object.defineProperty(globalThis,'devicePixelRatio',previous);else delete globalThis.devicePixelRatio;}
 });
 
 test('static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions',()=>{
  let ratio=1.25,calls=0;const rect={width:1280,height:720},canvas={width:0,height:0,getBoundingClientRect:()=>rect};
  const world={canvas,quality:'media',camera:new THREE.PerspectiveCamera(),renderer:{setSize(w,h){calls++;canvas.width=w;canvas.height=h;}}};
+ let releasedPrograms=0;world.programLease={dispose(){releasedPrograms++;}};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{get:()=>ratio,configurable:true});
  try{
   WorldScene.prototype.resize.call(world);assert.equal(calls,1);assert.deepEqual([canvas.width,canvas.height],[1600,900]);
@@ -83,4 +87,16 @@ test('canyon horizon changes only its ground material when the resident rectangl
  horizon.update(config,pack.profile,region,'media');const root=horizon.group,ground=root.children[0],water=root.children[1],geometry=ground.geometry,old=ground.material;let geos=0,mats=0;geometry.addEventListener('dispose',()=>geos++);old.addEventListener('dispose',()=>mats++);
  for(const quality of ['baja','muy_baja','media']){horizon.update(config,pack.profile,region,quality);assert.equal(horizon.group,root);assert.equal(ground.geometry,geometry);assert.equal(root.children[1],water);assert.equal(!!ground.material.isMeshBasicMaterial,quality==='muy_baja');assert.deepEqual(ground.material.userData.horizonBounds.toArray(),region.bounds);}
  assert.equal(geos,0);assert.equal(mats,1);horizon.dispose();assert.equal(geos,1);
+});
+
+for(const search of ['?stableShadowPrograms=1','','?stableShadowPrograms=0'])test('stable shadow programs retain materials: '+(search||'scheduler default'),()=>{
+ const stable=search!=='?stableShadowPrograms=0';
+ const previous=Object.getOwnPropertyDescriptor(globalThis,'location');Object.defineProperty(globalThis,'location',{value:{search},configurable:true});
+ const mesh=new THREE.Mesh(new THREE.PlaneGeometry(),nativeGroundMaterial('media')),scene=new THREE.Scene();scene.add(mesh);
+ const world={visualSearch:search,transactionalPrograms:WorldScene.prototype.transactionalPrograms,frameScheduler:search==='?stableShadowPrograms=1'?null:{},releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){if(stable)assert.fail('unnecessary invalidation');}}};
+ const material=mesh.material,version=material.version;world.sun.shadow.intensity=.8;
+ try{
+  WorldScene.prototype.qualitySetting.call(world,'baja');assert.equal(world.renderer.shadowMap.enabled,stable);assert.equal(world.sun.userData.nativeShadowDisabled,stable?true:undefined);assert.equal(world.sun.shadow.intensity,stable?0:.8);
+  WorldScene.prototype.qualitySetting.call(world,'media');assert.equal(world.sun.userData.nativeShadowDisabled,stable?false:undefined);assert.equal(world.sun.shadow.intensity,.8);assert.equal(mesh.material,material);if(stable)assert.equal(material.version,version);else assert.ok(material.version>version);
+ }finally{mesh.geometry.dispose();material.dispose();if(previous)Object.defineProperty(globalThis,'location',previous);else delete globalThis.location;}
 });

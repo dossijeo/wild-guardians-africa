@@ -1,0 +1,71 @@
+{
+  "scope": "QA diagnostic separation; not a renderer optimization or controlled A/B performance claim",
+  "rows": [
+    {
+      "quality": "baja",
+      "transitionMs": 1934.1499999761581,
+      "beforeDiagnosticMs": 1421.6449999809265,
+      "diagnosticMs": 512.4099999666214,
+      "settingMs": 1.4799999594688416
+    },
+    {
+      "quality": "media",
+      "transitionMs": 2290.8050000071526,
+      "beforeDiagnosticMs": 1666.675000011921,
+      "diagnosticMs": 623.6899999976158,
+      "settingMs": 0.7350000143051147
+    },
+    {
+      "quality": "baja",
+      "transitionMs": 5364.72000002861,
+      "beforeDiagnosticMs": 5048.100000023842,
+      "diagnosticMs": 316.55000001192093,
+      "settingMs": 1.3200000524520874
+    }
+  ],
+  "active": {
+    "initialElapsed": 119.99999999999746,
+    "elapsed": 140.31508500000172,
+    "travelFrame": 240,
+    "advancingFrames": 240,
+    "pausedFrames": 0,
+    "pauseReasons": {},
+    "created": 15,
+    "stream": {
+      "created": 40,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    }
+  },
+  "scheduler": {
+    "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+    "completed": 82,
+    "cancelled": 0,
+    "failed": 0,
+    "units": 1519,
+    "workMs": 439.920000910759,
+    "coordinationMs": 36.609999001026154,
+    "maxUnitMs": 10.254999995231628,
+    "overruns": 80,
+    "deadlineLoans": 69,
+    "oversizeRecoveries": 0,
+    "continuationMs": 29.40499985218048,
+    "continuationTurns": 1202,
+    "median": 49.88999999999942,
+    "p95": 83.24499999999534,
+    "p99": 99.81000000000495,
+    "cpu95": 9.639999985694885,
+    "jitter": 33.354999999995925,
+    "budgetMs": 0.594661607899666,
+    "pending": 0,
+    "oldestMs": 0
+  }
+}

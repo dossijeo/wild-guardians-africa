@@ -1,3 +1,5 @@
+import {createNativeLoadingTrace} from './native-loading-trace.js';
+import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-scheduler.js';
 import {createDesktopExit} from './desktop-exit.js';
 import {preloadScreenOverlays} from '../ui/screen-overlays.js';
 import {GameJuice} from '../ui/game-juice.js';
@@ -56,7 +58,7 @@ import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {prepareWildEngineWorld} from './wild-engine-world.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {WorldScene} from '../rendering/scene.js';
-import {farVegetationProfile} from '../rendering/far-vegetation-profile.js';
+import {farVegetationProfile,farGroundReviewOverrides} from '../rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from './far-world-loading.js';
 import {frameDelta} from './frame-delta.js';
 import {json} from '../rendering/assets.js';
@@ -99,14 +101,21 @@ function prepareLoadingScene(){
  if(preparedLoading)return preparedLoading;progressQa?.lifecycle('app-preloading-created');
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
- try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
+ try{owner=new WorldScene(canvas,onPick,{approvedVisuals:true});owner.frameScheduler=globalFrameSchedulerEnabled()?globalFrameScheduler:null;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
+ if(globalThis.__desktopSmokeStarted){
+  const trace=createNativeLoadingTrace({enabled:true}),previous=owner.onLoadingSpan;
+  owner.onLoadingSpan=span=>{previous?.(span);trace.witness(span);};
+  owner.onLoadingSpan.onAwaitStart=trace.witness.onAwaitStart;
+  owner.onLoadingSpan.onAwaitEnd=trace.witness.onAwaitEnd;
+  globalThis.__wildGuardiansNativeLoadingSnapshot=()=>({phases:trace.snapshot({at:performance.now()}),scheduler:globalFrameScheduler.snapshot()});
+ }
  diorama=new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
  preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
 function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
 function clearLoadingPresentation(){const qaProgress=loadingProgress,qaTransfers=loadingTransfers;loadingTransfers?.dispose();loadingTransfers=null;loadingOverlay?.dispose();loadingOverlay=null;loadingAudio?.dispose();loadingAudio=null;clearInterval(loadingDiagnostic);loadingDiagnostic=null;if(loadingCinema)progressQa?.cameraPose('cancel-current',world);loadingCinema?.cancel();if(loadingCinema)progressQa?.cameraPose('cancel-restored',world);progressQa?.close(qaProgress,qaTransfers,{cancelled:!!loadingCinema||!qaProgress?.ready});loadingCinema=null;loadingMature?.reject(new Error('Loading cancelled'));loadingMature=null;loadingDiorama?.dispose();loadingDiorama=null;loadingProgress=null;}
-function refreshLoadingOverlay(){progressQa?.update(loadingProgress);if(loadingOverlay&&loadingProgress&&loadingDiorama)loadingOverlay.render(loadingProgress.snapshot(),loadingDiorama.plants.progress,{night:loadingDiorama.night??0,accepting:loadingDiorama.interactive,pointer:loadingDiorama.pointerType??loadingOverlay.pointer});}
+function refreshLoadingOverlay(){progressQa?.update(loadingProgress);if(loadingOverlay&&loadingProgress&&loadingDiorama)loadingOverlay.render(loadingProgress.snapshot(),loadingDiorama.plants.progress,{night:loadingDiorama.night??0,accepting:loadingDiorama.interactive,plantingBlocked:loadingDiorama.plantingBlocked??false,pointer:loadingDiorama.pointerType??loadingOverlay.pointer});}
 function cancelLoading(failure=null){if(!starting){releasePreparedLoading();return;}loadingGeneration++;starting=false;state=null;clearWorld();releasePreparedLoading();menu();if(failure)error(failure.message,{loadingFailure:true});}
 window.addEventListener('keydown',event=>{if(event.key==='Escape'&&screen==='loading'){event.preventDefault();cancelLoading();}});
 const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
@@ -139,6 +148,7 @@ const localMoney=value=>formatMoney(value,moneyLocale());
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const commandId=()=>crypto.randomUUID();
 const button=(id,text,cls='primary')=>`<button id="${id}" class="${cls}">${text}</button>`;
+const CONTEXT_LOST_MESSAGE='Se ha perdido el contexto gráfico. La partida está pausada.';
 function error(message,{silent=false,loadingFailure=false}={}){if(String(message)===RESERVE_MESSAGE){if(reserveWarningShown)return;reserveWarningShown=true;budgetWarningUntil=performance.now()+18000;}if(!silent)uiAudio.error();if(loadingFailure){showLoadingFailure(message,{document,locale:moneyLocale()});return;}if(state&&screen==='game'){commandFeedback=String(message);refreshCommandFeedback();return;}document.querySelector('.error-banner')?.remove();const el=document.createElement('div');el.className='error-banner';el.role='alert';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),6000);}
 function safe(action){if(leaving)return;commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
@@ -199,7 +209,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     await prepared.pending;assertLoading();preparedLoading=null;loadingTransfers=prepared.transfers;world=prepared.world;world.onContextLost=()=>{if(screen==='loading')cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));};loadingDiorama=prepared.diorama;loadingDiorama.show(next);
     const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audioUnlocked.then(unlocked=>{if(unlocked&&loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
     const overlay=new LoadingOverlay({frameImages:prepared.frameImages,locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
-    loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
+    loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,plantingBlocked:loadingDiorama?.plantingBlocked??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
     prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';
     app.replaceChildren(prepared.canvas);
     app.append(overlay.element);overlay.paintFrames();loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame,world.renderer);gameplayGpuQa?.reset();
@@ -234,15 +244,17 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     app.innerHTML=`<main class="game world-loading" id="stage" aria-busy="true"><div id="world-loading" class="loading interactive-loading-indicator" role="status"><div class="eyebrow">Wild Guardians / Africa</div><h2>La tierra despierta</h2><p>Preparando terreno, poblado y cultivos originales…</p><p id="loading-progress"></p></div><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
     document.querySelector('#world').replaceWith(prepared.canvas);document.querySelector('#world-loading').replaceWith(overlay.element);loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
+    // Prepare only presentation resources; no narrator/tutorial/voice action.
+    if(new URLSearchParams(location.search).get('guardianWorker')==='1'&&new URLSearchParams(location.search).get('guardianWarm')==='1')ensureGuardianView();
     bind('menuButton',pauseDialog);
     document.querySelector('[data-menu="home"]').onclick=()=>world.focusFarm();
     document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>guidedHudAction('grow',()=>toolPanel('plant')));
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
     document.querySelector('[data-menu="build"]').onclick=()=>safe(()=>guidedHudAction('build',buildPanel));
-    world.onError=e=>{if(starting&&world===prepared.world){loadingProgress?.fail(e);cancelLoading(e);}else error(e.message);};world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
+    world.onError=e=>{if(starting&&world===prepared.world){loadingProgress?.fail(e);cancelLoading(e);}else error(e.message);};world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}Game.pause(state,'context-lost');error(CONTEXT_LOST_MESSAGE);};world.onContextRestored=()=>{Game.resume(state,'context-lost');if(commandFeedback===CONTEXT_LOST_MESSAGE){commandFeedback='';refreshCommandFeedback();}};
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
     if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation,world.farZeroVertexPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
-    await world.load(state,nav,payload,{spatialSession,farVegetation:spatialSession||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress});assertLoading();
+    await world.load(state,nav,payload,{spatialSession,farVegetation:(spatialSession&&new URLSearchParams(world.visualSearch).get('spatialFar')!=='1')||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome},farGroundReviewOverrides(nav.config.biome,world.visualSearch)),loadingProgress});assertLoading();
     const planner=createEventDrivenTaskPlanner(spatialSession);
     planner.resetFromState(state);
     const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
@@ -266,7 +278,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();
     loadingCinema.start();await loadingCinema.finished;assertLoading();progressQa?.cameraPose('cinematic-completed',world);loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;world.loadingActorQueue?.dispose();progressQa?.lifecycle('app-cinematic-restored-before-controls');progressQa?.close(loadingProgress,loadingTransfers);loadingTransfers.dispose();loadingTransfers=null;world.onLoadingSpan=null;world.onLoadingActorQueue=null;world.onLoadingGpuDraw=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
 
-    world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';juice=new GameJuice(document.querySelector('#stage'),state,world,{allowResult:()=>surfaces.active==='result'&&!guardian?.voice?.active&&!state?.tutorial?.reading,priority:()=>!!surfaces.active||!!guardian?.voice?.active||!!tutorial?.presentation({record:false})||!!document.hidden});screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();if(!campaignCinema?.active)audio.gameplay(state.day).catch(()=>{});installMicroevents();
+    world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';juice=new GameJuice(document.querySelector('#stage'),state,world,{allowResult:()=>surfaces.active==='result'&&!guardian?.voice?.active&&!state?.tutorial?.reading,priority:()=>!!surfaces.active||!!guardian?.voice?.active||!!tutorial?.presentation({record:false})||!!document.hidden});screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();if(!campaignCinema?.active)audio.gameplay(state.day).catch(()=>{});installMicroevents();
   } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
 function guidedHudAction(action,open){
@@ -462,8 +474,12 @@ function refreshTutorialGuidance(){
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   syncTutorialActionPause(state,{hudTarget:!hudHand.image.hidden,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
 }
-function narrator() {
+function ensureGuardianView() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase),new SpiritVoice({url:assetUrl,volume:()=>settings.sfx}));
+  return guardian;
+}
+function narrator() {
+  ensureGuardianView();
   tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
@@ -550,6 +566,7 @@ function updateRaidLoading(){
   document.querySelector('#stage').append(raidLoading);
 }
 function frame(now) {
+  if(globalFrameSchedulerEnabled())globalFrameScheduler.beginFrame(now);
 
   if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents')&&screen==='game')recordMicroeventFrame(world?.canvas,now-lastFrame,{off:settings.microevents==='off',event:!!microevents?.active,blocked:!!state?.pauses.length||microevents?.qaFrozen||document.hidden});
   requestAnimationFrame(frame);if(cropSpellFrameQa&&globalThis.__wildSpellFrameManual)return;if(preparedLoading?.world.loadingCpuBudget)preparedLoading.world.loadingPresentationEpoch=(preparedLoading.world.loadingPresentationEpoch??0)+1;if(screen==='loading'&&world?.loadingCpuBudget)world.loadingPresentationEpoch=(world.loadingPresentationEpoch??0)+1;const dt=frameDelta(now,lastFrame);lastFrame=now;
@@ -571,6 +588,7 @@ function frame(now) {
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
+  if(globalFrameSchedulerEnabled())globalFrameScheduler.endFrame();
 }
 async function boot() {try {await window.WildGuardiansLanguageReady;[selector,thumbnails]=await Promise.all([json('/content/selector.json'),json('/content/crop-thumbnails.json')]);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')){requestAnimationFrame(frame);const fixture={wood:'microevent-wood',wet:'microevent-wet',rocks:'microevent-rocks'}[new URLSearchParams(location.search).get('qa-microevents-fixture')]??'microevent-world';await startGame(await json('/tests/fixtures/'+fixture+'.json'));}else{menu();requestAnimationFrame(frame);}}catch(e){app.textContent='No se pudo iniciar Wild Guardians: '+e.message;}}
 boot();

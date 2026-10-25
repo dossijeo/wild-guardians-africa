@@ -1,0 +1,27 @@
+{
+  "heightMetersMin": 0.014509803921568629,
+  "heightMetersMax": 0.1,
+  "texelWorldMeters": 0.01220703125,
+  "sunRiseOverRun": 0.5931730451971593,
+  "gradientMagnitudePercentiles": {
+    "50": 0.13724015427772807,
+    "90": 0.40156862745098054,
+    "99": 0.8857842983690873,
+    "100": 2.6808909239348293
+  },
+  "bakedBlockingFraction": 0.009642601013183594,
+  "meanBlocking": 0.006053118975361571,
+  "note": "Offline full-resolution bilinear periodic height, flipped Y as Three texture upload; ignores mipmaps, footprint fade, slope, POM displacement, actual scene visibility. Diagnostic only, not rendered performance.",
+  "taps": 32,
+  "stepMeters": 0.006103515625,
+  "biasMeters": 0.001,
+  "softnessMeters": 0.003,
+  "maximumAttenuation": 0.45,
+  "input": "/assets/72472a81bc5a18a0591a7dcf91772c16e60cd03ca606d51b2d7c890cfbaeff5f.png",
+  "inputSHA256": "72472a81bc5a18a0591a7dcf91772c16e60cd03ca606d51b2d7c890cfbaeff5f",
+  "output": "public/assets/visual-lab/canyon-soil-solar-arh.png",
+  "outputSHA256": "a8a418cb0ae4c3fe61684a073c6b28c2679b768a6657a4f38677054515544318",
+  "inputFileBytes": 2016192,
+  "outputFileBytes": 2397715,
+  "rgbPreserved": true
+}

@@ -1,0 +1,2539 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+  "result": {
+    "farDraws": null,
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 727.2150000333786,
+      "bindings": {
+        "initialized": 59,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 59,
+        "released": 59,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": null,
+      "longFrames": null,
+      "frames": null,
+      "readyMs": 32021.92500001192,
+      "phases": []
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 12.1700000166893,
+      "maxTaskMs": 7.915000021457672,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "textureStaging": {
+      "strategy": "interop",
+      "scope": "Diagnostic private native-color-space textures on actual renderer context. ABAB invocation timings include state reset; explicit frame waits/readbacks, not whole-game or GPU benchmark. No texture replacement. Pixel conversion and every generated mip compared. Uses SRGB8_ALPHA8 for sRGB sources; reads encoded bytes and generated mipmaps, not shader screenshots. Bounded reference plus current readback; includes adversarial alpha fixture. Does not validate context loss, production memory lifecycle or scheduler throughput.",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:5190/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "slot": "map",
+          "colorSpace": "srgb",
+          "validationRetainedBytes": 22369620,
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.07499998807907104,
+          "cloneElapsedMs": 0.08499997854232788,
+          "conversionElapsedMs": 95.49500000476837,
+          "workerConversionMs": 68.22999995946884,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.4449999928474426
+                },
+                {
+                  "label": "upload",
+                  "ms": 170.05000001192093
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.08500003814697266
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 254.11500000953674,
+              "readbackMs": 480.3149999976158,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.13999998569488525
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.15500003099441528
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.1600000262260437
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0549999475479126
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04499995708465576
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.039999961853027344
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04000002145767212
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.010000050067901611
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 48.79000002145767,
+              "readbackMs": 691.3349999785423,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.02499997615814209
+                },
+                {
+                  "label": "upload",
+                  "ms": 21.009999990463257
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.025000035762786865
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 32.5799999833107,
+              "readbackMs": 390.40499997138977,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04499995708465576
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0549999475479126
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.059999942779541016
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0549999475479126
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04999995231628418
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.059999942779541016
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06500005722045898
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04999995231628418
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.7450000047683716
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.0350000262260437
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 41.0799999833107,
+              "readbackMs": 526.1349999904633,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5190/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "slot": "normalMap",
+          "colorSpace": "",
+          "validationRetainedBytes": 22369620,
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.029999971389770508,
+          "cloneElapsedMs": 0.04000002145767212,
+          "conversionElapsedMs": 33.294999957084656,
+          "workerConversionMs": 21.40499997138977,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.034999966621398926
+                },
+                {
+                  "label": "upload",
+                  "ms": 66.82499998807907
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.029999971389770508
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 81.64999997615814,
+              "readbackMs": 537.5749999880791,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04999995231628418
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.019999980926513672
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 43.125,
+              "readbackMs": 558.3650000095367,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "upload",
+                  "ms": 17.930000007152557
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.020000040531158447
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 30.180000007152557,
+              "readbackMs": 390.00999999046326,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.125
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.009999990463256836
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 42.22999995946884,
+              "readbackMs": 818.9450000524521,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5190/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "slot": "roughnessMap",
+          "colorSpace": "",
+          "validationRetainedBytes": 22369620,
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.020000040531158447,
+          "cloneElapsedMs": 0.030000030994415283,
+          "conversionElapsedMs": 28.169999957084656,
+          "workerConversionMs": 19.57499998807907,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "upload",
+                  "ms": 70.02499997615814
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.020000040531158447
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 78.6700000166893,
+              "readbackMs": 403.85499995946884,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0549999475479126
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06500005722045898
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.014999985694885254
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 33.86500000953674,
+              "readbackMs": 518.9350000023842,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.04499995708465576
+                },
+                {
+                  "label": "upload",
+                  "ms": 17.144999980926514
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.009999990463256836
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 34.66499996185303,
+              "readbackMs": 339.0300000309944,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0549999475479126
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06500005722045898
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04999995231628418
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04999995231628418
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0549999475479126
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.010000050067901611
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 49.74500000476837,
+              "readbackMs": 590.6199999451637,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            }
+          ]
+        },
+        {
+          "url": "qa:translucent-gradient",
+          "slot": "alpha-control",
+          "colorSpace": "srgb",
+          "validationRetainedBytes": 21844,
+          "width": 64,
+          "height": 64,
+          "cloneSubmitMs": 0.09500002861022949,
+          "cloneElapsedMs": 0.10000002384185791,
+          "conversionElapsedMs": 0.875,
+          "workerConversionMs": 0.5299999713897705,
+          "pixelBytes": 16384,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "upload",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.005000054836273193
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 14.09500002861023,
+              "readbackMs": 245.52999997138977,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.004999995231628418
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 30.189999997615814,
+              "readbackMs": 370.22000002861023,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16384,
+                  "changed": 6384,
+                  "max": 213,
+                  "mean": 1.345703125
+                },
+                {
+                  "level": 1,
+                  "bytes": 4096,
+                  "changed": 1184,
+                  "max": 22,
+                  "mean": 0.796875
+                },
+                {
+                  "level": 2,
+                  "bytes": 1024,
+                  "changed": 272,
+                  "max": 6,
+                  "mean": 0.484375
+                },
+                {
+                  "level": 3,
+                  "bytes": 256,
+                  "changed": 72,
+                  "max": 2,
+                  "mean": 0.3125
+                },
+                {
+                  "level": 4,
+                  "bytes": 64,
+                  "changed": 16,
+                  "max": 1,
+                  "mean": 0.25
+                },
+                {
+                  "level": 5,
+                  "bytes": 16,
+                  "changed": 4,
+                  "max": 1,
+                  "mean": 0.25
+                },
+                {
+                  "level": 6,
+                  "bytes": 4,
+                  "changed": 2,
+                  "max": 1,
+                  "mean": 0.5
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.04000002145767212
+                },
+                {
+                  "label": "upload",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.009999990463256836
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 7.030000030994415,
+              "readbackMs": 187.79999995231628,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            },
+            {
+              "mode": "interop-stripes",
+              "calls": [
+                {
+                  "label": "allocate-three",
+                  "ms": 0.16499996185302734
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.02499997615814209
+                }
+              ],
+              "glCalls": [],
+              "preparationElapsedMs": 22.30000001192093,
+              "readbackMs": 276.36500000953674,
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16384,
+                  "changed": 6384,
+                  "max": 213,
+                  "mean": 1.345703125
+                },
+                {
+                  "level": 1,
+                  "bytes": 4096,
+                  "changed": 1184,
+                  "max": 22,
+                  "mean": 0.796875
+                },
+                {
+                  "level": 2,
+                  "bytes": 1024,
+                  "changed": 272,
+                  "max": 6,
+                  "mean": 0.484375
+                },
+                {
+                  "level": 3,
+                  "bytes": 256,
+                  "changed": 72,
+                  "max": 2,
+                  "mean": 0.3125
+                },
+                {
+                  "level": 4,
+                  "bytes": 64,
+                  "changed": 16,
+                  "max": 1,
+                  "mean": 0.25
+                },
+                {
+                  "level": 5,
+                  "bytes": 16,
+                  "changed": 4,
+                  "max": 1,
+                  "mean": 0.25
+                },
+                {
+                  "level": 6,
+                  "bytes": 4,
+                  "changed": 2,
+                  "max": 1,
+                  "mean": 0.5
+                }
+              ],
+              "errors": [],
+              "textureResourceDelta": 0
+            }
+          ]
+        }
+      ]
+    },
+    "mudWorker": null,
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+      "completed": 75,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 1120,
+      "workMs": 337.15000039339066,
+      "coordinationMs": 29.224998891353607,
+      "maxUnitMs": 9.629999995231628,
+      "overruns": 13,
+      "deadlineLoans": 9,
+      "oversizeRecoveries": 0,
+      "continuationMs": 4723.840000092983,
+      "continuationTurns": 923,
+      "median": 16.68000000000029,
+      "p95": 415.6050000000032,
+      "p99": 415.6050000000032,
+      "cpu95": 5.995000004768372,
+      "jitter": 398.9250000000029,
+      "budgetMs": 2.121779272853489,
+      "pending": 0,
+      "waiting": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

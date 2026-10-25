@@ -1,0 +1,106 @@
+diff --git a/src/rendering/program-bindings.js b/src/rendering/program-bindings.js
+index a02d7e850..f7dd5ac1b 100644
+--- a/src/rendering/program-bindings.js
++++ b/src/rendering/program-bindings.js
+@@ -1,3 +1,5 @@
++import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
++const initializedBindings=new WeakSet();
+ // Three 0.180 defers diagnostics and uniform/attribute reflection until first
+ // use, even after compileAsync resolves. Pay that cost behind the loading screen
+ // for every already-compiled resident variant, including currently hidden ones.
+@@ -6,20 +8,31 @@ export function initializeProgramBindings(renderer){
+   for(const program of new Set(renderer.info.programs??[])){
+     // Keep the existing real-draw warmup if a future renderer changes this API.
+     if(typeof program?.getUniforms!=='function'||typeof program?.getAttributes!=='function'){stats.unsupported++;continue;}
+-    program.getUniforms();program.getAttributes();stats.initialized++;
++    program.getUniforms();program.getAttributes();initializedBindings.add(program);stats.initialized++;
+   }
+   return stats;
+ }
+ 
+ // Prepare one program per cooperative batch. Reflection is real synchronous GL
+ // work, so the budget is checked after each program rather than disguising it.
+-export async function initializeProgramBindingsAsync(renderer,{cancelled=()=>false,budgetMs=4,now=()=>performance.now(),nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve))}={}){
++// Each cold program is a distinct one-shot operation: never transfer a driver
++// stall estimate to unrelated programs. Scheduler records actual overrun cost.
++// Warm programs known here need no further admission or GL queries.
++export async function initializeProgramBindingsAsync(renderer,{scheduler=null,signal,getEpoch=()=>0,cancelled=()=>false,budgetMs=4,now=()=>performance.now(),nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve))}={}){
+  const stats={initialized:0,unsupported:0};let start=now();
++ const epoch=getEpoch(),deadline=start+250,collection=renderer.info.programs;
++ const check=()=>{if(signal?.aborted||cancelled()||getEpoch()!==epoch||renderer.info.programs!==collection)throw Error('Loading program bindings cancelled');};
++
+  for(const program of new Set(renderer.info.programs??[])){
+-  if(cancelled())throw Error('Loading program bindings cancelled');
++  check();
+   if(typeof program?.getUniforms!=='function'||typeof program?.getAttributes!=='function'){stats.unsupported++;continue;}
+-  program.getUniforms();program.getAttributes();stats.initialized++;
+-  if(now()-start>=budgetMs){await nextFrame();start=now();}
++  if(initializedBindings.has(program)){stats.initialized++;continue;}
++  const execute=()=>{
++   check();if('program' in program&&!program.program)throw Error('Loading program bindings disposed');
++   program.getUniforms();program.getAttributes();initializedBindings.add(program);stats.initialized++;
++  };
++  if(scheduler){await scheduler.submit((function*(){execute();})(),{signal,valid:()=>{check();return true;},deadline,priority:20,label:'program-bindings'});check();}
++  else {execute();if(now()-start>=budgetMs){await waitGpuFrame({signal,nextFrame,check});start=now();}}
+  }
+  return stats;
+ }
+diff --git a/tests/program-bindings.test.js b/tests/program-bindings.test.js
+index 0e32943fb..3e4ebeed7 100644
+--- a/tests/program-bindings.test.js
++++ b/tests/program-bindings.test.js
+@@ -20,3 +20,28 @@ test('first-use shader failure propagates unchanged, preventing later variants f
+ import {initializeProgramBindingsAsync} from '../src/rendering/program-bindings.js';
+ test('cooperative binding reflection yields between real program operations and matches counters',async()=>{let time=0,yields=0,calls=0;const make=()=>({getUniforms(){time+=3;calls++;},getAttributes(){time+=2;calls++;}}),a=make(),b=make();const stats=await initializeProgramBindingsAsync({info:{programs:[a,a,b,{}]}},{now:()=>time,nextFrame:async()=>{yields++;},budgetMs:4});assert.deepEqual(stats,{initialized:2,unsupported:1});assert.equal(calls,4);assert.equal(yields,2);});
+ test('cooperative reflection stops before touching programs after cancellation',async()=>{let stop=false,calls=0;const a={getUniforms(){calls++;},getAttributes(){calls++;}};await assert.rejects(initializeProgramBindingsAsync({info:{programs:[a,{...a}]}},{cancelled:()=>stop,budgetMs:0,nextFrame:async()=>{stop=true;}}),/cancelled/);assert.equal(calls,2);});
++
++test('global binding admission measures synchronous queries and uses one deadline without an extra frame',async()=>{
++ let time=0,calls=0;const jobs=[];
++ const program=()=>({getUniforms(){time+=2;calls++;},getAttributes(){time+=1;calls++;}});
++ const scheduler={submit(iterator,options){jobs.push(options);return Promise.resolve(iterator.next().value);}};
++ const result=await initializeProgramBindingsAsync({info:{programs:[program(),program()]}},{scheduler,now:()=>time,nextFrame:()=>assert.fail('extra frame')});
++ assert.equal(result.initialized,2);assert.equal(calls,4);assert.equal(jobs[0].deadline,jobs[1].deadline);assert.equal(jobs[1].estimate,undefined);
++});
++test('resource epoch changing while reflection is queued prevents queries',async()=>{
++ let epoch=0;const program={getUniforms:()=>assert.fail('stale query'),getAttributes:()=>{}};
++ const scheduler={submit(iterator){epoch++;return Promise.resolve().then(()=>iterator.next());}};
++ await assert.rejects(initializeProgramBindingsAsync({info:{programs:[program]}},{scheduler,getEpoch:()=>epoch}),/cancelled/);
++});
++test('disposed program is rejected before driver queries',async()=>{
++ await assert.rejects(initializeProgramBindingsAsync({info:{programs:[{program:null,getUniforms:()=>assert.fail('disposed query'),getAttributes:()=>{}}]}}),/disposed/);
++});
++
++test('one cold atomic outlier cannot poison admission of unrelated bindings; known warm bindings skip GL',async()=>{
++ let time=0,calls=0;const jobs=[];
++ const a={getUniforms(){time+=90;calls++;},getAttributes(){}},b={getUniforms(){calls++;},getAttributes(){}};
++ const renderer={info:{programs:[a,b]}},scheduler={submit(iterator,options){jobs.push(options);return Promise.resolve(iterator.next().value);}};
++ await initializeProgramBindingsAsync(renderer,{scheduler,now:()=>time});
++ assert.equal(jobs.length,2);assert.equal(jobs[1].estimate,undefined);
++ await initializeProgramBindingsAsync(renderer,{scheduler,now:()=>time});assert.equal(jobs.length,2);assert.equal(calls,2);
++});
+diff --git a/tools/experiments/check-spatial-thread-game.mjs b/tools/experiments/check-spatial-thread-game.mjs
+index bcff54d9e..c2801be8a 100644
+--- a/tools/experiments/check-spatial-thread-game.mjs
++++ b/tools/experiments/check-spatial-thread-game.mjs
+@@ -30,6 +30,7 @@ try{
+  const gameUrl=new URL(`http://127.0.0.1:${process.env.WG_THREAD_PORT??5192}/?`+globalClosureQuery(biome)+'&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads='+(threaded?'1':'0')+'&chunkInstall='+(process.env.WG_CHUNK_INSTALL??'sync')+'&horizonBedBudget='+(process.env.WG_HORIZON_BED_BUDGET??'2')+'&horizonBed='+(process.env.WG_HORIZON_BED??'sync')+'&chunkEviction='+(process.env.WG_CHUNK_EVICTION??'single')+'&ownedFarGpu='+(process.env.WG_THREAD_OWNED_FAR??'1')+'&streamingRecovery='+(process.env.WG_THREAD_RECOVERY??'auto')+'&waterShoreWorker='+(process.env.WG_THREAD_WATER_SHORE_WORKER??'0')+'&waterBedWorker='+(process.env.WG_THREAD_WATER_BED_WORKER??'auto')+'&waterBedDirect='+(process.env.WG_THREAD_WATER_BED_DIRECT??'0')+'&warmObstruction='+(process.env.WG_THREAD_WARM_OBSTRUCTION??'0')+'&retainPrograms='+(process.env.WG_THREAD_RETAIN_APP??'0'));
+  if(process.env.WG_FRAME_SCHEDULER_DIAGNOSTICS==='1')gameUrl.searchParams.set('frameSchedulerDiagnostics','1');
+  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
++ if(process.env.WG_THREAD_QUALITY_BINDINGS==='1')gameUrl.searchParams.set('qualityBindings','1');
+  if(process.env.WG_THREAD_CROP_DEPTH_PREPARATION==='1')gameUrl.searchParams.set('cropDepthPreparation','1');
+  if(process.env.WG_THREAD_CROP_DEPTH_WARM==='1')gameUrl.searchParams.set('cropDepthWarm','1');
+  if(process.env.WG_THREAD_ESTIMATE_OUTLIER==='1')gameUrl.searchParams.set('estimateOutlier','1');
+diff --git a/tools/experiments/spatial-thread-game-quality-case.js b/tools/experiments/spatial-thread-game-quality-case.js
+index ad5b0dff5..5ab0c0245 100644
+--- a/tools/experiments/spatial-thread-game-quality-case.js
++++ b/tools/experiments/spatial-thread-game-quality-case.js
+@@ -79,7 +79,8 @@ export async function verifyGameQualityCycle(w){
+    try{
+     if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'prepare'};
+     const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{compileSpans.push({...span,admission:span.label==='loading-compile-admission-wait'?globalFrameScheduler.snapshot():undefined});if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});
+-    stagedPreparation={ms:performance.now()-start,draws,stats,compileSpans};
++    const bindingsStart=performance.now();const bindings=new URLSearchParams(location.search).get('qualityBindings')==='1'?await initializeProgramBindingsAsync(w.renderer,{scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,signal:w.loading.signal,cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0}):null;
++    stagedPreparation={ms:performance.now()-start,draws,stats,compileSpans,bindings,bindingsMs:performance.now()-bindingsStart};
+     w.drawRenderFrame=originalDraw;
+     if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'activate'};
+     const activate=performance.now();w.qualitySetting(quality);settingMs=performance.now()-activate;await w.streamingProgramRefresh;stagedPreparation.activationMs=performance.now()-activate;

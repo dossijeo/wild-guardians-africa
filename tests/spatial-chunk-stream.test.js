@@ -249,12 +249,26 @@ test('production terrain installer accepts the same C++ payload used for navigat
   const pack=JSON.parse(readFileSync(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8'));
   const data=core.chunkPayload(),geometry=new THREE.BoxGeometry(1,1,1),material=new THREE.MeshStandardMaterial();
   geometry.computeBoundingBox();
-  const world={buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:core,suppressed:new Set(),
+  const world={prepareTerrainSteps:WorldScene.prototype.prepareTerrainSteps,disposePreparedTerrain:WorldScene.prototype.disposePreparedTerrain,toon:{globalVisualLighting:false},buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:core,suppressed:new Set(),
     chunk(){throw Error('The renderer must use the C++ payload');}},pack,
     prototypes:Array.from({length:20},()=>[0,1,2].map(()=>new THREE.Mesh(geometry,material))),
     quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),
     fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'sabana'}};
+  let abortedResources=0;
+  const disposePrepared=world.disposePreparedTerrain;
+  world.disposePreparedTerrain=function(group){group.traverse(object=>{if(object.isMesh)object.geometry.addEventListener('dispose',()=>abortedResources++);});disposePrepared.call(this,group);};
+  const aborted=world.prepareTerrainSteps(0,0,data);
+  assert.equal(aborted.next().value,'ground');
+  assert.equal(aborted.next().value,'water-geometry','Phase labels announce work before execution');
+  assert.equal(world.terrainMeshes.length,0,'Private preparation must not register a visible ground mesh');
+  aborted.return();assert.equal(abortedResources,1,'Abandoning preparation must release its ground geometry');
+  world.disposePreparedTerrain=disposePrepared;
+  const staged=world.prepareTerrainSteps(0,0,data);let prepared;
+  do{prepared=staged.next();assert.equal(world.terrainMeshes.length,0);}while(!prepared.done);
   const group=WorldScene.prototype.terrain.call(world,0,0,data);
+  const geometryRows=g=>{const rows=[];g.traverse(o=>{if(o.isMesh)rows.push({type:o.type,count:o.count,position:Array.from(o.geometry.attributes.position.array),index:o.geometry.index?Array.from(o.geometry.index.array):null});});return rows;};
+  assert.deepEqual(geometryRows(prepared.value),geometryRows(group),'Staged and synchronous geometry must match');
+  world.disposePreparedTerrain(prepared.value);
   assert.equal(group.userData.spatialAuthority,'spatial-wasm');
   assert.equal(world.terrainMeshes[0].geometry.getAttribute('position').count,49*49);
   assert.equal(group.userData.contactInstances.flat().length,data.instances.flat().length);

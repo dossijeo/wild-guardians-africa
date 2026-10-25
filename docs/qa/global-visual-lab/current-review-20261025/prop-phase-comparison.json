@@ -1,0 +1,145 @@
+{
+  "scope": "One instrumented paused pair with screenshot waits; not an FPS benchmark or causal A/B/A/B result. Summed phase waits overlap between chunks.",
+  "runs": [
+    {
+      "source": "gran-rio-phase-trace",
+      "phases": [
+        {
+          "batch": 0,
+          "count": 35,
+          "medianMs": 0.2549999952316284,
+          "maxMs": 1.6649999618530273,
+          "totalWaitMs": 59186.70999979973,
+          "maxEstimateMs": 52.53999996185303
+        },
+        {
+          "batch": 1,
+          "count": 35,
+          "medianMs": 0.25,
+          "maxMs": 0.9500000476837158,
+          "totalWaitMs": 93597.98000001907,
+          "maxEstimateMs": 48.735000014305115
+        },
+        {
+          "batch": 2,
+          "count": 35,
+          "medianMs": 0.2049999237060547,
+          "maxMs": 0.625,
+          "totalWaitMs": 78380.85499978065,
+          "maxEstimateMs": 43.86150001287461
+        },
+        {
+          "batch": 3,
+          "count": 35,
+          "medianMs": 0.18999993801116943,
+          "maxMs": 0.34999990463256836,
+          "totalWaitMs": 52150.299999952316,
+          "maxEstimateMs": 54.5
+        },
+        {
+          "batch": 4,
+          "count": 35,
+          "medianMs": 0.13499999046325684,
+          "maxMs": 54.5,
+          "totalWaitMs": 74229.81500005722,
+          "maxEstimateMs": 44.145
+        }
+      ],
+      "created": 10,
+      "blockingRecoveries": 26,
+      "maxUnitMs": 54.5349999666214,
+      "warnings": [
+        "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (810,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (665,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(670,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (667,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(672,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (604,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(609,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (606,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(611,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (326,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (326,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (322,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(327,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (322,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(327,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ]
+    },
+    {
+      "source": "gran-rio-phase-separated",
+      "phases": [
+        {
+          "batch": 0,
+          "count": 35,
+          "medianMs": 0.26499998569488525,
+          "maxMs": 1.6050000190734863,
+          "totalWaitMs": 48.06500017642975,
+          "maxEstimateMs": 1.6050000190734863
+        },
+        {
+          "batch": 1,
+          "count": 35,
+          "medianMs": 0.2200000286102295,
+          "maxMs": 1,
+          "totalWaitMs": 71.17500007152557,
+          "maxEstimateMs": 1
+        },
+        {
+          "batch": 2,
+          "count": 35,
+          "medianMs": 0.18999993801116943,
+          "maxMs": 0.809999942779541,
+          "totalWaitMs": 88.95000040531158,
+          "maxEstimateMs": 0.809999942779541
+        },
+        {
+          "batch": 3,
+          "count": 35,
+          "medianMs": 0.1549999713897705,
+          "maxMs": 2.7649999856948853,
+          "totalWaitMs": 89.29000008106232,
+          "maxEstimateMs": 2.7649999856948853
+        },
+        {
+          "batch": 4,
+          "count": 35,
+          "medianMs": 0.14499998092651367,
+          "maxMs": 53.02499997615814,
+          "totalWaitMs": 75093.19500052929,
+          "maxEstimateMs": 53.02499997615814
+        }
+      ],
+      "created": 10,
+      "blockingRecoveries": 9,
+      "maxUnitMs": 53.06499993801117,
+      "warnings": [
+        "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (810,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (665,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(670,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (667,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(672,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (604,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(609,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (606,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(611,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (326,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (326,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (322,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(327,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (322,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(327,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ]
+    }
+  ]
+}

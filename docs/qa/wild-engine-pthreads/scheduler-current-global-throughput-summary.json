@@ -1,0 +1,335 @@
+{
+  "baseRevision": "6603a7428 plus QA-only wall timestamps",
+  "scope": "Same control/candidate and active quality protocol as scheduler-current-global-quality-summary.json. Marks added only, no camera/wait/assertion changes. Wall travel includes correctness GL queries; not isolated GPU or CPU work.",
+  "decision": "Integrated bundle consistently eliminates observed multi-second first quality spike and completes full travel sooner, with all 15 chunks and empty queues. Does not prove each optional module or full six-biome/hardware acceptance.",
+  "runs": [
+    {
+      "run": "a1",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 199.41499996185303,
+          "p99Ms": 199.41499996185303,
+          "maxMs": 6900.3949999809265,
+          "beforeDiagnosticMs": 7771.610000014305,
+          "diagnosticMs": 499.1449999809265
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 286.289999961853,
+          "p99Ms": 286.289999961853,
+          "maxMs": 359.66999995708466,
+          "beforeDiagnosticMs": 1377.9800000190735,
+          "diagnosticMs": 500.61500000953674
+        },
+        {
+          "quality": "baja",
+          "samples": 16,
+          "p95Ms": 128.25,
+          "p99Ms": 128.25,
+          "maxMs": 279.0899999141693,
+          "beforeDiagnosticMs": 1218.7050000429153,
+          "diagnosticMs": 189.33499991893768
+        }
+      ],
+      "active": {
+        "travelWallMs": 29201.514999985695,
+        "settledWallMs": 29201.644999980927,
+        "postTravelWaitMs": 0.12999999523162842,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 125.17429999998691,
+        "elapsed": 143.3346899999936,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 0,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 0,
+        "workMs": 0,
+        "coordinationMs": 0,
+        "maxUnitMs": 0,
+        "overruns": 0,
+        "deadlineLoans": 0,
+        "oversizeRecoveries": 0,
+        "continuationMs": 0,
+        "continuationTurns": 0,
+        "median": 0,
+        "p95": 0,
+        "p99": 0,
+        "cpu95": 0,
+        "jitter": 0,
+        "budgetMs": 0,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    },
+    {
+      "run": "b1",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 84.13999998569489,
+          "p99Ms": 84.13999998569489,
+          "maxMs": 111.71000003814697,
+          "beforeDiagnosticMs": 727.4900000095367,
+          "diagnosticMs": 230.99500000476837
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 132.3050000667572,
+          "p99Ms": 132.3050000667572,
+          "maxMs": 133.58000004291534,
+          "beforeDiagnosticMs": 779.375,
+          "diagnosticMs": 267.0149999856949
+        },
+        {
+          "quality": "baja",
+          "samples": 26,
+          "p95Ms": 154.18499994277954,
+          "p99Ms": 160.29499995708466,
+          "maxMs": 178.21000003814697,
+          "beforeDiagnosticMs": 2116.514999985695,
+          "diagnosticMs": 249.67500007152557
+        }
+      ],
+      "active": {
+        "travelWallMs": 19525.975000023842,
+        "settledWallMs": 19526.050000071526,
+        "postTravelWaitMs": 0.07500004768371582,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 126.03621499994858,
+        "elapsed": 143.5563649999554,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 628,
+        "workMs": 323.76000118255615,
+        "coordinationMs": 30.635003209114075,
+        "maxUnitMs": 14.024999976158142,
+        "overruns": 48,
+        "deadlineLoans": 46,
+        "oversizeRecoveries": 0,
+        "continuationMs": 276.0099996328354,
+        "continuationTurns": 1129,
+        "median": 83.16500000000087,
+        "p95": 116.5399999999936,
+        "p99": 132.90999999999622,
+        "cpu95": 11.485000014305115,
+        "jitter": 33.374999999992724,
+        "budgetMs": 0.40129934393246985,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    },
+    {
+      "run": "a2",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 213.3550000190735,
+          "p99Ms": 213.3550000190735,
+          "maxMs": 6422.475000023842,
+          "beforeDiagnosticMs": 7275.014999985695,
+          "diagnosticMs": 456.13499999046326
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 152.4449999332428,
+          "p99Ms": 152.4449999332428,
+          "maxMs": 225.48500001430511,
+          "beforeDiagnosticMs": 1177.5199999809265,
+          "diagnosticMs": 458.90499997138977
+        },
+        {
+          "quality": "baja",
+          "samples": 13,
+          "p95Ms": 270.8049999475479,
+          "p99Ms": 270.8049999475479,
+          "maxMs": 459.7300000190735,
+          "beforeDiagnosticMs": 1777.7699999809265,
+          "diagnosticMs": 416.3900001049042
+        }
+      ],
+      "active": {
+        "travelWallMs": 30516.75,
+        "settledWallMs": 30516.87999999523,
+        "postTravelWaitMs": 0.12999999523162842,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 125.68647499992483,
+        "elapsed": 144.2635749999322,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 0,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 0,
+        "workMs": 0,
+        "coordinationMs": 0,
+        "maxUnitMs": 0,
+        "overruns": 0,
+        "deadlineLoans": 0,
+        "oversizeRecoveries": 0,
+        "continuationMs": 0,
+        "continuationTurns": 0,
+        "median": 0,
+        "p95": 0,
+        "p99": 0,
+        "cpu95": 0,
+        "jitter": 0,
+        "budgetMs": 0,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    },
+    {
+      "run": "b2",
+      "rows": [
+        {
+          "quality": "baja",
+          "samples": 12,
+          "p95Ms": 146.42500007152557,
+          "p99Ms": 146.42500007152557,
+          "maxMs": 218.57999992370605,
+          "beforeDiagnosticMs": 1278.460000038147,
+          "diagnosticMs": 385.1299999952316
+        },
+        {
+          "quality": "media",
+          "samples": 12,
+          "p95Ms": 212.63499999046326,
+          "p99Ms": 212.63499999046326,
+          "maxMs": 225.30000007152557,
+          "beforeDiagnosticMs": 1473.5099999904633,
+          "diagnosticMs": 648.920000076294
+        },
+        {
+          "quality": "baja",
+          "samples": 52,
+          "p95Ms": 147.05999994277954,
+          "p99Ms": 178.35000002384186,
+          "maxMs": 309.99000000953674,
+          "beforeDiagnosticMs": 4276.02999997139,
+          "diagnosticMs": 225.04000008106232
+        }
+      ],
+      "active": {
+        "travelWallMs": 23546.014999985695,
+        "settledWallMs": 23546.100000023842,
+        "postTravelWaitMs": 0.08500003814697266,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 126.06070499993426,
+        "elapsed": 145.0000199999418,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 628,
+        "workMs": 329.7800005674362,
+        "coordinationMs": 35.67999970912933,
+        "maxUnitMs": 11.449999928474426,
+        "overruns": 69,
+        "deadlineLoans": 64,
+        "oversizeRecoveries": 0,
+        "continuationMs": 256.3800002336502,
+        "continuationTurns": 1081,
+        "median": 50.154999999998836,
+        "p95": 100.11499999999796,
+        "p99": 116.36000000000058,
+        "cpu95": 11.93999993801117,
+        "jitter": 49.95999999999913,
+        "budgetMs": 0.25416670242945383,
+        "pending": 0,
+        "waiting": 0,
+        "oldestMs": 0
+      }
+    }
+  ]
+}

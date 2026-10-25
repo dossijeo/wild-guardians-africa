@@ -1,0 +1,260 @@
+{
+  "scope": "Attribution run, not A/B acceptance. GPU timer interval includes pipeline bubbles; cumulative scheduler stats include loading.",
+  "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "created": 15,
+  "summary": {
+    "slices": {
+      "count": 601,
+      "mean": 0.20029118166192003,
+      "p95": 0.6600000262260437,
+      "max": 3.7799999713897705
+    },
+    "preparationCpu": {
+      "count": 15,
+      "mean": 8.025000011920929,
+      "p95": 9.824999988079071,
+      "max": 12.334999918937683
+    },
+    "preparationLatency": {
+      "count": 15,
+      "mean": 1574.689000002543,
+      "p95": 3690.639999985695,
+      "max": 4153.474999964237
+    },
+    "generate": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "remove": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "removeBatch": {
+      "count": 3,
+      "mean": 6.356666664282481,
+      "p95": 6.7700000405311584,
+      "max": 6.974999964237213
+    },
+    "admit": {
+      "count": 15,
+      "mean": 0.04866665999094645,
+      "p95": 0.06499999761581421,
+      "max": 0.06999999284744263
+    },
+    "cancel": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "publish": {
+      "count": 15,
+      "mean": 0.6109999934832255,
+      "p95": 0.9150000214576721,
+      "max": 0.9399999976158142
+    },
+    "install": {
+      "count": 15,
+      "mean": 0.4946666638056437,
+      "p95": 1.2200000286102295,
+      "max": 2.084999978542328
+    },
+    "terrain": {
+      "count": 0,
+      "mean": 0,
+      "p95": null,
+      "max": null
+    },
+    "props": {
+      "count": 300,
+      "mean": 0.05056666572888692,
+      "p95": 0.21999996900558472,
+      "max": 0.2999999523162842
+    },
+    "mud": {
+      "count": 15,
+      "mean": 2.3329999883969625,
+      "p95": 3.074999988079071,
+      "max": 3.7549999952316284
+    },
+    "attach": {
+      "count": 16,
+      "mean": 0.6606250032782555,
+      "p95": 0.875,
+      "max": 0.9050000309944153
+    },
+    "details": {
+      "count": 15,
+      "mean": 0.3600000023841858,
+      "p95": 1.0149999856948853,
+      "max": 1.9300000071525574
+    },
+    "render": {
+      "count": 361,
+      "mean": 8.072631576880193,
+      "p95": 13.944999992847443,
+      "max": 25.939999997615814
+    },
+    "draw": {
+      "count": 361,
+      "mean": 4.902728531829538,
+      "p95": 8.800000011920929,
+      "max": 13.024999976158142
+    },
+    "cache": {
+      "count": 361,
+      "mean": 0.013462603422413242,
+      "p95": 0.009999990463256836,
+      "max": 0.3399999737739563
+    },
+    "nativeCompute": {
+      "count": 15,
+      "mean": 38.795654296875,
+      "p95": 46.780029296875,
+      "max": 52.5498046875
+    },
+    "frames": {
+      "count": 360,
+      "mean": 119.54054166666667,
+      "p95": 216.08000000000175,
+      "max": 349.4599999999991
+    }
+  },
+  "terrainPhases": {
+    "setup": {
+      "count": 15,
+      "cpuMs": 0.2600000500679016,
+      "maxCpuMs": 0.04000002145767212,
+      "waitMs": 2233.989999949932,
+      "maxWaitMs": 437.10000002384186
+    },
+    "ground": {
+      "count": 15,
+      "cpuMs": 20.31499993801117,
+      "maxCpuMs": 2.259999990463257,
+      "waitMs": 2199.2499999403954,
+      "maxWaitMs": 599.0199999809265
+    },
+    "mud-geometry": {
+      "count": 15,
+      "cpuMs": 35.18499982357025,
+      "maxCpuMs": 3.7799999713897705,
+      "waitMs": 2590.715000271797,
+      "maxWaitMs": 482.08000004291534
+    },
+    "mud-edges": {
+      "count": 15,
+      "cpuMs": 0.2200000286102295,
+      "maxCpuMs": 0.030000030994415283,
+      "waitMs": 1828.75,
+      "maxWaitMs": 372.1850000023842
+    },
+    "mud-edges-grid": {
+      "count": 150,
+      "cpuMs": 2.725000500679016,
+      "maxCpuMs": 0.06999999284744263,
+      "waitMs": 1985.779999434948,
+      "maxWaitMs": 299.7049999833107
+    },
+    "mud-edges-vertices": {
+      "count": 247,
+      "cpuMs": 39.33000010251999,
+      "maxCpuMs": 0.8050000071525574,
+      "waitMs": 8215.254999876022,
+      "maxWaitMs": 665.8450000286102
+    },
+    "mud-edges-publish": {
+      "count": 15,
+      "cpuMs": 1.6650000214576721,
+      "maxCpuMs": 0.25,
+      "waitMs": 394.29500007629395,
+      "maxWaitMs": 317.72000002861023
+    },
+    "water-geometry": {
+      "count": 15,
+      "cpuMs": 2.890000104904175,
+      "maxCpuMs": 0.6600000262260437,
+      "waitMs": 959.1699998378754,
+      "maxWaitMs": 415.6799999475479
+    },
+    "bank": {
+      "count": 8,
+      "cpuMs": 0.24499982595443726,
+      "maxCpuMs": 0.04499995708465576,
+      "waitMs": 0.8750001192092896,
+      "maxWaitMs": 0.36500000953674316
+    },
+    "water-edges": {
+      "count": 8,
+      "cpuMs": 0.31499993801116943,
+      "maxCpuMs": 0.06499999761581421,
+      "waitMs": 86.85000014305115,
+      "maxWaitMs": 86.08000004291534
+    },
+    "water-core": {
+      "count": 8,
+      "cpuMs": 0.009999990463256836,
+      "maxCpuMs": 0.004999995231628418,
+      "waitMs": 179.73000007867813,
+      "maxWaitMs": 178.90499997138977
+    },
+    "prop-filter": {
+      "count": 15,
+      "cpuMs": 1.805000126361847,
+      "maxCpuMs": 0.21000003814697266,
+      "waitMs": 740.6049998998642,
+      "maxWaitMs": 454.21499997377396
+    },
+    "prop-slots": {
+      "count": 75,
+      "cpuMs": 15.40999972820282,
+      "maxCpuMs": 0.5949999690055847,
+      "waitMs": 2067.855000138283,
+      "maxWaitMs": 227.27499997615814
+    }
+  },
+  "gpu": {
+    "count": 121,
+    "mean": 93.28292944628095,
+    "p95": 140.943176,
+    "max": 240.194114
+  },
+  "scheduler": {
+    "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+    "completed": 82,
+    "cancelled": 0,
+    "failed": 0,
+    "units": 1519,
+    "workMs": 444.1050001382828,
+    "coordinationMs": 37.124998927116394,
+    "maxUnitMs": 8.875,
+    "overruns": 69,
+    "deadlineLoans": 64,
+    "oversizeRecoveries": 0,
+    "continuationMs": 87.11500018835068,
+    "continuationTurns": 1000,
+    "median": 99.98500000000058,
+    "p95": 150.02000000000407,
+    "p99": 150.02000000000407,
+    "cpu95": 7.004999995231628,
+    "jitter": 50.03500000000349,
+    "budgetMs": 1.9154166678587599,
+    "pending": 0,
+    "oldestMs": 0,
+    "admissionDiagnostics": {
+      "idlePendingFrames": 21,
+      "noHeadroom": 21,
+      "mandatoryPressure": 21,
+      "lateCallback": 13,
+      "policyLimited": 0,
+      "elapsedGuard": 0,
+      "cpuSum": 322.4300000667572,
+      "latenessSum": 191.29499966859294,
+      "maxLateness": 14.825000004770118
+    }
+  }
+}

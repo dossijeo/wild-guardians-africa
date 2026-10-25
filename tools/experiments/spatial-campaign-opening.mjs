@@ -15,16 +15,20 @@ const chunkAt=value=>Math.floor((value+24)/48);
 // Isolated campaign entry. Every terrain, prop and route query uses the same
 // C++ world as the chunk payloads; this never constructs Navigation/TerrainField.
 export async function createSpatialCampaignOpening({seed=712,biome='sabana',
-  culture='mapungubwe',slotId='spatial-campaign'}={}){
+  culture='mapungubwe',slotId='spatial-campaign',runtimeFactory=null}={}){
   const pack=villages.find(item=>item.id===(culture==='saheliana'?'saheliano':culture));
   if(!pack)throw RangeError('Unknown village culture');
   const state=Game.newGame({seed,biome,culture,slotId});
   const start=await findSpatialStart(wasm,state,pack);
   Object.assign(state.villages[0],start.site);
   state.suppressed.push(...start.site.suppress);
+  const runtime=runtimeFactory?await runtimeFactory():null;
+  if(runtime)runtime.core.generate(seed,chunkAt(start.site.center.x),chunkAt(start.site.center.z),biome);
   const loaded=new Map();
   const session=createSpatialGameSession(wasm,state,{
-    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    ...(runtime?{core:runtime.core}:{}),loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  const disposeSession=session.dispose;
+  session.dispose=()=>{disposeSession();return runtime?.dispose();};
   try{
     const cx=chunkAt(start.site.center.x),cz=chunkAt(start.site.center.z);
     const jobs=new Map();

@@ -1,0 +1,183 @@
+{
+  "records": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "first": 334,
+      "late": 334,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "first": 334,
+      "late": 334,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "first": 308,
+      "late": 308,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "first": 308,
+      "late": 308,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "media",
+      "phase": "day",
+      "first": 334,
+      "late": 334,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "first": 334,
+      "late": 334,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "first": 309,
+      "late": 309,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "first": 309,
+      "late": 309,
+      "removedDuringWait": [],
+      "addedDuringWait": []
+    }
+  ],
+  "repeats": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "onlyFirst": [],
+      "onlyRepeat": []
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "onlyFirst": [],
+      "onlyRepeat": []
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "onlyFirst": [],
+      "onlyRepeat": [
+        {
+          "count": 1,
+          "geometry": {
+            "attributes": {
+              "nativeVisibility": {
+                "count": 1,
+                "itemSize": 1
+              },
+              "normal": {
+                "count": 2216,
+                "itemSize": 3
+              },
+              "position": {
+                "count": 2216,
+                "itemSize": 3
+              },
+              "tangent": {
+                "count": 2216,
+                "itemSize": 4
+              },
+              "uv": {
+                "count": 2216,
+                "itemSize": 2
+              }
+            },
+            "index": 2874,
+            "name": "",
+            "owners": [
+              {
+                "path": "Scene/native_merged_assets/native-obstruction-blend",
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "root": "scene",
+                "visible": true
+              }
+            ],
+            "parameters": null,
+            "type": "BufferGeometry"
+          }
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "onlyFirst": [],
+      "onlyRepeat": [
+        {
+          "count": 1,
+          "geometry": {
+            "attributes": {
+              "nativeVisibility": {
+                "count": 1,
+                "itemSize": 1
+              },
+              "normal": {
+                "count": 2216,
+                "itemSize": 3
+              },
+              "position": {
+                "count": 2216,
+                "itemSize": 3
+              },
+              "tangent": {
+                "count": 2216,
+                "itemSize": 4
+              },
+              "uv": {
+                "count": 2216,
+                "itemSize": 2
+              }
+            },
+            "index": 2874,
+            "name": "",
+            "owners": [
+              {
+                "path": "Scene/native_merged_assets/native-obstruction-blend",
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "root": "scene",
+                "visible": false
+              }
+            ],
+            "parameters": null,
+            "type": "BufferGeometry"
+          }
+        }
+      ]
+    }
+  ],
+  "complete": true
+}

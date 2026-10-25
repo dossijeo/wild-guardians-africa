@@ -1,0 +1,233 @@
+{
+  "scope": "Six real populated game scenes, Chrome Intel UHD 720p medium, 360 active frames, 144m fixed per-frame camera path, tutorial omitted in QA. Functional coverage, single run per biome, CPU/RAF only; not paired performance or exact visual equivalence.",
+  "rows": [
+    {
+      "biome": "sabana",
+      "backend": "pthreads",
+      "frames": {
+        "count": 360,
+        "mean": 35.336,
+        "p95": 66.6449999999968,
+        "max": 149.6050000000032
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7580000042915345,
+        "p95": 0.9549999833106995,
+        "max": 0.9699999690055847
+      },
+      "installation": {
+        "count": 15,
+        "mean": 5.965333330631256,
+        "p95": 8.729999959468842,
+        "max": 19.9650000333786
+      },
+      "created": 15,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "elapsedBefore": 119.99999999999746,
+      "elapsedAfter": 132.50718999999737,
+      "final": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 559,
+        "residentVisiblePropRecords": 6321,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1256,
+        "haloProps": 9
+      },
+      "unexpectedErrors": []
+    },
+    {
+      "biome": "desierto",
+      "backend": "pthreads",
+      "frames": {
+        "count": 360,
+        "mean": 22.355875000000005,
+        "p95": 33.37000000000262,
+        "max": 83.18000000000029
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.6529999931653341,
+        "p95": 0.8100000023841858,
+        "max": 1.0200000405311584
+      },
+      "installation": {
+        "count": 15,
+        "mean": 1.3823333342870077,
+        "p95": 1.7850000262260437,
+        "max": 2.0899999737739563
+      },
+      "created": 15,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "elapsedBefore": 119.99999999999746,
+      "elapsedAfter": 128.08114499999678,
+      "final": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 85,
+        "residentVisiblePropRecords": 291,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1256,
+        "haloProps": 0
+      },
+      "unexpectedErrors": []
+    },
+    {
+      "biome": "gran-rio",
+      "backend": "pthreads",
+      "frames": {
+        "count": 360,
+        "mean": 32.425375,
+        "p95": 66.45500000000175,
+        "max": 166.5699999999997
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7516666690508524,
+        "p95": 0.9399999976158142,
+        "max": 1.034999966621399
+      },
+      "installation": {
+        "count": 15,
+        "mean": 5.574333333969117,
+        "p95": 10.324999988079071,
+        "max": 10.960000038146973
+      },
+      "created": 15,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "elapsedBefore": 119.99999999999746,
+      "elapsedAfter": 131.55747499999714,
+      "final": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 582,
+        "residentVisiblePropRecords": 2905,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1256,
+        "haloProps": 10
+      },
+      "unexpectedErrors": []
+    },
+    {
+      "biome": "volcanes",
+      "backend": "pthreads",
+      "frames": {
+        "count": 360,
+        "mean": 31.82506944444445,
+        "p95": 66.45000000000437,
+        "max": 166.29499999999825
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.8043333292007446,
+        "p95": 1.1399999856948853,
+        "max": 1.159999966621399
+      },
+      "installation": {
+        "count": 15,
+        "mean": 6.307666659355164,
+        "p95": 9.2950000166893,
+        "max": 15.425000011920929
+      },
+      "created": 15,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "elapsedBefore": 119.99999999999746,
+      "elapsedAfter": 131.2750049999971,
+      "final": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 705,
+        "residentVisiblePropRecords": 4985,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1256,
+        "haloProps": 10
+      },
+      "unexpectedErrors": []
+    },
+    {
+      "biome": "gran-canon",
+      "backend": "pthreads",
+      "frames": {
+        "count": 360,
+        "mean": 18.383736111111112,
+        "p95": 32.82500000000073,
+        "max": 116.61999999999898
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7730000217755636,
+        "p95": 1.14000004529953,
+        "max": 1.2450000047683716
+      },
+      "installation": {
+        "count": 15,
+        "mean": 1.6916666626930237,
+        "p95": 2.4699999690055847,
+        "max": 2.6700000166893005
+      },
+      "created": 15,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "elapsedBefore": 119.99999999999746,
+      "elapsedAfter": 126.61824999999727,
+      "final": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 296,
+        "residentVisiblePropRecords": 2958,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1256,
+        "haloProps": 0
+      },
+      "unexpectedErrors": []
+    },
+    {
+      "biome": "manglares",
+      "backend": "pthreads",
+      "frames": {
+        "count": 360,
+        "mean": 34.82731944444444,
+        "p95": 50.08499999999913,
+        "max": 183.0350000000035
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7263333360354106,
+        "p95": 0.949999988079071,
+        "max": 1.0949999690055847
+      },
+      "installation": {
+        "count": 15,
+        "mean": 15.735666660467784,
+        "p95": 27.349999964237213,
+        "max": 34.72999995946884
+      },
+      "created": 15,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "elapsedBefore": 119.99999999999746,
+      "elapsedAfter": 132.33889999999755,
+      "final": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 335,
+        "residentVisiblePropRecords": 7160,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 1256,
+        "haloProps": 8
+      },
+      "unexpectedErrors": []
+    }
+  ]
+}

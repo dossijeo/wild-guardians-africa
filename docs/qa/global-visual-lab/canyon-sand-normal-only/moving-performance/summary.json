@@ -1,0 +1,121 @@
+{
+  "blocks": 8,
+  "gpuSamples": 960,
+  "cadenceFrames": 1440,
+  "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "results": [
+    {
+      "phase": "day",
+      "variant": "original",
+      "gpuMs": [
+        7.513518208333333,
+        5.608310758333333
+      ],
+      "cpuRenderMs": [
+        3.6650000010927517,
+        3.5344444437159432
+      ],
+      "intervalMs": [
+        16.627222222255337,
+        16.627777777777776
+      ],
+      "intervalP95Ms": [
+        17.099999994039536,
+        17.099999994039536
+      ],
+      "groupCpuMs": [
+        0.6966666671964857,
+        0.6872222221559948
+      ],
+      "uploadsPerFrame": [
+        2.5055555555555555,
+        2.5055555555555555
+      ]
+    },
+    {
+      "phase": "day",
+      "variant": "candidate",
+      "gpuMs": [
+        7.144464358333333,
+        7.054116266666667
+      ],
+      "cpuRenderMs": [
+        3.549999999337726,
+        3.567777778042687
+      ],
+      "intervalMs": [
+        16.627777777777776,
+        16.629444444345104
+      ],
+      "intervalP95Ms": [
+        17.099999994039536,
+        17
+      ],
+      "groupCpuMs": [
+        0.666666665342119,
+        0.6711111096872224
+      ],
+      "uploadsPerFrame": [
+        2.5055555555555555,
+        2.5055555555555555
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "original",
+      "gpuMs": [
+        6.854850641666666,
+        7.059277791666666
+      ],
+      "cpuRenderMs": [
+        3.5683333335651293,
+        3.7105555564165114
+      ],
+      "intervalMs": [
+        16.62888888882266,
+        16.62888888882266
+      ],
+      "intervalP95Ms": [
+        17.100000023841858,
+        17.099999994039536
+      ],
+      "groupCpuMs": [
+        0.69611111101177,
+        0.7427777778771188
+      ],
+      "uploadsPerFrame": [
+        2.5055555555555555,
+        2.5055555555555555
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "candidate",
+      "gpuMs": [
+        6.891081125,
+        7.014759483333333
+      ],
+      "cpuRenderMs": [
+        3.483333332505491,
+        3.427777777115504
+      ],
+      "intervalMs": [
+        16.62833333330022,
+        16.62833333346579
+      ],
+      "intervalP95Ms": [
+        17.099999994039536,
+        17
+      ],
+      "groupCpuMs": [
+        0.6755555561847157,
+        0.6716666670309173
+      ],
+      "uploadsPerFrame": [
+        2.5055555555555555,
+        2.5055555555555555
+      ]
+    }
+  ],
+  "note": "Two block means per variant/phase; not confidence intervals. CPU render excludes simulation; intervals are render entries, not presentation."
+}

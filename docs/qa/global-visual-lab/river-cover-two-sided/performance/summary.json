@@ -1,0 +1,89 @@
+{
+  "blocks": 8,
+  "gpuSamples": 960,
+  "cadenceFrames": 1440,
+  "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "results": [
+    {
+      "phase": "day",
+      "variant": "base",
+      "gpuMs": [
+        9.426772083333333,
+        9.467081566666666
+      ],
+      "cpuRenderMs": [
+        4.1722222222222225,
+        3.484444443219238
+      ],
+      "intervalMs": [
+        16.988333333366448,
+        16.62888888898823
+      ],
+      "intervalP95Ms": [
+        18.900000005960464,
+        17.099999994039536
+      ]
+    },
+    {
+      "phase": "day",
+      "variant": "combined",
+      "gpuMs": [
+        10.510246491666667,
+        9.693309441666667
+      ],
+      "cpuRenderMs": [
+        4.009444442556964,
+        3.5577777766519123
+      ],
+      "intervalMs": [
+        16.629444444345104,
+        16.62944444451067
+      ],
+      "intervalP95Ms": [
+        17.19999998807907,
+        17.099999994039536
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "base",
+      "gpuMs": [
+        10.938581116666667,
+        11.091083783333334
+      ],
+      "cpuRenderMs": [
+        3.665000000099341,
+        3.5877777776784368
+      ],
+      "intervalMs": [
+        16.723888888955116,
+        16.63555555558867
+      ],
+      "intervalP95Ms": [
+        18.19999998807907,
+        17.19999998807907
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "combined",
+      "gpuMs": [
+        11.206773741666666,
+        12.737867458333334
+      ],
+      "cpuRenderMs": [
+        3.657222222454018,
+        3.5016666665673255
+      ],
+      "intervalMs": [
+        16.62833333330022,
+        16.627777777777776
+      ],
+      "intervalP95Ms": [
+        17,
+        17.099999994039536
+      ]
+    }
+  ],
+  "note": "Two block means per variant/phase; not confidence intervals. CPU render excludes simulation; intervals are render entries, not presentation."
+}

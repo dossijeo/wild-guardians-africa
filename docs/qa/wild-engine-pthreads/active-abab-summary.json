@@ -1,0 +1,169 @@
+{
+  "scope": "Active Mangroves 720p medium Intel UHD, same initial fixture and per-frame 240m path, 600 frames. Final simulation state differs with real elapsed time; CPU/RAF only, no GPU timings.",
+  "runs": [
+    {
+      "run": "a1",
+      "backend": "standalone",
+      "initialElapsed": 119.99999999999746,
+      "elapsed": 139.28972999999905,
+      "frames": {
+        "count": 600,
+        "mean": 32.3976,
+        "p95": 66.5199999999968,
+        "max": 199.63500000000204
+      },
+      "generate": {
+        "count": 25,
+        "mean": 45.30739999294281,
+        "p95": 59.08499997854233,
+        "max": 71.19499999284744
+      },
+      "publish": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 25,
+        "mean": 14.246200003623962,
+        "p95": 23.50499999523163,
+        "max": 30.030000030994415
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 600,
+      "memoryBytes": 16777216,
+      "unexpectedErrors": []
+    },
+    {
+      "run": "b1",
+      "backend": "pthreads",
+      "initialElapsed": 119.99999999999746,
+      "elapsed": 138.74162499999878,
+      "frames": {
+        "count": 600,
+        "mean": 31.704991666666672,
+        "p95": 50.275000000001455,
+        "max": 216.1649999999936
+      },
+      "generate": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publish": {
+        "count": 25,
+        "mean": 0.7273999929428101,
+        "p95": 0.9549999833106995,
+        "max": 1.4100000262260437
+      },
+      "install": {
+        "count": 25,
+        "mean": 15.894800004959107,
+        "p95": 24.875,
+        "max": 36.81999999284744
+      },
+      "nativeCompute": {
+        "count": 25,
+        "mean": 48.4083984375,
+        "p95": 65.730224609375,
+        "max": 78.344970703125
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 600,
+      "memoryBytes": 16777216,
+      "unexpectedErrors": []
+    },
+    {
+      "run": "a2",
+      "backend": "standalone",
+      "initialElapsed": 119.99999999999746,
+      "elapsed": 138.82443499999917,
+      "frames": {
+        "count": 600,
+        "mean": 31.649666666666672,
+        "p95": 66.61999999999534,
+        "max": 182.6550000000061
+      },
+      "generate": {
+        "count": 25,
+        "mean": 43.64020000219345,
+        "p95": 56.61500000953674,
+        "max": 59.160000026226044
+      },
+      "publish": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "install": {
+        "count": 25,
+        "mean": 13.630200002193451,
+        "p95": 24.0349999666214,
+        "max": 28.814999997615814
+      },
+      "nativeCompute": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 600,
+      "memoryBytes": 16777216,
+      "unexpectedErrors": []
+    },
+    {
+      "run": "b2",
+      "backend": "pthreads",
+      "initialElapsed": 119.99999999999746,
+      "elapsed": 138.89137999999915,
+      "frames": {
+        "count": 600,
+        "mean": 31.78785,
+        "p95": 50.11999999999534,
+        "max": 182.9100000000035
+      },
+      "generate": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "publish": {
+        "count": 25,
+        "mean": 0.8238000011444092,
+        "p95": 1.409999966621399,
+        "max": 1.675000011920929
+      },
+      "install": {
+        "count": 25,
+        "mean": 15.561800000667573,
+        "p95": 25.8649999499321,
+        "max": 35.185000002384186
+      },
+      "nativeCompute": {
+        "count": 25,
+        "mean": 47.0268359375,
+        "p95": 57.8701171875,
+        "max": 91.0849609375
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 600,
+      "memoryBytes": 16777216,
+      "unexpectedErrors": []
+    }
+  ]
+}

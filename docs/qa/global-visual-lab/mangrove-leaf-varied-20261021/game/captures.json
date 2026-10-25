@@ -1,0 +1,536 @@
+{
+  "study": "Low-leaf coverage: coverage-mask growth versus coverage and wear growth",
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "elevated",
+    "reverse"
+  ],
+  "note": "Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "variant": "base",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "camera": [
+            64,
+            15.719999933242798,
+            42
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1368,
+            "far": 983,
+            "leaves": 18808,
+            "triangles": 59504,
+            "chunks": 25,
+            "cachedTiles": 55,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 26.79999989271164,
+              "selectionMs": 20.100000202655792,
+              "selectionCount": 18,
+              "candidates": 9796,
+              "masked": 5944,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 631686
+        },
+        {
+          "i": 1,
+          "camera": [
+            56,
+            29.719999933242796,
+            32
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1833,
+            "far": 772,
+            "leaves": 20840,
+            "triangles": 71008,
+            "chunks": 25,
+            "cachedTiles": 57,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 27.29999989271164,
+              "selectionMs": 20.90000021457672,
+              "selectionCount": 19,
+              "candidates": 10147,
+              "masked": 5944,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 33,
+          "triangles": 432026
+        },
+        {
+          "i": 2,
+          "camera": [
+            47,
+            6.219999933242798,
+            33
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 814,
+            "far": 458,
+            "leaves": 10176,
+            "triangles": 33376,
+            "chunks": 25,
+            "cachedTiles": 60,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 28.59999990463257,
+              "selectionMs": 22.600000202655792,
+              "selectionCount": 20,
+              "candidates": 10680,
+              "masked": 5962,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 581200
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "variant": "base",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "camera": [
+            64,
+            15.719999933242798,
+            42
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1368,
+            "far": 983,
+            "leaves": 18808,
+            "triangles": 59504,
+            "chunks": 25,
+            "cachedTiles": 60,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 28.59999990463257,
+              "selectionMs": 22.800000190734863,
+              "selectionCount": 21,
+              "candidates": 10680,
+              "masked": 5962,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 631686
+        },
+        {
+          "i": 1,
+          "camera": [
+            56,
+            29.719999933242796,
+            32
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1833,
+            "far": 772,
+            "leaves": 20840,
+            "triangles": 71008,
+            "chunks": 25,
+            "cachedTiles": 60,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 28.59999990463257,
+              "selectionMs": 23.40000021457672,
+              "selectionCount": 22,
+              "candidates": 10680,
+              "masked": 5962,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 33,
+          "triangles": 432026
+        },
+        {
+          "i": 2,
+          "camera": [
+            47,
+            6.219999933242798,
+            33
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 814,
+            "far": 458,
+            "leaves": 10176,
+            "triangles": 33376,
+            "chunks": 25,
+            "cachedTiles": 60,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 28.59999990463257,
+              "selectionMs": 23.600000262260437,
+              "selectionCount": 23,
+              "candidates": 10680,
+              "masked": 5962,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 581200
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "camera": [
+            64,
+            15.719999933242798,
+            42
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1368,
+            "far": 983,
+            "leaves": 18808,
+            "triangles": 59504,
+            "chunks": 25,
+            "cachedTiles": 53,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 25.80000001192093,
+              "selectionMs": 21.099999964237213,
+              "selectionCount": 16,
+              "candidates": 9458,
+              "masked": 5706,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 631686
+        },
+        {
+          "i": 1,
+          "camera": [
+            56,
+            29.719999933242796,
+            32
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1833,
+            "far": 772,
+            "leaves": 20840,
+            "triangles": 71008,
+            "chunks": 25,
+            "cachedTiles": 55,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 26.5,
+              "selectionMs": 22.5,
+              "selectionCount": 17,
+              "candidates": 9809,
+              "masked": 5706,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 33,
+          "triangles": 432026
+        },
+        {
+          "i": 2,
+          "camera": [
+            47,
+            6.219999933242798,
+            33
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 814,
+            "far": 458,
+            "leaves": 10176,
+            "triangles": 33376,
+            "chunks": 25,
+            "cachedTiles": 59,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 27.600000023841858,
+              "selectionMs": 23.80000001192093,
+              "selectionCount": 18,
+              "candidates": 10511,
+              "masked": 5841,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 581200
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "variant": "combined",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "camera": [
+            64,
+            15.719999933242798,
+            42
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1368,
+            "far": 983,
+            "leaves": 18808,
+            "triangles": 59504,
+            "chunks": 25,
+            "cachedTiles": 59,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 27.600000023841858,
+              "selectionMs": 24,
+              "selectionCount": 19,
+              "candidates": 10511,
+              "masked": 5841,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 64,
+          "triangles": 631686
+        },
+        {
+          "i": 1,
+          "camera": [
+            56,
+            29.719999933242796,
+            32
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 1833,
+            "far": 772,
+            "leaves": 20840,
+            "triangles": 71008,
+            "chunks": 25,
+            "cachedTiles": 59,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 27.600000023841858,
+              "selectionMs": 24.599999964237213,
+              "selectionCount": 20,
+              "candidates": 10511,
+              "masked": 5841,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 33,
+          "triangles": 432026
+        },
+        {
+          "i": 2,
+          "camera": [
+            47,
+            6.219999933242798,
+            33
+          ],
+          "target": [
+            52,
+            3.7199999332427978,
+            28
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 24,
+            "moduleSpacing": 0.6,
+            "near": 814,
+            "far": 458,
+            "leaves": 10176,
+            "triangles": 33376,
+            "chunks": 25,
+            "cachedTiles": 59,
+            "bufferBytes": 1205184,
+            "stats": {
+              "buildMs": 27.600000023841858,
+              "selectionMs": 24.899999916553497,
+              "selectionCount": 21,
+              "candidates": 10511,
+              "masked": 5841,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "calls": 65,
+          "triangles": 581200
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

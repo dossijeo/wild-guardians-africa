@@ -13,8 +13,8 @@ export class LoadingOverlay {
   this.resizeObserver=observeResize(()=>this.paintFrames());for(const host of this.frameHosts)this.resizeObserver.observe(host);
  }
  paintFrames(){if(this.disposed||!this.frameImages)return;for(const host of this.frameHosts)paintLoadingFrame(host,this.frameImages);}
- render(snapshot,progress,{night=0,accepting=true,pointer=this.pointer}={}){
-  if(this.disposed)return;this.pointer=pointer;const copy=loadingCopy(snapshot,{locale:this.locale,pointer,progress});
+ render(snapshot,progress,{night=0,accepting=true,plantingBlocked=false,pointer=this.pointer}={}){
+  if(this.disposed)return;this.pointer=pointer;const copy=loadingCopy(snapshot,{locale:this.locale,pointer,progress,plantingBlocked});
   text(this.title,snapshot.unchangedFor>15000&&!snapshot.ready?loadingWaitMessage(snapshot,this.locale).replace(/ · \d+ %$/,''):copy.title);
   text(this.percent,copy.percent+' %');text(this.help,accepting?copy.help:'');text(this.cancelLabel,copy.cancel);
   if(this.value!==copy.value){this.value=copy.value;this.bar.style.transform='scaleX('+copy.value+')';this.element.dataset.progress=String(copy.value);}

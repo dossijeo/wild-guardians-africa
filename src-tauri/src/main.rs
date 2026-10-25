@@ -37,7 +37,11 @@ fn main() {
                 if std::env::args().any(|arg| arg == "--smoke-visual") {
                     let _ = webview.eval("window.__desktopSmokeVisualCapture = true;");
                 }
-                let _ = webview.eval(include_str!("../smoke.js"));
+                if std::env::args().any(|arg| arg == "--smoke-pthreads") {
+                    let _ = webview.eval(include_str!("../pthread-smoke.js"));
+                } else {
+                    let _ = webview.eval(include_str!("../smoke.js"));
+                }
             }
         })
         .run(tauri::generate_context!())

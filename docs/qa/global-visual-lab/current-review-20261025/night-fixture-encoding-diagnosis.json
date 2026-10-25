@@ -1,0 +1,33 @@
+{
+  "cause": "read_text without explicit UTF-8 on Windows, then serializing corrupted Unicode escapes",
+  "sourceKind": "Zona com\u00fan",
+  "derivedKind": "Zona com\u00c3\u00ban",
+  "sourceCodepoints": [
+    90,
+    111,
+    110,
+    97,
+    32,
+    99,
+    111,
+    109,
+    250,
+    110
+  ],
+  "derivedCodepoints": [
+    90,
+    111,
+    110,
+    97,
+    32,
+    99,
+    111,
+    109,
+    195,
+    186,
+    110
+  ],
+  "sourceSha256": "5618c1f0d2cdb7c003078b6d7ed2e99111bb65c1562a1d61a10348aae3ab890b",
+  "invalidDerivedSha256": "51424736f30410d546422a50d2e94e9a7b44a77a978e520f4c541d812782f702",
+  "invalidEvidence": "Earlier current-night-fixtures controls do not validate gameplay or equivalent night appearance. Original day fixtures and day lifecycle controls are unaffected."
+}

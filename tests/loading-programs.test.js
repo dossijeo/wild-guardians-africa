@@ -70,3 +70,77 @@ test('a throwing optional CPU observer cannot remove the bounded compilation yie
  const gl={isContextLost:()=>false};renderer.getContext=()=>gl;
  await compileLoadingProgramsBatched(renderer,scene,{},undefined,{cpuBudget:true,frameBudget:16,now:()=>clock,onCpu:()=>{throw Error('diagnostic');},nextFrame:async()=>{frames++;}});assert.equal(frames,1);
 });
+
+import {EventDispatcher} from 'three';
+function guardedScene(ready=false){
+ const objects=Array.from({length:2},()=>({isMesh:true,geometry:new EventDispatcher(),material:new EventDispatcher()}));
+ const scene={traverse:fn=>objects.forEach(fn)},gl={isContextLost:()=>false};let calls=0,queries=0;
+ const renderer={compile(view){calls++;const materials=new Set();view.traverse(o=>materials.add(o.material));return materials;},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return ready;}}})}};
+ return {objects,scene,renderer,counts:()=>({calls,queries}),clean:()=>objects.every(o=>[o.geometry,o.material].every(r=>!r._listeners?.dispose?.length))};
+}
+for(const resource of ['geometry','material'])test(`borrowed ${resource} disposal aborts readiness before another driver query`,async()=>{
+ const f=guardedScene(),pending=compileLoadingProgramsBatched(f.renderer,f.scene,{},undefined,{batchSize:1,guardResourceDisposal:true});
+ const count=f.counts();f.objects[1][resource].dispatchEvent({type:'dispose'});
+ await assert.rejects(pending,/cancelled/);await new Promise(r=>setTimeout(r,25));assert.deepEqual(f.counts(),count);assert.equal(f.clean(),true);
+});
+test('borrowed disposal cancels a suspended frame and never submits the next batch',async()=>{
+ const f=guardedScene(true);let entered;const entry=new Promise(r=>entered=r);
+ const pending=compileLoadingProgramsBatched(f.renderer,f.scene,{},undefined,{batchSize:1,guardResourceDisposal:true,nextFrame:()=>{entered();return new Promise(()=>{});}});
+ await entry;f.objects[1].geometry.dispatchEvent({type:'dispose'});await assert.rejects(pending,/cancelled/);assert.equal(f.counts().calls,1);assert.equal(f.clean(),true);
+});
+test('guarded compilation cleans listeners on success, submission failure and external abort',async()=>{
+ for(const mode of ['success','failure','abort']){
+  const f=guardedScene(mode==='success'),owner=new AbortController();
+  if(mode==='failure')f.renderer.compile=()=>{throw Error('submission fault');};
+  const pending=compileLoadingProgramsBatched(f.renderer,f.scene,{},undefined,{guardResourceDisposal:true,signal:owner.signal,nextFrame:async()=>{}});
+  if(mode==='abort')owner.abort();
+  if(mode==='success')await pending;else await assert.rejects(pending,mode==='failure'?/submission fault/:/cancelled/);
+  assert.equal(f.clean(),true);
+ }
+});
+
+test('guarded batched compilation cancels during a suspended frame on context loss',async()=>{
+ const f=guardedScene(true),canvas=new EventTarget();f.renderer.getContext().canvas=canvas;
+ let entered;const entry=new Promise(r=>entered=r);
+ const pending=compileLoadingProgramsBatched(f.renderer,f.scene,{},undefined,{batchSize:1,guardResourceDisposal:true,nextFrame:()=>{entered();return new Promise(()=>{});}});
+ await entry;canvas.dispatchEvent(new Event('webglcontextlost'));
+ await assert.rejects(pending,/cancelled/);assert.equal(f.counts().calls,1);assert.equal(f.clean(),true);
+});
+
+import {GlobalFrameScheduler} from '../src/app/global-frame-scheduler.js';
+test('scheduler admits submission but never charges readiness wait as synchronous work',async()=>{
+ let clock=1000,ready=false,calls=0;const scheduler=new GlobalFrameScheduler({now:()=>clock}),f=fixture({isReady:()=>ready});
+ f.renderer.compile=()=>{calls++;clock+=2;return new Set([f.material]);};
+ const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{scheduler,now:()=>clock});assert.equal(calls,0);
+ clock+=300;scheduler.beginFrame(clock);clock+=1;await scheduler.endFrame();assert.equal(calls,1);assert.equal(scheduler.snapshot().workMs,2);assert.equal(scheduler.snapshot().pending,0);
+ clock+=100;ready=true;await pending;assert.equal(scheduler.snapshot().workMs,2);
+});
+test('aborting queued compilation rejects without submitting or needing another frame',async()=>{
+ const abort=new AbortController(),scheduler=new GlobalFrameScheduler(),f=fixture({isReady:()=>true});let calls=0;f.renderer.compile=()=>{calls++;return new Set();};
+ const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{scheduler,signal:abort.signal});abort.abort();await assert.rejects(pending,/cancelled/);assert.equal(calls,0);assert.equal(scheduler.snapshot().pending,0);
+});
+test('queued compilation latches context loss even if restored before admission',async()=>{
+ const scheduler=new GlobalFrameScheduler(),f=fixture({isReady:()=>true}),canvas=new EventTarget();f.renderer.getContext().canvas=canvas;let calls=0;f.renderer.compile=()=>{calls++;return new Set();};
+ const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{scheduler});canvas.dispatchEvent(new Event('webglcontextlost'));await assert.rejects(pending,/cancelled/);assert.equal(calls,0);
+});
+
+
+test('compiler forwards the operation deadline and reports queue wait separately',async()=>{
+ let clock=10,job,options;const rows=[],f=fixture({isReady:()=>true});
+ const scheduler={submit(iterator,value){job=iterator;options=value;return new Promise(resolve=>{this.resolve=resolve;});}};
+ const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{scheduler,deadline:5,now:()=>clock,onSubmit:row=>rows.push(row)});
+ assert.equal(options.deadline,5);clock=40;scheduler.resolve(job.next().value);await pending;
+ assert.equal(rows[0].label,'loading-compile-admission-wait');assert.equal(rows[0].duration,30);
+ assert.equal(rows[1].label,'loading-compile-submit');assert.equal(rows[1].duration,0);
+});
+
+
+test('batched scheduler deadline belongs to the operation, not each later batch',async()=>{
+ for(const explicit of [undefined,75]){
+  let clock=100;const deadlines=[],objects=Array.from({length:3},()=>({isMesh:true}));
+  const gl={isContextLost:()=>false},scene={traverse:fn=>objects.forEach(fn)},renderer={getContext:()=>gl,properties:{get:()=>({})},compile:()=>{clock+=300;return new Set();}};
+  const scheduler={submit(iterator,options){deadlines.push(options.deadline);return Promise.resolve(iterator.next().value);}};
+  await compileLoadingProgramsBatched(renderer,scene,{},scene,{scheduler,batchSize:1,now:()=>clock,deadline:explicit,nextFrame:()=>assert.fail('global admission must replace the local yield budget')});
+  assert.deepEqual(deadlines,Array(3).fill(explicit??350));
+ }
+});
