@@ -59,7 +59,7 @@ test('live world quality and resize preserve simulation, ground geometry and exi
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{value:2,configurable:true});
  try{
   for(const quality of ['muy_baja','baja','media','alta','media']){
-   world.releaseRetainedPrograms=WorldScene.prototype.releaseRetainedPrograms;WorldScene.prototype.qualitySetting.call(world,quality);assert.equal(releasedPrograms,1);assert.equal(world.programLease,null);assert.equal(world.chunks,chunks);assert.equal(chunks.get('0,0'),chunk);assert.equal(ground.geometry,geometry);assert.equal(JSON.stringify(state),snapshot);
+   world.transactionalPrograms=WorldScene.prototype.transactionalPrograms;world.refreshStreamingPrograms??=WorldScene.prototype.refreshStreamingPrograms;world.releaseRetainedPrograms=WorldScene.prototype.releaseRetainedPrograms;WorldScene.prototype.qualitySetting.call(world,quality);assert.equal(releasedPrograms,1);assert.equal(world.programLease,null);assert.equal(world.chunks,chunks);assert.equal(chunks.get('0,0'),chunk);assert.equal(ground.geometry,geometry);assert.equal(JSON.stringify(state),snapshot);
    assert.equal(!!ground.material.isMeshBasicMaterial,quality==='muy_baja');assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));assert.equal(world.toon.uniforms.uGroundDetail.value,quality==='muy_baja'?0:1);
    assert.deepEqual(world.renderer.size,[world.renderResolution.width,world.renderResolution.height]);assert.equal(world.camera.aspect,world.renderResolution.width/world.renderResolution.height);assert.ok(world.renderResolution.width*world.renderResolution.height<2605000);
   }
@@ -93,7 +93,7 @@ for(const search of ['?stableShadowPrograms=1','','?stableShadowPrograms=0'])tes
  const stable=search!=='?stableShadowPrograms=0';
  const previous=Object.getOwnPropertyDescriptor(globalThis,'location');Object.defineProperty(globalThis,'location',{value:{search},configurable:true});
  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(),nativeGroundMaterial('media')),scene=new THREE.Scene();scene.add(mesh);
- const world={frameScheduler:search==='?stableShadowPrograms=1'?null:{},releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){if(stable)assert.fail('unnecessary invalidation');}}};
+ const world={visualSearch:search,transactionalPrograms:WorldScene.prototype.transactionalPrograms,frameScheduler:search==='?stableShadowPrograms=1'?null:{},releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){if(stable)assert.fail('unnecessary invalidation');}}};
  const material=mesh.material,version=material.version;world.sun.shadow.intensity=.8;
  try{
   WorldScene.prototype.qualitySetting.call(world,'baja');assert.equal(world.renderer.shadowMap.enabled,stable);assert.equal(world.sun.userData.nativeShadowDisabled,stable?true:undefined);assert.equal(world.sun.shadow.intensity,stable?0:.8);
