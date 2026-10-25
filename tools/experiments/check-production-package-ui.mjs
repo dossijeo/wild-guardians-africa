@@ -18,7 +18,7 @@ const server=createServer(async(req,res)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const browser=await chromium.launch({channel:'chrome',headless:true,...(process.env.WG_PACKAGE_UI_SOFTWARE==='1'?{args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']}:{})});
-const page=await browser.newPage({viewport:{width:1280,height:720}});
+const page=await browser.newPage({viewport:{width:1280,height:720},...(process.env.WG_PACKAGE_UI_VIDEO==='1'?{recordVideo:{dir:'.codex-qa/package-flow-video',size:{width:1280,height:720}}}:{})});
 page.on('worker',worker=>{workers.push(worker.url());worker.on('close',()=>closedWorkers.push(worker.url()));});
 page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 const report=process.env.WG_PACKAGE_UI_REPORT??'docs/qa/production-integration-20261025/package-ui.json';
@@ -142,4 +142,4 @@ try{
  await page.screenshot({path:report.replace(/\.json$/,'.png')});
  console.log(JSON.stringify(result));
 }catch(e){result.loadingTrace=await page.evaluate(()=>globalThis.__wildGuardiansNativeLoadingSnapshot?.()).catch(()=>null);result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}
-finally{await writeFile(report,JSON.stringify({diagnostics:{loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await browser.close();await new Promise(resolve=>server.close(resolve));}
+finally{await writeFile(report,JSON.stringify({diagnostics:{loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await page.context().close();if(page.video())await page.video().saveAs(report.replace(/\.json$/,'.webm'));await browser.close();await new Promise(resolve=>server.close(resolve));}
