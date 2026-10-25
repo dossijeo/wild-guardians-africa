@@ -144,3 +144,6 @@ Auditoría de cambios locales heredados: seis archivos QA/documentales siguen fu
 
 
 Smoke nativo Manglares actualizado finalizado exit 0: native-mangrove-depth-recovery.json, ok=true, cero errores, readiness 28550,975 ms, HUD restaurado. PNG extraído aparte. Verificación real de guardado/minimización/restauración incluida; no demuestra corrección de las condiciones específicas del runner CI. CI Windows obsoleto 40198170193 (6b0, sin fix) cancelado explícitamente para liberar la cola del head actual; evidencia negativa completa 4882 ya conservada. No se canceló la validación de tests todavía activa.
+
+
+Controles de distribución actuales: verify:balance PASS; verify:browser-syntax 181 archivos/176 scripts, cero fallos; tools/package_itch.py genera ZIP de 433913256 bytes y valida CRCs. Audit SFX detectó inventario obsoleto por el hash de scene.js tras fix de trabajadores home. Regenerado y diff revisado: cambia solo ese hash, sin asignaciones/sonidos; --check pasa (126 originales, 101 asignados, 25 no asignados). No es validación auditiva ni cierra microeventos.
