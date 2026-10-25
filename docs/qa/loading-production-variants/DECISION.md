@@ -69,3 +69,16 @@ compartida89;25chunks en los tres casos, sin errores nuevos registrados aparte
 de X4000. El multiconjunto de huellas de shaders del mundo coincide con cada
 referencia previa al aislamiento. AfricanToon y smooth-far-transitions vuelven
 a coincidir con la referencia02cb81d0d. No se afirma mejora de velocidad.
+
+## Cierre del filtro de precalentamiento
+
+El filtro de cobertura queda también exclusivamente en QA. En Sabana elimina
+un enlace del precalentamiento ampliado (85 a 84), pero el original prepara 83:
+no reduce la carga de producción. En Manglares mantiene los 90 enlaces y no
+aporta ahorro demostrado. No se adopta. Véase obstruction-eligibility-summary.json.
+
+Validación final: 13 tests focalizados pasan. Se conservan los experimentos y
+sus resultados negativos; no se modifica el aspecto ni el scheduler del juego.
+La auditoría queda cerrada sin una reducción de carga validada. Las compilaciones
+tardías originales siguen siendo una limitación explícita, no una regresión
+introducida para ocultar trabajo fuera de la pantalla de carga.

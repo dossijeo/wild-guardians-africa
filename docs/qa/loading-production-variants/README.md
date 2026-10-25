@@ -440,3 +440,27 @@ slots do. QA-only filter now derives eligible material identities from actual
 coverage-bearing batch meshes, retaining all levels and merged representatives
 for those materials. Unknown/no-chunk callers retain original merged behavior.
 A filtered warmup diagnostic is running; no production filtering is enabled.
+
+## Coverage-aware preparation result (closed, QA only)
+
+Sabana filtered warmup completes with 84 links versus 85 for broad warmup
+and 83 for the production default. Both warmup probes remove the observed
+late world link; the guardian link remains late. Filtered warmup took
+259.68 ms versus 718.095 ms in the separate broad diagnostic. These are
+single instrumented runs, not a controlled speed claim. The production
+Sabana policy does not enable this warmup, so this is not a loading reduction
+relative to the shipped policy.
+
+Manglares, where obstruction warmup is already enabled, still creates 90
+links with the filter, exactly as the original. The measured warm phase is
+227.905 ms versus 194.5 ms in the historical original diagnostic. There is
+no demonstrated loading benefit and no reason to promote the filter.
+Neither new run records non-X4000 errors; neither has a late world link.
+Raw reports and obstruction-eligibility-summary.json preserve the observations.
+
+Thirteen focused tests pass, including all-LOD coverage selection, exclusion
+of ineligible merged materials, empty-chunk fallback, ownership/disposal and
+QA source-drift rejection. Production source and defaults are unchanged.
+This follow-up ends without adding a production optimization. Future work
+on missing prewarm coverage should be evaluated as a separate latency fix,
+not advertised as removing unused laboratory variants.
