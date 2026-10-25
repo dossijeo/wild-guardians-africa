@@ -1138,3 +1138,9 @@ y produce `worker-residency-lifecycle-summary.json` con límites explícitos.
 Pendiente: ciclos largos con simulación activa y variación de demanda, cambios de
 calidad completados sin salir, recreación y comparación de coste antes de activar
 la variante por defecto. No se ha modificado producción en este pase de QA.
+
+## Retención nativa incorporada a la receta de revisión
+
+La receta `globalCurrentReviewQuery` activa ahora `workerResidency=actors` en los seis biomas. Conserva datos nativos necesarios para los trabajadores al retirar sus meshes por distancia. No cambia los valores predeterminados del juego ni las reglas de navegación. `WG_WORKER_RESIDENCY=off` fuerza el control antiguo incluso con esta receta.
+
+Evidencia: `NIGHT-FIXTURE-CORRECTION.md` y `valid-night-six-biome-workers.json` (seis biomas corregidos), `WORKER-RETENTION-QUALITY.md` (cambios de calidad activos), `worker-residency-lifecycle-summary.json` (salida y liberación) y `WORKER-RETENTION-COST.md` (A/B/A/B). La decisión se basa en correctitud, no en una mejora de FPS. El coste con poblaciones grandes y la variabilidad de los peores frames siguen sin cerrarse. Nueve pruebas unitarias de retención y demanda pasan; se verifican las seis recetas y su desactivación explícita.

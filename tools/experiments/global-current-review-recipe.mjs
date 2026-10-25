@@ -3,6 +3,8 @@ import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
 // Historical recipes remain immutable controls for earlier reports.
 export function globalCurrentReviewQuery(biome){
  const q=new URLSearchParams(globalClosureQuery(biome));
+ // Keep native worker data alive when its graphical chunk leaves the camera.
+ q.set('workerResidency','actors');
  if(biome==='manglares'){q.set('mangroveFerns','holly');q.set('groundCache','fixed512');}
  if(biome==='gran-canon')q.set('canyonWater','calm');
  return q.toString();
