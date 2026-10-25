@@ -264,3 +264,20 @@ canyon-water-reflection.js no añade samplers ni construye texturas. No atribuir
 88vs84a cuatro nuevos mapas del agua sin un censo de inicialización/propiedad.
 Siguiente prueba: censo por recurso en ambas rutas, fuera de benchmarking.
 Conservar candidata artística, sin promoción ni pérdida de calidad por esta duda.
+
+## Censo de texturas control/calm
+
+Censo QA de create/delete/bind/storage/uploadWebGL, sin consultas sincronizantes
+GPU. Nuevas ejecuciones seriales, misma receta y fixture; las dos terminan con
+84texturas Three y88objetosWebGL vivos en el contexto del mundo. La firma multiset
+de las subidas observadas (argumentos, dimensiones y fuentes de imagen disponibles)
+no presenta diferencias en la vista normal diurna. No es comparación de contenido
+binario ni tamaño VRAM exacto. Ver canyon-texture-census-diff.json y los censos
+nativos día/noche compactados; capturas completas conservadas localmente.
+
+No se reproduce84vs88de las primeras capturas. La instrumentación cambia el tiempo
+de inicialización: no afirmar una causa resuelta ni usar estas ejecuciones para
+rendimiento. No hay evidencia de cuatro mapas propios de calm; la diferencia
+histórica queda como variabilidad no atribuida. Mantener candidata visual,
+priorizando validación integrada de movimiento/calidad baja antes de seleccionar
+la receta. No convertir este contador aislado en rechazo artístico o bloqueo global.
