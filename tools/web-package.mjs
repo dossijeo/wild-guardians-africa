@@ -20,6 +20,7 @@ export const RETIRED_MENU_ASSETS=new Set([
  'assets/a1458a9c5a3eee9dc6a0dde33da7790a12ed8a6514039305ab0006cda5357d5d.webp',
  'assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png'
 ]);
+export const QA_ONLY_GROUND_FILES=['savanna-ph-compact.glb','savanna-ph-structured.glb','savanna-polyhaven-crossed.glb','savanna-polyhaven-dry-atlas.png','savanna-polyhaven-grass-card.png','grass-fine.glb','grass-fine-lite.glb','kenney-dry-grass.glb','grass-clumps.glb','grass-lod.glb'];
 export const QA_ONLY_VILLAGE_FILES=[
  'mapungubwe-shared-art.bin','mapungubwe-shared-art.webp',
  'mapungubwe-color-detail.webp','mapungubwe-normal-enhanced.webp',
@@ -69,7 +70,7 @@ export function webPackagePlugin(){
         if(!target.startsWith(parent+sep))throw Error('QA archive path escapes visual assets');
         rmSync(target,{recursive:true,force:true});
       }
-      for(const name of QA_ONLY_VILLAGE_FILES){
+      for(const name of [...QA_ONLY_VILLAGE_FILES,...QA_ONLY_GROUND_FILES]){
         const parent=resolve(dist,'assets/visual-lab'),target=resolve(parent,name);
         if(!target.startsWith(parent+sep))throw Error('Village archive path escapes package');
         rmSync(target,{force:true});

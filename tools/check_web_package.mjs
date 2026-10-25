@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES} from './web-package.mjs';
+import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
@@ -9,7 +9,7 @@ async function collect(dir){for(const name of await readdir(dir)){const path=res
 await collect(root);
 for(const path of inventory)if(['.js','.mjs','.json','.html','.css'].includes(extname(path))){const text=await readFile(resolve(root,path),'utf8');for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(!text.includes('assets/visual-lab/'+name+'/'),'Packaged code references excluded QA assets: '+path+' -> '+name);}
 for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(![...inventory].some(path=>path.startsWith(`assets/visual-lab/${name}/`)),'QA-only visual assets must not ship: '+name);
-for(const name of QA_ONLY_VILLAGE_FILES){assert(!inventory.has('assets/visual-lab/'+name),'Workshop QA asset must not ship: '+name);for(const path of inventory)if(path.endsWith('.js'))assert(!(await readFile(resolve(root,path),'utf8')).includes(name),'Release code references workshop experiment: '+path+' -> '+name);}
+for(const name of [...QA_ONLY_VILLAGE_FILES,...QA_ONLY_GROUND_FILES]){assert(!inventory.has('assets/visual-lab/'+name),'Workshop QA asset must not ship: '+name);for(const path of inventory)if(path.endsWith('.js'))assert(!(await readFile(resolve(root,path),'utf8')).includes(name),'Release code references workshop experiment: '+path+' -> '+name);}
 const libraryManifest=JSON.parse(await readFile(resolve(root,'library/manifest.json'),'utf8'));
 assert.deepEqual(Object.keys(libraryManifest).sort(),['crops','destruction','sfx','walls'],'Only linked Library labs should ship');
 const gameplayCrop=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8')).find(model=>model.source.includes('Cultivos'));
