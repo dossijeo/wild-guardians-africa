@@ -20,6 +20,14 @@ export const RETIRED_MENU_ASSETS=new Set([
  'assets/a1458a9c5a3eee9dc6a0dde33da7790a12ed8a6514039305ab0006cda5357d5d.webp',
  'assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png'
 ]);
+export const QA_ONLY_VILLAGE_FILES=[
+ 'mapungubwe-shared-art.bin','mapungubwe-shared-art.webp',
+ 'mapungubwe-color-detail.webp','mapungubwe-normal-enhanced.webp',
+ 'musgum-color-detail.webp','musgum-normal-enhanced.webp',
+ 'mapu-0-art.bin','mapu-0-finish.bin','mapu-0-repacked.bin','mapu-0-surface.bin',
+ 'mapu-0-color-art.webp','mapu-0-color-details.webp','mapu-0-color-finish.webp',
+ 'mapu-0-color-repacked.webp','mapu-0-color-surface.webp'
+];
 // Assets referenced only by tools/experiments QA routes, never the shipped app.
 // Keep originals in public for reproducible development experiments.
 export const QA_ONLY_VISUAL_DIRECTORIES=[
@@ -60,6 +68,11 @@ export function webPackagePlugin(){
         const parent=resolve(dist,'assets/visual-lab'),target=resolve(parent,name);
         if(!target.startsWith(parent+sep))throw Error('QA archive path escapes visual assets');
         rmSync(target,{recursive:true,force:true});
+      }
+      for(const name of QA_ONLY_VILLAGE_FILES){
+        const parent=resolve(dist,'assets/visual-lab'),target=resolve(parent,name);
+        if(!target.startsWith(parent+sep))throw Error('Village archive path escapes package');
+        rmSync(target,{force:true});
       }
       for(const source of RETIRED_MENU_ASSETS){
         for(const path of [source,...mapping.records.filter(item=>item.source===source).map(item=>item.runtime)]){

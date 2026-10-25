@@ -20,3 +20,14 @@ Validation: build passes; package validation passes (840 relative links, 17 runt
 - Full post-change menu, Library, new/load, interactive loading, day/night transition and save/continue validation.
 - Compare six biomes, including Mangrove ferns and fixed512 ground cache, against approved appearance and timing.
 - Validate itch ZIP and Tauri distribution, review CI, then merge only after all gates pass.
+## Workshop experiments excluded from releases
+
+The village loader now folds authoring-only selections out at build time (`import.meta.env.PROD`), preserving those branches in Vite development and native assets in releases. Fifteen workshop atlas/geometry files are excluded. The initial build still retained a `mapu-0-art.bin` string because the minifier did not evaluate `Array.includes`; the new package guard caught it. An explicit production branch removed the remaining code. This negative test is recorded in `.codex-qa/release-village-package.log` only transiently; the corrected run passed.
+
+Current package: **983 files / 477,432,027 bytes**, a reduction of **18,562,599 bytes** against the initial baseline. No image quality reduction or model simplification. Build and package/reference validation pass; 13 targeted asset/menu tests pass. Real nested-path Chrome run completed new Mangrove game, save, exit and continue with the same slot. See `release-village-lifecycle.json`; this remains a subset of the final six-biome and desktop acceptance matrix.
+
+## First lighting pilot
+
+`tools/experiments/capture-final-lighting-pilot.mjs` captures original/warm day/night in the actual campaign renderer (seed 712, medium, 1280×720, far vegetation enabled). The candidate changes daylight constants via QA-only route interception; production appearance remains unchanged. `lighting-pilot-bank/comparison.html` presents original screenshots side by side without filtering them.
+
+All four observations: 84 draw calls, 363,173 triangles, no page/WebGL errors. This is **not a performance benchmark**. The warm change is visibly too mild to close the mockup direction. Near and baked far fern lighting are unchanged in this first isolation probe; stronger global grading would create a mismatch and affect water/lava, so it has not been adopted. DOF is still pending. Original settlement-view captures are also retained locally under `lighting-pilot`; the bank view is the representative comparison.
