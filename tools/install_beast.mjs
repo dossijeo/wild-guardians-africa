@@ -14,7 +14,9 @@ model.geometrySource=`Wild Guardians New/animales/${recipe.file}.glb`;
 model.replacement={repair:`tools/prepare_${species}.py`,report:`docs/qa/${species}-replacement/repair.json`,animationSourceSha256:recipe.donor};
 if(json.asset.extras?.wildHeadPosture){
  const previousActions=JSON.parse(await readFile(new URL('content/manifests/animal-actions.json',root),'utf8'));
- model.replacement.headPosture={...json.asset.extras.wildHeadPosture,minimumFootprintRadius:previousActions.animals[species].presentation.footprint.radius};
+ const {source,...posture}=json.asset.extras.wildHeadPosture;
+ // Provenance is a hash, not a runtime dependency on the superseded model.
+ model.replacement.headPosture={...posture,sourceSha256:source.split('/').at(-1).replace('.glb',''),minimumFootprintRadius:previousActions.animals[species].presentation.footprint.radius};
 }
 if(!manifest.resources.some(r=>r.url===url))manifest.resources.push({url,bytes:bytes.length,sha256:sha,mime:'application/octet-stream',origins:[`${model.geometrySource}#repaired-retargeted`]});
 if(previous&&previous!==url){
