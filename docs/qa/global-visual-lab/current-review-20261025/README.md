@@ -687,3 +687,33 @@ GPU media33,04ms.198muestras incluyen asentamiento, frente180 del control anteri
 no afirmar ahorro causal ni comparar medias como carga idéntica. Es un control
 funcional del cambio; el aspecto no fue modificado y no se reduce vegetación.
 Informe `manglares-required-recovery-active.json` y captura final conservados.
+
+
+## Gran Río: control visual pausado con capturas — fallo de asentamiento
+
+`gran-rio-visual-steps` conserva siete PNG originales, diagnóstico terminal y
+resumen con opciones y SHA-256. Escena 720p/media, receta actual, simulación
+pausada, desplazamiento de 96 unidades, fondos completos y pthreads.
+Inspeccionados los puntos 0, 30, 60, 90, 120 y 179: cubierta densa y suelo
+presente en las zonas visibles; caminos despejados. El punto 60 queda parcialmente
+oculto por una copa cercana; 90/120 muestran transparencia de obstrucción.
+No certifica ausencia de popping ni toda la transición LOD: son muestras separadas,
+no vídeo continuo, y el punto 150 se conserva sin inspección específica.
+
+El harness terminó con `Stream completion deadline`. Created=34 frente a los
+25 iniciales: nueve chunks incorporados, uno aún preparándose, queued=0.
+Horizonte y cuatro adaptadores lejanos listos. Scheduler pending=1, waiting=0;
+la tarea terrain 6,3:prop-slots tiene unos 29,87 s de antigüedad, estimate=31,77 ms
+y cost=0,774 ms. Este último es el estimador local del trabajo, NO una medición
+exacta de la siguiente unidad. Se registraron 26 blockingRecoveries y máximo de
+unidad 53,72 ms. La recuperación excepcional permitió progreso pero no bastó para
+cumplir el plazo en este control; no se declara streaming validado.
+
+Siguiente investigación: registrar la secuencia de costes de cada fase/unidad
+para separar primera construcción, recursos compartidos y reutilización. La
+estimación por calidad+fase comparte un máximo con decaimiento 0,9 y puede retener
+un pico entre unidades heterogéneas. No rebajar el estimador por conjetura ni
+ampliar el timeout para convertir el fallo en éxito. Tampoco cambiar el arte.
+Las esperas de screenshots alteran la cadencia: ninguna cifra temporal de esta
+serie representa rendimiento de juego. El control activo anterior sigue siendo
+una observación distinta, no refuta este fallo reproducido en modo pausado.
