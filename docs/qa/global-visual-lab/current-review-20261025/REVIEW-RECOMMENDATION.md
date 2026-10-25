@@ -36,3 +36,9 @@ No se declara eliminada toda unión de suelo: en la vista oblicua de Volcanes qu
 La rama incluye cambios arquitectónicos autorizados después del objetivo artístico original, además de cambios heredados. No presentar toda la diferencia contra main como exclusivamente gráfica ni declarar invariantes de simulación a partir de capturas. La integración requiere delimitar ese alcance y revisar las pruebas funcionales correspondientes. Este informe consolida la selección visual; no convierte una validación artística en autorización para fusionar.
 
 El atlas manual del taller permanece en pausa. Menú por capas/parallax y microeventos mantienen la secuencia posterior solicitada. No reabrir materiales aprobados por microdiferencias sin relevancia en juego normal.
+
+## Verificación posterior de main (25 octubre)
+
+`git ls-remote origin refs/heads/main` devuelve b2497b0695218652672c805c40971ea830686e3a, exactamente la base de las comparativas. origin/main local coincide y ese commit es ancestro de la rama experimental. Por tanto, la base histórica sigue siendo main remoto actual en esta fecha; no hay motivo para repetir las comparativas por un supuesto avance de main. Las capturas candidatas siguen siendo archivadas y mantienen sus límites propios. main-reference-verification.json conserva la comprobación.
+
+Control de regresión seleccionado: 26/26 pruebas aprobadas de cobertura continua, helechos/caché, suelo lejano y agua/ribera/reflejos. Salida en selected-visual-tests.tap. Se ejecutaron con el loader local de Wild Three.js; esto no certifica por sí solo el historial funcional completo ni un empaquetado de distribución.

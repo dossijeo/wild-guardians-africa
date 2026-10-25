@@ -30,3 +30,9 @@ Mantener la selección artística completa y el perfil medio como referencia vis
 4. Revisar los límites artísticos restantes de cielo/fondos y transiciones usando evidencia representativa. Las capturas con HUD que ocultan el cielo no prueban la calidad del skybox.
 
 No repetir por rutina la matriz residente de 48 ejecuciones. El menú por capas/parallax y la revisión visual de microeventos conservan el orden posterior solicitado por el usuario. El atlas manual del taller sigue en pausa.
+
+## Verificación posterior de main (25 octubre)
+
+`git ls-remote origin refs/heads/main` devuelve b2497b0695218652672c805c40971ea830686e3a, exactamente la base de las comparativas. origin/main local coincide y ese commit es ancestro de la rama experimental. Por tanto, la base histórica sigue siendo main remoto actual en esta fecha; no hay motivo para repetir las comparativas por un supuesto avance de main. Las capturas candidatas siguen siendo archivadas y mantienen sus límites propios. main-reference-verification.json conserva la comprobación.
+
+Control de regresión seleccionado: 26/26 pruebas aprobadas de cobertura continua, helechos/caché, suelo lejano y agua/ribera/reflejos. Salida en selected-visual-tests.tap. Se ejecutaron con el loader local de Wild Three.js; esto no certifica por sí solo el historial funcional completo ni un empaquetado de distribución.

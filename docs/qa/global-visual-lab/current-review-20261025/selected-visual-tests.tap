@@ -1,0 +1,174 @@
+TAP version 13
+# (node:21304) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: calm water remains explicit, lab-only and Canyon-only
+ok 1 - calm water remains explicit, lab-only and Canyon-only
+  ---
+  duration_ms: 1.9002
+  ...
+# Subtest: missing or changed shader contract fails explicitly
+ok 2 - missing or changed shader contract fails explicitly
+  ---
+  duration_ms: 1.2569
+  ...
+# (node:3240) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3240) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: mangrove coverage keeps neighboring water clear and invalidates shore tiles on release
+ok 3 - mangrove coverage keeps neighboring water clear and invalidates shore tiles on release
+  ---
+  duration_ms: 182.8358
+  ...
+# (node:6628) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:6628) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: river coverage keeps neighboring water clear and invalidates shore tiles on release
+ok 4 - river coverage keeps neighboring water clear and invalidates shore tiles on release
+  ---
+  duration_ms: 156.3805
+  ...
+# (node:35656) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35656) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: continuous coverage requires explicit Savanna lab option
+ok 5 - continuous coverage requires explicit Savanna lab option
+  ---
+  duration_ms: 1.841
+  ...
+# Subtest: native coverage follows time, event invalidation, chunk ownership and idempotent disposal
+ok 6 - native coverage follows time, event invalidation, chunk ownership and idempotent disposal
+  ---
+  duration_ms: 17.2938
+  ...
+# (node:5348) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: seam keeps the native and coarse sides exact without changing horizontal geometry
+ok 7 - seam keeps the native and coarse sides exact without changing horizontal geometry
+  ---
+  duration_ms: 7.7196
+  ...
+# Subtest: triangle crossings keep every proxy edge segment linear, including authored contacts
+ok 8 - triangle crossings keep every proxy edge segment linear, including authored contacts
+  ---
+  duration_ms: 3.7103
+  ...
+# Subtest: seam rejects invalid heights, rectangles and over-budget work
+ok 9 - seam rejects invalid heights, rectangles and over-budget work
+  ---
+  duration_ms: 0.9305
+  ...
+# (node:24464) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA isolation hides both simple and mapped ground, preserving water/trees/backdrop
+ok 10 - QA isolation hides both simple and mapped ground, preserving water/trees/backdrop
+  ---
+  duration_ms: 1.1523
+  ...
+# Subtest: QA isolation applies to a newly adopted regional ground while hidden
+ok 11 - QA isolation applies to a newly adopted regional ground while hidden
+  ---
+  duration_ms: 0.2238
+  ...
+# (node:37940) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: full fixed512 cache reserves replacement space and deferred chunks cannot starve edits
+ok 12 - full fixed512 cache reserves replacement space and deferred chunks cannot starve edits
+  ---
+  duration_ms: 16.2393
+  ...
+# Subtest: first published cache exposes the same shader recipe as later chunks without sharing their textures
+ok 13 - first published cache exposes the same shader recipe as later chunks without sharing their textures
+  ---
+  duration_ms: 1.2733
+  ...
+# (node:13376) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13376) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: fern option requires the visual lab and exact explicit selection
+ok 14 - fern option requires the visual lab and exact explicit selection
+  ---
+  duration_ms: 1.7184
+  ...
+# Subtest: native fern owns its near maps and far atlases and depth materials across quality changes and disposes once
+ok 15 - native fern owns its near maps and far atlases and depth materials across quality changes and disposes once
+  ---
+  duration_ms: 64.1391
+  ...
+# Subtest: cancelled far atlas loading releases every fulfilled texture before scene mutation
+ok 16 - cancelled far atlas loading releases every fulfilled texture before scene mutation
+  ---
+  duration_ms: 1.7787
+  ...
+# (node:41284) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: natural shore owns only its texture and disposes it once
+ok 17 - natural shore owns only its texture and disposes it once
+  ---
+  duration_ms: 7.0257
+  ...
+# Subtest: natural shores require explicit laboratory opt-in
+ok 18 - natural shores require explicit laboratory opt-in
+  ---
+  duration_ms: 0.5994
+  ...
+# Subtest: balanced bank is opt-in and exclusive to Canyon
+ok 19 - balanced bank is opt-in and exclusive to Canyon
+  ---
+  duration_ms: 0.3301
+  ...
+# Subtest: direct wetland mask preserves every packed byte without querying unused shore or level
+ok 20 - direct wetland mask preserves every packed byte without querying unused shore or level
+  ---
+  duration_ms: 43.5228
+  ...
+# Subtest: incremental asset bed preserves every sample and packed byte
+ok 21 - incremental asset bed preserves every sample and packed byte
+  ---
+  duration_ms: 70.2413
+  ...
+# Subtest: cancelled incremental asset bed releases its private proxy
+ok 22 - cancelled incremental asset bed releases its private proxy
+  ---
+  duration_ms: 0.4715
+  ...
+# Subtest: prepared asset bed installs the identical shader without querying terrain again
+ok 23 - prepared asset bed installs the identical shader without querying terrain again
+  ---
+  duration_ms: 15.4929
+  ...
+# Subtest: cheap asset sample blocks are coalesced before yielding
+ok 24 - cheap asset sample blocks are coalesced before yielding
+  ---
+  duration_ms: 9.5591
+  ...
+# (node:43268) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("file%3A///C%3A/Users/PC/source/repos/wild-guardians-wild-three/tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: regional water requires both opt-in flags
+ok 25 - regional water requires both opt-in flags
+  ---
+  duration_ms: 1.6709
+  ...
+# Subtest: regional colors preserve lava, unknown biomes and independent palette ownership
+ok 26 - regional colors preserve lava, unknown biomes and independent palette ownership
+  ---
+  duration_ms: 3.6981
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 711.9098
