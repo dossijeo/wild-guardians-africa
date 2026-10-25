@@ -120,3 +120,25 @@ para degradar vegetación ni atribuir la latencia a la simulación.
 
 La retención sigue siendo solo un control experimental. Esta prueba no certifica
 fluidez, estabilidad nocturna, equivalencia de todos los biomas o cierre global.
+
+## Contención GPU fuera de la prueba
+
+Tras finalizar todos los harness de esta serie, ocho lecturas CIM entre
+00:33:25 y 00:33:41 UTC registran actividad sostenida del motor 3D atribuida
+al PID 29484, chrome.exe: 91, 101, 70, 96, 84, 99, 85, 85. Se conservan los
+valores brutos (incluido 101); no son porcentajes calibrados ni deben sumarse
+con otros procesos para deducir ocupación total. El padre 14396 no se encuentra
+en la consulta de procesos, por lo que no se establece propiedad del navegador.
+No se ha terminado ningún proceso ajeno ni enviado mensajes a otras tareas.
+
+Esta observación confirma carga GPU fuera del harness en este intervalo.
+No demuestra retrospectivamente su presencia en cada prueba previa ni explica
+por sí sola toda la latencia. Las cifras recientes quedan como diagnósticos
+no aptos para aceptar rendimiento hasta repetir con muestreo concurrente y
+condiciones controladas. La atribución de llamadas getProgramInfoLog sigue
+siendo observada, pero sus duraciones pueden estar afectadas por contención.
+
+Continuar la validación visual de día/noche y movimiento sin convertir su
+cadencia en un benchmark. No reducir arte aprobado, ni adoptar retención como
+mejora integral, a partir de esta serie. El muestreo original se conserva en
+gpu-idle-contention.json para que el límite sea verificable.
