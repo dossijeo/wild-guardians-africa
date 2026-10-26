@@ -147,3 +147,10 @@ Benchmark nativo A/B/A/B ejecutado sin otro benchmark concurrente: variante7 ~1.
 canopy-broadleaf-37/world.png inspeccionada: copas amplias agrupadas y frondas continuas, canal legible; candidata más cercana al mockup que la variante de palmeras. No equivale a aprobación final multi-semilla ni rendimiento medido.
 
 Corregido prototipo de luces estables: ignora efectos cuyo ancestro está oculto o que pertenecen a un grupo desconectado de la escena. Ocho tests VFX pasan, incluida ocultación/reconexión sin variar número/visibilidad de PointLights. Continúa opt-in. Iniciada repetición real perfilada con fixture final-ten, salida shield-stable-visibility; pendiente resultado.
+
+
+## Repetición escudo con visibilidad jerárquica
+
+shield-stable-visibility completada con diez bestias, sin errores. Clic instrumentado30.295ms; única espera getProgramInfoLog72.08ms en MeshDepthMaterial/SkinnedMesh,5382ms después del clic. No reaparece la recompilación masiva al activar escudo. Resumen compacto guardado junto al perfil/vídeo. Sigue siendo una ejecución instrumentada, no ABAB ni coste GPU sostenido.
+
+Detectado primer intervalo rAF negativo por mezclar performance.now inicial con timestamp de callback. Harness corregido para empezar a medir entre dos callbacks; el resumen de esta ejecución excluye únicamente esa muestra inicial y conserva datos crudos.

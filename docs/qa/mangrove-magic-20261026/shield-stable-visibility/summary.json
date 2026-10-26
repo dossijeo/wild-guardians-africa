@@ -1,0 +1,87 @@
+{
+  "scope": "One instrumented real renderer run with video and CPU sampling; not sustained GPU benchmark or ABAB",
+  "clickMs": 30.295000076293945,
+  "frames": 149,
+  "invalidInitialSamples": 1,
+  "p95Ms": 83.14500000000407,
+  "maxMs": 166.13500000000204,
+  "programWaits": [
+    {
+      "startAfterClickMs": 5382.035000085831,
+      "ms": 72.07999992370605,
+      "draw": {
+        "object": "Mesh_0_1",
+        "parents": [
+          "Mesh_0",
+          "Armature"
+        ],
+        "type": "SkinnedMesh",
+        "material": "MeshDepthMaterial",
+        "source": "Material_0",
+        "side": 2
+      }
+    }
+  ],
+  "longTasks": [
+    {
+      "start": 47650.35500001907,
+      "ms": 51
+    },
+    {
+      "start": 48540.170000076294,
+      "ms": 50
+    },
+    {
+      "start": 48632.825000047684,
+      "ms": 70
+    },
+    {
+      "start": 49128.2800000906,
+      "ms": 50
+    },
+    {
+      "start": 49318.920000076294,
+      "ms": 64
+    },
+    {
+      "start": 49388.0300000906,
+      "ms": 52
+    },
+    {
+      "start": 49454.74500000477,
+      "ms": 84
+    },
+    {
+      "start": 49585.795000076294,
+      "ms": 65
+    },
+    {
+      "start": 49652.550000071526,
+      "ms": 59
+    },
+    {
+      "start": 49713.22000002861,
+      "ms": 52
+    },
+    {
+      "start": 49825.46500003338,
+      "ms": 61
+    },
+    {
+      "start": 50162.425000071526,
+      "ms": 52
+    },
+    {
+      "start": 50375.12000000477,
+      "ms": 50
+    },
+    {
+      "start": 51838.06000006199,
+      "ms": 50
+    },
+    {
+      "start": 53949.800000071526,
+      "ms": 112
+    }
+  ]
+}
