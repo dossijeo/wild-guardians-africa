@@ -525,3 +525,7 @@ Semillas1 y37 completadas con superficie regional,mascara2m,malla32m,media720p,h
 ## Revision semilla712 y alcance del benchmark
 
 Captura elevada712 inspeccionada: red de canales ramificados,zonas secas/embarradas,vegetacion conservada;0errores,724/3721puntos del recorte local mojados (no porcentaje global). ABAB water-travel-abab en curso; primer control completo0errores. La simulacion esta pausada: mide streaming/render,NO coste de simulacion activa. GPU se mide DESPUES del recorrido y drenaje de preparacion,con camara de retorno (no exactamente la elevada inicial pese al texto historico de scope en gpu.json). summarize-water-travel.mjs exige240muestrasGPU,sin disjoint,mismaGPU/semilla/camara inicial y cuatro corridas completas; separa rAFduranteviaje,CPUenvio yGPUestable. Contadores renderer.info.memory no son bytesVRAM. Pendiente validacion activa una vez seleccionada configuracion.
+
+## Primeras medidas ABAB y siguiente validacion activa
+
+Corridas0/1 completas: GPU media21.558/21.761ms; triangulos323542/323544,draws92/93 tras recorrido. Solo diferencia esperada de lamina2tri. Movimiento: p9582.94/83.165ms,max149.70/182.965ms,cola maxima13ambas; ultima muestra con6/9trabajos pendientes. No extrapolar GPUestable a fluidez de streaming ni concluir regresion de maxima con una sola pareja. Corrida2 acaba;3sigue. Adaptado harness de escudo repetido con WG_WATER_CANDIDATE=1 para mismas opciones regional/LOD/mascara2m,con simulacion legal activa,tras terminarABAB; no modifica reglas de cooldown ni produccion.

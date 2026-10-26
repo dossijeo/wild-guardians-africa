@@ -12,6 +12,8 @@ page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,gro
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_WATER_CANDIDATE==='1')await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch(),source=await response.text();if(!source.includes('groundColorStep:4'))throw Error('Missing water sample profile');await route.fulfill({response,body:source.replace('groundColorStep:4','groundColorStep:2')});});
+
  if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new')});});
  if(process.env.WG_MAGIC_PROFILE==='1')await page.addInitScript(()=>{
   const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];
@@ -21,7 +23,7 @@ try {
   p.getProgramInfoLog=function(program){const start=performance.now();try{return info.call(this,program);}finally{if(globalThis.qaMagicRecording)qaMagicPrograms.push({draw:globalThis.qaMagicDraw,start,ms:performance.now()-start,shaders:(attached.get(program)??[]).map(s=>sources.get(s))});}};
  });
  await page.addInitScript(f=>{localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',music:0,sfx:0}));},fixture);
- await page.goto(base+'/?qa-visibility'+(['0','1'].includes(process.env.WG_STABLE_LIGHTS)?'&vfxStableLights='+process.env.WG_STABLE_LIGHTS:''),{timeout:90000});const menu=page.frameLocator('#native-menu');
+ await page.goto(base+'/?qa-visibility'+(process.env.WG_WATER_CANDIDATE==='1'?'&farWaterSurface=1&farAngularLod=1':'')+(['0','1'].includes(process.env.WG_STABLE_LIGHTS)?'&vfxStableLights='+process.env.WG_STABLE_LIGHTS:''),{timeout:90000});const menu=page.frameLocator('#native-menu');
  await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});await menu.getByRole('button',{name:'Continuar',exact:true}).click();await menu.locator('[data-production-save="'+fixture.slotId+'"]').click();
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
  await page.waitForTimeout(2200);report.before=await inspect();
