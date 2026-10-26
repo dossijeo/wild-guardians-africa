@@ -241,3 +241,7 @@ Es una ejecucion instrumentada de escena agricola Sabana, no GPU aislado ni ABAB
 ## Pendiente posterior solicitado: overlays de pantalla completa
 
 Tras cerrar Manglares y bloqueos de magia, revisar duracion y legibilidad de overlays de magia, dano critico, victoria y similares. Objetivo perceptivo solicitado:2-3segundos, evitando aspecto de flash. Definir entrada/permanencia/salida y politica de sustitucion, renovacion o prioridad cuando llegan eventos cercanos, sin acumular capas ni prolongar indefinidamente el efecto. Validar magias encadenadas, dano+magia, victoria y salida/cambio de mundo. No implementado aun; no desplazar el objetivo activo.
+
+## Coste sostenido de slots: ABAB GPU iniciado
+
+measure-stable-lights-gpu.mjs mide drawRenderFrame completo mediante EXT_disjoint_timer_query_webgl2,60frames calentamiento y240consultas por brazo, chequeo disjoint y renderer real. A/B/A/B separados cargan misma fixture agricola, calidadmedia720p; B activa slots, A original, sin escudo activo. Simulacion permanece activa y video en ambos, por lo que registrar snapshots antes/despues y no asumir igualdad exacta. Sesion16190 en curso; ningun resultado aun. No modificar runtime durante serie.
