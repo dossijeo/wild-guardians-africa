@@ -55,10 +55,11 @@ the source atlases. This is an unresolved integration gate, not a passing visual
 validation. The QA-only `WG_ATLAS_HTML=1` isolates worker bitmap decoding from the
 ordinary texture loader. No production asset has been replaced.
 
-Follow-up: the HTML texture loader shows the same colored regions; hiding all
-impostor meshes also leaves them visible (`game-mangrove-isolate/without-impostors.png`).
-Therefore these regions cannot yet be attributed to atlas pixels or decoding.
-Keep the observation open; do not claim the new atlas itself is corrupt.
+Correction: the HTML texture loader shows the same colored regions. The first
+hide-impostor diagnostic was INVALID: the update loop restored visibility each
+frame. It cannot exclude an atlas contribution. The comparison harness now uses
+a persistent QA guard. Keep attribution open; do not claim either cause without
+a valid isolation result.
 
 The user selected the earlier all-3D comparison image as the best-looking result.
 Use `impostor-3d-matched/1-1/normal.png` as the visual reference. It is the new
@@ -67,3 +68,25 @@ native models with LOD, not the generated-image candidate.
 Next gates: resolve the color artifacts, inspect real-game day/night transitions, evaluate 128px supersampled
 runtime output versus 256px, validate all five changed biomes and package sources
 reproducibly before activating the new atlas set. Keep original Canyon atlases.
+
+## Deliverable: direct raster versus image generation
+
+The pilot now includes day and night for Manglares species slot 0. The other
+three species remain direct raster in both candidate scenes, so this is a
+controlled one-species pilot, not a fully generated forest. Neither candidate
+is activated in production.
+
+`comparativa-atlas-detalle.png` compares enlarged first-cell sprites, with raster
+premultiplied RGB decoded for display. It is a detail illustration, not a game
+screenshot. The generated night candidate changes hue and contrast in addition
+to shape. These are artistic differences for review, not proven improvements.
+
+`comparison/README.md` documents the same-seed actual-renderer captures and
+reproduction commands. Normal and horizon views compare 3D, direct raster and
+the image-generation pilot. Nearby trees retain 3D; cards are not forced into
+close or overhead views. The captures are visual evidence only, not benchmarks.
+
+Runtime conversion: `node tools/experiments/prepare-imagegen-tree-atlas.mjs day`
+and the same command with `night`. Both use 128px cells and area resampling in
+premultiplied linear light, preserving generated alpha without silhouette edits.
+Detail montage: `node tools/experiments/compare-tree-atlas-art.mjs`.
