@@ -83,3 +83,16 @@ Panorámica corregida seed1 inspeccionada: muestra distribución extensa de cana
 Serie overview: semilla1 completada y revisada; semilla37 agotó 240 s de espera de mundo mientras se editaban módulos del servidor HMR. No afirmar que sea un fallo de generación ni descartar esa posibilidad sin repetir. Servidor QA separado en 5220, HMR desactivado. Primer intento allí agotó 30 s en page.goto antes de entrar al juego (sin pageerrors); preservado failure.json. Harness ahora distingue navegación inicial (DOMContentLoaded, 90 s) y preparación del mundo (240 s), conserva texto/captura/errores al fallar y espera las rutas interceptadas antes de cerrar contexto. Repetición activa 57503.
 
 Añadido benchmark-estuary-generation.mjs para comparar coste CPU nativo por chunk en secuencia 7/8/7/8; aún NO ejecutado para evitar concurrencia con capturas. No mide GPU ni frametime. Mantenerlo separado de la validación de fluidez.
+
+## Cambio solicitado: canales transitables (2026-10-26)
+
+El usuario pide que bestias y trabajadores crucen el agua de Manglares para mantener incursiones y expansión. Esto reemplaza el requisito experimental de acceso exclusivamente terrestre entre islas; no autoriza construir/cultivar sobre agua ni eliminar helechos.
+
+Auditoría confirmada:
+- `spatial-savanna.cpp::terrainValid` actualmente exime del bloqueo por agua únicamente a trabajadores en Gran Cañón. Las bestias de Gran Cañón siguen bloqueadas; conservar esa regla fuera de Manglares.
+- La altura de desplazamiento debe actualizarse conjuntamente en navegación JS, `spatial-navigation-movement.js` y las consultas nativas de servicio de trabajadores (`spatial-intent-state.cpp::waterHeight`).
+- `lazy-sectors.cpp::cutFaceNatural` y `cutFaceNaturalWithoutSolid` certifican humedales como cierre natural. Deben dejar de hacerlo al permitir tránsito, o podrían declarar protegido un recinto accesible por el agua.
+- Conservar comprobaciones independientes de colocación: agua transitable no equivale a terreno edificable/cultivable. Conservar colisiones con props, edificios, murallas y escudos según perfil.
+- Validación requerida: rutas reales entre ambas orillas para trabajadores y las cinco especies; alturas visibles correctas; escudos/murallas siguen bloqueando bestias; guardado/carga y equivalencia pthreads; incursión múltiple y expansión. No basta cambiar el rechazo de agua.
+
+La captura pendiente `network-overview-37-nohmr-retry` terminó correctamente: 495/3721 muestras húmedas, 25 meshes de agua, sin errores registrados. Falta validar helechos y cruce acuático en el renderer. El cambio de transitabilidad todavía no está implementado.
