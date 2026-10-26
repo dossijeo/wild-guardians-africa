@@ -521,3 +521,7 @@ same-area-current: captura nativa y sustitucion regional con misma camara/hora,0
 ## Validacion adicional en curso
 
 Semillas1 y37 completadas con superficie regional,mascara2m,malla32m,media720p,hora fija;0errores. Capturas elevadas inspeccionadas: redes ramificadas,zonas secas,anchuras variables,conservacion vegetacion; no vuelve un lago continuo. Semilla712 sigue en la misma ejecucion serial. Se amplia el harness angular existente con WG_ANGULAR_TRAVEL: objetivo y camara recorren144m y regresan durante24s; registra cola/preparacion/chunks y contadores de texturas/geometrias. No se lanza simultaneamente con capturas para no contaminar medidas. Intervalos rAF no son tiempoGPU niCPUaislado; pendientes A/B y picos/latencia de llegada.
+
+## Revision semilla712 y alcance del benchmark
+
+Captura elevada712 inspeccionada: red de canales ramificados,zonas secas/embarradas,vegetacion conservada;0errores,724/3721puntos del recorte local mojados (no porcentaje global). ABAB water-travel-abab en curso; primer control completo0errores. La simulacion esta pausada: mide streaming/render,NO coste de simulacion activa. GPU se mide DESPUES del recorrido y drenaje de preparacion,con camara de retorno (no exactamente la elevada inicial pese al texto historico de scope en gpu.json). summarize-water-travel.mjs exige240muestrasGPU,sin disjoint,mismaGPU/semilla/camara inicial y cuatro corridas completas; separa rAFduranteviaje,CPUenvio yGPUestable. Contadores renderer.info.memory no son bytesVRAM. Pendiente validacion activa una vez seleccionada configuracion.
