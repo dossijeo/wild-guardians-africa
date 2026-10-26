@@ -655,3 +655,8 @@ production-estuary-agriculture-verified ejecuta growth/multiply/growth/multiply 
 ### Atribución CPU de la incursión actual
 
 production-estuary-raid-ui-verified/cpu-attribution.json: perfil15.568s. Tiempo muestreado inclusivo vfx.js2394.654ms, vfx-native.js1831.769ms, simulación202.955ms, WASM404.642ms, GC215.378ms. Categorías solapadas, NO sumables. fxTri465.372ms self, preparación de geometría dinámica relevante.4longtasks54/57/54/74ms; máximo intervalo166ms no equivale a bloqueoJS de166ms. No hay alineación temporal CDP/performance validada: no adjudicar el peor frame a fxTri ni confundir muestreo con GPU. El summarizer histórico basado en líneas fijas reportaba gameTick0; ese cero no acredita ausencia de coste de simulación. Nuevo informe agrupa por rutas reales. Próxima hipótesis verificable: reducir asignaciones/reconstrucción de geometríaVFX preservando exactamente sus vértices/tiempo y medir renderer completo; antes revisar cache packedTime ya existente.
+
+
+### Prototipo aislado de triángulos VFX
+
+probe-vfx-triangle-allocation.mjs reemplaza temporalmente fxTri por cálculo escalar de normales y escritura sin arrays/iteradores por vértice. No cambia src/rendering/vfx-native.js ni producción.126casos (18efectos×7tiempos) generan Float32Array exactamente iguales. Microprueba Node300generacionesescudo tras20calentamientos A/B/A/B:1025.046/658.063/935.227/750.116ms. Solo evidencia de coste de geometría aislado, NO FPS ni GPU. Candidato reproducible guardado en vfx-triangle-candidate/vfx-native.mjs. Gate siguiente: inyectarlo solo mediante rutaQA en renderer y comparar misma incursión intercalada sin alterar contenido, con capturas. No adoptarlo por microbenchmark.
