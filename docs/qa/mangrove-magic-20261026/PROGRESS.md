@@ -299,3 +299,9 @@ Resumen estuary-shield-stream-long/summary.json. Sigue pendiente panorama final 
 ## Incursion renderer sobre receta nueva iniciada
 
 create-estuary-raid-render-fixture construye apertura nativa Manglares712 receta8,4cultivos y trabajador pagados, progreso QA dia5 y grupo5especies mediante spawnRaid. Snapshot deserialize confirma mangroveNetwork. No altera manualmente rutas/posiciones de animales. Harness beast acepta WG_BEAST_FIXTURE para cargar esta partida y observar grupo antes del clic real de escudo. Sesion9173,estuary-raid/render, pendiente resultado/capturas. No equiparar fixture con campaña natural.
+
+## Incursion real Manglares: grupo y escudo
+
+9173 termina ok,0errores,receta8 conservada. Cinco rigs presentes; captura group-7 inspeccionada (copas/helechos/agua y animales visibles). Rutas:4especies caminan inicialmente; rinoceronte waiting/unknown hasta despues de~15s, luego walking hacia centro. No declarar latencia resuelta. Al final lion/rhino/buffalo caminando,hyena fuera,warthog retirandose. No prueba cruce de agua de todos desde esta camara.
+
+Clic de escudo real roundtrip73.945ms;0consultas getProgramInfoLog;163intervalos instrumentados despues de observacion de grupo,P9566.48ms,max149.615ms. No es perfil de toda la incursion ni GPU aislado. Resumen compacto estuary-raid/render/summary.json;video y capturas locales. Pendiente espera inicial del rinoceronte y movimiento de trabajador, entre otros gates finales.
