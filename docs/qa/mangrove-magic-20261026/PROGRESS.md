@@ -802,3 +802,9 @@ hydraulic-v2-production-default completa Chrome pthreads/media720p/seed4096/hora
 Ampliado mangrove-building-pads.test.js: cadauna de4semillas extrae los sites reales del poblado versión2 y los aplica al mundo pthread; prepara3chunks vecinos y compara agua,instancias,posiciones de terreno y props completos contra mundo síncrono. Junto a mangrove-channels.test.js,10tests pasan; incluye distribución regional100semillas,guardados y réplicas. Antes la prueba pthread multisemilla empleaba una reserva rectangular genérica: ya no es la única evidencia disponible.
 
 La validación nocturna anterior comenzó al anochecer; para cubrir activaciones en noche plena, check-agriculture-render admite WG_MAGIC_NIGHT_TIME. Corrida full-night(time320) iniciada con4casts; pendiente verificar uNight en cadauno. No ejecutar benchmarks concurrentes.
+
+### Auditoría final y prueba nocturna negativa conservada
+
+full-night rechaza el primer cast a time335.825;0casts,pauses[],raidnull. Corrección de atribución: no fue el tutorial ni un falloGPU. rules.permission exige time<300 para acciones agrícolas; la corrida al anochecer ya valida efectos persistentes con uNight1. Conservar policy-rejection.json,no presentar la prueba rechazada como benchmark. No alterar reglas para forzar un resultado.
+
+33tests finales de magia/colocación/expiración/política/recarga/travesía y9vfx-preload pasan. npm run build pasa con avisos de tamaño/importación mixta. RESULT.md reúne auditoría por requisito, evidencias antes/después y límites de rendimiento/distribución. Corregido controlQA variante7 para no heredar versión2 de reservas después de adoptar nuevo default; no cambia producción.
