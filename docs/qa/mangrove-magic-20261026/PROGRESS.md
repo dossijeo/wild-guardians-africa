@@ -77,3 +77,9 @@ Extraído el buscador geométrico común naturalLandAccess del wrapper de Gran C
 Cuatro semillas/todos los packs culturales pasan la condición añadida. Tanda completa: 19/19 pruebas de defensa natural de Cañón, emplazamientos iniciales y variantes Manglares. Error inicial de reutilización (riverX existe pero no devuelve coordenadas válidas fuera de Cañón) corregido limitando el seguimiento de esa ribera al bioma correspondiente.
 
 Panorámica corregida seed1 inspeccionada: muestra distribución extensa de canales y islas; orillas angulosas en el fondo siguen pendientes de diagnóstico de representación distante. Acceso de 32 m es una condición de arranque, no prueba de incursión completa ni de conectividad universal entre islas.
+
+## Revisión de panorámicas y robustez de QA
+
+Serie overview: semilla1 completada y revisada; semilla37 agotó 240 s de espera de mundo mientras se editaban módulos del servidor HMR. No afirmar que sea un fallo de generación ni descartar esa posibilidad sin repetir. Servidor QA separado en 5220, HMR desactivado. Primer intento allí agotó 30 s en page.goto antes de entrar al juego (sin pageerrors); preservado failure.json. Harness ahora distingue navegación inicial (DOMContentLoaded, 90 s) y preparación del mundo (240 s), conserva texto/captura/errores al fallar y espera las rutas interceptadas antes de cerrar contexto. Repetición activa 57503.
+
+Añadido benchmark-estuary-generation.mjs para comparar coste CPU nativo por chunk en secuencia 7/8/7/8; aún NO ejecutado para evitar concurrencia con capturas. No mide GPU ni frametime. Mantenerlo separado de la validación de fluidez.

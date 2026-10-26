@@ -10,7 +10,7 @@ try{
  if(process.env.WG_NETWORK_VARIANT==='8')await page.route('**/src/app/wild-engine-world.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('state.mangroveChannels=true','state.mangroveNetwork=true')});});
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaWaterWorld=this;this.raycaster=new')});});
  await page.addInitScript(()=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',music:0,sfx:0})));
- await page.goto('http://127.0.0.1:5218/?qa-seed='+seed);
+ await page.goto((process.env.WG_QA_URL??'http://127.0.0.1:5218')+'/?qa-seed='+seed,{waitUntil:'domcontentloaded',timeout:90000});
  const menu=page.frameLocator('#native-menu');await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});
  await menu.locator('body').evaluate(()=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome:'manglares',culture:'mapungubwe'},location.origin));
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&globalThis.qaWaterWorld?.state,null,{timeout:240000});
@@ -30,4 +30,4 @@ try{
  await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(2000);await page.screenshot({path:out+'/elevated.png'});
  console.log(JSON.stringify({seed:data.seed,target:data.target,wet:data.points.filter(p=>p.water.inside).length,total:data.points.length,waters:data.waters.length,errors}));
-}finally{await browser.close();}
+}catch(error){await writeFile(out+'/failure.json',JSON.stringify({error:String(error),errors,text:await page.locator('body').innerText().catch(()=>null)},null,2));await page.screenshot({path:out+'/failure.png'}).catch(()=>{});throw error;}finally{await page.unrouteAll({behavior: 'wait'});await browser.close();}
