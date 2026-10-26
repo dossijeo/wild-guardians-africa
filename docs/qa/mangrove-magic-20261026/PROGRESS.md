@@ -675,3 +675,8 @@ Repetición A/B/A/B sin samplingCPU (cpuSampling=false acreditado) no confirma m
 ### Cobertura de semillas de receta actual
 
 La prueba histórica100semillas solo cubría mangroveChannels (variante7). Añadida prueba específica mangroveNetwork (variante8) sobre100semillas, dos regiones480×480m centradas(60,0)y(1200,-1600),rejilla12m. Cada región debe conservar entre5%y45%agua: límites amplios contra mundo seco/lago gigante, no criterio de aprobación artística ni medida de conectividad. Pasa. Ejecutados conjuntamente mangrove-channels,mangrove-expansion-reload,mangrove-water-traversal:10tests pasan. Incluyen4semillas×4chunks vecinos comparando agua/terreno/instancias/props sync-pthread y recarga, rutas entreorillas para perfiles de actores, barreras sólidas y agua no edificable. No extrapolar100semillas a renderizado ni equivalenciapthread: estas coberturas son diferentes.
+
+
+### Magias agrícolas al anochecer, Manglares confirmado
+
+production-estuary-night-verified: fixture estuary-agriculture, WG_MAGIC_NIGHT=1, biome=manglares verificado.4comandos growth/multiply aceptados:1.765/.400/.315/.925ms.515intervalos P95=33.450ms,P99=49.945ms,máximo132.905ms.0consultasprogramas/0errores. uNight=1 confirmado,3efectos aún activos al capturar y4slots de luz estable. magic-night.png inspeccionada: efectos legibles, suelo y helechos conservados. El número3 es el estado al momento final, no cuatro efectos simultáneos exigidos para siempre. Corrida única con comandos legales directos, no pruebaUI agrícola ni tiemposGPU.
