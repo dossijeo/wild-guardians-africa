@@ -5,7 +5,7 @@ import {validateSpatialTerrainState} from '../world/wild-engine/spatial-state.js
 export function createFarSpatialReplica(module,terrain){
  validateSpatialTerrainState(terrain);
  const core=createSpatialWorld(module);
- core.generate(terrain.seed,0,0,terrain.biome);
+ core.generate(terrain.seed,0,0,terrain.biome,terrain);
  terrain.settlements.forEach((s,i)=>{if(i===0)core.setSettlement(s.x,s.z,s.hx,s.hz);else core.addSettlement(s.x,s.z,s.hx,s.hz);});
  core.removeChunk(0,0);
  return core;

@@ -1,0 +1,127 @@
+{
+  "sourceSha256": "4eb0726addd5d15ea9762042b37a74a08123568428c6207e0220c608c1a2a854",
+  "blender": "5.2.2 LTS",
+  "animationSource": "public\\assets\\cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+  "before": {
+    "vertices": 13204,
+    "faces": 15702
+  },
+  "collar": {
+    "vertices": 1596,
+    "bone": "Neck",
+    "weight": 1,
+    "previousLimbInfluences": 1458
+  },
+  "manePatches": [
+    {
+      "edges": 5,
+      "faces": 1,
+      "center": [
+        -0.02005423977971077,
+        0.03689829260110855,
+        0.9149472117424011
+      ]
+    },
+    {
+      "edges": 5,
+      "faces": 1,
+      "center": [
+        -0.22739703953266144,
+        0.17101776599884033,
+        0.6115342378616333
+      ]
+    },
+    {
+      "edges": 5,
+      "faces": 1,
+      "center": [
+        0.15691860020160675,
+        0.09876419603824615,
+        0.5046674609184265
+      ]
+    }
+  ],
+  "feet": [
+    {
+      "side": "Left",
+      "vertices": 300,
+      "solePitchDegrees": 4.099505696388788,
+      "floor": -0.03660307079553604
+    },
+    {
+      "side": "Right",
+      "vertices": 294,
+      "solePitchDegrees": -2.2511123223578924,
+      "floor": -0.040533460676670074
+    }
+  ],
+  "shading": {
+    "method": "Interpolated smooth normals, 55 degree crease limit",
+    "smoothFaces": 15705,
+    "preserved": "Creases above 55 degrees on tusks, hooves and mane; silhouette and painted texture unchanged"
+  },
+  "scale": 2.6883229115730525,
+  "hipTranslationRatio": 0.34481685387041444,
+  "headPosture": {
+    "headLiftDegrees": 18,
+    "neckLiftDegrees": 5,
+    "axis": "Animated torso lateral axis",
+    "preserved": "Relative animated head turns and nods; authored restpose unchanged"
+  },
+  "clips": [
+    {
+      "name": "Running",
+      "firstFrame": 1.0,
+      "lastFrame": 17.0,
+      "samples": 17,
+      "duration": 0.6666666666666666
+    },
+    {
+      "name": "Walking",
+      "firstFrame": 1.0,
+      "lastFrame": 26.0,
+      "samples": 26,
+      "duration": 1.0416666666666667
+    },
+    {
+      "name": "Charged_Upward_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 78.0,
+      "samples": 78,
+      "duration": 3.2083333333333335
+    },
+    {
+      "name": "Right_Hand_Sword_Slash",
+      "firstFrame": 1.0,
+      "lastFrame": 38.0,
+      "samples": 38,
+      "duration": 1.5416666666666667
+    },
+    {
+      "name": "Weapon_Combo",
+      "firstFrame": 1.0,
+      "lastFrame": 90.0,
+      "samples": 90,
+      "duration": 3.7083333333333335
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "firstFrame": 1.0,
+      "lastFrame": 110.0,
+      "samples": 110,
+      "duration": 4.541666666666667
+    },
+    {
+      "name": "restpose",
+      "firstFrame": 0.0,
+      "lastFrame": 2.0,
+      "samples": 3,
+      "duration": 0.08333333333333333
+    }
+  ],
+  "after": {
+    "vertices": 7904,
+    "faces": 15705,
+    "bytes": 72728708
+  }
+}

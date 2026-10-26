@@ -1,0 +1,15 @@
+{
+  "species": "rhino",
+  "baseline": "ead3780fa",
+  "before": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
+  "after": "/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+  "changedBytes": 47614,
+  "metadata": {
+    "tool": "tools/experiments/repair-beast-foot-weights.mjs",
+    "sourceSha256": "39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a",
+    "changedVertices": 6861,
+    "rigidBelowAnkle": -0.015,
+    "authoredAboveAnkle": 0.06
+  },
+  "invariants": "All JSON except provenance identical; every changed BIN byte belongs to WEIGHTS_0. Positions, indices, normals, UVs, textures, joints, inverse bind matrices, animations and presentation scale unchanged. All weights normalized."
+}

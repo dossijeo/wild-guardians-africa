@@ -1,0 +1,872 @@
+{
+  "skinEnvelope": {
+    "enabled": false,
+    "preparedMeshes": 0
+  },
+  "ok": true,
+  "biome": "gran-canon",
+  "culture": "mapungubwe",
+  "quality": "media",
+  "groupResizeCandidate": null,
+  "drawingBuffer": [
+    1280,
+    720
+  ],
+  "gpuReady": true,
+  "warmed": [
+    "hyena",
+    "buffalo",
+    "warthog",
+    "lion",
+    "rhino"
+  ],
+  "copies": 2,
+  "plannedReserves": false,
+  "savedReserves": true,
+  "savedActive": false,
+  "savedRaidUnchangedAtLoad": null,
+  "loadReservedRigs": 10,
+  "repeatedRigResources": {
+    "warthog": {
+      "copies": 2,
+      "sparesUsed": 2,
+      "uniqueModels": 2,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "hyena": {
+      "copies": 2,
+      "sparesUsed": 2,
+      "uniqueModels": 2,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "buffalo": {
+      "copies": 2,
+      "sparesUsed": 2,
+      "uniqueModels": 2,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "lion": {
+      "copies": 2,
+      "sparesUsed": 2,
+      "uniqueModels": 2,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "rhino": {
+      "copies": 2,
+      "sparesUsed": 2,
+      "uniqueModels": 2,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "425ded3e-6807-4718-8bc8-8bf692f9d80b",
+      "fromSpare": true,
+      "skeletons": [
+        "35286dcf-6e9c-4135-8a58-3e5f74cc8931",
+        "5f60dd07-e16a-4e0c-b62f-f633b0c2e496"
+      ],
+      "boneTextures": [
+        "35af5053-c738-4c06-b516-e829e81f6487",
+        "7052e992-17e6-411f-b9b6-3453ea6d0080"
+      ],
+      "geometry": [
+        "71d7abfc-d04a-4714-9e30-c5f0fa8bbf33",
+        "b9450493-bade-4d61-847b-aaabb8535feb"
+      ],
+      "materials": [
+        "36e4c2ec-fe98-4a74-b5db-abaa10af3fb4",
+        "72fe6600-e3ec-4440-9117-9f0206c72035"
+      ]
+    },
+    {
+      "species": "hyena",
+      "ready": true,
+      "modelId": "f8690434-601e-43c7-b246-f52714f5f26f",
+      "fromSpare": true,
+      "skeletons": [
+        "929abb75-3e7f-4190-b378-f0ef31d5e2ff",
+        "8c77a195-0204-4dbc-ab9f-81ec66650431"
+      ],
+      "boneTextures": [
+        "3bf9b69a-10ed-40fd-ab1a-06c1dad89b3c",
+        "26595dcd-862f-49f7-b7f3-0dc795167203"
+      ],
+      "geometry": [
+        "a0167124-8b48-4774-ae41-841f49fb60e6",
+        "2bb58bde-9aef-450f-b5a0-b4b68a66f355"
+      ],
+      "materials": [
+        "e49d3d7d-fc50-478b-939d-8a0767d67dfd",
+        "2cfca714-ab11-4295-a00b-6066c674b22a"
+      ]
+    },
+    {
+      "species": "buffalo",
+      "ready": true,
+      "modelId": "793c38d5-4231-4781-a3b0-2b6a77de263b",
+      "fromSpare": true,
+      "skeletons": [
+        "2d78536c-8c21-42d8-808f-17a58b155504"
+      ],
+      "boneTextures": [
+        "7ef858eb-f581-4363-9d83-72387d54e6c9"
+      ],
+      "geometry": [
+        "e6f6a359-a700-45a2-9f7f-3bdb49c6804c"
+      ],
+      "materials": [
+        "940a4294-980b-4d43-ad8e-936c046e9819"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "3ba65bbd-2876-4e32-baff-f6d28b46a4b4",
+      "fromSpare": true,
+      "skeletons": [
+        "ff2182d8-5474-451b-b9c0-e14333a346fe",
+        "5cf7189d-a78a-4340-bf5a-98720d453486",
+        "d2d34cf3-cec3-4504-802d-ac2098c6d5f4"
+      ],
+      "boneTextures": [
+        "00104997-f001-4007-b2d5-7d6f64e94b50",
+        "b7538325-7267-4bf9-9f69-a0b8a46f7479",
+        "ec602cca-2332-46b4-9b02-8a63052f20c6"
+      ],
+      "geometry": [
+        "31eba2f5-76ac-4743-b1db-982cc0160e24",
+        "d4deeb8e-e4da-49ca-9806-964654d1c296",
+        "9786ab80-5c14-4135-8119-34e862018fa4"
+      ],
+      "materials": [
+        "92d3e715-3b8c-4daa-ae31-8c5b232b37ca",
+        "54dcb0b1-3cd5-4efa-a5a2-2af392a0e717",
+        "11043831-26b0-4d96-95e9-7e6c169b65fa"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "743b0ccd-2d01-4f6a-9d70-70c7e69bb3e6",
+      "fromSpare": true,
+      "skeletons": [
+        "413d5af0-e041-4764-9aae-7311022b629f",
+        "eb5facff-0fc8-44dd-b910-f92b112c3156"
+      ],
+      "boneTextures": [
+        "1bf01a72-c889-42b4-afb0-04940027eec2",
+        "e9d7f68a-48d6-47e2-8e31-ae4e281e5488"
+      ],
+      "geometry": [
+        "496b8c7d-3553-44ca-9ede-242fb3791eec",
+        "19fd75ed-ddb6-47db-942c-eb98a94bb34d"
+      ],
+      "materials": [
+        "abea722e-7ed2-4d92-93d0-14ceabc15078",
+        "fff169ac-a242-483e-bff4-be91f07a50e2"
+      ]
+    },
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "3de2b18c-4d49-4121-9eb8-6cb7e254883c",
+      "fromSpare": true,
+      "skeletons": [
+        "0b7fbab0-c691-4931-957f-a9fe736246f0",
+        "b1d94a66-2c98-49b0-9a24-d0b0e3580428"
+      ],
+      "boneTextures": [
+        "36086bd8-4165-45b8-b840-f53a49efde5e",
+        "a6ae0d0c-55f2-4949-adba-8ff14fe151e3"
+      ],
+      "geometry": [
+        "71d7abfc-d04a-4714-9e30-c5f0fa8bbf33",
+        "b9450493-bade-4d61-847b-aaabb8535feb"
+      ],
+      "materials": [
+        "36e4c2ec-fe98-4a74-b5db-abaa10af3fb4",
+        "72fe6600-e3ec-4440-9117-9f0206c72035"
+      ]
+    },
+    {
+      "species": "hyena",
+      "ready": true,
+      "modelId": "92185711-016b-415d-acb3-8f8547b649ab",
+      "fromSpare": true,
+      "skeletons": [
+        "9c84c4c5-aabe-49ff-829a-52ebd230e73d",
+        "c319b2f4-b188-416c-b91a-3855279e3f82"
+      ],
+      "boneTextures": [
+        "ed0736cb-dce8-4468-828b-e375ef57acbe",
+        "4a84c761-124c-4723-8385-49e52046fdf5"
+      ],
+      "geometry": [
+        "a0167124-8b48-4774-ae41-841f49fb60e6",
+        "2bb58bde-9aef-450f-b5a0-b4b68a66f355"
+      ],
+      "materials": [
+        "e49d3d7d-fc50-478b-939d-8a0767d67dfd",
+        "2cfca714-ab11-4295-a00b-6066c674b22a"
+      ]
+    },
+    {
+      "species": "buffalo",
+      "ready": true,
+      "modelId": "2c89f2c7-c4b9-4431-8987-511370eea71b",
+      "fromSpare": true,
+      "skeletons": [
+        "517a2afd-eecb-476b-aeec-2196a5e1ce26"
+      ],
+      "boneTextures": [
+        "a480202c-2b79-4cff-9039-fd7541d566f0"
+      ],
+      "geometry": [
+        "e6f6a359-a700-45a2-9f7f-3bdb49c6804c"
+      ],
+      "materials": [
+        "940a4294-980b-4d43-ad8e-936c046e9819"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "ba48e634-3e19-4b6a-8104-4d1475a9300b",
+      "fromSpare": true,
+      "skeletons": [
+        "691b2633-d426-4a76-a464-b2a052453780",
+        "ed48e5cc-226d-4205-8e05-47ad12ab7791",
+        "6f19b71b-707e-430f-a92a-e93b2a10e473"
+      ],
+      "boneTextures": [
+        "3a952517-38ac-4fec-ad11-e23628e28b27",
+        "08f6dc90-652f-4ce0-a1ca-3a4bd0bf9e1f",
+        "d27edc78-488b-4cc6-afbb-32f7a3cd94d5"
+      ],
+      "geometry": [
+        "31eba2f5-76ac-4743-b1db-982cc0160e24",
+        "d4deeb8e-e4da-49ca-9806-964654d1c296",
+        "9786ab80-5c14-4135-8119-34e862018fa4"
+      ],
+      "materials": [
+        "92d3e715-3b8c-4daa-ae31-8c5b232b37ca",
+        "54dcb0b1-3cd5-4efa-a5a2-2af392a0e717",
+        "11043831-26b0-4d96-95e9-7e6c169b65fa"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "07d42152-c37e-459c-82f5-9e3e64b60ab4",
+      "fromSpare": true,
+      "skeletons": [
+        "4c078954-4422-4c4d-9e87-13b3d8b6e496",
+        "285154b2-5795-4148-8406-fa00a707300b"
+      ],
+      "boneTextures": [
+        "2faeef58-d3dc-42bf-9dd6-dd4e3b7e5104",
+        "704c3d8c-bf2f-4238-86d7-09e5fce28d0c"
+      ],
+      "geometry": [
+        "496b8c7d-3553-44ca-9ede-242fb3791eec",
+        "19fd75ed-ddb6-47db-942c-eb98a94bb34d"
+      ],
+      "materials": [
+        "abea722e-7ed2-4d92-93d0-14ceabc15078",
+        "fff169ac-a242-483e-bff4-be91f07a50e2"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 9,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        },
+        {
+          "id": 10,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 53,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        5,
+        8,
+        6,
+        7
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 8,
+    "programs": 58,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+    ],
+    "spareModelIds": [
+      "425ded3e-6807-4718-8bc8-8bf692f9d80b",
+      "3de2b18c-4d49-4121-9eb8-6cb7e254883c",
+      "f8690434-601e-43c7-b246-f52714f5f26f",
+      "92185711-016b-415d-acb3-8f8547b649ab",
+      "793c38d5-4231-4781-a3b0-2b6a77de263b",
+      "2c89f2c7-c4b9-4431-8987-511370eea71b",
+      "3ba65bbd-2876-4e32-baff-f6d28b46a4b4",
+      "ba48e634-3e19-4b6a-8104-4d1475a9300b",
+      "743b0ccd-2d01-4f6a-9d70-70c7e69bb3e6",
+      "07d42152-c37e-459c-82f5-9e3e64b60ab4"
+    ],
+    "animalPrograms": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 9,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        },
+        {
+          "id": 10,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|canyon-calm-day"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 53,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        5,
+        8,
+        6,
+        7
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 8,
+    "programs": 58,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 8,
+    "animalPrograms": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 959.8149999380112,
+  "loadingMs": 6387.964999914169,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "creations": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 536,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "simulatedSeconds": 26.8,
+      "centerHpBefore": 600,
+      "centerHpAfter": 575,
+      "logicalHits": [
+        {
+          "id": "event-45",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-43",
+          "targetId": "structure-2",
+          "species": "hyena",
+          "presentation": {
+            "elapsed": 426.9000000000061,
+            "animal": {
+              "x": -33.78938844633945,
+              "z": 27.27717993108504,
+              "heading": 0.755667063228005
+            },
+            "target": {
+              "x": -30.684595436780327,
+              "z": 30.572305649518967,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "ready": true,
+          "position": [
+            -27,
+            11.475000000000033
+          ],
+          "renderY": 3.688486377128246
+        },
+        {
+          "species": "hyena",
+          "status": "walking",
+          "animation": "Charged_Upward_Slash",
+          "ready": true,
+          "position": [
+            -33.78938844633945,
+            27.27717993108504
+          ],
+          "renderY": 3.6816523677686837
+        },
+        {
+          "species": "buffalo",
+          "status": "walking",
+          "ready": true,
+          "position": [
+            -26.558220321264717,
+            8.094433123702892
+          ],
+          "renderY": 3.7150180600377607
+        },
+        {
+          "species": "lion",
+          "status": "walking",
+          "ready": true,
+          "position": [
+            -28.108556852971052,
+            9.203056324612987
+          ],
+          "renderY": 3.683925571785141
+        },
+        {
+          "species": "rhino",
+          "status": "walking",
+          "ready": true,
+          "position": [
+            -26.653460034993383,
+            4.728279228005383
+          ],
+          "renderY": 3.7086647160549147
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "ready": true,
+          "position": [
+            -29.918585147507507,
+            -3.627694350481036
+          ],
+          "renderY": 3.6308309529733687
+        },
+        {
+          "species": "hyena",
+          "status": "waiting",
+          "ready": true,
+          "position": [
+            -30.209215954335534,
+            -33.22769435048104
+          ],
+          "renderY": 3.6759080412575913
+        },
+        {
+          "species": "buffalo",
+          "status": "waiting",
+          "ready": true,
+          "position": [
+            -28.75123541251223,
+            -40.627694350481036
+          ],
+          "renderY": 3.539268061091732
+        },
+        {
+          "species": "lion",
+          "status": "waiting",
+          "ready": true,
+          "position": [
+            -29.4859733255374,
+            -36.92769435048103
+          ],
+          "renderY": 3.54760801211296
+        },
+        {
+          "species": "rhino",
+          "status": "waiting",
+          "ready": true,
+          "position": [
+            -33.876987379474855,
+            -11.027694350481035
+          ],
+          "renderY": 3.619344048181252
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "hyena",
+          "sprites": 12
+        }
+      ],
+      "contactRequirement": "original-structure-hit",
+      "firstHit": {
+        "id": "event-44",
+        "type": "StructureHit",
+        "animalId": "animal-7",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 575,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "firstStructureHit": {
+        "id": "event-44",
+        "type": "StructureHit",
+        "animalId": "animal-7",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 575,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "maximumGameTickMs": 6.564999938011169,
+      "medianGameTickMs": 0.5149999856948853,
+      "renderedActors": [
+        {
+          "id": "animal-6",
+          "species": "warthog",
+          "status": "waiting",
+          "bounds": {
+            "min": [
+              -27.695842098097522,
+              3.710486377128246,
+              10.588919556926674
+            ],
+            "max": [
+              -26.23368251830394,
+              6.173900432784144,
+              12.690474742045724
+            ]
+          },
+          "intersectsCamera": false,
+          "meshes": 2,
+          "visibleMeshes": 2
+        },
+        {
+          "id": "animal-7",
+          "species": "hyena",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -34.19361092146908,
+              3.703652367768684,
+              27.042656885739774
+            ],
+            "max": [
+              -32.87985577551472,
+              5.6270166000714745,
+              28.068116182797418
+            ]
+          },
+          "intersectsCamera": false,
+          "meshes": 2,
+          "visibleMeshes": 2
+        },
+        {
+          "id": "animal-8",
+          "species": "buffalo",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -27.221669153268195,
+              3.7370180600377605,
+              7.1060280428591325
+            ],
+            "max": [
+              -25.8941030502497,
+              5.914677709554435,
+              8.689299159355453
+            ]
+          },
+          "intersectsCamera": false,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "animal-9",
+          "species": "lion",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -28.67187094142206,
+              3.705925571785142,
+              8.565059551060802
+            ],
+            "max": [
+              -27.543584286297772,
+              5.4267027422419964,
+              9.902990931563897
+            ]
+          },
+          "intersectsCamera": false,
+          "meshes": 3,
+          "visibleMeshes": 3
+        },
+        {
+          "id": "animal-10",
+          "species": "rhino",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -27.542665942258154,
+              3.7306647160549145,
+              3.678406086443289
+            ],
+            "max": [
+              -25.836788468449313,
+              6.63378274703349,
+              5.674203727301422
+            ]
+          },
+          "intersectsCamera": false,
+          "meshes": 2,
+          "visibleMeshes": 2
+        },
+        {
+          "id": "animal-11",
+          "species": "warthog",
+          "status": "waiting",
+          "bounds": {
+            "min": [
+              -30.695844513065172,
+              3.652830952973368,
+              -4.855317060111801
+            ],
+            "max": [
+              -29.221909926443566,
+              6.128380454139623,
+              -2.7419484407166266
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 2,
+          "visibleMeshes": 2
+        },
+        {
+          "id": "animal-12",
+          "species": "hyena",
+          "status": "waiting",
+          "bounds": {
+            "min": [
+              -30.806135543973994,
+              3.6979080412575915,
+              -33.40702412154665
+            ],
+            "max": [
+              -29.590244977188988,
+              5.676706860898113,
+              -32.1875560675398
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 2,
+          "visibleMeshes": 2
+        },
+        {
+          "id": "animal-13",
+          "species": "buffalo",
+          "status": "waiting",
+          "bounds": {
+            "min": [
+              -29.47028784117317,
+              3.561268061091731,
+              -41.01936755977505
+            ],
+            "max": [
+              -27.94466567033989,
+              5.78815795436875,
+              -40.0461168037058
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "animal-14",
+          "species": "lion",
+          "status": "waiting",
+          "bounds": {
+            "min": [
+              -30.00378990730452,
+              3.5696080121129596,
+              -37.45401118994358
+            ],
+            "max": [
+              -28.947605882853047,
+              5.356590943856033,
+              -36.53242822160819
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 3,
+          "visibleMeshes": 3
+        },
+        {
+          "id": "animal-15",
+          "species": "rhino",
+          "status": "waiting",
+          "bounds": {
+            "min": [
+              -34.87288964287814,
+              3.6413440481812516,
+              -11.641254640715601
+            ],
+            "max": [
+              -32.86789259702131,
+              6.534002684558427,
+              -9.913360941468968
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 2,
+          "visibleMeshes": 2
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino",
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "qaUrl": "http://127.0.0.1:5218/tests/browser/animal-preload.html?biome=gran-canon&motion=1&copies=2&load-reserves=1&approved=1"
+}

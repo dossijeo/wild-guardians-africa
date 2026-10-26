@@ -1,0 +1,54 @@
+{
+  "model": "/assets/39f566d004a817c13c2109867ffb065eb67808cebefd6bc3bfd356893d1cda9a.glb",
+  "originalSourceIntact": true,
+  "tests": {
+    "passed": 108,
+    "failed": 0
+  },
+  "viteBuild": "pass",
+  "webPackage": "pass",
+  "assetIntegrity": "pass",
+  "webAssetVerification": "pass: no glTF errors; geometry and animation byte-exact; albedo PSNR 37.55 dB relative to canonical 4K source",
+  "animationSamples": 774,
+  "clothSamples": 390,
+  "maxSoleHeightSpread": 0.0010432749213521442,
+  "minSoleHeight": 0.02199999999999967,
+  "maxSupportClearance": 0.022000000000000332,
+  "headPosture": {
+    "headLiftDegrees": 22,
+    "neckLiftDegrees": 5,
+    "primaryAnimationChannelsByteExact": 1098,
+    "referenceRef": "da18a4159"
+  },
+  "retainedBodyTriangles": 13906,
+  "cloth": {
+    "bones": 15,
+    "limbWeights": 0,
+    "maxLegOnlyRotationResponse": 0,
+    "maxEdgeExtension": 0.17924653884390448,
+    "minimumHeight": 0.08510251666909165,
+    "runtimeSimulation": false
+  },
+  "sharedLionSolverDefaultComparison": "pass: both panels byte-identical across 404 integration steps",
+  "captures": 50,
+  "feetCloseups": 4,
+  "rearCloseups": 18,
+  "headProfileCapture": "head-profile.jpg",
+  "nightBiomes": [
+    "desierto",
+    "gran-canon",
+    "gran-rio",
+    "manglares",
+    "sabana",
+    "volcanes"
+  ],
+  "nativeRaid": "pass: movement, attack and hit 600 to 540; no new downloads or animal GPU programs",
+  "video": {
+    "file": "rhino-animations.mp4",
+    "duration": 67.9,
+    "frames": 2037,
+    "fps": 30,
+    "fullFFmpegDecode": "pass"
+  },
+  "limits": "Offline baked cloth; no realtime environment response. Desktop Chrome checks; deterministic video does not measure mobile FPS."
+}

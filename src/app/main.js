@@ -92,7 +92,9 @@ let campaignCinema=null;
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-visibility'))globalThis.wildGuardiansVisibilityQa=()=>({
   hidden:document.hidden,screen,snapshot:state?JSON.stringify(state):null,
-  frameAt:lastFrame,observedAt:performance.now()
+  frameAt:lastFrame,observedAt:performance.now(),
+  actors:world?(state?.raid?.animals??[]).map(a=>({id:a.id,ready:world.mixers.has(a.id),position:world.objects.get(a.id)?.position.toArray()??null,visible:world.objects.get(a.id)?.visible??false})):[],
+  camera:world?{eye:world.camera.position.toArray(),target:world.controls.target.toArray(),projection:world.camera.projectionMatrix.toArray(),inverse:world.camera.matrixWorldInverse.toArray(),canvas:world.canvas.getBoundingClientRect().toJSON()}:null
 });
 let preparedLoading=null,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0,loadingAudio=null,loadingOverlay=null,loadingTransfers=null;
 function prepareLoadingScene(){

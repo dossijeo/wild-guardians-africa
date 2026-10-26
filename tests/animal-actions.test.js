@@ -11,6 +11,10 @@ import {updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {animalBodyVertices,bodyRadiusAt} from '../tools/animal_footprint.mjs';
 const attacks=['Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2'];
+test('visual replacements retain the published navigation and saved-actor radii',()=>{
+  assert.deepEqual(Object.fromEntries(Object.entries(A.animals).map(([name,a])=>[name,a.presentation.footprint.radius])),{warthog:1.1,hyena:.9,buffalo:.97,lion:.85,rhino:1.55});
+  for(const a of Object.values(A.animals))assert(a.presentation.footprint.visualRadius>0);
+});
 const nav={version:1,placement:()=>({valid:true}),setState:()=>{},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function fixture(species,name,hits=1){
   const s=Game.newGame({slotId:'animal',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);
@@ -72,17 +76,34 @@ for(const [species,library] of Object.entries(A.animals))test(`${species}: origi
   gltf.scene.scale.setScalar(.1);prepareAnimalModel(gltf.scene,species);assert.deepEqual(gltf.scene.scale.toArray(),[1,1,1]);gltf.scene.updateMatrixWorld(true);
   const originalBounds=new THREE.Box3().setFromObject(gltf.scene,true);assert.ok(Math.abs(originalBounds.max.y-originalBounds.min.y-native.bindHeight)<1e-8);assert.deepEqual(originalBounds.min.toArray(),native.bindMin);assert.deepEqual(originalBounds.max.toArray(),native.bindMax);
   const body=animalBodyVertices(gltf.scene),footprint=native.footprint;
-  assert.equal(body.reduce((n,b)=>n+b.vertices.length,0),footprint.bodyVertices);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.radius);
+  assert.equal(body.reduce((n,b)=>n+b.vertices.length,0),footprint.bodyVertices);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.visualRadius);
   const walkingMixer=new THREE.AnimationMixer(gltf.scene);
   for(const clip of clips.filter(c=>['Walking','Running'].includes(c.name))){
     walkingMixer.stopAllAction();walkingMixer.clipAction(clip).play();
     // A finer, offset phase grid exercises poses absent from calibration.
-    for(let i=0;i<129;i++){walkingMixer.setTime(clip.duration*(i+.5)/129);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.radius,`${species}/${clip.name} body exceeds navigation radius at phase ${i}`);}
+    for(let i=0;i<129;i++){walkingMixer.setTime(clip.duration*(i+.5)/129);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.visualRadius,`${species}/${clip.name} body exceeds visual radius at phase ${i}`);}
   }
   walkingMixer.stopAllAction();
   const parent=new THREE.Group();parent.position.set(20,5,10);parent.add(gltf.scene);
   const data={model:gltf.scene,mixer:new THREE.AnimationMixer(gltf.scene),clips,groundSamples:animalGroundSamples(gltf.scene)};
   assert.ok(data.groundSamples.length>0);
+  // Use independently selected rigid sole vertices, not the grounder's sample
+  // list: mixed calf/foot weights previously lifted a flat sole off the floor.
+  const soles={LeftFoot:[],RightFoot:[]};
+  gltf.scene.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const p=mesh.geometry.attributes.position,w=mesh.geometry.attributes.skinWeight,j=mesh.geometry.attributes.skinIndex;
+    for(const name of Object.keys(soles)){const joint=mesh.skeleton.bones.findIndex(b=>b.name===name);let bottom=Infinity;
+      for(let i=0;i<p.count;i++)if(j.getX(i)===joint&&w.getX(i)>.999)bottom=Math.min(bottom,p.getY(i));
+      for(let i=0;i<p.count;i++)if(j.getX(i)===joint&&w.getX(i)>.999&&Math.abs(p.getY(i)-bottom)<1e-5)soles[name].push({mesh,index:i});
+    }
+  });
+  const walking=clips.find(c=>c.name==='Walking');
+  for(let phase=0;phase<33;phase++){
+    applyAnimalPose(data,{species,status:'walking',motionPhase:walking.duration*(phase+.3)/33},0);gltf.scene.updateMatrixWorld(true);
+    const inverse=parent.matrixWorld.clone().invert(),centers=[],heights=[];
+    for(const points of Object.values(soles)){assert(points.length>=3);const vertices=points.map(({mesh,index})=>mesh.getVertexPosition(index,new THREE.Vector3()).applyMatrix4(mesh.matrixWorld).applyMatrix4(inverse));const lo=Math.min(...vertices.map(v=>v.y)),hi=Math.max(...vertices.map(v=>v.y));assert(hi-lo<.003,`${species}: sole tilted during walking`);heights.push(lo);centers.push(vertices.reduce((sum,v)=>sum+v.x/vertices.length,0));}
+    assert(Math.min(...heights)>=.022-1e-5&&Math.min(...heights)<.024,`${species}: planted foot floating or penetrating`);
+    assert(centers[0]-centers[1]>.1,`${species}: feet crossed during walking`);
+  }
   for(const name of attacks){
     const clip=clips.find(c=>c.name===name),duration=library.clips[name].duration;
     assert.ok(Math.abs(clip.duration-duration)<1e-6);assert.equal(Math.min(...clip.tracks.map(t=>t.times[0])),0);
@@ -122,4 +143,17 @@ for(const [species,library] of Object.entries(A.animals))test(`${species}: origi
   assert.ok(maximumGroundError<1e-9);
   t.diagnostic(JSON.stringify({species,groundingComparisonPoses:72,maximumGroundError}));
   assert.deepEqual(JSON.parse(readFileSync(new URL('../public/content/animal-actions.json',import.meta.url),'utf8')),A);
+});
+
+// Flexible appendages use their own baked motion and cannot become a rigid
+// navigation obstacle or raise the actor when a loose tip reaches the floor.
+test('secondary cloth and tail are excluded from grounding and walking body clearance',()=>{
+ const geometry=new THREE.BufferGeometry();
+ geometry.setAttribute('position',new THREE.Float32BufferAttribute([.1,0,0,.1,.1,0,100,-2,0,100,-1,0,-100,-3,0,-100,-2,0],3));
+ geometry.setAttribute('skinIndex',new THREE.Uint16BufferAttribute([0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,2,0,0,0,2,0,0,0],4));
+ geometry.setAttribute('skinWeight',new THREE.Float32BufferAttribute(Array.from({length:6},()=>[1,0,0,0]).flat(),4));
+ const root=new THREE.Group(),bones=['LeftFoot','Tail_01','ClothRear_L_Inner_03'].map(name=>{const b=new THREE.Bone();b.name=name;root.add(b);return b;});
+ const mesh=new THREE.SkinnedMesh(geometry,new THREE.MeshStandardMaterial());root.add(mesh);root.updateMatrixWorld(true);mesh.bind(new THREE.Skeleton(bones));
+ assert.deepEqual(animalGroundSamples(root).map(s=>s.index),[0]);
+ const body=animalBodyVertices(root);assert.deepEqual(body[0].vertices,[0,1]);assert(Math.abs(bodyRadiusAt(root,body)-.1)<1e-6);
 });

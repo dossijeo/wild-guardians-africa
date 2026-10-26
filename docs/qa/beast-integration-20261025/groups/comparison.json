@@ -1,0 +1,86 @@
+{
+  "scope": "Real game A/B, same saved fixture and spawn/exit positions; eight wall-time observations per run. Counts refer to projected actor centres at root +1 m, not occlusion visibility or full-body silhouettes. No FPS claim.",
+  "result": [
+    {
+      "case": "mixed-four",
+      "spawnAndExitIdentical": true,
+      "beforeVisible": [
+        3,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4
+      ],
+      "afterVisible": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "count": 4,
+      "shieldBefore": true,
+      "shieldAfter": true
+    },
+    {
+      "case": "mixed-ten",
+      "spawnAndExitIdentical": true,
+      "beforeVisible": [
+        7,
+        6,
+        6,
+        6,
+        7,
+        6,
+        6,
+        7
+      ],
+      "afterVisible": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "count": 10,
+      "shieldBefore": true,
+      "shieldAfter": true
+    },
+    {
+      "case": "warthog-sixteen",
+      "spawnAndExitIdentical": true,
+      "beforeVisible": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "afterVisible": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "count": 16,
+      "shieldBefore": true,
+      "shieldAfter": true
+    }
+  ]
+}

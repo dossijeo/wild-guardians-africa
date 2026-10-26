@@ -1,0 +1,320 @@
+TAP version 13
+# Subtest: new Mangrove channels bound flooding across 100 seeds; legacy lakes remain reproducible
+ok 1 - new Mangrove channels bound flooding across 100 seeds; legacy lakes remain reproducible
+  ---
+  duration_ms: 584.9763
+  ...
+# Subtest: variant survives snapshots, far replicas, settlement edits and chunk regeneration
+ok 2 - variant survives snapshots, far replicas, settlement edits and chunk regeneration
+  ---
+  duration_ms: 51.324
+  ...
+# Subtest: pthread preparation uses the same channel recipe as the authoritative main thread
+ok 3 - pthread preparation uses the same channel recipe as the authoritative main thread
+  ---
+  duration_ms: 274.088
+  ...
+# Subtest: saved-game biome IDs address the same spatial worlds as internal biome names
+ok 4 - saved-game biome IDs address the same spatial worlds as internal biome names
+  ---
+  duration_ms: 53.5588
+  ...
+# Subtest: one C++ source generates visual data and valid worker/animal routes
+ok 5 - one C++ source generates visual data and valid worker/animal routes
+  ---
+  duration_ms: 66.9816
+  ...
+# Subtest: continuous actor connectors preserve fractional and negative positions without crossing static barriers
+ok 6 - continuous actor connectors preserve fractional and negative positions without crossing static barriers
+  ---
+  duration_ms: 17.1593
+  ...
+# Subtest: oriented C++ wall footprints match the game collision frame and survive reload
+ok 7 - oriented C++ wall footprints match the game collision frame and survive reload
+  ---
+  duration_ms: 34.2699
+  ...
+# Subtest: a rotated wall chain is one topology transaction with the same result as individual placement
+ok 8 - a rotated wall chain is one topology transaction with the same result as individual placement
+  ---
+  duration_ms: 76.5781
+  ...
+# Subtest: native gate frames permit workers through the aperture but block animals
+ok 9 - native gate frames permit workers through the aperture but block animals
+  ---
+  duration_ms: 268.9889
+  ...
+# Subtest: mixed gate and wall placement batches the topology and preserves barrier groups
+ok 10 - mixed gate and wall placement batches the topology and preserves barrier groups
+  ---
+  duration_ms: 31.4978
+  ...
+# Subtest: wall topology mirror reacts to placement, gate conversion and ruin but ignores HP and leaf motion
+ok 11 - wall topology mirror reacts to placement, gate conversion and ruin but ignores HP and leaf motion
+  ---
+  duration_ms: 82.7474
+  ...
+# Subtest: a rejected native topology transaction changes neither barriers nor routes
+ok 12 - a rejected native topology transaction changes neither barriers nor routes
+  ---
+  duration_ms: 13.8609
+  ...
+# Subtest: work-center polygons match all five authored footprints across profiles and reload
+ok 13 - work-center polygons match all five authored footprints across profiles and reload
+  ---
+  duration_ms: 581.115
+  ...
+# Subtest: work-center topology mirrors placement and ruin without rebuilding for HP or repair
+ok 14 - work-center topology mirrors placement and ruin without rebuilding for HP or repair
+  ---
+  duration_ms: 35.024
+  ...
+# Subtest: version 4 spatial snapshots still restore without polygon records
+ok 15 - version 4 spatial snapshots still restore without polygon records
+  ---
+  duration_ms: 6.8658
+  ...
+# Subtest: authored village houses share exact collision polygons with the C++ graph
+ok 16 - authored village houses share exact collision polygons with the C++ graph
+  ---
+  duration_ms: 277.2659
+  ...
+# Subtest: spatial shields block animals, preserve worker access and expire without stale topology
+ok 17 - spatial shields block animals, preserve worker access and expire without stale topology
+  ---
+  duration_ms: 63.9796
+  ...
+# Subtest: the dry Desert chunk shares visible dunes, solid props and hierarchical routes
+ok 18 - the dry Desert chunk shares visible dunes, solid props and hierarchical routes
+  ---
+  duration_ms: 94.0314
+  ...
+# Subtest: Grand River shares wet terrain, floating flora, solids and both route profiles
+ok 19 - Grand River shares wet terrain, floating flora, solids and both route profiles
+  ---
+  duration_ms: 51.0068
+  ...
+# Subtest: Volcanoes shares basalt, lava, collision and both route profiles
+ok 20 - Volcanoes shares basalt, lava, collision and both route profiles
+  ---
+  duration_ms: 53.9713
+  ...
+# Subtest: Mangroves share flooded channels, terrain, obstacles and routes
+ok 21 - Mangroves share flooded channels, terrain, obstacles and routes
+  ---
+  duration_ms: 71.8466
+  ...
+# Subtest: a mangrove settlement dries its local flooded area without changing distant water
+ok 22 - a mangrove settlement dries its local flooded area without changing distant water
+  ---
+  duration_ms: 9.9183
+  ...
+# Subtest: mangrove water and local clearance do not depend on the selected resident chunk
+ok 23 - mangrove water and local clearance do not depend on the selected resident chunk
+  ---
+  duration_ms: 45.8004
+  ...
+# Subtest: Gran Cañón keeps its gorge, water barrier and worker crossing in one spatial core
+ok 24 - Gran Cañón keeps its gorge, water barrier and worker crossing in one spatial core
+  ---
+  duration_ms: 48.6771
+  ...
+# Subtest: the render payload and synchronous field query read one spatial world across chunks
+ok 25 - the render payload and synchronous field query read one spatial world across chunks
+  ---
+  duration_ms: 14.4845
+  ...
+# Subtest: resident surface and water queries match both rendered chunks in every biome
+ok 26 - resident surface and water queries match both rendered chunks in every biome
+  ---
+  duration_ms: 48.518
+  ...
+# Subtest: far terrain queries use the same native recipe without loading chunks or changing selected visual data
+ok 27 - far terrain queries use the same native recipe without loading chunks or changing selected visual data
+  ---
+  duration_ms: 682.4548
+  ...
+# Subtest: native far-water geometry exposes the river edges and wetland mask used by its own fluid rules
+ok 28 - native far-water geometry exposes the river edges and wetland mask used by its own fluid rules
+  ---
+  duration_ms: 56.7431
+  ...
+# Subtest: batched native far-ground colors exactly match rendered chunk colors in all six biomes
+ok 29 - batched native far-ground colors exactly match rendered chunk colors in all six biomes
+  ---
+  duration_ms: 316.7111
+  ...
+# Subtest: five animal radii retain independent logical graphs across profile switches and wall edits
+ok 30 - five animal radii retain independent logical graphs across profile switches and wall edits
+  ---
+  duration_ms: 130.0161
+  ...
+# Subtest: generated prop footprints follow each production scatter rule
+ok 31 - generated prop footprints follow each production scatter rule
+  ---
+  duration_ms: 24.5956
+  ...
+# Subtest: removing a generated obstacle changes the same visual and logical world and survives reload
+ok 32 - removing a generated obstacle changes the same visual and logical world and survives reload
+  ---
+  duration_ms: 126.4662
+  ...
+# Subtest: the 35x35 ground material mask meets at adjacent chunk overlaps
+ok 33 - the 35x35 ground material mask meets at adjacent chunk overlaps
+  ---
+  duration_ms: 5.2611
+  ...
+# Subtest: a WASM chunk uses the production render payload contract and transfers without JS terrain sampling
+ok 34 - a WASM chunk uses the production render payload contract and transfers without JS terrain sampling
+  ---
+  duration_ms: 19.3135
+  ...
+# Subtest: building both navigation profiles does not regenerate or change the selected visual chunk
+ok 35 - building both navigation profiles does not regenerate or change the selected visual chunk
+  ---
+  duration_ms: 66.7317
+  ...
+# Subtest: the JS surface view samples only transferred WASM triangles across chunks and site updates
+ok 36 - the JS surface view samples only transferred WASM triangles across chunks and site updates
+  ---
+  duration_ms: 23.6486
+  ...
+# Subtest: a settlement command flattens and clears the same C++ terrain used for navigation
+ok 37 - a settlement command flattens and clears the same C++ terrain used for navigation
+  ---
+  duration_ms: 77.8729
+  ...
+# Subtest: a river strip no longer renders across dry settlement terrain
+ok 38 - a river strip no longer renders across dry settlement terrain
+  ---
+  duration_ms: 9.082
+  ...
+# Subtest: generated water triangles remain on the spatial core's wet terrain
+ok 39 - generated water triangles remain on the spatial core's wet terrain
+  ---
+  duration_ms: 69.8282
+  ...
+# Subtest: the clipped river surface joins at a north-south chunk seam
+ok 40 - the clipped river surface joins at a north-south chunk seam
+  ---
+  duration_ms: 6.3175
+  ...
+# Subtest: multiple settlements preserve distant terrain and refresh only nearby resident chunks
+ok 41 - multiple settlements preserve distant terrain and refresh only nearby resident chunks
+  ---
+  duration_ms: 179.3433
+  ...
+# Subtest: placing and destroying a wall updates local sectors and restores a route
+ok 42 - placing and destroying a wall updates local sectors and restores a route
+  ---
+  duration_ms: 13.3911
+  ...
+# Subtest: a dynamic passage updates local worker and animal topology independently
+ok 43 - a dynamic passage updates local worker and animal topology independently
+  ---
+  duration_ms: 90.4421
+  ...
+# Subtest: indexed dynamic barriers preserve point and edge collision semantics across both profiles
+ok 44 - indexed dynamic barriers preserve point and edge collision semantics across both profiles
+  ---
+  duration_ms: 111.633
+  ...
+# Subtest: a wall-chain batch matches individual barriers with one local refresh per sector
+ok 45 - a wall-chain batch matches individual barriers with one local refresh per sector
+  ---
+  duration_ms: 217.3674
+  ...
+# Subtest: versioned spatial state restores settlements, sparse barrier IDs and both navigation profiles
+ok 46 - versioned spatial state restores settlements, sparse barrier IDs and both navigation profiles
+  ---
+  duration_ms: 158.587
+  ...
+# Subtest: neighboring chunks share their terrain seam and seed-dependent props
+ok 47 - neighboring chunks share their terrain seam and seed-dependent props
+  ---
+  duration_ms: 12.9463
+  ...
+# Subtest: procedural pond shares one visual and navigation water source
+ok 48 - procedural pond shares one visual and navigation water source
+  ---
+  duration_ms: 21.9826
+  ...
+# Subtest: a pond crossing a chunk boundary keeps its basin and fluid connectivity
+ok 49 - a pond crossing a chunk boundary keeps its basin and fluid connectivity
+  ---
+  duration_ms: 35.3946
+  ...
+# Subtest: a visible solid prop occupies its logical collision point
+ok 50 - a visible solid prop occupies its logical collision point
+  ---
+  duration_ms: 10.2066
+  ...
+# Subtest: a neighboring chunk owns the instance while its footprint blocks our edge
+ok 51 - a neighboring chunk owns the instance while its footprint blocks our edge
+  ---
+  duration_ms: 62.7655
+  ...
+# Subtest: indexed obstacle checks agree with every visible solid across the surrounding chunks
+ok 52 - indexed obstacle checks agree with every visible solid across the surrounding chunks
+  ---
+  duration_ms: 161.7042
+  ...
+# Subtest: two resident chunks share a graph and a wall closes and reopens their seam
+ok 53 - two resident chunks share a graph and a wall closes and reopens their seam
+  ---
+  duration_ms: 46.6664
+  ...
+# Subtest: fractional routes cross resident chunk seams regardless of the selected visual chunk
+ok 54 - fractional routes cross resident chunk seams regardless of the selected visual chunk
+  ---
+  duration_ms: 29.7433
+  ...
+# Subtest: resident prop collision agrees with the selected chunk after edits and reload
+ok 55 - resident prop collision agrees with the selected chunk after edits and reload
+  ---
+  duration_ms: 84.0649
+  ...
+# Subtest: negative chunk coordinates retain the shared border and graph
+ok 56 - negative chunk coordinates retain the shared border and graph
+  ---
+  duration_ms: 26.5629
+  ...
+# Subtest: chunks requested before the first graph build become resident together
+ok 57 - chunks requested before the first graph build become resident together
+  ---
+  duration_ms: 24.622
+  ...
+# Subtest: evicting and regenerating a chunk reuses sector slots and preserves wall topology
+ok 58 - evicting and regenerating a chunk reuses sector slots and preserves wall topology
+  ---
+  duration_ms: 437.9137
+  ...
+# Subtest: evicting the final chunk leaves an empty reusable graph
+ok 59 - evicting the final chunk leaves an empty reusable graph
+  ---
+  duration_ms: 21.9169
+  ...
+# Subtest: an unloaded middle chunk leaves distant connectivity unknown
+ok 60 - an unloaded middle chunk leaves distant connectivity unknown
+  ---
+  duration_ms: 35.6869
+  ...
+# Subtest: a turning four-chunk viewport reuses sectors and restores routes after revisiting
+ok 61 - a turning four-chunk viewport reuses sectors and restores routes after revisiting
+  ---
+  duration_ms: 152.8016
+  ...
+# Subtest: worker and animal graphs survive profile switches and local topology edits
+ok 62 - worker and animal graphs survive profile switches and local topology edits
+  ---
+  duration_ms: 86.0867
+  ...
+1..62
+# tests 62
+# suites 0
+# pass 62
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6199.0349

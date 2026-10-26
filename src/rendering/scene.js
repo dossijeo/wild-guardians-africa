@@ -753,7 +753,9 @@ export class WorldScene {
         else mesh=new THREE.Group();
       mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);if(e.kind==='center'||e.kind==='wall'){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
       }
-      mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+.025,e.z);
+      // Animals already apply their sole clearance in applyAnimalPose. Adding
+      // the generic object offset here made otherwise flat feet visibly float.
+      mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+('hitsRemaining' in e?0:.025),e.z);
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
       if('value' in e)mesh.visible=!e.carrierId;
       if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt,s.elapsed);}

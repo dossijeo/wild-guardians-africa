@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: 4 approaching beasts fit the group framing with HUD margins
+ok 1 - 4 approaching beasts fit the group framing with HUD margins
+  ---
+  duration_ms: 3.722
+  ...
+# Subtest: 10 approaching beasts fit the group framing with HUD margins
+ok 2 - 10 approaching beasts fit the group framing with HUD margins
+  ---
+  duration_ms: 0.5357
+  ...
+# Subtest: 16 approaching beasts fit the group framing with HUD margins
+ok 3 - 16 approaching beasts fit the group framing with HUD margins
+  ---
+  duration_ms: 0.6274
+  ...
+# Subtest: single or departed animals retain the existing individual camera path
+ok 4 - single or departed animals retain the existing individual camera path
+  ---
+  duration_ms: 0.2088
+  ...
+# Subtest: group arrival frames all visitors once and releases control on manual input
+ok 5 - group arrival frames all visitors once and releases control on manual input
+  ---
+  duration_ms: 1.3096
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 141.3138

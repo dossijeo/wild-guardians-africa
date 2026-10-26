@@ -124,6 +124,7 @@ try{
 
  }
  if(process.env.WG_PACKAGE_UI_PAN==='1'){
+  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
   for(let i=0;i<4;i++){
    await page.mouse.move(600,220);await page.mouse.down();
    await page.mouse.move(600,510,{steps:25});await page.mouse.up();
