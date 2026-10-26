@@ -133,3 +133,10 @@ Comparación misma cámara/poblado variante7 y8: ambas 225 matas cercanas +57 le
 canopy-dense-37/world.png completada sin errores e inspeccionada. Más arbolado, helechos presentes, pero predominan palmeras/árboles de hoja larga: no alcanza aún las agrupaciones de copa ancha del mockup. Siguiente hipótesis: selección de especies por margen húmeda, no seguir aumentando indiscriminadamente instancias.
 
 Incursión densa guardada por separado en native-estuary-raid-dense.json: cinco especies entran en agua, ataque tras474 pasos. Se conserva informe anterior. Siete tests pasan; ampliada equivalencia de variante8 pthread a posiciones del terreno, instancias visibles y props de colisión, además del agua. Coste GPU/framerate de densidad todavía no medido.
+
+
+## Dosel de copas anchas y coste nativo
+
+Variante8 selecciona 65–90 % de mangles de copa ancha/grandes raíces en grupos correlacionados por ruido; conserva palmeras ocasionales, identidades de celdas y colisiones. Admite mangles sobre islas emergidas además de márgenes húmedas; recetas4/7 intactas. Incursión cinco especies cruza agua y ataca tras501 pasos. Siete tests de rutas/snapshot/pthread pasan. Captura canopy-broadleaf-37 en curso (63406), todavía no juzgada.
+
+Benchmark nativo A/B/A/B ejecutado sin otro benchmark concurrente: variante7 ~1.82–4.44 ms/chunk, variante8 ~8.27–10.25 ms/chunk, cinco coordenadas repetidas. Ambas producen distinto mundo y más agua/árboles en8; no aisla coste del dosel. Es CPU Node síncrono sin perfiles de navegación, no GPU, no frametime y no prueba de streaming fluido. Informe native-generation-abab.json conservado. Hace falta atribuir coste de máscara y validar integración asíncrona real.

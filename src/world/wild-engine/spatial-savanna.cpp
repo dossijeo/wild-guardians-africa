@@ -1029,15 +1029,22 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
         const float scale=worldBiome==5&&type==5?
           float(.64+unit(cellHash(gx,gz,312+type))*.23):
           float(.78+unit(cellHash(gx,gz,312+type))*.43);
-        const int slot=(worldBiome==1?desertOffsets[type]:worldBiome==5?canyonOffsets[type]:savannaOffsets[type])+
+        int slot=(worldBiome==1?desertOffsets[type]:worldBiome==5?canyonOffsets[type]:savannaOffsets[type])+
           int(cellHash(gx,gz,315+type)%(worldBiome==1?desertCounts[type]:worldBiome==5?canyonCounts[type]:savannaCounts[type]));
+        if(mangroveNetwork&&type==0){
+          // Correlated canopy patches, with occasional coastal palms. Keep
+          // the same global cell identity for removal and chunk ownership.
+          const double canopy=.65+.25*noise(x*.025,z*.025,9321);
+          const double choice=unit(cellHash(gx,gz,9323));
+          slot=choice<canopy?(cellHash(gx,gz,9325)%2):2+(cellHash(gx,gz,9327)%2);
+        }
         if(removedProps().count({type,gx,gz}))continue;
         const double waterLevel=fluidLevel(x,z);
         const bool mangroveHabitat=worldBiome==4&&(slot==0||slot==1||slot==4);
         if(mangroveHabitat){
-          // Rooted mangles occupy damp banks as well as water, leaving dry
-          // interiors for the existing coastal trees and approved ferns.
-          if(wetlandMask(x,z)<(mangroveNetwork?.20:.56))continue;
+          // The estuary supports rooted canopy on emerged islands as well
+          // as wet banks; legacy recipes keep their original habitat mask.
+          if(!mangroveNetwork&&wetlandMask(x,z)<.56)continue;
         }
         else if((worldBiome==2&&slot==9)?waterLevel==0:waterLevel!=0)continue;
         if(worldBiome==2&&(slot==7||slot==17)&&
