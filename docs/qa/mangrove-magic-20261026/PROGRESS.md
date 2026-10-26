@@ -357,3 +357,7 @@ Repeticion angular-lod-motion-bounded finaliza sin errores/colas:493frames,P50=4
 Contadores en mismo recorrido:peticiones271/279/217/218,reemplazos pendientes114/120/61/45,cambiosLOD481/542/149/89,identidad0y recursos0 para todas especies. Preparaciones97/97/89/79. No atribuir a invalidacion shader/contexto. Prototipo agrupa peticiones pendientes angular porID,ultima transformacion/LOD gana para mismoID; conserva solicitudes independientes de productores fisico/logico.26tests pasan, incluyendo ambos productores mientras fence previo sigue pendiente. Resultado renderer coalesced pendiente; no default.
 
 Coalesced NEGATIVO:preparaciones98/98/85/82 frente97/97/89/79,cambiosLOD650/697/177/110 aumentan. P95=99.805ms vs99.775,P99=116.46 vs116.62,max149.655 vs133.09. Una ejecucion por variante no prueba regresion estadistica,pero no aporta señal favorable. Retirado agrupado y test exclusivo; conservar contadores de atribucion. Proximo foco:estabilidad de seleccionLOD,no nuevas colas.
+
+## Histeresis geometrica del standby angular
+
+Banda12% alrededor umbrales nativos38/85m ajustados por calidad; solo identidades exactas pueden conservar LOD previo.38tests dirigidos pasan. Recorrido sin errores:preparaciones90/95/73/69(total327 vs362),cambiosLOD446/470/114/66(total1096 vs1261). P95=99.76ms,P99=116.54,max132.98:sin mejora perceptible demostrada frente referencia. Mantener en prototipo por estabilidad,no como optimizacion FPS comprobada. No seguir microajustes indefinidos; falta validar otras vistas/biomas y presupuesto integral antes de default.

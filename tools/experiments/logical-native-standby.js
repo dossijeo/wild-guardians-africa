@@ -15,7 +15,7 @@ export function adoptedLogicalPreloadBounds(bounds,margin){
 
 // Data only: use the existing procedural population, source dimensions and LOD
 // recipe. No terrain mesh, collider, worker task or distant shadow is created.
-export function logicalNativeStandbyEntries(trees,{metadata,camera,quality,range,physicalIds,suppressed,maxTrees=1024,levels=3,preloadBounds=null,preloadHeightPolicy=null,angularLod=false}){
+export function logicalNativeStandbyEntries(trees,{metadata,camera,quality,range,physicalIds,suppressed,maxTrees=1024,levels=3,preloadBounds=null,preloadHeightPolicy=null,angularLod=false,previousLevels=null}){
  if(!Number.isFinite(range)||range<=0||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid logical standby budget');
  if(preloadBounds!==null&&(!Array.isArray(preloadBounds)||preloadBounds.length!==4||!preloadBounds.every(Number.isFinite)||preloadBounds[2]<=preloadBounds[0]||preloadBounds[3]<=preloadBounds[1]))throw Error('Invalid logical preload bounds');
  if(preloadHeightPolicy!==null&&(!Number.isFinite(preloadHeightPolicy.minimumHeight)||preloadHeightPolicy.minimumHeight<=0))throw Error('Invalid logical preload height policy');
@@ -23,6 +23,14 @@ export function logicalNativeStandbyEntries(trees,{metadata,camera,quality,range
   .sort((a,b)=>Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id)).slice(0,maxTrees);
  const native=selected.map(t=>({...t,...t.origin})),b=metadata.sourceBounds,prototype={size:b.max.map((v,i)=>v-b.min[i]),centerY:(b.min[1]+b.max[1])/2};
  const bins=nativeLodBins(native,prototype,0,[camera.x,camera.y,camera.z],quality,levels),dummy=new Object3D(),rows=[];
- for(const [level,indices]of bins.entries())for(const i of indices){const t=native[i];dummy.position.set(t.x,t.y,t.z);dummy.rotation.y=t.yaw;dummy.scale.set(t.sx,t.sy,t.sz);dummy.updateMatrix();rows.push({id:t.id,key:standbyTreeKey(t),x:t.x,z:t.z,sy:t.sy,level,matrix:dummy.matrix.toArray()});}
+ for(const [requestedLevel,indices]of bins.entries())for(const i of indices){const t=native[i];let level=requestedLevel;
+  const previous=previousLevels?.get(t.id);
+  if(previous&&previous.key===standbyTreeKey(t)&&previous.level!==level){
+   const radius=Math.max(prototype.size[0]*t.sx,prototype.size[2]*t.sz)*.25;
+   const distance=Math.max(0,Math.hypot(t.x-camera.x,t.y+prototype.centerY*t.sy-camera.y,t.z-camera.z)-radius);
+   const q=quality==='alta'?1.25:['baja','muy_baja'].includes(quality)?.8:1;
+   const boundary=(Math.min(previous.level,level)===0?38:85)*q;
+   if(Math.abs(distance-boundary)<boundary*.12)level=previous.level;
+  }dummy.position.set(t.x,t.y,t.z);dummy.rotation.y=t.yaw;dummy.scale.set(t.sx,t.sy,t.sz);dummy.updateMatrix();rows.push({id:t.id,key:standbyTreeKey(t),x:t.x,z:t.z,sy:t.sy,level,matrix:dummy.matrix.toArray()});}
  return rows;
 }
