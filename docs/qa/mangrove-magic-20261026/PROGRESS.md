@@ -317,3 +317,7 @@ Corregido targetFor: occupied conserva waitReason=contention; updateRaid encola 
 Nueva prueba recorre semillas1/37/712/4096 y cuatro chunks contiguos(2,1)(3,1)(2,2)(3,2). Compara agua,terrain.positions,instances y props entre generacion sincronica y preparacion/publicacion pthread; consultas de superficie siguen disponibles mientras prepara. Restaura snapshot para cada chunk y compara agua e instancias.8tests de canales/travesia pasan. Es equivalencia de datos en chunks vecinos, no prueba visual exhaustiva de todas las juntas ni de campañas completas.
 
 Iniciada captura real semilla4096 copas anchas/receta8 a105,50, salida canopy-broadleaf-4096,sesion81260; pendiente inspeccion. No cambian defaults aun.
+
+## Captura elevada4096 inspeccionada
+
+Render termina sin errores. Canales ramificados e islas visibles, poblado despejado, no lago gigante en area central. Sin embargo vista elevada muestra tramos angulosos y agua lejana plana con fronteras muy marcadas; no considerarla equivalencia artistica cerrada con referencia cartografica. Revisar curvatura/LOD de ribera y tiempo de estabilizacion de captura antes de defaults. Helechos a esta distancia no se distinguen individualmente; conservar validacion cercana anterior.
