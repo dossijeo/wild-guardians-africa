@@ -489,3 +489,7 @@ regional-water-ground-2m confirma en report.data.farGround step2/mapStep2 y19284
 ## Contactos de arboles sobre agua
 
 terrain-audit:196puntos mojados,109con suelo residente. Todos los residentes quedan exactamente~2cm bajo lamina; ninguno de196puntos regionales supera el agua, pero16quedan a menos5mm (minimo0.141mm). El ajuste fitFarGroundContacts eleva el lecho a las bases de arboles apoyadas al nivel del agua. Corregido SOLO prototipo regionalWaterBed: contactos mojados usan min(base,field.surface); arboles no se desplazan y contactos secos conservan comportamiento.16tests pasan, incluida regresion de altura/lecho y posicion inmutable del arbol. Auditoria visual/numerica posterior iniciada en regional-water-contact-fixed. No afirmar que este hallazgo explique todos los cortes ni activar prototipo sin validacion.
+
+## Verificacion posterior de contactos
+
+regional-water-contact-fixed: rayos196regionales/109residentes, ningun punto regional a menos5mm del agua (antes16); separacion minima5.742mm, residentes20mm sin cambio. Captura elevada inspeccionada: mejora visual marginal, no resuelve el conjunto. Cero errores. Nueva hipotesis verificable: precision de profundidad con separacion20mm y near0.1/far500. Control WG_WATER_NEAR=1 mantiene FOV/posicion/geometria; report incluye near/far/DEPTH_BITS reales. No cambiar camara normal ni afirmar z-fighting hasta observar el control.

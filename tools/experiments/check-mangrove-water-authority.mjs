@@ -21,6 +21,7 @@ try{
  const menu=page.frameLocator('#native-menu');await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});
  await menu.locator('body').evaluate((element,biome)=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome,culture:'mapungubwe'},location.origin),biome);
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&globalThis.qaWaterWorld?.state,null,{timeout:240000});
+ if(process.env.WG_WATER_NEAR)await page.evaluate(near=>{qaWaterWorld.camera.near=near;qaWaterWorld.camera.updateProjectionMatrix();},Number(process.env.WG_WATER_NEAR));
  if(process.env.WG_WATER_FIXED_TIME==='1')await page.evaluate(async()=>{const game=await import('/src/simulation/game.js');game.pause(qaWaterWorld.state,'qa-tree-comparison');qaWaterWorld.state.time=100;qaWaterWorld.state.elapsed=100;});
  await page.waitForTimeout(3000);
  // Presentation-only diagnostic: do not advance tutorial steps or let its
@@ -35,7 +36,7 @@ try{
   const w=qaWaterWorld,f=w.nav.field,points=[];const o=w.controls.target;
   for(let z=-60;z<=60;z+=2)for(let x=-60;x<=60;x+=2){const px=o.x+x,pz=o.z+z;points.push({x:px,z:pz,h:f.surface(px,pz),water:f.waterInfo(px,pz)});}
   const farGround=[];w.scene.traverse(m=>{if(m.userData.qaSampling)farGround.push(m.userData.qaSampling);});const regional=[];w.scene.traverse(m=>{if(m.userData.regionalWaterSurface)regional.push({visible:m.visible,vertices:m.geometry.attributes.position.count,clock:m.material.userData.paintUniforms.uTime.value,coverageValues:[...new Set(Array.from(w.renderer.properties.get(m.material).uniforms?.uRegionalMask?.value?.image?.data??[]).filter((_,i)=>i%4===3))].sort((a,b)=>a-b)});});const waters=[];w.scene.traverse(m=>{if(m.userData.nativeFluid)waters.push({kind:m.userData.nativeFluid,vertices:m.geometry?.attributes.position.count,bounds:m.geometry?.boundingBox});});
-  return {biome:w.state.biome,regional,farGround,runtime:w.spatialSession?.runtime??null,crossOriginIsolated:globalThis.crossOriginIsolated,seed:w.state.seed,channels:w.state.mangroveChannels===true,network:w.state.mangroveNetwork===true,visualSearch:w.visualSearch,coverage:w.groundDetails?.audit?.()??null,target:o.toArray(),camera:w.camera.position.toArray(),points,waters,fieldKeys:Object.keys(f),snapshot:JSON.stringify(w.state)};
+  return {biome:w.state.biome,regional,farGround,runtime:w.spatialSession?.runtime??null,crossOriginIsolated:globalThis.crossOriginIsolated,seed:w.state.seed,channels:w.state.mangroveChannels===true,network:w.state.mangroveNetwork===true,visualSearch:w.visualSearch,coverage:w.groundDetails?.audit?.()??null,target:o.toArray(),camera:w.camera.position.toArray(),points,waters,depthPrecision:{near:w.camera.near,far:w.camera.far,bits:w.renderer.getContext().getParameter(w.renderer.getContext().DEPTH_BITS)},fieldKeys:Object.keys(f),snapshot:JSON.stringify(w.state)};
  });
  await writeFile(out+'/report.json',JSON.stringify({farMaskStep:Number(process.env.WG_FAR_MASK_STEP??4),farGeometryStep:Number(process.env.WG_FAR_GEOMETRY_STEP??32),data,errors},null,2));
  await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);});
