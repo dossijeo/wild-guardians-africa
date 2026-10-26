@@ -325,3 +325,7 @@ Render termina sin errores. Canales ramificados e islas visibles, poblado despej
 ## Mascara lejana de 2 metros: prueba negativa
 
 El productor far-scene-data muestrea waterInfo.inside binario cada4m y far-ground usa interpolacion lineal con smoothstep(.45,.55); su agua es color plano sin respuesta de agua cercana. Prueba QA semilla4096,misma vista105,50,solo mascara2m: termina sin errores,652/3721 muestras humedas. Inspeccion elevada sigue mostrando bordes angulosos y agua plana; no adoptar mayor resolucion como solucion suficiente ni modificar defaults. Falta separar geometria proxy32m y forma nativa de la mascara. Esta ejecucion confirma spatialSession.runtime.backend=pthreads,fallbackReason=null,crossOriginIsolated=true. Sin medicion GPU en esta prueba. Capturas en far-mask-step2-4096; resumen compacto versionado.
+
+## Proxy lejano8m: hipotesis de geometria insuficiente
+
+Comparacion semilla4096,vista105,50,mascara4m original,proxy8m frente32m. Captura elevada sigue mostrando quiebros y agua plana. Repeticion instrumentada verifica mesh instalado:step8,mapStep4,17271vertices,mapWidth217;pthread activo,sin errores. No aumentar geometria por defecto: no resuelve el defecto. Harness ahora registra parametros solicitados y datos realmente instalados para evitar conclusiones basadas solo en overrides. Falta revisar forma nativa del cauce y respuesta visual del agua; ninguna mejora de rendimiento afirmada.
