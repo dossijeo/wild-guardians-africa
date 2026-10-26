@@ -53,6 +53,23 @@ try{
   await writeFile(out+'/motion.json',JSON.stringify(motion,null,2));await page.screenshot({path:out+'/motion-return.png'});
   if(motion.samples.some(s=>s.errors.length)||motion.final.some(a=>a.stats.errors.length||a.stats.standby?.errors.length))throw Error('Angular LOD motion preparation errors');
  }
+ if(process.env.WG_WATER_GPU==='1'){
+  await page.evaluate(async()=>{const game=await import('/src/simulation/game.js');game.pause(qaWaterWorld.state,'qa-water-benchmark');qaWaterWorld.state.time=100;qaWaterWorld.state.elapsed=100;});
+  const gpu=await page.evaluate(async()=>{
+   const w=qaWaterWorld,gl=w.renderer.getContext(),ext=gl.getExtension('EXT_disjoint_timer_query_webgl2'),debug=gl.getExtension('WEBGL_debug_renderer_info');
+   const renderer=debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);if(!ext)return {supported:false,renderer};
+   const original=w.drawRenderFrame,pending=[],gpu=[],cpu=[],intervals=[];let frames=0,disjoint=false,resolve,reject,last=null;
+   const done=new Promise((a,b)=>{resolve=a;reject=b;}),timeout=setTimeout(()=>reject(Error('GPU query timeout')),60000);
+   w.drawRenderFrame=function(...args){frames++;const measured=frames>60&&frames<=300;
+    if(gl.getQuery(ext.TIME_ELAPSED_EXT,gl.CURRENT_QUERY))throw Error('Existing GPU query');
+    const q=measured?gl.createQuery():null;if(q)gl.beginQuery(ext.TIME_ELAPSED_EXT,q);const start=performance.now();if(measured&&last!==null)intervals.push(start-last);last=start;
+    try{return original.apply(this,args);}finally{if(measured)cpu.push(performance.now()-start);if(q){gl.endQuery(ext.TIME_ELAPSED_EXT);pending.push(q);}if(gl.getParameter(ext.GPU_DISJOINT_EXT))disjoint=true;
+     while(pending.length&&gl.getQueryParameter(pending[0],gl.QUERY_RESULT_AVAILABLE)){const query=pending.shift();gpu.push(gl.getQueryParameter(query,gl.QUERY_RESULT)/1e6);gl.deleteQuery(query);}if(frames>=300&&!pending.length)resolve();}
+   };
+   try{await done;}finally{clearTimeout(timeout);w.drawRenderFrame=original;for(const q of pending)gl.deleteQuery(q);}
+   return {supported:true,renderer,frames,gpu,cpu,intervals,disjoint,memory:w.renderer.info.memory,render:w.renderer.info.render,scope:'Whole drawRenderFrame; 60 warmup+240 measured; static elevated view, identical day/time, simulation paused for controlled GPU comparison.'};
+  });await writeFile(out+'/gpu.json',JSON.stringify(gpu,null,2));if(gpu.disjoint)throw Error('Disjoint GPU measurements');
+ }
  if(process.env.WG_WATER_HIDE_FAR==='1'){await page.evaluate(()=>{qaWaterWorld.scene.traverse(m=>{if(m.userData.farGround)m.visible=false;});});await page.waitForTimeout(300);await page.screenshot({path:out+'/elevated-without-far-ground.png'});}
  console.log(JSON.stringify({seed:data.seed,target:data.target,wet:data.points.filter(p=>p.water.inside).length,total:data.points.length,waters:data.waters.length,errors}));
 }catch(error){await writeFile(out+'/failure.json',JSON.stringify({error:String(error),errors,text:await page.locator('body').innerText().catch(()=>null)},null,2));await page.screenshot({path:out+'/failure.png'}).catch(()=>{});throw error;}finally{await page.unrouteAll({behavior: 'wait'});await browser.close();}
