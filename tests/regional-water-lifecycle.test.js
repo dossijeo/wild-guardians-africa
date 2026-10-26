@@ -18,6 +18,8 @@ test('regional water owns its resources, borrows the clock and never resamples t
  water.material.onBeforeCompile(shader,{});
  assert.ok(shader.fragmentShader.includes('regionalShore'));assert.ok(shader.fragmentShader.includes('uRegionalBounds'));assert.equal(shader.uniforms.qaBed.value.image.data,data.waterBed.bytes);
  const liveBounds=shader.uniforms.uRegionalBounds;world.nearBounds=[48,0,96,48];candidate.updateGroundBounds();assert.deepEqual(liveBounds.value.toArray(),world.nearBounds);
+ const ground=candidate.impostors.children.find(m=>m.userData.farGround),groundShader={uniforms:{},vertexShader:'void main() {\n#include <worldpos_vertex>\n}',fragmentShader:'void main() {\n#include <clipping_planes_fragment>\n#include <opaque_fragment>\n}'};
+ ground.material.onBeforeCompile(groundShader,{});assert.ok(!groundShader.fragmentShader.includes('a>=.5)discard'));assert.ok(!groundShader.fragmentShader.includes('gl_FragColor.rgb=mix'));assert.ok(groundShader.fragmentShader.includes('uFarNearBounds'));
  let releases=0;for(const resource of [water.geometry,water.material,shader.uniforms.qaBed.value,candidate.farGroundTextures[0]])resource.addEventListener('dispose',()=>releases++);
  candidate.dispose();candidate.dispose();assert.equal(releases,4);assert.equal(originals,1);assert.equal(candidate.impostors.children.length,0);assert.equal(clock.value,17);
 });

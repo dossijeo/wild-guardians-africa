@@ -66,9 +66,9 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   if(mapped){
    if(nativeWaterMask){shader.uniforms.uFarWaterMask={value:colorMap};shader.uniforms.uFarMaskWaterColor={value:new THREE.Vector3(...(world.naturalWaterEdges&&world.state?.biome==='manglares'?[.26,.42,.46]:world.naturalWaterEdges&&world.fluidLighting?.regionalWaterBiome==='gran-rio'?[.30,.44,.48]:data.colorMap.waterColor))};shader.vertexShader='varying vec2 vFarWaterUv;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarWaterUv=uv;');shader.fragmentShader='varying vec2 vFarWaterUv;uniform sampler2D uFarWaterMask;uniform vec3 uFarMaskWaterColor;\n'+shader.fragmentShader;}
    shader.vertexShader='attribute float aFarWater;varying float vFarWater;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarWater=aFarWater;');
-   shader.fragmentShader='varying float vFarWater;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb=mix(gl_FragColor.rgb,pow(max('+(nativeWaterMask?'uFarMaskWaterColor':'vColor.rgb')+',vec3(0.)),vec3(2.2))*mix(vec3(1.),vec3(.187675676,.302022472,.661818182),uNight),'+(nativeWaterMask?'smoothstep(.45,.55,texture2D(uFarWaterMask,vFarWaterUv).a)':'smoothstep(.45,.55,vFarWater)')+');');
+   shader.fragmentShader='varying float vFarWater;\n'+shader.fragmentShader;if(!regionalSurface)shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb=mix(gl_FragColor.rgb,pow(max('+(nativeWaterMask?'uFarMaskWaterColor':'vColor.rgb')+',vec3(0.)),vec3(2.2))*mix(vec3(1.),vec3(.187675676,.302022472,.661818182),uNight),'+(nativeWaterMask?'smoothstep(.45,.55,texture2D(uFarWaterMask,vFarWaterUv).a)':'smoothstep(.45,.55,vFarWater)')+');');
   }
-  if(regionalSurface)shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nif(texture2D(uFarWaterMask,vFarWaterUv).a>=.5)discard;');
+  // Transparent banks need the native land beneath them, as resident water does.
   Object.assign(shader.uniforms,{uFarNearBounds:bounds,uFarGroundOrigin:origin,uFarGroundNight:world.toon.uniforms.uNight});
   shader.vertexShader='varying vec2 vFarGroundXZ;uniform float uFarGroundNight;\n'+shader.vertexShader;
   shader.vertexShader=shader.vertexShader.replace('#include <worldpos_vertex>','#include <worldpos_vertex>\nvFarGroundXZ=(modelMatrix*vec4(transformed,1.)).xz;');
@@ -83,7 +83,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  };
  material.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer);
  material.customProgramCacheKey=()=> nativeWaterMask?'far-ground-native-water-mask-v1':colorMap?'far-ground-color-map-v2:'+(data.colorMap.waterColor?'mask':'opaque'):'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
- if(regionalSurface){const baseKey=material.customProgramCacheKey;material.customProgramCacheKey=()=>baseKey()+':surface-cutout-v1';}
+ if(regionalSurface){const baseKey=material.customProgramCacheKey;material.customProgramCacheKey=()=>baseKey()+':surface-underlay-v2';}
  if(residentMask){const baseKey=material.customProgramCacheKey;material.customProgramCacheKey=()=>baseKey()+':resident-mask-v2';}
  const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  let seamOwner=null,lastSeamPromise=null;

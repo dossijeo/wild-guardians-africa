@@ -12,8 +12,8 @@ export function buildFarSceneData({config,profile,treeBounds,groundBounds,step=4
  const field=native?.field??new TerrainField(config);
  const landColorAt=(x,z)=>{const original=native?native.colorAt(x,z):groundColor(field,profile,x,z);return palette?palette(field,profile,x,z,original):original;};
  const trees=native?native.trees:slots?sampleFarTrees(config,profile,treeBounds,{field,suppressed:new Set(suppressed),slots}):sampleSavannaAcacias(config,profile,treeBounds,{field,suppressed:new Set(suppressed)});
- const colorAt=(x,z)=>waterSurface&&field.waterInfo(x,z).inside?hex(profile.colors.water):landColorAt(x,z);
- let ground=treesOnly?null:farGroundData(field,groundBounds,{step,colorAt,wash:groundWash,heightAt:waterSurface?(x,z)=>{const water=field.waterInfo(x,z);return water.inside?Math.max(field.surface(x,z),water.level):field.surface(x,z);}:null});
+ const colorAt=(x,z)=>waterSurface&&!regionalWaterBed&&field.waterInfo(x,z).inside?hex(profile.colors.water):landColorAt(x,z);
+ let ground=treesOnly?null:farGroundData(field,groundBounds,{step,colorAt,wash:groundWash,heightAt:waterSurface&&!regionalWaterBed?(x,z)=>{const water=field.waterInfo(x,z);return water.inside?Math.max(field.surface(x,z),water.level):field.surface(x,z);}:null});
  if(ground&&(treeBase||treeBases))ground=fitFarGroundContacts(ground,trees.map(t=>treeAtlasAnchor(t,treeBases?.[t.slot]??treeBase)));
  if(ground&&nativeWaterSamples){ground.water=new Float32Array(ground.positions.length/3);for(let i=0;i<ground.water.length;i++)ground.water[i]=field.waterInfo(ground.positions[i*3],ground.positions[i*3+2]).inside?1:0;}
  let bedEncoder=null;
