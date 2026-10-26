@@ -361,3 +361,7 @@ Coalesced NEGATIVO:preparaciones98/98/85/82 frente97/97/89/79,cambiosLOD650/697/
 ## Histeresis geometrica del standby angular
 
 Banda12% alrededor umbrales nativos38/85m ajustados por calidad; solo identidades exactas pueden conservar LOD previo.38tests dirigidos pasan. Recorrido sin errores:preparaciones90/95/73/69(total327 vs362),cambiosLOD446/470/114/66(total1096 vs1261). P95=99.76ms,P99=116.54,max132.98:sin mejora perceptible demostrada frente referencia. Mantener en prototipo por estabilidad,no como optimizacion FPS comprobada. No seguir microajustes indefinidos; falta validar otras vistas/biomas y presupuesto integral antes de default.
+
+## Comprobacion estatica angular en otros cinco biomas
+
+Harness configurable por WG_WATER_BIOME, verifica estado biome real. Sabana,GranRio,Volcanes,Desierto,GranCanon semilla712/calidadmedia720p completan menu/nueva partida/preparacionnormal/elevada,sin errores de pagina. Capturas normales de primeros4 inspeccionadas y elevadas de5; se ve geometria cercana y fondo separado. No aprobar toda la imagen: proxy de suelo/agua lejana sigue plano y juntas visibles en vistas elevadas,independiente del cambio de arboles. Resumen porbioma guardado. No benchmark de movimiento,ni noche/calidadbaja,ni equivalencia AB artistica completa. Primera ejecucion Sabana fallo por firma locator.evaluate del harness, corregida y repetida; conservar failure original.
