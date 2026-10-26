@@ -21,7 +21,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
   const module=await WebAssembly.compile(await response.arrayBuffer());
   if(signal?.aborted)throw new DOMException('Wild Engine cancelled','AbortError');
   if(!loaded){
-    if(state.biome==='manglares')state.mangroveChannels=true;
+    if(state.biome==='manglares')state.mangroveNetwork=true;
     const start=await findSpatialStart(module,state,payload,{signal});
     Object.assign(state.villages[0],start.site);
     state.suppressed.push(...start.site.suppress);
