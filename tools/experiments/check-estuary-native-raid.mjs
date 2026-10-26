@@ -13,7 +13,8 @@ Object.assign(s.villages[0],start.site);s.suppressed.push(...start.site.suppress
 const installed=new Map(),session=createSpatialGameSession(module,s,{loaded:()=>installed,onData:d=>installed.set(`${d.cx},${d.cz}`,d)});
 try{
  const nav=createSpatialNavigationMovement(session,s),cx=Math.floor((start.site.x+24)/48),cz=Math.floor((start.site.z+24)/48),wanted=new Map();
- for(let z=cz-3;z<=cz+3;z++)for(let x=cx-3;x<=cx+3;x++)wanted.set(`${x},${z}`,{cx:x,cz:z,score:Math.abs(x-cx)+Math.abs(z-cz)});
+ const radius=Number(process.env.WG_RAID_CHUNK_RADIUS??3);
+ for(let z=cz-radius;z<=cz+radius;z++)for(let x=cx-radius;x<=cx+radius;x++)wanted.set(`${x},${z}`,{cx:x,cz:z,score:Math.abs(x-cx)+Math.abs(z-cz)});
  session.stream.plan(wanted);await session.stream.whenIdle();
  Game.resume(s,'intro');s.tutorial.step='center';Game.placeStructure(s,'center',start.site.center,nav);
  const spawned=spawnRaid(s,{group:['warthog','hyena','buffalo','lion','rhino']},nav),waterActors=new Set(),positions=[];
@@ -22,6 +23,6 @@ try{
  let changed=false;for(const key of nav.raidConnectivityDemand??[]){if(wanted.has(key))continue;const [x,z]=key.split(',').map(Number);wanted.set(key,{cx:x,cz:z,score:0});changed=true;}
  if(changed){session.stream.plan(wanted);await session.stream.whenIdle();}
  }for(const a of s.raid?.animals??[]){if(nav.field.fluidInside(a.x,a.z))waterActors.add(a.id);}if(steps%50===0)positions.push({time:s.elapsed,animals:s.raid?.animals.map(a=>({id:a.id,x:a.x,z:a.z,status:a.status,wait:a.raidWait?structuredClone(a.raidWait):null}))});}
- const report={seed,spawned,steps,waterActors:[...waterActors],hit:s.events.some(e=>e.type==='StructureHit'),site:start.site,positions};
+ const report={seed,chunkRadius:radius,loadedChunks:installed.size,spawned,steps,waterActors:[...waterActors],hit:s.events.some(e=>e.type==='StructureHit'),site:start.site,positions};
  mkdirSync('docs/qa/mangrove-magic-20261026',{recursive:true});writeFileSync(process.env.WG_RAID_REPORT??'docs/qa/mangrove-magic-20261026/native-estuary-raid.json',JSON.stringify(report,null,2));console.log(JSON.stringify({spawned,steps,waterActors:waterActors.size,hit:report.hit}));
 }finally{session.dispose();}

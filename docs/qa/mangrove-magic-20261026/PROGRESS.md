@@ -199,3 +199,11 @@ Iniciada captura secuencial de dosel amplio en semillas1 y712, mismo punto105,50
 ## Regresión/limitación detectada en semilla4096
 
 Incursiones densas: semillas1 y712 cruzan agua con cinco especies y atacan tras525/567pasos. Semilla4096 genera incursión, pero todas quedan en waiting/unknown y termina a910pasos sin contacto ni agua. Conservar informe negativo. Harness inicialmente fija49chunks; añadido modo WG_RAID_STREAM para servir raidConnectivityDemand y captura profunda de raidWait (antes compartía referencias mutables). Repetición4096 con ese modo tampoco alcanza objetivo. No atribuir aún a densidad ni dar validación multi-semilla por cerrada: investigar qué consulta produce unknown y por qué no se satisface la demanda. Informe negativo adicional *4096-stream.json. Capturas de semillas continúan en60946.
+
+## Dosel denso: revision visual y limite de residencia en QA
+
+Inspeccionadas capturas reales canopy-broadleaf-1/world.png y canopy-broadleaf-712/world.png: copas anchas agrupadas, helechos continuos y canales visibles. Las dos ejecuciones finalizan sin errores. La camara cercana permite comprobar cobertura, pero no sustituye la comparacion panoramica exacta con el mockup ni una medida GPU.
+
+Diagnostico adicional semilla4096: mismo harness con WG_RAID_CHUNK_RADIUS=4 (81 chunks iniciales en vez de49), manteniendo demanda de streaming, obtiene StructureHit tras1222 pasos y tres actores cruzando agua. Esto demuestra que el escenario no es intrinsecamente intransitable; ampliar residencia cambia el resultado. No demuestra que la demanda del juego real este corregida ni que la latencia de rutas sea aceptable. Conservar los dos resultados negativos anteriores. Investigar el halo requerido y la propagacion de demanda antes de activar la variante por defecto.
+
+Reproduccion: WG_RAID_SEED=4096 WG_RAID_STREAM=1 WG_RAID_CHUNK_RADIUS=4 node tools/experiments/check-estuary-native-raid.mjs (variables de entorno). Informe native-estuary-raid-broadleaf-4096-halo.json. La densidad sigue siendo candidata experimental; rendimiento completo pendiente.
