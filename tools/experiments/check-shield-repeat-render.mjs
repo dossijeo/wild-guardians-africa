@@ -6,7 +6,7 @@ const species=process.argv[2]??'rhino',out=process.env.WG_BEAST_QA_OUT??'docs/qa
 const viewport={width:Number(process.env.WG_QA_WIDTH??1280),height:Number(process.env.WG_QA_HEIGHT??720)};
 await mkdir(out,{recursive:true});
 const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
-const fixture=JSON.parse(await readFile('docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
+const fixture=JSON.parse(await readFile(process.env.WG_MAGIC_FIXTURE??'docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:"Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid"};
 let profiler;

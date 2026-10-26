@@ -273,3 +273,13 @@ Streaming comprobado por claves:26/29chunks unicos en recorridos frente25inicial
 Control mismo recorrido sin Game.cast termina ok,sin errores.645intervalos:P9549.885,P9966.525,max249.42ms. Una consulta getProgramInfoLog217.895ms en native-obstruction-blend MeshStandardMaterial. Coincide con pico249.395ms y espera214.82ms de primera activacion con recorrido. Evidencia de preparacion tardia de transparencia durante movimiento, no del cambio de luces al activar escudo. Es una pareja de recorridos, no ABAB; no extrapolar frecuencias de tirones ni rendimiento sostenido. Otros30programas en prueba larga no se reproducen en este control corto; falta atribucion para ellos.
 
 Resumen compacto de ambos preservado, raw/profiles/videos locales. No se declara ausencia de tirones. Siguiente validacion del objetivo: escena real Manglares con generacion nueva y navegacion; defaults siguen pendientes hasta cierre artistico/funcional.
+
+## Pendiente posterior solicitado: apoyo del totem en menu
+
+Revisar composicion de inicio para anclar pie del totem a una capa de suelo cercana que comparta su movimiento/profundidad durante acercamiento. Conservar parallax del fondo lejano y animacion al elegir opcion; evitar apariencia flotante o deslizamiento de base. Validar reposo, acercamiento, regreso y formatos de pantalla. Tarea posterior al objetivo activo, aun no implementada.
+
+## Fixture Manglares nuevo y magia conjunta
+
+Apertura experimental admite mangroveNetwork antes de findSpatialStart (no cambia defaults). Fixture estuary-agriculture crea4cultivos pagados y trabajador sobre receta8, verifica comandos agricolas en copia, conserva snapshot versionado. Progresion dia5 controlada, no campaña natural. Harness magia permite seleccionar fixture por WG_MAGIC_FIXTURE.
+
+Iniciado renderer Manglares receta8 con dos escudos,cooldown real y recorrido streaming96m, luces estables:sesion95059,estuary-shield-stream. Pendiente resultado visual/perfil; no declarar validacion por preparar fixture.

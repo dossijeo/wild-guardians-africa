@@ -15,10 +15,11 @@ const chunkAt=value=>Math.floor((value+24)/48);
 // Isolated campaign entry. Every terrain, prop and route query uses the same
 // C++ world as the chunk payloads; this never constructs Navigation/TerrainField.
 export async function createSpatialCampaignOpening({seed=712,biome='sabana',
-  culture='mapungubwe',slotId='spatial-campaign',runtimeFactory=null}={}){
+  culture='mapungubwe',slotId='spatial-campaign',runtimeFactory=null,mangroveNetwork=false}={}){
   const pack=villages.find(item=>item.id===(culture==='saheliana'?'saheliano':culture));
   if(!pack)throw RangeError('Unknown village culture');
   const state=Game.newGame({seed,biome,culture,slotId});
+  if(mangroveNetwork){if(biome!=='manglares')throw Error('Estuary recipe requires Manglares');state.mangroveNetwork=true;}
   const start=await findSpatialStart(wasm,state,pack);
   Object.assign(state.villages[0],start.site);
   state.suppressed.push(...start.site.suppress);
