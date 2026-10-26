@@ -58,3 +58,13 @@ test('preparing water steps is idempotent and does not invent contacts, elapsed 
  locomotion.ripples.add(1,2,3,8);locomotion.ripples.update(8.1);assert.equal(mesh.count,1);assert.equal(mesh.visible,true);
  locomotion.dispose();assert.equal(world.children.length,0);library.dispose();pipeline.dispose();
 });
+
+test('stable light slots preserve isolated effect illumination and scene-relative coordinates without changing light count',()=>{
+ const {library,pipeline,camera,world}=setup();library.enableStableWorldLights(world);
+ const fx=library.create('spirit',pipeline);world.add(fx);world.position.set(-144,0,96);fx.position.set(150,2,-90);fx.scale.setScalar(2);fx.seek(2);fx.prepare(camera,world);library.updateWorldLights(camera);world.updateMatrixWorld(true);
+ let count=0;world.traverse(o=>{if(o.isPointLight)count++;});assert.equal(count,4);
+ const active=library.worldLights.filter(l=>l.intensity>0);assert.equal(active.length,2);
+ for(const source of fx.localLights){const expected=source.position.clone().applyMatrix4(fx.matrixWorld);assert(active.some(l=>l.getWorldPosition(new Vector3()).distanceTo(expected)<1e-8&&l.color.equals(source.color)&&l.intensity===source.intensity));}
+ fx.clear();library.updateWorldLights(camera);assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
+ fx.dispose();library.updateWorldLights(camera);assert.equal(world.children.length,4);library.dispose();assert.equal(world.children.length,0);pipeline.dispose();
+});

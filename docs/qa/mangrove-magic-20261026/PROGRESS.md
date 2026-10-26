@@ -23,3 +23,11 @@ Harness final-ten, Chrome/WebGL2, 1280x720, calidad media, clic real en escudo. 
 Segunda ejecución: `shield-programs-before`, 37 consultas de programas durante activación, 4911.38 ms síncronos acumulados y máximo intervalo rAF 5054.95 ms. Los shaders más costosos contienen `uniform PointLight pointLights[ 2 ]` e incluyen materiales de animales (`Material_0`, `Mane repairs`, `BakedMaterial`) y del mundo. VfxGpuPreload desactiva sus luces; NativeVfx activa dos PointLight según el efecto. Three incluye el número de luces en la clave de programa incluso para múltiples pasadas. Hipótesis confirmada: cambio global de configuración luminosa al primer escudo dispara variantes de toda la escena.
 
 Siguiente intervención: diseñar luces de VFX con configuración estable durante el mundo, propiedad y liberación explícitas, evitando aumentar variantes con cada efecto simultáneo. Comparar imagen y coste estable; no eliminar luz del escudo como atajo. Mantener las capturas negativas y repetir el mismo harness antes/después. La espera de rutas continúa pendiente y no queda explicada por esta atribución de shaders.
+
+## Prototipo opt-in: luces estables
+
+`?vfxStableLights=1` reserva cuatro luces desde la carga. Una luz sin contribución mantiene visibilidad con intensidad cero; así la clave de programa no cambia. Los efectos aportan sus fuentes a esos slots, seleccionadas por intensidad y distancia de cámara. El escudo aislado conserva ambas posiciones, colores e intensidad. Más de cuatro fuentes simultáneas implica selección: pendiente de validación artística, no aprobado por defecto.
+
+Primera ejecución idéntica final-ten: máximo rAF 182.995 ms, dos consultas de programa, 161.955 ms acumulados. Comparación anterior: 5054.95 ms / 37 consultas / 4911.38 ms. No es aún ABAB ni prueba de coste GPU sostenido. Programas restantes: humo de destrucción RawShaderMaterial (118.375 ms), profundidad de malla skinned con mapa (43.58 ms). Hay que resolver o atribuir su aparición y repetir sin confundir daño simultáneo con activación del escudo.
+
+17 pruebas existentes/nueva cobertura de precarga y VFX pasan. Test añadido verifica luz aislada, color/intensidad, origen de render desplazado, desaparición sin cambio de conteo y liberación. Runtime normal permanece sin cambios mientras no se indique opt-in.

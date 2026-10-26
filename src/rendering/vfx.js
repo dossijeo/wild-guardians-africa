@@ -19,7 +19,35 @@ export class VfxLibrary {
     }
   }
   create(id,pipeline,options){const effect=new NativeVfx(this,id,pipeline,options);this.instances.add(effect);return effect;}
-  dispose(){if(this.disposed)return;this.disposed=true;for(const instance of [...this.instances])instance.dispose();for(const material of this.preparedMaterials)material.dispose();this.preparedMaterials.clear();for(const shape of this.shapes.values())shape.dispose();this.shapes.clear();this.texture.dispose();}
+  enableStableWorldLights(world,count=4){
+    if(this.instances.size||this.worldLights)throw Error('Configure VFX light slots before creating effects');
+    this.lightWorld=world;this.lightPoint=new THREE.Vector3();this.lightEye=new THREE.Vector3();
+    this.worldLights=Array.from({length:count},()=>{const light=new THREE.PointLight(0xffffff,0,0,2);world.add(light);return light;});
+    this.lightCandidates=Array.from({length:count},()=>({score:0,source:null,effect:null}));
+  }
+  updateWorldLights(camera){
+    if(!this.worldLights)return;
+    camera.getWorldPosition(this.lightEye);
+    for(const c of this.lightCandidates){c.score=0;c.source=null;c.effect=null;}
+    for(const effect of this.instances){
+      if(effect.stopped||!effect.parent||!effect.visible)continue;
+      effect.updateWorldMatrix(true,false);
+      for(const source of effect.localLights){
+        if(!source.visible)continue;
+        this.lightPoint.copy(source.position).applyMatrix4(effect.matrixWorld);
+        const score=source.intensity*Math.max(source.color.r,source.color.g,source.color.b)/(1+this.lightPoint.distanceToSquared(this.lightEye));
+        let slot=this.lightCandidates[0];for(const c of this.lightCandidates)if(c.score<slot.score)slot=c;
+        if(score>slot.score){slot.score=score;slot.source=source;slot.effect=effect;}
+      }
+    }
+    for(let i=0;i<this.worldLights.length;i++){
+      const light=this.worldLights[i],c=this.lightCandidates[i];
+      // Never change visibility: zero intensity keeps the program key stable.
+      light.intensity=c.source?.intensity??0;
+      if(c.source){light.color.copy(c.source.color);light.position.copy(c.source.position).applyMatrix4(c.effect.matrixWorld);this.lightWorld.worldToLocal(light.position);}
+    }
+  }
+  dispose(){if(this.disposed)return;this.disposed=true;for(const instance of [...this.instances])instance.dispose();for(const light of this.worldLights??[])light.removeFromParent();for(const material of this.preparedMaterials)material.dispose();this.preparedMaterials.clear();for(const shape of this.shapes.values())shape.dispose();this.shapes.clear();this.texture.dispose();}
 }
 
 export class NativeVfx extends THREE.Group {
@@ -27,7 +55,7 @@ export class NativeVfx extends THREE.Group {
     super();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceMatrix=new THREE.Matrix4();this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.softParticleDepth=options.softParticleDepth!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
     const v=value=>({value});this.uniforms={uVP:v(new THREE.Matrix4()),uView:v(new THREE.Matrix4()),uModel:v(new THREE.Matrix4()),uInst:v(true),uTime:v(0),uWind:v(options.wind??.3),uWet:v(0),uNight:v(0),uEye:v(new THREE.Vector3()),uRight:v(new THREE.Vector3()),uUp:v(new THREE.Vector3()),uScale:v(1),uExposure:v(1.03),uFogColor:v(new THREE.Color()),uFogRange:v(new THREE.Vector2(1e8,1e9)),uAtlas:v(library.texture),uDepth:v(pipeline.smokeDepth.depthTexture),uViewport:v(new THREE.Vector2()),uNear:v(.1),uFar:v(600),uSunDir:v(new THREE.Vector3()),uSun:v(new THREE.Vector3()),uSky:v(new THREE.Vector3()),uGround:v(new THREE.Vector3()),uParticleLight:v(new THREE.Vector3()),uShadowVP:v(new THREE.Matrix4()),uShadow:v(null),uShadowTexel:v(new THREE.Vector2(1/1024,1/1024)),uHasShadow:v(false)};
     for(let i=0;i<2;i++){this.uniforms['uLightPos'+i]=v(new THREE.Vector3());this.uniforms['uLightCol'+i]=v(new THREE.Vector3());}
-    this.localLights=options.worldLights===false?[]:Array.from({length:2},()=>new THREE.PointLight(0xffffff,0,0,2));for(const light of this.localLights){light.visible=false;this.add(light);}
+    this.localLights=options.worldLights===false?[]:Array.from({length:2},()=>new THREE.PointLight(0xffffff,0,0,2));for(const light of this.localLights){light.visible=false;if(!library.worldLights)this.add(light);}
     const rigidFragment=fragment(vfxRigidFragment).replace('float hash(vec3 p)', 'uniform bool uHasShadow;\n'+THREE.ShaderChunk.packing+'\nfloat hash(vec3 p)').replace('float shadow(float nl){','float shadow(float nl){if(!uHasShadow)return 1.;').replace('float z=texture(uShadow,p.xy+vec2(x,y)*uShadowTexel*1.2).r;','float z=unpackRGBAToDepth(textureLod(uShadow,p.xy+vec2(x,y)*uShadowTexel*1.2,0.));').replace('vec4(max(c,vec3(0.)),1.)','vec4(worldColor(c),1.)');
     this.rigidMaterial=material(vfxRigidVertex,rigidFragment,this.uniforms);
     this.depthMaterial=material(vfxShadowVertex,'precision highp float;'+THREE.ShaderChunk.packing+'out vec4 fragColor;void main(){fragColor=packDepthToRGBA(gl_FragCoord.z);}',this.uniforms);
