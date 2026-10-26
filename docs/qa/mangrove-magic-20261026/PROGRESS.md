@@ -329,3 +329,19 @@ El productor far-scene-data muestrea waterInfo.inside binario cada4m y far-groun
 ## Proxy lejano8m: hipotesis de geometria insuficiente
 
 Comparacion semilla4096,vista105,50,mascara4m original,proxy8m frente32m. Captura elevada sigue mostrando quiebros y agua plana. Repeticion instrumentada verifica mesh instalado:step8,mapStep4,17271vertices,mapWidth217;pthread activo,sin errores. No aumentar geometria por defecto: no resuelve el defecto. Harness ahora registra parametros solicitados y datos realmente instalados para evitar conclusiones basadas solo en overrides. Falta revisar forma nativa del cauce y respuesta visual del agua; ninguna mejora de rendimiento afirmada.
+
+## Correccion de criterio de captura solicitada por usuario
+
+Las vistas elevadas dominadas por impostores sirven solo para diagnosticar trazado, no para validar calidad final. Retomar camara habitual con arboles3D y helechos cercanos e impostores exclusivamente lejanos. Inspeccion de far-geometry-step8-audit/world.png detecta ademas arbol borroso en primer plano derecho: pendiente identificar representacion/LOD y estabilizacion de streaming; no asumir que el problema ocurre solo al elevar camara. No aceptar comparativas artisticas ni de rendimiento con primer plano sustituido por impostores.
+
+## Pendiente posterior: LOD de trabajadores y bestias
+
+Solicitud del usuario: auditar si los actores ya disponen de LOD para camaras alejadas. Si falta, evaluar versiones low poly conservando rig, animaciones, silueta y legibilidad de incursiones. Seleccionar por tamano proyectado y validar transiciones, varias bestias/trabajadores simultaneos y ahorro CPU/GPU real; no afirmar existencia de LOD sin inspeccion. Tarea posterior, no desplaza Manglares/magias ni correccion angular de impostores.
+
+### Auditoria rapida de LOD de actores
+
+scene.actor y AnimalPreload cargan/clonan un unico GLB por perfil/especie, sin seleccion geometrica LOD por distancia. Los9GLB referenciados por worker-actions y modelos Bestiario no declaran MSFT_lod ni nodos LOD. Triangulos indexados totales del archivo: trabajadores youngMale41927,olderMale40781,olderFemale45115,youngFemale38837 (incluye25meshes,entre ellos herramientas; no equivale a triangulos visibles simultaneamente). Bestias bufalo15743,facoquero15711,hiena16104,leon15896,rinoceronte14182. No se ha generado ni simplificado geometria. Usuario prefiere suministrar variantes low poly antes de cualquier reduccion automatica; esperar esos assets para esta tarea posterior. No afirmar ausencia de archivos alternativos ajenos a los catalogos auditados.
+
+## Prototipo angular y correccion de impostor cercano
+
+farAngularLod=1 coordina CPU/GLSL: peso de tarjeta disminuye entre20y35grados sobre raiz,con readiness aplicada al final para evitar huecos. Standby usa LOD existente y permite preparacion fuera del rectangulo cercano si angulo lo requiere,hasta fadeEnd. No activado por defecto. Se encontro segundo problema: presencia fisica de datos no implica cobertura grafica seleccionada; para opcion angular se usa cobertura efectiva al elegir/satisfacer standby. Captura normal angular-lod-residency/world.png muestra arbol derecho antes borroso ahora3D,106arboles cercanos registrados listos,sin errores. Espera explicita a preparacion terminada antes de captura. Vista elevada usa geometria adicional real segun contadores. No cerrado: faltan movimiento,histeresis/presupuesto,costeGPU y otros5biomas. No simplificacion automatica de actores.

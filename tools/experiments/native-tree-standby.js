@@ -3,7 +3,7 @@ import {treeTransitionRange,validateTreeTransitionPolicy} from './tree-transitio
 import {obstructionMaterial} from '../../src/rendering/obstruction.js';
 import * as THREE from 'three';
 import {NativeFarGpuCancelled} from './prepare-native-far-gpu.js';
-import {lodMix} from './far-impostor-math.js';
+import {lodMix,angularLodMix} from './far-impostor-math.js';
 
 // Immutable logical identity survives changes of native instance order/LOD.
 // The standby itself receives a real upload draw/fence, never a CPU-only proof.
@@ -32,10 +32,10 @@ function geometryView(source,capacity){
 // Two owned banks: one prepared/immutable while its replacement uploads.
 // They render only IDs whose normal native representation is awaiting proof.
 export class NativeTreeStandby {
- constructor({scene,sources,prepare,smoothTransitions=false,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
+ constructor({scene,sources,prepare,angularLod=false,smoothTransitions=false,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<(transitionHeight?.end??end)||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,smoothTransitions,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
+  Object.assign(this,{angularLod,scene,sources,prepare,smoothTransitions,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
@@ -90,7 +90,7 @@ export class NativeTreeStandby {
   const bank=this.active;for(const [level,mesh] of bank.meshes.entries()){
    const attribute=mesh.geometry.attributes.nativeVisibility,drawRows=bank.drawRows[level],prepared=bank.preparedMatrices[level];let first=Infinity,last=-1,matrixFirst=Infinity,matrixLast=-1,live=0;
    for(const [i,d]of bank.rows[level].entries()){
-    const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround((!frustum||frustum.intersectsBox(d.bounds))&&!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),...(d.transitionRange??[this.start,this.end]),state.ready)):0);
+    const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround((!frustum||frustum.intersectsBox(d.bounds))&&!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-(this.angularLod?angularLodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),camera.y-tree.y,...(d.transitionRange??[this.start,this.end]),state.ready):lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),...(d.transitionRange??[this.start,this.end]),state.ready))):0);
     if(value<=0)continue;
     // A permutation contains only exact, already-fenced transforms. No new
     // source/identity/LOD is accepted by this draw packing operation.

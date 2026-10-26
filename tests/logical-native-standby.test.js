@@ -57,3 +57,11 @@ test('size exception rejects malformed authored dimensions and thresholds',()=>{
 test('size preload option requires authored size policy and enabled logical preparation before allocation',async()=>{
  for(const extra of [{logicalSizePreload:1},{logicalSizePreload:true},{logicalSizePreload:true,logicalStandbyPreload:true},{logicalSizePreload:true,transitionHeight:{minimumHeight:24,start:200,end:240}}])await assert.rejects(attachNativeFarWorld({},extra),/logical size preload/);
 });
+
+test('angular prewarm admits overhead LOD outside terrain bounds but keeps horizon cards',()=>{
+ const t=tree('outside',140),bounds=[-20,-20,20,20];
+ assert.equal(logicalNativeStandbyEntries([t],options({preloadBounds:bounds,angularLod:true})).length,0);
+ const rows=logicalNativeStandbyEntries([t],options({preloadBounds:bounds,angularLod:true,camera:{x:0,y:160,z:0}}));
+ assert.equal(rows.length,1);assert.equal(rows[0].id,t.id);assert.equal(rows[0].level,2);
+ assert.equal(logicalNativeStandbyEntries([t],options({preloadBounds:bounds,camera:{x:0,y:160,z:0}})).length,0);
+});
