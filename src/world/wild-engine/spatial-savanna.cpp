@@ -286,8 +286,8 @@ double settlementBlend(const Settlement& site,double x,double z);
 double estuaryMask(double x,double z){
   // Warped cell boundaries form a connected network, rather than two isolated
   // world axes. Interior islands stay dry; broad low-frequency basins never flood.
-  const double u=x+(noise(x*.009,z*.009,9241)-.5)*36;
-  const double v=z+(noise(x*.009,z*.009,9251)-.5)*36;
+  const double u=x+(noise(x*.015,z*.015,9241)-.5)*86+(noise(x*.042,z*.042,9243)-.5)*18;
+  const double v=z+(noise(x*.015,z*.015,9251)-.5)*86+(noise(x*.042,z*.042,9253)-.5)*18;
   constexpr double spacing=80;
   const int cx=int(std::floor(u/spacing)),cz=int(std::floor(v/spacing));
   double first=1e30,second=1e30;
@@ -1802,8 +1802,12 @@ float spatial_wetland_mask_resident(float x,float z){
 float spatial_wetland_mask_lipschitz(){
   if(worldBiome!=4)return std::numeric_limits<float>::quiet_NaN();
   // noise() has slope <= 1.5 per coordinate. The steepest channel in
-  // wetlandMask() is < 0.72 per metre; each settlement clearing adds <= .25.
-  return float((mangroveNetwork?4.0:1.0)+.25*settlements.size());
+  // legacy wetlandMask() is < 0.72 per metre. The estuary warp has
+  // Jacobian norm <= 1+2*1.5*(86*.015+18*.042) < 7.14;
+  // the two nearest-distance gap has slope <= 2 in warped space.
+  // Smoothstep over 7 m plus width noise stays below 3.1; use 8
+  // conservatively. Each settlement clearing adds <= .25.
+  return float((mangroveNetwork?8.0:1.0)+.25*settlements.size());
 }
 // Certify an entire one-metre cut face from the same continuous terrain used
 // by movement. The river bound uses the analytic maximum derivative of

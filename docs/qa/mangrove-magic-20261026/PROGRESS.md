@@ -55,3 +55,11 @@ C++ implementa límites de celdas irregulares deformados por ruido, con anchura 
 Survey cuatro semillas: 18.23–20.40 % agua en 480x480 m y 15.01–20.15 % en regiones exteriores (antes 0 %). Cuatro tests pasan, incluidos legacy, snapshot, réplica lejana y geometría de agua pthread equivalente.
 
 Inspección seed-37.png: red distribuida, pero bordes demasiado rectos y celdas poligonales evidentes; no cumple aún la referencia de meandros naturales. Conservar como iteración diagnóstica y aumentar deformación orgánica/jerarquía de ramificaciones. Pendientes capturas reales, navegación entre partes secas, costes de generación y memoria. No presentar la cobertura numérica como aprobación artística.
+
+## Meandros a dos escalas
+
+Deformación de la red con ruido a 0.015/0.042, amplitudes 86/18 m. Cobertura cuatro semillas 18.86–20.28 %, zonas exteriores 16.95–20.79 %. Máscara tiene una cota conservadora explícita de pendiente para los certificados de navegación. Los cuatro tests legacy/snapshot/far/pthread siguen pasando.
+
+Mapa seed37 inspeccionado: elimina la mayoría de tramos rectos y genera curvas, ensanchamientos e intersecciones. Primera captura real semilla37: 495/3721 muestras con agua alrededor del poblado (~13.3 %), sin errores de página. Cauces visibles en primer fondo y horizonte, poblado sin inundación. Todavía falta prueba de accesibilidad y utilidad de las masas secas, costes nativos y revisión artística multi-semilla; no activar por defecto.
+
+Harness de capturas ampliado con cierre del tutorial y vista elevada. Serie real 1/37/712 en curso, sesión de ejecución 38423. No se atribuyen resultados a capturas aún pendientes.
