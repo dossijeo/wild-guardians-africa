@@ -6,7 +6,7 @@ import * as Game from '../../src/simulation/game.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {WILD_ENGINE_WORLD_VERSION} from '../../src/world/wild-engine/world-version.js';
 const biome='manglares',network=true;
-const opening=await createSpatialCampaignOpening({seed:712,biome,culture:'mapungubwe',slotId:'estuary-raid-render-qa',mangroveNetwork:network});
+const opening=await createSpatialCampaignOpening({seed:712,biome,culture:'mapungubwe',slotId:'estuary-raid-render-qa',mangroveNetwork:network,...(process.env.WG_SETTLEMENT_VERSION?{mangroveSettlementVersion:Number(process.env.WG_SETTLEMENT_VERSION)}:{})});
 try{
  const {state,nav,start}=opening;state.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
  for(const [i,p] of start.farm.slice(0,4).entries())Game.plant(state,`qa-paid-crop-${i}`,'mijo',p.x,p.z,nav);
@@ -19,7 +19,7 @@ try{
  const group=['warthog','hyena','buffalo','lion','rhino'];assert(spawnRaid(state,{group},nav));
  assert.equal(deserialize(serialize(state)).mangroveNetwork,true);
  Game.pause(state,'menu');
- const out='docs/qa/mangrove-magic-20261026/estuary-raid';await mkdir(out,{recursive:true});
+ const out=process.env.WG_MAGIC_FIXTURE_OUT??'docs/qa/mangrove-magic-20261026/estuary-raid';await mkdir(out,{recursive:true});
  await writeFile(out+'/fixture.json',JSON.stringify({slotId:state.slotId,group,snapshot:serialize(state),scope:'Native paid opening and four paid living millet plants; QA advances progression to day5 and daytime100 for unlocked agricultural magic. Five-species raid spawned by native planner. No spell applied before renderer loads. Not a campaign progression test.'},null,2));
  console.log(JSON.stringify({plants:state.plants.length,day:state.day,time:state.time}));
 }finally{opening.dispose();}

@@ -1,0 +1,113 @@
+{
+  "biome": "manglares",
+  "reservationVersion": 2,
+  "simulationElapsed": {
+    "before": 1.9282549998998741,
+    "after": 133.39471499989696
+  },
+  "runtimeProfile": {
+    "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&farWaterSurface=1&farAngularLod=1&qa-visibility=",
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "regionalWater": 1
+  },
+  "ok": true,
+  "scope": "Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 5091,
+    "p50": 16.73499999998603,
+    "p95": 50.01499999999942,
+    "p99": 83.05500000000757,
+    "max": 166.18000000000757
+  },
+  "programWaits": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  },
+  "casts": [
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 88579.19500005245,
+      "before": {
+        "elapsed": 3.2756099998998685,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 5.764999985694885,
+      "simulationStart": 3.2257849998998718,
+      "after": {
+        "elapsed": 5.5205649998998485,
+        "cooldown": 87.75504500000027,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.75504500000003
+          }
+        ]
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 21,
+        "finalChunks": 12,
+        "uniqueChunks": 35
+      },
+      "activationFrames": {
+        "samples": 51,
+        "p50": 33.320000000006985,
+        "p95": 66.52000000000407,
+        "p99": 66.60000000000582,
+        "max": 66.60000000000582
+      },
+      "programWaits": []
+    },
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 178636.94000005722,
+      "before": {
+        "elapsed": 93.30286499990001,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 3.9850000143051147,
+      "simulationStart": 93.2862549999,
+      "after": {
+        "elapsed": 95.51500499989972,
+        "cooldown": 87.7878600000003,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.78786000000003
+          }
+        ]
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 19,
+        "finalChunks": 10,
+        "uniqueChunks": 22
+      },
+      "activationFrames": {
+        "samples": 54,
+        "p50": 33.23999999999069,
+        "p95": 66.56999999997788,
+        "p99": 116.18499999999767,
+        "max": 116.18499999999767
+      },
+      "programWaits": []
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "Commands invoke legal Game.cast; no pointer targeting test."
+  ]
+}
