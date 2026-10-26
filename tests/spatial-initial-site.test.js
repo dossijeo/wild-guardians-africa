@@ -114,6 +114,6 @@ test('estuarine starts retain twelve usable farm plots and worker routes across 
   const culture=pack.id==='saheliano'?'saheliana':pack.id;
   const state=Game.newGame({seed,biome:'manglares',culture,slotId:'estuary-start'});state.mangroveNetwork=true;
   const result=await findSpatialStart(module,state,pack);
-  assert.equal(result.valid,true,`${seed}/${culture}`);assert.equal(result.farm.length,12);assert(result.site.entry);
+  assert.equal(result.valid,true,`${seed}/${culture}`);assert.equal(result.farm.length,12);assert(result.site.entry);assert(result.landAccess?.path.length>0);
  }
 });

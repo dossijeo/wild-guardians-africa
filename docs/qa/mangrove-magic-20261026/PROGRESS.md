@@ -69,3 +69,11 @@ Harness de capturas ampliado con cierre del tutorial y vista elevada. Serie real
 Prueba real del buscador nativo sobre semillas 1/37/712/4096 y todos los packs culturales: encuentra un emplazamiento válido con doce parcelas útiles y sus rutas de trabajadores. Pasa en 10.46 s de suite (no benchmark comparativo). No demuestra aún acceso de incursiones desde todas las masas de tierra ni campañas largas.
 
 Limitación detectada en QA visual: las primeras capturas llamadas elevated estaban siendo reajustadas por la cámara guiada del tutorial. No cuentan como panorámicas. Harness corregido: cinematic=true únicamente para la captura, ocultar presentación del tutor sin avanzar pasos, posición elevada explícita sin clamp de OrbitControls. Se repetirán esas vistas; las capturas normales anteriores sí muestran el terreno real.
+
+## Acceso terrestre hostil obligatorio
+
+Extraído el buscador geométrico común naturalLandAccess del wrapper de Gran Cañón, conservando su comportamiento anterior. La variante estuarina exige ahora una ruta positiva desde 32 m hacia las parcelas con el radio publicado del rinoceronte (1.55 m). No abre pasos artificiales ni ignora agua. La búsqueda de emplazamiento rechaza candidatos sin ese testigo.
+
+Cuatro semillas/todos los packs culturales pasan la condición añadida. Tanda completa: 19/19 pruebas de defensa natural de Cañón, emplazamientos iniciales y variantes Manglares. Error inicial de reutilización (riverX existe pero no devuelve coordenadas válidas fuera de Cañón) corregido limitando el seguimiento de esa ribera al bioma correspondiente.
+
+Panorámica corregida seed1 inspeccionada: muestra distribución extensa de canales y islas; orillas angulosas en el fondo siguen pendientes de diagnóstico de representación distante. Acceso de 32 m es una condición de arranque, no prueba de incursión completa ni de conectividad universal entre islas.

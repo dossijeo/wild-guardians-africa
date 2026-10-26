@@ -1,15 +1,14 @@
 // A positive native route is required before accepting a new canyon settlement.
 // This checks natural access before player walls exist; it never opens a wall,
 // fills the river or grants hostile units a water-crossing exception.
-export function* canyonLandAccessSteps(nav,points,{radius=1.1,distance=32,fastOnly=false}={}) {
- if(!nav.field.canyon)return null;
+export function* naturalLandAccessSteps(nav,points,{radius=1.1,distance=32,fastOnly=false}={}) {
  const candidates=[];
  for(const target of points){
   yield;
   if(!nav.walkable(target.x,target.z,radius,null,false))continue;
   // Follow the bank's procedural bend with verified segments before trying A*.
   // The endpoint stays on the same bank rather than across a meandering river.
-  if(typeof nav.field.riverX==='function')for(const direction of [-1,1]){
+  if(nav.field.canyon&&typeof nav.field.riverX==='function')for(const direction of [-1,1]){
    const offset=target.x-nav.field.riverX(target.z),path=[];let previous=target,clear=true;
    for(let j=1;j<=8;j++){
     const z=target.z+direction*distance*j/8,point={x:nav.field.riverX(z)+offset,z};
@@ -34,8 +33,15 @@ export function* canyonLandAccessSteps(nav,points,{radius=1.1,distance=32,fastOn
  return null;
 }
 
-export function canyonLandAccess(nav,points,options){
- const search=canyonLandAccessSteps(nav,points,options);let result;
+export function* canyonLandAccessSteps(nav,points,options){
+ if(!nav.field.canyon)return null;
+ return yield* naturalLandAccessSteps(nav,points,options);
+}
+export function naturalLandAccess(nav,points,options){
+ const search=naturalLandAccessSteps(nav,points,options);let result;
  do {result=search.next();}while(!result.done);
  return result.value;
+}
+export function canyonLandAccess(nav,points,options){
+ return nav.field.canyon?naturalLandAccess(nav,points,options):null;
 }
