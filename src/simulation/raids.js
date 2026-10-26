@@ -575,7 +575,7 @@ export function targetFor(s,a,nav) {
         skipConnectivityDemand:!!native.frontier});
       return barrier?.target?barrier:{unknown:true};
     }
-    if(native?.status==='occupied')return {unknown:true};
+    if(native?.status==='occupied')return {unknown:true,waitReason:'contention'};
     const fallback=targetForImpl(s,a,nav,stats);
     if(stats){
       const reason=native?.status??'unsupported',
@@ -910,7 +910,7 @@ export function updateRaid(s,dt,nav) {
       if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
         if(selected?.unknown){
-          enqueueWait(s,a,'unknown');
+          enqueueWait(s,a,selected.waitReason??'unknown');
           a.raidWait.epoch=waitEpoch(s,nav,a);
           a.raidWait.retryAt=s.elapsed+8;
         }

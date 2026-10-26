@@ -1,0 +1,2710 @@
+{
+  "scope": "Same saved raid, full Game.tick,49 resident chunks, demand serviced; no renderer",
+  "plans": [
+    {
+      "elapsed": 0.1,
+      "status": "occupied",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": -2147483648,
+        "siteTrials": 0,
+        "lastRouteCount": -2147483648,
+        "lastRegisterResult": -2147483648,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 8.199999999999987,
+      "status": "occupied",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": -2147483648,
+        "siteTrials": 0,
+        "lastRouteCount": -2147483648,
+        "lastRegisterResult": -2147483648,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 11.499999999999975,
+      "status": "occupied",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": -2147483648,
+        "siteTrials": 0,
+        "lastRouteCount": -2147483648,
+        "lastRegisterResult": -2147483648,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 14.099999999999966,
+      "status": "occupied",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": -2147483648,
+        "siteTrials": 0,
+        "lastRouteCount": -2147483648,
+        "lastRegisterResult": -2147483648,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 18.799999999999997,
+      "status": "occupied",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": -2147483648,
+        "siteTrials": 0,
+        "lastRouteCount": -2147483648,
+        "lastRegisterResult": -2147483648,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 26.80000000000011,
+      "status": "occupied",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": -2147483648,
+        "siteTrials": 0,
+        "lastRouteCount": -2147483648,
+        "lastRegisterResult": -2147483648,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 31.00000000000017,
+      "status": "none",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": 0,
+        "siteTrials": 0,
+        "lastRouteCount": 0,
+        "lastRegisterResult": 0,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    },
+    {
+      "elapsed": 40.0000000000003,
+      "status": "none",
+      "diagnostics": {
+        "firstCandidateCrop": 0,
+        "preferredTrials": 0,
+        "lastPreferredRouteCount": 0,
+        "siteTrials": 0,
+        "lastRouteCount": 0,
+        "lastRegisterResult": 0,
+        "unknownCauseMask": 0
+      },
+      "frontier": null
+    }
+  ],
+  "stats": {
+    "selections": 28,
+    "nativeCropPlans": 28,
+    "nativeCropRegionQueries": 24,
+    "nativeCropRouteQueries": 4,
+    "nativeCropResults": {
+      "found": 4,
+      "occupied": 15,
+      "none": 9
+    },
+    "selectionMs": 1374.629800000001,
+    "legacyFallbacks": {
+      "none": 9
+    },
+    "legacyFallbackResults": {
+      "center": 9
+    },
+    "legacyFallbackMatrix": {
+      "none/not-requested": {
+        "center": 9
+      }
+    },
+    "maxRegionalQueriesPerTick": 0,
+    "decisionCacheEntries": 7
+  },
+  "timeline": [
+    {
+      "elapsed": 0.1,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.87158823072295,
+          "z": 6.869597779180754,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90.03167741143781,
+          "z": 4.066586793165047,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 82.52831162996539,
+          "z": 8.307285295204172,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 88.03628313881508,
+          "z": 9.990071270704835,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 1.0999999999999999,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.31698546045891,
+          "z": 7,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": 3.573737774711478,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 81.11117708645317,
+          "z": 8,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": 9.53761709488635,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 2.1000000000000005,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 6.183014539541066,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": 2.073737774711479,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 79.61117708645311,
+          "z": 8,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89.8541592135132,
+          "z": 8.731582454213681,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 3.1000000000000014,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 4.6830145395410625,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": 0.5737377747114795,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 78.11117708645305,
+          "z": 8,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 90.8626065068978,
+          "z": 7.666946153224714,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 4.100000000000001,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 3.1830145395410616,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": -0.9262622252885208,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 77,
+          "z": 7.611177086453013,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 91.00853078119363,
+          "z": 6.18132680062333,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 5.099999999999998,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 1.6830145395410625,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": -1.4262622252885504,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 77,
+          "z": 6.11117708645301,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 91.00857068455261,
+          "z": 4.681326801154093,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 6.099999999999994,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 0.18301453954106273,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": -2.9262622252885495,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 77,
+          "z": 4.611177086453006,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 90.88348629980598,
+          "z": 3.194477325805466,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 7.099999999999991,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -1.3169854604589375,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": -4.42626222528855,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 77,
+          "z": 3.1111770864530053,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 90.43572703180303,
+          "z": 1.7865392942195726,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 8.099999999999987,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -2.8169854604589366,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": -5.9262622252885535,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 76.611177086453,
+          "z": 2,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89.1946568935861,
+          "z": 1.044092283948288,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 8.1,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 9.099999999999984,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88,
+          "z": -3.316985460458963,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": -7.426262225288557,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 76,
+          "z": 1.111177086452975,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -0.3004118347086572,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 16.19999999999999,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 10.09999999999998,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 87.183014539541,
+          "z": -4,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90.02180480957031,
+          "z": -7.500158309936523,
+          "status": "attacking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 74.61117708645293,
+          "z": 1,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89.80041183470868,
+          "z": -1,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 16.19999999999999,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 11.099999999999977,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 87,
+          "z": -5.316985460459003,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 90.02180480957031,
+          "z": -7.500158309936523,
+          "status": "attacking",
+          "wait": null,
+          "target": "plant-7"
+        },
+        {
+          "species": "buffalo",
+          "x": 74,
+          "z": 0.11117708645290336,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 91.30041183470874,
+          "z": -1,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 16.19999999999999,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,4,0.1",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 12.099999999999973,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 87,
+          "z": -6.816985460459007,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 89.75031706431612,
+          "z": -8,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 19.599999999999973,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,5,11.499999999999975",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 74.3888229135471,
+          "z": -1,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 92.8004118347088,
+          "z": -1,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 19.499999999999975,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,5,11.499999999999975",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 13.09999999999997,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.95696258544922,
+          "z": -7.300544738769531,
+          "status": "attacking",
+          "wait": null,
+          "target": "plant-3"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": -7.250317064316091,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 19.599999999999973,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,5,11.499999999999975",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 75.88882291354716,
+          "z": -1,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 93,
+          "z": -2.3004118347088016,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 19.499999999999975,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,5,11.499999999999975",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 14.099999999999966,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.95696258544922,
+          "z": -7.300544738769531,
+          "status": "walking",
+          "wait": null,
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": -5.7503170643160875,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 77,
+          "z": -1.3888229135471986,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 93,
+          "z": -3.8004118347088007,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 15.099999999999962,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.04638946155767,
+          "z": -7,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 22.199999999999967,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": -4.250317064316084,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 77,
+          "z": -2.8888229135471977,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 93,
+          "z": -5.300411834708804,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 16.09999999999996,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -6.453610538442298,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 22.199999999999967,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": -2.7503170643160844,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 78,
+          "z": -3.388822913547227,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 93,
+          "z": -6.800411834708807,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 17.099999999999973,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -4.953610538442295,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 22.199999999999967,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": -1.2503170643160852,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 78.88882291354726,
+          "z": -4,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 92.80050002212819,
+          "z": -8.224604161275463,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 18.099999999999987,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -3.453610538442293,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 22.199999999999967,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 89.24968293568392,
+          "z": 0,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 80.38882291354732,
+          "z": -4,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 92.7557373046875,
+          "z": -8.274999618530273,
+          "status": "attacking",
+          "wait": null,
+          "target": "plant-9"
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 22.099999999999966,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,6,14.099999999999966",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 19.1,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -1.9536105384422937,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": 0.74968293568395,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 81.88882291354737,
+          "z": -4,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 92.9549637879569,
+          "z": -8.050703367192662,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 20.100000000000016,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": -0.45361053844229415,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": 2.2496829356839494,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 83,
+          "z": -4.388822913547413,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 91.56781660445539,
+          "z": -8,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 21.10000000000003,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 1.046389461557706,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90,
+          "z": 3.7496829356839485,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 83,
+          "z": -5.888822913547417,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 90.06781660445533,
+          "z": -8,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 22.100000000000044,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.66611771459327,
+          "z": 2.3980890132504187,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 83,
+          "z": -7.38882291354742,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -7.56781660445529,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 23.10000000000006,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88,
+          "z": 3.602219600534301,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 83,
+          "z": -8.888822913547424,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -6.067816604455286,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 24.100000000000072,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 87,
+          "z": 4.102219600534335,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 83,
+          "z": -10.388822913547427,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -4.567816604455283,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 25.100000000000087,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 87,
+          "z": 5.6022196005343385,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 83,
+          "z": -11.88882291354743,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -3.0678166044552824,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 26.1000000000001,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.92827783086351,
+          "z": 6.927166098636996,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 26.9,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 26.9,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 84.38882291354749,
+          "z": -12,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -1.5678166044552833,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 26.9,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 26.799999999999997,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 27.100000000000115,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.61253627109697,
+          "z": 6.606530374744301,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 85.88882291354754,
+          "z": -12,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": -0.0678166044552834,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 34.80000000000011,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 28.10000000000013,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.61253627109697,
+          "z": 6.606530374744301,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 87,
+          "z": -11.611177086452416,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 89,
+          "z": 1.4321833955447167,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 34.80000000000011,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 29.100000000000144,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.61253627109697,
+          "z": 6.606530374744301,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 87,
+          "z": -10.111177086452413,
+          "status": "walking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 88.06781660445525,
+          "z": 2,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 34.80000000000011,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 30.100000000000158,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.61253627109697,
+          "z": 6.606530374744301,
+          "status": "waiting",
+          "wait": {
+            "since": 14.199999999999966,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 14.199999999999966,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "hyena",
+          "x": 90.1949236769166,
+          "z": 4.409734948933411,
+          "status": "waiting",
+          "wait": {
+            "since": 11.599999999999975,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 11.599999999999975,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 87.14034271240234,
+          "z": -9.78499984741211,
+          "status": "attacking",
+          "wait": null,
+          "target": "plant-5"
+        },
+        {
+          "species": "lion",
+          "x": 88,
+          "z": 3.4321833955447536,
+          "status": "waiting",
+          "wait": {
+            "since": 18.9,
+            "retryAt": 34.90000000000011,
+            "moveRetryAt": 18.9,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 79.44900999719064,
+          "z": 11.02092540057511,
+          "status": "waiting",
+          "wait": {
+            "since": 0.1,
+            "retryAt": 34.80000000000011,
+            "moveRetryAt": 0.1,
+            "epoch": "2,1120,7,18.799999999999997",
+            "reason": "contention"
+          },
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 31.100000000000172,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 86.87916247712204,
+          "z": 6.877289430475915,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 90.03167741143781,
+          "z": 4.066586793165047,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 87.05835122556712,
+          "z": -9.910607952590679,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 87.6892041338835,
+          "z": 4.97964481416036,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 79.08050266967827,
+          "z": 11,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 32.100000000000186,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.3277803994657,
+          "z": 7,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 89.0077058532048,
+          "z": 3.008342035386837,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 85.60675112957344,
+          "z": -10,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 86.20425295000543,
+          "z": 4.969494302611532,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 80.58050266967832,
+          "z": 11,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 33.1000000000002,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 6.17221960053428,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": 1.5113564839633198,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 84.10675112957338,
+          "z": -10,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 86,
+          "z": 3.7065184378186933,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 82,
+          "z": 10.919497330321624,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 34.100000000000215,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 4.672219600534277,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 89,
+          "z": 0.011356483963319897,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 84,
+          "z": -8.606751129573379,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 86.19540286567859,
+          "z": 3.0562005052648513,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 82,
+          "z": 9.41949733032162,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 35.10000000000023,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 89,
+          "z": 3.1722196005342758,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 88.59303233050977,
+          "z": -1.2704622002320787,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 84,
+          "z": -7.106751129573375,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 86.19540286567859,
+          "z": 3.0562005052648513,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 82,
+          "z": 7.919497330321617,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 36.10000000000024,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.77674700403347,
+          "z": 1.7600039790624153,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 88.5135488103921,
+          "z": -1.3232852850735508,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 84,
+          "z": -5.606751129573372,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 86.19540286567859,
+          "z": 3.0562005052648513,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 82,
+          "z": 6.419497330321613,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 37.10000000000026,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.6903983804912,
+          "z": 1.667179576084701,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 88.76340437347686,
+          "z": -1.157236504302389,
+          "status": "waiting",
+          "wait": {
+            "since": 36.900000000000254,
+            "retryAt": 44.900000000000254,
+            "moveRetryAt": 36.900000000000254,
+            "epoch": "2,1120,14,36.80000000000025",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "buffalo",
+          "x": 84,
+          "z": -4.106751129573368,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 86.19540286567859,
+          "z": 3.0562005052648513,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "rhino",
+          "x": 82,
+          "z": 4.91949733032161,
+          "status": "walking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 38.10000000000027,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.6903983804912,
+          "z": 1.667179576084701,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 88.52977276352038,
+          "z": -1.0087999001070964,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 84.47111287330713,
+          "z": -3.476726503271515,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 87.14667568589219,
+          "z": 3,
+          "status": "waiting",
+          "wait": {
+            "since": 37.20000000000026,
+            "retryAt": 45.20000000000026,
+            "moveRetryAt": 37.20000000000026,
+            "epoch": "2,1120,16,37.10000000000026",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 81.68717385035995,
+          "z": 4.074514162996929,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "elapsed": 39.100000000000286,
+      "actors": [
+        {
+          "species": "warthog",
+          "x": 88.6903983804912,
+          "z": 1.667179576084701,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "hyena",
+          "x": 88.52977276352038,
+          "z": -1.0087999001070964,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "buffalo",
+          "x": 84.47111287330713,
+          "z": -3.476726503271515,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        },
+        {
+          "species": "lion",
+          "x": 88,
+          "z": 4.185404098193069,
+          "status": "waiting",
+          "wait": {
+            "since": 37.20000000000026,
+            "retryAt": 45.20000000000026,
+            "moveRetryAt": 37.20000000000026,
+            "epoch": "2,1120,16,37.10000000000026",
+            "reason": "contention"
+          },
+          "target": null
+        },
+        {
+          "species": "rhino",
+          "x": 81.68717385035995,
+          "z": 4.074514162996929,
+          "status": "attacking",
+          "wait": null,
+          "target": "structure-2"
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-12",
+          "x": 60,
+          "z": 0
+        }
+      ]
+    }
+  ]
+}

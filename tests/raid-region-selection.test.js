@@ -259,3 +259,15 @@ test('bounded connectivity chunk demand is retained only during its raid',()=>{
   f.state.raid=null;
   assert.equal(raidResidentDemand(f.state,f.nav).size,0);
 });
+
+test('occupied native crops preserve contention so released leases wake waiters',async()=>{
+ const {enqueueWait,waitEpoch}=await import('../src/simulation/raid-contention.js');
+ const f=fixture();f.nav.intentTaskPlanner={planAttackCrop:()=>({status:'occupied'})};
+ const selected=targetFor(f.state,f.animal,f.nav);
+ assert.deepEqual(selected,{unknown:true,waitReason:'contention'});
+ enqueueWait(f.state,f.animal,selected.waitReason);
+ const before=waitEpoch(f.state,f.nav,f.animal);f.state.raid.waitRevision++;
+ assert.notEqual(waitEpoch(f.state,f.nav,f.animal),before);
+ f.animal.raidWait.reason='unknown';const unknown=waitEpoch(f.state,f.nav,f.animal);
+ f.state.raid.waitRevision++;assert.equal(waitEpoch(f.state,f.nav,f.animal),unknown);
+});

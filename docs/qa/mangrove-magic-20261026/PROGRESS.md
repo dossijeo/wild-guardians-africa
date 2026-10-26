@@ -305,3 +305,9 @@ create-estuary-raid-render-fixture construye apertura nativa Manglares712 receta
 9173 termina ok,0errores,receta8 conservada. Cinco rigs presentes; captura group-7 inspeccionada (copas/helechos/agua y animales visibles). Rutas:4especies caminan inicialmente; rinoceronte waiting/unknown hasta despues de~15s, luego walking hacia centro. No declarar latencia resuelta. Al final lion/rhino/buffalo caminando,hyena fuera,warthog retirandose. No prueba cruce de agua de todos desde esta camara.
 
 Clic de escudo real roundtrip73.945ms;0consultas getProgramInfoLog;163intervalos instrumentados despues de observacion de grupo,P9566.48ms,max149.615ms. No es perfil de toda la incursion ni GPU aislado. Resumen compacto estuary-raid/render/summary.json;video y capturas locales. Pendiente espera inicial del rinoceronte y movimiento de trabajador, entre otros gates finales.
+
+## Rinoceronte: reserva ocupada no es ruta desconocida
+
+Audit-estuary-raid-wait carga misma fixture,49chunks,planner nativo y Game.tick completo40s. planAttackCrop rinoceronte devuelve occupied,unknownCauseMask0,0siteTrials a0.1/8.2/16.3/24.3s:4cultivos reservados por4companeros. No era cola de calculo de ruta. A32.3s pasa none y busca estructura; trabajador permanece en centro en esta fixture, no prueba expansion.
+
+Corregido targetFor: occupied conserva waitReason=contention; updateRaid encola con esa razon, cuya epoca incluye liberaciones de reservas/progreso. Unknown genuino conserva politica anterior. No roba reservas ni altera densidad.42tests de seleccion/contencion pasan,incluida nueva prueba de despertar al cambiar lease revision. No afirmar mejora de frametime ni reducir espera legitima por recursos ocupados. Auditoria guardada tras cambio; secuencia de consultas sigue igual en esta fixture donde no hay disponibilidad temprana.
