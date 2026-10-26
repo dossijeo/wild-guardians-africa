@@ -665,3 +665,8 @@ probe-vfx-triangle-allocation.mjs reemplaza temporalmente fxTri por cálculo esc
 ### Triángulos VFX: A/B/A/B en renderer real
 
 compare-vfx-triangle-renderer.mjs ejecuta cuatro incursiones mismo fixture Manglares,media720p,12s tras escudoUI,perfiladorCPU activo en todas. B sirve candidato mediante rutaQA y confirma candidateLoads=1; A usa producción. Cuatro ejecuciones sin errores ni consultas de programas. P95 A1/B1/A2/B2=66.520/50.195/66.265/50.175ms; P99=83.250/83.385/83.005/83.260ms; máximo=183.030/133.160/183.045/166.375ms. Mediana~49.8ms no mejora. Captura B2 inspeccionada conserva escudo/animales/helechos; simulación viva tiene poses/tiempos ligeramente distintos, no comparación pixel-idéntica. Equivalencia exacta de geometría se acredita por126casos previos. Resultado favorable en P95, no mejora integral garantizada: repetir sin samplingCPU antes de adoptar. No activado en producción.
+
+
+### Decisión: no adoptar candidato fxTri
+
+Repetición A/B/A/B sin samplingCPU (cpuSampling=false acreditado) no confirma mejora: P95 A1/B1/A2/B2=50.060/50.170/50.140/66.350ms;P99=66.475/66.525/66.660/66.695ms;máximos166.250/166.385/166.140/166.215ms;medianas~49.8ms.4corridas sin errores ni consultas de programas. Candidato cargado únicamente en B. El beneficio observado con perfilador no se sostiene bajo instrumentación reducida. Decisión NO ADOPTAR: producción y generador siguen originales. Se cierra este experimento, conservando candidato reproducible, equivalencia126casos y resultados negativos. No seguir microajustando fxTri sin nueva hipótesis. El objetivo global continúa; esta prueba no resuelve los picos restantes ni invalida la corrección de luces estables contra bloqueos multisegundo.
