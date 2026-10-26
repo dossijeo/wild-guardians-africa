@@ -794,3 +794,11 @@ hydraulic-v2-agriculture/day y night completan4activaciones legales cadauna(grow
 prepareWildEngineWorld activa mangroveSettlementVersion2 únicamente dentro de !loaded para nuevas partidas Manglares. Guardados sin versión/v1/v2 conservan receta; no migración silenciosa.34tests pasan:4semillas edificios/recarga,3recetas expansión/recarga,3travesía,20contención de incursiones y4batch/snapshot/pthreads. La contención tiene señales de revisión que despiertan antes del reintento de8s; la corrida real demuestra recuperación del rinoceronte,pero no atribuye exactamente todas sus reservas. No cambiar política de ataques por esa observación aislada.
 
 Iniciada comprobación real de nueva partida seed4096 sin WG_WATER_BUILDING_PADS ni inyección de versión. Pendiente comprobar snapshot2 y capturas antes de considerar validada la adopción por defecto.
+
+### Default verificado y equivalencia pthread con footprints reales
+
+hydraulic-v2-production-default completa Chrome pthreads/media720p/seed4096/hora100 sin inyección de receta: snapshot mangroveSettlementVersion2,mangroveNetworktrue,crossOriginIsolatedtrue,0errores. Elevated.png inspeccionada: ramificaciones superior e inferior conectadas,edificios secos,vegetación presente;379/3721muestras locales mojadas coincide con candidatoQA. Captura amplia no sustituye detalle cercano de helechos,ver prueba agrícola y shield-stream.
+
+Ampliado mangrove-building-pads.test.js: cadauna de4semillas extrae los sites reales del poblado versión2 y los aplica al mundo pthread; prepara3chunks vecinos y compara agua,instancias,posiciones de terreno y props completos contra mundo síncrono. Junto a mangrove-channels.test.js,10tests pasan; incluye distribución regional100semillas,guardados y réplicas. Antes la prueba pthread multisemilla empleaba una reserva rectangular genérica: ya no es la única evidencia disponible.
+
+La validación nocturna anterior comenzó al anochecer; para cubrir activaciones en noche plena, check-agriculture-render admite WG_MAGIC_NIGHT_TIME. Corrida full-night(time320) iniciada con4casts; pendiente verificar uNight en cadauno. No ejecutar benchmarks concurrentes.

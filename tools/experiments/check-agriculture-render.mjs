@@ -7,7 +7,7 @@ const viewport={width:Number(process.env.WG_QA_WIDTH??1280),height:Number(proces
 await mkdir(out,{recursive:true});
 const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
 const fixture=JSON.parse(await readFile(process.env.WG_MAGIC_FIXTURE??'docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
-if(process.env.WG_MAGIC_NIGHT==='1'){const state=JSON.parse(fixture.snapshot);state.time=288;fixture.snapshot=JSON.stringify(state);}
+if(process.env.WG_MAGIC_NIGHT==='1'){const state=JSON.parse(fixture.snapshot);state.time=Number(process.env.WG_MAGIC_NIGHT_TIME??288);fixture.snapshot=JSON.stringify(state);}
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});let report={species,fixtureId,group:fixture.group??[species],viewport,scope:fixture.scope};
 let profiler;
