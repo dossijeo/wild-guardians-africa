@@ -20,6 +20,7 @@ for(const [biome,entries] of Object.entries(manifest.biomes))for(const entry of 
  }
  entry.experimental=false;delete entry.errors;delete entry.webglError;delete entry.drawCallsPerView;
 }
+manifest.totalTextureBytes=plan.reduce((sum,item)=>sum+item.data.length,0);
 manifest.version=(manifest.version??1)+1;manifest.artRevision='imagegen-20261026';
 if(JSON.stringify(manifest).includes('/docs/qa/'))throw Error('QA paths must never enter production manifest');
 if(!process.argv.includes('--apply')){console.log(JSON.stringify({dryRun:true,files:plan.length,bytes:plan.reduce((n,p)=>n+p.data.length,0),manifestHash,command:'node tools/experiments/install-imagegen-tree-atlases.mjs --apply'}));process.exit(0);}
