@@ -17,7 +17,7 @@ self.onmessage=async({data:request})=>{
   try{
     const world=await spatialCore();
     const state=validateSpatialTerrainState(request.state);
-    world.generate(state.seed,request.region.cx,request.region.cz,state.biome);
+    world.generate(state.seed,request.region.cx,request.region.cz,state.biome,state);
     for(const site of state.settlements)if(!Number.isFinite(
       world.addSettlement(site.x,site.z,site.hx,site.hz)))throw Error('Invalid horizon settlement');
     const data=world.horizon(request.region,request.waterColor,request.river);

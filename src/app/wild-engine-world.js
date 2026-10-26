@@ -21,6 +21,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
   const module=await WebAssembly.compile(await response.arrayBuffer());
   if(signal?.aborted)throw new DOMException('Wild Engine cancelled','AbortError');
   if(!loaded){
+    if(state.biome==='manglares')state.mangroveChannels=true;
     const start=await findSpatialStart(module,state,payload,{signal});
     Object.assign(state.villages[0],start.site);
     state.suppressed.push(...start.site.suppress);
@@ -42,7 +43,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
       const visual=streamingOptions(state.biome,world.visualSearch);
       threaded.core.preparation?.visualOptions?.(visual.waterBed?(visual.waterShore?3:1):0);
       const first=state.villages[0];
-      threaded.core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome);
+      threaded.core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome,state);
     }
     session=createSpatialGameSession(module,state,{
     ...(threaded?{core:threaded.core}:{}),

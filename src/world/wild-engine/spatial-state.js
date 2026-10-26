@@ -14,15 +14,16 @@ function spatialSettlements(wasm){
 }
 const spatialBiome=wasm=>wasm.spatial_world_biome()===1?'desert':
   wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
-  wasm.spatial_world_biome()===4?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna';
+  [4,7].includes(wasm.spatial_world_biome())?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna';
+const spatialVariant=wasm=>wasm.spatial_world_biome()===7?{mangroveChannels:true}:{};
 
 export function captureSpatialTerrainState(wasm){
-  return {version:1,seed:wasm.spatial_world_seed()>>>0,biome:spatialBiome(wasm),
+  return {version:1,seed:wasm.spatial_world_seed()>>>0,biome:spatialBiome(wasm),...spatialVariant(wasm),
     settlements:spatialSettlements(wasm)};
 }
 
 export function validateSpatialTerrainState(state){
-  if(state?.version!==1||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
+  if(state?.version!==1||(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome)||
      !Array.isArray(state.settlements)||state.settlements.length>100000)
     throw TypeError('Invalid spatial terrain state');
@@ -62,13 +63,14 @@ export function captureSpatialState(wasm){
   const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
   const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
-  return {version:5,biome:spatialBiome(wasm),
+  return {version:5,biome:spatialBiome(wasm),...spatialVariant(wasm),
     seed:wasm.spatial_world_seed()>>>0,settlements,barriers,polygons,removedProps,
     nextBarrierId:wasm.spatial_next_barrier_id(),nextPolygonId:wasm.spatial_next_polygon_id()};
 }
 
 export function validateSpatialState(state){
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
+  if(state?.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove variant');
   if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4&&state?.version!==5)||
      (state.version>=2&&!['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome))||
      !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||

@@ -25,9 +25,9 @@ export function createSpatialGameSession(module,state,streamOptions){
     // The native generator receives the low 32 bits of the game seed. Real
     // games default to Date.now(), which is wider than the stored native seed.
     if(generated.seed!==(Number(state.seed)>>>0)||
-      generated.biome!==BIOME_IDS[state.biome])
+      generated.biome!==BIOME_IDS[state.biome]||!!generated.mangroveChannels!==!!state.mangroveChannels)
       throw TypeError('Pre-generated spatial world does not match game state');
-  }else core.generate(state.seed,cx,cz,state.biome);
+  }else core.generate(state.seed,cx,cz,state.biome,state);
   const field=createSpatialTerrainView(core);
   const villages=new Map();
   const chunkRevisions=new Map();

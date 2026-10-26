@@ -93,6 +93,7 @@ struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_m
 WILD_SAMPLING_LOCAL uint32_t worldSeed=0;
 WILD_SAMPLING_LOCAL int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
 WILD_SAMPLING_LOCAL bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
+WILD_SAMPLING_LOCAL bool mangroveChannels=false; // Variant 7: bounded channels for new worlds; retain legacy saved terrain.
 WILD_SAMPLING_LOCAL int chunkX=0,chunkZ=0;
 int nextBarrierId=1;
 // Main-thread revisions. Workers capture values, never read these concurrently.
@@ -289,7 +290,12 @@ double wetlandMask(double x,double z){
   const double channelB=1-blend((std::abs(z-(4+16*std::sin(x*.027+phase*.71)+
     3.5*std::sin(x*.11-phase*.63)-warp))-1.2)/4.0);
   const double basin=blend((noise(x*.014,z*.014,9211)-.67)/.23);
-  double mask=std::max({channelA,channelB*.96,basin*.92});
+  const double network=std::max(channelA,channelB*.96);
+  // Low-frequency basin noise used to flood entire regions around the village.
+  // New worlds allow modest widening only along existing channels, never an
+  // independent lake. The zero boundary of the network bounds the inundation.
+  double mask=mangroveChannels?std::min(1.0,network*(1+basin*.18)):
+    std::max(network,basin*.92);
   // Movement queries can inspect any resident chunk while another chunk is
   // selected for rendering. Wetness must depend on the queried position,
   // never on the selected chunk's settlement shortlist.
@@ -1443,9 +1449,9 @@ static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
-  if(biome<0||biome>6)return -1;
+  if(biome<0||biome>7)return -1;
   ++terrainInputRevision;++residencyRevision;
-  worldSeed=seed;canyonOpenRight=biome==6;worldBiome=canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;worldBiome=mangroveChannels?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
   removedProps().clear();removedPropState.clear();removedPropGeometry().clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
@@ -2112,7 +2118,7 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
   return 1;
 }
 uint32_t spatial_world_seed(){return worldSeed;}
-int spatial_world_biome(){return worldBiome;}
+int spatial_world_biome(){return mangroveChannels?7:worldBiome;}
 int spatial_next_barrier_id(){return nextBarrierId;}
 int spatial_settlement_state_count(){return int(settlements.size());}
 SettlementStateRecord* spatial_settlement_state_ptr(){
