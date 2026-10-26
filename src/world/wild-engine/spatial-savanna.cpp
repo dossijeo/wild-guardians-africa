@@ -959,6 +959,8 @@ double proceduralPropSpacing(int type){
   constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
   constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
   constexpr double canyonSpacing[6]={13,5.2,3.5,9,19,31};
+  // Estuary-only canopy trial: closer tree cells, unchanged low fern layer.
+  if(mangroveNetwork&&type==0)return 8.5;
   return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
 }
 void prepareSelectedChunk(int cx,int cz,bool visual){
@@ -1032,7 +1034,11 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
         if(removedProps().count({type,gx,gz}))continue;
         const double waterLevel=fluidLevel(x,z);
         const bool mangroveHabitat=worldBiome==4&&(slot==0||slot==1||slot==4);
-        if(mangroveHabitat){if(wetlandMask(x,z)<.56)continue;}
+        if(mangroveHabitat){
+          // Rooted mangles occupy damp banks as well as water, leaving dry
+          // interiors for the existing coastal trees and approved ferns.
+          if(wetlandMask(x,z)<(mangroveNetwork?.20:.56))continue;
+        }
         else if((worldBiome==2&&slot==9)?waterLevel==0:waterLevel!=0)continue;
         if(worldBiome==2&&(slot==7||slot==17)&&
            std::abs(std::abs(x-riverX(z))-6.1)>15)continue;

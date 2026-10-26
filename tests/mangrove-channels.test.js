@@ -63,5 +63,8 @@ test('estuarine variant persists independently and pthread chunks match its auth
   while(thread.preparation.status()!==3){assert(performance.now()-start<15000);await new Promise(r=>setTimeout(r,1));}
   assert(thread.preparation.publish(id,2,1)>0);thread.preparation.release();thread.selectChunk(2,1);core.addChunk(2,1);core.selectChunk(2,1);
   assert.deepEqual(thread.chunkPayload().water,core.chunkPayload().water);
+  assert.deepEqual(thread.chunkPayload().terrain.positions,core.chunkPayload().terrain.positions);
+  assert.deepEqual(thread.chunkPayload().instances,core.chunkPayload().instances);
+  assert.deepEqual(thread.props(),core.props());
  }finally{await handle.dispose();}
 });

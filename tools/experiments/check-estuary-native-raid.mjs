@@ -19,5 +19,5 @@ try{
  let steps=0;
  while(s.raid&&!s.events.some(e=>e.type==='StructureHit')&&steps++<1800){s.elapsed+=.1;updateRaid(s,.1,nav);for(const a of s.raid?.animals??[]){if(nav.field.fluidInside(a.x,a.z))waterActors.add(a.id);}if(steps%50===0)positions.push({time:s.elapsed,animals:s.raid?.animals.map(a=>({id:a.id,x:a.x,z:a.z,status:a.status,wait:a.raidWait}))});}
  const report={spawned,steps,waterActors:[...waterActors],hit:s.events.some(e=>e.type==='StructureHit'),site:start.site,positions};
- mkdirSync('docs/qa/mangrove-magic-20261026',{recursive:true});writeFileSync('docs/qa/mangrove-magic-20261026/native-estuary-raid.json',JSON.stringify(report,null,2));console.log(JSON.stringify({spawned,steps,waterActors:waterActors.size,hit:report.hit}));
+ mkdirSync('docs/qa/mangrove-magic-20261026',{recursive:true});writeFileSync(process.env.WG_RAID_REPORT??'docs/qa/mangrove-magic-20261026/native-estuary-raid.json',JSON.stringify(report,null,2));console.log(JSON.stringify({spawned,steps,waterActors:waterActors.size,hit:report.hit}));
 }finally{session.dispose();}

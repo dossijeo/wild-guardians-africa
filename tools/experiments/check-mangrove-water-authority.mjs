@@ -19,6 +19,8 @@ try{
  // guided placement camera override the requested comparison views.
  await page.addStyleTag({content:'#guardian-root{display:none!important}'});
  await page.evaluate(()=>{qaWaterWorld.cinematic=true;});
+ if(process.env.WG_WATER_VIEW)await page.evaluate(([x,z])=>{const w=qaWaterWorld,t=w.controls.target,dx=x-t.x,dz=z-t.z;t.set(x,w.nav.field.surface(x,z),z);w.camera.position.x+=dx;w.camera.position.z+=dz;w.camera.lookAt(t);w.camera.updateMatrixWorld(true);w.syncChunks();},process.env.WG_WATER_VIEW.split(',').map(Number));
+ if(process.env.WG_WATER_VIEW)await page.waitForTimeout(10000);
  await page.screenshot({path:out+'/world.png'});
  const data=await page.evaluate(async()=>{
   const w=qaWaterWorld,f=w.nav.field,points=[];const o=w.controls.target;

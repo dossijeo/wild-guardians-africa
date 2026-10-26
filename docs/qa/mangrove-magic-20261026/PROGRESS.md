@@ -121,3 +121,15 @@ Inspeccionada captura network-overview-37-nohmr-retry/world.png: canales visible
 ## Diagnóstico de presencia de helechos
 
 Captura real fern-diagnosis-37 completada sin errores. Audit confirma holly-fronds, variante C activa, calidad media, espaciado .65, 225 matas cercanas y 57 lejanas (282 total), 7656 triángulos; 6183 candidatos y 5481 excluidos por máscaras. El asset aprobado y LOD están activos: no atribuir la escasez a sustitución por hojas antiguas. Falta separar cobertura, desgaste/poblado, pendiente, exclusión acuática y alcance de cámara. Comparación equivalente con variante7 iniciada en sesión91103, todavía pendiente; no cambiar densidad sin esa evidencia.
+
+
+## Dirección frondosa solicitada
+
+Comparación misma cámara/poblado variante7 y8: ambas 225 matas cercanas +57 lejanas; no pérdida de cobertura seleccionada en esa vista. Captura fern-channel-37 fuera del poblado (105,50) inspeccionada: masa densa de frondas conservada alrededor del canal; arbolado sigue claramente disperso. Usuario solicita mayor densidad general según nuevo mockup. Primera prueba de dosel SOLO variante8: espaciado de árboles 13.5 ->8.5 m, umbral de hábitat de mangles .56 ->.20 para ocupar márgenes húmedas. No cambia helechos, despeje de asentamientos ni colisiones. Compilación53712 en curso; requiere captura y repetir pruebas de rutas/incursión, no activar por defecto todavía.
+
+
+## Primera captura del dosel más denso
+
+canopy-dense-37/world.png completada sin errores e inspeccionada. Más arbolado, helechos presentes, pero predominan palmeras/árboles de hoja larga: no alcanza aún las agrupaciones de copa ancha del mockup. Siguiente hipótesis: selección de especies por margen húmeda, no seguir aumentando indiscriminadamente instancias.
+
+Incursión densa guardada por separado en native-estuary-raid-dense.json: cinco especies entran en agua, ataque tras474 pasos. Se conserva informe anterior. Siete tests pasan; ampliada equivalencia de variante8 pthread a posiciones del terreno, instancias visibles y props de colisión, además del agua. Coste GPU/framerate de densidad todavía no medido.
