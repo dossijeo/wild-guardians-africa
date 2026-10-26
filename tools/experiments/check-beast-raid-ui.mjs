@@ -9,8 +9,16 @@ const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
 const fixture=JSON.parse(await readFile('docs/qa/beast-integration-20261025/fixtures/'+fixtureId+'.json','utf8'));
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:fixture.scope};
+let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_MAGIC_PROFILE==='1')await page.addInitScript(()=>{
+  const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];
+  const p=WebGL2RenderingContext.prototype,source=p.shaderSource,attach=p.attachShader,info=p.getProgramInfoLog;
+  p.shaderSource=function(shader,text){sources.set(shader,text);return source.call(this,shader,text);};
+  p.attachShader=function(program,shader){const list=attached.get(program)??[];list.push(shader);attached.set(program,list);return attach.call(this,program,shader);};
+  p.getProgramInfoLog=function(program){const start=performance.now();try{return info.call(this,program);}finally{if(globalThis.qaMagicRecording)qaMagicPrograms.push({start,ms:performance.now()-start,shaders:(attached.get(program)??[]).map(s=>sources.get(s))});}};
+ });
  await page.addInitScript(f=>{localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',music:0,sfx:0}));},fixture);
  await page.goto(base+'/?qa-visibility',{timeout:90000});const menu=page.frameLocator('#native-menu');
  await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});await menu.getByRole('button',{name:'Continuar',exact:true}).click();await menu.locator('[data-production-save="'+fixture.slotId+'"]').click();
@@ -29,6 +37,10 @@ try {
   }
  }
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
+ if(process.env.WG_MAGIC_PROFILE==='1'){
+  profiler=await context.newCDPSession(page);await profiler.send('Profiler.enable');await profiler.send('Profiler.start');
+  await page.evaluate(()=>{globalThis.qaMagicFrames=[];globalThis.qaMagicLongTasks=[];let last=performance.now();globalThis.qaMagicRecording=true;const frame=t=>{if(!qaMagicRecording)return;qaMagicFrames.push({t,ms:t-last});last=t;requestAnimationFrame(frame);};requestAnimationFrame(frame);new PerformanceObserver(list=>{for(const e of list.getEntries())qaMagicLongTasks.push({start:e.startTime,ms:e.duration});}).observe({type:'longtask',buffered:false});});
+ }
  await page.locator('[data-menu="magic"]').click();await page.locator('[data-spell="shield"]').click();
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
  const q=await inspect(),a=q.state.raid?.animals[0];assert(a,'Raid animal missing');
@@ -47,4 +59,4 @@ try {
  await page.waitForFunction(()=>JSON.parse(wildGuardiansVisibilityQa().snapshot).spells.some(s=>s.kind==='shield'||s.type==='shield'||s.spell==='shield'),null,{timeout:10000});
  await page.waitForTimeout(700);report.after=await inspect();await page.screenshot({path:out+'/raid-shield.png'});await page.waitForTimeout(5000);report.end=await inspect();await page.screenshot({path:out+'/raid-shield-end.png'});report.ok=true;assert.deepEqual(errors,[]);
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
