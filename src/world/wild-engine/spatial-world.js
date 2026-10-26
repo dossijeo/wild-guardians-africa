@@ -70,12 +70,12 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const pairs=new Int32Array(wasm.memory.buffer,wasm.spatial_changed_chunks_ptr(),count*2);
     return Array.from({length:count},(_,i)=>({cx:pairs[i*2],cz:pairs[i*2+1]}));
   }
-  function generate(seed,cx,cz,biome='savanna',{canyonOpenRight=false,mangroveChannels=false}={}){
+  function generate(seed,cx,cz,biome='savanna',{canyonOpenRight=false,mangroveChannels=false,mangroveNetwork=false}={}){
     const name=BIOME_IDS[biome]??biome;
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
     if(canyonOpenRight&&name!=='canyons')throw RangeError('One-wall variant requires canyons');
-    if(mangroveChannels&&name!=='mangrove')throw RangeError('Channel variant requires mangrove');
-    const count=wasm.spatial_generate_biome(seed>>>0,mangroveChannels?7:canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
+    if((mangroveChannels||mangroveNetwork)&&name!=='mangrove')throw RangeError('Channel variant requires mangrove');
+    const count=wasm.spatial_generate_biome(seed>>>0,mangroveNetwork?8:mangroveChannels?7:canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     workerPortalRoutes=[];chunkRevision++;
     return chunk;

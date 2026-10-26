@@ -14,8 +14,8 @@ function spatialSettlements(wasm){
 }
 const spatialBiome=wasm=>wasm.spatial_world_biome()===1?'desert':
   wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
-  [4,7].includes(wasm.spatial_world_biome())?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna';
-const spatialVariant=wasm=>wasm.spatial_world_biome()===7?{mangroveChannels:true}:{};
+  [4,7,8].includes(wasm.spatial_world_biome())?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna';
+const spatialVariant=wasm=>wasm.spatial_world_biome()===8?{mangroveNetwork:true}:wasm.spatial_world_biome()===7?{mangroveChannels:true}:{};
 
 export function captureSpatialTerrainState(wasm){
   return {version:1,seed:wasm.spatial_world_seed()>>>0,biome:spatialBiome(wasm),...spatialVariant(wasm),
@@ -23,6 +23,7 @@ export function captureSpatialTerrainState(wasm){
 }
 
 export function validateSpatialTerrainState(state){
+  if(state?.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove network');
   if(state?.version!==1||(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome)||
      !Array.isArray(state.settlements)||state.settlements.length>100000)
@@ -69,6 +70,7 @@ export function captureSpatialState(wasm){
 }
 
 export function validateSpatialState(state){
+  if(state?.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove network');
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
   if(state?.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove variant');
   if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4&&state?.version!==5)||

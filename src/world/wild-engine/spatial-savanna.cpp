@@ -94,6 +94,7 @@ WILD_SAMPLING_LOCAL uint32_t worldSeed=0;
 WILD_SAMPLING_LOCAL int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
 WILD_SAMPLING_LOCAL bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
 WILD_SAMPLING_LOCAL bool mangroveChannels=false; // Variant 7: bounded channels for new worlds; retain legacy saved terrain.
+WILD_SAMPLING_LOCAL bool mangroveNetwork=false; // Variant 8: distributed estuarine channel network.
 WILD_SAMPLING_LOCAL int chunkX=0,chunkZ=0;
 int nextBarrierId=1;
 // Main-thread revisions. Workers capture values, never read these concurrently.
@@ -282,6 +283,24 @@ double canyonWaterHalf(double z){return 5.8+noise(z*.009,14,5901)*1.8;}
 double mainRiverLevel(){return worldBiome==5?3.28:3.6;}
 double mainRiverReach(double z){return worldBiome==5?canyonWaterHalf(z)+.6:6.1;}
 double settlementBlend(const Settlement& site,double x,double z);
+double estuaryMask(double x,double z){
+  // Warped cell boundaries form a connected network, rather than two isolated
+  // world axes. Interior islands stay dry; broad low-frequency basins never flood.
+  const double u=x+(noise(x*.009,z*.009,9241)-.5)*36;
+  const double v=z+(noise(x*.009,z*.009,9251)-.5)*36;
+  constexpr double spacing=80;
+  const int cx=int(std::floor(u/spacing)),cz=int(std::floor(v/spacing));
+  double first=1e30,second=1e30;
+  for(int dz=-2;dz<=2;dz++)for(int dx=-2;dx<=2;dx++){
+    const int sx=cx+dx,sz=cz+dz;
+    const double px=(sx+.5+(unit(cellHash(sx,sz,9261))-.5)*.5)*spacing;
+    const double pz=(sz+.5+(unit(cellHash(sx,sz,9271))-.5)*.5)*spacing;
+    const double d=std::hypot(u-px,v-pz);
+    if(d<first){second=first;first=d;}else if(d<second)second=d;
+  }
+  const double width=2.5+noise(x*.013,z*.013,9281)*4;
+  return 1-blend((second-first-width)/7);
+}
 double wetlandMask(double x,double z){
   const double phase=unit(cellHash(9,7,63))*2*pi;
   const double warp=(noise(x*.065,z*.065,9201)-.5)*3.5;
@@ -296,6 +315,7 @@ double wetlandMask(double x,double z){
   // independent lake. The zero boundary of the network bounds the inundation.
   double mask=mangroveChannels?std::min(1.0,network*(1+basin*.18)):
     std::max(network,basin*.92);
+  if(mangroveNetwork)mask=estuaryMask(x,z);
   // Movement queries can inspect any resident chunk while another chunk is
   // selected for rendering. Wetness must depend on the queried position,
   // never on the selected chunk's settlement shortlist.
@@ -1449,9 +1469,9 @@ static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
-  if(biome<0||biome>7)return -1;
+  if(biome<0||biome>8)return -1;
   ++terrainInputRevision;++residencyRevision;
-  worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;worldBiome=mangroveChannels?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;mangroveNetwork=biome==8;worldBiome=(mangroveChannels||mangroveNetwork)?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
   removedProps().clear();removedPropState.clear();removedPropGeometry().clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
@@ -1783,7 +1803,7 @@ float spatial_wetland_mask_lipschitz(){
   if(worldBiome!=4)return std::numeric_limits<float>::quiet_NaN();
   // noise() has slope <= 1.5 per coordinate. The steepest channel in
   // wetlandMask() is < 0.72 per metre; each settlement clearing adds <= .25.
-  return float(1.0+.25*settlements.size());
+  return float((mangroveNetwork?4.0:1.0)+.25*settlements.size());
 }
 // Certify an entire one-metre cut face from the same continuous terrain used
 // by movement. The river bound uses the analytic maximum derivative of
@@ -2118,7 +2138,7 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
   return 1;
 }
 uint32_t spatial_world_seed(){return worldSeed;}
-int spatial_world_biome(){return mangroveChannels?7:worldBiome;}
+int spatial_world_biome(){return mangroveNetwork?8:mangroveChannels?7:worldBiome;}
 int spatial_next_barrier_id(){return nextBarrierId;}
 int spatial_settlement_state_count(){return int(settlements.size());}
 SettlementStateRecord* spatial_settlement_state_ptr(){

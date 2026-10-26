@@ -12,7 +12,7 @@ struct PreparationJob {
   uint32_t seed=0;
   uint64_t terrainRevision=0,residentRevision=0,obstacleRevision=0;
   int biome=0,cx=0,cz=0,id=0;
-  bool canyon=false,channels=false,ranOnWorker=false,cancelled=false,published=false;
+  bool canyon=false,channels=false,network=false,ranOnWorker=false,cancelled=false,published=false;
   double computeMs=0,publishMs=0;
   std::vector<Settlement> sites;
   std::unordered_set<PropKey,PropKeyHash> removed;
@@ -48,7 +48,7 @@ void* preparationLoop(void*){
     auto& job=*preparationJob;
     const double started=emscripten_get_now();
     job.ranOnWorker=!emscripten_is_main_runtime_thread();
-    worldSeed=job.seed;worldBiome=job.biome;canyonOpenRight=job.canyon;mangroveChannels=job.channels;
+    worldSeed=job.seed;worldBiome=job.biome;canyonOpenRight=job.canyon;mangroveChannels=job.channels;mangroveNetwork=job.network;
     settlements=std::move(job.sites);
     removedPropRegistry=&job.removed;residentSpatialRegistry=&job.samples;
     if(!preparationCancel.load(std::memory_order_acquire)){
@@ -99,7 +99,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_start(int cx,int cz){
   job->waterBedRequested=(preparationVisualOptions&1)!=0;
   job->waterShoreRequested=(preparationVisualOptions&2)!=0;
   job->id=++preparationSerial;job->seed=worldSeed;job->biome=worldBiome;
-  job->canyon=canyonOpenRight;job->channels=mangroveChannels;job->cx=cx;job->cz=cz;
+  job->canyon=canyonOpenRight;job->channels=mangroveChannels;job->network=mangroveNetwork;job->cx=cx;job->cz=cz;
   job->terrainRevision=terrainInputRevision;job->residentRevision=residencyRevision;job->obstacleRevision=overlayRevision;
   for(const auto& site:settlements)if(settlementNearChunk(site,cx,cz))job->sites.push_back(site);
   // Reproduce the procedural cell bounds, querying the authoritative suppression

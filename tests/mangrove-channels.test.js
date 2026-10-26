@@ -50,3 +50,18 @@ test('pthread preparation uses the same channel recipe as the authoritative main
   }
  }finally{await handle.dispose();}
 });
+
+test('estuarine variant persists independently and pthread chunks match its authoritative terrain',async()=>{
+ const core=createSpatialWorld(module);core.generate(37,0,0,'mangrove',{mangroveNetwork:true});core.addSettlement(60,0,14,12);
+ const saved=core.snapshot();assert.equal(saved.mangroveNetwork,true);assert.equal(saved.mangroveChannels,undefined);
+ const restored=createSpatialWorld(module);restored.restoreState(saved);const far=createFarSpatialReplica(module,core.terrainState());
+ for(let z=-180;z<=180;z+=7)for(let x=-180;x<=180;x+=7){assert.equal(restored.wetlandMaskAnywhere(x,z),core.wetlandMaskAnywhere(x,z));assert.equal(far.fluidLevelAnywhere(x,z),core.fluidLevelAnywhere(x,z));}
+ const handle=await createThreadedSpatialWorld(factory),thread=handle.core;
+ try{
+  thread.generate(37,0,0,'mangrove',{mangroveNetwork:true});thread.addSettlement(60,0,14,12);
+  const id=thread.preparation.start(2,1),start=performance.now();assert(id>0);
+  while(thread.preparation.status()!==3){assert(performance.now()-start<15000);await new Promise(r=>setTimeout(r,1));}
+  assert(thread.preparation.publish(id,2,1)>0);thread.preparation.release();thread.selectChunk(2,1);core.addChunk(2,1);core.selectChunk(2,1);
+  assert.deepEqual(thread.chunkPayload().water,core.chunkPayload().water);
+ }finally{await handle.dispose();}
+});

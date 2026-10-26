@@ -81,7 +81,7 @@ self.onmessage=async({data:request})=>{
           const state=validateSpatialState(request.state);
           seed=null;biome=null;
           wasm.spatial_generate_biome(state.seed,(state.biome??'savanna')==='desert'?1:
-            state.biome==='grand_river'?2:state.biome==='volcanoes'?3:state.biome==='mangrove'?(state.mangroveChannels?7:4):state.biome==='canyons'?5:0,
+            state.biome==='grand_river'?2:state.biome==='volcanoes'?3:state.biome==='mangrove'?(state.mangroveNetwork?8:state.mangroveChannels?7:4):state.biome==='canyons'?5:0,
             request.cx??0,request.cz??0);
           applySpatialState(wasm,state);
           for(const profile of request.profiles??[{radius:.28,worker:true},{radius:1.1,worker:false}])

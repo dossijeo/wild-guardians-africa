@@ -47,3 +47,11 @@ Nuevo survey-mangrove-network.mjs muestrea el WASM autoritativo (sin modificarlo
 La primera ejecución de atribución de objeto de sombra falló por una referencia QA no instalada; no es un error del juego. Corregida la inyección exclusivamente en el harness y repetición en curso. No usar esa ejecución fallida para rendimiento.
 
 Atribución corregida: clickStart 43507.525 ms, clickEnd 43570.430 ms. Única consulta tardía a 48871.075 ms (~5.3 s después): SkinnedMesh Mesh_0_1 / Mesh_0 / Armature, fuente Material_0, MeshDepthMaterial DoubleSide, espera 84.735 ms. Por tanto no atribuir ese evento al clic del escudo. La preparación residual de sombras y la latencia directa de magia son métricas distintas. Máximo rAF de la ventana completa 182.85 ms.
+
+## Primera red estuarina (variante 8, NO activada)
+
+C++ implementa límites de celdas irregulares deformados por ruido, con anchura variable y márgenes húmedos. Variante nativa 8 y bandera persistida mangroveNetwork, independiente de legacy 4 y canales 7. Propagada a estados, workers y validación de sesión; el hilo de preparación copia su bandera. Las partidas nuevas siguen usando variante 7 hasta validar arte/jugabilidad. Recompilados WASM síncrono y pthread.
+
+Survey cuatro semillas: 18.23–20.40 % agua en 480x480 m y 15.01–20.15 % en regiones exteriores (antes 0 %). Cuatro tests pasan, incluidos legacy, snapshot, réplica lejana y geometría de agua pthread equivalente.
+
+Inspección seed-37.png: red distribuida, pero bordes demasiado rectos y celdas poligonales evidentes; no cumple aún la referencia de meandros naturales. Conservar como iteración diagnóstica y aumentar deformación orgánica/jerarquía de ramificaciones. Pendientes capturas reales, navegación entre partes secas, costes de generación y memoria. No presentar la cobertura numérica como aprobación artística.
