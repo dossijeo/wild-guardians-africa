@@ -493,3 +493,7 @@ terrain-audit:196puntos mojados,109con suelo residente. Todos los residentes que
 ## Verificacion posterior de contactos
 
 regional-water-contact-fixed: rayos196regionales/109residentes, ningun punto regional a menos5mm del agua (antes16); separacion minima5.742mm, residentes20mm sin cambio. Captura elevada inspeccionada: mejora visual marginal, no resuelve el conjunto. Cero errores. Nueva hipotesis verificable: precision de profundidad con separacion20mm y near0.1/far500. Control WG_WATER_NEAR=1 mantiene FOV/posicion/geometria; report incluye near/far/DEPTH_BITS reales. No cambiar camara normal ni afirmar z-fighting hasta observar el control.
+
+## Precision descartada; auditoria de capas incompleta detectada
+
+regional-water-depth-precision report confirma near1/far500/24bits; captura elevada inspeccionada sin mejora perceptible respecto near0.1. No cambiar camara. Auditoria anterior clasificaba ground/farGround pero NO nativeHorizon. scene.syncChunks mantiene NativeHorizon, con meshes etiquetados terrain/water independientes. No atribuir todas las superficies a dos capas: se inicia aislamiento opt-in WG_WATER_HIDE_HORIZON que captura sin ambas mallas y registra sus vertices/visibilidad. Es una prueba de propiedad/composicion, no una retirada de horizonte propuesta.
