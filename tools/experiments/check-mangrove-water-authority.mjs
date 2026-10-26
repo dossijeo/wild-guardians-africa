@@ -6,7 +6,7 @@ const biome=process.env.WG_WATER_BIOME??'manglares';
 if(!['sabana','gran-rio','manglares','volcanes','desierto','gran-canon'].includes(biome))throw Error('Unsupported QA biome');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
-const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
+const page=await browser.newPage({viewport:{width:Number(process.env.WG_QA_WIDTH??1280),height:Number(process.env.WG_QA_HEIGHT??720)}}),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));
 page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
@@ -51,6 +51,18 @@ try{
  await page.waitForTimeout(2000);
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
  await page.screenshot({path:out+'/'+cameraView+'.png'});
+ if(process.env.WG_ATLAS_GROUND==='1'){
+  await page.evaluate(()=>{const w=qaWaterWorld,trees=w.farVegetation.adapters.flatMap(a=>a.layer.current.trees);let best=null;
+   for(let z=-100;z<=100;z+=20)for(let x=-40;x<=160;x+=20){if(Math.hypot(x-60,z)<55)continue;const near=trees.filter(t=>Math.hypot(t.x-x,t.z-z)<180);if(near.some(t=>Math.hypot(t.x-x,t.z-z)<10))continue;for(let angle=0;angle<Math.PI*2;angle+=Math.PI/12){const dx=Math.sin(angle),dz=Math.cos(angle);let gap=160,far=0;for(const t of near){const tx=t.x-x,tz=t.z-z,along=tx*dx+tz*dz,side=Math.abs(tx*dz-tz*dx);if(along>0&&side<5+along*.06){gap=Math.min(gap,along);if(along>90)far++;}}const score=gap+Math.min(far,5);if(!best||score>best.score)best={x,z,dx,dz,gap,score};}}
+   if(!best)throw Error('No clear ground camera');const {x,z,dx,dz}=best,water=w.nav.field.waterInfo(x,z),y=Math.max(w.nav.field.surface(x,z),water.inside?water.level:-Infinity);globalThis.qaGroundPose=best;w.camera.position.set(x,y+2.5,z);w.camera.lookAt(x+dx*200,y+2.5,z+dz*200);w.camera.updateMatrixWorld(true);w.syncChunks();});
+  await page.waitForTimeout(10000);await page.waitForFunction(()=>qaWaterWorld.farVegetation.adapters.every(a=>!a.preparationPending()),null,{timeout:90000});await page.waitForTimeout(1000);
+  const audit=await page.evaluate(async()=>{const w=qaWaterWorld,cards=new Set(w.farVegetation.adapters.map(a=>a.layer.current.prototype.impostors)),original=w.renderer.renderBufferDirect;let cardDraws=0,modelDraws=0,frames=0;const names={},standby=new Set(w.farVegetation.adapters.flatMap(a=>a.standbyDraws().map(d=>d.mesh)));
+   w.renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){if(cards.has(object))cardDraws++;if(standby.has(object)){modelDraws++;names[object.uuid]={count:object.count,triangles:geometry.index?geometry.index.count/3:geometry.attributes.position.count/3};}return original.apply(this,arguments);};
+   try{await new Promise(resolve=>{const tick=()=>{if(++frames>=120)resolve();else requestAnimationFrame(tick);};requestAnimationFrame(tick);});}finally{w.renderer.renderBufferDirect=original;}
+   const {qaFarDensity}=await import('/tools/experiments/qa-far-density.mjs');return {pose:globalThis.qaGroundPose,frames,cardDraws,modelDraws,models:names,camera:w.camera.position.toArray(),quaternion:w.camera.quaternion.toArray(),pixelRatio:w.renderer.getPixelRatio(),canvas:[w.renderer.domElement.width,w.renderer.domElement.height],adapters:w.farVegetation.adapters.map(a=>({stats:a.stats,cardVisible:a.layer.current.prototype.impostors.visible,pending:a.preparationPending(),unreadyWithinDensity:a.layer.current.trees.filter(t=>qaFarDensity(a.layer.current,w.camera.position,t.id)>0&&(a.layer.current.prototype.treeState(t.id)?.ready??0)<.999).length}))};});
+  await writeFile(out+'/ground-draw-audit.json',JSON.stringify(audit,null,2));if(process.env.WG_FORCE_FAR_3D==='1'&&(audit.cardDraws||audit.adapters.some(a=>a.unreadyWithinDensity||a.pending)))throw Error('3D reference has cards or unavailable replacements');
+  await page.screenshot({path:out+'/ground.png'});
+ }
  if(process.env.WG_ATLAS_HORIZON==='1'){
   await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x,t.y+42,t.z+70);w.camera.lookAt(t.x,t.y+7,t.z-130);w.camera.updateMatrixWorld(true);w.syncChunks();});
   await page.waitForTimeout(8000);await page.waitForFunction(()=>qaWaterWorld.farVegetation.adapters.every(a=>!a.preparationPending()),null,{timeout:90000});await page.waitForTimeout(1000);
