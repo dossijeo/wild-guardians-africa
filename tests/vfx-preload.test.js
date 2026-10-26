@@ -90,3 +90,18 @@ test('stable slots ignore effects hidden by ancestors or detached from their sce
  world.add(group);library.updateWorldLights(camera);assert(library.worldLights.some(l=>l.intensity>0));
  library.dispose();pipeline.dispose();
 });
+
+
+test('stable lights retain near-equal sources but admit a clearly stronger challenger',()=>{
+ const {library,pipeline,camera,world}=setup();library.enableStableWorldLights(world,1);
+ const first=library.create('spirit',pipeline),second=library.create('spirit',pipeline);world.add(first,second);
+ for(const fx of [first,second]){fx.stopped=false;fx.localLights[0].visible=true;fx.localLights[0].position.set(0,0,0);fx.localLights[0].color.setRGB(1,1,1);fx.localLights[1].visible=false;}
+ first.localLights[0].intensity=1;second.localLights[0].intensity=.99;
+ library.updateWorldLights(camera);assert(library.retainedLightSources.has(first.localLights[0]));
+ second.localLights[0].intensity=1.1;library.updateWorldLights(camera);assert(library.retainedLightSources.has(first.localLights[0]));
+ second.localLights[0].intensity=1.3;library.updateWorldLights(camera);assert(library.retainedLightSources.has(second.localLights[0]));
+ assert.equal(library.worldLights[0].intensity,1.3,'ranking hysteresis must not change authored intensity');
+ second.visible=false;library.updateWorldLights(camera);assert(library.retainedLightSources.has(first.localLights[0]));
+ first.visible=false;library.updateWorldLights(camera);assert.equal(library.worldLights[0].intensity,0);assert.equal(library.retainedLightSources.size,0);
+ library.dispose();pipeline.dispose();
+});

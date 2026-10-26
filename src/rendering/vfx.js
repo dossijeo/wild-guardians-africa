@@ -21,6 +21,8 @@ export class VfxLibrary {
   create(id,pipeline,options){const effect=new NativeVfx(this,id,pipeline,options);this.instances.add(effect);return effect;}
   enableStableWorldLights(world,count=4){
     if(this.instances.size||this.worldLights)throw Error('Configure VFX light slots before creating effects');
+    if(!Number.isInteger(count)||count<1||count>8)throw RangeError('Expected 1 to 8 stable light slots');
+    this.retainedLightSources=new Set();
     this.lightWorld=world;this.lightPoint=new THREE.Vector3();this.lightEye=new THREE.Vector3();
     this.worldLights=Array.from({length:count},()=>{const light=new THREE.PointLight(0xffffff,0,0,2);world.add(light);return light;});
     this.lightCandidates=Array.from({length:count},()=>({score:0,source:null,effect:null}));
@@ -38,11 +40,14 @@ export class VfxLibrary {
       for(const source of effect.localLights){
         if(!source.visible)continue;
         this.lightPoint.copy(source.position).applyMatrix4(effect.matrixWorld);
-        const score=source.intensity*Math.max(source.color.r,source.color.g,source.color.b)/(1+this.lightPoint.distanceToSquared(this.lightEye));
+        const score=(this.retainedLightSources.has(source)?1.2:1)*source.intensity*Math.max(source.color.r,source.color.g,source.color.b)/(1+this.lightPoint.distanceToSquared(this.lightEye));
         let slot=this.lightCandidates[0];for(const c of this.lightCandidates)if(c.score<slot.score)slot=c;
         if(score>slot.score){slot.score=score;slot.source=source;slot.effect=effect;}
       }
     }
+    // Keep near-equal sources from swapping as the camera moves slightly.
+    this.retainedLightSources.clear();
+    for(const candidate of this.lightCandidates)if(candidate.source)this.retainedLightSources.add(candidate.source);
     for(let i=0;i<this.worldLights.length;i++){
       const light=this.worldLights[i],c=this.lightCandidates[i];
       // Never change visibility: zero intensity keeps the program key stable.
