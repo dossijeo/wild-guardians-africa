@@ -746,3 +746,13 @@ mangrove-building-pads.test.js: semillas1,37,712,4096 pasan perímetros secos de
 building-pad-lower-cut completa0errores en pthreads. Su primer barrido cruzaba una orilla lateral; no usarlo para afirmar que el remate es natural. project-estuary-authority.mjs reconstruye cámara42° y valida12rayos contra coordenadas runtime con error<1e-5. Proyección completa de máscara nativa, sin objetos ni alpha/render, reproduce el corte inferior.
 
 Barrido siguiendo el cauce: píxeles770,460 hasta820,428.75 tienen máscara natural~.90–1, pero máscara con reservas .10–.55. Única influencia: site10, centro planificado. Distancia fuera de su rectángulo1.20–3.20m; settlementBlend extiende6m la exclusión de agua, cerrando el cauce aunque ya esté fuera de la reserva seca. Report y projected.png inspeccionados. Próximo diseño: separar la franja hidráulica de la nivelación/limpieza de vegetación, reducir exclusión fuera del edificio manteniendo su soporte seco y versionar esa receta en todas las réplicas/pthreads/guardados. No acortar globalmente el halo de otras culturas/biomas por este caso.
+
+### Transición hidráulica separada: canal inferior reconectado
+
+Settlement incorpora waterFalloff (default6). Lote ABI pasa5floats/site y valida .25..6m antes de mutar. wetlandMask usa el falloff individual; el camino6 conserva la expresión histórica exacta. Nivelación/clearRadius/halo de vegetación no cambian. La cota Lipschitz incorpora1.5/falloff para no invalidar certificaciones de agua. Struct copiado a trabajos pthread incluye el campo; snapshot nativo versión6 y terreno versión2 lo preservan, omitiéndolo en receta6para mantener formatos anteriores. Far replica y horizon worker restauran reservas con ese campo.
+
+Receta de partida mangroveSettlementVersion=2 usa1m, versión1 conserva6m; partidas sin campo conservan reserva original. QA activa2; aún no default. No migrar guardados silenciosamente. Standalone/pthreads recompilados con SDK6.0.12.
+
+20tests únicos pasan:4batch(incluye agua nueva, snapshots/far, validación y pthread con falloff1),4semillas edificios/recarga,3versiones expansión/recarga,6réplicas biomas y3travesía. Verificación pendiente: capturas multisemilla/movimiento/incursiones con versión2, costes completos y normal/cerca con helechos.
+
+building-pad-hydraulic-v2/elevated.png inspeccionada: canal inferior conectado a su bifurcación derecha y conexión superior conservada; no corte donde antes estaba halo del centro. Chrome real4096,media720p,hora100,backend pthreads,versión2,crossOriginIsolatedtrue,0errores.379/3721muestras locales mojadas (v1:370); no extrapolar ratio al mundo. Art/materiales/atlas no modificados. No cierre global por una sola captura.

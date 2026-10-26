@@ -55,7 +55,7 @@ export function createSpatialGameSession(module,state,streamOptions){
       ...terrainCenters.map(s=>centerFootprint(s,gameState).footprint)];
     const points=footprints.flat();
     if(!points.length)throw TypeError('A spatial village needs physical buildings');
-    const fittedEstuary=gameState.biome==='manglares'&&gameState.mangroveNetwork&&gameState.mangroveSettlementVersion===1;
+    const fittedEstuary=gameState.biome==='manglares'&&gameState.mangroveNetwork&&[1,2].includes(gameState.mangroveSettlementVersion);
     const sites=gameState.biome==='gran-canon'||fittedEstuary?footprints.map(footprint=>{
       const xs=footprint.map(point=>point.x),zs=footprint.map(point=>point.z);
       const minX=Math.min(...xs),maxX=Math.max(...xs),
@@ -67,7 +67,7 @@ export function createSpatialGameSession(module,state,streamOptions){
       hz:Math.max(...points.map(p=>Math.abs(p.z-village.z)))+1.25}];
     const changed=new Set();
     if(fittedEstuary){
-      core.applySettlements(sites,{replace:initial});
+      core.applySettlements(sites.map(site=>({...site,waterFalloff:gameState.mangroveSettlementVersion===2?1:6})),{replace:initial});
       for(const {cx,cz} of core.changedChunks())changed.add(`${cx},${cz}`);
     }else for(const [i,site] of sites.entries()){
       if(!Object.values(site).every(Number.isFinite)||site.hx>100||site.hz>100)

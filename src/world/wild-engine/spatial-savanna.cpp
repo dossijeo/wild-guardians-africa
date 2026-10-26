@@ -87,7 +87,7 @@ struct BarrierIndex {
   std::unordered_map<int,Barrier> byId;
   std::unordered_map<uint64_t,std::vector<int>> buckets;
 };
-struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0;};
+struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0,waterFalloff=6;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 WILD_SAMPLING_LOCAL uint32_t worldSeed=0;
@@ -321,7 +321,8 @@ double wetlandMask(double x,double z){
   // never on the selected chunk's settlement shortlist.
   for(const Settlement& site:settlements){
     if(std::abs(x-site.x)>=site.hx+6||std::abs(z-site.z)>=site.hz+6)continue;
-    mask*=1-settlementBlend(site,x,z);
+    const double edge=std::max(std::abs(x-site.x)-site.hx,std::abs(z-site.z)-site.hz);
+    mask*=site.waterFalloff==6?1-settlementBlend(site,x,z):blend(edge/site.waterFalloff);
   }
   return std::clamp(mask,0.0,1.0);
 }
@@ -1616,16 +1617,17 @@ int spatial_resident_visible_prop_count(){
 int spatial_changed_chunk_count(){return int(changedSettlementChunks.size()/2);}
 int32_t* spatial_changed_chunks_ptr(){return changedSettlementChunks.data();}
 // Main-thread authority stages a bounded batch; workers only consume snapshots.
-static float settlementBatchInput[256*4];
+static float settlementBatchInput[256*5];
 float* spatial_settlement_batch_ptr(){return settlementBatchInput;}
 int spatial_apply_settlement_batch(int count,int replace){
   if(count<0||count>256||(replace!=0&&replace!=1))return -1;
   std::vector<Settlement> incoming;incoming.reserve(count);
   for(int i=0;i<count;i++){
-    const float* p=settlementBatchInput+i*4;
+    const float* p=settlementBatchInput+i*5;
     if(!std::isfinite(p[0])||!std::isfinite(p[1])||!std::isfinite(p[2])||!std::isfinite(p[3])||
-       p[2]<=0||p[3]<=0||p[2]>100||p[3]>100)return -1;
+       p[2]<=0||p[3]<=0||p[2]>100||p[3]>100||!std::isfinite(p[4])||p[4]<.25||p[4]>6)return -1;
     incoming.push_back(makeSettlement(p[0],p[1],p[2],p[3]));
+    incoming.back().waterFalloff=p[4];
   }
   if(!replace&&incoming.empty())return 0;
   std::vector<Settlement> changed=replace?settlements:std::vector<Settlement>{};
@@ -1840,8 +1842,10 @@ float spatial_wetland_mask_lipschitz(){
   // Jacobian norm <= 1+2*1.5*(86*.015+18*.042) < 7.14;
   // the two nearest-distance gap has slope <= 2 in warped space.
   // Smoothstep over 7 m plus width noise stays below 3.1; use 8
-  // conservatively. Each settlement clearing adds <= .25.
-  return float((mangroveNetwork?8.0:1.0)+.25*settlements.size());
+  // conservatively. A settlement smoothstep adds <= 1.5 / waterFalloff.
+  double bound=mangroveNetwork?8.0:1.0;
+  for(const auto& site:settlements)bound+=1.5/site.waterFalloff;
+  return float(bound);
 }
 // Certify an entire one-metre cut face from the same continuous terrain used
 // by movement. The river bound uses the analytic maximum derivative of
@@ -2178,6 +2182,7 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
 uint32_t spatial_world_seed(){return worldSeed;}
 int spatial_world_biome(){return mangroveNetwork?8:mangroveChannels?7:worldBiome;}
 int spatial_next_barrier_id(){return nextBarrierId;}
+float spatial_settlement_water_falloff(int index){return index>=0&&index<int(settlements.size())?float(settlements[index].waterFalloff):-1;}
 int spatial_settlement_state_count(){return int(settlements.size());}
 SettlementStateRecord* spatial_settlement_state_ptr(){
   settlementState.clear();settlementState.reserve(settlements.size());

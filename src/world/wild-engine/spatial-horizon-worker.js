@@ -18,8 +18,8 @@ self.onmessage=async({data:request})=>{
     const world=await spatialCore();
     const state=validateSpatialTerrainState(request.state);
     world.generate(state.seed,request.region.cx,request.region.cz,state.biome,state);
-    for(const site of state.settlements)if(!Number.isFinite(
-      world.addSettlement(site.x,site.z,site.hx,site.hz)))throw Error('Invalid horizon settlement');
+    for(const site of state.settlements){if(site.waterFalloff!==undefined){world.applySettlements([site]);continue;}if(!Number.isFinite(
+      world.addSettlement(site.x,site.z,site.hx,site.hz)))throw Error('Invalid horizon settlement');}
     const data=world.horizon(request.region,request.waterColor,request.river);
     if(request.smoothNormals)data.normalBuild=smoothHorizonNormals(data.terrain);
     self.postMessage({id:request.id,data,metrics:world.metrics()},[data.terrain.buffer,data.water.buffer]);

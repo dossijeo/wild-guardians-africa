@@ -1,3 +1,4 @@
+import {applySpatialSettlementBatch,validWaterFalloff} from './spatial-settlement-batch.js';
 // The far horizon depends on relief and settlement flattening, not walls,
 // shields or removed props. Read only that small spatial subset for workers.
 function spatialSettlements(wasm){
@@ -9,6 +10,8 @@ function spatialSettlements(wasm){
     const at=i*16;
     settlements.push({x:sites.getFloat32(at,true),z:sites.getFloat32(at+4,true),
       hx:sites.getFloat32(at+8,true),hz:sites.getFloat32(at+12,true)});
+    const falloff=wasm.spatial_settlement_water_falloff(i);
+    if(falloff!==6)settlements.at(-1).waterFalloff=falloff;
   }
   return settlements;
 }
@@ -18,19 +21,20 @@ const spatialBiome=wasm=>wasm.spatial_world_biome()===1?'desert':
 const spatialVariant=wasm=>wasm.spatial_world_biome()===8?{mangroveNetwork:true}:wasm.spatial_world_biome()===7?{mangroveChannels:true}:{};
 
 export function captureSpatialTerrainState(wasm){
-  return {version:1,seed:wasm.spatial_world_seed()>>>0,biome:spatialBiome(wasm),...spatialVariant(wasm),
-    settlements:spatialSettlements(wasm)};
+  const settlements=spatialSettlements(wasm);
+  return {version:settlements.some(s=>s.waterFalloff!==undefined)?2:1,seed:wasm.spatial_world_seed()>>>0,biome:spatialBiome(wasm),...spatialVariant(wasm),
+    settlements};
 }
 
 export function validateSpatialTerrainState(state){
   if(state?.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove network');
-  if(state?.version!==1||(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
+  if(![1,2].includes(state?.version)||(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome)||
      !Array.isArray(state.settlements)||state.settlements.length>100000)
     throw TypeError('Invalid spatial terrain state');
   for(const site of state.settlements)if(![site?.x,site?.z,site?.hx,site?.hz].every(
        value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value)))||
-     site.hx<=0||site.hz<=0||site.hx>100||site.hz>100)
+     site.hx<=0||site.hz<=0||site.hx>100||site.hz>100||!validWaterFalloff(site)||(state.version===1&&site.waterFalloff!==undefined))
     throw TypeError('Invalid spatial terrain settlement');
   return state;
 }
@@ -64,7 +68,7 @@ export function captureSpatialState(wasm){
   const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
   const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
-  return {version:5,biome:spatialBiome(wasm),...spatialVariant(wasm),
+  return {version:settlements.some(s=>s.waterFalloff!==undefined)?6:5,biome:spatialBiome(wasm),...spatialVariant(wasm),
     seed:wasm.spatial_world_seed()>>>0,settlements,barriers,polygons,removedProps,
     nextBarrierId:wasm.spatial_next_barrier_id(),nextPolygonId:wasm.spatial_next_polygon_id()};
 }
@@ -73,7 +77,7 @@ export function validateSpatialState(state){
   if(state?.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove network');
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
   if(state?.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='mangrove'))throw TypeError('Invalid mangrove variant');
-  if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4&&state?.version!==5)||
+  if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4&&state?.version!==5&&state?.version!==6)||
      (state.version>=2&&!['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome))||
      !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !Array.isArray(state.settlements)||!Array.isArray(state.barriers)||
@@ -86,7 +90,7 @@ export function validateSpatialState(state){
     throw TypeError('Invalid spatial state version or header');
   for(const site of state.settlements)if(!finiteF32(site.x)||!finiteF32(site.z)||
     !finiteF32(site.hx)||!finiteF32(site.hz)||site.hx<=0||site.hz<=0||
-    site.hx>100||site.hz>100)throw TypeError('Invalid spatial settlement');
+    site.hx>100||site.hz>100||!validWaterFalloff(site)||(state.version<6&&site.waterFalloff!==undefined))throw TypeError('Invalid spatial settlement');
   let previous=0;
   for(const barrier of state.barriers){
     if(!Number.isInteger(barrier.id)||barrier.id<=previous||barrier.id>=state.nextBarrierId||
@@ -141,6 +145,7 @@ export function applySpatialState(wasm,state){
       throw Error('Could not restore removed spatial props');
   }
   for(const site of state.settlements){
+    if(site.waterFalloff!==undefined){applySpatialSettlementBatch(wasm,[site]);continue;}
     if(wasm.spatial_add_settlement(site.x,site.z,site.hx,site.hz)<0)
       throw Error('Could not restore spatial settlement');
   }

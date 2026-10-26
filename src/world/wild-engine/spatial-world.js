@@ -1,3 +1,4 @@
+import {applySpatialSettlementBatch} from './spatial-settlement-batch.js';
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barrier-batch.js';
 import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
@@ -456,15 +457,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     },
     applySettlements:(sites,{replace=false}={})=>{
       if(!generated)throw Error('Generate the world before placing settlements');
-      if(!Array.isArray(sites)||sites.length>256||typeof replace!=='boolean'||sites.some(s=>
-        !s||![s.x,s.z,s.hx,s.hz].every(v=>Number.isFinite(v)&&Number.isFinite(Math.fround(v)))||
-        s.hx<=0||s.hz<=0||s.hx>100||s.hz>100))throw TypeError('Invalid settlement batch');
-      const ptr=wasm.spatial_settlement_batch_ptr();
-      const input=new Float32Array(wasm.memory.buffer,ptr,sites.length*4);
-      sites.forEach((s,i)=>input.set([s.x,s.z,s.hx,s.hz],i*4));
-      const count=wasm.spatial_apply_settlement_batch(sites.length,replace?1:0);
-      if(count!==sites.length)throw Error('Could not apply settlement batch');
-      return count;
+      return applySpatialSettlementBatch(wasm,sites,{replace});
     },
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');

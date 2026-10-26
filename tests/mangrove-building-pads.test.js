@@ -7,7 +7,7 @@ import {centerFootprint} from '../src/world/centers.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 for(const seed of [1,37,712,4096])test(`footprint reservation keeps buildings dry and roundtrips adjacent chunks, seed ${seed}`,async()=>{
- const opening=await createSpatialCampaignOpening({seed,biome:'manglares',mangroveNetwork:true,mangroveSettlementVersion:1});let restored;
+ const opening=await createSpatialCampaignOpening({seed,biome:'manglares',mangroveNetwork:true,mangroveSettlementVersion:2});let restored;
  try{
   const {state,session}=opening,v=state.villages[0];
   const footprints=[...v.buildings.filter(b=>b.kind!=='Zona común').map(b=>b.footprint),centerFootprint(v.center,state).footprint];
