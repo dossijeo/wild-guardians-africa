@@ -52,12 +52,12 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   const compile=m.onBeforeCompile,key=m.customProgramCacheKey();
   // Share the live clock; this material is owned by this regional candidate.
   m.userData.paintUniforms.uTime=world.fluidMaterial.userData.paintUniforms.uTime;
-  m.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('if(vWetShore<3.5)','float regionalShore=texture2D(qaBed,(((bankWorld-qaBedBounds.xy)/qaBedBounds.zw)*(qaBedSize-1.)+.5)/qaBedSize).b*4.;if(regionalShore<3.5)').replace(',vWetShore)',',regionalShore)');Object.assign(shader.uniforms,{uRegionalMask:{value:colorMap},uRegionalBounds:bounds,...(residentMask?{uRegionalResident:{value:residentMask}}:{})});
+  m.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('if(vWetShore<3.5)','float regionalShore=texture2D(qaBed,(((bankWorld-qaBedBounds.xy)/qaBedBounds.zw)*(qaBedSize-1.)+.5)/qaBedSize).a*4.;if(regionalShore<3.5)').replace(',vWetShore)',',regionalShore)');Object.assign(shader.uniforms,{uRegionalMask:{value:colorMap},uRegionalBounds:bounds,...(residentMask?{uRegionalResident:{value:residentMask}}:{})});
    shader.vertexShader='varying vec2 vRegionalUv;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vRegionalUv=uv;');
    shader.fragmentShader='varying vec2 vRegionalUv;uniform sampler2D uRegionalMask;uniform vec4 uRegionalBounds;'+(residentMask?'uniform sampler2D uRegionalResident;':'')+'\n'+shader.fragmentShader;
    shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nif(texture2D(uRegionalMask,vRegionalUv).a<.5)discard;vec2 regionalXZ=vPaintWorld.xz+uWorldOrigin;if(all(greaterThanEqual(regionalXZ,uRegionalBounds.xy))&&all(lessThanEqual(regionalXZ,uRegionalBounds.zw)))'+(residentMask?'{vec2 cell=floor((regionalXZ-uRegionalBounds.xy)/48.);if(texture2D(uRegionalResident,(cell+.5)/8.).r>.5)discard;}':'discard;'));
   };
-  m.customProgramCacheKey=()=>key+':regional-mask-v1:'+!!residentMask;
+  m.customProgramCacheKey=()=>key+':regional-mask-v2:'+!!residentMask;
   regionalWater=new THREE.Mesh(g,m);regionalWater.receiveShadow=true;regionalWater.frustumCulled=false;regionalWater.userData.regionalWaterSurface=true;candidate.impostors.add(regionalWater);
  }
  const original=material.onBeforeCompile;
