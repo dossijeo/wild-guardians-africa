@@ -221,3 +221,9 @@ Conectado harness opcional WG_RAID_NATIVE_INTENTS=1 al createEventDrivenTaskPlan
 Combinacion completa:49chunks iniciales,4solicitados (5,0..3),53residentes;3actores cruzan agua y StructureHit tras1203pasos. Antes911sin movimiento/ataque. No se modifica densidad ni colisiones. Propagar demanda sin vecinos de origen tampoco resolvia; informes negativos preservados. No implica validar latencia real ni todas las semillas.
 
 Nueva preferencia del usuario: si es necesario, dejar pasos entre arboles para bestias/trabajadores; preservar copas y helechos. Pendiente medir conectividad para rinoceronte y verificar camara real, sin reducir densidad indiscriminadamente.
+
+## Repeticion con intents nativos y recuperacion de cobertura de tests
+
+Cuatro semillas con WG_RAID_NATIVE_INTENTS=1 y WG_RAID_STREAM=1:1/37/712/4096 alcanzan StructureHit tras525/501/567/1203pasos;5/5/5/3actores detectados en agua antes del primer impacto. No afirmar que todos alcanzan destino: harness termina al primer impacto.4096 aun tarda mucho mas; investigar latencia/desvios y espacio entre arboles. No es benchmark de frametime.
+
+Detectado en revision de commit que el archivo nuevo raid-entry-residency.test.js coincidia con un test preexistente y lo habia reemplazado. Restaurado integro desde el padre del commit y trasladadas las dos pruebas nuevas a raid-approach-residency.test.js. Ambas suites ejecutadas:9/9 pasan. La correccion recupera cobertura original; no ocultar esa omision del commit previo.
