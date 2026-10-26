@@ -321,3 +321,7 @@ Iniciada captura real semilla4096 copas anchas/receta8 a105,50, salida canopy-br
 ## Captura elevada4096 inspeccionada
 
 Render termina sin errores. Canales ramificados e islas visibles, poblado despejado, no lago gigante en area central. Sin embargo vista elevada muestra tramos angulosos y agua lejana plana con fronteras muy marcadas; no considerarla equivalencia artistica cerrada con referencia cartografica. Revisar curvatura/LOD de ribera y tiempo de estabilizacion de captura antes de defaults. Helechos a esta distancia no se distinguen individualmente; conservar validacion cercana anterior.
+
+## Mascara lejana de 2 metros: prueba negativa
+
+El productor far-scene-data muestrea waterInfo.inside binario cada4m y far-ground usa interpolacion lineal con smoothstep(.45,.55); su agua es color plano sin respuesta de agua cercana. Prueba QA semilla4096,misma vista105,50,solo mascara2m: termina sin errores,652/3721 muestras humedas. Inspeccion elevada sigue mostrando bordes angulosos y agua plana; no adoptar mayor resolucion como solucion suficiente ni modificar defaults. Falta separar geometria proxy32m y forma nativa de la mascara. Esta ejecucion confirma spatialSession.runtime.backend=pthreads,fallbackReason=null,crossOriginIsolated=true. Sin medicion GPU en esta prueba. Capturas en far-mask-step2-4096; resumen compacto versionado.
