@@ -295,3 +295,7 @@ Harness parametriza distancia/tiempo manteniendo valores anteriores por defecto.
 70152 termina ok sin errores,2escudos con recarga real y streaming144m/40s. Snapshot conserva mangroveNetwork. Comandos4.695/3.910ms; maximos de activacion99.755/99.805ms;3997intervalos totales,P5066? Correccion: P5033.225ms,P9566.55ms,P9999.78ms,max149.67ms.0consultas getProgramInfoLog registradas. Recorridos38/34chunks unicos frente21/25iniciales;16/15al retorno. Confirma generacion/instalacion durante prueba, no demuestra que todas las regiones deseadas esten listas a tiempo ni coste GPU. No se altero cooldown ni reloj; tutorial reaparece pero ambas aplicaciones se completan.
 
 Resumen estuary-shield-stream-long/summary.json. Sigue pendiente panorama final multi-semilla, navegacion/trabajadores en renderer, confirmar runtime pthread del navegador, densidad/rutas rinoceronte y politica final de fuentes antes de defaults. No extrapolar esta prueba agricola a incursiones activas.
+
+## Incursion renderer sobre receta nueva iniciada
+
+create-estuary-raid-render-fixture construye apertura nativa Manglares712 receta8,4cultivos y trabajador pagados, progreso QA dia5 y grupo5especies mediante spawnRaid. Snapshot deserialize confirma mangroveNetwork. No altera manualmente rutas/posiciones de animales. Harness beast acepta WG_BEAST_FIXTURE para cargar esta partida y observar grupo antes del clic real de escudo. Sesion9173,estuary-raid/render, pendiente resultado/capturas. No equiparar fixture con campaña natural.
