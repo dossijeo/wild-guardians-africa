@@ -509,3 +509,7 @@ pixel-audit punto pantalla700,510/world86.855,20.797: mask.935742, agua chunk y 
 ## Lecho visualizado en shader y regresiones nativas
 
 regional-water-bed-channels: salida QA roja=profundidad/1.17, verde=distancia/4, alpha1. Captura inspeccionada muestra gradientes y canales coherentes, sin una discontinuidad rectangular evidente que explique por si sola la apariencia. No es equivalencia numerica total (se conserva el error de muestreo ya documentado). Reejecutadas10pruebas: canales, estuario pthread/sincrono, chunks adyacentes/semillas, expansion/recarga, travesia por agua y cobertura; todas pasan. Nuevo aislamiento opt-in fuerza fluidVisibility1 SOLO en material de agua para distinguir recepcion de sombras de reflejos/color. No retirar sombras de produccion.
+
+## Sombras descartadas; comparacion espacial directa
+
+shadow-isolation termina0errores; captura sin recepcion de sombras conserva diferencia de apariencia. No promover quitar sombras. Datos de programas capturados: vertex difiere solo varyingUV, fragment solo mascara/sedimento esperado; paintUniforms no difieren. Esto no prueba equivalencia visual entre distancias. Se ejecuta comparacion actual misma zona: screenshot elevado original y regional-all (oculta chunk water, retira descarte residente de lamina regional). Tiempo fijo y camara igual; rejilla de rayos previa permite seleccionar pixeles mojados interiores con agua nativa para medir RGB. Prueba distinta de comparar colores en sitios/direcciones diferentes; anteriores same-area precedian correcciones de lecho/mascara.
