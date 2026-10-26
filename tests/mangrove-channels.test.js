@@ -91,3 +91,21 @@ test('dense estuary adjacent chunks agree across seeds, pthreads and saved reloa
   }
  }finally{await handle.dispose();}
 });
+
+
+test('current estuary recipe retains distributed channels and dry land across 100 seeds',()=>{
+ const core=createSpatialWorld(module);
+ for(let seed=1;seed<=100;seed++){
+  core.generate(seed,0,0,'mangrove',{mangroveNetwork:true});
+  // Sample separate regions, including far from the original village. Broad
+  // bounds detect a return to empty waterways or giant lakes, not artistic taste.
+  for(const [ox,oz] of [[60,0],[1200,-1600]]){
+   let wet=0,total=0;
+   for(let z=-240;z<=240;z+=12)for(let x=-240;x<=240;x+=12){
+    wet+=core.fluidLevelAnywhere(ox+x,oz+z)>0;total++;
+   }
+   const fraction=wet/total;
+   assert(fraction>.05&&fraction<.45,`Estuary seed ${seed} region ${ox},${oz}: wet fraction ${fraction}`);
+  }
+ }
+});

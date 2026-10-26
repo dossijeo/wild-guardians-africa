@@ -670,3 +670,8 @@ compare-vfx-triangle-renderer.mjs ejecuta cuatro incursiones mismo fixture Mangl
 ### Decisión: no adoptar candidato fxTri
 
 Repetición A/B/A/B sin samplingCPU (cpuSampling=false acreditado) no confirma mejora: P95 A1/B1/A2/B2=50.060/50.170/50.140/66.350ms;P99=66.475/66.525/66.660/66.695ms;máximos166.250/166.385/166.140/166.215ms;medianas~49.8ms.4corridas sin errores ni consultas de programas. Candidato cargado únicamente en B. El beneficio observado con perfilador no se sostiene bajo instrumentación reducida. Decisión NO ADOPTAR: producción y generador siguen originales. Se cierra este experimento, conservando candidato reproducible, equivalencia126casos y resultados negativos. No seguir microajustando fxTri sin nueva hipótesis. El objetivo global continúa; esta prueba no resuelve los picos restantes ni invalida la corrección de luces estables contra bloqueos multisegundo.
+
+
+### Cobertura de semillas de receta actual
+
+La prueba histórica100semillas solo cubría mangroveChannels (variante7). Añadida prueba específica mangroveNetwork (variante8) sobre100semillas, dos regiones480×480m centradas(60,0)y(1200,-1600),rejilla12m. Cada región debe conservar entre5%y45%agua: límites amplios contra mundo seco/lago gigante, no criterio de aprobación artística ni medida de conectividad. Pasa. Ejecutados conjuntamente mangrove-channels,mangrove-expansion-reload,mangrove-water-traversal:10tests pasan. Incluyen4semillas×4chunks vecinos comparando agua/terreno/instancias/props sync-pthread y recarga, rutas entreorillas para perfiles de actores, barreras sólidas y agua no edificable. No extrapolar100semillas a renderizado ni equivalenciapthread: estas coberturas son diferentes.
