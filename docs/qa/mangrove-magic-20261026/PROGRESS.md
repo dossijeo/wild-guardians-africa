@@ -311,3 +311,9 @@ Clic de escudo real roundtrip73.945ms;0consultas getProgramInfoLog;163intervalos
 Audit-estuary-raid-wait carga misma fixture,49chunks,planner nativo y Game.tick completo40s. planAttackCrop rinoceronte devuelve occupied,unknownCauseMask0,0siteTrials a0.1/8.2/16.3/24.3s:4cultivos reservados por4companeros. No era cola de calculo de ruta. A32.3s pasa none y busca estructura; trabajador permanece en centro en esta fixture, no prueba expansion.
 
 Corregido targetFor: occupied conserva waitReason=contention; updateRaid encola con esa razon, cuya epoca incluye liberaciones de reservas/progreso. Unknown genuino conserva politica anterior. No roba reservas ni altera densidad.42tests de seleccion/contencion pasan,incluida nueva prueba de despertar al cambiar lease revision. No afirmar mejora de frametime ni reducir espera legitima por recursos ocupados. Auditoria guardada tras cambio; secuencia de consultas sigue igual en esta fixture donde no hay disponibilidad temprana.
+
+## Equivalencia nativa ampliada
+
+Nueva prueba recorre semillas1/37/712/4096 y cuatro chunks contiguos(2,1)(3,1)(2,2)(3,2). Compara agua,terrain.positions,instances y props entre generacion sincronica y preparacion/publicacion pthread; consultas de superficie siguen disponibles mientras prepara. Restaura snapshot para cada chunk y compara agua e instancias.8tests de canales/travesia pasan. Es equivalencia de datos en chunks vecinos, no prueba visual exhaustiva de todas las juntas ni de campañas completas.
+
+Iniciada captura real semilla4096 copas anchas/receta8 a105,50, salida canopy-broadleaf-4096,sesion81260; pendiente inspeccion. No cambian defaults aun.

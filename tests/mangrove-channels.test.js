@@ -68,3 +68,26 @@ test('estuarine variant persists independently and pthread chunks match its auth
   assert.deepEqual(thread.props(),core.props());
  }finally{await handle.dispose();}
 });
+
+test('dense estuary adjacent chunks agree across seeds, pthreads and saved reloads',async()=>{
+ const handle=await createThreadedSpatialWorld(factory);
+ try{
+  for(const seed of [1,37,712,4096]){
+   const sync=createSpatialWorld(module),thread=handle.core;
+   for(const core of [sync,thread]){core.generate(seed,0,0,'mangrove',{mangroveNetwork:true});core.addSettlement(60,0,14,12);}
+   for(const [cx,cz] of [[2,1],[3,1],[2,2],[3,2]]){
+    sync.addChunk(cx,cz);sync.selectChunk(cx,cz);const expected=structuredClone(sync.chunkPayload());
+    const id=thread.preparation.start(cx,cz),started=performance.now();assert(id>0);
+    while(thread.preparation.status()!==3){assert(performance.now()-started<15000);assert(Number.isFinite(thread.surfaceAnywhere(60,0)));await new Promise(r=>setTimeout(r,1));}
+    assert(thread.preparation.publish(id,cx,cz)>0);thread.preparation.release();thread.selectChunk(cx,cz);
+    const actual=thread.chunkPayload();
+    for(const key of ['water','instances'])assert.deepEqual(actual[key],expected[key],`${seed}:${cx},${cz}:${key}`);
+    assert.deepEqual(actual.terrain.positions,expected.terrain.positions);
+    assert.deepEqual(thread.props(),sync.props());
+    const restored=createSpatialWorld(module);restored.restoreState(sync.snapshot(),cx,cz);restored.selectChunk(cx,cz);
+    assert.deepEqual(restored.chunkPayload().water,expected.water);
+    assert.deepEqual(restored.chunkPayload().instances,expected.instances);
+   }
+  }
+ }finally{await handle.dispose();}
+});
