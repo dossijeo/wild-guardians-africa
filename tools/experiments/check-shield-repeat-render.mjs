@@ -16,17 +16,17 @@ try {
 
  if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new')});});
  if(process.env.WG_MAGIC_PROFILE==='1')await page.addInitScript(()=>{
-  const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];
+  const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];globalThis.qaMagicProgramHistory=[];
   const p=WebGL2RenderingContext.prototype,source=p.shaderSource,attach=p.attachShader,info=p.getProgramInfoLog;
   p.shaderSource=function(shader,text){sources.set(shader,text);return source.call(this,shader,text);};
   p.attachShader=function(program,shader){const list=attached.get(program)??[];list.push(shader);attached.set(program,list);return attach.call(this,program,shader);};
-  p.getProgramInfoLog=function(program){const start=performance.now();try{return info.call(this,program);}finally{if(globalThis.qaMagicRecording)qaMagicPrograms.push({draw:globalThis.qaMagicDraw,start,ms:performance.now()-start,shaders:(attached.get(program)??[]).map(s=>sources.get(s))});}};
+  p.getProgramInfoLog=function(program){const start=performance.now();try{return info.call(this,program);}finally{const sample={draw:globalThis.qaMagicDraw,start,ms:performance.now()-start,shaders:(attached.get(program)??[]).map(s=>sources.get(s))};qaMagicProgramHistory.push({...sample,interactive:!!globalThis.qaMagicRecording});if(globalThis.qaMagicRecording)qaMagicPrograms.push(sample);}};
  });
  await page.addInitScript(f=>{localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',music:0,sfx:0}));},fixture);
  await page.goto(base+'/?qa-visibility'+(process.env.WG_WATER_CANDIDATE==='1'?'&farWaterSurface=1&farAngularLod=1':'')+(['0','1'].includes(process.env.WG_STABLE_LIGHTS)?'&vfxStableLights='+process.env.WG_STABLE_LIGHTS:''),{timeout:90000});const menu=page.frameLocator('#native-menu');
  await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});await menu.getByRole('button',{name:'Continuar',exact:true}).click();await menu.locator('[data-production-save="'+fixture.slotId+'"]').click();
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
- await page.waitForTimeout(2200);report.before=await inspect();
+ await page.waitForTimeout(2200);report.before=await inspect();report.biome=report.before.state?.biome;assert.equal(report.biome,JSON.parse(fixture.snapshot).biome);if(process.env.WG_EXPECT_BIOME)assert.equal(report.biome,process.env.WG_EXPECT_BIOME);if(process.env.WG_MAGIC_PROFILE==='1')report.runtimeProfile=await page.evaluate(()=>({visualSearch:qaMagicWorld.visualSearch,streamingOptions:qaMagicWorld.streamingOptions,regionalWater:qaMagicWorld.scene.getObjectsByProperty('isMesh',true).filter(m=>m.userData.regionalWaterSurface).length}));
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
  if(process.env.WG_MAGIC_PROFILE==='1'){
   profiler=await context.newCDPSession(page);await profiler.send('Profiler.enable');await profiler.send('Profiler.start');
@@ -54,4 +54,4 @@ try {
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}

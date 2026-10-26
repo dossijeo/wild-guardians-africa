@@ -615,3 +615,12 @@ production-shield-stream: dos comandos legales, cooldown real, simulación y rec
 
 
 Control production-stream-control completo sin magia:1consulta169.745ms en native-obstruction-blend, máximo intervalo199.540ms,P9549.650ms,0errores. Reproduce la mayor espera inicial también sin escudo. No demuestra que las24consultas de la corrida con magia sean todas ajenas al escudo: distinta duración(1vs2recorridos) y residencia inicial20vs25chunks. Debe estabilizarse la preparación inicial y comparar ventanas equivalentes antes de atribuir el resto. El motor sigue sin bloqueo multisegundo; queda compilación tardía de ocultación y atribución del exceso de consultas. Se corrige scope del resumidor para identificar explícitamente controles sin lanzamiento.
+
+
+### Corrección de alcance: fixture agrícola y prueba de Manglares
+
+La inspección del estado guardado y runtime demuestra que agriculture/fixture.json es SABANA. production-shield-stream, production-stream-control y candidate-shield-stream usan ese fixture: sus tiempos son válidos para Sabana, NO validan la nueva superficie regional de Manglares. La anterior conclusión de validación conjunta era incorrecta. Los resúmenes ahora incluyen biome explícito.
+
+obstruction-program-history:89programas consultados en carga,1tardío; no hubo shader de fade idéntico antes. Su diferencia frente al opaco es la retirada de OPAQUE y la sustitución de cobertura por alpha. No prueba un fallo de precalentamiento en Manglares: streamingOptions solo lo activa por defecto en Manglares, y este runtime era Sabana. Mantener aislada esa mejora de Sabana.
+
+Repetición correcta en curso: estuary-agriculture/fixture.json verificado biome=manglares, mangroveNetwork=true,seed712,4plantas; WG_EXPECT_BIOME=manglares obliga a fallar ante otra escena. Harness registra visualSearch, streamingOptions y número de superficies regionales reales. Sin overrides de candidato,2casts con cooldown real y streaming144m/40s. Pendiente resultado.
