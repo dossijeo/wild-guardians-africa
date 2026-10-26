@@ -1,0 +1,87 @@
+{
+  "scope": "One sequential shield/control pair, not ABAB; instrumented CPU/rAF, no isolated GPU timer",
+  "control": {
+    "samples": 5186,
+    "p50": 16.739999999990687,
+    "p95": 49.92499999998836,
+    "p99": 66.59500000000116,
+    "max": 149.7899999999936
+  },
+  "shield": {
+    "samples": 5091,
+    "p50": 16.73499999998603,
+    "p95": 50.01499999999942,
+    "p99": 83.05500000000757,
+    "max": 166.18000000000757
+  },
+  "controlActivation": [
+    {
+      "samples": 72,
+      "p50": 16.744999999995343,
+      "p95": 50.125,
+      "p99": 66.48500000000058,
+      "max": 66.48500000000058
+    },
+    {
+      "samples": 86,
+      "p50": 16.69000000000233,
+      "p95": 49.779999999998836,
+      "p99": 66.58999999999651,
+      "max": 66.58999999999651
+    }
+  ],
+  "shieldActivation": [
+    {
+      "samples": 51,
+      "p50": 33.320000000006985,
+      "p95": 66.52000000000407,
+      "p99": 66.60000000000582,
+      "max": 66.60000000000582
+    },
+    {
+      "samples": 54,
+      "p50": 33.23999999999069,
+      "p95": 66.56999999997788,
+      "p99": 116.18499999999767,
+      "max": 116.18499999999767
+    }
+  ],
+  "controlChunks": [
+    {
+      "samples": 400,
+      "initialChunks": 22,
+      "finalChunks": 12,
+      "uniqueChunks": 40
+    },
+    {
+      "samples": 400,
+      "initialChunks": 18,
+      "finalChunks": 11,
+      "uniqueChunks": 24
+    }
+  ],
+  "shieldChunks": [
+    {
+      "samples": 400,
+      "initialChunks": 21,
+      "finalChunks": 12,
+      "uniqueChunks": 35
+    },
+    {
+      "samples": 400,
+      "initialChunks": 19,
+      "finalChunks": 10,
+      "uniqueChunks": 22
+    }
+  ],
+  "programQueriesControl": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  },
+  "programQueriesShield": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  }
+}

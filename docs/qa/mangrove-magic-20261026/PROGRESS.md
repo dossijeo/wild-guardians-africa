@@ -770,3 +770,11 @@ hydraulic-v2-shield-stream completa ok, Manglares versión2 verificada antes/des
 Captura shield-0 inspeccionada: vegetación holly densa conserva aspecto cerca, pero desplazamiento ya aleja el encuadre del escudo; no sirve para validar su targeting/visibilidad. Estado confirma spellactivo. Visible globo tutorial agrícola, posible trabajo concurrente que debe constar. No UI/raid en esteharness. No aparece bloqueo multisegundo en la corrida; persisten picos166ms. Controlidénticosincast iniciado después,pendiente; no inferir causalidad ni mejoraestadística con una sola corrida instrumentada.
 
 summarize-magic-repeat incluye versión y tiempo de simulación para evitar atribuciones al bioma/receta incorrectos. Fixture de incursión admite versión/salida aislada; preparado para siguiente prueba, aún no ejecutada con receta2.
+
+### Control sin magia de receta2: costes residuales presentes
+
+hydraulic-v2-stream-control termina ok,versión2,elapsed2.008→133.440,2recorridos144m/40s separados90s de simulación,0pageerrors/0queries getProgramInfoLog.5186intervalos:P5016.74,P9549.925,P9966.595,max149.79ms. Con escudo:5091intervalos,P5016.735,P9550.015,P9983.055,max166.18ms. Ventanas2s controlmax66.485/66.59;escudo66.60/116.185. No concluir coste nulo delescudo: medianaactivación33ms con efecto frente16.7sinél. No bloqueo multisegundo observado.
+
+Solo pareja secuencial instrumentada, NOABAB/GPUaislado. Distintos35/22chunks únicos conescudo frente40/24control indican variabilidad de residencia, aunque recorrido/semilla/receta/tiempo sean iguales. No inferir significancia delmáximo ni atribuir todos los picos a magia. comparison.json conserva ambas métricas sin agregarlas.
+
+hydraulic-v2-raid/fixture.json generado mediante apertura nativa versión2,4cultivos y5especies usando spawnRaid. Prueba de interfaz/cámara/grupo en curso,observación32s y escudo por clic real, no Game.cast; resultado pendiente. No ejecutar otros renderers mientras se mide.
