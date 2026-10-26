@@ -10,8 +10,9 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));
 page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
+ if(process.env.WG_ATLAS_ISOLATE==='1')await page.route('**/tools/experiments/attach-native-far-world.js*',async route=>{const response=await route.fetch(),source=await response.text(),target='layer.current.prototype.impostors.visible=this.enabled;';if(!source.includes(target))throw Error('Missing impostor isolation hook');await route.fulfill({response,body:source.replace(target,'layer.current.prototype.impostors.visible=this.enabled&&!globalThis.qaHideImpostors;')});});
  if(process.env.WG_NEW_ATLASES==='1'){
-  await page.route('**/content/far-vegetation.json',async route=>{const response=await route.fetch({url:new URL('/docs/qa/tree-atlas-refresh-20261026/candidate-manifest.json',route.request().url()).href});await route.fulfill({response});});
+  await page.route('**/content/far-vegetation.json',async route=>{const response=await route.fetch({url:new URL('/docs/qa/tree-atlas-refresh-20261026/candidate-manifest.json',route.request().url()).href});if(process.env.WG_IMAGEGEN_ATLAS==='1'){const manifest=await response.json();const pilot=manifest.biomes.mangrove[0];pilot.day='/docs/qa/tree-atlas-refresh-20261026/mangrove-0/day-imagegen-128.webp';pilot.night='/docs/qa/tree-atlas-refresh-20261026/mangrove-0/night-imagegen-128.webp';await route.fulfill({response,json:manifest});}else await route.fulfill({response});});
   await page.route('**/src/rendering/far-vegetation.js*',async route=>{const response=await route.fetch(),source=await response.text();if(!source.includes('resolution:128,premultipliedLinear'))throw Error('Atlas resolution hook missing');await route.fulfill({response,body:source.replace('resolution:128,premultipliedLinear','resolution:metadata.viewResolution??128,premultipliedLinear').replace('world.assets.loadingTexture(path,{flipY:true,...options})',process.env.WG_ATLAS_HTML==='1'?'loader.loadAsync(path)':'world.assets.loadingTexture(path,{flipY:true,...options})')});});
  }
  if(process.env.WG_FORCE_FAR_3D==='1'){const {forceFarTrees3D}=await import('./qa-force-far-trees-3d.mjs');await forceFarTrees3D(page.context(),{matchDensity:process.env.WG_MATCH_FAR_DENSITY==='1'});}
@@ -50,10 +51,16 @@ try{
  await page.waitForTimeout(2000);
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
  await page.screenshot({path:out+'/'+cameraView+'.png'});
+ if(process.env.WG_ATLAS_HORIZON==='1'){
+  await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x,t.y+42,t.z+70);w.camera.lookAt(t.x,t.y+7,t.z-130);w.camera.updateMatrixWorld(true);w.syncChunks();});
+  await page.waitForTimeout(8000);await page.waitForFunction(()=>qaWaterWorld.farVegetation.adapters.every(a=>!a.preparationPending()),null,{timeout:90000});await page.waitForTimeout(1000);
+  await page.screenshot({path:out+'/horizon.png'});
+  await writeFile(out+'/horizon-camera.json',JSON.stringify(await page.evaluate(()=>({camera:qaWaterWorld.camera.position.toArray(),quaternion:qaWaterWorld.camera.quaternion.toArray(),target:qaWaterWorld.controls.target.toArray()})),null,2));
+ }
  if(process.env.WG_ATLAS_ISOLATE==='1'){
-  await page.evaluate(()=>{for(const a of qaWaterWorld.farVegetation.adapters)a.layer.current.prototype.impostors.visible=false;});
-  await page.waitForTimeout(300);await page.screenshot({path:out+'/without-impostors.png'});
-  await page.evaluate(()=>{for(const a of qaWaterWorld.farVegetation.adapters)a.layer.current.prototype.impostors.visible=true;});
+  await page.evaluate(()=>{globalThis.qaHideImpostors=true;});
+  await page.waitForTimeout(300);await page.screenshot({path:out+'/without-impostors.png'});await writeFile(out+'/impostor-isolation.json',JSON.stringify(await page.evaluate(()=>({guard:globalThis.qaHideImpostors,visible:qaWaterWorld.farVegetation.adapters.map(a=>a.layer.current.prototype.impostors.visible)})),null,2));
+  await page.evaluate(()=>{globalThis.qaHideImpostors=false;});
  }
 
  if(process.env.WG_FAR_REPRESENTATION_AUDIT==='1'){const audit=await page.evaluate(async()=>{const {qaFarDensity}=await import('/tools/experiments/qa-far-density.mjs');const w=qaWaterWorld;return {camera:w.camera.position.toArray(),target:w.controls.target.toArray(),adapters:w.farVegetation.adapters.map(a=>({stats:a.stats,status:a.preparationStatus(),unreadyWithinDensity:a.layer.current.trees.filter(t=>qaFarDensity(a.layer.current,w.camera.position,t.id)>0&&(a.layer.current.prototype.treeState(t.id)?.ready??0)<.999).map(t=>t.id),trees:a.layer.current.trees.map(t=>({id:t.id,x:t.x,y:t.y,z:t.z,sx:t.sx,sy:t.sy,sz:t.sz,yaw:t.yaw})),standby:a.standbyDraws().map(d=>({level:d.level,instances:d.mesh.count,rows:d.drawRows}))}))};});await writeFile(out+'/representation.json',JSON.stringify(audit,null,2));}
