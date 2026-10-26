@@ -501,3 +501,7 @@ regional-water-depth-precision report confirma near1/far500/24bits; captura elev
 ## Horizonte descartado con inventario runtime
 
 regional-water-horizon-isolation/horizon-layers.json=[]: NativeHorizon existe como coordinador pero no instala meshes en Manglares. La afirmacion anterior de tercera capa activa era una hipotesis incorrecta; queda refutada. Nuevo diagnostico toma rayos desde10pixeles alrededor de las uniones visibles y registra coordenadas, etiquetas de las superficies y uniforms de agua. Raycasting NO aplica discard/alpha del shader; las intersecciones deben interpretarse junto con mascaras, no como prueba directa de visibilidad.
+
+## Uniforms en punto mojado coincidente
+
+pixel-audit punto pantalla700,510/world86.855,20.797: mask.935742, agua chunk y regional a3.339999914. Ambos reloj65, escala.55, amplitud.72, mismos Ink0/1, night0/exposure1,clip0. No hay diferencia de estos uniforms.9de10puntos elegidos eran secos en campo autoritativo; no sirven para atribuir union. Se amplia muestreo a rejilla336rayos de pantalla para seleccionar agua realmente mojada y distinguir interior/exterior residente antes de otro cambio. No inferir visibilidad del raycast sin aplicar descarte del shader.
