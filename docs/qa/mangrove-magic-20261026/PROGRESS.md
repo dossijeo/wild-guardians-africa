@@ -159,3 +159,10 @@ Detectado primer intervalo rAF negativo por mezclar performance.now inicial con 
 ## Comparación intercalada del escudo iniciada
 
 Sesión49829 ejecuta A1/B1/A2/B2 secuenciales sobre final-ten, Chrome nuevo por ejecución, mismo viewport1280x720/calidadmedia y profiling+vídeo en todas. A mantiene luces originales, B activa vfxStableLights. No se modifica renderer durante la serie. Script summarize-shield-abab calcula percentiles, máximo del intervalo que solapa el clic (incluye bloqueos que terminan después del primer segundo), esperas de programas y errores; registra tiempo simulado y número de actores para detectar divergencia antes del clic. Serie aún en curso, sin resultados atribuidos. No mide GPU ni demuestra coste sostenido; el avance de simulación puede variar con el tiempo de preparación.
+
+
+## A/B/A parcial: bloqueo reproducido dos veces
+
+A1: máximo5154.925ms,36 consultas,4942.635ms de espera de programas. B1: máximo166.2ms, máximo que solapa activación149.63ms,1 consulta89.595ms. A2: máximo5454.19ms,36 consultas,5203.505ms de espera. P95 ~83ms en los tres: no mejora sostenida demostrada. Diez actores antes del clic y elapsed314.278/314.284/314.300, desviación pequeña pero no igualdad exacta de simulación. B2 sigue activo en49829.
+
+Auditoría de otras magias: AgricultureVfx desactiva worldLights por defecto y softParticleDepth para crecimiento/multiplicar; no debería provocar el mismo cambio de número de luces ni captura extra de profundidad. Esto es evidencia de código, no sustituye ejecución real de ambas magias.
