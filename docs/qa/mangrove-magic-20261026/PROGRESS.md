@@ -194,3 +194,8 @@ Harness ampliado con cámara cercana a las plantas, inspección de efectos activ
 close-render completado: captura magic-3 inspeccionada, cuatro auras/cintas visibles sobre plantas recién sembradas. Cuatro efectos presentes en escena con16sprites cada uno y tiempo creciente;0luces locales. Comandos1.23/.47/.21/.175ms. Resumen con frametimes/compilaciones guardado; no equivale a coste GPU aislado.
 
 Iniciada captura secuencial de dosel amplio en semillas1 y712, mismo punto105,50 y calidadmedia, para validar nueva densidad más allá de37. Sin cambios de runtime durante capturas.
+
+
+## Regresión/limitación detectada en semilla4096
+
+Incursiones densas: semillas1 y712 cruzan agua con cinco especies y atacan tras525/567pasos. Semilla4096 genera incursión, pero todas quedan en waiting/unknown y termina a910pasos sin contacto ni agua. Conservar informe negativo. Harness inicialmente fija49chunks; añadido modo WG_RAID_STREAM para servir raidConnectivityDemand y captura profunda de raidWait (antes compartía referencias mutables). Repetición4096 con ese modo tampoco alcanza objetivo. No atribuir aún a densidad ni dar validación multi-semilla por cerrada: investigar qué consulta produce unknown y por qué no se satisface la demanda. Informe negativo adicional *4096-stream.json. Capturas de semillas continúan en60946.
