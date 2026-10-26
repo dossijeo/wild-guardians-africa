@@ -1,0 +1,65 @@
+{
+  "ok": true,
+  "scope": "Streaming control without casting; active agricultural simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 1596,
+    "p50": 16.855000000010477,
+    "p95": 49.65000000000873,
+    "p99": 50.154999999998836,
+    "max": 199.54000000000087
+  },
+  "programWaits": {
+    "count": 1,
+    "totalMs": 169.74500000476837,
+    "maxMs": 169.74500000476837
+  },
+  "casts": [
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 38469.22500002384,
+      "commandMs": 0,
+      "after": {
+        "elapsed": 5.39725000005243,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 399,
+        "initialChunks": 20,
+        "finalChunks": 25,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 68,
+        "p50": 32.90999999999622,
+        "p95": 49.955000000001746,
+        "p99": 199.54000000000087,
+        "max": 199.54000000000087
+      },
+      "programWaits": [
+        {
+          "start": 38882.12000000477,
+          "ms": 169.74500000476837,
+          "draw": {
+            "object": "native-obstruction-blend",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "Commands invoke legal Game.cast; no pointer targeting test."
+  ]
+}
