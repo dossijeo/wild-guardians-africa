@@ -638,3 +638,10 @@ Esta corrida sí verifica el perfil actual de Manglares, a diferencia del fixtur
 production-estuary-control-verified: mismo fixture de Manglares,144m/40s por recorrido,2recorridos separados90segundos de simulación. Sin magia,0errores/0esperas de programas.4857intervalos: P50=16.800ms,P95=49.960ms,P99=83.030ms,máximo116.345ms. Ventanas iniciales2s máximos66.460/66.575ms. Frente a la corrida con escudo: P50=33.015ms,P95=50.090ms,P99=83.155ms,máximo116.450ms; ventanas116.425/99.790ms.
 
 Los picos globales también existen sin magia. NO concluir coste nulo del escudo: mediana y ventanas iniciales difieren; esta pareja no es ABAB ni GPU aislada. Residencia inicial22/25chunks en control vs21/25 con escudo, recorrido observa40/40 vs38/33chunks. Queda repetir intercalado para separar variabilidad de coste real. El harness de control ahora conserva90s de separación en simulación y el de incursión verifica biome contra el fixture y WG_EXPECT_BIOME.
+
+
+### Incursión y escudo por interfaz, perfil actual
+
+production-estuary-raid-ui-verified: fixture estuary-raid confirmado biome=manglares. Incursión nativa con warthog,hyena,buffalo,lion,rhino; menú Magia→Escudo y un clic de ratón aceptado, escudo presente en estado después. Captura raid-shield.png inspeccionada: cúpula sobre cultivos, animales presentes y helechos conservados.0errores/0esperas de programas.333intervalos: P95=66.475ms,P99=99.685ms,máximo166.300ms. Roundtrip de clic140.700ms incluye automatización/presentación: NO tiempo CPU aislado de Game.cast. Observación posterior12s.
+
+No reaparece bloqueo multisegundo en esta corrida, pero no equivale a ausencia de tirones ni sustituye ABAB/mediciónGPU. Mantener objetivo abierto para atribución de picos y cobertura de demás magias.
