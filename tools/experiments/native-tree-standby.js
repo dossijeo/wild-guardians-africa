@@ -48,6 +48,12 @@ export class NativeTreeStandby {
    const {entries,camera}=this.pending;this.pending=null;const wanted=new Map();
    for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===this.sourceKey(d.level))wanted.set(id,d);
    for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,transitionRange:treeTransitionRange(d,this.treeHeight,this.start,this.end,this.transitionHeight),matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
+   if(wanted.size>this.maxTrees&&this.angularLod){
+    // Current requests precede retained history; never grow the bank because
+    // a moving camera has visited several overlapping preparation regions.
+    const requested=new Set(entries.map(d=>d.id)),ranked=[...wanted.values()].sort((a,b)=>Number(requested.has(b.id))-Number(requested.has(a.id))||Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
+    for(const d of ranked.slice(this.maxTrees))wanted.delete(d.id);
+   }
    if(wanted.size>this.maxTrees)throw Error('Standby tree budget exceeded');
    if(this.active&&wanted.size===this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d))continue;
    if(!wanted.size){if(this.active){this.active.root.removeFromParent();this.active=null;this.revision++;this.stats.trees=0;}continue;}

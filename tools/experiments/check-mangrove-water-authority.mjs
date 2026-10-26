@@ -36,6 +36,20 @@ try{
  await page.waitForTimeout(2000);
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
  await page.screenshot({path:out+'/elevated.png'});
+ if(process.env.WG_ANGULAR_MOTION==='1'){
+  const motion=await page.evaluate(async()=>{
+   const w=qaWaterWorld,t=w.controls.target.clone(),frames=[],samples=[];let previous=performance.now(),start=previous;
+   await new Promise(resolve=>{const tick=now=>{frames.push(now-previous);previous=now;const u=Math.min(1,(now-start)/24000),phase=(1-Math.cos(u*Math.PI*4))/2;
+    w.camera.position.set(t.x+35+40*phase,t.y+25+90*phase,t.z+45+50*phase);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);w.syncChunks();
+    if(!samples.length||now-start-samples.at(-1).ms>=500)samples.push({ms:now-start,pending:w.farVegetation.adapters.filter(a=>a.preparationPending()).length,trees:w.farVegetation.adapters.map(a=>a.stats.standby?.trees??0),errors:w.farVegetation.adapters.flatMap(a=>[...a.stats.errors,...(a.stats.standby?.errors??[])])});
+    if(u<1)requestAnimationFrame(tick);else resolve();};requestAnimationFrame(tick);});
+   frames.sort((a,b)=>a-b);return {frames:frames.length,p50:frames[Math.floor(frames.length*.5)],p95:frames[Math.floor(frames.length*.95)],p99:frames[Math.floor(frames.length*.99)],max:frames.at(-1),samples};
+  });
+  await page.waitForFunction(()=>qaWaterWorld.farVegetation.adapters.every(a=>!a.preparationPending()),null,{timeout:90000});await page.waitForTimeout(1500);
+  motion.final=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));
+  await writeFile(out+'/motion.json',JSON.stringify(motion,null,2));await page.screenshot({path:out+'/motion-return.png'});
+  if(motion.samples.some(s=>s.errors.length)||motion.final.some(a=>a.stats.errors.length||a.stats.standby?.errors.length))throw Error('Angular LOD motion preparation errors');
+ }
  if(process.env.WG_WATER_HIDE_FAR==='1'){await page.evaluate(()=>{qaWaterWorld.scene.traverse(m=>{if(m.userData.farGround)m.visible=false;});});await page.waitForTimeout(300);await page.screenshot({path:out+'/elevated-without-far-ground.png'});}
  console.log(JSON.stringify({seed:data.seed,target:data.target,wet:data.points.filter(p=>p.water.inside).length,total:data.points.length,waters:data.waters.length,errors}));
 }catch(error){await writeFile(out+'/failure.json',JSON.stringify({error:String(error),errors,text:await page.locator('body').innerText().catch(()=>null)},null,2));await page.screenshot({path:out+'/failure.png'}).catch(()=>{});throw error;}finally{await page.unrouteAll({behavior: 'wait'});await browser.close();}
