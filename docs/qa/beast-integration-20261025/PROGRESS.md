@@ -75,3 +75,25 @@ La revisión visual se apoya en vídeos completos, hojas de contacto y secuencia
 cercanas de locomoción; no equivale a una prueba exhaustiva de colisiones.
 Índice final: `README.md`, con hashes y resultados en `FINAL-VALIDATION.json`.
 No fusionar a main automáticamente.
+
+## Validación adicional solicitada: incursiones con grupos
+
+La validación individual no basta para cerrar el objetivo. Se añaden grupos
+controlados de 4 especies, 10 animales (dos de cada especie) y 16 facóqueros
+(límite de una oleada del plan de presión actual). No son afirmaciones sobre
+la composición típica de la primera noche; el fixture controla el grupo.
+
+Referencia con el encuadre individual a 18 unidades: de 4 visitantes, solo
+2–4 centros quedan dentro del frustum; del grupo de 10, solo 6–7; de 16,
+solo 3 en las ocho muestras. Todos tienen rig y el escudo funciona, pero
+la presentación del grupo no es adecuada. Evidencia en `groups/`.
+
+Se prueba un encuadre colectivo que conserva la orientación, incluye la
+extensión de los cuerpos y reserva margen para HUD. El control manual y
+la cámara individual se mantienen; no se alteran posiciones ni rutas.
+La variante pasa la validación en renderer real: 4/4, 10/10 y 16/16 centros
+dentro del frustum en las ocho muestras de cada caso, con escudo funcional.
+Se verifican nacimientos y salidas idénticos a la referencia. También pasa el
+grupo de cuatro en Gran Cañón y la reserva de diez rigs independientes sin
+descargas ni programas de bestias adicionales al aparecer. Ver `groups/README.md`.
+Build y paquete finales: 973 archivos, 465.404.432 bytes, 17 GLB runtime.

@@ -5,9 +5,10 @@ import {Matrix4,Vector3} from 'three';
 const species=process.argv[2]??'rhino',out=process.env.WG_BEAST_QA_OUT??'docs/qa/beast-integration-20261025/'+species,base=process.env.WG_QA_URL??'http://127.0.0.1:5217';
 const viewport={width:Number(process.env.WG_QA_WIDTH??1280),height:Number(process.env.WG_QA_HEIGHT??720)};
 await mkdir(out,{recursive:true});
-const fixture=JSON.parse(await readFile('docs/qa/beast-integration-20261025/fixtures/'+species+'.json','utf8'));
+const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
+const fixture=JSON.parse(await readFile('docs/qa/beast-integration-20261025/fixtures/'+fixtureId+'.json','utf8'));
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
-page.on('pageerror',e=>errors.push(String(e)));let report={species,viewport,scope:fixture.scope};
+page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:fixture.scope};
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
  await page.addInitScript(f=>{localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',music:0,sfx:0}));},fixture);
@@ -16,6 +17,17 @@ try {
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
  await page.waitForFunction(()=>{const s=JSON.parse(wildGuardiansVisibilityQa().snapshot);return s.raid?.cameraFocusedAnimalId;},null,{timeout:90000});
  await page.waitForTimeout(2200);report.before=await inspect();await page.screenshot({path:out+'/raid-camera.png'});
+ if(process.env.WG_BEAST_GROUP_OBSERVE==='1'){
+  assert.equal(report.before.state.raid.animals.length,report.group.length,'Entire group must spawn');report.timeline=[];
+  for(let i=0;i<8;i++){
+   const q=await inspect(),projection=new Matrix4().fromArray(q.camera.projection),inverse=new Matrix4().fromArray(q.camera.inverse),r=q.camera.canvas;
+   const actors=q.state.raid.animals.map(a=>{const visual=q.actors.find(v=>v.id===a.id),v=visual?.position?new Vector3(...visual.position).add(new Vector3(0,1,0)).applyMatrix4(inverse).applyMatrix4(projection):null;return {id:a.id,species:a.species,status:a.status,x:a.x,z:a.z,pathLength:a.path?.length??0,ready:visual?.ready,visible:visual?.visible,screen:v?{x:r.x+(v.x+1)*r.width/2,y:r.y+(1-v.y)*r.height/2,depth:v.z,inFrustum:Math.abs(v.x)<=1&&Math.abs(v.y)<=1&&Math.abs(v.z)<=1}:null};});
+   report.timeline.push({elapsed:q.state.elapsed,focus:q.state.raid.cameraFocusedAnimalId,camera:q.camera,actors});
+   if([0,3,7].includes(i))await page.screenshot({path:`${out}/group-${i}.png`});
+   assert(actors.filter(a=>a.status!=='gone').every(a=>a.ready),'An active group member has no rig');
+   await page.waitForTimeout(1500);
+  }
+ }
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
  await page.locator('[data-menu="magic"]').click();await page.locator('[data-spell="shield"]').click();
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();

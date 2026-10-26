@@ -1,5 +1,6 @@
 import {beginTerrainCameraTravel,stepTerrainCameraTravel} from './terrain-camera.js';
 import {raidFarmBounds} from '../world/farm-envelope.js';
+import {raidGroupFrame} from './raid-group-framing.js';
 export {raidFarmBounds} from '../world/farm-envelope.js';
 const active=a=>!['gone','retreating'].includes(a.status);
 const inside=(animal,bounds)=>!!bounds&&animal.x>=bounds[0]&&animal.z>=bounds[1]&&animal.x<=bounds[2]&&animal.z<=bounds[3];
@@ -23,10 +24,15 @@ export class RaidCameraDirector {
   if(!this.travel)return;
   const animal=raid.animals.find(a=>a.id===this.travel.animalId&&active(a));
   if(!animal){this.travel=null;return;}
+  let destination=animal;
+  if(!this.travel.arrival){
+   const group=raidGroupFrame(raid.animals,this.field,this.camera,this.travel);
+   if(group){destination=group;this.travel.groupDistance=group.distance;this.travel.endDistance=group.distance;}
+  }
   // Keep the initial smooth trip, then track the same approaching animal.
   // Freeze the destination on first entry: never chase it around the crops.
-  if(!this.travel.arrival&&(!this.bounds||inside(animal,this.bounds)))this.travel.arrival={x:animal.x,z:animal.z};
-  const complete=stepTerrainCameraTravel(this.camera,this.controls,this.field,this.travel,this.travel.arrival??animal,seconds);
+  if(!this.travel.arrival&&(!this.bounds||inside(animal,this.bounds)))this.travel.arrival={x:destination.x,z:destination.z};
+  const complete=stepTerrainCameraTravel(this.camera,this.controls,this.field,this.travel,this.travel.arrival??destination,seconds);
   if(complete&&this.travel.arrival)this.travel=null;
  }
 }

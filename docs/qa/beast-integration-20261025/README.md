@@ -24,3 +24,8 @@ Siguiente pendiente del usuario: investigar el lago excesivo de Manglares mostra
 
 También queda anotada la corrección del tutorial en portrait: globo abajo y
 guardián encima para que no quede tapado, conservando accesibles los controles.
+
+Validación adicional completada: [incursiones con 4, 10 y 16 animales](groups/README.md).
+Se corrige el encuadre inicial colectivo, que antes dejaba fuera a parte del
+grupo. Incluye vídeos A/B, escudo real, Gran Cañón y comprobación de esqueletos
+independientes. Tras esta corrección el paquete ocupa 465.404.432 bytes.

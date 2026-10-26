@@ -48,10 +48,97 @@
   ],
   "portraitShield": true,
   "tests": 125,
-  "packageBytes": 465403353,
+  "packageBytes": 465404432,
   "limits": [
     "No terrain-conforming per-foot IK; up to 7.8 mm corner penetration measured on rhino on sampled slope.",
     "Narrow portrait HUD obscures part of rhino, although real shield placement succeeds.",
     "Deterministic animation videos are not performance benchmarks or exhaustive collision proofs."
-  ]
+  ],
+  "groups": {
+    "scope": "Real game A/B, same saved fixture and spawn/exit positions; eight wall-time observations per run. Counts refer to projected actor centres at root +1 m, not occlusion visibility or full-body silhouettes. No FPS claim.",
+    "result": [
+      {
+        "case": "mixed-four",
+        "spawnAndExitIdentical": true,
+        "beforeVisible": [
+          3,
+          2,
+          2,
+          3,
+          3,
+          4,
+          4,
+          4
+        ],
+        "afterVisible": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "count": 4,
+        "shieldBefore": true,
+        "shieldAfter": true
+      },
+      {
+        "case": "mixed-ten",
+        "spawnAndExitIdentical": true,
+        "beforeVisible": [
+          7,
+          6,
+          6,
+          6,
+          7,
+          6,
+          6,
+          7
+        ],
+        "afterVisible": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "count": 10,
+        "shieldBefore": true,
+        "shieldAfter": true
+      },
+      {
+        "case": "warthog-sixteen",
+        "spawnAndExitIdentical": true,
+        "beforeVisible": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "afterVisible": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "count": 16,
+        "shieldBefore": true,
+        "shieldAfter": true
+      }
+    ]
+  },
+  "groupResources": true
 }
