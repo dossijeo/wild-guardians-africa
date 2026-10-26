@@ -40,10 +40,10 @@ try {
    const w=qaMagicWorld,origin=w.controls.target.clone(),offset=w.camera.position.clone().sub(origin),start=performance.now();globalThis.qaStreamSamples=[];
    globalThis.qaStreamTimer=setInterval(()=>{const elapsed=(performance.now()-start)/1000,travel=96*Math.sin(Math.min(elapsed/16,1)*Math.PI);w.controls.target.copy(origin);w.controls.target.x+=travel;w.camera.position.copy(w.controls.target).add(offset);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);qaStreamSamples.push({elapsed,keys:[...w.chunks.keys()]});if(elapsed>=16){clearInterval(qaStreamTimer);qaStreamTimer=null;}},100);
   });
-  const result=await page.evaluate(i=>{const w=qaMagicWorld,p=w.state.plants[1],start=performance.now(),before={elapsed:w.state.elapsed,cooldown:w.state.cooldowns.shield,spells:w.state.spells.length};const accepted=qaGame.cast(w.state,'qa-repeat-shield-'+i,'shield',p.x,p.z,w.nav);return {kind:'shield',accepted,start,before,commandMs:performance.now()-start};},i);
-  assert(result.accepted);report.casts.push(result);await page.waitForTimeout(2200);
+  const result=process.env.WG_MAGIC_NO_CAST==='1'?{kind:'control-no-cast',accepted:false,start:await page.evaluate(()=>performance.now()),commandMs:0}:await page.evaluate(i=>{const w=qaMagicWorld,p=w.state.plants[1],start=performance.now(),before={elapsed:w.state.elapsed,cooldown:w.state.cooldowns.shield,spells:w.state.spells.length};const accepted=qaGame.cast(w.state,'qa-repeat-shield-'+i,'shield',p.x,p.z,w.nav);return {kind:'shield',accepted,start,before,commandMs:performance.now()-start};},i);
+  assert(result.accepted||process.env.WG_MAGIC_NO_CAST==='1');report.casts.push(result);await page.waitForTimeout(2200);
   result.after=await page.evaluate(()=>({elapsed:qaMagicWorld.state.elapsed,cooldown:qaMagicWorld.state.cooldowns.shield,spells:qaMagicWorld.state.spells.map(s=>({kind:s.kind,remaining:s.remaining}))}));
-  assert(result.after.spells.some(s=>s.kind==='shield'&&s.remaining>0));
+  assert(process.env.WG_MAGIC_NO_CAST==='1'||result.after.spells.some(s=>s.kind==='shield'&&s.remaining>0));
   await page.screenshot({path:out+'/shield-'+i+'.png'});
   if(process.env.WG_MAGIC_STREAM==='1'){await page.waitForFunction(()=>qaStreamTimer===null,null,{timeout:60000});result.streaming=await page.evaluate(()=>({samples:qaStreamSamples,spatial:globalThis.wildGuardiansSpatialQa?.()}));assert(new Set(result.streaming.samples.flatMap(s=>s.keys)).size>result.streaming.samples[0].keys.length,'Camera must introduce new chunks');}
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));

@@ -261,3 +261,9 @@ Limite: evita oscilaciones cerca de empate, pero sustitucion por fuente claramen
 ## Escudo con streaming simultaneo iniciado
 
 Harness repeat admite WG_MAGIC_STREAM=1: recorrido ida/vuelta96m en16s iniciado justo antes del comando, manteniendo bucle de presentacion normal y syncChunks existente. Registra claves instaladas cada100ms y exige que aparezcan chunks nuevos. Dos escudos con cooldown real, perfiles/video activos, luces estables con histeresis. Sesion80808, shield-stream-render, pendiente resultado. No afirma pthreads a partir del nombre: verificar runtime de esta distribucion aparte. Es escenario agricola Sabana; no equivale a incursiones Manglares.
+
+## Streaming + escudo: resultado y control iniciado
+
+Dos aplicaciones completan sin errores: comandos6.145/4.985ms; maximo ventana activacion249.395/116.345ms. Total4686intervalos,P9516? Correccion: P9533.49ms,P9966.45ms,max249.395ms.30consultas getProgramInfoLog suman1176.095ms,max214.82ms. La mayor corresponde native-obstruction-blend MeshStandardMaterial a329ms del primer comando; otras smooth-far-opaque hasta93.84ms. No atribuir todos los picos al escudo. No vuelve bloqueo de segundos, pero persisten tirones.
+
+Streaming comprobado por claves:26/29chunks unicos en recorridos frente25iniciales,15/16al terminar. No prueba throughput optimo ni ausencia de suelo temporalmente pendiente. Iniciado control mismo recorrido sin Game.cast (WG_MAGIC_NO_CAST=1,1recorrido), sesion96461 salida shield-stream-control. Diferenciar coste de movimiento del de magia antes de ampliar correccion. Resumen completo local con samples; no interpretar como comparacion GPU.
