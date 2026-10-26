@@ -685,3 +685,8 @@ production-estuary-night-verified: fixture estuary-agriculture, WG_MAGIC_NIGHT=1
 ### Auditoría de correctitud y captura actual4096
 
 77tests shield-placement-collision,shield-expiry,acceptance-raid-motion-shield,agriculture-vfx,shield-vfx pasan. No sustituyen rendimiento/render real. Captura actual production-seed-4096-verified/elevated.png inspeccionada, sin tutorial,perfil producción ysinatlas candidato: red distribuida visible, múltiples brazos y tierra seca/barro;0errores. Rejilla local120m alrededorpoblado316/3721muestras mojadas, no extrapolar porcentaje a todoelmundo. La vista elevada aún evidencia algunos bordes angulares/remates abruptos alrededorárea seca delpoblado; no declarar continuidad visual perfecta por tests de datos. Debe distinguirse recorte intencional delpoblado de discretización regional antes del cierre visual.
+
+
+### Recorte por poblado: hipótesis insuficiente
+
+attribute-estuary-settlement-mask.mjs compara receta4096 con/sin addSettlement(60,0,14,12),16641muestras paso0.5m. Solo5muestras antesmojadas quedan secas,0cambios fuera delsoporterectangular6m. Confirma forma settlementBlend, NO explica los grandes remates observados ni reproduce necesariamente todoslosasentamientosruntime. No cambiar generación por esta evidencia. Revisar oclusión entre terreno regional y lámina. Corregida etiquetaQA farMaskStep: usaba4pordefecto aunque farGround.mapStep realera2; próximosinformes derivan pasos delrecursoinspeccionado, no delentorno. Evidenciasanteriores conservar data.farGround como fuenteautoritativa.
