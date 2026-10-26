@@ -680,3 +680,8 @@ La prueba histórica100semillas solo cubría mangroveChannels (variante7). Añad
 ### Magias agrícolas al anochecer, Manglares confirmado
 
 production-estuary-night-verified: fixture estuary-agriculture, WG_MAGIC_NIGHT=1, biome=manglares verificado.4comandos growth/multiply aceptados:1.765/.400/.315/.925ms.515intervalos P95=33.450ms,P99=49.945ms,máximo132.905ms.0consultasprogramas/0errores. uNight=1 confirmado,3efectos aún activos al capturar y4slots de luz estable. magic-night.png inspeccionada: efectos legibles, suelo y helechos conservados. El número3 es el estado al momento final, no cuatro efectos simultáneos exigidos para siempre. Corrida única con comandos legales directos, no pruebaUI agrícola ni tiemposGPU.
+
+
+### Auditoría de correctitud y captura actual4096
+
+77tests shield-placement-collision,shield-expiry,acceptance-raid-motion-shield,agriculture-vfx,shield-vfx pasan. No sustituyen rendimiento/render real. Captura actual production-seed-4096-verified/elevated.png inspeccionada, sin tutorial,perfil producción ysinatlas candidato: red distribuida visible, múltiples brazos y tierra seca/barro;0errores. Rejilla local120m alrededorpoblado316/3721muestras mojadas, no extrapolar porcentaje a todoelmundo. La vista elevada aún evidencia algunos bordes angulares/remates abruptos alrededorárea seca delpoblado; no declarar continuidad visual perfecta por tests de datos. Debe distinguirse recorte intencional delpoblado de discretización regional antes del cierre visual.
