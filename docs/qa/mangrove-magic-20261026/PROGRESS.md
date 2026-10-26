@@ -447,3 +447,9 @@ Corregida incoherencia del prototipo farWaterSurface=1: no descartar terreno baj
 ## Programa regional verificado en render real
 
 WG_WATER_PROGRAM=1 inspecciona programas ya compilados (solo QA) y despues colorea magenta los fragmentos regionales. regional-water-program: programa regional64 frente residente27; todos los paintUniforms comparados coinciden. Diff GLSL real: UV regional, muestreo shore desde lecho y recorte regional/residente; no falta el shader global de ondas/iluminacion. Ancestros visibles, drawRange completo; captura magenta confirma cobertura lejana efectiva y recorte residente. Cero errores. Esto descarta material incorrecto/no dibujado, pero no equivalencia de todos los bindings GPU: revisar lecho y texturas compiladas en siguiente comparacion del mismo tramo bajo distintas residencias. Resumen compacto con diff guardado, fuentes completas locales para diagnostico.
+
+## Comparacion sobre el mismo tramo y diferencia de significado de shore
+
+regional-water-bindings confirma mismo UUID del mapa de pendientes256x256, origen, niebla90..480/color y rango de lecho2.17/1.17. regional-water-same-area mantiene camara y sustituye SOLO en QA agua residente por regional: ondas presentes tambien en primer plano, discrepancias principales en cobertura/bordes. No prueba exacta fotometrica (reloj avanza durante500ms de estabilizacion). Sin errores.
+
+Causa concreta encontrada en codigo: near qaBed.B contiene distancia geometrica al borde de triangulos (spatial-prepared-water.inc), mientras vWetShore contiene abs(mask-.61)*52 para sedimento. El prototipo regional usa info.shore tanto para qaBed.B (alpha) como sedimento, confundiendo dos magnitudes. Proxima correccion debe separar ambas, conservar la paleta y obtener distancia geometrica regional en worker; no ajustar iluminacion ni seguir aumentando resolucion. Harness WG_REGIONAL_ALL solo diagnostico, no comportamiento de produccion.
