@@ -43,6 +43,13 @@ try{
  await page.waitForTimeout(2000);
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
  await page.screenshot({path:out+'/elevated.png'});
+ await writeFile(out+'/elevated-coverage.json',JSON.stringify(await page.evaluate(()=>({camera:qaWaterWorld.camera.position.toArray(),target:qaWaterWorld.controls.target.toArray(),coverage:qaWaterWorld.groundDetails?.audit?.(),range:qaWaterWorld.groundDetails?.farDistance})),null,2));
+ if(process.env.WG_FERN_RANGE){
+  const range=Number(process.env.WG_FERN_RANGE);if(!Number.isFinite(range)||range<48||range>200)throw Error('Invalid fern range');
+  await page.evaluate(range=>{const q=qaWaterWorld.groundDetails;if(q?.cardStudy?.representation!=='native-holly-fern-balanced')throw Error('Approved ferns required');q.farDistance=range;q.uniforms.uCoverageFar.value=range;q.dirty=true;},range);
+  await page.waitForTimeout(2000);await page.screenshot({path:out+'/elevated-ferns.png'});
+  await writeFile(out+'/elevated-ferns.json',JSON.stringify(await page.evaluate(()=>({coverage:qaWaterWorld.groundDetails.audit(),range:qaWaterWorld.groundDetails.farDistance})),null,2));
+ }
  if(process.env.WG_ANGULAR_MOTION==='1'){
   const motion=await page.evaluate(async(travel)=>{
    const w=qaWaterWorld,t=w.controls.target.clone(),frames=[],samples=[];let previous=performance.now(),start=previous;

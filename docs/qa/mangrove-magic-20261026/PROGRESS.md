@@ -529,3 +529,19 @@ Captura elevada712 inspeccionada: red de canales ramificados,zonas secas/embarra
 ## Primeras medidas ABAB y siguiente validacion activa
 
 Corridas0/1 completas: GPU media21.558/21.761ms; triangulos323542/323544,draws92/93 tras recorrido. Solo diferencia esperada de lamina2tri. Movimiento: p9582.94/83.165ms,max149.70/182.965ms,cola maxima13ambas; ultima muestra con6/9trabajos pendientes. No extrapolar GPUestable a fluidez de streaming ni concluir regresion de maxima con una sola pareja. Corrida2 acaba;3sigue. Adaptado harness de escudo repetido con WG_WATER_CANDIDATE=1 para mismas opciones regional/LOD/mascara2m,con simulacion legal activa,tras terminarABAB; no modifica reglas de cooldown ni produccion.
+
+## Requisito visual adicional: sombras lejanas y helechos (2026-10-26)
+
+El usuario solicita sombras legibles también en árboles lejanos (simplificadas o precalculadas son aceptables) y presencia visible de los helechos aprobados en la vista de Manglares en evaluación. Pendiente de implementar y validar; no se considera resuelto con la captura actual.
+
+Inspección: el reporte regional-water-validation-712 confirma holly-fronds, variante C, 189 instancias cercanas y 70 lejanas en su punto de auditoría (anterior a la captura elevada). No demuestra densidad visible en la captura elevada. continuous-grass limita la cobertura a 48 m horizontales desde la cámara en calidad media, 40 m en baja. La selección por tamaño proyectado existe para el LOD, pero no sustituye ese corte de distancia. Revisar la cobertura realmente visible desde la cámara elevada antes de alterar densidad o máscaras de humedad.
+
+native-tree-standby crea los modelos lejanos con castShadow=false. El suelo regional simplificado utiliza MeshBasicMaterial: habilitar solamente castShadow en los árboles no resolvería su recepción de sombras y podría ampliar innecesariamente el coste del shadow map. Evaluar sombras precalculadas de copa/contacto integradas en el suelo regional, coherentes con dirección solar, transición día/noche, agua y límites residentes; evitar duplicarlas con las sombras nativas. Mantener las frondas aprobadas y su LOD, sin sustituirlas por hojas redondas.
+
+La siguiente comparación visual debe auditar cobertura DESPUÉS de colocar cada cámara y registrar instancias, overflow y rango efectivo. Comparar el coste conjunto de sombras y cobertura con la misma semilla/cámara, conservando los nuevos árboles aprobados (Gran Cañón conserva los originales).
+
+### Escudo con agua regional candidata y diagnóstico de helechos elevados
+
+candidate-shield-stream/summary.json: dos activaciones legales con cooldown real, simulación agrícola y cámara móvil, comando 5.845/5.320 ms, cero consultas bloqueantes de programas, ventanas de activación máximo 99.565/83.310 ms. Recorrido completo 4390 intervalos, P95 66.405 ms, P99 83.210 ms, máximo 166.255 ms. No se reproduce el bloqueo de varios segundos; esta ejecución no es A/B ni prueba de targeting UI o incursión.
+
+El harness coloca la cámara elevada a target+(75,95,95): 121 m horizontales al foco frente al límite de cobertura de 48 m. Añadida auditoría posterior a elevar la cámara y prueba WG_FERN_RANGE (48–200 m), que conserva geometría, distribución y LOD aprobados. Ensayo 160 m en ejecución; no activado en producción. Se registran overflow y conteos para no confundir una extensión truncada por capacidad con una cobertura correcta.
