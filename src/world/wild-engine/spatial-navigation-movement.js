@@ -117,7 +117,7 @@ export function createSpatialNavigationMovement(session,state){
       // let the caller try another point instead of demanding more chunks.
       if(!startRegions.unknown&&!startRegions.ids.length||
          !endRegions.unknown&&!endRegions.ids.length)return null;
-      throw new SpatialChunkUnavailable(start,end,[],{
+      throw new SpatialChunkUnavailable(start,end,result.missing??[],{
         routeReason:result.reason??'unspecified',
         startRegions,endRegions,
         startProps:session.queryPropsAt?.(start.x,start.z,1.5).status,
@@ -185,6 +185,10 @@ export function createSpatialNavigationMovement(session,state){
     const steps=Math.max(Math.abs(to.cx-from.cx),Math.abs(to.cz-from.cz),1);
     for(let i=0;i<=steps;i++)candidates.push({cx:Math.round(from.cx+(to.cx-from.cx)*i/steps),
       cz:Math.round(from.cz+(to.cz-from.cz)*i/steps)});
+    // Include the entry side: detours may leave the loaded corridor.
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+      if(x||z)candidates.push({cx:from.cx+x,cz:from.cz+z});
+    }
     for(let ring=1;ring<=2;ring++)for(let z=-ring;z<=ring;z++)for(let x=-ring;x<=ring;x++){
       if(Math.max(Math.abs(x),Math.abs(z))===ring)candidates.push({cx:to.cx+x,cz:to.cz+z});
     }

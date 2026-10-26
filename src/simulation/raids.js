@@ -447,6 +447,7 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null,region
     try{path=nav.approachPath?nav.approachPath(a,point,a.radius,32):nav.path(a,point,a.radius,null,false,32);}
     catch(error){
       if(error?.name!=='SpatialChunkUnavailable')throw error;
+      requestUnknownRaidTerrain(nav,error,a,point,a.radius);
       onUnknown?.();
       continue;
     }

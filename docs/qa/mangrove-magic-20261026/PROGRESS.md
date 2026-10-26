@@ -213,3 +213,11 @@ Reproduccion: WG_RAID_SEED=4096 WG_RAID_STREAM=1 WG_RAID_CHUNK_RADIUS=4 node too
 Instrumentado raidSelectionStats en harness. Con49chunks y servicio de raidConnectivityDemand:60selecciones,60legacyFallbacks.unsupported y60resultados unknown; demand vacio,0consultas regionales,49chunks residentes al terminar. El harness no reproduce el planificador completo de intents del juego; no atribuir el fallo directamente a la ruta de produccion. Revisar propagacion de unknown en fallback y equivalencia con runtime.
 
 Prueba negativa: anadir anillo de origen a requestRaidConnectivity no cambio el resultado (910pasos,0cruces,sin ataque). Cambio runtime retirado; no conservar heuristica sin utilidad demostrada.16tests spatial-navigation-movement pasan. Informe origin-demand preserva prueba negativa; demand-audit contiene instrumental nuevo. El objetivo sigue pendiente.
+
+## Correccion de demanda y densidad preservada
+
+Conectado harness opcional WG_RAID_NATIVE_INTENTS=1 al createEventDrivenTaskPlanner, reset y observadores como main. Reproduce espera4096 sin demanda: no era solo ausencia de planner. reachableApproach descartaba SpatialChunkUnavailable sin solicitar residencia. Ahora transmite demanda, conserva result.missing en el adaptador y la heuristica considera tambien vecinos del origen, antes solo destino/corredor.
+
+Combinacion completa:49chunks iniciales,4solicitados (5,0..3),53residentes;3actores cruzan agua y StructureHit tras1203pasos. Antes911sin movimiento/ataque. No se modifica densidad ni colisiones. Propagar demanda sin vecinos de origen tampoco resolvia; informes negativos preservados. No implica validar latencia real ni todas las semillas.
+
+Nueva preferencia del usuario: si es necesario, dejar pasos entre arboles para bestias/trabajadores; preservar copas y helechos. Pendiente medir conectividad para rinoceronte y verificar camara real, sin reducir densidad indiscriminadamente.
