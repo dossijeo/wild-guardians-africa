@@ -21,7 +21,12 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
   const module=await WebAssembly.compile(await response.arrayBuffer());
   if(signal?.aborted)throw new DOMException('Wild Engine cancelled','AbortError');
   if(!loaded){
-    if(state.biome==='manglares')state.mangroveNetwork=true;
+    if(state.biome==='manglares'){
+      state.mangroveNetwork=true;
+      // Only new worlds adopt footprint reservations with a narrow hydraulic
+      // margin. Loaded worlds retain the recipe stored in their snapshot.
+      state.mangroveSettlementVersion=2;
+    }
     const start=await findSpatialStart(module,state,payload,{signal});
     Object.assign(state.villages[0],start.site);
     state.suppressed.push(...start.site.suppress);

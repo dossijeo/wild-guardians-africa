@@ -786,3 +786,11 @@ hydraulic-v2-raid/render completa ok: receta2 comprobada, interfaz Magia/Escudo 
 La observación previa consta de8muestras separadas1.5s (no32s como anticipaba la nota anterior). Cuatro especies avanzan; rinoceronte queda waiting sinruta por raidWait.reason=contention. En estado final elapsed29.619 ya camina hacia structure-2 con ruta4puntos, desde91.04/14.13 hasta89/8.63. No es evidencia de ruta permanentemente imposible ni de cola pthread bloqueada. raids.js usa reintentos8s de reservas; queda distinguir ocupación legítima de espera excesiva antes de cerrar navegación. Simulación elapsed2.415→29.619. Perfil completo y vídeo locales; resumen y captura versionados.
 
 Validación agrícola diurna de versión2 iniciada serialmente tras finalizar incursión; pendiente de resultado. No activar receta2 por defecto hasta completar comprobaciones restantes.
+
+### Magias agrícolas día/noche con receta2 y adopción para mundos nuevos
+
+hydraulic-v2-agriculture/day y night completan4activaciones legales cadauna(growth,multiply,repetición),sin errores página/console ni consultas getProgramInfoLog. Día474intervalos:P5016.795,P9533.545,P9966.480,max116.135ms; comandos1.845/.450/.295/.310ms. Noche527intervalos:P5016.700,P9533.475,P9966.590,max133.040ms; comandos2.010/.705/.485/.225ms. Noche final uNight1,3efectos vivos,4slots de luz; el harness comienza en transición nocturna(time288),no afirmar que todos los casts ocurran en noche plena. Capturas magic-3 diurna y magic-night inspeccionadas: suelo/helechos conservados,efectos visibles. Corridas instrumentadas,no ABAB ni tiempoGPU.
+
+prepareWildEngineWorld activa mangroveSettlementVersion2 únicamente dentro de !loaded para nuevas partidas Manglares. Guardados sin versión/v1/v2 conservan receta; no migración silenciosa.34tests pasan:4semillas edificios/recarga,3recetas expansión/recarga,3travesía,20contención de incursiones y4batch/snapshot/pthreads. La contención tiene señales de revisión que despiertan antes del reintento de8s; la corrida real demuestra recuperación del rinoceronte,pero no atribuye exactamente todas sus reservas. No cambiar política de ataques por esa observación aislada.
+
+Iniciada comprobación real de nueva partida seed4096 sin WG_WATER_BUILDING_PADS ni inyección de versión. Pendiente comprobar snapshot2 y capturas antes de considerar validada la adopción por defecto.
