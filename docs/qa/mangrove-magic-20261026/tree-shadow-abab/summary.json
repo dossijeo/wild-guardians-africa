@@ -1,0 +1,229 @@
+{
+  "scope": "A/B/A/B: shader without regional shadow sampler versus one-channel mask. Paused scene, fixed camera recorded in each row, 720p medium, 60 warmup + 240 GPU samples per run. Resource counts are not VRAM bytes; CPU submission excludes native worker execution. No streaming or fern range extension in this isolated test.",
+  "rows": [
+    {
+      "run": 0,
+      "shadows": false,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "seed": "712",
+      "camera": [
+        135,
+        98.4999999332428,
+        95
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "gpu": {
+        "samples": 240,
+        "mean": 26.410384245833328,
+        "p50": 25.845104,
+        "p95": 31.625312,
+        "p99": 39.662812,
+        "max": 42.490467
+      },
+      "cpuSubmission": {
+        "samples": 240,
+        "mean": 2.0541666626930235,
+        "p50": 1.965000033378601,
+        "p95": 2.8799999952316284,
+        "p99": 3.1449999809265137,
+        "max": 3.4399999380111694
+      },
+      "presentation": {
+        "samples": 240,
+        "mean": 29.068583333492278,
+        "p50": 28.18999993801117,
+        "p95": 46.4449999332428,
+        "p99": 52.294999957084656,
+        "max": 55.105000019073486
+      },
+      "draw": {
+        "frame": 10050,
+        "calls": 55,
+        "triangles": 589298,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 128,
+        "textures": 155
+      },
+      "maskBaseBytes": 0
+    },
+    {
+      "run": 1,
+      "shadows": true,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "seed": "712",
+      "camera": [
+        135,
+        98.4999999332428,
+        95
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "gpu": {
+        "samples": 240,
+        "mean": 28.44209451666666,
+        "p50": 27.806145,
+        "p95": 36.673437,
+        "p99": 43.777708,
+        "max": 63.651822
+      },
+      "cpuSubmission": {
+        "samples": 240,
+        "mean": 2.5200625002384185,
+        "p50": 2.284999966621399,
+        "p95": 3.7450000047683716,
+        "p99": 4.115000009536743,
+        "max": 4.975000023841858
+      },
+      "presentation": {
+        "samples": 240,
+        "mean": 31.09695833325386,
+        "p50": 30.319999933242798,
+        "p95": 48.2150000333786,
+        "p99": 58.5900000333786,
+        "max": 66.93500006198883
+      },
+      "draw": {
+        "frame": 10002,
+        "calls": 55,
+        "triangles": 589298,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 128,
+        "textures": 156
+      },
+      "maskBaseBytes": 187489
+    },
+    {
+      "run": 2,
+      "shadows": false,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "seed": "712",
+      "camera": [
+        135,
+        98.4999999332428,
+        95
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "gpu": {
+        "samples": 240,
+        "mean": 25.599415975000007,
+        "p50": 25.003125,
+        "p95": 29.696822,
+        "p99": 39.262552,
+        "max": 40.465937
+      },
+      "cpuSubmission": {
+        "samples": 240,
+        "mean": 2.008041672408581,
+        "p50": 1.940000057220459,
+        "p95": 2.6100000143051147,
+        "p99": 2.9250000715255737,
+        "max": 4.389999985694885
+      },
+      "presentation": {
+        "samples": 240,
+        "mean": 28.15070833315452,
+        "p50": 27.47000002861023,
+        "p95": 43.955000042915344,
+        "p99": 54.795000076293945,
+        "max": 58.735000014305115
+      },
+      "draw": {
+        "frame": 10035,
+        "calls": 55,
+        "triangles": 589298,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 128,
+        "textures": 155
+      },
+      "maskBaseBytes": 0
+    },
+    {
+      "run": 3,
+      "shadows": true,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "seed": "712",
+      "camera": [
+        135,
+        98.4999999332428,
+        95
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "gpu": {
+        "samples": 240,
+        "mean": 24.385288341666687,
+        "p50": 23.856458,
+        "p95": 28.55177,
+        "p99": 33.070208,
+        "max": 40.992135
+      },
+      "cpuSubmission": {
+        "samples": 240,
+        "mean": 1.9787499954303105,
+        "p50": 1.9350000619888306,
+        "p95": 2.430000066757202,
+        "p99": 2.9450000524520874,
+        "max": 3.0449999570846558
+      },
+      "presentation": {
+        "samples": 240,
+        "mean": 26.844125000139076,
+        "p50": 25.825000047683716,
+        "p95": 43.77999997138977,
+        "p99": 56.860000014305115,
+        "max": 62.74500000476837
+      },
+      "draw": {
+        "frame": 10088,
+        "calls": 55,
+        "triangles": 589298,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 128,
+        "textures": 156
+      },
+      "maskBaseBytes": 187489
+    }
+  ],
+  "pairs": [
+    {
+      "baseline": 0,
+      "candidate": 1,
+      "gpuDeltaMs": 2.031710270833333,
+      "triangleDelta": 0,
+      "callDelta": 0
+    },
+    {
+      "baseline": 2,
+      "candidate": 3,
+      "gpuDeltaMs": -1.2141276333333195,
+      "triangleDelta": 0,
+      "callDelta": 0
+    }
+  ]
+}

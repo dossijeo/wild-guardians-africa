@@ -1,0 +1,7 @@
+// QA only: reuse the existing angular/native standby path, but require 3D at
+// every angle. Readiness still prevents holes; density and distance stay intact.
+export async function forceFarTrees3D(context,{matchDensity=false}={}){
+ if(matchDensity)await context.route('**/tools/experiments/attach-native-far-world.js*',async route=>{const response=await route.fetch(),source=await response.text(),target='return ref?.batch.fade?.attribute.getX(ref.index)??1;';if(!source.includes(target))throw Error('Missing standby density hook');await route.fulfill({response,body:"import {qaFarDensity} from './qa-far-density.mjs';\n"+source.replace(target,'return (ref?.batch.fade?.attribute.getX(ref.index)??1)*qaFarDensity(layer.current,world.camera.position,id);')});});
+ await context.route('**/tools/experiments/far-impostor-math.js*',async route=>{const response=await route.fetch(),source=await response.text(),target='export function horizonCardWeight(horizontal,vertical){';if(!source.includes(target))throw Error('Missing horizon policy');await route.fulfill({response,body:source.replace(target,target+'return 0;')});});
+ await context.route('**/tools/experiments/far-impostor-prototype.js*',async route=>{const response=await route.fetch(),source=await response.text(),target='*(1.-smoothstep(.3639702343,.7002075382,max(0.,cameraPosition.y-aTreeBase.y)/max(.001,d)))';if(!source.includes(target))throw Error('Missing GPU horizon policy');await route.fulfill({response,body:source.replace(target,'*0.')});});
+}

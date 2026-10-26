@@ -10,6 +10,7 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));
 page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
+ if(process.env.WG_FORCE_FAR_3D==='1'){const {forceFarTrees3D}=await import('./qa-force-far-trees-3d.mjs');await forceFarTrees3D(page.context(),{matchDensity:process.env.WG_MATCH_FAR_DENSITY==='1'});}
  if(process.env.WG_TREE_SHADOW_BAKE==='1')await page.context().route('**/tools/experiments/far-scene-data.js*',async route=>{const response=await route.fetch(),source=await response.text(),target='if(bedEncoder)ground.waterBed=bedEncoder.finish();';if(!source.includes(target))throw Error('Missing shadow bake hook');await route.fulfill({response,body:"import {bakeFarTreeShadows} from './far-tree-shadow-bake.js';\n"+source.replace(target,target+"if(ground?.colorMap&&config.biome==='mangrove')ground.treeShadows=bakeFarTreeShadows(ground.colorMap,trees,{applyRgb:false});")});});
  if(process.env.WG_REGIONAL_BINARY_COVERAGE==='1')await page.context().route('**/tools/experiments/regional-wetland-bed.js*',async route=>{const response=await route.fetch(),source=await response.text(),target='return Math.max(0,Math.min(1,.5+info.mask-.61));';if(!source.includes(target))throw Error('Missing continuous coverage implementation');await route.fulfill({response,body:source.replace(target,'return info.inside?1:0;')});});
  if(process.env.WG_TREE_CANDIDATES==='1')await page.route('**/content/biome-*.json',async route=>{const file=new URL(route.request().url()).pathname.split('/').at(-1);const response=await route.fetch({url:new URL('/assets/visual-lab/tree-candidates-20261026'+(process.env.WG_TREE_LOD==='1'?'-lod':'')+'/'+file,route.request().url()).href});if(!response.ok())throw Error('Candidate manifest missing: '+file);await route.fulfill({response});});
@@ -40,10 +41,13 @@ try{
   return {biome:w.state.biome,regional,farGround,runtime:w.spatialSession?.runtime??null,crossOriginIsolated:globalThis.crossOriginIsolated,seed:w.state.seed,channels:w.state.mangroveChannels===true,network:w.state.mangroveNetwork===true,visualSearch:w.visualSearch,coverage:w.groundDetails?.audit?.()??null,target:o.toArray(),camera:w.camera.position.toArray(),points,waters,depthPrecision:{near:w.camera.near,far:w.camera.far,bits:w.renderer.getContext().getParameter(w.renderer.getContext().DEPTH_BITS)},fieldKeys:Object.keys(f),snapshot:JSON.stringify(w.state)};
  });
  await writeFile(out+'/report.json',JSON.stringify({farMaskStep:Number(process.env.WG_FAR_MASK_STEP??4),farGeometryStep:Number(process.env.WG_FAR_GEOMETRY_STEP??32),data,errors},null,2));
- await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);});
+ const cameraView=process.env.WG_WATER_CAMERA==='normal'?'normal':'elevated';
+ if(cameraView==='elevated')await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(2000);
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
- await page.screenshot({path:out+'/elevated.png'});
+ await page.screenshot({path:out+'/'+cameraView+'.png'});
+ if(process.env.WG_FAR_REPRESENTATION_AUDIT==='1'){const audit=await page.evaluate(()=>{const w=qaWaterWorld;return {camera:w.camera.position.toArray(),target:w.controls.target.toArray(),adapters:w.farVegetation.adapters.map(a=>({stats:a.stats,status:a.preparationStatus(),trees:a.layer.current.trees.map(t=>({id:t.id,x:t.x,y:t.y,z:t.z,sx:t.sx,sy:t.sy,sz:t.sz,yaw:t.yaw})),standby:a.standbyDraws().map(d=>({level:d.level,instances:d.mesh.count,rows:d.drawRows}))}))};});await writeFile(out+'/representation.json',JSON.stringify(audit,null,2));}
+
  if(process.env.WG_TREE_SHADOW_COMPARE==='1'){
   const diagnostics=[];
   for(const strength of [0,.3,.55]){
@@ -54,7 +58,7 @@ try{
   await writeFile(out+'/shadow-comparison.json',JSON.stringify({diagnostics,scope:'Same-session visual strength test; all variants retain sampler so this is NOT a GPU overhead A/B.'},null,2));
  }
 
- await writeFile(out+'/elevated-coverage.json',JSON.stringify(await page.evaluate(()=>({camera:qaWaterWorld.camera.position.toArray(),target:qaWaterWorld.controls.target.toArray(),coverage:qaWaterWorld.groundDetails?.audit?.(),range:qaWaterWorld.groundDetails?.farDistance})),null,2));
+ await writeFile(out+'/'+cameraView+'-coverage.json',JSON.stringify(await page.evaluate(()=>({camera:qaWaterWorld.camera.position.toArray(),target:qaWaterWorld.controls.target.toArray(),coverage:qaWaterWorld.groundDetails?.audit?.(),range:qaWaterWorld.groundDetails?.farDistance})),null,2));
  if(process.env.WG_FERN_RANGE){
   const range=Number(process.env.WG_FERN_RANGE);if(!Number.isFinite(range)||range<48||range>200)throw Error('Invalid fern range');
   await page.evaluate(range=>{const q=qaWaterWorld.groundDetails;if(q?.cardStudy?.representation!=='native-holly-fern-balanced')throw Error('Approved ferns required');q.farDistance=range;q.uniforms.uCoverageFar.value=range;q.dirty=true;},range);
@@ -90,7 +94,7 @@ try{
      while(pending.length&&gl.getQueryParameter(pending[0],gl.QUERY_RESULT_AVAILABLE)){const query=pending.shift();gpu.push(gl.getQueryParameter(query,gl.QUERY_RESULT)/1e6);gl.deleteQuery(query);}if(frames>=300&&!pending.length)resolve();}
    };
    try{await done;}finally{clearTimeout(timeout);w.drawRenderFrame=original;for(const q of pending)gl.deleteQuery(q);}
-   return {supported:true,renderer,frames,gpu,cpu,intervals,disjoint,memory:w.renderer.info.memory,render:w.renderer.info.render,scope:'Whole drawRenderFrame; 60 warmup+240 measured; static elevated view, identical day/time, simulation paused for controlled GPU comparison.'};
+   return {supported:true,renderer,frames,gpu,cpu,intervals,disjoint,memory:w.renderer.info.memory,render:w.renderer.info.render,scope:'Whole drawRenderFrame; 60 warmup+240 measured; static view (see camera audit), identical day/time, simulation paused for controlled GPU comparison.'};
   });await writeFile(out+'/gpu.json',JSON.stringify(gpu,null,2));if(gpu.disjoint)throw Error('Disjoint GPU measurements');
  }
  if(process.env.WG_TREE_DETAIL==='1'){
