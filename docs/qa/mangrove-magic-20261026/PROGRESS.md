@@ -778,3 +778,11 @@ hydraulic-v2-stream-control termina ok,versión2,elapsed2.008→133.440,2recorri
 Solo pareja secuencial instrumentada, NOABAB/GPUaislado. Distintos35/22chunks únicos conescudo frente40/24control indican variabilidad de residencia, aunque recorrido/semilla/receta/tiempo sean iguales. No inferir significancia delmáximo ni atribuir todos los picos a magia. comparison.json conserva ambas métricas sin agregarlas.
 
 hydraulic-v2-raid/fixture.json generado mediante apertura nativa versión2,4cultivos y5especies usando spawnRaid. Prueba de interfaz/cámara/grupo en curso,observación32s y escudo por clic real, no Game.cast; resultado pendiente. No ejecutar otros renderers mientras se mide.
+
+### Incursión real de cinco especies con receta hidráulica2
+
+hydraulic-v2-raid/render completa ok: receta2 comprobada, interfaz Magia/Escudo y primer clic aceptado. Captura raid-shield.png inspeccionada: cúpula visible sobre el canal, animales y poblado presentes.279intervalos rAF instrumentados:P5049.805,P9566.435,P9982.995,max182.79ms;0consultas getProgramInfoLog,0errores página/console. Click roundtrip101.315ms incluye automatización, no es tiempo CPU del comando ni GPU. No bloqueo multisegundo observado; no afirmar fluidez perfecta ni mejora estadística con esta corrida.
+
+La observación previa consta de8muestras separadas1.5s (no32s como anticipaba la nota anterior). Cuatro especies avanzan; rinoceronte queda waiting sinruta por raidWait.reason=contention. En estado final elapsed29.619 ya camina hacia structure-2 con ruta4puntos, desde91.04/14.13 hasta89/8.63. No es evidencia de ruta permanentemente imposible ni de cola pthread bloqueada. raids.js usa reintentos8s de reservas; queda distinguir ocupación legítima de espera excesiva antes de cerrar navegación. Simulación elapsed2.415→29.619. Perfil completo y vídeo locales; resumen y captura versionados.
+
+Validación agrícola diurna de versión2 iniciada serialmente tras finalizar incursión; pendiente de resultado. No activar receta2 por defecto hasta completar comprobaciones restantes.
