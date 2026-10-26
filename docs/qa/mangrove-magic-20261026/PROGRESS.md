@@ -267,3 +267,9 @@ Harness repeat admite WG_MAGIC_STREAM=1: recorrido ida/vuelta96m en16s iniciado 
 Dos aplicaciones completan sin errores: comandos6.145/4.985ms; maximo ventana activacion249.395/116.345ms. Total4686intervalos,P9516? Correccion: P9533.49ms,P9966.45ms,max249.395ms.30consultas getProgramInfoLog suman1176.095ms,max214.82ms. La mayor corresponde native-obstruction-blend MeshStandardMaterial a329ms del primer comando; otras smooth-far-opaque hasta93.84ms. No atribuir todos los picos al escudo. No vuelve bloqueo de segundos, pero persisten tirones.
 
 Streaming comprobado por claves:26/29chunks unicos en recorridos frente25iniciales,15/16al terminar. No prueba throughput optimo ni ausencia de suelo temporalmente pendiente. Iniciado control mismo recorrido sin Game.cast (WG_MAGIC_NO_CAST=1,1recorrido), sesion96461 salida shield-stream-control. Diferenciar coste de movimiento del de magia antes de ampliar correccion. Resumen completo local con samples; no interpretar como comparacion GPU.
+
+## Control sin magia: pico independiente de activacion
+
+Control mismo recorrido sin Game.cast termina ok,sin errores.645intervalos:P9549.885,P9966.525,max249.42ms. Una consulta getProgramInfoLog217.895ms en native-obstruction-blend MeshStandardMaterial. Coincide con pico249.395ms y espera214.82ms de primera activacion con recorrido. Evidencia de preparacion tardia de transparencia durante movimiento, no del cambio de luces al activar escudo. Es una pareja de recorridos, no ABAB; no extrapolar frecuencias de tirones ni rendimiento sostenido. Otros30programas en prueba larga no se reproducen en este control corto; falta atribucion para ellos.
+
+Resumen compacto de ambos preservado, raw/profiles/videos locales. No se declara ausencia de tirones. Siguiente validacion del objetivo: escena real Manglares con generacion nueva y navegacion; defaults siguen pendientes hasta cierre artistico/funcional.
