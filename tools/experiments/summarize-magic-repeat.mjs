@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const root=process.argv[2];if(!root)throw Error('Expected renderer run directory');
+const report=JSON.parse(readFileSync(root+'/raid-ui.json'));
+const waits=JSON.parse(readFileSync(root+'/program-waits.json'));
+const frames=report.timing?.frames??[];
+const stats=values=>{const sorted=[...values].sort((a,b)=>a-b);const p=q=>sorted.length?sorted[Math.ceil(q*sorted.length)-1]:null;return {samples:sorted.length,p50:p(.5),p95:p(.95),p99:p(.99),max:sorted.at(-1)??null};};
+const summary={ok:report.ok,failure:report.failure,scope:report.scope,errors:report.errors,
+ frameIntervals:stats(frames.map(f=>f.ms)),programWaits:{count:waits.length,totalMs:waits.reduce((s,w)=>s+w.ms,0),maxMs:Math.max(0,...waits.map(w=>w.ms))},
+ casts:report.casts?.map(c=>({...c,activationFrames:stats(frames.filter(f=>f.t>=c.start&&f.t-f.ms<=c.start+2000).map(f=>f.ms)),programWaits:waits.filter(w=>w.start>=c.start&&w.start<=c.start+2000).map(w=>({start:w.start,ms:w.ms,draw:w.draw}))})),
+ limitations:['Single instrumented renderer run; not ABAB or isolated GPU timing.','Activation window includes intervals overlapping first two seconds after command.','Commands invoke legal Game.cast; no pointer targeting test.']};
+writeFileSync(root+'/summary.json',JSON.stringify(summary,null,2));console.log(JSON.stringify(summary,null,2));

@@ -231,3 +231,9 @@ Detectado en revision de commit que el archivo nuevo raid-entry-residency.test.j
 ## Escudo repetido: prueba renderer iniciada
 
 check-shield-repeat-render.mjs deriva del harness agricola validado y ejecuta3comandos legales de escudo en la misma posicion. Espera expiracion y cooldown real90s entre aplicaciones, sin adelantar reloj, con simulacion/render/video/perfil activos. Escena agricola sin incursiones: complementa el ABAB de primer uso con diez bestias, no lo sustituye. Primer comando aceptado5.59ms; pendiente resultado completo y analisis de intervalos/compilaciones. Sesion3053, salida shield-repeat-render. Luces estables siguen opt-in.
+
+## Tres escudos con recarga real completados
+
+shield-repeat-render termina sin errores. Comandos en elapsed3.286/93.296/183.306s, cooldown0 y sin escudo anterior en las tres aplicaciones. CPU comando5.590/5.680/6.405ms. Maximo intervalo rAF en ventana de activacion2s:66.495/49.800/33.485ms. Toda la ejecucion8705muestras:P5016.665,P9533.37,P9933.51,max99.57ms. Primera activacion una consulta getProgramInfoLog25.595ms MeshBasicMaterial; repeticiones ninguna. No reaparece bloqueo de segundos. Captura shield-1 inspeccionada: cupula visible correcta.
+
+Es una ejecucion instrumentada de escena agricola Sabana, no GPU aislado ni ABAB ni incursiones; complementa ABAB anterior con diez bestias. No demuestra coste GPU sostenido de cuatro luces, streaming simultaneo o todos los perfiles. Prototipo sigue opt-in hasta cerrar esas validaciones. Resumen reproducible con summarize-magic-repeat.mjs; raw/perfil/video conservados localmente.
