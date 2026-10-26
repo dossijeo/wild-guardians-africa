@@ -497,3 +497,7 @@ regional-water-contact-fixed: rayos196regionales/109residentes, ningun punto reg
 ## Precision descartada; auditoria de capas incompleta detectada
 
 regional-water-depth-precision report confirma near1/far500/24bits; captura elevada inspeccionada sin mejora perceptible respecto near0.1. No cambiar camara. Auditoria anterior clasificaba ground/farGround pero NO nativeHorizon. scene.syncChunks mantiene NativeHorizon, con meshes etiquetados terrain/water independientes. No atribuir todas las superficies a dos capas: se inicia aislamiento opt-in WG_WATER_HIDE_HORIZON que captura sin ambas mallas y registra sus vertices/visibilidad. Es una prueba de propiedad/composicion, no una retirada de horizonte propuesta.
+
+## Horizonte descartado con inventario runtime
+
+regional-water-horizon-isolation/horizon-layers.json=[]: NativeHorizon existe como coordinador pero no instala meshes en Manglares. La afirmacion anterior de tercera capa activa era una hipotesis incorrecta; queda refutada. Nuevo diagnostico toma rayos desde10pixeles alrededor de las uniones visibles y registra coordenadas, etiquetas de las superficies y uniforms de agua. Raycasting NO aplica discard/alpha del shader; las intersecciones deben interpretarse junto con mascaras, no como prueba directa de visibilidad.
