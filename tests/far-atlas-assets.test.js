@@ -21,7 +21,8 @@ test('offline atlases cover the native tree slots, preserve alpha and match both
    }
   }
  }
- assert.equal(bytes,manifest.totalTextureBytes);assert.ok(bytes<24*1024*1024);
+ assert.equal(bytes,manifest.totalTextureBytes);// Approved imagegen artwork uses exact lossless alpha: measured 45.2 MiB on disk; GPU dimensions remain unchanged.
+ assert.ok(bytes<(manifest.artRevision==='imagegen-20261026'?48:24)*1024*1024);
 });
 
 

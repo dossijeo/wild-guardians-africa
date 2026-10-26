@@ -1,0 +1,174 @@
+TAP version 13
+# Subtest: distant horizontal view retains cards while overhead uses geometry
+ok 1 - distant horizontal view retains cards while overhead uses geometry
+  ---
+  duration_ms: 1.2313
+  ...
+# Subtest: unprepared geometry never hides its fallback; preparation converges
+ok 2 - unprepared geometry never hides its fallback; preparation converges
+  ---
+  duration_ms: 0.1354
+  ...
+# Subtest: angular band is continuous and monotonic
+ok 3 - angular band is continuous and monotonic
+  ---
+  duration_ms: 0.4038
+  ...
+# (node:37112) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: offline atlases cover the native tree slots, preserve alpha and match both baked phases
+ok 4 - offline atlases cover the native tree slots, preserve alpha and match both baked phases
+  ---
+  duration_ms: 2551.7704
+  ...
+# Subtest: runtime atlases retain approved hashes and premultiplied transparent RGB
+ok 5 - runtime atlases retain approved hashes and premultiplied transparent RGB
+  ---
+  duration_ms: 2989.6737
+  ...
+# Subtest: admission preserves all 22 reviewed atlas recipes and phase framing
+ok 6 - admission preserves all 22 reviewed atlas recipes and phase framing
+  ---
+  duration_ms: 4.2348
+  ...
+# Subtest: obsolete sun, changed frame, wrong phase and missing linear-alpha declaration are rejected
+ok 7 - obsolete sun, changed frame, wrong phase and missing linear-alpha declaration are rejected
+  ---
+  duration_ms: 0.7223
+  ...
+# (node:25936) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+ok 8 - HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+  ---
+  duration_ms: 5.3474
+  ...
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 9 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 1.7856
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 10 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 0.3292
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 11 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 0.4474
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 12 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 6.632
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 13 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 1.3855
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 14 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 0.7381
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 15 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 0.5491
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 16 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 0.7646
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 17 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 3.8071
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 18 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 0.6169
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 19 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 0.7232
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 20 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 1.8288
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 21 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 0.5396
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 22 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 0.978
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 23 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.5321
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 24 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 0.5236
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 25 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 1.2132
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 26 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 1.2655
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 27 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 0.6012
+  ...
+# Subtest: loading-only bitmap textures retain far-owner disposal and native vertical orientation
+ok 28 - loading-only bitmap textures retain far-owner disposal and native vertical orientation
+  ---
+  duration_ms: 0.8935
+  ...
+# Subtest: parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+ok 29 - parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+  ---
+  duration_ms: 7.6969
+  ...
+# Subtest: parallel loading cancellation releases every late image and never attaches a partial region
+ok 30 - parallel loading cancellation releases every late image and never attaches a partial region
+  ---
+  duration_ms: 0.8301
+  ...
+# Subtest: parallel loading observes sibling failure and releases successful images before rejecting
+ok 31 - parallel loading observes sibling failure and releases successful images before rejecting
+  ---
+  duration_ms: 0.7776
+  ...
+# Subtest: parallel images preserve sequential species admission and all exact texture pairs
+ok 32 - parallel images preserve sequential species admission and all exact texture pairs
+  ---
+  duration_ms: 1.6225
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5800.8552

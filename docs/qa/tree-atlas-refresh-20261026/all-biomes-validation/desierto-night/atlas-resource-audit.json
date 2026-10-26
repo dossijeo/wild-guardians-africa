@@ -1,0 +1,103 @@
+{
+  "manifest": "imagegen-manifest.json",
+  "responses": [
+    {
+      "url": "http://127.0.0.1:5220/content/far-vegetation.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-0/day-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-0/night-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-1/day-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-1/night-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-2/day-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-2/night-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-3/day-imagegen-128.webp",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5220/docs/qa/tree-atlas-refresh-20261026/desert-3/night-imagegen-128.webp",
+      "status": 200
+    }
+  ],
+  "renderer": {
+    "biome": "desierto",
+    "night": 1,
+    "adapters": [
+      {
+        "prelit": 1,
+        "night": 1,
+        "day": [
+          1024,
+          1024
+        ],
+        "nightSize": [
+          1024,
+          1024
+        ],
+        "pending": false,
+        "errors": []
+      },
+      {
+        "prelit": 1,
+        "night": 1,
+        "day": [
+          1024,
+          1024
+        ],
+        "nightSize": [
+          1024,
+          1024
+        ],
+        "pending": false,
+        "errors": []
+      },
+      {
+        "prelit": 1,
+        "night": 1,
+        "day": [
+          1024,
+          1024
+        ],
+        "nightSize": [
+          1024,
+          1024
+        ],
+        "pending": false,
+        "errors": []
+      },
+      {
+        "prelit": 1,
+        "night": 1,
+        "day": [
+          1024,
+          1024
+        ],
+        "nightSize": [
+          1024,
+          1024
+        ],
+        "pending": false,
+        "errors": []
+      }
+    ]
+  }
+}
