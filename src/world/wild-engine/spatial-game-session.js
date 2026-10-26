@@ -46,8 +46,13 @@ export function createSpatialGameSession(module,state,streamOptions){
         Math.abs((center.yaw??0)-(planned.yaw??0))<1e-6&&
         (center.culture??village.culture)===(planned.culture??village.culture))?
       [planned]:[];
+    // The estuary's dry village pad is fixed at founding. Remote work centers
+    // are navigation obstacles, not terrain reclamation: including them on
+    // reload would drain every channel inside the expanded bounding rectangle.
+    const terrainCenters=gameState.mangroveNetwork&&planned?
+      [planned]:[...activeCenters,...plannedCenters];
     const footprints=[...village.buildings.filter(b=>b.kind!=='Zona común').map(b=>b.footprint),
-      ...[...activeCenters,...plannedCenters].map(s=>centerFootprint(s,gameState).footprint)];
+      ...terrainCenters.map(s=>centerFootprint(s,gameState).footprint)];
     const points=footprints.flat();
     if(!points.length)throw TypeError('A spatial village needs physical buildings');
     const sites=gameState.biome==='gran-canon'?footprints.map(footprint=>{
