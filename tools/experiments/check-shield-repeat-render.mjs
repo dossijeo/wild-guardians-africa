@@ -36,10 +36,10 @@ try {
  report.casts=[];
  for(let i=0;i<Number(process.env.WG_MAGIC_CASTS??3);i++){
   await page.waitForFunction(()=>qaMagicWorld.state.cooldowns.shield<=0&&!qaMagicWorld.state.spells.some(s=>s.kind==='shield'),null,{timeout:240000});
-  if(process.env.WG_MAGIC_STREAM==='1')await page.evaluate(()=>{
+  if(process.env.WG_MAGIC_STREAM==='1')await page.evaluate(({distance,duration})=>{
    const w=qaMagicWorld,origin=w.controls.target.clone(),offset=w.camera.position.clone().sub(origin),start=performance.now();globalThis.qaStreamSamples=[];
-   globalThis.qaStreamTimer=setInterval(()=>{const elapsed=(performance.now()-start)/1000,travel=96*Math.sin(Math.min(elapsed/16,1)*Math.PI);w.controls.target.copy(origin);w.controls.target.x+=travel;w.camera.position.copy(w.controls.target).add(offset);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);qaStreamSamples.push({elapsed,keys:[...w.chunks.keys()]});if(elapsed>=16){clearInterval(qaStreamTimer);qaStreamTimer=null;}},100);
-  });
+   globalThis.qaStreamTimer=setInterval(()=>{const elapsed=(performance.now()-start)/1000,travel=distance*Math.sin(Math.min(elapsed/duration,1)*Math.PI);w.controls.target.copy(origin);w.controls.target.x+=travel;w.camera.position.copy(w.controls.target).add(offset);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);qaStreamSamples.push({elapsed,keys:[...w.chunks.keys()]});if(elapsed>=duration){clearInterval(qaStreamTimer);qaStreamTimer=null;}},100);
+  },{distance:Number(process.env.WG_MAGIC_STREAM_DISTANCE??96),duration:Number(process.env.WG_MAGIC_STREAM_SECONDS??16)});
   const result=process.env.WG_MAGIC_NO_CAST==='1'?{kind:'control-no-cast',accepted:false,start:await page.evaluate(()=>performance.now()),commandMs:0}:await page.evaluate(i=>{const w=qaMagicWorld,p=w.state.plants[1],start=performance.now(),before={elapsed:w.state.elapsed,cooldown:w.state.cooldowns.shield,spells:w.state.spells.length};const accepted=qaGame.cast(w.state,'qa-repeat-shield-'+i,'shield',p.x,p.z,w.nav);return {kind:'shield',accepted,start,before,commandMs:performance.now()-start};},i);
   assert(result.accepted||process.env.WG_MAGIC_NO_CAST==='1');report.casts.push(result);await page.waitForTimeout(2200);
   result.after=await page.evaluate(()=>({elapsed:qaMagicWorld.state.elapsed,cooldown:qaMagicWorld.state.cooldowns.shield,spells:qaMagicWorld.state.spells.map(s=>({kind:s.kind,remaining:s.remaining}))}));

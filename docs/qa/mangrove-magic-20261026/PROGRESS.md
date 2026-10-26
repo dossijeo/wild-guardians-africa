@@ -283,3 +283,9 @@ Revisar composicion de inicio para anclar pie del totem a una capa de suelo cerc
 Apertura experimental admite mangroveNetwork antes de findSpatialStart (no cambia defaults). Fixture estuary-agriculture crea4cultivos pagados y trabajador sobre receta8, verifica comandos agricolas en copia, conserva snapshot versionado. Progresion dia5 controlada, no campaña natural. Harness magia permite seleccionar fixture por WG_MAGIC_FIXTURE.
 
 Iniciado renderer Manglares receta8 con dos escudos,cooldown real y recorrido streaming96m, luces estables:sesion95059,estuary-shield-stream. Pendiente resultado visual/perfil; no declarar validacion por preparar fixture.
+
+## Manglares conjunto: primera prueba no acredita streaming
+
+95059 termina con asercion Camera must introduce new chunks. Snapshot confirma biome=manglares,mangroveNetwork=true.21claves iniciales y21unicas,13finales: hubo retirada pero no instalacion nueva observada. Primer comando aceptado4.97ms; ninguna espera registrada de programas. Captura shield-0 muestra helechos densos y copas, pero escudo fuera del encuadre al mover camara; no valida su aspecto. Tutorial agricola reaparece durante recorrido; revisar interferencia en siguiente prueba. No descartar fallo ni declarar streaming correcto.
+
+Harness parametriza distancia/tiempo manteniendo valores anteriores por defecto. Repeticion144m/40s,2activaciones, salida estuary-shield-stream-long, sesion70152. Hipotesis: mas permanencia permite observar entrega; si no, investigar pipeline, no relajar asercion.
