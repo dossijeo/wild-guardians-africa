@@ -25,7 +25,7 @@ try {
  await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});await menu.getByRole('button',{name:'Continuar',exact:true}).click();await menu.locator('[data-production-save="'+fixture.slotId+'"]').click();
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
  await page.waitForFunction(()=>{const s=JSON.parse(wildGuardiansVisibilityQa().snapshot);return s.raid?.cameraFocusedAnimalId;},null,{timeout:90000});
- await page.waitForTimeout(2200);report.before=await inspect();await page.screenshot({path:out+'/raid-camera.png'});
+ await page.waitForTimeout(2200);report.before=await inspect();report.biome=report.before.state?.biome;assert.equal(report.biome,JSON.parse(fixture.snapshot).biome);if(process.env.WG_EXPECT_BIOME)assert.equal(report.biome,process.env.WG_EXPECT_BIOME);await page.screenshot({path:out+'/raid-camera.png'});
  if(process.env.WG_BEAST_GROUP_OBSERVE==='1'){
   assert.equal(report.before.state.raid.animals.length,report.group.length,'Entire group must spawn');report.timeline=[];
   for(let i=0;i<8;i++){

@@ -1,0 +1,88 @@
+{
+  "biome": "manglares",
+  "runtimeProfile": {
+    "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&farWaterSurface=1&farAngularLod=1&qa-visibility=",
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "regionalWater": 1
+  },
+  "ok": true,
+  "scope": "Streaming control without casting; active agricultural simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 4857,
+    "p50": 16.80000000000291,
+    "p95": 49.95999999999185,
+    "p99": 83.02999999999884,
+    "max": 116.34500000000116
+  },
+  "programWaits": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  },
+  "casts": [
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 85759.49000000954,
+      "commandMs": 0,
+      "simulationStart": 3.3845149999237045,
+      "after": {
+        "elapsed": 5.612634999923676,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 22,
+        "finalChunks": 12,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 65,
+        "p50": 33.24499999999534,
+        "p95": 49.96499999999651,
+        "p99": 66.45999999999185,
+        "max": 66.45999999999185
+      },
+      "programWaits": []
+    },
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 175780.65000009537,
+      "commandMs": 0,
+      "simulationStart": 93.41095499992365,
+      "after": {
+        "elapsed": 95.62270999992343,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 25,
+        "finalChunks": 14,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 72,
+        "p50": 16.84499999997206,
+        "p95": 66.39999999999418,
+        "p99": 66.57499999998254,
+        "max": 66.57499999998254
+      },
+      "programWaits": []
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "No spells cast; matched simulation spacing, no pointer targeting test."
+  ]
+}

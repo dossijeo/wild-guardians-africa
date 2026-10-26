@@ -631,3 +631,10 @@ Repetición correcta en curso: estuary-agriculture/fixture.json verificado biome
 production-estuary-shield-verified confirma biome=manglares, perfil holly/fixed512, farWaterSurface/farAngularLod activos, una superficie regional y warmObstruction/retainPrograms activos. Dos comandos legales aceptados con cooldown real:6.250/3.555ms. Simulación agrícola activa y recorrido144m/40s por activación;38/33chunks únicos observados.4601intervalos: P50=33.015ms,P95=50.090ms,P99=83.155ms,máximo116.450ms. Cero esperas de programas registradas y cero errores. Ventanas de2s tras activación: máximos116.425/99.790ms.
 
 Esta corrida sí verifica el perfil actual de Manglares, a diferencia del fixture de Sabana corregido arriba. No demuestra ausencia de todos los tirones: conserva intervalos de más de100ms. Es una corrida instrumentada, sin GPU aislada ni ABAB; los comandos llaman Game.cast y no prueban selección por puntero/incursión. No declarar cerrado el objetivo. Resumen reproducible mediante summarize-magic-repeat.mjs; fuentes raid-ui.json y program-waits.json conservadas. Próximo gate: control sin magia con mismo fixture/recorrido y validación UI en incursión.
+
+
+### Control Manglares con intervalo equivalente
+
+production-estuary-control-verified: mismo fixture de Manglares,144m/40s por recorrido,2recorridos separados90segundos de simulación. Sin magia,0errores/0esperas de programas.4857intervalos: P50=16.800ms,P95=49.960ms,P99=83.030ms,máximo116.345ms. Ventanas iniciales2s máximos66.460/66.575ms. Frente a la corrida con escudo: P50=33.015ms,P95=50.090ms,P99=83.155ms,máximo116.450ms; ventanas116.425/99.790ms.
+
+Los picos globales también existen sin magia. NO concluir coste nulo del escudo: mediana y ventanas iniciales difieren; esta pareja no es ABAB ni GPU aislada. Residencia inicial22/25chunks en control vs21/25 con escudo, recorrido observa40/40 vs38/33chunks. Queda repetir intercalado para separar variabilidad de coste real. El harness de control ahora conserva90s de separación en simulación y el de incursión verifica biome contra el fixture y WG_EXPECT_BIOME.
