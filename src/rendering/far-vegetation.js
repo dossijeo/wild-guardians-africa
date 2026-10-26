@@ -8,7 +8,7 @@ import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
 import {json} from './assets.js';
 import {farAtmosphere} from './far-atmosphere.js';
-import {farVegetationProfile} from './far-vegetation-profile.js';
+import {farVegetationProfile,farGroundReviewOverrides} from './far-vegetation-profile.js';
 import {smoothFarTransitionsEnabled} from './smooth-far-transitions.js';
 import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-world.js';
 
@@ -69,7 +69,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,arcLayout:options.backdropArcLayout??mountain?.arcLayout,stableAltitude:options.backdropStableAltitude??mountain?.stableAltitude,mirrored:options.backdropMirrored,fogBaseMix:options.backdropFogBaseMix??mountain?.fogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
   owner={enabled:true,adapters,configureQuality(quality){
    if(closed||!options.qualityDriven)return false;
-   const next=farVegetationProfile({quality,biome:world.nav.config.biome});
+   const next=farVegetationProfile({quality,biome:world.nav.config.biome},farGroundReviewOverrides(world.nav.config.biome,world.visualSearch));
    // Quality changes only the small-tree band. The large-tree/prewarm extent
    // stays owned by the existing banks, so no atlas or geometry is reloaded.
    if(JSON.stringify(next.transitionHeight)!==JSON.stringify(transitionHeight)||next.end>transitionEnd)throw Error('Far quality policy exceeds prepared extent');

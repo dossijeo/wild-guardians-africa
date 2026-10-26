@@ -21,7 +21,7 @@ import {attachNativeFarGround} from './native-far-ground.js';
 import {farAtmosphere} from '../../src/rendering/far-atmosphere.js';
 
 // Explicit QA opt-in. Atlas resources remain owned by the caller.
-export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>false,initialRegion=null,smoothTransitions=false,metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,simplifiedFarGround=false,bakedOnly=false,logicalStandbyPreload=false,logicalPreloadMargin=null,logicalSizePreload=false,cullZeroImpostors=false,groundTreeBases=null,groundStep=8,groundColorStep=null,groundWash=.25,groundPalette=null,groundSeam=false,nativeWaterMask=false,start=100,end=140,transitionHeight=null,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,importanceHeight=16,importanceMaxBoost=4,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380,fogDayColor='#b5d9e8',fogNightColor='#263747'}){
+export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>false,initialRegion=null,smoothTransitions=false,metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,simplifiedFarGround=false,bakedOnly=false,logicalStandbyPreload=false,logicalPreloadMargin=null,logicalSizePreload=false,cullZeroImpostors=false,groundTreeBases=null,groundStep=8,groundColorStep=null,regionalWaterBed=false,groundWash=.25,groundPalette=null,groundSeam=false,nativeWaterMask=false,start=100,end=140,transitionHeight=null,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,importanceHeight=16,importanceMaxBoost=4,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380,fogDayColor='#b5d9e8',fogNightColor='#263747'}){
  transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);const maxTransitionEnd=transitionHeight?.end??end;
  if(typeof logicalSizePreload!=='boolean'||logicalSizePreload&&(!logicalStandbyPreload||!transitionHeight))throw Error('Invalid logical size preload option');
  if(typeof smoothTransitions!=='boolean')throw Error('Invalid smooth transition option');
@@ -78,7 +78,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  const regionKey=center=>center.x+':'+center.z+':'+(world.spatialSession?.horizonSource.revision()??0);
  async function region(center){
   const key=regionKey(center);if(lastRequested===key)return;lastRequested=key;
-  try{const result=await layer.request(key,{...nativeFarRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundStep,groundColorStep,groundWash,groundPalette,metadata,slot,groundTreeBases,includeGround,bakedOnly}),...(world.spatialSession?{spatialTerrain:world.spatialSession.horizonSource.snapshot()}: {})});if(result)stats.regions++;}
+  try{const result=await layer.request(key,{...nativeFarRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundStep,groundColorStep,regionalWaterBed,groundWash,groundPalette,metadata,slot,groundTreeBases,includeGround,bakedOnly}),...(world.spatialSession?{spatialTerrain:world.spatialSession.horizonSource.snapshot()}: {})});if(result)stats.regions++;}
   catch(error){if(!isCancelled()){if(error instanceof NativeFarGpuCancelled){if(lastRequested===key)lastRequested=null;stats.cancelledRegions++;}else errors.push(String(error));}}
  }
  function schedulePreparation(){

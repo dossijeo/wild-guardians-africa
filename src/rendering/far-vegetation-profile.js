@@ -10,6 +10,7 @@ export function farVegetationProfile({quality,biome},overrides={}){
 
 // Artistic review selections only; normal profiles keep their original spacing.
 export function farGroundReviewOverrides(biome,search=''){
+ if(biome==='mangrove'&&new URLSearchParams(search).get('farWaterSurface')==='1')return {regionalWaterBed:true};
  const flag={volcanoes:'volcanicGround',savanna:'savannaGround',grand_river:'riverGround'}[biome];
  return flag&&new URLSearchParams(search).get(flag)==='fine'?{groundStep:16}:{};
 }
