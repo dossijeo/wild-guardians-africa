@@ -603,3 +603,12 @@ impostor-3d-matched/0-0 y1-1:5349árboles lógicos con idénticas transformacion
 Primera pareja GPU23.589→24.176ms, CPUenvío3.669→2.627ms,85→60draws,255866→623690triángulos. NO decidir con esta pareja; segunda repetición aún en curso. No hay presunción de que menos triángulos implique automáticamente másFPS, especialmente con el coste de preparación/transición de impostores.
 
 Comparación impostor-3d-matched completada, equivalencia de población/cámara y preparación completa comprobadas. Informe README.md con GPU/CPU/intervalos, capturas y límites. Mantener impostores provisionalmente: GPU mejor en ambas parejas, ventaja total variable, menor CPU con3D. No afirmar mejora uniforme deFPS ni extrapolar a todos los biomas. Se conserva el piloto de atlas sin publicar; no se ha iniciado regeneración masiva.
+
+
+### Integración de superficie regional y revalidación normal
+
+Activada la configuración previamente ensayada solo en el perfil Manglares: farWaterSurface=1, farAngularLod=1, máscara regional2m y malla32m. Conserva holly/fixed512 y controles explícitos. production-regional-normal (semilla37, sin flags de candidato en URL): captura inspeccionada, superficie regional visible, mapa433x433, máscara2m/malla32m,0errores. No activa atlas nuevos ni sombras regionales experimentales.
+
+Revalidación actual:84tests de canales/recarga/rutas/escudo/política agrícola,12de perfiles/agua regional y30de VFX pasan. No extrapolar estos tests a rendimiento.
+
+production-shield-stream: dos comandos legales, cooldown real, simulación y recorrido144m/40s por activación. Comandos8.080/4.940ms;5359intervalos, P9549.830ms,P9966.465ms,máximo216.280ms.24consultas de programas,914.475ms acumulados,máxima183.825ms (native-obstruction-blend). No vuelve el bloqueo de5segundos, pero no está libre de compilación tardía. Las ventanas de activación se solapan con streaming: NO atribuir automáticamente esas consultas al escudo. Control sin magia en curso para separar causas. No se marca el objetivo completo.

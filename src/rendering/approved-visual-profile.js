@@ -10,7 +10,7 @@ const COMMON=Object.freeze({
 const BIOMES=Object.freeze({
  sabana:Object.freeze({groundResidentMask:'1',savannaGround:'fine'}),
  'gran-rio':Object.freeze({groundResidentMask:'1',riverGround:'fine'}),
- manglares:Object.freeze({groundResidentMask:'1',mangroveFerns:'holly',groundCache:'fixed512'}),
+ manglares:Object.freeze({groundResidentMask:'1',mangroveFerns:'holly',groundCache:'fixed512',farWaterSurface:'1',farAngularLod:'1'}),
  desierto:Object.freeze({}),
  volcanes:Object.freeze({groundResidentMask:'1',volcanicGround:'fine'}),
  'gran-canon':Object.freeze({waterCore:'opaque',canyonBank:'balanced',canyonWater:'calm',horizonHandoff:'atomic'})
