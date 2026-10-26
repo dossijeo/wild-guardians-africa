@@ -37,7 +37,8 @@ export const ANIMAL_ACTIONS = {
             }
           },
           "clearance": 0.05,
-          "radius": 1.53
+          "radius": 1.1,
+          "visualRadius": 1.53
         }
       },
       "clips": {
@@ -112,7 +113,8 @@ export const ANIMAL_ACTIONS = {
             }
           },
           "clearance": 0.05,
-          "radius": 1.11
+          "radius": 0.9,
+          "visualRadius": 1.1
         }
       },
       "clips": {
@@ -182,7 +184,8 @@ export const ANIMAL_ACTIONS = {
             }
           },
           "clearance": 0.05,
-          "radius": 0.77
+          "radius": 0.97,
+          "visualRadius": 0.77
         }
       },
       "clips": {
@@ -252,7 +255,8 @@ export const ANIMAL_ACTIONS = {
             }
           },
           "clearance": 0.05,
-          "radius": 0.82
+          "radius": 0.85,
+          "visualRadius": 0.8
         }
       },
       "clips": {
@@ -322,7 +326,8 @@ export const ANIMAL_ACTIONS = {
             }
           },
           "clearance": 0.05,
-          "radius": 1.24
+          "radius": 1.55,
+          "visualRadius": 1.24
         }
       },
       "clips": {

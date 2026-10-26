@@ -11,6 +11,10 @@ import {updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {animalBodyVertices,bodyRadiusAt} from '../tools/animal_footprint.mjs';
 const attacks=['Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2'];
+test('visual replacements retain the published navigation and saved-actor radii',()=>{
+  assert.deepEqual(Object.fromEntries(Object.entries(A.animals).map(([name,a])=>[name,a.presentation.footprint.radius])),{warthog:1.1,hyena:.9,buffalo:.97,lion:.85,rhino:1.55});
+  for(const a of Object.values(A.animals))assert(a.presentation.footprint.visualRadius>0);
+});
 const nav={version:1,placement:()=>({valid:true}),setState:()=>{},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function fixture(species,name,hits=1){
   const s=Game.newGame({slotId:'animal',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);
@@ -72,12 +76,12 @@ for(const [species,library] of Object.entries(A.animals))test(`${species}: origi
   gltf.scene.scale.setScalar(.1);prepareAnimalModel(gltf.scene,species);assert.deepEqual(gltf.scene.scale.toArray(),[1,1,1]);gltf.scene.updateMatrixWorld(true);
   const originalBounds=new THREE.Box3().setFromObject(gltf.scene,true);assert.ok(Math.abs(originalBounds.max.y-originalBounds.min.y-native.bindHeight)<1e-8);assert.deepEqual(originalBounds.min.toArray(),native.bindMin);assert.deepEqual(originalBounds.max.toArray(),native.bindMax);
   const body=animalBodyVertices(gltf.scene),footprint=native.footprint;
-  assert.equal(body.reduce((n,b)=>n+b.vertices.length,0),footprint.bodyVertices);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.radius);
+  assert.equal(body.reduce((n,b)=>n+b.vertices.length,0),footprint.bodyVertices);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.visualRadius);
   const walkingMixer=new THREE.AnimationMixer(gltf.scene);
   for(const clip of clips.filter(c=>['Walking','Running'].includes(c.name))){
     walkingMixer.stopAllAction();walkingMixer.clipAction(clip).play();
     // A finer, offset phase grid exercises poses absent from calibration.
-    for(let i=0;i<129;i++){walkingMixer.setTime(clip.duration*(i+.5)/129);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.radius,`${species}/${clip.name} body exceeds navigation radius at phase ${i}`);}
+    for(let i=0;i<129;i++){walkingMixer.setTime(clip.duration*(i+.5)/129);assert.ok(bodyRadiusAt(gltf.scene,body)<footprint.visualRadius,`${species}/${clip.name} body exceeds visual radius at phase ${i}`);}
   }
   walkingMixer.stopAllAction();
   const parent=new THREE.Group();parent.position.set(20,5,10);parent.add(gltf.scene);

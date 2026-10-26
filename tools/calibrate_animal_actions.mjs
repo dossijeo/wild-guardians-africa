@@ -7,6 +7,9 @@ import {calibrateAnimalFootprint} from './animal_footprint.mjs';
 const assets=JSON.parse(readFileSync(new URL('../content/manifests/assets.json',import.meta.url)));
 const fragments={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 const actions={};
+// Published gameplay contract (main before the visual replacements). Geometry
+// calibration must not change saved actors, navigation or shield clearance.
+const gameplayRadii={warthog:1.1,hyena:.9,buffalo:.97,lion:.85,rhino:1.55};
 for(const [species,fragment] of Object.entries(fragments)){
   const model=assets.models.find(m=>m.source.includes(fragment));
   const bytes=readFileSync(new URL('../public'+model.url,import.meta.url));
@@ -33,9 +36,8 @@ for(const [species,fragment] of Object.entries(fragments)){
   const gltf=await new GLTFLoader().parseAsync(geometry.buffer.slice(geometry.byteOffset,geometry.byteOffset+geometry.length),'');gltf.scene.updateMatrixWorld(true);
   const bounds=new THREE.Box3().setFromObject(gltf.scene,true),height=bounds.max.y-bounds.min.y;
   const footprint=calibrateAnimalFootprint(gltf);
-  // A purely visual head lift must not shrink the established navigation /
-  // shield clearance. Still measure and expand if future geometry requires it.
-  footprint.radius=Math.max(footprint.radius,model.replacement?.headPosture?.minimumFootprintRadius??0);
+  footprint.visualRadius=footprint.radius;
+  footprint.radius=gameplayRadii[species];
   actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),presentation:{scale:1,bindHeight:height,bindMin:bounds.min.toArray(),bindMax:bounds.max.toArray(),sourceScript:script,sourceScriptSha256:createHash('sha256').update(scriptBytes).digest('hex'),footprint},clips};
 }
 const manifest={schema:'wg-animal-actions/1',logicalMarker:'Complete native clip. Original bestiary labs encode no logical damage/contact markers; decorative contacts do not drive damage.',animals:actions};
