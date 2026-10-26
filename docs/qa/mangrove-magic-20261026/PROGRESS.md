@@ -166,3 +166,10 @@ Sesión49829 ejecuta A1/B1/A2/B2 secuenciales sobre final-ten, Chrome nuevo por 
 A1: máximo5154.925ms,36 consultas,4942.635ms de espera de programas. B1: máximo166.2ms, máximo que solapa activación149.63ms,1 consulta89.595ms. A2: máximo5454.19ms,36 consultas,5203.505ms de espera. P95 ~83ms en los tres: no mejora sostenida demostrada. Diez actores antes del clic y elapsed314.278/314.284/314.300, desviación pequeña pero no igualdad exacta de simulación. B2 sigue activo en49829.
 
 Auditoría de otras magias: AgricultureVfx desactiva worldLights por defecto y softParticleDepth para crecimiento/multiplicar; no debería provocar el mismo cambio de número de luces ni captura extra de profundidad. Esto es evidencia de código, no sustituye ejecución real de ambas magias.
+
+
+## A/B/A/B completo
+
+Las cuatro ejecuciones terminan sin errores. A1/A2: máximo5154.925/5454.19ms,36 consultas cada una,4942.635/5203.505ms de espera. B1/B2: máximo166.2/166.35ms, máximo en activación149.63/116.385ms,1 consulta cada una89.595/122.87ms. P50 ~49.95ms en todas. P95 A82.945/82.985, B83.21/66.655: variabilidad, no concluir mejora sostenida. Tiempo simulado antes del clic314.278–314.300s,10 actores en todas. Resumen shield-abab/summary.json; perfiles, shaders y vídeos crudos en carpetas A1/B1/A2/B2.
+
+61 pruebas de agricultura VFX y movimiento/escudo pasan, incluidas expiración, reload, amanecer/anochecer y bloqueo físico del escudo. No son pruebas WebGL reales de crecimiento/multiplicación. La fixture final-ten tiene una planta muerta y está en día1/noche: no sirve directamente para esas magias; preparar escenario agrícola legal separado.
