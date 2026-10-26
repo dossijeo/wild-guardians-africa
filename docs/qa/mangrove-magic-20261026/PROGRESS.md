@@ -365,3 +365,7 @@ Banda12% alrededor umbrales nativos38/85m ajustados por calidad; solo identidade
 ## Comprobacion estatica angular en otros cinco biomas
 
 Harness configurable por WG_WATER_BIOME, verifica estado biome real. Sabana,GranRio,Volcanes,Desierto,GranCanon semilla712/calidadmedia720p completan menu/nueva partida/preparacionnormal/elevada,sin errores de pagina. Capturas normales de primeros4 inspeccionadas y elevadas de5; se ve geometria cercana y fondo separado. No aprobar toda la imagen: proxy de suelo/agua lejana sigue plano y juntas visibles en vistas elevadas,independiente del cambio de arboles. Resumen porbioma guardado. No benchmark de movimiento,ni noche/calidadbaja,ni equivalencia AB artistica completa. Primera ejecucion Sabana fallo por firma locator.evaluate del harness, corregida y repetida; conservar failure original.
+
+## Luces estables activadas por defecto en rama experimental
+
+scene configura4slots antes de crear efectos salvo vfxStableLights=0; desaparece dependencia de parametro1 para corregir escudo. Harnesses aceptan0/1 explicitos,ausencia prueba default. Prueba renderer shield-default:escudo legal aceptado6.52ms,maxintervalo83.055,P95=33.505;1consulta programa26.795ms,sin errores.9tests VFX pasan. Esto no sustituye evidencia previa ABAB/repeticiones/incursion/streaming; solo verifica ruta de configuracion habitual. Pendiente validacion visual de saturacion>4luces,noche y resto de cierre.

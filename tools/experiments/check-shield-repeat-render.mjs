@@ -21,7 +21,7 @@ try {
   p.getProgramInfoLog=function(program){const start=performance.now();try{return info.call(this,program);}finally{if(globalThis.qaMagicRecording)qaMagicPrograms.push({draw:globalThis.qaMagicDraw,start,ms:performance.now()-start,shaders:(attached.get(program)??[]).map(s=>sources.get(s))});}};
  });
  await page.addInitScript(f=>{localStorage.setItem('wild-guardians:slot:'+f.slotId,f.snapshot);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',music:0,sfx:0}));},fixture);
- await page.goto(base+'/?qa-visibility'+(process.env.WG_STABLE_LIGHTS==='1'?'&vfxStableLights=1':''),{timeout:90000});const menu=page.frameLocator('#native-menu');
+ await page.goto(base+'/?qa-visibility'+(['0','1'].includes(process.env.WG_STABLE_LIGHTS)?'&vfxStableLights='+process.env.WG_STABLE_LIGHTS:''),{timeout:90000});const menu=page.frameLocator('#native-menu');
  await menu.locator('#loading').waitFor({state:'hidden',timeout:90000});await menu.getByRole('button',{name:'Continuar',exact:true}).click();await menu.locator('[data-production-save="'+fixture.slotId+'"]').click();
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
  await page.waitForTimeout(2200);report.before=await inspect();
