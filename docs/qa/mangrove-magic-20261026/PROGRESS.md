@@ -257,3 +257,7 @@ Scope: Sabana agricola media720p sin escudo activo, video en todos; no incluye c
 Prototipo opt-in: histéresis20% en puntuacion de fuentes ya elegidas; no altera intensidad/color fisicos, numero de slots ni shaders. Set reutilizable, descartado cuando fuente oculta/desconectada/inactiva. Validacion count entero1..8. Nueva prueba con un slot y dos fuentes verifica que diferencia10% no cambia seleccion,30% si, intensidad original intacta y ocultacion limpia inmediatamente.9tests VFX pasan.
 
 Limite: evita oscilaciones cerca de empate, pero sustitucion por fuente claramente mayor sigue instantanea. No considerar validacion visual de multiples efectos completa ni extrapolar ABAB anterior a nueva politica bajo saturacion. Pendiente escena real con mas fuentes que slots, movimiento y streaming.
+
+## Escudo con streaming simultaneo iniciado
+
+Harness repeat admite WG_MAGIC_STREAM=1: recorrido ida/vuelta96m en16s iniciado justo antes del comando, manteniendo bucle de presentacion normal y syncChunks existente. Registra claves instaladas cada100ms y exige que aparezcan chunks nuevos. Dos escudos con cooldown real, perfiles/video activos, luces estables con histeresis. Sesion80808, shield-stream-render, pendiente resultado. No afirma pthreads a partir del nombre: verificar runtime de esta distribucion aparte. Es escenario agricola Sabana; no equivale a incursiones Manglares.

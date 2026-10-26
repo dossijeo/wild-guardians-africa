@@ -34,17 +34,22 @@ try {
  await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(1000);
  report.casts=[];
- for(let i=0;i<3;i++){
+ for(let i=0;i<Number(process.env.WG_MAGIC_CASTS??3);i++){
   await page.waitForFunction(()=>qaMagicWorld.state.cooldowns.shield<=0&&!qaMagicWorld.state.spells.some(s=>s.kind==='shield'),null,{timeout:240000});
+  if(process.env.WG_MAGIC_STREAM==='1')await page.evaluate(()=>{
+   const w=qaMagicWorld,origin=w.controls.target.clone(),offset=w.camera.position.clone().sub(origin),start=performance.now();globalThis.qaStreamSamples=[];
+   globalThis.qaStreamTimer=setInterval(()=>{const elapsed=(performance.now()-start)/1000,travel=96*Math.sin(Math.min(elapsed/16,1)*Math.PI);w.controls.target.copy(origin);w.controls.target.x+=travel;w.camera.position.copy(w.controls.target).add(offset);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);qaStreamSamples.push({elapsed,keys:[...w.chunks.keys()]});if(elapsed>=16){clearInterval(qaStreamTimer);qaStreamTimer=null;}},100);
+  });
   const result=await page.evaluate(i=>{const w=qaMagicWorld,p=w.state.plants[1],start=performance.now(),before={elapsed:w.state.elapsed,cooldown:w.state.cooldowns.shield,spells:w.state.spells.length};const accepted=qaGame.cast(w.state,'qa-repeat-shield-'+i,'shield',p.x,p.z,w.nav);return {kind:'shield',accepted,start,before,commandMs:performance.now()-start};},i);
   assert(result.accepted);report.casts.push(result);await page.waitForTimeout(2200);
   result.after=await page.evaluate(()=>({elapsed:qaMagicWorld.state.elapsed,cooldown:qaMagicWorld.state.cooldowns.shield,spells:qaMagicWorld.state.spells.map(s=>({kind:s.kind,remaining:s.remaining}))}));
   assert(result.after.spells.some(s=>s.kind==='shield'&&s.remaining>0));
   await page.screenshot({path:out+'/shield-'+i+'.png'});
+  if(process.env.WG_MAGIC_STREAM==='1'){await page.waitForFunction(()=>qaStreamTimer===null,null,{timeout:60000});result.streaming=await page.evaluate(()=>({samples:qaStreamSamples,spatial:globalThis.wildGuardiansSpatialQa?.()}));assert(new Set(result.streaming.samples.flatMap(s=>s.keys)).size>result.streaming.samples[0].keys.length,'Camera must introduce new chunks');}
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));
  }
  report.after=await inspect();
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
