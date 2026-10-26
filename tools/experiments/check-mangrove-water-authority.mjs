@@ -93,6 +93,10 @@ try{
   const changed=await page.evaluate(()=>{let n=0;qaWaterWorld.scene.traverse(m=>{if(m.userData.regionalWaterSurface){m.material.depthTest=false;m.material.depthWrite=false;m.renderOrder=1000;n++;}});return n;});
   await page.waitForTimeout(500);await page.screenshot({path:out+'/regional-no-depth-test.png'});await writeFile(out+'/depth-test.json',JSON.stringify({changed,diagnosticOnly:true}));
  }
+ if(process.env.WG_WATER_TERRAIN_AUDIT==='1'){
+  const result=await page.evaluate(async()=>{const THREE=await import('/node_modules/three/build/three.module.js'),w=qaWaterWorld,near=[],far=[];w.scene.updateMatrixWorld(true);w.scene.traverse(m=>{if(m.userData.ground)near.push(m);if(m.userData.farGround)far.push(m);});const ray=new THREE.Raycaster(),rows=[],t=w.controls.target;ray.ray.direction.set(0,-1,0);for(let z=t.z-80+.61;z<t.z+80;z+=4)for(let x=t.x-80+.37;x<t.x+80;x+=4){const info=w.nav.field.waterInfo(x,z);if(!info.inside)continue;ray.ray.origin.set(x,100,z);const a=ray.intersectObjects(near,false)[0],b=ray.intersectObjects(far,false)[0];rows.push({x,z,level:info.level,mask:info.mask,near:a?.point.y,far:b?.point.y});}return {rows,nearMeshes:near.length,farMeshes:far.length};});await writeFile(out+'/terrain-audit.json',JSON.stringify(result,null,2));
+  await page.evaluate(()=>qaWaterWorld.scene.traverse(m=>{if(m.userData.ground)m.visible=false;}));await page.waitForTimeout(300);await page.screenshot({path:out+'/without-near-ground.png'});
+ }
  if(process.env.WG_REGIONAL_ALL==='1'){
   await page.evaluate(()=>{qaWaterWorld.scene.traverse(m=>{if(m.userData.nativeFluid)m.visible=false;if(m.userData.regionalWaterSurface){const compile=m.material.onBeforeCompile,key=m.material.customProgramCacheKey();m.material.onBeforeCompile=(s,r)=>{compile(s,r);s.fragmentShader=s.fragmentShader.replace('if(all(greaterThanEqual(regionalXZ','if(false&&all(greaterThanEqual(regionalXZ');};m.material.customProgramCacheKey=()=>key+':qa-all';m.material.needsUpdate=true;}});});
   await page.waitForTimeout(500);await page.screenshot({path:out+'/regional-all.png'});
