@@ -245,3 +245,9 @@ Tras cerrar Manglares y bloqueos de magia, revisar duracion y legibilidad de ove
 ## Coste sostenido de slots: ABAB GPU iniciado
 
 measure-stable-lights-gpu.mjs mide drawRenderFrame completo mediante EXT_disjoint_timer_query_webgl2,60frames calentamiento y240consultas por brazo, chequeo disjoint y renderer real. A/B/A/B separados cargan misma fixture agricola, calidadmedia720p; B activa slots, A original, sin escudo activo. Simulacion permanece activa y video en ambos, por lo que registrar snapshots antes/despues y no asumir igualdad exacta. Sesion16190 en curso; ningun resultado aun. No modificar runtime durante serie.
+
+## GPU sostenida sin magia: ABAB completo Intel UHD
+
+Cuatro ejecuciones sin errores, EXT_disjoint_timer_query_webgl2 valido, disjoint=false,240consultas cada una sobre drawRenderFrame. GPU media A1/B1/A2/B2=22.533/21.558/20.606/21.304ms; mediana21.522/20.947/20.552/20.956ms. CPU envio medio3.201/3.141/3.274/3.279ms. No hay penalizacion consistente grande, pero tampoco mejora demostrada: A deriva entre repeticiones y B2 supera A2 ~0.70ms. No concluir coste cero ni ganancia. Mismo fixture con simulacion activa, elapsed inicial1.991-2.082s y finales9.482-10.230s; ventanas no son estados temporales exactamente iguales.
+
+Scope: Sabana agricola media720p sin escudo activo, video en todos; no incluye coste total simulacion/frametime ni valida biomas complejos o multiples fuentes. Resumen compacto stable-lights-gpu/summary.json y raw locales. Siguiente: comprobar fuentes simultaneas/cambios de seleccion y streaming antes de activar slots por defecto.

@@ -1,0 +1,97 @@
+{
+  "scope": "A official dynamic lights, B four prepared slots, no active shield. Same agricultural fixture/viewport/quality, active simulation, 60 warmup +240 GPU queries. CPU measures drawRenderFrame submission, not complete frame. Video recording enabled in all runs.",
+  "rows": [
+    {
+      "arm": "A1",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "n": 240,
+        "mean": 22.53266384583332,
+        "p50": 21.522291,
+        "p95": 29.589374,
+        "p99": 36.008437,
+        "max": 37.218489
+      },
+      "cpu": {
+        "n": 240,
+        "mean": 3.2005208263794582,
+        "p50": 2.990000009536743,
+        "p95": 4.474999904632568,
+        "p99": 5.309999942779541,
+        "max": 5.875
+      },
+      "elapsedBefore": 2.082389999957087,
+      "elapsedAfter": 10.230434999957021,
+      "errors": []
+    },
+    {
+      "arm": "B1",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "n": 240,
+        "mean": 21.55754972083332,
+        "p50": 20.946822,
+        "p95": 26.213176,
+        "p99": 33.38854,
+        "max": 35.333541
+      },
+      "cpu": {
+        "n": 240,
+        "mean": 3.140854172408581,
+        "p50": 2.9700000286102295,
+        "p95": 4.3450000286102295,
+        "p99": 5.195000052452087,
+        "max": 5.600000023841858
+      },
+      "elapsedBefore": 1.9966850000238427,
+      "elapsedAfter": 9.812200000023799,
+      "errors": []
+    },
+    {
+      "arm": "A2",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "n": 240,
+        "mean": 20.605925133333333,
+        "p50": 20.551978,
+        "p95": 23.554165,
+        "p99": 26.836093,
+        "max": 34.607655
+      },
+      "cpu": {
+        "n": 240,
+        "mean": 3.2737708374857903,
+        "p50": 3.165000081062317,
+        "p95": 4.335000038146973,
+        "p99": 5.110000014305115,
+        "max": 5.389999985694885
+      },
+      "elapsedBefore": 2.0658000000381445,
+      "elapsedAfter": 9.482035000038104,
+      "errors": []
+    },
+    {
+      "arm": "B2",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpu": {
+        "n": 240,
+        "mean": 21.30416685,
+        "p50": 20.956406,
+        "p95": 24.713592,
+        "p99": 33.479061,
+        "max": 37.028801
+      },
+      "cpu": {
+        "n": 240,
+        "mean": 3.2793333316842714,
+        "p50": 3.1100000143051147,
+        "p95": 4.4649999141693115,
+        "p99": 5.179999947547913,
+        "max": 5.640000104904175
+      },
+      "elapsedBefore": 1.9913899999332438,
+      "elapsedAfter": 9.723589999933196,
+      "errors": []
+    }
+  ]
+}

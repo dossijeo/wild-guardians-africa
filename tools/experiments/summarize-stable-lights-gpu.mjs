@@ -1,0 +1,5 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const root=process.argv[2]??'docs/qa/mangrove-magic-20261026/stable-lights-gpu';
+const stats=a=>{const s=[...a].sort((a,b)=>a-b);return {n:s.length,mean:s.reduce((a,b)=>a+b,0)/s.length,p50:s[Math.ceil(s.length*.5)-1],p95:s[Math.ceil(s.length*.95)-1],p99:s[Math.ceil(s.length*.99)-1],max:s.at(-1)};};
+const rows=['A1','B1','A2','B2'].map(arm=>{const r=JSON.parse(readFileSync(root+'/'+arm+'/gpu.json'));if(!r.ok||!r.gpu?.supported||r.gpu.disjoint||r.gpu.gpu.length!==240)throw Error('Invalid run '+arm);return {arm,renderer:r.gpu.renderer,gpu:stats(r.gpu.gpu),cpu:stats(r.gpu.cpu),elapsedBefore:r.before?.state?.elapsed,elapsedAfter:r.after?.state?.elapsed,errors:r.errors};});
+const summary={scope:'A official dynamic lights, B four prepared slots, no active shield. Same agricultural fixture/viewport/quality, active simulation, 60 warmup +240 GPU queries. CPU measures drawRenderFrame submission, not complete frame. Video recording enabled in all runs.',rows};writeFileSync(root+'/summary.json',JSON.stringify(summary,null,2));console.log(JSON.stringify(summary,null,2));
