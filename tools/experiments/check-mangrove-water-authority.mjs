@@ -49,6 +49,7 @@ try{
   await page.evaluate(range=>{const q=qaWaterWorld.groundDetails;if(q?.cardStudy?.representation!=='native-holly-fern-balanced')throw Error('Approved ferns required');q.farDistance=range;q.uniforms.uCoverageFar.value=range;q.dirty=true;},range);
   await page.waitForTimeout(2000);await page.screenshot({path:out+'/elevated-ferns.png'});
   await writeFile(out+'/elevated-ferns.json',JSON.stringify(await page.evaluate(()=>({coverage:qaWaterWorld.groundDetails.audit(),range:qaWaterWorld.groundDetails.farDistance})),null,2));
+  if(process.env.WG_FERN_SHADOW_DIAGNOSTIC==='1'){await page.evaluate(()=>{globalThis.qaFernSync=qaWaterWorld.groundDetails.syncLod;qaWaterWorld.groundDetails.syncLod=null;qaWaterWorld.scene.traverse(m=>{if(m.name==='fern-prebaked-shadow')m.visible=false;});});await page.waitForTimeout(300);await page.screenshot({path:out+'/elevated-ferns-no-shadow.png'});await page.evaluate(()=>{qaWaterWorld.groundDetails.syncLod=globalThis.qaFernSync;delete globalThis.qaFernSync;qaWaterWorld.groundDetails.syncLod();});}
  }
  if(process.env.WG_ANGULAR_MOTION==='1'){
   const motion=await page.evaluate(async(travel)=>{
