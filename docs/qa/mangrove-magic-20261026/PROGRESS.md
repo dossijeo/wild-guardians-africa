@@ -173,3 +173,10 @@ Auditoría de otras magias: AgricultureVfx desactiva worldLights por defecto y s
 Las cuatro ejecuciones terminan sin errores. A1/A2: máximo5154.925/5454.19ms,36 consultas cada una,4942.635/5203.505ms de espera. B1/B2: máximo166.2/166.35ms, máximo en activación149.63/116.385ms,1 consulta cada una89.595/122.87ms. P50 ~49.95ms en todas. P95 A82.945/82.985, B83.21/66.655: variabilidad, no concluir mejora sostenida. Tiempo simulado antes del clic314.278–314.300s,10 actores en todas. Resumen shield-abab/summary.json; perfiles, shaders y vídeos crudos en carpetas A1/B1/A2/B2.
 
 61 pruebas de agricultura VFX y movimiento/escudo pasan, incluidas expiración, reload, amanecer/anochecer y bloqueo físico del escudo. No son pruebas WebGL reales de crecimiento/multiplicación. La fixture final-ten tiene una planta muerta y está en día1/noche: no sirve directamente para esas magias; preparar escenario agrícola legal separado.
+
+
+## Escenario agrícola real preparado
+
+create-agriculture-render-fixture genera apertura nativa y cuatro plantas de mijo pagadas con contratación normal. Progresión controlada a día5/hora100 para desbloqueo; no es campaña natural. Valida Game.cast de las cuatro aplicaciones en copia deserializada sin aplicar efectos al snapshot que carga el renderer.
+
+check-agriculture-render carga esa partida en renderer real, invoca comando Game.cast legal sobre cada planta (growth/multiply/growth/multiply), espera y captura cada efecto. Mide comandos, rAF y getProgramInfoLog con el mismo instrumental del escudo. No valida puntería UI, no debe confundirse con prueba de clic. Ejecución6737 en curso; pendiente resultado.
