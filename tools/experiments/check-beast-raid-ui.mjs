@@ -12,6 +12,7 @@ page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_VFX_TRIANGLE_CANDIDATE==='1'){const candidate=await readFile('docs/qa/mangrove-magic-20261026/vfx-triangle-candidate/vfx-native.mjs','utf8');await page.route('**/src/rendering/vfx-native.js*',route=>{report.vfxCandidateLoads=(report.vfxCandidateLoads??0)+1;return route.fulfill({status:200,contentType:'application/javascript',body:candidate});});report.vfxTriangleCandidate=true;}
  if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new')});});
  if(process.env.WG_MAGIC_PROFILE==='1')await page.addInitScript(()=>{
   const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];
@@ -59,6 +60,6 @@ try {
   if(s.state.spells.some(s=>s.kind==='shield'||s.type==='shield'||s.spell==='shield')){report.click=point;break;}
  }
  await page.waitForFunction(()=>JSON.parse(wildGuardiansVisibilityQa().snapshot).spells.some(s=>s.kind==='shield'||s.type==='shield'||s.spell==='shield'),null,{timeout:10000});
- await page.waitForTimeout(700);report.after=await inspect();await page.screenshot({path:out+'/raid-shield.png'});await page.waitForTimeout(Number(process.env.WG_SHIELD_OBSERVE_MS??5000));report.end=await inspect();await page.screenshot({path:out+'/raid-shield-end.png'});report.ok=true;assert.deepEqual(errors,[]);
+ await page.waitForTimeout(700);report.after=await inspect();await page.screenshot({path:out+'/raid-shield.png'});await page.waitForTimeout(Number(process.env.WG_SHIELD_OBSERVE_MS??5000));report.end=await inspect();await page.screenshot({path:out+'/raid-shield-end.png'});if(process.env.WG_VFX_TRIANGLE_CANDIDATE==='1')assert(report.vfxCandidateLoads>0,'Candidate module must be served');report.ok=true;assert.deepEqual(errors,[]);
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
 finally{if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks,lights:qaLightSamples};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
