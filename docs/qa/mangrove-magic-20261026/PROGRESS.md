@@ -645,3 +645,8 @@ Los picos globales también existen sin magia. NO concluir coste nulo del escudo
 production-estuary-raid-ui-verified: fixture estuary-raid confirmado biome=manglares. Incursión nativa con warthog,hyena,buffalo,lion,rhino; menú Magia→Escudo y un clic de ratón aceptado, escudo presente en estado después. Captura raid-shield.png inspeccionada: cúpula sobre cultivos, animales presentes y helechos conservados.0errores/0esperas de programas.333intervalos: P95=66.475ms,P99=99.685ms,máximo166.300ms. Roundtrip de clic140.700ms incluye automatización/presentación: NO tiempo CPU aislado de Game.cast. Observación posterior12s.
 
 No reaparece bloqueo multisegundo en esta corrida, pero no equivale a ausencia de tirones ni sustituye ABAB/mediciónGPU. Mantener objetivo abierto para atribución de picos y cobertura de demás magias.
+
+
+### Magias agrícolas en Manglares confirmado
+
+production-estuary-agriculture-verified ejecuta growth/multiply/growth/multiply sobre cuatro plantas legales del fixture estuary-agriculture. Bioma confirmado por assertion. Cuatro comandos aceptados, tiempos [0.985, 0.425, 0.315, 0.36]ms; efectos visibles con sprites y permanencia en escena, captura magic-3.png inspeccionada.492intervalos: P95=33.510ms,P99=49.985ms,máximo133.355ms.0consultas getProgramInfoLog y0errores. No hay bloqueo multisegundo. Comandos directos Game.cast, no clic UI; corrida instrumentada única, no ABAB/GPU aislada. Añadida comprobación de bioma al harness agrícola para evitar extrapolar Sabana a Manglares.
