@@ -70,6 +70,18 @@ try{
    return {supported:true,renderer,frames,gpu,cpu,intervals,disjoint,memory:w.renderer.info.memory,render:w.renderer.info.render,scope:'Whole drawRenderFrame; 60 warmup+240 measured; static elevated view, identical day/time, simulation paused for controlled GPU comparison.'};
   });await writeFile(out+'/gpu.json',JSON.stringify(gpu,null,2));if(gpu.disjoint)throw Error('Disjoint GPU measurements');
  }
+ if(process.env.WG_WATER_ISOLATE==='1'){
+  const hits=await page.evaluate(()=>{
+   const w=qaWaterWorld,ray=w.raycaster,points=[[740,295],[400,365],[650,540],[880,385]],result=[];
+   for(const [x,y] of points){ray.setFromCamera({x:x/1280*2-1,y:1-y/720*2},w.camera);result.push({pixel:[x,y],hits:ray.intersectObjects(w.scene.children,true).slice(0,12).map(h=>({point:h.point.toArray(),distance:h.distance,name:h.object.name,userData:h.object.userData,material:h.object.material?.type,parents:[h.object.parent?.name,h.object.parent?.parent?.name]}))});}
+   return result;
+  });await writeFile(out+'/surface-hits.json',JSON.stringify(hits,null,2));
+  for(const layer of ['regional','resident','seam']){
+   await page.evaluate(layer=>{const w=qaWaterWorld;globalThis.qaHidden=[];w.scene.traverse(m=>{if(m.visible&&((layer==='regional'&&(m.userData.farGround||m.userData.regionalWaterSurface))||(layer==='resident'&&m.userData.nativeFluid)||(layer==='seam'&&m.userData.farGroundSeam))){qaHidden.push(m);m.visible=false;}});},layer);
+   await page.waitForTimeout(200);await page.screenshot({path:out+'/without-'+layer+'.png'});
+   await page.evaluate(()=>{for(const m of qaHidden)m.visible=true;delete globalThis.qaHidden;});
+  }
+ }
  if(process.env.WG_WATER_HIDE_FAR==='1'){await page.evaluate(()=>{qaWaterWorld.scene.traverse(m=>{if(m.userData.farGround)m.visible=false;});});await page.waitForTimeout(300);await page.screenshot({path:out+'/elevated-without-far-ground.png'});}
  console.log(JSON.stringify({seed:data.seed,target:data.target,wet:data.points.filter(p=>p.water.inside).length,total:data.points.length,waters:data.waters.length,errors}));
 }catch(error){await writeFile(out+'/failure.json',JSON.stringify({error:String(error),errors,text:await page.locator('body').innerText().catch(()=>null)},null,2));await page.screenshot({path:out+'/failure.png'}).catch(()=>{});throw error;}finally{await page.unrouteAll({behavior: 'wait'});await browser.close();}
