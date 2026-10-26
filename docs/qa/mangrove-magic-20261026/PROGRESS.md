@@ -505,3 +505,7 @@ regional-water-horizon-isolation/horizon-layers.json=[]: NativeHorizon existe co
 ## Uniforms en punto mojado coincidente
 
 pixel-audit punto pantalla700,510/world86.855,20.797: mask.935742, agua chunk y regional a3.339999914. Ambos reloj65, escala.55, amplitud.72, mismos Ink0/1, night0/exposure1,clip0. No hay diferencia de estos uniforms.9de10puntos elegidos eran secos en campo autoritativo; no sirven para atribuir union. Se amplia muestreo a rejilla336rayos de pantalla para seleccionar agua realmente mojada y distinguir interior/exterior residente antes de otro cambio. No inferir visibilidad del raycast sin aplicar descarte del shader.
+
+## Lecho visualizado en shader y regresiones nativas
+
+regional-water-bed-channels: salida QA roja=profundidad/1.17, verde=distancia/4, alpha1. Captura inspeccionada muestra gradientes y canales coherentes, sin una discontinuidad rectangular evidente que explique por si sola la apariencia. No es equivalencia numerica total (se conserva el error de muestreo ya documentado). Reejecutadas10pruebas: canales, estuario pthread/sincrono, chunks adyacentes/semillas, expansion/recarga, travesia por agua y cobertura; todas pasan. Nuevo aislamiento opt-in fuerza fluidVisibility1 SOLO en material de agua para distinguir recepcion de sombras de reflejos/color. No retirar sombras de produccion.
