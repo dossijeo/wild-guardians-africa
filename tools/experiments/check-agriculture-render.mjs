@@ -31,10 +31,14 @@ try {
   await page.evaluate(()=>{const renderer=qaMagicWorld.renderer,draw=renderer.renderBufferDirect;renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){globalThis.qaMagicDraw={object:object.name,parents:[object.parent?.name,object.parent?.parent?.name],type:object.type,material:material.type,source:object.material?.name,side:material.side};try{return draw.call(this,camera,scene,geometry,material,object,group);}finally{globalThis.qaMagicDraw=null;}};globalThis.qaMagicFrames=[];globalThis.qaMagicLongTasks=[];let last=null;globalThis.qaMagicRecording=true;const frame=t=>{if(!qaMagicRecording)return;if(last!==null)qaMagicFrames.push({t,ms:t-last});last=t;requestAnimationFrame(frame);};requestAnimationFrame(frame);new PerformanceObserver(list=>{for(const e of list.getEntries())qaMagicLongTasks.push({start:e.startTime,ms:e.duration});}).observe({type:'longtask',buffered:false});});
  }
  await page.evaluate(async()=>{globalThis.qaGame=await import('/src/simulation/game.js');});
+ await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
+ await page.waitForTimeout(1000);
  report.casts=[];
  for(let i=0;i<4;i++){
   const result=await page.evaluate(i=>{const w=qaMagicWorld,p=w.state.plants[i],kind=i%2?'multiply':'growth',start=performance.now();const accepted=qaGame.cast(w.state,'qa-render-'+i,kind,p.x,p.z,w.nav,p.id);return {kind,target:p.id,accepted,start,commandMs:performance.now()-start};},i);
   assert(result.accepted);report.casts.push(result);await page.waitForTimeout(2200);
+  result.graphics=await page.evaluate(()=>[...qaMagicWorld.agricultureVfx.effects.values()].map(e=>({visible:e.visible,parent:!!e.parent,time:e.native.time,sprites:e.sprites.geometry.instanceCount,lights:e.localLights.length})));
+  assert.equal(result.graphics.length,i+1);assert(result.graphics.some(e=>e.visible&&e.parent&&e.sprites>0));
   await page.screenshot({path:out+'/magic-'+i+'.png'});
  }
  report.after=await inspect();assert.equal(report.after.state.spells.length,4);

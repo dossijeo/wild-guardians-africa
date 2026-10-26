@@ -180,3 +180,10 @@ Las cuatro ejecuciones terminan sin errores. A1/A2: máximo5154.925/5454.19ms,36
 create-agriculture-render-fixture genera apertura nativa y cuatro plantas de mijo pagadas con contratación normal. Progresión controlada a día5/hora100 para desbloqueo; no es campaña natural. Valida Game.cast de las cuatro aplicaciones en copia deserializada sin aplicar efectos al snapshot que carga el renderer.
 
 check-agriculture-render carga esa partida en renderer real, invoca comando Game.cast legal sobre cada planta (growth/multiply/growth/multiply), espera y captura cada efecto. Mide comandos, rAF y getProgramInfoLog con el mismo instrumental del escudo. No valida puntería UI, no debe confundirse con prueba de clic. Ejecución6737 en curso; pendiente resultado.
+
+
+## Primera ejecución agrícola y limitación visual
+
+Cuatro comandos aceptados:1.315/.690/.285/.330ms, sin consultas getProgramInfoLog, máximo rAF99.68ms y P9533.405ms. Simulación avanza y duraciones de hechizos decrecen. Captura magic-3 inspeccionada: planos de siembra pequeños, efectos no suficientemente discernibles para aceptación visual. No afirmar equivalencia de efectos por ausencia de compilación.
+
+Harness ampliado con cámara cercana a las plantas, inspección de efectos activos/sprites/visibilidad y aserciones. Repetición close-render90530 en curso, preservando primera ejecución.
