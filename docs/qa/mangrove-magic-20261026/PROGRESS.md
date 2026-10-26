@@ -567,3 +567,11 @@ Primer bake RGB no servía para esta ruta: mapped=true usa el mapa regional para
 far-tree-shadow-mask: captura real sin errores, máscara confirmada en metadata del renderer: 433x433, 187489 bytes base, 30978 texels afectados. No son cifras de VRAM total/driver. La comparación visual inspeccionada muestra un efecto discreto en el fondo; no demuestra aún que el anclaje sea suficiente ni una mejora perceptual definitiva. Pendiente comparar sin máscara dentro de la misma sesión, noche y coste GPU/streaming. No activado en producción.
 
 Corrección de nota anterior sobre niebla: 160 m era el default genérico de farAtmosphere; farVegetationProfile configura fogStart=90, fogEnd=480 para esta ruta. La deducción de ausencia de niebla por estar por debajo de160 no era válida. Se mantiene la evidencia de superposición de sombras del ensayo con/sin tarjetas; auditar valores runtime en próximas capturas.
+
+### Comparación visual de sombras en la misma sesión
+
+far-shadow-same-session: strengths0/.30/.55 mediante uniform compartido, misma cámara, semilla712, día fijo; cero errores. Inspeccionado montaje far-shadow-detail.png (izquierda0, derecha.55): aporta sombras suaves al suelo entre árboles; efecto discreto bajo la niebla. Runtime confirma fogNear90/fogFar480 y uNight0. No se confunde con benchmark GPU: incluso strength0 conserva lectura de máscara. Variante sigue opt-in.
+
+Revalidación: 19 tests pasan entre mangrove-channels, mangrove-expansion-reload, mangrove-water-traversal, continuous-grass-mangrove-water, far-ground-color-map y far-tree-shadow-bake. Incluyen equivalencia de terreno sync/pthreads, continuidad/semillas y recarga expandida, rutas acuáticas sin hacer agua edificable, conservación de máscaras y propiedad de textura. No sustituyen pruebas visuales/nocturnas ni A/B de frametime.
+
+En curso far-shadow-night con tiempo400 y comparación de intensidades; comprobar uNight1 y ausencia de efecto residual solar. Añadido WG_WATER_TIME para fijar fase visual sin avanzar simulación.

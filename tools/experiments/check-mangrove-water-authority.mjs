@@ -23,7 +23,7 @@ try{
  await menu.locator('body').evaluate((element,biome)=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome,culture:'mapungubwe'},location.origin),biome);
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&globalThis.qaWaterWorld?.state,null,{timeout:240000});
  if(process.env.WG_WATER_NEAR)await page.evaluate(near=>{qaWaterWorld.camera.near=near;qaWaterWorld.camera.updateProjectionMatrix();},Number(process.env.WG_WATER_NEAR));
- if(process.env.WG_WATER_FIXED_TIME==='1')await page.evaluate(async()=>{const game=await import('/src/simulation/game.js');game.pause(qaWaterWorld.state,'qa-tree-comparison');qaWaterWorld.state.time=100;qaWaterWorld.state.elapsed=100;});
+ if(process.env.WG_WATER_FIXED_TIME==='1')await page.evaluate(async time=>{const game=await import('/src/simulation/game.js');game.pause(qaWaterWorld.state,'qa-tree-comparison');qaWaterWorld.state.time=time;qaWaterWorld.state.elapsed=100;},Number(process.env.WG_WATER_TIME??100));
  await page.waitForTimeout(3000);
  // Presentation-only diagnostic: do not advance tutorial steps or let its
  // guided placement camera override the requested comparison views.
@@ -44,6 +44,16 @@ try{
  await page.waitForTimeout(2000);
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
  await page.screenshot({path:out+'/elevated.png'});
+ if(process.env.WG_TREE_SHADOW_COMPARE==='1'){
+  const diagnostics=[];
+  for(const strength of [0,.3,.55]){
+   const state=await page.evaluate(strength=>{const w=qaWaterWorld,rows=[];w.scene.traverse(m=>{const d=m.userData.treeShadowBake;if(d){d.strength.value=strength;rows.push({width:d.width,height:d.height,bytes:d.bytes,affected:d.affected});}});if(!rows.length)throw Error('No regional shadow mask');return {strength,rows,night:w.toon.uniforms.uNight.value,fog:w.scene.fog?{near:w.scene.fog.near,far:w.scene.fog.far}:null};},strength);
+   await page.waitForTimeout(300);await page.screenshot({path:out+'/shadow-strength-'+strength+'.png'});diagnostics.push(state);
+  }
+  await page.evaluate(()=>{qaWaterWorld.scene.traverse(m=>{if(m.userData.treeShadowBake)m.userData.treeShadowBake.strength.value=.3;});});
+  await writeFile(out+'/shadow-comparison.json',JSON.stringify({diagnostics,scope:'Same-session visual strength test; all variants retain sampler so this is NOT a GPU overhead A/B.'},null,2));
+ }
+
  await writeFile(out+'/elevated-coverage.json',JSON.stringify(await page.evaluate(()=>({camera:qaWaterWorld.camera.position.toArray(),target:qaWaterWorld.controls.target.toArray(),coverage:qaWaterWorld.groundDetails?.audit?.(),range:qaWaterWorld.groundDetails?.farDistance})),null,2));
  if(process.env.WG_FERN_RANGE){
   const range=Number(process.env.WG_FERN_RANGE);if(!Number.isFinite(range)||range<48||range>200)throw Error('Invalid fern range');

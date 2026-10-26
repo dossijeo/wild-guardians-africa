@@ -62,6 +62,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   m.customProgramCacheKey=()=>key+':regional-mask-v2:'+!!residentMask;
   regionalWater=new THREE.Mesh(g,m);regionalWater.receiveShadow=true;regionalWater.frustumCulled=false;regionalWater.userData.regionalWaterSurface=true;candidate.impostors.add(regionalWater);
  }
+ const treeShadowStrength={value:.30};
  const original=material.onBeforeCompile;
  const patchGroundShader=(shader,renderer,clipNear=true)=>{
   original.call(material,shader,renderer);
@@ -70,7 +71,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
    shader.vertexShader='attribute float aFarWater;varying float vFarWater;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarWater=aFarWater;');
    shader.fragmentShader='varying float vFarWater;\n'+shader.fragmentShader;if(!regionalSurface)shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb=mix(gl_FragColor.rgb,pow(max('+(nativeWaterMask?'uFarMaskWaterColor':'vColor.rgb')+',vec3(0.)),vec3(2.2))*mix(vec3(1.),vec3(.187675676,.302022472,.661818182),uNight),'+(nativeWaterMask?'smoothstep(.45,.55,texture2D(uFarWaterMask,vFarWaterUv).a)':'smoothstep(.45,.55,vFarWater)')+');');
   }
-  if(treeShadowMap){shader.uniforms.uFarTreeShadow={value:treeShadowMap};shader.uniforms.uFarTreeNight=world.toon.uniforms.uNight;shader.vertexShader='varying vec2 vFarTreeShadowUv;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarTreeShadowUv=uv;');shader.fragmentShader='varying vec2 vFarTreeShadowUv;uniform sampler2D uFarTreeShadow;uniform float uFarTreeNight;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb*=1.-.30*texture2D(uFarTreeShadow,vFarTreeShadowUv).r*(1.-clamp(uFarTreeNight,0.,1.));');}
+  if(treeShadowMap){shader.uniforms.uFarTreeStrength=treeShadowStrength;shader.uniforms.uFarTreeShadow={value:treeShadowMap};shader.uniforms.uFarTreeNight=world.toon.uniforms.uNight;shader.vertexShader='varying vec2 vFarTreeShadowUv;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarTreeShadowUv=uv;');shader.fragmentShader='varying vec2 vFarTreeShadowUv;uniform sampler2D uFarTreeShadow;uniform float uFarTreeNight,uFarTreeStrength;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb*=1.-uFarTreeStrength*texture2D(uFarTreeShadow,vFarTreeShadowUv).r*(1.-clamp(uFarTreeNight,0.,1.));');}
   // Transparent banks need the native land beneath them, as resident water does.
   Object.assign(shader.uniforms,{uFarNearBounds:bounds,uFarGroundOrigin:origin,uFarGroundNight:world.toon.uniforms.uNight});
   shader.vertexShader='varying vec2 vFarGroundXZ;uniform float uFarGroundNight;\n'+shader.vertexShader;
@@ -89,7 +90,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  if(treeShadowMap){const baseKey=material.customProgramCacheKey;material.customProgramCacheKey=()=>baseKey()+':tree-shadow-v1';}
  if(regionalSurface){const baseKey=material.customProgramCacheKey;material.customProgramCacheKey=()=>baseKey()+':surface-underlay-v2';}
  if(residentMask){const baseKey=material.customProgramCacheKey;material.customProgramCacheKey=()=>baseKey()+':resident-mask-v2';}
- const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;if(data.treeShadows)mesh.userData.treeShadowBake={width:data.treeShadows.width,height:data.treeShadows.height,affected:data.treeShadows.affected,bytes:data.treeShadows.data.byteLength};mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
+ const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;if(data.treeShadows)mesh.userData.treeShadowBake={width:data.treeShadows.width,height:data.treeShadows.height,affected:data.treeShadows.affected,bytes:data.treeShadows.data.byteLength,strength:treeShadowStrength};mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  let seamOwner=null,lastSeamPromise=null;
  candidate.updateGroundBounds=()=>{bounds.value.set(...world.nearBounds);
   if(residentMask){
