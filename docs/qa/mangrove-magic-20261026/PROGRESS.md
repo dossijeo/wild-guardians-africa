@@ -116,3 +116,8 @@ Añadida prueba nativa con terreno y props reales, semilla37, nueve chunks resid
 Nuevo check-estuary-native-raid.mjs crea un poblado real en variante8/semilla37, carga 49 chunks con la sesión de juego y lanza una incursión de jabalí, hiena, búfalo, león y rinoceronte. Los cinco animales entraron en agua y se produjo StructureHit tras 497 pasos de 0.1 s. Resultado en native-estuary-raid.json. Es simulación nativa con obstáculos reales, no vídeo ni medida de frametime.
 
 Inspeccionada captura network-overview-37-nohmr-retry/world.png: canales visibles, pero casi ningún helecho cerca del poblado. No se acepta como preservación artística. El perfil aprobado sigue seleccionando mangroveFerns=holly; pendiente inspeccionar estadísticas de continuous-grass, máscaras y selección antes de tocar densidad o atribuirlo al nuevo agua.
+
+
+## Diagnóstico de presencia de helechos
+
+Captura real fern-diagnosis-37 completada sin errores. Audit confirma holly-fronds, variante C activa, calidad media, espaciado .65, 225 matas cercanas y 57 lejanas (282 total), 7656 triángulos; 6183 candidatos y 5481 excluidos por máscaras. El asset aprobado y LOD están activos: no atribuir la escasez a sustitución por hojas antiguas. Falta separar cobertura, desgaste/poblado, pendiente, exclusión acuática y alcance de cámara. Comparación equivalente con variante7 iniciada en sesión91103, todavía pendiente; no cambiar densidad sin esa evidencia.
