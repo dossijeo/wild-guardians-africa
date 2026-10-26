@@ -1,7 +1,7 @@
 // Worker-side QA prototype. Rasterize a union, not repeated alpha blending.
 // Modifies existing ground RGB only: no resident GPU texture or draw call added.
 // Fixed daylight projection is experimental; not a production day/night policy.
-export function bakeFarTreeShadows(map,trees,{strength=.3,radius=3,height=6,sun=[-30,55,25]}={}){
+export function bakeFarTreeShadows(map,trees,{strength=.3,radius=3,height=6,sun=[-30,55,25],applyRgb=true}={}){
  if(!map||!Number.isFinite(strength)||strength<0||strength>1||!Number.isFinite(radius)||radius<=0||!Number.isFinite(height)||height<0||sun.length!==3||!sun.every(Number.isFinite)||sun[1]<=0)throw Error('Invalid regional shadow bake');
  const {width,height:rows,bounds:b,data}=map,mask=new Uint8Array(width*rows);
  const dx=(b.maxX-b.minX)/(width-1),dz=(b.maxZ-b.minZ)/(rows-1);
@@ -18,8 +18,8 @@ export function bakeFarTreeShadows(map,trees,{strength=.3,radius=3,height=6,sun=
  }
  let affected=0;
  for(let i=0;i<mask.length;i++){
-  if(!mask[i]||data[i*4+3]>=128)continue; // Keep water mask and RGB untouched.
-  const factor=1-strength*mask[i]/255;for(let c=0;c<3;c++)data[i*4+c]=Math.round(data[i*4+c]*factor);affected++;
+  if(data[i*4+3]>=128){mask[i]=0;continue;}if(!mask[i])continue; // Keep water mask and RGB untouched.
+  const factor=1-strength*mask[i]/255;if(applyRgb)for(let c=0;c<3;c++)data[i*4+c]=Math.round(data[i*4+c]*factor);affected++;
  }
- return {affected,temporaryBytes:mask.byteLength,strength,projection:'fixed-daylight',overlap:'maximum'};
+ return {data:mask,width,height:rows,affected,temporaryBytes:mask.byteLength,strength,projection:'fixed-daylight',overlap:'maximum'};
 }

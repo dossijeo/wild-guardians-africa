@@ -28,4 +28,4 @@ export function buildFarSceneData({config,profile,treeBounds,groundBounds,step=4
  if(bedEncoder)ground.waterBed=bedEncoder.finish();
  return {trees,ground};
 }
-export function farSceneTransferables(data){return data.ground?[data.ground.positions.buffer,data.ground.colors.buffer,data.ground.indices.buffer,...(data.ground.waterBed?[data.ground.waterBed.bytes.buffer]:[]),...(data.ground.water?[data.ground.water.buffer]:[]),...(data.ground.colorMap?[data.ground.colorMap.data.buffer]:[])]:[];}
+export function farSceneTransferables(data){return data.ground?[data.ground.positions.buffer,data.ground.colors.buffer,data.ground.indices.buffer,...(data.ground.treeShadows?[data.ground.treeShadows.data.buffer]:[]),...(data.ground.waterBed?[data.ground.waterBed.bytes.buffer]:[]),...(data.ground.water?[data.ground.water.buffer]:[]),...(data.ground.colorMap?[data.ground.colorMap.data.buffer]:[])]:[];}
