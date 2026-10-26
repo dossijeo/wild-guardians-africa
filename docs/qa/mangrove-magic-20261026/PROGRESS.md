@@ -104,3 +104,8 @@ La navegaci贸n nativa permite agua de Manglares para todos los perfiles y calcul
 Recompilados WASM s铆ncrono y pthread. Dos tests nuevos pasan: segmentos f铆sicos sumergidos para trabajador y los cinco radios de bestia, barrera que bloquea y vuelve a liberar el paso, altura y rechazo de construcci贸n. Los doce tests existentes de defensa de Ca帽贸n y recetas/snapshot/pthreads de Manglares tambi茅n pasan. Primer intento del test nuevo fall贸 por pedir un conector local de 4 m (API limitada a 1.5 m), corregido a 1 m; no era un fallo de navegaci贸n. Esto solo demuestra segmentos cortos, no a煤n recorridos completos entre orillas ni incursiones reales.
 
 Pendiente antes de cerrar este cambio: ruta larga cruzando canales, recinto abierto por agua, movimiento visible de grupos/trabajadores, guardado/carga con perfiles de navegaci贸n y equivalencia pthread completa. Contin煤an pendientes validaci贸n art铆stica de helechos y rendimiento de magias/rutas del objetivo global.
+
+
+## Rutas completas entre orillas
+
+A馻dida prueba nativa con terreno y props reales, semilla37, nueve chunks residentes, origen seco (-24,-40) y destino seco (0,-40). Los seis perfiles encuentran ruta que entra en agua; cada segmento se valida con el comprobador f韘ico continuo. Las rutas son id閚ticas tras restaurar snapshot y en el runtime pthread. Tres tests de tr醤sito pasan; a馻dido tambi閚 rechazo expl韈ito del certificado de cierre natural por humedal. Esto valida consultas nativas, todav韆 no simulaci髇 de una incursi髇 ni animaci髇/renderizado.
