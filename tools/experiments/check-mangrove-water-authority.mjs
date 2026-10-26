@@ -8,6 +8,7 @@ await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));
+page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
  if(process.env.WG_FAR_MASK_STEP||process.env.WG_FAR_GEOMETRY_STEP){const mask=Number(process.env.WG_FAR_MASK_STEP??4),geometry=Number(process.env.WG_FAR_GEOMETRY_STEP??32);if(![1,2,4].includes(mask)||![8,16,32].includes(geometry))throw Error('Unsupported far ground sample step');await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('groundColorStep:4',`groundColorStep:${mask}`).replace('groundStep:32',`groundStep:${geometry}`)});});}
  if(process.env.WG_NETWORK_VARIANT==='8')await page.route('**/src/app/wild-engine-world.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('state.mangroveChannels=true','state.mangroveNetwork=true')});});
@@ -30,8 +31,8 @@ try{
  const data=await page.evaluate(async()=>{
   const w=qaWaterWorld,f=w.nav.field,points=[];const o=w.controls.target;
   for(let z=-60;z<=60;z+=2)for(let x=-60;x<=60;x+=2){const px=o.x+x,pz=o.z+z;points.push({x:px,z:pz,h:f.surface(px,pz),water:f.waterInfo(px,pz)});}
-  const farGround=[];w.scene.traverse(m=>{if(m.userData.qaSampling)farGround.push(m.userData.qaSampling);});const waters=[];w.scene.traverse(m=>{if(m.userData.nativeFluid)waters.push({kind:m.userData.nativeFluid,vertices:m.geometry?.attributes.position.count,bounds:m.geometry?.boundingBox});});
-  return {biome:w.state.biome,farGround,runtime:w.spatialSession?.runtime??null,crossOriginIsolated:globalThis.crossOriginIsolated,seed:w.state.seed,channels:w.state.mangroveChannels===true,network:w.state.mangroveNetwork===true,visualSearch:w.visualSearch,coverage:w.groundDetails?.audit?.()??null,target:o.toArray(),camera:w.camera.position.toArray(),points,waters,fieldKeys:Object.keys(f),snapshot:JSON.stringify(w.state)};
+  const farGround=[];w.scene.traverse(m=>{if(m.userData.qaSampling)farGround.push(m.userData.qaSampling);});const regional=[];w.scene.traverse(m=>{if(m.userData.regionalWaterSurface)regional.push({visible:m.visible,vertices:m.geometry.attributes.position.count,clock:m.material.userData.paintUniforms.uTime.value});});const waters=[];w.scene.traverse(m=>{if(m.userData.nativeFluid)waters.push({kind:m.userData.nativeFluid,vertices:m.geometry?.attributes.position.count,bounds:m.geometry?.boundingBox});});
+  return {biome:w.state.biome,regional,farGround,runtime:w.spatialSession?.runtime??null,crossOriginIsolated:globalThis.crossOriginIsolated,seed:w.state.seed,channels:w.state.mangroveChannels===true,network:w.state.mangroveNetwork===true,visualSearch:w.visualSearch,coverage:w.groundDetails?.audit?.()??null,target:o.toArray(),camera:w.camera.position.toArray(),points,waters,fieldKeys:Object.keys(f),snapshot:JSON.stringify(w.state)};
  });
  await writeFile(out+'/report.json',JSON.stringify({farMaskStep:Number(process.env.WG_FAR_MASK_STEP??4),farGeometryStep:Number(process.env.WG_FAR_GEOMETRY_STEP??32),data,errors},null,2));
  await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);});
