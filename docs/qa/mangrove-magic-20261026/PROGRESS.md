@@ -575,3 +575,9 @@ far-shadow-same-session: strengths0/.30/.55 mediante uniform compartido, misma c
 Revalidación: 19 tests pasan entre mangrove-channels, mangrove-expansion-reload, mangrove-water-traversal, continuous-grass-mangrove-water, far-ground-color-map y far-tree-shadow-bake. Incluyen equivalencia de terreno sync/pthreads, continuidad/semillas y recarga expandida, rutas acuáticas sin hacer agua edificable, conservación de máscaras y propiedad de textura. No sustituyen pruebas visuales/nocturnas ni A/B de frametime.
 
 En curso far-shadow-night con tiempo400 y comparación de intensidades; comprobar uNight1 y ausencia de efecto residual solar. Añadido WG_WATER_TIME para fijar fase visual sin avanzar simulación.
+
+### Noche y coste aislado de la máscara
+
+far-shadow-night: captura inspeccionada, uNight=1 confirmado en las tres intensidades0/.3/.55, sin errores. Región(400,90)-(1050,280) compara0 frente.55 con diferencia RGB exactamente0 y sin píxeles distintos (night-difference.json). Evidencia de que el sombreado solar añadido se atenúa a cero de noche en esa región; no prueba todavía transición animada completa ni streaming.
+
+Iniciada secuencia tree-shadow-abab: 4 procesos consecutivos con WG_TREE_SHADOW_BAKE alternado0/1/0/1, semilla712, cámara elevada, tiempo100,720pmedia, mapa2m/terreno32m, superficie de agua candidata, AngularLOD, 60warmup+240GPUquery. SIN ampliación de helechos ni movimiento para aislar coste de máscara. summarize-tree-shadow-abab.mjs valida renderer, cámara, semilla, presencia/ausencia de máscara,240 muestras y ausencia de disjoint, e informa diferencias de geometría/draw calls. Pendiente completar cuatro ejecuciones y analizar; no anticipar resultado.
