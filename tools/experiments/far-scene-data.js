@@ -14,7 +14,13 @@ export function buildFarSceneData({config,profile,treeBounds,groundBounds,step=4
  const trees=native?native.trees:slots?sampleFarTrees(config,profile,treeBounds,{field,suppressed:new Set(suppressed),slots}):sampleSavannaAcacias(config,profile,treeBounds,{field,suppressed:new Set(suppressed)});
  const colorAt=(x,z)=>waterSurface&&!regionalWaterBed&&field.waterInfo(x,z).inside?hex(profile.colors.water):landColorAt(x,z);
  let ground=treesOnly?null:farGroundData(field,groundBounds,{step,colorAt,wash:groundWash,heightAt:waterSurface&&!regionalWaterBed?(x,z)=>{const water=field.waterInfo(x,z);return water.inside?Math.max(field.surface(x,z),water.level):field.surface(x,z);}:null});
- if(ground&&(treeBase||treeBases))ground=fitFarGroundContacts(ground,trees.map(t=>treeAtlasAnchor(t,treeBases?.[t.slot]??treeBase)));
+ if(ground&&(treeBase||treeBases))ground=fitFarGroundContacts(ground,trees.map(t=>{
+  const anchor=treeAtlasAnchor(t,treeBases?.[t.slot]??treeBase);
+  // Water-rooted trees keep their authored placement; do not lift the bed
+  // to their water-level feet and make it coplanar with transparent water.
+  if(regionalWaterBed&&waterSurface&&field.wetland&&field.waterInfo(anchor.x,anchor.z).inside)anchor.y=Math.min(anchor.y,field.surface(anchor.x,anchor.z));
+  return anchor;
+ }));
  if(ground&&nativeWaterSamples){ground.water=new Float32Array(ground.positions.length/3);for(let i=0;i<ground.water.length;i++)ground.water[i]=field.waterInfo(ground.positions[i*3],ground.positions[i*3+2]).inside?1:0;}
  let bedEncoder=null;
  if(ground&&regionalWaterBed&&waterSurface&&colorMapStep!==null&&field.wetland)bedEncoder=createRegionalWetlandBed(groundBounds,Math.ceil((groundBounds.maxX-groundBounds.minX)/colorMapStep)+1,Math.ceil((groundBounds.maxZ-groundBounds.minZ)/colorMapStep)+1,field.wetlandLevel());
