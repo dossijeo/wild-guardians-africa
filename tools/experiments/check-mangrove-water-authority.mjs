@@ -44,14 +44,14 @@ try{
  if(process.env.WG_ANGULAR_LOD==='1'){await page.waitForFunction(()=>{const a=qaWaterWorld.farVegetation?.adapters;return a?.length&&a.every(x=>!x.preparationPending());},null,{timeout:90000});await page.waitForTimeout(1500);const lod=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));await writeFile(out+'/angular-lod.json',JSON.stringify(lod,null,2));}
  await page.screenshot({path:out+'/elevated.png'});
  if(process.env.WG_ANGULAR_MOTION==='1'){
-  const motion=await page.evaluate(async()=>{
+  const motion=await page.evaluate(async(travel)=>{
    const w=qaWaterWorld,t=w.controls.target.clone(),frames=[],samples=[];let previous=performance.now(),start=previous;
    await new Promise(resolve=>{const tick=now=>{frames.push(now-previous);previous=now;const u=Math.min(1,(now-start)/24000),phase=(1-Math.cos(u*Math.PI*4))/2;
-    w.camera.position.set(t.x+35+40*phase,t.y+25+90*phase,t.z+45+50*phase);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);w.syncChunks();
-    if(!samples.length||now-start-samples.at(-1).ms>=500)samples.push({ms:now-start,pending:w.farVegetation.adapters.filter(a=>a.preparationPending()).length,trees:w.farVegetation.adapters.map(a=>a.stats.standby?.trees??0),errors:w.farVegetation.adapters.flatMap(a=>[...a.stats.errors,...(a.stats.standby?.errors??[])])});
+    const dx=travel?144*Math.sin(u*Math.PI):0;w.controls.target.set(t.x+dx,t.y,t.z);w.camera.position.set(t.x+dx+35+40*phase,t.y+25+90*phase,t.z+45+50*phase);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);w.syncChunks();
+    if(!samples.length||now-start-samples.at(-1).ms>=500)samples.push({ms:now-start,chunks:w.chunks.size,chunkQueue:w.chunkStream.queue.length,chunkPreparing:w.chunkStream.preparing.size,chunkStats:{...w.chunkStream.stats},gpuMemory:{...w.renderer.info.memory},pending:w.farVegetation.adapters.filter(a=>a.preparationPending()).length,trees:w.farVegetation.adapters.map(a=>a.stats.standby?.trees??0),errors:w.farVegetation.adapters.flatMap(a=>[...a.stats.errors,...(a.stats.standby?.errors??[])])});
     if(u<1)requestAnimationFrame(tick);else resolve();};requestAnimationFrame(tick);});
    frames.sort((a,b)=>a-b);return {frames:frames.length,p50:frames[Math.floor(frames.length*.5)],p95:frames[Math.floor(frames.length*.95)],p99:frames[Math.floor(frames.length*.99)],max:frames.at(-1),samples};
-  });
+  },process.env.WG_ANGULAR_TRAVEL==='1');
   await page.waitForFunction(()=>qaWaterWorld.farVegetation.adapters.every(a=>!a.preparationPending()),null,{timeout:90000});await page.waitForTimeout(1500);
   motion.final=await page.evaluate(()=>qaWaterWorld.farVegetation.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats})));
   await writeFile(out+'/motion.json',JSON.stringify(motion,null,2));await page.screenshot({path:out+'/motion-return.png'});
