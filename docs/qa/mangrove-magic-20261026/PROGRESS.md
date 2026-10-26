@@ -31,3 +31,11 @@ Siguiente intervención: diseñar luces de VFX con configuración estable durant
 Primera ejecución idéntica final-ten: máximo rAF 182.995 ms, dos consultas de programa, 161.955 ms acumulados. Comparación anterior: 5054.95 ms / 37 consultas / 4911.38 ms. No es aún ABAB ni prueba de coste GPU sostenido. Programas restantes: humo de destrucción RawShaderMaterial (118.375 ms), profundidad de malla skinned con mapa (43.58 ms). Hay que resolver o atribuir su aparición y repetir sin confundir daño simultáneo con activación del escudo.
 
 17 pruebas existentes/nueva cobertura de precarga y VFX pasan. Test añadido verifica luz aislada, color/intensidad, origen de render desplazado, desaparición sin cambio de conteo y liberación. Runtime normal permanece sin cambios mientras no se indique opt-in.
+
+## Precarga de humo
+
+Añadida preparación explícita de smokeScene con su configuración real (sin luces de mundo, sombras desactivadas, destino de pantalla). Estado del renderer restaurado antes del await, probado con compilación pendiente. No se generan partículas ni se altera simulación.
+
+Repetición stable-smoke: una sola consulta tardía, MeshDepthMaterial skinned, 73.915 ms; desaparece la consulta del humo. Máximo intervalo rAF 182.76 ms, sin long tasks >150 ms. Son medidas de una ejecución con sampling y vídeo, todavía no equivalencia ABAB ni benchmark GPU. Captura raid-shield.png inspeccionada: escudo y grupo visibles, escena coherente; no sustituye comparación fija de efectos múltiples.
+
+Añadidas marcas de tiempo del clic al harness para las siguientes ejecuciones. Pendiente aislar variante de sombra, estabilizar selección de luces simultáneas y medir coste GPU sostenido. Encontrados reintentos de rutas desconocidas de 4/8 segundos en raids.js; medir causas y sectores, no asumir que un pthread elimina esas políticas.

@@ -68,3 +68,11 @@ test('stable light slots preserve isolated effect illumination and scene-relativ
  fx.clear();library.updateWorldLights(camera);assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
  fx.dispose();library.updateWorldLights(camera);assert.equal(world.children.length,4);library.dispose();assert.equal(world.children.length,0);pipeline.dispose();
 });
+
+test('smoke preparation submits its own lightless scene and restores renderer state before compilation resolves',async()=>{
+ const {pipeline,renderer,camera}=setup();let resolve,seen;const target={id:'loading'};let current=target;
+ Object.assign(renderer,{getRenderTarget:()=>current,setRenderTarget:t=>{current=t;},getViewport:v=>v.set(0,0,800,600),getScissor:v=>v.set(0,0,800,600),getScissorTest:()=>true,setViewport:()=>{},setScissor:()=>{},setScissorTest:()=>{},compileAsync:(scene,c)=>{seen={scene,c,target:current,shadows:renderer.shadowMap.enabled};return new Promise(r=>{resolve=r;});}});
+ renderer.shadowMap.enabled=true;const pending=pipeline.prepareSmokePrograms(camera);
+ assert.equal(seen.scene,pipeline.smokeScene);assert.equal(seen.target,null);assert.equal(seen.shadows,false);assert.equal(current,target);assert.equal(renderer.shadowMap.enabled,true);
+ resolve();await pending;pipeline.dispose();
+});

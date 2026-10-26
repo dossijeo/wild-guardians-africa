@@ -53,7 +53,7 @@ try {
  const free=await page.evaluate(points=>points.filter(p=>document.elementFromPoint(p.x,p.y)?.tagName==='CANVAS'),points);
  assert(free.length,'No ground target visible outside the HUD');report.attempts=[];
  for(const point of free.slice(0,8)){
-  await page.mouse.click(point.x,point.y);await page.waitForTimeout(150);const s=await inspect();report.attempts.push(point);
+  report.clickStart=await page.evaluate(()=>performance.now());await page.mouse.click(point.x,point.y);report.clickEnd=await page.evaluate(()=>performance.now());await page.waitForTimeout(150);const s=await inspect();report.attempts.push(point);
   if(s.state.spells.some(s=>s.kind==='shield'||s.type==='shield'||s.spell==='shield')){report.click=point;break;}
  }
  await page.waitForFunction(()=>JSON.parse(wildGuardiansVisibilityQa().snapshot).spells.some(s=>s.kind==='shield'||s.type==='shield'||s.spell==='shield'),null,{timeout:10000});

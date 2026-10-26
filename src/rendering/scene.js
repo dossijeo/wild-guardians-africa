@@ -548,6 +548,7 @@ export class WorldScene {
       // The first building hit makes its opening-mask mesh drawable. Compile
       // that retained native recipe even while the intact opening is hidden.
       await phase('warm-compile-destruction',()=>compile(this.destructionPass.scene,this.camera,this.scene));if(this.disposed)return;
+      await phase('warm-compile-smoke',()=>this.destructionPass.prepareSmokePrograms(this.camera));if(this.disposed)return;
       if(this.nav.field.canyon)await compile(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
       if(this.disposed)return;
       // Resident clipped/alpha props can be outside the opening view or on
