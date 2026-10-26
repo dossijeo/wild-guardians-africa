@@ -690,3 +690,9 @@ production-estuary-night-verified: fixture estuary-agriculture, WG_MAGIC_NIGHT=1
 ### Recorte por poblado: hipótesis insuficiente
 
 attribute-estuary-settlement-mask.mjs compara receta4096 con/sin addSettlement(60,0,14,12),16641muestras paso0.5m. Solo5muestras antesmojadas quedan secas,0cambios fuera delsoporterectangular6m. Confirma forma settlementBlend, NO explica los grandes remates observados ni reproduce necesariamente todoslosasentamientosruntime. No cambiar generación por esta evidencia. Revisar oclusión entre terreno regional y lámina. Corregida etiquetaQA farMaskStep: usaba4pordefecto aunque farGround.mapStep realera2; próximosinformes derivan pasos delrecursoinspeccionado, no delentorno. Evidenciasanteriores conservar data.farGround como fuenteautoritativa.
+
+### Aislamiento actual de oclusión tras instalar los atlas aprobados
+
+Dos capturas reales nuevas, semilla4096, media720p, hora100 fija, mismos defaults y LODangular. current-depth-isolation compara elevación normal con depthTest=false SOLO en la lámina regional. Aparecen brazos de agua que estaban ocultos en la región exterior al poblado. Esto demuestra oclusión de parte de la red, no ausencia de generación; la prueba sin profundidad también dibuja agua sobre árboles y no es una solución aceptable.
+
+current-far-occlusion oculta únicamente meshes farGround. Desaparece el terreno exterior y quedan visibles cauces regionales antes tapados. El rectángulo residente y sus remates persisten: no atribuir todos los extremos al suelo regional ni afirmar que el problema completo está resuelto. Ambas corridas terminan sin errores. La malla regional usa muestras de altura espaciadas32m mientras cobertura acuática usa2m; la hipótesis siguiente es resolver altura/oclusiones de canales estrechos sin multiplicar uniformemente toda la malla ni alterar generación autoritativa. No cambios de producción realizados en esta atribución.
