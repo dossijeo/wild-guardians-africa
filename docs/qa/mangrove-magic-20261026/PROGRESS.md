@@ -63,3 +63,9 @@ Deformación de la red con ruido a 0.015/0.042, amplitudes 86/18 m. Cobertura cu
 Mapa seed37 inspeccionado: elimina la mayoría de tramos rectos y genera curvas, ensanchamientos e intersecciones. Primera captura real semilla37: 495/3721 muestras con agua alrededor del poblado (~13.3 %), sin errores de página. Cauces visibles en primer fondo y horizonte, poblado sin inundación. Todavía falta prueba de accesibilidad y utilidad de las masas secas, costes nativos y revisión artística multi-semilla; no activar por defecto.
 
 Harness de capturas ampliado con cierre del tutorial y vista elevada. Serie real 1/37/712 en curso, sesión de ejecución 38423. No se atribuyen resultados a capturas aún pendientes.
+
+## Validación de emplazamientos
+
+Prueba real del buscador nativo sobre semillas 1/37/712/4096 y todos los packs culturales: encuentra un emplazamiento válido con doce parcelas útiles y sus rutas de trabajadores. Pasa en 10.46 s de suite (no benchmark comparativo). No demuestra aún acceso de incursiones desde todas las masas de tierra ni campañas largas.
+
+Limitación detectada en QA visual: las primeras capturas llamadas elevated estaban siendo reajustadas por la cámara guiada del tutorial. No cuentan como panorámicas. Harness corregido: cinematic=true únicamente para la captura, ocultar presentación del tutor sin avanzar pasos, posición elevada explícita sin clamp de OrbitControls. Se repetirán esas vistas; las capturas normales anteriores sí muestran el terreno real.

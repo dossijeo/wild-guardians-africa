@@ -15,7 +15,10 @@ try{
  await menu.locator('body').evaluate(()=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome:'manglares',culture:'mapungubwe'},location.origin));
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&globalThis.qaWaterWorld?.state,null,{timeout:240000});
  await page.waitForTimeout(3000);
- if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
+ // Presentation-only diagnostic: do not advance tutorial steps or let its
+ // guided placement camera override the requested comparison views.
+ await page.addStyleTag({content:'#guardian-root{display:none!important}'});
+ await page.evaluate(()=>{qaWaterWorld.cinematic=true;});
  await page.screenshot({path:out+'/world.png'});
  const data=await page.evaluate(async()=>{
   const w=qaWaterWorld,f=w.nav.field,points=[];const o=w.controls.target;
@@ -24,7 +27,7 @@ try{
   return {seed:w.state.seed,channels:w.state.mangroveChannels===true,target:o.toArray(),camera:w.camera.position.toArray(),points,waters,fieldKeys:Object.keys(f),snapshot:JSON.stringify(w.state)};
  });
  await writeFile(out+'/report.json',JSON.stringify({data,errors},null,2));
- await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.controls.update();});
+ await page.evaluate(()=>{const w=qaWaterWorld,t=w.controls.target;w.camera.position.set(t.x+75,t.y+95,t.z+95);w.camera.lookAt(t);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(2000);await page.screenshot({path:out+'/elevated.png'});
  console.log(JSON.stringify({seed:data.seed,target:data.target,wet:data.points.filter(p=>p.water.inside).length,total:data.points.length,waters:data.waters.length,errors}));
 }finally{await browser.close();}
