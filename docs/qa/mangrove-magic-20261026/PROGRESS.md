@@ -39,3 +39,9 @@ Añadida preparación explícita de smokeScene con su configuración real (sin l
 Repetición stable-smoke: una sola consulta tardía, MeshDepthMaterial skinned, 73.915 ms; desaparece la consulta del humo. Máximo intervalo rAF 182.76 ms, sin long tasks >150 ms. Son medidas de una ejecución con sampling y vídeo, todavía no equivalencia ABAB ni benchmark GPU. Captura raid-shield.png inspeccionada: escudo y grupo visibles, escena coherente; no sustituye comparación fija de efectos múltiples.
 
 Añadidas marcas de tiempo del clic al harness para las siguientes ejecuciones. Pendiente aislar variante de sombra, estabilizar selección de luces simultáneas y medir coste GPU sostenido. Encontrados reintentos de rutas desconocidas de 4/8 segundos en raids.js; medir causas y sectores, no asumir que un pthread elimina esas políticas.
+
+## Diagnóstico espacial de Manglares
+
+Nuevo survey-mangrove-network.mjs muestrea el WASM autoritativo (sin modificarlo), con poblado en (60,0), 480x480 metros, paso 2 m, semillas 1/37/712/4096. Agua: 2.413/2.439/2.340/2.406 %. En las regiones con |x|>100 e |z|>100: 0 % en las cuatro. Mapa seed-37.png inspeccionado: dos líneas estrechas atravesando una superficie mayoritariamente seca. La fórmula no define una red distribuida. El proxy de barro del mapa es máscara >0.2 fuera del agua, no clasificación del material final. Se necesitan cauces principales y secundarios repartidos espacialmente, con anchuras y márgenes variables, conservando identidad de generación para partidas existentes.
+
+La primera ejecución de atribución de objeto de sombra falló por una referencia QA no instalada; no es un error del juego. Corregida la inyección exclusivamente en el harness y repetición en curso. No usar esa ejecución fallida para rendimiento.
