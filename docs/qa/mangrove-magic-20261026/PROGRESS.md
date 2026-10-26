@@ -595,3 +595,11 @@ Benchmark anterior de sombras elevado completo: GPU A26.410/B28.442/A25.599/B24.
 Piloto impostor-3d-abab terminado sin errores, pero B registró expulsiones por presupuesto en standby (510/215 en dos especies) y no igualaba densidad terminal. No es un sustituto completo ni comparación aceptable. Se conserva como evidencia negativa.
 
 Nueva secuencia impostor-3d-matched: controlB aplica fórmula de densidad/rank/fade del shader también al modelo; test de rango, desvanecimiento y origen pasa. Límite de preparación QA8192 por especie evita el techo1024; población lógica no cambia. Auditoría adicional enumera árboles con densidad positiva aún no preparados y comprueba identidad/transformaciones de toda la población, además de expulsiones/errores. No modifica el juego normal. Benchmark sigue en curso, no hay recomendación todavía. summarize-impostor-3d.mjs rechaza una conclusión equivalente si existen árboles sin preparar o cambia la población/cámara/GPU.
+
+### Primera pareja equivalente de impostores frente a3D
+
+impostor-3d-matched/0-0 y1-1:5349árboles lógicos con idénticas transformaciones (hash independiente b13800b6dc121938d773dc441f0451e651972834303a804c735c4db7feb64792). ControlB sin expulsiones ni árboles con densidad positiva pendientes en las4especies. Ambas capturas normales inspeccionadas, comparación montada comparison-normal.png. Cercanía/poblado conservados; el fondo cambia de los atlas antiguos a los nuevos modelos, limitación artística expresamente registrada.
+
+Primera pareja GPU23.589→24.176ms, CPUenvío3.669→2.627ms,85→60draws,255866→623690triángulos. NO decidir con esta pareja; segunda repetición aún en curso. No hay presunción de que menos triángulos implique automáticamente másFPS, especialmente con el coste de preparación/transición de impostores.
+
+Comparación impostor-3d-matched completada, equivalencia de población/cámara y preparación completa comprobadas. Informe README.md con GPU/CPU/intervalos, capturas y límites. Mantener impostores provisionalmente: GPU mejor en ambas parejas, ventaja total variable, menor CPU con3D. No afirmar mejora uniforme deFPS ni extrapolar a todos los biomas. Se conserva el piloto de atlas sin publicar; no se ha iniciado regeneración masiva.

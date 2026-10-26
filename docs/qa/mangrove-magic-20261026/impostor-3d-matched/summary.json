@@ -1,0 +1,449 @@
+{
+  "scope": "Normal game camera, medium720p Intel UHD as reported. Same logical population and fade policy. Static paused simulation; CPU is renderer submission. Current old impostor atlases versus approved new 3D LODs: visual assets are not identical. No claim for dynamic streaming.",
+  "conditionsMatch": true,
+  "replacementComplete": true,
+  "rows": [
+    {
+      "run": 0,
+      "models3D": false,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "camera": [
+        76.70247532024266,
+        18.67490205068118,
+        30.57367599590944
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "seed": "712",
+      "population": 5349,
+      "populationHash": "6d72636a9aedb0060145ea9bc12182326c3b12b776ee4b1446fac5f4feb6291f",
+      "gpu": {
+        "n": 240,
+        "mean": 23.58863752500001,
+        "p50": 22.523072,
+        "p95": 32.393906,
+        "p99": 38.516718,
+        "max": 46.406875
+      },
+      "cpuSubmission": {
+        "n": 240,
+        "mean": 3.6685625086228053,
+        "p50": 3.465000033378601,
+        "p95": 5.284999966621399,
+        "p99": 5.8450000286102295,
+        "max": 6.855000019073486
+      },
+      "presentation": {
+        "n": 240,
+        "mean": 26.70004166662693,
+        "p50": 25.74500000476837,
+        "p95": 37.45999991893768,
+        "p99": 45.49000000953674,
+        "max": 54.69500005245209
+      },
+      "render": {
+        "frame": 10147,
+        "calls": 85,
+        "triangles": 255866,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 276,
+        "textures": 152
+      },
+      "standby": [
+        {
+          "rendered": 3,
+          "budgetEvictions": 0,
+          "unready": 579,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 3,
+          "budgetEvictions": 0,
+          "unready": 578,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 1,
+          "budgetEvictions": 0,
+          "unready": 158,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 0,
+          "budgetEvictions": 0,
+          "unready": 117,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "models3D": true,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "camera": [
+        76.70247532024266,
+        18.67490205068118,
+        30.57367599590944
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "seed": "712",
+      "population": 5349,
+      "populationHash": "6d72636a9aedb0060145ea9bc12182326c3b12b776ee4b1446fac5f4feb6291f",
+      "gpu": {
+        "n": 240,
+        "mean": 24.176133799999988,
+        "p50": 23.532499,
+        "p95": 31.835156,
+        "p99": 37.321822,
+        "max": 37.957864
+      },
+      "cpuSubmission": {
+        "n": 240,
+        "mean": 2.6273958295583726,
+        "p50": 2.5299999713897705,
+        "p95": 3.5,
+        "p99": 4.174999952316284,
+        "max": 4.365000009536743
+      },
+      "presentation": {
+        "n": 240,
+        "mean": 26.59762499978145,
+        "p50": 25.675000071525574,
+        "p95": 38.94000005722046,
+        "p99": 45.35000002384186,
+        "max": 57.27999997138977
+      },
+      "render": {
+        "frame": 9746,
+        "calls": 60,
+        "triangles": 623690,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 284,
+        "textures": 164
+      },
+      "standby": [
+        {
+          "rendered": 120,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 135,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 33,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 26,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "models3D": false,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "camera": [
+        76.70247532024266,
+        18.67490205068118,
+        30.57367599590944
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "seed": "712",
+      "population": 5349,
+      "populationHash": "6d72636a9aedb0060145ea9bc12182326c3b12b776ee4b1446fac5f4feb6291f",
+      "gpu": {
+        "n": 240,
+        "mean": 20.380154016666665,
+        "p50": 19.778488,
+        "p95": 23.878437,
+        "p99": 32.154739,
+        "max": 36.417916
+      },
+      "cpuSubmission": {
+        "n": 240,
+        "mean": 2.9364583323399227,
+        "p50": 2.865000009536743,
+        "p95": 3.7050000429153442,
+        "p99": 4.180000066757202,
+        "max": 4.539999961853027
+      },
+      "presentation": {
+        "n": 240,
+        "mean": 22.67302083323399,
+        "p50": 22.084999918937683,
+        "p95": 28.739999890327454,
+        "p99": 37.00999999046326,
+        "max": 39.18999993801117
+      },
+      "render": {
+        "frame": 9837,
+        "calls": 85,
+        "triangles": 255866,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 276,
+        "textures": 152
+      },
+      "standby": [
+        {
+          "rendered": 3,
+          "budgetEvictions": 0,
+          "unready": 579,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 3,
+          "budgetEvictions": 0,
+          "unready": 578,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 1,
+          "budgetEvictions": 0,
+          "unready": 158,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 0,
+          "budgetEvictions": 0,
+          "unready": 117,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "models3D": true,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "camera": [
+        76.70247532024266,
+        18.67490205068118,
+        30.57367599590944
+      ],
+      "target": [
+        60,
+        3.499999933242798,
+        0
+      ],
+      "seed": "712",
+      "population": 5349,
+      "populationHash": "6d72636a9aedb0060145ea9bc12182326c3b12b776ee4b1446fac5f4feb6291f",
+      "gpu": {
+        "n": 240,
+        "mean": 23.402289816666684,
+        "p50": 22.972239,
+        "p95": 27.397135,
+        "p99": 35.320312,
+        "max": 39.618749
+      },
+      "cpuSubmission": {
+        "n": 240,
+        "mean": 2.5195833345254264,
+        "p50": 2.4250000715255737,
+        "p95": 3.3200000524520874,
+        "p99": 3.8850001096725464,
+        "max": 4.454999923706055
+      },
+      "presentation": {
+        "n": 240,
+        "mean": 25.810291666785876,
+        "p50": 25.18499994277954,
+        "p95": 35.25999999046326,
+        "p99": 45.669999957084656,
+        "max": 50.68999993801117
+      },
+      "render": {
+        "frame": 9841,
+        "calls": 60,
+        "triangles": 623690,
+        "points": 0,
+        "lines": 0
+      },
+      "resources": {
+        "geometries": 284,
+        "textures": 152
+      },
+      "standby": [
+        {
+          "rendered": 120,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 135,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 33,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        },
+        {
+          "rendered": 26,
+          "budgetEvictions": 0,
+          "unready": 0,
+          "errors": [],
+          "status": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          }
+        }
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "baseline": 0,
+      "candidate": 1,
+      "gpuDeltaMs": 0.5874962749999781,
+      "cpuDeltaMs": -1.0411666790644327
+    },
+    {
+      "baseline": 2,
+      "candidate": 3,
+      "gpuDeltaMs": 3.0221358000000187,
+      "cpuDeltaMs": -0.41687499781449633
+    }
+  ]
+}
