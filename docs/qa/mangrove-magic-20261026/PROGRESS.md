@@ -650,3 +650,8 @@ No reaparece bloqueo multisegundo en esta corrida, pero no equivale a ausencia d
 ### Magias agrícolas en Manglares confirmado
 
 production-estuary-agriculture-verified ejecuta growth/multiply/growth/multiply sobre cuatro plantas legales del fixture estuary-agriculture. Bioma confirmado por assertion. Cuatro comandos aceptados, tiempos [0.985, 0.425, 0.315, 0.36]ms; efectos visibles con sprites y permanencia en escena, captura magic-3.png inspeccionada.492intervalos: P95=33.510ms,P99=49.985ms,máximo133.355ms.0consultas getProgramInfoLog y0errores. No hay bloqueo multisegundo. Comandos directos Game.cast, no clic UI; corrida instrumentada única, no ABAB/GPU aislada. Añadida comprobación de bioma al harness agrícola para evitar extrapolar Sabana a Manglares.
+
+
+### Atribución CPU de la incursión actual
+
+production-estuary-raid-ui-verified/cpu-attribution.json: perfil15.568s. Tiempo muestreado inclusivo vfx.js2394.654ms, vfx-native.js1831.769ms, simulación202.955ms, WASM404.642ms, GC215.378ms. Categorías solapadas, NO sumables. fxTri465.372ms self, preparación de geometría dinámica relevante.4longtasks54/57/54/74ms; máximo intervalo166ms no equivale a bloqueoJS de166ms. No hay alineación temporal CDP/performance validada: no adjudicar el peor frame a fxTri ni confundir muestreo con GPU. El summarizer histórico basado en líneas fijas reportaba gameTick0; ese cero no acredita ausencia de coste de simulación. Nuevo informe agrupa por rutas reales. Próxima hipótesis verificable: reducir asignaciones/reconstrucción de geometríaVFX preservando exactamente sus vértices/tiempo y medir renderer completo; antes revisar cache packedTime ya existente.
