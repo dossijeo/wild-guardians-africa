@@ -7,8 +7,9 @@ const viewport={width:Number(process.env.WG_QA_WIDTH??1280),height:Number(proces
 await mkdir(out,{recursive:true});
 const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
 const fixture=JSON.parse(await readFile(process.env.WG_MAGIC_FIXTURE??'docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
+if(process.env.WG_MAGIC_NIGHT==='1'){const state=JSON.parse(fixture.snapshot);state.time=288;fixture.snapshot=JSON.stringify(state);}
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
-page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:fixture.scope};
+page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});let report={species,fixtureId,group:fixture.group??[species],viewport,scope:fixture.scope};
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
@@ -39,9 +40,11 @@ try {
   assert(result.accepted);report.casts.push(result);await page.waitForTimeout(2200);
   result.graphics=await page.evaluate(()=>[...qaMagicWorld.agricultureVfx.effects.values()].map(e=>({visible:e.visible,parent:!!e.parent,time:e.native.time,sprites:e.sprites.geometry.instanceCount,lights:e.localLights.length})));
   assert.equal(result.graphics.length,i+1);assert(result.graphics.some(e=>e.visible&&e.parent&&e.sprites>0));
+  result.lightSlots=await page.evaluate(()=>({night:qaMagicWorld.toon.uniforms.uNight.value,sources:[...qaMagicWorld.vfxLibrary.instances].filter(e=>e.visible&&e.parent).reduce((n,e)=>n+e.localLights.filter(l=>l.visible&&l.intensity>0).length,0),slots:qaMagicWorld.vfxLibrary.worldLights?.map(l=>({intensity:l.intensity,position:l.position.toArray()}))}));
   await page.screenshot({path:out+'/magic-'+i+'.png'});
  }
- report.after=await inspect();assert.equal(report.after.state.spells.length,4);
+ if(process.env.WG_MAGIC_NIGHT==='1'){await page.waitForFunction(()=>qaMagicWorld.toon.uniforms.uNight.value>.99,null,{timeout:45000});report.night=await page.evaluate(()=>({time:qaMagicWorld.state.time,night:qaMagicWorld.toon.uniforms.uNight.value,effects:qaMagicWorld.agricultureVfx.effects.size,slots:qaMagicWorld.vfxLibrary.worldLights?.length}));await page.screenshot({path:out+'/magic-night.png'});}
+ report.after=await inspect();if(process.env.WG_MAGIC_NIGHT==='1'){assert(report.night.night>.99);assert(report.night.effects>0);assert(report.after.state.spells.every(s=>s.remaining>0));}else assert.equal(report.after.state.spells.length,4);
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}

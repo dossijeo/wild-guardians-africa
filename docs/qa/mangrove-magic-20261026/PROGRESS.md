@@ -385,3 +385,9 @@ Comparacion semilla4096,720p,media,LOD angular,misma camara/target; baseline y r
 ## Pendiente condicionado: sustituir modelos base de arboles
 
 El usuario dispone de modelos visualmente mejores con aproximadamente un tercio de triangulos y quiere sustituir los modelos base, incluidos los de primer plano, no limitarlos a LOD lejanos. EJECUCION INACTIVA hasta que el usuario entregue los nuevos archivos. Mientras tanto conservar los actuales y no generar reducciones automaticas para esta tarea. Tras recibirlos: revisar escala/pivote/materiales, integrar como candidatos base, preservar distribucion y comportamiento, comparar apariencia y rendimiento real (geometria, sombras, draw calls, texturas y transparencias) con escenas equivalentes antes de consolidar la sustitucion. No bloquea el objetivo activo de Manglares y magias.
+
+## Magias agricolas durante anochecer
+
+Harness check-agriculture-render admite WG_MAGIC_NIGHT=1: guardado inicia en tiempo288, cuatro comandos legales growth/multiply antes de anochecer y espera uNight>.99. Captura real dusk-validated/magic-night.png inspeccionada: efectos siguen visibles sobre cultivos. Comandos1.955/.815/.365/.295ms;532intervalos rAF,P50=16.675,P95=33.370,P99=49.815,max116.540ms;0consultas getProgramInfoLog,0errores consola/pagina. No son tiemposGPU ni comparativa ABAB. Agriculturales usan worldLights=false, por tanto NO prueban saturacion de4slots (fuentes0 verificadas).
+
+Pruebas negativas conservadas: night-stable intento lanzar de noche y validacion autoritativa lo rechazo correctamente; dusk-stable completo comandos pero asercion final suponia4hechizos vivos aunque alguno expiro durante espera/captura. Corregida expectativa nocturna respetando duraciones, sin modificar reglas del juego; repeticion dusk-validated pasa. Falta saturacion con impactos/escudo y cierre visual del estuario. No modifica modelos de arboles pendientes de entrega.
