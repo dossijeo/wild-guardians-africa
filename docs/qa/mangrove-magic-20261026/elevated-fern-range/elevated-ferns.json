@@ -1,0 +1,66 @@
+{
+  "coverage": {
+    "distribution": "original",
+    "leafShape": "holly-fronds",
+    "variant": "C",
+    "active": true,
+    "quality": "media",
+    "biome": "manglares",
+    "edgePadding": 1,
+    "nearDistance": 24,
+    "moduleSpacing": 0.65,
+    "near": 0,
+    "far": 17062,
+    "leaves": 68248,
+    "triangles": 136496,
+    "chunks": 25,
+    "cachedTiles": 187,
+    "bufferBytes": 1206340,
+    "stats": {
+      "buildMs": 90.30500042438507,
+      "selectionMs": 81.89499962329865,
+      "selectionCount": 94,
+      "candidates": 29067,
+      "masked": 11516,
+      "overflow": 0
+    },
+    "engineQueries": 0,
+    "castShadow": true,
+    "cardStudy": {
+      "representation": "native-holly-fern-balanced",
+      "shadowResolution": 2048,
+      "castsNativeShadow": true,
+      "sizeXZ": 1.35,
+      "sizeY": 1.6,
+      "colorContrast": 1.12,
+      "edgePadding": 1,
+      "frondsPerClump": 4,
+      "trianglesPerClump": 32,
+      "textureCount": 2,
+      "textureBytesEstimate": 11184810.666666666,
+      "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+      "reuseNativeInstanceBuffers": true,
+      "extraSelectionPass": false,
+      "stats": {
+        "instances": 17062,
+        "updates": 0,
+        "selectionMs": 0
+      },
+      "prelit": {
+        "nearAndFar": false,
+        "nearNative": true,
+        "orientations": 8,
+        "atlasWidth": 2048,
+        "atlasHeight": 256,
+        "solarShadowOpacity": 0.55,
+        "solarShadowQuad": true,
+        "liveNormalSampling": false,
+        "liveShadowCasting": false,
+        "liveWind": false,
+        "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+      }
+    },
+    "baseMeshesReplaced": true
+  },
+  "range": 160
+}
