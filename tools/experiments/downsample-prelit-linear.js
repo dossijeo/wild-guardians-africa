@@ -6,7 +6,7 @@ export function downsamplePrelitLinear(bytes,width,height,factor=2){
  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
   let r=0,g=0,b=0,a=0;
   for(let dy=0;dy<factor;dy++)for(let dx=0;dx<factor;dx++){const i=((y*factor+dy)*width+x*factor+dx)*4,v=bytes[i+3]/255;a+=v;r+=lut[bytes[i]]*v;g+=lut[bytes[i+1]]*v;b+=lut[bytes[i+2]]*v;}
-  const i=(y*w+x)*4;out[i]=encode(r/n);out[i+1]=encode(g/n);out[i+2]=encode(b/n);out[i+3]=Math.round(255*a/n);
+  const i=(y*w+x)*4;out[i]=encode(r/n);out[i+1]=encode(g/n);out[i+2]=encode(b/n);out[i+3]=Math.round(255*a/n);if(out[i+3]===0)out[i]=out[i+1]=out[i+2]=0;
  }
  return {data:out,width:w,height:h,encoding:'srgb-encoded-linear-premultiplied'};
 }

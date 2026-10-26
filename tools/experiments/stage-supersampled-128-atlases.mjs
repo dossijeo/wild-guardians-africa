@@ -10,7 +10,7 @@ for(const biome of ['savanna','grand_river','mangrove','desert','volcanoes'])for
  for(const phase of ['day','night']){
   const source=await sharp(`${dir}/${phase}-source.png`).ensureAlpha().raw().toBuffer({resolveWithObject:true});
   const filtered=downsamplePrelitLinear(source.data,source.info.width,source.info.height,4);
-  const encoded=await sharp(filtered.data,{raw:{width:filtered.width,height:filtered.height,channels:4}}).webp({lossless:true,effort:4}).toBuffer();
+  const encoded=await sharp(filtered.data,{raw:{width:filtered.width,height:filtered.height,channels:4}}).webp({lossless:true,exact:true,effort:4}).toBuffer();
   await fs.writeFile(`${dir}/${phase}-128.webp`,encoded);bytes+=encoded.length;
   tree[phase]=`/${dir}/${phase}-128.webp`;
  }

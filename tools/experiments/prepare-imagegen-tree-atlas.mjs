@@ -1,11 +1,17 @@
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
-const root='docs/qa/tree-atlas-refresh-20261026/mangrove-0';
-const phase=process.argv[2];
-if(!['day','night'].includes(phase))throw Error('Expected day or night');
+import {createHash} from 'node:crypto';
+const args=process.argv.slice(2),option=name=>{const i=args.indexOf('--'+name);return i<0?undefined:args[i+1];};
+const biome=option('biome')??'mangrove',slot=Number(option('slot')??0),phase=option('phase')??args.find(x=>['day','night'].includes(x));
+const manifest=JSON.parse(await fs.readFile('docs/qa/tree-atlas-refresh-20261026/candidate-manifest.json','utf8'));
+if(!manifest.biomes[biome]?.some(s=>s.slot===slot)||!Number.isInteger(slot))throw Error('Unknown biome/slot in candidate manifest');
+if(!['day','night'].includes(phase))throw Error('Expected --phase day|night');
+const root=`docs/qa/tree-atlas-refresh-20261026/${biome}-${slot}`;
+const sha256=data=>createHash('sha256').update(data).digest('hex');
 const input=`${root}/${phase}-imagegen-candidate.png`;
-const {data,info}=await sharp(input).ensureAlpha().raw().toBuffer({resolveWithObject:true});
-if(info.width!==info.height)throw Error('Atlas grid must remain square');
+const inputBytes=await fs.readFile(input);
+const {data,info}=await sharp(inputBytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+if(info.width!==info.height||info.width<1024)throw Error('Atlas grid must remain square and at least 1024 pixels');
 const size=1024,output=new Uint8Array(size*size*4),scale=info.width/size;
 const linear=Float64Array.from({length:256},(_,i)=>{const x=i/255;return x<=.04045?x/12.92:((x+.055)/1.055)**2.4;});
 const encode=x=>Math.round(255*(x<=.0031308?12.92*x:1.055*x**(1/2.4)-.055));
@@ -22,8 +28,8 @@ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
  }
  const i=(y*size+x)*4,area=scale*scale;
  for(let c=0;c<3;c++)output[i+c]=encode(sums[c]/area);
- output[i+3]=Math.round(255*sums[3]/area);
+ output[i+3]=Math.round(255*sums[3]/area);if(output[i+3]===0)output[i]=output[i+1]=output[i+2]=0;
 }
-await sharp(output,{raw:{width:size,height:size,channels:4}}).webp({lossless:true,effort:4}).toFile(`${root}/${phase}-imagegen-128.webp`);
-await fs.writeFile(`${root}/${phase}-imagegen-runtime.json`,JSON.stringify({input,inputWidth:info.width,outputWidth:size,viewResolution:128,encoding:'srgb-encoded-linear-premultiplied',preservesGeneratedAlpha:true,production:false},null,2));
+await sharp(output,{raw:{width:size,height:size,channels:4}}).webp({lossless:true,exact:true,effort:4}).toFile(`${root}/${phase}-imagegen-128.webp`);
+await fs.writeFile(`${root}/${phase}-imagegen-runtime.json`,JSON.stringify({biome,slot,phase,input,inputSha256:sha256(inputBytes),outputSha256:sha256(await fs.readFile(`${root}/${phase}-imagegen-128.webp`)),inputWidth:info.width,outputWidth:size,viewResolution:128,encoding:'srgb-encoded-linear-premultiplied',preservesGeneratedAlpha:true,transparentRgb:'zero-exact-webp',production:false},null,2));
 console.log(`${phase} imagegen candidate ready`);

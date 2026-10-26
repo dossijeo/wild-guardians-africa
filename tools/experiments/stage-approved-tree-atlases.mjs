@@ -11,7 +11,7 @@ for(const biome of ['savanna','grand_river','mangrove','desert','volcanoes']){
    if(bake.errors.length||bake.source.errors.length||bake.source.webglError||!bake.source.nativeSunDirection||bake.source.cells.length!==64)throw Error('Invalid bake');
    const image=await sharp(`${dir}/${phase}.png`).ensureAlpha().raw().toBuffer({resolveWithObject:true});
    if(image.info.width!==2048||image.info.height!==2048)throw Error('Invalid atlas size');
-   const bytes=await sharp(`${dir}/${phase}.png`).webp({lossless:true,effort:6}).toBuffer();
+   const bytes=await sharp(`${dir}/${phase}.png`).webp({lossless:true,exact:true,effort:6}).toBuffer();
    await fs.writeFile(`${dir}/${phase}.webp`,bytes);
    pair.push(bake);
    records.push({biome,slot,phase,bytes:bytes.length,sourceTriangles:bake.source.sourceTriangles});
