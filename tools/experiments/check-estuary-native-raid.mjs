@@ -17,12 +17,13 @@ try{
  for(let z=cz-radius;z<=cz+radius;z++)for(let x=cx-radius;x<=cx+radius;x++)wanted.set(`${x},${z}`,{cx:x,cz:z,score:Math.abs(x-cx)+Math.abs(z-cz)});
  session.stream.plan(wanted);await session.stream.whenIdle();
  Game.resume(s,'intro');s.tutorial.step='center';Game.placeStructure(s,'center',start.site.center,nav);
+ nav.raidSelectionStats={};
  const spawned=spawnRaid(s,{group:['warthog','hyena','buffalo','lion','rhino']},nav),waterActors=new Set(),positions=[];
  let steps=0;
  while(s.raid&&!s.events.some(e=>e.type==='StructureHit')&&steps++<1800){s.elapsed+=.1;updateRaid(s,.1,nav);if(process.env.WG_RAID_STREAM==='1'){
  let changed=false;for(const key of nav.raidConnectivityDemand??[]){if(wanted.has(key))continue;const [x,z]=key.split(',').map(Number);wanted.set(key,{cx:x,cz:z,score:0});changed=true;}
  if(changed){session.stream.plan(wanted);await session.stream.whenIdle();}
  }for(const a of s.raid?.animals??[]){if(nav.field.fluidInside(a.x,a.z))waterActors.add(a.id);}if(steps%50===0)positions.push({time:s.elapsed,animals:s.raid?.animals.map(a=>({id:a.id,x:a.x,z:a.z,status:a.status,wait:a.raidWait?structuredClone(a.raidWait):null}))});}
- const report={seed,chunkRadius:radius,loadedChunks:installed.size,spawned,steps,waterActors:[...waterActors],hit:s.events.some(e=>e.type==='StructureHit'),site:start.site,positions};
+ const report={seed,chunkRadius:radius,loadedChunks:installed.size,demand:[...(nav.raidConnectivityDemand??[])],selectionStats:nav.raidSelectionStats,spawned,steps,waterActors:[...waterActors],hit:s.events.some(e=>e.type==='StructureHit'),site:start.site,positions};
  mkdirSync('docs/qa/mangrove-magic-20261026',{recursive:true});writeFileSync(process.env.WG_RAID_REPORT??'docs/qa/mangrove-magic-20261026/native-estuary-raid.json',JSON.stringify(report,null,2));console.log(JSON.stringify({spawned,steps,waterActors:waterActors.size,hit:report.hit}));
 }finally{session.dispose();}

@@ -207,3 +207,9 @@ Inspeccionadas capturas reales canopy-broadleaf-1/world.png y canopy-broadleaf-7
 Diagnostico adicional semilla4096: mismo harness con WG_RAID_CHUNK_RADIUS=4 (81 chunks iniciales en vez de49), manteniendo demanda de streaming, obtiene StructureHit tras1222 pasos y tres actores cruzando agua. Esto demuestra que el escenario no es intrinsecamente intransitable; ampliar residencia cambia el resultado. No demuestra que la demanda del juego real este corregida ni que la latencia de rutas sea aceptable. Conservar los dos resultados negativos anteriores. Investigar el halo requerido y la propagacion de demanda antes de activar la variante por defecto.
 
 Reproduccion: WG_RAID_SEED=4096 WG_RAID_STREAM=1 WG_RAID_CHUNK_RADIUS=4 node tools/experiments/check-estuary-native-raid.mjs (variables de entorno). Informe native-estuary-raid-broadleaf-4096-halo.json. La densidad sigue siendo candidata experimental; rendimiento completo pendiente.
+
+## Atribucion de espera en incursiones, semilla4096
+
+Instrumentado raidSelectionStats en harness. Con49chunks y servicio de raidConnectivityDemand:60selecciones,60legacyFallbacks.unsupported y60resultados unknown; demand vacio,0consultas regionales,49chunks residentes al terminar. El harness no reproduce el planificador completo de intents del juego; no atribuir el fallo directamente a la ruta de produccion. Revisar propagacion de unknown en fallback y equivalencia con runtime.
+
+Prueba negativa: anadir anillo de origen a requestRaidConnectivity no cambio el resultado (910pasos,0cruces,sin ataque). Cambio runtime retirado; no conservar heuristica sin utilidad demostrada.16tests spatial-navigation-movement pasan. Informe origin-demand preserva prueba negativa; demand-audit contiene instrumental nuevo. El objetivo sigue pendiente.
