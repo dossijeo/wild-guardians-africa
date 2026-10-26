@@ -140,3 +140,10 @@ Incursión densa guardada por separado en native-estuary-raid-dense.json: cinco 
 Variante8 selecciona 65–90 % de mangles de copa ancha/grandes raíces en grupos correlacionados por ruido; conserva palmeras ocasionales, identidades de celdas y colisiones. Admite mangles sobre islas emergidas además de márgenes húmedas; recetas4/7 intactas. Incursión cinco especies cruza agua y ataca tras501 pasos. Siete tests de rutas/snapshot/pthread pasan. Captura canopy-broadleaf-37 en curso (63406), todavía no juzgada.
 
 Benchmark nativo A/B/A/B ejecutado sin otro benchmark concurrente: variante7 ~1.82–4.44 ms/chunk, variante8 ~8.27–10.25 ms/chunk, cinco coordenadas repetidas. Ambas producen distinto mundo y más agua/árboles en8; no aisla coste del dosel. Es CPU Node síncrono sin perfiles de navegación, no GPU, no frametime y no prueba de streaming fluido. Informe native-generation-abab.json conservado. Hace falta atribuir coste de máscara y validar integración asíncrona real.
+
+
+## Captura de copas y retorno a magia
+
+canopy-broadleaf-37/world.png inspeccionada: copas amplias agrupadas y frondas continuas, canal legible; candidata más cercana al mockup que la variante de palmeras. No equivale a aprobación final multi-semilla ni rendimiento medido.
+
+Corregido prototipo de luces estables: ignora efectos cuyo ancestro está oculto o que pertenecen a un grupo desconectado de la escena. Ocho tests VFX pasan, incluida ocultación/reconexión sin variar número/visibilidad de PointLights. Continúa opt-in. Iniciada repetición real perfilada con fixture final-ten, salida shield-stable-visibility; pendiente resultado.

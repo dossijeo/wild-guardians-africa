@@ -76,3 +76,17 @@ test('smoke preparation submits its own lightless scene and restores renderer st
  assert.equal(seen.scene,pipeline.smokeScene);assert.equal(seen.target,null);assert.equal(seen.shadows,false);assert.equal(current,target);assert.equal(renderer.shadowMap.enabled,true);
  resolve();await pending;pipeline.dispose();
 });
+
+
+test('stable slots ignore effects hidden by ancestors or detached from their scene',()=>{
+ const {library,pipeline,camera,world}=setup();library.enableStableWorldLights(world);
+ const group=new Scene();world.add(group);const fx=library.create('spirit',pipeline);group.add(fx);
+ fx.seek(2);fx.prepare(camera,world);library.updateWorldLights(camera);
+ assert(library.worldLights.some(l=>l.intensity>0));
+ group.visible=false;library.updateWorldLights(camera);
+ assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
+ group.visible=true;group.removeFromParent();library.updateWorldLights(camera);
+ assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
+ world.add(group);library.updateWorldLights(camera);assert(library.worldLights.some(l=>l.intensity>0));
+ library.dispose();pipeline.dispose();
+});

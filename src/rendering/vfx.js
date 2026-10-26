@@ -31,6 +31,9 @@ export class VfxLibrary {
     for(const c of this.lightCandidates){c.score=0;c.source=null;c.effect=null;}
     for(const effect of this.instances){
       if(effect.stopped||!effect.parent||!effect.visible)continue;
+      let ancestor=effect.parent;
+      while(ancestor&&ancestor!==this.lightWorld&&ancestor.visible)ancestor=ancestor.parent;
+      if(ancestor!==this.lightWorld||!this.lightWorld.visible)continue;
       effect.updateWorldMatrix(true,false);
       for(const source of effect.localLights){
         if(!source.visible)continue;
