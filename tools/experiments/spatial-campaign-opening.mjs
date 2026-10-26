@@ -15,16 +15,17 @@ const chunkAt=value=>Math.floor((value+24)/48);
 // Isolated campaign entry. Every terrain, prop and route query uses the same
 // C++ world as the chunk payloads; this never constructs Navigation/TerrainField.
 export async function createSpatialCampaignOpening({seed=712,biome='sabana',
-  culture='mapungubwe',slotId='spatial-campaign',runtimeFactory=null,mangroveNetwork=false}={}){
+  culture='mapungubwe',slotId='spatial-campaign',runtimeFactory=null,mangroveNetwork=false,mangroveSettlementVersion}={}){
   const pack=villages.find(item=>item.id===(culture==='saheliana'?'saheliano':culture));
   if(!pack)throw RangeError('Unknown village culture');
   const state=Game.newGame({seed,biome,culture,slotId});
   if(mangroveNetwork){if(biome!=='manglares')throw Error('Estuary recipe requires Manglares');state.mangroveNetwork=true;}
+  if(mangroveSettlementVersion!==undefined)state.mangroveSettlementVersion=mangroveSettlementVersion;
   const start=await findSpatialStart(wasm,state,pack);
   Object.assign(state.villages[0],start.site);
   state.suppressed.push(...start.site.suppress);
   const runtime=runtimeFactory?await runtimeFactory():null;
-  if(runtime)runtime.core.generate(seed,chunkAt(start.site.center.x),chunkAt(start.site.center.z),biome);
+  if(runtime)runtime.core.generate(seed,chunkAt(start.site.center.x),chunkAt(start.site.center.z),biome,state);
   const loaded=new Map();
   const session=createSpatialGameSession(wasm,state,{
     ...(runtime?{core:runtime.core}:{}),loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
