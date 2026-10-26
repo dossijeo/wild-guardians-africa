@@ -35,24 +35,24 @@ export class NativeTreeStandby {
  constructor({scene,sources,prepare,angularLod=false,smoothTransitions=false,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<(transitionHeight?.end??end)||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{angularLod,scene,sources,prepare,smoothTransitions,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
+  Object.assign(this,{angularLod,scene,sources,prepare,smoothTransitions,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={requests:0,queuedReplacements:0,addedEntries:0,identityChanges:0,lodChanges:0,resourceDrops:0,distanceDrops:0,budgetEvictions:0,cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
  request(entries,camera){
-  if(this.closed)return;this.pending={entries:entries.map(d=>({...d,matrix:new Float64Array(d.matrix)})),camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
+  if(this.closed)return;this.stats.requests++;if(this.pending)this.stats.queuedReplacements++;this.pending={entries:entries.map(d=>({...d,matrix:new Float64Array(d.matrix)})),camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
  }
  async run(){
   this.busy=true;
   try{while(!this.closed&&this.pending){
    const {entries,camera}=this.pending;this.pending=null;const wanted=new Map();
-   for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===this.sourceKey(d.level))wanted.set(id,d);
-   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,transitionRange:treeTransitionRange(d,this.treeHeight,this.start,this.end,this.transitionHeight),matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
+   for(const [id,d] of this.active?.entries??[]){if(d.resource!==this.sourceKey(d.level)){this.stats.resourceDrops++;continue;}if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance){this.stats.distanceDrops++;continue;}wanted.set(id,d);}
+   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old)this.stats.addedEntries++;else if(old.key!==d.key)this.stats.identityChanges++;else if(old.level!==d.level)this.stats.lodChanges++;if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,transitionRange:treeTransitionRange(d,this.treeHeight,this.start,this.end,this.transitionHeight),matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
    if(wanted.size>this.maxTrees&&this.angularLod){
     // Current requests precede retained history; never grow the bank because
     // a moving camera has visited several overlapping preparation regions.
     const requested=new Set(entries.map(d=>d.id)),ranked=[...wanted.values()].sort((a,b)=>Number(requested.has(b.id))-Number(requested.has(a.id))||Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
-    for(const d of ranked.slice(this.maxTrees))wanted.delete(d.id);
+    this.stats.budgetEvictions+=wanted.size-this.maxTrees;for(const d of ranked.slice(this.maxTrees))wanted.delete(d.id);
    }
    if(wanted.size>this.maxTrees)throw Error('Standby tree budget exceeded');
    if(this.active&&wanted.size===this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d))continue;
