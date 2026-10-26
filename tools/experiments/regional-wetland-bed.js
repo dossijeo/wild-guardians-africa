@@ -10,7 +10,9 @@ export function createRegionalWetlandBed(bounds,width,height,level){
    masks[cursor]=info.mask;
    const depth=Math.max(0,Math.min(span,(info.mask-.61)*3)),heightCode=Math.round((span-depth)/span*65535),i=cursor++*4;
    bytes[i]=heightCode>>>8;bytes[i+1]=heightCode&255;bytes[i+2]=255;bytes[i+3]=Math.round(Math.max(0,Math.min(4,info.shore))/4*255);
-   return info.inside?1:0;
+   // Keep the .61 contour when coverage is interpolated between samples.
+   // Binary coverage moves every crossing to the midpoint of the cell.
+   return Math.max(0,Math.min(1,.5+info.mask-.61));
   },finish(){if(cursor!==width*height)throw Error('Incomplete regional water bed');encodeRegionalShoreDistance(bytes,masks,width,height,(bounds.maxX-bounds.minX)/(width-1),(bounds.maxZ-bounds.minZ)/(height-1));return this.bed;}};
 }
 

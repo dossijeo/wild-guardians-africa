@@ -14,5 +14,6 @@ test('transparent regional water retains native ground height and land palette b
   assert.ok(Math.abs(painted.positions[i*3+1]-3.34)<1e-6);
  }
  assert.notDeepEqual(underlay.colors,painted.colors);
- assert.deepEqual(underlay.colorMap.data,painted.colorMap.data,'Coverage and land map stay unchanged');
+ for(let i=0;i<underlay.colorMap.data.length;i++)if(i%4!==3)assert.equal(underlay.colorMap.data[i],painted.colorMap.data[i],'Land channels stay unchanged');
+ assert.ok(underlay.colorMap.data[3]>127,'Continuous coverage remains wet');
 });
