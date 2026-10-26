@@ -369,3 +369,11 @@ Harness configurable por WG_WATER_BIOME, verifica estado biome real. Sabana,Gran
 ## Luces estables activadas por defecto en rama experimental
 
 scene configura4slots antes de crear efectos salvo vfxStableLights=0; desaparece dependencia de parametro1 para corregir escudo. Harnesses aceptan0/1 explicitos,ausencia prueba default. Prueba renderer shield-default:escudo legal aceptado6.52ms,maxintervalo83.055,P95=33.505;1consulta programa26.795ms,sin errores.9tests VFX pasan. Esto no sustituye evidencia previa ABAB/repeticiones/incursion/streaming; solo verifica ruta de configuracion habitual. Pendiente validacion visual de saturacion>4luces,noche y resto de cierre.
+
+## Validacion integrada posterior a luces estables (2026-10-26)
+
+Ejecutado `node --test tests/mangrove-channels.test.js tests/mangrove-water-traversal.test.js tests/raid-entry-residency.test.js tests/raid-approach-residency.test.js tests/vfx-preload.test.js`: 26/26 pasan. Incluye equivalencia de chunks adyacentes en varias semillas entre sincrono/pthreads, recarga guardada, rutas entre orillas por perfil, retencion de terreno para incursiones y propiedad/preparacion de efectos. No sustituye recorridos interactivos de trabajadores.
+
+`npm run build` finaliza codigo 0 (Vite 7.23 s); advertencias de bundle grande e importacion mixta de far-atmosphere. `npm run test:web-package` pasa: 973 archivos, 465431968 bytes, 840 enlaces relativos, 17 GLB runtime. Esto valida paquete web, no ejecucion Tauri ni todas las distribuciones.
+
+Inspeccionada `water-layer-isolation-4096/elevated-without-far-ground.png`: al ocultar proxy regional desaparece suelo fuera del rectangulo detallado, conservando canales/terreno cercanos. Es una prueba diagnostica, no imagen candidata: los objetos quedan suspendidos fuera del terreno residente. Confirma alcance de la representacion regional, no demuestra por si sola la causa de cada junta. Codigo `native-far-ground.js` confirma agua regional pintada mediante mascara sobre terreno, sin superficie de agua equivalente a la cercana. Reducir paso de muestreo o geometria no corrige esa diferencia de material/superficie; siguiente validacion debe tratar esa transicion explicitamente. Estuario y LOD angular siguen sin aprobarse como configuracion por defecto.
