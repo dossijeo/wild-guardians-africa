@@ -624,3 +624,10 @@ La inspección del estado guardado y runtime demuestra que agriculture/fixture.j
 obstruction-program-history:89programas consultados en carga,1tardío; no hubo shader de fade idéntico antes. Su diferencia frente al opaco es la retirada de OPAQUE y la sustitución de cobertura por alpha. No prueba un fallo de precalentamiento en Manglares: streamingOptions solo lo activa por defecto en Manglares, y este runtime era Sabana. Mantener aislada esa mejora de Sabana.
 
 Repetición correcta en curso: estuary-agriculture/fixture.json verificado biome=manglares, mangroveNetwork=true,seed712,4plantas; WG_EXPECT_BIOME=manglares obliga a fallar ante otra escena. Harness registra visualSearch, streamingOptions y número de superficies regionales reales. Sin overrides de candidato,2casts con cooldown real y streaming144m/40s. Pendiente resultado.
+
+
+### Resultado verificado: escudo con streaming en Manglares
+
+production-estuary-shield-verified confirma biome=manglares, perfil holly/fixed512, farWaterSurface/farAngularLod activos, una superficie regional y warmObstruction/retainPrograms activos. Dos comandos legales aceptados con cooldown real:6.250/3.555ms. Simulación agrícola activa y recorrido144m/40s por activación;38/33chunks únicos observados.4601intervalos: P50=33.015ms,P95=50.090ms,P99=83.155ms,máximo116.450ms. Cero esperas de programas registradas y cero errores. Ventanas de2s tras activación: máximos116.425/99.790ms.
+
+Esta corrida sí verifica el perfil actual de Manglares, a diferencia del fixture de Sabana corregido arriba. No demuestra ausencia de todos los tirones: conserva intervalos de más de100ms. Es una corrida instrumentada, sin GPU aislada ni ABAB; los comandos llaman Game.cast y no prueban selección por puntero/incursión. No declarar cerrado el objetivo. Resumen reproducible mediante summarize-magic-repeat.mjs; fuentes raid-ui.json y program-waits.json conservadas. Próximo gate: control sin magia con mismo fixture/recorrido y validación UI en incursión.

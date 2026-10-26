@@ -7,6 +7,7 @@ const viewport={width:Number(process.env.WG_QA_WIDTH??1280),height:Number(proces
 await mkdir(out,{recursive:true});
 const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
 const fixture=JSON.parse(await readFile(process.env.WG_MAGIC_FIXTURE??'docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
+if(process.env.WG_WATER_CANDIDATE==='1')assert.equal(JSON.parse(fixture.snapshot).biome,'manglares','Regional-water candidate requires a Manglares fixture');
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:"Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid"};
 let profiler;
