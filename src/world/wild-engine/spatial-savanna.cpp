@@ -1615,6 +1615,26 @@ int spatial_resident_visible_prop_count(){
 }
 int spatial_changed_chunk_count(){return int(changedSettlementChunks.size()/2);}
 int32_t* spatial_changed_chunks_ptr(){return changedSettlementChunks.data();}
+// Main-thread authority stages a bounded batch; workers only consume snapshots.
+static float settlementBatchInput[256*4];
+float* spatial_settlement_batch_ptr(){return settlementBatchInput;}
+int spatial_apply_settlement_batch(int count,int replace){
+  if(count<0||count>256||(replace!=0&&replace!=1))return -1;
+  std::vector<Settlement> incoming;incoming.reserve(count);
+  for(int i=0;i<count;i++){
+    const float* p=settlementBatchInput+i*4;
+    if(!std::isfinite(p[0])||!std::isfinite(p[1])||!std::isfinite(p[2])||!std::isfinite(p[3])||
+       p[2]<=0||p[3]<=0||p[2]>100||p[3]>100)return -1;
+    incoming.push_back(makeSettlement(p[0],p[1],p[2],p[3]));
+  }
+  if(!replace&&incoming.empty())return 0;
+  std::vector<Settlement> changed=replace?settlements:std::vector<Settlement>{};
+  changed.insert(changed.end(),incoming.begin(),incoming.end());
+  if(replace)settlements=std::move(incoming);
+  else settlements.insert(settlements.end(),incoming.begin(),incoming.end());
+  if(!changed.empty())refreshSettlementChunks(changed);
+  return count;
+}
 float spatial_set_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;
