@@ -520,7 +520,8 @@ struct ServicePoints {
 bool waterHeight(const Target& target,Point point){
   const double ground=spatial_surface_anywhere(float(point.x),float(point.z));
   const double crop=spatial_surface_anywhere(float(target.x),float(target.z));
-  const double worker=spatial_world_biome()==5?
+  const int biome=spatial_world_biome();
+  const double worker=(biome==4||biome==5||biome==6||biome==7||biome==8)?
     std::max(ground,double(spatial_fluid_surface_level())):ground;
   return std::isfinite(worker)&&std::isfinite(crop)&&std::abs(worker-crop)<=.5;
 }

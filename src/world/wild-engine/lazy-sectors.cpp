@@ -11,6 +11,7 @@
 
 extern "C" float spatial_static_object_clearance(float,float,float);
 extern "C" float spatial_min_animal_radius();
+extern "C" int spatial_world_biome();
 extern "C" float spatial_fluid_level(float,float);
 extern "C" float spatial_wetland_mask_resident(float,float);
 extern "C" float spatial_wetland_mask_lipschitz();
@@ -518,6 +519,9 @@ bool cutFaceCoveredBySolid(int x,int z,int nx,int nz,float radius){
   return covered(covered,ax,az,bx,bz,first,last,0);
 }
 bool cutFaceCoveredByWetland(int x,int z,int nx,int nz){
+  // Mangrove water is traversable by every movement profile, never a defense.
+  const int biome=spatial_world_biome();
+  if(biome==4||biome==7||biome==8)return false;
   const float slope=spatial_wetland_mask_lipschitz();
   if(!(slope>0)||!std::isfinite(slope))return false;
   const float mx=(x+nx)*.5f,mz=(z+nz)*.5f;

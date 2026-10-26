@@ -684,11 +684,12 @@ void buildWaterMesh(int cx,int cz){
 bool terrainValid(double x,double z,float radius,bool worker){
   auto travelSurface=[&](double px,double pz){
     const double ground=surface(px,pz);
-    return worldBiome==5&&worker?std::max(ground,3.28):ground;
+    return worldBiome==4?std::max(ground,3.34):
+      worldBiome==5&&worker?std::max(ground,3.28):ground;
   };
   for(int i=0;i<5;i++){
     const double px=x+(i==1?radius:i==2?-radius:0),pz=z+(i==3?radius:i==4?-radius:0);
-    if(!(worldBiome==5&&worker)&&fluid(px,pz))return false;
+    if(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))return false;
     if(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
       travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5)return false;
   }

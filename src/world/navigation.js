@@ -140,18 +140,19 @@ export class Navigation {
   }
   workerSurface(x,z){
     const ground=this.field.surface(x,z);
-    return this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
+    return this.field.wetland?Math.max(ground,this.field.wetlandLevel()):
+      this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
   }
   actorSurface(x,z){
-    const ground=this.field.surface(x,z),water=this.field.canyon&&this.field.waterInfo(x,z);
+    const ground=this.field.surface(x,z),water=(this.field.canyon||this.field.wetland)&&this.field.waterInfo(x,z);
     return water?.inside?Math.max(ground,water.level-.10):ground;
   }
   terrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
     // Keep all five samples and their order without six temporary arrays.
     for(let sample=0;sample<5;sample++) {
       const dx=sample===1?radius:sample===2?-radius:0,dz=sample===3?radius:sample===4?-radius:0;
-      if(!allowFluid&&!(worker&&this.field.canyon)&&fluidAt(this.field,x+dx,z+dz))return false;
-      if(this.field.canyon){
+      if(!allowFluid&&!this.field.wetland&&!(worker&&this.field.canyon)&&fluidAt(this.field,x+dx,z+dz))return false;
+      if(this.field.canyon||this.field.wetland){
         const surface=(px,pz)=>this.workerSurface(px,pz);
         const value=Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6;if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;
       }else {const value=this.field.slope(x+dx,z+dz);if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;}

@@ -96,3 +96,11 @@ Auditoría confirmada:
 - Validación requerida: rutas reales entre ambas orillas para trabajadores y las cinco especies; alturas visibles correctas; escudos/murallas siguen bloqueando bestias; guardado/carga y equivalencia pthreads; incursión múltiple y expansión. No basta cambiar el rechazo de agua.
 
 La captura pendiente `network-overview-37-nohmr-retry` terminó correctamente: 495/3721 muestras húmedas, 25 meshes de agua, sin errores registrados. Falta validar helechos y cruce acuático en el renderer. El cambio de transitabilidad todavía no está implementado.
+
+## Paso por agua implementado: primera validación
+
+La navegación nativa permite agua de Manglares para todos los perfiles y calcula pendientes sobre la superficie transitable (máximo entre suelo y nivel 3.34). Gran Cañón conserva su regla anterior. Actualizadas alturas JS, comprobaciones físicas de cada paso y altura de servicio de trabajadores. Los certificados nativos ya no consideran agua de Manglares un cierre defensivo; la colocación de edificios/cultivos conserva sus restricciones de agua. No se modifica distribución ni densidad de helechos.
+
+Recompilados WASM síncrono y pthread. Dos tests nuevos pasan: segmentos físicos sumergidos para trabajador y los cinco radios de bestia, barrera que bloquea y vuelve a liberar el paso, altura y rechazo de construcción. Los doce tests existentes de defensa de Cañón y recetas/snapshot/pthreads de Manglares también pasan. Primer intento del test nuevo falló por pedir un conector local de 4 m (API limitada a 1.5 m), corregido a 1 m; no era un fallo de navegación. Esto solo demuestra segmentos cortos, no aún recorridos completos entre orillas ni incursiones reales.
+
+Pendiente antes de cerrar este cambio: ruta larga cruzando canales, recinto abierto por agua, movimiento visible de grupos/trabajadores, guardado/carga con perfiles de navegación y equivalencia pthread completa. Continúan pendientes validación artística de helechos y rendimiento de magias/rutas del objetivo global.
