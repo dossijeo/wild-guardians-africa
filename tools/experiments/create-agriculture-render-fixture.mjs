@@ -5,7 +5,7 @@ import * as Game from '../../src/simulation/game.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {WILD_ENGINE_WORLD_VERSION} from '../../src/world/wild-engine/world-version.js';
 const biome=process.env.WG_MAGIC_BIOME??'sabana',network=process.env.WG_NETWORK_VARIANT==='8';
-const opening=await createSpatialCampaignOpening({seed:712,biome,culture:'mapungubwe',slotId:network?'estuary-agriculture-render-qa':'agriculture-render-qa',mangroveNetwork:network});
+const opening=await createSpatialCampaignOpening({seed:712,biome,culture:'mapungubwe',slotId:network?'estuary-agriculture-render-qa':'agriculture-render-qa',mangroveNetwork:network,...(process.env.WG_SETTLEMENT_VERSION?{mangroveSettlementVersion:Number(process.env.WG_SETTLEMENT_VERSION)}:{})});
 try{
  const {state,nav,start}=opening;state.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
  for(const [i,p] of start.farm.slice(0,4).entries())Game.plant(state,`qa-paid-crop-${i}`,'mijo',p.x,p.z,nav);
