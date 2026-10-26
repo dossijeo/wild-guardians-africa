@@ -154,3 +154,8 @@ Corregido prototipo de luces estables: ignora efectos cuyo ancestro está oculto
 shield-stable-visibility completada con diez bestias, sin errores. Clic instrumentado30.295ms; única espera getProgramInfoLog72.08ms en MeshDepthMaterial/SkinnedMesh,5382ms después del clic. No reaparece la recompilación masiva al activar escudo. Resumen compacto guardado junto al perfil/vídeo. Sigue siendo una ejecución instrumentada, no ABAB ni coste GPU sostenido.
 
 Detectado primer intervalo rAF negativo por mezclar performance.now inicial con timestamp de callback. Harness corregido para empezar a medir entre dos callbacks; el resumen de esta ejecución excluye únicamente esa muestra inicial y conserva datos crudos.
+
+
+## Comparación intercalada del escudo iniciada
+
+Sesión49829 ejecuta A1/B1/A2/B2 secuenciales sobre final-ten, Chrome nuevo por ejecución, mismo viewport1280x720/calidadmedia y profiling+vídeo en todas. A mantiene luces originales, B activa vfxStableLights. No se modifica renderer durante la serie. Script summarize-shield-abab calcula percentiles, máximo del intervalo que solapa el clic (incluye bloqueos que terminan después del primer segundo), esperas de programas y errores; registra tiempo simulado y número de actores para detectar divergencia antes del clic. Serie aún en curso, sin resultados atribuidos. No mide GPU ni demuestra coste sostenido; el avance de simulación puede variar con el tiempo de preparación.
