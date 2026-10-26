@@ -1,3 +1,5 @@
+> VALIDACIÓN RETIRADA: el helper QA usado para forzar 3D contenía una inversión de la mezcla de impostores. Las cifras se conservan como datos brutos, pero no justifican una comparación de 3D puro frente a impostores hasta verificar y repetir las representaciones. Véase ../../tree-atlas-refresh-20261026/COMPARISON-CORRECTION.md.
+
 # Impostores frente a 3D: prueba rápida controlada
 
 Intel UHD (ANGLE D3D11), 1280x720, calidad media, Manglares semilla712, cámara normal del juego. A/B/A/B,60frames de calentamiento y240muestras GPU válidas por ejecución. Simulación pausada. Árboles cercanos, terreno, agua, iluminación y población lógica iguales. B reemplaza el horizonte por modelos nuevos con LOD, mantiene densidad/rank/fade de A. No hay expulsiones por presupuesto ni árboles pendientes en B. Hash de las5349transformaciones lógicas idéntico en las4ejecuciones.
