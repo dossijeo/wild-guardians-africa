@@ -89,6 +89,10 @@ try{
   const changed=await page.evaluate(()=>{const w=qaWaterWorld,materials=new Set();w.scene.traverse(m=>{if((m.userData.nativeFluid||m.userData.regionalWaterSurface)&&m.material)materials.add(m.material);});for(const material of materials){const compile=material.onBeforeCompile,key=material.customProgramCacheKey();material.onBeforeCompile=(s,r)=>{compile.call(material,s,r);if(!s.fragmentShader.includes('#include <opaque_fragment>'))throw Error('Missing water output');s.fragmentShader=s.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a=1.;\n#include <opaque_fragment>');};material.customProgramCacheKey=()=>key+':qa-opaque-composition';material.needsUpdate=true;}return materials.size;});
   await page.waitForTimeout(2000);await page.screenshot({path:out+'/opaque-water-diagnostic.png'});await writeFile(out+'/composition.json',JSON.stringify({changed,diagnosticOnly:true,scope:'Force water alpha to one, preserving RGB shader and geometry. Not a candidate visual change.'}));
  }
+ if(process.env.WG_WATER_DEPTH_TEST==='1'){
+  const changed=await page.evaluate(()=>{let n=0;qaWaterWorld.scene.traverse(m=>{if(m.userData.regionalWaterSurface){m.material.depthTest=false;m.material.depthWrite=false;m.renderOrder=1000;n++;}});return n;});
+  await page.waitForTimeout(500);await page.screenshot({path:out+'/regional-no-depth-test.png'});await writeFile(out+'/depth-test.json',JSON.stringify({changed,diagnosticOnly:true}));
+ }
  if(process.env.WG_REGIONAL_ALL==='1'){
   await page.evaluate(()=>{qaWaterWorld.scene.traverse(m=>{if(m.userData.nativeFluid)m.visible=false;if(m.userData.regionalWaterSurface){const compile=m.material.onBeforeCompile,key=m.material.customProgramCacheKey();m.material.onBeforeCompile=(s,r)=>{compile(s,r);s.fragmentShader=s.fragmentShader.replace('if(all(greaterThanEqual(regionalXZ','if(false&&all(greaterThanEqual(regionalXZ');};m.material.customProgramCacheKey=()=>key+':qa-all';m.material.needsUpdate=true;}});});
   await page.waitForTimeout(500);await page.screenshot({path:out+'/regional-all.png'});
