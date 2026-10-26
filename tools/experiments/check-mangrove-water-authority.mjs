@@ -70,6 +70,12 @@ try{
    return {supported:true,renderer,frames,gpu,cpu,intervals,disjoint,memory:w.renderer.info.memory,render:w.renderer.info.render,scope:'Whole drawRenderFrame; 60 warmup+240 measured; static elevated view, identical day/time, simulation paused for controlled GPU comparison.'};
   });await writeFile(out+'/gpu.json',JSON.stringify(gpu,null,2));if(gpu.disjoint)throw Error('Disjoint GPU measurements');
  }
+ if(process.env.WG_WATER_PROGRAM==='1'){
+  const audit=await page.evaluate(()=>{const w=qaWaterWorld,items=[];w.scene.traverse(m=>{if(!m.userData.regionalWaterSurface&&m.userData.nativeFluid!=='chunk')return;const mat=m.material,p=w.renderer.properties.get(mat),program=p.currentProgram,u=mat.userData.paintUniforms,ancestors=[];for(let a=m;a;a=a.parent)ancestors.push({name:a.name,visible:a.visible});items.push({regional:!!m.userData.regionalWaterSurface,ancestors,drawRange:m.geometry.drawRange,program:program?.id,key:mat.customProgramCacheKey(),transparent:mat.transparent,opacity:mat.opacity,uniforms:Object.fromEntries(Object.entries(u??{}).map(([k,v])=>[k,v.value?.isTexture?{uuid:v.value.uuid}:v.value?.toArray?v.value.toArray():v.value])),vertex:program?w.renderer.getContext().getShaderSource(program.vertexShader):null,fragment:program?w.renderer.getContext().getShaderSource(program.fragmentShader):null});});return items;});
+  await writeFile(out+'/programs.json',JSON.stringify(audit,null,2));
+  await page.evaluate(()=>{const w=qaWaterWorld;w.scene.traverse(m=>{if(m.userData.regionalWaterSurface){const old=m.material.onBeforeCompile,key=m.material.customProgramCacheKey();m.material.onBeforeCompile=(s,r)=>{old(s,r);s.fragmentShader=s.fragmentShader.replace('#include <opaque_fragment>','outgoingLight=vec3(1.,0.,1.);diffuseColor.a=1.;\n#include <opaque_fragment>');};m.material.customProgramCacheKey=()=>key+':qa-magenta';m.material.needsUpdate=true;}});});
+  await page.waitForTimeout(500);await page.screenshot({path:out+'/regional-magenta.png'});
+ }
  if(process.env.WG_WATER_ISOLATE==='1'){
   const hits=await page.evaluate(()=>{
    const w=qaWaterWorld,ray=w.raycaster,points=[[740,295],[400,365],[650,540],[880,385]],result=[];

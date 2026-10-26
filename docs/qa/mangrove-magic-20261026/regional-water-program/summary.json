@@ -1,0 +1,52 @@
+{
+  "regionalProgram": 64,
+  "residentProgram": 27,
+  "regionalKey": "african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|mangrove-shore-v1|qa-depth-bank-v2|manglares:regional-mask-v1:true",
+  "residentKey": "african-water-relative-v4.1.4|hdr-endpoints|sky-atmosphere-clouds-v1|global-water-slope-map|mangrove-shore-v1|qa-depth-bank-v2|manglares",
+  "paintUniformDifferences": {},
+  "regionalAncestors": [
+    {
+      "name": "",
+      "visible": true
+    },
+    {
+      "name": "",
+      "visible": true
+    },
+    {
+      "name": "",
+      "visible": true
+    }
+  ],
+  "vertexDifference": [
+    "--- \n",
+    "+++ \n",
+    "@@ -72,2 +72,3 @@\n",
+    " ",
+    "+varying vec2 vRegionalUv;",
+    " attribute float wetShore;varying float vWetShore;",
+    "@@ -384,3 +385,3 @@\n",
+    " #endif",
+    "-void main() {",
+    "+void main() {vRegionalUv=uv;",
+    " #if defined( USE_UV ) || defined( USE_ANISOTROPY )"
+  ],
+  "fragmentDifference": [
+    "--- \n",
+    "+++ \n",
+    "@@ -60,2 +60,3 @@\n",
+    " ",
+    "+varying vec2 vRegionalUv;uniform sampler2D uRegionalMask;uniform vec4 uRegionalBounds;uniform sampler2D uRegionalResident;",
+    " float qaShoreHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
+    "@@ -277,3 +278,3 @@\n",
+    "  float bodyBlend=smoothstep(.10,.85,bodyDepth);",
+    "- vec3 base=mix(uInk0*.72,vec3(.16,.29,.22),bodyBlend);if(vWetShore<3.5){float deposit=wetNoise(bankWorld*.31);float fine=wetNoise(bankWorld*1.4);fine=mix(.5,fine,detailFade);float width=mix(.35,3.5,smoothstep(.25,.80,deposit));float shallow=(1.-smoothstep(0.,width,vWetShore))*smoothstep(.18,.65,deposit);vec3 sediment=mix(vec3(.23,.37,.27),vec3(.42,.48,.28),fine);base=mix(base,sediment,shallow*.85);}",
+    "+ vec3 base=mix(uInk0*.72,vec3(.16,.29,.22),bodyBlend);float regionalShore=texture2D(qaBed,(((bankWorld-qaBedBounds.xy)/qaBedBounds.zw)*(qaBedSize-1.)+.5)/qaBedSize).b*4.;if(regionalShore<3.5){float deposit=wetNoise(bankWorld*.31);float fine=wetNoise(bankWorld*1.4);fine=mix(.5,fine,detailFade);float width=mix(.35,3.5,smoothstep(.25,.80,deposit));float shallow=(1.-smoothstep(0.,width,regionalShore))*smoothstep(.18,.65,deposit);vec3 sediment=mix(vec3(.23,.37,.27),vec3(.42,.48,.28),fine);base=mix(base,sediment,shallow*.85);}",
+    "    lit=toLinear4(base)*mix(vec3(.82,.90,.92),vec3(.12,.22,.43)*uNightLight,uNight)*(.70+.30*visibility);",
+    "@@ -1688,2 +1689,3 @@\n",
+    " #endif",
+    "+if(texture2D(uRegionalMask,vRegionalUv).a<.5)discard;vec2 regionalXZ=vPaintWorld.xz+uWorldOrigin;if(all(greaterThanEqual(regionalXZ,uRegionalBounds.xy))&&all(lessThanEqual(regionalXZ,uRegionalBounds.zw))){vec2 cell=floor((regionalXZ-uRegionalBounds.xy)/48.);if(texture2D(uRegionalResident,(cell+.5)/8.).r>.5)discard;}",
+    "       if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if((uFluidClip<1.5&&!inside)||(uFluidClip>1.5&&inside))discard;}"
+  ],
+  "limitations": "Uniform comparison covers paintUniforms, not all GPU bindings. Magenta diagnostic confirms visible regional fragments, not image equivalence."
+}
