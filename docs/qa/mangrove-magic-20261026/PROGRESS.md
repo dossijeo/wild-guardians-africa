@@ -237,3 +237,7 @@ check-shield-repeat-render.mjs deriva del harness agricola validado y ejecuta3co
 shield-repeat-render termina sin errores. Comandos en elapsed3.286/93.296/183.306s, cooldown0 y sin escudo anterior en las tres aplicaciones. CPU comando5.590/5.680/6.405ms. Maximo intervalo rAF en ventana de activacion2s:66.495/49.800/33.485ms. Toda la ejecucion8705muestras:P5016.665,P9533.37,P9933.51,max99.57ms. Primera activacion una consulta getProgramInfoLog25.595ms MeshBasicMaterial; repeticiones ninguna. No reaparece bloqueo de segundos. Captura shield-1 inspeccionada: cupula visible correcta.
 
 Es una ejecucion instrumentada de escena agricola Sabana, no GPU aislado ni ABAB ni incursiones; complementa ABAB anterior con diez bestias. No demuestra coste GPU sostenido de cuatro luces, streaming simultaneo o todos los perfiles. Prototipo sigue opt-in hasta cerrar esas validaciones. Resumen reproducible con summarize-magic-repeat.mjs; raw/perfil/video conservados localmente.
+
+## Pendiente posterior solicitado: overlays de pantalla completa
+
+Tras cerrar Manglares y bloqueos de magia, revisar duracion y legibilidad de overlays de magia, dano critico, victoria y similares. Objetivo perceptivo solicitado:2-3segundos, evitando aspecto de flash. Definir entrada/permanencia/salida y politica de sustitucion, renovacion o prioridad cuando llegan eventos cercanos, sin acumular capas ni prolongar indefinidamente el efecto. Validar magias encadenadas, dano+magia, victoria y salida/cambio de mundo. No implementado aun; no desplazar el objetivo activo.
