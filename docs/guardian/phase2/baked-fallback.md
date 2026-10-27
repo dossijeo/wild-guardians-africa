@@ -29,3 +29,6 @@ El recorrido horizontal consulta `segmentClear` y la altura usa muestras de piel
 ## Trabajo pendiente
 
 Validar continuidad visual de caída y recuperación en todas las especies/direcciones, golpes repetidos y terreno inclinado; resolver colisiones y separación de cuerpos; revisar el límite de ocho alternativas; medir escenas equivalentes sin procesos de compilación simultáneos, incluyendo CPU, p95/p99, memoria y respuesta de controles. La hiena del ensayo usa el modelo actual del juego, no el candidato facial aún no aprobado.
+
+
+Los ragdolls activos comparten ahora un mundo y colisionan entre sí: [implementación y pruebas](shared-ragdoll-world.md). La caída horneada sigue fuera de ese intercambio de fuerzas; esta mejora no cierra su limitación de colisiones.

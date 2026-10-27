@@ -1,19 +1,19 @@
 import {BakedBeastFallbacks,loadBakedFalls} from './baked-beast-fallbacks.js';
 import {guardianImpactTime} from '../simulation/guardian-timing.js';
-import {Vector3,Box3} from 'three';
+import {Vector3} from 'three';
+import {BeastPhysicsEnvironment} from './beast-physics-environment.js';
 import {BeastRagdollSolver} from '../simulation/beast-ragdoll.js';
 import {BeastRagdollBinding} from './beast-ragdoll-binding.js';
 import {BeastRecovery} from './beast-recovery.js';
 import {applyAnimalPose} from './animal-actions.js';
 import {ATTACK} from '../simulation/guardian-combat.js';
-import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 let initialization;
 export async function beastPhysicsRuntime(){initialization??=import('@dimforge/rapier3d-compat').then(async({default:R})=>{await R.init();return R;});return initialization;}
 
 // Simulation calls step before raid/worker AI; rendering only samples the poses.
 // Bounded to three articulated actors, with no physical world while inactive.
 export class BeastCombatPhysics{
- constructor(world,R){this.world=world;this.R=R;this.entries=new Map();this.seen=new Map();this.v=new Vector3();this.stats={active:0,physicsMs:0,recoveryMs:0,rejected:0,startMs:0,maxStepMs:0,solverMs:0,solverSteps:0,bindingMs:0,recoverySetupMs:0,creationMs:0,lastCreation:null};world.nav.beastPhysics=this;}
+ constructor(world,R){this.world=world;this.R=R;this.entries=new Map();this.solver=null;this.environment=null;this.accumulator=0;this.seen=new Map();this.v=new Vector3();this.stats={active:0,physicsMs:0,recoveryMs:0,rejected:0,startMs:0,maxStepMs:0,solverMs:0,solverSteps:0,bindingMs:0,recoverySetupMs:0,creationMs:0,lastCreation:null};world.nav.beastPhysics=this;}
  static async create(world){
   const R=await beastPhysicsRuntime();
   // Compile the articulated/contact path and select skin support vertices during
@@ -49,23 +49,16 @@ export class BeastCombatPhysics{
    }finally{recovery.restore();}
   }
   if(this.entries.size>=3){this.stats.rejected++;return this.baked?.start(animal)??false;}
-  root.updateMatrixWorld(true);const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),captured=performance.now(),colliders=binding.colliders(),fitted=performance.now(),solver=new BeastRagdollSolver(this.R,{capacity:1});
+  root.updateMatrixWorld(true);const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),captured=performance.now(),colliders=binding.colliders(),fitted=performance.now(),solver=this.solver??=new BeastRagdollSolver(this.R);
+  this.environment??=new BeastPhysicsEnvironment(w,solver);
   try{
-   const vertices=[],indices=[],size=16,ox=animal.x-8,oz=animal.z-8;
-   for(let z=0;z<=size;z++)for(let x=0;x<=size;x++){const px=ox+x,pz=oz+z;vertices.push(px,w.nav.field.surface(px,pz),pz);}
-   for(let z=0;z<size;z++)for(let x=0;x<size;x++){const i=z*(size+1)+x;indices.push(i,i+size+1,i+1,i+1,i+size+1,i+size+2);}
-   solver.terrain(new Float32Array(vertices),new Uint32Array(indices));
-   for(const structure of w.state.structures){if(structure.status!=='intact'||Math.hypot(structure.x-animal.x,structure.z-animal.z)>10)continue;
-    if(structure.kind==='wall'){const b=wallCollisionBounds(structure,0),y=w.nav.field.surface(structure.x,structure.z);solver.box({x:(b[0]+b[2])/2,y:y+1.25,z:(b[1]+b[3])/2},{x:(b[2]-b[0])/2,y:1.25,z:(b[3]-b[1])/2});}
-    else{const object=w.objects.get(structure.id);if(object){const box=new Box3().setFromObject(object),center=box.getCenter(new Vector3()),half=box.getSize(new Vector3()).multiplyScalar(.5);if(half.x>0&&half.y>0&&half.z>0)solver.box(center,half);}}
-   }
-   for(const p of w.nav.propsAt?.(animal.x,animal.z,8)??[])if(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18){const r=p.radius??1,y=w.nav.field.surface(p.x,p.z);solver.box({x:p.x,y:y+1.5,z:p.z},{x:r,y:1.5,z:r});}
+   this.environment.sync([...this.entries.values()].map(e=>e.animal).concat(animal));
    const environmentReady=performance.now(),hit=animal.magicImpact,actor=solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:hit.direction,intensity:hit.intensity,heading:animal.heading??0});
    const bodiesReady=performance.now();this.stats.lastCreation={species:animal.species,captureMs:captured-started,colliderFitMs:fitted-captured,environmentMs:environmentReady-fitted,bodiesMs:bodiesReady-environmentReady};
    const hip=binding.entries[0].bone.getWorldPosition(new Vector3()),offset={x:hip.x-animal.x,z:hip.z-animal.z};
    animal.magicDown={phase:'falling',since:w.state.elapsed,until:w.state.elapsed+9};animal.path=null;animal.attackRemaining=0;animal.hitApplied=true;if(animal.status==='attacking')animal.status='walking';
    this.entries.set(animal.id,{animal,data,root,binding,solver,actor,offset,accumulator:0,hitAt:animal.magicImpact.impactAt??-Infinity,settledAt:null,recovery:null});this.stats.startMs=performance.now()-started;return true;
-  }catch(error){solver.dispose();throw error;}
+  }catch(error){solver.remove(animal.id);if(!this.entries.size){solver.dispose();this.solver=null;this.environment=null;}throw error;}
  }
  step(state,dt){
   const started=performance.now();this.stats.solverMs=this.stats.solverSteps=this.stats.bindingMs=this.stats.recoverySetupMs=this.stats.creationMs=0;
@@ -74,11 +67,16 @@ export class BeastCombatPhysics{
    if(animal.magicDown&&!this.entries.has(animal.id)&&!this.baked?.has(animal.id))delete animal.magicDown;
    const hit=animal.magicImpact;if(hit&&state.elapsed>=guardianImpactTime(hit)&&state.elapsed-guardianImpactTime(hit)<.5&&this.seen.get(animal.id)!==hit.at){if(!this.world.mixers.has(animal.id))continue;this.seen.set(animal.id,hit.at);try{const creation=performance.now();this.start(animal);this.stats.creationMs+=performance.now()-creation;}catch(error){this.world.onError?.(error);}}
   }
+  // All live actors advance once on the same clock and exchange contact forces.
+  if(this.solver?.actors.size){
+   let firstHit=Infinity;for(const e of this.entries.values())if(!e.recovery)firstHit=Math.min(firstHit,e.hitAt);
+   this.accumulator+=Math.min(dt,Math.max(0,state.elapsed-firstHit));
+   while(this.accumulator>=1/60){this.solver.step();this.stats.solverMs+=this.solver.stats.stepMs;this.stats.solverSteps++;this.accumulator-=1/60;}
+  }
   for(const [id,e] of this.entries){
    if(!state.raid?.animals.includes(e.animal)||e.animal.status==='gone'||state.result){this.release(id);continue;}
    const a=e.animal;
    if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
-   e.accumulator+=Math.min(dt,Math.max(0,state.elapsed-e.hitAt));while(e.accumulator>=1/60){e.solver.step();this.stats.solverMs+=e.solver.stats.stepMs;this.stats.solverSteps++;e.accumulator-=1/60;}
    const bindingStarted=performance.now();
    e.binding.restore();e.binding.apply(e.actor.pose);const hip=e.binding.entries[0].bone.getWorldPosition(this.v);a.x=hip.x-e.offset.x;a.z=hip.z-e.offset.z;this.stats.bindingMs+=performance.now()-bindingStarted;
    if(e.actor.settled){e.settledAt??=e.actor.age;}else e.settledAt=null;
@@ -93,6 +91,6 @@ export class BeastCombatPhysics{
  }
  before(id){this.baked?.before(id);const e=this.entries.get(id);if(e?.recovery)e.recovery.restore();else e?.binding.restore();}
  render(id){this.baked?.render(id);const e=this.entries.get(id);if(!e)return;if(e.recovery){const start=performance.now();e.recovery.age=0;e.recovery.apply(e.recoveryAge);this.stats.recoveryMs+=performance.now()-start;}else e.binding.apply(e.actor.pose);}
- release(id){const e=this.entries.get(id);if(!e)return;e.recovery?.restore();e.binding.restore();e.solver.dispose();delete e.animal.magicDown;this.entries.delete(id);}
+ release(id){const e=this.entries.get(id);if(!e)return;e.recovery?.restore();e.binding.restore();e.solver.remove(id);delete e.animal.magicDown;this.entries.delete(id);if(!this.entries.size){this.solver.dispose();this.solver=null;this.environment=null;this.accumulator=0;}else this.environment.sync([...this.entries.values()].map(e=>e.animal));}
  dispose(){this.baked?.dispose();for(const id of this.entries.keys())this.release(id);if(this.world.nav.beastPhysics===this)delete this.world.nav.beastPhysics;this.seen.clear();}
 }

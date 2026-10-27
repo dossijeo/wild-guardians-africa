@@ -78,7 +78,8 @@ test('four simultaneous contacts keep three ragdolls and release every actor on 
  }
  f.manager.step(f.state,.1);assert.equal(f.manager.entries.size,3);assert.equal(f.manager.stats.rejected,1);
  assert.equal(f.state.raid.animals.filter(a=>a.magicDown).length,3);assert.equal(f.state.raid.animals[3].magicDown,undefined);
- for(const entry of f.manager.entries.values())assert.equal(entry.solver.world.bodies.len(),14);
+ assert.equal(new Set([...f.manager.entries.values()].map(e=>e.solver)).size,1);
+ for(const entry of f.manager.entries.values())assert.equal(entry.solver.world.bodies.len(),42);
  f.state.result={outcome:'ended'};f.manager.step(f.state,.1);assert.equal(f.manager.entries.size,0);
  assert.ok(f.state.raid.animals.every(a=>!a.magicDown));f.manager.dispose();
 });

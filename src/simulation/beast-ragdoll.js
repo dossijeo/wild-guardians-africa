@@ -33,8 +33,8 @@ export class BeastRagdollSolver{
  }
  // Each scene supplies a local terrain patch and conservative solid volumes.
  // Static colliders are retained across steps; never rebuild them per frame.
- terrain(vertices,indices){const c=this.world.createCollider(this.R.ColliderDesc.trimesh(vertices,indices).setFriction(.85).setRestitution(.02).setCollisionGroups(0x00010002));this.obstacles.push(c);return c;}
- box(center,half,rotation={x:0,y:0,z:0,w:1}){const c=this.world.createCollider(this.R.ColliderDesc.cuboid(half.x,half.y,half.z).setTranslation(center.x,center.y,center.z).setRotation(rotation).setFriction(.8).setCollisionGroups(0x00010002));this.obstacles.push(c);return c;}
+ terrain(vertices,indices){const c=this.world.createCollider(this.R.ColliderDesc.trimesh(vertices,indices).setFriction(.85).setRestitution(.02).setCollisionGroups(0x0001fffe));this.obstacles.push(c);return c;}
+ box(center,half,rotation={x:0,y:0,z:0,w:1}){const c=this.world.createCollider(this.R.ColliderDesc.cuboid(half.x,half.y,half.z).setTranslation(center.x,center.y,center.z).setRotation(rotation).setFriction(.8).setCollisionGroups(0x0001fffe));this.obstacles.push(c);return c;}
  add(id,{pose,colliders=null,scale=1,mass=1,direction=vector(1,0,0),velocity=vector(),intensity=1,heading=0}){
   if(this.actors.size>=this.capacity&&!this.actors.has(id)){this.stats.rejected++;return null;}
   // Validate the whole snapshot before allocating any WASM resources.
@@ -44,7 +44,8 @@ export class BeastRagdollSolver{
   if(pose.parents&&(!Array.isArray(pose.parents)||pose.parents.length!==RAGDOLL_LINKS.length||pose.parents.some((p,i)=>!Number.isInteger(p)||p< -1||p>=i||(i>0&&p<0))))throw Error('Invalid ragdoll hierarchy');
   if(colliders)for(const fit of colliders)if(fit&&(!(fit.radius>0)||!(fit.halfHeight>=0)||![fit.radius,fit.halfHeight,fit.offset?.x,fit.offset?.y,fit.offset?.z].every(Number.isFinite)||(fit.hull&&(!Array.isArray(fit.hull)||fit.hull.length<12||fit.hull.length>288||fit.hull.length%3||!fit.hull.every(Number.isFinite)))))throw Error('Invalid ragdoll collider');
   if(this.actors.has(id))this.remove(id);
-  const actor={parts:[],joints:[],age:0,quiet:0,settled:false,pose:new Float32Array(RAGDOLL_LINKS.length*7)};
+  const usedGroups=new Set([...this.actors.values()].map(a=>a.group));let group=2;while(usedGroups.has(group))group<<=1;if(group>0x4000)throw Error('Ragdoll collision groups exhausted');
+  const actor={group,parts:[],joints:[],age:0,quiet:0,settled:false,pose:new Float32Array(RAGDOLL_LINKS.length*7)};
   this.actors.set(id,actor);
   try{
    for(let i=0;i<RAGDOLL_LINKS.length;i++){
@@ -53,7 +54,7 @@ export class BeastRagdollSolver{
     actor.parts.push({body,center,rotation:q,length:len,radius});
     const offset=fit?.offset??vector();
     const shape=(fit?.hull?this.R.ColliderDesc.convexHull(new Float32Array(fit.hull)):null)??this.R.ColliderDesc.capsule(fit?.halfHeight??Math.max(.005,len/2-radius),radius).setTranslation(offset.x,offset.y,offset.z);
-    this.world.createCollider(shape.setContactSkin(.05).setMass((i<2?8:2)*mass).setFriction(.8).setRestitution(.02).setCollisionGroups(0x00020001),body);
+    this.world.createCollider(shape.setContactSkin(.05).setMass((i<2?8:2)*mass).setFriction(.8).setRestitution(.02).setCollisionGroups((group<<16)|(0xffff^group)),body);
     if(parent>=0){
      const p=actor.parts[parent],a1=rotate(sub(start,p.center),inverse(p.rotation)),a2=rotate(sub(start,center),inverse(q));
      const yaw={x:0,y:Math.sin(heading/2),z:0,w:Math.cos(heading/2)},frame=multiply(yaw,FRAMES[axis]),f1=multiply(inverse(p.rotation),frame),f2=multiply(inverse(q),frame);

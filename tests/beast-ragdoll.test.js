@@ -101,3 +101,14 @@ test('recovery prewarm leaves geometry, pose and subsequent recovery unchanged',
  const actor=solver.add('warm',{pose:before,colliders:binding.colliders()});for(let i=0;i<360;i++)solver.step();
  const recovery=new BeastRecovery(binding,actor.pose,{surface:()=>0});assert.equal(recovery.apply(0),false);assert.equal(recovery.apply(recovery.duration),true);recovery.restore();solver.dispose();
 });
+
+
+test('separate animals exchange contacts in a shared world without self collisions',()=>{
+ const solver=new BeastRagdollSolver(R);solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
+ const actors=[-1,1].map((side,i)=>{const model=beastSkin('hyena');model.position.x=side*1.3;model.position.y=.15;model.updateMatrixWorld(true);const binding=new BeastRagdollBinding(model);return solver.add('animal-'+i,{pose:binding.capture(),colliders:binding.colliders(),direction:{x:-side,y:0,z:0}});});
+ assert.notEqual(actors[0].group,actors[1].group);
+ const handles=new Set(actors[1].parts.map(p=>p.body.collider(0).handle));let contacts=0,maxSpeed=0;
+ for(let i=0;i<360;i++){solver.step();for(const p of actors[0].parts)solver.world.contactPairsWith(p.body.collider(0),c=>{if(handles.has(c.handle))contacts++;});for(const a of actors){assert.ok(a.pose.every(Number.isFinite));for(const p of a.parts){const v=p.body.linvel();maxSpeed=Math.max(maxSpeed,Math.hypot(v.x,v.y,v.z));}}}
+ assert.ok(contacts>0,'animals never collided');assert.ok(maxSpeed<15,'explosive animal contact');assert.ok(actors[0].pose[0]<actors[1].pose[0],'animals passed through each other');
+ const oldGroup=actors[0].group;solver.remove('animal-0');const replacement=solver.add('replacement',{pose:pose('hyena')});assert.equal(replacement.group,oldGroup);assert.equal(solver.world.bodies.len(),28);solver.dispose();
+});
