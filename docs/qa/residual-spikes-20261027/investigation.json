@@ -47,5 +47,31 @@
       "8": "generator completion",
       "draw": "render-origin window, effects, sky, scene, shadows, smoke"
     }
+  },
+  "subsystemDiagnosis": {
+    "report": "subsystem-control/summary.json",
+    "scope": "Instrumented real-game CPU attribution; conditional subsystem samples >=1ms. No optimization or ABAB claim.",
+    "finding": "Spatial release dominates the selected chunk-sync spikes. Contacts are not the primary cost in this capture.",
+    "examples": [
+      {
+        "frame": 1207,
+        "worldRenderMs": 41.21,
+        "syncChunksMs": 20.25,
+        "spatialReleaseMs": 18.85
+      },
+      {
+        "frame": 5867,
+        "worldRenderMs": 38.105,
+        "syncChunksMs": 21.36,
+        "spatialReleaseMs": 20.01
+      }
+    ],
+    "contactsMaxMs": 1.97,
+    "next": "Attribute native spatial_remove_chunks between per-profile sector removal/border refresh and possible populateChunk of selected fallback. Preserve immediate residency/navigation correctness; do not simply defer authoritative removal.",
+    "sources": [
+      "src/world/wild-engine/spatial-chunk-retention.js:18",
+      "src/world/wild-engine/spatial-world.js:135",
+      "src/world/wild-engine/spatial-savanna.cpp:1563"
+    ]
   }
 }

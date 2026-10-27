@@ -20,6 +20,7 @@ if(report.residual){
   const grouped=new Map();for(const p of report.residual.phases){if(!grouped.has(p.label))grouped.set(p.label,[]);grouped.get(p.label).push(p.ms);}
   summary.residual.phases=Object.fromEntries([...grouped].map(([label,values])=>[label,stats(values)]));
   summary.residual.droppedPhases=report.residual.droppedPhases;
+  summary.residual.phaseScope='World-frame phases cover synchronous frame units. Subsystem spans are nested, include only calls >=1ms, have conditional percentiles, and must not be summed with parent phases.';
   summary.residual.slowestRenderFrames=[...cpu].sort((a,b)=>b.ms-a.ms).slice(0,10).map(c=>({...c,gpuMs:gpu.samples.find(g=>g.frame===c.frame)?.ms??null,phases:report.residual.phases.filter(p=>p.frame===c.frame)}));
  }
  summary.limitations.push('CPU World.render includes GPU-query bookkeeping; simulation/UI outside this call are excluded. GPU queries do not include asynchronous preparation outside the envelope.');
