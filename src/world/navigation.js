@@ -244,6 +244,11 @@ export class Navigation {
     }
     return route;
   }
+  canApproachFrom(start,radius){
+    // approachPath searches in reverse, making the animal's current position
+    // its destination. Every candidate fails immediately if that point is solid.
+    return this.walkable(start.x,start.z,radius,null,false);
+  }
   approachPath(start,end,radius,margin=16){
     // Animal routes have symmetric terrain/solid collision rules. Search from
     // the service point: an enclosed island then proves failure after exploring

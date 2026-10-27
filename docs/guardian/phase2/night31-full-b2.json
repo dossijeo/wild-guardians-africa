@@ -1,0 +1,1860 @@
+{
+  "ready": true,
+  "campaign": true,
+  "entityCounts": {
+    "workers": 135,
+    "structures": 51,
+    "crops": 5362,
+    "animals": 4
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 20466.599999980237,
+  "simulate": false,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    104.22496248122542,
+    1.775037518774606
+  ],
+  "draws": 199,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 20447.14999998052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 20447.299999980518,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 20447.399999980516,
+      "emitter": "animal-63429",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 20447.399999980516,
+      "emitter": "impact:animal-63429",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 20449.399999980487,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 20459.249999980344,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 20459.39999998034,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 20459.49999998034,
+      "emitter": "animal-63429",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 20459.49999998034,
+      "emitter": "impact:animal-63429",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 20461.49999998031,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 7.300000071525574,
+    "maxStepMs": 11.099999904632568,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "warthog",
+      "captureMs": 0.20000004768371582,
+      "colliderFitMs": 3,
+      "environmentMs": 2.600000023841858,
+      "bodiesMs": 1.5
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "animal-63429",
+      "x": 104.22496248122542,
+      "z": 1.775037518774606
+    },
+    {
+      "id": "animal-63430",
+      "x": 106.97100478708565,
+      "z": 33.553773207349906
+    },
+    {
+      "id": "animal-63431",
+      "x": 104,
+      "z": -4.628857651758049
+    },
+    {
+      "id": "animal-63432",
+      "x": 108.79282183378162,
+      "z": 36.88858694253332
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Restored night-31 snapshot, native Game.tick/navigation, fixed 0.05s steps, at most 400 frames; real 12s Attack cooldown, no fixture health resets",
+    "version": 2,
+    "physicsEnabled": true,
+    "guardian": true,
+    "visibility": "visible",
+    "frames": 400,
+    "simulationSeconds": 19.99999999970896,
+    "reason": "duration",
+    "commands": [
+      {
+        "at": 0.5499999999919964,
+        "target": "animal-63429",
+        "health": 56,
+        "ms": 4.800000071525574
+      },
+      {
+        "at": 12.649999999815918,
+        "target": "animal-63429",
+        "health": 28,
+        "ms": 1.600000023841858
+      }
+    ],
+    "initialActors": [
+      {
+        "id": "animal-63429",
+        "status": "walking",
+        "x": 104,
+        "z": 3.2031812368194563
+      },
+      {
+        "id": "animal-63430",
+        "status": "gone",
+        "x": 106.97100478708565,
+        "z": 33.553773207349906
+      },
+      {
+        "id": "animal-63431",
+        "status": "walking",
+        "x": 104,
+        "z": 5.2484271247462075
+      },
+      {
+        "id": "animal-63432",
+        "status": "gone",
+        "x": 108.79282183378162,
+        "z": 36.88858694253332
+      }
+    ],
+    "averageFps": 9.262668435836337,
+    "frameP95": 183,
+    "frameP99": 698.2000000000044,
+    "frameMax": 1064.2999999999993,
+    "framesOver50ms": 316,
+    "framesOver100ms": 127,
+    "physicsP95": 2.399999976158142,
+    "physicsP99": 3.5,
+    "physicsMax": 11.099999904632568,
+    "solverP95": 2,
+    "creationMax": 10.600000023841858,
+    "recoveryFollowP95": 1.2000000476837158,
+    "recoveryRenderP95": 0.7000000476837158,
+    "peakPhysics": 1,
+    "peakBaked": 0,
+    "heapStart": 570857051,
+    "heapEnd": 617602344,
+    "simulationP95": 10.800000071525574,
+    "simulationMax": 1043.1000000238419,
+    "renderP95": 32.39999997615814,
+    "animationP95": 0.2999999523162842,
+    "vfxP95": 1.600000023841858,
+    "drawP95": 201,
+    "hiddenFrames": 0,
+    "slowestFrames": [
+      {
+        "dt": 1064.2999999999993,
+        "renderMs": 22.199999928474426,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 158,
+        "hidden": false,
+        "elapsed": 4.699999999931606,
+        "simulationMs": 501.8000000715256,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 598827648
+      },
+      {
+        "dt": 814.6999999999971,
+        "renderMs": 24.200000047683716,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 181,
+        "hidden": false,
+        "elapsed": 6.849999999900319,
+        "simulationMs": 1.7000000476837158,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 575769172
+      },
+      {
+        "dt": 698.5,
+        "renderMs": 23.600000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 180,
+        "hidden": false,
+        "elapsed": 7.89999999988504,
+        "simulationMs": 0.8999999761581421,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 606912912
+      },
+      {
+        "dt": 698.2000000000044,
+        "renderMs": 21.100000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 181,
+        "hidden": false,
+        "elapsed": 9.99999999985448,
+        "simulationMs": 0.8999999761581421,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 600129984
+      },
+      {
+        "dt": 648.3999999999942,
+        "renderMs": 35.299999952316284,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0.10000002384185791,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 11.049999999839201,
+        "simulationMs": 2.600000023841858,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 582451652
+      },
+      {
+        "dt": 631.6999999999971,
+        "renderMs": 21.399999976158142,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 180,
+        "hidden": false,
+        "elapsed": 8.94999999986976,
+        "simulationMs": 1.399999976158142,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 570819336
+      },
+      {
+        "dt": 565.3999999999942,
+        "renderMs": 19.100000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 12.099999999823922,
+        "simulationMs": 0.7999999523162842,
+        "physicsMs": 0.09999990463256836,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 584872472
+      },
+      {
+        "dt": 548.7000000000007,
+        "renderMs": 18.799999952316284,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 173,
+        "hidden": false,
+        "elapsed": 5.799999999915599,
+        "simulationMs": 1.2000000476837158,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 574441576
+      },
+      {
+        "dt": 515.5,
+        "renderMs": 19.5,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 158,
+        "hidden": false,
+        "elapsed": 4.749999999930878,
+        "simulationMs": 3.399999976158142,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 598827648
+      },
+      {
+        "dt": 249.3000000000029,
+        "renderMs": 37,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0.09999990463256836,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 8.399999999877764,
+        "simulationMs": 2.5,
+        "physicsMs": 0.10000002384185791,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 586853996
+      },
+      {
+        "dt": 232.8000000000029,
+        "renderMs": 35.10000002384186,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0.09999990463256836,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 7.049999999897409,
+        "simulationMs": 1.600000023841858,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 597584500
+      },
+      {
+        "dt": 232.70000000000437,
+        "renderMs": 24.399999976158142,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 8.199999999880674,
+        "simulationMs": 1.100000023841858,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 602326708
+      }
+    ],
+    "memory": {
+      "geometries": 353,
+      "textures": 83
+    },
+    "outcome": {
+      "rng": 842598846,
+      "time": 600,
+      "result": null,
+      "pauses": [],
+      "animals": [
+        {
+          "id": "animal-63429",
+          "status": "walking",
+          "x": 104.22496248122542,
+          "z": 1.775037518774606,
+          "health": 28,
+          "hits": 1,
+          "target": "plant-58858"
+        },
+        {
+          "id": "animal-63430",
+          "status": "gone",
+          "x": 106.97100478708565,
+          "z": 33.553773207349906,
+          "hits": 0,
+          "target": null
+        },
+        {
+          "id": "animal-63431",
+          "status": "walking",
+          "x": 104,
+          "z": -4.628857651758049,
+          "hits": 3,
+          "target": "plant-55083"
+        },
+        {
+          "id": "animal-63432",
+          "status": "gone",
+          "x": 108.79282183378162,
+          "z": 36.88858694253332,
+          "hits": 0,
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-31689",
+          "x": 103.87392929394439,
+          "z": -11.191988946414753,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": true
+        },
+        {
+          "id": "worker-38318",
+          "x": 103.2143478496856,
+          "z": -13.371374434737147,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": true
+        },
+        {
+          "id": "worker-41800",
+          "x": 85.22515989741707,
+          "z": -16.683647696253168,
+          "status": "fleeing",
+          "hits": 1,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-41885",
+          "x": 85.13080485930656,
+          "z": -16.687276736180497,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-49380",
+          "x": 103.6823236779875,
+          "z": -10.009852778809766,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": true
+        },
+        {
+          "id": "worker-53244",
+          "x": 84.97128449697131,
+          "z": -16.693412134731854,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61108",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61109",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61110",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61111",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61112",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61113",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61114",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61115",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61116",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61117",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61118",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61119",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61120",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61121",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61122",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61123",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61124",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61125",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61126",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61127",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61128",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61129",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61130",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61131",
+          "x": 80.15396094951,
+          "z": -16.878693809634225,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61132",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61133",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61134",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61135",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61136",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61137",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61138",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61139",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61140",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61141",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61142",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61143",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61144",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61145",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61146",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61147",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61148",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61149",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61150",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61151",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61152",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61153",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61154",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61155",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61156",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61157",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61158",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61159",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61160",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61161",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61162",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61163",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61164",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61165",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61166",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61167",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61168",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61169",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61170",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61171",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61172",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61173",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61174",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61175",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61176",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61177",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61178",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61179",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61180",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61181",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61182",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61183",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61184",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61185",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61186",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61187",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61188",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61189",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61190",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61191",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61192",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61193",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61194",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61195",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61196",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61197",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61198",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61199",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61200",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61201",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61202",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61203",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61204",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61205",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61206",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61207",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61208",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61209",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61210",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61211",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61212",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61213",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61214",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61215",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61216",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61217",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61218",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61219",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61220",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61221",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61222",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61223",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61224",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61225",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61226",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61227",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61228",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61229",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61230",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61231",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61232",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-62099",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-63260",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-63284",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-63310",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        }
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "hp": 600,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7581",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7582",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7583",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7584",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7585",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7586",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7587",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7588",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7589",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7590",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7591",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7592",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7593",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7594",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7595",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7596",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7597",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7598",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7599",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7600",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7601",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7602",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7603",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7604",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7605",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7606",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7607",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7608",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7609",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7610",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7611",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7612",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7613",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7614",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7615",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7616",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7617",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7618",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7619",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7620",
+          "hp": 60,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7621",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7622",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7623",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7624",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7625",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7626",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7627",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7628",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7629",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7630",
+          "hp": 100,
+          "status": "intact"
+        }
+      ],
+      "livingCrops": 1023
+    }
+  },
+  "commandCosts": []
+}

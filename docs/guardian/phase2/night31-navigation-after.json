@@ -1,0 +1,2254 @@
+{
+  "ready": true,
+  "campaign": true,
+  "entityCounts": {
+    "workers": 135,
+    "structures": 51,
+    "crops": 5362,
+    "animals": 4
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 20466.599999980237,
+  "simulate": false,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    104.22496248122542,
+    1.775037518774606
+  ],
+  "draws": 199,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 20447.14999998052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 20447.299999980518,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 20447.399999980516,
+      "emitter": "animal-63429",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 20447.399999980516,
+      "emitter": "impact:animal-63429",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 20449.399999980487,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 20459.249999980344,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 20459.39999998034,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 20459.49999998034,
+      "emitter": "animal-63429",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 20459.49999998034,
+      "emitter": "impact:animal-63429",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 20461.49999998031,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 9,
+    "maxStepMs": 11.800000071525574,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "warthog",
+      "captureMs": 0.30000007152557373,
+      "colliderFitMs": 3.6999999284744263,
+      "environmentMs": 2.700000047683716,
+      "bodiesMs": 2.299999952316284
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "animal-63429",
+      "x": 104.22496248122542,
+      "z": 1.775037518774606
+    },
+    {
+      "id": "animal-63430",
+      "x": 106.97100478708565,
+      "z": 33.553773207349906
+    },
+    {
+      "id": "animal-63431",
+      "x": 104,
+      "z": -4.628857651758049
+    },
+    {
+      "id": "animal-63432",
+      "x": 108.79282183378162,
+      "z": 36.88858694253332
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Restored night-31 snapshot, native Game.tick/navigation, fixed 0.05s steps, at most 400 frames; real 12s Attack cooldown, no fixture health resets",
+    "version": 2,
+    "slowSearches": [
+      {
+        "at": 0.049999999999272404,
+        "ms": 158.20000004768372,
+        "start": {
+          "x": 106.17231695295943,
+          "z": 1.4528249378970106
+        },
+        "end": {
+          "x": 60,
+          "z": 0
+        },
+        "radius": 0.28,
+        "worker": true,
+        "stack": "Error\n    at GuardianNavigationTrial.nav.findPath (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:6:456)\n    at Navigation.path (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:211:22)\n    at Navigation.workerPath (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:430:75)\n    at walkTo (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:405:39)\n    at updateWorkers (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:521:23)\n    at tickScoped (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:674:85)\n    at http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:40\n    at withNavigationQueries (http://127.0.0.1:5194/src/world/navigation-query-scope.js:8:13)\n    at Module.tick (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:10)\n    at GuardianNavigationTrial.advance (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:8:173)"
+      },
+      {
+        "at": 0.049999999999272404,
+        "ms": 15.5,
+        "start": {
+          "x": 105.51232680853917,
+          "z": 1.9167329029342133
+        },
+        "end": {
+          "x": 60,
+          "z": 0
+        },
+        "radius": 0.28,
+        "worker": true,
+        "stack": "Error\n    at GuardianNavigationTrial.nav.findPath (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:6:456)\n    at Navigation.path (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:211:22)\n    at Navigation.workerPath (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:430:75)\n    at walkTo (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:405:39)\n    at updateWorkers (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:521:23)\n    at tickScoped (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:674:85)\n    at http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:40\n    at withNavigationQueries (http://127.0.0.1:5194/src/world/navigation-query-scope.js:8:13)\n    at Module.tick (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:10)\n    at GuardianNavigationTrial.advance (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:8:173)"
+      },
+      {
+        "at": 0.049999999999272404,
+        "ms": 29.899999976158142,
+        "start": {
+          "x": 108.9036751698487,
+          "z": 3.1481526013549797
+        },
+        "end": {
+          "x": 60,
+          "z": 0
+        },
+        "radius": 0.28,
+        "worker": true,
+        "stack": "Error\n    at GuardianNavigationTrial.nav.findPath (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:6:456)\n    at Navigation.path (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:211:22)\n    at Navigation.workerPath (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:430:75)\n    at walkTo (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:405:39)\n    at updateWorkers (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:521:23)\n    at tickScoped (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:674:85)\n    at http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:40\n    at withNavigationQueries (http://127.0.0.1:5194/src/world/navigation-query-scope.js:8:13)\n    at Module.tick (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:10)\n    at GuardianNavigationTrial.advance (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:8:173)"
+      },
+      {
+        "at": 17.349999999747524,
+        "ms": 20.700000047683716,
+        "start": {
+          "x": 104.26177276481422,
+          "z": 5.727285978605791
+        },
+        "end": {
+          "x": 103.5955567942432,
+          "z": 34.25829492285341
+        },
+        "radius": 1.1,
+        "worker": false,
+        "stack": "Error\n    at GuardianNavigationTrial.nav.findPath (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:6:456)\n    at Navigation.path (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:211:22)\n    at walkTo (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:405:90)\n    at updateRaid (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:326:11)\n    at tickScoped (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:674:62)\n    at http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:40\n    at withNavigationQueries (http://127.0.0.1:5194/src/world/navigation-query-scope.js:8:13)\n    at Module.tick (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:10)\n    at GuardianNavigationTrial.advance (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:8:173)\n    at frame (http://127.0.0.1:5194/tests/browser/guardian-combat.js?t=1793119545184:70:386)"
+      },
+      {
+        "at": 17.349999999747524,
+        "ms": 100.59999990463257,
+        "start": {
+          "x": 87.19989611800472,
+          "z": 5.981206703522562
+        },
+        "end": {
+          "x": 104.2994036470421,
+          "z": 5.7921621429710815
+        },
+        "radius": 1.1,
+        "worker": false,
+        "stack": "Error\n    at GuardianNavigationTrial.nav.findPath (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:6:456)\n    at Navigation.path (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:211:22)\n    at Navigation.approachPath (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:256:24)\n    at reachableApproach (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:195:37)\n    at targetFor (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:226:49)\n    at updateRaid (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:332:22)\n    at tickScoped (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:674:62)\n    at http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:40\n    at withNavigationQueries (http://127.0.0.1:5194/src/world/navigation-query-scope.js:8:13)\n    at Module.tick (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:10)"
+      },
+      {
+        "at": 17.349999999747524,
+        "ms": 72.09999990463257,
+        "start": {
+          "x": 80.58760419307005,
+          "z": -22.693433078936845
+        },
+        "end": {
+          "x": 104.2994036470421,
+          "z": 5.7921621429710815
+        },
+        "radius": 1.1,
+        "worker": false,
+        "stack": "Error\n    at GuardianNavigationTrial.nav.findPath (http://127.0.0.1:5194/tests/browser/guardian-navigation-trial.js?t=1793119545184:6:456)\n    at Navigation.path (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:211:22)\n    at Navigation.approachPath (http://127.0.0.1:5194/src/world/navigation.js?t=1793119545179:256:24)\n    at reachableApproach (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:195:37)\n    at targetFor (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:226:49)\n    at updateRaid (http://127.0.0.1:5194/src/simulation/raids.js?t=1793119545184:332:22)\n    at tickScoped (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:674:62)\n    at http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:40\n    at withNavigationQueries (http://127.0.0.1:5194/src/world/navigation-query-scope.js:8:13)\n    at Module.tick (http://127.0.0.1:5194/src/simulation/game.js?t=1793119545184:635:10)"
+      }
+    ],
+    "slowestSimulationFrames": [
+      {
+        "dt": 65.90000000002328,
+        "renderMs": 33.200000047683716,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 0.049999999999272404,
+        "simulationMs": 249.09999990463257,
+        "pathSearchMs": 209.20000004768372,
+        "pathSearchCalls": 7,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 563635550
+      },
+      {
+        "dt": 83.10000000000582,
+        "renderMs": 31.600000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 189,
+        "hidden": false,
+        "elapsed": 17.349999999747524,
+        "simulationMs": 213.89999997615814,
+        "pathSearchMs": 193.39999985694885,
+        "pathSearchCalls": 3,
+        "physicsMs": 1.399999976158142,
+        "solverMs": 0.30000007152557373,
+        "creationMs": 0,
+        "recoveryFollowMs": 0.7999999523162842,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 582903967
+      },
+      {
+        "dt": 83,
+        "renderMs": 28.5,
+        "active": 1,
+        "animationMs": 0.30000007152557373,
+        "vfxMs": 3.5,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 163,
+        "hidden": false,
+        "elapsed": 0.7999999999883585,
+        "simulationMs": 26.799999952316284,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 11.800000071525574,
+        "solverMs": 0,
+        "creationMs": 11.300000071525574,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 548633914
+      },
+      {
+        "dt": 66.5,
+        "renderMs": 24.100000023841858,
+        "active": 1,
+        "animationMs": 0.19999992847442627,
+        "vfxMs": 0.7999999523162842,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 160,
+        "hidden": false,
+        "elapsed": 1.6999999999752617,
+        "simulationMs": 20.800000071525574,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 3,
+        "solverMs": 2.799999952316284,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 560216002
+      },
+      {
+        "dt": 66.59999999997672,
+        "renderMs": 20.399999976158142,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 3.0499999999556167,
+        "simulationMs": 19.399999976158142,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 2,
+        "solverMs": 0.30000007152557373,
+        "creationMs": 0,
+        "recoveryFollowMs": 1.6999999284744263,
+        "recoveryMs": 0.8999999761581421,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 566568963
+      },
+      {
+        "dt": 83,
+        "renderMs": 21,
+        "active": 1,
+        "animationMs": 0.30000007152557373,
+        "vfxMs": 1.7000000476837158,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 160,
+        "hidden": false,
+        "elapsed": 2.5499999999628926,
+        "simulationMs": 18.300000071525574,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 2.600000023841858,
+        "solverMs": 2.299999952316284,
+        "creationMs": 0,
+        "recoveryFollowMs": 0.10000002384185791,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 561804099
+      },
+      {
+        "dt": 49.69999999998254,
+        "renderMs": 22.90000009536743,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 2.8999999999577994,
+        "simulationMs": 12,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 2.799999952316284,
+        "solverMs": 2.600000023841858,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 555689495
+      },
+      {
+        "dt": 100,
+        "renderMs": 21.700000047683716,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 2.849999999958527,
+        "simulationMs": 11.199999928474426,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 2.5,
+        "solverMs": 2.3000000715255737,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 568505379
+      },
+      {
+        "dt": 66.69999999998254,
+        "renderMs": 18.700000047683716,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 3.5499999999483407,
+        "simulationMs": 11.100000023841858,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 1.3000000715255737,
+        "solverMs": 0.40000009536743164,
+        "creationMs": 0,
+        "recoveryFollowMs": 0.8999999761581421,
+        "recoveryMs": 0.7999999523162842,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 555583355
+      },
+      {
+        "dt": 116.29999999998836,
+        "renderMs": 30.800000071525574,
+        "active": 1,
+        "animationMs": 0.30000007152557373,
+        "vfxMs": 0.5,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 194,
+        "hidden": false,
+        "elapsed": 12.89999999981228,
+        "simulationMs": 11.099999904632568,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 9.299999952316284,
+        "solverMs": 0,
+        "creationMs": 9,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 589724154
+      },
+      {
+        "dt": 116.30000000001746,
+        "renderMs": 24.299999952316284,
+        "active": 1,
+        "animationMs": 0.3999999761581421,
+        "vfxMs": 1.399999976158142,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 163,
+        "hidden": false,
+        "elapsed": 0.8499999999876309,
+        "simulationMs": 10.5,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 6.299999952316284,
+        "solverMs": 5.700000047683716,
+        "creationMs": 0,
+        "recoveryFollowMs": 0.09999990463256836,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 554257778
+      },
+      {
+        "dt": 83.30000000001746,
+        "renderMs": 20.90000009536743,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 2.949999999957072,
+        "simulationMs": 9.399999976158142,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 3.600000023841858,
+        "solverMs": 1.7000000476837158,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0.8999999761581421,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 550755450
+      }
+    ],
+    "physicsEnabled": true,
+    "guardian": true,
+    "visibility": "visible",
+    "frames": 400,
+    "simulationSeconds": 19.99999999970896,
+    "reason": "duration",
+    "commands": [
+      {
+        "at": 0.5499999999919964,
+        "target": "animal-63429",
+        "health": 56,
+        "ms": 3.600000023841858
+      },
+      {
+        "at": 12.649999999815918,
+        "target": "animal-63429",
+        "health": 28,
+        "ms": 2.200000047683716
+      }
+    ],
+    "initialActors": [
+      {
+        "id": "animal-63429",
+        "status": "walking",
+        "x": 104,
+        "z": 3.2031812368194563
+      },
+      {
+        "id": "animal-63430",
+        "status": "gone",
+        "x": 106.97100478708565,
+        "z": 33.553773207349906
+      },
+      {
+        "id": "animal-63431",
+        "status": "walking",
+        "x": 104,
+        "z": 5.2484271247462075
+      },
+      {
+        "id": "animal-63432",
+        "status": "gone",
+        "x": 108.79282183378162,
+        "z": 36.88858694253332
+      }
+    ],
+    "averageFps": 10.625214164472997,
+    "frameP95": 149.80000000001746,
+    "frameP99": 166.30000000001746,
+    "frameMax": 282.69999999998254,
+    "framesOver50ms": 315,
+    "framesOver100ms": 102,
+    "physicsP95": 2.600000023841858,
+    "physicsP99": 3.600000023841858,
+    "physicsMax": 11.800000071525574,
+    "solverP95": 2.200000047683716,
+    "creationMax": 11.300000071525574,
+    "recoveryFollowP95": 1.100000023841858,
+    "recoveryRenderP95": 0.7000000476837158,
+    "peakPhysics": 1,
+    "peakBaked": 0,
+    "heapStart": 563635550,
+    "heapEnd": 599980523,
+    "simulationP95": 8.300000071525574,
+    "simulationMax": 249.09999990463257,
+    "renderP95": 33.799999952316284,
+    "animationP95": 0.2999999523162842,
+    "vfxP95": 1.7999999523162842,
+    "drawP95": 201,
+    "hiddenFrames": 0,
+    "slowestFrames": [
+      {
+        "dt": 282.69999999998254,
+        "renderMs": 28.100000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 150,
+        "hidden": false,
+        "elapsed": 0.09999999999854481,
+        "simulationMs": 8.300000071525574,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 563635550
+      },
+      {
+        "dt": 249.5,
+        "renderMs": 28.5,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 190,
+        "hidden": false,
+        "elapsed": 17.399999999746797,
+        "simulationMs": 1,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 582903967
+      },
+      {
+        "dt": 166.30000000001746,
+        "renderMs": 29.600000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 181,
+        "hidden": false,
+        "elapsed": 6.849999999900319,
+        "simulationMs": 2.600000023841858,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 569211639
+      },
+      {
+        "dt": 166.30000000001746,
+        "renderMs": 29.5,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 9.849999999856664,
+        "simulationMs": 2.100000023841858,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 582099407
+      },
+      {
+        "dt": 166.30000000001746,
+        "renderMs": 30.299999952316284,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 10.39999999984866,
+        "simulationMs": 1.100000023841858,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 597833035
+      },
+      {
+        "dt": 166.29999999998836,
+        "renderMs": 29,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 182,
+        "hidden": false,
+        "elapsed": 11.199999999837019,
+        "simulationMs": 1.1999999284744263,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 602311711
+      },
+      {
+        "dt": 166.20000000001164,
+        "renderMs": 31.100000023841858,
+        "active": 1,
+        "animationMs": 0.30000007152557373,
+        "vfxMs": 1.5,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 200,
+        "hidden": false,
+        "elapsed": 14.74999999978536,
+        "simulationMs": 3.899999976158142,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 3,
+        "solverMs": 2.6999999284744263,
+        "creationMs": 0,
+        "recoveryFollowMs": 0.20000004768371582,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 592732426
+      },
+      {
+        "dt": 166,
+        "renderMs": 27.600000023841858,
+        "active": 0,
+        "animationMs": 0,
+        "vfxMs": 0,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 181,
+        "hidden": false,
+        "elapsed": 10.849999999842112,
+        "simulationMs": 2,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 0,
+        "solverMs": 0,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 0,
+        "bakedActive": 0,
+        "heap": 603595839
+      },
+      {
+        "dt": 149.89999999999418,
+        "renderMs": 42.799999952316284,
+        "active": 1,
+        "animationMs": 0.30000007152557373,
+        "vfxMs": 1,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 194,
+        "hidden": false,
+        "elapsed": 12.999999999810825,
+        "simulationMs": 2.5,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 1.600000023841858,
+        "solverMs": 1.5,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 569123374
+      },
+      {
+        "dt": 149.89999999999418,
+        "renderMs": 30.5,
+        "active": 1,
+        "animationMs": 0.20000004768371582,
+        "vfxMs": 0.5,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 194,
+        "hidden": false,
+        "elapsed": 13.399999999805004,
+        "simulationMs": 3.6999999284744263,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 1.5,
+        "solverMs": 1.2999999523162842,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 582453102
+      },
+      {
+        "dt": 149.89999999999418,
+        "renderMs": 30.600000023841858,
+        "active": 1,
+        "animationMs": 0.2999999523162842,
+        "vfxMs": 0.8999999761581421,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 198,
+        "hidden": false,
+        "elapsed": 14.049999999795546,
+        "simulationMs": 2.6999999284744263,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 2.0999999046325684,
+        "solverMs": 1.899999976158142,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 591837694
+      },
+      {
+        "dt": 149.89999999999418,
+        "renderMs": 31.199999928474426,
+        "active": 1,
+        "animationMs": 0.30000007152557373,
+        "vfxMs": 1.7999999523162842,
+        "reused": 0,
+        "retainedAttacks": 0,
+        "draws": 200,
+        "hidden": false,
+        "elapsed": 14.399999999790452,
+        "simulationMs": 2.8000000715255737,
+        "pathSearchMs": 0,
+        "pathSearchCalls": 0,
+        "physicsMs": 2,
+        "solverMs": 1.899999976158142,
+        "creationMs": 0,
+        "recoveryFollowMs": 0,
+        "recoveryMs": 0,
+        "physicsActive": 1,
+        "bakedActive": 0,
+        "heap": 610987738
+      }
+    ],
+    "memory": {
+      "geometries": 353,
+      "textures": 83
+    },
+    "outcome": {
+      "rng": 842598846,
+      "time": 600,
+      "result": null,
+      "pauses": [],
+      "animals": [
+        {
+          "id": "animal-63429",
+          "status": "walking",
+          "x": 104.22496248122542,
+          "z": 1.775037518774606,
+          "health": 28,
+          "hits": 1,
+          "target": "plant-58858"
+        },
+        {
+          "id": "animal-63430",
+          "status": "gone",
+          "x": 106.97100478708565,
+          "z": 33.553773207349906,
+          "hits": 0,
+          "target": null
+        },
+        {
+          "id": "animal-63431",
+          "status": "walking",
+          "x": 104,
+          "z": -4.628857651758049,
+          "hits": 3,
+          "target": "plant-55083"
+        },
+        {
+          "id": "animal-63432",
+          "status": "gone",
+          "x": 108.79282183378162,
+          "z": 36.88858694253332,
+          "hits": 0,
+          "target": null
+        }
+      ],
+      "workers": [
+        {
+          "id": "worker-31689",
+          "x": 103.87392929394439,
+          "z": -11.191988946414753,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": true
+        },
+        {
+          "id": "worker-38318",
+          "x": 103.2143478496856,
+          "z": -13.371374434737147,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": true
+        },
+        {
+          "id": "worker-41800",
+          "x": 85.22515989741707,
+          "z": -16.683647696253168,
+          "status": "fleeing",
+          "hits": 1,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-41885",
+          "x": 85.13080485930656,
+          "z": -16.687276736180497,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-49380",
+          "x": 103.6823236779875,
+          "z": -10.009852778809766,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": true
+        },
+        {
+          "id": "worker-53244",
+          "x": 84.97128449697131,
+          "z": -16.693412134731854,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61108",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61109",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61110",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61111",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61112",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61113",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61114",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61115",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61116",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61117",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61118",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61119",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61120",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61121",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61122",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61123",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61124",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61125",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61126",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61127",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61128",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61129",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61130",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61131",
+          "x": 80.15396094951,
+          "z": -16.878693809634225,
+          "status": "fleeing",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61132",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61133",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61134",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61135",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61136",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61137",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61138",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61139",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61140",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61141",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61142",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61143",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61144",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61145",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61146",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61147",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61148",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61149",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61150",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61151",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61152",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61153",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61154",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61155",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61156",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61157",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61158",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61159",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61160",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61161",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61162",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61163",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61164",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61165",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61166",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61167",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61168",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61169",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61170",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61171",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61172",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61173",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61174",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61175",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61176",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61177",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61178",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61179",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61180",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61181",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61182",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61183",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61184",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61185",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61186",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61187",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61188",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61189",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61190",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61191",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61192",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61193",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61194",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61195",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61196",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61197",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61198",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61199",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61200",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61201",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61202",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61203",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61204",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61205",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61206",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61207",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61208",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61209",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61210",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61211",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61212",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61213",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61214",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61215",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61216",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61217",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61218",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61219",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61220",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61221",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61222",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61223",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61224",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61225",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61226",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61227",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61228",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61229",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61230",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61231",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-61232",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-62099",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-63260",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-63284",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        },
+        {
+          "id": "worker-63310",
+          "x": 60,
+          "z": 0,
+          "status": "home",
+          "hits": 0,
+          "incapacitated": false
+        }
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "hp": 600,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7581",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7582",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7583",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7584",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7585",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7586",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7587",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7588",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7589",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7590",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7591",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7592",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7593",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7594",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7595",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7596",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7597",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7598",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7599",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7600",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7601",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7602",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7603",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7604",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7605",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7606",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7607",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7608",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7609",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7610",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7611",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7612",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7613",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7614",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7615",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7616",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7617",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7618",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7619",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7620",
+          "hp": 60,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7621",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7622",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7623",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7624",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7625",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7626",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7627",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7628",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7629",
+          "hp": 100,
+          "status": "intact"
+        },
+        {
+          "id": "structure-7630",
+          "hp": 100,
+          "status": "intact"
+        }
+      ],
+      "livingCrops": 1023
+    }
+  },
+  "commandCosts": []
+}

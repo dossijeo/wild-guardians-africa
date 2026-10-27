@@ -181,6 +181,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){
+  if(nav.canApproachFrom?.(a,a.radius)===false)return null;
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
   for(let sample=0;sample<32;sample++){
@@ -206,6 +207,10 @@ export function raidTarget(s,id){
   return s.plants.find(eligible)??s.structures.find(eligible);
 }
 function targetFor(s,a,nav) {
+  // A displaced actor may temporarily overlap the navigation footprint of a
+  // solid. Do not scan every crop/side when reverse routes all have an invalid
+  // destination. Existing wait/retreat movement handles leaving that position.
+  if(nav.canApproachFrom?.(a,a.radius)===false)return null;
   const groups=[],seen=new Set(),components=createCropGrouping(s.plants);
   for(const p of components.living)if(!seen.has(p.id)) {
     const group=components.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
