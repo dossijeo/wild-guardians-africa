@@ -175,6 +175,7 @@ try {
   if(process.env.WG_MAGIC_CAPTURE_AFTER_STREAM==='1'){result.captureStart=await page.evaluate(()=>performance.now());await page.screenshot({path:out+'/shield-'+i+'.png'});result.captureEnd=await page.evaluate(()=>performance.now());}
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));
  }
+ if(process.env.WG_LIVE_WATER_VISUAL==='1'){report.waterVisual=await page.evaluate(async()=>{const {inspectLiveWaterBed}=await import('/tools/experiments/qa-live-chunk-water-bed.js');return inspectLiveWaterBed(qaMagicWorld);});assert(report.waterVisual.resident);await page.screenshot({path:out+'/water-bank.png'});}
  report.after=await inspect();
  if(report.runtimeOverride)assert(report.runtimeOverride.loads['spatial-threaded.wasm']>0,'Candidate shared runtime WASM was not loaded');
  if(process.env.WG_CHUNK_WATER_BED==='1'){report.chunkWaterBed=await page.evaluate(()=>globalThis.qaChunkWaterBed??null);assert(report.chunkWaterBed?.calls>0,'Chunk water candidate not exercised');}
