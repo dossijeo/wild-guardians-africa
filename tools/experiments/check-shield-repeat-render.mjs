@@ -1,3 +1,4 @@
+import {patchPackedContacts} from './packed-ground-contact-patch.mjs';
 import {patchCoveragePrefix} from './coverage-prefix-upload-patch.mjs';
 import {startPresentationTrace} from './qa-presentation-trace.mjs';
 import {patchChunkWaterScene} from './chunk-water-scene-patch.mjs';
@@ -34,6 +35,13 @@ try {
    await route.fulfill({response,body:regionalTailProbe((name==='native-far-ground.js'||name==='native-far-ground-seam.js')?await response.text():await readFile(path,'utf8'),name)});
   });
  }
+ if(process.env.WG_PACKED_CONTACTS==='1')await context.route(/\/tools\/experiments\/(?:far-scene-worker|far-ground-contacts|far-ground-data|native-far-ground-seam)\.js(?:\?.*)?$/,async route=>{
+  const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
+  let body=patchPackedContacts(await response.text(),name);
+  if(name==='native-far-ground-seam.js'&&process.env.WG_REGIONAL_TAIL_PROBE==='1')body=regionalTailProbe(body,name);
+  (report.packedContactLoads??={})[name]=((report.packedContactLoads??{})[name]??0)+1;
+  await route.fulfill({response,body});
+ });
  if(process.env.WG_COVERAGE_PREFIX==='1')await context.route(/\/src\/rendering\/continuous-grass\.js(?:\?.*)?$/,async route=>{const response=await route.fetch();await route.fulfill({response,body:patchCoveragePrefix(await response.text())});});
  if(process.env.WG_SMOOTH_SORT_SOURCE){
   report.smoothSortSource=process.env.WG_SMOOTH_SORT_SOURCE;
@@ -193,6 +201,7 @@ try {
  report.after=await inspect();
  if(report.runtimeOverride)assert(report.runtimeOverride.loads['spatial-threaded.wasm']>0,'Candidate shared runtime WASM was not loaded');
  if(process.env.WG_CHUNK_WATER_BED==='1'){report.chunkWaterBed=await page.evaluate(()=>globalThis.qaChunkWaterBed??null);assert(report.chunkWaterBed?.calls>0,'Chunk water candidate not exercised');}
+ if(process.env.WG_PACKED_CONTACTS==='1')for(const name of ['far-scene-worker.js','far-ground-contacts.js','far-ground-data.js','native-far-ground-seam.js'])assert(report.packedContactLoads?.[name]>0,'Packed contacts source missing: '+name);
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}

@@ -1,0 +1,34 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {farGroundData,farGroundHeight} from '../tools/experiments/far-ground-data.js';
+import {fitFarGroundContacts,groundCellTriangles,groundTriangleWeights} from '../tools/experiments/far-ground-contacts.js';
+import {farGroundSeam} from '../tools/experiments/far-ground-seam.js';
+import {packGroundContacts,packedContactTriangles,hasPackedContact,packedContactTransferables} from '../tools/experiments/packed-ground-contact-candidate.js';
+import {patchPackedContacts} from '../tools/experiments/packed-ground-contact-patch.mjs';
+const helperUrl=new URL('../tools/experiments/packed-ground-contact-candidate.js',import.meta.url).href;
+const contactsUrl=new URL('../tools/experiments/far-ground-contacts.js',import.meta.url).href;
+const contactSource=patchPackedContacts(readFileSync(new URL(contactsUrl),'utf8'),'far-ground-contacts.js').replace('/tools/experiments/packed-ground-contact-candidate.js',helperUrl);
+const encodedContacts='data:text/javascript;base64,'+Buffer.from(contactSource).toString('base64');
+const heightSource=patchPackedContacts(readFileSync(new URL('../tools/experiments/far-ground-data.js',import.meta.url),'utf8'),'far-ground-data.js').replace('/tools/experiments/packed-ground-contact-candidate.js',helperUrl).replace('./far-ground-contacts.js',encodedContacts);
+const encodedHeight='data:text/javascript;base64,'+Buffer.from(heightSource).toString('base64');
+const {farGroundHeight:packedHeight}=await import(encodedHeight);
+const seamSource=readFileSync(new URL('../tools/experiments/far-ground-seam.js',import.meta.url),'utf8').replace('./far-ground-data.js',encodedHeight);
+const {farGroundSeam:packedSeam}=await import('data:text/javascript;base64,'+Buffer.from(seamSource).toString('base64'));
+test('packed worker topology preserves exact indices and height samples across edges and contacts',()=>{
+ const ground=farGroundData({surface:(x,z)=>Math.sin(x)+Math.cos(z)},{minX:-16,maxX:16,minZ:-16,maxZ:16},{step:4});
+ const anchors=[];for(let i=0;i<150;i++)anchors.push({id:String(i),x:((i*137)%310)/10-15.5,z:((i*71)%310)/10-15.5,y:Math.sin(i)*2});
+ anchors.push({id:'edge',x:0,z:4,y:3},{id:'corner',x:0,z:0,y:2});
+ const fitted=fitFarGroundContacts(ground,anchors),packed=packGroundContacts(fitted);
+ assert.equal(packed.positions,fitted.positions);assert.equal(packed.indices,fitted.indices);assert.equal(packed.colors,fitted.colors);
+ assert.equal(packed.contactCells,undefined);assert.equal(packed.contactAnchors,undefined);
+ for(let z=0;z<ground.nz;z++)for(let x=0;x<ground.nx;x++)if(hasPackedContact(packed,x,z))assert.deepEqual([...packedContactTriangles(packed,x,z)],groundCellTriangles(fitted,x,z));
+ for(let z=-16;z<=16;z+=.25)for(let x=-16;x<=16;x+=.25)assert.equal(packedHeight(packed,x,z),farGroundHeight(fitted,x,z));
+ for(const a of anchors)assert.equal(packedHeight(packed,Math.fround(a.x),Math.fround(a.z)),farGroundHeight(fitted,Math.fround(a.x),Math.fround(a.z)));
+ const seamOptions={nativeHeightAt:(x,z)=>Math.sin(x)*Math.cos(z)};
+ assert.deepEqual(packedSeam(packed,[-8,-8,8,8],seamOptions),farGroundSeam(fitted,[-8,-8,8,8],seamOptions));
+ const bytes=packedContactTransferables(packed);assert.equal(bytes.length,2);const clone=structuredClone(packed,{transfer:bytes});assert.equal(bytes[0].byteLength,0);assert.equal(packedHeight(clone,0,4),farGroundHeight(fitted,0,4));
+});
+test('unfitted ground stays unchanged and inconsistent metadata is rejected',()=>{
+ const ground=farGroundData({surface:()=>0},{minX:0,maxX:8,minZ:0,maxZ:8});assert.equal(packGroundContacts(ground),ground);
+ const fitted=fitFarGroundContacts(ground,[{id:'a',x:1,z:1,y:1}]);fitted.indices[0]=999;assert.throws(()=>packGroundContacts(fitted),/topology/);
+});
