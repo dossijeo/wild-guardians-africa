@@ -18,3 +18,13 @@ El reproductor `BakedRagdollClip` interpola posiciones y rotaciones por tiempo, 
 - Validar gráficamente especies y direcciones; medir coste combinado y tamaño descargado.
 
 No se considera resuelto el cuarto impacto por la mera existencia del archivo. El código de combate todavía conserva la reacción ligera cuando se llena el presupuesto físico; este recurso prepara su sustitución por una caída articulada comprobable.
+
+## Adaptación al esqueleto
+
+El banco pasa a versión 2, `snapshotKind: bone-world`: guarda posiciones y orientaciones de huesos después de aplicar la pose física, en lugar de usar directamente los ejes de colisionadores. Los ejes físicos no son intercambiables con los ejes del rig.
+
+`BakedBeastFall` reproduce el banco sobre el modelo colocado en el mundo. Captura la pose animada inicial, mezcla durante 0,18 s hacia la caída, conserva las traslaciones locales de huesos no raíz y transforma orientación/escala/posición mediante la matriz del modelo. Usa los mismos puntos de contacto de piel que la recuperación para compensación vertical. El llamador puede restringir la trayectoria mediante `clipPosition`; este callback no es por sí solo un sistema de colisiones.
+
+Cinco pruebas del banco/reproductor pasan. Incluyen las cinco especies con giro, escala y traslación, pose inicial alterada de brazo, ausencia de salto a tiempo cero, longitudes óseas, restauración y trayectoria horizontal restringida. No prueban naturalidad de la mezcla ni colisiones de extremidades.
+
+Sigue pendiente conectar este reproductor al presupuesto del controlador, reconciliar posición lógica, crear recuperación desde su pose final y ejecutar la matriz gráfica. El cuarto impacto del juego aún conserva la reacción ligera. No se declara implementado el fallback completo.

@@ -17,6 +17,7 @@ function contactIndices(geometry){
 // logical root to the fallen pelvis; the world-space snapshot preserves the
 // visible pose during that reconciliation. No return to the pre-impact origin.
 export class BeastRecovery{
+ static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh.geometry))samples.push({mesh,index});});return samples;}
  static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh.geometry);});}
  constructor(binding,snapshot,{surface,duration=1.65}={}){
   this.binding=binding;this.surface=surface;this.duration=duration;this.age=0;this.done=false;this.lift=0;this.v=new Vector3();
@@ -35,7 +36,7 @@ export class BeastRecovery{
   this.legs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot'),target=foot.getWorldPosition(new Vector3());return {upper,knee,foot,target,length1:upper.getWorldPosition(new Vector3()).distanceTo(knee.getWorldPosition(new Vector3())),length2:knee.getWorldPosition(new Vector3()).distanceTo(target)};});
   const footClearance=Math.min(...this.legs.map(l=>l.target.y-(surface?.(l.target.x,l.target.z)??0)));for(const l of this.legs)l.target.y=(surface?.(l.target.x,l.target.z)??0)+Math.max(.05,footClearance);
   this.ik={p:new Vector3(),k:new Vector3(),f:new Vector3(),direction:new Vector3(),pole:new Vector3(),desired:new Vector3(),current:new Vector3(),q:new Quaternion(),parent:new Quaternion(),local:new Quaternion()};
-  this.samples=[];binding.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(const index of contactIndices(mesh.geometry))this.samples.push({mesh,index});});
+  this.samples=BeastRecovery.contactSamples(binding.model);
  }
  apply(dt){
   this.age=Math.min(this.duration,this.age+Math.max(0,dt));const t=this.age/this.duration,brace=smooth(t/.42),rise=smooth((t-.42)/.58);
