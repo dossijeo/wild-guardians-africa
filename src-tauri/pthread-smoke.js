@@ -5,6 +5,9 @@
   const report = {ok:false, scope:'Packaged pthread runtime in native Tauri/WebView2; not full-game acceptance', origin:location.origin, userAgent:navigator.userAgent, isolated:crossOriginIsolated, secure:isSecureContext, rows:[], errors:[]};
   const wait=()=>new Promise(resolve=>setTimeout(resolve,1));
   const until=async predicate=>{const deadline=performance.now()+30000;while(!predicate()){if(performance.now()>deadline)throw Error('Native pthread timeout');await wait();}};
+  // Base six biomes plus saved-world terrain variants: open canyon,
+  // bounded mangrove channels and current estuarine mangrove network.
+  const biomeCodes=[0,1,2,3,4,5,6,7,8];
   let runtime;
   try {
     if(!crossOriginIsolated||typeof SharedArrayBuffer==='undefined')throw Error('Shared WASM memory unavailable in desktop origin');
@@ -12,7 +15,7 @@
     const memory=new WebAssembly.Memory({initial:256,maximum:8192,shared:true});
     runtime=await factory({wasmMemory:memory});
     if(runtime.HEAPU8.buffer!==memory.buffer)throw Error('Runtime did not adopt supplied shared memory');
-    for(let biome=0;biome<6;biome++){
+    for(const biome of biomeCodes){
       runtime._spatial_generate_biome(712,biome,0,0);
       runtime._spatial_build_nav_profile(1,.28,1);
       const start=performance.now(),id=runtime._spatial_prepare_start(1,0);
@@ -35,7 +38,7 @@
       await until(()=>runtime._spatial_prepare_status()===5&&runtime.PThread.unusedWorkers.length===1);
       runtime._spatial_prepare_release();runtime.PThread.terminateAllThreads();
     }catch(error){report.errors.push(String(error));}
-    report.ok=report.errors.length===0&&report.rows.length===6;
+    report.ok=report.errors.length===0&&report.rows.length===biomeCodes.length;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report',{report});
   }
 })();
