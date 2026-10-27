@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {ActorExpression} from '../../src/rendering/actor-expression.js';
@@ -6,8 +7,8 @@ const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(innerWidth
 const scene=new T.Scene();scene.background=new T.Color('#343d39');scene.add(new T.HemisphereLight(0xffffff,0x635748,2));for(const [x,y,z,p] of [[3,5,4,2],[-3,2,2,1]]){const light=new T.DirectionalLight(0xffffff,p);light.position.set(x,y,z);scene.add(light);}
 const camera=new T.PerspectiveCamera(32,innerWidth/innerHeight,.01,50);camera.position.set(0,1.52,1.85);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,.48);controls.update();
 const $=id=>document.getElementById(id),errors=[];let elapsed=20,previous=performance.now(),paused=false,automatic=false,action=null,actor={id:'qa-face',status:'walking'},frame=0;
-const asset='/test-results/hyena-face-candidate.glb';
-const gltf=await new GLTFLoader().loadAsync(asset);scene.add(gltf.scene);const expression=new ActorExpression(gltf.scene,actor.id),mixer=new T.AnimationMixer(gltf.scene);
+const asset=new URLSearchParams(location.search).get('compressed')==='1'?'/test-results/hyena-face-web.glb':'/test-results/hyena-face-candidate.glb';
+const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(asset);scene.add(gltf.scene);const expression=new ActorExpression(gltf.scene,actor.id),mixer=new T.AnimationMixer(gltf.scene);
 for(const clip of gltf.animations){const option=document.createElement('option');option.value=option.textContent=clip.name;$('clip').append(option);}
 const manual=()=>{automatic=false;expression.setValues(Number($('left').value),Number($('right').value),Number($('mouth').value));};
 for(const id of ['left','right','mouth'])$(id).oninput=manual;

@@ -78,3 +78,20 @@ test('unsupported storage and extensions fail before changing the source contain
  }
  for(const replacements of [new Map([[9,color]]),new Map([[.5,color]]),new Map([[0,new Uint8Array()]]),new Map([[0,'bytes']])])await assert.rejects(replaceWebGlbColorImages(bytes,replacements),/invalid replacement/);
 });
+
+
+test('byte sparse morph indices survive image relocation and reject invalid ranges',async()=>{
+ const {bytes,color}=await fixture(),{json,bin}=readGlb(bytes);
+ const raw=Buffer.from([0,2,3,0]),index=json.bufferViews.length;
+ json.bufferViews.push({buffer:0,byteOffset:bin.length,byteLength:3});
+ json.buffers[0].byteLength=bin.length+raw.length;
+ json.accessors=[{componentType:5126,count:4,type:'VEC3',sparse:{count:3,indices:{bufferView:index,componentType:5121},values:{bufferView:2}}}];
+ const input=writeGlb(json,Buffer.concat([bin,raw]));
+ const after=readGlb(await replaceWebGlbColorImages(input,new Map([[0,withJunkChunk(color)]])));
+ assert.deepEqual(after.json.accessors,json.accessors);
+ assert.deepEqual(physical(after.bin,after.json.bufferViews[index]),Uint8Array.from(raw.subarray(0,3)));
+ assert.notEqual(after.json.bufferViews[index].byteOffset,json.bufferViews[index].byteOffset);
+ assert.deepEqual(physical(after.bin,after.json.bufferViews[2].extensions.EXT_meshopt_compression),physical(bin,json.bufferViews[2].extensions.EXT_meshopt_compression));
+ json.accessors[0].sparse.count=4;
+ await assert.rejects(replaceWebGlbColorImages(writeGlb(json,Buffer.concat([bin,raw])),new Map()),/invalid raw sparse/);
+});
