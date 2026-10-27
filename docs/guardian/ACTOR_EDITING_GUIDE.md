@@ -137,3 +137,11 @@ A horizontal rigid-head weight threshold cut through the hyena muzzle. In rest p
 Check the actual skinned surface during native clips before accepting rest renders. For the hyena, `audit_actor_face.mjs --hyena-muzzle` tracks 1011 calibrated neutral core vertices in Head space across 246 samples; it rejected the old 0.245 m drift. Repair the whole anatomical region and blend behind/below it, preserving necklace components. Bone-track parity alone does not validate skinning.
 
 Eyelid envelopes must account for the socket depth slope toward the temples and left/right asymmetry. The frontal spherical envelope protruded 18-40 mm in sampled regions; a symmetric shallower replacement exposed the left eyeball. Validate both eyes independently and in profile, including intermediate closures.
+
+### León: soldadura local y correspondencia de superficies
+
+La soldadura global de vértices coincidentes alteró UV fuera de la boca y cambió el aspecto de los ojos, aunque posiciones y pesos seguían iguales. Conservar normales por esquina no bastó. La solución fue usar una copia soldada solo para estudiar conectividad y limitar la soldadura efectiva a la región oral. La auditoría v9 compara 14.723 caras fuera de esa región: posiciones, UV y pesos sin cambios; normales con diferencia máxima de componente 0.0003252. También se revisó el frente neutral renderizado.
+
+No identificar caras únicamente por su conjunto de posiciones: triángulos coincidentes pueden tener orientación o UV diferentes. El primer comparador sobrescribía una pareja; ahora incluye orientación, UV y material, y rechaza correspondencias ambiguas. Esta comprobación no cubre la región editada, la interpolación mandibular ni los clips animados.
+
+La simetría visual aparente del hocico tampoco garantiza una profundidad labial simétrica. Los dientes nuevos del león asomaban por una abertura original en neutral. Se calibró su retranqueo con rayos contra la superficie real, desplazando cada pieza completa. La oclusión en neutral no sustituye la revisión de colocación anatómica, separación dental, ambos perfiles y aperturas intermedias. El candidato sigue en elaboración.

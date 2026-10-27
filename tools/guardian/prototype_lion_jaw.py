@@ -14,10 +14,12 @@ from pathlib import Path
 import bpy
 import bmesh
 from mathutils import Vector, Matrix
+from mathutils.kdtree import KDTree
 
 p = argparse.ArgumentParser()
 p.add_argument('--input', required=True)
 p.add_argument('--output', required=True)
+p.add_argument('--oral-cavity', action='store_true')
 a = p.parse_args(sys.argv[sys.argv.index('--') + 1:])
 source = Path(a.input).resolve()
 expected = '539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968'
@@ -40,14 +42,16 @@ bm.faces.ensure_lookup_table()
 for face, polygon in zip(bm.faces, mesh.data.polygons):
     for loop, index in zip(face.loops, polygon.loop_indices):
         loop[normals_layer] = mesh.data.corner_normals[index].vector
-bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=1e-5)
 for v in bm.verts:
     v.co = world @ v.co
 
-# Tag the body island so separate ornaments cannot be selected by coordinates.
+# Weld a disposable copy for connectivity only. The production mesh retains
+# its authored split vertices everywhere outside the oral editing region.
+topology = bm.copy()
+bmesh.ops.remove_doubles(topology, verts=list(topology.verts), dist=1e-5)
 seen = set()
 groups = []
-for seed in bm.verts:
+for seed in topology.verts:
     if seed in seen:
         continue
     todo = [seed]
@@ -63,9 +67,20 @@ for seed in bm.verts:
                 todo.append(other)
     groups.append(group)
 body = set(max(groups, key=len))
+body_tree = KDTree(len(body))
+for index, vertex in enumerate(body):
+    body_tree.insert(vertex.co, index)
+body_tree.balance()
 tag = bm.faces.layers.int.new('lionBodySurface')
 for f in bm.faces:
-    f[tag] = int(all(v in body for v in f.verts))
+    f[tag] = int(all(body_tree.find(v.co)[2] < 2e-5 for v in f.verts))
+topology.free()
+
+def oral_vertices():
+    return [v for v in bm.verts if abs(v.co.x) < .08 and -.27 < v.co.y < -.14
+            and 1.45 < v.co.z < 1.6]
+
+bmesh.ops.remove_doubles(bm, verts=oral_vertices(), dist=1e-5)
 
 profile = [(-.25, 1.564), (-.226, 1.5614), (-.2167, 1.5547),
            (-.2042, 1.5512), (-.1908, 1.5481), (-.177, 1.5485),
@@ -92,7 +107,7 @@ for left, right in zip(profile, profile[1:]):
     slope = (right[1] - left[1]) / (right[0] - left[0])
     bmesh.ops.bisect_plane(bm, geom=geometry(faces), dist=1e-7,
                            plane_co=(0, left[0], left[1]), plane_no=(0, -slope, 1))
-bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=1e-6)
+bmesh.ops.remove_doubles(bm, verts=oral_vertices(), dist=1e-6)
 lower = bm.faces.layers.int.new('lionLowerJaw')
 for f in bm.faces:
     f[lower] = int(sum(v.co.z - lip(v.co.y) for v in f.verts) < -1e-7)
@@ -136,9 +151,14 @@ rotation = Matrix.Rotation(.4, 3, 'X')
 for v, dest in zip(mesh.data.vertices, key.data):
     point = world @ v.co
     dest.co = inverse @ point.lerp(pivot + rotation @ (point - pivot), weights[v.index])
+oral = None
+if a.oral_cavity:
+    sys.path.insert(0,str(Path(__file__).parent))
+    from lion_oral_cavity import add_cavity
+    oral = add_cavity(mesh, lip)
 bpy.ops.wm.save_as_mainfile(filepath=str(output))
 output.with_suffix('.json').write_text(json.dumps({
-    'status': 'diagnostic jaw only; no oral interior; NOT installed',
+    'status': 'authoring candidate; NOT installed', 'oralCavity': oral,
     'source': str(source), 'sha256': digest, 'profile': profile,
     'seam': segments, 'movingVertices': sum(w > 0 for w in weights),
     'vertices': len(mesh.data.vertices), 'pivot': list(pivot), 'angleRadians': .4,
