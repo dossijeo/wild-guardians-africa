@@ -30,3 +30,13 @@ Paquete funcional30337 termina sin errores/404: biblioteca cuatro labs, entrada 
 Proceso82846 terminó exit1:4997tests,4916pass,19fail,62skipped,560.327s. full-suite-failures.json conserva ubicación/detalle. No declarar verde ni mergear todavía. Tres fallos resueltos por contratos de test: atlas múltiples (commit145de98), occupied ahora distingue waitReason contention, y doble de VfxLibrary carecía de enableStableWorldLights. Siete tests de intención/carga pasan tras estos últimos ajustes, sin cambiar producción.
 
 Pendientes de atribuir: contactos/bounds nuevos, hashes/recetas de atlas/hulls, cinco casos legacy de salida Manglares, tres casos de navegación/murallas y catálogoSFX. No actualizar hashes ni expectativas de rutas a ciegas. Proceso89322 de recarga/asentado sigue activo y ya produjo captura inicial; no reiniciado.
+
+## Recetas históricas y datos derivados de atlas
+
+Confirmado git380a0a2cd^ contiene exactamente el manifiesto SHA256fe553e32... esperado por native-inputs.zip. Conservado como tools/sources/far-atlases/reviewed-native-manifest.json; tests de reconstrucción/piloto solar verifican ese archivo histórico, no sustituyen sus hashes por los generados. Tests actuales far-atlas-assets siguen verificando44outputs aprobados y RGB transparente.9tests pasan.
+
+Regenerado hull conservador desde alpha de44atlas actuales con herramienta existente (margen16pixels,umbral0),guardado aparte en generated-atlas-hulls.json. Test comprueba hashes reales y cobertura de cada pixel alpha en todas las celdas; ya no exige silueta idéntica al arte anterior.4tests pasan. No modifica geometría/runtime ni se usa para afirmar mejora de rendimiento.
+
+CatálogoSFX regenerado con auditor oficial; diff conserva126originales,101asignaciones/25sin asignar y clasificaciones,actualiza líneas y hashes de código tras cambios de raids.3tests pasan. No cambia audio ni cuenta como validación auditiva nueva.
+
+Quedan9fallos originales por resolver:1contactos/bounds,5legacy raid-safe-exit y3navegación/murallas. No eliminar aserciones de rutas ni rebajar validación sin diagnóstico.
