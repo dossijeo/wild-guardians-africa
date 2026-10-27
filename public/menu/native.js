@@ -306,7 +306,7 @@ void main(){
  vec3 c=clamp(srgbToLinear(texel.rgb),0.,.94);
  sceneColor=vec4(uHDR>.5?plateInverseACES(c):c,alpha);glowColor=vec4(0.);
 }`;
-let menuForegroundTex;
+let menuForegroundTex,menuSupportTex;
 async function loadMenuPlate(url){
  const response=await fetch(url);if(!response.ok)throw Error('Missing menu artwork: '+url);
  const bitmap=await createImageBitmap(await response.blob(),{premultiplyAlpha:'none',colorSpaceConversion:'none'});
@@ -323,6 +323,25 @@ function drawMenuPlate(foreground){
  u1(p,'uScale',foreground?1.035+travel*3.5:1.025+travel*.14);
  u1(p,'uOpacity',1);u1(p,'uHDR',gl.hdr?1:0);
  drawQuad();gl.depthMask(true);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
+}
+
+// The near surface uses the same camera as the totem, with fixed world UVs.
+const menuSupportVS=`#version 300 es
+uniform mat4 uVP;out vec3 vSupportWorld;
+void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));vSupportWorld=vec3((p.x-.5)*40.,-.072,(p.y-.5)*36.+.4);gl_Position=uVP*vec4(vSupportWorld,1.);}`;
+const menuSupportFS=`#version 300 es
+precision highp float;
+in vec3 vSupportWorld;uniform sampler2D uPlate;uniform float uHDR;
+layout(location=0)out vec4 sceneColor;layout(location=1)out vec4 glowColor;
+${lightingFunctions}
+vec3 supportInverseACES(vec3 y){vec3 a=2.51-2.43*y,b=.03-.59*y;return (-b+sqrt(max(b*b+.56*a*y,vec3(0.))))/(2.*a);}
+void main(){vec2 uv=vSupportWorld.xz/vec2(30.,26.)+.5;
+ float radius=length(vSupportWorld.xz/vec2(15.,13.));float alpha=1.-smoothstep(.42,1.,radius);if(alpha<.002)discard;
+ vec3 c=clamp(srgbToLinear(texture(uPlate,uv).rgb),0.,.94);float shade=exp(-dot(vSupportWorld.xz/vec2(6.5,6.),vSupportWorld.xz/vec2(6.5,6.))*4.8)*.56;
+ c=(uHDR>.5?supportInverseACES(c):c)*(1.-shade);sceneColor=vec4(c,alpha);glowColor=vec4(0.);
+}`;
+function drawMenuSupport(){
+ const p=programs.ground;gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.useProgram(p);um(p,'uVP',VP);u1(p,'uHDR',gl.hdr?1:0);bindTex(p,'uPlate',menuSupportTex,0);drawQuad();gl.disable(gl.BLEND);gl.depthMask(true);
 }
 
 const progress=(p,text)=>{$('#loadbar').style.width=p+'%';$('#loadtext').textContent=text;};
@@ -627,7 +646,7 @@ function draw(t){
  gl.bindFramebuffer(gl.FRAMEBUFFER,targets.main.fbo);gl.viewport(0,0,RW,RH);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.clearColor(.012,.017,.025,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);
  // The backdrop is a depth-tested world-space relief. It uses the SAME VP as the GLB.
  drawMenuPlate(false);
- gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.useProgram(p.ground);um(p.ground,'uVP',VP);drawQuad();gl.disable(gl.BLEND);gl.depthMask(true);
+ drawMenuSupport();
  gl.useProgram(p.mesh);um(p.mesh,'uVP',VP);um(p.mesh,'uLightVP',lightVP);u3(p.mesh,'uEye',pose.eye);u1(p.mesh,'uHDR',gl.hdr?1:0);u1(p.mesh,'uSun',opts.sun);u1(p.mesh,'uGlow',opts.glow);u1(p.mesh,'uTime',t);ui(p.mesh,'uActive',active);u1(p.mesh,'uIconOpacity',iconOpacity);u1(p.mesh,'uNormalStrength',1);u1(p.mesh,'uLightCount',opts.fireflies?({low:4,balanced:6,high:8}[opts.quality]):0);u3(p.mesh,'uFirePos[0]',heroPositions);u4(p.mesh,'uFireColor[0]',heroColors);
  bindTex(p.mesh,'uAlbedo',model.textures[1],0);bindTex(p.mesh,'uNormal',model.textures[0],1);bindTex(p.mesh,'uORM',model.textures[2],2);bindTex(p.mesh,'uShadow',shadow.texture,3);bindTex(p.mesh,'uCleanAlbedo',cleanTex,4);gl.bindVertexArray(model.vao);gl.drawElements(gl.TRIANGLES,model.count,gl.UNSIGNED_INT,0);
  gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
@@ -664,8 +683,8 @@ async function init(){try{
  const raw=await modelBytes();progress(30,'Cargando la geometría y sus texturas…');await new Promise(r=>setTimeout(r,10));model=await parseGLB(raw,gl);
  const anis=gl.getExtension('EXT_texture_filter_anisotropic');if(anis)model.textures.forEach(t=>{gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameterf(gl.TEXTURE_2D,anis.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,gl.getParameter(anis.MAX_TEXTURE_MAX_ANISOTROPY_EXT)))});
  progress(61,'Preparando el crepúsculo y las superficies…');await new Promise(r=>setTimeout(r,10));
- programs={mesh:compile(meshVS,meshFS),depth:compile(depthVS,depthFS),plate:compile(quadVS,menuPlateFS),ground:compile(groundVS,groundFS),ring:compile(ringVS,ringFS),fly:compile(flyVS,flyFS),blur:compile(quadVS,blurFS),composite:compile(quadVS,compositeFS)};
- quadVAO=gl.createVertexArray();[bgTex,menuForegroundTex]=await Promise.all([loadMenuPlate('./art/sanctuary-valley-v1.png'),loadMenuPlate('./art/sanctuary-foreground-v1.png')]);glyphTex=gardenGlyph();cleanTex=makeTexture(await imageFromData($('#cleandata').textContent.trim()));$('#cleandata').textContent='';await initSurface();
+ programs={mesh:compile(meshVS,meshFS),depth:compile(depthVS,depthFS),plate:compile(quadVS,menuPlateFS),ground:compile(menuSupportVS,menuSupportFS),ring:compile(ringVS,ringFS),fly:compile(flyVS,flyFS),blur:compile(quadVS,blurFS),composite:compile(quadVS,compositeFS)};
+ quadVAO=gl.createVertexArray();[bgTex,menuForegroundTex,menuSupportTex]=await Promise.all([loadMenuPlate('./art/sanctuary-valley-v1.png'),loadMenuPlate('./art/sanctuary-foreground-v1.png'),loadMenuPlate('./art/sanctuary-ground-v1.webp')]);glyphTex=gardenGlyph();cleanTex=makeTexture(await imageFromData($('#cleandata').textContent.trim()));$('#cleandata').textContent='';await initSurface();
  flyVAO=gl.createVertexArray();gl.bindVertexArray(flyVAO);flyBuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,flyBuf);gl.bufferData(gl.ARRAY_BUFFER,flyPositions,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);flyColBuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,flyColBuf);gl.bufferData(gl.ARRAY_BUFFER,flyColors,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,4,gl.FLOAT,false,0,0);gl.bindVertexArray(null);
  prepareHotspots();configureResolution();createShadow();computeHome();progress(88,'Situando el paisaje y encendiendo las luciérnagas…');setupInput();syncAudioUI();startMenuMusic(true);
  window.WildGuardiansMenu={navigate,back,setRenderPaused:v=>{renderPaused=!!v},renderOnce:()=>draw(time),getState:()=>({version:"2.8",iconOpacity,backgroundMode:"world-space-layered-parallax",state,section:slots[section]?.id||null,travel,options:{...opts},triangles:model.count/3,vertices:model.p.length/3,resolution:[RW,RH],HDR:gl.hdr,renderCount,estimatedFPS:Math.round(1000/frameMS),storageAvailable:storageOK}),getHotspots:()=>slots.map(s=>({id:s.id,title:s.title,anchor:[...s.anchor],screen:{...s.screen}})),setOptions:o=>{opts={...opts,...o};saveOptions();onResize();createShadow()},raycast,debugPose:()=>({home,pose}),

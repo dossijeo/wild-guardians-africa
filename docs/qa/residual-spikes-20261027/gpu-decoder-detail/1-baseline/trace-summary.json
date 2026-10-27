@@ -1,0 +1,410 @@
+{
+  "durationMs": 8109.227,
+  "events": 451252,
+  "marks": [
+    {
+      "args": {
+        "data": {
+          "callTime": 777438569605,
+          "navigationId": "B0ED40256752DA9811A55ADB1CCB4DE5",
+          "sampleTraceId": 4037396229575334,
+          "startTime": 85580.08000004292
+        }
+      },
+      "cat": "blink.user_timing",
+      "name": "wg-stream-trace-start",
+      "ph": "I",
+      "pid": 41492,
+      "s": "t",
+      "tid": 47888,
+      "ts": 777438569592,
+      "tts": 27500760
+    },
+    {
+      "args": {
+        "data": {
+          "callTime": 777446678823,
+          "navigationId": "B0ED40256752DA9811A55ADB1CCB4DE5",
+          "sampleTraceId": 4037396229601613,
+          "startTime": 93689.31000006199
+        }
+      },
+      "cat": "blink.user_timing",
+      "name": "wg-stream-trace-end",
+      "ph": "I",
+      "pid": 41492,
+      "s": "t",
+      "tid": 47888,
+      "ts": 777446678819,
+      "tts": 32746152
+    }
+  ],
+  "top": [
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 5209,
+      "maxMs": 86.297,
+      "totalNestedMs": 5270.779000000137
+    },
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "ProxyMain::BeginMainFrame",
+      "count": 206,
+      "maxMs": 86.276,
+      "totalNestedMs": 4971.650999999999
+    },
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "FireAnimationFrame",
+      "count": 1403,
+      "maxMs": 79.378,
+      "totalNestedMs": 4824.349999999992
+    },
+    {
+      "pid": 41492,
+      "tid": 12772,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 1090,
+      "maxMs": 71.224,
+      "totalNestedMs": 1210.1359999999993
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 4304,
+      "maxMs": 54.68,
+      "totalNestedMs": 7996.440000000016
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "Scheduler::RunTask",
+      "count": 3236,
+      "maxMs": 54.671,
+      "totalNestedMs": 7708.353000000002
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "count": 2467,
+      "maxMs": 54.663,
+      "totalNestedMs": 6007.668
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "RendererRasterWorker",
+      "count": 111,
+      "maxMs": 54.631,
+      "totalNestedMs": 321.8080000000002
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "CommandBuffer::Flush",
+      "count": 2383,
+      "maxMs": 54.629,
+      "totalNestedMs": 5891.428000000003
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "count": 2383,
+      "maxMs": 54.625,
+      "totalNestedMs": 5887.732000000005
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "CommandBufferService:PutChanged",
+      "count": 2383,
+      "maxMs": 54.612,
+      "totalNestedMs": 5866.7739999999985
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "WebGL",
+      "count": 2273,
+      "maxMs": 47.724,
+      "totalNestedMs": 5573.832999999995
+    },
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "FunctionCall",
+      "count": 1644,
+      "maxMs": 37.551,
+      "totalNestedMs": 3687.0990000000083
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "CommandBufferStub::PerformWork",
+      "count": 589,
+      "maxMs": 36.475,
+      "totalNestedMs": 254.62299999999996
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "GLContextEGL::MakeCurrent",
+      "count": 1667,
+      "maxMs": 36.414,
+      "totalNestedMs": 515.1019999999985
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "SkiaOutputSurfaceImplOnGpu::FinishPaintRenderPass",
+      "count": 560,
+      "maxMs": 33.463,
+      "totalNestedMs": 727.1739999999993
+    },
+    {
+      "pid": 41492,
+      "tid": 17104,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 234,
+      "maxMs": 28.571,
+      "totalNestedMs": 157.46500000000003
+    },
+    {
+      "pid": 41492,
+      "tid": 872,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 529,
+      "maxMs": 27.46,
+      "totalNestedMs": 363.2640000000001
+    },
+    {
+      "pid": 41492,
+      "tid": 872,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 21,
+      "maxMs": 27.447,
+      "totalNestedMs": 81.385
+    },
+    {
+      "pid": 41492,
+      "tid": 13316,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 111,
+      "maxMs": 27.424,
+      "totalNestedMs": 130.955
+    },
+    {
+      "pid": 41492,
+      "tid": 31260,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 148,
+      "maxMs": 27.414,
+      "totalNestedMs": 137.78999999999996
+    },
+    {
+      "pid": 41492,
+      "tid": 13316,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 17,
+      "maxMs": 27.41,
+      "totalNestedMs": 80.21
+    },
+    {
+      "pid": 41492,
+      "tid": 31260,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 26,
+      "maxMs": 27.403,
+      "totalNestedMs": 80.77199999999999
+    },
+    {
+      "pid": 41492,
+      "tid": 17172,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 87,
+      "maxMs": 27.397,
+      "totalNestedMs": 117.13900000000002
+    },
+    {
+      "pid": 41492,
+      "tid": 3064,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 114,
+      "maxMs": 27.393,
+      "totalNestedMs": 110.82900000000002
+    },
+    {
+      "pid": 41492,
+      "tid": 17172,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 12,
+      "maxMs": 27.384,
+      "totalNestedMs": 81.07199999999997
+    },
+    {
+      "pid": 41492,
+      "tid": 28668,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "ThreadPool_RunTask",
+      "count": 43,
+      "maxMs": 27.383,
+      "totalNestedMs": 96.66999999999999
+    },
+    {
+      "pid": 41492,
+      "tid": 3064,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 17,
+      "maxMs": 27.379,
+      "totalNestedMs": 55.39900000000001
+    },
+    {
+      "pid": 41492,
+      "tid": 17104,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 26,
+      "maxMs": 27.371,
+      "totalNestedMs": 54.117000000000004
+    },
+    {
+      "pid": 41492,
+      "tid": 12772,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 24,
+      "maxMs": 27.37,
+      "totalNestedMs": 54.452
+    },
+    {
+      "pid": 41492,
+      "tid": 28668,
+      "thread": "ThreadPoolForegroundWorker",
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 8,
+      "maxMs": 27.37,
+      "totalNestedMs": 80.14999999999999
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "count": 280,
+      "maxMs": 26.65,
+      "totalNestedMs": 665.2930000000005
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "Graphics.Pipeline",
+      "count": 561,
+      "maxMs": 26.5,
+      "totalNestedMs": 641.8070000000002
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "SkiaOutputDevice->ScheduleOverlays()",
+      "count": 280,
+      "maxMs": 26.428,
+      "totalNestedMs": 620.0710000000001
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "DXGISwapChainImageBacking::Present",
+      "count": 280,
+      "maxMs": 26.394,
+      "totalNestedMs": 612.4959999999999
+    },
+    {
+      "pid": 44288,
+      "tid": 24528,
+      "thread": "GpuVSyncThread",
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 487,
+      "maxMs": 17.728,
+      "totalNestedMs": 8092.004000000003
+    },
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "HandlePostMessage",
+      "count": 15,
+      "maxMs": 13.759,
+      "totalNestedMs": 29.648999999999994
+    },
+    {
+      "pid": 44288,
+      "tid": 7988,
+      "thread": "CrGpuMain",
+      "name": "SharedImageStub::OnDestroySharedImage",
+      "count": 43,
+      "maxMs": 13.54,
+      "totalNestedMs": 27.643000000000008
+    },
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "MajorGC",
+      "count": 3,
+      "maxMs": 9.945,
+      "totalNestedMs": 27.624000000000002
+    },
+    {
+      "pid": 41492,
+      "tid": 47888,
+      "thread": "CrRendererMain",
+      "name": "V8.GC_MARK_COMPACTOR",
+      "count": 3,
+      "maxMs": 9.877,
+      "totalNestedMs": 27.391
+    }
+  ],
+  "limits": [
+    "Durations include CPU and waits in browser processes, not GPU execution time.",
+    "Nested events overlap; do not sum totalNestedMs across categories.",
+    "Headless diagnostic with trace overhead; not an acceptance benchmark or proof of hardware/driver cause.",
+    "Requires association with slow frames and an untraced visible-browser control before choosing an optimization."
+  ]
+}

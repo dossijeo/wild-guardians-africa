@@ -2,7 +2,7 @@ import {writeFile} from 'node:fs/promises';
 import {gzipSync} from 'node:zlib';
 export async function startPresentationTrace(browser,page,out){
  const session=await browser.newBrowserCDPSession();
- const categories='toplevel,devtools.timeline,blink.user_timing,cc,gpu,viz,benchmark';
+ const categories='toplevel,devtools.timeline,blink.user_timing,cc,gpu,viz,benchmark'+(process.env.WG_TRACE_GPU_DETAIL==='1'?',disabled-by-default-gpu.decoder,disabled-by-default-gpu.service,disabled-by-default-gpu.device':'');
  await session.send('Tracing.start',{categories,transferMode:'ReturnAsStream'});
  await page.evaluate(()=>performance.mark('wg-stream-trace-start'));
  let stopped=false;

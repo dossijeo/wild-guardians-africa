@@ -1,0 +1,359 @@
+[
+  {
+    "name": "kDrawElementsInstancedANGLE",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2,
+    "maxMs": 0.38
+  },
+  {
+    "name": "kDrawArrays",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2,
+    "maxMs": 0.057
+  },
+  {
+    "name": "kDrawElements",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 1,
+    "maxMs": 0.054
+  },
+  {
+    "name": "kBindTexture",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 19,
+    "maxMs": 0.015
+  },
+  {
+    "name": "kBufferSubData",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2,
+    "maxMs": 0.01
+  },
+  {
+    "name": "kBindFramebuffer",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 1,
+    "maxMs": 0.004
+  },
+  {
+    "name": "kBufferData",
+    "phase": "X",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 1,
+    "maxMs": 0.003
+  },
+  {
+    "name": "RendererRasterWorker-0x702400466300",
+    "phase": "I",
+    "cat": "disabled-by-default-gpu.device",
+    "count": 1,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawElementsInstancedANGLE",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 17415,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawElementsInstancedANGLE",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 17415,
+    "maxMs": 0
+  },
+  {
+    "name": "kBindTexture",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 49525,
+    "maxMs": 0
+  },
+  {
+    "name": "kBindTexture",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 49525,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawArrays",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 3163,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawArrays",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 3163,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawElements",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 4177,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawElements",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 4177,
+    "maxMs": 0
+  },
+  {
+    "name": "kBindFramebuffer",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2088,
+    "maxMs": 0
+  },
+  {
+    "name": "kBindFramebuffer",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2088,
+    "maxMs": 0
+  },
+  {
+    "name": "kDiscardFramebufferEXTImmediate",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 418,
+    "maxMs": 0
+  },
+  {
+    "name": "kDiscardFramebufferEXTImmediate",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 418,
+    "maxMs": 0
+  },
+  {
+    "name": "kBlitFramebufferCHROMIUM",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 209,
+    "maxMs": 0
+  },
+  {
+    "name": "kBlitFramebufferCHROMIUM",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 209,
+    "maxMs": 0
+  },
+  {
+    "name": "WebGL-0x7024010a9800",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2275,
+    "maxMs": 0
+  },
+  {
+    "name": "kFramebufferTexture2D",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 218,
+    "maxMs": 0
+  },
+  {
+    "name": "kFramebufferTexture2D",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 218,
+    "maxMs": 0
+  },
+  {
+    "name": "WebGL-0x7024010a9800",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 2275,
+    "maxMs": 0
+  },
+  {
+    "name": "RendererRasterWorker-0x702400466300",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 146,
+    "maxMs": 0
+  },
+  {
+    "name": "RendererRasterWorker-0x702400466300",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 146,
+    "maxMs": 0
+  },
+  {
+    "name": "kClear",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 723,
+    "maxMs": 0
+  },
+  {
+    "name": "kClear",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 723,
+    "maxMs": 0
+  },
+  {
+    "name": "kCreateAndTexStorage2DSharedImageINTERNALImmediate",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 40,
+    "maxMs": 0
+  },
+  {
+    "name": "kCreateAndTexStorage2DSharedImageINTERNALImmediate",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 40,
+    "maxMs": 0
+  },
+  {
+    "name": "kBufferSubData",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 7861,
+    "maxMs": 0
+  },
+  {
+    "name": "kBufferSubData",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 7861,
+    "maxMs": 0
+  },
+  {
+    "name": "kBufferData",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 1505,
+    "maxMs": 0
+  },
+  {
+    "name": "kBufferData",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 1505,
+    "maxMs": 0
+  },
+  {
+    "name": "RendererRasterWorker-0x702400466300",
+    "phase": "n",
+    "cat": "disabled-by-default-gpu.device",
+    "count": 73,
+    "maxMs": 0
+  },
+  {
+    "name": "kFlush",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 319,
+    "maxMs": 0
+  },
+  {
+    "name": "kFlush",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 319,
+    "maxMs": 0
+  },
+  {
+    "name": "kDeleteFramebuffersImmediate",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 24,
+    "maxMs": 0
+  },
+  {
+    "name": "kDeleteFramebuffersImmediate",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 24,
+    "maxMs": 0
+  },
+  {
+    "name": "kTexSubImage2D",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 52,
+    "maxMs": 0
+  },
+  {
+    "name": "kTexSubImage2D",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 52,
+    "maxMs": 0
+  },
+  {
+    "name": "kTexImage2D",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 9,
+    "maxMs": 0
+  },
+  {
+    "name": "kTexImage2D",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 9,
+    "maxMs": 0
+  },
+  {
+    "name": "kGenerateMipmap",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 18,
+    "maxMs": 0
+  },
+  {
+    "name": "kGenerateMipmap",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 18,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawBuffersEXTImmediate",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 9,
+    "maxMs": 0
+  },
+  {
+    "name": "kDrawBuffersEXTImmediate",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 9,
+    "maxMs": 0
+  },
+  {
+    "name": "kTexStorage2DEXT",
+    "phase": "b",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 23,
+    "maxMs": 0
+  },
+  {
+    "name": "kTexStorage2DEXT",
+    "phase": "e",
+    "cat": "disabled-by-default-gpu.service",
+    "count": 23,
+    "maxMs": 0
+  }
+]

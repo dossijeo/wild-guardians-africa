@@ -22,11 +22,13 @@ code=code.replace('if(!ready||paused||document.hidden||manualPreview)return;', '
 landscape=(root/'src/ui/menu-landscape.js').read_text(encoding='utf-8')
 code=code.replace('const progress=(p,text)=>',landscape+'\nconst progress=(p,text)=>',1)
 code=code.replace('bg:compile(bgVS,bgFS),','plate:compile(quadVS,menuPlateFS),',1)
+code=code.replace('ground:compile(groundVS,groundFS)', 'ground:compile(menuSupportVS,menuSupportFS)',1)
+code=code.replace(" gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.useProgram(p.ground);um(p.ground,'uVP',VP);drawQuad();gl.disable(gl.BLEND);gl.depthMask(true);",' drawMenuSupport();',1)
 start=code.index(' gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.useProgram(p.bg);')
 end=code.index('\n',start)
 code=code[:start]+' drawMenuPlate(false);'+code[end:]
 code=code.replace(' gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);gl.useProgram(p.blur);',' drawMenuPlate(true);\n gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);gl.useProgram(p.blur);',1)
-code=code.replace("bgTex=makeTexture(await imageFromData($('#backgrounddata').textContent.trim()));", "[bgTex,menuForegroundTex]=await Promise.all([loadMenuPlate('./art/sanctuary-valley-v1.png'),loadMenuPlate('./art/sanctuary-foreground-v1.png')]);",1)
+code=code.replace("bgTex=makeTexture(await imageFromData($('#backgrounddata').textContent.trim()));", "[bgTex,menuForegroundTex,menuSupportTex]=await Promise.all([loadMenuPlate('./art/sanctuary-valley-v1.png'),loadMenuPlate('./art/sanctuary-foreground-v1.png'),loadMenuPlate('./art/sanctuary-ground-v1.webp')]);",1)
 code=code.replace("skyTex=makeTexture(await imageFromData($('#skydata').textContent.trim()));terrainMaskTex=makeTexture(await imageFromData($('#terrainmaskdata').textContent.trim()));",'')
 code=code.replace('createBackgroundRelief();','')
 for unused in ('skydata','terrainmaskdata'):
