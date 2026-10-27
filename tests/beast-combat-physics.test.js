@@ -65,3 +65,17 @@ test('hits throughout get-up preserve the visible pose and reuse the collision w
   assert.equal(manager.entries.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
  }
 });
+
+
+test('four simultaneous contacts keep three ragdolls and release every actor on scene end',()=>{
+ const f=fixture();
+ for(let i=1;i<4;i++){
+  const other=fixture(),id='beast-'+i;other.animal.id=id;other.animal.x+=i*3;other.root.position.x+=i*3;other.root.updateMatrixWorld(true);
+  f.state.raid.animals.push(other.animal);f.world.objects.set(id,other.root);f.world.mixers.set(id,other.world.mixers.get('beast'));other.manager.dispose();
+ }
+ f.manager.step(f.state,.1);assert.equal(f.manager.entries.size,3);assert.equal(f.manager.stats.rejected,1);
+ assert.equal(f.state.raid.animals.filter(a=>a.magicDown).length,3);assert.equal(f.state.raid.animals[3].magicDown,undefined);
+ for(const entry of f.manager.entries.values())assert.equal(entry.solver.world.bodies.len(),14);
+ f.state.result={outcome:'ended'};f.manager.step(f.state,.1);assert.equal(f.manager.entries.size,0);
+ assert.ok(f.state.raid.animals.every(a=>!a.magicDown));f.manager.dispose();
+});

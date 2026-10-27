@@ -33,3 +33,17 @@ En otra ejecución continua, el arranque de la hiena se desglosó en captura 0,4
 Se optimizó el ajuste sin cambiar su resultado: las 96 direcciones de soporte se calculan una vez; los vértices cabeza/cuello se transforman a coordenadas mundiales una vez antes de alimentar ambos soportes; se eliminan los Set temporales por vértice. La comparación profunda de los ajustes antes/después coincide exactamente para las cinco especies. Pasan las catorce pruebas físicas y de integración.
 
 `tools/guardian/measure_collider_fit.mjs` permite medir cuarenta ajustes en caliente por especie y conservar sus resultados completos. El resumen `collider-fit-comparison.json` registra tiempos y hashes de salida de una referencia y dos ejecuciones posteriores. La variación, especialmente un máximo de 52 ms en la primera ejecución posterior, impide afirmar una mejora estable de rendimiento. No se ha creado un pool de cuerpos: la medición señaló primero el ajuste geométrico, y se ha reducido trabajo allí sin cambiar contactos.
+
+## Cuatro impactos simultáneos
+
+La acción QA **Medir 4 impactos reales** prepara cuatro animales y ejecuta cuatro órdenes sin enfriamiento, únicamente en la fixture. No cambia la recarga del juego. Game.tick y WorldScene siguen activos durante ocho segundos simulados.
+
+Ejecución: cuatro hienas, dirección automática, Intel UHD, 1600 × 900, 223 fotogramas, cero ocultos. Máximo observado: un Guardián, tres ragdolls; una creación rechazada por capacidad. Al finalizar quedan cero simulaciones físicas activas, sin errores reportados. Una prueba de integración adicional verifica tres conjuntos de catorce cuerpos y limpieza completa al terminar la escena; pasan las cinco pruebas del controlador.
+
+Física total p95 4,9 ms, p99 6,5 ms, máximo 25,7 ms. Creación agregada máxima 19,2 ms. Solver máximo 6,1 ms y hasta nueve pasos agregados por fotograma. Recuperación renderizada máxima 4,8 ms. Fotograma completo p99 83,2 ms. Datos: `four-impact-physics.json`.
+
+El cuarto animal conserva el daño autoritativo y usa la reacción ligera de `animal-impact.js`, sin ragdoll. Esa alternativa aún no cumple el nivel de caída y recuperación pedido. El ensayo prueba el límite y la limpieza, no aprueba su calidad visual ni el rendimiento de concurrencia. La captura final no registra la caída del cuarto animal y no se presenta como tal.
+
+![Estado final tras cuatro impactos](four-impact-physics.png)
+
+La siguiente optimización debe reducir la creación simultánea sin retrasar el contacto visual ni ampliar el número de simulaciones. Hace falta una alternativa de derribo convincente al saturar el presupuesto; no se considera suficiente mantener solamente la sacudida actual.
