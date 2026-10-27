@@ -5,8 +5,8 @@ root=pathlib.Path(__file__).resolve().parents[2];bpy.ops.wm.open_mainfile(filepa
 for tr in rig.animation_data.nla_tracks:tr.mute=True
 scene.frame_set(1);base=[v.co.copy() for v in body.data.vertices];edges=[(a,b,(base[a]-base[b]).length) for a,b in [e.vertices for e in body.data.edges] if (base[a]-base[b]).length>.002]
 report={'weights':{'minSum':min(sum(g.weight for g in v.groups) for v in body.data.vertices),'maxSum':max(sum(g.weight for g in v.groups) for v in body.data.vertices),'maxInfluences':max(len(v.groups) for v in body.data.vertices)},'clips':{}}
-for clip in ['Idle','Explain','Warning','Enthusiasm','Invoke','Cast']:
- for tr in rig.animation_data.nla_tracks:tr.mute=tr.name not in [clip,'Float','Mantle_Spell' if clip in ['Invoke','Cast'] else 'Mantle_Breeze']
+for clip in ['Idle','Explain','Warning','Enthusiasm','Invoke','Cast','Spell_Grow','Spell_Multiply','Spell_Shield','Spell_Attack']:
+ for tr in rig.animation_data.nla_tracks:tr.mute=tr.name not in [clip,'Float','Mantle_Spell' if clip in ['Invoke','Cast'] or clip.startswith('Spell_') else 'Mantle_Breeze']
  rig.data.pose_position='REST';bpy.context.view_layer.update();rig.data.pose_position='POSE';rig.update_tag(refresh={'OBJECT','DATA','TIME'});bpy.context.view_layer.update()
  ratios=[];maxd=0;worst=(0,None)
  for f in range(1,290,12):

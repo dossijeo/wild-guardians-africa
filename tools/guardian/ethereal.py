@@ -69,28 +69,28 @@ def refine(body,rig,islands,samples,verts,root):
  measured=[]
  for row in [2,4,6]:
   idx=row*9+4;measured.append(max((Vector(s[idx])-Vector(verts[idx])).length for s in samples))
- for clip,gain in [('Mantle_Breeze',1),('Mantle_Spell',1.65)]:
+ for clip,gain in [('Mantle_Breeze',1),('Mantle_Spell',1.35)]:
   a=new(clip)
   for f in range(1,290,2):
    t=(f-1)/288;w=TAU*t
    for panel,name in enumerate(['FL','FR','BL','BR']):
     for i in range(3):
-     pb=rig.pose.bones[f'Mantle.{name}.{i}'];lag=panel*.85-i*.7
+     pb=rig.pose.bones[f'Mantle.{name}.{i}'];lag=panel*.35-i*.7
      # Increasing deflection toward the hem; translations are local increments.
-     amp=min(.007,.0018+measured[i]*.025)*gain
+     amp=min([.002,.004,.024][i],.004+measured[i]*.12)*gain
      world=Vector((amp*.55*math.sin(w*2+lag),amp*math.sin(w*2+lag-.5)+amp*.32*math.sin(w*3+lag),amp*.25*math.sin(w*2+lag+.7)))
      pb.location=pb.bone.matrix_local.to_3x3().inverted()@world
-     pb.rotation_euler=(gain*(.018+i*.014)*math.sin(w*2+lag),gain*.018*math.sin(w*3+lag+.8),gain*.024*math.sin(w*2+lag+1.1))
+     pb.rotation_euler=(gain*[.018,.055,.42][i]*math.sin(w*2+lag),gain*[.008,.02,.10][i]*math.sin(w*3+lag+.8),gain*[.012,.025,.11][i]*math.sin(w*2+lag+1.1))
      for prop in ['location','rotation_euler']:pb.keyframe_insert(prop,frame=f,group=pb.name)
    for j,(name,tip,kind,vs,lo,hi,c) in enumerate(controls):
     pb=rig.pose.bones[name];phase=j*1.31
-    pb.rotation_euler=(gain*.10*math.sin(w*2+phase),gain*.07*math.sin(w*3+phase+.5),gain*.08*math.sin(w*2+phase+1))
+    pb.rotation_euler=(gain*.28*math.sin(w*2+phase),gain*.19*math.sin(w*3+phase+.5),gain*.22*math.sin(w*2+phase+1))
     if kind=='Wood':
-     world=Vector((.006*math.sin(w+phase),.005*math.sin(w*2+phase),.009*math.sin(w*2+phase+.7)))
+     world=Vector((.018*math.sin(w+phase),.016*math.sin(w*2+phase),.03*math.sin(w*2+phase+.7)))
      pb.location=pb.bone.matrix_local.to_3x3().inverted()@world;pb.keyframe_insert('location',frame=f,group=name)
     pb.keyframe_insert('rotation_euler',frame=f,group=name)
     if tip:
-     p=rig.pose.bones[tip];p.rotation_mode='XYZ';p.rotation_euler=(gain*.12*math.sin(w*2+phase-.65),0,gain*.06*math.sin(w*3+phase));p.keyframe_insert('rotation_euler',frame=f,group=tip)
+     p=rig.pose.bones[tip];p.rotation_mode='XYZ';p.rotation_euler=(gain*.32*math.sin(w*2+phase-.65),0,gain*.06*math.sin(w*3+phase));p.keyframe_insert('rotation_euler',frame=f,group=tip)
   finish(a)
  a=new('Float')
  for f in range(1,290,2):

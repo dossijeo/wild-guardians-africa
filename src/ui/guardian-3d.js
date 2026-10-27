@@ -27,7 +27,7 @@ export class Guardian3D {
   const event=speaking?this.face.data?.gestures?.find(e=>clock>=e.start&&clock<e.end):null;
   const envelope=event?Math.min(1,(clock-event.start)/.35,(event.end-clock)/.45):0;
   const clip=(this.manual.clip==='Float'||this.manual.clip?.startsWith('Mantle_'))?'Idle':this.manual.clip??event?.clip??'Idle';
-  const cloth=this.manual.clip?.startsWith('Mantle_')?this.manual.clip:['Invoke','Cast'].includes(clip)?'Mantle_Spell':'Mantle_Breeze';
+  const cloth=this.manual.clip?.startsWith('Mantle_')?this.manual.clip:(['Invoke','Cast'].includes(clip)||clip.startsWith('Spell_'))?'Mantle_Spell':'Mantle_Breeze';
   for(const [name,a] of this.actions){
    a.enabled=name==='Float'||name===cloth||name==='Idle'||name===clip;
    a.weight=reduced?0:(name==='Float'||name===cloth)?1:name==='Idle'?(clip==='Idle'?1:this.manual.clip?0:1-envelope):this.manual.clip?1:envelope;

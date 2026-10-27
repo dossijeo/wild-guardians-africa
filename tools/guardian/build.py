@@ -59,8 +59,36 @@ for v in body.data.vertices:
   r=((x-cx)/.034)**2+((z-cz)/.026)**2
   eye=(1-smooth(.48,1.03,r))*(1-smooth(-.055,-.025,y))
   if eye>0:weights={'Head':1-eye,'Eye.'+s:eye};break
- weights={k:w for k,w in weights.items() if w>.0001};weights=dict(sorted(weights.items(),key=lambda kv:-kv[1])[:4]);total=sum(weights.values())
+ weights={k:w for k,w in weights.items() if w>.0001};total=sum(weights.values())
  for k,w in weights.items():body.vertex_groups[k].add([v.index],w/total,'REPLACE')
+# Relax abrupt influence gradients along the actual surface before limiting
+# the skin to four influences. Coincident UV seams share the same neighbours.
+adj=[set() for _ in body.data.vertices];seams={}
+for v in body.data.vertices:seams.setdefault(tuple(round(c,5) for c in v.co),[]).append(v.index)
+for e in body.data.edges:
+ a,b=e.vertices;adj[a].add(b);adj[b].add(a)
+for ids in seams.values():
+ neighbours=set().union(*(adj[i] for i in ids))
+ for i in ids:adj[i]=neighbours
+skin=[{g.group:g.weight for g in v.groups} for v in body.data.vertices]
+for iteration in range(12):
+ updated=[]
+ for v in body.data.vertices:
+  i=v.index;neighbours=adj[i]
+  if v.co.z>.12 or not neighbours:updated.append(skin[i]);continue
+  weights={g:w*.65 for g,w in skin[i].items()}
+  for n in neighbours:
+   for g,w in skin[n].items():weights[g]=weights.get(g,0)+w*.35/len(neighbours)
+  updated.append(weights)
+ skin=updated
+for v in body.data.vertices:
+ ranked=sorted(skin[v.index].items(),key=lambda pair:-pair[1]);cutoff=ranked[4][1] if len(ranked)>4 else 0
+ # At a ranking boundary both competing influences vanish continuously.
+ # Raw top-four truncation instead creates visible creases when wind is broad.
+ weights=[(g,max(0,w-cutoff)) for g,w in ranked[:4]];total=sum(w for _,w in weights)
+ if total<1e-8:weights=ranked[:4];total=sum(w for _,w in weights)
+ for group in body.vertex_groups:group.remove([v.index])
+ for g,w in weights:body.vertex_groups[g].add([v.index],w/total,'REPLACE')
 # Small disconnected ornaments are rigid pieces, not rubber beads.
 parents=list(range(len(body.data.vertices)))
 def find(i):
@@ -139,6 +167,10 @@ for clip,amp in [('Idle',.015),('Explain',.065),('Warning',.035),('Enthusiasm',.
  for pb in rig.pose.bones:pb.rotation_euler=(0,0,0);pb.location=(0,0,0)
 from ethereal import refine
 refine(body,rig,islands,samples,verts,ROOT)
+from arm_weights import relax_shoulders
+relax_shoulders(body)
+from spell_actions import create_spells
+create_spells(rig)
 for track in rig.animation_data.nla_tracks:track.mute=track.name not in ['Idle','Mantle_Breeze','Float']
 proxy.hide_render=True;proxy.hide_set(True);wind.hide_set(True)
 scene.frame_set(1);activate(body);rig.select_set(True);face.select_set(True)
