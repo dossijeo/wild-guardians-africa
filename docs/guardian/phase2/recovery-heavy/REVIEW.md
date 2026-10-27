@@ -41,5 +41,6 @@ heavy-species recovery. Scoped performance comparison remains separate.
 
 The follow-up rhino runtime trace completed and measured a peak vertical contact
 correction of 1.017 m. This confirms the issue in the actual game path, not only
-the plane audit. The adapted framing screenshot shows the complete standing
-animal; it does not validate every intermediate pose.
+the plane audit. The adapted framing screenshot still clips the animal after it moves toward
+the camera. That camera adjustment is insufficient and is not visually accepted;
+a follow target or a wider fixed view is needed for the next diagnostic run.
