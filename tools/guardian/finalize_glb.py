@@ -28,5 +28,8 @@ for index in {a['samplers'][c['sampler']]['output'] for a in doc.get('animations
  acc.pop('min',None);acc.pop('max',None)
 raw=json.dumps(doc,separators=(',',':')).encode();raw+=b' '*((-len(raw))%4)
 p.write_bytes(struct.pack('<III',0x46546c67,2,20+len(raw)+len(binary))+struct.pack('<II',len(raw),0x4e4f534a)+raw+binary)
+import runpy
+runpy.run_path(str(ROOT/'tools/guardian/batch_face.py'))['optimize'](p)
+packed=p.read_bytes();doc=json.loads(packed[20:20+struct.unpack_from('<I',packed,12)[0]])
 report={'bytes':p.stat().st_size,'bones':len(doc['skins'][0]['joints']),'animations':{a['name']:len(a['channels']) for a in doc['animations']},'primitives':sum(len(m['primitives']) for m in doc['meshes']),'sourceBytes':(ROOT/'art/guardian/original.glb').stat().st_size}
 (ROOT/'docs/guardian/model-metrics.json').write_text(json.dumps(report,indent=2)+'\n');print(report)

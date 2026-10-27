@@ -15,12 +15,14 @@ export function guardianMaterial(source,toon){
  #include <packing>
  #include <uv_pars_fragment>
  #include <map_pars_fragment>
+ #include <color_pars_fragment>
  #include <normal_pars_fragment>
  #include <normalmap_pars_fragment>
  #include <fog_pars_fragment>
  void main(){
   vec4 diffuseColor=vec4(diffuse,opacity);
   #include <map_fragment>
+  #include <color_fragment>
   #include <normal_fragment_begin>
   #include <normal_fragment_maps>
   vec3 worldNormal=inverseTransformDirection(normal,viewMatrix);
@@ -43,7 +45,7 @@ export function guardianMaterial(source,toon){
   #include <fog_fragment>
  }`;
  const vertexShader=('varying vec3 vSpiritPosition;\n'+THREE.ShaderLib.standard.vertexShader).replace('#include <project_vertex>','#include <project_vertex>\n vSpiritPosition=(modelMatrix*vec4(transformed,1.)).xyz;').replace('#include <shadowmap_pars_vertex>','').replace('#include <shadowmap_vertex>','');
- const material=new THREE.ShaderMaterial({name:'Guardian fixed world light',uniforms,vertexShader,fragmentShader,transparent:true,depthWrite:true,side:source.side,fog:true,toneMapped:false});
+ const material=new THREE.ShaderMaterial({name:'Guardian fixed world light',vertexColors:source.vertexColors,uniforms,vertexShader,fragmentShader,transparent:true,depthWrite:true,side:source.side,fog:true,toneMapped:false});
  material.map=source.map;material.normalMap=source.normalMap;material.normalMapType=THREE.TangentSpaceNormalMap;material.forceSinglePass=true;
  return material;
 }

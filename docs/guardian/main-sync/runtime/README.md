@@ -35,3 +35,20 @@ El contacto diurno muestra las apariciones al lado de los cultivos, la diferenci
 La primera grabación nocturna quedó cortada en recuperación: `night-truncated.json` conserva 14 cuerpos físicos y fase `recovering`. Se preserva como evidencia rechazada. La herramienta usaba una espera de nueve segundos reales y después desactivaba la simulación; con fotogramas lentos avanzaba menos tiempo simulado. Ahora espera a que terminen todos los estados de derribo, con límite de 90 segundos reales y error explícito. Esto corrige la captura de QA, no cambia la recuperación del juego.
 
 La repetición corregida (`night.mp4`, 25,57 s; `night.json`) completa seis comandos —Attack y Shield—, cambios de cámara/zoom e impactos repetidos. Termina sin errores, con máximo de un Guardián y cero cuerpos físicos o estados de derribo activos. La hoja `night-contact.png` muestra escudo, ataques y caída; las reacciones de especies pesadas requieren todavía revisión próxima de naturalidad. La grabación no certifica colisiones con todas las estructuras ni el equilibrio de combate.
+
+## Agrupación de materiales faciales
+
+Se descartó la hipótesis de una doble pasada del vórtice: `ShaderMaterial` ya configura `forceSinglePass=true` en esta versión de Three.js. El cambio redundante fue retirado. `gpu-impact-before.json` y `gpu-impact-after.json` son repeticiones sin una optimización efectiva entre ellas; su variación no demuestra mejora.
+
+La optimización implementada agrupa los cuatro materiales planos de boca interior, dientes, lengua y párpados en una sola primitiva con `COLOR_0` lineal. El material del Guardián en el mundo ahora respeta colores de vértice. No se simplifica ni elimina geometría. El Blender conserva sus materiales editables; `finalize_glb.py` aplica automáticamente `batch_face.py` después de la exportación. El script rechaza materiales incompatibles y conserva los morph targets dispersos al leerlos; elimina los buffers no referenciados al escribir.
+
+La auditoría `audit_face_batch.py` compara el export previo con el resultado. Pasan 472 comprobaciones exactas de geometría, índices, normales, tangentes, UV, pesos, articulaciones, morphs y animaciones, además de los colores con precisión FLOAT. La referencia está en el GLB del commit `fce2d9df7`; las huellas están en `face-batch-parity.json`. El GLB pasa de 2.694.836 a 2.765.144 bytes (+70.308 bytes por los colores y los morphs empaquetados), y de seis a tres primitivas. No se modifica la fuente original ni el Blender editable.
+
+Validación real:
+
+- WorldScene, impacto a 0,30 s: sólo cuerpo pasa de 89 a 86 draw calls; conjunto pasa de 96 a 93, con fondo constante de 83. `gpu-face-batched.json` y `face-batched.png`.
+- Laboratorio Three.js: 84 aserciones aprobadas, incluyendo los nueve visemas, parpadeos, mirada, capas corporales, duración de los 54 audios y reproducción/seek ES/EN. `face-batch-browser.json`. La foto `face-batched-viseme-d.png` muestra apertura D y materiales.
+- 13 pruebas Node específicas aprobadas; compilación y paquete aprobados: 993 archivos / 495.011.229 bytes.
+- Validador glTF: cero errores y dos advertencias de jerarquía de mallas con skin. La jerarquía no cambió; se conserva el informe completo.
+
+La reducción de draw calls es verificable. Los tiempos GPU entre ejecuciones siguen teniendo demasiada variación para atribuir una ganancia de FPS al cambio. No se da por corregida la regresión previa. El selector GPU ahora permite congelar llegada, impacto, estabilización y desaparición; en esta iteración se ejecutó el impacto, las dos fases posteriores siguen pendientes.
