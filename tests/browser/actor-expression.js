@@ -9,7 +9,7 @@ const params=new URLSearchParams(location.search),lion=params.get('actor')==='li
 const faceTarget=new T.Vector3(0,lion?1.57:1.5,lion?.20:.48),faceDistance=lion?.65:1.35;
 const camera=new T.PerspectiveCamera(32,innerWidth/innerHeight,.01,50);camera.position.set(0,1.52,1.85);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,.48);controls.update();
 const $=id=>document.getElementById(id),errors=[];let elapsed=20,previous=performance.now(),paused=false,automatic=false,action=null,actor={id:'qa-face',status:'walking'},frame=0;
-const asset=lion?'/test-results/lion-face-candidate.glb':params.has('uncompressed')?'/test-results/hyena-face-candidate.glb':'/content/source/actors/hyena/expressive-candidate.glb';
+const asset=lion?(params.has('uncompressed')?'/test-results/lion-face-candidate.glb':'/content/source/actors/lion/expressive-candidate.glb'):params.has('uncompressed')?'/test-results/hyena-face-candidate.glb':'/content/source/actors/hyena/expressive-candidate.glb';
 const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(asset);scene.add(gltf.scene);const expression=new ActorExpression(gltf.scene,actor.id),mixer=new T.AnimationMixer(gltf.scene);
 gltf.scene.updateMatrixWorld(true);const head=gltf.scene.getObjectByName('Head'),headAnchor=head?head.worldToLocal(faceTarget.clone()):null,headPoint=new T.Vector3(),cameraShift=new T.Vector3();let followFace=false;
 $('follow').onclick=()=>followFace=!followFace;
