@@ -145,3 +145,11 @@ La soldadura global de vértices coincidentes alteró UV fuera de la boca y camb
 No identificar caras únicamente por su conjunto de posiciones: triángulos coincidentes pueden tener orientación o UV diferentes. El primer comparador sobrescribía una pareja; ahora incluye orientación, UV y material, y rechaza correspondencias ambiguas. Esta comprobación no cubre la región editada, la interpolación mandibular ni los clips animados.
 
 La simetría visual aparente del hocico tampoco garantiza una profundidad labial simétrica. Los dientes nuevos del león asomaban por una abertura original en neutral. Se calibró su retranqueo con rayos contra la superficie real, desplazando cada pieza completa. La oclusión en neutral no sustituye la revisión de colocación anatómica, separación dental, ambos perfiles y aperturas intermedias. El candidato sigue en elaboración.
+
+### León: densidad temporal, inicio de NLA y piel animada
+
+Conservar nombres y duraciones no garantiza conservar clips. El león activo se preparó a 96 Hz; reexportarlo a 24 produjo diferencias de hasta 6.77 cm en huesos. Además, el importador coloca los strips en `scene.frame_start`: a 96 Hz, dejarlo en 1 desplazaba 31.25 ms el inicio original de 1/24 s. Fijar 96 Hz y fotograma inicial 4 antes de importar conserva las 246 poses comprobadas con error máximo de posición de 0.000002763 m. Registrar la frecuencia y el origen temporal por fuente, no copiarlos desde otro actor.
+
+Los dientes deben quedar fuera de gradientes de deformación de piel: el colmillo inferior del león alcanzaba 16.25% de error de aristas. La rotación común lo reduce a 0.0264% en apertura completa; el morph lineal mantiene 2.003% de contracción a media apertura. Documentar esa diferencia entre rigidez del extremo e interpolación.
+
+El siguiente fallo apareció solo en Three.js con un clip nativo: la cavidad rígida en Head no acompaña al hocico con pesos repartidos. Se conserva la pose Running 0.35 s / boca 0.85 y una auditoría del núcleo del hocico (hasta 6.12 cm de desplazamiento relativo a Head). La corrección sigue pendiente: no aprobar la piel porque los huesos hayan pasado su comparador.

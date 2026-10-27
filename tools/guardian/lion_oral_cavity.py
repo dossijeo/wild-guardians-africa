@@ -102,8 +102,8 @@ def add_cavity(body, lip):
             for index in range(start,len(vertices)):
                 point=world@vertices[index];point.y+=shift;point.x+=dx
                 vertices[index]=inverse@point
-                weight=(1-smooth(-.18,-.15,point.y)) if is_lower else 0
-                opened[index]=inverse@point.lerp(pivot+rotation@(point-pivot),weight)
+                # Teeth are rigid pieces, unlike the soft rear cheek transition.
+                opened[index]=inverse@(pivot+rotation@(point-pivot) if is_lower else point)
             for ring in range(4):
                 for j in range(8):
                     face([tooth[ring][j],tooth[ring][(j+1)%8],tooth[ring+1][(j+1)%8],tooth[ring+1][j]],(.78,.68,.46,1))

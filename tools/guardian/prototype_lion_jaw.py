@@ -20,6 +20,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--input', required=True)
 p.add_argument('--output', required=True)
 p.add_argument('--oral-cavity', action='store_true')
+p.add_argument('--export-glb', action='store_true')
 a = p.parse_args(sys.argv[sys.argv.index('--') + 1:])
 source = Path(a.input).resolve()
 expected = '539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968'
@@ -29,6 +30,12 @@ output = Path(a.output).resolve()
 assert output != source and output.suffix == '.blend'
 output.parent.mkdir(parents=True, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
+# prepare_lion.py authored the current source at 96 Hz. Set FPS before import
+# so its fractional-second keys retain that time grid on sampled GLB export.
+bpy.context.scene.render.fps = 96
+# All six source clips begin at 1/24 s, i.e. frame 4 at 96 Hz. The glTF
+# importer stashes NLA strips at scene.frame_start; its default 1 shifts clips.
+bpy.context.scene.frame_start = 4
 bpy.ops.import_scene.gltf(filepath=str(source))
 mesh = bpy.data.objects['Mesh_0']
 world = mesh.matrix_world.copy()
@@ -157,6 +164,11 @@ if a.oral_cavity:
     from lion_oral_cavity import add_cavity
     oral = add_cavity(mesh, lip)
 bpy.ops.wm.save_as_mainfile(filepath=str(output))
+if a.export_glb:
+    bpy.ops.export_scene.gltf(filepath=str(output.with_suffix('.glb')),export_format='GLB',
+        export_animations=True,export_animation_mode='NLA_TRACKS',export_nla_strips=True,
+        export_force_sampling=True,export_frame_range=False,export_yup=True,export_skins=True,
+        export_all_influences=False,export_extras=True)
 output.with_suffix('.json').write_text(json.dumps({
     'status': 'authoring candidate; NOT installed', 'oralCavity': oral,
     'source': str(source), 'sha256': digest, 'profile': profile,

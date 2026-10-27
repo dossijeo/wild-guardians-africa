@@ -5,6 +5,38 @@ Estado: **en elaboración; no instalado en el juego**. Fuente activa conservada:
 
 ## Actualización: candidato v9
 
+### Avance posterior v12: exportación y prueba en Three.js
+
+La auditoría dental encontró una deformación del 16.25% en aristas del colmillo
+inferior izquierdo: se le aplicaba el gradiente de la mejilla. Ahora todos los
+dientes inferiores reciben la misma rotación mandibular. Error máximo a apertura
+completa: 0.0264% (aristas pequeñas en coordenadas float32). A media apertura
+queda una contracción máxima del 2.003%, propia de interpolar linealmente un giro
+de 0.4 radianes. No se afirma rigidez exacta durante todo el recorrido.
+
+La primera exportación falló la comparación de clips: reducía 96 muestras/s a
+24, con diferencias de hasta 6.77 cm y 0.404 rad. El importador también colocaba
+los strips en el fotograma 1, desplazando 31.25 ms los clips a 96 Hz. Se conservan
+ahora tanto 96 Hz como el inicio original en el fotograma 4 (1/24 s), antes de
+importar. Los seis clips / 78 huesos / 246 poses pasan con error máximo de
+posición 0.000002763 m y de ángulo 0.000007763 rad.
+
+**Validación visual animada FALLIDA, integración pendiente:** el GLB v12 se ha
+ejecutado en Three.js mediante `actor-expression.html?actor=lion`. Carga y recibe
+el morph en tres primitivas, pero a `Running=0.35 s` y boca `0.85`, la lengua y
+los dientes se separan del labio inferior. La cavidad sigue `Head`; los pesos
+originales del hocico se reparten entre varios huesos. La auditoría específica
+de 1.050 vértices del núcleo del hocico mide hasta 0.061232 m respecto a `Head`
+en los clips originales. Conservar los huesos no valida la unión de la piel.
+La captura `v12-running-mouth-misalignment.png` documenta el fallo; no se ha
+instalado el candidato. Siguiente corrección: reconciliar el skinning oral y del
+hocico, preservando collar, melena y transiciones, y repetir la misma pose.
+
+El visor incorpora selección del candidato de león, seguimiento de rostro y
+tiempo manual de clip para reproducir el problema. El parpadeo del león continúa
+pendiente, como indica su etiqueta. Los seis tests del controlador facial pasan;
+no prueban la calidad visual ni corrigen el fallo anterior.
+
 Se corrigió la alteración exterior restringiendo la soldadura a la región oral.
 La copia soldada para estudiar conectividad es ahora desechable. El comparador
 de caras distingue orientación y UV para no confundir triángulos coincidentes:
