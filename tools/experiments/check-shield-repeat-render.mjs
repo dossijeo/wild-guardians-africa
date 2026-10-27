@@ -73,7 +73,7 @@ try {
   w.render=wrapped;
   globalThis.qaResidualFinish=()=>{for(const restore of restorers)restore();if(w.render===wrapped)w.render=original;if(w.onLoadingSpan===witness)w.onLoadingSpan=previousWitness;return {gpu:gpu.close(),cpu,phases,droppedPhases,hardware:qaResidualHardware,cpuScope:'World.render synchronous wall time including timer polling and submission; excludes simulation/UI and asynchronous preparation outside this call.'};};
  },process.env.WG_MAGIC_PHASES==='1');
- if(process.env.WG_MAGIC_FAR_PHASES==='1')await page.evaluate(async()=>{const {installFarCpuProbe}=await import('/tools/experiments/qa-far-cpu-probe.js');globalThis.qaFarCpuFinish=await installFarCpuProbe();});
+ if(process.env.WG_MAGIC_FAR_PHASES==='1')await page.evaluate(async()=>{const {installFarCpuProbe}=await import('/tools/experiments/qa-far-cpu-probe.js');globalThis.qaFarCpuFinish=await installFarCpuProbe(qaMagicWorld);});
  await page.evaluate(async()=>{globalThis.qaGame=await import('/src/simulation/game.js');});
  await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(1000);
