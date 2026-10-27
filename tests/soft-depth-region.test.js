@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {PerspectiveCamera,Matrix4,Vector4} from 'three';
+import {softDepthRegion} from '../tools/experiments/soft-depth-region.js';
+function fixture(){const camera=new PerspectiveCamera(60,16/9,.1,100),data=new Float32Array(25);data.set([0,0,-10,1,1]);data[21]=1;const fx={spriteBuffer:{array:data},sprites:{geometry:{instanceCount:1}},uniforms:{uVP:{value:camera.projectionMatrix.clone()}},softParticleDepth:true};return {camera,fx,world:{destructionPass:{buildings:new Set()},locomotionVfx:{effects:new Map([[1,fx]])}}};}
+test('region includes rotated billboard corners under perspective and keeps screen resolution',()=>{const {world,fx}=fixture(),r=softDepthRegion(world,1280,720);assert(r.width<300&&r.height<300);for(let angle=0;angle<6.3;angle+=.1)for(const x of [-.5,.5])for(const y of [-.5,.5]){const p=new Vector4(Math.cos(angle)*x-Math.sin(angle)*y,Math.sin(angle)*x+Math.cos(angle)*y,-10,1).applyMatrix4(fx.uniforms.uVP.value);const px=(p.x/p.w+1)*640,py=(p.y/p.w+1)*360;assert(px>=r.x&&px<=r.x+r.width&&py>=r.y&&py<=r.y+r.height);}});
+test('near intersection, unknown demand and destruction smoke use full-frame fallback',()=>{const {world,fx}=fixture();fx.spriteBuffer.array[2]=-.2;assert.equal(softDepthRegion(world,1280,720),null);fx.spriteBuffer.array[2]=-10;fx.softParticleDepth=false;assert.equal(softDepthRegion(world,1280,720),null);fx.softParticleDepth=true;world.destructionPass.buildings.add({effects:{native:{smoke:[1]}}});assert.equal(softDepthRegion(world,1280,720),null);});
