@@ -16,13 +16,19 @@ export class BeastPhysicsEnvironment {
      return s.terrain(new Float32Array(vertices),new Uint32Array(indices));
     });
    }
-   for(const structure of w.state.structures){
-    if(structure.status!=='intact'||Math.hypot(structure.x-animal.x,structure.z-animal.z)>10)continue;
-    if(structure.kind==='wall')keep('structure:'+structure.id,()=>{const b=wallCollisionBounds(structure,0),y=w.nav.field.surface(structure.x,structure.z);return s.box({x:(b[0]+b[2])/2,y:y+1.25,z:(b[1]+b[3])/2},{x:(b[2]-b[0])/2,y:1.25,z:(b[3]-b[1])/2});});
-    else {const object=w.objects.get(structure.id);if(object)keep('structure:'+structure.id,()=>{const box=new Box3().setFromObject(object),center=box.getCenter(new Vector3()),half=box.getSize(new Vector3()).multiplyScalar(.5);return half.x>0&&half.y>0&&half.z>0?s.box(center,half):null;});}
-   }
-   for(const p of w.nav.propsAt?.(animal.x,animal.z,8)??[])if(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)keep(`prop:${p.slot}:${p.x}:${p.z}`,()=>{const r=p.radius??1,y=w.nav.field.surface(p.x,p.z);return s.box({x:p.x,y:y+1.5,z:p.z},{x:r,y:1.5,z:r});});
+   visitBeastSolids(w,animal,(key,bounds)=>keep(key,()=>{const box=bounds(),half=box.getSize(new Vector3()).multiplyScalar(.5);return half.x>0&&half.y>0&&half.z>0?s.box(box.getCenter(new Vector3()),half):null;}));
   }
   for(const [key,collider] of this.colliders)if(!wanted.has(key)){if(collider){s.world.removeCollider(collider,true);const i=s.obstacles.indexOf(collider);if(i>=0)s.obstacles.splice(i,1);}this.colliders.delete(key);}
  }
+}
+
+// Shared simplified solids for physical ragdolls and baked contact constraints.
+// Bounds are evaluated lazily so shared physical colliders are not rebuilt.
+export function visitBeastSolids(w,animal,visit){
+ for(const structure of w.state.structures){
+  if(structure.status!=='intact'||Math.hypot(structure.x-animal.x,structure.z-animal.z)>10)continue;
+  if(structure.kind==='wall')visit('structure:'+structure.id,()=>{const b=wallCollisionBounds(structure,0),y=w.nav.field.surface(structure.x,structure.z);return new Box3(new Vector3(b[0],y,b[1]),new Vector3(b[2],y+2.5,b[3]));});
+  else{const object=w.objects.get(structure.id);if(object)visit('structure:'+structure.id,()=>new Box3().setFromObject(object));}
+ }
+ for(const p of w.nav.propsAt?.(animal.x,animal.z,8)??[])if(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)visit(`prop:${p.slot}:${p.x}:${p.z}`,()=>{const r=p.radius??1,y=w.nav.field.surface(p.x,p.z);return new Box3(new Vector3(p.x-r,y,p.z-r),new Vector3(p.x+r,y+3,p.z+r));});
 }

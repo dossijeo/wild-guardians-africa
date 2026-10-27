@@ -3,8 +3,8 @@ import {BeastRecovery} from './beast-recovery.js';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Playback only: the owner must reconcile navigation and supply obstacle clipping.
 export class BakedBeastFall {
- constructor(binding,clip,{surface,clipPosition}={}){
-  this.binding=binding;this.clip=clip;this.surface=surface;this.clipPosition=clipPosition;
+ constructor(binding,clip,{surface,clipPosition,solidContacts}={}){
+  this.binding=binding;this.clip=clip;this.surface=surface;this.clipPosition=clipPosition;this.solidContacts=solidContacts;
   const model=binding.model;model.updateWorldMatrix(true,true);
   this.transform=new Matrix4().copy(model.matrixWorld);this.worldRotation=model.getWorldQuaternion(new Quaternion()).normalize();
   this.entries=binding.entries.map(e=>({bone:e.bone,position:e.bone.position.clone(),rotation:e.bone.quaternion.clone(),initialWorld:e.bone.getWorldQuaternion(new Quaternion()).normalize()}));
@@ -20,6 +20,7 @@ export class BakedBeastFall {
    this.q.fromArray(v,j+3).premultiply(this.worldRotation).normalize();this.q.slerpQuaternions(e.initialWorld,this.q,blend);
    e.bone.parent.getWorldQuaternion(this.parent).normalize().invert();e.bone.quaternion.copy(this.q.premultiply(this.parent));e.bone.updateWorldMatrix(false,true);
   }
+  if(age>0)this.solidContacts?.resolve();
   this.lift=0;
   if(age>0&&this.surface){for(const {mesh,index} of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);this.lift=Math.max(this.lift,this.surface(this.v.x,this.v.z)+.01-this.v.y);}
    const hip=this.entries[0].bone;hip.getWorldPosition(this.hip);this.hip.y+=this.lift;hip.position.copy(hip.parent.worldToLocal(this.v.copy(this.hip)));this.binding.model.updateMatrixWorld(true);
