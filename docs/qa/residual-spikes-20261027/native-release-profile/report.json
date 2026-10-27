@@ -1,0 +1,105 @@
+{
+  "scope": "Isolated Node WASM diagnosis, seed712 estuary,25chunks,six profiles, same five removals; alternating whether selected chunk is removed. No renderer, workers, dynamic world or gameplay frametime; not an optimization comparison.",
+  "rows": [
+    {
+      "selectedRemoved": false,
+      "selected": [
+        0,
+        0
+      ],
+      "removed": 5,
+      "cpuMs": 18.629500000000007,
+      "phases": {
+        "populate": 0,
+        "raster": 0,
+        "commitSectors": 0,
+        "neighborBorders": 0,
+        "addTotal": 0,
+        "setup": 0,
+        "latticeAndRegistration": 0,
+        "colors": 0,
+        "waterLevels": 0,
+        "groundMask": 0,
+        "waterMesh": 0,
+        "propsAndRegistration": 0,
+        "sectorOverlayFill": 13.501199999998335,
+        "sectorGraphCommit": 1.5722000000007483
+      }
+    },
+    {
+      "selectedRemoved": true,
+      "selected": [
+        -2,
+        0
+      ],
+      "removed": 5,
+      "cpuMs": 26.59649999999965,
+      "phases": {
+        "populate": 9.430599999999686,
+        "raster": 0,
+        "commitSectors": 0,
+        "neighborBorders": 0,
+        "addTotal": 0,
+        "setup": 0.00680000000011205,
+        "latticeAndRegistration": 0.02320000000008804,
+        "colors": 4.644800000000032,
+        "waterLevels": 1.3080999999997402,
+        "groundMask": 0.8011000000001332,
+        "waterMesh": 2.139600000000428,
+        "propsAndRegistration": 0.5044000000002598,
+        "sectorOverlayFill": 12.950399999997444,
+        "sectorGraphCommit": 1.494100000000799
+      }
+    },
+    {
+      "selectedRemoved": false,
+      "selected": [
+        0,
+        0
+      ],
+      "removed": 5,
+      "cpuMs": 24.440500000000156,
+      "phases": {
+        "populate": 0,
+        "raster": 0,
+        "commitSectors": 0,
+        "neighborBorders": 0,
+        "addTotal": 0,
+        "setup": 0,
+        "latticeAndRegistration": 0,
+        "colors": 0,
+        "waterLevels": 0,
+        "groundMask": 0,
+        "waterMesh": 0,
+        "propsAndRegistration": 0,
+        "sectorOverlayFill": 18.769200000002,
+        "sectorGraphCommit": 2.16939999999704
+      }
+    },
+    {
+      "selectedRemoved": true,
+      "selected": [
+        -2,
+        0
+      ],
+      "removed": 5,
+      "cpuMs": 24.911199999999553,
+      "phases": {
+        "populate": 9.098700000000463,
+        "raster": 0,
+        "commitSectors": 0,
+        "neighborBorders": 0,
+        "addTotal": 0,
+        "setup": 0.005400000000008731,
+        "latticeAndRegistration": 0.01860000000033324,
+        "colors": 4.32090000000062,
+        "waterLevels": 1.2998999999999796,
+        "groundMask": 0.8184000000001106,
+        "waterMesh": 2.1446999999998297,
+        "propsAndRegistration": 0.48880000000008295,
+        "sectorOverlayFill": 11.825800000006893,
+        "sectorGraphCommit": 1.3806000000049607
+      }
+    }
+  ]
+}

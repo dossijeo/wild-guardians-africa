@@ -1,0 +1,20 @@
+{
+  "scope": "Manual inspection of actual full-resolution captures, not pixel equality or full biome acceptance.",
+  "files": [
+    "1-baseline/shield-0.png",
+    "2-candidate/shield-0.png",
+    "1-baseline/shield-1.png",
+    "2-candidate/shield-1.png"
+  ],
+  "observations": [
+    "Approved dense fern cover and root/rock detail remain present.",
+    "No obvious missing shadow regions in these close views.",
+    "First capture camera positions differ slightly; unsuitable for exact image comparison.",
+    "Second captures show 14:53 and 14:54 respectively, with wind and obstruction differences; not identical simulation states."
+  ],
+  "pending": [
+    "Forced-redraw versus cached GPU depth readback",
+    "Remaining ABAB pair",
+    "Broader world/day-night lifecycle validation before any adoption"
+  ]
+}

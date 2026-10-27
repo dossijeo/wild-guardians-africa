@@ -140,3 +140,17 @@ test('declared camera-dependent custom depth inputs remain tracked when the view
   f.draw();f.camera.position.x=2;f.draw();assert.equal(f.draws,2);
   f.draw();assert.equal(f.draws,2);f.close();depth.dispose();
 });
+
+test('snapshots remain immutable and preserve exact values without version changes',()=>{
+  const f=fixture(),cache=new ShadowCache();f.scene.updateMatrixWorld(true);f.camera.updateMatrixWorld(true);
+  const capture=previous=>shadowSnapshot(f.renderer,f.light,f.scene,f.camera,previous);
+  const original=capture();cache.commit(original);assert.ok(cache.matches(capture(original)));
+  f.mesh.instanceMatrix.array[12]=-0;const negativeZero=capture(original);
+  assert.equal(cache.matches(negativeZero),false,'signed zero retains original Object.is semantics');
+  f.mesh.instanceMatrix.array[12]=0;assert.ok(cache.matches(capture(original)),'candidate capture did not mutate old snapshot');
+  f.mesh.instanceMatrix.array[12]=NaN;const nan=capture(original);cache.commit(nan);
+  assert.ok(cache.matches(capture(nan)),'NaN remains stable');
+  assert.ok(cache.matches(capture()),'independent snapshots compare by value');
+  f.mesh.instanceMatrix.array[12]=3;assert.equal(cache.matches(capture(nan)),false);
+  f.close();
+});

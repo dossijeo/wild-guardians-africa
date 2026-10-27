@@ -1,0 +1,25 @@
+{
+  "run": 40431690252,
+  "commit": "4beaad35566b72c4be5c0c404022b1124a35e375",
+  "conclusion": "success",
+  "suite": {
+    "total": 4993,
+    "pass": 4992,
+    "fail": 0,
+    "skipped": 1,
+    "skip": "Real PowerShell preflight requires Windows"
+  },
+  "playable": {
+    "total": 216,
+    "pass": 216,
+    "fail": 0,
+    "skipped": 0
+  },
+  "packaging": "Build, web package gate and itch packaging passed",
+  "localCountDifference": "Six local-only tree-candidate-textures.test.js tests are untracked experimental checks and not part of the remote candidate. Renamed water policy test and absolute suite file paths account for name differences.",
+  "windows": {
+    "run": 40431690251,
+    "status": "in_progress"
+  },
+  "scope": "Remote CI functional validation; no performance claim."
+}

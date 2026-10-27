@@ -1,0 +1,20 @@
+{
+  "status": "experimental; real-game ABAB running, not adopted",
+  "change": "Reuse resident sector passability and interior edges; resample only directions adjacent to evicted chunks, then commit the graph synchronously.",
+  "ownership": "No extra graph or deferred authoritative state. Lazy sector staging copies existing overlay into existing staging buffers.",
+  "tests": {
+    "command": "WG_RELEASE_WASM=.codex-tmp/spatial-release-border-candidate.wasm node --test tests/spatial-release-boundaries.test.js",
+    "pass": 6,
+    "fail": 0,
+    "scope": "Six biomes, all six profiles, cell component equality, connectivity and exact routes vs unchanged sequential full rebuild; duplicate/missing removals, corner removals, re-addition, selected chunk removal and obstacles."
+  },
+  "builds": {
+    "diagnostic": "SPATIAL_PROFILE=1 SPATIAL_WASM_OUTPUT=.codex-tmp/spatial-release-border-candidate.wasm bash tools/build-spatial-savanna-wasm.sh",
+    "threaded": "SPATIAL_PTHREADS=1 SPATIAL_WASM_OUTPUT=.codex-tmp/release-border-candidate/spatial-threaded.mjs bash tools/build-spatial-savanna-wasm.sh"
+  },
+  "limits": [
+    "Production binaries unchanged pending acceptance.",
+    "Selected-chunk fallback still regenerates visual data; separate unresolved cost.",
+    "No gameplay frametime improvement claimed from isolated native timings."
+  ]
+}

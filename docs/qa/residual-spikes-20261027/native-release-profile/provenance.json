@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "4beaad35566b72c4be5c0c404022b1124a35e375",
+  "wasmSha256": "dac56ebf99e7d60dafa4bddfc5b013a99c91bb9553d977f6bbbb410cb00e980d",
+  "build": "SPATIAL_PROFILE=1 SPATIAL_WASM_OUTPUT=.codex-tmp/spatial-release-profile.wasm bash tools/build-spatial-savanna-wasm.sh",
+  "emscripten": "6.0.12",
+  "run": "node tools/experiments/diagnose-spatial-release.mjs",
+  "productionWasm": "unchanged",
+  "limits": [
+    "Standalone isolated native attribution, not pthread runtime or game frametime.",
+    "Existing timers measure nested phases; do not sum populate and its children.",
+    "No production optimization applied."
+  ]
+}

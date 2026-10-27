@@ -1,0 +1,444 @@
+{
+  "rows": [
+    {
+      "order": 1,
+      "candidate": false,
+      "provenance": {
+        "candidate": false,
+        "order": 1,
+        "commit": "f55bdbe7fd91f434037fc39b08e09b7f74df8a1a",
+        "wasmSha256": "b09fe3374802a7c0bbc80f89c6322eacdf4505aa4c360da5d4ab870cb857de17",
+        "harnessSha256": "b9ba99cb3229da4ef8821cb3847ee9b663cd8d64c0e8a711c5e8176de0b1f5f4",
+        "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+        "conditions": {
+          "WG_RELEASE_ABAB_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab",
+          "WG_RELEASE_CANDIDATE_DIR": ".codex-tmp/release-lazy-fixed",
+          "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab/1-baseline",
+          "WG_QA_URL": "http://127.0.0.1:5220",
+          "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+          "WG_MAGIC_PROFILE": "1",
+          "WG_MAGIC_CPU_SAMPLING": "0",
+          "WG_MAGIC_VIDEO": "0",
+          "WG_MAGIC_GPU": "1",
+          "WG_MAGIC_PHASES": "1",
+          "WG_MAGIC_CASTS": "2",
+          "WG_MAGIC_NO_CAST": "1",
+          "WG_MAGIC_STREAM": "1",
+          "WG_MAGIC_STREAM_DISTANCE": "144",
+          "WG_MAGIC_STREAM_SECONDS": "40",
+          "WG_SPATIAL_RUNTIME_DIR": ""
+        },
+        "limits": [
+          "Instrumented GPU queries and phase clocks; no CPU sampling or video.",
+          "Same seed, profile and camera sequence; simulation is active and asynchronous residency can differ.",
+          "Shared host; no claim of exclusive hardware use."
+        ]
+      },
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "frameIntervals": {
+        "samples": 6256,
+        "p50": 16.660000000003492,
+        "p95": 33.4199999999837,
+        "p99": 50.04000000000815,
+        "max": 99.6649999999936
+      },
+      "cpuWorldRenderMs": {
+        "samples": 6282,
+        "p50": 7.75,
+        "p95": 15.65499997138977,
+        "p99": 21.790000081062317,
+        "max": 69.10000002384186
+      },
+      "gpuWorldRenderMs": {
+        "samples": 6279,
+        "p50": 15.857708,
+        "p95": 25.141405,
+        "p99": 28.877343,
+        "max": 44.079166
+      },
+      "gpuSanity": {
+        "observedSpanMs": 131754.2350000143,
+        "impossibleSamples": [],
+        "usable": true,
+        "scope": "Conservative sanity bound only; passing does not independently prove timer accuracy. Raw samples are never clipped or discarded here."
+      },
+      "releaseCallsAtLeast1ms": {
+        "samples": 13,
+        "p50": 9.335000038146973,
+        "p95": 21.335000038146973,
+        "p99": 21.335000038146973,
+        "max": 21.335000038146973
+      },
+      "renderFramesWithReleaseAtLeast1ms": {
+        "samples": 13,
+        "p50": 33.860000014305115,
+        "p95": 69.10000002384186,
+        "p99": 69.10000002384186,
+        "max": 69.10000002384186
+      },
+      "cpuRenderOver33ms": 7,
+      "presentationOver50ms": 73,
+      "presentationOver100ms": 0,
+      "streaming": [
+        {
+          "samples": 400,
+          "initialChunks": 25,
+          "finalChunks": 12,
+          "uniqueChunks": 40
+        },
+        {
+          "samples": 400,
+          "initialChunks": 21,
+          "finalChunks": 13,
+          "uniqueChunks": 37
+        }
+      ],
+      "programWaits": {
+        "count": 0,
+        "totalMs": 0,
+        "maxMs": 0
+      }
+    },
+    {
+      "order": 2,
+      "candidate": true,
+      "provenance": {
+        "candidate": true,
+        "order": 2,
+        "commit": "f55bdbe7fd91f434037fc39b08e09b7f74df8a1a",
+        "wasmSha256": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+        "harnessSha256": "b9ba99cb3229da4ef8821cb3847ee9b663cd8d64c0e8a711c5e8176de0b1f5f4",
+        "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+        "conditions": {
+          "WG_RELEASE_ABAB_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab",
+          "WG_RELEASE_CANDIDATE_DIR": ".codex-tmp/release-lazy-fixed",
+          "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab/2-candidate",
+          "WG_QA_URL": "http://127.0.0.1:5220",
+          "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+          "WG_MAGIC_PROFILE": "1",
+          "WG_MAGIC_CPU_SAMPLING": "0",
+          "WG_MAGIC_VIDEO": "0",
+          "WG_MAGIC_GPU": "1",
+          "WG_MAGIC_PHASES": "1",
+          "WG_MAGIC_CASTS": "2",
+          "WG_MAGIC_NO_CAST": "1",
+          "WG_MAGIC_STREAM": "1",
+          "WG_MAGIC_STREAM_DISTANCE": "144",
+          "WG_MAGIC_STREAM_SECONDS": "40",
+          "WG_SPATIAL_RUNTIME_DIR": ".codex-tmp/release-lazy-fixed"
+        },
+        "limits": [
+          "Instrumented GPU queries and phase clocks; no CPU sampling or video.",
+          "Same seed, profile and camera sequence; simulation is active and asynchronous residency can differ.",
+          "Shared host; no claim of exclusive hardware use."
+        ]
+      },
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "frameIntervals": {
+        "samples": 6294,
+        "p50": 16.664999999979045,
+        "p95": 33.39499999998952,
+        "p99": 50.04000000000815,
+        "max": 83.13999999999942
+      },
+      "cpuWorldRenderMs": {
+        "samples": 6321,
+        "p50": 7.5299999713897705,
+        "p95": 14.495000004768372,
+        "p99": 19.91000008583069,
+        "max": 54.84999990463257
+      },
+      "gpuWorldRenderMs": {
+        "samples": 6318,
+        "p50": 16.138229,
+        "p95": 25.159687,
+        "p99": 28.443229,
+        "max": 35.086978
+      },
+      "gpuSanity": {
+        "observedSpanMs": 131736.60000002384,
+        "impossibleSamples": [],
+        "usable": true,
+        "scope": "Conservative sanity bound only; passing does not independently prove timer accuracy. Raw samples are never clipped or discarded here."
+      },
+      "releaseCallsAtLeast1ms": {
+        "samples": 12,
+        "p50": 1.7850000858306885,
+        "p95": 4.025000095367432,
+        "p99": 4.025000095367432,
+        "max": 4.025000095367432
+      },
+      "renderFramesWithReleaseAtLeast1ms": {
+        "samples": 12,
+        "p50": 23.100000023841858,
+        "p95": 54.84999990463257,
+        "p99": 54.84999990463257,
+        "max": 54.84999990463257
+      },
+      "cpuRenderOver33ms": 1,
+      "presentationOver50ms": 72,
+      "presentationOver100ms": 0,
+      "streaming": [
+        {
+          "samples": 400,
+          "initialChunks": 25,
+          "finalChunks": 13,
+          "uniqueChunks": 40
+        },
+        {
+          "samples": 400,
+          "initialChunks": 21,
+          "finalChunks": 16,
+          "uniqueChunks": 37
+        }
+      ],
+      "programWaits": {
+        "count": 0,
+        "totalMs": 0,
+        "maxMs": 0
+      }
+    },
+    {
+      "order": 3,
+      "candidate": false,
+      "provenance": {
+        "candidate": false,
+        "order": 3,
+        "commit": "f55bdbe7fd91f434037fc39b08e09b7f74df8a1a",
+        "wasmSha256": "b09fe3374802a7c0bbc80f89c6322eacdf4505aa4c360da5d4ab870cb857de17",
+        "harnessSha256": "b9ba99cb3229da4ef8821cb3847ee9b663cd8d64c0e8a711c5e8176de0b1f5f4",
+        "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+        "conditions": {
+          "WG_RELEASE_ABAB_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab",
+          "WG_RELEASE_CANDIDATE_DIR": ".codex-tmp/release-lazy-fixed",
+          "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab/3-baseline",
+          "WG_QA_URL": "http://127.0.0.1:5220",
+          "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+          "WG_MAGIC_PROFILE": "1",
+          "WG_MAGIC_CPU_SAMPLING": "0",
+          "WG_MAGIC_VIDEO": "0",
+          "WG_MAGIC_GPU": "1",
+          "WG_MAGIC_PHASES": "1",
+          "WG_MAGIC_CASTS": "2",
+          "WG_MAGIC_NO_CAST": "1",
+          "WG_MAGIC_STREAM": "1",
+          "WG_MAGIC_STREAM_DISTANCE": "144",
+          "WG_MAGIC_STREAM_SECONDS": "40",
+          "WG_SPATIAL_RUNTIME_DIR": ""
+        },
+        "limits": [
+          "Instrumented GPU queries and phase clocks; no CPU sampling or video.",
+          "Same seed, profile and camera sequence; simulation is active and asynchronous residency can differ.",
+          "Shared host; no claim of exclusive hardware use."
+        ]
+      },
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "frameIntervals": {
+        "samples": 6254,
+        "p50": 16.664999999979045,
+        "p95": 33.39000000001397,
+        "p99": 50.02499999999418,
+        "max": 83.19500000000698
+      },
+      "cpuWorldRenderMs": {
+        "samples": 6281,
+        "p50": 7.7149999141693115,
+        "p95": 14.669999957084656,
+        "p99": 20.894999980926514,
+        "max": 63.049999952316284
+      },
+      "gpuWorldRenderMs": {
+        "samples": 6278,
+        "p50": 16.756301,
+        "p95": 25.08677,
+        "p99": 28.572342,
+        "max": 33.861822
+      },
+      "gpuSanity": {
+        "observedSpanMs": 131769.12999999523,
+        "impossibleSamples": [],
+        "usable": true,
+        "scope": "Conservative sanity bound only; passing does not independently prove timer accuracy. Raw samples are never clipped or discarded here."
+      },
+      "releaseCallsAtLeast1ms": {
+        "samples": 13,
+        "p50": 11.584999918937683,
+        "p95": 25.179999947547913,
+        "p99": 25.179999947547913,
+        "max": 25.179999947547913
+      },
+      "renderFramesWithReleaseAtLeast1ms": {
+        "samples": 13,
+        "p50": 35.63499999046326,
+        "p95": 63.049999952316284,
+        "p99": 63.049999952316284,
+        "max": 63.049999952316284
+      },
+      "cpuRenderOver33ms": 7,
+      "presentationOver50ms": 64,
+      "presentationOver100ms": 0,
+      "streaming": [
+        {
+          "samples": 400,
+          "initialChunks": 25,
+          "finalChunks": 12,
+          "uniqueChunks": 40
+        },
+        {
+          "samples": 400,
+          "initialChunks": 21,
+          "finalChunks": 13,
+          "uniqueChunks": 37
+        }
+      ],
+      "programWaits": {
+        "count": 0,
+        "totalMs": 0,
+        "maxMs": 0
+      }
+    },
+    {
+      "order": 4,
+      "candidate": true,
+      "provenance": {
+        "candidate": true,
+        "order": 4,
+        "commit": "f55bdbe7fd91f434037fc39b08e09b7f74df8a1a",
+        "wasmSha256": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+        "harnessSha256": "b9ba99cb3229da4ef8821cb3847ee9b663cd8d64c0e8a711c5e8176de0b1f5f4",
+        "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+        "conditions": {
+          "WG_RELEASE_ABAB_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab",
+          "WG_RELEASE_CANDIDATE_DIR": ".codex-tmp/release-lazy-fixed",
+          "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/release-lazy-fixed-abab/4-candidate",
+          "WG_QA_URL": "http://127.0.0.1:5220",
+          "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+          "WG_MAGIC_PROFILE": "1",
+          "WG_MAGIC_CPU_SAMPLING": "0",
+          "WG_MAGIC_VIDEO": "0",
+          "WG_MAGIC_GPU": "1",
+          "WG_MAGIC_PHASES": "1",
+          "WG_MAGIC_CASTS": "2",
+          "WG_MAGIC_NO_CAST": "1",
+          "WG_MAGIC_STREAM": "1",
+          "WG_MAGIC_STREAM_DISTANCE": "144",
+          "WG_MAGIC_STREAM_SECONDS": "40",
+          "WG_SPATIAL_RUNTIME_DIR": ".codex-tmp/release-lazy-fixed"
+        },
+        "limits": [
+          "Instrumented GPU queries and phase clocks; no CPU sampling or video.",
+          "Same seed, profile and camera sequence; simulation is active and asynchronous residency can differ.",
+          "Shared host; no claim of exclusive hardware use."
+        ]
+      },
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "frameIntervals": {
+        "samples": 6263,
+        "p50": 16.660000000003492,
+        "p95": 33.4149999999936,
+        "p99": 50.029999999998836,
+        "max": 83.26499999998487
+      },
+      "cpuWorldRenderMs": {
+        "samples": 6289,
+        "p50": 7.860000014305115,
+        "p95": 15.5,
+        "p99": 22.56500005722046,
+        "max": 56.015000104904175
+      },
+      "gpuWorldRenderMs": {
+        "samples": 6287,
+        "p50": 16.028906,
+        "p95": 25.293488,
+        "p99": 28.776613,
+        "max": 37.923177
+      },
+      "gpuSanity": {
+        "observedSpanMs": 131770.2799999714,
+        "impossibleSamples": [],
+        "usable": true,
+        "scope": "Conservative sanity bound only; passing does not independently prove timer accuracy. Raw samples are never clipped or discarded here."
+      },
+      "releaseCallsAtLeast1ms": {
+        "samples": 13,
+        "p50": 2.034999966621399,
+        "p95": 3.6549999713897705,
+        "p99": 3.6549999713897705,
+        "max": 3.6549999713897705
+      },
+      "renderFramesWithReleaseAtLeast1ms": {
+        "samples": 13,
+        "p50": 25.299999952316284,
+        "p95": 56.015000104904175,
+        "p99": 56.015000104904175,
+        "max": 56.015000104904175
+      },
+      "cpuRenderOver33ms": 2,
+      "presentationOver50ms": 76,
+      "presentationOver100ms": 0,
+      "streaming": [
+        {
+          "samples": 400,
+          "initialChunks": 25,
+          "finalChunks": 14,
+          "uniqueChunks": 40
+        },
+        {
+          "samples": 400,
+          "initialChunks": 22,
+          "finalChunks": 12,
+          "uniqueChunks": 38
+        }
+      ],
+      "programWaits": {
+        "count": 0,
+        "totalMs": 0,
+        "maxMs": 0
+      }
+    }
+  ],
+  "limits": [
+    "Two runs per configuration are evidence for this scene only; no automatic acceptance threshold.",
+    "Simulation and asynchronous residency remain active; chunk arrival timings can differ.",
+    "Release spans record calls >=1ms only. Their counts and percentiles are conditional, not all releases.",
+    "World.render CPU excludes simulation/UI outside that call; presentation intervals include all frame delays.",
+    "GPU sanity is a rejection check, not independent proof of timer accuracy.",
+    "Inspect captures and concurrency validation before adopting."
+  ]
+}

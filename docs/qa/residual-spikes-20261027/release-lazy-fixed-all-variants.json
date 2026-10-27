@@ -1,0 +1,309 @@
+{
+  "runtimePath": "C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\.codex-tmp\\release-lazy-fixed\\spatial-threaded.mjs",
+  "scope": "Native differential: six profiles, retained/removed boundaries, obstacles, duplicate/missing requests, running job invalidation, retry and complete eviction. Not rendered performance.",
+  "rows": [
+    {
+      "biome": "sabana",
+      "options": {},
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 157
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 74
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 74
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 88
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 157
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "desierto",
+      "options": {},
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 170
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 77
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 77
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 66
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 170
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "gran-rio",
+      "options": {},
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 151
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 68
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 68
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 82
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 151
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "volcanes",
+      "options": {},
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 157
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 75
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 75
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 89
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 157
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "manglares",
+      "options": {},
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 243
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 130
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 130
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 140
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 243
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "gran-canon",
+      "options": {},
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 108
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 33
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 33
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 33
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 108
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "manglares",
+      "options": {
+        "mangroveChannels": true
+      },
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 243
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 130
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 130
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 140
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 243
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "manglares",
+      "options": {
+        "mangroveNetwork": true
+      },
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 117
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 51
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 51
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 97
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 117
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "gran-canon",
+      "options": {
+        "canyonOpenRight": true
+      },
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 175
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 63
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 63
+        },
+        {
+          "stage": "edits-after-selected-eviction",
+          "queries": 294,
+          "found": 68
+        },
+        {
+          "stage": "save-restore-after-pending-visuals",
+          "queries": 294,
+          "found": 108
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    }
+  ]
+}

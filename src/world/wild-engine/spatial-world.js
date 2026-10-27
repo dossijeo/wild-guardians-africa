@@ -59,12 +59,12 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return polygons.length;
   };
-  const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
-  const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
-  const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
-  const groundMask=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_ground_mask_ptr(),35*35*4);
-  const waterLevels=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_levels_ptr(),48*48);
-  const waterTriangles=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3);
+  const heights=()=>{const pointer=wasm.spatial_heights_ptr();return new Float32Array(wasm.memory.buffer,pointer,49*49);};
+  const colors=()=>{const pointer=wasm.spatial_colors_ptr();return new Float32Array(wasm.memory.buffer,pointer,49*49*3);};
+  const water=()=>{const pointer=wasm.spatial_water_ptr();return new Uint8Array(wasm.memory.buffer,pointer,48*48);};
+  const groundMask=()=>{const pointer=wasm.spatial_ground_mask_ptr();return new Uint8Array(wasm.memory.buffer,pointer,35*35*4);};
+  const waterLevels=()=>{const pointer=wasm.spatial_water_levels_ptr();return new Float32Array(wasm.memory.buffer,pointer,48*48);};
+  const waterTriangles=()=>{const pointer=wasm.spatial_water_triangles_ptr();return new Float32Array(wasm.memory.buffer,pointer,wasm.spatial_water_vertex_count()*3);};
   function changedChunks(){
     const count=wasm.spatial_changed_chunk_count();
     if(!count)return [];

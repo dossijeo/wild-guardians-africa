@@ -41,6 +41,7 @@ int lazy_select_context(int profile);
 uint8_t* lazy_pass_ptr();
 uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
+int lazy_stage_sector(int sx,int sz);
 int lazy_commit_sector(int sx,int sz);
 int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
@@ -147,6 +148,7 @@ std::unordered_set<PropKey,PropKeyHash>& removedProps(){
 }
 WILD_SAMPLING_LOCAL std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 WILD_SAMPLING_LOCAL int haloPropCount=0;
+WILD_SAMPLING_LOCAL bool selectedVisualPending=false;
 WILD_SAMPLING_LOCAL BarrierIndex* barrierRegistry=nullptr;
 BarrierIndex& barrierIndex(){
   if(!barrierRegistry)barrierRegistry=new BarrierIndex();
@@ -888,6 +890,30 @@ void refreshSector(int sx,int sz){
   lazy_commit_sector(sx,sz);
   SPATIAL_TOCK(13,sectorGraphStarted);
 }
+// Removing a neighboring chunk cannot change the resident sector's cells or
+// interior edges. Only edges facing the removed residency need resampling.
+void refreshSectorResidencyEdges(int sx,int sz,uint8_t directions){
+  if(!lazy_stage_sector(sx,sz)){refreshSector(sx,sz);return;}
+  SPATIAL_TICK(sectorFillStarted);
+  auto* pass=lazy_pass_ptr();auto* steps=lazy_steps_ptr();auto* inbound=lazy_inbound_ptr();
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(int d=0;d<4;d++)if(directions&(1<<d))for(int k=0;k<sector;k++){
+    const int lx=d==0?sector-1:d==1?0:k,lz=d==2?sector-1:d==3?0:k;
+    const int i=lz*sector+lx,x=sx*sector+lx,z=sz*sector+lz,nx=x+dx[d],nz=z+dz[d];
+    steps[i]&=uint8_t(~(1<<d));inbound[i]&=uint8_t(~(1<<d));
+    if(!pass[i])continue;
+    if(!rasterAt(nx,nz)){
+      const ChunkRaster* chunk=rasterAt(x,z);const int at=rasterIndex(*chunk,x,z);
+      if((chunk->steps[at]&(1<<d))&&wallEdgeClear(x,z,nx,nz))steps[i]|=1<<d;
+      if((chunk->inbound[at]&(1<<d))&&wallEdgeClear(nx,nz,x,z))inbound[i]|=1<<d;
+    }else{
+      if(edge(x,z,nx,nz))steps[i]|=1<<d;
+      if(edge(nx,nz,x,z))inbound[i]|=1<<d;
+    }
+  }
+  SPATIAL_TOCK(12,sectorFillStarted);SPATIAL_TICK(sectorGraphStarted);
+  lazy_commit_sector(sx,sz);SPATIAL_TOCK(13,sectorGraphStarted);
+}
 template<class F> void forEachRectSector(int minX,int minZ,int maxX,int maxZ,F visit){
   if(!navReady)return;
   for(int cz=floorDiv(minZ+24,side);cz<=floorDiv(maxZ+24,side);cz++)
@@ -964,23 +990,10 @@ double proceduralPropSpacing(int type){
   if(mangroveNetwork&&type==0)return 8.5;
   return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
 }
-void prepareSelectedChunk(int cx,int cz,bool visual){
-  SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
-  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
-  selectNearbySettlements(cx,cz);
-  // The standalone no-entry WASM binary has no startup constructor pass.
-  preparePonds(cx,cz);
-  if(visual){
-    heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
-    water.assign(side*side,0);waterLevels.assign(side*side,0);
-  }
-  SPATIAL_TOCK(5,setupStarted);SPATIAL_TICK(latticeStarted);
-  const int x0=cx*side-24,z0=cz*side-24;
-  lattice.resize(latticeSpan*latticeSpan);
-  for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
-    lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
-  SPATIAL_TOCK(6,latticeStarted);
-  if(visual){
+void buildSelectedVisual(){
+  const int cx=chunkX,cz=chunkZ,x0=cx*side-24,z0=cz*side-24;
+  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
+  water.assign(side*side,0);waterLevels.assign(side*side,0);
   SPATIAL_TICK(colorStarted);
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
@@ -998,7 +1011,28 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
   SPATIAL_TOCK(9,maskStarted);SPATIAL_TICK(meshStarted);
   buildWaterMesh(cx,cz);
   SPATIAL_TOCK(10,meshStarted);
+  selectedVisualPending=false;
+}
+void ensureSelectedVisual(){if(selectedVisualPending)buildSelectedVisual();}
+void prepareSelectedChunk(int cx,int cz,bool visual){
+  // Spatial-only refreshes must not declare older visual arrays current.
+  selectedVisualPending=!visual;
+  SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
+  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
+  selectNearbySettlements(cx,cz);
+  // The standalone no-entry WASM binary has no startup constructor pass.
+  preparePonds(cx,cz);
+  if(visual){
+    heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
+    water.assign(side*side,0);waterLevels.assign(side*side,0);
   }
+  SPATIAL_TOCK(5,setupStarted);SPATIAL_TICK(latticeStarted);
+  const int x0=cx*side-24,z0=cz*side-24;
+  lattice.resize(latticeSpan*latticeSpan);
+  for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
+    lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
+  SPATIAL_TOCK(6,latticeStarted);
+  if(visual)buildSelectedVisual();
   SPATIAL_TICK(propsStarted);
   constexpr double savannaDensity[6]={.53,.51,.72,.30,.28,.63};
   constexpr double desertDensity[6]={.30,.22,.035,.17,.10,.12};
@@ -1110,14 +1144,16 @@ struct PreparedChunkData {
   std::vector<Prop> props,solidProps;
   std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
   std::vector<size_t> nearbySettlements;
+  bool visualPending=false;
 };
 PreparedChunkData takePreparedChunkData(){
   return {chunkX,chunkZ,haloPropCount,std::move(heights),std::move(colors),
     std::move(waterLevels),std::move(waterTriangles),std::move(water),
     std::move(groundMask),std::move(lattice),std::move(ponds),std::move(props),
-    std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements)};
+    std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements),selectedVisualPending};
 }
 void selectPreparedChunkData(PreparedChunkData data){
+  selectedVisualPending=data.visualPending;
   chunkX=data.cx;chunkZ=data.cz;haloPropCount=data.halo;
   heights=std::move(data.heights);colors=std::move(data.colors);
   waterLevels=std::move(data.waterLevels);waterTriangles=std::move(data.waterTriangles);
@@ -1138,6 +1174,21 @@ void populateChunk(int cx,int cz,bool visual=true){
   auto prepared=takePreparedChunkData();
   selectPreparedChunkData(std::move(prepared));
   publishSelectedChunk();
+}
+// Eviction selects an already resident spatial snapshot. Visual composition is
+// needed only if a caller actually reads this replacement chunk's render data.
+void selectResidentAfterEviction(int cx,int cz){
+  const auto key=chunkKey(cx,cz);
+  const auto spatial=residentSpatial().find(key);
+  const auto solid=residentSolidProps().find(key),visible=residentVisibleProps().find(key);
+  if(spatial==residentSpatial().end()||solid==residentSolidProps().end()||visible==residentVisibleProps().end()){
+    populateChunk(cx,cz);return;
+  }
+  chunkX=cx;chunkZ=cz;lattice=spatial->second.lattice;ponds=spatial->second.ponds;
+  solidProps=solid->second;props=visible->second;selectNearbySettlements(cx,cz);
+  haloPropCount=0;const int x0=cx*side-24,z0=cz*side-24;
+  for(const auto& p:solidProps)if(p.x<x0||p.x>=x0+side||p.z<z0||p.z>=z0+side)++haloPropCount;
+  indexSolidProps();selectedVisualPending=true;
 }
 // Preparation owns its output; live navigation is not modified until installation.
 ChunkRaster prepareActiveRaster(){
@@ -1551,7 +1602,7 @@ int spatial_remove_chunk(int cx,int cz){
   selectProfile(previous);
   if(chunkX==cx&&chunkZ==cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
+    else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return 1;
 }
@@ -1584,7 +1635,8 @@ int spatial_remove_chunks(int count){
       const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
       for(int z=0;z<4;z++)for(int x=0;x<4;x++)lazy_remove_sector(firstX+x,firstZ+z);
     }
-    std::unordered_set<uint64_t> refreshed;
+    std::unordered_map<uint64_t,uint8_t> refreshed;
+    std::vector<uint64_t> refreshOrder;
     constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
     for(const auto& [cx,cz]:removed)for(int d=0;d<4;d++){
       const int nx=cx+dx[d],nz=cz+dz[d];
@@ -1592,14 +1644,18 @@ int spatial_remove_chunks(int count){
       const int x0=(nx*side-24)/sector,z0=(nz*side-24)/sector;
       for(int i=0;i<4;i++){
         const int x=x0+(d==0?0:d==1?3:i),z=z0+(d==2?0:d==3?3:i);
-        if(refreshed.insert(chunkKey(x,z)).second)refreshSector(x,z);
+        const auto key=chunkKey(x,z);
+        auto [it,inserted]=refreshed.try_emplace(key,0);
+        if(inserted)refreshOrder.push_back(key);
+        it->second|=1<<(d^1);
       }
     }
+    for(const auto key:refreshOrder)refreshSectorResidencyEdges(int(int32_t(key>>32)),int(int32_t(key)),refreshed.at(key));
   }
   selectProfile(previous);
   if(std::find(removed.begin(),removed.end(),std::pair<int,int>{chunkX,chunkZ})!=removed.end()){
-    if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
+    if(!loadedChunks.empty())selectResidentAfterEviction(loadedChunks.back().first,loadedChunks.back().second);
+    else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return int(removed.size());
 }
@@ -2015,13 +2071,13 @@ int spatial_build_horizon(int cx,int cz,int minX,int minZ,int maxX,int maxZ,
 float* spatial_horizon_terrain_ptr(){return horizonTerrain.data();}
 int spatial_horizon_water_count(){return int(horizonWater.size()/9);}
 float* spatial_horizon_water_ptr(){return horizonWater.data();}
-float* spatial_heights_ptr(){return heights.data();}
-float* spatial_colors_ptr(){return colors.data();}
-uint8_t* spatial_water_ptr(){return water.data();}
-uint8_t* spatial_ground_mask_ptr(){return groundMask.data();}
-float* spatial_water_levels_ptr(){return waterLevels.data();}
-float* spatial_water_triangles_ptr(){return waterTriangles.data();}
-int spatial_water_vertex_count(){return int(waterTriangles.size()/3);}
+float* spatial_heights_ptr(){ensureSelectedVisual();return heights.data();}
+float* spatial_colors_ptr(){ensureSelectedVisual();return colors.data();}
+uint8_t* spatial_water_ptr(){ensureSelectedVisual();return water.data();}
+uint8_t* spatial_ground_mask_ptr(){ensureSelectedVisual();return groundMask.data();}
+float* spatial_water_levels_ptr(){ensureSelectedVisual();return waterLevels.data();}
+float* spatial_water_triangles_ptr(){ensureSelectedVisual();return waterTriangles.data();}
+int spatial_water_vertex_count(){ensureSelectedVisual();return int(waterTriangles.size()/3);}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
