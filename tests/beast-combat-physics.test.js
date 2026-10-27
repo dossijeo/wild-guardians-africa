@@ -39,7 +39,9 @@ test('authored recovery follows a real fallen pose and releases physical ownersh
  let recovering=false,rolling=false,maxStep=0,previous=null;
  for(let i=0;i<720;i++){
   state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
-  const entry=manager.entries.get(animal.id);if(entry?.rolling){rolling=true;assert.ok(!entry.actor.kinematic);assert.equal(entry.actor.joints.length,13);assert.equal(animal.magicDown.phase,'rolling');}if(entry?.recovery){recovering=true;assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));const p=entry.binding.bones.get('Hips').getWorldPosition(new Vector3());if(previous)maxStep=Math.max(maxStep,p.distanceTo(previous));previous=p;assert.equal(entry.actor.kinematic,true);}
+  const entry=manager.entries.get(animal.id);if(entry?.rolling){rolling=true;assert.ok(!entry.actor.kinematic);assert.equal(entry.actor.joints.length,13);assert.equal(animal.magicDown.phase,'rolling');}if(entry?.recovery){recovering=true;assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));const p=entry.binding.bones.get('Hips').getWorldPosition(new Vector3());if(previous)maxStep=Math.max(maxStep,p.distanceTo(previous));previous=p;assert.equal(entry.actor.kinematic,true);
+   if(entry.recoveryAge>=entry.recovery.entryDuration){let floor=Infinity;const point=new Vector3();for(const {mesh,index}of entry.recovery.samples){mesh.getVertexPosition(index,point).applyMatrix4(mesh.matrixWorld);floor=Math.min(floor,point.y);}assert.ok(Math.abs(floor-.01)<.002,`Recovery support detached from floor: ${floor}m`);}
+  }
  }
  assert.ok(rolling);assert.ok(recovering);assert.equal(manager.stats.rollFailures,0);assert.ok(maxStep<.08,`Authored get-up hip step ${maxStep}`);assert.equal(animal.magicDown,undefined);assert.equal(manager.entries.size,0);manager.dispose();
  }
