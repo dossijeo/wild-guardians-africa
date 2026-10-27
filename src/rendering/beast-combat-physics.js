@@ -5,6 +5,7 @@ import {BeastPhysicsEnvironment} from './beast-physics-environment.js';
 import {BeastRagdollSolver} from '../simulation/beast-ragdoll.js';
 import {BeastRagdollBinding} from './beast-ragdoll-binding.js';
 import {BeastRecovery} from './beast-recovery.js';
+import {AuthoredBeastRecovery} from './authored-beast-recovery.js';
 import {applyAnimalPose} from './animal-actions.js';
 import {ATTACK} from '../simulation/guardian-combat.js';
 let initialization;
@@ -91,7 +92,8 @@ export class BeastCombatPhysics{
    if(e.actor.age>5||e.settledAt!==null&&e.actor.age-e.settledAt>.3){
     const recoveryStarted=performance.now();
     e.binding.restore();e.root.position.set(a.x,this.world.nav.field.surface(a.x,a.z),a.z);e.root.updateMatrixWorld(true);e.data.key=null;applyAnimalPose(e.data,a,state.elapsed);
-    e.recovery=new BeastRecovery(e.binding,e.actor.pose,{surface:(x,z)=>this.world.nav.field.surface(x,z)});e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
+    const clip=this.recoveryClips?.get(a.species),options={surface:(x,z)=>this.world.nav.field.surface(x,z)};
+    e.recovery=clip?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip}):new BeastRecovery(e.binding,e.actor.pose,options);e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;

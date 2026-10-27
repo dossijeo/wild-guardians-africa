@@ -8,4 +8,6 @@ Contains one mesh, a 28-joint Mixamo-named skin and `Stand_Up1` (8.2666664 secon
 
 Inspect the original with `/tests/browser/stand-up-source.html`. The viewer frames the complete sampled motion envelope and provides playback, scrubbing and front/side views. It does not replace production models or load this source into the game.
 
-Retargeting and integration are pending. Matching joint names alone does not establish matching bind axes, limb lengths or ground contacts. Preserve the current production meshes, face morphs and accessories when adapting the animation. Physical-pose entry, ground supports, final pose and navigation reconciliation require validation for each species and worker rig.
+`hyena-candidate.json` is the first offline adaptation to the expressive hyena. Its provenance includes both input hashes. It is available in the preview and an explicit engine QA option, not enabled by default. See `docs/guardian/phase2/stand-up-source/REVIEW.md` for commands, actual results and the rejected lateral-entry transition. Other species and workers remain pending.
+
+Matching joint names alone does not establish matching bind axes, limb lengths or ground contacts. Preserve the current production meshes, face morphs and accessories when adapting the animation. Physical-pose entry, ground supports, final pose and navigation reconciliation require validation for each species and worker rig.

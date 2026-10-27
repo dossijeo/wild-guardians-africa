@@ -8,6 +8,7 @@ import {beastSkin} from './helpers/beast-skin.js';
 import {BeastCombatPhysics,beastPhysicsRuntime} from '../src/rendering/beast-combat-physics.js';
 import {updateRaid} from '../src/simulation/raids.js';
 const R=await beastPhysicsRuntime();
+const authoredClip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL('../content/source/animations/stand-up/hyena-candidate.json',import.meta.url))).clip);
 function fixture(){
  const model=beastSkin('hyena'),root=new Group();root.add(model);root.position.set(20,0,30);root.updateMatrixWorld(true);
  const animal={id:'beast',species:'hyena',x:20,z:30,status:'attacking',hitsRemaining:8,heading:0,radius:.7,attackRemaining:1,path:[{x:21,z:30}],magicImpact:{at:10,direction:{x:1,y:-.2,z:.2},intensity:1}};
@@ -31,6 +32,15 @@ test('combat physics suspends AI and worker hits, moves logical position, recove
  assert.ok(Math.hypot(animal.x-20,animal.z-30)>.5);assert.equal(animal.destinationId,null);
  manager.dispose();assert.equal(world.nav.beastPhysics,undefined);
 });
+test('authored recovery follows a real fallen pose and releases physical ownership',()=>{
+ const {animal,state,root,manager}=fixture();manager.recoveryClips=new Map([['hyena',authoredClip]]);manager.step(state,.1);
+ let recovering=false,maxStep=0,previous=null;
+ for(let i=0;i<720;i++){
+  state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
+  const entry=manager.entries.get(animal.id);if(entry?.recovery){recovering=true;assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery');const p=entry.binding.bones.get('Hips').getWorldPosition(new Vector3());if(previous)maxStep=Math.max(maxStep,p.distanceTo(previous));previous=p;assert.equal(entry.actor.kinematic,true);}
+ }
+ assert.ok(recovering);assert.ok(maxStep<.08,`Authored get-up hip step ${maxStep}`);assert.equal(animal.magicDown,undefined);assert.equal(manager.entries.size,0);manager.dispose();
+});
 test('second hit reuses the airborne articulated body without resetting its pose',()=>{
  const {animal,state,manager}=fixture();manager.step(state,.1);
  const entry=manager.entries.get(animal.id),before=Array.from(entry.actor.pose);
@@ -48,8 +58,8 @@ test('physical launch waits for projectile contact and only advances the elapsed
 });
 
 test('hits throughout get-up preserve the visible pose and reuse the collision world',()=>{
- for(const age of [.15,.65,1.4]){
-  const {animal,state,root,manager}=fixture();manager.step(state,.1);
+ for(const clip of [null,authoredClip])for(const age of clip?[.15,.65,2.8,3.9]:[.15,.65,1.4]){
+  const {animal,state,root,manager}=fixture();if(clip)manager.recoveryClips=new Map([['hyena',clip]]);manager.step(state,.1);
   let entry=manager.entries.get(animal.id);
   for(let i=0;i<360&&!entry.recovery;i++){
    state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
@@ -62,7 +72,7 @@ test('hits throughout get-up preserve the visible pose and reuse the collision w
   assert.ok(Math.hypot(animal.x-logical.x,animal.z-logical.z)<.0001);
   for(let i=0;i<before.length;i++){
    assert.ok(before[i].p.distanceTo(entry.binding.entries[i].bone.getWorldPosition(new Vector3()))<.0001,'bone position popped at get-up '+age);
-   assert.ok(before[i].q.angleTo(entry.binding.entries[i].bone.getWorldQuaternion(new Quaternion()))<.001,'bone orientation popped at get-up '+age);
+   assert.ok(before[i].q.clone().normalize().angleTo(entry.binding.entries[i].bone.getWorldQuaternion(new Quaternion()).normalize())<.001,'bone orientation popped at get-up '+age);
   }
   for(let i=0;i<500;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);}
   assert.equal(manager.entries.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
