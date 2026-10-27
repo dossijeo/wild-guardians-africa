@@ -1,0 +1,30 @@
+{
+  "candidate": true,
+  "order": 4,
+  "commit": "26948b3fbe5fdb7d1add19b8b09fae99876bce7b",
+  "wasmSha256": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+  "harnessSha256": "3422ac7ac58cf1b90f3fd7b82085e6383691c8759bb32f3a0d285eda8a258b7f",
+  "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+  "conditions": {
+    "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/shadow-bypass-abab/4-candidate",
+    "WG_QA_URL": "http://127.0.0.1:5220",
+    "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+    "WG_MAGIC_PROFILE": "1",
+    "WG_MAGIC_CPU_SAMPLING": "0",
+    "WG_MAGIC_VIDEO": "0",
+    "WG_MAGIC_GPU": "1",
+    "WG_MAGIC_PHASES": "1",
+    "WG_MAGIC_CASTS": "2",
+    "WG_MAGIC_NO_CAST": "1",
+    "WG_MAGIC_STREAM": "1",
+    "WG_MAGIC_STREAM_DISTANCE": "144",
+    "WG_MAGIC_STREAM_SECONDS": "40",
+    "WG_SPATIAL_RUNTIME_DIR": "",
+    "WG_MAGIC_SHADOW_CACHE": "0"
+  },
+  "limits": [
+    "Instrumented GPU queries and phase clocks; no CPU sampling or video.",
+    "Same seed, profile and camera sequence; simulation is active and asynchronous residency can differ.",
+    "Shared host; no claim of exclusive hardware use."
+  ]
+}
