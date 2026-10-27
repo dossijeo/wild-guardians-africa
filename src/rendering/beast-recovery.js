@@ -3,10 +3,12 @@ import {Vector3,Quaternion} from 'three';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 const X=new Vector3(1,0,0),Z=new Vector3(0,0,1);
 const sampleCache=new WeakMap();
-function contactIndices(geometry){
+function contactIndices(mesh){
+ const geometry=mesh.geometry;
  if(sampleCache.has(geometry))return sampleCache.get(geometry);const p=geometry.attributes.position,indices=geometry.attributes.skinIndex,weights=geometry.attributes.skinWeight,directions=[];
  for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++)if(x||y||z)directions.push([x,y,z]);
  const groups=new Map(),chosen=new Set();for(let i=0;i<p.count;i++){
+  if(isTailContactVertex(mesh,i))continue;
   let dominant=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,dominant))dominant=k;const id=indices.getComponent(i,dominant);let group=groups.get(id);if(!group){group=directions.map(()=>({score:-Infinity,index:0}));groups.set(id,group);}
   for(let j=0;j<directions.length;j++){const d=directions[j],score=p.getX(i)*d[0]+p.getY(i)*d[1]+p.getZ(i)*d[2];if(score>group[j].score){group[j].score=score;group[j].index=i;}}
  }
@@ -18,8 +20,8 @@ function contactIndices(geometry){
 // logical root to the fallen pelvis; the world-space snapshot preserves the
 // visible pose during that reconciliation. No return to the pre-impact origin.
 export class BeastRecovery{
- static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh.geometry))if(!isTailContactVertex(mesh,index))samples.push({mesh,index});});return samples;}
- static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh.geometry);});}
+ static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh))if(!isTailContactVertex(mesh,index))samples.push({mesh,index});});return samples;}
+ static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh);});}
  constructor(binding,snapshot,{surface,duration=1.9,fallenWorldPose=null}={}){
   this.binding=binding;this.surface=surface;this.duration=duration;this.age=0;this.done=false;this.lift=0;this.v=new Vector3();
   this.entries=binding.entries.map(e=>({bone:e.bone,standingQ:e.bone.quaternion.clone(),standingP:e.bone.position.clone(),fallenQ:new Quaternion(),fallenP:new Vector3(),crouchQ:e.bone.quaternion.clone(),crouchP:e.bone.position.clone()}));

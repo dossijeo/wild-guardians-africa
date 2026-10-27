@@ -14,3 +14,16 @@ test('tail exemption keeps pelvis and mixed body contacts and accepts explicit u
  geometry.setAttribute('tailContactExempt',new Float32BufferAttribute([0,0,0,1],1));
  assert.equal(isTailContactVertex(mesh,3),true);assert.equal(isTailContactVertex(mesh,0),false);
 });
+
+
+test('reviewed warthog tail mask excludes misweighted tail without excluding the actual hand',async()=>{
+ const {actorGeometry}=await import('./helpers/actor-geometry.js');
+ const {ANIMAL_ACTIONS}=await import('../src/simulation/animal-actions-data.js');
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.warthog.url,import.meta.url)),mesh=model.getObjectByName('Mesh_0_1');
+ assert.equal(isTailContactVertex(mesh,15050),true,'Known tail tip formerly supporting the hand collider');
+ let count=0,retainedHand=0;const {position:p,skinIndex:ix,skinWeight:w}=mesh.geometry.attributes;
+ for(let i=0;i<p.count;i++){const excluded=isTailContactVertex(mesh,i);if(excluded)count++;for(let k=0;k<4;k++)if(mesh.skeleton.bones[ix.getComponent(i,k)].name==='RightHand'&&w.getComponent(i,k)>.25&&p.getX(i)<-.9&&p.getY(i)>1.05&&p.getZ(i)>-.5&&!excluded)retainedHand++;}
+ assert.equal(count,1193);assert.ok(retainedHand>20,'Actual hand contacts must remain');
+ const changed={...mesh,geometry:mesh.geometry.clone()};changed.geometry.deleteAttribute('tailContactExempt');changed.geometry.attributes.position.setX(0,p.getX(0)+.01);
+ assert.equal(isTailContactVertex(changed,15050),false,'Changed rest geometry must not inherit an old mask');
+});

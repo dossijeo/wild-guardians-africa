@@ -24,7 +24,7 @@ function rotate(v,q){const x=2*(q.y*v.z-q.z*v.y),y=2*(q.z*v.x-q.x*v.z),z=2*(q.x*
 function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b.z+a.y*b.w+a.z*b.x,z:a.w*b.z+a.x*b.y-a.y*b.x+a.z*b.w,w:a.w*b.w-a.x*b.x-a.y*b.y-a.z*b.z};}
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
-export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5});
+export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5,forearmDamping:4});
 export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,angleTolerance:.45,settleSeconds:.15,timeout:3.5});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
@@ -52,7 +52,7 @@ export class BeastRagdollSolver{
   try{
    for(let i=0;i<RAGDOLL_LINKS.length;i++){
     const [a,b,defaultParent,r,axis,lo,hi]=RAGDOLL_LINKS[i],parent=pose.parents?.[i]??defaultParent,start=pose[a],end=pose[b],delta=sub(end,start),len=length(delta),q=fromY(delta),center=vector((start.x+end.x)/2,(start.y+end.y)/2,(start.z+end.z)/2);
-    const fit=colliders?.[i],radius=fit?.radius??(i===3?r*scale:Math.min(r*scale,len*.45)),body=this.world.createRigidBody(this.R.RigidBodyDesc.dynamic().setTranslation(center.x,center.y,center.z).setRotation(q).setLinearDamping(.2).setAngularDamping(2.5).setCcdEnabled(true));
+    const fit=colliders?.[i],radius=fit?.radius??(i===3?r*scale:Math.min(r*scale,len*.45)),body=this.world.createRigidBody(this.R.RigidBodyDesc.dynamic().setTranslation(center.x,center.y,center.z).setRotation(q).setLinearDamping(.2).setAngularDamping(/ForeArm$/.test(a)?RAGDOLL_CONFIG.forearmDamping:2.5).setCcdEnabled(true));
     actor.parts.push({body,center,rotation:q,length:len,radius});
     const offset=fit?.offset??vector();
     const shape=(fit?.hull?this.R.ColliderDesc.convexHull(new Float32Array(fit.hull)):null)??this.R.ColliderDesc.capsule(fit?.halfHeight??Math.max(.005,len/2-radius),radius).setTranslation(offset.x,offset.y,offset.z);

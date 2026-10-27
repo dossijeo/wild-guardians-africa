@@ -1,7 +1,20 @@
+import {Uint8BufferAttribute} from 'three';
+import {ACTOR_CONTACT_MASKS} from './actor-contact-masks.js';
+const checked=new WeakSet();
+export function applyAuthoredContactMask(mesh){
+ const geometry=mesh.geometry;if(checked.has(geometry))return;checked.add(geometry);
+ if(geometry.getAttribute('tailContactExempt'))return;
+ const p=geometry.attributes.position;let hash=2166136261;
+ for(let i=0;i<p.count;i++)for(let k=0;k<3;k++)hash=Math.imul(hash^Math.round(p.getComponent(i,k)*1e5),16777619);
+ const mask=ACTOR_CONTACT_MASKS[p.count+':'+(hash>>>0)];if(!mask)return;
+ const flags=new Uint8Array(p.count);for(const i of mask.indices)flags[i]=1;
+ geometry.setAttribute('tailContactExempt',new Uint8BufferAttribute(flags,1));
+}
 // Tail skin is decorative during knockdown, never a support for the body.
 // Unrigged tails may be explicitly marked with a per-vertex tailContactExempt
 // attribute; do not infer them from pelvis weights or spatial thresholds.
 export function isTailContactVertex(mesh,index){
+ applyAuthoredContactMask(mesh);
  const mask=mesh.geometry.getAttribute('tailContactExempt');
  if(mask?.getX(index)>.5)return true;
  const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
