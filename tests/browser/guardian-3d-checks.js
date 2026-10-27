@@ -12,6 +12,7 @@ export async function checkGuardian(actor,audio,voices,resolve){
  const bones=[];actor.model.traverse(o=>{if(o.isBone)bones.push(o);});const head=bones.find(b=>b.name==='Head'),arm=bones.find(b=>/^Arm/.test(b.name)),mantle=bones.find(b=>/^Mantle/.test(b.name));
  actor.manual.clip='Invoke';actor.draw({time:.1});const first=[head.quaternion.toArray(),arm.quaternion.toArray(),mantle.position.toArray()];actor.draw({time:1.9});const second=[head.quaternion.toArray(),arm.quaternion.toArray(),mantle.position.toArray()];
  for(let i=0;i<3;i++)assert(['head rotation','arm rotation','baked mantle'][i],JSON.stringify(first[i])!==JSON.stringify(second[i]));
+ for(const prefix of ['Feather','Wood','Root']){const bone=bones.find(b=>b.name.startsWith(prefix));actor.draw({time:.3});const before=bone.matrixWorld.toArray();actor.draw({time:3.7});assert(prefix+' continuous floating motion',JSON.stringify(before)!==JSON.stringify(bone.matrixWorld.toArray()));}
  actor.manual.clip=null;
  for(const id of ['ES_01','EN_01']){
   const record=voices.find(v=>v.id===id);await actor.setRecord({id,path:record.audio});

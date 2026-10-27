@@ -46,9 +46,13 @@ for v in body.data.vertices:
  mantle*=smooth(-.42,-.28,z)*max(smooth(-.29,-.19,z),smooth(.07,.14,ax))
  if mantle and remain:
   row=max(0,min(2,(-z-.035)/.12));i=int(row);f=row-i
-  name=('F' if y<0 else 'B')+side
-  weights['Mantle.'+name+'.'+str(i)]=remain*mantle*(1-f)
-  if i<2:weights['Mantle.'+name+'.'+str(i+1)]=remain*mantle*f
+  back=smooth(-.055,.055,y)
+  right=smooth(-.065,.065,x)
+  for panel,panel_weight in [('F',1-back),('B',back)]:
+   for panel_side,side_weight in [('L',1-right),('R',right)]:
+    name=panel+panel_side
+    weights['Mantle.'+name+'.'+str(i)]=remain*mantle*(1-f)*panel_weight*side_weight
+    if i<2:weights['Mantle.'+name+'.'+str(i+1)]=remain*mantle*f*panel_weight*side_weight
  weights['Torso']=remain*(1-mantle)
  # Eye motion is confined to the visible globe and softly pinned at the socket.
  for s,cx,cz in [('L',-.067,.27),('R',.052,.286)]:
@@ -133,7 +137,9 @@ for clip,amp in [('Idle',.015),('Explain',.065),('Warning',.035),('Enthusiasm',.
    pb.keyframe_insert('rotation_euler',frame=frame,group=name)
  track=rig.animation_data.nla_tracks.new();track.name=clip;track.strips.new(clip,1,action);rig.animation_data.action=None
  for pb in rig.pose.bones:pb.rotation_euler=(0,0,0);pb.location=(0,0,0)
-for track in rig.animation_data.nla_tracks:track.mute=track.name not in ['Idle','Mantle_Breeze']
+from ethereal import refine
+refine(body,rig,islands,samples,verts,ROOT)
+for track in rig.animation_data.nla_tracks:track.mute=track.name not in ['Idle','Mantle_Breeze','Float']
 proxy.hide_render=True;proxy.hide_set(True);wind.hide_set(True)
 scene.frame_set(1);activate(body);rig.select_set(True);face.select_set(True)
 output=ROOT/'public/content/guardian';output.mkdir(parents=True,exist_ok=True)
