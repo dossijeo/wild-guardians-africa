@@ -1,0 +1,5 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+const root=process.argv[2]??'docs/qa/residual-spikes-20261027/fixed-scene-windows-corrected/1-baseline',r=JSON.parse(fs.readFileSync(root+'/raid-ui.json'));assert(r.ok);assert.deepEqual(r.errors,[]);assert.deepEqual(r.consoleErrors,[]);
+const stats=xs=>{const a=xs.sort((a,b)=>a-b);assert(a.length);return {n:a.length,p50:a[Math.ceil(a.length*.5)-1],p95:a[Math.ceil(a.length*.95)-1],p99:a[Math.ceil(a.length*.99)-1],max:a.at(-1)};};
+const rows=r.fixedScene.windows.map(({start,end,snapshot})=>{assert.deepEqual(snapshot,r.fixedScene.before);const cpu=r.residual.cpu.filter(x=>x.at>=start&&x.at+x.ms<=end),ids=new Set(cpu.map(x=>x.frame));return {start,end,cpu:stats(cpu.map(x=>x.ms)),gpu:stats(r.residual.gpu.samples.filter(x=>ids.has(x.frame)).map(x=>x.ms)),raf:stats(r.timing.frames.filter(x=>x.t-x.ms>=start&&x.t<=end).map(x=>x.ms))};});
+fs.writeFileSync(root+'/comparison.json',JSON.stringify({scope:r.fixedScene.scope,snapshot:r.fixedScene.before,rows},null,2));console.log(JSON.stringify(rows,null,2));
