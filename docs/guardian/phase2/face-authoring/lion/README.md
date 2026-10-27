@@ -175,3 +175,20 @@ installed. Remaining: inspect more animated poses, both profiles, eye-skin
 transition boundaries and continuous blink interpolation; improve oral
 shading in Three.js and finish the production asset validation.
 
+## Oral v15: winding and depth shading
+
+`repair_lion_oral_shading.py` found negative signed volume on the closed
+tongue and several dental components. It repairs face winding, verifies
+all 17 closed components point outward, and asserts vertex and morph
+coordinates remain exactly unchanged. The cavity remains open at the front.
+Tissue vertex colors now darken with depth; teeth retain their ivory colors.
+No new texture, mesh or draw call was introduced by this repair.
+
+Front and both profiles at mouth 0.85 were inspected in the Three.js QA page.
+The tongue is less bright; the front view still has simpler shading than
+the Blender render, so this is not final artistic acceptance. Both profiles
+show the open aperture and recessed tongue. The dental rigidity audit and
+native-clip/muzzle audits pass. Source is
+`C:/tmp/guardian-faces/lion-oral-v15-checked.blend`; the equivalent v15 GLB
+is loaded in the browser fixture. Production lion remains unchanged.
+
