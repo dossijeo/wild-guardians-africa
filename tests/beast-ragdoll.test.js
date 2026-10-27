@@ -1,3 +1,4 @@
+import {BeastRecovery} from '../src/rendering/beast-recovery.js';
 import {beastSkin} from './helpers/beast-skin.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -58,3 +59,13 @@ test('skin-derived convex colliders settle and support the actual deformed mesh'
 });
 
 test('invalid fitted collider leaves an existing simulation intact',()=>{const s=new BeastRagdollSolver(R),p=pose('hyena'),a=s.add('one',{pose:p});assert.throws(()=>s.add('one',{pose:p,colliders:[{radius:NaN}]}));assert.equal(s.actors.get('one'),a);assert.equal(s.world.bodies.len(),14);s.dispose();});
+
+test('get-up starts at the physical pose, retains displaced root and releases control',()=>{
+ for(const species of ['hyena','warthog','lion','buffalo','rhino']){
+  const model=beastSkin(species);model.position.y=.15;const b=new BeastRagdollBinding(model),p=b.capture(),s=new BeastRagdollSolver(R);s.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});const a=s.add(species,{pose:p,colliders:b.colliders()});for(let i=0;i<480;i++)s.step();b.apply(a.pose);
+  const fallen=b.entries[0].bone.getWorldPosition(new THREE.Vector3());b.restore();const standing=b.entries[0].bone.getWorldPosition(new THREE.Vector3());model.position.x+=fallen.x-standing.x;model.position.z+=fallen.z-standing.z;model.updateMatrixWorld(true);
+  const root=model.position.clone(),r=new BeastRecovery(b,a.pose,{surface:()=>0});r.apply(0);assert.ok(fallen.distanceTo(b.entries[0].bone.getWorldPosition(new THREE.Vector3()))<.03,'start pose jumps');let maxStep=0,maxPenetration=0;const point=new THREE.Vector3();const last=b.entries[0].bone.getWorldPosition(new THREE.Vector3());
+  for(let i=0;i<100;i++){r.restore();r.apply(1/60);const hip=b.entries[0].bone.getWorldPosition(new THREE.Vector3());maxStep=Math.max(maxStep,hip.distanceTo(last));last.copy(hip);assert.ok(Number.isFinite(hip.y));assert.deepEqual(model.position.toArray(),root.toArray());if(i%10===0)model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let j=0;j<mesh.geometry.attributes.position.count;j+=3){mesh.getVertexPosition(j,point).applyMatrix4(mesh.matrixWorld);maxPenetration=Math.max(maxPenetration,-point.y);}});}
+  assert.ok(r.done);assert.ok(maxStep<.08,species+' recovery step '+maxStep);console.log('get-up',species,{maxStep,maxPenetration,lift:r.lift});assert.ok(maxPenetration<.04,species+' recovery penetrates '+maxPenetration);r.restore();s.dispose();
+ }
+});
