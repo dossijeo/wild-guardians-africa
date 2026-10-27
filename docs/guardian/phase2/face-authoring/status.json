@@ -2,7 +2,7 @@
   "status": "in-progress-hollow-oral-cavity-not-runtime",
   "actor": "hyena",
   "sourceBranch": "codex/global-visual-lab",
-  "editableLocalSource": "C:/tmp/guardian-faces/hyena-face-v12.blend",
+  "editableLocalSource": "content/source/actors/hyena/expressive-candidate.blend",
   "reproduce": [
     "tools/guardian/build_actor_face.py",
     "tools/guardian/inspect_actor_face.py",
@@ -135,5 +135,14 @@
     "repair": "Complete anterior muzzle and tagged teeth follow Head, with posterior/inferior transition; collar and geometry untouched.",
     "check": "1011 core muzzle vertices, 246 samples over six native clips: maximum head-relative error 1.36e-15 m; the same audit rejected the previous weights with 0.245 m error.",
     "scope": "Neutral core skin rigidity and bone track parity; not full-expression/all-surface acceptance."
+  },
+  "runtimeCandidate": "content/source/actors/hyena/expressive-candidate.glb",
+  "combatValidation": {
+    "evidence": "face-v12-combat-cycle.json",
+    "scope": "One continuous native Attack cycle in WorldScene, hyena only. Not a global performance or all-scenario acceptance.",
+    "completed": true,
+    "errors": [],
+    "physicalBodiesAfter": 0,
+    "productionInstalled": false
   }
 }

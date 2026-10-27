@@ -1,3 +1,4 @@
+import {applyActorExpression} from './actor-expression.js';
 import {BeastCombatPhysics} from './beast-combat-physics.js';
 import {GuardianSummons} from './guardian-summons.js';
 import {restoreAnimalImpact,captureAnimalImpact,applyAnimalImpact} from './animal-impact.js';
@@ -457,6 +458,7 @@ export class WorldScene {
     if(type==='worker'){
       const task=this.state.tasks.find(t=>t.id===entity.taskId);
       applyWorkerPose(data,entity,task,this.state.elapsed,this.workerLibraries[entity.profile],this.workerToolCulling!==false);
+      applyActorExpression(data,entity,'worker',this.state.elapsed);
       if(entity.status==='acting'&&(task?.kind==='initial'||task?.kind==='water'))this.objects.get(entity.id).rotation.y=entity.heading??0;
       if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
       return;
@@ -465,6 +467,7 @@ export class WorldScene {
     this.objects.get(entity.id).rotation.y=entity.heading??0;
     if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
     this.beastPhysics?.render(entity.id);
+    applyActorExpression(data,entity,'animal',this.state.elapsed);
   }
   prepareUpcomingAnimalRigs(s=this.state,now=performance.now()) {
     if(!s||this.disposed)return;
