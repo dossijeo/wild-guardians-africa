@@ -1,0 +1,5 @@
+# Buffer upload ownership
+
+Diagnostic passed. Upload window 17.779 seconds includes the trace/capture protocol, so it is not the same as the 8-second trace window. 8742 bufferSubData calls, 168943132 source bytes; maximum synchronous JS call 0.445 ms. The top six source buffers belong to continuous herbaceous coverage: coverageAnchor/Data/Slope for refined/light LOD, including shared prebaked-shadow attributes. They total 112320000 bytes. No per-frame scene ownership scans; owners collected at endpoints, so disposed intermediate attributes can be unknown.
+
+Source inspection: continuous-grass.js selection rewrites the selected prefix then marks all three attributes needsUpdate, without update ranges; allocated capacity is uploaded. These buffers retain default StaticDrawUsage. Hypothesis for next controlled experiment: upload only the selected/modified range, preserving instance order, counts, data and shadow sharing. Do not infer these sources caused the long decoder intervals: there is no identity correlation yet. No renderer optimization adopted.
