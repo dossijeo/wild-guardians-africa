@@ -1,0 +1,26 @@
+{
+  "command": "npm test",
+  "environment": [
+    {
+      "name": "WILD_ENGINE_NATIVE_ROUTE_WASM",
+      "value": "src/world/wild-engine/spatial-savanna.wasm"
+    },
+    {
+      "name": "WILD_ENGINE_SPATIAL_SERVICES_WASM",
+      "value": "src/world/wild-engine/spatial-savanna.wasm"
+    },
+    {
+      "name": "WILD_ENGINE_TOPOLOGICAL_CUT_WASM",
+      "value": "src/world/wild-engine/spatial-savanna.wasm"
+    }
+  ],
+  "runtimeCommit": "78c00945f",
+  "tests": 5008,
+  "pass": 5008,
+  "fail": 0,
+  "skipped": 0,
+  "exitCode": 0,
+  "durationMs": 502897.1529,
+  "logSha256": "d1ea442d4d380afa057da34005ed4f22b5cc05e8b056e4ba7f1f519ebe8d051e",
+  "scope": "Full local Node test suite including optional native routes/services/topological coverage. Not a renderer benchmark or physical-device campaign acceptance."
+}
