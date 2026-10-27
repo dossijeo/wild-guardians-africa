@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import {spawnSync,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-const root='docs/qa/residual-spikes-20261027/six-biome-quality-defaults';
+const root=process.argv[2]??'docs/qa/residual-spikes-20261027/six-biome-quality-defaults';
 fs.mkdirSync(root,{recursive:true});
 const harness='tools/experiments/check-spatial-thread-game.mjs';
 const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
