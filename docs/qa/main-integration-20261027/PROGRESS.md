@@ -40,3 +40,6 @@ Regenerado hull conservador desde alpha de44atlas actuales con herramienta exist
 CatálogoSFX regenerado con auditor oficial; diff conserva126originales,101asignaciones/25sin asignar y clasificaciones,actualiza líneas y hashes de código tras cambios de raids.3tests pasan. No cambia audio ni cuenta como validación auditiva nueva.
 
 Quedan9fallos originales por resolver:1contactos/bounds,5legacy raid-safe-exit y3navegación/murallas. No eliminar aserciones de rutas ni rebajar validación sin diagnóstico.
+
+## Límites de árboles: regresión real corregida
+El importador conservaba min/max del árbol sustituido. ContactPrototypes usa esos datos para el radio de contacto; no era una expectativa obsoleta. Recalculados los límites exactos LOD0 de los cinco packs aprobados, sin alterar geometría, texturas ni Gran Cañón. Herramienta refresh-approved-tree-bounds.mjs reproducible e importador de promoción corregido. Los tres tests de contactos originales pasan sin modificar sus aserciones. Quedan ocho fallos originales; reproducidos los de wall-shortening (estado unknown=3) y puerta de granja (0 puertas), pendientes de diagnóstico. No se han cambiado sus expectativas ni declarado integración lista.

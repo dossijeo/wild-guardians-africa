@@ -21,7 +21,19 @@ for(const biome of biomes){
  for(const set of pack.textureSets)for(const texture of set){const bytes=await readFile('public'+texture.base64.url),extension=texture.base64.url.split('.').pop(),url=`/assets/trees-20261026/${createHash('sha256').update(bytes).digest('hex')}.${extension}`;await writeFile('public'+url,bytes);texture.base64.url=url;}
  for(let i=0;i<pack.assets.length;i++){
   const replacement=candidate.assets.find(a=>a.slot===pack.assets[i].slot&&a.textureSet!==undefined);
-  if(replacement)pack.assets[i]=structuredClone(replacement);
+  if(replacement){
+   pack.assets[i]=structuredClone(replacement);
+   // Candidate manifests may carry bounds from the original tree. Contacts
+   // must describe the replacement geometry, not the asset it supersedes.
+   const d=replacement.lods[0].position;
+   const positions=new Float32Array(source.buffer,source.byteOffset+d.offset,d.count);
+   const min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];
+   for(let n=0;n<positions.length;n++){
+    if(!Number.isFinite(positions[n]))throw Error('Invalid tree position');
+    min[n%3]=Math.min(min[n%3],positions[n]);max[n%3]=Math.max(max[n%3],positions[n]);
+   }
+   Object.assign(pack.assets[i],{min,max});
+  }
   for(const lod of pack.assets[i].lods)for(const [name,value]of Object.entries(lod))if(value&&Number.isInteger(value.offset)&&Number.isInteger(value.count))lod[name]=copy(value,replacement?source:old);
  }
  pack.binary.url=`/assets/trees-20261026/${biome}.bin`;
