@@ -2,7 +2,7 @@
 import bpy,sys,json,math,argparse
 from pathlib import Path
 from mathutils import Vector
-p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--samples',type=int,default=20);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output);out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output);out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=a.input)
 else:bpy.ops.import_scene.gltf(filepath=a.input)
@@ -22,6 +22,8 @@ for o in bpy.context.scene.objects:
 if not points:points=[o.matrix_world@v.co for o in bpy.context.scene.objects if o.type=='MESH' for v in o.data.vertices]
 lo=Vector([sorted(v[k] for v in points)[int(len(points)*.08)] for k in range(3)]);hi=Vector([sorted(v[k] for v in points)[int(len(points)*.92)] for k in range(3)]);center=(lo+hi)*.5;extent=max(hi-lo)*1.8
 if a.mouth_closeup:center=Vector((0,-.56,1.47));extent=.55
+if a.center:center=Vector(a.center)
+if a.extent:extent=a.extent
 scene=bpy.context.scene;scene.render.film_transparent=False;scene.render.engine='CYCLES';scene.cycles.samples=a.samples;scene.render.resolution_x=768;scene.render.resolution_y=768;scene.render.resolution_percentage=100;scene.world=bpy.data.worlds.new('Face inspection');scene.world.color=(.22,.22,.22);scene.view_settings.view_transform='Standard'
 for pos,power,size in [((3,-4,5),700,4),((-4,-1,3),450,3),((0,4,4),550,3)]:
  bpy.ops.object.light_add(type='AREA',location=center+Vector(pos)*extent);light=bpy.context.object;light.data.energy=power*extent*extent;light.data.shape='DISK';light.data.size=size*extent;light.rotation_euler=(center-light.location).to_track_quat('-Z','Y').to_euler()
