@@ -69,3 +69,10 @@ test('get-up starts at the physical pose, retains displaced root and releases co
   assert.ok(r.done);assert.ok(maxStep<.08,species+' recovery step '+maxStep);console.log('get-up',species,{maxStep,maxPenetration,lift:r.lift});assert.ok(maxPenetration<.04,species+' recovery penetrates '+maxPenetration);r.restore();s.dispose();
  }
 });
+
+
+test('solver iteration experiments are explicit and production retains twelve iterations',()=>{
+ const solver=new BeastRagdollSolver(R);assert.equal(solver.world.numSolverIterations,12);solver.dispose();
+ const trial=new BeastRagdollSolver(R,{solverIterations:24});assert.equal(trial.world.numSolverIterations,24);trial.dispose();
+ for(const solverIterations of [0,33,1.5,NaN])assert.throws(()=>new BeastRagdollSolver(R,{solverIterations}),/Invalid solver iterations/);
+});

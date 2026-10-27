@@ -17,3 +17,13 @@ No se ha cambiado el impulso. Aumentar globalmente su velocidad no está justifi
 El controlador real fuerza la transición a recuperación al superar cinco segundos aunque el solver no indique reposo. Es un mecanismo de salida, no evidencia de estabilización física. Se debe inspeccionar en pantalla la transición en estos tres casos antes de aprobarla.
 
 Siguientes comprobaciones necesarias: captura de poses de caminar/atacar del juego, escala y orientación reales, plano y pendiente, impacto lateral/descendente, contacto de piel y articulaciones, continuidad al levantarse. El ensayo actual no sustituye esas comprobaciones ni prueba los 1–2 m durante una incursión.
+
+## Experimento de estabilización
+
+La telemetría del último segundo identifica el mayor movimiento residual en el pie derecho de la hiena lateral (hasta 6,92 rad/s) y el antebrazo derecho del león descendente (hasta 1,12 m/s). Esto localiza la inestabilidad, pero no demuestra por sí solo si procede del colisionador, la restricción o su interacción.
+
+Se compararon 12, 16 y 24 iteraciones. Con 16 la hiena lateral sigue sin estabilizarse. Con 24 los quince casos alcanzan reposo durante el ensayo, pero la suite ampliada falla: rinoceronte con penetración de piel de 0,0703 m y salto inicial de recuperación de 0,0528 m. Por tanto, se rechaza el cambio global. No se han relajado los umbrales para aprobarlo.
+
+La producción conserva 12 iteraciones y sus siete pruebas físicas pasan de nuevo. El solver acepta ahora un parámetro explícito para experimentos; el medidor recibe el número como tercer argumento. Los informes `ragdoll-solver-12.json`, `ragdoll-solver-16.json` y `ragdoll-solver-24.json` conservan las mediciones. Los tiempos de una sola ejecución no permiten atribuir una regresión de rendimiento con fiabilidad.
+
+Pendiente: reproducir gráficamente las direcciones problemáticas con poses animadas, revisar los soportes del pie/antebrazo y validar una corrección que también conserve contactos de piel y continuidad de recuperación. Ninguna de las variantes se declara aprobada visualmente.
