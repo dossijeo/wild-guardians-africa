@@ -105,6 +105,19 @@ try {
  if(process.env.WG_DEPTH_MATRIX_REUSE==='1')await page.evaluate(async()=>{const {installDepthSceneMatrixReuse}=await import('/tools/experiments/reuse-depth-scene-matrices.js');globalThis.qaMatrixReuseFinish=installDepthSceneMatrixReuse(qaMagicWorld);});
  await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(1000);
+ if(process.env.WG_MAGIC_SETTLE==='1')report.readiness=await page.evaluate(async()=>{
+  const w=qaMagicWorld,start=performance.now(),deadline=start+60000;let stable=0,last='',snapshot;
+  while(stable<60){
+   await new Promise(requestAnimationFrame);
+   const stream=w.chunkStream.summary(),keys=[...w.chunks.keys()].sort(),signature=keys.join('|');
+   const pending=stream.busy||stream.queued||stream.preparing||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||w.farVegetation?.adapters.some(a=>a.preparationPending());
+   snapshot={keys,stream,pending:!!pending,camera:w.camera.position.toArray(),target:w.controls.target.toArray(),elapsed:w.state.elapsed,quality:w.quality};
+   if(stream.failed)throw Error('Preflight streaming failed '+JSON.stringify(snapshot));
+   stable=!pending&&signature===last?stable+1:0;last=signature;
+   if(performance.now()>deadline)throw Error('Preflight scene did not settle '+JSON.stringify({stable,snapshot}));
+  }
+  return {start,end:performance.now(),stableFrames:stable,...snapshot,scope:'Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows.'};
+ });
  report.casts=[];
  for(let i=0;i<Number(process.env.WG_MAGIC_CASTS??3);i++){
   await page.waitForFunction(()=>qaMagicWorld.state.cooldowns.shield<=0&&!qaMagicWorld.state.spells.some(s=>s.kind==='shield'),null,{timeout:240000});
