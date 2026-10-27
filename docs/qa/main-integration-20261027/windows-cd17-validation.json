@@ -4647,5 +4647,11 @@
   "limits": [
     "Functional CI checks, not hardware performance validation.",
     "Latest candidate 4beaad355 has a separate Windows run40431690251; do not present this previous-head result as that run."
-  ]
+  ],
+  "visualInspection": {
+    "artifactId": 12702848127,
+    "view": "Gran Cañón world canvas",
+    "observed": "Terrain, water, buildings and original canyon tree are visible; no apparent missing textures in this view.",
+    "limits": "Single CI canvas image, no HUD; not a six-biome artistic or performance validation."
+  }
 }
