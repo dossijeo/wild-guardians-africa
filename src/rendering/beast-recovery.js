@@ -29,6 +29,7 @@ export class BeastRecovery{
   }else binding.apply(snapshot);
   this.fallenSecondary=new Map();for(const [name,bone]of binding.bones)if(/^Tail_0[1-5]$/.test(name)||/^ClothRear_.*_01$/.test(name))this.fallenSecondary.set(bone,bone.getWorldQuaternion(new Quaternion()).normalize());
   this.fallenLegs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot');return {target:foot.getWorldPosition(new Vector3()),orientation:foot.getWorldQuaternion(new Quaternion()).normalize(),pole:knee.getWorldPosition(new Vector3()).sub(upper.getWorldPosition(new Vector3())).normalize()};});
+  this.fallenArms=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'Arm'),knee=binding.bones.get(side+'ForeArm'),hand=binding.bones.get(side+'Hand');if(!upper||!knee||!hand)return null;return {target:hand.getWorldPosition(new Vector3()),orientation:hand.getWorldQuaternion(new Quaternion()).normalize(),pole:knee.getWorldPosition(new Vector3()).sub(upper.getWorldPosition(new Vector3())).normalize()};});
   for(const e of this.entries){e.fallenQ.copy(e.bone.quaternion);e.fallenP.copy(e.bone.position);}
   if(fallenWorldPose){for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}binding.model.updateMatrixWorld(true);}else binding.restore();
   const hips=this.entries[0],height=Math.max(.4,hips.standingP.y);hips.crouchP.y-=height*.6;
@@ -71,6 +72,7 @@ export class BeastRecovery{
    target.y=(surface?.(target.x,target.z)??0)+clearance;
    return [{upper,knee,foot,target,standingHandQ:foot.quaternion.clone(),contactOrientation:foot.getWorldQuaternion(new Quaternion()).normalize(),length1,length2,pole:new Vector3(sign,0,-.3).normalize()}];
   });
+  for(const [i,arm]of this.arms.entries()){arm.supportTarget=arm.target.clone();arm.supportOrientation=arm.contactOrientation.clone();arm.fallen=this.fallenArms[i];arm.poleWorld=new Vector3();}
   this.ik={upperStart:new Quaternion(),kneeStart:new Quaternion(),p:new Vector3(),k:new Vector3(),f:new Vector3(),direction:new Vector3(),pole:new Vector3(),desired:new Vector3(),current:new Vector3(),q:new Quaternion(),parent:new Quaternion(),local:new Quaternion()};
  }
  apply(dt){
@@ -81,7 +83,7 @@ export class BeastRecovery{
   for(const e of this.secondary){const fold=smooth((t-e.delay)/(.42-e.delay)),release=smooth((t-.42-e.delay)/(.58-e.delay));if(t<.42){this.ik.local.slerpQuaternions(e.fallenWorldQ,e.crouchWorldQ,fold);e.bone.parent.getWorldQuaternion(this.ik.parent).normalize().invert();e.bone.quaternion.copy(this.ik.local).premultiply(this.ik.parent);e.bone.updateWorldMatrix(false,true);}else e.bone.quaternion.slerpQuaternions(e.standingQ,e.crouchQ,1-release);}
   const model=this.binding.model;model.updateMatrixWorld(true);
   const contactWeight=1-smooth((t-.85)/.15);for(const leg of this.legs){leg.target.lerpVectors(leg.fallen.target,leg.supportTarget,brace);leg.contactOrientation.slerpQuaternions(leg.fallen.orientation,leg.supportOrientation,brace);leg.poleWorld.set(0,0,1).applyQuaternion(model.getWorldQuaternion(this.ik.parent)).lerp(leg.fallen.pole,1-brace).normalize();this.legIK(leg,contactWeight);}
-  const handWeight=smooth((t-.08)/.3)*(1-smooth((t-.48)/.3));for(const arm of this.arms)this.legIK(arm,handWeight);
+  const handWeight=1-smooth((t-.48)/.3);for(const arm of this.arms){arm.target.lerpVectors(arm.fallen.target,arm.supportTarget,brace);arm.contactOrientation.slerpQuaternions(arm.fallen.orientation,arm.supportOrientation,brace);arm.poleWorld.copy(arm.pole).applyQuaternion(model.getWorldQuaternion(this.ik.parent)).lerp(arm.fallen.pole,1-brace).normalize();this.legIK(arm,handWeight);}
   model.updateMatrixWorld(true);let penetration=0;
   if(this.surface)for(const {mesh,index} of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);penetration=Math.max(penetration,this.surface(this.v.x,this.v.z)+.01-this.v.y);}
   // Contact correction is vertical and never modifies horizontal navigation.
