@@ -41,7 +41,7 @@ El original contiene una sola malla con 11.963 vértices y 15.361 triángulos, u
 
 Se mantienen la geometría base, máscara, silueta, espiral inferior, UV y adornos. Las modificaciones faciales están localizadas: una superficie con borde fijo para la boca, interior oscuro, dientes y lengua estilizados, y párpados pintados del color de la máscara. Un atlas frontal horneado conserva la madera en la región de la boca y evita interpolar entre islas UV incompatibles.
 
-25 huesos: Root, Torso, Head; Shoulder/Arm/Forearm/Hand a ambos lados; dos Eye; cuatro cadenas de tres huesos Mantle. No hay caderas, piernas ni pies. Cada vértice tiene como máximo cuatro influencias normalizadas. Los pequeños componentes de adornos comparten pesos para conservar su forma. Los huesos oculares deforman las superficies existentes del ojo; se limitan a aproximadamente siete grados para evitar descubrir los bordes originales. `lookAt(Vector3, side)` admite objetivo conjunto o `L`/`R` independiente.
+37 huesos: Root, Torso, Head; Shoulder/Arm/Forearm/Hand a ambos lados; dos Eye; cuatro cadenas de tres huesos Mantle; cuatro plumas con dos huesos cada una y cuatro fragmentos de madera con un hueso rígido cada uno. No hay caderas, piernas ni pies. Cada vértice tiene como máximo cuatro influencias normalizadas. Los pequeños componentes de adornos comparten pesos para conservar su forma. Los huesos oculares deforman las superficies existentes del ojo; se limitan a aproximadamente siete grados para evitar descubrir los bordes originales. `lookAt(Vector3, side)` admite objetivo conjunto o `L`/`R` independiente.
 
 Las Shape Keys `viseme_A` a `viseme_H` y `viseme_X` comparten topología. X conserva el reposo; A cierra la apertura; B/G/H revelan los pequeños elementos interiores apropiados; C/D cambian apertura; E/F estrechan y proyectan la boca. `blink_L`, `blink_R`, `joy`, `focus`, `surprise` son controles separados.
 
@@ -51,9 +51,12 @@ Referencia de formas y reconocedores: [documentación oficial de Rhubarb](https:
 
 El proxy físico de 81 vértices tiene hombros fijados, viento, amortiguación y gravedad reducida. Blender evalúa 97 fotogramas a 24 fps. Sus desplazamientos se convierten a coordenadas locales y se hornean en las cadenas de manto. Una envolvente periódica garantiza regreso a reposo. `docs/guardian/cloth-study.json` registra parámetros y desplazamiento medido.
 
-`Mantle_Breeze` contiene exclusivamente traslaciones del manto. `Mantle_Spell` amplifica la misma trayectoria física y su recuperación: no es una segunda simulación independiente de viento fuerte. Los clips Idle, Explain, Warning, Enthusiasm, Invoke y Cast contienen exclusivamente torso/cabeza/brazos/Root. La herencia del torso aporta reacción al cuerpo. No existe colisión dinámica de tela contra brazos en el navegador: los gestos conservadores y sus pesos deben revisarse al añadir poses más extremas.
+`tools/guardian/ethereal.py` utiliza la amplitud medida del estudio físico como referencia y añade ondas periódicas dirigidas artísticamente. No presenta estas ondas como una simulación física completa: se hornean a huesos para continuidad, desfase entre paneles y retraso hacia el borde. Los pesos del manto mezclan suavemente frente/dorso e izquierda/derecha.
 
-En Blender se abre el reposo animado. Para editar otro clip, silenciar las pistas corporales restantes y mantener solo una pista de manto. Los clips de invocación y lanzamiento son gestos de preparación, sin lógica de combate.
+`Mantle_Breeze` contiene traslaciones y rotaciones de manto, plumas y madera; `Mantle_Spell` aumenta la ganancia de ese movimiento. `Float` controla exclusivamente Root, separado de los gestos de diálogo, con deriva y balanceo suaves. Idle, Float y viento usan ciclos continuos de 12 segundos, con extremos y velocidades comprobados; los tiempos GLB se normalizan a cero para evitar una pausa al reiniciar. Idle incluye hombros, brazos, antebrazos y manos desfasados. Los clips de conversación mantienen una base suave en brazos y antebrazos.
+
+No existe colisión dinámica de tela contra brazos en el navegador: se revisan las poses suministradas y deben revisarse las nuevas poses extremas. Los movimientos secundarios no añaden geometría ni draw calls.
+En Blender se abre el reposo animado. Para editar otro clip, silenciar las pistas corporales restantes y mantener Float y solo una pista de manto. Los clips de invocación y lanzamiento son gestos de preparación, sin lógica de combate.
 
 ## Reproducción y expresividad
 

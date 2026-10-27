@@ -1,5 +1,7 @@
 # Validación y rendimiento del Guardián
 
+La revisión posterior de viento y flotación está documentada en [ETHEREAL.md](ETHEREAL.md), con métricas, pruebas y vídeos nuevos. Las cifras comparativas de esta página corresponden a la primera integración.
+
 ## Evidencias
 
 - `gltf-validation.json`: validador Khronos, sin errores. Advertencias de nodos skinned bajo un padre: el padre de exportación tiene transformación identidad; los movimientos se aplican a huesos.
