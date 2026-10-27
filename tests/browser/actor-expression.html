@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><title>Expresiones de actores · QA</title>
+<style>body{margin:0;background:#343d39;color:white;font:14px system-ui}canvas{display:block}aside{position:fixed;bottom:0;background:#17221ee8;padding:12px;max-height:180px;overflow:auto;width:calc(100% - 24px)}label,button,select{margin:5px}pre{font-size:12px;white-space:pre-wrap}</style>
+<aside>CANDIDATO DENTAL: cavidad interior, atlas horneado y parpadeo. En validacion; no integrado aun.<br>
+<label>Ojo izquierdo <input id="left" type="range" min="0" max="1" step=".05" value="0"></label>
+<label>Ojo derecho <input id="right" type="range" min="0" max="1" step=".05" value="0"></label>
+<label>Boca <input id="mouth" type="range" min="0" max="1" step=".05" value="0"></label>
+<button id="neutral">Neutral</button><button id="pain">Dolor</button><button id="half">Medio parpadeo</button><button id="side">Perfil</button><button id="front">Frente</button>
+<select id="clip"><option value="">Pose base</option></select><button id="auto">Parpadeo automático</button><button id="attack">Atacar</button><button id="hit">Recibir golpe</button><button id="pause">Pausa</button>
+<pre id="status">Cargando GLB local…</pre></aside><script type="module" src="./actor-expression.js"></script>

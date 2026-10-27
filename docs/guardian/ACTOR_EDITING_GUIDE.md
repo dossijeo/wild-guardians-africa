@@ -90,3 +90,9 @@ Evidencia y límites actuales: [corrección dental](phase2/face-authoring/dental
 7. No atribuir una causa sin aislarla. Registrar también los intentos descartados para no repetir cortes horizontales, pesos por proximidad, cortinas interiores o reparaciones parciales.
 
 Usar [la plantilla de revisión por actor](actor-edit-review.template.json) como registro. Todos sus resultados empiezan pendientes; copiarla no aprueba ninguna puerta.
+
+### Actualización: recorrido de párpados y coste de materiales
+
+Las formas intermedias de 25/50/75% evitan el recorrido recto a través del ojo. El controlador debe mezclar solo las dos poses vecinas: sumarlas todas sobrecierra el párpado. Además, normalizar el recorrido sobre la esfera completa desperdicia parte de la animación detrás de la ceja; se calibra respecto a la abertura visible. El candidato actual mejora el medio cierre en Three.js, pero sigue pendiente la matriz completa de pesos y clips.
+
+No crear un material por cada región de color cuando sus otras propiedades coinciden: paladar, suelo, garganta y lengua ahora comparten material con color por vértice. Se verificaron cuatro draw calls reales frente a siete en el candidato anterior. Comparar también contra el original (dos); una mejora entre iteraciones no equivale a ausencia de regresión respecto al juego.

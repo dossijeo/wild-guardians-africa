@@ -31,3 +31,11 @@ The large triangular flap beside the collar canine also appears in the untouched
 ```
 
 The candidate GLB loaded in the Three.js facial QA scene, with mouth/eyelid controls, seven draw calls and no reported JavaScript errors. The six native clips retain equivalent bone poses over 246 samples (21 bones; maximum world-position difference 0.0000016 m). This checks preserved animation transforms, not complete skin appearance or game performance. Runtime inspection exposed protruding/creased eyelids and small shading differences after export; these remain unaccepted and require correction. No production facial model has been replaced yet.
+
+## Corrective eyelid interpolation and oral batching
+
+The single blink morph crossed the eyeball at partial weights. The current candidate uses 25/50/75% corrective poses plus full closure, all sampled on the eye envelope. The start/end are fitted to the aperture visible outside the original brow and lower rim. `ActorExpression` blends only neighboring poses, preserving single-morph compatibility. Manual QA uses the same mapping. Six controller tests pass, including intermediate weights and independent mouth/right-eye channels.
+
+The 2048 frontal atlas preserves more fur detail than the earlier narrow 512 sample. Oral base colors are now vertex colors on one shared material. The actual Three.js fixture reports four draws, down from seven in the preceding candidate. Compared with the prepared original, the candidate still adds two draws, 4,407 triangles and 686,592 uncompressed morph-accessor bytes. These static counts do not establish frame-time or total GPU-memory acceptance. Details: `hyena-face-candidate-metrics.json`.
+
+After the documented authoring commands, copy the resulting GLB to `test-results/hyena-face-candidate.glb` and open `/tests/browser/actor-expression.html` through Vite. The scene identifies that asset path and exposes manual/automatic expression, native clip and pause controls. Current local source: `C:/tmp/guardian-faces/hyena-lids-v9.blend`. Full visual weight/clip matrix, compression, production integration and comparable performance remain pending.
