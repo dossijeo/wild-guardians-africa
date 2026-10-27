@@ -13,6 +13,10 @@ export function regionalTailProbe(source,name){
   replace('world.spatialSession.horizonSource.snapshot()',"globalThis.qaTailMeasure('seam-terrain-snapshot',()=>world.spatialSession.horizonSource.snapshot())");
   replace('pending=stream.request(next,request).then',"pending=globalThis.qaTailMeasure('seam-request-submit',()=>stream.request(next,request)).then");
  }else if(name==='native-far-ground.js'){
+  replace('new AfricanToon({visualSearch:world.visualSearch})',"globalThis.qaTailMeasure('far-ground-toon-create',()=>new AfricanToon({visualSearch:world.visualSearch}))");
+  replace("nativeGroundMaterial('muy_baja')","globalThis.qaTailMeasure('far-ground-material-create',()=>nativeGroundMaterial('muy_baja'))");
+  replace('const water=data.water??new Float32Array(data.positions.length/3);if(!data.water&&world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;',"const water=globalThis.qaTailMeasure('far-ground-water-input',()=>{const water=data.water??new Float32Array(data.positions.length/3);if(!data.water&&world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;return water;});");
+
 
   replace('geometry.computeVertexNormals();',"globalThis.qaTailMeasure('far-ground-normals',()=>geometry.computeVertexNormals());");
   replace('farGroundColorUvs(data.positions,map)',"globalThis.qaTailMeasure('far-ground-uvs',()=>farGroundColorUvs(data.positions,map))");
