@@ -18,3 +18,6 @@ The paragraphs above record the earlier substitution experiment, not the current
 - PR218 at e953ce025 has passed remote validate and both memory configurations. Windows remains in progress. Native-intent attempt1 exceeded its35-minute job limit after checkout consumed almost34minutes; it was retried on the same commit. A timeout is not a passing validation or a demonstrated code failure.
 
 Later local far-transition experiments are not part of the PR218 remote head. Keep that separation until their performance and correctness acceptance is complete.
+
+## Native optimization merged
+PR218 merged at2026-10-27T05:31:05Z as328eb419c731c8ab16e542915d88577fd450757a, exactly the validated head e953ce025. All five checks passed, including native-intent attempt2. Merge used an exact-head guard. The local far-transition experiment remains excluded; its A/B/A/B sequence is still pending. No broad claim that all residual stutters are solved.
