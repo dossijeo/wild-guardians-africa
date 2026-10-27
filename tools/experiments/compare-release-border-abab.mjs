@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
-const root=process.argv[2],mode=process.argv[3]??'release';assert(root,'Expected completed A/B/A/B directory');assert(['release','shadow-bypass','far-candidates','far-water'].includes(mode),'Unknown comparison mode');
+const root=process.argv[2],mode=process.argv[3]??'release';assert(root,'Expected completed A/B/A/B directory');assert(['release','shadow-bypass','far-candidates','far-water','logical-distance'].includes(mode),'Unknown comparison mode');
 const read=p=>JSON.parse(readFileSync(p));
 const stats=values=>{const s=values.slice().sort((a,b)=>a-b),p=q=>s.length?s[Math.ceil(q*s.length)-1]:null;return {samples:s.length,p50:p(.5),p95:p(.95),p99:p(.99),max:s.at(-1)??null};};
 const rows=[];
@@ -23,7 +23,7 @@ for(const [i,candidate] of [false,true,false,true].entries()){
   else {assert(r.farTransitionOverride?.loads>0,'Original transition source not loaded');assert.equal(r.farTransitionOverride.file,p.conditions.WG_FAR_TRANSITION_SOURCE);}
   assert.equal(s.residual.gpuSanity?.usable,true,'Unusable GPU samples');
  }
- if(mode==='far-water'){
+ if(mode==='far-water'||mode==='logical-distance'){
   assert.equal(r.shadowCacheEnabled,true);assert.equal(p.conditions.WG_MAGIC_NO_CAST,'1');
   assert.equal(p.conditions.WG_FAR_TRANSITION_SOURCE,'');assert.equal(p.conditions.WG_SPATIAL_RUNTIME_DIR,'');
   assert.equal(s.residual.gpuSanity?.usable,true,'Unusable GPU samples');
@@ -37,11 +37,11 @@ if(mode==='far-candidates'){
  assert.notEqual(rows[0].provenance.transitionSha256,rows[1].provenance.transitionSha256,'Identical treatments');
  for(const row of rows){assert.equal(row.provenance.transitionSha256,rows[row.candidate?1:0].provenance.transitionSha256,'Treatment changed between repeats');assert.equal(row.provenance.adapterSha256,rows[0].provenance.adapterSha256,'Adapter changed');}
 }
-if(mode==='far-water'){
- assert.notEqual(rows[0].provenance.groundSha256,rows[1].provenance.groundSha256,'Identical treatments');
- for(const row of rows)assert.equal(row.provenance.groundSha256,rows[row.candidate?1:0].provenance.groundSha256,'Treatment drift');
+if(mode==='far-water'||mode==='logical-distance'){
+ assert.notEqual(rows[0].provenance[mode==='far-water'?'groundSha256':'selectionSha256'],rows[1].provenance[mode==='far-water'?'groundSha256':'selectionSha256'],'Identical treatments');
+ for(const row of rows)assert.equal(row.provenance[mode==='far-water'?'groundSha256':'selectionSha256'],rows[row.candidate?1:0].provenance[mode==='far-water'?'groundSha256':'selectionSha256'],'Treatment drift');
 }
-if(mode==='far-water')for(const row of rows){
+if(mode==='far-water'||mode==='logical-distance')for(const row of rows){
  const directory=`${root}/${row.order}-${row.candidate?'candidate':'baseline'}`,r=read(directory+'/raid-ui.json');
  const start=r.casts[0].start,cpu=r.residual.cpu.filter(f=>f.at>=start);
  row.continuousAfterFirstSweep={scope:'Supplementary attribution only; full-run metrics above retain initial camera reposition.',cpu:stats(cpu.map(f=>f.ms)),over33:cpu.filter(f=>f.ms>33.333).length};
