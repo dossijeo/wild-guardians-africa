@@ -27,3 +27,19 @@ Se compararon 12, 16 y 24 iteraciones. Con 16 la hiena lateral sigue sin estabil
 La producción conserva 12 iteraciones y sus siete pruebas físicas pasan de nuevo. El solver acepta ahora un parámetro explícito para experimentos; el medidor recibe el número como tercer argumento. Los informes `ragdoll-solver-12.json`, `ragdoll-solver-16.json` y `ragdoll-solver-24.json` conservan las mediciones. Los tiempos de una sola ejecución no permiten atribuir una regresión de rendimiento con fiabilidad.
 
 Pendiente: reproducir gráficamente las direcciones problemáticas con poses animadas, revisar los soportes del pie/antebrazo y validar una corrección que también conserve contactos de piel y continuidad de recuperación. Ninguna de las variantes se declara aprobada visualmente.
+
+## Corrección aplicada: amortiguación relativa y soporte cabeza/cuello
+
+Se añade un motor de velocidad objetivo cero con factor 2,5 a las articulaciones: amortigua el movimiento relativo sin imponer una pose ni aumentar el impulso. Se conservan doce iteraciones. Los vértices de la unión cabeza/cuello con al menos un 25% de peso en el segundo hueso se incluyen en ambos colisionadores; antes solo se incluían en el de mayor peso. Esto cubre piel compartida que podía quedar fuera del soporte al doblar el cuello.
+
+La inclusión compartida en todas las articulaciones se descartó porque alteraba otras caídas. También se descartaron factores de amortiguación 2 y 3: el primero no sostenía el reposo del león lateral y el segundo dejaba una hiena sin reposo en la prueba de contacto a ocho segundos. No se modificaron tolerancias para aceptar esos resultados.
+
+Nueve pruebas pasan, incluida una regresión de quince combinaciones de especie y dirección que exige reposo sostenido durante 0,3 s dentro de seis segundos. La suite de piel y recuperación conserva sus límites originales. Informe numérico actual: `ragdoll-joint-damping.json`. Esto sigue siendo una muestra finita de poses, no garantía sobre todas las caídas.
+
+Prueba gráfica de WorldScene con comandos y simulación reales, reloj avanzado por pasos de 0,12 s, hiena, impacto lateral, Intel UHD 1600 × 900: caída articulada visible; recuperación ya activa a 3,48 s desde contacto, antes del límite forzado de 5 s; regreso a locomoción y cero simulaciones activas a 5,28 s. Posición inicial (90, -6), posición al recuperar (89,793, -3,876): desplazamiento lógico aproximado de 2,13 m. Errores reportados: ninguno. Máximo de Guardianes: uno.
+
+![Caída](damped-hyena-fall.png)
+![Recuperación](damped-hyena-recovery.png)
+![Locomoción recuperada](damped-hyena-standing.png)
+
+Límites: la interfaz tapa parte de la primera caída y el zoom posterior limita la inspección anatómica fina; no es un vídeo ni aprobación de naturalidad a velocidad real. Audio desactivado. Falta comprobar león descendente y otras especies/obstáculos gráficamente. El pico observado de actualización física fue 21,2 ms y el arranque 10,8 ms; son observaciones de pasos manuales, no percentiles de una incursión ni una comparación antes/después. Rendimiento todavía no aprobado.

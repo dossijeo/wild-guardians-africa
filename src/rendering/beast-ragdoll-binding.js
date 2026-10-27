@@ -34,8 +34,10 @@ export class BeastRagdollBinding{
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
    const cached=colliderSamples.get(mesh.geometry);if(!cached)selected.set(mesh.geometry,new Set());
    const samples=cached??Array.from({length:Math.ceil(indices.count/2)},(_,i)=>i*2);
-   for(const i of samples){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;const owner=mapping[indices.getComponent(i,best)];if(owner===undefined)continue;
-    const f=frames[owner];mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld).sub(f.center).applyQuaternion(f.inverse);const point=v.clone();point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);
+   for(const i of samples){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
+    // Shared head/neck skin needs support from both adjacent colliders.
+    const owners=new Set();for(let k=0;k<4;k++){const owner=mapping[indices.getComponent(i,k)],primary=mapping[indices.getComponent(i,best)];if(owner!==undefined&&(k===best||weights.getComponent(i,k)>=.25&&(owner===2||owner===3)&&(primary===2||primary===3)))owners.add(owner);}
+    for(const owner of owners){const f=frames[owner];mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld).sub(f.center).applyQuaternion(f.inverse);const point=v.clone();point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);}
    }
   });
   const quantile=(values,p)=>{values.sort((a,b)=>a-b);return values[Math.floor((values.length-1)*p)];};

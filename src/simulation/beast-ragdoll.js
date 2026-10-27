@@ -24,7 +24,7 @@ function rotate(v,q){const x=2*(q.y*v.z-q.z*v.y),y=2*(q.z*v.x-q.x*v.z),z=2*(q.x*
 function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b.z+a.y*b.w+a.z*b.x,z:a.w*b.z+a.x*b.y-a.y*b.x+a.z*b.w,w:a.w*b.w-a.x*b.x-a.y*b.y-a.z*b.z};}
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
-export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25});
+export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
@@ -58,7 +58,8 @@ export class BeastRagdollSolver{
      const p=actor.parts[parent],a1=rotate(sub(start,p.center),inverse(p.rotation)),a2=rotate(sub(start,center),inverse(q));
      const yaw={x:0,y:Math.sin(heading/2),z:0,w:Math.cos(heading/2)},frame=multiply(yaw,FRAMES[axis]),f1=multiply(inverse(p.rotation),frame),f2=multiply(inverse(q),frame);
      const hinge=this.world.createImpulseJoint(this.R.JointData.revoluteWithAxes(a1,a2,rotate(vector(1,0,0),f1),rotate(vector(1,0,0),f2)),p.body,body,true);
-     hinge.setLocalFrame1(a1,f1);hinge.setLocalFrame2(a2,f2);hinge.setLimits(lo,hi);hinge.setContactsEnabled(false);actor.joints.push(hinge);
+     // Resist relative joint motion without driving the body toward a target pose.
+     hinge.setLocalFrame1(a1,f1);hinge.setLocalFrame2(a2,f2);hinge.setLimits(lo,hi);hinge.setContactsEnabled(false);hinge.configureMotorVelocity(0,RAGDOLL_CONFIG.jointDamping);actor.joints.push(hinge);
     }
    }
    this.impulse(id,{direction,velocity,intensity,mass});this.snapshot(actor);this.stats.active=this.actors.size;return actor;

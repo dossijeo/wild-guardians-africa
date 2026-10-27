@@ -76,3 +76,16 @@ test('solver iteration experiments are explicit and production retains twelve it
  const trial=new BeastRagdollSolver(R,{solverIterations:24});assert.equal(trial.world.numSolverIterations,24);trial.dispose();
  for(const solverIterations of [0,33,1.5,NaN])assert.throws(()=>new BeastRagdollSolver(R,{solverIterations}),/Invalid solver iterations/);
 });
+
+
+test('all fitted species sustain rest after horizontal, downward and lateral impacts',()=>{
+ for(const [species,mass] of [['hyena',.7],['warthog',1],['lion',1.5],['buffalo',3],['rhino',5]]){
+  const binding=new BeastRagdollBinding(beastSkin(species)),pose=binding.capture(),colliders=binding.colliders();
+  for(const direction of [{x:1,y:0,z:0},{x:1,y:-.8,z:0},{x:0,y:0,z:1}]){
+   const solver=new BeastRagdollSolver(R);solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
+   const actor=solver.add(species,{pose,colliders,mass,direction});let quiet=0,sustained=false;
+   for(let i=0;i<360;i++){solver.step();quiet=actor.settled?quiet+1:0;if(quiet>=18)sustained=true;}
+   assert.ok(sustained,species+' failed sustained rest '+JSON.stringify(direction));solver.dispose();
+  }
+ }
+});
