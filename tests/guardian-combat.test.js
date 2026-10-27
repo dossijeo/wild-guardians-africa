@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {Group,Quaternion} from 'three';
-import {applyAnimalImpact,restoreAnimalImpact} from '../src/rendering/animal-impact.js';
+import {Bone,Group,Quaternion} from 'three';
+import {applyAnimalImpact,captureAnimalImpact,restoreAnimalImpact} from '../src/rendering/animal-impact.js';
 import * as Game from '../src/simulation/game.js';import {ATTACK} from '../src/simulation/guardian-combat.js';import {impactResponse} from '../src/rendering/animal-impact.js';import {castPickedSpell} from '../src/app/spell-placement.js';import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}],field:{surface:()=>0}};
 test('impact preserves the imported model orientation and never accumulates offsets',()=>{const model=new Group();model.rotation.x=-Math.PI/2;const base=model.quaternion.clone(),data={model},animal={species:'hyena',x:0,z:0,magicImpact:{at:0,point:{x:0,y:1,z:0},direction:{x:1,y:-.3,z:0}}};for(let i=0;i<20;i++){restoreAnimalImpact(data);applyAnimalImpact(data,animal,.12);assert.ok(model.quaternion.angleTo(base)<.1);}restoreAnimalImpact(data);assert.ok(model.quaternion.angleTo(base)<1e-7);});
@@ -14,3 +14,14 @@ test('invalid vectors and menu pause do not mutate health or spend cooldown',()=
 test('directional response distinguishes sides, descending hits and mass, and decays to rest',()=>{const {a}=ready();a.magicImpact={at:10,point:{x:17,y:1,z:8},direction:{x:1,y:0,z:0}};const lateral=impactResponse(a,10.12);a.magicImpact.direction.x=-1;assert.ok(lateral.roll*impactResponse(a,10.12).roll<0);a.magicImpact.direction={x:0,y:-.8,z:.6};assert.notEqual(impactResponse(a,10.12).pitch,0);a.magicImpact.direction={x:1,y:0,z:0};a.species='rhino';assert.ok(Math.abs(impactResponse(a,10.12).roll)<Math.abs(lateral.roll));assert.equal(impactResponse(a,12),null);});
 
 test('impact contact, intensity and ground survive snapshots and reject invalid values',()=>{const {s,a}=ready();fire(s);assert.deepEqual(deserialize(serialize(s)).raid.animals[0].magicImpact,a.magicImpact);a.magicImpact.ground=NaN;assert.throws(()=>serialize(s),/Impacto/);a.magicImpact.ground=0;a.magicImpact.intensity=Infinity;assert.throws(()=>serialize(s),/Impacto/);});
+
+
+test('expired impact stops touching the skeleton and a new hit resumes from the current pose',()=>{
+ const model=new Group(),bone=new Bone();bone.name='Spine';model.add(bone);const data={model},animal={species:'hyena',x:0,z:0,magicImpact:{at:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0}}};
+ captureAnimalImpact(data,animal,.1);applyAnimalImpact(data,animal,.1);assert.equal(data.impactApplied,true);restoreAnimalImpact(data);
+ bone.rotation.y=.7;const walking=bone.quaternion.clone();let copies=0;const copy=bone.quaternion.copy;bone.quaternion.copy=function(q){copies++;return copy.call(this,q);};
+ for(let i=0;i<100;i++){captureAnimalImpact(data,animal,2+i/30);applyAnimalImpact(data,animal,2+i/30);restoreAnimalImpact(data);}
+ assert.equal(copies,0);assert.ok(bone.quaternion.angleTo(walking)<1e-7);
+ animal.magicImpact={...animal.magicImpact,at:6};captureAnimalImpact(data,animal,6);bone.rotation.y=1;applyAnimalImpact(data,animal,6);assert.ok(bone.quaternion.angleTo(walking)<1e-7);restoreAnimalImpact(data);assert.ok(Math.abs(bone.rotation.y-1)<1e-7);
+ const loaded={model:new Group()};captureAnimalImpact(loaded,animal,20);applyAnimalImpact(loaded,animal,20);assert.equal(loaded.impactBones,undefined);
+});

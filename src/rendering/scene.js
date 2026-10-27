@@ -459,7 +459,7 @@ export class WorldScene {
       if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
       return;
     }
-    restoreAnimalImpact(data);captureAnimalImpact(data,entity);applyAnimalPose(data,entity,this.state.elapsed);applyAnimalImpact(data,entity,this.state.elapsed);
+    restoreAnimalImpact(data);captureAnimalImpact(data,entity,this.state.elapsed);applyAnimalPose(data,entity,this.state.elapsed);applyAnimalImpact(data,entity,this.state.elapsed);
     this.objects.get(entity.id).rotation.y=entity.heading??0;
     if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
   }
