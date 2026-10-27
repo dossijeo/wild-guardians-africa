@@ -1,0 +1,128 @@
+{
+  "runs": [
+    {
+      "label": "before",
+      "scope": "Node warm rest-pose collider fit only; no GPU or game benchmark",
+      "rows": [
+        {
+          "species": "hyena",
+          "median": 1.870900000000006,
+          "p95": 2.486499999999978,
+          "max": 2.5149000000000115,
+          "fitSha256": "7574d91a3b3413155629e75594dbb2cbc03806854e164865c1e5d16b5e63c7e4"
+        },
+        {
+          "species": "warthog",
+          "median": 1.800299999999993,
+          "p95": 3.2934000000000196,
+          "max": 3.519600000000082,
+          "fitSha256": "c0dff66f3a5eb4b857a3c4a31a56ade3d0c611f4a5dfc2d804a1af7859da6ebd"
+        },
+        {
+          "species": "lion",
+          "median": 1.671799999999962,
+          "p95": 2.9606999999999744,
+          "max": 3.5681999999999334,
+          "fitSha256": "f663345e8d64ae462861d998f63a13fed2943d07efbba20ef730e12bf576c67a"
+        },
+        {
+          "species": "buffalo",
+          "median": 1.758199999999988,
+          "p95": 2.8895999999998594,
+          "max": 3.0999000000001615,
+          "fitSha256": "fbcdd5fc395af8f40ee52ada3f35a60a2cade2cc8ecf30028812101ad277a05d"
+        },
+        {
+          "species": "rhino",
+          "median": 1.5516000000000076,
+          "p95": 2.415399999999863,
+          "max": 2.619499999999789,
+          "fitSha256": "ee6fd2fb736bbda33c7052690b5088f9052f5c144b209630fae21ceb84a13aa3"
+        }
+      ]
+    },
+    {
+      "label": "after",
+      "scope": "Node warm rest-pose collider fit only; no GPU or game benchmark",
+      "rows": [
+        {
+          "species": "hyena",
+          "median": 2.5289000000000215,
+          "p95": 11.785599999999988,
+          "max": 52.251599999999996,
+          "fitSha256": "7574d91a3b3413155629e75594dbb2cbc03806854e164865c1e5d16b5e63c7e4"
+        },
+        {
+          "species": "warthog",
+          "median": 1.4587999999999965,
+          "p95": 2.8308000000000675,
+          "max": 5.140700000000038,
+          "fitSha256": "c0dff66f3a5eb4b857a3c4a31a56ade3d0c611f4a5dfc2d804a1af7859da6ebd"
+        },
+        {
+          "species": "lion",
+          "median": 1.5172999999999774,
+          "p95": 2.436800000000062,
+          "max": 8.797900000000027,
+          "fitSha256": "f663345e8d64ae462861d998f63a13fed2943d07efbba20ef730e12bf576c67a"
+        },
+        {
+          "species": "buffalo",
+          "median": 1.602100000000064,
+          "p95": 2.560899999999947,
+          "max": 2.5909999999998945,
+          "fitSha256": "fbcdd5fc395af8f40ee52ada3f35a60a2cade2cc8ecf30028812101ad277a05d"
+        },
+        {
+          "species": "rhino",
+          "median": 1.0189000000000306,
+          "p95": 1.6433999999999287,
+          "max": 1.8974000000000615,
+          "fitSha256": "ee6fd2fb736bbda33c7052690b5088f9052f5c144b209630fae21ceb84a13aa3"
+        }
+      ]
+    },
+    {
+      "label": "after-repeat",
+      "scope": "Node warm rest-pose collider fit only; no GPU or game benchmark",
+      "rows": [
+        {
+          "species": "hyena",
+          "median": 1.7901999999999703,
+          "p95": 3.190300000000036,
+          "max": 3.5598999999999705,
+          "fitSha256": "7574d91a3b3413155629e75594dbb2cbc03806854e164865c1e5d16b5e63c7e4"
+        },
+        {
+          "species": "warthog",
+          "median": 1.477700000000027,
+          "p95": 2.905200000000036,
+          "max": 3.1263000000000147,
+          "fitSha256": "c0dff66f3a5eb4b857a3c4a31a56ade3d0c611f4a5dfc2d804a1af7859da6ebd"
+        },
+        {
+          "species": "lion",
+          "median": 1.3967000000000098,
+          "p95": 2.1685999999999694,
+          "max": 2.268299999999954,
+          "fitSha256": "f663345e8d64ae462861d998f63a13fed2943d07efbba20ef730e12bf576c67a"
+        },
+        {
+          "species": "buffalo",
+          "median": 1.4837999999999738,
+          "p95": 2.1732999999999265,
+          "max": 2.3640000000000327,
+          "fitSha256": "fbcdd5fc395af8f40ee52ada3f35a60a2cade2cc8ecf30028812101ad277a05d"
+        },
+        {
+          "species": "rhino",
+          "median": 1.4218999999998232,
+          "p95": 1.8302000000001044,
+          "max": 2.2391000000000076,
+          "fitSha256": "ee6fd2fb736bbda33c7052690b5088f9052f5c144b209630fae21ceb84a13aa3"
+        }
+      ]
+    }
+  ],
+  "acceptance": "Exact output parity verified for five rest poses. Timing inconclusive; not a game performance claim."
+}

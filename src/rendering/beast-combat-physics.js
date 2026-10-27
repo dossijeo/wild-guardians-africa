@@ -12,7 +12,7 @@ export async function beastPhysicsRuntime(){initialization??=import('@dimforge/r
 // Simulation calls step before raid/worker AI; rendering only samples the poses.
 // Bounded to three articulated actors, with no physical world while inactive.
 export class BeastCombatPhysics{
- constructor(world,R){this.world=world;this.R=R;this.entries=new Map();this.seen=new Map();this.v=new Vector3();this.stats={active:0,physicsMs:0,recoveryMs:0,rejected:0,startMs:0,maxStepMs:0,solverMs:0,solverSteps:0,bindingMs:0,recoverySetupMs:0,creationMs:0};world.nav.beastPhysics=this;}
+ constructor(world,R){this.world=world;this.R=R;this.entries=new Map();this.seen=new Map();this.v=new Vector3();this.stats={active:0,physicsMs:0,recoveryMs:0,rejected:0,startMs:0,maxStepMs:0,solverMs:0,solverSteps:0,bindingMs:0,recoverySetupMs:0,creationMs:0,lastCreation:null};world.nav.beastPhysics=this;}
  static async create(world){
   const R=await beastPhysicsRuntime();
   // Compile the articulated/contact path and select skin support vertices during
@@ -47,7 +47,7 @@ export class BeastCombatPhysics{
    }finally{recovery.restore();}
   }
   if(this.entries.size>=3){this.stats.rejected++;return false;}
-  root.updateMatrixWorld(true);const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),colliders=binding.colliders(),solver=new BeastRagdollSolver(this.R,{capacity:1});
+  root.updateMatrixWorld(true);const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),captured=performance.now(),colliders=binding.colliders(),fitted=performance.now(),solver=new BeastRagdollSolver(this.R,{capacity:1});
   try{
    const vertices=[],indices=[],size=16,ox=animal.x-8,oz=animal.z-8;
    for(let z=0;z<=size;z++)for(let x=0;x<=size;x++){const px=ox+x,pz=oz+z;vertices.push(px,w.nav.field.surface(px,pz),pz);}
@@ -58,7 +58,8 @@ export class BeastCombatPhysics{
     else{const object=w.objects.get(structure.id);if(object){const box=new Box3().setFromObject(object),center=box.getCenter(new Vector3()),half=box.getSize(new Vector3()).multiplyScalar(.5);if(half.x>0&&half.y>0&&half.z>0)solver.box(center,half);}}
    }
    for(const p of w.nav.propsAt?.(animal.x,animal.z,8)??[])if(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18){const r=p.radius??1,y=w.nav.field.surface(p.x,p.z);solver.box({x:p.x,y:y+1.5,z:p.z},{x:r,y:1.5,z:r});}
-   const hit=animal.magicImpact,actor=solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:hit.direction,intensity:hit.intensity,heading:animal.heading??0});
+   const environmentReady=performance.now(),hit=animal.magicImpact,actor=solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:hit.direction,intensity:hit.intensity,heading:animal.heading??0});
+   const bodiesReady=performance.now();this.stats.lastCreation={species:animal.species,captureMs:captured-started,colliderFitMs:fitted-captured,environmentMs:environmentReady-fitted,bodiesMs:bodiesReady-environmentReady};
    const hip=binding.entries[0].bone.getWorldPosition(new Vector3()),offset={x:hip.x-animal.x,z:hip.z-animal.z};
    animal.magicDown={phase:'falling',since:w.state.elapsed,until:w.state.elapsed+9};animal.path=null;animal.attackRemaining=0;animal.hitApplied=true;if(animal.status==='attacking')animal.status='walking';
    this.entries.set(animal.id,{animal,data,root,binding,solver,actor,offset,accumulator:0,hitAt:animal.magicImpact.impactAt??-Infinity,settledAt:null,recovery:null});this.stats.startMs=performance.now()-started;return true;

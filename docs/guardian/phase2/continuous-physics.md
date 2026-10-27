@@ -25,3 +25,11 @@ Datos completos: [JSON](continuous-hyena-physics.json).
 No es una comparativa antes/después. No demuestra que el precalentamiento redujera el pico ni permite atribuir los 83,5 ms de fotograma a la física. La creación física de 10,6 ms merece una siguiente medición y optimización mediante reutilización. Falta repetición, baseline equivalente, tres ragdolls, incursión masiva, sonido, cámara y análisis de pausas. Rendimiento no aprobado.
 
 El ensayo permite que la IA continúe y cambie de estado; no garantiza identidad de escena entre ejecuciones. No usarlo como benchmark A/B sin restaurar un estado inicial equivalente. También registra si se agota el límite real antes de completar los ocho segundos simulados mediante los dos tiempos del informe.
+
+## Desglose de creación y ajuste de colisionadores
+
+En otra ejecución continua, el arranque de la hiena se desglosó en captura 0,4 ms, ajuste de colisionadores 3,9 ms, entorno 2,1 ms y cuerpos 1,6 ms. Se conserva el estado completo en `creation-stage-baseline.json`. El p99 de fotograma fue 182,6 ms en esa ejecución, muy distinto del ensayo anterior: no se interpreta como efecto de una modificación de física, porque solo se añadió instrumentación y las condiciones no están suficientemente controladas.
+
+Se optimizó el ajuste sin cambiar su resultado: las 96 direcciones de soporte se calculan una vez; los vértices cabeza/cuello se transforman a coordenadas mundiales una vez antes de alimentar ambos soportes; se eliminan los Set temporales por vértice. La comparación profunda de los ajustes antes/después coincide exactamente para las cinco especies. Pasan las catorce pruebas físicas y de integración.
+
+`tools/guardian/measure_collider_fit.mjs` permite medir cuarenta ajustes en caliente por especie y conservar sus resultados completos. El resumen `collider-fit-comparison.json` registra tiempos y hashes de salida de una referencia y dos ejecuciones posteriores. La variación, especialmente un máximo de 52 ms en la primera ejecución posterior, impide afirmar una mejora estable de rendimiento. No se ha creado un pool de cuerpos: la medición señaló primero el ajuste geométrico, y se ha reducido trabajo allí sin cambiar contactos.

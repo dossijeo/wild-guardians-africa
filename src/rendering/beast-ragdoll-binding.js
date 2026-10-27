@@ -1,6 +1,7 @@
 import {Vector3,Quaternion,Bone} from 'three';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
 const colliderSamples=new WeakMap();
+const supportDirections=Array.from({length:96},(_,k)=>{const y=1-2*(k+.5)/96,r=Math.sqrt(1-y*y),theta=k*2.399963229728653;return {x:Math.cos(theta)*r,y,z:Math.sin(theta)*r};});
 
 // The physics snapshot is world-space. Only Hips translation is transferred;
 // other bone lengths remain authored, so solver tolerances cannot stretch skin.
@@ -35,16 +36,19 @@ export class BeastRagdollBinding{
    const cached=colliderSamples.get(mesh.geometry);if(!cached)selected.set(mesh.geometry,new Set());
    const samples=cached??Array.from({length:Math.ceil(indices.count/2)},(_,i)=>i*2);
    for(const i of samples){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
-    // Shared head/neck skin needs support from both adjacent colliders.
-    const owners=new Set();for(let k=0;k<4;k++){const owner=mapping[indices.getComponent(i,k)],primary=mapping[indices.getComponent(i,best)];if(owner!==undefined&&(k===best||weights.getComponent(i,k)>=.25&&(owner===2||owner===3)&&(primary===2||primary===3)))owners.add(owner);}
-    for(const owner of owners){const f=frames[owner];mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld).sub(f.center).applyQuaternion(f.inverse);const point=v.clone();point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);}
+    // Skin once; adjacent head/neck supports share the same world-space point.
+    const primary=mapping[indices.getComponent(i,best)];if(primary===undefined)continue;
+    mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld);
+    let secondary;
+    if(primary===2||primary===3)for(let k=0;k<4;k++){const owner=mapping[indices.getComponent(i,k)];if(owner!==primary&&(owner===2||owner===3)&&weights.getComponent(i,k)>=.25)secondary=owner;}
+    for(let k=0;k<(secondary===undefined?1:2);k++){const owner=k===0?primary:secondary,f=frames[owner],point=v.clone().sub(f.center).applyQuaternion(f.inverse);point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);}
    }
   });
   const quantile=(values,p)=>{values.sort((a,b)=>a-b);return values[Math.floor((values.length-1)*p)];};
   const fits=groups.map((points,i)=>{if(points.length<8)return null;
    const x=quantile(points.map(p=>p.x),.5),z=quantile(points.map(p=>p.z),.5),lo=quantile(points.map(p=>p.y),.02),hi=quantile(points.map(p=>p.y),.98);
    const radius=Math.max(.05,quantile(points.map(p=>Math.hypot(p.x-x,p.z-z)),.96)+.025);
-   const hull=[];for(let k=0;k<96;k++){const dy=1-2*(k+.5)/96,r=Math.sqrt(1-dy*dy),theta=k*2.399963229728653,dx=Math.cos(theta)*r,dz=Math.sin(theta)*r;let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
+   const hull=[];for(const {x:dx,y:dy,z:dz} of supportDirections){let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
    return {hull,radius,halfHeight:Math.max(.005,(hi-lo)/2-radius),offset:{x,y:(lo+hi)/2,z},samples:points.length};
   });
   for(const [geometry,indices] of selected)colliderSamples.set(geometry,[...indices]);
