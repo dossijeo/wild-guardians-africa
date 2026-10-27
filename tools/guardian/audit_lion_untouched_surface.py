@@ -8,6 +8,7 @@ p.add_argument('--source',required=True)
 p.add_argument('--candidate',required=True)
 p.add_argument('--output',required=True)
 p.add_argument('--check',action='store_true')
+p.add_argument('--allow-facial-skinning',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 
 def snapshot(path):
@@ -52,6 +53,8 @@ source,source_duplicates=snapshot(a.source); candidate,candidate_duplicates=snap
 report={'source':a.source,'candidate':a.candidate,'sourceFaces':len(source),
         'candidateFaces':len(candidate),'duplicateFaceKeys':[source_duplicates,candidate_duplicates],
         'missingFaces':0,'corners':0,'max':{},'examples':{}}
+report['facialSkinning']={'allowed':a.allow_facial_skinning,'changedCorners':0,'maxWeightChange':0,
+    'scope':'Only weights may change at |world X| < .075, world Y < -.10, world Z > 1.45; geometry/UV/normals still compared outside the original oral editing box'}
 for key,corners in source.items():
     if key not in candidate:
         report['missingFaces']+=1; continue
@@ -60,6 +63,11 @@ for key,corners in source.items():
         for field in ['position','uv','normal','evaluatedNormal','evaluatedPosition','weights']:
             if field=='weights': error=max([abs(row[field].get(k,0)-other[field].get(k,0)) for k in row[field].keys()|other[field].keys()] or [0])
             else: error=max(abs(x-y) for x,y in zip(row[field],other[field]))
+            x,y,z=row['position']
+            if field=='weights' and a.allow_facial_skinning and abs(x)<.075 and y<-.10 and z>1.45:
+                if error>1e-6:report['facialSkinning']['changedCorners']+=1
+                report['facialSkinning']['maxWeightChange']=max(report['facialSkinning']['maxWeightChange'],error)
+                continue
             if error>report['max'].get(field,-1):
                 report['max'][field]=error; report['examples'][field]={'position':row['position'],'source':row[field],'candidate':other[field]}
 Path(a.output).write_text(json.dumps(report,indent=2),encoding='utf-8')

@@ -21,6 +21,7 @@ p.add_argument('--input', required=True)
 p.add_argument('--output', required=True)
 p.add_argument('--oral-cavity', action='store_true')
 p.add_argument('--export-glb', action='store_true')
+p.add_argument('--fur-material', action='store_true')
 a = p.parse_args(sys.argv[sys.argv.index('--') + 1:])
 source = Path(a.input).resolve()
 expected = '539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968'
@@ -37,6 +38,19 @@ bpy.context.scene.render.fps = 96
 # importer stashes NLA strips at scene.frame_start; its default 1 shifts clips.
 bpy.context.scene.frame_start = 4
 bpy.ops.import_scene.gltf(filepath=str(source))
+material_changes = []
+if a.fur_material:
+    for name in ['Material_0', 'Rear cloth']:
+        material = bpy.data.materials[name]
+        bsdf = next(node for node in material.node_tree.nodes if node.type == 'BSDF_PRINCIPLED')
+        old_roughness = bsdf.inputs['Roughness'].default_value
+        bsdf.inputs['Roughness'].default_value = .85
+        bsdf.inputs['Specular IOR Level'].default_value = .18
+        for node in material.node_tree.nodes:
+            if node.type == 'NORMAL_MAP': node.inputs['Strength'].default_value = .55
+        material_changes.append({'name': name, 'originalRoughness': old_roughness,
+            'roughness': .85, 'specularIORLevel': .18, 'normalStrength': .55,
+            'textures': 'unchanged; shared atlas includes ornaments'})
 mesh = bpy.data.objects['Mesh_0']
 world = mesh.matrix_world.copy()
 inverse = world.inverted()
@@ -138,12 +152,32 @@ def smooth(left, right, value):
 bm.verts.ensure_lookup_table()
 bm.verts.index_update()
 weights = []
+deform = bm.verts.layers.deform.verify()
+head_group = mesh.vertex_groups['Head'].index
+skin_changes = []
 for v in bm.verts:
     point = v.co
     allowed = bool(v.link_faces) and all(f[lower] and f[tag] for f in v.link_faces)
     weight = float(allowed) * smooth(1.46, 1.49, point.z)
     weight *= (1 - smooth(-.18, -.15, point.y)) * (1 - smooth(.06, .075, abs(point.x)))
     weights.append(weight)
+    # The original lower muzzle follows Neck while the new cavity follows Head.
+    # Give the rigid facial core a shared frame, with a soft transition confined
+    # to the main body surface. Separate mane/necklace islands are excluded.
+    blend = smooth(1.45, 1.49, point.z) * (1 - smooth(-.18, -.10, point.y))
+    blend *= 1 - smooth(.04, .075, abs(point.x))
+    if not v.link_faces or not all(f[tag] for f in v.link_faces):
+        blend = 0
+    if blend > 0 and v[deform].get(head_group, 0) < .999999:
+        original = dict(v[deform])
+        combined = {group: value * (1 - blend) for group, value in original.items()}
+        combined[head_group] = combined.get(head_group, 0) + blend
+        strongest = sorted(combined.items(), key=lambda item: item[1], reverse=True)[:4]
+        total = sum(value for _, value in strongest)
+        for group in list(v[deform].keys()): del v[deform][group]
+        for group, value in strongest:
+            if value > 1e-8: v[deform][group] = value / total
+        skin_changes.append({'position': list(point), 'blend': blend})
     v.co = inverse @ point
 corner_normals = [tuple(loop[normals_layer].normalized()) for face in bm.faces for loop in face.loops]
 bm.to_mesh(mesh.data)
@@ -171,7 +205,10 @@ if a.export_glb:
         export_all_influences=False,export_extras=True)
 output.with_suffix('.json').write_text(json.dumps({
     'status': 'authoring candidate; NOT installed', 'oralCavity': oral,
+    'materialChanges': material_changes,
     'source': str(source), 'sha256': digest, 'profile': profile,
     'seam': segments, 'movingVertices': sum(w > 0 for w in weights),
     'vertices': len(mesh.data.vertices), 'pivot': list(pivot), 'angleRadians': .4,
+    'facialSkinning': {'changedVertices': len(skin_changes), 'changes': skin_changes,
+        'scope': 'main body only; Head core with cheek/neck transition; separate accessories excluded'},
 }, indent=2), encoding='utf-8')

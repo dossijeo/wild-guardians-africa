@@ -3,6 +3,39 @@
 Estado: **en elaboración; no instalado en el juego**. Fuente activa conservada:
 `539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb`.
 
+## Actualización v13–v14: unión facial y material
+
+Se corrigieron los pesos del núcleo del hocico hacia Head, con transición suave
+en mejillas/cuello y selección restringida al componente corporal. La auditoría
+de 1.050 vértices a lo largo de los seis clips reduce la separación respecto a
+Head de 6.12 cm a error numérico (~1.21e-15 m). La pose Running 0.35 s / boca
+0.85 se revisó de nuevo en Three.js: lengua y dientes vuelven a quedar dentro
+del labio inferior. También se inspeccionó Weapon_Combo_2 a 3.32 s. Esto corrige
+el fallo localizado; no es aprobación de todos los clips, poses o expresiones.
+
+El comparador de superficies conserva posiciones y UV fuera de la edición oral.
+Permite ahora explícitamente los cambios de pesos en la zona facial documentada:
+1.821 esquinas comparadas cambian de pesos allí; fuera de esa zona el error de
+pesos es cero. Melena y adornos separados se excluyen de la selección de autoría.
+La transición de piel necesita todavía la revisión visual completa.
+
+Por observación del usuario se compararon los materiales con los de la hiena.
+El león usaba rugosidad 0.50, normal strength 1 y reflexión especular por defecto;
+la hiena usa 0.85, 0.55 y specularFactor 0.36. `--fur-material` reproduce estos
+ajustes en Material_0 y Rear cloth, conservando el material oral y el de reparación
+de melena. Se inspeccionó frente neutral en Three.js con iluminación/cámara iguales
+(`material-original.png`, `material-fur.png`): los reflejos amplios de plástico se
+reducen. La forma laminar de los mechones y los brillos pintados en el albedo no
+desaparecen por cambiar parámetros del material.
+
+Verificación v13→v14: cuatro primitivas, 30 atributos geométricos exactos, seis
+clips conservados, imágenes embebidas con hashes idénticos. No hay nuevas texturas
+ni geometría por este ajuste. El material principal comparte atlas con adornos,
+por lo que estos también se vuelven más mates. El exportador añade
+KHR_materials_specular (ya utilizado por la hiena); el coste GPU específico y la
+apariencia en iluminación día/noche del juego siguen pendientes, sin afirmar
+coste cero. v14 sigue como candidato, no sustituye todavía el GLB activo.
+
 ## Actualización: candidato v9
 
 ### Avance posterior v12: exportación y prueba en Three.js
