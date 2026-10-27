@@ -25,7 +25,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     // The native generator receives the low 32 bits of the game seed. Real
     // games default to Date.now(), which is wider than the stored native seed.
     if(generated.seed!==(Number(state.seed)>>>0)||
-      generated.biome!==BIOME_IDS[state.biome]||!!generated.mangroveChannels!==!!state.mangroveChannels)
+      generated.biome!==BIOME_IDS[state.biome]||!!generated.mangroveChannels!==!!state.mangroveChannels||!!generated.mangroveNetwork!==!!state.mangroveNetwork)
       throw TypeError('Pre-generated spatial world does not match game state');
   }else core.generate(state.seed,cx,cz,state.biome,state);
   const field=createSpatialTerrainView(core);
@@ -46,11 +46,17 @@ export function createSpatialGameSession(module,state,streamOptions){
         Math.abs((center.yaw??0)-(planned.yaw??0))<1e-6&&
         (center.culture??village.culture)===(planned.culture??village.culture))?
       [planned]:[];
+    // The estuary's dry village pad is fixed at founding. Remote work centers
+    // are navigation obstacles, not terrain reclamation: including them on
+    // reload would drain every channel inside the expanded bounding rectangle.
+    const terrainCenters=gameState.mangroveNetwork&&planned?
+      [planned]:[...activeCenters,...plannedCenters];
     const footprints=[...village.buildings.filter(b=>b.kind!=='Zona común').map(b=>b.footprint),
-      ...[...activeCenters,...plannedCenters].map(s=>centerFootprint(s,gameState).footprint)];
+      ...terrainCenters.map(s=>centerFootprint(s,gameState).footprint)];
     const points=footprints.flat();
     if(!points.length)throw TypeError('A spatial village needs physical buildings');
-    const sites=gameState.biome==='gran-canon'?footprints.map(footprint=>{
+    const fittedEstuary=gameState.biome==='manglares'&&gameState.mangroveNetwork&&[1,2].includes(gameState.mangroveSettlementVersion);
+    const sites=gameState.biome==='gran-canon'||fittedEstuary?footprints.map(footprint=>{
       const xs=footprint.map(point=>point.x),zs=footprint.map(point=>point.z);
       const minX=Math.min(...xs),maxX=Math.max(...xs),
         minZ=Math.min(...zs),maxZ=Math.max(...zs);
@@ -60,7 +66,10 @@ export function createSpatialGameSession(module,state,streamOptions){
       hx:Math.max(...points.map(p=>Math.abs(p.x-village.x)))+1.25,
       hz:Math.max(...points.map(p=>Math.abs(p.z-village.z)))+1.25}];
     const changed=new Set();
-    for(const [i,site] of sites.entries()){
+    if(fittedEstuary){
+      core.applySettlements(sites.map(site=>({...site,waterFalloff:gameState.mangroveSettlementVersion===2?1:6})),{replace:initial});
+      for(const {cx,cz} of core.changedChunks())changed.add(`${cx},${cz}`);
+    }else for(const [i,site] of sites.entries()){
       if(!Object.values(site).every(Number.isFinite)||site.hx>100||site.hz>100)
         throw RangeError('Spatial settlement exceeds supported bounds');
       const level=initial&&i===0?core.setSettlement(site.x,site.z,site.hx,site.hz):

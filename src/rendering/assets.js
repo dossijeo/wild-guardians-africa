@@ -66,6 +66,7 @@ export class Assets {
   async biome(pack) {
     this.assertOpen();
     const [buffer,entries]=await Promise.all([bytes(pack.binary.url,{signal:this.preparation.signal}),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);this.assertOpen();
+    const textureSets=await Promise.all((pack.textureSets??[]).map(set=>Promise.all(set.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')])).then(Object.fromEntries)));this.assertOpen();
     const preparedTangents=this.asyncTextureImages?await prepareBiomeTangentsAsync(buffer,pack.assets,{signal:this.preparation.signal}):null;this.assertOpen();
     let preparationFrame=performance.now();
     const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array};
@@ -75,7 +76,7 @@ export class Assets {
       geometry.setAttribute('tangent',new THREE.BufferAttribute(preparedTangents?.[index][level]??computeTangents(geometry.attributes.position.array,geometry.attributes.normal.array,geometry.attributes.uv.array,geometry.index.array),4));geometry.computeBoundingBox();
       levels.push(geometry);
       if(this.asyncTextureImages&&performance.now()-preparationFrame>=4){await new Promise(resolve=>requestAnimationFrame(resolve));this.assertOpen();preparationFrame=performance.now();}
-    }const material=this.own(nativeAssetMaterial(pack,a,index,textures,levels[0].boundingBox));result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
+    }const material=this.own(nativeAssetMaterial(pack,a,index,a.textureSet===undefined?textures:textureSets[a.textureSet],levels[0].boundingBox));result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
   }
   async village(payload) {
     this.assertOpen();

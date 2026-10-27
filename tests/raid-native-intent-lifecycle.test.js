@@ -36,7 +36,7 @@ test('native occupied crop approaches wait for lease changes without claiming bl
   const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};
   const nav={raidSelectionStats:{},intentTaskPlanner:{planAttackCrop:()=>({
     status:'occupied',regionQueries:1,routeQueries:0})}};
-  assert.deepEqual(targetFor(state,{id:'animal-1'},nav),{unknown:true});
+  assert.deepEqual(targetFor(state,{id:'animal-1'},nav),{unknown:true,waitReason:'contention'});
   assert.equal(nav.raidSelectionStats.nativeCropResults.occupied,1);
   assert.equal(nav.raidSelectionStats.legacyFallbacks,undefined);
 });

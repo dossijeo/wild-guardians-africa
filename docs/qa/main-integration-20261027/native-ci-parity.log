@@ -1,0 +1,545 @@
+TAP version 13
+# (node:12652) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native retreat owns one physical route until completion without an attack lease
+ok 1 - native retreat owns one physical route until completion without an attack lease
+  ---
+  duration_ms: 1914.649
+  ...
+# Subtest: a retreat exit does not reserve an attack site for another animal
+ok 2 - a retreat exit does not reserve an attack site for another animal
+  ---
+  duration_ms: 1343.4784
+  ...
+# Subtest: a confirmed wall invalidates a pinned retreat route and its old handle
+ok 3 - a confirmed wall invalidates a pinned retreat route and its old handle
+  ---
+  duration_ms: 1314.8314
+  ...
+# Subtest: native animal leases preserve committed strikes and reject duplicate targets
+ok 4 - native animal leases preserve committed strikes and reject duplicate targets
+  ---
+  duration_ms: 1245.7804
+  ...
+# Subtest: topology validation retains a verified remaining attack route when a wall closes behind it
+ok 5 - topology validation retains a verified remaining attack route when a wall closes behind it
+  ---
+  duration_ms: 1073.8959
+  ...
+# (node:25916) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: game event observers retain every committed event beyond the capped log and detach cleanly
+ok 6 - game event observers retain every committed event beyond the capped log and detach cleanly
+  ---
+  duration_ms: 15.9504
+  ...
+# Subtest: native crop groups share the game adjacency rule and invalidate only on crop events
+ok 7 - native crop groups share the game adjacency rule and invalidate only on crop events
+  ---
+  duration_ms: 1118.8902
+  ...
+# Subtest: a paid closed wall ring protects the crop; removing a wall invalidates certification
+ok 8 - a paid closed wall ring protects the crop; removing a wall invalidates certification
+  ---
+  duration_ms: 3664.4019
+  ...
+# Subtest: enclosure advice quotes real wall modules and never certifies an incomplete ring
+ok 9 - enclosure advice quotes real wall modules and never certifies an incomplete ring
+  ---
+  duration_ms: 2260.6729
+  ...
+# Subtest: missing sectors cannot certify a proposed perimeter
+ok 10 - missing sectors cannot certify a proposed perimeter
+  ---
+  duration_ms: 2004.6389
+  ...
+# Subtest: a center-adjacent crop uses valid animal attack sites to certify its enclosure
+ok 11 - a center-adjacent crop uses valid animal attack sites to certify its enclosure
+  ---
+  duration_ms: 5018.1324
+  ...
+# (node:40044) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native damaged lists update by HP event without rebuilding topology
+ok 12 - native damaged lists update by HP event without rebuilding topology
+  ---
+  duration_ms: 1591.2882
+  ...
+# Subtest: HP-only events do not wake the event-driven action planner
+ok 13 - HP-only events do not wake the event-driven action planner
+  ---
+  duration_ms: 807.9146
+  ...
+# Subtest: structure condition events are deduplicated and reset cleanly on restore
+ok 14 - structure condition events are deduplicated and reset cleanly on restore
+  ---
+  duration_ms: 441.8085
+  ...
+# Subtest: native unknown connectivity identifies the actual missing frontier sector
+ok 15 - native unknown connectivity identifies the actual missing frontier sector
+  ---
+  duration_ms: 217.9244
+  ...
+# (node:40236) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: one Wild Engine index serves persistent intentions and spatial advice
+ok 16 - one Wild Engine index serves persistent intentions and spatial advice
+  ---
+  duration_ms: 11325.0737
+  ...
+# (node:28160) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:43668) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13788) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a saved exhausted buffalo uses a physically clear continuous exit instead of a blocked grid bend
+ok 17 - a saved exhausted buffalo uses a physically clear continuous exit instead of a blocked grid bend
+  ---
+  duration_ms: 3750.7169
+  ...
+# Subtest: the intent bridge projects a scaled gate using the physical wall frame
+ok 18 - the intent bridge projects a scaled gate using the physical wall frame
+  ---
+  duration_ms: 1.5518
+  ...
+# Subtest: an HP-only structure hit updates damage advice without waking route reconciliation
+ok 19 - an HP-only structure hit updates damage advice without waking route reconciliation
+  ---
+  duration_ms: 161.433
+  ...
+# Subtest: loading an active raid restores distinct routes and reservations for eight animals
+ok 20 - loading an active raid restores distinct routes and reservations for eight animals
+  ---
+  duration_ms: 2574.7301
+  ...
+# Subtest: saving during a retreat restores its physical route and deterministic raid finish
+ok 21 - saving during a retreat restores its physical route and deterministic raid finish
+  ---
+  duration_ms: 3239.4224
+  ...
+# Subtest: a topology change after restoring concurrent raid routes preserves live leases
+ok 22 - a topology change after restoring concurrent raid routes preserves live leases
+  ---
+  duration_ms: 1577.6391
+  ...
+# Subtest: a saved native animal route resumes movement with its original lease
+ok 23 - a saved native animal route resumes movement with its original lease
+  ---
+  duration_ms: 746.1749
+  ...
+# Subtest: a pending saved animal attack retries only after sectors arrive and keeps its lease
+ok 24 - a pending saved animal attack retries only after sectors arrive and keeps its lease
+  ---
+  duration_ms: 686.5453
+  ...
+# Subtest: an unresolved saved animal attack ends its wait without spending a hit
+ok 25 - an unresolved saved animal attack ends its wait without spending a hit
+  ---
+  duration_ms: 86.0339
+  ...
+# Subtest: loading during a committed strike applies its damage frame exactly once
+ok 26 - loading during a committed strike applies its damage frame exactly once
+  ---
+  duration_ms: 725.7694
+  ...
+# Subtest: restoring a committed animal strike uses the live target index, not crop history
+ok 27 - restoring a committed animal strike uses the live target index, not crop history
+  ---
+  duration_ms: 159.4193
+  ...
+# Subtest: a confirmed ruin cancels travelling animal leases but defers committed strikes
+ok 28 - a confirmed ruin cancels travelling animal leases but defers committed strikes
+  ---
+  duration_ms: 970.4436
+  ...
+# Subtest: an attack plan sees a crop destroyed earlier in the same event boundary
+ok 29 - an attack plan sees a crop destroyed earlier in the same event boundary
+  ---
+  duration_ms: 881.809
+  ...
+# Subtest: event-fed native intent bridge replays live state and only changes on explicit deltas
+ok 30 - event-fed native intent bridge replays live state and only changes on explicit deltas
+  ---
+  duration_ms: 5154.2768
+  ...
+# Subtest: removing a worker releases native and JavaScript per-actor planning records
+ok 31 - removing a worker releases native and JavaScript per-actor planning records
+  ---
+  duration_ms: 1735.423
+  ...
+# Subtest: stale targets or topology cannot acquire native task leases
+ok 32 - stale targets or topology cannot acquire native task leases
+  ---
+  duration_ms: 5181.1137
+  ...
+# Subtest: opt-in Game.tick keeps one native task intention across ordinary movement ticks
+ok 33 - opt-in Game.tick keeps one native task intention across ordinary movement ticks
+  ---
+  duration_ms: 5039.2086
+  ...
+# Subtest: unknown service routes wait for a sector event or low-frequency retry
+ok 34 - unknown service routes wait for a sector event or low-frequency retry
+  ---
+  duration_ms: 5207.9519
+  ...
+# Subtest: a moved crate reroutes the same worker task at the confirmed event boundary
+ok 35 - a moved crate reroutes the same worker task at the confirmed event boundary
+  ---
+  duration_ms: 4824.8279
+  ...
+# Subtest: native whole-queue assignments match JS on controlled real Desert and Canyon states
+ok 36 - native whole-queue assignments match JS on controlled real Desert and Canyon states
+  ---
+  duration_ms: 9708.038
+  ...
+# (node:3112) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native intent matches a real Desert watering interaction
+ok 37 - native intent matches a real Desert watering interaction
+  ---
+  duration_ms: 7594.8806
+  ...
+# Subtest: unknown Gran Cañón task region remains pending in one native batch
+ok 38 - unknown Gran Cañón task region remains pending in one native batch
+  ---
+  duration_ms: 6375.6742
+  ...
+# (node:16500) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: incremental native task index plans, discards and commits one global assignment batch
+ok 39 - incremental native task index plans, discards and commits one global assignment batch
+  ---
+  duration_ms: 1671.6221
+  ...
+# (node:44312) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native crop-site geometry never certifies an illegal resident placement
+ok 40 - native crop-site geometry never certifies an illegal resident placement
+  ---
+  duration_ms: 2522.4229
+  ...
+# Subtest: native crop-site classification is conservative across all six biomes
+ok 41 - native crop-site classification is conservative across all six biomes
+  ---
+  duration_ms: 4989.3798
+  ...
+# Subtest: a site near a chunk edge remains unknown until neighboring prop data is resident
+ok 42 - a site near a chunk edge remains unknown until neighboring prop data is resident
+  ---
+  duration_ms: 190.5692
+  ...
+# (node:23748) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native planting advice reserves legal bidirectional sites and confirms paid planting
+ok 43 - native planting advice reserves legal bidirectional sites and confirms paid planting
+  ---
+  duration_ms: 2164.3156
+  ...
+# (node:18720) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a blocked attack site from the frozen Desert night 79 reselects an accessible wall
+ok 44 - a blocked attack site from the frozen Desert night 79 reselects an accessible wall
+  ---
+  duration_ms: 2282.2479
+  ...
+# Subtest: a native raid approaches an active shield border before waiting on its old route
+ok 45 - a native raid approaches an active shield border before waiting on its old route
+  ---
+  duration_ms: 8183.6697
+  ...
+# Subtest: frozen canyon day-nine cohort becomes enterable when the camera region is resident
+ok 46 - frozen canyon day-nine cohort becomes enterable when the camera region is resident
+  ---
+  duration_ms: 3025.5658
+  ...
+# Subtest: Volcanes day-10 raid uses the replacement center for the headless camera
+ok 47 - Volcanes day-10 raid uses the replacement center for the headless camera
+  ---
+  duration_ms: 2830.7251
+  ...
+# Subtest: a native Sabana incursion spawns physically and advances through Game.tick
+ok 48 - a native Sabana incursion spawns physically and advances through Game.tick
+  ---
+  duration_ms: 2005.0535
+  ...
+# {"controlFirstAttackAt":22.000000000000043,"nativeFirstAttackAt":22.000000000000043,"controlTargetId":"plant-4","nativeTargetId":"plant-4","controlApproach":{"id":"approach-plant-4-direct-0","x":-9.29794298943202,"z":-12.451737763196315},"nativeApproach":{"id":"native-approach-plant-4","x":-9.297943115234375,"z":-12.451737403869629},"controlInitialPathLength":32.412282970450654,"nativeInitialPathLength":32.942282739755285,"nativeCropPlans":1}
+# Subtest: an opt-in raider keeps its crop lease when a new wall only invalidates its route
+ok 49 - an opt-in raider keeps its crop lease when a new wall only invalidates its route
+  ---
+  duration_ms: 1270.2619
+  ...
+# Subtest: 1 native raiders attack an accessible wall instead of crossing a closed crop enclosure
+ok 50 - 1 native raiders attack an accessible wall instead of crossing a closed crop enclosure
+  ---
+  duration_ms: 891.0437
+  ...
+# Subtest: 5 native raiders attack an accessible wall instead of crossing a closed crop enclosure
+ok 51 - 5 native raiders attack an accessible wall instead of crossing a closed crop enclosure
+  ---
+  duration_ms: 838.9279
+  ...
+# Subtest: a confirmed enclosure breach reconsiders other wall attackers at an event boundary
+ok 52 - a confirmed enclosure breach reconsiders other wall attackers at an event boundary
+  ---
+  duration_ms: 1511.8869
+  ...
+# Subtest: animal damage ruins a saved enclosure wall without changing the restored raid
+ok 53 - animal damage ruins a saved enclosure wall without changing the restored raid
+  ---
+  duration_ms: 1440.7292
+  ...
+# Subtest: a retreat waits for unknown sectors and retries without treating them as blocked
+ok 54 - a retreat waits for unknown sectors and retries without treating them as blocked
+  ---
+  duration_ms: 810.181
+  ...
+# Subtest: a frozen rhino retreat uses a physically clear exit when its graph route stays unknown
+ok 55 - a frozen rhino retreat uses a physically clear exit when its graph route stays unknown
+  ---
+  duration_ms: 12681.524
+  ...
+# Subtest: a waiting raider parks its return-to-spawn move when sectors are unknown
+ok 56 - a waiting raider parks its return-to-spawn move when sectors are unknown
+  ---
+  duration_ms: 1135.1056
+  ...
+# Subtest: a stalled retreat can phase past a mobile body occupying its exit
+ok 57 - a stalled retreat can phase past a mobile body occupying its exit
+  ---
+  duration_ms: 852.7814
+  ...
+# Subtest: the saved day-nine traffic jam finishes without an emergency disappearance
+ok 58 - the saved day-nine traffic jam finishes without an emergency disappearance
+  ---
+  duration_ms: 1150.7528
+  ...
+# Subtest: an unresolved native crop group can still expose a certified reachable enclosure wall
+ok 59 - an unresolved native crop group can still expose a certified reachable enclosure wall
+  ---
+  duration_ms: 768.5199
+  ...
+# Subtest: the archived occupied-wall farm now admits a native crop route through walkable water
+ok 60 - the archived occupied-wall farm now admits a native crop route through walkable water
+  ---
+  duration_ms: 9600.0781
+  ...
+# Subtest: an explicit occupied native wall result retains a physically reachable alternate attack
+ok 61 - an explicit occupied native wall result retains a physically reachable alternate attack
+  ---
+  duration_ms: 9325.3871
+  ...
+# (node:28560) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Manglares water access selects crops or sealed walls and retains physical shortened routes
+ok 62 - Manglares water access selects crops or sealed walls and retains physical shortened routes
+  ---
+  duration_ms: 4112.9759
+  ...
+# (node:45956) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native worker home route keeps a task-free handle across save restoration
+ok 63 - native worker home route keeps a task-free handle across save restoration
+  ---
+  duration_ms: 1582.2693
+  ...
+# Subtest: saving during worker flight restores native home routes without new plans
+ok 64 - saving during worker flight restores native home routes without new plans
+  ---
+  duration_ms: 1955.6148
+  ...
+# Subtest: a confirmed wall invalidates a worker home route and reopening replans it
+ok 65 - a confirmed wall invalidates a worker home route and reopening replans it
+  ---
+  duration_ms: 891.687
+  ...
+# (node:17164) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a day-37 fractional crop approach never commits an unswept connector
+ok 66 - a day-37 fractional crop approach never commits an unswept connector
+  ---
+  duration_ms: 6035.8203
+  ...
+# Subtest: a legal worker beside a wall finds an adjacent connector instead of retrying every crop
+ok 67 - a legal worker beside a wall finds an adjacent connector instead of retrying every crop
+  ---
+  duration_ms: 1400.2824
+  ...
+# Subtest: native world planner matches fractional connectors and automatic gate routes
+ok 68 - native world planner matches fractional connectors and automatic gate routes
+  ---
+  duration_ms: 1140.7239
+  ...
+# Subtest: native route cache follows local wall changes and sector residence
+ok 69 - native route cache follows local wall changes and sector residence
+  ---
+  duration_ms: 951.8491
+  ...
+# Subtest: shadow native batch preserves global task order and nearest-worker assignment
+ok 70 - shadow native batch preserves global task order and nearest-worker assignment
+  ---
+  duration_ms: 662.8815
+  ...
+# (node:6752) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Sabana/123 day 83: repeated repair hypotheses leave confirmed revisions and routes intact
+ok 71 - Sabana/123 day 83: repeated repair hypotheses leave confirmed revisions and routes intact
+  ---
+  duration_ms: 14925.1815
+  ...
+# Subtest: Sabana day 15: occupied repair footprints defer without speculative routes
+ok 72 - Sabana day 15: occupied repair footprints defer without speculative routes
+  ---
+  duration_ms: 1060.7026
+  ...
+# Subtest: Volcanes/712 day 19: reverse reach batch matches each repair witness
+ok 73 - Volcanes/712 day 19: reverse reach batch matches each repair witness
+  ---
+  duration_ms: 5730.5583
+  ...
+# Subtest: repairing the last physical gap creates a worker-access gate before payment
+ok 74 - repairing the last physical gap creates a worker-access gate before payment
+  ---
+  duration_ms: 2472.3917
+  ...
+# Subtest: Gran Cañón repairs retain existing worker routes without unnecessary gates
+ok 75 - Gran Cañón repairs retain existing worker routes without unnecessary gates
+  ---
+  duration_ms: 1202.2872
+  ...
+# Subtest: manglares: a paid repair keeps native worker access without an unnecessary gate
+ok 76 - manglares: a paid repair keeps native worker access without an unnecessary gate
+  ---
+  duration_ms: 3354.0239
+  ...
+# Subtest: gran-rio: a paid repair keeps native worker access without an unnecessary gate
+ok 77 - gran-rio: a paid repair keeps native worker access without an unnecessary gate
+  ---
+  duration_ms: 3752.6186
+  ...
+# Subtest: desierto: a paid repair keeps native worker access without an unnecessary gate
+ok 78 - desierto: a paid repair keeps native worker access without an unnecessary gate
+  ---
+  duration_ms: 5134.2706
+  ...
+# Subtest: volcanes: a paid repair keeps native worker access without an unnecessary gate
+ok 79 - volcanes: a paid repair keeps native worker access without an unnecessary gate
+  ---
+  duration_ms: 3417.7657
+  ...
+# Subtest: a wall crossing between grid samples blocks the graph edge and continuous segment
+ok 80 - a wall crossing between grid samples blocks the graph edge and continuous segment
+  ---
+  duration_ms: 778.1291
+  ...
+# Subtest: rejecting a buffalo route edge yields a different native route
+ok 81 - rejecting a buffalo route edge yields a different native route
+  ---
+  duration_ms: 552.7294
+  ...
+# Subtest: rejecting a worker route edge yields a different native route
+ok 82 - rejecting a worker route edge yields a different native route
+  ---
+  duration_ms: 446.1665
+  ...
+# (node:43340) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cut diagnostics distinguish uncertified blockage from unavailable geometry
+ok 83 - cut diagnostics distinguish uncertified blockage from unavailable geometry
+  ---
+  duration_ms: 4.5963
+  ...
+# Subtest: a physically blocked cut slot reaches certification, but crops and unaccounted slots do not
+ok 84 - a physically blocked cut slot reaches certification, but crops and unaccounted slots do not
+  ---
+  duration_ms: 0.383
+  ...
+# Subtest: clearance hull yields a closed free-form candidate around every crop
+ok 85 - clearance hull yields a closed free-form candidate around every crop
+  ---
+  duration_ms: 2.4558
+  ...
+# Subtest: native cut edges form an arbitrary world contour without assuming a rectangle
+ok 86 - native cut edges form an arbitrary world contour without assuming a rectangle
+  ---
+  duration_ms: 47.6393
+  ...
+# Subtest: adjacent wall footprints occlude a whole attack face but a gap does not
+ok 87 - adjacent wall footprints occlude a whole attack face but a gap does not
+  ---
+  duration_ms: 4.0984
+  ...
+# Subtest: natural joins inspect only exposed wall ends and require a continuous obstacle
+ok 88 - natural joins inspect only exposed wall ends and require a continuous obstacle
+  ---
+  duration_ms: 1.0742
+  ...
+# Subtest: static cut certificate bounds unsampled gaps and refuses uncertainty
+ok 89 - static cut certificate bounds unsampled gaps and refuses uncertainty
+  ---
+  duration_ms: 1.4038
+  ...
+# Subtest: a placed free-form wall loop needs a gate and no omitted modules
+ok 90 - a placed free-form wall loop needs a gate and no omitted modules
+  ---
+  duration_ms: 6.6738
+  ...
+# Subtest: a sub-body seam in a closed wall loop blocks committed crop hits
+ok 91 - a sub-body seam in a closed wall loop blocks committed crop hits
+  ---
+  duration_ms: 3.9346
+  ...
+# Subtest: a canyon river blocks the crop-hit ray across a natural barrier
+ok 92 - a canyon river blocks the crop-hit ray across a natural barrier
+  ---
+  duration_ms: 7.246
+  ...
+# Subtest: two wall strokes quote and purchase atomically with one automatic gate
+ok 93 - two wall strokes quote and purchase atomically with one automatic gate
+  ---
+  duration_ms: 62.5454
+  ...
+# Subtest: natural-join checks use placed module ends and refuse missing pieces
+ok 94 - natural-join checks use placed module ends and refuse missing pieces
+  ---
+  duration_ms: 12.8951
+  ...
+# Subtest: separate arcs beside a building keep one gate and worker access
+ok 95 - separate arcs beside a building keep one gate and worker access
+  ---
+  duration_ms: 774.0922
+  ...
+# Subtest: day-80 cut detours around a rock only after renewed physical certification
+ok 96 - day-80 cut detours around a rock only after renewed physical certification
+  ---
+  duration_ms: 4693.4341
+  ...
+# Subtest: native five-profile cut is deterministic and responds to local solid changes
+ok 97 - native five-profile cut is deterministic and responds to local solid changes
+  ---
+  duration_ms: 2991.2395
+  ...
+# Subtest: traversable Manglares water never certifies a defensive boundary and requires residency
+ok 98 - traversable Manglares water never certifies a defensive boundary and requires residency
+  ---
+  duration_ms: 2458.892
+  ...
+# Subtest: native cut observes a paid wall stroke and its removal
+ok 99 - native cut observes a paid wall stroke and its removal
+  ---
+  duration_ms: 10127.2919
+  ...
+# Subtest: Gran Cañón natural corridor closes around planted crops and rejects uncertain protection
+ok 100 - Gran Cañón natural corridor closes around planted crops and rejects uncertain protection
+  ---
+  duration_ms: 9847.6366
+  ...
+1..100
+# tests 100
+# suites 0
+# pass 100
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 63194.9387

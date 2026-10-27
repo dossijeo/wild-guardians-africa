@@ -36,7 +36,8 @@ export const QA_ONLY_VILLAGE_FILES=[
 export const QA_ONLY_VISUAL_DIRECTORIES=[
  'ground-fiber-bake','ground-pom','moss-composite','fern-composite-lod-20261023',
  'holly-fern-cards-20261023','mangrove-leaf-cards-20261023',
- 'continuous-grass-cards','continuous-grass-flow'
+ 'continuous-grass-cards','continuous-grass-flow',
+ 'tree-candidates-20261026','tree-candidates-20261026-lod'
 ];
 export function publicText(text,path,manifest){
   if(path==='content/models.json'){
@@ -94,7 +95,7 @@ export function webPackagePlugin(){
       }
       // Keep demo village and superseded combined ground maps in the source
       // archive. Ship native cultures and the three final baked maps only.
-      for(const archive of ['biome-lab-update.json','mangrove-ground-bake.json']){
+      for(const archive of ['biome-lab-update.json','mangrove-ground-bake.json','retired-biome-geometry.json']){
         const manifestFile=resolve(config.root,'content/manifests',archive);
         if(existsSync(manifestFile))for(const url of JSON.parse(readFileSync(manifestFile,'utf8')).archiveOnly){
           if(!/^\/assets\/[a-f0-9]{64}\.(?:bin|png|jpg|webp)$/.test(url))throw Error('Invalid source archive path');

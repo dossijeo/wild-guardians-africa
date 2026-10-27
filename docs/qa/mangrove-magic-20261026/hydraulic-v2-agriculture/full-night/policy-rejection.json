@@ -1,0 +1,9 @@
+{
+  "ok": false,
+  "failure": "Error: page.evaluate: Error: Esta acción no está disponible ahora\n    at validateSpell (http://127.0.0.1:5220/src/simulation/game.js:737:32)\n    at Module.cast (http://127.0.0.1:5220/src/simulation/game.js:742:14)\n    at eval (eval at evaluate (:291:30), <anonymous>:1:121)\n    at UtilityScript.evaluate (<anonymous>:293:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)",
+  "casts": 0,
+  "time": 335.8246249996924,
+  "pauses": [],
+  "raid": null,
+  "interpretation": "Expected policy rejection: agricultural spells require time <300 and no raid. No spell was activated. Not a performance run. Existing dusk-to-night run validates ongoing effects."
+}

@@ -49,3 +49,10 @@ test('offline landscape grading preserves tree identity, geometry and water cove
  assert.notDeepEqual(unwashed.ground.colorMap.data,original.ground.colorMap.data);for(let i=3;i<original.ground.colorMap.data.length;i+=4)assert.equal(unwashed.ground.colorMap.data[i],original.ground.colorMap.data[i]);
  for(const value of [-.01,1.01,NaN,Infinity])assert.throws(()=>buildFarSceneData({...request,groundWash:value}),/ground wash/);
 });
+
+test('regional tree shadow mask is transferred, owned once and follows live night uniform',()=>{
+ const data=farGroundData({surface:()=>0},bounds,{step:16});data.colorMap=farGroundColorMap(bounds,{step:4,colorAt:()=>[.4,.5,.3]});data.treeShadows={data:new Uint8Array(data.colorMap.width*data.colorMap.height),width:data.colorMap.width,height:data.colorMap.height,affected:1};
+ const candidate={impostors:new THREE.Group(),dispose(){}},world={nearBounds:[100,-64,116,-48],toon:{uniforms:{uWorldOrigin:{value:new THREE.Vector2()},uNight:{value:0}}}};
+ attachNativeFarGround(candidate,data,world,{simplified:true});assert.equal(candidate.farGroundTextures.length,2);const texture=candidate.farGroundTextures[1];assert.equal(texture.format,THREE.RedFormat);assert.equal(texture.image.data,data.treeShadows.data);assert.ok(farSceneTransferables({ground:data}).includes(data.treeShadows.data.buffer));
+ const shader={uniforms:{},vertexShader:'void main() {\n#include <worldpos_vertex>\n}',fragmentShader:'#include <map_fragment>\n#include <opaque_fragment>\n#include <clipping_planes_fragment>'};candidate.impostors.children[0].material.onBeforeCompile(shader);assert.equal(shader.uniforms.uFarTreeNight,world.toon.uniforms.uNight);assert.equal(shader.uniforms.uFarTreeShadow.value,texture);let released=0;texture.addEventListener('dispose',()=>released++);candidate.dispose();candidate.dispose();assert.equal(released,1);
+});

@@ -117,7 +117,7 @@ export function createSpatialNavigationMovement(session,state){
       // let the caller try another point instead of demanding more chunks.
       if(!startRegions.unknown&&!startRegions.ids.length||
          !endRegions.unknown&&!endRegions.ids.length)return null;
-      throw new SpatialChunkUnavailable(start,end,[],{
+      throw new SpatialChunkUnavailable(start,end,result.missing??[],{
         routeReason:result.reason??'unspecified',
         startRegions,endRegions,
         startProps:session.queryPropsAt?.(start.x,start.z,1.5).status,
@@ -185,6 +185,10 @@ export function createSpatialNavigationMovement(session,state){
     const steps=Math.max(Math.abs(to.cx-from.cx),Math.abs(to.cz-from.cz),1);
     for(let i=0;i<=steps;i++)candidates.push({cx:Math.round(from.cx+(to.cx-from.cx)*i/steps),
       cz:Math.round(from.cz+(to.cz-from.cz)*i/steps)});
+    // Include the entry side: detours may leave the loaded corridor.
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+      if(x||z)candidates.push({cx:from.cx+x,cz:from.cz+z});
+    }
     for(let ring=1;ring<=2;ring++)for(let z=-ring;z<=ring;z++)for(let x=-ring;x<=ring;x++){
       if(Math.max(Math.abs(x),Math.abs(z))===ring)candidates.push({cx:to.cx+x,cz:to.cz+z});
     }
@@ -256,10 +260,11 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
-  const workerSurface=(x,z)=>session.field.canyon?
+  const workerSurface=(x,z)=>session.field.wetland?
+    Math.max(session.field.surface(x,z),session.field.wetlandLevel()):session.field.canyon?
     Math.max(session.field.surface(x,z),session.field.riverLevel):session.field.surface(x,z);
   const actorSurface=(x,z)=>{
-    const ground=session.field.surface(x,z),water=session.field.canyon&&session.field.waterInfo(x,z);
+    const ground=session.field.surface(x,z),water=(session.field.canyon||session.field.wetland)&&session.field.waterInfo(x,z);
     return water?.inside?Math.max(ground,water.level-.10):ground;
   };
   const chunk=(cx,cz)=>{
@@ -285,8 +290,11 @@ export function createSpatialNavigationMovement(session,state){
   const terrainValid=(x,z,radius=.28,worker=false)=>{
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]){
       const px=x+dx,pz=z+dz;
-      if(!worker&&session.field.fluidInside(px,pz))return false;
-      if(!Number.isFinite(session.field.slope(px,pz))||session.field.slope(px,pz)>.5)
+      if(!worker&&!session.field.wetland&&session.field.fluidInside(px,pz))return false;
+      const slope=session.field.wetland?Math.hypot(
+        workerSurface(px+.8,pz)-workerSurface(px-.8,pz),
+        workerSurface(px,pz+.8)-workerSurface(px,pz-.8))/1.6:session.field.slope(px,pz);
+      if(!Number.isFinite(slope)||slope>.5)
         return false;
     }
     return true;

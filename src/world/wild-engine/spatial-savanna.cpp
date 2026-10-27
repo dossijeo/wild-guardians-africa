@@ -87,13 +87,14 @@ struct BarrierIndex {
   std::unordered_map<int,Barrier> byId;
   std::unordered_map<uint64_t,std::vector<int>> buckets;
 };
-struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0;};
+struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0,waterFalloff=6;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 WILD_SAMPLING_LOCAL uint32_t worldSeed=0;
 WILD_SAMPLING_LOCAL int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
 WILD_SAMPLING_LOCAL bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
 WILD_SAMPLING_LOCAL bool mangroveChannels=false; // Variant 7: bounded channels for new worlds; retain legacy saved terrain.
+WILD_SAMPLING_LOCAL bool mangroveNetwork=false; // Variant 8: distributed estuarine channel network.
 WILD_SAMPLING_LOCAL int chunkX=0,chunkZ=0;
 int nextBarrierId=1;
 // Main-thread revisions. Workers capture values, never read these concurrently.
@@ -282,6 +283,24 @@ double canyonWaterHalf(double z){return 5.8+noise(z*.009,14,5901)*1.8;}
 double mainRiverLevel(){return worldBiome==5?3.28:3.6;}
 double mainRiverReach(double z){return worldBiome==5?canyonWaterHalf(z)+.6:6.1;}
 double settlementBlend(const Settlement& site,double x,double z);
+double estuaryMask(double x,double z){
+  // Warped cell boundaries form a connected network, rather than two isolated
+  // world axes. Interior islands stay dry; broad low-frequency basins never flood.
+  const double u=x+(noise(x*.015,z*.015,9241)-.5)*86+(noise(x*.042,z*.042,9243)-.5)*18;
+  const double v=z+(noise(x*.015,z*.015,9251)-.5)*86+(noise(x*.042,z*.042,9253)-.5)*18;
+  constexpr double spacing=80;
+  const int cx=int(std::floor(u/spacing)),cz=int(std::floor(v/spacing));
+  double first=1e30,second=1e30;
+  for(int dz=-2;dz<=2;dz++)for(int dx=-2;dx<=2;dx++){
+    const int sx=cx+dx,sz=cz+dz;
+    const double px=(sx+.5+(unit(cellHash(sx,sz,9261))-.5)*.5)*spacing;
+    const double pz=(sz+.5+(unit(cellHash(sx,sz,9271))-.5)*.5)*spacing;
+    const double d=std::hypot(u-px,v-pz);
+    if(d<first){second=first;first=d;}else if(d<second)second=d;
+  }
+  const double width=2.5+noise(x*.013,z*.013,9281)*4;
+  return 1-blend((second-first-width)/7);
+}
 double wetlandMask(double x,double z){
   const double phase=unit(cellHash(9,7,63))*2*pi;
   const double warp=(noise(x*.065,z*.065,9201)-.5)*3.5;
@@ -296,12 +315,14 @@ double wetlandMask(double x,double z){
   // independent lake. The zero boundary of the network bounds the inundation.
   double mask=mangroveChannels?std::min(1.0,network*(1+basin*.18)):
     std::max(network,basin*.92);
+  if(mangroveNetwork)mask=estuaryMask(x,z);
   // Movement queries can inspect any resident chunk while another chunk is
   // selected for rendering. Wetness must depend on the queried position,
   // never on the selected chunk's settlement shortlist.
   for(const Settlement& site:settlements){
     if(std::abs(x-site.x)>=site.hx+6||std::abs(z-site.z)>=site.hz+6)continue;
-    mask*=1-settlementBlend(site,x,z);
+    const double edge=std::max(std::abs(x-site.x)-site.hx,std::abs(z-site.z)-site.hz);
+    mask*=site.waterFalloff==6?1-settlementBlend(site,x,z):blend(edge/site.waterFalloff);
   }
   return std::clamp(mask,0.0,1.0);
 }
@@ -664,11 +685,12 @@ void buildWaterMesh(int cx,int cz){
 bool terrainValid(double x,double z,float radius,bool worker){
   auto travelSurface=[&](double px,double pz){
     const double ground=surface(px,pz);
-    return worldBiome==5&&worker?std::max(ground,3.28):ground;
+    return worldBiome==4?std::max(ground,3.34):
+      worldBiome==5&&worker?std::max(ground,3.28):ground;
   };
   for(int i=0;i<5;i++){
     const double px=x+(i==1?radius:i==2?-radius:0),pz=z+(i==3?radius:i==4?-radius:0);
-    if(!(worldBiome==5&&worker)&&fluid(px,pz))return false;
+    if(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))return false;
     if(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
       travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5)return false;
   }
@@ -938,6 +960,8 @@ double proceduralPropSpacing(int type){
   constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
   constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
   constexpr double canyonSpacing[6]={13,5.2,3.5,9,19,31};
+  // Estuary-only canopy trial: closer tree cells, unchanged low fern layer.
+  if(mangroveNetwork&&type==0)return 8.5;
   return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
 }
 void prepareSelectedChunk(int cx,int cz,bool visual){
@@ -1006,12 +1030,23 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
         const float scale=worldBiome==5&&type==5?
           float(.64+unit(cellHash(gx,gz,312+type))*.23):
           float(.78+unit(cellHash(gx,gz,312+type))*.43);
-        const int slot=(worldBiome==1?desertOffsets[type]:worldBiome==5?canyonOffsets[type]:savannaOffsets[type])+
+        int slot=(worldBiome==1?desertOffsets[type]:worldBiome==5?canyonOffsets[type]:savannaOffsets[type])+
           int(cellHash(gx,gz,315+type)%(worldBiome==1?desertCounts[type]:worldBiome==5?canyonCounts[type]:savannaCounts[type]));
+        if(mangroveNetwork&&type==0){
+          // Correlated canopy patches, with occasional coastal palms. Keep
+          // the same global cell identity for removal and chunk ownership.
+          const double canopy=.65+.25*noise(x*.025,z*.025,9321);
+          const double choice=unit(cellHash(gx,gz,9323));
+          slot=choice<canopy?(cellHash(gx,gz,9325)%2):2+(cellHash(gx,gz,9327)%2);
+        }
         if(removedProps().count({type,gx,gz}))continue;
         const double waterLevel=fluidLevel(x,z);
         const bool mangroveHabitat=worldBiome==4&&(slot==0||slot==1||slot==4);
-        if(mangroveHabitat){if(wetlandMask(x,z)<.56)continue;}
+        if(mangroveHabitat){
+          // The estuary supports rooted canopy on emerged islands as well
+          // as wet banks; legacy recipes keep their original habitat mask.
+          if(!mangroveNetwork&&wetlandMask(x,z)<.56)continue;
+        }
         else if((worldBiome==2&&slot==9)?waterLevel==0:waterLevel!=0)continue;
         if(worldBiome==2&&(slot==7||slot==17)&&
            std::abs(std::abs(x-riverX(z))-6.1)>15)continue;
@@ -1449,9 +1484,9 @@ static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
-  if(biome<0||biome>7)return -1;
+  if(biome<0||biome>8)return -1;
   ++terrainInputRevision;++residencyRevision;
-  worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;worldBiome=mangroveChannels?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;mangroveNetwork=biome==8;worldBiome=(mangroveChannels||mangroveNetwork)?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
   removedProps().clear();removedPropState.clear();removedPropGeometry().clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
@@ -1581,6 +1616,27 @@ int spatial_resident_visible_prop_count(){
 }
 int spatial_changed_chunk_count(){return int(changedSettlementChunks.size()/2);}
 int32_t* spatial_changed_chunks_ptr(){return changedSettlementChunks.data();}
+// Main-thread authority stages a bounded batch; workers only consume snapshots.
+static float settlementBatchInput[256*5];
+float* spatial_settlement_batch_ptr(){return settlementBatchInput;}
+int spatial_apply_settlement_batch(int count,int replace){
+  if(count<0||count>256||(replace!=0&&replace!=1))return -1;
+  std::vector<Settlement> incoming;incoming.reserve(count);
+  for(int i=0;i<count;i++){
+    const float* p=settlementBatchInput+i*5;
+    if(!std::isfinite(p[0])||!std::isfinite(p[1])||!std::isfinite(p[2])||!std::isfinite(p[3])||
+       p[2]<=0||p[3]<=0||p[2]>100||p[3]>100||!std::isfinite(p[4])||p[4]<.25||p[4]>6)return -1;
+    incoming.push_back(makeSettlement(p[0],p[1],p[2],p[3]));
+    incoming.back().waterFalloff=p[4];
+  }
+  if(!replace&&incoming.empty())return 0;
+  std::vector<Settlement> changed=replace?settlements:std::vector<Settlement>{};
+  changed.insert(changed.end(),incoming.begin(),incoming.end());
+  if(replace)settlements=std::move(incoming);
+  else settlements.insert(settlements.end(),incoming.begin(),incoming.end());
+  if(!changed.empty())refreshSettlementChunks(changed);
+  return count;
+}
 float spatial_set_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;
@@ -1782,8 +1838,14 @@ float spatial_wetland_mask_resident(float x,float z){
 float spatial_wetland_mask_lipschitz(){
   if(worldBiome!=4)return std::numeric_limits<float>::quiet_NaN();
   // noise() has slope <= 1.5 per coordinate. The steepest channel in
-  // wetlandMask() is < 0.72 per metre; each settlement clearing adds <= .25.
-  return float(1.0+.25*settlements.size());
+  // legacy wetlandMask() is < 0.72 per metre. The estuary warp has
+  // Jacobian norm <= 1+2*1.5*(86*.015+18*.042) < 7.14;
+  // the two nearest-distance gap has slope <= 2 in warped space.
+  // Smoothstep over 7 m plus width noise stays below 3.1; use 8
+  // conservatively. A settlement smoothstep adds <= 1.5 / waterFalloff.
+  double bound=mangroveNetwork?8.0:1.0;
+  for(const auto& site:settlements)bound+=1.5/site.waterFalloff;
+  return float(bound);
 }
 // Certify an entire one-metre cut face from the same continuous terrain used
 // by movement. The river bound uses the analytic maximum derivative of
@@ -2118,8 +2180,9 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
   return 1;
 }
 uint32_t spatial_world_seed(){return worldSeed;}
-int spatial_world_biome(){return mangroveChannels?7:worldBiome;}
+int spatial_world_biome(){return mangroveNetwork?8:mangroveChannels?7:worldBiome;}
 int spatial_next_barrier_id(){return nextBarrierId;}
+float spatial_settlement_water_falloff(int index){return index>=0&&index<int(settlements.size())?float(settlements[index].waterFalloff):-1;}
 int spatial_settlement_state_count(){return int(settlements.size());}
 SettlementStateRecord* spatial_settlement_state_ptr(){
   settlementState.clear();settlementState.reserve(settlements.size());

@@ -94,3 +94,11 @@ test('native far distance uses the authored bottom pivot with anisotropic scale 
  f.camera.position.z=z+4;coverage.update(f.chunks,f.camera,()=>({ready:1,enabled:true}),1);assert.equal(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0),0);
  f.close();
 });
+
+test('angular coverage invalidates when only camera altitude changes',()=>{
+ const f=fixture(),batch=f.group.userData.lodBatches[0],coverage=new NativeFarCoverage([0,0,0],{start:5,end:10,angularLod:true});
+ f.camera.position.set(0,1,20);updateAssetLods(f.chunks,f.camera,'media');const ready=()=>({ready:1,enabled:true});
+ coverage.update(f.chunks,f.camera,ready,1);assert.equal(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0),0);
+ f.camera.position.y=25;coverage.update(f.chunks,f.camera,ready,1);assert.equal(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0),1);
+ const scans=coverage.scans;coverage.update(f.chunks,f.camera,ready,1);assert.equal(coverage.scans,scans);f.close();
+});

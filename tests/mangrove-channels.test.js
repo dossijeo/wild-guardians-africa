@@ -50,3 +50,62 @@ test('pthread preparation uses the same channel recipe as the authoritative main
   }
  }finally{await handle.dispose();}
 });
+
+test('estuarine variant persists independently and pthread chunks match its authoritative terrain',async()=>{
+ const core=createSpatialWorld(module);core.generate(37,0,0,'mangrove',{mangroveNetwork:true});core.addSettlement(60,0,14,12);
+ const saved=core.snapshot();assert.equal(saved.mangroveNetwork,true);assert.equal(saved.mangroveChannels,undefined);
+ const restored=createSpatialWorld(module);restored.restoreState(saved);const far=createFarSpatialReplica(module,core.terrainState());
+ for(let z=-180;z<=180;z+=7)for(let x=-180;x<=180;x+=7){assert.equal(restored.wetlandMaskAnywhere(x,z),core.wetlandMaskAnywhere(x,z));assert.equal(far.fluidLevelAnywhere(x,z),core.fluidLevelAnywhere(x,z));}
+ const handle=await createThreadedSpatialWorld(factory),thread=handle.core;
+ try{
+  thread.generate(37,0,0,'mangrove',{mangroveNetwork:true});thread.addSettlement(60,0,14,12);
+  const id=thread.preparation.start(2,1),start=performance.now();assert(id>0);
+  while(thread.preparation.status()!==3){assert(performance.now()-start<15000);await new Promise(r=>setTimeout(r,1));}
+  assert(thread.preparation.publish(id,2,1)>0);thread.preparation.release();thread.selectChunk(2,1);core.addChunk(2,1);core.selectChunk(2,1);
+  assert.deepEqual(thread.chunkPayload().water,core.chunkPayload().water);
+  assert.deepEqual(thread.chunkPayload().terrain.positions,core.chunkPayload().terrain.positions);
+  assert.deepEqual(thread.chunkPayload().instances,core.chunkPayload().instances);
+  assert.deepEqual(thread.props(),core.props());
+ }finally{await handle.dispose();}
+});
+
+test('dense estuary adjacent chunks agree across seeds, pthreads and saved reloads',async()=>{
+ const handle=await createThreadedSpatialWorld(factory);
+ try{
+  for(const seed of [1,37,712,4096]){
+   const sync=createSpatialWorld(module),thread=handle.core;
+   for(const core of [sync,thread]){core.generate(seed,0,0,'mangrove',{mangroveNetwork:true});core.addSettlement(60,0,14,12);}
+   for(const [cx,cz] of [[2,1],[3,1],[2,2],[3,2]]){
+    sync.addChunk(cx,cz);sync.selectChunk(cx,cz);const expected=structuredClone(sync.chunkPayload());
+    const id=thread.preparation.start(cx,cz),started=performance.now();assert(id>0);
+    while(thread.preparation.status()!==3){assert(performance.now()-started<15000);assert(Number.isFinite(thread.surfaceAnywhere(60,0)));await new Promise(r=>setTimeout(r,1));}
+    assert(thread.preparation.publish(id,cx,cz)>0);thread.preparation.release();thread.selectChunk(cx,cz);
+    const actual=thread.chunkPayload();
+    for(const key of ['water','instances'])assert.deepEqual(actual[key],expected[key],`${seed}:${cx},${cz}:${key}`);
+    assert.deepEqual(actual.terrain.positions,expected.terrain.positions);
+    assert.deepEqual(thread.props(),sync.props());
+    const restored=createSpatialWorld(module);restored.restoreState(sync.snapshot(),cx,cz);restored.selectChunk(cx,cz);
+    assert.deepEqual(restored.chunkPayload().water,expected.water);
+    assert.deepEqual(restored.chunkPayload().instances,expected.instances);
+   }
+  }
+ }finally{await handle.dispose();}
+});
+
+
+test('current estuary recipe retains distributed channels and dry land across 100 seeds',()=>{
+ const core=createSpatialWorld(module);
+ for(let seed=1;seed<=100;seed++){
+  core.generate(seed,0,0,'mangrove',{mangroveNetwork:true});
+  // Sample separate regions, including far from the original village. Broad
+  // bounds detect a return to empty waterways or giant lakes, not artistic taste.
+  for(const [ox,oz] of [[60,0],[1200,-1600]]){
+   let wet=0,total=0;
+   for(let z=-240;z<=240;z+=12)for(let x=-240;x<=240;x+=12){
+    wet+=core.fluidLevelAnywhere(ox+x,oz+z)>0;total++;
+   }
+   const fraction=wet/total;
+   assert(fraction>.05&&fraction<.45,`Estuary seed ${seed} region ${ox},${oz}: wet fraction ${fraction}`);
+  }
+ }
+});

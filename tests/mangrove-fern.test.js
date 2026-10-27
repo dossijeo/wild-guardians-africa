@@ -31,6 +31,7 @@ test('native fern owns its near maps and far atlases and depth materials across 
   let disposed=0;for(const t of owned)t.addEventListener('dispose',()=>disposed++);
   assert.equal(q.screenLod,true);assert.equal(q.meshes[0].mesh.geometry.index.count,96);assert.equal(q.meshes[1].mesh.geometry.index.count,24);assert.equal(q.meshes[0].mesh.castShadow,true);assert.equal(q.meshes[1].mesh.castShadow,false);
   const shadow=world.scene.getObjectByName('fern-prebaked-shadow');assert.ok(shadow);q.meshes[1].mesh.geometry.instanceCount=7;q.meshes[1].mesh.visible=true;q.syncLod();assert.equal(shadow.geometry.instanceCount,7);assert.equal(shadow.visible,true);
+  const farMaterial=q.meshes[1].mesh.material;assert.equal(farMaterial.fog,true);assert.equal(shadow.material.fog,true);assert.ok(farMaterial.uniforms.fogColor.value.isColor);assert.notEqual(farMaterial.uniforms.fogColor,THREE.UniformsLib.fog.fogColor);assert.equal(shadow.material.uniforms.fogColor,farMaterial.uniforms.fogColor);
   for(const e of q.meshes)e.mesh.customDepthMaterial.addEventListener('dispose',()=>disposed++);
   q.configureQuality('baja');assert.equal(q.spacing,.75);q.configureQuality('muy_baja');assert.equal(q.group.visible,false);q.configureQuality('media');assert.equal(q.spacing,.65);assert.equal(q.group.visible,true);
   q.dispose();q.dispose();assert.equal(disposed,7);assert.equal(borrowedDisposed,0);assert.equal(world.scene.children.length,0);

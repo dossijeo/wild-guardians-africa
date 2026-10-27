@@ -1,0 +1,74 @@
+{
+  "biome": "gran-canon",
+  "runtime": {
+    "backend": "pthreads",
+    "fallbackReason": null
+  },
+  "errors": [],
+  "nearTrees": 0,
+  "unreadyNear": 0,
+  "adapters": [
+    {
+      "status": {
+        "native": false,
+        "regional": 0,
+        "worker": false,
+        "standby": false,
+        "closed": false
+      },
+      "errors": [],
+      "standby": {
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0,
+        "cancelledPreparations": 0,
+        "preparations": 0,
+        "rendered": 0,
+        "submittedInstances": 0,
+        "maskedInstances": 0,
+        "submittedTriangles": 0,
+        "visibleTriangles": 0,
+        "trees": 0,
+        "estimatedOwnedGpuBytes": 0,
+        "estimatedPreparedMatrixCpuBytes": 0,
+        "errors": []
+      }
+    },
+    {
+      "status": {
+        "native": false,
+        "regional": 0,
+        "worker": false,
+        "standby": false,
+        "closed": false
+      },
+      "errors": [],
+      "standby": {
+        "requests": 14,
+        "queuedReplacements": 4,
+        "addedEntries": 1,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0,
+        "cancelledPreparations": 0,
+        "preparations": 1,
+        "rendered": 1,
+        "submittedInstances": 1,
+        "maskedInstances": 0,
+        "submittedTriangles": 1415,
+        "visibleTriangles": 1415,
+        "trees": 1,
+        "estimatedOwnedGpuBytes": 859644,
+        "estimatedPreparedMatrixCpuBytes": 1536,
+        "errors": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "commit": "cd17d4d067b2a67223d0c66c51b22bf9fd9e30ec",
+  "fullSuite": {
+    "tests": 4999,
+    "pass": 4937,
+    "fail": 0,
+    "skipped": 62,
+    "scope": "Started before transparent order delta; delta additionally covered by seven targeted tests and built-package visual runs. Optional native suites were skipped without CI environment variables; this is not complete CI-equivalent coverage on its own."
+  },
+  "playable": {
+    "pass": 216,
+    "fail": 0
+  },
+  "gates": [
+    "assets",
+    "web-assets",
+    "audio-runtime",
+    "plan",
+    "balance",
+    "browser-syntax",
+    "web-package"
+  ],
+  "package": {
+    "files": 989,
+    "bytes": 484451340,
+    "itchZipBytes": 431172162,
+    "crcVerified": true
+  },
+  "runs": [
+    {
+      "report": "water-transition-order.json",
+      "capture": "water-transition-order-settled.png",
+      "errors": 0,
+      "missingResources": 0,
+      "settled": true
+    },
+    {
+      "report": "final-sabana.json",
+      "capture": "final-sabana-settled.png",
+      "errors": 0,
+      "missingResources": 0,
+      "settled": true
+    },
+    {
+      "report": "final-gran-rio.json",
+      "capture": "final-gran-rio-settled.png",
+      "errors": 0,
+      "missingResources": 0,
+      "settled": true
+    },
+    {
+      "report": "final-desierto.json",
+      "capture": "final-desierto-settled.png",
+      "errors": 0,
+      "missingResources": 0,
+      "settled": true
+    },
+    {
+      "report": "final-volcanes.json",
+      "capture": "final-volcanes-settled.png",
+      "errors": 0,
+      "missingResources": 0,
+      "settled": true
+    },
+    {
+      "report": "final-gran-canon.json",
+      "capture": "final-gran-canon-settled.png",
+      "errors": 0,
+      "missingResources": 0,
+      "settled": true
+    }
+  ],
+  "limits": [
+    "Functional/visual checks, not performance comparisons; concurrent host load.",
+    "No completed Windows distribution validation yet; remote workflow pending.",
+    "Residual rendering and streaming spikes remain the next phase."
+  ],
+  "nativeCiParity": {
+    "tests": 100,
+    "pass": 100,
+    "fail": 0,
+    "skipped": 0,
+    "durationMs": 63194.9387,
+    "environment": [
+      "WILD_ENGINE_NATIVE_ROUTE_WASM",
+      "WILD_ENGINE_SPATIAL_SERVICES_WASM",
+      "WILD_ENGINE_TOPOLOGICAL_CUT_WASM"
+    ],
+    "binary": "src/world/wild-engine/spatial-savanna.wasm",
+    "selection": "All test files referencing those three CI environment variables",
+    "log": "native-ci-parity.log",
+    "productionChanges": false
+  }
+}

@@ -31,6 +31,6 @@ export function farRegionRequest(config,profile,{x,z},{treeHalf=180,groundHalf=2
 
 // One descriptor shared by early loading and the eventual regional owner.
 // The early path must match every field before adopting transferred arrays.
-export function nativeFarRegionRequest(config,profile,center,{treeHalf=400,groundStep=8,groundColorStep=null,groundWash=.25,groundPalette=null,groundTreeBases=null,metadata,slot=0,includeGround=true,bakedOnly=false}={}){
- return {...farRegionRequest(config,profile,center,{treeHalf,groundHalf:treeHalf+32,step:groundStep}),waterSurface:bakedOnly,colorMapStep:groundColorStep,groundWash,groundPalette,treeBase:metadata.localBase,treeBases:groundTreeBases,slots:includeGround&&groundTreeBases?Object.keys(groundTreeBases).map(Number):[slot]};
+export function nativeFarRegionRequest(config,profile,center,{treeHalf=400,groundStep=8,groundColorStep=null,regionalWaterBed=false,groundWash=.25,groundPalette=null,groundTreeBases=null,metadata,slot=0,includeGround=true,bakedOnly=false}={}){
+ return {...farRegionRequest(config,profile,center,{treeHalf,groundHalf:treeHalf+32,step:groundStep}),waterSurface:bakedOnly,regionalWaterBed,colorMapStep:groundColorStep,groundWash,groundPalette,treeBase:metadata.localBase,treeBases:groundTreeBases,slots:includeGround&&groundTreeBases?Object.keys(groundTreeBases).map(Number):[slot]};
 }

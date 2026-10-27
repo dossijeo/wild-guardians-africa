@@ -93,6 +93,14 @@ const groundBake=JSON.parse(await readFile('content/manifests/mangrove-ground-ba
 for(const url of groundBake.archiveOnly)assert(!await exists(resolve(root,url.slice(1))),'Original mangrove texture duplicated in package');
 for(const item of Object.values({...groundBake.maps,...Object.fromEntries(Object.entries(groundBake.mudMaps??{}).map(([k,v])=>['mud-'+k,v]))}))assert(await exists(resolve(root,item.url.slice(1))),'Baked mangrove texture missing');
 
+const retiredBiomes=JSON.parse(await readFile('content/manifests/retired-biome-geometry.json','utf8'));
+for(const record of retiredBiomes.records){
+ assert(!inventory.has(record.archive.slice(1)),'Retired biome geometry must not ship');
+ assert(inventory.has(record.current.slice(1)),'Approved biome geometry missing');
+ const pack=JSON.parse(await readFile(resolve(root,`content/biome-${record.biome}.json`),'utf8'));
+ assert.equal(pack.binary.url.replace(/^(?:\.\.\/|\.\/|\/)+/,''),record.current.slice(1));
+ for(const file of inventory)if(/\.(json|js|mjs|html|css)$/.test(file))assert(!(await readFile(resolve(root,file),'utf8')).includes(record.archive.split('/').at(-1)),'Packaged reference to retired geometry: '+file);
+}
 assert(files<=1000,'itch.io package exceeds 1000 files');
 assert(bytes<=500_000_000,'itch.io package exceeds 500 MB');
 console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${packagedAssets.records.filter(item=>item.runtime.endsWith('.glb')).length} runtime GLBs, no unused worker labs, original GLBs, demo village or superseded ground duplicates`);

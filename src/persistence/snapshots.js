@@ -11,6 +11,8 @@ function wholeMoney(value){
 }
 export function validateSnapshot(state) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  if(state.mangroveSettlementVersion!==undefined&&(![1,2].includes(state.mangroveSettlementVersion)||state.biome!=='manglares'||!state.mangroveNetwork))throw new Error('Reserva de Manglares incompatible');
+  if(state.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   validateMicroState(state);
   validatePressureSnapshot(state);

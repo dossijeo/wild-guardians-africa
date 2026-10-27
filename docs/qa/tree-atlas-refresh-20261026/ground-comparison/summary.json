@@ -1,0 +1,140 @@
+{
+  "scope": "Ground level actual renderer submission audited. Pixel differences in tree band, not quality score. Near 3D occludes some distant pilot; no density changes for visibility.",
+  "region": {
+    "x": 0,
+    "y": 300,
+    "width": 1600,
+    "height": 230
+  },
+  "rows": [
+    {
+      "mode": "3d",
+      "pose": {
+        "x": 160,
+        "z": 100,
+        "dx": 0.7071067811865475,
+        "dz": 0.7071067811865476,
+        "gap": 41.95368495246948,
+        "score": 46.95368495246948
+      },
+      "camera": [
+        160,
+        5.8399999141693115,
+        100
+      ],
+      "quaternion": [
+        0,
+        0.9238795325112867,
+        0,
+        -0.3826834323650898
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "pixelRatio": 1,
+      "frames": 120,
+      "cardDraws": 0,
+      "modelDraws": 480,
+      "unready": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "errors": []
+    },
+    {
+      "mode": "raster",
+      "pose": {
+        "x": 160,
+        "z": 100,
+        "dx": 0.7071067811865475,
+        "dz": 0.7071067811865476,
+        "gap": 41.95368495246948,
+        "score": 46.95368495246948
+      },
+      "camera": [
+        160,
+        5.8399999141693115,
+        100
+      ],
+      "quaternion": [
+        0,
+        0.9238795325112867,
+        0,
+        -0.3826834323650898
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "pixelRatio": 1,
+      "frames": 120,
+      "cardDraws": 480,
+      "modelDraws": 240,
+      "unready": [
+        494,
+        473,
+        137,
+        123
+      ],
+      "errors": []
+    },
+    {
+      "mode": "imagegen",
+      "pose": {
+        "x": 160,
+        "z": 100,
+        "dx": 0.7071067811865475,
+        "dz": 0.7071067811865476,
+        "gap": 41.95368495246948,
+        "score": 46.95368495246948
+      },
+      "camera": [
+        160,
+        5.8399999141693115,
+        100
+      ],
+      "quaternion": [
+        0,
+        0.9238795325112867,
+        0,
+        -0.3826834323650898
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "pixelRatio": 1,
+      "frames": 120,
+      "cardDraws": 480,
+      "modelDraws": 240,
+      "unready": [
+        494,
+        473,
+        137,
+        123
+      ],
+      "errors": []
+    }
+  ],
+  "diffs": [
+    {
+      "a": "3d",
+      "b": "raster",
+      "pixelsOver30RgbSum": 13392,
+      "totalPixels": 368000,
+      "meanAbsoluteChannelDifference": 1.556026268115942,
+      "maxRgbSum": 599
+    },
+    {
+      "a": "raster",
+      "b": "imagegen",
+      "pixelsOver30RgbSum": 6570,
+      "totalPixels": 368000,
+      "meanAbsoluteChannelDifference": 0.5487644927536232,
+      "maxRgbSum": 509
+    }
+  ]
+}

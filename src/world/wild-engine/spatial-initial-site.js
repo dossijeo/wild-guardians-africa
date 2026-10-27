@@ -7,7 +7,7 @@ import {createSpatialTerrainView} from './spatial-terrain-view.js';
 import {spatialCanyonLayout} from './spatial-canyon-layout.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from './spatial-navigation-movement.js';
 import {createSpatialPlacement} from './spatial-placement.js';
-import {canyonLandAccess} from '../canyon-land-access.js';
+import {canyonLandAccess,naturalLandAccess} from '../canyon-land-access.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
 const chunkCoordinate=value=>Math.floor((value+24)/48);
@@ -111,6 +111,11 @@ export async function probeSpatialStart(module,state,payload,
       if(state.biome==='gran-canon'){
         landAccess=canyonLandAccess(nav,farm,
           {radius:ANIMAL_SPATIAL_PROFILES.warthog.radius});
+        if(!landAccess){if(unresolved)throw unresolved;
+          return {valid:false,reason:'no-hostile-land-access',entry,farm};}
+      }
+      if(state.biome==='manglares'&&state.mangroveNetwork){
+        landAccess=naturalLandAccess(nav,farm,{radius:ANIMAL_SPATIAL_PROFILES.rhino.radius});
         if(!landAccess){if(unresolved)throw unresolved;
           return {valid:false,reason:'no-hostile-land-access',entry,farm};}
       }

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "views": 8,
   "orientations": 8,
   "resolution": 128,
@@ -13,42 +13,16 @@
   "biomes": {
     "savanna": [
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05940286095556792,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Acacia paraguas",
         "biome": "sabana",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05940286095556792,
-          "elevationDegrees": 8,
-          "impostorHeight": 8.350773016112239,
-          "projectedBottom": -0.491232188392715,
-          "projectedTop": 7.7782716787719695
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 8.350773016112239,
-        "impostorWidth": 10.566604987392356,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.05150783061981201,
-          0,
-          1.2762385308742523
-        ],
-        "nightAmount": 0,
         "packBiome": "savanna",
+        "slot": 0,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -60,72 +34,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 0,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.5716925263404846,
+          0,
+          -0.04281330108642578
+        ],
+        "impostorWidth": 10.316756529808044,
+        "impostorHeight": 8.3189919822693,
+        "baseV": 0.05548242428560176,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.457065993590975,
+          "projectedTop": 7.780966130567453,
+          "impostorHeight": 8.3189919822693,
+          "baseV": 0.05548242428560176
+        },
         "sourceBounds": {
-          "max": [
-            4.31987190246582,
-            7.5,
-            3.4133520126342773
-          ],
           "min": [
-            -4.31987190246582,
+            -4.204583644866943,
             0,
-            -3.4133520126342773
+            -3.2740094661712646
+          ],
+          "max": [
+            4.204583644866943,
+            7.5,
+            3.2740094661712646
           ]
         },
-        "sourceTriangles": 1519,
-        "sourceVertices": 3524,
-        "sourceYaw": null,
-        "species": "Acacia paraguas",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 5567,
+        "sourceTriangles": 4222,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/savanna-0-day.webp",
         "night": "./assets/far-vegetation/savanna-0-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "35b239a22341bc22e213f1f27567d8ff8781c847bdd0841e530aa07b6f3ffa89",
+          "night": "0205f7fc1b1e2dc237d4a9b0a9d3e017e9da09925084f6da1c4cd8b79451d74d"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.0517881991718459,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Acacia irregular",
         "biome": "sabana",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.0517881991718459,
-          "elevationDegrees": 8,
-          "impostorHeight": 7.981101489387044,
-          "projectedBottom": -0.4093044048225092,
-          "projectedTop": 7.494125553503269
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 7.981101489387044,
-        "impostorWidth": 10.74667892932892,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.6307021975517273,
-          0,
-          1.1540181934833529
-        ],
-        "nightAmount": 0,
         "packBiome": "savanna",
+        "slot": 1,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -137,72 +118,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 1,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.38933175802230835,
+          0,
+          0.39066094160079956
+        ],
+        "impostorWidth": 10.473211541175843,
+        "impostorHeight": 7.77215391416186,
+        "baseV": 0.05349436217753476,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.411720206199909,
+          "projectedTop": 7.284795640339393,
+          "impostorHeight": 7.77215391416186,
+          "baseV": 0.05349436217753476
+        },
         "sourceBounds": {
-          "max": [
-            4.344612121582031,
-            7,
-            3.109397649765014
-          ],
           "min": [
-            -4.3446125984191895,
+            -4.459378242492676,
             0,
-            -3.109397649765014
+            -2.3971147537231445
+          ],
+          "max": [
+            4.459377288818359,
+            7,
+            2.3971147537231445
           ]
         },
-        "sourceTriangles": 1032,
-        "sourceVertices": 2259,
-        "sourceYaw": null,
-        "species": "Acacia irregular",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 4311,
+        "sourceTriangles": 3290,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/savanna-1-day.webp",
         "night": "./assets/far-vegetation/savanna-1-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "f22e40dd4f1cc3290124ede57e3b77d5ab79381253839a01be0e81cfce8522bc",
+          "night": "96abb47211cdab6d3fd75040f3f8b5b57881291e13913d1038c9fc3daddfa456"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.058899750133523034,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Baobab",
         "biome": "sabana",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.058899750133523034,
-          "elevationDegrees": 8,
-          "impostorHeight": 11.025845060536165,
-          "projectedBottom": -0.643099412958984,
-          "projectedTop": 10.275442881381943
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 11.025845060536165,
-        "impostorWidth": 10.055204512821394,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.27096331119537354,
-          0,
-          0.02707695960998535
-        ],
-        "nightAmount": 0,
         "packBiome": "savanna",
+        "slot": 2,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -214,73 +202,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 2,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.011712312698364258,
+          0,
+          -0.013177156448364258
+        ],
+        "impostorWidth": 8.754870399912573,
+        "impostorHeight": 10.940497529657902,
+        "baseV": 0.056641524888538,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.6136557170582521,
+          "projectedTop": 10.220369642708,
+          "impostorHeight": 10.940497529657902,
+          "baseV": 0.056641524888538
+        },
         "sourceBounds": {
-          "max": [
-            4.377838134765625,
-            10,
-            3.0403850078582764
-          ],
           "min": [
-            -4.377838134765625,
+            -3.966325044631958,
             0,
-            -3.0403850078582764
+            -2.4319183826446533
+          ],
+          "max": [
+            3.966325044631958,
+            10,
+            2.4319183826446533
           ]
         },
-        "sourceTriangles": 1247,
-        "sourceVertices": 2529,
-        "sourceYaw": null,
-        "species": "Baobab",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 4791,
+        "sourceTriangles": 3770,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/savanna-2-day.webp",
         "night": "./assets/far-vegetation/savanna-2-night.webp",
-        "nativeSunDirection": true,
-        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied"
+        "runtimeSha256": {
+          "day": "040e8f9cc732cadfd3c3de5a95cbbba7b0f4b02bd435fee0ca60e34e205426df",
+          "night": "c8d96b6f3932645045bf40fc486dcf4750d9fa5a06f3dbdc287e827db73fdca7"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05264782873081064,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol seco",
         "biome": "sabana",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05264782873081064,
-          "elevationDegrees": 8,
-          "impostorHeight": 8.285385456971305,
-          "projectedBottom": -0.4319624125725011,
-          "projectedTop": 7.772790242681967
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 8.285385456971305,
-        "impostorWidth": 6.086348190307618,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.02347254753112793,
-          0,
-          -0.009562015533447266
-        ],
-        "nightAmount": 0,
         "packBiome": "savanna",
+        "slot": 3,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -292,74 +286,81 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 3,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.03953707218170166,
+          0,
+          0
+        ],
+        "impostorWidth": 6.534344987869263,
+        "impostorHeight": 8.395581875009652,
+        "baseV": 0.059376928473908845,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.49365245914802225,
+          "projectedTop": 7.820224190179518,
+          "impostorHeight": 8.395581875009652,
+          "baseV": 0.059376928473908845
+        },
         "sourceBounds": {
-          "max": [
-            2.794280767440796,
-            7.5,
-            1.9900145530700684
-          ],
           "min": [
-            -2.794281244277954,
+            -2.9856226444244385,
             0,
-            -1.9900145530700684
+            -2.321884870529175
+          ],
+          "max": [
+            2.9856221675872803,
+            7.5,
+            2.321884870529175
           ]
         },
-        "sourceTriangles": 600,
-        "sourceVertices": 1258,
-        "sourceYaw": null,
-        "species": "Árbol seco",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 2265,
+        "sourceTriangles": 1612,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/savanna-3-day.webp",
         "night": "./assets/far-vegetation/savanna-3-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "43ff4497fb86b51f38c5b227bd95900cd2e1f7d25e3375fda5583268b8fb1225",
+          "night": "7a1cdb17b16448afba81ca1054e55f066ab3c6b0743b83139af26ca94c147fc2"
+        },
+        "imagegen": true
       }
     ],
     "grand_river": [
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05333709276944374,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol de ribera con lianas",
         "biome": "gran-rio",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05333709276944374,
-          "elevationDegrees": 8,
-          "impostorHeight": 9.316198799116428,
-          "projectedBottom": -0.4920631730897722,
-          "projectedTop": 8.73347101972379
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 9.316198799116428,
-        "impostorWidth": 9.753050265312195,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.4807823300361634,
-          0,
-          0.2420872449874878
-        ],
-        "nightAmount": 0,
         "packBiome": "grand_river",
+        "slot": 0,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -371,72 +372,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 0,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.2809075117111206,
+          0,
+          0.783047616481781
+        ],
+        "impostorWidth": 10.063644662001545,
+        "impostorHeight": 9.400789911902068,
+        "baseV": 0.05913727188229641,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.5505267275896769,
+          "projectedTop": 8.758775343114822,
+          "impostorHeight": 9.400789911902068,
+          "baseV": 0.05913727188229641
+        },
         "sourceBounds": {
-          "max": [
-            4.034518718719482,
-            8.5,
-            2.5846078395843506
-          ],
           "min": [
-            -4.034518718719482,
+            -4.347517013549805,
             0,
-            -2.5846078395843506
+            -3.331591844558716
+          ],
+          "max": [
+            4.347517490386963,
+            8.5,
+            3.331591844558716
           ]
         },
-        "sourceTriangles": 960,
-        "sourceVertices": 2237,
-        "sourceYaw": null,
-        "species": "Árbol de ribera con lianas",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 2374,
+        "sourceTriangles": 1738,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/grand_river-0-day.webp",
         "night": "./assets/far-vegetation/grand_river-0-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "63d57d1ebca4dee6a267442249ecb8788ba7902454dc7755651a85181df0dcc8",
+          "night": "d1cd166966b22d96f8b80f3dfafb55cbbbc2015608f585ca241d04b219892518"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.0635070329215118,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol de ribera compacto",
         "biome": "gran-rio",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.0635070329215118,
-          "elevationDegrees": 8,
-          "impostorHeight": 7.454239582688964,
-          "projectedBottom": -0.46878957503800633,
-          "projectedTop": 6.9129058604483635
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 7.454239582688964,
-        "impostorWidth": 7.307640266418457,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.1408069133758545,
-          0,
-          0.36279523372650146
-        ],
-        "nightAmount": 0,
         "packBiome": "grand_river",
+        "slot": 1,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -448,72 +456,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 1,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.4314022660255432,
+          0,
+          0.9675256609916687
+        ],
+        "impostorWidth": 7.963579802513123,
+        "impostorHeight": 7.787555812744436,
+        "baseV": 0.053452727684479555,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.4122150271140864,
+          "projectedTop": 7.299552827789537,
+          "impostorHeight": 7.787555812744436,
+          "baseV": 0.053452727684479555
+        },
         "sourceBounds": {
-          "max": [
-            3.2423598766326904,
-            6.8000006675720215,
-            2.519453287124634
-          ],
           "min": [
-            -3.2423598766326904,
+            -3.2554402351379395,
             0,
-            -2.519453287124634
+            -2.6339478492736816
+          ],
+          "max": [
+            3.2554402351379395,
+            6.8000006675720215,
+            2.6339468955993652
           ]
         },
-        "sourceTriangles": 958,
-        "sourceVertices": 2392,
-        "sourceYaw": null,
-        "species": "Árbol de ribera compacto",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 1723,
+        "sourceTriangles": 1254,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/grand_river-1-day.webp",
         "night": "./assets/far-vegetation/grand_river-1-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "ef144cc875bbd69fcf30304a9ae204f2afc67dad80cc0a553ae9ea139f3c17ae",
+          "night": "8cbe94e0702bcab502ed492d869b44fc06a0e0e2e28cf799686fc72b7c03a39a"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05627238982446959,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Baobab de ribera",
         "biome": "gran-rio",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05627238982446959,
-          "elevationDegrees": 8,
-          "impostorHeight": 10.921235539396063,
-          "projectedBottom": -0.6085831288058002,
-          "projectedTop": 10.206367697063742
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 10.921235539396063,
-        "impostorWidth": 10.6059375,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.21534442901611328,
-          0,
-          -0.16805267333984375
-        ],
-        "nightAmount": 0,
         "packBiome": "grand_river",
+        "slot": 2,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -525,72 +540,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 2,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.11797749996185303,
+          0,
+          1.0632018446922302
+        ],
+        "impostorWidth": 11.154944443702698,
+        "impostorHeight": 11.072528221070792,
+        "baseV": 0.0514796553326187,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.5644626389629591,
+          "projectedTop": 10.40030849860335,
+          "impostorHeight": 11.072528221070792,
+          "baseV": 0.0514796553326187
+        },
         "sourceBounds": {
-          "max": [
-            4.694811820983887,
-            10,
-            2.376847982406616
-          ],
           "min": [
-            -4.694811820983887,
+            -4.596909523010254,
             0,
-            -2.376847982406616
+            -4.101124286651611
+          ],
+          "max": [
+            4.596909523010254,
+            10,
+            4.101124286651611
           ]
         },
-        "sourceTriangles": 1204,
-        "sourceVertices": 2800,
-        "sourceYaw": null,
-        "species": "Baobab de ribera",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 3647,
+        "sourceTriangles": 2672,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/grand_river-2-day.webp",
         "night": "./assets/far-vegetation/grand_river-2-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "384822cbbbe6ebd4d8f1bdb4e295828f9dbe23ce82b59f27232830ddd83e7bcf",
+          "night": "cb8a92cc45c0fdc60965328c56bccc59174fe8295b3afcf2ff42e88139173987"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.04348564267793442,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Palmera fluvial",
         "biome": "gran-rio",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.04348564267793442,
-          "elevationDegrees": 8,
-          "impostorHeight": 10.384713386032308,
-          "projectedBottom": -0.4471911323350577,
-          "projectedTop": 9.83645893688589
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 10.384713386032308,
-        "impostorWidth": 7.576842298507691,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.3704882860183716,
-          0,
-          0.30393391847610474
-        ],
-        "nightAmount": 0,
         "packBiome": "grand_river",
+        "slot": 3,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -602,74 +624,81 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 3,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.7574490308761597,
+          0,
+          -0.16953086853027344
+        ],
+        "impostorWidth": 12.010313386917115,
+        "impostorHeight": 10.879386487840392,
+        "baseV": 0.0481431338220492,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.5186704877542222,
+          "projectedTop": 10.254838558652619,
+          "impostorHeight": 10.879386487840392,
+          "baseV": 0.0481431338220492
+        },
         "sourceBounds": {
-          "max": [
-            3.1373090744018555,
-            9.5,
-            3.0883994102478027
-          ],
           "min": [
-            -3.1373090744018555,
+            -4.802881240844727,
             0,
-            -3.0883994102478027
+            -3.533724784851074
+          ],
+          "max": [
+            4.802881240844727,
+            9.5,
+            3.533726215362549
           ]
         },
-        "sourceTriangles": 1401,
-        "sourceVertices": 3269,
-        "sourceYaw": null,
-        "species": "Palmera fluvial",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 1261,
+        "sourceTriangles": 989,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/grand_river-3-day.webp",
         "night": "./assets/far-vegetation/grand_river-3-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "a020320b81fdf522f95c7b8541b8d80c2668f2c2c108619477b85490c6d302f2",
+          "night": "58bb63da11dbb2dd117dec7e1236679504e614dce0a2523995d0ea4c9db5c45c"
+        },
+        "imagegen": true
       }
     ],
     "mangrove": [
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.06654960432265321,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Mangle de copa ancha",
         "biome": "manglares",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.06654960432265321,
-          "elevationDegrees": 8,
-          "impostorHeight": 9.409269997286849,
-          "projectedBottom": -0.6200892234727597,
-          "projectedTop": 8.697610405008486
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 9.409269997286849,
-        "impostorWidth": 8.544266252517701,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.0911308526992798,
-          0,
-          -0.011716604232788086
-        ],
-        "nightAmount": 0,
         "packBiome": "mangrove",
+        "slot": 0,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -681,72 +710,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 0,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.12409770488739014,
+          0,
+          0.4754984974861145
+        ],
+        "impostorWidth": 10.472472925186159,
+        "impostorHeight": 9.4097219674576,
+        "baseV": 0.07108981691904191,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.6624253784804579,
+          "projectedTop": 8.655721821628909,
+          "impostorHeight": 9.4097219674576,
+          "baseV": 0.07108981691904191
+        },
         "sourceBounds": {
-          "max": [
-            3.8645479679107666,
-            8.5,
-            2.762019157409668
-          ],
           "min": [
-            -3.8645479679107666,
+            -4.724269390106201,
             0,
-            -2.762019157409668
+            -2.7608413696289062
+          ],
+          "max": [
+            4.724270820617676,
+            8.5,
+            2.7608413696289062
           ]
         },
-        "sourceTriangles": 2255,
-        "sourceVertices": 5546,
-        "sourceYaw": null,
-        "species": "Mangle de copa ancha",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 5096,
+        "sourceTriangles": 3101,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/mangrove-0-day.webp",
         "night": "./assets/far-vegetation/mangrove-0-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "56e9cc2e8d16276e505d8ed38950c6e527d7119db533ac4c90c251a55d257504",
+          "night": "489f747af3f63f865cf00298f37de0d3df6a539ad1e4e9ca496dc927838614ce"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.06539290828800788,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Mangle de grandes raíces",
         "biome": "manglares",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.06539290828800788,
-          "elevationDegrees": 8,
-          "impostorHeight": 10.563190329289096,
-          "projectedBottom": -0.6840353296247892,
-          "projectedTop": 9.776354757509957
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 10.563190329289096,
-        "impostorWidth": 11.045165147781372,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.40571391582489014,
-          0,
-          0.05019497871398926
-        ],
-        "nightAmount": 0,
         "packBiome": "mangrove",
+        "slot": 1,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -758,72 +794,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 1,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.04649031162261963,
+          0,
+          -7.152557373046875e-7
+        ],
+        "impostorWidth": 10.119412679672243,
+        "impostorHeight": 10.63733915491785,
+        "baseV": 0.06705192194988993,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.70631269553388,
+          "projectedTop": 9.827504605955708,
+          "impostorHeight": 10.63733915491785,
+          "baseV": 0.06705192194988993
+        },
         "sourceBounds": {
-          "max": [
-            4.707788467407227,
-            9.5,
-            3.196178674697876
-          ],
           "min": [
-            -4.707788467407227,
+            -4.638422966003418,
             0,
-            -3.196178674697876
+            -3.1188485622406006
+          ],
+          "max": [
+            4.638422966003418,
+            9.5,
+            3.118847131729126
           ]
         },
-        "sourceTriangles": 2540,
-        "sourceVertices": 6212,
-        "sourceYaw": null,
-        "species": "Mangle de grandes raíces",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 5428,
+        "sourceTriangles": 3252,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/mangrove-1-day.webp",
         "night": "./assets/far-vegetation/mangrove-1-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "bc7668243d0f374ae0bc55309df599347b02cd9325decb40df96e7e34807ee21",
+          "night": "a8366da15571cea41e736dbfb7402f92b2e0bfb3cd1f21c810f0e0c65c0d6ce6"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.056067350075636936,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Cocotero costero",
         "biome": "manglares",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.056067350075636936,
-          "elevationDegrees": 8,
-          "impostorHeight": 10.624816332028873,
-          "projectedBottom": -0.5899079337786894,
-          "projectedTop": 9.931508416073438
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 10.624816332028873,
-        "impostorWidth": 8.324474045664259,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.12182176113128662,
-          0,
-          0.19736850261688232
-        ],
-        "nightAmount": 0,
         "packBiome": "mangrove",
+        "slot": 2,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -835,72 +878,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 2,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.42373669147491455,
+          0,
+          1.508266031742096
+        ],
+        "impostorWidth": 15.007671953283987,
+        "impostorHeight": 11.008262987740938,
+        "baseV": 0.061411958669661704,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.6694598266333722,
+          "projectedTop": 10.231671502436157,
+          "impostorHeight": 11.008262987740938,
+          "baseV": 0.061411958669661704
+        },
         "sourceBounds": {
-          "max": [
-            2.9510655403137207,
-            9.5,
-            3.1248788833618164
-          ],
           "min": [
-            -2.9510655403137207,
+            -4.376636505126953,
             0,
-            -3.1248788833618164
+            -4.13958215713501
+          ],
+          "max": [
+            4.376636505126953,
+            9.5,
+            4.13958215713501
           ]
         },
-        "sourceTriangles": 708,
-        "sourceVertices": 1637,
-        "sourceYaw": null,
-        "species": "Cocotero costero",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 1738,
+        "sourceTriangles": 1319,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/mangrove-2-day.webp",
         "night": "./assets/far-vegetation/mangrove-2-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "92719af7343912cb383ba43d9c22b1f21a0d853584be238ecd24c95294bd5b24",
+          "night": "32cdc508d16a8af9d113e2c220f9fc917c7bc0a5e27f82a3788edab419fbb551"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.0704889888772388,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol costero de hojas largas",
         "biome": "manglares",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.0704889888772388,
-          "elevationDegrees": 8,
-          "impostorHeight": 6.777855618676337,
-          "projectedBottom": -0.47311462106824015,
-          "projectedTop": 6.238779372647577
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 6.777855618676337,
-        "impostorWidth": 7.0203618892549216,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.137320876121521,
-          0,
-          0.10775721073150636
-        ],
-        "nightAmount": 0,
         "packBiome": "mangrove",
+        "slot": 3,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -912,74 +962,81 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 3,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.08961093425750732,
+          0,
+          0.24545449018478394
+        ],
+        "impostorWidth": 5.964547491073609,
+        "impostorHeight": 6.738803608857153,
+        "baseV": 0.05354543308552152,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.3573205639598229,
+          "projectedTop": 6.315901471411874,
+          "impostorHeight": 6.738803608857153,
+          "baseV": 0.05354543308552152
+        },
         "sourceBounds": {
-          "max": [
-            2.6608450412750244,
-            6,
-            2.4864656925201416
-          ],
           "min": [
-            -2.6608450412750244,
+            -2.6717536449432373,
             0,
-            -2.4864656925201416
+            -1.7698050737380981
+          ],
+          "max": [
+            2.6717536449432373,
+            6,
+            1.7698050737380981
           ]
         },
-        "sourceTriangles": 460,
-        "sourceVertices": 1085,
-        "sourceYaw": null,
-        "species": "Árbol costero de hojas largas",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 4222,
+        "sourceTriangles": 2522,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/mangrove-3-day.webp",
         "night": "./assets/far-vegetation/mangrove-3-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "aaad714b8f2a93b0ff3a8c137fbbddd913b416759c1b6cadafd0101798f1c7e3",
+          "night": "8e30986b53479e654832ae1666cfbe0a5d37fcaef8ddfdc35210b5fca6731d07"
+        },
+        "imagegen": true
       }
     ],
     "volcanoes": [
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.07213056286009749,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Acacia de ladera volcánica",
         "biome": "volcanes",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.07213056286009749,
-          "elevationDegrees": 8,
-          "impostorHeight": 8.87739443733245,
-          "projectedBottom": -0.634099795768928,
-          "projectedTop": 8.156900449145438
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 8.87739443733245,
-        "impostorWidth": 13.72348046436235,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.024323225021362305,
-          0,
-          -0.06531178951263428
-        ],
-        "nightAmount": 0,
         "packBiome": "volcanoes",
+        "slot": 0,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -991,72 +1048,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 0,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -1.4828104376792908,
+          0,
+          1.7064950466156006
+        ],
+        "impostorWidth": 11.892371850013733,
+        "impostorHeight": 8.88414038332501,
+        "baseV": 0.07137494223427987,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.6279339403256041,
+          "projectedTop": 8.169746599498648,
+          "impostorHeight": 8.88414038332501,
+          "baseV": 0.07137494223427987
+        },
         "sourceBounds": {
-          "max": [
-            3.9624955654144287,
-            7.800000667572021,
-            5.675074577331543
-          ],
           "min": [
-            -4.869084358215332,
+            -4.929506778717041,
             0,
-            -2.9493117332458496
+            -1.4177348613739014
+          ],
+          "max": [
+            4.0229172706604,
+            7.80000114440918,
+            4.143499374389648
           ]
         },
-        "sourceTriangles": 958,
-        "sourceVertices": 2216,
-        "sourceYaw": null,
-        "species": "Acacia de ladera volcánica",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 4458,
+        "sourceTriangles": 3487,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/volcanoes-0-day.webp",
         "night": "./assets/far-vegetation/volcanoes-0-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "d2167964248805699923e87b1039e18cdb1dd6024b19e5bb4b97c719b1aab969",
+          "night": "c595e096e3c6958379e52d491cbd9057cbcc49c89962bdb4be808d307b1ea487"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.06375007447928885,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Acacia irregular volcánica",
         "biome": "volcanes",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.06375007447928885,
-          "elevationDegrees": 8,
-          "impostorHeight": 9.03722558201932,
-          "projectedBottom": -0.5705170066835784,
-          "projectedTop": 8.378758917204607
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 9.03722558201932,
-        "impostorWidth": 11.329321188729256,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0,
-          0,
-          -0.019429683685302734
-        ],
-        "nightAmount": 0,
         "packBiome": "volcanoes",
+        "slot": 1,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1068,72 +1132,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 1,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -2.010760009288788,
+          0,
+          0.8012032508850098
+        ],
+        "impostorWidth": 12.336257786750794,
+        "impostorHeight": 9.214066790058725,
+        "baseV": 0.07015309601862328,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.6401046375004583,
+          "projectedTop": 8.484291487946836,
+          "impostorHeight": 9.214066790058725,
+          "baseV": 0.07015309601862328
+        },
         "sourceBounds": {
-          "max": [
-            3.2157747745513916,
-            8,
-            3.656022310256958
-          ],
           "min": [
-            -4.864608287811279,
+            -5.349303722381592,
             0,
-            -2.8829054832458496
+            -2.841742515563965
+          ],
+          "max": [
+            3.700470447540283,
+            8,
+            3.6148595809936523
           ]
         },
-        "sourceTriangles": 762,
-        "sourceVertices": 1821,
-        "sourceYaw": null,
-        "species": "Acacia irregular volcánica",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 2684,
+        "sourceTriangles": 2117,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/volcanoes-1-day.webp",
         "night": "./assets/far-vegetation/volcanoes-1-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "752d9027c23bef36d2e343b76b7d0dde703116cdcd52fdfca5be47e8265bf9ca",
+          "night": "e05326493914582ba6a697f377c1e16efb28f106c7e6ddf9eeeade75816c0777"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.11494977873776172,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Baobab volcánico",
         "biome": "volcanes",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.11494977873776172,
-          "elevationDegrees": 8,
-          "impostorHeight": 12.024680127222387,
-          "projectedBottom": -1.3687825106311309,
-          "projectedTop": 10.538874256188524
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 12.024680127222387,
-        "impostorWidth": 18.4152876663208,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.11290407180786131,
-          0,
-          3.859769821166992
-        ],
-        "nightAmount": 0,
         "packBiome": "volcanoes",
+        "slot": 2,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1145,72 +1216,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 2,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.2965376377105713,
+          0,
+          3.8224319219589233
+        ],
+        "impostorWidth": 8.566971645355226,
+        "impostorHeight": 10.783857077484113,
+        "baseV": 0.05854883058238311,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.6252376526811557,
+          "projectedTop": 10.053671669024151,
+          "impostorHeight": 10.783857077484113,
+          "baseV": 0.05854883058238311
+        },
         "sourceBounds": {
-          "max": [
-            3.9621078968048096,
-            9.799999237060549,
-            12.239408493041992
-          ],
           "min": [
-            -3.9621078968048096,
+            -3.6696529388427734,
             0,
-            -4.665826320648193
+            0.9055280685424805
+          ],
+          "max": [
+            3.6696529388427734,
+            9.799999237060547,
+            6.668052673339844
           ]
         },
-        "sourceTriangles": 1207,
-        "sourceVertices": 2673,
-        "sourceYaw": null,
-        "species": "Baobab volcánico",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 3690,
+        "sourceTriangles": 2921,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/volcanoes-2-day.webp",
         "night": "./assets/far-vegetation/volcanoes-2-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "adae615c2b689b59f4c701ae5d8297e0cb310272d75d70cb35a057e85588425f",
+          "night": "0c9efde2fa06c1d528eb81dbc73e2d116b3041d1f98fe2989dba26c2a2024d83"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05853814248004685,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol carbonizado",
         "biome": "volcanes",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05853814248004685,
-          "elevationDegrees": 8,
-          "impostorHeight": 7.227381426136338,
-          "projectedBottom": -0.4189601226926421,
-          "projectedTop": 6.738084924226086
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 7.227381426136338,
-        "impostorWidth": 7.812693700790406,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.0033010244369506836,
-          0,
-          0.01801121234893799
-        ],
-        "nightAmount": 0,
         "packBiome": "volcanoes",
+        "slot": 3,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1222,34 +1300,67 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 3,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.08072084188461304,
+          0,
+          0.7143654227256775
+        ],
+        "impostorWidth": 4.636107430458069,
+        "impostorHeight": 6.95919997175301,
+        "baseV": 0.0579917156009266,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.39964837221201577,
+          "projectedTop": 6.491825143802229,
+          "impostorHeight": 6.95919997175301,
+          "baseV": 0.0579917156009266
+        },
         "sourceBounds": {
-          "max": [
-            2.5700607299804688,
-            6.300000190734863,
-            3.634999036788941
-          ],
           "min": [
-            -2.469390869140625,
+            -2.0656251907348633,
             0,
-            -2.2983455657958984
+            -1.0995779037475586
+          ],
+          "max": [
+            2.166295051574707,
+            6.300000190734863,
+            2.436230421066284
           ]
         },
-        "sourceTriangles": 497,
-        "sourceVertices": 1139,
-        "sourceYaw": null,
-        "species": "Árbol carbonizado",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 2599,
+        "sourceTriangles": 1928,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/volcanoes-3-day.webp",
         "night": "./assets/far-vegetation/volcanoes-3-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "3e3d7cb86b7647c2e4a21569c43fbe439646be956c41f3e1753f9f709022c8b2",
+          "night": "e60e5d7cf19cb35018aa6693c50b49d2144fb1dae5766bff4cda8bb6e31372dd"
+        },
+        "imagegen": true
       }
     ],
     "canyons": [
@@ -1278,7 +1389,7 @@
           "projectedBottom": -0.44425137778822144,
           "projectedTop": 7.086477030081438
         },
-        "experimental": true,
+        "experimental": false,
         "framingLod": 0,
         "impostorHeight": 7.604737187416016,
         "impostorWidth": 9.85934054374695,
@@ -1328,7 +1439,13 @@
         "views": 8,
         "day": "./assets/far-vegetation/canyons-0-day.webp",
         "night": "./assets/far-vegetation/canyons-0-night.webp",
-        "nativeSunDirection": true
+        "nativeSunDirection": true,
+        "runtimeSha256": {
+          "day": "a24c739e2cb68b45c41569cda341c295228c6e0c4af725729e784c0a08dfaac2",
+          "night": "552c8f3cb06762e8c269c0cdfc093ecd8f110d66ad70f855c2428ac929a21686"
+        },
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
+        "imagegen": true
       },
       {
         "anglesDegrees": [
@@ -1355,7 +1472,7 @@
           "projectedBottom": -0.3938408550318172,
           "projectedTop": 5.851387564025764
         },
-        "experimental": true,
+        "experimental": false,
         "framingLod": 0,
         "impostorHeight": 6.306603854241203,
         "impostorWidth": 7.10890673160553,
@@ -1405,47 +1522,27 @@
         "views": 8,
         "day": "./assets/far-vegetation/canyons-1-day.webp",
         "night": "./assets/far-vegetation/canyons-1-night.webp",
-        "nativeSunDirection": true
+        "nativeSunDirection": true,
+        "runtimeSha256": {
+          "day": "d542398944d6c5a396a3c70b0f767b2a5dd0f5f97f47849bc61d9f492e3b9b5b",
+          "night": "ea46b6d8bae456ed4eccb6afd57ee2aee0a4fbdecf3a8c93ec659de39c2c2577"
+        },
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
+        "imagegen": true
       }
     ],
     "desert": [
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05437887009999608,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Acacia del desierto",
         "biome": "desierto",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05437887009999608,
-          "elevationDegrees": 8,
-          "impostorHeight": 6.456276036306072,
-          "projectedBottom": -0.3476682608619627,
-          "projectedTop": 6.0457757408733315
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 6.456276036306072,
-        "impostorWidth": 9.258356122970582,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.6294771432876587,
-          0,
-          0.3844146132469177
-        ],
-        "nightAmount": 0,
         "packBiome": "desert",
+        "slot": 0,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1457,72 +1554,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 0,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.6269441843032837,
+          0,
+          0.30472177267074585
+        ],
+        "impostorWidth": 10.324372243881227,
+        "impostorHeight": 6.678160978559991,
+        "baseV": 0.054652922018847416,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.3614290410790104,
+          "projectedTop": 6.251740533904908,
+          "impostorHeight": 6.678160978559991,
+          "baseV": 0.054652922018847416
+        },
         "sourceBounds": {
-          "max": [
-            3.656798839569092,
-            5.800000190734863,
-            1.992209553718567
-          ],
           "min": [
-            -3.6567981243133545,
+            -4.152857780456543,
             0,
-            -1.992209553718567
+            -2.0290729999542236
+          ],
+          "max": [
+            4.152857780456543,
+            5.800000190734863,
+            2.02907395362854
           ]
         },
-        "sourceTriangles": 922,
-        "sourceVertices": 2162,
-        "sourceYaw": null,
-        "species": "Acacia del desierto",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 4211,
+        "sourceTriangles": 2864,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/desert-0-day.webp",
         "night": "./assets/far-vegetation/desert-0-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "020e4c2496898d399ff18fd65c6e6ee0f0c2e1a713331b0812b18c959f9bbdab",
+          "night": "0cd1c07ef1333b1d40f476e93790cf1603df7f8e98bf53065acd71d0dc9604a5"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.04977812900861728,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Acacia irregular",
         "biome": "desierto",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.04977812900861728,
-          "elevationDegrees": 8,
-          "impostorHeight": 5.15989772936405,
-          "projectedBottom": -0.2543504077660937,
-          "projectedTop": 4.855331551595259
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 5.15989772936405,
-        "impostorWidth": 7.403433229029179,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -1.0104938708245754,
-          0,
-          -0.4272231478244066
-        ],
-        "nightAmount": 0,
         "packBiome": "desert",
+        "slot": 1,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1534,72 +1638,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 1,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.015515923500061035,
+          0,
+          0.2007930874824524
+        ],
+        "impostorWidth": 6.418971548080445,
+        "impostorHeight": 5.141569214725396,
+        "baseV": 0.058999659875679594,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.3003986454236677,
+          "projectedTop": 4.791133171143563,
+          "impostorHeight": 5.141569214725396,
+          "baseV": 0.058999659875679594
+        },
         "sourceBounds": {
-          "max": [
-            2.4170215129852295,
-            4.599999904632568,
-            1.732648491859436
-          ],
           "min": [
-            -2.4170212745666504,
+            -2.9562301635742188,
             0,
-            -1.7326494455337524
+            -1.5826194286346436
+          ],
+          "max": [
+            2.9562301635742188,
+            4.599999904632568,
+            1.5826184749603271
           ]
         },
-        "sourceTriangles": 833,
-        "sourceVertices": 1739,
-        "sourceYaw": null,
-        "species": "Acacia irregular",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 2819,
+        "sourceTriangles": 1972,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/desert-1-day.webp",
         "night": "./assets/far-vegetation/desert-1-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "ed33530cabd6d2881f1e6d6409dea62ca7fbca82ecd01290332c9b2860eba954",
+          "night": "4ba879aca0a657fac321a836fa344ee74be3cf9b6174d56103f86a0b7e480a24"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.06038690236105879,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol seco",
         "biome": "desierto",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.06038690236105879,
-          "elevationDegrees": 8,
-          "impostorHeight": 6.328600062554205,
-          "projectedBottom": -0.3784453548901344,
-          "projectedTop": 5.8885652068932
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 6.328600062554205,
-        "impostorWidth": 5.402635817527772,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          -0.19552332162857056,
-          0,
-          0.04774278402328491
-        ],
-        "nightAmount": 0,
         "packBiome": "desert",
+        "slot": 2,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1611,72 +1722,79 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 2,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          -0.12674212455749512,
+          0,
+          0.13424694538116455
+        ],
+        "impostorWidth": 5.450794746556857,
+        "impostorHeight": 6.305984035782153,
+        "baseV": 0.05093706449985712,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.3180823383189834,
+          "projectedTop": 5.926532294310183,
+          "impostorHeight": 6.305984035782153,
+          "baseV": 0.05093706449985712
+        },
         "sourceBounds": {
-          "max": [
-            2.305696964263916,
-            5.599999904632568,
-            1.5450305938720703
-          ],
           "min": [
-            -2.305696964263916,
+            -2.3764142990112305,
             0,
-            -1.545029640197754
+            -1.5650978088378906
+          ],
+          "max": [
+            2.3764142990112305,
+            5.599999904632568,
+            1.565098762512207
           ]
         },
-        "sourceTriangles": 605,
-        "sourceVertices": 1340,
-        "sourceYaw": null,
-        "species": "Árbol seco",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 3685,
+        "sourceTriangles": 2513,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/desert-2-day.webp",
         "night": "./assets/far-vegetation/desert-2-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "d779c5abce1c618b1729df0b0633c6e83f66330d1cd1ab79e8915f367ea0a90a",
+          "night": "f085a306102185816a4e55dc63a8faa14b52db125b2d49abb946bdea086715f0"
+        },
+        "imagegen": true
       },
       {
-        "anglesDegrees": [
-          0,
-          45,
-          90,
-          135,
-          180,
-          225,
-          270,
-          315
-        ],
-        "atlasHeight": 1024,
-        "atlasWidth": 1024,
-        "bakedLod": 2,
-        "bakedPhase": "day",
-        "baseV": 0.05449474019737782,
+        "experimental": false,
+        "approvedLighting": true,
+        "species": "Árbol suculento",
         "biome": "desierto",
-        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
-        "elevation": {
-          "baseV": 0.05449474019737782,
-          "elevationDegrees": 8,
-          "impostorHeight": 6.52908618622585,
-          "projectedBottom": -0.35233822597778813,
-          "projectedTop": 6.113207342303349
-        },
-        "experimental": true,
-        "framingLod": 0,
-        "impostorHeight": 6.52908618622585,
-        "impostorWidth": 5.885060334205628,
-        "lighting": "Native AfricanToon and source material, baked day",
-        "localBase": [
-          0.2257203459739685,
-          0,
-          0.3224761486053467
-        ],
-        "nightAmount": 0,
         "packBiome": "desert",
+        "slot": 3,
+        "views": 8,
+        "viewResolution": 128,
+        "atlasWidth": 1024,
+        "atlasHeight": 1024,
         "rotationViews": 8,
         "rotationsDegrees": [
           0,
@@ -1688,37 +1806,71 @@
           270,
           315
         ],
-        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
-        "slot": 3,
+        "anglesDegrees": [
+          0,
+          45,
+          90,
+          135,
+          180,
+          225,
+          270,
+          315
+        ],
+        "localBase": [
+          0.3583657741546631,
+          0,
+          0.10625410079956055
+        ],
+        "impostorWidth": 6.138316783905029,
+        "impostorHeight": 6.571471083494698,
+        "baseV": 0.06073088154482724,
+        "elevation": {
+          "elevationDegrees": 8,
+          "projectedBottom": -0.3952073035118241,
+          "projectedTop": 6.112310675131546,
+          "impostorHeight": 6.571471083494698,
+          "baseV": 0.06073088154482724
+        },
         "sourceBounds": {
-          "max": [
-            2.498845100402832,
-            5.900000095367432,
-            1.8362661600112915
-          ],
           "min": [
-            -2.498844623565674,
+            -2.483447551727295,
             0,
-            -1.8362650871276855
+            -1.8710379600524902
+          ],
+          "max": [
+            2.483448028564453,
+            5.899999618530273,
+            1.8710379600524902
           ]
         },
-        "sourceTriangles": 1135,
-        "sourceVertices": 2753,
-        "sourceYaw": null,
-        "species": "Árbol suculento",
+        "bakedLod": 0,
+        "framingLod": 0,
+        "sourceVertices": 4632,
+        "sourceTriangles": 2846,
+        "lighting": "Native AfricanToon and source material, baked day",
+        "bakedPhase": "day",
+        "nightAmount": 0,
         "sunPosition": [
           -193.08041382469224,
           122.4412380351707,
           72.99381498250561
         ],
-        "viewResolution": 128,
-        "views": 8,
+        "nativeSunDirection": true,
+        "sourceYaw": null,
+        "rowMeaning": "Tree world yaw relative to fixed sun; columns are camera angles relative to that tree",
+        "colorEncoding": "sRGB display color, native shader grading; no runtime normal atlas",
+        "prelitAlphaEncoding": "srgb-encoded-linear-premultiplied",
         "day": "./assets/far-vegetation/desert-3-day.webp",
         "night": "./assets/far-vegetation/desert-3-night.webp",
-        "nativeSunDirection": true
+        "runtimeSha256": {
+          "day": "668c5f075d485813a6f065204d669230ae74f1601053557116e2d073e00d3f6b",
+          "night": "15145ad1eb7d252aa8b45ba6a2bc468b595c2a5c4eebf6cb505002a68cb86add"
+        },
+        "imagegen": true
       }
     ]
   },
-  "totalTextureBytes": 20530912,
-  "nativeSunDirection": true
+  "totalTextureBytes": 47410534,
+  "nativeSunDirection": true,
+  "artRevision": "imagegen-20261026"
 }

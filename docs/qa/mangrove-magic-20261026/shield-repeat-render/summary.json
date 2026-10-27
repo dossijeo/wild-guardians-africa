@@ -1,0 +1,127 @@
+{
+  "ok": true,
+  "scope": "Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 8705,
+    "p50": 16.664999999993597,
+    "p95": 33.36999999999534,
+    "p99": 33.51000000000204,
+    "max": 99.56999999999971
+  },
+  "programWaits": {
+    "count": 1,
+    "totalMs": 25.59499990940094,
+    "maxMs": 25.59499990940094
+  },
+  "casts": [
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 38578.94500005245,
+      "before": {
+        "elapsed": 3.285945000052461,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 5.5899999141693115,
+      "after": {
+        "elapsed": 5.497615000052448,
+        "cooldown": 87.78833000000022,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.78833000000002
+          }
+        ]
+      },
+      "activationFrames": {
+        "samples": 77,
+        "p50": 32.95999999999913,
+        "p95": 49.90999999999622,
+        "p99": 66.49500000000262,
+        "max": 66.49500000000262
+      },
+      "programWaits": [
+        {
+          "start": 38602.955000042915,
+          "ms": 25.59499990940094,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        }
+      ]
+    },
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 128590.34500002861,
+      "before": {
+        "elapsed": 93.29600000005215,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 5.679999947547913,
+      "after": {
+        "elapsed": 95.50742500005198,
+        "cooldown": 87.78857500000017,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.788574999999998
+          }
+        ]
+      },
+      "activationFrames": {
+        "samples": 84,
+        "p50": 16.744999999995343,
+        "p95": 33.36000000000058,
+        "p99": 49.80000000000291,
+        "max": 49.80000000000291
+      },
+      "programWaits": []
+    },
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 218603.04499995708,
+      "before": {
+        "elapsed": 183.30579500005558,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 6.40500009059906,
+      "after": {
+        "elapsed": 185.51745500005597,
+        "cooldown": 87.78834000000013,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.788340000000023
+          }
+        ]
+      },
+      "activationFrames": {
+        "samples": 80,
+        "p50": 33.11499999999069,
+        "p95": 33.34999999997672,
+        "p99": 33.485000000015134,
+        "max": 33.485000000015134
+      },
+      "programWaits": []
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "Commands invoke legal Game.cast; no pointer targeting test."
+  ]
+}

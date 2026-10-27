@@ -1,4 +1,5 @@
 import {loadingYieldBudget} from './loading-yield-budget.js';
+import {withScreenTarget} from './screen-target.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import * as THREE from 'three';
@@ -218,6 +219,15 @@ export class BuildingDestructionPass {
       renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);
       this.depthCaptureStats=withDepthCaptureMaterials(world,()=>renderer.render(world,camera),this.depthCaptureOptions());
     }finally{renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+  }
+  prepareSmokePrograms(camera){
+    const renderer=this.renderer,shadows=renderer.shadowMap.enabled;
+    try{
+      renderer.shadowMap.enabled=false;
+      // Submit the actual smoke scene, which has no world lights. Compilation
+      // starts synchronously; restore shared renderer state before awaiting it.
+      return withScreenTarget(renderer,()=>renderer.compileAsync(this.smokeScene,camera));
+    }finally{renderer.shadowMap.enabled=shadows;}
   }
   renderSmoke(camera,world,{depthPrepared=false}={}){
     if(![...this.buildings].some(b=>b.effects.native.smoke.length))return;

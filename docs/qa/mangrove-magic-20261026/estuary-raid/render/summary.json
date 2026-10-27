@@ -1,0 +1,159 @@
+{
+  "ok": true,
+  "errors": [],
+  "biome": "manglares",
+  "mangroveNetwork": true,
+  "group": [
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino"
+  ],
+  "clickRoundtripMs": 73.9449999332428,
+  "frameIntervals": {
+    "samples": 163,
+    "p95": 66.47999999999593,
+    "max": 149.61500000000524
+  },
+  "programWaits": 0,
+  "actors": {
+    "before": [
+      {
+        "species": "warthog",
+        "status": "walking",
+        "x": 89,
+        "z": 6.102209539251139,
+        "raidWait": null,
+        "targetId": "plant-3"
+      },
+      {
+        "species": "hyena",
+        "status": "walking",
+        "x": 89,
+        "z": 1.9929327744215988,
+        "raidWait": null,
+        "targetId": "plant-7"
+      },
+      {
+        "species": "buffalo",
+        "status": "walking",
+        "x": 79.53037208616333,
+        "z": 8,
+        "raidWait": null,
+        "targetId": "plant-5"
+      },
+      {
+        "species": "lion",
+        "status": "walking",
+        "x": 89.74647908628464,
+        "z": 8.855699423118342,
+        "raidWait": null,
+        "targetId": "plant-9"
+      },
+      {
+        "species": "rhino",
+        "status": "waiting",
+        "x": 79.44900999719064,
+        "z": 11.02092540057511,
+        "raidWait": {
+          "since": 0.010675000076298602,
+          "retryAt": 9.22991000007627,
+          "moveRetryAt": 0.010675000076298602,
+          "epoch": "2,704",
+          "reason": "unknown"
+        },
+        "targetId": null
+      }
+    ],
+    "after": [
+      {
+        "species": "warthog",
+        "status": "walking",
+        "x": 87.55234803844222,
+        "z": -4,
+        "raidWait": null,
+        "targetId": "structure-2"
+      },
+      {
+        "species": "hyena",
+        "status": "retreating",
+        "x": 92,
+        "z": 0.42114693568372336,
+        "raidWait": null,
+        "targetId": null
+      },
+      {
+        "species": "buffalo",
+        "status": "walking",
+        "x": 80.93905291383706,
+        "z": -4,
+        "raidWait": null,
+        "targetId": "plant-5"
+      },
+      {
+        "species": "lion",
+        "status": "attacking",
+        "x": 92.7557373046875,
+        "z": -8.274999618530273,
+        "raidWait": null,
+        "targetId": "plant-9"
+      },
+      {
+        "species": "rhino",
+        "status": "walking",
+        "x": 80.1430851696783,
+        "z": 11,
+        "raidWait": null,
+        "targetId": "structure-2"
+      }
+    ],
+    "end": [
+      {
+        "species": "warthog",
+        "status": "retreating",
+        "x": 87.53103134793975,
+        "z": -3.454216670928541,
+        "raidWait": null,
+        "targetId": null
+      },
+      {
+        "species": "hyena",
+        "status": "gone",
+        "x": 91.6332015991211,
+        "z": 7.042482852935791,
+        "raidWait": null,
+        "targetId": null
+      },
+      {
+        "species": "buffalo",
+        "status": "walking",
+        "x": 83,
+        "z": -10.394560413837075,
+        "raidWait": null,
+        "targetId": "plant-5"
+      },
+      {
+        "species": "lion",
+        "status": "walking",
+        "x": 89.10226255773,
+        "z": -4.6338005919123235,
+        "raidWait": null,
+        "targetId": "structure-2"
+      },
+      {
+        "species": "rhino",
+        "status": "walking",
+        "x": 82,
+        "z": 4.4014073303217005,
+        "raidWait": null,
+        "targetId": "structure-2"
+      }
+    ]
+  },
+  "limitations": [
+    "Profiling starts after group observation; frame metrics cover shield phase only.",
+    "Rhino initially waits unknown, then walks; route latency is not resolved.",
+    "This camera near settlement does not establish cross-water motion for all actors."
+  ]
+}

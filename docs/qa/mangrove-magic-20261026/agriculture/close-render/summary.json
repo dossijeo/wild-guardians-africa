@@ -1,0 +1,116 @@
+{
+  "scope": "Real renderer, close camera, four legal commands; visual effects inspected, no GPU timing",
+  "casts": [
+    {
+      "kind": "growth",
+      "target": "plant-3",
+      "accepted": true,
+      "start": 39632.55999994278,
+      "commandMs": 1.2300000190734863,
+      "graphics": [
+        {
+          "visible": true,
+          "parent": true,
+          "time": 2.211704999999977,
+          "sprites": 16,
+          "lights": 0
+        }
+      ]
+    },
+    {
+      "kind": "multiply",
+      "target": "plant-5",
+      "accepted": true,
+      "start": 42250.26999998093,
+      "commandMs": 0.4700000286102295,
+      "graphics": [
+        {
+          "visible": true,
+          "parent": true,
+          "time": 4.8390449999999525,
+          "sprites": 16,
+          "lights": 0
+        },
+        {
+          "visible": true,
+          "parent": true,
+          "time": 2.2117299999999975,
+          "sprites": 16,
+          "lights": 0
+        }
+      ]
+    },
+    {
+      "kind": "growth",
+      "target": "plant-7",
+      "accepted": true,
+      "start": 44901,
+      "commandMs": 0.2099999189376831,
+      "graphics": [
+        {
+          "visible": true,
+          "parent": true,
+          "time": 7.499514999999942,
+          "sprites": 16,
+          "lights": 0
+        },
+        {
+          "visible": true,
+          "parent": true,
+          "time": 4.872199999999994,
+          "sprites": 16,
+          "lights": 0
+        },
+        {
+          "visible": true,
+          "parent": true,
+          "time": 2.2282550000000008,
+          "sprites": 16,
+          "lights": 0
+        }
+      ]
+    },
+    {
+      "kind": "multiply",
+      "target": "plant-9",
+      "accepted": true,
+      "start": 47517.00999999046,
+      "commandMs": 0.17499995231628418,
+      "graphics": [
+        {
+          "visible": true,
+          "parent": true,
+          "time": 10.093499999999928,
+          "sprites": 16,
+          "lights": 0
+        },
+        {
+          "visible": true,
+          "parent": true,
+          "time": 7.466184999999997,
+          "sprites": 16,
+          "lights": 0
+        },
+        {
+          "visible": true,
+          "parent": true,
+          "time": 4.8222399999999865,
+          "sprites": 16,
+          "lights": 0
+        },
+        {
+          "visible": true,
+          "parent": true,
+          "time": 2.2116599999999984,
+          "sprites": 16,
+          "lights": 0
+        }
+      ]
+    }
+  ],
+  "programQueries": 0,
+  "programWaitMs": 0,
+  "maxFrameMs": 99.75,
+  "p95Ms": 33.299999999995634,
+  "errors": []
+}

@@ -20,6 +20,10 @@ function registerScene(scene,owner){
 }
 
 export function createSmoothFarImpostor(mesh,scene){
+ const originalRenderOrder=mesh.renderOrder;
+ // Transparent water spans whole chunks, so object-centre sorting can draw
+ // it over above-water foliage. Draw fading vegetation after those surfaces.
+ mesh.renderOrder=1;
  const source=mesh.geometry,base=mesh.material,geometry=new THREE.InstancedBufferGeometry();
  if(source.index)geometry.setIndex(new THREE.BufferAttribute(source.index.array,source.index.itemSize,source.index.normalized));
  for(const [name,a]of Object.entries(source.attributes))geometry.setAttribute(name,a.isInstancedBufferAttribute?new THREE.InstancedBufferAttribute(new a.array.constructor(a.array.length),a.itemSize,a.normalized).setUsage(THREE.DynamicDrawUsage):new THREE.BufferAttribute(a.array,a.itemSize,a.normalized));
@@ -51,7 +55,7 @@ export function createSmoothFarImpostor(mesh,scene){
   for(let i=0;i<count;i++)depth[i]=view[2]*pos.getX(i)+view[6]*(pos.getY(i)+height*scale.getY(i)*.5)+view[10]*pos.getZ(i);
   indices.sort((a,b)=>depth[a]-depth[b]||pos.getX(a)-pos.getX(b)||pos.getZ(a)-pos.getZ(b)||pos.getY(a)-pos.getY(b));
   for(const [name,a]of attrs){const out=geometry.attributes[name];for(let i=0;i<count;i++)for(let k=0;k<a.itemSize;k++)out.array[i*a.itemSize+k]=a.array[indices[i]*a.itemSize+k];out.needsUpdate=true;}
- },dispose(){if(closed)return;closed=true;release();opaque.removeFromParent();mesh.geometry=source;mesh.material=base;geometry.dispose();partial.dispose();opaqueMaterial.dispose();}};
+ },dispose(){if(closed)return;closed=true;release();opaque.removeFromParent();mesh.geometry=source;mesh.material=base;mesh.renderOrder=originalRenderOrder;geometry.dispose();partial.dispose();opaqueMaterial.dispose();}};
  const release=registerScene(scene,owner);return owner;
 }
 

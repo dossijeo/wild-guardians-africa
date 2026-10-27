@@ -1,0 +1,37 @@
+{
+  "mode": "default, no vfxStableLights query parameter",
+  "ok": true,
+  "errors": [],
+  "casts": [
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 38525.81499993801,
+      "before": {
+        "elapsed": 3.249034999990465,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 6.520000100135803,
+      "after": {
+        "elapsed": 5.4773749999904515,
+        "cooldown": 87.77166000000018,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.771660000000033
+          }
+        ]
+      }
+    }
+  ],
+  "frameIntervals": {
+    "p50": 16.735000000000582,
+    "p95": 33.50500000000466,
+    "p99": 66.625,
+    "max": 83.05500000000029
+  },
+  "programQueries": 1,
+  "maximumSynchronousProgramWaitMs": 26.794999957084656,
+  "limitations": "Single first-use default smoke test; previous repeated/raid/streaming evidence applies to same stable-light implementation. Not GPU execution time."
+}

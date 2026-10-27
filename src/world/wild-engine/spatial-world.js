@@ -1,3 +1,4 @@
+import {applySpatialSettlementBatch} from './spatial-settlement-batch.js';
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barrier-batch.js';
 import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
@@ -70,12 +71,12 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const pairs=new Int32Array(wasm.memory.buffer,wasm.spatial_changed_chunks_ptr(),count*2);
     return Array.from({length:count},(_,i)=>({cx:pairs[i*2],cz:pairs[i*2+1]}));
   }
-  function generate(seed,cx,cz,biome='savanna',{canyonOpenRight=false,mangroveChannels=false}={}){
+  function generate(seed,cx,cz,biome='savanna',{canyonOpenRight=false,mangroveChannels=false,mangroveNetwork=false}={}){
     const name=BIOME_IDS[biome]??biome;
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
     if(canyonOpenRight&&name!=='canyons')throw RangeError('One-wall variant requires canyons');
-    if(mangroveChannels&&name!=='mangrove')throw RangeError('Channel variant requires mangrove');
-    const count=wasm.spatial_generate_biome(seed>>>0,mangroveChannels?7:canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
+    if((mangroveChannels||mangroveNetwork)&&name!=='mangrove')throw RangeError('Channel variant requires mangrove');
+    const count=wasm.spatial_generate_biome(seed>>>0,mangroveNetwork?8:mangroveChannels?7:canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     workerPortalRoutes=[];chunkRevision++;
     return chunk;
@@ -453,6 +454,10 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
         throw TypeError('Expected 1–4 native barrier IDs');
       return Boolean(wasm.spatial_local_clear_except(start.x,start.z,end.x,end.z,
         ...Array.from({length:4},(_,i)=>ids[i]??0)));
+    },
+    applySettlements:(sites,{replace=false}={})=>{
+      if(!generated)throw Error('Generate the world before placing settlements');
+      return applySpatialSettlementBatch(wasm,sites,{replace});
     },
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
