@@ -18,6 +18,13 @@ report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_FAR_TRANSITION_SOURCE){
+  report.farTransitionOverride={file:process.env.WG_FAR_TRANSITION_SOURCE,loads:0};
+  await context.route(/\/tools\/experiments\/far-tree-transitions\.js(?:\?.*)?$/,async route=>{
+   const response=await route.fetch();report.farTransitionOverride.loads++;
+   await route.fulfill({response,body:await readFile(process.env.WG_FAR_TRANSITION_SOURCE,'utf8')});
+  });
+ }
  if(process.env.WG_SHADOW_SOURCE_DIR)await context.route(/\/src\/rendering\/(shadow-cache|native-shadow)\.js(?:\?.*)?$/,async route=>{
   const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
   const transformed=await response.text();let body=await readFile(process.env.WG_SHADOW_SOURCE_DIR+'/'+name,'utf8');
@@ -57,6 +64,10 @@ try {
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
  await page.waitForTimeout(2200);report.before=await inspect();report.biome=report.before.state?.biome;assert.equal(report.biome,JSON.parse(fixture.snapshot).biome);if(process.env.WG_EXPECT_BIOME)assert.equal(report.biome,process.env.WG_EXPECT_BIOME);if(process.env.WG_MAGIC_PROFILE==='1')report.runtimeProfile=await page.evaluate(()=>({visualSearch:qaMagicWorld.visualSearch,streamingOptions:qaMagicWorld.streamingOptions,regionalWater:qaMagicWorld.scene.getObjectsByProperty('isMesh',true).filter(m=>m.userData.regionalWaterSurface).length}));
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
+ if(['0','1'].includes(process.env.WG_MAGIC_SHADOW_CACHE)){
+  report.shadowCacheEnabled=process.env.WG_MAGIC_SHADOW_CACHE==='1';
+  await page.evaluate(enabled=>{qaMagicWorld.releaseNativeShadow.cache.enabled=enabled;},report.shadowCacheEnabled);
+ }
  if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheBefore=await page.evaluate(()=>({...qaMagicWorld.releaseNativeShadow?.cache?.stats}));
  if(process.env.WG_MAGIC_PROFILE==='1'){
   profiler=await context.newCDPSession(page);if(cpuSampling){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}

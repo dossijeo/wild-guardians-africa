@@ -1,0 +1,28 @@
+{
+  "commit": "c63354b9a42fdad1a97a45836a187a0a4fef1ef3",
+  "files": {
+    "tools/experiments/check-spatial-thread-game.mjs": "a0421af2741bef98f6e03fb5d792d8b427a8078656dae078a2c3d574002fa89d",
+    "tools/experiments/spatial-thread-game-quality-case.js": "ecc6fdcc2a925d5937651c1e78b21f79d8b879f766676452e699589ce43a385c",
+    "tools/experiments/quality-execution-attribution.js": "7a143ae22b1a3cbd35f6c86d4503a2c15e52d89d8215ced3d72bd98d234d8f3b",
+    "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+    "docs/qa/residual-spikes-20261027/quality-current-fixture.json": "53c8f5bd09629889bdc96c39d3438891f67c3b5d5481a685c025759f18e01f71"
+  },
+  "scope": "Diagnostic with synchronous phase/GL attribution. Not an uninstrumented benchmark. Original harness has preexisting uncommitted edits and is preserved untouched.",
+  "controls": {
+    "biome": "manglares",
+    "quality": "media",
+    "active": true,
+    "currentReview": true,
+    "defaultStreaming": true,
+    "qualityCycle": true,
+    "qualityMenuProtocol": true,
+    "qualityActive": true,
+    "qualityPhases": true,
+    "qualityExecution": true
+  },
+  "rejectedSetup": {
+    "reason": "Fixture slotId did not match harness opening slot; game correctly refused loading. Process interrupted only after confirmed persistent validation error; no benchmark results.",
+    "fixture": "0dfa8235a6dd5c1e474165c7ac6d1c01d4520291033f3cefbcfd0beb8ed48347"
+  },
+  "fixtureAdaptation": "Only slotId changed from estuary-agriculture-render-qa to opening for this harness. Procedural world and entities preserved."
+}

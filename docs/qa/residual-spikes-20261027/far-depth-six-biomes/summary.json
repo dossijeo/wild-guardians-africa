@@ -1,0 +1,1401 @@
+{
+  "scope": "Compatibility and live quality-cycle diagnostic. Sparse historical saves, production URL defaults. Not an AB performance comparison, GPU benchmark, new-world layout validation or complete game acceptance. Final gl.getError diagnostics and capture settling influence subsequent work; elapsed transition is not blocked CPU time.",
+  "rows": [
+    {
+      "biome": "manglares",
+      "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1",
+      "warningOrErrorCount": 28,
+      "messages": [
+        "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (708,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(713,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (897,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(902,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(897,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(902,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (896,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(901,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(896,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(901,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (734,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(739,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (840,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(845,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(840,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(845,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (846,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(851,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(846,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(851,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(846,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(851,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (673,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(678,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (328,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(333,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(328,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(333,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (737,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(742,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (332,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(337,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(332,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(337,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ],
+      "active": {
+        "travelWallMs": 15699.179999947548,
+        "settledWallMs": 49199.72000002861,
+        "postTravelWaitMs": 33500.54000008106,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 124.02723000006357,
+        "elapsed": 171.60917000008197,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "qualities": [
+        {
+          "quality": "baja",
+          "transitionMs": 1297.25,
+          "settingMs": 3.524999976158142,
+          "diagnosticMs": 286.61500000953674,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 78.81500005722046,
+            "p95": 115.68999993801117,
+            "p99": 115.68999993801117,
+            "max": 124.46000003814697
+          },
+          "programs": 94,
+          "drawCalls": 79,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 69,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 25,
+              "published": 25,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          }
+        },
+        {
+          "quality": "media",
+          "transitionMs": 1040.4500000476837,
+          "settingMs": 1.6100000143051147,
+          "diagnosticMs": 178.06000006198883,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 68.19500005245209,
+            "p95": 104.75999999046326,
+            "p99": 104.75999999046326,
+            "max": 143.56499993801117
+          },
+          "programs": 94,
+          "drawCalls": 72,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 72,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 40,
+              "published": 40,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          }
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 794.2599999904633,
+          "settingMs": 0.7000000476837158,
+          "diagnosticMs": 139.9650000333786,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 54.7849999666214,
+            "p95": 73.74000000953674,
+            "p99": 73.74000000953674,
+            "max": 82.32999992370605
+          },
+          "programs": 93,
+          "drawCalls": 71,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 74,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": {
+            "chunks": 25,
+            "ready": 25,
+            "queue": {
+              "bytes": 35209000,
+              "peakBytes": 35209000,
+              "tiles": 40,
+              "published": 40,
+              "cancelled": 0,
+              "rejected": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "biome": "sabana",
+      "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1",
+      "warningOrErrorCount": 24,
+      "messages": [
+        "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (708,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(713,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (888,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(893,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (723,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(728,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (725,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(730,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (662,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(667,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (664,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(669,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (324,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(329,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (320,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(325,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ],
+      "active": {
+        "travelWallMs": 15130.610000014305,
+        "settledWallMs": 39241.62000000477,
+        "postTravelWaitMs": 24111.009999990463,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 120.55820500004981,
+        "elapsed": 158.86003000006164,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "qualities": [
+        {
+          "quality": "baja",
+          "transitionMs": 1398.7200000286102,
+          "settingMs": 2.3799999952316284,
+          "diagnosticMs": 249.79500007629395,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 98.18999993801117,
+            "p95": 132.95000004768372,
+            "p99": 132.95000004768372,
+            "max": 153.9099999666214
+          },
+          "programs": 85,
+          "drawCalls": 84,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 74,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "media",
+          "transitionMs": 1010.4850000143051,
+          "settingMs": 1.034999966621399,
+          "diagnosticMs": 170.68500006198883,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 70.51499998569489,
+            "p95": 105.02999997138977,
+            "p99": 105.02999997138977,
+            "max": 133.8400000333786
+          },
+          "programs": 85,
+          "drawCalls": 79,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 76,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 828.3899999856949,
+          "settingMs": 0.6799999475479126,
+          "diagnosticMs": 110.75,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 46.544999957084656,
+            "p95": 110.36500000953674,
+            "p99": 110.36500000953674,
+            "max": 115.125
+          },
+          "programs": 85,
+          "drawCalls": 67,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 66,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1",
+      "warningOrErrorCount": 24,
+      "messages": [
+        "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (708,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(713,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (891,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(896,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (723,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(728,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (725,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(730,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (662,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(667,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (664,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(669,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (327,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(332,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (323,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(328,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ],
+      "active": {
+        "travelWallMs": 12519.844999909401,
+        "settledWallMs": 35251.104999899864,
+        "postTravelWaitMs": 22731.259999990463,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 120.89934499993532,
+        "elapsed": 155.45735999994417,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "qualities": [
+        {
+          "quality": "baja",
+          "transitionMs": 1091.8950001001358,
+          "settingMs": 2.765000104904175,
+          "diagnosticMs": 153.54999995231628,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 56.769999980926514,
+            "p95": 115.17500007152557,
+            "p99": 115.17500007152557,
+            "max": 188.26000010967255
+          },
+          "programs": 85,
+          "drawCalls": 83,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 73,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "media",
+          "transitionMs": 833.1100000143051,
+          "settingMs": 1.600000023841858,
+          "diagnosticMs": 185.54999995231628,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 48.8549998998642,
+            "p95": 75.57000005245209,
+            "p99": 75.57000005245209,
+            "max": 103.08499991893768
+          },
+          "programs": 85,
+          "drawCalls": 84,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 77,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 607.6050000190735,
+          "settingMs": 0.9550000429153442,
+          "diagnosticMs": 105.625,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 21.90499997138977,
+            "p95": 103.43499994277954,
+            "p99": 103.43499994277954,
+            "max": 176.65499997138977
+          },
+          "programs": 85,
+          "drawCalls": 65,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 65,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        }
+      ]
+    },
+    {
+      "biome": "desierto",
+      "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1",
+      "warningOrErrorCount": 15,
+      "messages": [
+        "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (785,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(790,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (893,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(898,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ],
+      "active": {
+        "travelWallMs": 8881.59500002861,
+        "settledWallMs": 27040.825000047684,
+        "postTravelWaitMs": 18159.230000019073,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 129.21355500007783,
+        "elapsed": 156.05292000008743,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "qualities": [
+        {
+          "quality": "baja",
+          "transitionMs": 855.7749999761581,
+          "settingMs": 2.0450000762939453,
+          "diagnosticMs": 223.58000004291534,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 44.39999997615814,
+            "p95": 75.27999997138977,
+            "p99": 75.27999997138977,
+            "max": 76.15499997138977
+          },
+          "programs": 71,
+          "drawCalls": 59,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 42,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "media",
+          "transitionMs": 725.0750000476837,
+          "settingMs": 0.7599999904632568,
+          "diagnosticMs": 112.79499995708466,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 45.574999928474426,
+            "p95": 74.7849999666214,
+            "p99": 74.7849999666214,
+            "max": 79.70000004768372
+          },
+          "programs": 71,
+          "drawCalls": 44,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 44,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 537.5500000715256,
+          "settingMs": 0.8300000429153442,
+          "diagnosticMs": 90.97500002384186,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 27.259999990463257,
+            "p95": 72.62999999523163,
+            "p99": 72.62999999523163,
+            "max": 84.20500004291534
+          },
+          "programs": 71,
+          "drawCalls": 42,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 44,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1",
+      "warningOrErrorCount": 24,
+      "messages": [
+        "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (785,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(790,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (888,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(893,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (805,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(810,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (807,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(812,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (744,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(749,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (746,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(751,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (324,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(329,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (320,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(325,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ],
+      "active": {
+        "travelWallMs": 12014.400000095367,
+        "settledWallMs": 29558.43500006199,
+        "postTravelWaitMs": 17544.03499996662,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 128.6508950000392,
+        "elapsed": 158.0179850000494,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "qualities": [
+        {
+          "quality": "baja",
+          "transitionMs": 817.6600000858307,
+          "settingMs": 2.2700001001358032,
+          "diagnosticMs": 173.8050000667572,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 46.924999952316284,
+            "p95": 77.65499997138977,
+            "p99": 77.65499997138977,
+            "max": 78.12000000476837
+          },
+          "programs": 83,
+          "drawCalls": 71,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 66,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "media",
+          "transitionMs": 570.3200000524521,
+          "settingMs": 0.9250000715255737,
+          "diagnosticMs": 124.40499997138977,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 32.75999999046326,
+            "p95": 48.68500006198883,
+            "p99": 48.68500006198883,
+            "max": 80.48000001907349
+          },
+          "programs": 83,
+          "drawCalls": 68,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 69,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 296.74000000953674,
+          "settingMs": 0.8050000667572021,
+          "diagnosticMs": 35.7849999666214,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 16.4650000333786,
+            "p95": 29.855000019073486,
+            "p99": 29.855000019073486,
+            "max": 57.59500002861023
+          },
+          "programs": 83,
+          "drawCalls": 63,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 63,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1",
+      "warningOrErrorCount": 21,
+      "messages": [
+        "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+        "THREE.WebGLProgram: Program Info Log: (708,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(713,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (892,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(897,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (723,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(728,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (894,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(899,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+        "THREE.WebGLProgram: Program Info Log: (662,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(667,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+      ],
+      "active": {
+        "travelWallMs": 10063.044999957085,
+        "settledWallMs": 31483.264999985695,
+        "postTravelWaitMs": 21420.22000002861,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 128.6664199999869,
+        "elapsed": 159.2998449999991,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "qualities": [
+        {
+          "quality": "baja",
+          "transitionMs": 693.8250000476837,
+          "settingMs": 1.3899999856948853,
+          "diagnosticMs": 72.98500001430511,
+          "frameIntervals": {
+            "samples": 17,
+            "p50": 30.990000009536743,
+            "p95": 53.360000014305115,
+            "p99": 53.360000014305115,
+            "max": 60.16499996185303
+          },
+          "programs": 67,
+          "drawCalls": 43,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 45,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "media",
+          "transitionMs": 759.2300000190735,
+          "settingMs": 0.4100000858306885,
+          "diagnosticMs": 185.50499999523163,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 48.90499997138977,
+            "p95": 62.5699999332428,
+            "p99": 62.5699999332428,
+            "max": 80.19500005245209
+          },
+          "programs": 67,
+          "drawCalls": 51,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 46,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 949.7699999809265,
+          "settingMs": 0.4099999666213989,
+          "diagnosticMs": 145.09500002861023,
+          "frameIntervals": {
+            "samples": 12,
+            "p50": 59.925000071525574,
+            "p95": 99.90500009059906,
+            "p99": 99.90500009059906,
+            "max": 99.98000001907349
+          },
+          "programs": 68,
+          "drawCalls": 45,
+          "capture": {
+            "stableFrames": 120,
+            "drawCalls": 42,
+            "far": [
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              },
+              {
+                "status": {
+                  "native": false,
+                  "regional": 0,
+                  "worker": false,
+                  "standby": false,
+                  "closed": false
+                },
+                "errors": []
+              }
+            ]
+          },
+          "cache": null
+        }
+      ]
+    }
+  ]
+}

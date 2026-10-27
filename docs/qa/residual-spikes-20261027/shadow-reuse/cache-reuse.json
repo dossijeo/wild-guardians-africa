@@ -1,0 +1,26 @@
+{
+  "scope": "One real active agricultural streaming diagnostic, not an optimization benchmark or ABAB.",
+  "shadow": {
+    "draws": 1692,
+    "hits": 2,
+    "untracked": 0,
+    "hitFraction": 0.0011806375442739079,
+    "scope": "Counter differences across recorded run, not CPU or GPU timings. Untracked attempts overlap draws; do not add them to total attempts."
+  },
+  "frameIntervals": {
+    "samples": 1613,
+    "p50": 16.75,
+    "p95": 49.875,
+    "p99": 66.43499999999767,
+    "max": 132.91500000000815
+  },
+  "cpu": {
+    "samples": 1629,
+    "p50": 8.884999990463257,
+    "p95": 18.899999976158142,
+    "p99": 23.924999952316284,
+    "max": 73.68499994277954
+  },
+  "errors": [],
+  "hypothesis": "Near-zero cache reuse suggests exact snapshot validation is redundant in continuously changing scenes. Test bypassing cache while retaining all shadow draws before designing adaptive behavior."
+}

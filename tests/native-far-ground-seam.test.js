@@ -48,3 +48,16 @@ test('terrain revision changes the worker cache key at unchanged near bounds',as
  const a=h.owner.update();h.requests[0].resolve(result());await a;revision++;
  const b=h.owner.update();assert.notEqual(h.requests[0].key,h.requests[1].key);assert.equal(h.requests[1].request.spatialTerrain.revision,1);h.requests[1].resolve(result());await b;assert.equal(h.owner.stats.adopted,2);h.owner.dispose();
 });
+
+test('reused seam material survives replacement and is disposed exactly once on close',async()=>{
+ const h=setup({reuseMaterial:true});const a=h.owner.update();h.requests[0].resolve(result());const first=await a;
+ h.world.nearBounds=[1,0,2,1];const b=h.owner.update();h.requests[1].resolve(result());const second=await b;
+ assert.equal(first.material,second.material);assert.equal(h.disposals(),0);
+ h.setLost(true);h.setLost(false);const c=h.owner.update();h.requests[2].resolve(result());const third=await c;assert.equal(third.material,first.material);
+ h.owner.dispose();h.owner.dispose();assert.equal(h.disposals(),1);
+});
+test('shared seam material closes safely while replacement preparation is pending',async()=>{
+ const fences=[],h=setup({reuseMaterial:true,prepare:()=>new Promise(resolve=>fences.push(resolve))});
+ const a=h.owner.update();h.requests[0].resolve(result());await new Promise(setImmediate);fences[0]();await a;
+ h.world.nearBounds=[1,0,2,1];const b=h.owner.update();h.requests[1].resolve(result());await new Promise(setImmediate);h.owner.dispose();fences[1]();assert.equal(await b,null);assert.equal(h.disposals(),1);assert.equal(h.candidate.impostors.children.length,0);
+});
