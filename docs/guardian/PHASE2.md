@@ -114,6 +114,18 @@ Se corrigió un coste independiente: después de un impacto, el controlador segu
 
 Validación posterior: 87 pruebas dirigidas aprobadas; build aprobado. Prueba gráfica de rinoceronte a 0,12 s, recuperación a 2,4 s y segundo golpe: `phase2/impact-active.png`, `impact-recovered.png`, `impact-second-hit.png` y `impact-recovery-check.json`. Un solo Guardián, salud 168→140→112, sin errores. No se atribuye a esta corrección una mejora global de FPS: la medición ABBA es anterior a ella.
 
+## Navegación real y colocación aérea
+
+Se ejecutaron dos restauraciones independientes de la instantánea de noche 31, con 135 trabajadores, 51 estructuras, 5.362 registros de cultivos y cuatro animales (dos ya estaban retirados del escenario). Se mantuvo congelada la instantánea antes de iniciar cada prueba y se avanzaron 400 pasos nativos de `Game.tick` de 0,05 s: 20 segundos de simulación, no 20 segundos de reloj. Attack se lanzó a 0,55 y 12,65 s, sin reiniciar salud ni recarga. La navegación permaneció activa.
+
+`phase2-perf-navigation-reference.json` y `phase2-perf-navigation-guardian.json`: 10,62 frente a 10,60 FPS; p95 149,8 ms en ambos; p99 166,4 frente a 166,3 ms. Simulación p95 6,2/7,5 ms, máximos 178,2/171,6 ms. Animación del Guardián p95 0,2 ms, VFX 1,6 ms. Ambos terminan con 344 geometrías y 83 texturas. No se atribuyen diferencias pequeñas a una causa con sólo estas dos ejecuciones.
+
+La comparación exacta de los campos registrados del estado final coincide: RNG, reloj, resultado/pausas, posiciones/estado/salud/objetivo de los animales, posiciones/estado de los 135 trabajadores, estado y HP de las 51 estructuras y número de cultivos vivos. No equivale a comparar byte por byte toda la partida. `phase2-navigation-comparison.json` conserva el hash y alcance. Sin errores y máximo un Guardián. La granja base sigue siendo lenta: esto verifica equivalencia de la simulación y un coste añadido pequeño en ese recorrido, no fluidez absoluta ni veinte bestias navegando.
+
+La prueba de Grow sobre maíz descubrió que el último recurso de elevar cinco metros al Guardián podía dejarlo fuera de cámara. Ahora, cuando no hay huella libre, evalúa cuatro alturas sobre las 16 posiciones, comprueba el volumen corporal contra edificios/murallas/árboles/rocas, la altura de cultivos y actores y la proyección de cabeza y cuerpo. Conserva la búsqueda normal junto al objetivo. La elevación extrema sólo queda como último recurso cuando no hay alternativa validada. Se verificó gráficamente Grow sobre maíz y plátano y Multiply sobre yuca: `phase2/grow-maize.png`, `grow-banana.png`, `multiply-cassava.png`, con un único cuerpo y sin errores. Se corrigió además el botón Día del laboratorio para retirar su incursión de prueba; las reglas de disponibilidad del juego no se cambiaron.
+
+La petición posterior amplía esta fase con invocaciones cinematográficas y ragdoll. Sus requisitos y estado de investigación se registran en `CINEMATIC-RAGDOLL.md`; no están completados por las pruebas anteriores.
+
 ## Reproducción
 
 1. `npm run dev -- --port 5194` y abrir `/tests/browser/guardian-combat.html`.

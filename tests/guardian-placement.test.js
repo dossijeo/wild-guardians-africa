@@ -8,3 +8,11 @@ test('all blocked candidates produce a finite elevated fallback without mutating
 test('placement leaves space around workers, including incapacitated bodies',()=>{const args=setup(),first=guardianPlacement(args);args.state.workers=[{x:first.x,z:first.z,status:'incapacitated',incapacitated:true}];const moved=guardianPlacement(args);assert.ok(Math.hypot(moved.x-first.x,moved.z-first.z)>=1.1);});
 
 test('large distant farms are rejected once by the placement broad phase',()=>{const args=setup(),expected=guardianPlacement(args);let reads=0;args.state.plants=Array.from({length:10000},()=>({alive:true,get x(){reads++;return 10000;},z:10000}));assert.deepEqual(guardianPlacement(args),expected);assert.equal(reads,10000);});
+
+
+test('crowded footprints choose an elevated body inside the camera and above crops',()=>{
+ const args=setup();args.nav.walkable=()=>false;args.state.plants=[];for(let x=-5;x<=5;x+=.5)for(let z=-5;z<=5;z+=.5)args.state.plants.push({x,z,alive:true});
+ const p=guardianPlacement({...args,occupied:x=>x<0,cropHeight:()=>2.5});
+ assert.ok(p.x>=0);assert.ok(p.y-1.2>=2.5);assert.ok(p.y<6.7);
+ const head=new Vector3(p.x,p.y+1.3,p.z).project(args.camera);assert.ok(Math.abs(head.y)<.88);
+});

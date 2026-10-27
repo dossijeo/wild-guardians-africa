@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 // Bounded work per accepted command. No navigation or camera movement is requested.
-export function guardianPlacement({target,camera,nav,state,occluded=()=>false}){
+export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,cropHeight=()=>2.2}){
  const radius=target.radius??.7,base=Math.atan2(camera.position.x-target.x,camera.position.z-target.z),v=new Vector3(),candidates=[];
  // Cull distant entries once per command, rather than scanning the whole farm
  // for each of the sixteen candidate footprints.
@@ -16,10 +16,29 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false}){
   v.set(x,y+1.7,z).project(camera);
   const screen=Math.hypot(v.x-sx,v.y-sy),out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
   const blocked=occluded(x,y+1.7,z),score=(clear?0:1000)+out*100+Math.abs(y-floor)*3+(blocked?20:0)+Math.abs(screen-.19)*8+distance*.12;
-  candidates.push({x,y:y+1.7,z,score,clear});
+  candidates.push({x,y:y+1.7,z,score,clear,distance});
  }
  candidates.sort((a,b)=>a.score-b.score);const best=candidates.find(p=>p.clear)??candidates[0];
  if(!best)return {x:target.x+2,y:floor+5,z:target.z};
- // Above the obstruction when every ground footprint is blocked; never alter gameplay.
+ if(!best.clear&&occupied){
+  // Evaluate the actual elevated body, not a ground candidate followed by a
+  // blind five-metre lift that can put the spirit outside the camera.
+  const aerial=[];
+  for(const p of candidates){
+   let ceiling=p.y-1.7;
+   for(const crop of crops)if(Math.hypot(p.x-crop.x,p.z-crop.z)<1.2)ceiling=Math.max(ceiling,(nav.field.surface(crop.x,crop.z))+cropHeight(crop));
+   for(const worker of workers)if(Math.hypot(p.x-worker.x,p.z-worker.z)<1.3)ceiling=Math.max(ceiling,nav.field.surface(worker.x,worker.z)+2);
+   for(const animal of state.raid?.animals??[])if(animal.status!=='gone'&&Math.hypot(p.x-animal.x,p.z-animal.z)<1+animal.radius)ceiling=Math.max(ceiling,nav.field.surface(animal.x,animal.z)+3.5);
+   for(const lift of [1.6,2.5,3.5,5]){
+    const y=p.y+lift;if(y-1.2<ceiling||occupied(p.x,y,p.z))continue;
+    v.set(p.x,y,p.z).project(camera);const screen=Math.hypot(v.x-sx,v.y-sy);let out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
+    v.set(p.x,y+1.3,p.z).project(camera);out+=Math.max(0,Math.abs(v.y)-.88);
+    const score=out*100+(occluded(p.x,y,p.z)?20:0)+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
+    aerial.push({x:p.x,y,z:p.z,score});
+   }
+  }
+  aerial.sort((a,b)=>a.score-b.score);if(aerial.length){const p=aerial[0];return {x:p.x,y:p.y,z:p.z};}
+ }
+ // Last resort when the supplied solid volumes leave no usable aerial space.
  return {x:best.x,y:best.y+(best.clear?0:5),z:best.z};
 }
