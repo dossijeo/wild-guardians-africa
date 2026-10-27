@@ -13,7 +13,7 @@ import {json} from '../../src/rendering/assets.js';
 import {castPickedSpell} from '../../src/app/spell-placement.js';
 import {AudioSystem} from '../../src/audio/audio.js';
 const campaign=new URLSearchParams(location.search).has('campaign');
-const trialSeconds=new URLSearchParams(location.search).has('authoredRecovery')?12:8;
+const trialSeconds=12;
 const $=id=>document.getElementById(id),errors=[];let world,state,nav,site,paused=new URLSearchParams(location.search).has('navigation'),serial=0,angle=.7,zoom=10,report=null;const commandCosts=[];let maxVisibleGuardians=0;
 const fail=e=>{errors.push(e.stack??String(e));$('status').textContent=errors.join('\n');};addEventListener('error',e=>fail(e.error??e.message));addEventListener('unhandledrejection',e=>fail(e.reason));
 let physicsTrial=null,physicsStep=0;

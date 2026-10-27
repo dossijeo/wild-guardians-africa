@@ -111,3 +111,13 @@ Authored recovery now estimates the local terrain normal from four height querie
 Added full-skin hyena/lion tests at three slope/heading combinations, checking early foot clearance below 5 cm and penetration below 2.5 cm without stretched limbs. All 49 scoped tests pass, including physical ownership, repeated hits, rest and baked fall checks. Existing models/clips are unchanged by this patch.
 
 Real WorldScene recordings `lion-terrain-aligned` and `hyena-terrain-aligned` (MP4/PNG/JSON) complete with zero final downed animals and no errors. Lion sampled early foot clearances are 2.09–2.26 cm instead of the preceding 10–14 cm; hyena 1.0–2.08 cm. Contact sheets inspected. This addresses the measured sloping-ground suspension; the distant framing does not establish final close-detail art acceptance of every joint or both feet. These authored clips remain QA opt-in; shipping integration and obstacle/steep-slope coverage remain open. Recordings have no audio. Feature performance comparison remains pending.
+
+## Normal game loading of authored recoveries
+
+`tools/guardian/pack_recovery_clips.mjs` reproducibly packs all five candidate clips into `public/content/guardian/recovery/recovery.bin` (1,137,136 bytes), with shared times per species and a JSON manifest containing source/target/candidate hashes. Float32 values exactly match Three.js parsing of the candidate JSON; no resampling or lossy reduction. `recovery-clips.js` validates spans, channel types/counts, timestamps and finite values before creating clips backed by shared typed arrays.
+
+BeastCombatPhysics.create now loads this bank alongside the existing baked falls during normal scene loading. Authored recovery no longer requires the QA URL switch for physical ragdolls. Load errors are explicit; invalid data is not silently treated as a valid clip. The QA cycle duration is now 12 s for the longer roll/get-up sequence.
+
+Eighteen targeted bank/terrain/ownership tests pass, including exact float-channel parity for every species and malformed-bank rejection. `lion-shipping-bank.mp4/png/json` records WorldScene without `face` or `authoredRecovery` overrides: production lion asset, successful physical roll (0.7167 s), fall/roll/recover/attack transitions, no final downed actors and no errors. Sampled early foot gap 2.19–2.33 cm. Contact sheet inspected but not sufficient for final close art approval.
+
+This supersedes the earlier QA-only status for physical recovery. The baked overflow path still uses its older procedural recovery and needs an authored-compatible transition. Worker recovery, close visual acceptance, obstacle coverage, bank regeneration after collider changes and feature performance comparison remain incomplete. No audio validation in this recording.
