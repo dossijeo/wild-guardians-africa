@@ -1,0 +1,7 @@
+# Host GPU contention, independent follow-up
+
+With no Chrome process returned by Win32_Process and no active game benchmark, three Windows GPU engine samples at 19:15:53–19:15:57 UTC report90.47–91.57% 3D activity for PID42388, ChatGPT.exe. The executable resolves to the installed OpenAI.Codex Windows app, parent23048. DWM separately reports8.20–9.47% on the same engine. These are per-engine counters, not additive whole-adapter utilization or GPU frame timings. No counters were invalid.
+
+The diagnostic sampler itself consumed about.405 CPU-core equivalents during collection; therefore it was deliberately run outside benchmarks. This observation does not retroactively prove the cause of every previous A/B difference. It does show that a clean local GPU performance acceptance environment is not currently established. Do not kill the Codex host or claim the packed-contact candidate would pass without contention.
+
+Asked the user asynchronously to close animated previews/minimize Codex before new Intel UHD acceptance measurements. Continue independent integration and correctness work while that is unresolved. Linux PR221 run40561498770 has passed full validation including tests, build and itch packaging; Windows run40561498662 has reached native minimization/restoration after build and WebView2 smoke. Neither local contention nor a pending CI job is grounds to declare the overall goal complete.

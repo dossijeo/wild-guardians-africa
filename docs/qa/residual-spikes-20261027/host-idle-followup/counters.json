@@ -1,0 +1,62 @@
+{
+  "scope": "Per-engine Windows utilization above1%, not additive adapter load, GPU frametime, clock or thermal telemetry. Invalid counters counted. Diagnostic only.",
+  "wallSeconds": 8.9131875,
+  "samplerCpuSeconds": 3.609375,
+  "samplerCoreEquivalents": 0.4049477249300545,
+  "samples": [
+    {
+      "utc": "2026-10-27T19:15:53.4810660Z",
+      "engineCounters": [
+        {
+          "instance": "pid_1716_luid_0x00000000_0x00010053_phys_0_eng_0_engtype_3d",
+          "percent": 9.306125441009533,
+          "processId": 1716,
+          "process": "dwm"
+        },
+        {
+          "instance": "pid_42388_luid_0x00000000_0x00010053_phys_0_eng_0_engtype_3d",
+          "percent": 90.88229358476161,
+          "processId": 42388,
+          "process": "ChatGPT"
+        }
+      ],
+      "invalidCounters": 0
+    },
+    {
+      "utc": "2026-10-27T19:15:55.7486106Z",
+      "engineCounters": [
+        {
+          "instance": "pid_1716_luid_0x00000000_0x00010053_phys_0_eng_0_engtype_3d",
+          "percent": 8.20438908274462,
+          "processId": 1716,
+          "process": "dwm"
+        },
+        {
+          "instance": "pid_42388_luid_0x00000000_0x00010053_phys_0_eng_0_engtype_3d",
+          "percent": 91.5671492221796,
+          "processId": 42388,
+          "process": "ChatGPT"
+        }
+      ],
+      "invalidCounters": 0
+    },
+    {
+      "utc": "2026-10-27T19:15:57.8039939Z",
+      "engineCounters": [
+        {
+          "instance": "pid_1716_luid_0x00000000_0x00010053_phys_0_eng_0_engtype_3d",
+          "percent": 9.4697811352267,
+          "processId": 1716,
+          "process": "dwm"
+        },
+        {
+          "instance": "pid_42388_luid_0x00000000_0x00010053_phys_0_eng_0_engtype_3d",
+          "percent": 90.47151935115947,
+          "processId": 42388,
+          "process": "ChatGPT"
+        }
+      ],
+      "invalidCounters": 0
+    }
+  ]
+}
