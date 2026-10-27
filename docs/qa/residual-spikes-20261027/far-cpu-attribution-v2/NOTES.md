@@ -1,0 +1,2 @@
+# Expanded far CPU diagnostic
+No errors or dropped samples. Complete far update:1744calls,total3034.44ms,P954.835ms,P998.850ms,max22.405ms. Camera matrix updates total18.02ms and ground bounds40.90ms are small. Adapter methods total2998.92ms; layer1272.37ms and standby839.83ms are nested. Impostor prototype update8.59ms is small. Next attribution: logical preload scheduling and preparation scheduling, plus transition coverage/suppression setters within layer. These results do not justify changing camera matrices or ground mask behavior.
