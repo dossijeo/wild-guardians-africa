@@ -8,7 +8,7 @@ Grow, Multiply, Shield y Attack reutilizan **una sola instancia** del Guardián.
 
 Si coincide con el tutorial, se oculta únicamente su avatar de diálogo: se conservan texto, controles y voz. El cuerpo del mundo puede muestrear esa misma voz y secuencia facial. Al terminar la invocación vuelve el avatar del tutorial, sin reiniciar la locución.
 
-`guardian-placement.js` evalúa 16 posiciones alrededor del objetivo, proyección en cámara, terreno, cultivos, bestias y volúmenes de edificios/murallas/árboles. Se reutiliza CameraBuildingRegistry para evitar raycasts repetidos contra mallas animadas. Si no encuentra un emplazamiento libre usa una alternativa elevada; es una aproximación geométrica, no una garantía de visibilidad perfecta en cualquier escena.
+`guardian-placement.js` evalúa 16 posiciones alrededor del objetivo, proyección en cámara, terreno, cultivos, trabajadores, bestias y volúmenes de edificios/murallas/árboles. Se reutiliza CameraBuildingRegistry para evitar raycasts repetidos contra mallas animadas. Si no encuentra un emplazamiento libre usa una alternativa elevada; es una aproximación geométrica, no una garantía de visibilidad perfecta en cualquier escena.
 
 ## Brazos, viento y energía
 
@@ -75,6 +75,34 @@ Geometrías: 180 en las cuatro ventanas; texturas: 87. Heap JS oscila entre 449 
 Hay una regresión de fluidez en esa ejecución y **no se marca como superada**. Otras repeticiones muestran gran variación de la referencia, incluso sin Guardián. `phase2-perf-gpu-isolation.json` separa cuerpo/efectos, pero su referencia cae de 16,9 a 11,9 FPS durante la prueba; no permite atribuir causalmente todo el cambio a un componente. Se conservan los registros anteriores para auditar las iteraciones, no para escoger sólo el resultado más favorable. Los registros `investigation`, `isolated` y `optimized` preceden al requisito de instancia única; no describen la versión actual.
 
 Optimización ya realizada: una instancia, posicionamiento por volúmenes en vez de raycasts de triángulos, shaders precalentados sin recompilación por luces, una pasada por superficie, haces instanciados y aura sin captura adicional de profundidad. Queda pendiente cerrar una comparación sostenida y estable y reducir los picos bajo carga antes de declarar cumplido el criterio de rendimiento del usuario.
+
+## Revisión posterior: granja de noche 31 y buffers VFX
+
+Se cargó la instantánea existente `docs/qa/raid-paid-defense-night31/failure-state.json.gz` en el laboratorio mediante `?campaign=1`: 135 trabajadores, 51 estructuras y 5.362 cultivos. Para el estrés se sustituyó únicamente la incursión de la fixture por 20 bestias. La simulación permanece detenida durante las mediciones; no representa el coste de navegación de una incursión completa.
+
+El posicionador filtra los cultivos y trabajadores próximos una vez por comando antes de evaluar sus 16 candidatos. Evita los cuerpos de trabajadores, también incapacitados. Los volúmenes se precalientan durante la carga. Una prueba con 10.000 cultivos lejanos comprueba una sola lectura de coordenada por cultivo y conserva la posición elegida. La captura `phase2/campaign-worker-clearance.png` muestra el espacio corregido. `campaign-rotated-zoom.png` documenta un límite: al girar la cámara después de colocar al Guardián puede quedar oculto por el follaje. No se recoloca durante el gesto ni se declara resuelta toda oclusión.
+
+El empaquetador VFX reutiliza el Float32Array del buffer de subida, elimina arrays temporales del comparador y actualiza sólo las filas activas. Evita una asignación de 76.000 bytes por efecto y fotograma (2,28 MB/s a 30 FPS), además de la copia; esto es una reducción de asignaciones calculable, no una mejora de FPS demostrada. Se regeneró el código desde `tools/prepare_vfx_renderer.py`. Las pruebas comparan los datos con y sin buffer prestado, identidad, vaciado y rangos de subida.
+
+Se añadió una comparación GPU intercalada con orden equilibrado, mundo y pose congelados: 40 fotogramas de calentamiento y 240 medidos, 60 por variante. Consultas GPU asíncronas, sin `gl.finish`. No se interpreta su RAF instrumentado como FPS de juego. Resultados `phase2-perf-balanced-gpu.json` y `phase2-perf-campaign-gpu.json`, sin muestras descartadas ni eventos disjoint:
+
+| Escena / GPU mediana (ms) | Sin cuerpo ni aura | Sólo cuerpo | Sólo efectos | Ambos |
+|---|---:|---:|---:|---:|
+| Fixture 20 bestias | 26,71 | 27,07 | 24,60 | 24,91 |
+| Granja noche 31, incursión original | 50,50 | 50,87 | 47,90 | 48,11 |
+
+Las variantes con efectos arrojan menos tiempo en estas consultas. No se afirma que los efectos aceleren el juego: la medida de comandos GPU y el ritmo CPU/controlador no permiten esa conclusión. El cuerpo añade aproximadamente 0,37 ms a la mediana en ambas comparaciones, con seis draw calls adicionales; el conjunto añade once.
+
+Se corrigió también el benchmark ordinario para que los comandos no fuercen un segundo render fuera del bucle RAF. Los botones manuales conservan ese render para inspección congelada. `phase2-perf-campaign-stress.json` es anterior a esta corrección y `phase2-perf-campaign-single-render.json` posterior; se conservan ambos, sin atribuir diferencias a una causa no aislada.
+
+| Noche 31, un render por RAF | FPS medios | Frame p95 / p99 (ms) | Animación / VFX p95 (ms) |
+|---|---:|---:|---:|
+| Sin ataques | 9,30 | 133,2 / 150,1 | 0 / 0 |
+| Ataques + Guardián | 8,73 | 133,1 / 199,5 | 0,4 / 1,2 |
+| Ataques sin Guardián | 8,90 | 149,6 / 166,2 | 0 / 0 |
+| Ataques + Guardián repetido | 7,20 | 166,4 / 266,1 | 0,5 / 1,0 |
+
+En las cuatro ventanas se mantienen 282 geometrías y 98 texturas; máximo un Guardián, sin errores registrados. Los comandos calientes tardan 0,8–2,2 ms sin render inmediato. La referencia ya es lenta y deriva durante la sesión; los picos siguen pendientes de investigación y la aceptación de rendimiento permanece abierta. Esta revisión pasa 86 pruebas dirigidas de Guardián, selección y VFX; se ejecutaron además 67 pruebas focalizadas del empaquetado y los efectos antes de la revisión final.
 
 ## Reproducción
 
