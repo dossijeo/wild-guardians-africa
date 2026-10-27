@@ -1,3 +1,4 @@
+import {BakedSolidContacts} from './baked-solid-contacts.js';
 import {loadRecoveryClips} from './recovery-clips.js';
 import {BakedBeastFallbacks,loadBakedFalls} from './baked-beast-fallbacks.js';
 import {guardianImpactTime} from '../simulation/guardian-timing.js';
@@ -91,7 +92,7 @@ export class BeastCombatPhysics{
    // Refresh the watchdog while this manager still owns the body, so raid AI
    // never resumes navigation or attacks underneath an active simulation.
    if(a.magicDown)a.magicDown.until=Math.max(a.magicDown.until,state.elapsed+.5);
-   if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
+   if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.age=0;e.recovery.apply(e.recovery.duration);const shift=e.recovery.horizontalCorrection;if(shift){a.x+=shift.x;a.z+=shift.z;}e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
    const bindingStarted=performance.now();
    e.binding.restore();e.binding.apply(e.actor.pose);const hip=e.binding.entries[0].bone.getWorldPosition(this.v);a.x=hip.x-e.offset.x;a.z=hip.z-e.offset.z;this.stats.bindingMs+=performance.now()-bindingStarted;
    if(e.actor.settled){e.settledAt??=e.actor.age;}else e.settledAt=null;
@@ -109,7 +110,7 @@ export class BeastCombatPhysics{
      e.solver.rollTo(id,orientation);e.rolling=true;a.magicDown.phase='rolling';continue;
     }
     const rollFailed=e.rolling&&e.actor.roll.timedOut;this.stats.rollFailures=(this.stats.rollFailures??0)+(rollFailed?1:0);this.stats.lastRoll=e.actor.roll?{seconds:e.actor.roll.age,error:e.actor.roll.error,speed:e.actor.roll.speed,timedOut:rollFailed}:null;
-    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
+    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip,solidContacts:BakedSolidContacts.forAnimal(this.world,a,e.binding)}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;

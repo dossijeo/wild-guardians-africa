@@ -167,3 +167,17 @@ for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${specie
  }
  assert.ok(rolling&&recovering);assert.ok(maxHipStep<.15,`Recovery jump ${maxHipStep}`);assert.equal(f.animal.magicDown,undefined);assert.equal(baked.entries.size,0);assert.equal(f.animal.destinationId,null);baked.dispose();f.manager.dispose();
 });
+
+test('physical and baked recovery commit a resolved horizontal offset exactly once to navigation',()=>{
+ for(const mode of ['physical','baked']){
+  const f=fixture();let owner=f.manager;
+  if(mode==='physical')owner.recoveryClips=new Map([['hyena',authoredClip]]);
+  else{const base=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',base))),bytes=fs.readFileSync(new URL('falls.bin',base)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);owner=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])),new Map([['hyena',authoredClip]]));owner.start(f.animal);}
+  let entry;for(let i=0;i<900;i++){f.state.elapsed+=1/60;owner.step(f.state,1/60);owner.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);owner.render(f.animal.id);entry=owner.entries.get(f.animal.id);if(entry?.recovery)break;}
+  assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery');const shift=new Vector3(.2,0,-.1),point=new Vector3(),hip=entry.binding.bones.get('Hips');
+  entry.recovery.solidContacts={resolve(){hip.getWorldPosition(point).add(shift);hip.position.copy(hip.parent.worldToLocal(point));entry.binding.model.updateMatrixWorld(true);return shift;}};
+  const x=f.animal.x,z=f.animal.z;entry.recoveryAge=entry.recovery.duration-.001;f.state.elapsed+=.01;owner.step(f.state,.01);
+  assert.ok(Math.abs(f.animal.x-x-.2)<1e-6);assert.ok(Math.abs(f.animal.z-z+.1)<1e-6);assert.equal(f.animal.magicDown,undefined);
+  owner.step(f.state,0);assert.ok(Math.abs(f.animal.x-x-.2)<1e-6);assert.ok(Math.abs(f.animal.z-z+.1)<1e-6);owner.dispose();if(owner!==f.manager)f.manager.dispose();
+ }
+});

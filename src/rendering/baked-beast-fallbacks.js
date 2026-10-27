@@ -22,7 +22,7 @@ export class BakedBeastFallbacks {
  }
  step(state,dt){for(const [id,e] of this.entries){const a=e.animal;if(state.result||!state.raid?.animals.includes(a)||a.status==='gone'){this.release(id);continue;}
   if(a.magicDown)a.magicDown.until=Math.max(a.magicDown.until,state.elapsed+.5);
-  if(e.recovery){e.recoveryAge+=dt;if(e.recoveryAge>=e.recovery.duration){this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
+  if(e.recovery){e.recoveryAge+=dt;if(e.recoveryAge>=e.recovery.duration){e.recovery.age=0;e.recovery.apply(e.recovery.duration);const shift=e.recovery.horizontalCorrection;if(shift){a.x+=shift.x;a.z+=shift.z;}this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
   const done=e.fall.apply(Math.max(0,state.elapsed-e.at));a.x=e.fall.hip.x-e.offset.x;a.z=e.fall.hip.z-e.offset.z;
   if(!done&&e.fall.clip.metadata.rollStart!==undefined&&state.elapsed-e.at>=e.fall.clip.metadata.rollStart)a.magicDown.phase='rolling';
   if(done){
@@ -31,7 +31,7 @@ export class BakedBeastFallbacks {
    e.fall.restore();e.root.position.set(a.x,this.world.nav.field.surface(a.x,a.z),a.z);
    if(authored){const yaw=e.fall.clip.metadata.recoveryYaw;a.heading=(a.heading??0)+yaw;e.root.rotation.y+=yaw;}
    e.root.updateMatrixWorld(true);e.data.key=null;applyAnimalPose(e.data,a,state.elapsed);
-   const options={surface:(x,z)=>this.world.nav.field.surface(x,z)};
+   const options={surface:(x,z)=>this.world.nav.field.surface(x,z),solidContacts:e.fall.solidContacts};
    e.recovery=authored?new AuthoredBeastRecovery(e.binding,e.snapshot,{...options,clip}):new BeastRecovery(e.binding,null,{...options,fallenWorldPose:e.snapshot});a.magicDown.phase='recovering';
   }
  }}

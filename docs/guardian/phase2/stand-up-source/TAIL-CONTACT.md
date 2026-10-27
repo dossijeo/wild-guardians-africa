@@ -155,3 +155,13 @@ The corrected full-vertex audit reports zero wall penetration in all ten side/do
 `buffalo-solid-runtime.mp4/png/json` records four real WorldScene impacts beside the existing building, peak three physical/one baked, completed recovery with zero downed actors/errors. Contact sheet inspected; this run confirms integration but does not establish that the fallback actually contacted the building or validate every frame at close range. The numerical wall fixture supplies the direct collision evidence.
 
 Remaining limitations: conservative axis-aligned envelope can reserve empty space around limbs; no live inter-animal collision for baked actors; new obstacles appearing mid-fall are not added; tight corners require further testing; authored get-up still lacks this solid constraint. Feature CPU comparison remains pending. No global collision-completion claim.
+
+## Solid contacts during authored get-up
+
+AuthoredBeastRecovery now accepts the same solid-envelope constraint used for baked falls. Both physical and baked managers supply nearby shared solids. Resolve after rear-cloth adjustments and before final terrain grounding; bone lengths remain unchanged. On completion each manager evaluates the final pose, transfers its horizontal correction once into animal x/z, then releases animation ownership. This prevents the visual displacement from being discarded when navigation resumes.
+
+New full-skin tests for hyena/lion cover a wall and an open two-wall corner throughout get-up. The lion exposed a genuine 4 mm penetration: sampled envelope max z 0.3362 versus an omitted vertex at 0.3406 and wall at 0.3365. The contact margin was previously used only for separation; it now inflates the envelope before overlap detection as well. Acceptance tolerances were not relaxed. The tests also preserve non-hip bone lengths. A manager-boundary regression verifies horizontal correction reaches navigation exactly once for both physical and baked ownership.
+
+Twenty-six focused terrain/solid/ownership tests pass. `lion-solid-getup-runtime.mp4/png/json` captures four production-lion impacts, peak three physical plus one baked, all recovering with zero final downed actors and no errors. Contact sheet inspected. This demonstrates runtime integration, not exhaustive close visual collision acceptance or proof of contact with every nearby obstacle.
+
+Remaining limits: closed corridors/contradictory constraints, obstacle appearance during an active cycle, live collision between baked animals, close joint/timing review and comparable feature CPU/GPU measurements. The new margin is conservative and may produce extra clearance around limbs. No general obstacle-completion claim.

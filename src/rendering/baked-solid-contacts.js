@@ -12,6 +12,9 @@ export class BakedSolidContacts{
  resolve(){
   this.shift.set(0,0,0);if(!this.boxes.length)return this.shift;
   this.bounds.makeEmpty();for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);}
+  // Include the contact skin in broad-phase overlap, not just separation.
+  // Sparse support samples can miss small features between extrema.
+  this.bounds.expandByScalar(.015);
   const b=this.bounds,r=this.reference;
   for(let pass=0;pass<4;pass++)for(const solid of this.boxes){
    if(solid.active?.()===false||!b.intersectsBox(solid))continue;
