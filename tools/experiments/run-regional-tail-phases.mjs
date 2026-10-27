@@ -3,7 +3,7 @@ import {spawnSync,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const root=process.argv[2]??'docs/qa/residual-spikes-20261027/regional-tail-phases';
 const fixture='docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json';
-const files=['tools/experiments/native-far-ground.js','tools/experiments/check-shield-repeat-render.mjs','tools/experiments/qa-whole-frame-attribution.js','tools/experiments/regional-tail-probe-source.mjs','tools/experiments/far-scene-loader.js','tools/experiments/native-far-layer.js','src/app/main.js','src/app/global-frame-scheduler.js','src/rendering/scene.js','src/rendering/render-origin.js',fixture,'public/wild-engine/spatial-threaded.wasm'];
+const files=['tools/experiments/native-far-ground-seam.js','tools/experiments/far-ground-seam-stream.js','tools/experiments/native-far-ground.js','tools/experiments/check-shield-repeat-render.mjs','tools/experiments/qa-whole-frame-attribution.js','tools/experiments/regional-tail-probe-source.mjs','tools/experiments/far-scene-loader.js','tools/experiments/native-far-layer.js','src/app/main.js','src/app/global-frame-scheduler.js','src/rendering/scene.js','src/rendering/render-origin.js',fixture,'public/wild-engine/spatial-threaded.wasm'];
 const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex'),sources=Object.fromEntries(files.map(p=>[p,hash(p)]));
 for(const [i,candidate] of [false].entries()){
  const out=`${root}/${i+1}-${candidate?'candidate':'baseline'}`;fs.mkdirSync(out,{recursive:true});

@@ -26,9 +26,9 @@ try {
    globalThis.qaTailSpan=span=>{if(qaTailRows.length<20000)qaTailRows.push(span);else qaTailDropped++;};
    globalThis.qaTailMeasure=(label,run)=>{const start=performance.now();try{return run();}finally{const duration=performance.now()-start;if(duration>=1||label.startsWith('worker-'))qaTailSpan({label,start,duration,scope:'Synchronous call wall time; nested spans overlap.'});}};
   });
-  await context.route(/\/(?:tools\/experiments\/(?:far-scene-loader|native-far-layer|native-far-ground)|src\/app\/global-frame-scheduler)\.js(?:\?.*)?$/,async route=>{
+  await context.route(/\/(?:tools\/experiments\/(?:far-scene-loader|native-far-layer|native-far-ground|native-far-ground-seam)|src\/app\/global-frame-scheduler)\.js(?:\?.*)?$/,async route=>{
    const response=await route.fetch(),path=new URL(route.request().url()).pathname.slice(1),name=path.split('/').at(-1);
-   await route.fulfill({response,body:regionalTailProbe(name==='native-far-ground.js'?await response.text():await readFile(path,'utf8'),name)});
+   await route.fulfill({response,body:regionalTailProbe((name==='native-far-ground.js'||name==='native-far-ground-seam.js')?await response.text():await readFile(path,'utf8'),name)});
   });
  }
  if(process.env.WG_SMOOTH_SORT_SOURCE){
