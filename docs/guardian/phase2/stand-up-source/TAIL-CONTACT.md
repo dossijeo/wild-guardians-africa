@@ -175,3 +175,10 @@ Baseline implementation at 5d64265f6 repeated sampled skinning for envelope and 
 `contact-cost-before.json` and `contact-cost-after.json` preserve all measurements. Far-box median ms: hyena 0.475→0.304, lion 1.023→0.683, warthog 0.218→0.195, buffalo 0.613→0.293, rhino 0.996→0.684. Far-box p95 ranges from 0.333 to 1.377 ms after the change. Near-contact cost is not claimed improved; it still requires resampling. An initial version duplicated terrain queries in collision cases and was replaced with cached positions before this final measurement. Storage cost is 24 bytes per sampled vertex per active contact instance (e.g. hyena 30,024 bytes).
 
 Twenty-eight focused contact/terrain/ownership tests pass after the final change. No new graphical acceptance or whole-game fluency claim. Browser paired performance under representative incursions, close art review and previously documented obstacle limitations remain open.
+
+
+### Lion claw curvature — 2026-10-28
+
+Mirrored the three claw ribbons along the local attack axis so their concave side faces the lion. Contact origin, timing, particles and damage remain unchanged. The extraction script preserves this intentional deviation from the original Atelier; its parity oracle documents the same exception. All 18 attack/native VFX tests pass.
+
+Inspected the actual WorldScene wall attack from front, rear-oblique and side views. `lion-claws-concave.png` records the complete ribbons in profile. Fixed the QA wall fixture to supply an attack ID and a visible claw phase, and added a profile camera button. This is a visual fixture, not a new gameplay action.

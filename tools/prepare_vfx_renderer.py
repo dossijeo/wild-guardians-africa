@@ -36,6 +36,8 @@ rigid_pack = rigid_pack.replace('function updateRigidBuffers()', 'function rigid
 rigid_pack = rigid_pack.replace('rigidGeo[k].instancesFrom(rigidBuffers[k],Math.min(256,counts[k]));', 'rigidPacked[k].count=Math.min(256,counts[k]);')
 rigid_pack = rigid_pack.rstrip()[:-1]+'return rigidPacked;}\n'
 geometry = 'let fxVertices=[];\n'+section('function fxTri(', 'function paintGeometryFX(')
+# Mirror claw curvature along the attack axis; retain contact origin and timing.
+geometry = geometry.replace('arcRibbon(center,[1,0,0],[0,.91,.32]', 'arcRibbon(center,[-1,0,0],[0,.91,.32]')
 simulation = section('let current=', 'function updateRigidBuffers(')
 simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
 simulation = simulation.replace('const mouth=M.pt(toolModel,[.62,.21,0]);', "const source=waterSource?.(clock);if(waterSource&&!source)return;const mouth=source?.position??M.pt(toolModel,[.62,.21,0]);")

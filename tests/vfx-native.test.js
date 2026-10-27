@@ -21,13 +21,14 @@ test('World surface replaces the demonstration crop bed and follows drifting spr
 });
 const json=value=>JSON.parse(JSON.stringify(value));
 const section=(start,end)=>{const a=source.indexOf(start);return source.slice(a,source.indexOf(end,a));};
+// Intentional production difference from Atelier: lion claws open toward the animal.
 function oracle(id){
   const context=vm.createContext({console,window:{dispatchEvent(){}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail;}}});
   const cpu='const TAU=Math.PI*2;'+section('const clamp=','const settings=')+section('const settings=','const canvas=')+
     'const MAX_SPRITES=760;const atlasImage={width:4096,height:2048};const ASSETS='+JSON.stringify(assets)+';'+section('const spriteRects={};','const MAX_SPRITES=')+
     section('function tri(','class Builder{')+section('const definitions=','let current=')+
     'let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];function buildStation(){}'+
-    section('let current=','function updateRigidBuffers(')+'let fxVertices=[];'+section('function fxTri(','function paintGeometryFX(')+section('const DUST_TEXTURES=','const paths=')+section('const style=','function makeWaterCan(')+
+    section('let current=','function updateRigidBuffers(')+'let fxVertices=[];'+section('function fxTri(','function paintGeometryFX(').replace('arcRibbon(center,[1,0,0],[0,.91,.32]', 'arcRibbon(center,[-1,0,0],[0,.91,.32]')+section('const DUST_TEXTURES=','const paths=')+section('const style=','function makeWaterCan(')+
     'const rigidPacked={},rigidGeo=Object.fromEntries(Object.keys(style).map(k=>[k,{instancesFrom(data,count){rigidPacked[k]={data,count}}}])),rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)]));'+section('function updateRigidBuffers(','function renderScene(');
   vm.runInContext(cpu+`
     current=definitions.find(d=>d.id===${JSON.stringify(id)});restartEffect(false);
