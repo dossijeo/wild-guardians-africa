@@ -41,3 +41,13 @@ Authored get-up now grounds non-cloth body supports first, then bends the existi
 A real compressed-lion regression verifies that penetrating cloth moves upward independently without translating hips or altering non-cloth rotations. Forty scoped animation/physics/expression tests pass, plus the three terrain tests.
 
 `lion-cloth-contact.mp4/png/json` captures the full-body WorldScene cycle. In sampled recovery ages 1.83–2.26 s the lowest support is Hips, then finger bones at 2.38–2.48 s; rear cloth no longer lifts the body in this interval. Foot clearance remains 0.13–0.17 m during this portion, so anatomical pose/hand support still needs refinement. The wider view avoids cropping but does not prove close-detail quality. Complete cycle and no runtime errors; no final art acceptance or comparative performance claim. Tail exemptions for unrigged species and baked-bank regeneration remain pending.
+
+## Supine leg placement
+
+The exported lion's initial foot skin was 0.2200 m above the flat floor despite a supported back. Extended the offline two-bone support solve to the legs, retaining bone translations and anatomical lengths. Reconcile foot placement and whole-skin grounding for three additional offline passes because leg weights also affect pelvis skin. No added runtime leg solver. Both candidate JSON clips were regenerated from the unchanged supplied source and expressive meshes.
+
+Added a 0.04 m maximum minimum-foot-clearance check across the first two source seconds, alongside the existing standing support, full skin penetration and limb-length checks. Forty scoped tests pass. Example hyena initial foot clearance is 0.0027 m and at source time 2 s is 0.0171 m; original lion initial clearance was 0.2200 m, first corrected pass 0.0138 m. These are model-space, flat-floor measurements, not a guarantee that both feet contact on slopes.
+
+`hyena-planted-feet.mp4/png/json`: actual full-body WorldScene cycle completes with zero errors; physical roll succeeds in 1.0 s. Inspected contact sheet. New lion clip has numerical/physical tests but has not yet been recorded in runtime after this last regeneration. Visual acceptance remains pending.
+
+Additional continuity audit found large adjacent-frame quaternion changes in hand/forearm channels (hyena RightForeArm 1.633 rad; lion RightHand 2.449 rad). Leg maxima: hyena LeftLeg 0.400 rad, lion RightLeg 0.196 rad per source frame. Current green tests do not validate these angular discontinuities. Investigate bend-pole/hand IK continuity before shipping; do not claim the full get-up is smooth. Ground-correction limitingBones metadata describes the initial silhouette pass, prior to the additional foot reconciliation passes.

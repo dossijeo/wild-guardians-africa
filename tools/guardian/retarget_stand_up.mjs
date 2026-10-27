@@ -50,10 +50,10 @@ function supportAppendages(){
   bone.quaternion.copy(bone.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(rotation));bone.updateWorldMatrix(false,true);
  }
 }
-function supportHand(side){
- const upper=to.get(side+'Arm').bone,elbow=to.get(side+'ForeArm').bone,hand=to.get(side+'Hand').bone;
+function supportLimb(side,foot=false){
+ const upper=to.get(side+(foot?'UpLeg':'Arm')).bone,elbow=to.get(side+(foot?'Leg':'ForeArm')).bone,hand=to.get(side+(foot?'Foot':'Hand')).bone;
  let bottom=Infinity;for(const {mesh,index}of samples){const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(index,k)>weights.getComponent(index,best))best=k;let bone=mesh.skeleton.bones[indices.getComponent(index,best)];while(bone&&bone!==hand)bone=bone.parent;if(bone===hand){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);bottom=Math.min(bottom,v.y);}}
- if(bottom>=0)return;
+ if(!Number.isFinite(bottom)||!foot&&bottom>=0)return;
  const start=upper.getWorldPosition(new Vector3()),knee=elbow.getWorldPosition(new Vector3()),end=hand.getWorldPosition(new Vector3()),orientation=hand.getWorldQuaternion(new Quaternion()).normalize(),goal=end.clone();goal.y-=bottom;
  const l1=start.distanceTo(knee),l2=knee.distanceTo(end),axis=goal.clone().sub(start),distance=Math.max(Math.abs(l1-l2)+1e-5,Math.min(l1+l2-1e-5,axis.length()));axis.normalize();
  const pole=knee.clone().sub(start).addScaledVector(axis,-knee.clone().sub(start).dot(axis)).normalize(),along=(l1*l1-l2*l2+distance*distance)/(2*distance),height=Math.sqrt(Math.max(0,l1*l1-along*along));
@@ -78,12 +78,21 @@ for(let frame=0;frame<=frames;frame++){
  hip.getWorldPosition(p);p.y-=bodyMinimum;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);
  // Longer target arms must bend at the elbow to support the character. Lifting
  // the pelvis to clear a hand would leave both feet visibly hovering.
- supportAppendages();supportHand('Left');supportHand('Right');target.scene.updateMatrixWorld(true);
+ supportLimb('Left',true);supportLimb('Right',true);supportAppendages();supportLimb('Left');supportLimb('Right');target.scene.updateMatrixWorld(true);
  let minimum=Infinity,limiting='';for(const {mesh,index}of samples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);if(v.y<minimum){minimum=v.y;let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;limiting=mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name;}}
  limitingBones.push(limiting);
  // Keep the complete skinned silhouette above the support plane, including
  // authored ornaments. Report correction; large corrections are not acceptance.
- hip.getWorldPosition(p);p.y-=minimum;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);ground.push(-minimum-bodyMinimum);
+ hip.getWorldPosition(p);p.y-=minimum;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);
+ let finalCorrection=-minimum-bodyMinimum;
+ // Leg weights also influence pelvis skin on these rigs. Reconcile their
+ // planted soles with the complete silhouette after the first body correction.
+ for(let pass=0;pass<3;pass++){
+  supportLimb('Left',true);supportLimb('Right',true);target.scene.updateMatrixWorld(true);
+  let lowest=Infinity;for(const {mesh,index}of samples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);lowest=Math.min(lowest,v.y);}
+  hip.getWorldPosition(p);p.y-=lowest;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);finalCorrection-=lowest;
+ }
+ ground.push(finalCorrection);
  for(const [name,item]of animated)item.bone.quaternion.toArray(values.get(name),values.get(name).length);hip.position.toArray(hipValues,hipValues.length);
 }
 const tracks=animated.map(([name,item])=>new QuaternionKeyframeTrack(item.bone.name+'.quaternion',times,values.get(name)));tracks.push(new VectorKeyframeTrack(to.get('Hips').bone.name+'.position',times,hipValues));
