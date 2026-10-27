@@ -1,0 +1,23 @@
+{
+  "mode": "context",
+  "commit": "a2e5bd19b248eff2d33b017b7ed928931b416922",
+  "sources": {
+    "tools/experiments/.chunk-water-runtime-generated.mjs": "9f36bb65fe34f1f10764fb2874a9168cc4f1024e43bf1e88935c971916b9dce0",
+    "tools/experiments/chunk-water-scene-patch.mjs": "f3745cfbb10e683cadc31b7b3724205a4f5650a89dba89165b9277d5fbd07dc7",
+    "tools/experiments/chunk-water-bed-candidate.js": "b7f43b11f19c44e9549f05f62c36cd1a0f6309e6c5fc0e6cc780db2f237aed03",
+    "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+    "src/rendering/natural-water-edges.js": "8981dabf54eefd91315a449e54e30faa5727698f1d11529ebc55abcf47ec0102",
+    "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b"
+  },
+  "conditions": {
+    "WG_THREAD_PORT": "5220",
+    "WG_THREAD_BIOME": "manglares",
+    "WG_THREAD_QUALITY": "media",
+    "WG_PRODUCTION_VISUALS": "1",
+    "WG_THREAD_DEFAULT_STREAMING": "1",
+    "WG_THREAD_MAIN_PHASES": "1",
+    "WG_THREAD_REPORT": "docs/qa/residual-spikes-20261027/chunk-water-runtime-validation/context/report.json",
+    "WG_THREAD_CONTEXT": "1"
+  },
+  "scope": "Functional diagnostic using existing historical Manglares fixture. Not art or performance acceptance; context case pauses simulation for state equality."
+}
