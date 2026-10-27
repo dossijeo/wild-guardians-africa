@@ -1,0 +1,29 @@
+{
+  "status": "in-progress-not-runtime",
+  "actor": "hyena",
+  "sourceBranch": "codex/global-visual-lab",
+  "editableLocalSource": "C:/tmp/guardian-faces/hyena-expression.blend",
+  "reproduce": [
+    "tools/guardian/build_actor_face.py",
+    "tools/guardian/inspect_actor_face.py"
+  ],
+  "iterations": 4,
+  "viewsPerIteration": [
+    "front",
+    "quarter",
+    "side"
+  ],
+  "rejected": [
+    "v1 socket collapse stretches brow and nose",
+    "v2 new lid UV interpolation crosses source islands",
+    "v3 eyelid width/center mismatch"
+  ],
+  "current": "v4 uses continuous baked source-color atlas and calibrated eye centers; still needs edge and partial-blink inspection",
+  "remaining": [
+    "Mouth opens insufficiently: author real oral opening and jaw topology",
+    "Validate blink at 0/0.5/1 in animation and all views",
+    "Export and test GLB morphs without altering native clips",
+    "Repeat calibration on other four beasts and four farmers",
+    "Wire reaction and locomotion states, performance and game validation"
+  ]
+}
