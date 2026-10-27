@@ -15,7 +15,7 @@ test('cooldown starts at casting and updates cards while effect continues; pause
   const s=ready();s.day=5;Game.cast(s,'cast','growth',17,8,nav);const spec=BALANCE.spells.find(s=>s.id==='growth');assert.equal(spellCardStatus(s,spec).cooldown,90);assert.equal(spellCardStatus(s,spec).label,'Recargando');Game.tick(s,1,nav);assert.ok(s.spells[0].remaining>28);assert.ok(Math.abs(spellCardStatus(s,spec).cooldown-89)<1e-8);Game.pause(s,'menu');Game.tick(s,10,nav);assert.ok(Math.abs(spellCardStatus(s,spec).cooldown-89)<1e-8);
 });
 test('native markup keeps original symbols and translated status labels',()=>{
-  const markup=spellCardsMarkup(ready(),i=>`<svg data-original="${i}"></svg>`);assert.equal((markup.match(/ disabled/g)||[]).length,3);assert.equal((markup.match(/data-original=/g)||[]).length,3);
+  const markup=spellCardsMarkup(ready(),i=>`<svg data-original="${i}"></svg>`);assert.equal((markup.match(/ disabled/g)||[]).length,4);assert.equal((markup.match(/data-original=/g)||[]).length,4);
   for(const [es,en] of [['Disponible desde la noche 1','Available from night 1'],['Disponible desde el día 3','Available from day 3'],['Disponible desde el día 5','Available from day 5'],['Recargando','Cooling down'],['No disponible ahora','Unavailable now']]){assert.equal(translate(es,'es'),es);assert.equal(translate(es,'en'),en);}
 });
 test('the spell panel describes direct placement in both languages',()=>{

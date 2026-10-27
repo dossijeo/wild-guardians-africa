@@ -204,10 +204,15 @@ export class AudioSystem {
       // Consume its ID normally so history changes cannot replay it later.
       if(event.type==='HarvestRequested'&&event.automatic===true)continue;
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
-      const id=event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
+      const id=event.type==='GuardianMagicHit'&&ANIMAL_SOUND_ROUTES[event.species]?event.species+'_hurt':event.type==='AnimalRetreating'&&event.reason==='magic-resilience-exhausted'?ANIMAL_SOUND_ROUTES[event.species]?.retreat:event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
       const requested=this.context?.currentTime??0,generation=this.generation;
+      const magicOptions=event.type==='GuardianMagicHit'||event.type==='AnimalRetreating'&&event.reason==='magic-resilience-exhausted'?{family:event.type==='GuardianMagicHit'?'animal-hurt':'animal-retreat',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length}:{};
       const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
-      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      if(event.type==='GuardianMagicHit'){
+        const options=eventAudioOptions(event,'beast_take_damage',state,listener);
+        this.sound('beast_take_damage',{...options,...magicOptions,family:'magic-contact',emitter:'impact:'+event.targetId,gain:options.gain*.45}).catch(()=>{});
+      }
       const alert=event.type==='StructureHit'?structureAlertSound(event):eventAlertSound[event.type];
       if(alert&&!(alerts??=new Set()).has(alert)){alerts.add(alert);const requested=this.context?.currentTime??0,generation=this.generation;
         this.sound(alert,{bus:'ui',family:alert==='ui_objective_complete'?'tutorial-complete':alert==='game_farmer_hurt'?'worker-danger':'structure-danger',emitter:alert==='ui_objective_complete'?'ui:tutorial':alert==='game_farmer_hurt'?'ui:worker-danger':'ui:structure-danger',gain:1,
@@ -291,7 +296,7 @@ export class AudioSystem {
     this.animalSoundPreparation??=new Map();
     for(const id of new Set([...species,...(state.raid?.animals.map(a=>a.species)??[])])){
       if(this.animalSoundPreparation.has(id))continue;
-      const pending=this.sfxBank().then(bank=>Promise.all([...Object.values(ANIMAL_SOUND_ROUTES[id]??{}),'game_enemy_detected'].map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
+      const pending=this.sfxBank().then(bank=>Promise.all([...Object.values(ANIMAL_SOUND_ROUTES[id]??{}),id+'_hurt','game_enemy_detected'].map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
       this.animalSoundPreparation.set(id,pending);pending.catch(()=>{if(this.animalSoundPreparation.get(id)===pending)this.animalSoundPreparation.delete(id);});
     }
   }

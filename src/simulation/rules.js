@@ -9,7 +9,7 @@ export function villageCost(ordinal) {
   return expansionVillagePriceForRuntime(ordinal,B.postgame.additional_village_cost.variant);
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
-export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=1&&state.time>=300||state.day>1:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
+export const spellUnlocked=(state,kind)=>['shield','attack'].includes(kind)?state.day>=1&&state.time>=300||state.day>1:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
 export function permission(state,action) {
   if(state.result || state.pauses.some(reason=>reason!=='tutorial-action')) return false;
   const hasCenter=state.structures.some(operational);
@@ -17,6 +17,7 @@ export function permission(state,action) {
   if(action==='camera')return true;
   if(!hasCenter) return action==='center' && peaceful;
   if(action==='shield')return true;
+  if(action==='attack')return !!state.raid?.animals.some(a=>!['gone','retreating'].includes(a.status));
   if(!peaceful)return false;
   if(action==='multiply')return state.workers.some(w=>!w.incapacitated && w.status!=='home');
   if(action==='village')return state.postgame;

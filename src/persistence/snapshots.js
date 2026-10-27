@@ -33,6 +33,9 @@ export function validateSnapshot(state) {
   if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
   const ids=new Set();
   for(const animal of state.raid?.animals??[]){
+    if(animal.magicHealth!==undefined&&(!Number.isFinite(animal.magicHealth)||animal.magicHealth<0||animal.magicHealth>1000))throw new Error('Resistencia mágica inválida');
+    if(animal.magicStunUntil!==undefined&&(!Number.isFinite(animal.magicStunUntil)||animal.magicStunUntil<0))throw new Error('Interrupción mágica inválida');
+    if(animal.magicImpact!==undefined){const h=animal.magicImpact;if(!h||!Number.isFinite(h.at)||h.at<0||h.at>state.elapsed||![h.point,h.direction,h.origin].every(p=>p&&[p.x,p.y,p.z].every(Number.isFinite)))throw new Error('Impacto mágico inválido');}
     if(animal.damageProfile!==undefined&&!validDamageProfile(animal.damageProfile))throw new Error('Perfil de impacto inválido');
     const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
   }

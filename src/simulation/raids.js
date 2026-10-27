@@ -246,6 +246,10 @@ export function warmRaidApproaches(state,specs,entry,nav){
     }
   }finally{nav.state=originalState;}
 }
+export function retreatAnimal(s,a,reason='magic') {
+ release(s,a);leaveWait(s.raid,a);a.status='retreating';a.hitApplied=true;a.attackRemaining=0;
+ emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason});
+}
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   reconcileTargetReservations(s,release);
@@ -253,6 +257,7 @@ export function updateRaid(s,dt,nav) {
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
+    if((a.magicStunUntil??0)>s.elapsed)continue;
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
       a.attackRemaining=Math.max(0,a.attackRemaining-dt);

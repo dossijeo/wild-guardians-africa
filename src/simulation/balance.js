@@ -345,6 +345,47 @@ export const BALANCE = {
       ],
       "harvest_multiplier": 2,
       "radius_m": null
+    },
+    {
+      "id": "attack",
+      "name": "Ataque",
+      "duration_seconds": 0,
+      "cooldown_seconds": 12,
+      "unlock": "night_1",
+      "radius_m": 0.8,
+      "damage": 28,
+      "profiles": {
+        "hyena": {
+          "resilience": 56,
+          "mass": 0.7,
+          "stun": 0.7,
+          "reaction": 0.15
+        },
+        "warthog": {
+          "resilience": 84,
+          "mass": 1,
+          "stun": 0.55,
+          "reaction": 0.12
+        },
+        "lion": {
+          "resilience": 112,
+          "mass": 1.5,
+          "stun": 0.45,
+          "reaction": 0.1
+        },
+        "buffalo": {
+          "resilience": 140,
+          "mass": 3,
+          "stun": 0.3,
+          "reaction": 0.065
+        },
+        "rhino": {
+          "resilience": 168,
+          "mass": 5,
+          "stun": 0.2,
+          "reaction": 0.045
+        }
+      }
     }
   ],
   "no_overlap_between_spell_areas": true,

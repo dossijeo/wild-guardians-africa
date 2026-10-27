@@ -1613,5 +1613,9 @@ export const messages = {
   "Suelo fértil": "Fertile soil",
   "Buena temporada": "Good season",
   "Aviso del poblado": "Village notice",
-  "La incursión espera una entrada físicamente exterior transitable para su grupo completo.": "The raid is waiting for a physically accessible exterior entrance for its whole group."
+  "La incursión espera una entrada físicamente exterior transitable para su grupo completo.": "The raid is waiting for a physically accessible exterior entrance for its whole group.",
+  "Impacto": "Impact",
+  "Ataque: toca una bestia activa.": "Attack: touch an active beast.",
+  "Selecciona una bestia activa": "Select an active beast",
+  "Impacto mágico inválido": "Invalid magical impact"
 };

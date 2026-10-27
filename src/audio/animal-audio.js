@@ -29,7 +29,7 @@ export class AnimalAudio {
       const currentPhase=phase(actor),previous=this.entries.get(actor.id),entry=previous??{ticket:0,voice:null,nextNeutral:state.elapsed+ANIMAL_NEUTRAL_INTERVAL};this.entries.set(actor.id,entry);
       if(!continuous){if(dt!==0||!previous)this.release(entry);if(dt!==0)entry.nextNeutral=state.elapsed+ANIMAL_NEUTRAL_INTERVAL;}
       else if(currentPhase==='attack'&&(previous?.phase!=='attack'||entry.attackId!==actor.attackId))this.cue('attack',actor,entry,state,listener);
-      else if(currentPhase==='retreat'&&previous?.phase!=='retreat')this.cue('retreat',actor,entry,state,listener);
+      else if(currentPhase==='retreat'&&previous?.phase!=='retreat'&&actor.magicHealth!==0)this.cue('retreat',actor,entry,state,listener);
       else if(!previous&&currentPhase==='approach')this.cue('aggressive',actor,entry,state,listener);
       else if(previous?.phase!==currentPhase)this.release(entry);
       else if(currentPhase==='approach'&&state.elapsed>=entry.nextNeutral)this.cue('neutral',actor,entry,state,listener);

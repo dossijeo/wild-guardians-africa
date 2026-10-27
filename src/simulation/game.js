@@ -1,3 +1,4 @@
+import {attackTarget,applyGuardianAttack} from './guardian-combat.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
@@ -40,7 +41,7 @@ export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slo
   return {saveVersion:1,terrainVersion:'4.1.10.3',slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,postgame:false,result:null,
     initialPreparation:true,ledger:{balance:rational(B.initial_money),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
     pauses:[],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
-    cooldowns:{shield:0,growth:0,multiply:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
+    cooldowns:{shield:0,growth:0,multiply:0,attack:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
 export const resume=(s,reason)=>{s.pauses=s.pauses.filter(r=>r!==reason);};
@@ -344,7 +345,7 @@ export function requestRepair(s,id,targetId) {
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
 }
-export const spellRadius=id=>({shield:1.95,growth:.79,multiply:.79})[id];
+export const spellRadius=id=>({shield:1.95,growth:.79,multiply:.79,attack:.8})[id];
 export function spellAt(s,id,p) {return s.spells.find(a=>a.kind===id&&a.remaining>0&&(a.targetId?a.targetId===p.id:dist(a,p)<=a.radius));}
 function markMultiplyTargets(s,area){
   for(const p of s.plants)if(p.alive&&(area.targetId?p.id===area.targetId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
@@ -372,6 +373,7 @@ function validateSpell(s,kind,x,z,nav,targetId=null) {
   if(s.cooldowns[kind]>0)throw new Error('La magia está recargando');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
+  if(kind==='attack'){const animal=attackTarget(s,targetId)??(targetId===null?s.raid?.animals.find(a=>!['gone','retreating'].includes(a.status)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
   const plant=kind==='shield'?null:spellPlant(s,x,z);
   if(kind!=='shield'&&!plant)throw new Error('Selecciona un cultivo vivo');
   if(targetId!==null&&plant?.id!==targetId)throw new Error('El cultivo elegido ya no está disponible');
@@ -380,14 +382,19 @@ function validateSpell(s,kind,x,z,nav,targetId=null) {
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
   return {spec,plant};
 }
-export function cast(s,id,kind,x,z,nav,{targetId=null}={}) {
+export function cast(s,id,kind,x,z,nav,{targetId=null,origin=null,contact=null}={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const {spec,plant}=validateSpell(s,kind,x,z,nav,targetId),radius=spellRadius(kind);
+  const {spec,plant,animal}=validateSpell(s,kind,x,z,nav,targetId),radius=spellRadius(kind);
+  // Presentation placement is optional and runs only after gameplay validation.
+  // A visual failure must not cancel an otherwise valid spell.
+  if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
+  for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
+    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{origin,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x:plant?.x??x,z:plant?.z??z,radius,remaining:spec.duration_seconds};
     if(plant)area.targetId=plant.id;
     if(kind==='multiply')markMultiplyTargets(s,area);
-    s.spells.push(area);s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
+    s.spells.push(area);s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x:area.x,z:area.z,targetId:plant?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x:area.x,y:nav.field?.surface?.(area.x,area.z)??0,z:area.z}}});
   });
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
