@@ -148,6 +148,7 @@ std::unordered_set<PropKey,PropKeyHash>& removedProps(){
 }
 WILD_SAMPLING_LOCAL std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 WILD_SAMPLING_LOCAL int haloPropCount=0;
+WILD_SAMPLING_LOCAL bool selectedVisualPending=false;
 WILD_SAMPLING_LOCAL BarrierIndex* barrierRegistry=nullptr;
 BarrierIndex& barrierIndex(){
   if(!barrierRegistry)barrierRegistry=new BarrierIndex();
@@ -989,23 +990,10 @@ double proceduralPropSpacing(int type){
   if(mangroveNetwork&&type==0)return 8.5;
   return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
 }
-void prepareSelectedChunk(int cx,int cz,bool visual){
-  SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
-  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
-  selectNearbySettlements(cx,cz);
-  // The standalone no-entry WASM binary has no startup constructor pass.
-  preparePonds(cx,cz);
-  if(visual){
-    heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
-    water.assign(side*side,0);waterLevels.assign(side*side,0);
-  }
-  SPATIAL_TOCK(5,setupStarted);SPATIAL_TICK(latticeStarted);
-  const int x0=cx*side-24,z0=cz*side-24;
-  lattice.resize(latticeSpan*latticeSpan);
-  for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
-    lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
-  SPATIAL_TOCK(6,latticeStarted);
-  if(visual){
+void buildSelectedVisual(){
+  const int cx=chunkX,cz=chunkZ,x0=cx*side-24,z0=cz*side-24;
+  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
+  water.assign(side*side,0);waterLevels.assign(side*side,0);
   SPATIAL_TICK(colorStarted);
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
@@ -1023,7 +1011,27 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
   SPATIAL_TOCK(9,maskStarted);SPATIAL_TICK(meshStarted);
   buildWaterMesh(cx,cz);
   SPATIAL_TOCK(10,meshStarted);
+  selectedVisualPending=false;
+}
+void ensureSelectedVisual(){if(selectedVisualPending)buildSelectedVisual();}
+void prepareSelectedChunk(int cx,int cz,bool visual){
+  selectedVisualPending=false;
+  SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
+  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
+  selectNearbySettlements(cx,cz);
+  // The standalone no-entry WASM binary has no startup constructor pass.
+  preparePonds(cx,cz);
+  if(visual){
+    heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
+    water.assign(side*side,0);waterLevels.assign(side*side,0);
   }
+  SPATIAL_TOCK(5,setupStarted);SPATIAL_TICK(latticeStarted);
+  const int x0=cx*side-24,z0=cz*side-24;
+  lattice.resize(latticeSpan*latticeSpan);
+  for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
+    lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
+  SPATIAL_TOCK(6,latticeStarted);
+  if(visual)buildSelectedVisual();
   SPATIAL_TICK(propsStarted);
   constexpr double savannaDensity[6]={.53,.51,.72,.30,.28,.63};
   constexpr double desertDensity[6]={.30,.22,.035,.17,.10,.12};
@@ -1135,14 +1143,16 @@ struct PreparedChunkData {
   std::vector<Prop> props,solidProps;
   std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
   std::vector<size_t> nearbySettlements;
+  bool visualPending=false;
 };
 PreparedChunkData takePreparedChunkData(){
   return {chunkX,chunkZ,haloPropCount,std::move(heights),std::move(colors),
     std::move(waterLevels),std::move(waterTriangles),std::move(water),
     std::move(groundMask),std::move(lattice),std::move(ponds),std::move(props),
-    std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements)};
+    std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements),selectedVisualPending};
 }
 void selectPreparedChunkData(PreparedChunkData data){
+  selectedVisualPending=data.visualPending;
   chunkX=data.cx;chunkZ=data.cz;haloPropCount=data.halo;
   heights=std::move(data.heights);colors=std::move(data.colors);
   waterLevels=std::move(data.waterLevels);waterTriangles=std::move(data.waterTriangles);
@@ -1163,6 +1173,21 @@ void populateChunk(int cx,int cz,bool visual=true){
   auto prepared=takePreparedChunkData();
   selectPreparedChunkData(std::move(prepared));
   publishSelectedChunk();
+}
+// Eviction selects an already resident spatial snapshot. Visual composition is
+// needed only if a caller actually reads this replacement chunk's render data.
+void selectResidentAfterEviction(int cx,int cz){
+  const auto key=chunkKey(cx,cz);
+  const auto spatial=residentSpatial().find(key);
+  const auto solid=residentSolidProps().find(key),visible=residentVisibleProps().find(key);
+  if(spatial==residentSpatial().end()||solid==residentSolidProps().end()||visible==residentVisibleProps().end()){
+    populateChunk(cx,cz);return;
+  }
+  chunkX=cx;chunkZ=cz;lattice=spatial->second.lattice;ponds=spatial->second.ponds;
+  solidProps=solid->second;props=visible->second;selectNearbySettlements(cx,cz);
+  haloPropCount=0;const int x0=cx*side-24,z0=cz*side-24;
+  for(const auto& p:solidProps)if(p.x<x0||p.x>=x0+side||p.z<z0||p.z>=z0+side)++haloPropCount;
+  indexSolidProps();selectedVisualPending=true;
 }
 // Preparation owns its output; live navigation is not modified until installation.
 ChunkRaster prepareActiveRaster(){
@@ -1576,7 +1601,7 @@ int spatial_remove_chunk(int cx,int cz){
   selectProfile(previous);
   if(chunkX==cx&&chunkZ==cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
+    else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return 1;
 }
@@ -1628,8 +1653,8 @@ int spatial_remove_chunks(int count){
   }
   selectProfile(previous);
   if(std::find(removed.begin(),removed.end(),std::pair<int,int>{chunkX,chunkZ})!=removed.end()){
-    if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
+    if(!loadedChunks.empty())selectResidentAfterEviction(loadedChunks.back().first,loadedChunks.back().second);
+    else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return int(removed.size());
 }
@@ -2045,13 +2070,13 @@ int spatial_build_horizon(int cx,int cz,int minX,int minZ,int maxX,int maxZ,
 float* spatial_horizon_terrain_ptr(){return horizonTerrain.data();}
 int spatial_horizon_water_count(){return int(horizonWater.size()/9);}
 float* spatial_horizon_water_ptr(){return horizonWater.data();}
-float* spatial_heights_ptr(){return heights.data();}
-float* spatial_colors_ptr(){return colors.data();}
-uint8_t* spatial_water_ptr(){return water.data();}
-uint8_t* spatial_ground_mask_ptr(){return groundMask.data();}
-float* spatial_water_levels_ptr(){return waterLevels.data();}
-float* spatial_water_triangles_ptr(){return waterTriangles.data();}
-int spatial_water_vertex_count(){return int(waterTriangles.size()/3);}
+float* spatial_heights_ptr(){ensureSelectedVisual();return heights.data();}
+float* spatial_colors_ptr(){ensureSelectedVisual();return colors.data();}
+uint8_t* spatial_water_ptr(){ensureSelectedVisual();return water.data();}
+uint8_t* spatial_ground_mask_ptr(){ensureSelectedVisual();return groundMask.data();}
+float* spatial_water_levels_ptr(){ensureSelectedVisual();return waterLevels.data();}
+float* spatial_water_triangles_ptr(){ensureSelectedVisual();return waterTriangles.data();}
+int spatial_water_vertex_count(){ensureSelectedVisual();return int(waterTriangles.size()/3);}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}

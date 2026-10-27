@@ -21,8 +21,9 @@ export function spatialInstances(wasm,cx,cz){
 }
 
 export function spatialChunkPayload(wasm,cx,cz){
-  const memory=wasm.memory.buffer;
-  const ground=new Float32Array(memory,wasm.spatial_heights_ptr(),49*49);
+  // A deferred selected payload may grow WASM memory: resolve it first.
+  const groundPointer=wasm.spatial_heights_ptr(),memory=wasm.memory.buffer;
+  const ground=new Float32Array(memory,groundPointer,49*49);
   const rgb=new Float32Array(memory,wasm.spatial_colors_ptr(),49*49*3);
   const positions=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);
   for(let z=0;z<49;z++)for(let x=0;x<49;x++){

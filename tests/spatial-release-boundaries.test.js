@@ -16,6 +16,15 @@ function world(seed,biome){
 }
 function equivalent(a,b,label){
  assert.equal(a.spatial_chunk_count(),b.spatial_chunk_count(),label);
+ assert.equal(a.spatial_prop_count(),b.spatial_prop_count(),label+' visible count');
+ assert.equal(a.spatial_halo_prop_count(),b.spatial_halo_prop_count(),label+' collision halo');
+ // Read deferred visual data after removal, without selecting/regenerating first.
+ for(const [getter,bytes] of [['spatial_props_ptr',a.spatial_prop_count()*40],['spatial_heights_ptr',49*49*4],['spatial_colors_ptr',49*49*3*4],['spatial_water_ptr',48*48],['spatial_water_levels_ptr',48*48*4],['spatial_ground_mask_ptr',35*35*4]]){
+  const pa=a[getter](),pb=b[getter]();assert.deepEqual(new Uint8Array(a.memory.buffer,pa,bytes),new Uint8Array(b.memory.buffer,pb,bytes),label+' '+getter);
+ }
+ const count=a.spatial_water_vertex_count();assert.equal(count,b.spatial_water_vertex_count());
+ assert.deepEqual(new Float32Array(a.memory.buffer,a.spatial_water_triangles_ptr(),count*3),new Float32Array(b.memory.buffer,b.spatial_water_triangles_ptr(),count*3),label+' water mesh');
+
  for(const p of profiles){
   a.spatial_select_nav_profile_index(p.index);b.spatial_select_nav_profile_index(p.index);
   for(let z=-73;z<=73;z++)for(let x=-73;x<=73;x++)assert.equal(a.lazy_component(x,z),b.lazy_component(x,z),`${label} profile${p.index} cell${x},${z}`);
