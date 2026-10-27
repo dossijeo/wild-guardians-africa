@@ -26,3 +26,16 @@ test('Attack charges at the hand, travels before contact, and starts its impact 
  world.state.elapsed=1.24;summons.update();assert.equal(slot.impact.visible,true);assert.ok(slot.core.position.distanceTo(new THREE.Vector3(0,1,0))<.001);
  world.state.elapsed=1.6;summons.update();assert.equal(slot.beam.visible,false);assert.equal(slot.impact.visible,false);assert.equal(slot.core.visible,false);summons.dispose();
 });
+
+
+test('a replacement summon preserves the old projectile and contact without retaining a second Guardian',async()=>{
+ const world={state:{events:[],elapsed:1,time:400},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ const attack={type:'SpellActivated',kind:'attack',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}};world.state.events.push(attack);summons.update();
+ world.state.elapsed=1.1;const growth={type:'SpellActivated',kind:'growth',x:10,z:0,presentation:{origin:{x:12,y:1,z:0},contact:{x:10,y:1,z:0},elapsed:1.1}};world.state.events.push(growth);summons.update();
+ const slot=summons.slots[0],pool=summons.attackEchoes;assert.equal(slot.event,growth);assert.equal(slot.group.position.x,12);assert.equal(summons.slots.filter(s=>s.group.visible).length,1);assert.equal(pool.stats.active,1);
+ world.state.elapsed=1.2;summons.update();const matrix=new THREE.Matrix4(),point=new THREE.Vector3();pool.meshes.core.getMatrixAt(0,matrix);point.setFromMatrixPosition(matrix);assert.ok(Math.abs(point.x-1.2)<.001);assert.equal(pool.meshes.ring.count,0);
+ world.state.elapsed=1.24;summons.update();assert.equal(pool.meshes.ring.count,1);pool.meshes.ring.getMatrixAt(0,matrix);point.setFromMatrixPosition(matrix);assert.ok(point.distanceTo(new THREE.Vector3(0,1,0))<.001);
+ world.state.elapsed=1.6;summons.update();assert.equal(pool.stats.active,0);assert.ok(pool.draws.every(m=>!m.visible));assert.equal(slot.event,growth);
+ world.state.elapsed=.5;summons.update();assert.equal(slot.event,null);summons.dispose();assert.equal(world.scene.children.length,0);
+});
