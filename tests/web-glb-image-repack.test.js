@@ -14,7 +14,7 @@ function withJunkChunk(source){
 }
 function stableMetadata(source){
  const j=structuredClone(source),images=new Set(j.images.map(image=>image.bufferView));delete j.buffers[0].byteLength;
- for(const [i,v] of j.bufferViews.entries())if(images.has(i)){delete v.byteOffset;delete v.byteLength;}else delete v.extensions.EXT_meshopt_compression.byteOffset;
+ for(const [i,v] of j.bufferViews.entries())if(images.has(i)){delete v.byteOffset;delete v.byteLength;}else if(v.extensions?.EXT_meshopt_compression)delete v.extensions.EXT_meshopt_compression.byteOffset;else delete v.byteOffset;
  return j;
 }
 function assertPreserved(before,after,changed){
@@ -22,6 +22,8 @@ function assertPreserved(before,after,changed){
  for(const [index,view] of before.json.bufferViews.entries())if(view.extensions?.EXT_meshopt_compression){
   assert.deepEqual(physical(after.bin,after.json.bufferViews[index].extensions.EXT_meshopt_compression),physical(before.bin,view.extensions.EXT_meshopt_compression),'compressed view '+index);
  }
+ const imageViews=new Set(before.json.images.map(image=>image.bufferView));
+ for(const [index,view] of before.json.bufferViews.entries())if(!imageViews.has(index)&&!view.extensions?.EXT_meshopt_compression)assert.deepEqual(physical(after.bin,after.json.bufferViews[index]),physical(before.bin,view),'uncompressed view '+index);
  for(const [index,image] of before.json.images.entries())if(!changed.has(index))assert.deepEqual(physical(after.bin,after.json.bufferViews[after.json.images[index].bufferView]),physical(before.bin,before.json.bufferViews[image.bufferView]),'untouched image '+index);
 }
 async function fixture(){
@@ -43,7 +45,7 @@ test('all textured runtime GLBs retain exact compressed geometry, animation and 
   assertPreserved(before,after,new Set([index]));assert.equal(hash(bytes),originalHash);
   assert.ok(Buffer.from(physical(after.bin,after.json.bufferViews[after.json.images[index].bufferView])).equals(replacement));
   const compressedIndex=before.json.bufferViews.findIndex(view=>view.extensions?.EXT_meshopt_compression);
-  assert.notEqual(after.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset,before.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset);
+  if(compressedIndex>=0)assert.notEqual(after.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset,before.json.bufferViews[compressedIndex].extensions.EXT_meshopt_compression.byteOffset);
   t.diagnostic(record.runtime+' compressed views and metadata unchanged');
  }
 });
