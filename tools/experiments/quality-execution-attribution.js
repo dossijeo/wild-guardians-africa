@@ -21,7 +21,7 @@ export async function observeQualityExecution(world,run){
  }
  const gpu=installStreamGpuTimer(world),supported=PerformanceObserver.supportedEntryTypes.includes('long-animation-frame');
  const observer=supported?new PerformanceObserver(list=>longFrames.push(...list.getEntries().map(e=>e.toJSON()))):null;
- globalThis.qaMainFrame=row=>frames.push(row);globalThis.qaMainPhase=row=>phases.push(row);observer?.observe({type:'long-animation-frame'});
+ globalThis.qaMainFrame=row=>{const info=world.renderer.info.render;frames.push({...row,quality:world.quality,simulationElapsed:world.state.elapsed,drawCalls:info.calls,triangles:info.triangles,points:info.points,lines:info.lines,createdChunks:world.chunkStream.stats.created});};globalThis.qaMainPhase=row=>phases.push(row);observer?.observe({type:'long-animation-frame'});
  let result;
  try{result=await run();}
  finally{for(const fn of restore.reverse())fn();gpu.stop();globalThis.qaMainFrame=previousFrame;globalThis.qaMainPhase=previousPhase;if(observer){longFrames.push(...observer.takeRecords().map(e=>e.toJSON()));observer.disconnect();}if(!result)await gpu.finish();}
