@@ -1,6 +1,6 @@
 import {BakedBeastFallbacks,loadBakedFalls} from './baked-beast-fallbacks.js';
 import {guardianImpactTime} from '../simulation/guardian-timing.js';
-import {Vector3} from 'three';
+import {Vector3,Quaternion} from 'three';
 import {BeastPhysicsEnvironment} from './beast-physics-environment.js';
 import {BeastRagdollSolver} from '../simulation/beast-ragdoll.js';
 import {BeastRagdollBinding} from './beast-ragdoll-binding.js';
@@ -32,6 +32,7 @@ export class BeastCombatPhysics{
   if(this.baked?.has(animal.id))return this.baked.start(animal);
   const previous=this.entries.get(animal.id);
   if(previous&&!previous.recovery){
+   previous.actor.roll=null;previous.rolling=false;previous.settledAt=null;animal.magicDown.phase='falling';
    previous.solver.impulse(animal.id,{direction:animal.magicImpact.direction,intensity:animal.magicImpact.intensity,mass:ATTACK.profiles[animal.species].mass});
    previous.hitAt=animal.magicImpact.impactAt??-Infinity;previous.actor.age=0;previous.settledAt=null;animal.magicDown.since=w.state.elapsed;animal.magicDown.until=w.state.elapsed+9;return true;
   }
@@ -85,15 +86,29 @@ export class BeastCombatPhysics{
   for(const [id,e] of this.entries){
    if(!state.raid?.animals.includes(e.animal)||e.animal.status==='gone'||state.result){this.release(id);continue;}
    const a=e.animal;
+   // Physical roll + authored recovery can outlast the initial impact timeout.
+   // Refresh the watchdog while this manager still owns the body, so raid AI
+   // never resumes navigation or attacks underneath an active simulation.
+   if(a.magicDown)a.magicDown.until=Math.max(a.magicDown.until,state.elapsed+.5);
    if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
    const bindingStarted=performance.now();
    e.binding.restore();e.binding.apply(e.actor.pose);const hip=e.binding.entries[0].bone.getWorldPosition(this.v);a.x=hip.x-e.offset.x;a.z=hip.z-e.offset.z;this.stats.bindingMs+=performance.now()-bindingStarted;
    if(e.actor.settled){e.settledAt??=e.actor.age;}else e.settledAt=null;
-   if(e.actor.age>5||e.settledAt!==null&&e.actor.age-e.settledAt>.3){
+   if(e.rolling&&!e.actor.roll.done)continue;
+   if(e.rolling||e.actor.age>5||e.settledAt!==null&&e.actor.age-e.settledAt>.3){
     const recoveryStarted=performance.now();
     e.binding.restore();e.root.position.set(a.x,this.world.nav.field.surface(a.x,a.z),a.z);e.root.updateMatrixWorld(true);e.data.key=null;applyAnimalPose(e.data,a,state.elapsed);
     const clip=this.recoveryClips?.get(a.species),options={surface:(x,z)=>this.world.nav.field.surface(x,z)};
-    e.recovery=clip?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip}):new BeastRecovery(e.binding,e.actor.pose,options);e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
+    if(clip&&!e.rolling){
+     const preview=new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip}),target=new Float32Array(98);preview.apply(preview.entryDuration);e.binding.physicalSnapshot(target);preview.restore();
+     const orientation=new Quaternion().fromArray(target,3).normalize(),fallenAxis=new Vector3(0,1,0).applyQuaternion(new Quaternion().fromArray(e.actor.pose,3)),targetAxis=new Vector3(0,1,0).applyQuaternion(orientation);
+     // Preserve the fallen head-to-feet direction. Reorient the future standing
+     // heading, rather than somersaulting the body to match its pre-hit heading.
+     if(Math.hypot(fallenAxis.x,fallenAxis.z)>.25&&Math.hypot(targetAxis.x,targetAxis.z)>.25){const yaw=Math.atan2(fallenAxis.x,fallenAxis.z)-Math.atan2(targetAxis.x,targetAxis.z);a.heading=(a.heading??0)+yaw;e.root.rotation.y+=yaw;e.root.updateMatrixWorld(true);orientation.premultiply(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),yaw));}
+     e.solver.rollTo(id,orientation);e.rolling=true;a.magicDown.phase='rolling';continue;
+    }
+    const rollFailed=e.rolling&&e.actor.roll.timedOut;this.stats.rollFailures=(this.stats.rollFailures??0)+(rollFailed?1:0);this.stats.lastRoll=e.actor.roll?{seconds:e.actor.roll.age,error:e.actor.roll.error,timedOut:rollFailed}:null;
+    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;

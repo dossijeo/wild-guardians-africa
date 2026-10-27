@@ -33,13 +33,21 @@ test('combat physics suspends AI and worker hits, moves logical position, recove
  manager.dispose();assert.equal(world.nav.beastPhysics,undefined);
 });
 test('authored recovery follows a real fallen pose and releases physical ownership',()=>{
- const {animal,state,root,manager}=fixture();manager.recoveryClips=new Map([['hyena',authoredClip]]);manager.step(state,.1);
- let recovering=false,maxStep=0,previous=null;
+ for(const direction of [{x:1,y:-.2,z:.2},{x:0,y:0,z:1},{x:-1,y:-.8,z:0}]){
+ const {animal,state,root,manager}=fixture();animal.magicImpact.direction=direction;manager.recoveryClips=new Map([['hyena',authoredClip]]);manager.step(state,.1);
+ let recovering=false,rolling=false,maxStep=0,previous=null;
  for(let i=0;i<720;i++){
   state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
-  const entry=manager.entries.get(animal.id);if(entry?.recovery){recovering=true;assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery');const p=entry.binding.bones.get('Hips').getWorldPosition(new Vector3());if(previous)maxStep=Math.max(maxStep,p.distanceTo(previous));previous=p;assert.equal(entry.actor.kinematic,true);}
+  const entry=manager.entries.get(animal.id);if(entry?.rolling){rolling=true;assert.ok(!entry.actor.kinematic);assert.equal(entry.actor.joints.length,13);assert.equal(animal.magicDown.phase,'rolling');}if(entry?.recovery){recovering=true;assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));const p=entry.binding.bones.get('Hips').getWorldPosition(new Vector3());if(previous)maxStep=Math.max(maxStep,p.distanceTo(previous));previous=p;assert.equal(entry.actor.kinematic,true);}
  }
- assert.ok(recovering);assert.ok(maxStep<.08,`Authored get-up hip step ${maxStep}`);assert.equal(animal.magicDown,undefined);assert.equal(manager.entries.size,0);manager.dispose();
+ assert.ok(rolling);assert.ok(recovering);assert.equal(manager.stats.rollFailures,0);assert.ok(maxStep<.08,`Authored get-up hip step ${maxStep}`);assert.equal(animal.magicDown,undefined);assert.equal(manager.entries.size,0);manager.dispose();
+ }
+});
+test('another hit cancels a physical roll without resetting the body or allocating another world',()=>{
+ const {animal,state,root,manager}=fixture();manager.recoveryClips=new Map([['hyena',authoredClip]]);manager.step(state,.1);
+ let entry;for(let i=0;i<480;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);entry=manager.entries.get(animal.id);if(entry?.rolling&&entry.actor.roll.age>.2)break;}
+ assert.ok(entry?.rolling);animal.magicDown.until=state.elapsed-.1;manager.step(state,0);assert.ok(animal.magicDown.until>state.elapsed,'physical ownership must extend the AI watchdog');const pose=Array.from(entry.actor.pose),world=entry.solver.world;animal.magicImpact.at=state.elapsed;manager.step(state,0);
+ assert.equal(entry.actor.roll,null);assert.equal(entry.rolling,false);assert.equal(animal.magicDown.phase,'falling');assert.equal(entry.solver.world,world);assert.equal(world.bodies.len(),14);assert.deepEqual(Array.from(entry.actor.pose),pose);manager.dispose();assert.equal(animal.magicDown,undefined);
 });
 test('second hit reuses the airborne articulated body without resetting its pose',()=>{
  const {animal,state,manager}=fixture();manager.step(state,.1);
@@ -61,7 +69,7 @@ test('hits throughout get-up preserve the visible pose and reuse the collision w
  for(const clip of [null,authoredClip])for(const age of clip?[.15,.65,2.8,3.9]:[.15,.65,1.4]){
   const {animal,state,root,manager}=fixture();if(clip)manager.recoveryClips=new Map([['hyena',clip]]);manager.step(state,.1);
   let entry=manager.entries.get(animal.id);
-  for(let i=0;i<360&&!entry.recovery;i++){
+  for(let i=0;i<(clip?600:360)&&!entry.recovery;i++){
    state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
   }
   assert.ok(entry.recovery,'never entered get-up');assert.equal(entry.actor.kinematic,true);assert.equal(entry.solver.world.bodies.len(),14);entry.recoveryAge=age;manager.render(animal.id);
@@ -74,7 +82,7 @@ test('hits throughout get-up preserve the visible pose and reuse the collision w
    assert.ok(before[i].p.distanceTo(entry.binding.entries[i].bone.getWorldPosition(new Vector3()))<.0001,'bone position popped at get-up '+age);
    assert.ok(before[i].q.clone().normalize().angleTo(entry.binding.entries[i].bone.getWorldQuaternion(new Quaternion()).normalize())<.001,'bone orientation popped at get-up '+age);
   }
-  for(let i=0;i<500;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);}
+  for(let i=0;i<(clip?840:500);i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);}
   assert.equal(manager.entries.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
  }
 });

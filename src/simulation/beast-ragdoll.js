@@ -25,6 +25,7 @@ function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
 export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5});
+export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,angleTolerance:.45,settleSeconds:.15,timeout:3});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
@@ -69,6 +70,7 @@ export class BeastRagdollSolver{
  }
  impulse(id,{direction,velocity=vector(),intensity=1,mass=1}){
   const a=this.actors.get(id);if(!a)return;
+  a.roll=null;
   const horizontal=Math.hypot(direction.x,direction.z)||1,power=Math.max(.2,Math.min(1.8,intensity))/Math.sqrt(Math.max(1,mass));
   // Common launch velocity preserves constraints. Small beasts travel roughly
   // 1â€“2m before ground friction; heavy species retain substantially more weight.
@@ -81,6 +83,33 @@ export class BeastRagdollSolver{
   for(const joint of a.joints)this.world.removeImpulseJoint(joint,true);a.joints.length=0;
   for(const {body} of a.parts){body.setBodyType(this.R.RigidBodyType.KinematicPositionBased,true);body.setLinvel(vector(),true);body.setAngvel(vector(),true);}
   a.kinematic=true;
+ }
+ rollTo(id,target){
+  const a=this.actors.get(id);if(!a||a.kinematic)throw Error('Roll requires a dynamic actor');
+  if(!target||![target.x,target.y,target.z,target.w].every(Number.isFinite)||Math.abs(Math.hypot(target.x,target.y,target.z,target.w)-1)>.01)throw Error('Invalid roll target');
+  // Rotate the complete fallen configuration towards the authored supine hip
+  // frame. Relative limb poses and all existing joint constraints are retained.
+  const delta=multiply(target,inverse(a.parts[0].body.rotation()));
+  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity};a.settled=false;
+ }
+ driveRoll(a){
+  const roll=a.roll;if(!roll||roll.done)return;roll.age+=this.stepSize;
+  let rootError=0,rootSpeed=0;
+  for(let i=0;i<a.parts.length;i++){
+   const body=a.parts[i].body,q=multiply(roll.targets[i],inverse(body.rotation())),sign=q.w<0?-1:1,sine=Math.hypot(q.x,q.y,q.z),angle=2*Math.atan2(sine,Math.abs(q.w)),w=body.angvel();
+   const speed=Math.min(RAGDOLL_ROLL.speed,angle*4),factor=sine>1e-8?sign*speed/sine:0;
+   let x=(q.x*factor-w.x)*RAGDOLL_ROLL.response,y=(q.y*factor-w.y)*RAGDOLL_ROLL.response,z=(q.z*factor-w.z)*RAGDOLL_ROLL.response;
+   const clamp=Math.min(1,RAGDOLL_ROLL.maxAcceleration/(Math.hypot(x,y,z)||1));x*=clamp;y*=clamp;z*=clamp;
+   const inertia=body.effectiveAngularInertia(),dt=this.stepSize;
+   // A broad convex torso has to tip over its contact edge. Inertia-only
+   // velocity feedback cannot overcome gravity there; provide a bounded
+   // weight/lever-arm torque, fading near the desired orientation.
+   const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.supportTorque*Math.min(1,angle/.5)/sine:0;
+   body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support)*dt),true);
+   if(i<2){rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
+  }
+  roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
+  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=RAGDOLL_ROLL.timeout;roll.done||=roll.timedOut;
  }
  follow(id,pose,from=null,weight=1){
   const a=this.actors.get(id);if(!a?.kinematic)throw Error('Actor is not kinematic');
@@ -102,7 +131,7 @@ export class BeastRagdollSolver{
  }
  step(){
   if(!this.actors.size){this.stats.stepMs=0;return;}
-  const t=performance.now();this.world.step();this.stats.steps++;
+  const t=performance.now();for(const a of this.actors.values())if(!a.kinematic)this.driveRoll(a);this.world.step();this.stats.steps++;
   for(const a of this.actors.values()){
    if(a.kinematic){this.snapshot(a);continue;}
    a.age+=this.stepSize;let speed=0;
