@@ -152,4 +152,10 @@ Conservar nombres y duraciones no garantiza conservar clips. El león activo se 
 
 Los dientes deben quedar fuera de gradientes de deformación de piel: el colmillo inferior del león alcanzaba 16.25% de error de aristas. La rotación común lo reduce a 0.0264% en apertura completa; el morph lineal mantiene 2.003% de contracción a media apertura. Documentar esa diferencia entre rigidez del extremo e interpolación.
 
-El siguiente fallo apareció solo en Three.js con un clip nativo: la cavidad rígida en Head no acompaña al hocico con pesos repartidos. Se conserva la pose Running 0.35 s / boca 0.85 y una auditoría del núcleo del hocico (hasta 6.12 cm de desplazamiento relativo a Head). La corrección sigue pendiente: no aprobar la piel porque los huesos hayan pasado su comparador.
+El siguiente fallo apareció solo en Three.js con un clip nativo: la cavidad rígida en Head no acompaña al hocico con pesos repartidos. Se conserva la pose Running 0.35 s / boca 0.85 y una auditoría del núcleo del hocico (hasta 6.12 cm de desplazamiento relativo a Head). La corrección v13 del núcleo del hocico pasa esa auditoría y la pose se revisó visualmente; no aprobar otras zonas de piel porque los huesos hayan pasado su comparador.
+
+### Párpados del león: textura, superficie y pesos son problemas distintos
+
+Los UV originales no se pueden interpolar sin más sobre párpados nuevos: cruzan islas y aparecen manchas ajenas. Una proyección continua resuelve los cortes UV, pero sigue copiando pinturas oscuras o blancas si se toma la ceja como muestra. Elegir una zona de pelaje limpia y revisar el tono en el renderizador final.
+
+Seguir cada triángulo del ojo produce bandas geométricas. Ajustar una superficie suave y unir sus bordes al rostro, comprobando que no parezca una lámina flotante. Finalmente, probar el cierre durante los clips: en v5 el iris reaparecía en Running 0.35 s porque la piel conservaba pesos de Neck. v6 corrige 286 vértices visibles de esa región con transición local a Head. La captura de esa pose confirma la corrección puntual, no todas las animaciones ni los bordes de transición.

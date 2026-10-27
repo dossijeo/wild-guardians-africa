@@ -132,7 +132,7 @@ blender --background --python-exit-code 1 --python tools/guardian/prototype_lion
 blender --background --python-exit-code 1 --python tools/guardian/inspect_actor_face.py -- --input C:/tmp/guardian-faces/lion-jaw-v9.blend --output C:/tmp/guardian-faces/lion-jaw-v9-1 --center 0 -.23 1.55 --extent .24 --expression mouthOpen --amount 1 --samples 8
 blender --background --python-exit-code 1 --python tools/guardian/audit_lion_untouched_surface.py -- --source public/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb --candidate C:/tmp/guardian-faces/lion-jaw-v9.blend --output C:/tmp/guardian-faces/lion-v9-surface-audit.json --check
 ```
-# Eyelid authoring checkpoint (not accepted)
+# Eyelid authoring checkpoint (initial failure)
 
 `tools/guardian/add_lion_eyelids.py` authors independent left/right closure
 and 25/50/75% corrective poses on the v14 jaw/material source. The original
@@ -150,4 +150,28 @@ occlusion, then inspect neutral, partial closure, full closure and animated
 head poses. These images are **failure evidence, not visual acceptance**.
 No blink GLB has been installed or tested in the game. The local editable
 checkpoint is `C:/tmp/guardian-faces/lion-lids-v2.blend`.
+
+## Eyelid v6: smoother closure and animated skin correction
+
+The updated tool fits a quadratic eye envelope, joins its edges to the source
+surface and samples clean nasal-bridge fur instead of painted brow markings.
+A 0.6 linear color multiplier matches the surrounding shaded socket more
+closely. Neutral, half and full closure were rendered in Blender v5; the
+original angular bands are no longer visible in the reviewed front views.
+
+Three.js then exposed a separate failure: at Running 0.35 s, full closure
+revealed iris because original eye skin still followed Neck. v6 corrects
+visible eye-region weights to Head with a 20px blend boundary. The failed
+and corrected screenshots are retained. Full closure with mouth 0.85 in
+that pose and half closure from three quarters were visually inspected.
+The page reported eight lid bindings, four visible draw calls and no errors.
+This is the asset QA scene, **not integrated-game acceptance or a performance
+comparison**. The six controller unit tests pass. The 246-pose native clip
+comparison and existing muzzle audit also pass; neither audits all eye skin.
+
+Current local source/export: `C:/tmp/guardian-faces/lion-lids-v6.blend` and
+`.glb`; browser fixture `test-results/lion-face-candidate.glb`. Still not
+installed. Remaining: inspect more animated poses, both profiles, eye-skin
+transition boundaries and continuous blink interpolation; improve oral
+shading in Three.js and finish the production asset validation.
 

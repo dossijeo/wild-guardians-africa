@@ -22,7 +22,7 @@ $('neutral').onclick=()=>set(0,0,0);$('pain').onclick=()=>set(1,1,.85);$('half')
 function faceView(x,z){controls.target.copy(faceTarget);camera.position.copy(faceTarget).add(new T.Vector3(x*faceDistance,.02,z*faceDistance));controls.update();}
 $('otherSide').onclick=()=>faceView(-1,0);$('quarter').onclick=()=>faceView(.7,.8);$('body').onclick=()=>{controls.target.set(0,.9,0);camera.position.set(2,1.8,4);controls.update();};
 $('side').onclick=()=>faceView(1,0);$('front').onclick=()=>faceView(0,1);faceView(0,1);
-$('candidateLabel').textContent=lion?'LEÓN: candidato de mandíbula e interior oral. Parpadeo pendiente; no instalado.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';
+$('candidateLabel').textContent=lion?'LEÓN: candidato de mandíbula, interior oral y párpados. Validación en curso; no instalado.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';
 $('clip').onchange=()=>{mixer.stopAllAction();action=null;const clip=gltf.animations.find(c=>c.name===$('clip').value);$('clipTime').value=0;$('clipTime').max=clip?.duration??0;if(clip)action=mixer.clipAction(clip).reset().play();};
 $('auto').onclick=()=>{automatic=true;actor.status='walking';};$('attack').onclick=()=>{automatic=true;actor.status='attacking';actor.attackDuration=2;actor.attackRemaining=2;};$('hit').onclick=()=>{automatic=true;actor.status='walking';actor.magicImpact={at:elapsed,impactAt:elapsed+.24};};$('pause').onclick=()=>paused=!paused;
 addEventListener('error',e=>errors.push(e.message));
