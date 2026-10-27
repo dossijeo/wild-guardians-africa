@@ -41,7 +41,7 @@ export function installNativeShadow(renderer,light,uniforms){
     const active=map.enabled&&(map.autoUpdate||map.needsUpdate)&&lights.includes(light)&&light.castShadow&&(light.shadow.autoUpdate||light.shadow.needsUpdate);
     if(!active){updateNativeShadowUniforms(uniforms,renderer,light);return original.call(this,lights,scene,camera);}
     ensureNativeShadowTarget(light);
-    const snapshot=cache.enabled&&lights.length===1?shadowSnapshot(renderer,light,scene,camera):null;
+    const snapshot=cache.enabled&&lights.length===1?shadowSnapshot(renderer,light,scene,camera,cache.snapshot):null;
     if(cache.enabled&&cache.matches(snapshot,map.needsUpdate||light.shadow.needsUpdate)){
       cache.stats.hits++;updateNativeShadowUniforms(uniforms,renderer,light);return;
     }

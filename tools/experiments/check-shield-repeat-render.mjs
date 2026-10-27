@@ -18,6 +18,10 @@ report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_SHADOW_SOURCE_DIR)await context.route(/\/src\/rendering\/(shadow-cache|native-shadow)\.js(?:\?.*)?$/,async route=>{
+  const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
+  await route.fulfill({response,body:await readFile(process.env.WG_SHADOW_SOURCE_DIR+'/'+name)});
+ });
  if(process.env.WG_SPATIAL_RUNTIME_DIR){
   report.runtimeOverride={directory:process.env.WG_SPATIAL_RUNTIME_DIR,loads:{}};
   await context.route(/\/wild-engine\/spatial-threaded\.(mjs|wasm)(?:\?.*)?$/,async route=>{
