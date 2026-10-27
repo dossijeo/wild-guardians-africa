@@ -1,0 +1,1018 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "candidate": false,
+      "window": {
+        "start": 128577.0450000763,
+        "end": 168577.0450000763
+      },
+      "presentationIntervals": {
+        "count": 713,
+        "mean": 56.01917952314164,
+        "p50": 49.929999999993015,
+        "p95": 116.40499999999884,
+        "p99": 149.55999999999767,
+        "max": 183.2400000000198
+      },
+      "cpuRenderSubmission": {
+        "count": 714,
+        "mean": 12.98526610697017,
+        "p50": 12.044999957084656,
+        "p95": 22.205000042915344,
+        "p99": 27.944999933242798,
+        "max": 32.1599999666214
+      },
+      "mainFrameSync": {
+        "count": 714,
+        "mean": 14.073935575011063,
+        "p50": 13.47000002861023,
+        "p95": 22.919999957084656,
+        "p99": 28.454999923706055,
+        "max": 32.93500006198883
+      },
+      "gpuRender": {
+        "count": 714,
+        "mean": 35.12093916666666,
+        "p50": 34.215051,
+        "p95": 59.725103,
+        "p99": 81.778384,
+        "max": 107.86552
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04500007629394531,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 1,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 1.0999999046325684,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 4.190000057220459,
+          "observerWallMs": 0.014999985694885254
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1792064,
+          "getterWallMs": 12.054999947547913,
+          "observerWallMs": 0.375
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04999995231628418,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04499995708465576,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.05000007152557373,
+          "observerWallMs": 0
+        }
+      ],
+      "demands": 30,
+      "completed": 21,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 9,
+      "latency": {
+        "count": 21,
+        "mean": 4842.131666654632,
+        "p50": 4924.044999957085,
+        "p95": 10004.514999985695,
+        "p99": 10299.06500005722,
+        "max": 10299.06500005722
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 5963.15499997139
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 2214.4199999570847
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 2214
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 5962.014999985695
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 10299.06500005722
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 8201.259999990463
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 2586.2300000190735
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 2585.8849999904633
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 6194.254999995232
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 10004.514999985695
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 5041.939999938011
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 3939.3649998903275
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 3358.7949999570847
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 4924.044999957085
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 5554.534999966621
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 5278.7300000190735
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 2403.460000038147
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 3119.9900000095367
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 3119.524999976158
+        },
+        {
+          "key": "2,2",
+          "epoch": 0,
+          "ms": 5279.235000014305
+        },
+        {
+          "key": "1,-1",
+          "epoch": 0,
+          "ms": 3440.3450000286102
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 5
+    },
+    {
+      "run": 2,
+      "candidate": true,
+      "window": {
+        "start": 134869.19000005722,
+        "end": 174869.19000005722
+      },
+      "presentationIntervals": {
+        "count": 1455,
+        "mean": 27.48554295532646,
+        "p50": 33.085000000020955,
+        "p95": 49.89500000001863,
+        "p99": 66.51000000000931,
+        "max": 99.89000000001397
+      },
+      "cpuRenderSubmission": {
+        "count": 1455,
+        "mean": 10.627467352663938,
+        "p50": 9.409999966621399,
+        "p95": 19.375,
+        "p99": 25.02999997138977,
+        "max": 28.72000002861023
+      },
+      "mainFrameSync": {
+        "count": 1455,
+        "mean": 11.402034364942832,
+        "p50": 10.22000002861023,
+        "p95": 20.09499990940094,
+        "p99": 25.490000009536743,
+        "max": 29.09499990940094
+      },
+      "gpuRender": {
+        "count": 1455,
+        "mean": 22.355513742267988,
+        "p50": 21.196978,
+        "p95": 30.662603,
+        "p99": 36.44276,
+        "max": 51.011978
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04499995708465576,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 0.5800000429153442,
+          "observerWallMs": 0.014999985694885254
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 0.5499999523162842,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 2.9000000953674316,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1795713,
+          "getterWallMs": 7,
+          "observerWallMs": 0.014999985694885254
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.029999971389770508,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.03500008583068848,
+          "observerWallMs": 0.019999980926513672
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.039999961853027344,
+          "observerWallMs": 0.004999995231628418
+        }
+      ],
+      "demands": 30,
+      "completed": 23,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 7,
+      "latency": {
+        "count": 23,
+        "mean": 1844.5721739167752,
+        "p50": 1266.2849999666214,
+        "p95": 4693.4400000572205,
+        "p99": 4694.254999995232,
+        "max": 4694.254999995232
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 1047.0199999809265
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 647.9500000476837
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 520.5199999809265
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 832.75
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 1132.585000038147
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 1341.25
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 928.2799999713898
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 711.9049999713898
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 1247.5900000333786
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 1626.4900000095367
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 1443.554999947548
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 645.5800000429153
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 535.4750000238419
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 1346.1200000047684
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 1646.25
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 4693.4400000572205
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 4261.610000014305
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 848.6750000715256
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 4262.560000061989
+        },
+        {
+          "key": "2,2",
+          "epoch": 0,
+          "ms": 4694.254999995232
+        },
+        {
+          "key": "1,-1",
+          "epoch": 0,
+          "ms": 2367.0849999189377
+        },
+        {
+          "key": "1,0",
+          "epoch": 0,
+          "ms": 1266.2849999666214
+        },
+        {
+          "key": "1,1",
+          "epoch": 0,
+          "ms": 4377.929999947548
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 4
+    },
+    {
+      "run": 3,
+      "candidate": false,
+      "window": {
+        "start": 103403.20000004768,
+        "end": 143403.20000004768
+      },
+      "presentationIntervals": {
+        "count": 746,
+        "mean": 53.607895442359236,
+        "p50": 49.88000000000466,
+        "p95": 99.83999999999651,
+        "p99": 149.64999999999418,
+        "max": 216.18500000001222
+      },
+      "cpuRenderSubmission": {
+        "count": 746,
+        "mean": 12.690911526974022,
+        "p50": 11.764999985694885,
+        "p95": 21.78000009059906,
+        "p99": 27.544999957084656,
+        "max": 38.894999980926514
+      },
+      "mainFrameSync": {
+        "count": 746,
+        "mean": 13.762178281836471,
+        "p50": 13.259999990463257,
+        "p95": 22.59500002861023,
+        "p99": 28.930000066757202,
+        "max": 39.90499997138977
+      },
+      "gpuRender": {
+        "count": 746,
+        "mean": 33.94269031099192,
+        "p50": 34.135883,
+        "p95": 57.13578,
+        "p99": 70.674947,
+        "max": 103.742864
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.06499993801116943,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 2.284999966621399,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 0.48000001907348633,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 1.2049999237060547,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1792064,
+          "getterWallMs": 10.735000014305115,
+          "observerWallMs": 0.4150000810623169
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.06999993324279785,
+          "observerWallMs": 0.005000114440917969
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.039999961853027344,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04500007629394531,
+          "observerWallMs": 0.004999995231628418
+        }
+      ],
+      "demands": 30,
+      "completed": 21,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 9,
+      "latency": {
+        "count": 21,
+        "mean": 4248.832142869632,
+        "p50": 3963.5100001096725,
+        "p95": 7913.310000061989,
+        "p99": 9152.819999933243,
+        "max": 9152.819999933243
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 5148.799999952316
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 1976.4900000095367
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 1975.335000038147
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 5147.924999952316
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 9152.819999933243
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 6306.7699999809265
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 2385.545000076294
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 2385.139999985695
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 4609.7300000190735
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 6307.415000081062
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 3160.8700000047684
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 2113.0449999570847
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 2112.6749999523163
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 2611.5099999904633
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 3548.139999985695
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 6268.955000042915
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 2372.7150000333786
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 3963.5100001096725
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 4615.705000042915
+        },
+        {
+          "key": "2,2",
+          "epoch": 0,
+          "ms": 7913.310000061989
+        },
+        {
+          "key": "1,-1",
+          "epoch": 0,
+          "ms": 5149.070000052452
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 4
+    },
+    {
+      "run": 4,
+      "candidate": true,
+      "window": {
+        "start": 129690.12000000477,
+        "end": 169690.12000000477
+      },
+      "presentationIntervals": {
+        "count": 710,
+        "mean": 56.25579577464787,
+        "p50": 49.89499999998952,
+        "p95": 116.38499999998021,
+        "p99": 166.22000000000116,
+        "max": 199.57000000000698
+      },
+      "cpuRenderSubmission": {
+        "count": 711,
+        "mean": 20.206378341391787,
+        "p50": 18.894999980926514,
+        "p95": 35.6949999332428,
+        "p99": 41.30499994754791,
+        "max": 49.49500000476837
+      },
+      "mainFrameSync": {
+        "count": 711,
+        "mean": 21.41163853586307,
+        "p50": 19.980000019073486,
+        "p95": 36.830000042915344,
+        "p99": 42.47499990463257,
+        "max": 50.484999895095825
+      },
+      "gpuRender": {
+        "count": 711,
+        "mean": 34.13041231364276,
+        "p50": 34.88453,
+        "p95": 59.809321,
+        "p99": 70.498697,
+        "max": 129.860519
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.03000009059906006,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 0.9950000047683716,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 4.134999990463257,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 0.49000000953674316,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1795713,
+          "getterWallMs": 10.440000057220459,
+          "observerWallMs": 0.05500006675720215
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.0700000524520874,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.07999992370605469,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.07499992847442627,
+          "observerWallMs": 0.004999995231628418
+        }
+      ],
+      "demands": 30,
+      "completed": 8,
+      "cancelled": 7,
+      "pendingAtWindowEnd": 15,
+      "latency": {
+        "count": 8,
+        "mean": 6117.096875011921,
+        "p50": 3144.164999961853,
+        "p95": 15683.165000081062,
+        "p99": 15683.165000081062,
+        "max": 15683.165000081062
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 3144.164999961853
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 1557.3999999761581
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 1137.2450000047684
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 2849.1749999523163
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 7320.75
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 13554.995000004768
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 3689.880000114441
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 15683.165000081062
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 4
+    }
+  ],
+  "matched": [
+    {
+      "baseline": 1,
+      "candidate": 2,
+      "common": 21,
+      "earlier": 19,
+      "delta": {
+        "count": 21,
+        "mean": -3090.6580952178865,
+        "p50": -2823.319999933243,
+        "p95": 1143.0350000858307,
+        "p99": 1858.1499999761581,
+        "max": 1858.1499999761581
+      },
+      "deltas": [
+        {
+          "key": "5,-2",
+          "deltaMs": -4916.134999990463
+        },
+        {
+          "key": "5,-1",
+          "deltaMs": -1566.469999909401
+        },
+        {
+          "key": "5,0",
+          "deltaMs": -1693.4800000190735
+        },
+        {
+          "key": "5,1",
+          "deltaMs": -5129.264999985695
+        },
+        {
+          "key": "5,2",
+          "deltaMs": -9166.480000019073
+        },
+        {
+          "key": "6,-2",
+          "deltaMs": -6860.009999990463
+        },
+        {
+          "key": "6,-1",
+          "deltaMs": -1657.9500000476837
+        },
+        {
+          "key": "6,0",
+          "deltaMs": -1873.9800000190735
+        },
+        {
+          "key": "6,1",
+          "deltaMs": -4946.664999961853
+        },
+        {
+          "key": "6,2",
+          "deltaMs": -8378.024999976158
+        },
+        {
+          "key": "7,-2",
+          "deltaMs": -3598.3849999904633
+        },
+        {
+          "key": "7,-1",
+          "deltaMs": -3293.784999847412
+        },
+        {
+          "key": "7,0",
+          "deltaMs": -2823.319999933243
+        },
+        {
+          "key": "7,1",
+          "deltaMs": -3577.9249999523163
+        },
+        {
+          "key": "7,2",
+          "deltaMs": -3908.2849999666214
+        },
+        {
+          "key": "2,-2",
+          "deltaMs": -585.289999961853
+        },
+        {
+          "key": "2,-1",
+          "deltaMs": 1858.1499999761581
+        },
+        {
+          "key": "2,0",
+          "deltaMs": -2271.314999938011
+        },
+        {
+          "key": "2,1",
+          "deltaMs": 1143.0350000858307
+        },
+        {
+          "key": "2,2",
+          "deltaMs": -584.9800000190735
+        },
+        {
+          "key": "1,-1",
+          "deltaMs": -1073.2600001096725
+        }
+      ]
+    },
+    {
+      "baseline": 3,
+      "candidate": 4,
+      "common": 8,
+      "earlier": 5,
+      "delta": {
+        "count": 8,
+        "mean": 2019.3737500160933,
+        "p50": -838.0900000333786,
+        "p95": 11169.449999928474,
+        "p99": 11169.449999928474,
+        "max": 11169.449999928474
+      },
+      "deltas": [
+        {
+          "key": "5,-2",
+          "deltaMs": -2004.6349999904633
+        },
+        {
+          "key": "5,-1",
+          "deltaMs": -419.0900000333786
+        },
+        {
+          "key": "5,0",
+          "deltaMs": -838.0900000333786
+        },
+        {
+          "key": "5,1",
+          "deltaMs": -2298.75
+        },
+        {
+          "key": "5,2",
+          "deltaMs": -1832.0699999332428
+        },
+        {
+          "key": "6,-1",
+          "deltaMs": 11169.449999928474
+        },
+        {
+          "key": "6,0",
+          "deltaMs": 1304.740000128746
+        },
+        {
+          "key": "6,1",
+          "deltaMs": 11073.435000061989
+        }
+      ]
+    }
+  ],
+  "reference": {
+    "sources": {
+      "tools/experiments/packed-ground-contact-candidate.js": "6a0196037c1c90e5ff34aba8ce2b4a2c5baee7f672a9105c02944fb1b1b28129",
+      "tools/experiments/packed-ground-contact-patch.mjs": "27be692c8123283ba32edfd6df76e20db01f6fadf7a602a989d61d29b57cb7d5",
+      "tools/experiments/check-shield-repeat-render.mjs": "5e63d52943ff728bfabaad8f9c115336b028879f3b42db54f23ec30e3d75ee1d",
+      "tools/experiments/qa-chunk-delivery-probe.js": "4723f11be4505b3418a71cf8adc3da1b73d7223779096396ec46901c5b3c92fe",
+      "tools/experiments/regional-tail-probe-source.mjs": "43bf5172ed9784cb940dce8079408c703a018ad296e8b38722882aececa2e53c",
+      "tools/experiments/far-scene-worker.js": "6381c7ce38d14c3696320c82e671ef4a4e738e6face7290915d62802f10d765d",
+      "tools/experiments/far-scene-loader.js": "2b5745fc15fa8b44849358c4c7474401e42f16d58b809dae70a52859191aa30c",
+      "tools/experiments/far-scene-data.js": "9a132c221ee47e49f82bdbc01ac959b200fc1e0682588783dbf3573bb30be599",
+      "tools/experiments/far-ground-contacts.js": "bfc82185b18c4af95e8dcababc64fb51cec13576f7e13f624a5853b8d2b1d5ef",
+      "tools/experiments/far-ground-data.js": "fc7c8af24f78fe685d6d5e124150d637981e7fab9ac1ab8a41d592161d683fca",
+      "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+      "tools/experiments/far-ground-seam.js": "07f22c4bfa54f06a9aa2bac492224dd660c5ca3a1c7ab2c69fb08d9d7093c026",
+      "src/app/main.js": "b9f76b4d8bb159da25b294f11e6a2ee0957d363b4cdb9d696e2dab6d5bf9a861",
+      "src/rendering/scene.js": "7168f1e6e0909b832331b424b93f79d239b51947023604106703b8c70caa0cfd",
+      "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+      "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b"
+    },
+    "hardware": {
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "hardwareConcurrency": 16,
+      "devicePixelRatio": 1,
+      "canvas": [
+        1280,
+        720
+      ],
+      "crossOriginIsolated": true
+    },
+    "camera": [
+      105.5,
+      10.319999933242798,
+      4
+    ],
+    "target": [
+      100.5,
+      3.319999933242798,
+      -6
+    ],
+    "quality": "media",
+    "keys": [
+      "0,-1",
+      "0,-2",
+      "0,0",
+      "0,1",
+      "0,2",
+      "1,-1",
+      "1,-2",
+      "1,0",
+      "1,1",
+      "1,2",
+      "2,-1",
+      "2,-2",
+      "2,0",
+      "2,1",
+      "2,2",
+      "3,-1",
+      "3,-2",
+      "3,0",
+      "3,1",
+      "3,2",
+      "4,-1",
+      "4,-2",
+      "4,0",
+      "4,1",
+      "4,2"
+    ]
+  },
+  "limitations": [
+    "Instrumented four-arm experiment; not proof across hardware or biomes.",
+    "Presentation intervals are RAF observations, not physical display latency.",
+    "CPU submission includes driver waits; GPU queries cover World.render, not all work in the browser.",
+    "Per-key completion comparison excludes keys not completed in both windows; pending and cancelled counts are retained.",
+    "Metadata observation and task tracing add overhead. No CPU/GPU memory measurement in this experiment."
+  ]
+}
