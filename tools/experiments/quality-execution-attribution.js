@@ -4,14 +4,19 @@ import {BufferGeometry} from 'three';
 export async function observeQualityExecution(world,run){
  const frames=[],phases=[],longFrames=[],previousFrame=globalThis.qaMainFrame,previousPhase=globalThis.qaMainPhase;
  const farOperations=[],restore=[];
- const renderStages=[];let renderStagesDropped=0;
+ const renderStages=[],depthRequests=[];let renderStagesDropped=0;
  if(new URLSearchParams(globalThis.location?.search??'').get('qualityRenderStages')==='1'){
   const record=span=>{if(span.duration<1)return;if(renderStages.length<20000)renderStages.push(span);else renderStagesDropped++;};
   const previous=world.onLoadingSpan;
   const witness=span=>{previous?.(span);if(span.label.startsWith('world-frame-'))record(span);};
   world.onLoadingSpan=witness;restore.push(()=>{if(world.onLoadingSpan===witness)world.onLoadingSpan=previous;});
+  for(const slot of ['workVfx','attackVfx','shieldVfx','agricultureVfx','materialVfx','locomotionVfx']){
+   const owner=world[slot];if(!owner)continue;const originalPrepare=owner.prepare;
+   const prepare=function(...args){const result=originalPrepare.apply(this,args);if(result&&depthRequests.length<20000)depthRequests.push({slot,at:performance.now(),effects:owner.effects?.size});return result;};
+   owner.prepare=prepare;restore.push(()=>{if(owner.prepare===prepare)owner.prepare=originalPrepare;});
+  }
   const original=world.renderer.render;
-  const wrapped=function(scene,camera){const start=performance.now();try{return original.call(this,scene,camera);}finally{const end=performance.now();record({label:scene===world.scene?'three-world-render':'three-aux-render',start,end,duration:end-start});}};
+  const wrapped=function(scene,camera){const start=performance.now();try{return original.call(this,scene,camera);}finally{const end=performance.now();record({label:scene===world.scene?'three-world-render':'three-aux-render',target:this.getRenderTarget()?.texture?.uuid??null,override:scene.overrideMaterial?.type??null,start,end,duration:end-start});}};
   world.renderer.render=wrapped;restore.push(()=>{if(world.renderer.render===wrapped)world.renderer.render=original;});
  }
 
@@ -37,5 +42,5 @@ export async function observeQualityExecution(world,run){
  try{result=await run();}
  finally{for(const fn of restore.reverse())fn();gpu.stop();globalThis.qaMainFrame=previousFrame;globalThis.qaMainPhase=previousPhase;if(observer){longFrames.push(...observer.takeRecords().map(e=>e.toJSON()));observer.disconnect();}if(!result)await gpu.finish();}
  const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
- return {...result,execution:{renderStages,renderStagesDropped,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
+ return {...result,execution:{renderStages,renderStagesDropped,depthRequests,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
 }
