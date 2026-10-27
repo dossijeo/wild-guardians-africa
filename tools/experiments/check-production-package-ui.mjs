@@ -15,8 +15,9 @@ const server=createServer(async(req,res)=>{
   if(!path.startsWith(root+sep))throw Error('Outside package');
   const runtimeName=url.pathname.split('/').at(-1);
   const override=process.env.WG_PACKAGE_UI_RUNTIME_DIR&&url.pathname.startsWith(prefix+'wild-engine/')&&['spatial-threaded.mjs','spatial-threaded.wasm'].includes(runtimeName);
-  const bytes=await readFile(override?resolve(process.env.WG_PACKAGE_UI_RUNTIME_DIR,runtimeName):path);
-  if(override)runtimeOverrides[runtimeName]={sha256:createHash('sha256').update(bytes).digest('hex'),loads:(runtimeOverrides[runtimeName]?.loads??0)+1};
+  const standalone=process.env.WG_PACKAGE_UI_STANDALONE_WASM&&url.pathname.startsWith(prefix+'assets/')&&/^spatial-savanna-[\w-]+\.wasm$/.test(runtimeName);
+  const bytes=await readFile(standalone?resolve(process.env.WG_PACKAGE_UI_STANDALONE_WASM):override?resolve(process.env.WG_PACKAGE_UI_RUNTIME_DIR,runtimeName):path);
+  if(override||standalone)runtimeOverrides[runtimeName]={sha256:createHash('sha256').update(bytes).digest('hex'),loads:(runtimeOverrides[runtimeName]?.loads??0)+1};
   res.writeHead(200,{'Content-Type':types[extname(path)]??'application/octet-stream',...(isolation?{'Cross-Origin-Opener-Policy':'same-origin','Cross-Origin-Embedder-Policy':'require-corp'}:{})});res.end(bytes);
  }catch(error){requests.push({url:url.pathname,status:404,message:error.message});res.writeHead(404);res.end('Not found');}
 });
@@ -187,4 +188,4 @@ try{
  }
  console.log(JSON.stringify(result));
 }catch(e){result.loadingTrace=await page.evaluate(()=>globalThis.__wildGuardiansNativeLoadingSnapshot?.()).catch(()=>null);result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}
-finally{await writeFile(report,JSON.stringify({diagnostics:{runtimeOverrideDirectory:process.env.WG_PACKAGE_UI_RUNTIME_DIR??null,runtimeOverrides,loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await page.context().close();if(page.video())await page.video().saveAs(report.replace(/\.json$/,'.webm'));await browser.close();await new Promise(resolve=>server.close(resolve));}
+finally{await writeFile(report,JSON.stringify({diagnostics:{standaloneOverride:process.env.WG_PACKAGE_UI_STANDALONE_WASM??null,runtimeOverrideDirectory:process.env.WG_PACKAGE_UI_RUNTIME_DIR??null,runtimeOverrides,loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await page.context().close();if(page.video())await page.video().saveAs(report.replace(/\.json$/,'.webm'));await browser.close();await new Promise(resolve=>server.close(resolve));}
