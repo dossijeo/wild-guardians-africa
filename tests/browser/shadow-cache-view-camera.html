@@ -35,6 +35,19 @@ button.onclick=async()=>{
   draws=release.cache.stats.draws;camera.layers.enable(2);draw();const layers=read();check('layer selection redraws and changes depth',release.cache.stats.draws===draws+1&&compare(cut,layers)>0,{differentBytes:compare(cut,layers)});
   draws=release.cache.stats.draws;light.position.x+=1;draw();const moved=read();check('light movement redraws and changes depth',release.cache.stats.draws===draws+1&&compare(layers,moved)>0,{differentBytes:compare(layers,moved)});
   renderer.shadowMap.needsUpdate=true;draw();check('moved light agrees with forced depth',compare(moved,read())===0);
+  const instances=new THREE.InstancedMesh(new THREE.BoxGeometry(.8,2,.8),new THREE.MeshStandardMaterial(),3);
+  instances.castShadow=true;instances.count=1;instances.setMatrixAt(0,new THREE.Matrix4().makeTranslation(-3,1,2));scene.add(instances);draw();
+  const instanceDepth=read();draws=release.cache.stats.draws;
+  instances.instanceMatrix.needsUpdate=true;draw();check('unchanged instance upload reuses depth',release.cache.stats.draws===draws);
+  instances.setMatrixAt(2,new THREE.Matrix4().makeTranslation(3,1,-3));instances.instanceMatrix.needsUpdate=true;draw();check('inactive instance capacity preserves depth',release.cache.stats.draws===draws&&compare(instanceDepth,read())===0);
+  instances.setMatrixAt(0,new THREE.Matrix4().makeTranslation(-2,1,3));instances.instanceMatrix.needsUpdate=true;draw();const changedInstance=read();
+  check('active instance movement redraws and changes depth',release.cache.stats.draws===draws+1&&compare(instanceDepth,changedInstance)>0);
+  renderer.shadowMap.needsUpdate=true;draw();check('changed instance cached depth equals forced draw',compare(changedInstance,read())===0);
+  draws=release.cache.stats.draws;instances.setMatrixAt(1,new THREE.Matrix4().makeTranslation(3,1,-3));instances.instanceMatrix.needsUpdate=true;instances.count=2;draw();const grown=read();
+  check('active instance count growth changes depth',release.cache.stats.draws===draws+1&&compare(changedInstance,grown)>0);
+  renderer.shadowMap.needsUpdate=true;draw();check('count growth cached depth equals forced draw',compare(grown,read())===0);
+  scene.remove(instances);instances.dispose();instances.geometry.dispose();instances.material.dispose();draw();const removed=read();
+  renderer.shadowMap.needsUpdate=true;draw();check('removed instances leave no stale depth',compare(removed,read())===0);
   check('WebGL is clean',renderer.getContext().getError()===0&&errors.length===0,{errors:[...errors]});
   output.textContent=JSON.stringify({passed:true,checks,stats:release.cache.stats,device:{userAgent:navigator.userAgent},scope:'Real WebGL depth readback of isolated standard casters; not full-world GPU timing, custom destruction or physical mobile acceptance.'},null,2);
  }catch(e){output.textContent=JSON.stringify({passed:false,checks,error:String(e.stack??e),errors},null,2);}
