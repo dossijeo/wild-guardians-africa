@@ -23,3 +23,5 @@ Current coverage audit (2026-10-27):
 - Native/JS simulation tests and resource owner tests passed; browser context recovery and world exit verified for seam reuse. Long endurance leak freedom not proven.
 - Linux package CI passed for PR head; Windows startup and visibility checks passed, menu exit/restart still running.
 - Remaining fluency attribution: footstep soft-depth pass contributes CPU peaks. Neither scissor nor cropped-camera prototype demonstrated consistent overall gain; preserve original effects. Program creation was intermittent and not reproduced in depth-program-lifetime, so no retention rewrite justified yet.
+
+Update after integration: PR219 merged as 7d699c5b2; Windows exit/restart passed. Legal shield command streaming validation completed (final-seam-magic), but its captures do not show the shield and do not constitute visual shield acceptance. Night baseline and enabled diagnostic each passed after two earlier enabled timeouts; cause remains unresolved. See MERGE-219.md.

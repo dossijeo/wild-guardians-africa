@@ -7,7 +7,9 @@ fs.mkdirSync(root,{recursive:true});
 const harness='tools/experiments/check-spatial-thread-game.mjs';
 const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 fs.writeFileSync(root+'/harness-working.patch',execFileSync('git',['diff','HEAD','--',harness]));
-for(const biome of ['manglares','sabana','gran-rio','desierto','volcanes','gran-canon']){
+const selected=process.argv.slice(3);
+if(selected.some(b=>!Object.hasOwn(fixtures,b)))throw Error('Unknown biome');
+for(const biome of (selected.length?selected:['manglares','sabana','gran-rio','desierto','volcanes','gran-canon'])){
  const out=root+'/'+biome;fs.mkdirSync(out,{recursive:true});
  const fixture=JSON.parse(fs.readFileSync('docs/qa/global-visual-lab/'+fixtures[biome]+'/native-fixture.json'));const state=JSON.parse(fixture.timing.navigationContext.state);state.time=350;fixture.timing.navigationContext.state=JSON.stringify(state);const fixturePath=out+'/night-fixture.json';fs.writeFileSync(fixturePath,JSON.stringify(fixture));
  const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.startsWith('WG_')));
