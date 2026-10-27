@@ -43,3 +43,15 @@ Prueba gráfica de WorldScene con comandos y simulación reales, reloj avanzado 
 ![Locomoción recuperada](damped-hyena-standing.png)
 
 Límites: la interfaz tapa parte de la primera caída y el zoom posterior limita la inspección anatómica fina; no es un vídeo ni aprobación de naturalidad a velocidad real. Audio desactivado. Falta comprobar león descendente y otras especies/obstáculos gráficamente. El pico observado de actualización física fue 21,2 ms y el arranque 10,8 ms; son observaciones de pasos manuales, no percentiles de una incursión ni una comparación antes/después. Rendimiento todavía no aprobado.
+
+## León descendente y preparación de la recuperación
+
+Prueba adicional en WorldScene: león, dirección elevada, simulación real y pasos manuales de 0,12 s. Contacto en tiempo 3022,215; recuperación observada en 3025,335 (3,12 s después, antes del límite forzado). Posición inicial (90, -6), posición al recuperar (88,028, -5,503): unos 2,03 m. Caída visible y sin errores reportados. No se capturó el final de su recuperación antes de recargar el código; ese extremo sigue pendiente.
+
+![León tras impacto descendente](damped-lion-fall.png)
+
+El máximo acumulado de actualización física alcanzó 34,7 ms. No se ha atribuido ese pico al solver sin una separación de costes. Ahora la telemetría distingue `creationMs`, `solverMs`, `solverSteps`, `bindingMs` y `recoverySetupMs` por actualización, además del coste total y de renderizar la recuperación.
+
+Se prepara durante la carga la selección de vértices de contacto utilizada por la recuperación, usando la misma geometría compartida y su caché WeakMap. Antes esa selección recorría la geometría por primera vez al levantarse. La prueba específica confirma que precalentar dos veces no modifica posiciones ni pose y que la recuperación posterior termina. Pasaron las trece pruebas físicas/de integración anteriores y esta prueba adicional por separado.
+
+Aún no se declara una reducción medida del pico ni se acepta el rendimiento: falta comparar ejecución continua antes/después con las mismas entidades, contabilizar los pasos físicos de cada fotograma y recoger percentiles y máximos. La preparación desplaza trabajo a la carga; su efecto sobre el tiempo de carga también debe registrarse.

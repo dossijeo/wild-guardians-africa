@@ -17,6 +17,7 @@ function contactIndices(geometry){
 // logical root to the fallen pelvis; the world-space snapshot preserves the
 // visible pose during that reconciliation. No return to the pre-impact origin.
 export class BeastRecovery{
+ static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh.geometry);});}
  constructor(binding,snapshot,{surface,duration=1.65}={}){
   this.binding=binding;this.surface=surface;this.duration=duration;this.age=0;this.done=false;this.lift=0;this.v=new Vector3();
   this.entries=binding.entries.map(e=>({bone:e.bone,standingQ:e.bone.quaternion.clone(),standingP:e.bone.position.clone(),fallenQ:new Quaternion(),fallenP:new Vector3(),crouchQ:e.bone.quaternion.clone(),crouchP:e.bone.position.clone()}));

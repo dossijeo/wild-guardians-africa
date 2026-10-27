@@ -89,3 +89,15 @@ test('all fitted species sustain rest after horizontal, downward and lateral imp
   }
  }
 });
+
+
+test('recovery prewarm leaves geometry, pose and subsequent recovery unchanged',()=>{
+ const model=beastSkin('hyena'),binding=new BeastRagdollBinding(model),before=binding.capture();
+ const attributes=[];model.traverse(o=>{if(o.isMesh)attributes.push([o.geometry,o.geometry.attributes.position.array.slice()]);});
+ BeastRecovery.prewarm(model);BeastRecovery.prewarm(model);
+ assert.deepEqual(binding.capture(),before);
+ for(const [geometry,positions] of attributes)assert.deepEqual(geometry.attributes.position.array,positions);
+ const solver=new BeastRagdollSolver(R);solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
+ const actor=solver.add('warm',{pose:before,colliders:binding.colliders()});for(let i=0;i<360;i++)solver.step();
+ const recovery=new BeastRecovery(binding,actor.pose,{surface:()=>0});assert.equal(recovery.apply(0),false);assert.equal(recovery.apply(recovery.duration),true);recovery.restore();solver.dispose();
+});
