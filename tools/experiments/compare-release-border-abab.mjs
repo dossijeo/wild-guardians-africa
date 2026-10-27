@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
-const root=process.argv[2],mode=process.argv[3]??'release';assert(root,'Expected completed A/B/A/B directory');assert(['release','shadow-bypass','far-candidates'].includes(mode),'Unknown comparison mode');
+const root=process.argv[2],mode=process.argv[3]??'release';assert(root,'Expected completed A/B/A/B directory');assert(['release','shadow-bypass','far-candidates','far-water'].includes(mode),'Unknown comparison mode');
 const read=p=>JSON.parse(readFileSync(p));
 const stats=values=>{const s=values.slice().sort((a,b)=>a-b),p=q=>s.length?s[Math.ceil(q*s.length)-1]:null;return {samples:s.length,p50:p(.5),p95:p(.95),p99:p(.99),max:s.at(-1)??null};};
 const rows=[];
@@ -23,6 +23,11 @@ for(const [i,candidate] of [false,true,false,true].entries()){
   else {assert(r.farTransitionOverride?.loads>0,'Original transition source not loaded');assert.equal(r.farTransitionOverride.file,p.conditions.WG_FAR_TRANSITION_SOURCE);}
   assert.equal(s.residual.gpuSanity?.usable,true,'Unusable GPU samples');
  }
+ if(mode==='far-water'){
+  assert.equal(r.shadowCacheEnabled,true);assert.equal(p.conditions.WG_MAGIC_NO_CAST,'1');
+  assert.equal(p.conditions.WG_FAR_TRANSITION_SOURCE,'');assert.equal(p.conditions.WG_SPATIAL_RUNTIME_DIR,'');
+  assert.equal(s.residual.gpuSanity?.usable,true,'Unusable GPU samples');
+ }
  const releases=r.residual.phases.filter(x=>x.label==='subsystem:spatialRelease');
  const releaseFrames=new Set(releases.map(x=>x.frame));
  rows.push({order:i+1,candidate,shadowCache:s.shadowCache??null,provenance:p,hardware:s.residual.hardware,frameIntervals:s.frameIntervals,cpuWorldRenderMs:s.residual.cpuWorldRenderMs,gpuWorldRenderMs:s.residual.gpuWorldRenderMs,gpuSanity:s.residual.gpuSanity,releaseCallsAtLeast1ms:stats(releases.map(x=>x.ms)),renderFramesWithReleaseAtLeast1ms:stats(r.residual.cpu.filter(x=>releaseFrames.has(x.frame)).map(x=>x.ms)),cpuRenderOver33ms:r.residual.cpu.filter(x=>x.ms>33.333).length,presentationOver50ms:r.timing.frames.filter(x=>x.ms>50).length,presentationOver100ms:r.timing.frames.filter(x=>x.ms>100).length,streaming:s.casts.map(x=>x.streaming),programWaits:s.programWaits});
@@ -31,6 +36,10 @@ for(const row of rows){if(mode!=='release')assert.equal(row.provenance.wasmSha25
 if(mode==='far-candidates'){
  assert.notEqual(rows[0].provenance.transitionSha256,rows[1].provenance.transitionSha256,'Identical treatments');
  for(const row of rows){assert.equal(row.provenance.transitionSha256,rows[row.candidate?1:0].provenance.transitionSha256,'Treatment changed between repeats');assert.equal(row.provenance.adapterSha256,rows[0].provenance.adapterSha256,'Adapter changed');}
+}
+if(mode==='far-water'){
+ assert.notEqual(rows[0].provenance.groundSha256,rows[1].provenance.groundSha256,'Identical treatments');
+ for(const row of rows)assert.equal(row.provenance.groundSha256,rows[row.candidate?1:0].provenance.groundSha256,'Treatment drift');
 }
 const result={mode,rows,limits:['Two runs per configuration are evidence for this scene only; no automatic acceptance threshold.','Simulation and asynchronous residency remain active; chunk arrival timings can differ.','Release spans record calls >=1ms only. Their counts and percentiles are conditional, not all releases.','World.render CPU excludes simulation/UI outside that call; presentation intervals include all frame delays.','GPU sanity is a rejection check, not independent proof of timer accuracy.','Inspect captures and concurrency validation before adopting.']};
 writeFileSync(root+'/comparison.json',JSON.stringify(result,null,2)+'\n');
