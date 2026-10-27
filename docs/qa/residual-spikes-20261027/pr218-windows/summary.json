@@ -1,0 +1,61 @@
+{
+  "commit": "e953ce0253d5d78c9485679c197adbe4ade4950a",
+  "run": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/40451206336",
+  "conclusion": "success",
+  "scope": "Remote packaged Windows build, smoke, native visibility and persisted exit/restart. Timings are CI lifecycle diagnostics, not hardware performance benchmarks.",
+  "rows": [
+    {
+      "name": "smoke",
+      "ok": true,
+      "errors": [],
+      "checks": {
+        "audioSeconds": 12,
+        "storage": true,
+        "webgl2": true,
+        "worker": true
+      },
+      "sha256": "e9db1113ffb21ea08c5a6330ddd5052ed048af556c5fe7128ef4e3ba5a23b5ae"
+    },
+    {
+      "name": "visibility",
+      "ok": true,
+      "errors": [],
+      "checks": {
+        "audioSeconds": 12,
+        "storage": true,
+        "webgl2": true,
+        "worker": true
+      },
+      "sha256": "331e4278160c1beb116e01dad98dd937dde9e52515e44a141a400ce948172ef2"
+    },
+    {
+      "name": "exit-create",
+      "ok": true,
+      "errors": [],
+      "nativeProcess": {
+        "exited": true,
+        "elapsedMs": 326595.4121,
+        "exitCode": 0
+      },
+      "checks": {
+        "exitButtonFound": true
+      },
+      "sha256": "35700e90600d891cb5018376e4e0327afb614bc27dd36b9ffe738a83ed932aea"
+    },
+    {
+      "name": "exit-restore",
+      "ok": true,
+      "errors": [],
+      "nativeProcess": {
+        "exited": true,
+        "elapsedMs": 216855.8747,
+        "exitCode": 0
+      },
+      "checks": {
+        "exitButtonFound": true,
+        "restartRestored": true
+      },
+      "sha256": "f51faaab3efd6bb66f3e0db2bb93ddd1d626fb6c02d046b05be3d8ddc5ada10c"
+    }
+  ]
+}
