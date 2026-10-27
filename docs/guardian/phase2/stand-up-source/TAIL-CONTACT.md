@@ -101,3 +101,13 @@ The unchanged acceptance gates now pass for all five candidates: skin penetratio
 ## Lion runtime grounding discrepancy (still open)
 
 A fresh WorldScene cycle after the five-species test pass exposes a remaining difference between offline flat-floor validation and runtime support. `lion-grounding-recheck.json/mp4`: at recovery age 0.931 s the body minimum is 0.01 m (Spine2) while minimum sampled foot clearance is 0.1438 m; at 1.813 s it is 0.0705 m (hips supporting body). At 2.694 s feet reach 0.01 m. Cycle completes with no downed actors or errors, but this is NOT a visual grounding pass. Check actual presentation scale, terrain and pose support together before shipping; model-space acceptance does not establish world-space feet placement. No runtime IK change has yet been made to address this finding.
+
+## Terrain-aligned supine pose
+
+The runtime discrepancy was reproduced with separate body/foot surface samples: the floor below Spine2 was 12.964 m and below the foot 12.842 m, approximately 12 cm apart. A flat-floor diagnostic using native Walking pose and full foot geometry produced 2.1 cm clearance; sparse contacts agreed. Thus the demonstrated error came from applying a horizontal supine pose across sloping ground, rather than a missing foot sample or model scale.
+
+Authored recovery now estimates the local terrain normal from four height queries at a 0.6 m radius. It rotates the hip pose toward that normal, bounded to 0.35 rad, fading in with physical entry and fading out over source seconds 2–6 as the animal rises. Existing skin/cloth grounding remains authoritative. No bone translations/length changes, added physical bodies, or per-frame allocations. This is a local slope approximation, not multi-contact IK on rocks or discontinuous steps.
+
+Added full-skin hyena/lion tests at three slope/heading combinations, checking early foot clearance below 5 cm and penetration below 2.5 cm without stretched limbs. All 49 scoped tests pass, including physical ownership, repeated hits, rest and baked fall checks. Existing models/clips are unchanged by this patch.
+
+Real WorldScene recordings `lion-terrain-aligned` and `hyena-terrain-aligned` (MP4/PNG/JSON) complete with zero final downed animals and no errors. Lion sampled early foot clearances are 2.09–2.26 cm instead of the preceding 10–14 cm; hyena 1.0–2.08 cm. Contact sheets inspected. This addresses the measured sloping-ground suspension; the distant framing does not establish final close-detail art acceptance of every joint or both feet. These authored clips remain QA opt-in; shipping integration and obstacle/steep-slope coverage remain open. Recordings have no audio. Feature performance comparison remains pending.

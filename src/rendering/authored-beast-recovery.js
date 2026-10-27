@@ -1,5 +1,5 @@
 import {RecoveryClothContacts} from './recovery-cloth-contacts.js';
-import {Vector3} from 'three';
+import {Vector3,Quaternion} from 'three';
 import {BeastRecovery} from './beast-recovery.js';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 
@@ -8,6 +8,7 @@ const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 export class AuthoredBeastRecovery{
  constructor(binding,snapshot,{clip,surface,entryDuration=.65,playDuration=3.1,exitDuration=.3}){
   this.binding=binding;this.surface=surface;this.age=0;this.entryDuration=entryDuration;this.playDuration=playDuration;this.exitDuration=exitDuration;this.duration=entryDuration+playDuration+exitDuration;this.clipDuration=clip.duration;this.arms=[];this.v=new Vector3();this.lift=0;
+  this.groundNormal=new Vector3();this.up=new Vector3(0,1,0);this.slopeRotation=new Quaternion();this.worldRotation=new Quaternion();this.parentRotation=new Quaternion();this.identity=new Quaternion();
   this.entries=[];binding.model.traverse(bone=>{if(bone.isBone)this.entries.push({bone,standingP:bone.position.clone(),standingQ:bone.quaternion.clone()});});
   this.samples=BeastRecovery.contactSamples(binding.model);this.cloth=new RecoveryClothContacts(binding,this.samples);
   binding.apply(snapshot);for(const e of this.entries){e.fallenP=e.bone.position.clone();e.fallenQ=e.bone.quaternion.clone();}
@@ -23,6 +24,18 @@ export class AuthoredBeastRecovery{
   for(const t of this.tracks){const value=t.interpolant.evaluate(time);t.entry.bone[t.property].fromArray(value);if(t.entry.bone===this.hip&&t.property==='position')this.hip.position.add(this.hipOffset);}
   for(const e of this.entries){e.bone.position.lerp(e.fallenP,1-entry).lerp(e.standingP,exit);e.bone.quaternion.slerp(e.fallenQ,1-entry).slerp(e.standingQ,exit);}
   const model=this.binding.model;model.updateMatrixWorld(true);let clearance=Infinity,correction=0;
+  // A horizontal authored supine pose otherwise rests on its uphill shoulder,
+  // leaving downhill feet suspended. Fit a local plane while lying down and
+  // release its tilt as the torso rises; never change bone lengths.
+  const slopeWeight=entry*(1-exit)*(1-smooth((time-2)/4));
+  if(this.surface&&slopeWeight>0){
+   this.hip.getWorldPosition(this.v);const x=this.v.x,z=this.v.z,r=.6;
+   const dx=(this.surface(x+r,z)-this.surface(x-r,z))/(2*r),dz=(this.surface(x,z+r)-this.surface(x,z-r))/(2*r);
+   this.groundNormal.set(-dx,1,-dz).normalize();this.slopeRotation.setFromUnitVectors(this.up,this.groundNormal);
+   const angle=this.identity.angleTo(this.slopeRotation);this.slopeRotation.slerp(this.identity,1-slopeWeight*Math.min(1,.35/Math.max(angle,1e-6)));
+   this.hip.getWorldQuaternion(this.worldRotation).normalize();this.hip.parent.getWorldQuaternion(this.parentRotation).normalize().invert();
+   this.hip.quaternion.copy(this.parentRotation.multiply(this.slopeRotation).multiply(this.worldRotation));model.updateMatrixWorld(true);
+  }
   if(this.surface&&this.age>0){
    if(this.cloth.entries.length){
     let bodyClearance=Infinity;for(const sample of this.samples){if(this.cloth.clothSamples.has(sample))continue;sample.mesh.getVertexPosition(sample.index,this.v).applyMatrix4(sample.mesh.matrixWorld);bodyClearance=Math.min(bodyClearance,this.v.y-this.surface(this.v.x,this.v.z));}
