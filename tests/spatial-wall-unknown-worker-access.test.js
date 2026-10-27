@@ -7,7 +7,7 @@ import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-se
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {quoteWallChain,walkTo} from '../src/simulation/game.js';
 
-test('a pre-existing pathless fleeing worker does not veto a legal farm gate',async()=>{
+test('a pathless fleeing worker does not veto a farm quote with a traversable water opening',async()=>{
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/manglares712-d10-pathless-fleeing.json.gz',import.meta.url))).toString());
   const binary=new WebAssembly.Module(readFileSync(new URL(
@@ -38,12 +38,18 @@ test('a pre-existing pathless fleeing worker does not veto a legal farm gate',as
       [[72,-18],[102,-18],[102,18],[72,18],[72,-18]],nav,
       {smooth:false,snap:false});
     assert.equal(plan.pieces.length,56);
-    assert.equal(plan.gates,1);
+    // The water previously closed this perimeter. The five unbuildable
+    // modules now leave traversable openings, so a door is unnecessary.
+    assert.equal(plan.gates,0);
+    assert.equal(plan.blockedPieces.length,5);
     assert.equal(plan.cost,560);
     assert.equal(routes,0);
     assert.equal(previews,0);
     assert.equal(session.core.wasm.lazy_sector_updates(),updates);
     assert.equal(serialize(state),before);
+    assert.deepEqual(nav.wallWorkerReachability({x:105,z:-11},
+      [{x:99,z:-11}],plan.pieces,plan.suppressed),['found'],
+      'the proposed walls retain a physical worker crossing through the opening');
   }finally{session.dispose();}
 });
 

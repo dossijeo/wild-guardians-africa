@@ -1122,7 +1122,9 @@ test('an unresolved native crop group can still expose a certified reachable enc
   }finally{session.dispose();}
 });
 
-test('an occupied native wall site retains a reachable alternate attack',()=>{
+for(const occupiedFallback of [false,true])test(occupiedFallback?
+ 'an explicit occupied native wall result retains a physically reachable alternate attack':
+ 'the archived occupied-wall farm now admits a native crop route through walkable water',()=>{
   const state=deserialize(gunzipSync(readFileSync(new URL(
     '../docs/qa/wild-engine-intent-lifecycle/manglares14-wall-occupied-diagnostic-occupied-fallback-state.json.gz',
     import.meta.url))).toString());
@@ -1144,17 +1146,30 @@ test('an occupied native wall site retains a reachable alternate attack',()=>{
     const planner=createEventDrivenTaskPlanner(session);
     planner.resetFromState(state);
     planner.nativeWallSelectionEnabled=true;
+    // Keep the fallback contract covered explicitly: the archived world no
+    // longer produces blocked/occupied naturally now that water is walkable.
+    if(occupiedFallback){
+      planner.planAttackCrop=()=>({status:'blocked',regionQueries:0,routeQueries:0});
+      planner.planAttackWall=()=>({status:'occupied',candidatesExamined:0,routeQueries:0});
+    }
     const nav=createSpatialNavigationMovement(session,state);
     nav.intentTaskPlanner=planner;
     nav.raidSelectionStats={};
     const selected=targetFor(state,animal,nav);
+    if(occupiedFallback){
     assert.equal(nav.raidSelectionStats.nativeCropResults.blocked,1);
     assert.equal(nav.raidSelectionStats.nativeWallResults.occupied,1);
-    assert.equal(selected?.target?.id,'structure-1588',
+    assert.equal(selected?.target?.id,'plant-10708',
       'an occupied native site is not a blocked physical perimeter');
     assert.equal(selected.native??false,false);
     assert.equal(nav.raidSelectionStats.legacyFallbackMatrix
-      ['blocked/occupied'].wall,1);
+      ['blocked/occupied'].crop,1);
+    }else{
+      assert.equal(nav.raidSelectionStats.nativeCropResults.found,1);
+      assert.equal(selected.native,true);
+      assert.equal(selected.target.id,'plant-10755');
+      assert.equal(nav.raidSelectionStats.nativeWallPlans,undefined);
+    }
     assert(selected.approach.path.length>0);
     let previous=animal;
     for(const next of selected.approach.path){
