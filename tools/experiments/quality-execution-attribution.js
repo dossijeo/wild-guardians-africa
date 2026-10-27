@@ -4,7 +4,7 @@ import {BufferGeometry} from 'three';
 export async function observeQualityExecution(world,run){
  const frames=[],phases=[],longFrames=[],previousFrame=globalThis.qaMainFrame,previousPhase=globalThis.qaMainPhase;
  const farOperations=[],restore=[];
- let depthRegions=null;if(new URLSearchParams(globalThis.location?.search??'').get('softDepthRegion')==='1'){const {installSoftDepthRegion}=await import('./soft-depth-region.js');const finish=installSoftDepthRegion(world);restore.push(()=>{depthRegions=finish();});}
+ let depthRegions=null;if(new URLSearchParams(globalThis.location?.search??'').has('softDepthRegion')){const {installSoftDepthRegion}=await import('./soft-depth-region.js');const finish=installSoftDepthRegion(world,{cropCamera:new URLSearchParams(globalThis.location.search).get('softDepthRegion')==='2'});restore.push(()=>{depthRegions=finish();});}
 
  const renderStages=[],depthRequests=[];let renderStagesDropped=0;
  if(new URLSearchParams(globalThis.location?.search??'').get('qualityRenderStages')==='1'){

@@ -3,10 +3,11 @@ import {Matrix4,Vector2,Vector4} from 'three';
 // Return null for full-frame fallback, including near-plane intersections.
 export function softDepthRegion(world,width,height){
  if([...world.destructionPass.buildings].some(b=>b.effects.native.smoke.length))return null;
- const p=new Vector4();let x0=1,y0=1,x1=-1,y1=-1,seen=false;
+ const p=new Vector4(),vp=new Matrix4();let x0=1,y0=1,x1=-1,y1=-1,seen=false;
  for(const slot of ['workVfx','attackVfx','shieldVfx','agricultureVfx','materialVfx','locomotionVfx'])for(const fx of world[slot]?.effects.values()??[]){
   if(fx.stopped||!fx.softParticleDepth)continue;
-  const data=fx.spriteBuffer.array,count=fx.sprites.geometry.instanceCount,vp=fx.uniforms.uVP.value;
+  const data=fx.spriteBuffer.array,count=fx.sprites.geometry.instanceCount;
+  vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse).multiply(fx.matrixWorld);
   for(let i=0;i<count;i++){const o=i*25;if(!(data[o+21]>0))continue;
    // Rotated unit corner square fits a circle of radius sqrt(0.5).
    // Orthogonal billboard basis then fits this local-space enclosing cube.
