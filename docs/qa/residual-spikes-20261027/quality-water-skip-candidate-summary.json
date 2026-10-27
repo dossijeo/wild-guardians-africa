@@ -1,0 +1,259 @@
+{
+  "sha256": "0e1d1611c923e34b27c9a5b190b1c2290e74cbd3c71934755a2f04adaa29f5c4",
+  "scope": "Single candidate diagnostic; no acceptance claim.",
+  "active": {
+    "travelWallMs": 10324.375,
+    "settledWallMs": 13138.745000004768,
+    "postTravelWaitMs": 2814.3700000047684,
+    "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+    "initialElapsed": 1.2581149999427732,
+    "elapsed": 14.394909999942625,
+    "travelFrame": 240,
+    "advancingFrames": 240,
+    "pausedFrames": 0,
+    "pauseReasons": {},
+    "created": 15,
+    "stream": {
+      "created": 40,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    }
+  },
+  "farOperations": [
+    {
+      "label": "computeVertexNormals",
+      "vertices": 2401,
+      "indices": 13824,
+      "at": 73899.37000000477,
+      "ms": 2.4049999713897705
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 5,
+      "cz": 0,
+      "at": 73902.09000003338,
+      "ms": 3.9850000143051147
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 5,
+      "cz": 1,
+      "at": 74088.60500001907,
+      "ms": 2.5149999856948853
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 5,
+      "cz": -1,
+      "at": 75893.41000008583,
+      "ms": 3.1699999570846558
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 5,
+      "cz": 2,
+      "at": 75933.81500005722,
+      "ms": 2.319999933242798
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 6,
+      "cz": 0,
+      "at": 79367.04000008106,
+      "ms": 4.014999985694885
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 6,
+      "cz": 1,
+      "at": 79864.99000000954,
+      "ms": 2.7799999713897705
+    },
+    {
+      "slot": 2,
+      "label": "create",
+      "at": 81275.64499998093,
+      "ms": 1.540000081062317
+    },
+    {
+      "slot": 3,
+      "label": "create",
+      "at": 81387.64999997616,
+      "ms": 1.0350000858306885
+    },
+    {
+      "slot": 1,
+      "label": "create",
+      "at": 81528.9050000906,
+      "ms": 2.0799999237060547
+    },
+    {
+      "slot": 1,
+      "label": "bind",
+      "at": 81679.57500004768,
+      "ms": 1.8350000381469727
+    },
+    {
+      "label": "computeVertexNormals",
+      "vertices": 2401,
+      "indices": 13824,
+      "at": 82391.84500002861,
+      "ms": 1.215000033378601
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 6,
+      "cz": -1,
+      "at": 82393.25499999523,
+      "ms": 4.415000081062317
+    },
+    {
+      "slot": 0,
+      "label": "create",
+      "at": 82814.05000007153,
+      "ms": 3.3700000047683716
+    },
+    {
+      "label": "computeVertexNormals",
+      "vertices": 6114,
+      "indices": 36354,
+      "at": 82817.72000002861,
+      "ms": 2.6699999570846558
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": false,
+      "cx": 0,
+      "cz": 0,
+      "at": 82820.47500002384,
+      "ms": 6.264999985694885
+    },
+    {
+      "slot": 0,
+      "label": "attachData",
+      "at": 82817.43500006199,
+      "ms": 10.459999918937683,
+      "ground": {
+        "vertices": 6114,
+        "indices": 36354,
+        "waterProvided": false,
+        "colorMap": true
+      }
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 6,
+      "cz": 2,
+      "at": 83251.6700000763,
+      "ms": 2.4850000143051147
+    },
+    {
+      "slot": 0,
+      "label": "bind",
+      "at": 83410.37000000477,
+      "ms": 1.3250000476837158
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 7,
+      "cz": 0,
+      "at": 83763.9200000763,
+      "ms": 3.0149999856948853
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 5,
+      "cz": 3,
+      "at": 83915.08000004292,
+      "ms": 3.7799999713897705
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 7,
+      "cz": 1,
+      "at": 84345.44000005722,
+      "ms": 3.2649999856948853
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 7,
+      "cz": -1,
+      "at": 84422.4850000143,
+      "ms": 2.1649999618530273
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 6,
+      "cz": 3,
+      "at": 84870.66500008106,
+      "ms": 3.609999895095825
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 7,
+      "cz": 2,
+      "at": 85062.97500002384,
+      "ms": 3.3100000619888306
+    },
+    {
+      "label": "groundUniforms",
+      "mapped": true,
+      "cx": 7,
+      "cz": 3,
+      "at": 85140.30000007153,
+      "ms": 3.799999952316284
+    }
+  ],
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(825,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+    "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+    "THREE.WebGLProgram: Program Info Log: (910,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(915,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(732,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+    "THREE.WebGLProgram: Program Info Log: (863,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(868,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(709,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+    "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(725,1): warning X4000: use of potentially uninitialized variable (f_africanToon4)",
+    "THREE.WebGLProgram: Program Info Log: (708,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(713,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (708,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(713,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (879,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(884,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (897,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(902,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(897,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(902,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(903,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(908,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (734,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(739,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (896,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(901,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(896,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(901,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (872,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(877,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (842,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(847,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (840,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(845,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(840,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(845,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (846,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(851,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(846,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(851,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(846,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(851,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (673,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(678,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (328,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(333,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(328,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(333,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (328,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(333,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(328,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(333,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (737,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(742,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (332,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(337,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(332,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(337,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (332,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(337,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(332,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(337,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

@@ -1,8 +1,12 @@
 import {installStreamGpuTimer} from './spatial-stream-gpu-timer.js';
+import {BufferGeometry} from 'three';
 // QA only: existing RAF callbacks and asynchronous GPU queries, no new RAF.
 export async function observeQualityExecution(world,run){
  const frames=[],phases=[],longFrames=[],previousFrame=globalThis.qaMainFrame,previousPhase=globalThis.qaMainPhase;
  const farOperations=[],restore=[];
+ const normalOwner=BufferGeometry.prototype,originalNormals=normalOwner.computeVertexNormals;
+ const wrappedNormals=function(...args){const at=performance.now();try{return originalNormals.apply(this,args);}finally{const ms=performance.now()-at;if(ms>=1&&farOperations.length<10000)farOperations.push({label:'computeVertexNormals',vertices:this.attributes.position?.count,indices:this.index?.count,at,ms});}};
+ normalOwner.computeVertexNormals=wrappedNormals;restore.push(()=>{if(normalOwner.computeVertexNormals===wrappedNormals)normalOwner.computeVertexNormals=originalNormals;});
  if(world.biomeGround){
   const owner=world.biomeGround,original=owner.uniforms;
   const wrapped=function(...args){const at=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-at;if(ms>=1&&farOperations.length<10000)farOperations.push({label:'groundUniforms',mapped:args[3]?.mapped!==false,cx:args[0],cz:args[1],at,ms});}};
@@ -11,7 +15,7 @@ export async function observeQualityExecution(world,run){
  for(const [slot,adapter] of (world.farVegetation?.adapters??[]).entries()){
   for(const [owner,key] of [[adapter.layer,'selectTrees'],[adapter.layer,'create'],[adapter.layer,'attachData'],[adapter.layer,'prepare'],[adapter.layer.transitions,'bind']]){
    const original=owner[key];if(typeof original!=='function')continue;
-   const wrapped=function(...args){const at=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-at;if(ms>=1&&farOperations.length<10000)farOperations.push({slot,label:key,at,ms});}};
+   const wrapped=function(...args){const at=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-at;if(ms>=1&&farOperations.length<10000){const ground=key==='attachData'?args[1]?.ground:null;farOperations.push({slot,label:key,at,ms,...(ground?{ground:{vertices:ground.positions.length/3,indices:ground.indices.length,waterProvided:!!ground.water,colorMap:!!ground.colorMap}}:{})});}}};
    owner[key]=wrapped;restore.push(()=>{if(owner[key]===wrapped)owner[key]=original;});
   }
  }
