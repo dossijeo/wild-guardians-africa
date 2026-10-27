@@ -114,3 +114,18 @@ Comprobaciones para cerrar este caso:
 Actualización verificada: el reempaquetador admite ahora vistas sin compresión exclusivamente para índices dispersos de 8 bits, con comprobación de referencias y límites. Las siete pruebas de reempaquetado pasan, incluida la recolocación al cambiar el tamaño de una imagen. El candidato pasa de 59,908,736 a 4,752,800 bytes. La carga Three.js compara exactamente 52 atributos en cuatro mallas y conserva nombres de morphs; 246 muestras de seis clips conservan las poses (21 huesos). Informe: [paridad comprimida](phase2/face-authoring/hyena-compressed-parity.json).
 
 La prueba gráfica del comprimido confirma carga, cuatro draw calls y expresión de dolor sin errores reportados. No equivale a aprobación artística: los párpados todavía se ven abultados. Tampoco sustituye la matriz de clips/expresiones, las pruebas de combate ni las mediciones de rendimiento en incursiones. Se mantiene fuera del manifiesto de producción.
+
+
+### Animación física: espacios de coordenadas y escenas de prueba
+
+- Una pose de cuerpos rígidos no es una pose de huesos: los ejes de los colisionadores pueden diferir de los del esqueleto. Al hornear, aplicar primero la vinculación física y registrar las transformaciones reales de los huesos. Identificar explícitamente el espacio de cada dato en el formato.
+- Probar la entrada a la caída desde una pose animada, con el actor trasladado, girado y escalado. Una caída correcta en el origen no demuestra que funcione en el juego. Mezclar desde la pose actual y comprobar que las longitudes locales de los huesos no cambian.
+- Comprobar por separado caída, estabilización, recuperación y devolución del control a la navegación. Registrar la posición lógica y visual antes y después de cada transición; buscar saltos, doble control y estados que no se liberan.
+- Validar también la escena de prueba: una fixture llegó a colocar al cuarto animal dentro de una roca. Esa captura no sirve para aprobar ni rechazar las colisiones del sistema. Verificar posición inicial libre y terreno antes de lanzar el impacto; guardar el fallo de preparación por separado.
+- Un límite de simulaciones exige probar expresamente el siguiente animal, además de los que caben en el presupuesto. Registrar cuántos usan físicas, cuántos usan una alternativa y si todos recuperan su comportamiento.
+- Las caídas horneadas sobre suelo plano no acreditan colisiones articuladas con edificios, pendientes u otros animales. La limitación debe permanecer visible hasta ejecutar esas pruebas.
+- Separar pruebas pausadas de inspección artística y mediciones continuas de rendimiento. Una ejecución congelada, oculta o con condiciones diferentes no constituye una comparación de fluidez válida.
+
+### Ficha de cada iteración
+
+Anotar candidato y hash, defecto observable, vista/pose/peso que lo reproduce, hipótesis, cambio aislado, resultado y evidencia. Distinguir una corrección comprobada de una solución candidata. Cuando falle una prueba, conservar su caso reproducible y añadirlo a la revisión del siguiente modelo. Priorizar primero anatomía y silueta; después recorrido de deformación, materiales, integración y coste. No propagar a otras especies una técnica que aún tiene un defecto visible pendiente.

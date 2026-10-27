@@ -8,10 +8,16 @@
   },
   "anatomyProfile": null,
   "observedDefects": [],
+  "iterations": [],
   "hypothesesNotYetProven": [],
   "rejectedApproaches": [],
   "verifiedCorrections": [],
   "gates": {
+    "validTestFixture": { "status": "pending", "evidence": [] },
+    "animatedPoseToPhysicsContinuity": { "status": "pending", "evidence": [] },
+    "recoveryToNavigationContinuity": { "status": "pending", "evidence": [] },
+    "simulationBudgetOverflow": { "status": "pending", "evidence": [] },
+
     "sourceAndPreparedComparison": { "status": "pending", "evidence": [] },
     "anatomicalLandmarks": { "status": "pending", "evidence": [] },
     "neutralSilhouetteAndAccessories": { "status": "pending", "evidence": [] },
