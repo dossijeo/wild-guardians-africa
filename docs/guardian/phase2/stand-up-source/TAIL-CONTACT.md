@@ -61,3 +61,15 @@ Both source-derived clips regenerated. `support-angle-audit.json` records remain
 A trial 5 mm reach margin did not reduce the remaining maximum and was reverted. Large pole flips are corrected; fine motion timing and runtime close-detail inspection remain open.
 
 Runtime follow-up: lion-stable-support.mp4/png/json records the updated lion in WorldScene. Completed cycle, no errors, successful roll in 0.7167 s. Inspected full-body contact sheet; this verifies sequence coverage, not close-detail smoothness. Latest hyena bend-plane change still needs a fresh visual recording.
+
+## Additional beast rigs
+
+Generated separate buffalo and rhino authored candidates from their current active bestiary GLBs (hashes embedded in each JSON). Both map 23 source bones; no use of the lion/hyena target skeleton. QA loader now offers those two clips in addition to hyena/lion. Production catalogue and native clips remain unchanged.
+
+Expanded full-skin, limb-length, foot-clearance and arm-angle validation to both models. Added their actual-geometry physical-roll/authored-recovery ownership tests: both complete without procedural substitution. Full scoped suite: 44 tests pass.
+
+Warthog attempted but rejected: 1.1217 m peak body correction at source frame 100, initial limiting bone RightHand; supine minimum-foot gap 0.1141 m and arm step 0.3892 rad violate current gates. Recorded source/target hashes and metrics in `species-transfer-audit.json`. Rejected clip stays in ignored test-results and is not loaded by QA or production. Inspect right-hand geometry/props before adapting this species; do not weaken the acceptance thresholds.
+
+Buffalo runtime evidence: `buffalo-authored-runtime.mp4/png/json`, completed WorldScene cycle, no errors, successful 0.4167 s physical roll. Full-body contact sheet inspected. Fine posture/grounding impression still requires close review; this is sequence validation, not final visual acceptance. Audio disabled.
+
+Rhino runtime: rhino-authored-runtime.mp4/png/json completes with zero errors, zero final downed actors/bodies, and a successful 1.1333 s physical roll. Inspected a full-duration contact sheet including standing recovery. Fine posture and weight remain QA work; not final visual approval.

@@ -1,3 +1,4 @@
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import fs from 'node:fs';
 import {BakedBeastFallbacks} from '../src/rendering/baked-beast-fallbacks.js';
 import {BakedRagdollClip} from '../src/simulation/baked-ragdoll-clip.js';
@@ -52,9 +53,9 @@ test('another hit cancels a physical roll without resetting the body or allocati
  assert.ok(entry?.rolling);animal.magicDown.until=state.elapsed-.1;manager.step(state,0);assert.ok(animal.magicDown.until>state.elapsed,'physical ownership must extend the AI watchdog');const pose=Array.from(entry.actor.pose),world=entry.solver.world;animal.magicImpact.at=state.elapsed;manager.step(state,0);
  assert.equal(entry.actor.roll,null);assert.equal(entry.rolling,false);assert.equal(animal.magicDown.phase,'falling');assert.equal(entry.solver.world,world);assert.equal(world.bodies.len(),14);assert.deepEqual(Array.from(entry.actor.pose),pose);manager.dispose();assert.equal(animal.magicDown,undefined);
 });
-test('expressive lion rolls and plays its own retargeted get-up without a procedural substitution',async()=>{
- const model=await actorGeometry(new URL('../content/source/actors/lion/expressive-candidate.glb',import.meta.url)),clip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL('../content/source/animations/stand-up/lion-candidate.json',import.meta.url))).clip);
- const {animal,state,root,manager}=fixture('lion',model);manager.recoveryClips=new Map([['lion',clip]]);manager.step(state,.1);let recovering=false,rolling=false;
+for(const species of ['lion','buffalo','rhino'])test(`${species} rolls and plays its own retargeted get-up without a procedural substitution`,async()=>{
+ const model=await actorGeometry(new URL(species==='lion'?'../content/source/actors/lion/expressive-candidate.glb':'../public'+ANIMAL_ACTIONS.animals[species].url,import.meta.url)),clip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL(`../content/source/animations/stand-up/${species}-candidate.json`,import.meta.url))).clip);
+ const {animal,state,root,manager}=fixture(species,model);manager.recoveryClips=new Map([[species,clip]]);manager.step(state,.1);let recovering=false,rolling=false;
  for(let i=0;i<840;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);const e=manager.entries.get(animal.id);rolling||=!!e?.rolling;if(e?.recovery){recovering=true;assert.equal(e.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));}}
  assert.ok(rolling&&recovering);assert.equal(manager.stats.rollFailures,0);assert.equal(manager.entries.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
 });
