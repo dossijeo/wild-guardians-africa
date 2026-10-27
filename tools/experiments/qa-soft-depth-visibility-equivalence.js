@@ -12,10 +12,10 @@ export function compareSoftDepthVisibility(w){
    fx.position.copy(center).addScaledVector(right,offset);fx.position.y+=.2;
    const control=sample();const a=sample(),finish=installSoftDepthVisibility(w);let b,stats;
    try{b=sample();}finally{stats=finish();}
-   let sameBackendChangedPixels=0;for(let i=0;i<a.length;i+=4)if(a[i]!==control[i]||a[i+1]!==control[i+1]||a[i+2]!==control[i+2]||a[i+3]!==control[i+3])sameBackendChangedPixels++;
-   let changed=0,max=0;for(let i=0;i<a.length;i+=4){let diff=false;for(let k=0;k<4;k++){const d=Math.abs(a[i+k]-b[i+k]);max=Math.max(max,d);diff ||=d>0;}changed+=Number(diff);}
+   const controlCoordinates=[],candidateCoordinates=[];let sameBackendChangedPixels=0;for(let i=0;i<a.length;i+=4)if(a[i]!==control[i]||a[i+1]!==control[i+1]||a[i+2]!==control[i+2]||a[i+3]!==control[i+3]){sameBackendChangedPixels++;if(controlCoordinates.length<64)controlCoordinates.push([i/4%width,Math.floor(i/4/width)]);}
+   let changed=0,max=0;for(let i=0;i<a.length;i+=4){let diff=false;for(let k=0;k<4;k++){const d=Math.abs(a[i+k]-b[i+k]);max=Math.max(max,d);diff ||=d>0;}changed+=Number(diff);if(diff&&candidateCoordinates.length<64)candidateCoordinates.push([i/4%width,Math.floor(i/4/width)]);}
    let effectPixels=null;if(offset===0){fx.visible=false;const blank=sample();fx.visible=true;effectPixels=0;for(let i=0;i<a.length;i+=4)if(a[i]!==blank[i]||a[i+1]!==blank[i+1]||a[i+2]!==blank[i+2])effectPixels++;if(!effectPixels)throw Error('Empty visible effect control');}
-   rows.push({offset,sameBackendChangedPixels,effectPixels,changedPixels:changed,maxByteDifference:max,...stats});
+   rows.push({offset,controlCoordinates,candidateCoordinates,sameBackendChangedPixels,effectPixels,changedPixels:changed,maxByteDifference:max,...stats});
   }
   if(!rows.some(x=>x.skipped))throw Error('No skipped pass exercised '+JSON.stringify(rows));
   if(!rows.some(x=>x.requested&&!x.skipped))throw Error('No retained pass exercised');
