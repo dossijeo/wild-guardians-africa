@@ -1,3 +1,4 @@
+import {regionalTailProbe} from './regional-tail-probe-source.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
@@ -18,6 +19,17 @@ report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_REGIONAL_TAIL_PROBE==='1'){
+  await context.addInitScript(()=>{
+   globalThis.qaTailRows=[];globalThis.qaTailDropped=0;
+   globalThis.qaTailSpan=span=>{if(qaTailRows.length<20000)qaTailRows.push(span);else qaTailDropped++;};
+   globalThis.qaTailMeasure=(label,run)=>{const start=performance.now();try{return run();}finally{const duration=performance.now()-start;if(duration>=1||label.startsWith('worker-'))qaTailSpan({label,start,duration,scope:'Synchronous call wall time; nested spans overlap.'});}};
+  });
+  await context.route(/\/(?:tools\/experiments\/(?:far-scene-loader|native-far-layer)|src\/app\/global-frame-scheduler)\.js(?:\?.*)?$/,async route=>{
+   const response=await route.fetch(),path=new URL(route.request().url()).pathname.slice(1),name=path.split('/').at(-1);
+   await route.fulfill({response,body:regionalTailProbe(await readFile(path,'utf8'),name)});
+  });
+ }
  if(process.env.WG_SMOOTH_SORT_SOURCE){
   report.smoothSortSource=process.env.WG_SMOOTH_SORT_SOURCE;
   await context.route(/\/src\/rendering\/smooth-far-transitions\.js(?:\?.*)?$/,async route=>{
@@ -60,7 +72,14 @@ try {
   }
   await route.fulfill({response,body:source});
  });
- if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new')});});
+ if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{
+  const response=await route.fetch();let source=(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new');
+  if(process.env.WG_CHUNK_WATER_BED==='1'){
+   const anchor='if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);';assert(source.includes(anchor));
+   source="import {prepareChunkWaterBed} from '/tools/experiments/chunk-water-bed-candidate.js';\n"+source.replace(anchor,"if(waterMaterial!==this.fluidMaterial){let bed=payload?.waterBed;if(asynchronous&&!bed){yield 'water-bed';bed=yield* prepareChunkWaterBed(this,waterGeometry,cx,cz);yield 'water-edges';}prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,bed);}");
+  }
+  await route.fulfill({response,body:source});
+ });
  if(process.env.WG_MAGIC_PROFILE==='1')await page.addInitScript(()=>{
   const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];globalThis.qaMagicProgramHistory=[];
   const p=WebGL2RenderingContext.prototype,source=p.shaderSource,attach=p.attachShader,info=p.getProgramInfoLog;
@@ -157,7 +176,8 @@ try {
  }
  report.after=await inspect();
  if(report.runtimeOverride)assert(report.runtimeOverride.loads['spatial-threaded.wasm']>0,'Candidate shared runtime WASM was not loaded');
+ if(process.env.WG_CHUNK_WATER_BED==='1'){report.chunkWaterBed=await page.evaluate(()=>globalThis.qaChunkWaterBed??null);assert(report.chunkWaterBed?.calls>0,'Chunk water candidate not exercised');}
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{report.wholeFrame=await page.evaluate(()=>globalThis.qaWholeFrameFinish?.()??null).catch(()=>null);report.smoothSort=await page.evaluate(()=>globalThis.qaSmoothSortStats??null).catch(()=>null);report.matrixReuse=await page.evaluate(()=>globalThis.qaMatrixReuseFinish?.()??null).catch(()=>null);await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);if(process.env.WG_MAGIC_FAR_PHASES==='1')report.farCpu=await page.evaluate(()=>globalThis.qaFarCpuFinish?.()??null);if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheAfter=await page.evaluate(()=>({...globalThis.qaMagicWorld?.releaseNativeShadow?.cache?.stats})).catch(()=>null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{report.regionalTail=await page.evaluate(()=>({rows:globalThis.qaTailRows??[],dropped:globalThis.qaTailDropped??0})).catch(()=>null);report.wholeFrame=await page.evaluate(()=>globalThis.qaWholeFrameFinish?.()??null).catch(()=>null);report.smoothSort=await page.evaluate(()=>globalThis.qaSmoothSortStats??null).catch(()=>null);report.matrixReuse=await page.evaluate(()=>globalThis.qaMatrixReuseFinish?.()??null).catch(()=>null);await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);if(process.env.WG_MAGIC_FAR_PHASES==='1')report.farCpu=await page.evaluate(()=>globalThis.qaFarCpuFinish?.()??null);if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheAfter=await page.evaluate(()=>({...globalThis.qaMagicWorld?.releaseNativeShadow?.cache?.stats})).catch(()=>null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
