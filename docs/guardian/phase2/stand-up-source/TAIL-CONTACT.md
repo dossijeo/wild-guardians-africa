@@ -121,3 +121,9 @@ BeastCombatPhysics.create now loads this bank alongside the existing baked falls
 Eighteen targeted bank/terrain/ownership tests pass, including exact float-channel parity for every species and malformed-bank rejection. `lion-shipping-bank.mp4/png/json` records WorldScene without `face` or `authoredRecovery` overrides: production lion asset, successful physical roll (0.7167 s), fall/roll/recover/attack transitions, no final downed actors and no errors. Sampled early foot gap 2.19–2.33 cm. Contact sheet inspected but not sufficient for final close art approval.
 
 This supersedes the earlier QA-only status for physical recovery. The baked overflow path still uses its older procedural recovery and needs an authored-compatible transition. Worker recovery, close visual acceptance, obstacle coverage, bank regeneration after collider changes and feature performance comparison remain incomplete. No audio validation in this recording.
+
+## Refresh of the baked overflow bank
+
+Regenerated all 40 fallback directions with the current forearm damping and tail contact masks. The baker now loads actual GLTF geometry through the same meshopt-capable helper used in model validation, rather than the minimal uncompressed fixture reader. Source asset hashes remain recorded individually. Manifest additionally pins the contact-mask module hash; tests compare the complete solver configuration and mask hash so this bank cannot silently remain stale after either changes.
+
+New bank is 1,037,624 bytes (previous 1,082,312). All 19 baked playback/skin/contact/physical-ownership tests pass, including four simultaneous impacts, recovery and repeated hits. This is numerical integration validation, not a new visual or comparative performance pass. Baked overflow still uses procedural get-up; an authored-compatible roll/handoff remains pending and must preserve bone-world versus physical snapshot conventions.

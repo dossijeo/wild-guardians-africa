@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import R from '@dimforge/rapier3d-compat';
 import {Vector3,Quaternion} from 'three';
-import {beastSkin} from '../../tests/helpers/beast-skin.js';
+import {actorGeometry} from '../../tests/helpers/actor-geometry.js';
 import {BeastRagdollBinding} from '../../src/rendering/beast-ragdoll-binding.js';
 import {BeastRagdollSolver,RAGDOLL_CONFIG,RAGDOLL_LINKS} from '../../src/simulation/beast-ragdoll.js';
 import {ANIMAL_ACTIONS} from '../../src/simulation/animal-actions-data.js';
@@ -14,7 +14,7 @@ const chunks=[],clips=[];let offset=0;
 const position=new Vector3(),rotation=new Quaternion();
 function boneFrame(binding,physical){binding.apply(physical);const values=[];for(const entry of binding.entries){entry.bone.getWorldPosition(position);entry.bone.getWorldQuaternion(rotation).normalize();values.push(position.x,position.y,position.z,rotation.x,rotation.y,rotation.z,rotation.w);}binding.restore();return values;}
 for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
- const model=beastSkin(species),binding=new BeastRagdollBinding(model),pose=binding.capture(),colliders=binding.colliders();
+ const model=await actorGeometry('public'+ANIMAL_ACTIONS.animals[species].url),binding=new BeastRagdollBinding(model),pose=binding.capture(),colliders=binding.colliders();
  const source=fs.readFileSync('public'+ANIMAL_ACTIONS.animals[species].url),sourceSha256=createHash('sha256').update(source).digest('hex');
  for(const [directionName,direction] of [['front',{x:0,y:0,z:1}],['side',{x:1,y:0,z:0}],['back',{x:0,y:0,z:-1}],['left',{x:-1,y:0,z:0}],['down',{x:0,y:-.8,z:1}],['downBack',{x:0,y:-.8,z:-1}],['downSide',{x:1,y:-.8,z:0}],['downLeft',{x:-1,y:-.8,z:0}]]){
   const solver=new BeastRagdollSolver(R,{solverIterations:24});solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
@@ -25,6 +25,6 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
   const bytes=Buffer.from(values.buffer);chunks.push(bytes);
   clips.push({species,direction:directionName,sourceSha256,source:ANIMAL_ACTIONS.animals[species].url,byteOffset:offset,floatCount:values.length,frames:values.length/98,sampleRate:20,duration:(values.length/98-1)/20,parents:pose.parents,initialHip:frames.slice(0,3),settled:true});offset+=bytes.length;solver.dispose();
  }
- model.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});
+ model.traverse(o=>{if(o.isMesh){o.geometry.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());}});
 }
-const bytes=Buffer.concat(chunks);fs.writeFileSync(output+'/falls.bin',bytes);fs.writeFileSync(output+'/falls.json',JSON.stringify({version:2,snapshotKind:'bone-world',scope:'Offline flat-ground rest-pose falls. Runtime collision adaptation and visual acceptance still required.',frameStride:98,bones:RAGDOLL_LINKS.map(r=>r[0]),config:{...RAGDOLL_CONFIG,solverIterations:24},byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),clips},null,2)+'\n');console.log({clips:clips.length,bytes:bytes.length,durations:clips.map(c=>[c.species,c.direction,c.duration])});
+const bytes=Buffer.concat(chunks);fs.writeFileSync(output+'/falls.bin',bytes);fs.writeFileSync(output+'/falls.json',JSON.stringify({version:2,snapshotKind:'bone-world',scope:'Offline flat-ground rest-pose falls. Runtime collision adaptation and visual acceptance still required.',frameStride:98,bones:RAGDOLL_LINKS.map(r=>r[0]),config:{...RAGDOLL_CONFIG,solverIterations:24},contactMaskSha256:createHash('sha256').update(fs.readFileSync('src/rendering/actor-contact-masks.js')).digest('hex'),byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),clips},null,2)+'\n');console.log({clips:clips.length,bytes:bytes.length,durations:clips.map(c=>[c.species,c.direction,c.duration])});
