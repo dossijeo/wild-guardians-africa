@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
-import factory from '../../public/wild-engine/spatial-threaded.mjs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const runtimePath=resolve(process.env.WG_THREAD_RUNTIME??'public/wild-engine/spatial-threaded.mjs');
+const {default:factory}=await import(pathToFileURL(runtimePath).href);
 import {createThreadedSpatialWorld} from '../../src/world/wild-engine/spatial-thread-runtime.js';
 import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from '../../src/world/wild-engine/spatial-movement-profiles.js';
@@ -49,4 +52,4 @@ for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-
   rows.push({biome,stages,removed:5,finalChunks:0});console.log(`${biome}: batch eviction, stale rejection and retry pass`);
  }finally{await handle.dispose();}
 }
-await writeFile('docs/qa/wild-engine-pthreads/thread-batch-eviction.json',JSON.stringify({scope:'Native differential: six profiles, retained/removed boundaries, obstacles, duplicate/missing requests, running job invalidation, retry and complete eviction. Not rendered performance.',rows},null,2)+'\n');
+await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-batch-eviction.json',JSON.stringify({runtimePath,scope:'Native differential: six profiles, retained/removed boundaries, obstacles, duplicate/missing requests, running job invalidation, retry and complete eviction. Not rendered performance.',rows},null,2)+'\n');
