@@ -25,5 +25,27 @@
     "Current profile has no explicit clock correlation for per-spike sampled stack attribution.",
     "Other host worktrees may contend for hardware; require controlled ABAB before adopting changes."
   ],
-  "nextPhaseRequires": "Complete validated PR216 merge first; keep current candidate unchanged."
+  "nextPhaseRequires": "Complete validated PR216 merge first; keep current candidate unchanged.",
+  "phaseDiagnosis": {
+    "report": "phase-control/summary.json",
+    "scope": "CPU stage attribution; GPU invalid for this run due to impossible timer duration. No performance comparison.",
+    "findings": [
+      "Frame268: 46.69ms synchronous World.render, 20.435ms stage0 (camera/chunk sync), 9ms far vegetation, 11.63ms draw.",
+      "Frame4660: 40.935ms synchronous World.render, 20.675ms stage0, 7.99ms far vegetation, 7.205ms draw.",
+      "Initial frame2 includes instrumentation/startup effects; 68ms is preserved but is not treated as steady-state streaming evidence."
+    ],
+    "next": "Subdivide syncChunks (planning/install/removal) and far vegetation updates using targeted diagnostic clocks before selecting a production change.",
+    "phaseMapping": {
+      "0": "resize/camera/origin/syncChunks",
+      "1": "asset LOD and scene sync",
+      "2": "obstruction",
+      "3": "far vegetation",
+      "4": "asset groups",
+      "5": "hands and effects",
+      "6": "world origin uniform",
+      "7": "material cache resources",
+      "8": "generator completion",
+      "draw": "render-origin window, effects, sky, scene, shadows, smoke"
+    }
+  }
 }

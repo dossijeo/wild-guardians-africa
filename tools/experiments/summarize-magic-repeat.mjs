@@ -12,6 +12,16 @@ const summary={biome:report.biome??report.before?.state?.biome,reservationVersio
 if(report.residual){
  const {gpu,cpu,hardware,cpuScope}=report.residual;
  summary.residual={hardware,cpuScope,cpuWorldRenderMs:stats(cpu.map(s=>s.ms)),gpuWorldRenderMs:stats(gpu.samples.map(s=>s.ms)),gpuStatus:{supported:gpu.supported,reason:gpu.reason,disjointEvents:gpu.disjointEvents,discarded:gpu.discarded,overflowSkipped:gpu.overflowSkipped,foreignQuerySkipped:gpu.foreignQuerySkipped,pendingBeforeDispose:gpu.pendingBeforeDispose,unresolvedAtDispose:gpu.unresolvedAtDispose},gpuScope:gpu.scope};
+ const observedSpanMs=cpu.length?cpu.at(-1).at+cpu.at(-1).ms-cpu[0].at:0;
+ const impossible=gpu.samples.filter(sample=>sample.ms>observedSpanMs);
+ summary.residual.gpuSanity={observedSpanMs,impossibleSamples:impossible,usable:gpu.supported===true&&impossible.length===0,scope:'Conservative sanity bound only; passing does not independently prove timer accuracy. Raw samples are never clipped or discarded here.'};
+ if(impossible.length){summary.residual.rawGpuWorldRenderMs=summary.residual.gpuWorldRenderMs;summary.residual.gpuWorldRenderMs=null;summary.limitations.push('GPU timer returned durations longer than the entire observation window; this run is invalid for GPU performance conclusions even without a reported disjoint. Raw values are retained.');}
+ if(report.residual.phases?.length){
+  const grouped=new Map();for(const p of report.residual.phases){if(!grouped.has(p.label))grouped.set(p.label,[]);grouped.get(p.label).push(p.ms);}
+  summary.residual.phases=Object.fromEntries([...grouped].map(([label,values])=>[label,stats(values)]));
+  summary.residual.droppedPhases=report.residual.droppedPhases;
+  summary.residual.slowestRenderFrames=[...cpu].sort((a,b)=>b.ms-a.ms).slice(0,10).map(c=>({...c,gpuMs:gpu.samples.find(g=>g.frame===c.frame)?.ms??null,phases:report.residual.phases.filter(p=>p.frame===c.frame)}));
+ }
  summary.limitations.push('CPU World.render includes GPU-query bookkeeping; simulation/UI outside this call are excluded. GPU queries do not include asynchronous preparation outside the envelope.');
 }
 writeFileSync(root+'/summary.json',JSON.stringify(summary,null,2));console.log(JSON.stringify(summary,null,2));

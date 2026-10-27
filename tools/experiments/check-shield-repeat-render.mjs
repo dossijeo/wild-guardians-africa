@@ -35,15 +35,18 @@ try {
   profiler=await context.newCDPSession(page);if(cpuSampling){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
   await page.evaluate(()=>{const renderer=qaMagicWorld.renderer,draw=renderer.renderBufferDirect;renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){globalThis.qaMagicDraw={object:object.name,parents:[object.parent?.name,object.parent?.parent?.name],type:object.type,material:material.type,source:object.material?.name,side:material.side};try{return draw.call(this,camera,scene,geometry,material,object,group);}finally{globalThis.qaMagicDraw=null;}};globalThis.qaMagicFrames=[];globalThis.qaMagicLongTasks=[];let last=null;globalThis.qaMagicRecording=true;const frame=t=>{if(!qaMagicRecording)return;if(last!==null)qaMagicFrames.push({t,ms:t-last});last=t;requestAnimationFrame(frame);};requestAnimationFrame(frame);new PerformanceObserver(list=>{for(const e of list.getEntries())qaMagicLongTasks.push({start:e.startTime,ms:e.duration});}).observe({type:'longtask',buffered:false});});
  }
- if(process.env.WG_MAGIC_GPU==='1')await page.evaluate(async()=>{
+ if(process.env.WG_MAGIC_GPU==='1')await page.evaluate(async capturePhases=>{
   const {LoadingGpuQa}=await import('/src/app/loading-gpu-qa.js');
-  const w=qaMagicWorld,original=w.render,gpu=new LoadingGpuQa(w.renderer),cpu=[];
+  const w=qaMagicWorld,original=w.render,gpu=new LoadingGpuQa(w.renderer),cpu=[],phases=[],previousWitness=w.onLoadingSpan;
+  let droppedPhases=0;
+  const witness=span=>{previousWitness?.(span);if(!span.label.startsWith('world-frame-'))return;if(phases.length<80000)phases.push({frame:gpu.index-1,label:span.label,at:span.start,ms:span.duration,failed:span.failed});else droppedPhases++;};
+  if(capturePhases)w.onLoadingSpan=witness;
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   globalThis.qaResidualHardware={renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),hardwareConcurrency:navigator.hardwareConcurrency,devicePixelRatio,canvas:[gl.drawingBufferWidth,gl.drawingBufferHeight],crossOriginIsolated};
   const wrapped=function(...args){const at=performance.now();try{return gpu.measure('world-render',()=>original.apply(this,args));}finally{cpu.push({frame:gpu.index-1,at,ms:performance.now()-at});}};
   w.render=wrapped;
-  globalThis.qaResidualFinish=()=>{if(w.render===wrapped)w.render=original;return {gpu:gpu.close(),cpu,hardware:qaResidualHardware,cpuScope:'World.render synchronous wall time including timer polling and submission; excludes simulation/UI and asynchronous preparation outside this call.'};};
- });
+  globalThis.qaResidualFinish=()=>{if(w.render===wrapped)w.render=original;if(w.onLoadingSpan===witness)w.onLoadingSpan=previousWitness;return {gpu:gpu.close(),cpu,phases,droppedPhases,hardware:qaResidualHardware,cpuScope:'World.render synchronous wall time including timer polling and submission; excludes simulation/UI and asynchronous preparation outside this call.'};};
+ },process.env.WG_MAGIC_PHASES==='1');
  await page.evaluate(async()=>{globalThis.qaGame=await import('/src/simulation/game.js');});
  await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(1000);
