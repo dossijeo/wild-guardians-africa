@@ -1,6 +1,6 @@
 # Guardián 3D: fuente, pipeline e integración
 
-El retrato 2D deformable se sustituye en `NativeGuardian` por un GLB animado con Three.js 0.180.0. Se conservan las fases, botones, textos, reproducción de voz y eventos del tutorial. No se modifican reglas de simulación ni se conectan los clips de magia a acciones del juego.
+El retrato 2D deformable se sustituye en `NativeGuardian` por un GLB animado con Three.js 0.180.0. Se conservan las fases, botones, textos, reproducción de voz y eventos del tutorial. La fase 2 conecta Grow, Multiply, Shield y Attack con una invocación única en el mundo. Véase [PHASE2.md](PHASE2.md) para integración, balance, vídeos y límites de rendimiento pendientes.
 
 ## Archivos
 
