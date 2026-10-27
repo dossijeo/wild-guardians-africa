@@ -127,3 +127,16 @@ test('recovery colliders follow the bone pose with roll and remain contactable',
  assert.ok(contacts>0);assert.ok(maxSpeed<15);assert.ok(other.pose.every(Number.isFinite));for(let i=0;i<98;i++)assert.ok(Math.abs(actor.pose[i]-snapshot[i])<1e-5);
  s.remove('recovering');assert.equal(s.world.bodies.len(),14);s.dispose();
 });
+test('recovery keeps planted soles aligned while the knees fold',()=>{
+ for(const species of ['hyena','warthog','lion','buffalo','rhino']){
+  const model=beastSkin(species),binding=new BeastRagdollBinding(model);binding.capture();
+  const snapshot=new Float32Array(98);binding.physicalSnapshot(snapshot);
+  const recovery=new BeastRecovery(binding,snapshot,{surface:()=>0});
+  recovery.apply(recovery.duration*.42);
+  for(const leg of recovery.legs){
+   const actual=leg.foot.getWorldQuaternion(new THREE.Quaternion());
+   assert.ok(actual.angleTo(leg.contactOrientation)<.00001,species+' sole rotates away from its support');
+  }
+  recovery.restore();
+ }
+});

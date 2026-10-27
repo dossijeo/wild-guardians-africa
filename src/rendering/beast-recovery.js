@@ -39,7 +39,7 @@ export class BeastRecovery{
   }
   // Bounded skin samples during recovery only: cached extremes per influencing
   // bone plus uniform coverage, including sparse toes, tusks and fingers.
-  this.legs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot'),target=foot.getWorldPosition(new Vector3());return {upper,knee,foot,target,length1:upper.getWorldPosition(new Vector3()).distanceTo(knee.getWorldPosition(new Vector3())),length2:knee.getWorldPosition(new Vector3()).distanceTo(target)};});
+  this.legs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot'),target=foot.getWorldPosition(new Vector3());return {upper,knee,foot,target,contactOrientation:foot.getWorldQuaternion(new Quaternion()),length1:upper.getWorldPosition(new Vector3()).distanceTo(knee.getWorldPosition(new Vector3())),length2:knee.getWorldPosition(new Vector3()).distanceTo(target)};});
   const footClearance=Math.min(...this.legs.map(l=>l.target.y-(surface?.(l.target.x,l.target.z)??0)));for(const l of this.legs)l.target.y=(surface?.(l.target.x,l.target.z)??0)+Math.max(.05,footClearance);
   const facing=binding.model.getWorldQuaternion(new Quaternion()),forward=new Vector3(0,0,1).applyQuaternion(facing),sideways=new Vector3(1,0,0).applyQuaternion(facing);
   this.arms=['Left','Right'].flatMap((side,i)=>{
@@ -69,6 +69,10 @@ export class BeastRecovery{
   if(leg.pole)a.pole.copy(leg.pole);else a.pole.set(0,0,1);a.pole.applyQuaternion(this.binding.model.getWorldQuaternion(a.parent));a.pole.addScaledVector(a.direction,-a.pole.dot(a.direction)).normalize();
   const along=(leg.length1*leg.length1+distance*distance-leg.length2*leg.length2)/(2*distance),height=Math.sqrt(Math.max(0,leg.length1*leg.length1-along*along));a.desired.copy(a.p).addScaledVector(a.direction,along).addScaledVector(a.pole,height);
   this.aimBone(leg.upper,a.k,a.desired,weight);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);this.aimBone(leg.knee,a.f,leg.target,weight);
+  // Keep the sole in its captured standing orientation while the leg folds.
+  // Position-only IK otherwise points the toes through the ground, and the
+  // whole-body contact correction lifts the pelvis to compensate.
+  if(leg.contactOrientation){leg.foot.parent.getWorldQuaternion(a.parent).invert();a.local.copy(leg.contactOrientation).premultiply(a.parent);leg.foot.quaternion.slerp(a.local,weight);leg.foot.updateWorldMatrix(false,true);}
  }
  aimBone(bone,endpoint,target,weight){const a=this.ik;bone.getWorldPosition(a.p);a.current.copy(endpoint).sub(a.p).normalize();a.direction.copy(target).sub(a.p).normalize();a.q.setFromUnitVectors(a.current,a.direction);bone.getWorldQuaternion(a.local).premultiply(a.q);bone.parent.getWorldQuaternion(a.parent).invert();a.local.premultiply(a.parent);bone.quaternion.slerp(a.local,weight);bone.updateWorldMatrix(false,true);}
  restore(){for(const e of this.entries){e.bone.quaternion.copy(e.standingQ);e.bone.position.copy(e.standingP);}this.binding.model.updateMatrixWorld(true);}
