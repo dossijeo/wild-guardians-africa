@@ -2,7 +2,7 @@
   "status": "in-progress-hollow-oral-cavity-not-runtime",
   "actor": "hyena",
   "sourceBranch": "codex/global-visual-lab",
-  "editableLocalSource": "C:/tmp/guardian-faces/hyena-hollow-mouth-v17.blend",
+  "editableLocalSource": "C:/tmp/guardian-faces/hyena-collar-expressive.blend",
   "reproduce": [
     "tools/guardian/build_actor_face.py",
     "tools/guardian/inspect_actor_face.py",
@@ -10,7 +10,10 @@
     "tools/guardian/prototype_hyena_dental_jaw.py",
     "tools/guardian/hyena_muzzle_patch.py",
     "tools/guardian/actor_dentition.py",
-    "tools/guardian/audit_actor_dentition.py"
+    "tools/guardian/audit_actor_dentition.py",
+    "tools/guardian/restore_hyena_collar.py",
+    "tools/guardian/bake_actor_materials.py",
+    "tools/guardian/add_hyena_eyelids.py"
   ],
   "viewsPerIteration": [
     "front",
@@ -31,12 +34,12 @@
     "closed oral lining and cut-edge bridges looked like a black wall across the entrance; rejected by user",
     "mirrored proximity weights for fused left canine stretched its tip; removed"
   ],
-  "current": "Hollow palate, floor, rounded tongue, recessed throat and depth-oriented buccal walls replace the entrance-spanning lining. Both canines and the lower dental row are detached by biconnected topology and retain their source geometry. Front full/half views and full profiles inspected; still an authoring candidate, not a runtime acceptance.",
+  "current": "Hollow dental cavity and original necklace geometry restored; bilateral repair baked to original 8192 atlas. Candidate GLB with lids loaded in Three.js. Collar fold corrected in closed/open profiles; eyelid protrusion/creases and export shading remain unaccepted.",
   "remaining": [
-    "Finish corner and all-view neutral/partial inspection",
-    "Bake bilateral projected muzzle repair into the original UV atlas",
-    "Combine eyelids, repeat native-clip pose audit and inspect exported GLB in Three.js",
-    "Calibrate other beasts/farmers and complete in-game/performance validation"
+    "Correct runtime eyelid protrusion/creases and export shading differences",
+    "Validate native clips visually with mouth and eyelids combined",
+    "Optimize and install approved GLB in game; validate actual encounters",
+    "Calibrate remaining beasts/farmers and complete performance comparison"
   ],
   "exportCheck": {
     "file": "C:/tmp/guardian-faces/hyena-expression.glb",
@@ -105,5 +108,7 @@
     "fullOpenRigidErrorMeters": 0,
     "halfOpenMaxRelativeEdgeContraction": 0.012776720564962152,
     "scope": "Morph geometry only; not native animated clip validation"
-  }
+  },
+  "collarRepair": "hyena-collar-restored.collar.json",
+  "currentNativeClipAudit": "hyena-collar-native-clips.json"
 }

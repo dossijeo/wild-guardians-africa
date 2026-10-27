@@ -17,3 +17,17 @@ Reproduce from the worktree root:
 ```
 
 Use `--amount 0` and `--amount 0.5` for closed and partial inspection. The inspector renders front, quarter and both profiles. The editable local source is preserved at the path above; the committed scripts reproduce it. Blink combination, atlas baking, current-asset GLB playback, native-clip validation and game/performance tests remain pending. Historical export results in `status.json` refer to the rejected chin-cut candidate and are not validation of this source.
+
+## Necklace/neck fold correction
+
+The large triangular flap beside the collar canine also appears in the untouched prepared visual-lab GLB. Ray inspection identifies it as a separate necklace component: its mouth morph displacement is exactly zero. Smoothing jaw weights would not correct it.
+
+`restore_hyena_collar.py` recovers necklace rest positions from the original artist GLB (`Desktop/Wild Guardians New/animales/hiena.glb`). It matches complete UV-face signatures to resolve overlapping UV coordinates, and fits the source-to-prepared uniform transform from 1,999 unaffected head vertices (maximum residual below 0.0000003 m). All 1,298 selected rigid-Neck ornament vertices must match; the script refuses a partial repair. It preserves topology, UVs and rigid Neck weights, and gives every facial shape key the same restored necklace positions. Both profiles and closed/open Blender renders were inspected: the stretched triangular flap is gone and the original canine remains.
+
+```powershell
+& $blender -b --python tools/guardian/restore_hyena_collar.py -- --input C:/tmp/guardian-faces/hyena-hollow-mouth-v17.blend --original 'C:/Users/PC/Desktop/Wild Guardians New/animales/hiena.glb' --output C:/tmp/guardian-faces/hyena-collar-restored.blend
+& $blender -b --python tools/guardian/bake_actor_materials.py -- --input C:/tmp/guardian-faces/hyena-collar-restored.blend --output C:/tmp/guardian-faces/hyena-collar-baked.blend
+& $blender -b --python tools/guardian/add_hyena_eyelids.py -- --input C:/tmp/guardian-faces/hyena-collar-baked.blend --output C:/tmp/guardian-faces/hyena-collar-expressive.blend
+```
+
+The candidate GLB loaded in the Three.js facial QA scene, with mouth/eyelid controls, seven draw calls and no reported JavaScript errors. The six native clips retain equivalent bone poses over 246 samples (21 bones; maximum world-position difference 0.0000016 m). This checks preserved animation transforms, not complete skin appearance or game performance. Runtime inspection exposed protruding/creased eyelids and small shading differences after export; these remain unaccepted and require correction. No production facial model has been replaced yet.

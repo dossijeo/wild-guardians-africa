@@ -19,6 +19,7 @@ for o in bpy.context.scene.objects:
  ids={v.index for v in o.vertex_groups if v.name.replace('mixamorig:','')=='Head'}
  selected=[v for v in o.data.vertices if sum(g.weight for g in v.groups if g.group in ids)>.7]
  points.extend(o.matrix_world@v.co for v in selected);info.append({'mesh':o.name,'vertices':len(o.data.vertices),'headVertices':len(selected)})
+if not points:points=[o.matrix_world@v.co for o in bpy.context.scene.objects if o.type=='MESH' for v in o.data.vertices]
 lo=Vector([sorted(v[k] for v in points)[int(len(points)*.08)] for k in range(3)]);hi=Vector([sorted(v[k] for v in points)[int(len(points)*.92)] for k in range(3)]);center=(lo+hi)*.5;extent=max(hi-lo)*1.8
 if a.mouth_closeup:center=Vector((0,-.56,1.47));extent=.55
 scene=bpy.context.scene;scene.render.film_transparent=False;scene.render.engine='CYCLES';scene.cycles.samples=a.samples;scene.render.resolution_x=768;scene.render.resolution_y=768;scene.render.resolution_percentage=100;scene.world=bpy.data.worlds.new('Face inspection');scene.world.color=(.22,.22,.22);scene.view_settings.view_transform='Standard'
