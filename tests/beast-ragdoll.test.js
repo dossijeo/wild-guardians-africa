@@ -1,3 +1,4 @@
+import {beastSkin} from './helpers/beast-skin.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -45,3 +46,15 @@ test('physical pose binding preserves the captured pose and authored bone length
   for(let i=1;i<before.length;i++)assert.ok(before[i].position.distanceTo(binding.entries[i].bone.position)<1e-8,'bone length changed');s.dispose();
  }
 });
+
+test('skin-derived convex colliders settle and support the actual deformed mesh',()=>{const failures=[];
+ for(const [species,mass] of [['hyena',1],['warthog',1],['lion',1.5],['buffalo',3],['rhino',5]]){
+  const model=beastSkin(species);model.position.y=.15;const binding=new BeastRagdollBinding(model),p=binding.capture(),colliders=binding.colliders();
+  const s=new BeastRagdollSolver(R);s.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});const a=s.add(species,{pose:p,colliders,mass,direction:{x:1,y:-.2,z:.2}});
+  for(let i=0;i<480;i++)s.step();binding.apply(a.pose);model.updateMatrixWorld(true);const v=new THREE.Vector3();let penetration=0,worst=null;
+  model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let i=0;i<mesh.geometry.attributes.position.count;i+=3){mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld);if(-v.y>penetration){penetration=-v.y;const idx=mesh.geometry.attributes.skinIndex,w=mesh.geometry.attributes.skinWeight;worst=[0,1,2,3].map(k=>[mesh.skeleton.bones[idx.getComponent(i,k)].name,w.getComponent(i,k)]);}}});
+  const gaps=binding.entries.map((e,i)=>{const j=i*7,p=new THREE.Vector3(0,-e.length/2,0).applyQuaternion(new THREE.Quaternion().fromArray(a.pose,j+3).normalize()).add(new THREE.Vector3().fromArray(a.pose,j));return [e.bone.name,p.distanceTo(e.bone.getWorldPosition(new THREE.Vector3()))];});console.log('skin contact',species,{settled:a.settled,penetration,worst,gaps:gaps.filter(g=>g[1]>.04)});if(!a.settled||penetration>=.03)failures.push(species+': '+penetration);s.dispose();
+ }assert.deepEqual(failures,[]);
+});
+
+test('invalid fitted collider leaves an existing simulation intact',()=>{const s=new BeastRagdollSolver(R),p=pose('hyena'),a=s.add('one',{pose:p});assert.throws(()=>s.add('one',{pose:p,colliders:[{radius:NaN}]}));assert.equal(s.actors.get('one'),a);assert.equal(s.world.bodies.len(),14);s.dispose();});

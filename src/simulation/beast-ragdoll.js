@@ -34,21 +34,24 @@ export class BeastRagdollSolver{
  // Static colliders are retained across steps; never rebuild them per frame.
  terrain(vertices,indices){const c=this.world.createCollider(this.R.ColliderDesc.trimesh(vertices,indices).setFriction(.85).setRestitution(.02).setCollisionGroups(0x00010002));this.obstacles.push(c);return c;}
  box(center,half,rotation={x:0,y:0,z:0,w:1}){const c=this.world.createCollider(this.R.ColliderDesc.cuboid(half.x,half.y,half.z).setTranslation(center.x,center.y,center.z).setRotation(rotation).setFriction(.8).setCollisionGroups(0x00010002));this.obstacles.push(c);return c;}
- add(id,{pose,scale=1,mass=1,direction=vector(1,0,0),velocity=vector(),intensity=1,heading=0}){
+ add(id,{pose,colliders=null,scale=1,mass=1,direction=vector(1,0,0),velocity=vector(),intensity=1,heading=0}){
   if(this.actors.size>=this.capacity&&!this.actors.has(id)){this.stats.rejected++;return null;}
   // Validate the whole snapshot before allocating any WASM resources.
   for(const [a,b] of RAGDOLL_LINKS)for(const name of [a,b]){const p=pose[name];if(!p||![p.x,p.y,p.z].every(Number.isFinite))throw Error('Invalid ragdoll joint '+name);}
   for(const [a,b] of RAGDOLL_LINKS)if(length(sub(pose[b],pose[a]))<1e-5)throw Error('Degenerate ragdoll '+a);
   if(!(scale>0&&mass>0&&Number.isFinite(scale+mass+intensity+heading))||![direction.x,direction.y,direction.z,velocity.x,velocity.y,velocity.z].every(Number.isFinite))throw Error('Invalid ragdoll impulse');
+  if(colliders)for(const fit of colliders)if(fit&&(!(fit.radius>0)||!(fit.halfHeight>=0)||![fit.radius,fit.halfHeight,fit.offset?.x,fit.offset?.y,fit.offset?.z].every(Number.isFinite)||(fit.hull&&(!Array.isArray(fit.hull)||fit.hull.length<12||fit.hull.length>288||fit.hull.length%3||!fit.hull.every(Number.isFinite)))))throw Error('Invalid ragdoll collider');
   if(this.actors.has(id))this.remove(id);
   const actor={parts:[],joints:[],age:0,quiet:0,settled:false,pose:new Float32Array(RAGDOLL_LINKS.length*7)};
   this.actors.set(id,actor);
   try{
    for(let i=0;i<RAGDOLL_LINKS.length;i++){
     const [a,b,parent,r,axis,lo,hi]=RAGDOLL_LINKS[i],start=pose[a],end=pose[b],delta=sub(end,start),len=length(delta),q=fromY(delta),center=vector((start.x+end.x)/2,(start.y+end.y)/2,(start.z+end.z)/2);
-    const radius=i===3?r*scale:Math.min(r*scale,len*.45),body=this.world.createRigidBody(this.R.RigidBodyDesc.dynamic().setTranslation(center.x,center.y,center.z).setRotation(q).setLinearDamping(.2).setAngularDamping(1.2).setCcdEnabled(true));
+    const fit=colliders?.[i],radius=fit?.radius??(i===3?r*scale:Math.min(r*scale,len*.45)),body=this.world.createRigidBody(this.R.RigidBodyDesc.dynamic().setTranslation(center.x,center.y,center.z).setRotation(q).setLinearDamping(.2).setAngularDamping(1.2).setCcdEnabled(true));
     actor.parts.push({body,center,rotation:q,length:len,radius});
-    this.world.createCollider(this.R.ColliderDesc.capsule(Math.max(.005,len/2-radius),radius).setMass((i<2?8:2)*mass).setFriction(.8).setRestitution(.02).setCollisionGroups(0x00020001),body);
+    const offset=fit?.offset??vector();
+    const shape=(fit?.hull?this.R.ColliderDesc.convexHull(new Float32Array(fit.hull)):null)??this.R.ColliderDesc.capsule(fit?.halfHeight??Math.max(.005,len/2-radius),radius).setTranslation(offset.x,offset.y,offset.z);
+    this.world.createCollider(shape.setContactSkin(.025).setMass((i<2?8:2)*mass).setFriction(.8).setRestitution(.02).setCollisionGroups(0x00020001),body);
     if(parent>=0){
      const p=actor.parts[parent],a1=rotate(sub(start,p.center),inverse(p.rotation)),a2=rotate(sub(start,center),inverse(q));
      const yaw={x:0,y:Math.sin(heading/2),z:0,w:Math.cos(heading/2)},frame=multiply(yaw,FRAMES[axis]),f1=multiply(inverse(p.rotation),frame),f2=multiply(inverse(q),frame);

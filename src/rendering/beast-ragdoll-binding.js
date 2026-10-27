@@ -10,9 +10,27 @@ export class BeastRagdollBinding{
   this.v=new Vector3();this.q=new Quaternion();this.parentQ=new Quaternion();this.y=new Vector3(0,1,0);this.hip=new Vector3();
  }
  capture(){
-  this.model.updateWorldMatrix(true,true);const pose={};for(const [name,bone] of this.bones){const p=bone.getWorldPosition(new Vector3());pose[name]={x:p.x,y:p.y,z:p.z};}
+  this.model.updateWorldMatrix(true,true);this.model.updateMatrixWorld(true);const pose={};for(const [name,bone] of this.bones){const p=bone.getWorldPosition(new Vector3());pose[name]={x:p.x,y:p.y,z:p.z};}
   for(const e of this.entries){this.v.copy(pose[e.tip.name.replace(/^mixamorig[:_]?/,'')]).sub(pose[e.bone.name.replace(/^mixamorig[:_]?/,'')]);e.length=this.v.length();this.q.setFromUnitVectors(this.y,this.v.normalize());e.offset.copy(this.q).invert().multiply(e.bone.getWorldQuaternion(this.parentQ));}
   return pose;
+ }
+ colliders(){
+  const groups=this.entries.map(()=>[]),owners=new Map(this.entries.map((e,i)=>[e.bone,i]));
+  const frames=this.entries.map(e=>{const a=e.bone.getWorldPosition(new Vector3()),b=e.tip.getWorldPosition(new Vector3());return {center:a.clone().add(b).multiplyScalar(.5),inverse:new Quaternion().setFromUnitVectors(this.y,b.sub(a).normalize()).invert()};});
+  const v=new Vector3();
+  this.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
+   const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
+   for(let i=0;i<indices.count;i+=2){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;const owner=mapping[indices.getComponent(i,best)];if(owner===undefined)continue;
+    const f=frames[owner];mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld).sub(f.center).applyQuaternion(f.inverse);groups[owner].push(v.clone());
+   }
+  });
+  const quantile=(values,p)=>{values.sort((a,b)=>a-b);return values[Math.floor((values.length-1)*p)];};
+  return groups.map((points,i)=>{if(points.length<8)return null;
+   const x=quantile(points.map(p=>p.x),.5),z=quantile(points.map(p=>p.z),.5),lo=quantile(points.map(p=>p.y),.02),hi=quantile(points.map(p=>p.y),.98);
+   const radius=Math.max(.05,quantile(points.map(p=>Math.hypot(p.x-x,p.z-z)),.96)+.025);
+   const hull=[];for(let k=0;k<96;k++){const dy=1-2*(k+.5)/96,r=Math.sqrt(1-dy*dy),theta=k*2.399963229728653,dx=Math.cos(theta)*r,dz=Math.sin(theta)*r;let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);}
+   return {hull,radius,halfHeight:Math.max(.005,(hi-lo)/2-radius),offset:{x,y:(lo+hi)/2,z},samples:points.length};
+  });
  }
  apply(snapshot,weight=1){
   if(snapshot.length!==this.entries.length*7)throw Error('Invalid ragdoll snapshot');
