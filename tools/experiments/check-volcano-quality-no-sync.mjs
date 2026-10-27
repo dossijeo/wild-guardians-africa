@@ -10,6 +10,7 @@ const injection=` if(${['0','1'].includes(process.env.WG_SEAM_REUSE)}){await pag
  await page.route('**/tools/experiments/quality-execution-attribution.js*',async route=>{const response=await route.fetch();const body=(await response.text()).replace('execution:{frames,','execution:{depthPreparations:globalThis.qaDepthPreparations??[],frames,');await route.fulfill({response,body});});
  }
  gameUrl.searchParams.set('qualityAttribution','1');
+ if(${process.env.WG_DEPTH_MATRIX_REUSE==='1'})gameUrl.searchParams.set('depthMatrixReuse','1');
  if(${process.env.WG_SOFT_DEPTH_VISIBILITY==='1'})gameUrl.searchParams.set('softDepthVisibility','1');
  if(${process.env.WG_SOFT_DEPTH_DEMAND==='1'})gameUrl.searchParams.set('softDepthDemand','1');
  if(${['1','2'].includes(process.env.WG_SOFT_DEPTH_REGION)})gameUrl.searchParams.set('softDepthRegion','${process.env.WG_SOFT_DEPTH_REGION==='2'?'2':'1'}');

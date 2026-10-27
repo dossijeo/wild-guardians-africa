@@ -8,6 +8,7 @@ export async function observeQualityExecution(world,run){
 
  let depthDemand=null;if(new URLSearchParams(globalThis.location?.search??'').get('softDepthDemand')==='1'){const {installSoftDepthDemandAudit}=await import('./soft-depth-demand-audit.js');const finish=installSoftDepthDemandAudit(world);restore.push(()=>{depthDemand=finish();});}
  let depthVisibility=null;if(new URLSearchParams(globalThis.location?.search??'').get('softDepthVisibility')==='1'){const {installSoftDepthVisibility}=await import('./soft-depth-visibility.js');const finish=installSoftDepthVisibility(world);restore.push(()=>{depthVisibility=finish();});}
+ let matrixReuse=null;if(new URLSearchParams(globalThis.location?.search??'').get('depthMatrixReuse')==='1'){const {installDepthSceneMatrixReuse}=await import('./reuse-depth-scene-matrices.js');const finish=installDepthSceneMatrixReuse(world);restore.push(()=>{matrixReuse=finish();});}
  const renderStages=[],depthRequests=[],depthPrograms=[];let renderStagesDropped=0;
  if(new URLSearchParams(globalThis.location?.search??'').get('qualityRenderStages')==='1'){
   const record=span=>{if(span.duration<1)return;if(renderStages.length<20000)renderStages.push(span);else renderStagesDropped++;};
@@ -49,5 +50,5 @@ export async function observeQualityExecution(world,run){
  try{result=await run();}
  finally{for(const fn of restore.reverse())fn();gpu.stop();globalThis.qaMainFrame=previousFrame;globalThis.qaMainPhase=previousPhase;if(observer){longFrames.push(...observer.takeRecords().map(e=>e.toJSON()));observer.disconnect();}if(!result)await gpu.finish();}
  const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
- return {...result,execution:{depthVisibility,depthDemand,depthRegions,renderStages,renderStagesDropped,depthRequests,depthPrograms,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
+ return {...result,execution:{matrixReuse,depthVisibility,depthDemand,depthRegions,renderStages,renderStagesDropped,depthRequests,depthPrograms,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
 }
