@@ -19,10 +19,16 @@ function contactIndices(geometry){
 export class BeastRecovery{
  static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh.geometry))samples.push({mesh,index});});return samples;}
  static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh.geometry);});}
- constructor(binding,snapshot,{surface,duration=1.65}={}){
+ constructor(binding,snapshot,{surface,duration=1.65,fallenWorldPose=null}={}){
   this.binding=binding;this.surface=surface;this.duration=duration;this.age=0;this.done=false;this.lift=0;this.v=new Vector3();
   this.entries=binding.entries.map(e=>({bone:e.bone,standingQ:e.bone.quaternion.clone(),standingP:e.bone.position.clone(),fallenQ:new Quaternion(),fallenP:new Vector3(),crouchQ:e.bone.quaternion.clone(),crouchP:e.bone.position.clone()}));
-  binding.apply(snapshot);for(const e of this.entries){e.fallenQ.copy(e.bone.quaternion);e.fallenP.copy(e.bone.position);}binding.restore();
+  if(fallenWorldPose){
+   if(fallenWorldPose.length!==98||!fallenWorldPose.every(Number.isFinite))throw Error('Invalid fallen bone pose');
+   const parent=new Quaternion();
+   for(let i=0;i<this.entries.length;i++){const bone=this.entries[i].bone,j=i*7;if(i===0)bone.position.copy(bone.parent.worldToLocal(this.v.fromArray(fallenWorldPose,j)));bone.parent.getWorldQuaternion(parent).normalize().invert();bone.quaternion.fromArray(fallenWorldPose,j+3).premultiply(parent).normalize();bone.updateWorldMatrix(false,true);}
+  }else binding.apply(snapshot);
+  for(const e of this.entries){e.fallenQ.copy(e.bone.quaternion);e.fallenP.copy(e.bone.position);}
+  if(fallenWorldPose){for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}binding.model.updateMatrixWorld(true);}else binding.restore();
   const hips=this.entries[0],height=Math.max(.4,hips.standingP.y);hips.crouchP.y-=height*.38;
   for(const e of this.entries){const n=e.bone.name;
    if(/UpLeg$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,-.55));

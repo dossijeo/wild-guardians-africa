@@ -16,8 +16,8 @@ function boneFrame(binding,physical){binding.apply(physical);const values=[];for
 for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
  const model=beastSkin(species),binding=new BeastRagdollBinding(model),pose=binding.capture(),colliders=binding.colliders();
  const source=fs.readFileSync('public'+ANIMAL_ACTIONS.animals[species].url),sourceSha256=createHash('sha256').update(source).digest('hex');
- for(const [directionName,direction] of [['front',{x:0,y:0,z:1}],['side',{x:1,y:0,z:0}],['down',{x:0,y:-.8,z:1}]]){
-  const solver=new BeastRagdollSolver(R);solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
+ for(const [directionName,direction] of [['front',{x:0,y:0,z:1}],['side',{x:1,y:0,z:0}],['back',{x:0,y:0,z:-1}],['left',{x:-1,y:0,z:0}],['down',{x:0,y:-.8,z:1}],['downBack',{x:0,y:-.8,z:-1}],['downSide',{x:1,y:-.8,z:0}],['downLeft',{x:-1,y:-.8,z:0}]]){
+  const solver=new BeastRagdollSolver(R,{solverIterations:24});solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
   const actor=solver.add(species,{pose,colliders,mass:ATTACK.profiles[species].mass,direction}),frames=boneFrame(binding,actor.pose);let quiet=0,ended=false;
   for(let i=1;i<=480;i++){solver.step();quiet=actor.settled?quiet+1:0;if(i%3===0){frames.push(...boneFrame(binding,actor.pose));if(quiet>=18){ended=true;break;}}}
   if(!ended)throw Error('Unsettled fallback '+species+'/'+directionName);
@@ -27,4 +27,4 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
  }
  model.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});
 }
-const bytes=Buffer.concat(chunks);fs.writeFileSync(output+'/falls.bin',bytes);fs.writeFileSync(output+'/falls.json',JSON.stringify({version:2,snapshotKind:'bone-world',scope:'Offline flat-ground rest-pose falls. Runtime collision adaptation and visual acceptance still required.',frameStride:98,bones:RAGDOLL_LINKS.map(r=>r[0]),config:RAGDOLL_CONFIG,byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),clips},null,2)+'\n');console.log({clips:clips.length,bytes:bytes.length,durations:clips.map(c=>[c.species,c.direction,c.duration])});
+const bytes=Buffer.concat(chunks);fs.writeFileSync(output+'/falls.bin',bytes);fs.writeFileSync(output+'/falls.json',JSON.stringify({version:2,snapshotKind:'bone-world',scope:'Offline flat-ground rest-pose falls. Runtime collision adaptation and visual acceptance still required.',frameStride:98,bones:RAGDOLL_LINKS.map(r=>r[0]),config:{...RAGDOLL_CONFIG,solverIterations:24},byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),clips},null,2)+'\n');console.log({clips:clips.length,bytes:bytes.length,durations:clips.map(c=>[c.species,c.direction,c.duration])});

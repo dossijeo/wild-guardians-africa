@@ -26,5 +26,6 @@ export class BakedBeastFall {
   }
   this.entries[0].bone.getWorldPosition(this.hip);return age>=this.clip.duration;
  }
+ snapshot(out){for(let i=0;i<this.entries.length;i++){const bone=this.entries[i].bone;bone.getWorldPosition(this.v);bone.getWorldQuaternion(this.q).normalize();this.v.toArray(out,i*7);this.q.toArray(out,i*7+3);}return out;}
  restore(){for(const e of this.entries){e.bone.position.copy(e.position);e.bone.quaternion.copy(e.rotation);}this.binding.model.updateWorldMatrix(true,true);}
 }

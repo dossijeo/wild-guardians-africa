@@ -5,8 +5,8 @@ import {createHash} from 'node:crypto';
 import {BakedRagdollClip} from '../src/simulation/baked-ragdoll-clip.js';
 const root=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',root))),bytes=fs.readFileSync(new URL('falls.bin',root)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
 test('all five current species have finite settled clips tied to exact source assets',()=>{
- assert.equal(meta.clips.length,15);assert.equal(createHash('sha256').update(bytes).digest('hex'),meta.sha256);
- for(const species of new Set(meta.clips.map(c=>c.species)))assert.deepEqual(meta.clips.filter(c=>c.species===species).map(c=>c.direction),['front','side','down']);
+ assert.equal(meta.clips.length,40);assert.equal(createHash('sha256').update(bytes).digest('hex'),meta.sha256);
+ for(const species of new Set(meta.clips.map(c=>c.species)))assert.deepEqual(meta.clips.filter(c=>c.species===species).map(c=>c.direction),['front','side','back','left','down','downBack','downSide','downLeft']);
  for(const clip of meta.clips){const source=fs.readFileSync(new URL("../public"+clip.source,import.meta.url));assert.equal(createHash("sha256").update(source).digest("hex"),clip.sourceSha256);assert.equal(clip.settled,true);const instance=new BakedRagdollClip(clip,buffer);assert.ok(instance.values.every(Number.isFinite));assert.ok(instance.duration>1&&instance.duration<8);}
 });
 test('playback follows time at low FPS, clamps endpoints and maintains unit quaternions',()=>{

@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import {BakedBeastFallbacks} from '../src/rendering/baked-beast-fallbacks.js';
+import {BakedRagdollClip} from '../src/simulation/baked-ragdoll-clip.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Group,AnimationClip,AnimationMixer,Vector3,Quaternion} from 'three';
@@ -78,4 +81,35 @@ test('four simultaneous contacts keep three ragdolls and release every actor on 
  for(const entry of f.manager.entries.values())assert.equal(entry.solver.world.bodies.len(),14);
  f.state.result={outcome:'ended'};f.manager.step(f.state,.1);assert.equal(f.manager.entries.size,0);
  assert.ok(f.state.raid.animals.every(a=>!a.magicDown));f.manager.dispose();
+});
+
+
+test('fourth impact plays a baked fall, suspends AI, recovers and clears without another physics world',()=>{
+ const f=fixture(),base=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',base))),bytes=fs.readFileSync(new URL('falls.bin',base)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+ f.manager.baked=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])));
+ for(let i=1;i<4;i++){const other=fixture(),id='beast-'+i;other.animal.id=id;other.animal.x+=i*3;other.root.position.x+=i*3;other.root.updateMatrixWorld(true);f.state.raid.animals.push(other.animal);f.world.objects.set(id,other.root);f.world.mixers.set(id,other.world.mixers.get('beast'));other.manager.dispose();}
+ f.manager.step(f.state,.1);const fourth=f.state.raid.animals[3],start={x:fourth.x,z:fourth.z};assert.equal(f.manager.entries.size,3);assert.equal(f.manager.baked.entries.size,1);assert.equal(fourth.magicDown.mode,'baked');assert.equal(fourth.attackRemaining,0);
+ let recovering=false;
+ for(let i=0;i<600;i++){f.state.elapsed+=1/60;f.manager.step(f.state,1/60);for(const a of f.state.raid.animals){f.manager.before(a.id);const root=f.world.objects.get(a.id);root.position.set(a.x,0,a.z);root.updateMatrixWorld(true);f.manager.render(a.id);}recovering ||= fourth.magicDown?.phase==='recovering';}
+ assert.ok(recovering);assert.equal(f.manager.baked.entries.size,0);assert.equal(fourth.magicDown,undefined);assert.ok(Math.hypot(fourth.x-start.x,fourth.z-start.z)>.2);assert.equal(fourth.destinationId,null);f.manager.dispose();
+});
+
+
+test('baked repeat hits preserve the contact pose during falling and recovery',()=>{
+ const base=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',base))),bytes=fs.readFileSync(new URL('falls.bin',base)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+ for(const recovering of [false,true]){
+  const f=fixture(),baked=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])));
+  baked.start(f.animal);
+  for(let i=0;i<(recovering?400:35);i++){
+   f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);baked.render(f.animal.id);
+   if(recovering&&baked.entries.get(f.animal.id)?.recoveryAge>.4)break;
+  }
+  let e=baked.entries.get(f.animal.id);assert.ok(e);assert.equal(!!e.recovery,recovering);
+  const pose=e.binding.entries.map(e=>({p:e.bone.getWorldPosition(new Vector3()),q:e.bone.getWorldQuaternion(new Quaternion()).normalize()})),logical={x:f.animal.x,z:f.animal.z};
+  f.animal.magicImpact={at:f.state.elapsed,impactAt:f.state.elapsed,direction:{x:-1,y:-.2,z:0},intensity:1};baked.start(f.animal);baked.step(f.state,0);baked.render(f.animal.id);e=baked.entries.get(f.animal.id);
+  assert.ok(Math.hypot(f.animal.x-logical.x,f.animal.z-logical.z)<1e-5);
+  for(let i=0;i<pose.length;i++){assert.ok(pose[i].p.distanceTo(e.binding.entries[i].bone.getWorldPosition(new Vector3()))<1e-5,'repeat position');assert.ok(pose[i].q.angleTo(e.binding.entries[i].bone.getWorldQuaternion(new Quaternion()).normalize())<1e-5,'repeat orientation');}
+  for(let i=0;i<600;i++){f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);baked.render(f.animal.id);}
+  assert.equal(baked.entries.size,0);assert.equal(f.animal.magicDown,undefined);baked.dispose();f.manager.dispose();
+ }
 });
