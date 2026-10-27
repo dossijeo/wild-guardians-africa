@@ -15,6 +15,10 @@ The production catalogue remains unchanged.
 Open `/tests/browser/actor-expression.html?actor=lion` on the normal Vite
 server. The default now loads this committed GLB. Add `&uncompressed` only
 when testing the separate local `test-results/lion-face-candidate.glb` fixture.
+For the actual WorldScene/Game.tick/Attack path, open
+`/tests/browser/guardian-combat.html?face=lion`. This substitutes only the
+fixture's lion asset and selects lion in the species control. `?face=1`
+continues to select the hyena candidate; the production catalogue is unchanged.
 
 Re-export with the saved 96Hz/NLA timeline intact:
 
@@ -35,3 +39,11 @@ Still pending: broader animated eye-boundary checks, continuous interpolation,
 oral artistic refinement, actual combat/ragdoll/recovery visual integration,
 and scoped performance comparison. See the evidence and failure history in
 `docs/guardian/phase2/face-authoring/lion/` before accepting this candidate.
+
+One real continuous combat cycle has now completed with the candidate:
+11 facial bindings, one physical ragdoll, resumed attacking state, no remaining
+physical bodies and no reported errors. The contact screenshot shows the
+Guardian and impact, and the trace records lion hurt/impact SFX sources played.
+The recording was not listened to; this does not validate the audio mix.
+Only contact and final poses were inspected, so full fall/get-up artistic
+acceptance still requires reviewing a continuous recording.

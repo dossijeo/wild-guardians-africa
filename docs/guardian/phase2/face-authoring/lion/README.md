@@ -192,3 +192,25 @@ native-clip/muzzle audits pass. Source is
 `C:/tmp/guardian-faces/lion-oral-v15-checked.blend`; the equivalent v15 GLB
 is loaded in the browser fixture. Production lion remains unchanged.
 
+## Combat fixture integration
+
+`guardian-combat.html?face=lion` now selects and substitutes the committed lion
+candidate through the existing AssetManager path. Existing `?face=1` hyena
+behavior is retained. The visible diagnostic identifies the candidate species.
+
+`combat-cycle.json` records one continuous Game.tick/WorldScene Attack cycle:
+8.0938 simulated seconds, peak one physical ragdoll, finalDownCount 0,
+physicalBodies 0, resumed attacking, 11 facial bindings and no errors.
+Maximum visible Guardians remained one. The earlier paused contact inspection
+had eyes 1/1 and mouth 0.8205; it did not simulate the ragdoll. SFX source
+creation succeeded for lion_hurt and beast_take_damage in the continuous run;
+there was no listening assessment of the mix.
+
+This unpaired diagnostic had frame p95 99.8 ms / p99 133.1 ms on Intel UHD,
+physics p95 4.1 ms and peak creation 14.7 ms. These are recorded observations,
+not attribution of the existing fluency issue or performance acceptance.
+General fluency investigation remains assigned elsewhere. The contact and
+final state were visually inspected, but the whole fall/recovery was not
+captured and reviewed frame by frame. Full animation quality, obstacles,
+concurrency, directional variants and paired feature-cost testing remain open.
+
