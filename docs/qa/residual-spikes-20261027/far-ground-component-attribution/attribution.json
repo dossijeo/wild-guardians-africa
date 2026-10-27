@@ -1,0 +1,1561 @@
+{
+  "window": {
+    "start": 89740.12000000477,
+    "end": 129740.12000000477
+  },
+  "timed": [
+    {
+      "label": "far-region-worker",
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+      "count": 4,
+      "total": 19017.789999842644,
+      "max": 5828.759999990463
+    },
+    {
+      "label": "far-region-gpu-ready",
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+      "count": 4,
+      "total": 1025.5100002288818,
+      "max": 481.0400000810623
+    },
+    {
+      "label": "far-region-attach-ground",
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+      "count": 4,
+      "total": 22.02999997138977,
+      "max": 22.019999980926514
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:bank",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 10.959999918937683,
+      "max": 10.959999918937683
+    },
+    {
+      "label": "worker-receiver",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 9,
+      "total": 14.820000052452087,
+      "max": 10.294999957084656
+    },
+    {
+      "label": "worker-event-data",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 9,
+      "total": 14.340000033378601,
+      "max": 10.25
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:bank",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 8.590000033378601,
+      "max": 8.590000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 8.129999995231628,
+      "max": 8.129999995231628
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:water-bed",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 8,
+      "total": 14.454999923706055,
+      "max": 5.759999990463257
+    },
+    {
+      "label": "scheduler-unit:terrain 1,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.804999947547913,
+      "max": 4.804999947547913
+    },
+    {
+      "label": "scheduler-unit:terrain 7,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.509999990463257,
+      "max": 4.509999990463257
+    },
+    {
+      "label": "scheduler-unit:terrain 6,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.4649999141693115,
+      "max": 4.4649999141693115
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.365000009536743,
+      "max": 4.365000009536743
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:water-bed",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 4,
+      "total": 8.370000004768372,
+      "max": 4.144999980926514
+    },
+    {
+      "label": "scheduler-unit:terrain 7,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.115000009536743,
+      "max": 4.115000009536743
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.115000009536743,
+      "max": 4.115000009536743
+    },
+    {
+      "label": "far-region-create",
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+      "count": 4,
+      "total": 9.700000047683716,
+      "max": 4.075000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 1,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.045000076293945,
+      "max": 4.045000076293945
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.024999976158142,
+      "max": 4.024999976158142
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4,
+      "max": 4
+    },
+    {
+      "label": "scheduler-unit:terrain 7,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.8700000047683716,
+      "max": 3.8700000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 6,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.7450000047683716,
+      "max": 3.7450000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.7200000286102295,
+      "max": 3.7200000286102295
+    },
+    {
+      "label": "scheduler-unit:terrain 5,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.6850000619888306,
+      "max": 3.6850000619888306
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.665000081062317,
+      "max": 3.665000081062317
+    },
+    {
+      "label": "scheduler-unit:terrain 1,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.625,
+      "max": 3.625
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.6050000190734863,
+      "max": 3.6050000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.5899999141693115,
+      "max": 3.5899999141693115
+    },
+    {
+      "label": "scheduler-unit:terrain 6,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.4850000143051147,
+      "max": 3.4850000143051147
+    },
+    {
+      "label": "scheduler-unit:terrain 5,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.475000023841858,
+      "max": 3.475000023841858
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.465000033378601,
+      "max": 3.465000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.409999966621399,
+      "max": 3.409999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.3700000047683716,
+      "max": 3.3700000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.305000066757202,
+      "max": 3.305000066757202
+    },
+    {
+      "label": "scheduler-unit:terrain 2,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.2899999618530273,
+      "max": 3.2899999618530273
+    },
+    {
+      "label": "far-ground-material",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.265000104904175,
+      "max": 3.265000104904175
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.2300000190734863,
+      "max": 3.2300000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.1299999952316284,
+      "max": 3.1299999952316284
+    },
+    {
+      "label": "scheduler-unit:terrain 5,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.049999952316284,
+      "max": 3.049999952316284
+    },
+    {
+      "label": "scheduler-unit:terrain 6,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.8450000286102295,
+      "max": 2.8450000286102295
+    },
+    {
+      "label": "scheduler-unit:terrain 1,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.8350000381469727,
+      "max": 2.8350000381469727
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.7050000429153442,
+      "max": 2.7050000429153442
+    },
+    {
+      "label": "scheduler-unit:terrain 7,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.6050000190734863,
+      "max": 2.6050000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 5,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.5399999618530273,
+      "max": 2.5399999618530273
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.509999990463257,
+      "max": 2.509999990463257
+    },
+    {
+      "label": "scheduler-unit:terrain 7,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.409999966621399,
+      "max": 2.409999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.3550000190734863,
+      "max": 2.3550000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.3550000190734863,
+      "max": 2.3550000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.340000033378601,
+      "max": 2.340000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.3350000381469727,
+      "max": 2.3350000381469727
+    },
+    {
+      "label": "scheduler-unit:terrain 2,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.225000023841858,
+      "max": 2.225000023841858
+    },
+    {
+      "label": "scheduler-unit:terrain 7,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.075000047683716,
+      "max": 2.075000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 5,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.9900000095367432,
+      "max": 1.9900000095367432
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.9550000429153442,
+      "max": 1.9550000429153442
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.7249999046325684,
+      "max": 1.7249999046325684
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.65500009059906,
+      "max": 1.65500009059906
+    },
+    {
+      "label": "scheduler-unit:terrain 6,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.5350000858306885,
+      "max": 1.5350000858306885
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.534999966621399,
+      "max": 1.534999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.4900000095367432,
+      "max": 1.4900000095367432
+    },
+    {
+      "label": "scheduler-unit:terrain 5,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.3650000095367432,
+      "max": 1.3650000095367432
+    },
+    {
+      "label": "scheduler-unit:terrain 6,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.3499999046325684,
+      "max": 1.3499999046325684
+    },
+    {
+      "label": "far-ground-normals",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.3450000286102295,
+      "max": 1.3450000286102295
+    },
+    {
+      "label": "worker-terminate",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 9,
+      "total": 0.1650000810623169,
+      "max": 0.029999971389770508
+    }
+  ],
+  "all": [
+    {
+      "label": "far-region-worker",
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+      "count": 8,
+      "total": 34642.824999809265,
+      "max": 5828.759999990463
+    },
+    {
+      "label": "far-region-gpu-ready",
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+      "count": 8,
+      "total": 6255.025000333786,
+      "max": 4616.935000061989
+    },
+    {
+      "label": "far-region-attach-ground",
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+      "count": 8,
+      "total": 56.63499987125397,
+      "max": 34.58999991416931
+    },
+    {
+      "label": "worker-receiver",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 16,
+      "total": 44.9650000333786,
+      "max": 13.34499990940094
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:bank",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 24.049999833106995,
+      "max": 13.089999914169312
+    },
+    {
+      "label": "worker-event-data",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 16,
+      "total": 43.81000006198883,
+      "max": 12.980000019073486
+    },
+    {
+      "label": "scheduler-unit:Symbol()",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 12.419999957084656,
+      "max": 12.419999957084656
+    },
+    {
+      "label": "scheduler-unit:depth-preparation",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 29,
+      "total": 59.03999972343445,
+      "max": 11.309999942779541
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 14.245000004768372,
+      "max": 10.639999985694885
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:water-bed",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 25,
+      "total": 43.02499985694885,
+      "max": 8.659999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:bank",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 8.590000033378601,
+      "max": 8.590000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 10.259999871253967,
+      "max": 8.534999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 0,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 8.289999961853027,
+      "max": 8.289999961853027
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 14.039999961853027,
+      "max": 8.129999995231628
+    },
+    {
+      "label": "scheduler-unit:terrain 3,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 7.440000057220459,
+      "max": 7.440000057220459
+    },
+    {
+      "label": "far-region-create",
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+      "count": 8,
+      "total": 25.875,
+      "max": 7.414999961853027
+    },
+    {
+      "label": "scheduler-unit:terrain 0,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 7.28000009059906,
+      "max": 7.28000009059906
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 9.460000038146973,
+      "max": 7.125
+    },
+    {
+      "label": "scheduler-unit:terrain 4,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 6.995000004768372,
+      "max": 6.995000004768372
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 10.445000052452087,
+      "max": 6.980000019073486
+    },
+    {
+      "label": "scheduler-unit:terrain 2,3:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 6.829999923706055,
+      "max": 6.829999923706055
+    },
+    {
+      "label": "scheduler-unit:terrain 4,3:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 6.784999966621399,
+      "max": 6.784999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 3,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 6.205000042915344,
+      "max": 6.205000042915344
+    },
+    {
+      "label": "scheduler-unit:terrain 3,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 6.054999947547913,
+      "max": 6.054999947547913
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 7.990000009536743,
+      "max": 5.634999990463257
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 8.695000052452087,
+      "max": 5.465000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 3,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 5.445000052452087,
+      "max": 5.445000052452087
+    },
+    {
+      "label": "scheduler-unit:terrain 3,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 5.199999928474426,
+      "max": 5.199999928474426
+    },
+    {
+      "label": "scheduler-unit:terrain 3,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 5.159999966621399,
+      "max": 5.159999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 1,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 9.754999876022339,
+      "max": 4.949999928474426
+    },
+    {
+      "label": "scheduler-unit:terrain 3,3:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.870000004768372,
+      "max": 4.870000004768372
+    },
+    {
+      "label": "scheduler-unit:terrain 0,3:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.840000033378601,
+      "max": 4.840000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 2,3:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.800000071525574,
+      "max": 4.800000071525574
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 8.855000019073486,
+      "max": 4.740000009536743
+    },
+    {
+      "label": "scheduler-unit:terrain 0,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.605000019073486,
+      "max": 4.605000019073486
+    },
+    {
+      "label": "scheduler-unit:terrain 0,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.564999938011169,
+      "max": 4.564999938011169
+    },
+    {
+      "label": "scheduler-unit:terrain 7,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.509999990463257,
+      "max": 4.509999990463257
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 8.144999980926514,
+      "max": 4.479999899864197
+    },
+    {
+      "label": "scheduler-unit:terrain 2,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 7.769999861717224,
+      "max": 4.479999899864197
+    },
+    {
+      "label": "scheduler-unit:terrain 6,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.4649999141693115,
+      "max": 4.4649999141693115
+    },
+    {
+      "label": "far-ground-normals",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 5.759999990463257,
+      "max": 4.414999961853027
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.365000009536743,
+      "max": 4.365000009536743
+    },
+    {
+      "label": "scheduler-unit:terrain 1,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 8.395000100135803,
+      "max": 4.350000023841858
+    },
+    {
+      "label": "scheduler-unit:terrain 1,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 7.0350000858306885,
+      "max": 4.200000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 4,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.185000061988831,
+      "max": 4.185000061988831
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 6.875,
+      "max": 4.169999957084656
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:water-bed",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 4,
+      "total": 8.370000004768372,
+      "max": 4.144999980926514
+    },
+    {
+      "label": "scheduler-unit:terrain 7,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.115000009536743,
+      "max": 4.115000009536743
+    },
+    {
+      "label": "scheduler-unit:terrain 3,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.109999895095825,
+      "max": 4.109999895095825
+    },
+    {
+      "label": "scheduler-unit:terrain 4,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.034999966621399,
+      "max": 4.034999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4.024999976158142,
+      "max": 4.024999976158142
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 4,
+      "max": 4
+    },
+    {
+      "label": "scheduler-unit:terrain 3,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.9850000143051147,
+      "max": 3.9850000143051147
+    },
+    {
+      "label": "scheduler-unit:terrain 0,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.9850000143051147,
+      "max": 3.9850000143051147
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 7.355000019073486,
+      "max": 3.9850000143051147
+    },
+    {
+      "label": "scheduler-unit:terrain 0,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.9199999570846558,
+      "max": 3.9199999570846558
+    },
+    {
+      "label": "scheduler-unit:terrain 4,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.915000081062317,
+      "max": 3.915000081062317
+    },
+    {
+      "label": "far-ground-material",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 7.180000066757202,
+      "max": 3.9149999618530273
+    },
+    {
+      "label": "scheduler-unit:terrain 4,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.875,
+      "max": 3.875
+    },
+    {
+      "label": "scheduler-unit:terrain 7,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.8700000047683716,
+      "max": 3.8700000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 4,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.78000009059906,
+      "max": 3.78000009059906
+    },
+    {
+      "label": "scheduler-unit:terrain 6,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.7450000047683716,
+      "max": 3.7450000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.7200000286102295,
+      "max": 3.7200000286102295
+    },
+    {
+      "label": "scheduler-unit:terrain 0,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.715000033378601,
+      "max": 3.715000033378601
+    },
+    {
+      "label": "scheduler-unit:terrain 1,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 7.334999918937683,
+      "max": 3.709999918937683
+    },
+    {
+      "label": "scheduler-unit:terrain 5,2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.6850000619888306,
+      "max": 3.6850000619888306
+    },
+    {
+      "label": "scheduler-unit:terrain 4,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.649999976158142,
+      "max": 3.649999976158142
+    },
+    {
+      "label": "scheduler-unit:terrain 1,3:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.5950000286102295,
+      "max": 3.5950000286102295
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.5899999141693115,
+      "max": 3.5899999141693115
+    },
+    {
+      "label": "scheduler-unit:terrain 0,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.5700000524520874,
+      "max": 3.5700000524520874
+    },
+    {
+      "label": "scheduler-unit:terrain 4,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.555000066757202,
+      "max": 3.555000066757202
+    },
+    {
+      "label": "scheduler-unit:terrain 6,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.4850000143051147,
+      "max": 3.4850000143051147
+    },
+    {
+      "label": "scheduler-unit:terrain 5,0:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.475000023841858,
+      "max": 3.475000023841858
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.409999966621399,
+      "max": 3.409999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-2:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.305000066757202,
+      "max": 3.305000066757202
+    },
+    {
+      "label": "scheduler-unit:terrain 1,3:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.2950000762939453,
+      "max": 3.2950000762939453
+    },
+    {
+      "label": "scheduler-unit:terrain 4,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.1950000524520874,
+      "max": 3.1950000524520874
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 5.245000004768372,
+      "max": 3.1299999952316284
+    },
+    {
+      "label": "far-select-anchor",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 4.1600000858306885,
+      "max": 3.100000023841858
+    },
+    {
+      "label": "scheduler-unit:terrain 0,3:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.0950000286102295,
+      "max": 3.0950000286102295
+    },
+    {
+      "label": "scheduler-unit:terrain 2,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 5.304999947547913,
+      "max": 3.0799999237060547
+    },
+    {
+      "label": "scheduler-unit:terrain 5,1:ground",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 3.049999952316284,
+      "max": 3.049999952316284
+    },
+    {
+      "label": "scheduler-unit:terrain 4,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.950000047683716,
+      "max": 2.950000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 6,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.8450000286102295,
+      "max": 2.8450000286102295
+    },
+    {
+      "label": "scheduler-unit:terrain 7,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.6050000190734863,
+      "max": 2.6050000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 5,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.5399999618530273,
+      "max": 2.5399999618530273
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.509999990463257,
+      "max": 2.509999990463257
+    },
+    {
+      "label": "scheduler-unit:terrain 7,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.409999966621399,
+      "max": 2.409999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 4.710000038146973,
+      "max": 2.3700000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.3550000190734863,
+      "max": 2.3550000190734863
+    },
+    {
+      "label": "scheduler-unit:terrain 0,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.1399999856948853,
+      "max": 2.1399999856948853
+    },
+    {
+      "label": "scheduler-unit:terrain 7,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.075000047683716,
+      "max": 2.075000047683716
+    },
+    {
+      "label": "scheduler-unit:terrain 3,3:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 2.0299999713897705,
+      "max": 2.0299999713897705
+    },
+    {
+      "label": "scheduler-unit:terrain 5,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.9900000095367432,
+      "max": 1.9900000095367432
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.9550000429153442,
+      "max": 1.9550000429153442
+    },
+    {
+      "label": "scheduler-unit:terrain 0,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.7000000476837158,
+      "max": 1.7000000476837158
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 2,
+      "total": 3.25,
+      "max": 1.65500009059906
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:mud-edges-worker",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.6100000143051147,
+      "max": 1.6100000143051147
+    },
+    {
+      "label": "scheduler-unit:terrain 6,0:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.5350000858306885,
+      "max": 1.5350000858306885
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.534999966621399,
+      "max": 1.534999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.4900000095367432,
+      "max": 1.4900000095367432
+    },
+    {
+      "label": "scheduler-unit:terrain 0,1:water-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.4299999475479126,
+      "max": 1.4299999475479126
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-1:water-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.4199999570846558,
+      "max": 1.4199999570846558
+    },
+    {
+      "label": "scheduler-unit:terrain 5,1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.3650000095367432,
+      "max": 1.3650000095367432
+    },
+    {
+      "label": "scheduler-unit:terrain 6,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.3499999046325684,
+      "max": 1.3499999046325684
+    },
+    {
+      "label": "scheduler-unit:terrain 3,2:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.3199999332427979,
+      "max": 1.3199999332427979
+    },
+    {
+      "label": "scheduler-unit:terrain 3,-1:mud-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.309999942779541,
+      "max": 1.309999942779541
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:mud-edges",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.28000009059906,
+      "max": 1.28000009059906
+    },
+    {
+      "label": "scheduler-unit:terrain 3,2:water-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.2100000381469727,
+      "max": 1.2100000381469727
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:prop-slots-0",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.2050000429153442,
+      "max": 1.2050000429153442
+    },
+    {
+      "label": "scheduler-unit:terrain 4,2:water-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.159999966621399,
+      "max": 1.159999966621399
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:water-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.1200000047683716,
+      "max": 1.1200000047683716
+    },
+    {
+      "label": "far-ground-uvs",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.100000023841858,
+      "max": 1.100000023841858
+    },
+    {
+      "label": "scheduler-unit:terrain 1,2:water-geometry",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 1,
+      "total": 1.024999976158142,
+      "max": 1.024999976158142
+    },
+    {
+      "label": "worker-terminate",
+      "scope": "Synchronous call wall time; nested spans overlap.",
+      "count": 16,
+      "total": 0.3350001573562622,
+      "max": 0.07500004768371582
+    }
+  ],
+  "slowWorkerFrames": [
+    {
+      "name": "long-animation-frame",
+      "entryType": "long-animation-frame",
+      "startTime": 100725.91500008106,
+      "duration": 86.88499999046326,
+      "navigationId": 8962,
+      "paintTime": 100812.80000007153,
+      "presentationTime": 100850.96000003815,
+      "renderStart": 100798.56500005722,
+      "styleAndLayoutStart": 100812.6700000763,
+      "firstUIEventTimestamp": 0,
+      "blockingDuration": 3.895,
+      "scripts": [
+        {
+          "name": "script",
+          "entryType": "script",
+          "startTime": 100758.66000008583,
+          "duration": 39.59999990463257,
+          "navigationId": 8962,
+          "invoker": "Worker.onmessage",
+          "invokerType": "event-listener",
+          "windowAttribution": "self",
+          "executionStart": 100758.66000008583,
+          "forcedStyleAndLayoutDuration": 0,
+          "pauseDuration": 0,
+          "sourceURL": "http://127.0.0.1:5220/tools/experiments/far-scene-loader.js",
+          "sourceFunctionName": "",
+          "sourceCharPosition": 923
+        },
+        {
+          "name": "script",
+          "entryType": "script",
+          "startTime": 100798.63499999046,
+          "duration": 13.525000095367432,
+          "navigationId": 8962,
+          "invoker": "FrameRequestCallback",
+          "invokerType": "user-callback",
+          "windowAttribution": "self",
+          "executionStart": 100798.63499999046,
+          "forcedStyleAndLayoutDuration": 0.225,
+          "pauseDuration": 0,
+          "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+          "sourceFunctionName": "frame",
+          "sourceCharPosition": 69326
+        }
+      ],
+      "spans": [
+        {
+          "label": "worker-event-data",
+          "start": 100758.69000005722,
+          "duration": 10.25,
+          "scope": "Synchronous call wall time; nested spans overlap."
+        },
+        {
+          "label": "worker-terminate",
+          "start": 100768.96000003815,
+          "duration": 0.014999985694885254,
+          "scope": "Synchronous call wall time; nested spans overlap."
+        },
+        {
+          "label": "worker-receiver",
+          "start": 100758.68500006199,
+          "duration": 10.294999957084656,
+          "scope": "Synchronous call wall time; nested spans overlap."
+        },
+        {
+          "label": "far-region-worker",
+          "start": 94940.24000000954,
+          "end": 100769,
+          "duration": 5828.759999990463,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-create",
+          "start": 100769.75499999523,
+          "end": 100772.59500002861,
+          "duration": 2.840000033378601,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-ground-normals",
+          "start": 100772.84500002861,
+          "duration": 1.3450000286102295,
+          "scope": "Synchronous call wall time; nested spans overlap."
+        },
+        {
+          "label": "far-ground-material",
+          "start": 100790.50499999523,
+          "duration": 3.265000104904175,
+          "scope": "Synchronous call wall time; nested spans overlap."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 100772.60500001907,
+          "end": 100794.625,
+          "duration": 22.019999980926514,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-gpu-ready",
+          "start": 100794.62999999523,
+          "end": 101275.6700000763,
+          "duration": 481.0400000810623,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ]
+    }
+  ],
+  "largestSynchronous": [
+    {
+      "label": "far-region-attach-ground",
+      "start": 100772.60500001907,
+      "end": 100794.625,
+      "duration": 22.019999980926514,
+      "failed": false,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:bank",
+      "start": 124448.91500008106,
+      "duration": 10.959999918937683,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "worker-receiver",
+      "start": 100758.68500006199,
+      "duration": 10.294999957084656,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "worker-event-data",
+      "start": 100758.69000005722,
+      "duration": 10.25,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:bank",
+      "start": 118937.8600000143,
+      "duration": 8.590000033378601,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:ground",
+      "start": 118733.65000009537,
+      "duration": 8.129999995231628,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:water-bed",
+      "start": 124643.24000000954,
+      "duration": 5.759999990463257,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,1:mud-geometry",
+      "start": 125297.55500006676,
+      "duration": 4.804999947547913,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 7,2:ground",
+      "start": 101995.31000006199,
+      "duration": 4.509999990463257,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 6,2:ground",
+      "start": 97216.0150001049,
+      "duration": 4.4649999141693115,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-2:ground",
+      "start": 101684.63499999046,
+      "duration": 4.365000009536743,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 2,0:water-bed",
+      "start": 119018.99000000954,
+      "duration": 4.144999980926514,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 7,0:ground",
+      "start": 101094.85000002384,
+      "duration": 4.115000009536743,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,-1:ground",
+      "start": 124329.37999999523,
+      "duration": 4.115000009536743,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "far-region-create",
+      "start": 99351.72500002384,
+      "end": 99355.80000007153,
+      "duration": 4.075000047683716,
+      "failed": false,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,2:ground",
+      "start": 128423.23000001907,
+      "duration": 4.045000076293945,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-1:mud-geometry",
+      "start": 96123.82000005245,
+      "duration": 4.024999976158142,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 6,-1:ground",
+      "start": 96036.33500003815,
+      "duration": 4,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 7,1:ground",
+      "start": 101609.68000006676,
+      "duration": 3.8700000047683716,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 6,1:ground",
+      "start": 96423.33500003815,
+      "duration": 3.7450000047683716,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-1:ground",
+      "start": 91282.75,
+      "duration": 3.7200000286102295,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 5,2:ground",
+      "start": 91715.7350000143,
+      "duration": 3.6850000619888306,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 2,-1:ground",
+      "start": 118818.36500000954,
+      "duration": 3.665000081062317,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,1:ground",
+      "start": 125281,
+      "duration": 3.625,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 2,1:ground",
+      "start": 119588.67500007153,
+      "duration": 3.6050000190734863,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 5,-2:ground",
+      "start": 91576.52000010014,
+      "duration": 3.5899999141693115,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 6,0:ground",
+      "start": 95952.47000002861,
+      "duration": 3.4850000143051147,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 5,0:ground",
+      "start": 91185.87000000477,
+      "duration": 3.475000023841858,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 1,0:ground",
+      "start": 124234.35000002384,
+      "duration": 3.465000033378601,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    },
+    {
+      "label": "scheduler-unit:terrain 7,-1:ground",
+      "start": 101182.6550000906,
+      "duration": 3.409999966621399,
+      "scope": "Synchronous call wall time; nested spans overlap."
+    }
+  ],
+  "limits": [
+    "Diagnostic source instrumentation changes observation overhead; no optimization treatment.",
+    "Async spans are elapsed latency including concurrent work, not exclusive CPU.",
+    "Nested spans overlap and must not be summed.",
+    "Scheduler units below 1ms are not recorded; totals are incomplete by design."
+  ]
+}

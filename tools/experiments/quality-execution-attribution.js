@@ -4,6 +4,30 @@ import {BufferGeometry} from 'three';
 export async function observeQualityExecution(world,run){
  const frames=[],phases=[],longFrames=[],previousFrame=globalThis.qaMainFrame,previousPhase=globalThis.qaMainPhase;
  const farOperations=[],restore=[];
+ let depthRegions=null;if(new URLSearchParams(globalThis.location?.search??'').has('softDepthRegion')){const {installSoftDepthRegion}=await import('./soft-depth-region.js');const finish=installSoftDepthRegion(world,{cropCamera:new URLSearchParams(globalThis.location.search).get('softDepthRegion')==='2'});restore.push(()=>{depthRegions=finish();});}
+
+ let depthDemand=null;if(new URLSearchParams(globalThis.location?.search??'').get('softDepthDemand')==='1'){const {installSoftDepthDemandAudit}=await import('./soft-depth-demand-audit.js');const finish=installSoftDepthDemandAudit(world);restore.push(()=>{depthDemand=finish();});}
+ let depthVisibility=null;if(new URLSearchParams(globalThis.location?.search??'').get('softDepthVisibility')==='1'){const {installSoftDepthVisibility}=await import('./soft-depth-visibility.js');const finish=installSoftDepthVisibility(world);restore.push(()=>{depthVisibility=finish();});}
+ let matrixReuse=null;if(new URLSearchParams(globalThis.location?.search??'').get('depthMatrixReuse')==='1'){const {installDepthSceneMatrixReuse}=await import('./reuse-depth-scene-matrices.js');const finish=installDepthSceneMatrixReuse(world);restore.push(()=>{matrixReuse=finish();});}
+ const renderStages=[],depthRequests=[],depthPrograms=[];let renderStagesDropped=0;
+ if(new URLSearchParams(globalThis.location?.search??'').get('qualityRenderStages')==='1'){
+  const record=span=>{if(span.duration<1)return;if(renderStages.length<20000)renderStages.push(span);else renderStagesDropped++;};
+  const previous=world.onLoadingSpan;
+  const witness=span=>{previous?.(span);if(span.label.startsWith('world-frame-'))record(span);};
+  world.onLoadingSpan=witness;restore.push(()=>{if(world.onLoadingSpan===witness)world.onLoadingSpan=previous;});
+  for(const slot of ['workVfx','attackVfx','shieldVfx','agricultureVfx','materialVfx','locomotionVfx']){
+   const owner=world[slot];if(!owner)continue;const originalPrepare=owner.prepare;
+   const prepare=function(...args){const result=originalPrepare.apply(this,args);if(result&&depthRequests.length<20000)depthRequests.push({slot,at:performance.now(),effects:owner.effects?.size});return result;};
+   owner.prepare=prepare;restore.push(()=>{if(owner.prepare===prepare)owner.prepare=originalPrepare;});
+  }
+  const depthOwner=world.destructionPass,originalDepth=depthOwner.captureDepth;
+  const capture=function(...args){const before=world.renderer.info.programs.map(p=>({id:p.id,key:p.cacheKey,usedTimes:p.usedTimes})),ids=new Set(before.map(p=>p.id)),at=performance.now();try{return originalDepth.apply(this,args);}finally{const after=world.renderer.info.programs.filter(p=>!ids.has(p.id)).map(p=>({id:p.id,key:p.cacheKey,usedTimes:p.usedTimes}));if(after.length)depthPrograms.push({at,before,created:after,retention:{...world.programLease?.stats}});}};
+  depthOwner.captureDepth=capture;restore.push(()=>{if(depthOwner.captureDepth===capture)depthOwner.captureDepth=originalDepth;});
+  const original=world.renderer.render;
+  const wrapped=function(scene,camera){const start=performance.now();try{return original.call(this,scene,camera);}finally{const end=performance.now();record({label:scene===world.scene?'three-world-render':'three-aux-render',target:this.getRenderTarget()?.texture?.uuid??null,override:scene.overrideMaterial?.type??null,start,end,duration:end-start});}};
+  world.renderer.render=wrapped;restore.push(()=>{if(world.renderer.render===wrapped)world.renderer.render=original;});
+ }
+
  const normalOwner=BufferGeometry.prototype,originalNormals=normalOwner.computeVertexNormals;
  const wrappedNormals=function(...args){const at=performance.now();try{return originalNormals.apply(this,args);}finally{const ms=performance.now()-at;if(ms>=1&&farOperations.length<10000)farOperations.push({label:'computeVertexNormals',vertices:this.attributes.position?.count,indices:this.index?.count,at,ms});}};
  normalOwner.computeVertexNormals=wrappedNormals;restore.push(()=>{if(normalOwner.computeVertexNormals===wrappedNormals)normalOwner.computeVertexNormals=originalNormals;});
@@ -26,5 +50,5 @@ export async function observeQualityExecution(world,run){
  try{result=await run();}
  finally{for(const fn of restore.reverse())fn();gpu.stop();globalThis.qaMainFrame=previousFrame;globalThis.qaMainPhase=previousPhase;if(observer){longFrames.push(...observer.takeRecords().map(e=>e.toJSON()));observer.disconnect();}if(!result)await gpu.finish();}
  const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
- return {...result,execution:{frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
+ return {...result,execution:{matrixReuse,depthVisibility,depthDemand,depthRegions,renderStages,renderStagesDropped,depthRequests,depthPrograms,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
 }

@@ -1,0 +1,107 @@
+{
+  "scope": "Functional runtime checks, not performance acceptance or interruption coverage",
+  "runs": {
+    "quality": {
+      "candidate": {
+        "calls": 1,
+        "yields": 1
+      },
+      "shaderWarningMessages": 28,
+      "otherErrors": [],
+      "transitions": [
+        {
+          "quality": "baja",
+          "transitionWallMs": 494.6200000047684,
+          "chunkWaitMs": 0.02499997615814209,
+          "drawCalls": 78,
+          "maxObservedFrameMs": 61.87000000476837
+        },
+        {
+          "quality": "media",
+          "transitionWallMs": 598.5,
+          "chunkWaitMs": 1.065000057220459,
+          "drawCalls": 73,
+          "maxObservedFrameMs": 56.99499988555908
+        },
+        {
+          "quality": "baja",
+          "transitionWallMs": 2482.3300000429153,
+          "chunkWaitMs": 1871.8250000476837,
+          "drawCalls": 71,
+          "maxObservedFrameMs": 95.92999994754791
+        }
+      ],
+      "active": {
+        "travelWallMs": 8827.164999961853,
+        "settledWallMs": 8827.27999997139,
+        "postTravelWaitMs": 0.11500000953674316,
+        "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+        "initialElapsed": 126.39382000003482,
+        "elapsed": 135.12454000003703,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      }
+    },
+    "context": {
+      "candidate": {
+        "calls": 1,
+        "yields": 1
+      },
+      "shaderWarningMessages": 30,
+      "otherErrors": [],
+      "restore": {
+        "temporaryProgramScope": null,
+        "compilationCancellation": null,
+        "recovery": {
+          "revision": 3,
+          "ms": 1415.1200000047684,
+          "retained": 36
+        },
+        "retained": {
+          "retained": 36,
+          "released": 0,
+          "destroyed": 0,
+          "abandoned": 0,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "abandoned": {
+          "retained": 92,
+          "released": 0,
+          "destroyed": 0,
+          "abandoned": 92,
+          "skipped": 0,
+          "unsupported": false
+        },
+        "programs": 37,
+        "drawCalls": 77,
+        "worldUnchanged": true,
+        "backend": "pthreads",
+        "nativeBytes": 16777216,
+        "glEpoch": {
+          "epoch": 1,
+          "created": 4782,
+          "staleDeletes": 58,
+          "currentDeletes": 1088,
+          "unknownDeletes": 0
+        }
+      }
+    }
+  }
+}

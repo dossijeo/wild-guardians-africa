@@ -1,0 +1,244 @@
+{
+  "invariant": {
+    "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1&qualityAttribution=1&qualityRenderStages=1",
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "runtime": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+    "qualityCase": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+  },
+  "rows": [
+    {
+      "order": 1,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/soft-depth-visibility.js": "34662d6b353ac721c3876990194a3f4849f7b0b475c4aed086678ea4a65c03c5",
+        "tools/experiments/check-spatial-thread-game.mjs": "a0421af2741bef98f6e03fb5d792d8b427a8078656dae078a2c3d574002fa89d",
+        "src/rendering/buildings.js": "1999041bc0bec66ab4f45944d18101f31bbefc67f02bdc8f78bf8626becd7af4",
+        "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+        "src/rendering/vfx.js": "e48a74c0424bf2943443c3603d3e32af093910a33606a46f80e85f6c0aefd61f",
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1c3c8da0cd04e1c3edc31f8992233a8301993ef4837d2eaa2913949a6c1d8b67",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "43855f600c6b9b3d0e05922ff6acb30e12abbced3384157956a13f269534e948",
+        "tools/experiments/quality-execution-attribution.js": "63a2a42dddcc4a2ecd70c15c17f6e5c159a5968c3604859bbf2a6c27529d88c3"
+      },
+      "warnings": 28,
+      "depthVisibility": null,
+      "cpu": {
+        "n": 240,
+        "p50": 14.75,
+        "p95": 27.009999990463257,
+        "p99": 33.74000000953674,
+        "max": 51.77499997615814
+      },
+      "gpu": {
+        "n": 80,
+        "p50": 32.827967,
+        "p95": 71.168437,
+        "p99": 72.055467,
+        "max": 75.061406
+      },
+      "callbackCadence": {
+        "n": 239,
+        "p50": 66.47000000000116,
+        "p95": 116.46499999999651,
+        "p99": 149.59500000000116,
+        "max": 166.32500000000437
+      },
+      "transitionIntervals": {
+        "n": 179,
+        "p50": 65.63499999046326,
+        "p95": 125.17000007629395,
+        "p99": 155.75999999046326,
+        "max": 165.24000000953674
+      },
+      "maxBlockingLoaf": 24.2,
+      "slowGL": [],
+      "travelMs": 15214.759999990463,
+      "settledMs": 15214.865000009537,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    },
+    {
+      "order": 2,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/soft-depth-visibility.js": "34662d6b353ac721c3876990194a3f4849f7b0b475c4aed086678ea4a65c03c5",
+        "tools/experiments/check-spatial-thread-game.mjs": "a0421af2741bef98f6e03fb5d792d8b427a8078656dae078a2c3d574002fa89d",
+        "src/rendering/buildings.js": "1999041bc0bec66ab4f45944d18101f31bbefc67f02bdc8f78bf8626becd7af4",
+        "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+        "src/rendering/vfx.js": "e48a74c0424bf2943443c3603d3e32af093910a33606a46f80e85f6c0aefd61f",
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1c3c8da0cd04e1c3edc31f8992233a8301993ef4837d2eaa2913949a6c1d8b67",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "43855f600c6b9b3d0e05922ff6acb30e12abbced3384157956a13f269534e948",
+        "tools/experiments/quality-execution-attribution.js": "63a2a42dddcc4a2ecd70c15c17f6e5c159a5968c3604859bbf2a6c27529d88c3"
+      },
+      "warnings": 28,
+      "depthVisibility": {
+        "requested": 104,
+        "skipped": 34
+      },
+      "cpu": {
+        "n": 249,
+        "p50": 14.325000047683716,
+        "p95": 24.829999923706055,
+        "p99": 35.07000005245209,
+        "max": 61.550000071525574
+      },
+      "gpu": {
+        "n": 83,
+        "p50": 20.063123,
+        "p95": 68.715624,
+        "p99": 87.569947,
+        "max": 90.484895
+      },
+      "callbackCadence": {
+        "n": 248,
+        "p50": 66.47499999999854,
+        "p95": 116.45999999999913,
+        "p99": 149.65499999999884,
+        "max": 199.40499999999884
+      },
+      "transitionIntervals": {
+        "n": 82,
+        "p50": 66.27499997615814,
+        "p95": 150.32500004768372,
+        "p99": 174.73500001430511,
+        "max": 176.45999991893768
+      },
+      "maxBlockingLoaf": 39.55,
+      "slowGL": [],
+      "travelMs": 15822.094999909401,
+      "settledMs": 16362.314999938011,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    },
+    {
+      "order": 3,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/soft-depth-visibility.js": "34662d6b353ac721c3876990194a3f4849f7b0b475c4aed086678ea4a65c03c5",
+        "tools/experiments/check-spatial-thread-game.mjs": "a0421af2741bef98f6e03fb5d792d8b427a8078656dae078a2c3d574002fa89d",
+        "src/rendering/buildings.js": "1999041bc0bec66ab4f45944d18101f31bbefc67f02bdc8f78bf8626becd7af4",
+        "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+        "src/rendering/vfx.js": "e48a74c0424bf2943443c3603d3e32af093910a33606a46f80e85f6c0aefd61f",
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1c3c8da0cd04e1c3edc31f8992233a8301993ef4837d2eaa2913949a6c1d8b67",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "43855f600c6b9b3d0e05922ff6acb30e12abbced3384157956a13f269534e948",
+        "tools/experiments/quality-execution-attribution.js": "63a2a42dddcc4a2ecd70c15c17f6e5c159a5968c3604859bbf2a6c27529d88c3"
+      },
+      "warnings": 28,
+      "depthVisibility": null,
+      "cpu": {
+        "n": 316,
+        "p50": 14.550000071525574,
+        "p95": 23.87999999523163,
+        "p99": 34.700000047683716,
+        "max": 53.97000002861023
+      },
+      "gpu": {
+        "n": 106,
+        "p50": 29.097291,
+        "p95": 57.570468,
+        "p99": 71.585103,
+        "max": 78.134112
+      },
+      "callbackCadence": {
+        "n": 315,
+        "p50": 50.10000000000582,
+        "p95": 99.88000000000466,
+        "p99": 116.43499999999767,
+        "max": 182.97499999999854
+      },
+      "transitionIntervals": {
+        "n": 308,
+        "p50": 55.574999928474426,
+        "p95": 105.48500001430511,
+        "p99": 125.0349999666214,
+        "max": 180.4800000190735
+      },
+      "maxBlockingLoaf": 40.08,
+      "slowGL": [],
+      "travelMs": 14372.960000038147,
+      "settledMs": 19234.84000003338,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    },
+    {
+      "order": 4,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/soft-depth-visibility.js": "34662d6b353ac721c3876990194a3f4849f7b0b475c4aed086678ea4a65c03c5",
+        "tools/experiments/check-spatial-thread-game.mjs": "a0421af2741bef98f6e03fb5d792d8b427a8078656dae078a2c3d574002fa89d",
+        "src/rendering/buildings.js": "1999041bc0bec66ab4f45944d18101f31bbefc67f02bdc8f78bf8626becd7af4",
+        "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+        "src/rendering/vfx.js": "e48a74c0424bf2943443c3603d3e32af093910a33606a46f80e85f6c0aefd61f",
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1c3c8da0cd04e1c3edc31f8992233a8301993ef4837d2eaa2913949a6c1d8b67",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "43855f600c6b9b3d0e05922ff6acb30e12abbced3384157956a13f269534e948",
+        "tools/experiments/quality-execution-attribution.js": "63a2a42dddcc4a2ecd70c15c17f6e5c159a5968c3604859bbf2a6c27529d88c3"
+      },
+      "warnings": 28,
+      "depthVisibility": {
+        "requested": 157,
+        "skipped": 98
+      },
+      "cpu": {
+        "n": 240,
+        "p50": 10.129999995231628,
+        "p95": 17.990000009536743,
+        "p99": 27.050000071525574,
+        "max": 45.07000005245209
+      },
+      "gpu": {
+        "n": 80,
+        "p50": 23.119895,
+        "p95": 34.899322,
+        "p99": 41.483748,
+        "max": 41.50776
+      },
+      "callbackCadence": {
+        "n": 239,
+        "p50": 33.20999999999913,
+        "p95": 50.3550000000032,
+        "p99": 83.14500000000407,
+        "max": 99.73999999999796
+      },
+      "transitionIntervals": {
+        "n": 65,
+        "p50": 39.99000000953674,
+        "p95": 64.22000002861023,
+        "p99": 73.87000000476837,
+        "max": 95.83500003814697
+      },
+      "maxBlockingLoaf": 12.155,
+      "slowGL": [],
+      "travelMs": 7763.975000023842,
+      "settledMs": 7764.074999928474,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    }
+  ],
+  "limits": [
+    "Two repetitions per treatment; attribution instrumentation adds overhead. Not final acceptance.",
+    "One historical populated biome save only; no full-game or six-biome completion claim.",
+    "Existing X4000 compiler warnings preserved, not a clean-console claim.",
+    "GPU query durations include bubbles. CPU and callback cadence are separate.",
+    "Callback timestamp deltas cover main callbacks; transitionIntervals cover only transition windows.",
+    "240-frame travel has variable wall duration. Streaming arrivals may vary; compare useful work and total settled time."
+  ]
+}

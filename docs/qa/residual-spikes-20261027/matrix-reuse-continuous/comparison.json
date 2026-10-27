@@ -1,0 +1,191 @@
+{
+  "reference": {
+    "sources": {
+      "tools/experiments/check-shield-repeat-render.mjs": "c8a7efa4da18280c3e123122886369f6c757e1a1c5e2de926ea895dce72776db",
+      "tools/experiments/reuse-depth-scene-matrices.js": "26b23c57f4f873cf5bc9ad49def0f46aaae4f07bf88d36ab7a019bf515cb169f",
+      "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+      "src/rendering/render-origin.js": "92aa71a8f0da4880af1111059fb954f68927ca0e53ec2fcb09bd4b3fe4b2c3ef",
+      "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+      "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b"
+    },
+    "conditions": {
+      "WG_QA_URL": "http://127.0.0.1:5220",
+      "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+      "WG_MAGIC_PROFILE": "1",
+      "WG_MAGIC_CPU_SAMPLING": "0",
+      "WG_MAGIC_VIDEO": "0",
+      "WG_MAGIC_GPU": "1",
+      "WG_MAGIC_PHASES": "1",
+      "WG_MAGIC_CASTS": "1",
+      "WG_MAGIC_NO_CAST": "1",
+      "WG_MAGIC_STREAM": "1",
+      "WG_MAGIC_STREAM_DISTANCE": "144",
+      "WG_MAGIC_STREAM_SECONDS": "40"
+    },
+    "hardware": {
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "hardwareConcurrency": 16,
+      "devicePixelRatio": 1,
+      "canvas": [
+        1280,
+        720
+      ],
+      "crossOriginIsolated": true
+    }
+  },
+  "rows": [
+    {
+      "candidate": false,
+      "matrixReuse": null,
+      "cpu": {
+        "n": 1480,
+        "p50": 8.575000047683716,
+        "p95": 16.59999990463257,
+        "p99": 22.37000000476837,
+        "max": 51.579999923706055
+      },
+      "presentation": {
+        "n": 1466,
+        "p50": 33.129999999990105,
+        "p95": 49.94000000000233,
+        "p99": 66.5399999999936,
+        "max": 99.80500000000757
+      },
+      "gpuQueries": {
+        "n": 1476,
+        "p50": 22.348331,
+        "p95": 30.723333,
+        "p99": 34.941561,
+        "max": 43.723905
+      },
+      "streaming": {
+        "observations": 400,
+        "duration": 40.00014999997616,
+        "uniqueChunks": 40,
+        "initialChunks": 25,
+        "finalChunks": 14
+      },
+      "simulationAdvance": 41.42163000000054,
+      "programWaits": 0,
+      "consoleErrors": []
+    },
+    {
+      "candidate": true,
+      "matrixReuse": {
+        "reused": 0
+      },
+      "cpu": {
+        "n": 1499,
+        "p50": 8.670000076293945,
+        "p95": 16.115000009536743,
+        "p99": 22.81499993801117,
+        "max": 51.72500002384186
+      },
+      "presentation": {
+        "n": 1484,
+        "p50": 33.044999999998254,
+        "p95": 49.9600000000064,
+        "p99": 66.55500000000757,
+        "max": 99.89999999999418
+      },
+      "gpuQueries": {
+        "n": 1497,
+        "p50": 22.012446,
+        "p95": 30.492239,
+        "p99": 33.961822,
+        "max": 42.787239
+      },
+      "streaming": {
+        "observations": 400,
+        "duration": 40.00102999997139,
+        "uniqueChunks": 39,
+        "initialChunks": 22,
+        "finalChunks": 14
+      },
+      "simulationAdvance": 41.37165000000059,
+      "programWaits": 0,
+      "consoleErrors": []
+    },
+    {
+      "candidate": false,
+      "matrixReuse": null,
+      "cpu": {
+        "n": 1309,
+        "p50": 11.984999895095825,
+        "p95": 23.865000009536743,
+        "p99": 32.36500000953674,
+        "max": 52.60000002384186
+      },
+      "presentation": {
+        "n": 1295,
+        "p50": 33.23500000000058,
+        "p95": 66.39500000000407,
+        "p99": 83.10000000000582,
+        "max": 116.38999999999942
+      },
+      "gpuQueries": {
+        "n": 1307,
+        "p50": 25.03625,
+        "p95": 34.497968,
+        "p99": 43.051821,
+        "max": 52.552186
+      },
+      "streaming": {
+        "observations": 400,
+        "duration": 40.00531500005722,
+        "uniqueChunks": 40,
+        "initialChunks": 25,
+        "finalChunks": 12
+      },
+      "simulationAdvance": 41.33854500000082,
+      "programWaits": 0,
+      "consoleErrors": []
+    },
+    {
+      "candidate": true,
+      "matrixReuse": {
+        "reused": 0
+      },
+      "cpu": {
+        "n": 1401,
+        "p50": 9.194999933242798,
+        "p95": 19.325000047683716,
+        "p99": 26.864999890327454,
+        "max": 60.96499991416931
+      },
+      "presentation": {
+        "n": 1389,
+        "p50": 33.169999999998254,
+        "p95": 50.0850000000064,
+        "p99": 83.0850000000064,
+        "max": 166.2450000000099
+      },
+      "gpuQueries": {
+        "n": 1397,
+        "p50": 22.81026,
+        "p95": 33.458593,
+        "p99": 40.803853,
+        "max": 59.85776
+      },
+      "streaming": {
+        "observations": 400,
+        "duration": 40.00398000001908,
+        "uniqueChunks": 40,
+        "initialChunks": 22,
+        "finalChunks": 13
+      },
+      "simulationAdvance": 41.355205000000545,
+      "programWaits": 0,
+      "consoleErrors": []
+    }
+  ],
+  "treatmentExercised": false,
+  "limitations": [
+    "One populated Manglares fixture at medium quality; no universal performance claim.",
+    "If treatmentExercised is false, timings cannot establish benefit from matrix reuse; zero reuse is a relevance failure, not an acceptance pass.",
+    "GPU query durations include pipeline bubbles, not exclusive GPU execution.",
+    "Existing instrumentation is identical across treatments; CPU includes query bookkeeping.",
+    "Camera samples every100ms; equal route duration does not ensure identical simulation timing or chunk installation times.",
+    "Screenshots during the run can affect isolated frame maxima; raw timings retained."
+  ]
+}

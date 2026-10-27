@@ -1,0 +1,3 @@
+# Night validation interrupted
+
+The process exited 1 before the night bank screenshot. inspectLiveWaterCancellation failed its resident-groups-unchanged assertion. The probe yields to the browser and is invoked after moving-camera streaming; it does not first assert a drained streaming queue. Therefore this evidence does not distinguish unrelated chunk publication/eviction from mutation caused by the private preparation. Do not count it as night acceptance and do not weaken the resident-group invariant. Next reproduction must record before/after keys and group identities, streaming state and timing around the probe to attribute the mutation. Raw failure and provenance retained.

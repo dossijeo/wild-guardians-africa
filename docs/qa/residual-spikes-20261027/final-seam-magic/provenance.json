@@ -1,0 +1,24 @@
+{
+  "commit": "28135c12c4e4f63904cf8cf5064772f005e71ad1",
+  "sources": {
+    "tools/experiments/check-shield-repeat-render.mjs": "4273321d924fc639827e29595c2b017474c6f065b914c1d7a52d1fd2a76defa2",
+    "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+    "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+    "tools/experiments/native-far-ground.js": "1c3c8da0cd04e1c3edc31f8992233a8301993ef4837d2eaa2913949a6c1d8b67",
+    "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe"
+  },
+  "conditions": {
+    "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/final-seam-magic",
+    "WG_QA_URL": "http://127.0.0.1:5220",
+    "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+    "WG_MAGIC_PROFILE": "1",
+    "WG_MAGIC_CPU_SAMPLING": "0",
+    "WG_MAGIC_VIDEO": "0",
+    "WG_MAGIC_GPU": "1",
+    "WG_MAGIC_PHASES": "1",
+    "WG_MAGIC_CASTS": "2",
+    "WG_MAGIC_STREAM": "1",
+    "WG_MAGIC_STREAM_DISTANCE": "144",
+    "WG_MAGIC_STREAM_SECONDS": "40"
+  }
+}

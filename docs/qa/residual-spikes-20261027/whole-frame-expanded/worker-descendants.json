@@ -1,0 +1,110 @@
+{
+  "scope": "Sampled descendants of far loader/layer (excluding layer update); full profile including warmup, not exact LoAF interval.",
+  "total": 190.95099999999994,
+  "self": [
+    [
+      "treeState http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:73",
+      74.47199999999998
+    ],
+    [
+      " http://127.0.0.1:5220/tools/experiments/far-scene-loader.js:4",
+      34.629
+    ],
+    [
+      "worker.onmessage http://127.0.0.1:5220/tools/experiments/far-scene-loader.js:17",
+      16.549
+    ],
+    [
+      "wasm-function[71] http://127.0.0.1:5220/wild-engine/spatial-threaded.wasm:1",
+      13.878
+    ],
+    [
+      "wasm-function[17] http://127.0.0.1:5220/wild-engine/spatial-threaded.wasm:1",
+      12.732999999999999
+    ],
+    [
+      "createFarImpostorPrototype http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:8",
+      4.868
+    ],
+    [
+      "treeAtlasAnchor http://127.0.0.1:5220/tools/experiments/far-tree-sampling.js:31",
+      3.196
+    ],
+    [
+      "bind http://127.0.0.1:5220/tools/experiments/far-tree-transitions.js:5",
+      3.158
+    ],
+    [
+      "has http://127.0.0.1:5220/tools/experiments/native-prepared-tree-coverage.js:20",
+      2.572
+    ],
+    [
+      "setCoverage http://127.0.0.1:5220/tools/experiments/far-tree-transitions.js:10",
+      1.95
+    ],
+    [
+      "standbyAvailable http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:64",
+      1.692
+    ],
+    [
+      "dispatchEvent http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:267",
+      1.688
+    ],
+    [
+      "farGroundColorUvs http://127.0.0.1:5220/tools/experiments/far-ground-color-map.js:17",
+      1.679
+    ],
+    [
+      "wasm-function[165] http://127.0.0.1:5220/wild-engine/spatial-threaded.wasm:1",
+      1.669
+    ],
+    [
+      "prepare http://127.0.0.1:5220/src/rendering/smooth-far-transitions.js:46",
+      1.62
+    ],
+    [
+      "computeVertexNormals http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:11413",
+      1.605
+    ],
+    [
+      "wasm-function[55] http://127.0.0.1:5220/wild-engine/spatial-threaded.wasm:1",
+      1.587
+    ],
+    [
+      "prepareSmoothFar http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:94",
+      1.545
+    ],
+    [
+      "standbyTreeKey http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:15",
+      1.536
+    ],
+    [
+      "cloneUniforms http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:12023",
+      1.501
+    ],
+    [
+      "treeDensityRank http://127.0.0.1:5220/tools/experiments/far-impostor-math.js:3",
+      1.501
+    ],
+    [
+      "URLSearchParams :0",
+      1.38
+    ],
+    [
+      "copy http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:10063",
+      1.295
+    ],
+    [
+      "wasm-function[16] http://127.0.0.1:5220/wild-engine/spatial-threaded.wasm:1",
+      1.211
+    ],
+    [
+      "_BufferGeometry http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:10913",
+      1.131
+    ],
+    [
+      "setTreeReadiness http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:65",
+      0.306
+    ]
+  ]
+}

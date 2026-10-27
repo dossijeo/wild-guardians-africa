@@ -1,0 +1,465 @@
+{
+  "scope": "Process CPU deltas sampled during this interval, not GPU activity, temperature, or proof of interference. Top 12 only; newly started processes lack a first delta.",
+  "logicalProcessors": 16,
+  "memoryAtEnd": {
+    "totalKiB": 66841384,
+    "freeKiB": 22648208
+  },
+  "samples": [
+    {
+      "utc": "2026-10-27T14:59:33.6122531Z",
+      "elapsedSeconds": 2.0647104,
+      "intervalSeconds": 2.0647104,
+      "processes": [
+        {
+          "pid": 23048,
+          "name": "ChatGPT",
+          "cpuSeconds": 2.3125,
+          "coreEquivalents": 1.1200117943901478,
+          "workingSetBytes": 910614528
+        },
+        {
+          "pid": 27576,
+          "name": "node",
+          "cpuSeconds": 2.046875,
+          "coreEquivalents": 0.9913617909804687,
+          "workingSetBytes": 1004883968
+        },
+        {
+          "pid": 45844,
+          "name": "node",
+          "cpuSeconds": 1.9375,
+          "coreEquivalents": 0.9383882601647184,
+          "workingSetBytes": 793071616
+        },
+        {
+          "pid": 42388,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.625,
+          "coreEquivalents": 0.30270589037571566,
+          "workingSetBytes": 1674625024
+        },
+        {
+          "pid": 15188,
+          "name": "CrossDeviceService",
+          "cpuSeconds": 0.40625,
+          "coreEquivalents": 0.19675882874421516,
+          "workingSetBytes": 322883584
+        },
+        {
+          "pid": 8200,
+          "name": "audiodg",
+          "cpuSeconds": 0.328125,
+          "coreEquivalents": 0.1589205924472507,
+          "workingSetBytes": 50683904
+        },
+        {
+          "pid": 3904,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.328125,
+          "coreEquivalents": 0.1589205924472507,
+          "workingSetBytes": 1560113152
+        },
+        {
+          "pid": 39860,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.25,
+          "coreEquivalents": 0.12108235615028626,
+          "workingSetBytes": 639242240
+        },
+        {
+          "pid": 25912,
+          "name": "pwsh",
+          "cpuSeconds": 0.203125,
+          "coreEquivalents": 0.09837941437210758,
+          "workingSetBytes": 101179392
+        },
+        {
+          "pid": 10652,
+          "name": "dptf_helper",
+          "cpuSeconds": 0.078125,
+          "coreEquivalents": 0.03783823629696446,
+          "workingSetBytes": 7954432
+        },
+        {
+          "pid": 22704,
+          "name": "explorer",
+          "cpuSeconds": 0.078125,
+          "coreEquivalents": 0.03783823629696446,
+          "workingSetBytes": 213426176
+        },
+        {
+          "pid": 22596,
+          "name": "logioptionsplus_agent",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.02270294177817867,
+          "workingSetBytes": 177872896
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-27T14:59:35.7316567Z",
+      "elapsedSeconds": 4.2097966,
+      "intervalSeconds": 2.1450861999999997,
+      "processes": [
+        {
+          "pid": 23048,
+          "name": "ChatGPT",
+          "cpuSeconds": 2.609375,
+          "coreEquivalents": 1.2164429569310549,
+          "workingSetBytes": 910569472
+        },
+        {
+          "pid": 25912,
+          "name": "pwsh",
+          "cpuSeconds": 0.6875,
+          "coreEquivalents": 0.3204999407483019,
+          "workingSetBytes": 107454464
+        },
+        {
+          "pid": 42388,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.6875,
+          "coreEquivalents": 0.3204999407483019,
+          "workingSetBytes": 1673883648
+        },
+        {
+          "pid": 15188,
+          "name": "CrossDeviceService",
+          "cpuSeconds": 0.34375,
+          "coreEquivalents": 0.16024997037415095,
+          "workingSetBytes": 322867200
+        },
+        {
+          "pid": 39860,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.265625,
+          "coreEquivalents": 0.12382952256184392,
+          "workingSetBytes": 639340544
+        },
+        {
+          "pid": 8200,
+          "name": "audiodg",
+          "cpuSeconds": 0.25,
+          "coreEquivalents": 0.11654543299938251,
+          "workingSetBytes": 50683904
+        },
+        {
+          "pid": 3904,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.234375,
+          "coreEquivalents": 0.10926134343692111,
+          "workingSetBytes": 1561272320
+        },
+        {
+          "pid": 10652,
+          "name": "dptf_helper",
+          "cpuSeconds": 0.078125,
+          "coreEquivalents": 0.036420447812307036,
+          "workingSetBytes": 7954432
+        },
+        {
+          "pid": 31272,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.078125,
+          "coreEquivalents": 0.036420447812307036,
+          "workingSetBytes": 236077056
+        },
+        {
+          "pid": 22596,
+          "name": "logioptionsplus_agent",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.02185226868738422,
+          "workingSetBytes": 177872896
+        },
+        {
+          "pid": 22704,
+          "name": "explorer",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.02185226868738422,
+          "workingSetBytes": 213426176
+        },
+        {
+          "pid": 9460,
+          "name": "AdobeCollabSync",
+          "cpuSeconds": 0.03125,
+          "coreEquivalents": 0.014568179124922814,
+          "workingSetBytes": 150589440
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-27T14:59:37.7989170Z",
+      "elapsedSeconds": 6.3063324,
+      "intervalSeconds": 2.0965358,
+      "processes": [
+        {
+          "pid": 23048,
+          "name": "ChatGPT",
+          "cpuSeconds": 2.3125,
+          "coreEquivalents": 1.1030100225333621,
+          "workingSetBytes": 912842752
+        },
+        {
+          "pid": 42388,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.75,
+          "coreEquivalents": 0.3577329802810904,
+          "workingSetBytes": 1674403840
+        },
+        {
+          "pid": 25912,
+          "name": "pwsh",
+          "cpuSeconds": 0.421875,
+          "coreEquivalents": 0.20122480140811333,
+          "workingSetBytes": 114180096
+        },
+        {
+          "pid": 39860,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.390625,
+          "coreEquivalents": 0.1863192605630679,
+          "workingSetBytes": 638406656
+        },
+        {
+          "pid": 8200,
+          "name": "audiodg",
+          "cpuSeconds": 0.390625,
+          "coreEquivalents": 0.1863192605630679,
+          "workingSetBytes": 50683904
+        },
+        {
+          "pid": 15188,
+          "name": "CrossDeviceService",
+          "cpuSeconds": 0.265625,
+          "coreEquivalents": 0.1266970971828862,
+          "workingSetBytes": 322883584
+        },
+        {
+          "pid": 3904,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.234375,
+          "coreEquivalents": 0.11179155633784074,
+          "workingSetBytes": 1559351296
+        },
+        {
+          "pid": 10652,
+          "name": "dptf_helper",
+          "cpuSeconds": 0.09375,
+          "coreEquivalents": 0.0447166225351363,
+          "workingSetBytes": 7954432
+        },
+        {
+          "pid": 22704,
+          "name": "explorer",
+          "cpuSeconds": 0.0625,
+          "coreEquivalents": 0.029811081690090866,
+          "workingSetBytes": 213426176
+        },
+        {
+          "pid": 22596,
+          "name": "logioptionsplus_agent",
+          "cpuSeconds": 0.0625,
+          "coreEquivalents": 0.029811081690090866,
+          "workingSetBytes": 177872896
+        },
+        {
+          "pid": 31272,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.03125,
+          "coreEquivalents": 0.014905540845045433,
+          "workingSetBytes": 236077056
+        },
+        {
+          "pid": 30724,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.015625,
+          "coreEquivalents": 0.0074527704225227165,
+          "workingSetBytes": 64663552
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-27T14:59:39.8444818Z",
+      "elapsedSeconds": 8.3673533,
+      "intervalSeconds": 2.0610209,
+      "processes": [
+        {
+          "pid": 23048,
+          "name": "ChatGPT",
+          "cpuSeconds": 2.25,
+          "coreEquivalents": 1.0916919862384704,
+          "workingSetBytes": 913965056
+        },
+        {
+          "pid": 42388,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.609375,
+          "coreEquivalents": 0.2956665796062524,
+          "workingSetBytes": 1671135232
+        },
+        {
+          "pid": 15188,
+          "name": "CrossDeviceService",
+          "cpuSeconds": 0.5625,
+          "coreEquivalents": 0.2729229965596176,
+          "workingSetBytes": 322891776
+        },
+        {
+          "pid": 8200,
+          "name": "audiodg",
+          "cpuSeconds": 0.296875,
+          "coreEquivalents": 0.14404269262868707,
+          "workingSetBytes": 50683904
+        },
+        {
+          "pid": 39860,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.21875,
+          "coreEquivalents": 0.10613672088429574,
+          "workingSetBytes": 638513152
+        },
+        {
+          "pid": 22596,
+          "name": "logioptionsplus_agent",
+          "cpuSeconds": 0.171875,
+          "coreEquivalents": 0.08339313783766095,
+          "workingSetBytes": 177872896
+        },
+        {
+          "pid": 3904,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.171875,
+          "coreEquivalents": 0.08339313783766095,
+          "workingSetBytes": 1559695360
+        },
+        {
+          "pid": 25912,
+          "name": "pwsh",
+          "cpuSeconds": 0.171875,
+          "coreEquivalents": 0.08339313783766095,
+          "workingSetBytes": 116731904
+        },
+        {
+          "pid": 10652,
+          "name": "dptf_helper",
+          "cpuSeconds": 0.09375,
+          "coreEquivalents": 0.0454871660932696,
+          "workingSetBytes": 7954432
+        },
+        {
+          "pid": 31272,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.0227435830466348,
+          "workingSetBytes": 236081152
+        },
+        {
+          "pid": 19108,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.0227435830466348,
+          "workingSetBytes": 24240128
+        },
+        {
+          "pid": 32268,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.03125,
+          "coreEquivalents": 0.015162388697756535,
+          "workingSetBytes": 246300672
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-27T14:59:41.8957695Z",
+      "elapsedSeconds": 10.4135918,
+      "intervalSeconds": 2.046238500000001,
+      "processes": [
+        {
+          "pid": 23048,
+          "name": "ChatGPT",
+          "cpuSeconds": 2.359375,
+          "coreEquivalents": 1.1530303041409877,
+          "workingSetBytes": 918384640
+        },
+        {
+          "pid": 42388,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.734375,
+          "coreEquivalents": 0.3588902271167313,
+          "workingSetBytes": 1673449472
+        },
+        {
+          "pid": 15188,
+          "name": "CrossDeviceService",
+          "cpuSeconds": 0.34375,
+          "coreEquivalents": 0.16799117013974657,
+          "workingSetBytes": 322891776
+        },
+        {
+          "pid": 8200,
+          "name": "audiodg",
+          "cpuSeconds": 0.296875,
+          "coreEquivalents": 0.1450832833025084,
+          "workingSetBytes": 50737152
+        },
+        {
+          "pid": 39860,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.28125,
+          "coreEquivalents": 0.13744732102342902,
+          "workingSetBytes": 638414848
+        },
+        {
+          "pid": 3904,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.25,
+          "coreEquivalents": 0.12217539646527023,
+          "workingSetBytes": 1559621632
+        },
+        {
+          "pid": 13668,
+          "name": "codex",
+          "cpuSeconds": 0.1875,
+          "coreEquivalents": 0.09163154734895267,
+          "workingSetBytes": 2049904640
+        },
+        {
+          "pid": 25912,
+          "name": "pwsh",
+          "cpuSeconds": 0.15625,
+          "coreEquivalents": 0.07635962279079389,
+          "workingSetBytes": 120537088
+        },
+        {
+          "pid": 10652,
+          "name": "dptf_helper",
+          "cpuSeconds": 0.078125,
+          "coreEquivalents": 0.038179811395396945,
+          "workingSetBytes": 7954432
+        },
+        {
+          "pid": 19108,
+          "name": "ChatGPT",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.022907886837238167,
+          "workingSetBytes": 24240128
+        },
+        {
+          "pid": 22596,
+          "name": "logioptionsplus_agent",
+          "cpuSeconds": 0.046875,
+          "coreEquivalents": 0.022907886837238167,
+          "workingSetBytes": 177876992
+        },
+        {
+          "pid": 19792,
+          "name": "PhoneExperienceHost",
+          "cpuSeconds": 0.03125,
+          "coreEquivalents": 0.015271924558158779,
+          "workingSetBytes": 244604928
+        }
+      ]
+    }
+  ]
+}
