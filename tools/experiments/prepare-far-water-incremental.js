@@ -21,8 +21,11 @@ export async function prepareFarWaterIncremental(data,world,cancelled){
  const valid=()=>!cancelled()&&!world.disposed&&world.nav?.field===field;
  // One submission, not one promise per vertex. Output remains privately owned.
  const units=farWaterUnits(data,field,{cancelled:()=>!valid()});
- let result;const work=(function*(){for(;;){const next=units.next();if(next.done){result=next.value;return;}yield;}})();
- await scheduler.submit(work,{valid,priority:30,deadline:performance.now()+250});
- if(!valid())throw new DOMException('Obsolete far water','AbortError');
- data.water=result;
+ const record={start:performance.now(),vertices:data.positions.length/3,units:0,cpuMs:0,maxUnitMs:0,completed:false};
+ let result;const work=(function*(){for(;;){const start=performance.now();let next;try{next=units.next();}finally{const ms=performance.now()-start;record.units++;record.cpuMs+=ms;record.maxUnitMs=Math.max(record.maxUnitMs,ms);}if(next.done){result=next.value;return;}yield;}})();
+ try{
+  await scheduler.submit(work,{valid,priority:30,deadline:performance.now()+250});
+  if(!valid())throw new DOMException('Obsolete far water','AbortError');
+  data.water=result;record.completed=true;
+ }finally{record.end=performance.now();record.wallMs=record.end-record.start;(globalThis.qaIncrementalWater??=[]).push(record);}
 }

@@ -1,0 +1,20 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+const root=process.argv[2];if(!root)throw Error('ABAB directory required');
+const stats=values=>{if(!values.length)return null;assert(values.every(Number.isFinite));const s=values.toSorted((a,b)=>a-b),q=p=>s[Math.ceil(s.length*p)-1];return {count:s.length,mean:s.reduce((a,b)=>a+b,0)/s.length,p50:q(.5),p95:q(.95),p99:q(.99),max:s.at(-1)};};
+const runs=[];let reference;
+for(const [i,candidate]of [false,true,false,true].entries()){
+ const dir=`${root}/${i+1}-${candidate?'candidate':'baseline'}`,r=JSON.parse(fs.readFileSync(dir+'/raid-ui.json')),p=JSON.parse(fs.readFileSync(dir+'/provenance.json'));
+ assert.equal(p.candidate,candidate);assert(!p.pilot);assert(r.ok);assert.deepEqual(r.errors,[]);assert.deepEqual(r.consoleErrors,[]);assert.equal(r.regionalTail.dropped,0);assert.equal(r.wholeFrame.dropped,0);
+ const signature={sources:p.sources,hardware:r.residual.hardware,camera:r.readiness.camera,target:r.readiness.target,quality:r.readiness.quality,keys:r.readiness.keys};if(reference)assert.deepEqual(signature,reference);else reference=signature;
+ if(candidate)for(const name of ['native-far-layer.js','attach-native-far-world.js'])assert(r.incrementalWaterLoads?.[name]>0);
+ const start=r.casts[0].start,end=start+40000;assert(r.casts[0].captureStart>=end);const inside=(at,duration=0)=>at>=start&&at+duration<=end;
+ const cpu=r.residual.cpu.filter(x=>inside(x.at,x.ms)),ids=new Set(cpu.map(x=>x.frame)),g=r.residual.gpu;
+ assert(g.supported&&!g.contextLost&&g.disjointEvents===0);
+ const payloads=[];for(let j=1;j<r.regionalTail.rows.length;j++){const x=r.regionalTail.rows[j],prev=r.regionalTail.rows[j-1];if(x.label==='worker-payload-shape'&&inside(x.start)){assert.equal(prev.label,'worker-event-data');payloads.push({trees:x.treeCount,groundBytes:x.transferredGroundBytes,getterWallMs:prev.duration,observerWallMs:x.duration});}}
+ const demands=r.chunkDelivery.records.filter(x=>inside(x.demandAt)),completed=demands.filter(x=>Number.isFinite(x.installedAt)&&x.installedAt<=end),latencies=completed.map(x=>({key:x.key,epoch:x.epoch,ms:x.installedAt-x.demandAt}));
+ runs.push({run:i+1,candidate,window:{start,end},incrementalWater:r.incrementalWater,regionalAttachment:r.regionalTail.rows.filter(x=>x.label==="far-region-attach-ground"&&inside(x.start,x.duration)),presentationIntervals:stats(r.timing.frames.filter(x=>inside(x.t-x.ms,x.ms)).map(x=>x.ms)),cpuRenderSubmission:stats(cpu.map(x=>x.ms)),mainFrameSync:stats(r.wholeFrame.frames.filter(x=>inside(x.start,x.end-x.start)).map(x=>x.end-x.start)),gpuRender:stats(g.samples.filter(x=>ids.has(x.frame)).map(x=>x.ms)),payloads,demands:demands.length,completed:completed.length,cancelled:demands.filter(x=>x.cancelledAt<=end).length,pendingAtWindowEnd:demands.filter(x=>!(x.installedAt<=end)&&!(x.cancelledAt<=end)).length,latency:stats(latencies.map(x=>x.ms)),latencies,streamFailures:r.chunkDelivery.summary.failed,gpuUnresolved:g.unresolvedAtDispose});
+ assert.equal(r.chunkDelivery.summary.failed,0);
+}
+const matched=[0,2].map(i=>{const a=runs[i],b=runs[i+1],bm=new Map(b.latencies.map(x=>[x.epoch+':'+x.key,x.ms]));const deltas=a.latencies.filter(x=>bm.has(x.epoch+':'+x.key)).map(x=>({key:x.key,deltaMs:bm.get(x.epoch+':'+x.key)-x.ms}));return {baseline:a.run,candidate:b.run,common:deltas.length,earlier:deltas.filter(x=>x.deltaMs<0).length,delta:stats(deltas.map(x=>x.deltaMs)),deltas};});
+const result={runs,matched,reference,limitations:['Instrumented four-arm experiment; not proof across hardware or biomes.','Presentation intervals are RAF observations, not physical display latency.','CPU submission includes driver waits; GPU queries cover World.render, not all work in the browser.','Per-key completion comparison excludes keys not completed in both windows; pending and cancelled counts are retained.','Metadata observation and task tracing add overhead. No CPU/GPU memory measurement in this experiment.']};
+fs.writeFileSync(root+'/comparison.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({runs:runs.map(({latencies,...r})=>r),matched},null,2));
