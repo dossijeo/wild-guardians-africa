@@ -1,0 +1,13 @@
+# Incremental far-water pilot — not accepted
+
+QA-only source overrides, production unchanged. One Manglares medium 720p agricultural streaming run, 144-unit/40-second camera excursion. Both patched modules were served. Runtime ok:true; no page/console errors or dropped attribution rows. Three targeted tests cover exact original water attributes/query count, cancellation without partial publication, and reuse of existing attributes.
+
+This differs from rejected water-skip trials: all original waterInfo calls/values remain; preparation is a generator submitted once to the existing Global Frame Scheduler, in 64-vertex units, before ground resource attachment. The previous region remains visible until normal GPU readiness/publication. Native world/terrain view identity and owner cancellation gate completion. No second scheduler or frame loop.
+
+The streaming regional attachment phase now reports awaited wall time (662.660 ms), not synchronous CPU. Initial attachment was 76.160 ms wall time. These must NOT be compared directly to earlier 20–30 ms synchronous attachment measurements. No water-input span exceeded the 1 ms probe threshold after precomputation; this does not measure the generator's accumulated CPU or prove whole-frame improvement. The streaming material and normals spans were 5.100 and 1.565 ms. Existing GPU-readiness waits overlap other phases and are not CPU blocking.
+
+Open gates: add explicit per-unit/aggregate generator attribution; compare A/B/A/B total frame distribution, region publication latency, useful chunk throughput and loading; verify identical real rendered pixels under fixed state. A 662 ms preparation delay is a potential latency regression, not an acceptable tradeoff by assumption. Do not adopt from this pilot.
+
+Additional source finding, not changed here: spatial-terrain-view.waterInfo queries native fluid level, shore and mangrove mask, while this attribute only uses inside. fluidInside already exposes the same native fluid-level predicate. A separate equivalence-tested experiment could avoid the two unused native queries; do not mix it into this treatment.
+
+Reproduction: check-shield-repeat-render.mjs with WG_INCREMENTAL_FAR_WATER=1, WG_REGIONAL_TAIL_PROBE=1, WG_MAGIC_PROFILE=1, WG_MAGIC_CPU_SAMPLING=0, WG_MAGIC_VIDEO=0, WG_MAGIC_CASTS=1, WG_MAGIC_NO_CAST=1, WG_MAGIC_STREAM=1, WG_MAGIC_STREAM_DISTANCE=144, WG_MAGIC_STREAM_SECONDS=40, WG_MAGIC_SETTLE=1, WG_MAGIC_WARMUP_ELAPSED=30, WG_MAGIC_CAPTURE_AFTER_STREAM=1, WG_CHUNK_DELIVERY=1, WG_WHOLE_FRAME=1; URL5220, hydraulic-v2-agriculture fixture, fresh output directory. Source hashes in provenance.json.

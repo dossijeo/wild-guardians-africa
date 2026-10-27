@@ -1,3 +1,4 @@
+import {patchIncrementalFarWater} from './incremental-far-water-patch.mjs';
 import {patchPackedContacts} from './packed-ground-contact-patch.mjs';
 import {patchCoveragePrefix} from './coverage-prefix-upload-patch.mjs';
 import {startPresentationTrace} from './qa-presentation-trace.mjs';
@@ -35,6 +36,13 @@ try {
    await route.fulfill({response,body:regionalTailProbe((name==='native-far-ground.js'||name==='native-far-ground-seam.js')?await response.text():await readFile(path,'utf8'),name)});
   });
  }
+ if(process.env.WG_INCREMENTAL_FAR_WATER==='1')await context.route(/\/tools\/experiments\/(?:native-far-layer|attach-native-far-world)\.js(?:\?.*)?$/,async route=>{
+  const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
+  let body=patchIncrementalFarWater(await response.text(),name);
+  if(name==='native-far-layer.js'&&process.env.WG_REGIONAL_TAIL_PROBE==='1')body=regionalTailProbe(body,name);
+  (report.incrementalWaterLoads??={})[name]=((report.incrementalWaterLoads??{})[name]??0)+1;
+  await route.fulfill({response,body});
+ });
  if(process.env.WG_PACKED_CONTACTS==='1')await context.route(/\/tools\/experiments\/(?:far-scene-worker|far-ground-contacts|far-ground-data|native-far-ground-seam)\.js(?:\?.*)?$/,async route=>{
   const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
   let body=patchPackedContacts(await response.text(),name);
