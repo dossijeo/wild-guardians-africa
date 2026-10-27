@@ -16,9 +16,9 @@ Registro de trabajo solicitado por el usuario. Se actualiza con evidencia nueva;
 | Pliegue triangular entre cuello y colmillo del collar | Estaba presente en el GLB preparado de origen. Sus vértices tenían desplazamiento de boca exactamente cero. La pieza aislada mostraba triángulos estirados. | Comparar original, preparado y editado antes de culpar al morph. Restaurar posiciones originales por correspondencia de caras UV y transformación verificada. `restore_hyena_collar.py` recupera 1,298 vértices, conserva pesos rígidos de Neck y exige correspondencia completa. No suavizar el cuello para ocultar una pieza de collar dañada. |
 | Correspondencia incorrecta al restaurar geometría | Un mismo punto UV puede pertenecer a distintas islas o superficies. El primer intento por UV individual dejó vértices ambiguos. | Usar la firma UV de la cara completa y su esquina. Verificar la transformación con geometría no modificada. Para esta hiena: 1,999 vértices de ajuste y error máximo de 2.99e-7 m. Si hay puntos sin correspondencia, detener la restauración, no dejar una reparación parcial. |
 | Cambios inesperados en UV durante autoría | Añadir un atributo de color invalidó una referencia RNA a una capa UV. | Volver a obtener la capa por nombre después de añadir atributos. Comparar todos los UV originales antes/después. Evitar referencias BMesh/RNA antiguas cuando cambia la estructura de capas. |
-| Párpados con UV estirados entre islas | Interpolar UV originales en una nueva malla atravesaba discontinuidades del atlas. | Un atlas frontal continuo evita esa interpolación entre islas. Es una solución para la textura, no para el volumen del párpado. El candidato actual todavía presenta protrusión/pliegues y no está aceptado. |
+| Párpados con UV estirados entre islas | Interpolar UV originales en una nueva malla atravesaba discontinuidades del atlas. | Un atlas frontal continuo evita esa interpolación entre islas. Es una solución para la textura, no para el volumen del párpado. El atlas resuelve la continuidad de textura; la forma debe validarse por separado. Los primeros candidatos presentaban protrusión/pliegues. El candidato v9 mejora el cierre, pero no tiene aceptación visual completa. |
 | Párpados que nunca terminan de cerrar | El filtrado temporal adicional suavizaba un pulso que ya estaba diseñado analíticamente. | Asignar el peso analítico del parpadeo; suavizar la boca por separado. Comprobar el máximo realmente aplicado a la malla, además del valor solicitado. |
-| Cierre completo mejorado, pero cierre parcial oculto dentro del ojo | La envolvente continua del candidato v4 elimina los pliegues grandes al cerrar; en Three.js, a peso 0.5, el ojo sigue casi abierto porque la interpolación atraviesa su volumen. | Validar el recorrido, no solo sus extremos. Investigar formas correctivas intermedias o rotación esquelética que sigan la curvatura. Es una solución pendiente, no aprobada. |
+| Cierre completo mejorado, pero cierre parcial oculto dentro del ojo | La envolvente continua del candidato v4 elimina los pliegues grandes al cerrar; en Three.js, a peso 0.5, el ojo sigue casi abierto porque la interpolación atraviesa su volumen. | Validar el recorrido, no solo sus extremos. Se implementaron correctivas a 25/50/75% y mezcla de poses vecinas. El medio cierre mejoró en Three.js; sigue pendiente comprobar todos los pesos, ambos ojos independientes y clips combinados. |
 | Facetas al reimportar un morph en Blender que no aparecen igual en Three.js | En el candidato v4, el cierre es suave en Blender fuente y Three.js, pero presenta bandas en el GLB reimportado en Blender. | Mantener las tres referencias. No atribuir automáticamente toda diferencia de reimportación al archivo utilizado por el juego. El diagnóstico de normales del importador sigue pendiente. |
 | Diferencias entre Blender y el GLB reimportado | El render reimportado mostró marcas pequeñas nuevas. El PNG del atlas embebido coincide byte por byte con el PNG horneado. | El siguiente diagnóstico debe aislar normales, triangulación y morphs. Todavía no se ha demostrado la causa; no volver a pintar la textura sin evidencia. |
 
@@ -77,7 +77,7 @@ Evidencia y límites actuales: [corrección dental](phase2/face-authoring/dental
 | `bake_actor_materials.py` | Horneado de nodos al UV original. Actualmente selecciona el marcador `MuzzleRepairProjection`; extender de forma explícita para otro pipeline. |
 | `actor_dentition.py` / `audit_actor_dentition.py` | Método topológico y medición dental; selección, recuentos, pivote y ángulo están calibrados para la hiena. |
 | `restore_hyena_collar.py` | Restauración exacta por caras UV y ajuste de coordenadas; número de vértices y selección Neck específicos de esta fuente. |
-| `add_hyena_eyelids.py` | Experimental. No usar como solución aprobada ni copiar sus coordenadas a otros actores mientras siga fallando la revisión visual. |
+| `add_hyena_eyelids.py` | Candidato con envolvente curva y correctivas intermedias. No copiar sus coordenadas a otros actores; falta la matriz visual completa para aprobarlo. |
 
 ## Reducir iteraciones sin rebajar la calidad
 
@@ -96,3 +96,16 @@ Usar [la plantilla de revisión por actor](actor-edit-review.template.json) como
 Las formas intermedias de 25/50/75% evitan el recorrido recto a través del ojo. El controlador debe mezclar solo las dos poses vecinas: sumarlas todas sobrecierra el párpado. Además, normalizar el recorrido sobre la esfera completa desperdicia parte de la animación detrás de la ceja; se calibra respecto a la abertura visible. El candidato actual mejora el medio cierre en Three.js, pero sigue pendiente la matriz completa de pesos y clips.
 
 No crear un material por cada región de color cuando sus otras propiedades coinciden: paladar, suelo, garganta y lengua ahora comparten material con color por vértice. Se verificaron cuatro draw calls reales frente a siete en el candidato anterior. Comparar también contra el original (dos); una mejora entre iteraciones no equivale a ausencia de regresión respecto al juego.
+
+### Compresión: comprobar también las representaciones dispersas
+
+El candidato con morphs incluye accessors dispersos (`sparse`). La primera compresión falló al interpretar su vista de índices como atributos: el bloque que detenía la exportación contiene índices de **8 bits**, no de 16 bits. Hay que inspeccionar `componentType`, `count`, offsets y longitud reales, incluyendo los índices y valores dispersos, antes de elegir modo y stride.
+
+El intento de conservar esos índices de 8 bits sin compresión superó ese punto, pero falló después en `repack_web_glb_images.mjs`: el reempaquetador exige que toda vista no destinada a imágenes sea almacenamiento Meshopt auditado. Por tanto, la solución todavía no está validada de extremo a extremo. No basta con corregir el compresor si el siguiente paso no admite su salida.
+
+Comprobaciones para cerrar este caso:
+
+- Cubrir índices dispersos de 8/16/32 bits, valores dispersos y vistas comprimidas y sin comprimir.
+- Verificar igualdad de los datos decodificados, nombres y pesos de morphs, clips y poses después del pipeline completo, incluido el reempaquetado de imágenes.
+- Abrir el resultado con el mismo decodificador y renderizador del juego y repetir las expresiones parciales.
+- Mantener la prueba aislada del manifiesto de producción hasta que pase. No sustituir el modelo publicado por un candidato que solo exporta correctamente desde Blender.
