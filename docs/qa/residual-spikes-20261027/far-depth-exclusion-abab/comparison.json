@@ -1,0 +1,418 @@
+{
+  "invariant": {
+    "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1&qualityAttribution=1",
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "runtime": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+    "fixture": "bf294ff6f50df9cc9b4b5fca2230922c350a172946b40801043c94cf19e2dcaa",
+    "harness": "9385d5debbc36b1fbc6e82b7c66ee4ec0bd7934ef5285c361caa7e7a80cc1f94",
+    "qualityCase": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+  },
+  "rows": [
+    {
+      "order": 1,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/prepare-native-far-gpu.js": "c1c268eec02f9e50a69d78f9367a34e04cec58e5171cb5705fc24df84405efd1",
+        "tools/experiments/attach-native-far-world.js": "51e37fd758f42654e774b18898067b931ef3e30df1bf5ec05ab32c15a1ca886f",
+        "tools/experiments/prepare-native-far-depth.js": "4196c9633288a30446b7407e19e342af10a3db48d192c2863aede6ee168395b9",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "4b21897c663db21953fc0adb32137669f7c96e4a167b7efb30c8bfa277f1c791",
+        "tools/experiments/spatial-thread-game-quality-case.js": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 270,
+        "p50": 12.930000066757202,
+        "p95": 20.509999990463257,
+        "p99": 135.53999996185303,
+        "max": 234.09499990940094
+      },
+      "gpu": {
+        "n": 90,
+        "p50": 18.405364,
+        "p95": 66.103385,
+        "p99": 74.231092,
+        "max": 93.089113
+      },
+      "callbackCadence": {
+        "n": 269,
+        "p50": 49.95999999999913,
+        "p95": 99.79999999999563,
+        "p99": 133.3550000000032,
+        "max": 232.7850000000035
+      },
+      "transitionIntervals": {
+        "n": 62,
+        "p50": 55.02499997615814,
+        "p95": 92.44000005722046,
+        "p99": 108.7150000333786,
+        "max": 125.83000004291534
+      },
+      "maxBlockingLoaf": 191.34,
+      "slowGL": [
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 170.53999996185303,
+          "at": 49119.66000008583,
+          "stack": null,
+          "program": {
+            "id": 90,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 110.3050000667572,
+          "at": 50161.35000002384,
+          "stack": null,
+          "program": {
+            "id": 91,
+            "cacheKey": "26,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 50.94500005245209,
+          "at": 50269.71500003338,
+          "stack": null,
+          "program": {
+            "id": 93,
+            "cacheKey": "28,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 140.875,
+          "at": 51229.61500000954,
+          "stack": null,
+          "program": {
+            "id": 94,
+            "cacheKey": "24,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramParameter",
+          "quality": "baja",
+          "ms": 23.43999993801117,
+          "at": 51256.37999999523,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 16.69000005722046,
+          "at": 51274.71000003815,
+          "stack": null,
+          "program": {
+            "id": 95,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,far-ground-native-water-mask-v1:resident-mask-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 17.069999933242798,
+          "at": 51303.375,
+          "stack": null,
+          "program": {
+            "id": 96,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 157.13499999046326,
+          "at": 54683.99500000477,
+          "stack": null,
+          "program": {
+            "id": 97,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        }
+      ],
+      "travelMs": 13537.05999994278,
+      "settledMs": 15152.72000002861,
+      "created": 15,
+      "programCounts": [
+        82,
+        82,
+        81
+      ]
+    },
+    {
+      "order": 2,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/native-far-ground.js": "39451480a4b1966d1649d3bc9d02a9385939a29c78baf63deea4943ab1929178",
+        "tools/experiments/prepare-native-far-gpu.js": "0bd2c3f7504b770b391f10b764c1b9395abf16b163386c060fcf819add16e6bf",
+        "tools/experiments/attach-native-far-world.js": "4a0e7536cd0a3ac938e7d7681d5b5999df243d065b87c63753ff6f5a266f94fd",
+        "tools/experiments/prepare-native-far-depth.js": "4196c9633288a30446b7407e19e342af10a3db48d192c2863aede6ee168395b9",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "4b21897c663db21953fc0adb32137669f7c96e4a167b7efb30c8bfa277f1c791",
+        "tools/experiments/spatial-thread-game-quality-case.js": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 269,
+        "p50": 11.635000109672546,
+        "p95": 18.59500002861023,
+        "p99": 23.2849999666214,
+        "max": 48.53999996185303
+      },
+      "gpu": {
+        "n": 90,
+        "p50": 15.222031,
+        "p95": 54.735051,
+        "p99": 60.551145,
+        "max": 62.100208
+      },
+      "callbackCadence": {
+        "n": 268,
+        "p50": 49.7699999999968,
+        "p95": 99.75,
+        "p99": 116.58000000000175,
+        "max": 149.5749999999971
+      },
+      "transitionIntervals": {
+        "n": 59,
+        "p50": 49.55999994277954,
+        "p95": 104.53999996185303,
+        "p99": 112.375,
+        "max": 118.71000003814697
+      },
+      "maxBlockingLoaf": 21.615,
+      "slowGL": [],
+      "travelMs": 11484.024999976158,
+      "settledMs": 12970.114999890327,
+      "created": 15,
+      "programCounts": [
+        83,
+        83,
+        83
+      ]
+    },
+    {
+      "order": 3,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/prepare-native-far-gpu.js": "c1c268eec02f9e50a69d78f9367a34e04cec58e5171cb5705fc24df84405efd1",
+        "tools/experiments/attach-native-far-world.js": "51e37fd758f42654e774b18898067b931ef3e30df1bf5ec05ab32c15a1ca886f",
+        "tools/experiments/prepare-native-far-depth.js": "4196c9633288a30446b7407e19e342af10a3db48d192c2863aede6ee168395b9",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "4b21897c663db21953fc0adb32137669f7c96e4a167b7efb30c8bfa277f1c791",
+        "tools/experiments/spatial-thread-game-quality-case.js": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 251,
+        "p50": 12.394999980926514,
+        "p95": 21.889999985694885,
+        "p99": 112.25999999046326,
+        "max": 320.84499990940094
+      },
+      "gpu": {
+        "n": 84,
+        "p50": 19.884114,
+        "p95": 66.221509,
+        "p99": 70.104582,
+        "max": 70.601978
+      },
+      "callbackCadence": {
+        "n": 250,
+        "p50": 49.900000000001455,
+        "p95": 116.37999999999738,
+        "p99": 166.35000000000582,
+        "max": 332.65000000000146
+      },
+      "transitionIntervals": {
+        "n": 62,
+        "p50": 45.24500000476837,
+        "p95": 107.00499999523163,
+        "p99": 125.5349999666214,
+        "max": 141.93999993801117
+      },
+      "maxBlockingLoaf": 272.245,
+      "slowGL": [
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 133.12999999523163,
+          "at": 59007.98000001907,
+          "stack": null,
+          "program": {
+            "id": 90,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 79.00499999523163,
+          "at": 61591.43000006676,
+          "stack": null,
+          "program": {
+            "id": 91,
+            "cacheKey": "26,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 182.13499999046326,
+          "at": 62478.41000008583,
+          "stack": null,
+          "program": {
+            "id": 94,
+            "cacheKey": "24,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 13.96999990940094,
+          "at": 62497.52500009537,
+          "stack": null,
+          "program": {
+            "id": 95,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,far-ground-native-water-mask-v1:resident-mask-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getShaderInfoLog",
+          "quality": "baja",
+          "ms": 41,
+          "at": 62538.5300000906,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 23.889999985694885,
+          "at": 62566.520000100136,
+          "stack": null,
+          "program": {
+            "id": 96,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getShaderInfoLog",
+          "quality": "baja",
+          "ms": 11.929999947547913,
+          "at": 62578.46500003338,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramParameter",
+          "quality": "baja",
+          "ms": 22.050000071525574,
+          "at": 62601.02500009537,
+          "stack": null,
+          "program": null
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 169.70500004291534,
+          "at": 66271.84500002861,
+          "stack": null,
+          "program": {
+            "id": 97,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        }
+      ],
+      "travelMs": 13982.734999895096,
+      "settledMs": 14613.789999961853,
+      "created": 15,
+      "programCounts": [
+        82,
+        82,
+        81
+      ]
+    },
+    {
+      "order": 4,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/native-far-ground.js": "39451480a4b1966d1649d3bc9d02a9385939a29c78baf63deea4943ab1929178",
+        "tools/experiments/prepare-native-far-gpu.js": "0bd2c3f7504b770b391f10b764c1b9395abf16b163386c060fcf819add16e6bf",
+        "tools/experiments/attach-native-far-world.js": "4a0e7536cd0a3ac938e7d7681d5b5999df243d065b87c63753ff6f5a266f94fd",
+        "tools/experiments/prepare-native-far-depth.js": "4196c9633288a30446b7407e19e342af10a3db48d192c2863aede6ee168395b9",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "4b21897c663db21953fc0adb32137669f7c96e4a167b7efb30c8bfa277f1c791",
+        "tools/experiments/spatial-thread-game-quality-case.js": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 242,
+        "p50": 11.18999993801117,
+        "p95": 18.164999961853027,
+        "p99": 21.93999993801117,
+        "max": 42.21000003814697
+      },
+      "gpu": {
+        "n": 81,
+        "p50": 13.672811,
+        "p95": 51.712447,
+        "p99": 64.989322,
+        "max": 71.410884
+      },
+      "callbackCadence": {
+        "n": 241,
+        "p50": 49.79000000000087,
+        "p95": 83.16999999999825,
+        "p99": 132.97499999999854,
+        "max": 149.33499999999913
+      },
+      "transitionIntervals": {
+        "n": 75,
+        "p50": 53.075000047683716,
+        "p95": 128.4650000333786,
+        "p99": 139.43999993801117,
+        "max": 163.68999993801117
+      },
+      "maxBlockingLoaf": 7.055,
+      "slowGL": [],
+      "travelMs": 11472.789999961853,
+      "settledMs": 11483.105000019073,
+      "created": 15,
+      "programCounts": [
+        83,
+        83,
+        83
+      ]
+    }
+  ],
+  "limits": [
+    "Two repetitions per treatment; attribution instrumentation adds overhead. Not final acceptance.",
+    "Historical Volcanes save only; no full-game or six-biome completion claim.",
+    "Existing X4000 compiler warnings preserved, not a clean-console claim.",
+    "GPU query durations include bubbles. CPU and callback cadence are separate.",
+    "Callback timestamp deltas cover main callbacks; transitionIntervals cover only transition windows.",
+    "240-frame travel has variable wall duration. Streaming arrivals may vary; compare useful work and total settled time."
+  ]
+}
