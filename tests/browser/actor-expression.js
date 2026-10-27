@@ -14,7 +14,8 @@ const manual=()=>{automatic=false;expression.setValues(Number($('left').value),N
 for(const id of ['left','right','mouth'])$(id).oninput=manual;
 function set(l,r,m){$('left').value=l;$('right').value=r;$('mouth').value=m;manual();}
 $('neutral').onclick=()=>set(0,0,0);$('pain').onclick=()=>set(1,1,.85);$('half').onclick=()=>set(.5,.5,0);
-$('side').onclick=()=>{camera.position.set(1.35,1.52,.48);controls.update();};$('front').onclick=()=>{camera.position.set(0,1.52,1.85);controls.update();};
+$('otherSide').onclick=()=>{controls.target.set(0,1.5,.48);camera.position.set(-1.35,1.52,.48);controls.update();};$('quarter').onclick=()=>{controls.target.set(0,1.5,.48);camera.position.set(.9,1.52,1.5);controls.update();};$('body').onclick=()=>{controls.target.set(0,.9,0);camera.position.set(2,1.8,4);controls.update();};
+$('side').onclick=()=>{controls.target.set(0,1.5,.48);camera.position.set(1.35,1.52,.48);controls.update();};$('front').onclick=()=>{controls.target.set(0,1.5,.48);camera.position.set(0,1.52,1.85);controls.update();};
 $('clip').onchange=()=>{mixer.stopAllAction();action=null;const clip=gltf.animations.find(c=>c.name===$('clip').value);if(clip)action=mixer.clipAction(clip).reset().play();};
 $('auto').onclick=()=>{automatic=true;actor.status='walking';};$('attack').onclick=()=>{automatic=true;actor.status='attacking';actor.attackDuration=2;actor.attackRemaining=2;};$('hit').onclick=()=>{automatic=true;actor.status='walking';actor.magicImpact={at:elapsed,impactAt:elapsed+.24};};$('pause').onclick=()=>paused=!paused;
 addEventListener('error',e=>errors.push(e.message));

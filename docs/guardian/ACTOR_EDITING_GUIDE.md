@@ -129,3 +129,11 @@ La prueba gráfica del comprimido confirma carga, cuatro draw calls y expresión
 ### Ficha de cada iteración
 
 Anotar candidato y hash, defecto observable, vista/pose/peso que lo reproduce, hipótesis, cambio aislado, resultado y evidencia. Distinguir una corrección comprobada de una solución candidata. Cuando falle una prueba, conservar su caso reproducible y añadirlo a la revisión del siguiente modelo. Priorizar primero anatomía y silueta; después recorrido de deformación, materiales, integración y coste. No propagar a otras especies una técnica que aún tiene un defecto visible pendiente.
+
+## Regression found during native clip playback
+
+A horizontal rigid-head weight threshold cut through the hyena muzzle. In rest pose the face looked correct, and all native bone tracks matched, but Running stretched the nose because the lower muzzle still followed Neck and shoulders. Detached dental islands also need explicit rigid head skin weights, in addition to a rigid jaw morph.
+
+Check the actual skinned surface during native clips before accepting rest renders. For the hyena, `audit_actor_face.mjs --hyena-muzzle` tracks 1011 calibrated neutral core vertices in Head space across 246 samples; it rejected the old 0.245 m drift. Repair the whole anatomical region and blend behind/below it, preserving necklace components. Bone-track parity alone does not validate skinning.
+
+Eyelid envelopes must account for the socket depth slope toward the temples and left/right asymmetry. The frontal spherical envelope protruded 18-40 mm in sampled regions; a symmetric shallower replacement exposed the left eyeball. Validate both eyes independently and in profile, including intermediate closures.

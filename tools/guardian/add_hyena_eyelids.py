@@ -40,6 +40,13 @@ for rig in scene.objects:
  if rig.type=='ARMATURE':rig.data.pose_position='POSE'
 lidMaterial=bpy.data.materials.new('Original fur eyelid atlas');lidMaterial.use_nodes=True;node=lidMaterial.node_tree.nodes.new('ShaderNodeTexImage');node.image=atlas;bs=lidMaterial.node_tree.nodes.get('Principled BSDF');lidMaterial.node_tree.links.new(node.outputs['Color'],bs.inputs['Base Color']);bs.inputs['Roughness'].default_value=.85
 verts=[];closed=[];tex=[];faces=[];sides=[];columns=33;rows=13
+# The eye sockets turn away from the frontal plane toward the temples.
+# A symmetric frontal sphere floated 18-40 mm in front of the actual eye.
+# Follow that depth gradient while retaining a continuous surface for morphs.
+def lid_depth(x,z,cx,cz):
+ u=(x-cx)/.070
+ radial=max(0,1-u*u-((z-cz)/.052)**2)
+ return (-.546 if cx<0 else -.538)+.35*(abs(x)-.115)-.057*math.sqrt(radial)
 upperBounds={};lowerBounds={}
 for side,eye in zip(['L','R'],profile['eyes']):
  cx,cy,cz=eye;bounds=[];lowerBounds[side]=[]
@@ -47,7 +54,7 @@ for side,eye in zip(['L','R'],profile['eyes']):
   u=(col/(columns-1)*2-1)*.995;x=cx+u*.070;arch=math.sqrt(max(0,1-u*u));upper=cz+.052*arch;lower=cz-.052*arch;visible=[]
   for sample in range(81):
    z=cz+.052*arch*(1-2*sample/80)
-   envelope=-.552-.057*math.sqrt(max(0,1-u*u-((z-cz)/.052)**2))
+   envelope=lid_depth(x,z,cx,cz)
    skin,_=surface(x,z)
    if envelope<skin.y-.001:
     visible.append(z)
@@ -64,10 +71,10 @@ for side,eye in zip(['L','R'],profile['eyes']):
    # A continuous eye envelope stays behind the brow instead of sampling
    # discontinuous brow/eyeball depths into a folded sheet.
    initialZ=top-.0001*t
-   initial=Vector((x,-.552-.057*math.sqrt(max(0,1-u*u-((initialZ-cz)/.052)**2)),initialZ))
+   initial=Vector((x,lid_depth(x,initialZ,cx,cz),initialZ))
    z=top+(bottom-top)*t
    radial=max(0,1-u*u-((z-cz)/.052)**2)
-   final=Vector((x,-.552-.057*math.sqrt(radial),z))
+   final=Vector((x,lid_depth(x,z,cx,cz),z))
    coord=Vector(((x+.35)/.7,(cz+.10+.060*t-1.27)/.7,0))
    verts.append(tuple(inv@initial));closed.append(tuple(inv@final));tex.append((coord.x,coord.y));sides.append(side)
  for row in range(rows-1):
@@ -96,7 +103,7 @@ for side in ['L','R']:
    top=upperBounds[side][col];bottom=lowerBounds[side][col]
    z=top+(bottom-top)*t*amount
    radial=max(0,1-u*u-((z-cz)/.052)**2)
-   dst.co=inv@Vector((x,-.552-.057*math.sqrt(radial),z))
+   dst.co=inv@Vector((x,lid_depth(x,z,cx,cz),z))
 # Oral surfaces differ only in base color. Pack that color per corner so
 # palate/floor/throat/tongue share one runtime material and draw call.
 oral=bpy.data.objects.get('OralCavity')

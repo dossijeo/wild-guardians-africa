@@ -2,7 +2,7 @@
   "status": "in-progress-hollow-oral-cavity-not-runtime",
   "actor": "hyena",
   "sourceBranch": "codex/global-visual-lab",
-  "editableLocalSource": "C:/tmp/guardian-faces/hyena-lids-v9.blend",
+  "editableLocalSource": "C:/tmp/guardian-faces/hyena-face-v12.blend",
   "reproduce": [
     "tools/guardian/build_actor_face.py",
     "tools/guardian/inspect_actor_face.py",
@@ -13,7 +13,8 @@
     "tools/guardian/audit_actor_dentition.py",
     "tools/guardian/restore_hyena_collar.py",
     "tools/guardian/bake_actor_materials.py",
-    "tools/guardian/add_hyena_eyelids.py"
+    "tools/guardian/add_hyena_eyelids.py",
+    "tools/guardian/repair_hyena_face_weights.py"
   ],
   "viewsPerIteration": [
     "front",
@@ -34,9 +35,9 @@
     "closed oral lining and cut-edge bridges looked like a black wall across the entrance; rejected by user",
     "mirrored proximity weights for fused left canine stretched its tip; removed"
   ],
-  "current": "Hollow cavity, restored original collar, baked muzzle repair and corrective eyelids prepared in a local GLB. Oral colors consolidated to one material; actual Three.js draws reduced from 7 to 4. Not installed in production yet.",
+  "current": "Local v12 candidate: calibrated asymmetric eyelid depths and complete muzzle/dental Head weights. Not installed in production. Neutral and expressed Running plus attack inspected in Three.js; wider animation/game validation remains.",
   "remaining": [
-    "Correct runtime eyelid protrusion/creases and export shading differences",
+    "Complete intermediate eyelid and animated skin visual matrix; calibrated depth is now closer to original eye surface",
     "Validate native clips visually with mouth and eyelids combined",
     "Optimize and install approved GLB in game; validate actual encounters",
     "Calibrate remaining beasts/farmers and complete performance comparison"
@@ -110,14 +111,16 @@
     "scope": "Morph geometry only; not native animated clip validation"
   },
   "collarRepair": "hyena-collar-restored.collar.json",
-  "currentNativeClipAudit": "hyena-lids-v9-clips.json",
+  "currentNativeClipAudit": "hyena-face-v12-clips.json",
   "eyelidExperiment": {
-    "candidate": "C:/tmp/guardian-faces/hyena-lids-v9.blend",
+    "candidate": "C:/tmp/guardian-faces/hyena-face-v12.blend",
     "method": "Continuous eye envelope bounded by visible aperture, intermediate 25/50/75 percent morphs, controller blends adjacent poses only, 2048 frontal fur atlas",
-    "observed": "Partial closure visible in Three.js; full closure smoother without previous folded sheets. Front half and front/profile full reviewed. Runtime appearance still needs all-weight/all-clip and game acceptance.",
+    "observed": "v11 uses temple depth slope and independent left/right depth offsets. Front closed and half, both profiles, and independent left closure inspected. v10 symmetric depth exposed the left eyeball and was rejected.",
     "evidence": [
       "lids-v7-runtime-half.png",
-      "lids-v9-runtime-closed.png"
+      "lids-v9-runtime-closed.png",
+      "lids-v11-runtime-closed.png",
+      "lids-v11-runtime-half.png"
     ],
     "tests": "6 expression/controller tests pass; 246 native clip samples preserve 21 bone poses",
     "drawCalls": 4,
@@ -126,5 +129,11 @@
       "All native clips with expressions and skin/collar inspection",
       "Runtime compression parity and actual encounter/performance validation"
     ]
+  },
+  "skinRegression": {
+    "cause": "Existing horizontal rigid-head threshold split the muzzle between Head and Neck/Shoulder weights. Native bone-track parity did not detect this. Detached dental islands also retained mixed weights.",
+    "repair": "Complete anterior muzzle and tagged teeth follow Head, with posterior/inferior transition; collar and geometry untouched.",
+    "check": "1011 core muzzle vertices, 246 samples over six native clips: maximum head-relative error 1.36e-15 m; the same audit rejected the previous weights with 0.245 m error.",
+    "scope": "Neutral core skin rigidity and bone track parity; not full-expression/all-surface acceptance."
   }
 }
