@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+ok 1 - audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+  ---
+  duration_ms: 22.2943
+  ...
+# Subtest: short, repeated and missing cues remain finite
+ok 2 - short, repeated and missing cues remain finite
+  ---
+  duration_ms: 0.5655
+  ...
+# Subtest: a late language response cannot animate the newer recording; pausing preserves the pose
+ok 3 - a late language response cannot animate the newer recording; pausing preserves the pose
+  ---
+  duration_ms: 1.4083
+  ...
+# Subtest: all 54 real recordings have bounded Rhubarb cues and matching source identities
+ok 4 - all 54 real recordings have bounded Rhubarb cues and matching source identities
+  ---
+  duration_ms: 565.9115
+  ...
+# Subtest: blink closes fully and returns to rest
+ok 5 - blink closes fully and returns to rest
+  ---
+  duration_ms: 2.1338
+  ...
+# Subtest: closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+ok 6 - closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+  ---
+  duration_ms: 13.5171
+  ...
+# Subtest: a superseded ended callback cannot close the next presentation
+ok 7 - a superseded ended callback cannot close the next presentation
+  ---
+  duration_ms: 2.754
+  ...
+# Subtest: closeAfter retains timed fallback when media is unavailable or no voice exists
+ok 8 - closeAfter retains timed fallback when media is unavailable or no voice exists
+  ---
+  duration_ms: 17.556
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1058.2839

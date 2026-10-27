@@ -11,4 +11,3 @@ for name in ['neutral','blink_L']+['viseme_'+s for s in 'ABCDEFGHX']:
  if name!='neutral':body.data.shape_keys.key_blocks[name].value=1
  if name=='blink_L':body.data.shape_keys.key_blocks['blink_R'].value=1
  scene.render.filepath=str(root/('docs/guardian/face-'+name+'.png'));bpy.ops.render.render(write_still=True)
-
