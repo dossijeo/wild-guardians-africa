@@ -1,3 +1,4 @@
+import {isTailContactVertex} from '../../src/rendering/beast-ground-contact.js';
 // Offline bind-space transfer. Production meshes and native clips are untouched.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,8 +7,10 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {AnimationMixer,AnimationClip,QuaternionKeyframeTrack,VectorKeyframeTrack,LoopOnce,Vector3,Quaternion} from 'three';
 import {BeastRecovery} from '../../src/rendering/beast-recovery.js';
-const [sourcePath,targetPath,output]=process.argv.slice(2);
-if(!output)throw Error('Usage: node tools/guardian/retarget_stand_up.mjs source.glb target.glb output.json');
+const [sourcePath,targetPath,output,profile='default']=process.argv.slice(2);
+const profiles={default:null,warthog:{neckPitch:.2,headPitch:.45,releaseStart:4,releaseEnd:6,legTurnPerFrame:.2}};
+if(!(profile in profiles))throw Error('Unknown retarget profile '+profile);
+if(!output)throw Error('Usage: node tools/guardian/retarget_stand_up.mjs source.glb target.glb output.json [default|warthog]');
 function geometryOnly(bytes){
  const n=bytes.readUInt32LE(12),g=JSON.parse(bytes.subarray(20,20+n));
  for(const m of g.materials??[]){delete m.normalTexture;delete m.occlusionTexture;delete m.emissiveTexture;delete m.pbrMetallicRoughness?.baseColorTexture;delete m.pbrMetallicRoughness?.metallicRoughnessTexture;delete m.extensions;}
@@ -23,6 +26,8 @@ for(const name of ['Hips','Spine','Head','LeftArm','RightArm','LeftUpLeg','Right
 const ratio=to.get('Hips').p.y/from.get('Hips').p.y;if(!(ratio>.1&&ratio<10))throw Error('Unsupported rig units '+ratio);
 const endpoints=new Map();for(const side of ['Left','Right'])for(const [a,b]of [['Shoulder','Arm'],['Arm','ForeArm'],['ForeArm','Hand'],['UpLeg','Leg'],['Leg','Foot']])endpoints.set(side+a,side+b);
 const mapped=[...to].filter(([name])=>from.has(name)),samples=BeastRecovery.contactSamples(target.scene),mixer=new AnimationMixer(source.scene),action=mixer.clipAction(clip).setLoop(LoopOnce,1);action.clampWhenFinished=true;action.play();
+const surfaceSamples=profile==='warthog'?[]:samples;
+if(profile==='warthog')target.scene.traverse(mesh=>{if(mesh.isSkinnedMesh)for(let index=0;index<mesh.geometry.attributes.position.count;index++)if(!isTailContactVertex(mesh,index))surfaceSamples.push({mesh,index});});
 const secondary=[...to].filter(([name])=>/^ClothRear_.*_0[1-3]$/.test(name)),animated=[...mapped,...secondary];
 // The donor's anatomical ankle bind axes do not describe a planted sole on
 // the repaired game rigs. Calibrate relative ankle motion from the authored
@@ -50,6 +55,8 @@ function supportAppendages(){
   bone.quaternion.copy(bone.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(rotation));bone.updateWorldMatrix(false,true);
  }
 }
+const previousLegPose=new Map();
+function limitLegTurn(bone){const previous=previousLegPose.get(bone);if(!previous)return;const angle=previous.angleTo(bone.quaternion);const limit=profiles[profile].legTurnPerFrame;if(angle>limit)bone.quaternion.slerp(previous,1-limit/angle);bone.updateWorldMatrix(false,true);}
 function supportLimb(side,foot=false){
  const upper=to.get(side+(foot?'UpLeg':'Arm')).bone,elbow=to.get(side+(foot?'Leg':'ForeArm')).bone,hand=to.get(side+(foot?'Foot':'Hand')).bone;
  let bottom=Infinity;for(const {mesh,index}of samples){const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(index,k)>weights.getComponent(index,best))best=k;let bone=mesh.skeleton.bones[indices.getComponent(index,best)];while(bone&&bone!==hand)bone=bone.parent;if(bone===hand){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);bottom=Math.min(bottom,v.y);}}
@@ -63,7 +70,7 @@ function supportLimb(side,foot=false){
  pole.addScaledVector(axis,-pole.dot(axis)).normalize();
  const along=(l1*l1-l2*l2+distance*distance)/(2*distance),height=Math.sqrt(Math.max(0,l1*l1-along*along));
  const desiredKnee=start.clone().addScaledVector(axis,along).addScaledVector(pole,height);goal.copy(start).addScaledVector(axis,distance);
- aim(upper,elbow,desiredKnee);aim(elbow,hand,goal);hand.quaternion.copy(hand.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(orientation));hand.updateWorldMatrix(false,true);
+ aim(upper,elbow,desiredKnee);if(foot&&profile==='warthog')limitLegTurn(upper);aim(elbow,hand,goal);if(foot&&profile==='warthog')limitLegTurn(elbow);hand.quaternion.copy(hand.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(orientation));hand.updateWorldMatrix(false,true);
 }
 for(let frame=0;frame<=frames;frame++){
  const time=Math.min(clip.duration,frame/60);times.push(time);action.paused=false;mixer.setTime(time);source.scene.updateMatrixWorld(true);
@@ -78,13 +85,17 @@ for(let frame=0;frame<=frames;frame++){
   if(name==='Hips'){donor.bone.getWorldPosition(p).sub(donor.p).multiplyScalar(ratio).add(item.p);item.bone.position.copy(item.bone.parent.worldToLocal(p));}
   item.bone.updateWorldMatrix(false,true);
  }
+ const adjustment=profiles[profile];if(adjustment){
+  const t=Math.max(0,Math.min(1,(time-adjustment.releaseStart)/(adjustment.releaseEnd-adjustment.releaseStart))),weight=1-t*t*(3-2*t);
+  for(const [name,pitch]of [['Neck',adjustment.neckPitch],['Head',adjustment.headPitch]]){const bone=to.get(name).bone;bone.getWorldQuaternion(q).normalize();q.premultiply(delta.setFromAxisAngle(new Vector3(1,0,0),pitch*weight));bone.parent.getWorldQuaternion(parentQ).normalize().invert();bone.quaternion.copy(parentQ.multiply(q));bone.updateWorldMatrix(false,true);}
+ }
  const hip=to.get('Hips').bone;let bodyMinimum=Infinity;
  for(const {mesh,index}of samples){let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;const name=canonical(mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name);if(/Arm|Hand|^Tail_|^ClothRear_/.test(name))continue;mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);bodyMinimum=Math.min(bodyMinimum,v.y);}
  hip.getWorldPosition(p);p.y-=bodyMinimum;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);
  // Longer target arms must bend at the elbow to support the character. Lifting
  // the pelvis to clear a hand would leave both feet visibly hovering.
  supportLimb('Left',true);supportLimb('Right',true);supportAppendages();supportLimb('Left');supportLimb('Right');target.scene.updateMatrixWorld(true);
- let minimum=Infinity,limiting='';for(const {mesh,index}of samples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);if(v.y<minimum){minimum=v.y;let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;limiting=mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name;}}
+ let minimum=Infinity,limiting='';for(const {mesh,index}of surfaceSamples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);if(v.y<minimum){minimum=v.y;let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;limiting=mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name;}}
  limitingBones.push(limiting);
  // Keep the complete skinned silhouette above the support plane, including
  // authored ornaments. Report correction; large corrections are not acceptance.
@@ -92,14 +103,15 @@ for(let frame=0;frame<=frames;frame++){
  let finalCorrection=-minimum-bodyMinimum;
  // Leg weights also influence pelvis skin on these rigs. Reconcile their
  // planted soles with the complete silhouette after the first body correction.
- for(let pass=0;pass<3;pass++){
+ for(let pass=0;pass<(profile==='warthog'?5:3);pass++){
   supportLimb('Left',true);supportLimb('Right',true);target.scene.updateMatrixWorld(true);
-  let lowest=Infinity;for(const {mesh,index}of samples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);lowest=Math.min(lowest,v.y);}
+  let lowest=Infinity;for(const {mesh,index}of surfaceSamples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);lowest=Math.min(lowest,v.y);}
   hip.getWorldPosition(p);p.y-=lowest;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);finalCorrection-=lowest;
  }
  ground.push(finalCorrection);
+ if(profile==='warthog')for(const [name,item]of to)if(/(?:UpLeg|Leg)$/.test(name))previousLegPose.set(item.bone,item.bone.quaternion.clone());
  for(const [name,item]of animated)item.bone.quaternion.toArray(values.get(name),values.get(name).length);hip.position.toArray(hipValues,hipValues.length);
 }
 const tracks=animated.map(([name,item])=>new QuaternionKeyframeTrack(item.bone.name+'.quaternion',times,values.get(name)));tracks.push(new VectorKeyframeTrack(to.get('Hips').bone.name+'.position',times,hipValues));
-const result={schema:'wg-retargeted-recovery/1',sourceSha256:crypto.createHash('sha256').update(sourceBytes).digest('hex'),targetSha256:crypto.createHash('sha256').update(targetBytes).digest('hex'),ratio,samples:times.length,mappedBones:mapped.map(([name])=>name),unmappedBones:[...to.keys()].filter(name=>!from.has(name)),groundCorrection:{min:Math.min(...ground),max:Math.max(...ground),values:ground,limitingBones},clip:AnimationClip.toJSON(new AnimationClip('Stand_Up1',clip.duration,tracks))};
+const result={schema:'wg-retargeted-recovery/1',profile,sourceSha256:crypto.createHash('sha256').update(sourceBytes).digest('hex'),targetSha256:crypto.createHash('sha256').update(targetBytes).digest('hex'),ratio,samples:times.length,mappedBones:mapped.map(([name])=>name),unmappedBones:[...to.keys()].filter(name=>!from.has(name)),groundCorrection:{min:Math.min(...ground),max:Math.max(...ground),values:ground,limitingBones},clip:AnimationClip.toJSON(new AnimationClip('Stand_Up1',clip.duration,tracks))};
 fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result)+'\n');console.log(JSON.stringify({output,bytes:fs.statSync(output).size,samples:result.samples,mapped:result.mappedBones.length,ratio,groundCorrection:{min:result.groundCorrection.min,max:result.groundCorrection.max}},null,2));

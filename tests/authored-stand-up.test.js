@@ -6,11 +6,12 @@ import fs from 'node:fs';
 import {AnimationClip,AnimationMixer,LoopOnce,Vector3,Quaternion} from 'three';
 import {actorGeometry} from './helpers/actor-geometry.js';
 
-for(const species of ['hyena','lion','buffalo','rhino'])test(`authored ${species} get-up preserves limb lengths and clears all non-tail skin`,async()=>{
+for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`authored ${species} get-up preserves limb lengths and clears all non-tail skin`,async()=>{
  const data=JSON.parse(fs.readFileSync(new URL(`../content/source/animations/stand-up/${species}-candidate.json`,import.meta.url))),model=await actorGeometry(new URL(['hyena','lion'].includes(species)?`../content/source/actors/${species}/expressive-candidate.glb`:'../public'+ANIMAL_ACTIONS.animals[species].url,import.meta.url)),clip=AnimationClip.parse(data.clip),mixer=new AnimationMixer(model),action=mixer.clipAction(clip).setLoop(LoopOnce,1);
  action.clampWhenFinished=true;action.play();const bones=[],meshes=[];model.traverse(o=>{if(o.isBone)bones.push({bone:o,length:o.position.length()});if(o.isSkinnedMesh)meshes.push(o);});
  const qa=new Quaternion(),qb=new Quaternion();let maxArmStep=0,armChannel='';
  for(const track of clip.tracks)if(/(?:Arm|Hand)\.quaternion$/.test(track.name))for(let i=4;i<track.values.length;i+=4){qa.fromArray(track.values,i-4).normalize();qb.fromArray(track.values,i).normalize();const step=qa.angleTo(qb);if(step>maxArmStep){maxArmStep=step;armChannel=track.name;}}
+ if(species==='warthog')for(const track of clip.tracks)if(/(?:UpLeg|Leg)\.quaternion$/.test(track.name))for(let i=4;i<track.values.length;i+=4){qa.fromArray(track.values,i-4).normalize();qb.fromArray(track.values,i).normalize();assert.ok(qa.angleTo(qb)<.20001,'Unbounded warthog knee transition');}
  // A 20-degree source-frame ceiling rejects the former 94/140-degree pole flips.
 
  assert.equal(data.mappedBones.length,['hyena','warthog'].includes(species)?21:23);assert.ok(clip.duration>8&&clip.duration<8.3);
