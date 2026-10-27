@@ -3,7 +3,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const files=['tools/experiments/native-far-ground.js','tools/experiments/prepare-native-far-gpu.js','tools/experiments/attach-native-far-world.js'];
 const candidates=new Map(files.map(p=>[p,fs.readFileSync(p)]));
-const root='docs/qa/residual-spikes-20261027/far-depth-quality-abab';fs.mkdirSync(root,{recursive:true});
+const root=process.argv[2]??'docs/qa/residual-spikes-20261027/far-depth-quality-abab';fs.mkdirSync(root,{recursive:true});
 const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 try{for(const [i,enabled] of [false,true,false,true].entries()){
  for(const p of files)fs.writeFileSync(p,enabled?candidates.get(p):execFileSync('git',['show','7d00e96a7:'+p]));
