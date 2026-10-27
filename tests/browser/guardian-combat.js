@@ -56,7 +56,7 @@ try{
    while(state.elapsed-start<8&&performance.now()-wallStart<30000){
     await sleep(100);
     const animal=state.raid?.animals[0],entry=animal&&world.beastPhysics.entries.get(animal.id),recovery=entry?.recovery;
-    recoveryTrace.push({wallMs:performance.now()-wallStart,time:state.elapsed-start,phase:animal?.magicDown?.phase??animal?.status,recoveryAge:entry?.recoveryAge??null,hands:recovery?.arms.map(arm=>{arm.foot.getWorldPosition(contactPoint);return {position:contactPoint.toArray(),target:arm.target.toArray(),targetDistance:contactPoint.distanceTo(arm.target),groundGap:contactPoint.y-nav.field.surface(contactPoint.x,contactPoint.z)};})??[]});
+    recoveryTrace.push({wallMs:performance.now()-wallStart,time:state.elapsed-start,phase:animal?.magicDown?.phase??animal?.status,recoveryAge:entry?.recoveryAge??null,groundCorrection:recovery?.lift??null,pelvis:recovery?(()=>{recovery.entries[0].bone.getWorldPosition(contactPoint);return {position:contactPoint.toArray(),groundGap:contactPoint.y-nav.field.surface(contactPoint.x,contactPoint.z)};})():null,hands:recovery?.arms.map(arm=>{arm.foot.getWorldPosition(contactPoint);return {position:contactPoint.toArray(),target:arm.target.toArray(),targetDistance:contactPoint.distanceTo(arm.target),groundGap:contactPoint.y-nav.field.surface(contactPoint.x,contactPoint.z)};})??[]});
    }
    const rows=samples.slice(),keys=['dt','renderMs','physicsTotal','solverMs','solverSteps','creationMs','bindingMs','recoverySetupMs','recoveryFollowMs','recoveryMs','animationMs','vfxMs','draws'];
    const metrics=Object.fromEntries(keys.map(key=>{const values=rows.map(r=>r[key]??0).sort((a,b)=>a-b),at=p=>values[Math.min(values.length-1,Math.floor(values.length*p))];return [key,{mean:values.reduce((a,b)=>a+b,0)/values.length,p95:at(.95),p99:at(.99),max:at(1)}];}));
@@ -66,7 +66,7 @@ try{
  const recoveryView=document.createElement('button');recoveryView.textContent='Vista lateral de recuperación';document.querySelector('header').insertBefore(recoveryView,$('status'));
  recoveryView.onclick=()=>{const y=nav.field.surface(site.x,site.z);world.controls.target.set(site.x+1,y+.9,site.z);world.camera.position.set(site.x+1,y+2.1,site.z+7);world.controls.update();};
  const supportView=document.createElement('button');supportView.textContent='Detalle de apoyos';document.querySelector('header').insertBefore(supportView,$('status'));
- supportView.onclick=()=>{const y=nav.field.surface(site.x+2,site.z-1);world.controls.target.set(site.x+2,y+.8,site.z-1);world.camera.position.set(site.x+2,y+1.5,site.z+3);world.controls.update();};
+ supportView.onclick=()=>{const y=nav.field.surface(site.x+2,site.z-1),height=ANIMAL_ACTIONS.animals[$('species').value].presentation.bindHeight;world.controls.target.set(site.x+2,y+height*.45,site.z-1);world.camera.position.set(site.x+2,y+height*.7,site.z-1+height*2.2);world.controls.update();};
  const recordCycle=document.createElement('button');recordCycle.textContent='Grabar ciclo seleccionado';recordCycle.id='recordCycle';document.querySelector('header').insertBefore(recordCycle,$('status'));
  recordCycle.onclick=async()=>{
   if(recording||measuring||physicsTrial)return;
