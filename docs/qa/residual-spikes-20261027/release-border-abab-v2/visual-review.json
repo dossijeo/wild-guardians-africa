@@ -1,0 +1,12 @@
+{
+  "scope": "Manual inspection of shield-0.png from first baseline/candidate pair only",
+  "findings": [
+    "Both show the approved dense fern cards, same nearby mangrove roots, rocks, ground and HUD composition. No obvious geometry/lighting regression in this view.",
+    "Tutorial overlay is present in both images despite the initial close attempt. This is a matched workload but not an unobstructed art capture.",
+    "Clock differs by one game minute; active simulation and camera timer mean these are not pixel-exact deterministic captures."
+  ],
+  "limits": [
+    "Second pair and second capture remain to inspect.",
+    "Does not establish navigation correctness or visual equivalence for every scene."
+  ]
+}

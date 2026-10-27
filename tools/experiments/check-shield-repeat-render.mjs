@@ -59,6 +59,14 @@ try {
     owner[key]=timed;restorers.push(()=>{if(owner[key]===timed)owner[key]=prior;});
    }
   }
+  if(capturePhases&&w.spatialSession?.core){
+   const core=w.spatialSession.core;
+   for(const key of ['removeChunks','removeChunk']){
+    const prior=core[key];if(typeof prior!=='function')continue;
+    const timed=function(...args){const selected=core.currentChunk(),coordinates=key==='removeChunks'?args[0]:[args],selectedRequested=!!selected&&coordinates.some(([x,z])=>x===selected.cx&&z===selected.cz),at=performance.now();let removed;try{return removed=prior.apply(this,args);}finally{if(phases.length<80000)phases.push({frame:renderActive?gpu.index-1:null,label:'native:'+key,at,ms:performance.now()-at,selectedRequested,requested:coordinates.length,removed,selectedBefore:selected,selectedAfter:core.currentChunk()});else droppedPhases++;}};
+    core[key]=timed;restorers.push(()=>{if(core[key]===timed)core[key]=prior;});
+   }
+  }
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   globalThis.qaResidualHardware={renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),hardwareConcurrency:navigator.hardwareConcurrency,devicePixelRatio,canvas:[gl.drawingBufferWidth,gl.drawingBufferHeight],crossOriginIsolated};
   const wrapped=function(...args){const at=performance.now();renderActive=true;try{return gpu.measure('world-render',()=>original.apply(this,args));}finally{renderActive=false;cpu.push({frame:gpu.index-1,at,ms:performance.now()-at});}};
