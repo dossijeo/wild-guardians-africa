@@ -40,10 +40,11 @@ export class BeastRecovery{
   // Fold trailing appendages away from the support plane instead of lifting
   // the entire animal to accommodate a hanging tail or skirt.
   this.secondary=[];
-  for(const [name,bone] of binding.bones)if(name==='Tail_01'||/^ClothRear_.*_01$/.test(name)){
+  for(const [name,bone] of binding.bones)if(/^Tail_0[1-5]$/.test(name)||/^ClothRear_.*_01$/.test(name)){
    const standingQ=bone.quaternion.clone(),parent=bone.parent.getWorldQuaternion(new Quaternion()),axis=X.clone().applyQuaternion(binding.model.getWorldQuaternion(new Quaternion()));
-   const crouchQ=parent.clone().invert().multiply(new Quaternion().setFromAxisAngle(axis,name==='Tail_01'?1.5:-1.2)).multiply(parent).multiply(standingQ);
-   this.secondary.push({bone,standingQ,crouchQ});
+   const tailIndex=name.startsWith('Tail_')?Number(name.slice(-2))-1:-1,angle=tailIndex>=0?[1.1,.25,.18,.1,.04][tailIndex]:-1.2;
+   const crouchQ=parent.clone().invert().multiply(new Quaternion().setFromAxisAngle(axis,angle)).multiply(parent).multiply(standingQ);
+   this.secondary.push({bone,standingQ,crouchQ,delay:Math.max(0,tailIndex)*.025});
   }
   this.samples=BeastRecovery.contactSamples(binding.model);
   // Bounded skin samples during recovery only: cached extremes per influencing
@@ -70,7 +71,7 @@ export class BeastRecovery{
   this.age=Math.min(this.duration,this.age+Math.max(0,dt));const t=this.age/this.duration,brace=smooth(t/.42),rise=smooth((t-.42)/.58);
   for(const e of this.entries){if(t<.42){e.bone.quaternion.slerpQuaternions(e.fallenQ,e.crouchQ,brace);e.bone.position.lerpVectors(e.fallenP,e.crouchP,brace);}else{e.bone.quaternion.slerpQuaternions(e.crouchQ,e.standingQ,rise);e.bone.position.lerpVectors(e.crouchP,e.standingP,rise);}}
   for(const arm of this.arms)arm.foot.quaternion.copy(arm.standingHandQ);
-  for(const e of this.secondary)e.bone.quaternion.slerpQuaternions(e.standingQ,e.crouchQ,brace*(1-rise));
+  for(const e of this.secondary){const fold=smooth((t-e.delay)/(.42-e.delay)),release=smooth((t-.42-e.delay)/(.58-e.delay));e.bone.quaternion.slerpQuaternions(e.standingQ,e.crouchQ,fold*(1-release));}
   const model=this.binding.model;model.updateMatrixWorld(true);
   const contactWeight=smooth((t-.2)/.22)*(1-smooth((t-.85)/.15));for(const leg of this.legs)this.legIK(leg,contactWeight);
   const handWeight=smooth((t-.08)/.3)*(1-smooth((t-.48)/.3));for(const arm of this.arms)this.legIK(arm,handWeight);
