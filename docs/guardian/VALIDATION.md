@@ -41,4 +41,4 @@ No se añaden bibliotecas de reconocimiento, simulación física ni IA en ejecuc
 
 Estos límites se mantienen visibles; no se etiquetan como pruebas superadas.
 
-La sesión de producción en inglés cargó el juego, pero la captura final no contiene un diálogo visible (`english-game-no-dialogue.png`); no se cuenta como validación visual del tutorial inglés. La reproducción real ES/EN y su controlador sí se comprobaron en el laboratorio. En producción española se verificó también el cierre mediante el botón original.
+La nueva partida inglesa también presentó el Guardián completo y el diálogo introductorio (`tutorial-english.png`). El botón Continue avanzó al mensaje del centro de trabajo; no se registraron errores de consola. La primera captura inglesa se tomó después del diálogo y se conserva como tal, sin contarse como evidencia facial. En producción española se verificó también el cierre mediante el botón original.
