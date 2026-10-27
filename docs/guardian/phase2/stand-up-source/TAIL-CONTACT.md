@@ -15,3 +15,9 @@ Reduced the gravity-assist torque near the target (dead angle 0.1 rad), retained
 `lion-tail-runtime.mp4`, `.png` and `.json` record the actual WorldScene fixture with the expressive lion and authored clip. Completed 12 simulation seconds; zero final downed actors, no errors, roll succeeded in 0.95 s (0.2607 rad, 0.4598 rad/s). The wide contact sheet confirms fall, roll, sit and rise. It is not final visual acceptance: apparent foot clearance needs closer inspection, and this single flat-ground cycle does not cover slopes or obstacles. Audio was disabled. No paired performance conclusion is claimed.
 
 `lion-source-support.png` predates the user-approved tail exemption and documents the previous candidate only; use the newer runtime video for current behavior.
+
+## Foot-support follow-up
+
+The QA trace now identifies the lowest retained support, minimum foot-skin clearance, model grounding offset and authored hip offset during recovery. `lion-support-runtime.json` is a second real WorldScene cycle, not a synthetic pose check. At recovery age 2.1944 s, rear cloth `ClothRear_R_Inner_02` is the lowest support (0.01 m), while feet are 0.2010 m above terrain. At ages 2.743, 3.259 and 3.807 s, LeftFoot is the support at 0.01 m. Thus the previous wide video does not prove final standing levitation; the mid-rise cloth support remains an actual refinement target. Do not eliminate cloth contacts to conceal it.
+
+Standalone full-skin samples of the exported lion clip place the feet at the flat support plane from source time 6 s through the endpoint. Added an explicit upper bound of 0.025 m on minimum foot clearance throughout that standing portion for both authored candidates; both tests pass. This bounds hovering in the assets, while the runtime trace separately covers scene grounding. The differing mid-rise gap still needs investigation with terrain and cloth transforms; it is not fixed by this diagnostic change.
