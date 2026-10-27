@@ -498,7 +498,7 @@ test('native five-profile cut is deterministic and responds to local solid chang
     }finally{session.dispose();}
   });
 
-test('native wetland face proof requires residency and rejects uncertain shores',
+test('traversable Manglares water never certifies a defensive boundary and requires residency',
   {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
     const state=Game.newGame({seed:712,biome:'manglares',culture:'mapungubwe',
       slotId:'wetland-face-test'});
@@ -524,21 +524,25 @@ test('native wetland face proof requires residency and rejects uncertain shores'
             uncertifiedWet.push(face);
         }
       }
-      assert.ok(wet.length>0,'Expected a continuously wet Manglares face');
+      assert.equal(wet.length,0,'Walkable water cannot seal a defensive perimeter');
       assert.ok(uncertifiedWet.length>0,
-        'A wet midpoint alone must not certify a dry-gap-prone face');
+        'The fixture must include resident water that is not a defensive boundary');
       assert.equal(wasm.lazy_cut_face_natural(500,500,501,500),-1,
         'Unloaded space cannot certify a natural boundary');
-      const first=wet[0];
-      assert.equal(wasm.lazy_cut_face_natural(...first),2);
+      const first=uncertifiedWet[0];
+      for(const species of ['warthog','hyena','buffalo','lion','rhino']){
+        session.actorRegionsBatch([{x:94,z:-10}],{worker:false,species});
+        assert.notEqual(wasm.lazy_cut_face_natural(...first),2,
+          `Water must remain traversable for ${species}`);
+      }
       const midpoint={x:(first[0]+first[2])*.5,z:(first[1]+first[3])*.5};
       assert.ok(wasm.spatial_add_settlement(midpoint.x,midpoint.z,2,2)>=0);
       assert.equal(wasm.lazy_cut_face_natural(...first),0,
-        'A new settlement clearing the wetland invalidates its face proof');
+        'Clearing water cannot create a defensive boundary');
       assert.equal(session.stream.releaseChunk(2,0),1);
       loaded.delete('2,0');
       assert.equal(wasm.lazy_cut_face_natural(...first),-1,
-        'A wetland proof expires when its spatial chunk is unloaded');
+        'Unloaded geometry cannot retain a resident boundary classification');
     }finally{session.dispose();}
   });
 

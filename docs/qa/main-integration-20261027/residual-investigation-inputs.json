@@ -1,0 +1,101 @@
+{
+  "scope": "Preparation for post-merge investigation; historical samples, not optimization evidence or current baseline.",
+  "source": "../mangrove-magic-20261026/hydraulic-v2-stream-control/magic.cpuprofile",
+  "profileWallMs": 131698.663,
+  "topSelf": [
+    [
+      "(idle) | :0",
+      58272.23500000022
+    ],
+    [
+      "updateMatrixWorld | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8325",
+      7394.604999999989
+    ],
+    [
+      "(program) | :0",
+      5934.1050000000205
+    ],
+    [
+      "put | http://127.0.0.1:5220/src/rendering/shadow-cache.js:7",
+      2222.1789999999996
+    ],
+    [
+      "updateAssetLods | http://127.0.0.1:5220/src/rendering/asset-lod.js:37",
+      2117.294999999996
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:94",
+      1932.3860000000032
+    ],
+    [
+      "intersectsBox | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:14946",
+      1644.8590000000027
+    ],
+    [
+      "multiplyMatrices | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:6652",
+      1521.6270000000025
+    ],
+    [
+      "getBoundingClientRect | :0",
+      1482.5040000000013
+    ],
+    [
+      "attribute | http://127.0.0.1:5220/src/rendering/shadow-cache.js:24",
+      1364.0819999999994
+    ],
+    [
+      "WebGLRenderer.renderBufferDirect | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40314",
+      1164.5239999999983
+    ],
+    [
+      "projectObject | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40593",
+      1155.2840000000003
+    ],
+    [
+      "prepare | http://127.0.0.1:5220/src/rendering/smooth-far-transitions.js:42",
+      1147.841999999999
+    ],
+    [
+      "upload | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:34743",
+      1146.7940000000003
+    ],
+    [
+      " | http://127.0.0.1:5220/src/rendering/asset-groups.js:107",
+      1104.5119999999997
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/asset-groups.js:173",
+      979.9110000000011
+    ],
+    [
+      "updateObstructions | http://127.0.0.1:5220/src/rendering/obstruction.js:44",
+      959.2200000000007
+    ],
+    [
+      "prepare | http://127.0.0.1:5220/src/rendering/asset-groups.js:89",
+      936.613999999999
+    ],
+    [
+      "(garbage collector) | :0",
+      902.9219999999999
+    ],
+    [
+      "renderObject | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:36700",
+      838.0329999999996
+    ]
+  ],
+  "confirmedCodeObservations": [
+    "shadowSnapshot allocates an array and serializes active instanced attribute values, including every active instance matrix, on each invocation.",
+    "Smooth far preparation sorts and recopies attributes when the camera matrix or attribute versions change."
+  ],
+  "limitations": [
+    "Self samples over the complete run do not identify the cause of individual slow frames.",
+    "The historical summarizer uses stale source line numbers for some aggregate counters; those counters are intentionally excluded.",
+    "No CPU/GPU or presentation causality inferred from these samples."
+  ],
+  "nextMeasurement": [
+    "Capture synchronized presentation intervals, main-thread phase durations and GPU timings on the merged build.",
+    "Use identical seed, camera path, residency and active simulation for interleaved repeats.",
+    "Compare total frame distributions and useful streaming throughput, not isolated function duration."
+  ]
+}
