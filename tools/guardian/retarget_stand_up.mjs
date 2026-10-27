@@ -56,7 +56,12 @@ function supportLimb(side,foot=false){
  if(!Number.isFinite(bottom)||!foot&&bottom>=0)return;
  const start=upper.getWorldPosition(new Vector3()),knee=elbow.getWorldPosition(new Vector3()),end=hand.getWorldPosition(new Vector3()),orientation=hand.getWorldQuaternion(new Quaternion()).normalize(),goal=end.clone();goal.y-=bottom;
  const l1=start.distanceTo(knee),l2=knee.distanceTo(end),axis=goal.clone().sub(start),distance=Math.max(Math.abs(l1-l2)+1e-5,Math.min(l1+l2-1e-5,axis.length()));axis.normalize();
- const pole=knee.clone().sub(start).addScaledVector(axis,-knee.clone().sub(start).dot(axis)).normalize(),along=(l1*l1-l2*l2+distance*distance)/(2*distance),height=Math.sqrt(Math.max(0,l1*l1-along*along));
+ // Preserve the donor elbow/knee bend plane before moving its endpoint.
+ // Projecting the old joint directly against the displaced target axis can
+ // cross zero and flip the limb by 180 degrees as contact begins.
+ const originalAxis=end.clone().sub(start).normalize(),bend=knee.clone().sub(start),pole=bend.clone().addScaledVector(originalAxis,-bend.dot(originalAxis));
+ pole.addScaledVector(axis,-pole.dot(axis)).normalize();
+ const along=(l1*l1-l2*l2+distance*distance)/(2*distance),height=Math.sqrt(Math.max(0,l1*l1-along*along));
  const desiredKnee=start.clone().addScaledVector(axis,along).addScaledVector(pole,height);goal.copy(start).addScaledVector(axis,distance);
  aim(upper,elbow,desiredKnee);aim(elbow,hand,goal);hand.quaternion.copy(hand.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(orientation));hand.updateWorldMatrix(false,true);
 }

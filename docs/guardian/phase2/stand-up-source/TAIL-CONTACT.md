@@ -51,3 +51,13 @@ Added a 0.04 m maximum minimum-foot-clearance check across the first two source 
 `hyena-planted-feet.mp4/png/json`: actual full-body WorldScene cycle completes with zero errors; physical roll succeeds in 1.0 s. Inspected contact sheet. New lion clip has numerical/physical tests but has not yet been recorded in runtime after this last regeneration. Visual acceptance remains pending.
 
 Additional continuity audit found large adjacent-frame quaternion changes in hand/forearm channels (hyena RightForeArm 1.633 rad; lion RightHand 2.449 rad). Leg maxima: hyena LeftLeg 0.400 rad, lion RightLeg 0.196 rad per source frame. Current green tests do not validate these angular discontinuities. Investigate bend-pole/hand IK continuity before shipping; do not claim the full get-up is smooth. Ground-correction limitingBones metadata describes the initial silhouette pass, prior to the additional foot reconciliation passes.
+
+## Bend-plane discontinuity repair
+
+Diagnostic retargets with hand support disabled reduced maximum arm-channel steps from 1.633/2.449 rad (hyena/lion) to 0.154 rad in both rigs. The discontinuity came from projecting the old elbow against the already displaced hand target: the resulting bend direction could reverse as contact began. The support solve now derives the original elbow/knee bend plane first, then projects that direction onto the new target plane. Hand support remains enabled; no bone translations or generic clip smoothing were introduced.
+
+Both source-derived clips regenerated. `support-angle-audit.json` records remaining maxima: hyena 0.3031 rad (17.37 degrees), lion 0.2086 rad (11.95 degrees) per 60 Hz source frame. Added a 20-degree source-frame regression ceiling on Arm/ForeArm/Hand quaternion channels, rejecting the prior 94/140-degree flips. This is a bound against discontinuities, not proof of perceptually smooth motion at accelerated game playback. Forty scoped tests pass, including foot placement, skin clearance, physical handoff, cloth and repeated hits.
+
+A trial 5 mm reach margin did not reduce the remaining maximum and was reverted. Large pole flips are corrected; fine motion timing and runtime close-detail inspection remain open.
+
+Runtime follow-up: lion-stable-support.mp4/png/json records the updated lion in WorldScene. Completed cycle, no errors, successful roll in 0.7167 s. Inspected full-body contact sheet; this verifies sequence coverage, not close-detail smoothness. Latest hyena bend-plane change still needs a fresh visual recording.
