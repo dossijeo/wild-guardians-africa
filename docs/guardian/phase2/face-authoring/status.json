@@ -5,9 +5,10 @@
   "editableLocalSource": "C:/tmp/guardian-faces/hyena-expression.blend",
   "reproduce": [
     "tools/guardian/build_actor_face.py",
-    "tools/guardian/inspect_actor_face.py"
+    "tools/guardian/inspect_actor_face.py",
+    "tools/guardian/actor_mouth.py"
   ],
-  "iterations": 4,
+  "iterations": 11,
   "viewsPerIteration": [
     "front",
     "quarter",
@@ -16,14 +17,41 @@
   "rejected": [
     "v1 socket collapse stretches brow and nose",
     "v2 new lid UV interpolation crosses source islands",
-    "v3 eyelid width/center mismatch"
+    "v3 eyelid width/center mismatch",
+    "v5 continuous lip skin elongated nose",
+    "v7-v8 cavity edge did not match actual skin delta",
+    "v10 mouth bag protruded below cheek"
   ],
-  "current": "v4 uses continuous baked source-color atlas and calibrated eye centers; still needs edge and partial-blink inspection",
+  "current": "Localized lip seam split, mouth interior follows actual lower-lip morph deltas; closed mouth bag reduced after rejecting protruding variant. Neutral, open and closed-eye renders inspected front/quarter/side. Still not approved for runtime.",
   "remaining": [
-    "Mouth opens insufficiently: author real oral opening and jaw topology",
+    "Review mouth corner silhouette and partial opening in motion; refine eyelid edges",
     "Validate blink at 0/0.5/1 in animation and all views",
     "Export and test GLB morphs without altering native clips",
     "Repeat calibration on other four beasts and four farmers",
     "Wire reaction and locomotion states, performance and game validation"
-  ]
+  ],
+  "exportCheck": {
+    "file": "C:/tmp/guardian-faces/hyena-expression.glb",
+    "bytes": 71759972,
+    "nativeClips": 6,
+    "nativeClipStartEndTimes": "all equal to source",
+    "morphs": {
+      "Mesh_0": [
+        "mouthOpen"
+      ],
+      "Oral cavity": [
+        "mouthOpen"
+      ],
+      "Expressive fur lids": [
+        "blinkL",
+        "blinkR"
+      ]
+    },
+    "notVerified": [
+      "full animation pose equivalence",
+      "Three.js visual playback",
+      "runtime compression",
+      "GPU cost"
+    ]
+  }
 }
