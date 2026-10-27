@@ -1,0 +1,121 @@
+{
+  "scope": "Real campaign renderer, seed 712, same camera and visual time; Integrated final daylight on/off with the same scene and time. DOF disabled in both arms to isolate lighting; no timing claim.",
+  "records": [
+    {
+      "run": 0,
+      "arm": "original",
+      "phase": "day",
+      "file": "volcanes-original-day.png",
+      "timing": null,
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "volcanes",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&volcanicGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 67,
+        "triangles": 223042,
+        "memory": {
+          "geometries": 243,
+          "textures": 91
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "run": 0,
+      "arm": "original",
+      "phase": "night",
+      "file": "volcanes-original-night.png",
+      "timing": null,
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "volcanes",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&volcanicGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 67,
+        "triangles": 223042,
+        "memory": {
+          "geometries": 243,
+          "textures": 91
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "run": 1,
+      "arm": "warm",
+      "phase": "day",
+      "file": "volcanes-warm-day.png",
+      "timing": null,
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "volcanes",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&volcanicGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 67,
+        "triangles": 223042,
+        "memory": {
+          "geometries": 244,
+          "textures": 87
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "run": 1,
+      "arm": "warm",
+      "phase": "night",
+      "file": "volcanes-warm-night.png",
+      "timing": null,
+      "camera": [
+        46,
+        19.612501525878905,
+        -18
+      ],
+      "target": [
+        24,
+        3.612501525878906,
+        -36
+      ],
+      "biome": "volcanes",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&volcanicGround=fine&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 67,
+        "triangles": 223042,
+        "memory": {
+          "geometries": 244,
+          "textures": 87
+        },
+        "glError": 0
+      },
+      "errors": []
+    }
+  ]
+}

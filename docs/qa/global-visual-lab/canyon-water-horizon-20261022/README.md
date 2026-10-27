@@ -1,0 +1,7 @@
+# Canyon water horizon extension
+
+Extended the QA bank attribute/material treatment to horizon water using the same TerrainField and absolute coordinates. Both river meshes use the existing one-meter longitudinal lattice. No new triangles, draws or texture samples. Horizon adds 4608 vec2 attributes / 36864 bytes; near home adds 81744 bytes. CPU preparation and GPU cost remain unbenchmarked.
+
+Two fixtures: canyon-water-horizon-20261022 repeats the 192-unit out/back test; canyon-water-horizon-view-20261022 looks 160 units along the river at three camera positions. Both produce twelve day/night baseline/candidate captures, six pairs with identical cameras/time/draws/triangles and no GL/console/network errors. Package scripts create paired sheets. The first fixture is pixel-identical to the near-only predecessor because it does not expose far water; it is NOT proof of visual near/far parity.
+
+The second fixture exposes far water and substantial pre-existing terrain/shore LOD changes. These must be separated from the bank transition before claiming seam-free quality. The shallow tint is retained as QA, not integrated. Current evidence proves the added attributes exist on the horizon and draw successfully; it does not prove temporal continuity during motion or a release-level seamless horizon. Next priority is inspecting the existing horizon material/geometry transition in this same long river view. Preserve original terrain authority and gameplay.

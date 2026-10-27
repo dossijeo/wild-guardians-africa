@@ -58,3 +58,50 @@ test('preparing water steps is idempotent and does not invent contacts, elapsed 
  locomotion.ripples.add(1,2,3,8);locomotion.ripples.update(8.1);assert.equal(mesh.count,1);assert.equal(mesh.visible,true);
  locomotion.dispose();assert.equal(world.children.length,0);library.dispose();pipeline.dispose();
 });
+
+test('stable light slots preserve isolated effect illumination and scene-relative coordinates without changing light count',()=>{
+ const {library,pipeline,camera,world}=setup();library.enableStableWorldLights(world);
+ const fx=library.create('spirit',pipeline);world.add(fx);world.position.set(-144,0,96);fx.position.set(150,2,-90);fx.scale.setScalar(2);fx.seek(2);fx.prepare(camera,world);library.updateWorldLights(camera);world.updateMatrixWorld(true);
+ let count=0;world.traverse(o=>{if(o.isPointLight)count++;});assert.equal(count,4);
+ const active=library.worldLights.filter(l=>l.intensity>0);assert.equal(active.length,2);
+ for(const source of fx.localLights){const expected=source.position.clone().applyMatrix4(fx.matrixWorld);assert(active.some(l=>l.getWorldPosition(new Vector3()).distanceTo(expected)<1e-8&&l.color.equals(source.color)&&l.intensity===source.intensity));}
+ fx.clear();library.updateWorldLights(camera);assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
+ fx.dispose();library.updateWorldLights(camera);assert.equal(world.children.length,4);library.dispose();assert.equal(world.children.length,0);pipeline.dispose();
+});
+
+test('smoke preparation submits its own lightless scene and restores renderer state before compilation resolves',async()=>{
+ const {pipeline,renderer,camera}=setup();let resolve,seen;const target={id:'loading'};let current=target;
+ Object.assign(renderer,{getRenderTarget:()=>current,setRenderTarget:t=>{current=t;},getViewport:v=>v.set(0,0,800,600),getScissor:v=>v.set(0,0,800,600),getScissorTest:()=>true,setViewport:()=>{},setScissor:()=>{},setScissorTest:()=>{},compileAsync:(scene,c)=>{seen={scene,c,target:current,shadows:renderer.shadowMap.enabled};return new Promise(r=>{resolve=r;});}});
+ renderer.shadowMap.enabled=true;const pending=pipeline.prepareSmokePrograms(camera);
+ assert.equal(seen.scene,pipeline.smokeScene);assert.equal(seen.target,null);assert.equal(seen.shadows,false);assert.equal(current,target);assert.equal(renderer.shadowMap.enabled,true);
+ resolve();await pending;pipeline.dispose();
+});
+
+
+test('stable slots ignore effects hidden by ancestors or detached from their scene',()=>{
+ const {library,pipeline,camera,world}=setup();library.enableStableWorldLights(world);
+ const group=new Scene();world.add(group);const fx=library.create('spirit',pipeline);group.add(fx);
+ fx.seek(2);fx.prepare(camera,world);library.updateWorldLights(camera);
+ assert(library.worldLights.some(l=>l.intensity>0));
+ group.visible=false;library.updateWorldLights(camera);
+ assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
+ group.visible=true;group.removeFromParent();library.updateWorldLights(camera);
+ assert(library.worldLights.every(l=>l.visible&&l.intensity===0));
+ world.add(group);library.updateWorldLights(camera);assert(library.worldLights.some(l=>l.intensity>0));
+ library.dispose();pipeline.dispose();
+});
+
+
+test('stable lights retain near-equal sources but admit a clearly stronger challenger',()=>{
+ const {library,pipeline,camera,world}=setup();library.enableStableWorldLights(world,1);
+ const first=library.create('spirit',pipeline),second=library.create('spirit',pipeline);world.add(first,second);
+ for(const fx of [first,second]){fx.stopped=false;fx.localLights[0].visible=true;fx.localLights[0].position.set(0,0,0);fx.localLights[0].color.setRGB(1,1,1);fx.localLights[1].visible=false;}
+ first.localLights[0].intensity=1;second.localLights[0].intensity=.99;
+ library.updateWorldLights(camera);assert(library.retainedLightSources.has(first.localLights[0]));
+ second.localLights[0].intensity=1.1;library.updateWorldLights(camera);assert(library.retainedLightSources.has(first.localLights[0]));
+ second.localLights[0].intensity=1.3;library.updateWorldLights(camera);assert(library.retainedLightSources.has(second.localLights[0]));
+ assert.equal(library.worldLights[0].intensity,1.3,'ranking hysteresis must not change authored intensity');
+ second.visible=false;library.updateWorldLights(camera);assert(library.retainedLightSources.has(first.localLights[0]));
+ first.visible=false;library.updateWorldLights(camera);assert.equal(library.worldLights[0].intensity,0);assert.equal(library.retainedLightSources.size,0);
+ library.dispose();pipeline.dispose();
+});

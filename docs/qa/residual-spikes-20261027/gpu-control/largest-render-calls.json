@@ -1,0 +1,205 @@
+{
+  "scope": "Same-frame CPU/GPU correlation. CPU includes timer polling. Last-render counters may exclude subpasses. No attribution of asynchronous work or improvement claim.",
+  "top": [
+    {
+      "frame": 1,
+      "at": 76460.75999999046,
+      "ms": 71.125,
+      "gpuMs": 18.947134,
+      "lastRender": {
+        "calls": 51,
+        "triangles": 250538,
+        "points": 0,
+        "lines": 0,
+        "frame": 11468
+      },
+      "phase": "between-runs",
+      "overlappingLongTasks": [
+        {
+          "start": 76460.04999995232,
+          "ms": 93
+        }
+      ]
+    },
+    {
+      "frame": 5749,
+      "at": 196398.17999994755,
+      "ms": 44.00499999523163,
+      "gpuMs": 20.897394,
+      "lastRender": {
+        "calls": 79,
+        "triangles": 466199,
+        "points": 0,
+        "lines": 0,
+        "frame": 24793
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": [
+        {
+          "start": 196397.87000000477,
+          "ms": 69
+        }
+      ]
+    },
+    {
+      "frame": 4673,
+      "at": 168787.00999999046,
+      "ms": 36.12999999523163,
+      "gpuMs": 23.109529,
+      "lastRender": {
+        "calls": 70,
+        "triangles": 364147,
+        "points": 0,
+        "lines": 0,
+        "frame": 21971
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": [
+        {
+          "start": 168786.70500004292,
+          "ms": 51
+        }
+      ]
+    },
+    {
+      "frame": 4829,
+      "at": 173325.92499995232,
+      "ms": 35.69000005722046,
+      "gpuMs": 27.691822,
+      "lastRender": {
+        "calls": 73,
+        "triangles": 509721,
+        "points": 0,
+        "lines": 0,
+        "frame": 22421
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 1537,
+      "at": 116307.63499999046,
+      "ms": 35.68499994277954,
+      "gpuMs": 16.94953,
+      "lastRender": {
+        "calls": 56,
+        "triangles": 326644,
+        "points": 0,
+        "lines": 0,
+        "frame": 15593
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 113,
+      "at": 78794.49500000477,
+      "ms": 35.610000014305115,
+      "gpuMs": 21.958853,
+      "lastRender": {
+        "calls": 69,
+        "triangles": 366994,
+        "points": 0,
+        "lines": 0,
+        "frame": 11757
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 5010,
+      "at": 178689.64499998093,
+      "ms": 35.09500002861023,
+      "gpuMs": 23.272968,
+      "lastRender": {
+        "calls": 81,
+        "triangles": 470454,
+        "points": 0,
+        "lines": 0,
+        "frame": 22958
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 433,
+      "at": 88697.41999995708,
+      "ms": 31.74500000476837,
+      "gpuMs": 22.154791,
+      "lastRender": {
+        "calls": 81,
+        "triangles": 470454,
+        "points": 0,
+        "lines": 0,
+        "frame": 12742
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 5947,
+      "at": 201800.79499995708,
+      "ms": 30.365000009536743,
+      "gpuMs": 28.943228,
+      "lastRender": {
+        "calls": 67,
+        "triangles": 497365,
+        "points": 0,
+        "lines": 0,
+        "frame": 25355
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 1173,
+      "at": 106404.21500003338,
+      "ms": 30.319999933242798,
+      "gpuMs": 22.38005,
+      "lastRender": {
+        "calls": 79,
+        "triangles": 466209,
+        "points": 0,
+        "lines": 0,
+        "frame": 14565
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": [
+        {
+          "start": 106403.81999993324,
+          "ms": 53
+        }
+      ]
+    },
+    {
+      "frame": 262,
+      "at": 83345.3899999857,
+      "ms": 30.125,
+      "gpuMs": 28.979582,
+      "lastRender": {
+        "calls": 73,
+        "triangles": 511107,
+        "points": 0,
+        "lines": 0,
+        "frame": 12211
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    },
+    {
+      "frame": 250,
+      "at": 82896.42499995232,
+      "ms": 28.330000042915344,
+      "gpuMs": 32.365103,
+      "lastRender": {
+        "calls": 79,
+        "triangles": 542460,
+        "points": 0,
+        "lines": 0,
+        "frame": 12173
+      },
+      "phase": "camera-streaming",
+      "overlappingLongTasks": []
+    }
+  ]
+}

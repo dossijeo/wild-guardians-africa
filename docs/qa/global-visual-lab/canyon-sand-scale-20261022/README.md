@@ -1,0 +1,7 @@
+# Canyon sand physical scale trial
+
+Inspected the actual canyon user mockup (ART-REFERENCES.md): its sandy floor combines broad relief, fine grain and irregular rocky shore structure. Current V11 canyon sand samples Aerial Beach 01 at a 30-world-unit period. This isolated trial changes only both UV/origin divisors to 12, keeping masks, albedo, normal intensity, geometry, camera and illumination unchanged.
+
+Reproduce: WG_REVIEW_BIOMES=gran-canon then node tools/experiments/capture-canyon-sand-scale-20261022.mjs; python tools/experiments/package-canyon-sand-scale-20261022.py. Vite 5190, seed 712, media, 1280x720, three poses, day/night. Twelve real campaign images, six pairs. Camera/target/time/draws/triangles match in all pairs. No console/network/GL errors. No GPU/CPU timing claim; identical shader sample count does not prove identical cache cost.
+
+Decision: do not promote the 12-unit scale alone. It reduces oversized ripple bands, but also weakens relief at game distance and becomes visually flatter/finer. The original 30-unit variant remains unchanged. This is an artistic rejection, not a performance rejection. Both variants retain the same overly uniform shoreline geometry and material transition, which a texture scale change cannot fix. Future trial should preserve readable mesoscopic undulation while adding fine detail, with controlled material-only shore variation. Do not change authoritative terrain or repeat a blind scale sweep. Desert's approved mesorelief is untouched.

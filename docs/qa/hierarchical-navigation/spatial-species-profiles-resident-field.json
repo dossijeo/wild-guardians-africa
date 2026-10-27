@@ -1,0 +1,125 @@
+{
+  "scope": "Same two Sabana chunks and seed, ABBA. One worker + one animal graph versus worker + all five native species radii. Isolated synchronous WASM; not a frame-time or full-game result.",
+  "rows": [
+    {
+      "profiles": [
+        {
+          "index": 0,
+          "radius": 1.1,
+          "buildMs": 25.34819999999999,
+          "sectors": 32
+        }
+      ],
+      "generationMs": 9.290700000000001,
+      "workerBuildMs": 45.174099999999996,
+      "animalBuildMs": 25.34819999999999,
+      "queryMs": 1.1684999999999945,
+      "found": 6,
+      "wallMs": 4.385499999999979,
+      "removeMs": 2.2900999999999954,
+      "memoryBytes": 4194304
+    },
+    {
+      "profiles": [
+        {
+          "index": 0,
+          "radius": 1.1,
+          "buildMs": 21.646000000000015,
+          "sectors": 32
+        },
+        {
+          "index": 2,
+          "radius": 0.9,
+          "buildMs": 20.742099999999994,
+          "sectors": 32
+        },
+        {
+          "index": 3,
+          "radius": 0.97,
+          "buildMs": 20.15100000000001,
+          "sectors": 32
+        },
+        {
+          "index": 4,
+          "radius": 0.85,
+          "buildMs": 21.8467,
+          "sectors": 32
+        },
+        {
+          "index": 5,
+          "radius": 1.55,
+          "buildMs": 18.682799999999986,
+          "sectors": 32
+        }
+      ],
+      "generationMs": 3.9238,
+      "workerBuildMs": 23.160899999999998,
+      "animalBuildMs": 103.0686,
+      "queryMs": 0.9157000000000153,
+      "found": 30,
+      "wallMs": 9.096299999999985,
+      "removeMs": 5.503300000000024,
+      "memoryBytes": 4194304
+    },
+    {
+      "profiles": [
+        {
+          "index": 0,
+          "radius": 1.1,
+          "buildMs": 24.343099999999993,
+          "sectors": 32
+        },
+        {
+          "index": 2,
+          "radius": 0.9,
+          "buildMs": 22.82759999999996,
+          "sectors": 32
+        },
+        {
+          "index": 3,
+          "radius": 0.97,
+          "buildMs": 24.053800000000024,
+          "sectors": 32
+        },
+        {
+          "index": 4,
+          "radius": 0.85,
+          "buildMs": 27.55709999999999,
+          "sectors": 32
+        },
+        {
+          "index": 5,
+          "radius": 1.55,
+          "buildMs": 23.548699999999997,
+          "sectors": 32
+        }
+      ],
+      "generationMs": 2.6761999999999944,
+      "workerBuildMs": 24.328899999999976,
+      "animalBuildMs": 122.33029999999997,
+      "queryMs": 1.512399999999957,
+      "found": 30,
+      "wallMs": 9.119500000000016,
+      "removeMs": 5.5774000000000115,
+      "memoryBytes": 4194304
+    },
+    {
+      "profiles": [
+        {
+          "index": 0,
+          "radius": 1.1,
+          "buildMs": 26.493299999999977,
+          "sectors": 32
+        }
+      ],
+      "generationMs": 2.644200000000012,
+      "workerBuildMs": 25.177599999999927,
+      "animalBuildMs": 26.493299999999977,
+      "queryMs": 0.09730000000001837,
+      "found": 6,
+      "wallMs": 2.9925000000000637,
+      "removeMs": 1.8777000000000044,
+      "memoryBytes": 4194304
+    }
+  ]
+}

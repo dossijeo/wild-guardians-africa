@@ -9,6 +9,9 @@ const fragments={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',
 const previous=JSON.parse(readFileSync(new URL('../content/manifests/animal-actions.json',import.meta.url)));
 const selected=new Set(process.argv.slice(2));for(const species of selected)if(!fragments[species])throw Error('Unknown species '+species);
 const actions=selected.size?structuredClone(previous.animals):{};
+// Published gameplay contract (main before the visual replacements). Geometry
+// calibration must not change saved actors, navigation or shield clearance.
+const gameplayRadii={warthog:1.1,hyena:.9,buffalo:.97,lion:.85,rhino:1.55};
 for(const [species,fragment] of Object.entries(fragments)){
   if(selected.size&&!selected.has(species))continue;
   const model=assets.models.find(m=>m.source.includes(fragment));
@@ -27,16 +30,18 @@ for(const [species,fragment] of Object.entries(fragments)){
     if(!(clips[name]?.duration>0))throw new Error(`Missing native clip ${species}/${name}`);
   const script='references/extracted/'+model.source.split('.html')[0]+'/script-1.js',scriptBytes=readFileSync(new URL('../'+script,import.meta.url));
   if(!/avatar\.s=\[1,1,1\]/.test(scriptBytes.toString()))throw Error('Native scale contract not found: '+species);
-  // Decode geometry/skins only in Node. Original labs use unit scale; the
-  // intended heroic dimensions are already authored into each embedded GLB.
+  // Decode geometry/skins only in Node. Active rigs use unit scale; repaired
+  // replacements bake their intended heroic dimensions into the GLB too.
   const geometryDoc=structuredClone(doc);
   for(const m of geometryDoc.materials){delete m.normalTexture;delete m.occlusionTexture;delete m.emissiveTexture;delete m.pbrMetallicRoughness?.baseColorTexture;delete m.pbrMetallicRoughness?.metallicRoughnessTexture;}
   const encoded=Buffer.from(JSON.stringify(geometryDoc)),size=Math.ceil(encoded.length/4)*4,tail=bytes.subarray(20+jsonLength),geometry=Buffer.alloc(20+size+tail.length,32);
   bytes.copy(geometry,0,0,20);geometry.writeUInt32LE(geometry.length,8);geometry.writeUInt32LE(size,12);encoded.copy(geometry,20);tail.copy(geometry,20+size);
   const gltf=await new GLTFLoader().parseAsync(geometry.buffer.slice(geometry.byteOffset,geometry.byteOffset+geometry.length),'');gltf.scene.updateMatrixWorld(true);
   const bounds=new THREE.Box3().setFromObject(gltf.scene,true),height=bounds.max.y-bounds.min.y;
-  actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),presentation:{scale:1,bindHeight:height,bindMin:bounds.min.toArray(),bindMax:bounds.max.toArray(),sourceScript:script,sourceScriptSha256:createHash('sha256').update(scriptBytes).digest('hex'),footprint:calibrateAnimalFootprint(gltf)},clips};
-  const prior=previous.animals[species]?.presentation.footprint;if(prior?.visualRadius!==undefined){const footprint=actions[species].presentation.footprint;footprint.visualRadius=footprint.radius;footprint.radius=prior.radius;}
+  const footprint=calibrateAnimalFootprint(gltf);
+  footprint.visualRadius=footprint.radius;
+  footprint.radius=gameplayRadii[species];
+  actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),presentation:{scale:1,bindHeight:height,bindMin:bounds.min.toArray(),bindMax:bounds.max.toArray(),sourceScript:script,sourceScriptSha256:createHash('sha256').update(scriptBytes).digest('hex'),footprint},clips};
 }
 const manifest={schema:'wg-animal-actions/1',logicalMarker:'Complete native clip. Original bestiary labs encode no logical damage/contact markers; decorative contacts do not drive damage.',animals:actions};
 for(const path of ['content/manifests/animal-actions.json','public/content/animal-actions.json'])writeFileSync(new URL('../'+path,import.meta.url),JSON.stringify(manifest,null,2)+'\n');

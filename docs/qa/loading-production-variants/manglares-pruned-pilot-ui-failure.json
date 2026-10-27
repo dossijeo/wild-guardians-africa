@@ -1,0 +1,29 @@
+{
+  "attempt": 15,
+  "diagnostic": {
+    "text": "No se ha podido preparar tu mundo.\nFixed512 shader anchor changed\nCerrar",
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "chunks": 25,
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 1
+    },
+    "isolated": true
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

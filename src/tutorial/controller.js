@@ -5,8 +5,13 @@ import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS,DEFENSES_FOLLO
 import {REPEATABLE_MAGIC_IDS,shieldReminderKey,usefulPeacefulMagic,recordMagicReminder} from './magic-reminders.js';
 import {dailyTutorialMessages,tutorialMessageShownToday,recordTutorialMessageToday} from './daily-messages.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
-const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
+const agriculturalLessons=new Set(['magic.growth','magic.multiply','reminder.growth','reminder.multiply']);
+const delivered=s=>s.tutorial?.harvestCompleted===true||s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
+  if(['magic.growth','magic.multiply'].includes(id)){
+    const start=s.events.findLastIndex(e=>e.type==='TutorialMessageStarted'&&e.messageId===id);
+    return start>=0&&s.events.slice(start+1).some(e=>e.type==='SpellActivated'&&e.kind===id.slice(6)&&e.benefited);
+  }
   if(id==='basic.center')return s.structures.some(c=>c.kind==='center'&&operational(c));
   if(id==='basic.plant')return s.plants.length>0;
   if(id==='basic.hiring')return s.hiringPaidDay!=null;
@@ -27,6 +32,7 @@ export class TutorialController {
     this.state=state;this.profile=profile;this.onError=onError;this.isNarrating=isNarrating;
     const t=state.tutorial??={step:'intro',seen:[]};
     t.seen=[...new Set((t.seen??[]).filter(id=>known.has(id)))];
+    if(t.harvestCompleted!==true&&(state.crates.some(c=>c.delivered)||state.events.some(e=>e.type==='CrateDelivered')||t.seen.includes('basic.harvest')))t.harvestCompleted=true;
     t.pending=[...new Set((t.pending??[]).filter(id=>known.has(id)))];
     t.guideAfterAuto=[...new Set((t.guideAfterAuto??[]).filter(id=>['basic.center','basic.plant'].includes(id)))];
     if(!BASIC_STEPS.includes(t.step))t.step='intro';
@@ -61,6 +67,13 @@ export class TutorialController {
     if(t.reading&&readingActionCompleted(s,t.reading)){
       this.recordSeen(t.reading);t.reading=null;this.lastPresentation=null;
     }
+    const finishBasicFirst=!t.basicSkipped&&t.step==='done'&&delivered(s)&&!t.seen.includes('basic.complete');
+    const harvestBeforeMagic=s.day===1&&!s.raid&&!t.basicSkipped&&t.step==='harvest'&&agriculturalLessons.has(t.reading);
+    if(t.reading&&((!s.raid&&finishBasicFirst&&t.reading!=='basic.complete')||
+      harvestBeforeMagic||(s.raid&&agriculturalLessons.has(t.reading)))){
+      if(!t.pending.includes(t.reading))t.pending.unshift(t.reading);
+      t.reading=null;this.lastPresentation=null;
+    }
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
     };
@@ -72,8 +85,13 @@ export class TutorialController {
     enqueue('mechanic.defenses',!s.postgame&&s.result!=='victory'&&(s.day>1||s.time>=240));
     enqueue('mechanic.first-raid',!!s.raid);
     enqueue('magic.shield',!!s.raid);
-    enqueue('magic.growth',s.day>=3);
-    enqueue('magic.multiply',s.day>=5);
+    // Availability is day one; teach after the basic flow rather than interrupting its hands.
+    const live=s.plants.filter(p=>p.alive);
+    const watered=live.length>0&&live.every(p=>p.water[0].status!=='due'&&!p.water.some(w=>w.status==='due'));
+    const working=s.hiringPaidDay===s.day&&s.workers.length>0;
+    const teachAgriculture=!s.raid&&((working&&watered)||s.day>1);
+    enqueue('magic.growth',teachAgriculture);
+    enqueue('magic.multiply',teachAgriculture&&this.seen('magic.growth',globalSeen));
     enqueue('worker.recovery',s.workers.some(w=>w.incapacitated)||s.people.some(p=>p.recoveryUntil>=s.day));
     enqueue('campaign.liberation',s.result==='victory',true);
     enqueue('world.expansion',s.postgame&&!s.result);
@@ -83,7 +101,7 @@ export class TutorialController {
     }
     const repeatable=[];
     if(shieldKey&&(memo.shieldRaid!==shieldKey||t.reading==='reminder.shield'))repeatable.push(this.seen('magic.shield',globalSeen)?'reminder.shield':'magic.shield');
-    for(const kind of this.usefulMagic??[])if(!s.raid&&s.time<300&&s.cooldowns[kind]===0&&this.seen('magic.'+kind,globalSeen)&&(t.reading==='reminder.'+kind||s.elapsed-(memo[kind+'At']??0)>=120&&s.elapsed-(memo.lastAt??0)>=75))repeatable.push('reminder.'+kind);
+    for(const kind of this.usefulMagic??[])if(!s.raid&&s.time<300&&this.seen('magic.'+kind,globalSeen)&&(t.reading==='reminder.'+kind||s.elapsed-(memo[kind+'At']??0)>=120&&s.elapsed-(memo.lastAt??0)>=75))repeatable.push('reminder.'+kind);
     t.pending=t.pending.filter(id=>!REPEATABLE_MAGIC_IDS.has(id)||repeatable.includes(id));
     if(REPEATABLE_MAGIC_IDS.has(t.reading)&&!repeatable.includes(t.reading))t.reading=null;
     for(const id of repeatable)if(!tutorialMessageShownToday(s,id)&&!t.pending.includes(id)&&t.reading!==id)t.pending.push(id);
@@ -105,7 +123,9 @@ export class TutorialController {
       if(s.result==='victory')t.reading=t.pending.includes('campaign.liberation')?'campaign.liberation':null;
       else {
         const urgent=s.raid&&['mechanic.first-raid','magic.shield'].find(id=>t.pending.includes(id));
-        t.reading=urgentShield||urgent||t.pending.shift()||null;
+        const expansion=s.postgame&&t.pending.includes('world.expansion')?'world.expansion':null;
+        const next=t.pending.findIndex(id=>!s.raid||!agriculturalLessons.has(id));
+        t.reading=urgentShield||urgent||expansion||(next<0?null:t.pending.splice(next,1)[0]);
       }
     }
     if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);recordMagicReminder(s,t.reading);this.presentationAge=0;this.presentationKey=null;emit(s,'TutorialMessageStarted',{messageId:t.reading});}
@@ -134,6 +154,7 @@ export class TutorialController {
   }
   dismiss({automatic=false,message=this.presentation({record:false})}={}){
     if(!message)return false;
+    recordTutorialMessageToday(this.state,message.id);
     if(message.reading&&this.state.tutorial.reading===message.id)this.acknowledge();
     const t=this.state.tutorial;
     t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];
@@ -148,7 +169,7 @@ export class TutorialController {
     const message=this.currentPresentation();
     if(message&&!message.reading&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
     if(message){
-      if(tutorialMessageShownToday(this.state,message.id)&&!message.reading&&this.lastPresentation?.id!==message.id)return null;
+      if(tutorialMessageShownToday(this.state,message.id)&&!message.reading&&message.variant!=='delivery'&&this.lastPresentation?.id!==message.id)return null;
       if(record)recordTutorialMessageToday(this.state,message.id);
     }
     if(record)this.lastPresentation=message;
@@ -157,6 +178,8 @@ export class TutorialController {
   currentPresentation(){
     const s=this.state,t=s.tutorial;
     if(s.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
+    if(!s.result&&s.day===1&&!s.raid&&!t.basicSkipped&&t.step==='harvest'&&s.crates.some(c=>!c.delivered)&&!s.plants.some(p=>p.alive&&isMature(p)))
+      return {id:'basic.harvest',variant:'delivery',gesture:'idle',text:'Paciencia: la cosecha aún tiene camino. La caja va al centro; cobrarás al entregarla. Si queda en el suelo, no pierde su valor: esperará a que tu equipo vuelva por ella.',blocking:false};
     if(t.reading){
       const id=t.reading,afterRaid=s.day>1||!!s.raid||!!(s.nightPlan?.done&&s.nightPlan.group?.length);
       return {id,...TUTORIAL_MESSAGES[id],...(id==='mechanic.defenses'&&afterRaid?{...DEFENSES_FOLLOWUP,variant:'after-raid'}:{}),blocking:false,reading:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};
@@ -164,7 +187,6 @@ export class TutorialController {
     if(s.result==='victory')return {id:'campaign.liberation',...TUTORIAL_MESSAGES['campaign.liberation'],blocking:false,result:true};
     if(s.result==='defeat')return {id:'result.defeat',gesture:'warning',text:s.messages.at(-1)?.text??'Faltan recursos para alimentar otro mañana.',blocking:false,result:true};
     if(s.day===1&&!t.basicSkipped&&t.step!=='done'){
-      if(t.step==='harvest'&&s.crates.some(c=>!c.delivered)&&!s.plants.some(p=>p.alive&&isMature(p)))return {id:'basic.harvest',variant:'delivery',gesture:'idle',text:'Paciencia: la cosecha aún tiene camino. La caja va al centro; cobrarás al entregarla. Si queda en el suelo, no pierde su valor: esperará a que tu equipo vuelva por ella.',blocking:false};
       return {id:BASIC_MESSAGES[t.step],...TUTORIAL_MESSAGES[BASIC_MESSAGES[t.step]],blocking:false};
     }
     return null;

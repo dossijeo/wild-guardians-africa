@@ -1,0 +1,32 @@
+{
+  "commit": "4beaad35566b72c4be5c0c404022b1124a35e375",
+  "fixture": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+  "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+  "harness": "tools/experiments/check-shield-repeat-render.mjs",
+  "settings": {
+    "quality": "media",
+    "viewport": [
+      1280,
+      720
+    ],
+    "casts": 2,
+    "noCast": true,
+    "streamDistance": 144,
+    "streamSeconds": 40,
+    "controlInterval": 90,
+    "cpuProfiling": false,
+    "video": false,
+    "gpuQueries": true,
+    "phaseWitness": true
+  },
+  "limitations": [
+    "Diagnostic GPU-query run, not an optimization or ABAB comparison.",
+    "CPU World.render includes timer bookkeeping and WebGL submission, excludes simulation/UI outside the call.",
+    "GPU elapsed query excludes asynchronous preparation outside World.render; unresolved/disjoint queries are reported.",
+    "Other host worktrees may contend for hardware.",
+    "Extra phase clock reads/records add observer overhead; diagnose causes, not compare absolute speed with uninstrumented runs."
+  ],
+  "command": "WG_MAGIC_PROFILE=1 WG_MAGIC_CPU_SAMPLING=0 WG_MAGIC_VIDEO=0 WG_MAGIC_GPU=1 WG_MAGIC_PHASES=1 WG_MAGIC_CASTS=2 WG_MAGIC_NO_CAST=1 WG_MAGIC_STREAM=1 WG_MAGIC_STREAM_DISTANCE=144 WG_MAGIC_STREAM_SECONDS=40 WG_MAGIC_FIXTURE=docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json node tools/experiments/check-shield-repeat-render.mjs",
+  "harnessSha256": "7ca60b615a721d9fda1eb3f906d595cf8c29c4ee7a373585d07e791c490c0720",
+  "uncommittedQaHarnessChanges": true
+}

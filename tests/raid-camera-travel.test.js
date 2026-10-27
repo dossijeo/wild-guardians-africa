@@ -65,3 +65,13 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','des
  }
  assert.ok(Math.abs(controls.target.x-s.raid.animals[0].x)<1e-8);assert.ok(Math.abs(controls.target.z-s.raid.animals[0].z)<1e-8);
 });
+
+test('raid framing approaches smoothly without zooming out an already close player view',()=>{
+ const {state,camera,controls,director,field}=fixture();
+ const initial=camera.position.distanceTo(controls.target);director.update(state,.1);
+ const partial=camera.position.distanceTo(controls.target);assert(partial<initial&&partial>18);
+ director.update(state,2);assert(Math.abs(camera.position.distanceTo(controls.target)-18)<1e-6);
+ focusTerrainCamera(camera,controls,field,{x:50,z:50,distance:10});
+ state.raid={id:'close-raid',animals:[{id:'close',x:50,z:50,species:'rhino',status:'entering'}]};
+ director.update(state,2);assert(Math.abs(camera.position.distanceTo(controls.target)-10)<1e-6);
+});

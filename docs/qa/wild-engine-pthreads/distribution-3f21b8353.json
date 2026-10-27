@@ -1,0 +1,29 @@
+{
+  "sourceCheckpoint": "3f21b8353",
+  "artifacts": [
+    {
+      "path": "test-results/wild-guardians-itch.zip",
+      "bytes": 433886209,
+      "sha256": "f8cc8b888e66c395a1398e01acdb92f123571611339c97ef9c236af3969af416"
+    },
+    {
+      "path": "src-tauri/target/release/wild-guardians-africa.exe",
+      "bytes": 424357888,
+      "sha256": "bd4588826e71e19006751586878e02c6b09f0a76f1dfbbf35e60d23d744be8a4"
+    }
+  ],
+  "windowsSmokeExitCodes": [
+    0,
+    0
+  ],
+  "reports": [
+    "tauri-pthreads-3f21b8353.json",
+    "tauri-game-3f21b8353.json"
+  ],
+  "packageProbe": "thread-package-iframe-3f21b8353.json",
+  "limits": [
+    "Local isolated cross-origin iframe, not actual itch.io deployment",
+    "Windows release executable, no installer or non-Windows run",
+    "Smoke checks do not replace campaign soak validation"
+  ]
+}

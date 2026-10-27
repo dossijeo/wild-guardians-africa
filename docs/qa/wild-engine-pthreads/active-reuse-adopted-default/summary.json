@@ -1,0 +1,106 @@
+{
+  "rows": [
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "night": false,
+      "reuse": false,
+      "scope": "Default pthread path;  active simulation and continuous camera. Night uses an explicit time-450 fixture and QA override of raid-camera movement, not a tested dusk transition or normal night-camera interaction. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "preparedWater": {
+        "count": 8,
+        "bytes": 109820
+      },
+      "preparedShore": {
+        "count": 8,
+        "bytes": 96900
+      },
+      "elapsed": 10.027249999999512,
+      "frames": {
+        "count": 360,
+        "mean": 27.99127777777778,
+        "p95": 50,
+        "max": 166.27999999999884
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7933333436648051,
+        "p95": 0.9550000429153442,
+        "max": 1.100000023841858
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.016523547615040702,
+        "p95": 0.029999971389770508,
+        "max": 0.08500003814697266
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.492938082644624,
+        "p95": 33.098645,
+        "max": 48.530415
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-reuse-adopted-default/manglares.json"
+    },
+    {
+      "biome": "sabana",
+      "quality": "baja",
+      "night": false,
+      "reuse": false,
+      "scope": "Default pthread path;  active simulation and continuous camera. Night uses an explicit time-450 fixture and QA override of raid-camera movement, not a tested dusk transition or normal night-camera interaction. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "preparedWater": {
+        "count": 0,
+        "bytes": 0
+      },
+      "preparedShore": {
+        "count": 0,
+        "bytes": 0
+      },
+      "elapsed": 9.361959999999229,
+      "frames": {
+        "count": 360,
+        "mean": 26.004625,
+        "p95": 50.01000000000204,
+        "max": 116.26000000000204
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7893333276112874,
+        "p95": 1.0699999928474426,
+        "max": 1.5450000166893005
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.044666667779287,
+        "p95": 5.060000002384186,
+        "max": 6.980000019073486
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.014778391971482464,
+        "p95": 0.025000035762786865,
+        "max": 0.050000011920928955
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 18.435604619834702,
+        "p95": 27.175468,
+        "max": 30.182447
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-reuse-adopted-default/sabana.json"
+    }
+  ]
+}

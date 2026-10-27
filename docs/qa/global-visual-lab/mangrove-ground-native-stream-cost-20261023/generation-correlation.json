@@ -1,0 +1,392 @@
+[
+  {
+    "mode": "frame",
+    "groups": {
+      "bake": {
+        "count": 29,
+        "cpuMs": {
+          "mean": 16.25862068965517,
+          "p95": 20.5,
+          "max": 21.900000035762787
+        },
+        "intervalMs": {
+          "mean": 92.36206896757257,
+          "p95": 132.89999997615814,
+          "max": 141.4000000357628
+        },
+        "gpuMeanMs": 28.475965344827586
+      },
+      "noBake": {
+        "count": 210,
+        "cpuMs": {
+          "mean": 13.10857142947969,
+          "p95": 19.700000047683716,
+          "max": 55.69999998807907
+        },
+        "intervalMs": {
+          "mean": 29.528095237981706,
+          "p95": 44.69999998807907,
+          "max": 65.10000002384186
+        },
+        "gpuMeanMs": 25.55171681904762
+      }
+    },
+    "topIntervals": [
+      {
+        "frame": 34,
+        "intervalMs": 141.4000000357628,
+        "cpuMs": 21.900000035762787,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 36,
+          "published": 36,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 36,
+          "removed": 15
+        }
+      },
+      {
+        "frame": 213,
+        "intervalMs": 132.89999997615814,
+        "cpuMs": 17.19999998807907,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 56,
+          "published": 56,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 56,
+          "removed": 35
+        }
+      },
+      {
+        "frame": 216,
+        "intervalMs": 120.80000001192093,
+        "cpuMs": 15.899999976158142,
+        "cache": {
+          "bytes": 33800640,
+          "peakBytes": 35209000,
+          "tiles": 59,
+          "published": 59,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 24,
+          "added": 59,
+          "removed": 35
+        }
+      },
+      {
+        "frame": 64,
+        "intervalMs": 120.39999997615814,
+        "cpuMs": 15.800000011920929,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 41,
+          "published": 41,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 41,
+          "removed": 20
+        }
+      },
+      {
+        "frame": 214,
+        "intervalMs": 107.69999998807907,
+        "cpuMs": 11,
+        "cache": {
+          "bytes": 30983920,
+          "peakBytes": 35209000,
+          "tiles": 57,
+          "published": 57,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 22,
+          "added": 57,
+          "removed": 35
+        }
+      },
+      {
+        "frame": 0,
+        "intervalMs": 106.29999995231628,
+        "cpuMs": 10.099999964237213,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 31,
+          "published": 31,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 31,
+          "removed": 10
+        }
+      },
+      {
+        "frame": 36,
+        "intervalMs": 102.69999998807907,
+        "cpuMs": 19.69999998807907,
+        "cache": {
+          "bytes": 32392280,
+          "peakBytes": 35209000,
+          "tiles": 38,
+          "published": 38,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 23,
+          "added": 38,
+          "removed": 15
+        }
+      },
+      {
+        "frame": 65,
+        "intervalMs": 101.40000003576279,
+        "cpuMs": 16.69999998807907,
+        "cache": {
+          "bytes": 30983920,
+          "peakBytes": 35209000,
+          "tiles": 42,
+          "published": 42,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 22,
+          "added": 42,
+          "removed": 20
+        }
+      },
+      {
+        "frame": 149,
+        "intervalMs": 98.90000003576279,
+        "cpuMs": 12.599999964237213,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 46,
+          "published": 46,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 46,
+          "removed": 25
+        }
+      },
+      {
+        "frame": 38,
+        "intervalMs": 97.60000002384186,
+        "cpuMs": 18.5,
+        "cache": {
+          "bytes": 35209000,
+          "peakBytes": 35209000,
+          "tiles": 40,
+          "published": 40,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 25,
+          "added": 40,
+          "removed": 15
+        }
+      }
+    ]
+  },
+  {
+    "mode": "cadence",
+    "groups": {
+      "bake": {
+        "count": 29,
+        "cpuMs": {
+          "mean": 15.817241376843945,
+          "p95": 20.80000001192093,
+          "max": 24
+        },
+        "intervalMs": {
+          "mean": 88.96551724343465,
+          "p95": 118.30000001192093,
+          "max": 135.5
+        },
+        "gpuMeanMs": null
+      },
+      "noBake": {
+        "count": 210,
+        "cpuMs": {
+          "mean": 12.103809525285449,
+          "p95": 18.599999964237213,
+          "max": 43.30000001192093
+        },
+        "intervalMs": {
+          "mean": 29.8199999996594,
+          "p95": 39.5,
+          "max": 66.19999998807907
+        },
+        "gpuMeanMs": null
+      }
+    },
+    "topIntervals": [
+      {
+        "frame": 213,
+        "intervalMs": 135.5,
+        "cpuMs": 13.699999988079071,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 86,
+          "published": 86,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 86,
+          "removed": 65
+        }
+      },
+      {
+        "frame": 64,
+        "intervalMs": 118.30000001192093,
+        "cpuMs": 19.5,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 71,
+          "published": 71,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 71,
+          "removed": 50
+        }
+      },
+      {
+        "frame": 216,
+        "intervalMs": 111.89999997615814,
+        "cpuMs": 17.80000001192093,
+        "cache": {
+          "bytes": 33800640,
+          "peakBytes": 35209000,
+          "tiles": 89,
+          "published": 89,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 24,
+          "added": 89,
+          "removed": 65
+        }
+      },
+      {
+        "frame": 214,
+        "intervalMs": 111.69999998807907,
+        "cpuMs": 14.900000035762787,
+        "cache": {
+          "bytes": 30983920,
+          "peakBytes": 35209000,
+          "tiles": 87,
+          "published": 87,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 22,
+          "added": 87,
+          "removed": 65
+        }
+      },
+      {
+        "frame": 215,
+        "intervalMs": 111.10000002384186,
+        "cpuMs": 20.80000001192093,
+        "cache": {
+          "bytes": 32392280,
+          "peakBytes": 35209000,
+          "tiles": 88,
+          "published": 88,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 23,
+          "added": 88,
+          "removed": 65
+        }
+      },
+      {
+        "frame": 37,
+        "intervalMs": 104.90000003576279,
+        "cpuMs": 16.099999964237213,
+        "cache": {
+          "bytes": 33800640,
+          "peakBytes": 35209000,
+          "tiles": 69,
+          "published": 69,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 24,
+          "added": 69,
+          "removed": 45
+        }
+      },
+      {
+        "frame": 36,
+        "intervalMs": 104.39999997615814,
+        "cpuMs": 24,
+        "cache": {
+          "bytes": 32392280,
+          "peakBytes": 35209000,
+          "tiles": 68,
+          "published": 68,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 23,
+          "added": 68,
+          "removed": 45
+        }
+      },
+      {
+        "frame": 38,
+        "intervalMs": 104.39999997615814,
+        "cpuMs": 18.399999976158142,
+        "cache": {
+          "bytes": 35209000,
+          "peakBytes": 35209000,
+          "tiles": 70,
+          "published": 70,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 25,
+          "added": 70,
+          "removed": 45
+        }
+      },
+      {
+        "frame": 0,
+        "intervalMs": 95,
+        "cpuMs": 9.399999976158142,
+        "cache": {
+          "bytes": 29575560,
+          "peakBytes": 35209000,
+          "tiles": 61,
+          "published": 61,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 21,
+          "added": 61,
+          "removed": 40
+        }
+      },
+      {
+        "frame": 66,
+        "intervalMs": 93.60000002384186,
+        "cpuMs": 15.600000023841858,
+        "cache": {
+          "bytes": 32392280,
+          "peakBytes": 35209000,
+          "tiles": 73,
+          "published": 73,
+          "cancelled": 0,
+          "rejected": 0,
+          "entries": 23,
+          "added": 73,
+          "removed": 50
+        }
+      }
+    ]
+  }
+]

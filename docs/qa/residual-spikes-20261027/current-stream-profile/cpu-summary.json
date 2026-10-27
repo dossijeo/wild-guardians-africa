@@ -1,0 +1,493 @@
+{
+  "scope": "Statistical CPU samples, not GPU time or benchmark acceptance. Inclusive entries overlap and must not be added. Far self includes callees only when a far-system ancestor is sampled.",
+  "samples": 25556,
+  "profileWallMs": 41753.09,
+  "sampledMs": 41752.615000000216,
+  "farSampledMs": 2845.5509999999967,
+  "topSelf": [
+    [
+      "(idle) :0",
+      26265.9479999998
+    ],
+    [
+      "(program) :0",
+      1625.2500000000005
+    ],
+    [
+      "updateMatrixWorld http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8325",
+      936.4859999999996
+    ],
+    [
+      "put http://127.0.0.1:5220/src/rendering/shadow-cache.js:7",
+      420.94599999999997
+    ],
+    [
+      "prepare http://127.0.0.1:5220/src/rendering/smooth-far-transitions.js:46",
+      418.40200000000004
+    ],
+    [
+      "attribute http://127.0.0.1:5220/src/rendering/shadow-cache.js:24",
+      311.0690000000001
+    ],
+    [
+      "updateAssetLods http://127.0.0.1:5220/src/rendering/asset-lod.js:37",
+      277.438
+    ],
+    [
+      "standbyTreeKey http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:15",
+      264.29700000000014
+    ],
+    [
+      "toArray http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:7291",
+      245.31500000000008
+    ],
+    [
+      "multiplyMatrices http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:6652",
+      239.51899999999992
+    ],
+    [
+      "upload http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:34743",
+      227.783
+    ],
+    [
+      "projectObject http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40593",
+      224.72900000000004
+    ],
+    [
+      "(garbage collector) :0",
+      223.44099999999997
+    ],
+    [
+      "select http://127.0.0.1:5220/src/rendering/continuous-grass.js:134",
+      218.86399999999992
+    ],
+    [
+      "prepare http://127.0.0.1:5220/src/rendering/asset-groups.js:89",
+      216.73700000000008
+    ],
+    [
+      "getBoundingClientRect :0",
+      212.35200000000003
+    ],
+    [
+      "traverseVisible http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8284",
+      197.03200000000018
+    ],
+    [
+      "intersectsBox http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:14946",
+      195.24900000000002
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/src/rendering/shadow-cache.js:55",
+      180.04099999999994
+    ],
+    [
+      "updateObstructions http://127.0.0.1:5220/src/rendering/obstruction.js:44",
+      179.094
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:94",
+      178.14
+    ],
+    [
+      "WebGLRenderer.renderBufferDirect http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40314",
+      173.175
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/src/rendering/asset-groups.js:107",
+      166.05999999999997
+    ],
+    [
+      "getParameters http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:35492",
+      162.04400000000007
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-far-coverage.js:8",
+      156.93399999999997
+    ],
+    [
+      "update http://127.0.0.1:5220/src/rendering/asset-groups.js:173",
+      141.88299999999998
+    ],
+    [
+      "has http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:41",
+      133.98199999999997
+    ],
+    [
+      "nativeLodBins http://127.0.0.1:5220/src/rendering/lod-source.js:3",
+      129.102
+    ],
+    [
+      "bufferSubData :0",
+      128.77100000000002
+    ],
+    [
+      "bindVertexArray :0",
+      126.21999999999997
+    ],
+    [
+      "frame http://127.0.0.1:5220/src/app/main.js:570",
+      126.13499999999998
+    ],
+    [
+      "standbyAvailable http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:64",
+      126.01200000000006
+    ],
+    [
+      "update http://127.0.0.1:5220/src/ui/guardian-native.js:146",
+      121.53100000000002
+    ],
+    [
+      "renderObject http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:36700",
+      112.482
+    ],
+    [
+      "setCoverage http://127.0.0.1:5220/tools/experiments/far-tree-transitions.js:10",
+      111.94300000000003
+    ],
+    [
+      "wrapped http://127.0.0.1:5220/tools/experiments/qa-far-cpu-probe.js:11",
+      110.98700000000001
+    ],
+    [
+      "treeState http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:73",
+      109.593
+    ],
+    [
+      "q.renderHook.world.scene.onBeforeRender http://127.0.0.1:5220/src/rendering/continuous-grass.js:143",
+      95.759
+    ],
+    [
+      "run http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:45",
+      94.28099999999998
+    ],
+    [
+      "setValueM4Array http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:34504",
+      89.131
+    ]
+  ],
+  "farSelf": [
+    [
+      "standbyTreeKey http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:15",
+      264.29700000000014
+    ],
+    [
+      "intersectsBox http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:14946",
+      193.60600000000002
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:94",
+      178.14
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-far-coverage.js:8",
+      156.93399999999997
+    ],
+    [
+      "has http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:41",
+      133.98199999999997
+    ],
+    [
+      "standbyAvailable http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:64",
+      126.01200000000006
+    ],
+    [
+      "getParameters http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:35492",
+      125.62700000000002
+    ],
+    [
+      "setCoverage http://127.0.0.1:5220/tools/experiments/far-tree-transitions.js:10",
+      111.94300000000003
+    ],
+    [
+      "treeState http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:73",
+      109.593
+    ],
+    [
+      "run http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:45",
+      94.28099999999998
+    ],
+    [
+      "wrapped http://127.0.0.1:5220/tools/experiments/qa-far-cpu-probe.js:11",
+      89.72000000000001
+    ],
+    [
+      "nativeFarRenderSignature http://127.0.0.1:5220/tools/experiments/native-far-render-signature.js:3",
+      87.554
+    ],
+    [
+      "traverseVisible http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8284",
+      58.60799999999999
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/native-far-coverage.js:13",
+      57.968999999999994
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:99",
+      49.75700000000001
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:80",
+      47.71099999999999
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:43",
+      46.33300000000001
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-tree-coverage.js:6",
+      45.269000000000005
+    ],
+    [
+      "sourceKey http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:25",
+      45.04600000000001
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:73",
+      41.54699999999999
+    ],
+    [
+      "getProgram http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40766",
+      38.445
+    ],
+    [
+      "logicalNativeStandbyEntries http://127.0.0.1:5220/tools/experiments/logical-native-standby.js:18",
+      34.03
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/logical-native-standby.js:22",
+      32.766999999999996
+    ],
+    [
+      "setTreeReadiness http://127.0.0.1:5220/tools/experiments/far-impostor-prototype.js:65",
+      29.738999999999997
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/native-far-render-signature.js:4",
+      29.650000000000002
+    ],
+    [
+      "toArray http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:7291",
+      29.478
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/logical-native-standby.js:23",
+      21.475
+    ],
+    [
+      "updateMatrixWorld http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8325",
+      19.747999999999998
+    ],
+    [
+      "getProgramCacheKey http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:35707",
+      19.333
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:77",
+      17.719
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-far-layer.js:38",
+      17.715999999999998
+    ],
+    [
+      "candidate.updateGroundBounds http://127.0.0.1:5220/tools/experiments/native-far-ground.js:95",
+      14.489
+    ],
+    [
+      "getX http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:10531",
+      13.363
+    ],
+    [
+      "request http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:42",
+      12.98
+    ],
+    [
+      "cancelled http://127.0.0.1:5220/src/rendering/far-vegetation.js:39",
+      12.445999999999998
+    ],
+    [
+      "compileGpuPreparation http://127.0.0.1:5220/tools/experiments/compile-gpu-preparation.js:6",
+      12.279000000000002
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-prepared-tree-coverage.js:6",
+      11.643
+    ],
+    [
+      "now :0",
+      11.624
+    ],
+    [
+      "scheduleLogicalPreload http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:70",
+      11.563
+    ],
+    [
+      "cancelled http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:91",
+      11.436
+    ]
+  ],
+  "farInclusive": [
+    [
+      "(root) :0",
+      2845.5509999999967
+    ],
+    [
+      "loadingSyncWitness http://127.0.0.1:5220/src/rendering/loading-sync-witness.js:2",
+      2160.560999999998
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:99",
+      2130.1019999999976
+    ],
+    [
+      "update http://127.0.0.1:5220/src/rendering/far-vegetation.js:79",
+      2130.1019999999976
+    ],
+    [
+      "renderFrameUpdates http://127.0.0.1:5220/src/rendering/scene.js:838",
+      2130.1019999999976
+    ],
+    [
+      "render http://127.0.0.1:5220/src/rendering/scene.js:853",
+      2130.1019999999976
+    ],
+    [
+      "frame http://127.0.0.1:5220/src/app/main.js:570",
+      2130.1019999999976
+    ],
+    [
+      "wrapped http://127.0.0.1:5220/tools/experiments/qa-far-cpu-probe.js:11",
+      2128.4509999999977
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/src/rendering/scene.js:853",
+      2124.926999999998
+    ],
+    [
+      "(anonymous) :24",
+      2124.926999999998
+    ],
+    [
+      "measure http://127.0.0.1:5220/src/app/loading-gpu-qa.js:7",
+      2124.926999999998
+    ],
+    [
+      "wrapped :24",
+      2124.926999999998
+    ],
+    [
+      "scoped http://127.0.0.1:5220/tools/experiments/qa-far-cpu-probe.js:21",
+      2123.193999999998
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-far-layer.js:38",
+      1058.0650000000003
+    ],
+    [
+      "setCoverage http://127.0.0.1:5220/tools/experiments/far-tree-transitions.js:10",
+      648.7199999999999
+    ],
+    [
+      "standbyAvailable http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:64",
+      520.6119999999997
+    ],
+    [
+      "has http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:67",
+      514.4289999999996
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:94",
+      438.8359999999999
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:89",
+      418.2909999999998
+    ],
+    [
+      "compileDrawAndFence http://127.0.0.1:5220/tools/experiments/prepare-native-far-gpu.js:69",
+      403.075
+    ],
+    [
+      "prepareNativeFarGpu http://127.0.0.1:5220/tools/experiments/prepare-native-far-gpu.js:40",
+      393.0839999999999
+    ],
+    [
+      "standbyCoverageReady http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:18",
+      392.8809999999998
+    ],
+    [
+      "has http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:41",
+      385.1489999999999
+    ],
+    [
+      "compileGpuPreparation http://127.0.0.1:5220/tools/experiments/compile-gpu-preparation.js:6",
+      374.63599999999985
+    ],
+    [
+      "span http://127.0.0.1:5220/tools/experiments/qa-far-cpu-probe.js:27",
+      368.5690000000001
+    ],
+    [
+      "run http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:45",
+      355.47599999999983
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:106",
+      349.3540000000001
+    ],
+    [
+      "scheduleLogicalPreload http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:70",
+      346.65700000000015
+    ],
+    [
+      "update http://127.0.0.1:5220/tools/experiments/native-far-coverage.js:8",
+      313.31900000000013
+    ],
+    [
+      "WebGLRenderer.compile http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40416",
+      277.40800000000013
+    ],
+    [
+      "standbyTreeKey http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:15",
+      264.29700000000014
+    ],
+    [
+      "request http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:42",
+      216.47300000000007
+    ],
+    [
+      "traverse http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8269",
+      208.54700000000005
+    ],
+    [
+      "(anonymous) http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40441",
+      206.94100000000003
+    ],
+    [
+      "getProgram http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40766",
+      200.23800000000006
+    ],
+    [
+      "prepareMaterial http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40403",
+      200.23800000000006
+    ],
+    [
+      "intersectsBox http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:14946",
+      200.07800000000006
+    ],
+    [
+      "logicalNativeStandbyEntries http://127.0.0.1:5220/tools/experiments/logical-native-standby.js:18",
+      185.07699999999997
+    ],
+    [
+      "getParameters http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:35492",
+      133.30500000000004
+    ],
+    [
+      "check http://127.0.0.1:5220/tools/experiments/prepare-native-far-gpu.js:49",
+      127.652
+    ]
+  ]
+}

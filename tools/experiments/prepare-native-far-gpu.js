@@ -1,3 +1,4 @@
+import {initializeValidatedProgramBindings} from '../../src/rendering/program-bindings.js';
 import {compileLoadingPrograms} from '../../src/rendering/loading-programs.js';
 import {withScreenTarget} from '../../src/rendering/screen-target.js';
 import {Vector4} from 'three';
@@ -38,7 +39,7 @@ function rememberTexture(entry,texture){
 // the completed fence to their exact packing and renderable generation.
 export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame,timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false,ownedCompilation=false,ownedWaits=false,cooperative=false,zeroVertices=false,measureDraw=null,onPrepare=null}={}){
  const beginSpan=()=>onPrepare?performance.now():null;
- const endSpan=(label,start)=>{if(start===null)return;const end=performance.now();try{onPrepare({label:'far-gpu:'+label,start,end,duration:end-start,scope:label==='draw'?'Synchronous draw submission CPU wall time, not GPU time.':'Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.'});}catch{}};
+ const endSpan=(label,start)=>{if(start===null)return;const end=performance.now();try{onPrepare({label:'far-gpu:'+label,start,end,duration:end-start,scope:label==='draw'||label==='validated-bindings'?'Synchronous draw submission CPU wall time, not GPU time.':'Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.'});}catch{}};
  if(typeof isolateRoot!=='boolean')throw Error('Invalid isolated GPU preparation option');
  if(typeof zeroVertices!=='boolean'||zeroVertices&&!isolateRoot)throw Error('Zero-vertex GPU preparation requires isolation');
  if(typeof ownedCompilation!=='boolean')throw Error('Invalid owned GPU compilation option');
@@ -69,7 +70,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   // Explicit QA gate: preserve the original recipe until native cancellation,
   // visual and traveling checks validate the owned readiness poll.
   const compileStart=beginSpan();
-  if(cooperative)await compileLoadingPrograms(renderer,root,camera,scene,{screen:true,timeout,cancelled:()=>{check();return false;}});
+  if(cooperative)await compileLoadingPrograms(renderer,root,camera,scene,{screen:true,timeout,onProgramReady:new URLSearchParams(globalThis.location?.search??'').get('farValidatedBindings')==='1'?program=>{const start=beginSpan();try{initializeValidatedProgramBindings(renderer,program);}finally{endSpan('validated-bindings',start);}}:undefined,cancelled:()=>{check();return false;}});
   else if(ownedCompilation)await compileGpuPreparation(renderer,root,camera,scene,{check});
   else await renderer.compileAsync(root,camera,scene);
   endSpan('compile',compileStart);check();checkErrors('after compilation');
@@ -94,7 +95,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,zeroVertexDraws,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
   };
   return cooperative?await queueLoadingFarPrograms(renderer,compileDrawAndFence,{check,nextFrame:frame,onPrepare}):await compileDrawAndFence();
- }finally{if(sync&&(!(ownedWaits||cooperative)||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
+ }catch(error){if(error.code==='GPU_PROGRAM_DISPOSED')throw new NativeFarGpuCancelled('program-disposed');throw error;}finally{if(sync&&(!(ownedWaits||cooperative)||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
 }
 
 // Loading-only compile/draw queue. Texture preparation remains concurrent;

@@ -1,10 +1,12 @@
+import {createSmoothFarImpostor} from '../../src/rendering/smooth-far-transitions.js';
 import {treeTransitionWeight,validateTreeTransitionPolicy} from './tree-transition-range.js';
 import * as THREE from 'three';
 import {impostorHullShape} from './impostor-hull.js';
 import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
 import {impostorLightingDeclarations,impostorLightingColor,impostorLightingUniforms,normalAtlasDeclarations,normalAtlasLightingColor} from './far-impostor-lighting.js';
 import {modelOrigin,NearTreeSelection,treeDensityRank,treeImportanceRank} from './far-impostor-math.js';
-export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null,nativeModels=true,importanceHeight=16,importanceMaxBoost=4,transitionHeight=null,cullZeroImpostors=false}={}){
+export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null,nativeModels=true,importanceHeight=16,importanceMaxBoost=4,transitionHeight=null,cullZeroImpostors=false,smoothScene=null,angularLod=false}={}){
+ if(smoothScene&&nativeModels)throw Error('Smooth far transition requires native world ownership');
  if(typeof cullZeroImpostors!=='boolean')throw Error('Invalid zero-coverage culling option');
  transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);
  const floatLiteral=value=>Number.isInteger(value)?value+'.0':String(value),baseLiteral=floatLiteral(metadata.baseV??0);
@@ -18,12 +20,13 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  const hullShape=metadata.impostorHull?impostorHullShape(metadata.impostorHull):null,plane=hullShape?.shape??new THREE.PlaneGeometry(1,1),geometry=new THREE.InstancedBufferGeometry();geometry.index=plane.index;geometry.attributes={...plane.attributes};geometry.setDrawRange(plane.drawRange.start,plane.drawRange.count);attrs(geometry,trees.length);geometry.instanceCount=trees.length;geometry.setAttribute('aTreeReady',readyAttribute(trees.length));
  for(const [i,t] of trees.entries()){geometry.attributes.aTreeTransitionWeight.setX(i,treeTransitionWeight(t,metadata.impostorHeight,transitionHeight));geometry.attributes.aTreeBase.setXYZ(i,t.x,t.y,t.z);geometry.attributes.aTreeYaw.setX(i,t.yaw);geometry.attributes.aTreeScale.setXYZ(i,t.sx??t.scale,t.sy??t.scale,t.sz??t.scale);geometry.attributes.aTreeRank.setX(i,treeImportanceRank(treeDensityRank(t.id,seed),metadata.impostorHeight*(t.sy??t.scale),{referenceHeight:importanceHeight,maximumBoost:importanceMaxBoost}));}
  texture.colorSpace=THREE.SRGBColorSpace;texture.premultiplyAlpha=!(prelitAtlas?.premultipliedLinear===true&&[prelitAtlas.day,prelitAtlas.night].includes(texture));texture.generateMipmaps=true;
+ if(angularLod&&nativeModels)throw Error("Angular LOD requires native world ownership");
  const material=new THREE.ShaderMaterial({uniforms,fog:true,side:THREE.DoubleSide,vertexShader:`attribute vec3 aTreeBase;attribute float aTreeYaw,aTreeRank,aTreeReady,aTreeTransitionWeight;attribute vec3 aTreeScale;uniform vec2 uDensityRange,uDistanceFadeRange;uniform float uDensityEnabled,uDensityMinimum,uDensityBand;uniform vec2 uSize;uniform float uStart,uEnd,uReady;uniform vec2 uFarOrigin,uLargeRange;varying vec2 vUv;varying float vView,vMix,vDensityFade;
  ${rotationViews>1?'varying float vPrelitRotation;':''}
  ${hasNormals?'varying vec2 vFarRotation;varying vec3 vFarScale;':''}
  ${toon?'varying vec3 vFarWorld,vFarRight,vFarFacing;varying float vRelativeHeight;':''}
  #include <fog_pars_vertex>
- void main(){vec2 delta=cameraPosition.xz+uFarOrigin-aTreeBase.xz;float d=length(delta);vec2 dir=d>.0001?delta/d:vec2(0.,1.);vec3 right=vec3(dir.y,0.,-dir.x);float relativeAngle=atan(dir.x,dir.y)-aTreeYaw;vec2 projectedRight=vec2(cos(relativeAngle)*aTreeScale.x,sin(relativeAngle)*aTreeScale.z);float widthScale=length(projectedRight);vec3 world=aTreeBase+right*(uv.x-.5)*uSize.x*widthScale+vec3(0.,(uv.y-${baseLiteral})*uSize.y*aTreeScale.y,0.)-vec3(uFarOrigin.x,0.,uFarOrigin.y);vUv=uv;${rotationViews>1?'vPrelitRotation=mod(aTreeYaw+6.28318530718,6.28318530718)*8./6.28318530718;':''}${hasNormals?'vFarRotation=vec2(cos(aTreeYaw),sin(aTreeYaw));vFarScale=aTreeScale;':''}float density=1.-(1.-uDensityMinimum)*smoothstep(uDensityRange.x,uDensityRange.y,d);vDensityFade=mix(1.,clamp((density+uDensityBand-aTreeRank)/uDensityBand,0.,1.),uDensityEnabled)*step(0.,aTreeReady)*(1.-smoothstep(uDistanceFadeRange.x,uDistanceFadeRange.y,d));${toon?`vFarWorld=world;vFarRight=right;vFarFacing=vec3(dir.x,0.,dir.y);vRelativeHeight=clamp((uv.y-${baseLiteral})*${floatLiteral(metadata.impostorHeight)}/${floatLiteral(metadata.sourceBounds.max[1]-metadata.sourceBounds.min[1])},0.,1.);`:''}float angle=mod(atan(projectedRight.y,projectedRight.x)+6.28318530718,6.28318530718);vView=angle*8./6.28318530718;vMix=1.-uReady*aTreeReady*(1.-smoothstep(mix(uStart,uLargeRange.x,aTreeTransitionWeight),mix(uEnd,uLargeRange.y,aTreeTransitionWeight),d));vec4 mvPosition=viewMatrix*vec4(world,1.);gl_Position=projectionMatrix*mvPosition;${cullZeroImpostors?'if(vMix*vDensityFade<=0.)gl_Position=vec4(2.,2.,2.,1.);':''}
+ void main(){vec2 delta=cameraPosition.xz+uFarOrigin-aTreeBase.xz;float d=length(delta);vec2 dir=d>.0001?delta/d:vec2(0.,1.);vec3 right=vec3(dir.y,0.,-dir.x);float relativeAngle=atan(dir.x,dir.y)-aTreeYaw;vec2 projectedRight=vec2(cos(relativeAngle)*aTreeScale.x,sin(relativeAngle)*aTreeScale.z);float widthScale=length(projectedRight);vec3 world=aTreeBase+right*(uv.x-.5)*uSize.x*widthScale+vec3(0.,(uv.y-${baseLiteral})*uSize.y*aTreeScale.y,0.)-vec3(uFarOrigin.x,0.,uFarOrigin.y);vUv=uv;${rotationViews>1?'vPrelitRotation=mod(aTreeYaw+6.28318530718,6.28318530718)*8./6.28318530718;':''}${hasNormals?'vFarRotation=vec2(cos(aTreeYaw),sin(aTreeYaw));vFarScale=aTreeScale;':''}float density=1.-(1.-uDensityMinimum)*smoothstep(uDensityRange.x,uDensityRange.y,d);vDensityFade=mix(1.,clamp((density+uDensityBand-aTreeRank)/uDensityBand,0.,1.),uDensityEnabled)*step(0.,aTreeReady)*(1.-smoothstep(uDistanceFadeRange.x,uDistanceFadeRange.y,d));${toon?`vFarWorld=world;vFarRight=right;vFarFacing=vec3(dir.x,0.,dir.y);vRelativeHeight=clamp((uv.y-${baseLiteral})*${floatLiteral(metadata.impostorHeight)}/${floatLiteral(metadata.sourceBounds.max[1]-metadata.sourceBounds.min[1])},0.,1.);`:''}float angle=mod(atan(projectedRight.y,projectedRight.x)+6.28318530718,6.28318530718);vView=angle*8./6.28318530718;vMix=1.-uReady*aTreeReady*(1.-smoothstep(mix(uStart,uLargeRange.x,aTreeTransitionWeight),mix(uEnd,uLargeRange.y,aTreeTransitionWeight),d)${angularLod?"*(1.-smoothstep(.3639702343,.7002075382,max(0.,cameraPosition.y-aTreeBase.y)/max(.001,d)))":""});vec4 mvPosition=viewMatrix*vec4(world,1.);gl_Position=projectionMatrix*mvPosition;${cullZeroImpostors?'if(vMix*vDensityFade<=0.)gl_Position=vec4(2.,2.,2.,1.);':''}
  #include <fog_vertex>
  }`,fragmentShader:`uniform sampler2D uAtlas;uniform float uBlend;uniform vec3 uLighting;varying vec2 vUv;varying float vView,vMix,vDensityFade;
  ${coverageThreshold}
@@ -43,6 +46,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  }`});
  if(toon||prelitAtlas)material.toneMapped=false;
  const impostors=new THREE.Mesh(geometry,material);impostors.frustumCulled=false;impostors.castShadow=false;
+ const smoothFar=smoothScene?createSmoothFarImpostor(impostors,smoothScene):null;
  let modelGeometry,modelMaterial,models,originalColor;
  if(nativeModels){
  modelGeometry=source.geometry.clone();attrs(modelGeometry,trees.length);modelGeometry.setAttribute('aTreeReady',readyAttribute(trees.length));
@@ -86,6 +90,6 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  }
  function setHullEnabled(enabled){if(!hullShape)return false;const changed=hullShape.set(enabled);geometry.setDrawRange(plane.drawRange.start,plane.drawRange.count);return changed;}
  function stats(){return {selectionScans:selection.scans,matrixUploads,readinessRevision,readinessUploads};}
- function dispose({disposeTexture=true}={}){geometry.dispose();material.dispose();modelGeometry?.dispose();modelMaterial?.dispose();models?.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
- return {impostors,models,uniforms,setHullEnabled,setTransitionHeight,treeTransitionRange,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
+ function dispose({disposeTexture=true}={}){smoothFar?.dispose();geometry.dispose();material.dispose();modelGeometry?.dispose();modelMaterial?.dispose();models?.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
+ return {impostors,models,uniforms,prepareSmoothFar:camera=>smoothFar?.prepare(camera),setHullEnabled,setTransitionHeight,treeTransitionRange,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
 }

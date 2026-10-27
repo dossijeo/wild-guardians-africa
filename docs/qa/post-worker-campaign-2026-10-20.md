@@ -1,0 +1,32 @@
+# Campaña del runner heredado tras la separación de trabajadores
+
+El 20 de octubre de 2026 se ejecutó Sabana/Mapungubwe/712 con la estrategia `good` y la política laboral `legacy` sobre `main` `44da3cac6b883685dc45e52bc717648f8022f4e5`. El checkout no tenía modificaciones registradas. La corrida previa de 14 noches utilizó `11ed124cb`, cuyo árbol es idéntico al del merge `44da3cac`. Los comandos usaron exclusivamente reglas y compras normales, sin crédito QA ni cambios de balance. **Corrección de alcance:** `run_native_campaign.mjs` llama a `simulateNativeCampaign()` sin `openingFactory`; su valor predeterminado `createOpeningWorld()` crea `Navigation` de JavaScript. El nombre histórico del runner no convierte estas partidas en pruebas de Wild Engine. El SHA-256 registrado del WASM de producción (`0d2901425c9d16fa38cdafc916680d3086c1b18f6730a0bfc584f6b1315d817d`) no implica que este runner lo utilizara para navegar.
+
+| Horizonte solicitado | Resultado observado | Dinero | Cultivos vivos | Trabajadores | Centro | Incursiones finalizadas | Entregas físicas |
+| ---: | --- | ---: | ---: | ---: | --- | ---: | ---: |
+| 14 noches | Horizonte alcanzado, `result=null` | 949 | 126 | 23 | 600/600 PV | 14 | 1.464 |
+| 30 noches | Horizonte alcanzado, `result=null` | 388 | 46 | 9 | 600/600 PV | 30 | 2.738 |
+| 100 noches | Derrota tras 44 noches | 27 | 0 | 1 | 402/600 PV | 44 | 3.011 |
+
+La prueba de 100 noches terminó por la condición económica `dawnMinimum`: tras el amanecer de la noche 44 no quedaba ningún cultivo y 27 monedas no permitían costear otra jornada. El centro no estaba destruido. Hubo 906 destrucciones de cultivos y 186 eventos `ActorMobileCollisionRecovery` acumulados. El informe del runner registra cero incidencias de incursión; esto no demuestra que toda trayectoria individual estuviera libre de solapamientos. El [diagnóstico experimental de recuperación móvil](https://github.com/dossijeo/wild-guardians-africa/blob/f10f71e0b20cf83a0ebb115782f03e9b687116e1/docs/qa/worker-mobile-recovery/README.md) muestra esa limitación.
+
+La estrategia solicitó defensas, pero no compró ninguna pieza de muralla en esta campaña: las cotizaciones completas quedaron fuera de presupuesto. Tampoco efectuó reparaciones. Por tanto, la derrota describe esta política económica y defensiva concreta **sobre el navegador heredado**; no refuta las victorias de 100 noches de otras políticas y revisiones, ni certifica el resultado de Wild Engine con esta estrategia.
+
+Los 30 primeros registros diarios de las corridas de 30 y 100 noches coinciden exactamente en día, dinero, plantilla, siembras, entregas, destrucciones, cultivos vivos y tareas pendientes. El prefijo de 14 noches comparte el mismo árbol fuente y reproduce su cierre conocido. Los tiempos de CPU no son un A/B de algoritmos: `Game.tick` acumuló 155,77 s hasta la noche 30 y 171,63 s hasta la derrota en la corrida de 100; las decisiones acumularon 8,38 s en esta última. Las ejecuciones se hicieron en momentos distintos y con cargas de trabajo divergentes.
+
+Los tiempos diarios de esa misma corrida tampoco crecen simplemente con la edad de la partida: `Game.tick` empleó 1,85 s el día 1 (8 trabajadores, 65 cultivos vivos), 9,20 s el día 8 (24 trabajadores, 149 cultivos), 1,75 s el día 30 (9 trabajadores, 46 cultivos) y 0,51 s el día 44 (1 trabajador, ningún cultivo). La caída de coste cuando desaparecen entidades contradice la hipótesis de un crecimiento temporal monótono, pero no identifica por sí sola qué subsistema domina los días de mayor carga. El guardado final contiene cero cultivos, trabajadores, cajas y hechizos, y conserva los últimos 200 eventos; esto verifica esas colecciones en ese punto, no la ausencia universal de retenciones en memoria nativa o durante la jornada.
+
+Reproducir desde ese commit, con una carpeta de salida nueva para cada intento:
+
+```sh
+node tools/run_native_campaign.mjs --out test-results/post-worker-good30 --days 30 --seed 712 --strategy good --biome sabana --culture mapungubwe
+node tools/run_native_campaign.mjs --out test-results/post-worker-good100 --days 100 --seed 712 --strategy good --biome sabana --culture mapungubwe
+```
+
+El runner escribe `source.json`, `days.jsonl`, `report.json`, `receipt.json` y el estado comprimido. `observed-native-defeat` es un resultado válido del juego y produce código de salida 2; `incomplete-harness-error` indica una prueba técnica inconclusa y debe tratarse por separado.
+
+## Prueba adicional de otra política
+
+La [ejecución de CI 39411703305](https://github.com/dossijeo/wild-guardians-africa/actions/runs/39411703305) probó `check_intensive_case.mjs` con Sabana/Mapungubwe/712 y horizonte de 100 noches sobre el mismo `main` `44da3cac`. Es otra política y no forma parte de la comparación reproducible de la tabla. Terminó en derrota económica tras 50 noches: 34 monedas, ningún cultivo vivo y el centro con 600/600 PV. Completó 50 incursiones y 1.847 entregas; registró 1.014 cultivos destruidos, 71 recuperaciones de colisión móvil y dos reparaciones aplicadas. La ejecución falló como comprobación de supervivencia de 100 noches por una derrota válida del juego, no por un error técnico del runner.
+
+Esta configuración ejecuta `simulateIntensiveFarm` con `defend=false` por defecto, por lo que tampoco prueba una defensa con murallas. La política exige reservas económicas antes de plantar; el registro permite identificar esa restricción, pero no basta para atribuirle por sí sola la derrota. Tampoco constituye una campaña de Wild Engine. Ninguna de las dos campañas heredadas documentadas aquí demuestra una victoria de 100 noches en el `main` actual.

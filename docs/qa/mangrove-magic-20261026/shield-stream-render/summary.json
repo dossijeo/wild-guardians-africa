@@ -1,0 +1,156 @@
+{
+  "ok": true,
+  "scope": "Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 4686,
+    "p50": 16.669999999998254,
+    "p95": 33.48999999999069,
+    "p99": 66.45000000000437,
+    "max": 249.3949999999968
+  },
+  "programWaits": {
+    "count": 30,
+    "totalMs": 1176.0950000286102,
+    "maxMs": 214.8200000524521
+  },
+  "casts": [
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 37954.53999996185,
+      "before": {
+        "elapsed": 3.318464999942772,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 6.145000100135803,
+      "after": {
+        "elapsed": 5.380854999942749,
+        "cooldown": 87.93761000000025,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.937610000000035
+          }
+        ]
+      },
+      "streaming": {
+        "samples": 156,
+        "initialChunks": 25,
+        "finalChunks": 15,
+        "uniqueChunks": 26
+      },
+      "activationFrames": {
+        "samples": 48,
+        "p50": 33.270000000004075,
+        "p95": 99.80000000000291,
+        "p99": 249.3949999999968,
+        "max": 249.3949999999968
+      },
+      "programWaits": [
+        {
+          "start": 37979.10000002384,
+          "ms": 38.33500003814697,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "start": 38283.90499997139,
+          "ms": 214.8200000524521,
+          "draw": {
+            "object": "native-obstruction-blend",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "start": 39759.64499998093,
+          "ms": 66.7150000333786,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        }
+      ]
+    },
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 128242.42500007153,
+      "before": {
+        "elapsed": 93.36323999994245,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 4.984999895095825,
+      "after": {
+        "elapsed": 95.55838499994219,
+        "cooldown": 87.80485500000026,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.804855000000032
+          }
+        ]
+      },
+      "streaming": {
+        "samples": 159,
+        "initialChunks": 25,
+        "finalChunks": 16,
+        "uniqueChunks": 29
+      },
+      "activationFrames": {
+        "samples": 57,
+        "p50": 33.25,
+        "p95": 66.40999999998894,
+        "p99": 116.34500000000116,
+        "max": 116.34500000000116
+      },
+      "programWaits": [
+        {
+          "start": 130075.30500006676,
+          "ms": 78.05499994754791,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "Commands invoke legal Game.cast; no pointer targeting test."
+  ]
+}

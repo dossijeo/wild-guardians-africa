@@ -1,0 +1,288 @@
+{
+  "scope": "A/B/A/B, frozen simulation, current recipe, no density/quality changes. Authored frames exclude variable settling; GPU intervals may include bubbles. Final pixel differences do not prove full motion equivalence.",
+  "conditions": [
+    {
+      "visualLab": [
+        "global-lighting"
+      ],
+      "skyAtmosphere": [
+        "clouds"
+      ],
+      "grassCoverage": [
+        "continuous"
+      ],
+      "riverSoil": [
+        "1"
+      ],
+      "riverYards": [
+        "islands"
+      ],
+      "mangroveSubstrate": [
+        "full"
+      ],
+      "mangroveMoss": [
+        "layered"
+      ],
+      "canyonSand": [
+        "full"
+      ],
+      "canyonSandBlend": [
+        "soft"
+      ],
+      "canyonNormals": [
+        "smooth"
+      ],
+      "canyonFloor": [
+        "warm"
+      ],
+      "canyonShadows": [
+        "horizon"
+      ],
+      "sandRelief": [
+        "1"
+      ],
+      "sandWear": [
+        "residual"
+      ],
+      "sandMeso": [
+        "1"
+      ],
+      "volcanicAsh": [
+        "mask"
+      ],
+      "volcanicRock": [
+        "layered"
+      ],
+      "volcanicNight": [
+        "spectrum"
+      ],
+      "spatialFar": [
+        "1"
+      ],
+      "farTransitions": [
+        "smooth"
+      ],
+      "waterEdges": [
+        "natural"
+      ],
+      "waterPalette": [
+        "regional"
+      ],
+      "riverBank": [
+        "soil"
+      ],
+      "mangroveShore": [
+        "sediment"
+      ],
+      "workerResidency": [
+        "actors"
+      ],
+      "groundResidentMask": [
+        "1"
+      ],
+      "mangroveFerns": [
+        "holly"
+      ],
+      "groundCache": [
+        "fixed512"
+      ],
+      "wildEngineThreads": [
+        "1"
+      ],
+      "chunkInstall": [
+        "sync"
+      ],
+      "horizonBedBudget": [
+        "2"
+      ],
+      "horizonBed": [
+        "sync"
+      ],
+      "ownedFarGpu": [
+        "1"
+      ],
+      "streamingRecovery": [
+        "auto"
+      ],
+      "waterShoreWorker": [
+        "0"
+      ],
+      "waterBedWorker": [
+        "auto"
+      ],
+      "waterBedDirect": [
+        "0"
+      ],
+      "warmObstruction": [
+        "0"
+      ],
+      "retainPrograms": [
+        "1"
+      ],
+      "frameScheduler": [
+        "1"
+      ]
+    },
+    "gran-rio",
+    "media",
+    "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    {
+      "axis": "x",
+      "pose": null,
+      "visualSteps": false,
+      "terrainCamera": false,
+      "mainPhases": false,
+      "lockRaidCamera": false,
+      "completeLegs": false,
+      "pinPrograms": false,
+      "zigzag": false,
+      "active": false,
+      "gpu": true,
+      "depthWarm": false,
+      "glDetail": false,
+      "frames": 180,
+      "distance": 144
+    },
+    [
+      99.70247532024266,
+      22.023772089667386,
+      30.57367599590944
+    ],
+    [
+      83,
+      6.848869972229004,
+      0
+    ],
+    119.99999999999746,
+    15,
+    {
+      "memoryBytes": 16777216,
+      "loadedChunks": 27,
+      "residentPropRecords": 598,
+      "residentVisiblePropRecords": 2979,
+      "loadedSectors": 432,
+      "sectorSlots": 432,
+      "haloProps": 10
+    }
+  ],
+  "rows": [
+    {
+      "run": "a1",
+      "sourceSha256": "9edc4d6baf53d84973de022d0df945d69d87ad9b0fa48597bc2c63b2faab5234",
+      "authoredMean": 30.575805555555537,
+      "p95": 50.11499999999796,
+      "p99": 66.56999999999971,
+      "maximum": 83.30500000000029,
+      "travelAndSettle": 6651.059999999998,
+      "gpu": {
+        "count": 81,
+        "mean": 20.973295172839503,
+        "p95": 28.761197,
+        "max": 38.657708
+      },
+      "renderCpu": {
+        "count": 243,
+        "mean": 9.988148148658345,
+        "p95": 14.695000052452087,
+        "max": 49.425000071525574
+      },
+      "evictionCalls": 13,
+      "evictionTotal": 52.10499966144561,
+      "evictionMaximum": 10.615000009536743,
+      "sectorUpdates": 1216
+    },
+    {
+      "run": "b1",
+      "sourceSha256": "4d040fb6a032da547bd9d3b755272968bee29b812da631ade2caf5696b3b2db9",
+      "authoredMean": 31.13158333333336,
+      "p95": 50.06500000000233,
+      "p99": 66.59500000000116,
+      "maximum": 66.71499999999651,
+      "travelAndSettle": 5919.790000000001,
+      "gpu": {
+        "count": 67,
+        "mean": 22.328675910447757,
+        "p95": 27.764739,
+        "max": 33.79651
+      },
+      "renderCpu": {
+        "count": 199,
+        "mean": 11.598015070560589,
+        "p95": 17.180000066757202,
+        "max": 39.18999993801117
+      },
+      "evictionCalls": 3,
+      "evictionTotal": 33.52999997138977,
+      "evictionMaximum": 15.485000014305115,
+      "sectorUpdates": 1184
+    },
+    {
+      "run": "a2",
+      "sourceSha256": "9d2b8de46e4c8ed86e63416ac6e21e5ada857a87d2f90ef73483a47dc52b72f5",
+      "authoredMean": 31.502249999999993,
+      "p95": 66.36000000000058,
+      "p99": 66.66000000000349,
+      "maximum": 83.06000000000495,
+      "travelAndSettle": 5986.300000000003,
+      "gpu": {
+        "count": 66,
+        "mean": 22.883107499999998,
+        "p95": 30.890207,
+        "max": 37.959165
+      },
+      "renderCpu": {
+        "count": 198,
+        "mean": 11.696792928859441,
+        "p95": 17.09500002861023,
+        "max": 55.38499999046326
+      },
+      "evictionCalls": 13,
+      "evictionTotal": 53.54000008106232,
+      "evictionMaximum": 10.389999985694885,
+      "sectorUpdates": 1216
+    },
+    {
+      "run": "b2",
+      "sourceSha256": "6e07779865d2a126781f154e0aa1746d5a34a92a86cd4f3c1fa836f63253c5e6",
+      "authoredMean": 31.317777777777803,
+      "p95": 66.40499999999884,
+      "p99": 83.2699999999968,
+      "maximum": 83.47000000000116,
+      "travelAndSettle": 5986.669999999998,
+      "gpu": {
+        "count": 67,
+        "mean": 22.350018388059706,
+        "p95": 28.046874,
+        "max": 36.438749
+      },
+      "renderCpu": {
+        "count": 199,
+        "mean": 11.73017587673724,
+        "p95": 17.4099999666214,
+        "max": 40.00999999046326
+      },
+      "evictionCalls": 3,
+      "evictionTotal": 38.359999895095825,
+      "evictionMaximum": 20.679999947547913,
+      "sectorUpdates": 1184
+    }
+  ],
+  "finalPixels": [
+    {
+      "pair": [
+        "a1",
+        "b1"
+      ],
+      "mae": 0.0005103443287037037,
+      "maxChannel": 13
+    },
+    {
+      "pair": [
+        "a2",
+        "b2"
+      ],
+      "mae": 0.00042860243055555555,
+      "maxChannel": 9
+    }
+  ]
+}

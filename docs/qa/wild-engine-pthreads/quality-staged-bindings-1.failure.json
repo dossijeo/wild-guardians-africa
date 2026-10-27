@@ -1,0 +1,1335 @@
+{
+  "message": "Quality cycle exceeded 120s host watchdog",
+  "diagnostic": null,
+  "qualityStatuses": [
+    {
+      "phase": {
+        "quality": "media",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 11,
+          "totalMs": 0.19999992847442627,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 11,
+          "totalMs": 16.785000026226044,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 10,
+          "totalMs": 25.55999994277954,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 10,
+          "totalMs": 0.16499996185302734,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 100,
+          "totalMs": 2.1900001764297485,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 162,
+          "totalMs": 28.27999973297119,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 9,
+          "totalMs": 1.1649999022483826,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 9,
+          "totalMs": 1.9600000977516174,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 5,
+          "totalMs": 0.1799999475479126,
+          "maxMs": 0.050000011920928955
+        },
+        "water-edges": {
+          "count": 5,
+          "totalMs": 0.23500001430511475,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 5,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 9,
+          "totalMs": 1.1949999928474426,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 45,
+          "totalMs": 11.529999911785126,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 256,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 1489,
+        "workMs": 500.6150000691414,
+        "coordinationMs": 53.94000059366226,
+        "maxUnitMs": 9.480000019073486,
+        "overruns": 139,
+        "deadlineLoans": 133,
+        "oversizeRecoveries": 0,
+        "continuationMs": 36.47999995946884,
+        "continuationTurns": 1160,
+        "median": 33.270000000004075,
+        "p95": 66.64500000000407,
+        "p99": 83.15000000000146,
+        "cpu95": 14.495000004768372,
+        "jitter": 33.375,
+        "budgetMs": 0,
+        "pending": 3,
+        "oldestMs": 681.339999973774
+      },
+      "jobs": [
+        {
+          "label": "terrain 7,1:mud-edges-vertices",
+          "age": 681.3899999856949,
+          "cost": 0.1350000321865082,
+          "deadline": 42516.5
+        },
+        {
+          "label": "terrain 5,3:mud-geometry",
+          "age": 628.0649999976158,
+          "cost": 2.6608499826192857,
+          "deadline": 42569.844999969006
+        },
+        {
+          "label": null,
+          "age": 0.8100000023841858,
+          "cost": 0.25,
+          "deadline": 33343.00499999523
+        }
+      ],
+      "pauses": [
+        "tutorial-action"
+      ],
+      "stream": {
+        "created": 34,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 4,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 61.81000059843063,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.17500000000291,
+        "p95": 49.919999999998254,
+        "p99": 83.11000000000058,
+        "cpu95": 9.349999964237213,
+        "jitter": 16.744999999995343,
+        "budgetMs": 1.0294023921109257,
+        "pending": 1,
+        "oldestMs": 1120.2400000095367
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 1120.2649999856949,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [
+        "tutorial-action"
+      ],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 71.58000069856644,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 16.69000000000233,
+        "p95": 33.400000000001455,
+        "p99": 33.53500000000349,
+        "cpu95": 8.635000050067902,
+        "jitter": 16.709999999999127,
+        "budgetMs": 2.872161112796734,
+        "pending": 1,
+        "oldestMs": 11137.024999976158
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 11137.034999966621,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [
+        "tutorial-action"
+      ],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 80.7950005531311,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.15999999998894,
+        "p95": 49.85000000000582,
+        "p99": 66.31000000001222,
+        "cpu95": 8.759999990463257,
+        "jitter": 16.69000000001688,
+        "budgetMs": 1.4846093289605193,
+        "pending": 1,
+        "oldestMs": 21143.555000007153
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 21143.569999992847,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 87.26500064134598,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.11499999999069,
+        "p95": 33.354999999995925,
+        "p99": 33.50500000000466,
+        "cpu95": 8.2049999833107,
+        "jitter": 0.2400000000052387,
+        "budgetMs": 3.176653422537107,
+        "pending": 1,
+        "oldestMs": 31152.415000021458
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 31152.430000007153,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 92.96000093221664,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.16000000000349,
+        "p95": 49.86500000000524,
+        "p99": 50.14999999999418,
+        "cpu95": 8.835000038146973,
+        "jitter": 16.705000000001746,
+        "budgetMs": 1.9380746522168069,
+        "pending": 1,
+        "oldestMs": 41147.30000001192
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 41147.360000014305,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 98.28000050783157,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.279999999998836,
+        "p95": 50.0399999999936,
+        "p99": 50.125,
+        "cpu95": 10.024999976158142,
+        "jitter": 16.75999999999476,
+        "budgetMs": 1.1152075470765568,
+        "pending": 1,
+        "oldestMs": 51147.08499997854
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 51147.11500000954,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 103.76500004529953,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.195000000006985,
+        "p95": 33.470000000001164,
+        "p99": 33.625,
+        "cpu95": 8.240000009536743,
+        "jitter": 0.27499999999417923,
+        "budgetMs": 3.1854605487632837,
+        "pending": 1,
+        "oldestMs": 61149.17000001669
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 61149.214999973774,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 109.70999985933304,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.195000000006985,
+        "p95": 33.404999999998836,
+        "p99": 33.5,
+        "cpu95": 8.129999995231628,
+        "jitter": 0.20999999999185093,
+        "budgetMs": 3.250480932580496,
+        "pending": 1,
+        "oldestMs": 71156.719999969
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 71156.74000000954,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 115.43999969959259,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.20000000001164,
+        "p95": 33.625,
+        "p99": 49.73499999998603,
+        "cpu95": 8.785000026226044,
+        "jitter": 0.42499999998835847,
+        "budgetMs": 1.9710018566543606,
+        "pending": 1,
+        "oldestMs": 81168.56000000238
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 81168.57999998331,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "baja",
+        "step": "prepare"
+      },
+      "terrainPhases": {
+        "setup": {
+          "count": 15,
+          "totalMs": 0.28499990701675415,
+          "maxMs": 0.0350000262260437
+        },
+        "ground": {
+          "count": 15,
+          "totalMs": 22.210000038146973,
+          "maxMs": 2.475000023841858
+        },
+        "mud-geometry": {
+          "count": 15,
+          "totalMs": 37.579999923706055,
+          "maxMs": 3.649999976158142
+        },
+        "mud-edges": {
+          "count": 15,
+          "totalMs": 0.2349998950958252,
+          "maxMs": 0.020000040531158447
+        },
+        "mud-edges-grid": {
+          "count": 150,
+          "totalMs": 3.1000002026557922,
+          "maxMs": 0.125
+        },
+        "mud-edges-vertices": {
+          "count": 247,
+          "totalMs": 41.064999878406525,
+          "maxMs": 0.64000004529953
+        },
+        "mud-edges-publish": {
+          "count": 15,
+          "totalMs": 1.8749998807907104,
+          "maxMs": 0.26999998092651367
+        },
+        "water-geometry": {
+          "count": 15,
+          "totalMs": 3.1150001287460327,
+          "maxMs": 0.8199999928474426
+        },
+        "bank": {
+          "count": 8,
+          "totalMs": 0.2999999523162842,
+          "maxMs": 0.06499999761581421
+        },
+        "water-edges": {
+          "count": 8,
+          "totalMs": 0.34500008821487427,
+          "maxMs": 0.06000000238418579
+        },
+        "water-core": {
+          "count": 8,
+          "totalMs": 0.005000054836273193,
+          "maxMs": 0.005000054836273193
+        },
+        "prop-filter": {
+          "count": 15,
+          "totalMs": 2.0299999713897705,
+          "maxMs": 0.20999997854232788
+        },
+        "prop-slots": {
+          "count": 75,
+          "totalMs": 18.004999816417694,
+          "maxMs": 0.7799999713897705
+        }
+      },
+      "scheduler": {
+        "completed": 642,
+        "cancelled": 3,
+        "failed": 0,
+        "units": 2079,
+        "workMs": 816.2250003814697,
+        "coordinationMs": 121.13499969244003,
+        "maxUnitMs": 83.75500005483627,
+        "overruns": 195,
+        "deadlineLoans": 173,
+        "oversizeRecoveries": 0,
+        "continuationMs": 80.48499983549118,
+        "continuationTurns": 3334,
+        "median": 33.22999999998137,
+        "p95": 49.845000000001164,
+        "p99": 50.139999999984866,
+        "cpu95": 11.365000009536743,
+        "jitter": 16.61500000001979,
+        "budgetMs": 0.5556663548393833,
+        "pending": 1,
+        "oldestMs": 91179.72500002384
+      },
+      "jobs": [
+        {
+          "label": "program-bindings",
+          "age": 91179.75999999046,
+          "cost": 83.73000001907349,
+          "deadline": 51952.78999996185
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    }
+  ],
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

@@ -1,0 +1,562 @@
+{
+  "scope": "Stationary, paused, 360 frames after 60 warm frames, no recording. GPU elapsed includes pipeline bubbles. No FPS improvement claim. Dynamic hole-fill work is not measured here.",
+  "protocolVerified": true,
+  "runs": [
+    {
+      "run": "a1",
+      "mask": "0",
+      "presentationMs": {
+        "count": 360,
+        "mean": 18.845833333333335,
+        "p95": 33.26499999999942,
+        "max": 34.18000000000029
+      },
+      "gpuElapsedMs": {
+        "count": 121,
+        "mean": 16.78304962809918,
+        "p95": 19.036092,
+        "max": 35.293801
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 361,
+          "mean": 5.7502354581600414,
+          "p95": 7.899999976158142,
+          "max": 9.600000023841858
+        },
+        "draw": {
+          "count": 361,
+          "mean": 3.1296537414482097,
+          "p95": 4.485000014305115,
+          "max": 5.704999923706055
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 360,
+          "mean": 18.845833333333335,
+          "p95": 33.26499999999942,
+          "max": 34.18000000000029
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "run": "b1",
+      "mask": "1",
+      "presentationMs": {
+        "count": 360,
+        "mean": 18.614944444444436,
+        "p95": 33.2699999999968,
+        "max": 33.51499999999942
+      },
+      "gpuElapsedMs": {
+        "count": 121,
+        "mean": 16.592886041322323,
+        "p95": 19.354166,
+        "max": 28.758385
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 361,
+          "mean": 5.427880887509713,
+          "p95": 7.044999957084656,
+          "max": 8.320000052452087
+        },
+        "draw": {
+          "count": 361,
+          "mean": 2.9571606673692403,
+          "p95": 3.8949999809265137,
+          "max": 4.580000042915344
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 360,
+          "mean": 18.614944444444436,
+          "p95": 33.2699999999968,
+          "max": 33.51499999999942
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "run": "a2",
+      "mask": "0",
+      "presentationMs": {
+        "count": 360,
+        "mean": 19.76950000000001,
+        "p95": 33.33499999999913,
+        "max": 33.775000000001455
+      },
+      "gpuElapsedMs": {
+        "count": 121,
+        "mean": 17.6730276694215,
+        "p95": 20.272082,
+        "max": 33.360677
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 361,
+          "mean": 6.779099725620238,
+          "p95": 8.639999985694885,
+          "max": 10.705000042915344
+        },
+        "draw": {
+          "count": 361,
+          "mean": 3.7953047115056466,
+          "p95": 4.929999947547913,
+          "max": 6.014999985694885
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 360,
+          "mean": 19.76950000000001,
+          "p95": 33.33499999999913,
+          "max": 33.775000000001455
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "run": "b2",
+      "mask": "1",
+      "presentationMs": {
+        "count": 360,
+        "mean": 18.707041666666655,
+        "p95": 33.30500000000029,
+        "max": 33.56500000000233
+      },
+      "gpuElapsedMs": {
+        "count": 121,
+        "mean": 16.812858859504136,
+        "p95": 18.920207,
+        "max": 36.052447
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 361,
+          "mean": 5.7274238221202864,
+          "p95": 7.245000004768372,
+          "max": 9.884999990463257
+        },
+        "draw": {
+          "count": 361,
+          "mean": 3.034639891495005,
+          "p95": 4.070000052452087,
+          "max": 5.534999966621399
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 360,
+          "mean": 18.707041666666655,
+          "p95": 33.30500000000029,
+          "max": 33.56500000000233
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ]
+}

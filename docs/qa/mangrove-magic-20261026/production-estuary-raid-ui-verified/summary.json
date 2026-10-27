@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "biome": "manglares",
+  "errors": [],
+  "species": [
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino"
+  ],
+  "attempts": [
+    {
+      "x": 879.57238570668,
+      "y": 214.2727685417686,
+      "world": {
+        "x": 88,
+        "z": -4
+      }
+    }
+  ],
+  "clickRoundtripMs": 140.70000004768372,
+  "frames": 333,
+  "p95": 66.47500000000582,
+  "p99": 99.68499999999767,
+  "max": 166.3000000000029,
+  "programWaitCount": 0,
+  "programWaitMaxMs": 0,
+  "shieldPresentAfterClick": true,
+  "limitations": [
+    "Single instrumented run; mouse-click round trip includes automation and presentation waits, not isolated command CPU.",
+    "No GPU timing or ABAB in this run."
+  ]
+}

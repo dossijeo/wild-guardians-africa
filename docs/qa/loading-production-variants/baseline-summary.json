@@ -1,0 +1,975 @@
+{
+  "scope": "Diagnostic single runs; no performance acceptance. Links are invocations, not GPU compilation time or resident count.",
+  "biomes": [
+    {
+      "biome": "sabana",
+      "readyMs": 27266.335000038147,
+      "links": 83,
+      "worldLinks": 82,
+      "postReadyLinks": 2,
+      "types": {
+        "MeshStandardMaterial": 22,
+        "ShaderMaterial": 22,
+        "RawShaderMaterial": 10,
+        "MeshPhysicalMaterial": 2,
+        "MeshBasicMaterial": 10,
+        "LineBasicMaterial": 1,
+        "MeshDepthMaterial": 15,
+        "native": 1
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.1400001049041748
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.7599999904632568
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 696.1699999570847
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 266.18999993801117
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 1.8550000190734863
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.13499999046325684
+        },
+        {
+          "label": "load-village-models",
+          "ms": 104.83500003814697
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 1.9800000190734863
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 491.99000000953674
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.7000000476837158
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.14500010013580322
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.17499995231628418
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 199.57500004768372
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 25.490000009536743
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 11.945000052452087
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 8.824999928474426
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 367.914999961853
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 9.659999966621399
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 29.544999957084656
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 27.610000014305115
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.23000001907348633
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 233.93999993801117
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 866.0449999570847
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 44
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 0.12999999523162842
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3248.9900000095367
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1006.7200000286102
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 343.38499999046326
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.13499999046325684
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 804.8200000524521
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 787.4550000429153
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 153.57500004768372
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 7273.219999909401
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 4.090000033378601
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 6207.840000033379
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 32.5699999332428
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "readyMs": 28475.134999990463,
+      "links": 83,
+      "worldLinks": 82,
+      "postReadyLinks": 2,
+      "types": {
+        "MeshStandardMaterial": 22,
+        "ShaderMaterial": 22,
+        "RawShaderMaterial": 10,
+        "MeshPhysicalMaterial": 2,
+        "MeshBasicMaterial": 10,
+        "LineBasicMaterial": 1,
+        "MeshDepthMaterial": 15,
+        "native": 1
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.399999976158142
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 2.490000009536743
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 772.8999999761581
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 386.75
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 4.074999928474426
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.19999992847442627
+        },
+        {
+          "label": "load-village-models",
+          "ms": 109.49000000953674
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.4149999618530273
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 600.4499999284744
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.815000057220459
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.17500007152557373
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.22499990463256836
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 227.45000004768372
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 17.09500002861023
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 9.324999928474426
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 1.9450000524520874
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 418.8949999809265
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 18.65499997138977
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 29.2849999666214
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 45.580000042915344
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.315000057220459
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 208.37999999523163
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 836.2749999761581
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 44.07000005245209
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 0.07500004768371582
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3031.9700000286102
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 964.3849999904633
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 641.7599999904633
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.08000004291534424
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 1090.5099999904633
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 784.2200000286102
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 198.10000002384186
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 7615.225000023842
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 5.980000019073486
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 5646.850000023842
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 14.555000066757202
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "readyMs": 39466.049999952316,
+      "links": 90,
+      "worldLinks": 89,
+      "postReadyLinks": 1,
+      "types": {
+        "MeshStandardMaterial": 23,
+        "ShaderMaterial": 28,
+        "RawShaderMaterial": 10,
+        "MeshPhysicalMaterial": 2,
+        "MeshBasicMaterial": 10,
+        "LineBasicMaterial": 1,
+        "MeshDepthMaterial": 15,
+        "native": 1
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.0699999332427979
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.524999976158142
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 396.6399999856949
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 201.9449999332428
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 11.014999985694885
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.2250000238418579
+        },
+        {
+          "label": "load-village-models",
+          "ms": 107.43499994277954
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.4700000286102295
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 522.4900000095367
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.8650000095367432
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.1549999713897705
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.15000009536743164
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 158.37000000476837
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 17.24500000476837
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 13.485000014305115
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 27.289999961853027
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 726.7300000190735
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 12.805000066757202
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 158.76499998569489
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 24.5
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.2200000286102295
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 153.00999999046326
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 892.0199999809265
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 45.139999985694885
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 116.0349999666214
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 5337.490000009537
+        },
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 194.5
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 4913.22000002861
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 789.3799999952316
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.1499999761581421
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 1288.4399999380112
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 942.1299999952316
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 500.56000006198883
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 15040.649999976158
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 34.36500000953674
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 8075.90499997139
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 17.105000019073486
+        }
+      ]
+    },
+    {
+      "biome": "desierto",
+      "readyMs": 23851.05999994278,
+      "links": 70,
+      "worldLinks": 69,
+      "postReadyLinks": 2,
+      "types": {
+        "MeshStandardMaterial": 15,
+        "ShaderMaterial": 20,
+        "RawShaderMaterial": 10,
+        "MeshPhysicalMaterial": 2,
+        "MeshBasicMaterial": 6,
+        "LineBasicMaterial": 1,
+        "MeshDepthMaterial": 15,
+        "native": 1
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.2599999904632568
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.7400000095367432
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 638.0199999809265
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 86.52499997615814
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 35.41000008583069
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.12000000476837158
+        },
+        {
+          "label": "load-village-models",
+          "ms": 118.06499993801117
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 1.8849999904632568
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 545
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.6150000095367432
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.15500009059906006
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.25999999046325684
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 214.33500003814697
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 24.475000023841858
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 10.570000052452087
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 2
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 416.8799999952316
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 8.929999947547913
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 22.950000047683716
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.13999998569488525
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 242.0699999332428
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 715.8400000333786
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 67.29499995708466
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 0.125
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 2951.6900000572205
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 427.74000000953674
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 491.7150000333786
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.10500001907348633
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 891.8899999856949
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 435.75999999046326
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 144.14999997615814
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 6144.909999966621
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 13.335000038146973
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 4248.02999997139
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 25.105000019073486
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "readyMs": 30459.165000081062,
+      "links": 81,
+      "worldLinks": 80,
+      "postReadyLinks": 2,
+      "types": {
+        "MeshStandardMaterial": 22,
+        "ShaderMaterial": 20,
+        "RawShaderMaterial": 10,
+        "MeshPhysicalMaterial": 2,
+        "MeshBasicMaterial": 10,
+        "LineBasicMaterial": 1,
+        "MeshDepthMaterial": 15,
+        "native": 1
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.6299999952316284
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 2.375
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 792.1699999570847
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 256.335000038147
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 2.6799999475479126
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.14500010013580322
+        },
+        {
+          "label": "load-village-models",
+          "ms": 122.10999989509583
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.615000009536743
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 520.0900000333786
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.4350000619888306
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.14499998092651367
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.21500003337860107
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 198.55999994277954
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 39.139999985694885
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 15.960000038146973
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 10.129999995231628
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 411.79500007629395
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 14.409999966621399
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 29.830000042915344
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.12999999523162842
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 460.5499999523163
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 1001.375
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 108.12000000476837
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 0.07500004768371582
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3401.1699999570847
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1447.6749999523163
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 853.5049999952316
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.12000000476837158
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 810.2150000333786
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 609.914999961853
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 183.3949999809265
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 8437.665000081062
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 13.569999933242798
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 6693.375
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 16.06499993801117
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "readyMs": 27610.289999961853,
+      "links": 67,
+      "worldLinks": 66,
+      "postReadyLinks": 1,
+      "types": {
+        "MeshStandardMaterial": 19,
+        "ShaderMaterial": 13,
+        "RawShaderMaterial": 10,
+        "MeshPhysicalMaterial": 2,
+        "MeshBasicMaterial": 6,
+        "LineBasicMaterial": 1,
+        "MeshDepthMaterial": 15,
+        "native": 1
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.375
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 2.3000000715255737
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 638.6950000524521
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 307.4450000524521
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 2.325000047683716
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.125
+        },
+        {
+          "label": "load-village-models",
+          "ms": 111.9099999666214
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 6.184999942779541
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 535.2450000047684
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 2.180000066757202
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.2200000286102295
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.315000057220459
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 176.68499994277954
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 20.570000052452087
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 2.1799999475479126
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 1.5049999952316284
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 4376.290000081062
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 10.080000042915344
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 35.09500002861023
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.13999998569488525
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 232.9650000333786
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 863.3550000190735
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 106.44000005722046
+        },
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 0.1099998950958252
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3683.8849999904633
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 608.9249999523163
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 439.1399999856949
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.1549999713897705
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 1536.9800000190735
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 522.0349999666214
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 267.5899999141693
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 8061.074999928474
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 7.475000023841858
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 2610.2549999952316
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 18.72000002861023
+        }
+      ]
+    }
+  ]
+}

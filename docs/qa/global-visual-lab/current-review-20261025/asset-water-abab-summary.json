@@ -1,0 +1,221 @@
+{
+  "scope": "A/B/A/B on same host, authored camera and initial world. First 180 presentation intervals compared separately; GPU and other summaries include variable settling. Simulation advances by real wall time, so final states differ. One series cannot establish small speedups.",
+  "runs": [
+    {
+      "run": "a1",
+      "mode": "sync",
+      "authoredFrames": {
+        "count": 180,
+        "mean": 39.72377777777777,
+        "p95": 83.16525000000074,
+        "max": 166.25499999999738
+      },
+      "allFrames": {
+        "count": 180,
+        "mean": 39.72377777777777,
+        "p95": 83.16500000000087,
+        "max": 166.25499999999738
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 28.453248557377048,
+        "p95": 37.862186,
+        "max": 42.598072
+      },
+      "preparationCpu": {
+        "count": 10,
+        "mean": 4.913000011444092,
+        "p95": 6.274999976158142,
+        "max": 10.675000071525574
+      },
+      "preparationLatency": {
+        "count": 10,
+        "mean": 999.7630000233651,
+        "p95": 2098.1900000572205,
+        "max": 2379.0250000953674
+      },
+      "slices": {
+        "count": 114,
+        "mean": 0.43096491328456943,
+        "p95": 2.034999966621399,
+        "max": 3.944999933242798
+      },
+      "draw": {
+        "count": 181,
+        "mean": 10.478149171033618,
+        "p95": 15.360000014305115,
+        "max": 138.77499997615814
+      },
+      "loading": {
+        "textureUploads": null,
+        "longFrames": null,
+        "frames": null,
+        "readyMs": 24820.019999980927,
+        "phases": []
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "run": "b1",
+      "mode": "coalesced",
+      "authoredFrames": {
+        "count": 180,
+        "mean": 40.37083333333333,
+        "p95": 83.13049999999748,
+        "max": 149.58499999999913
+      },
+      "allFrames": {
+        "count": 180,
+        "mean": 40.37083333333333,
+        "p95": 83.12999999999738,
+        "max": 149.58499999999913
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 28.87050947540984,
+        "p95": 36.351197,
+        "max": 47.922551
+      },
+      "preparationCpu": {
+        "count": 10,
+        "mean": 4.9220000267028805,
+        "p95": 5.990000128746033,
+        "max": 10.235000014305115
+      },
+      "preparationLatency": {
+        "count": 10,
+        "mean": 1121.0885000348092,
+        "p95": 2965.625,
+        "max": 3245.4550000429153
+      },
+      "slices": {
+        "count": 134,
+        "mean": 0.3673134348285732,
+        "p95": 1.1299999952316284,
+        "max": 2.490000009536743
+      },
+      "draw": {
+        "count": 181,
+        "mean": 10.931933700050438,
+        "p95": 16.394999980926514,
+        "max": 146.48500001430511
+      },
+      "loading": {
+        "textureUploads": null,
+        "longFrames": null,
+        "frames": null,
+        "readyMs": 24908.37999999523,
+        "phases": []
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "run": "a2",
+      "mode": "sync",
+      "authoredFrames": {
+        "count": 180,
+        "mean": 41.47952777777775,
+        "p95": 83.00624999999745,
+        "max": 166.1449999999968
+      },
+      "allFrames": {
+        "count": 191,
+        "mean": 40.65811518324606,
+        "p95": 82.93000000000029,
+        "max": 166.1449999999968
+      },
+      "gpu": {
+        "count": 64,
+        "mean": 28.934049265625,
+        "p95": 37.585155,
+        "max": 43.535571
+      },
+      "preparationCpu": {
+        "count": 10,
+        "mean": 4.682000005245209,
+        "p95": 6.764999747276306,
+        "max": 7.240000128746033
+      },
+      "preparationLatency": {
+        "count": 10,
+        "mean": 1218.4175000190735,
+        "p95": 3952.725000023842,
+        "max": 5405.014999985695
+      },
+      "slices": {
+        "count": 114,
+        "mean": 0.41070175484607097,
+        "p95": 1.9500000476837158,
+        "max": 4.59499990940094
+      },
+      "draw": {
+        "count": 192,
+        "mean": 11.115312496821085,
+        "p95": 16.264999985694885,
+        "max": 151.01499998569489
+      },
+      "loading": {
+        "textureUploads": null,
+        "longFrames": null,
+        "frames": null,
+        "readyMs": 24192.110000014305,
+        "phases": []
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "run": "b2",
+      "mode": "coalesced",
+      "authoredFrames": {
+        "count": 180,
+        "mean": 39.447750000000006,
+        "p95": 83.15525000000562,
+        "max": 132.99000000000524
+      },
+      "allFrames": {
+        "count": 180,
+        "mean": 39.447750000000006,
+        "p95": 83.15500000000611,
+        "max": 132.99000000000524
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 28.285070557377036,
+        "p95": 36.203749,
+        "max": 45.765207
+      },
+      "preparationCpu": {
+        "count": 10,
+        "mean": 5.041999971866607,
+        "p95": 6.834999680519104,
+        "max": 10.390000104904175
+      },
+      "preparationLatency": {
+        "count": 10,
+        "mean": 1055.0264999628066,
+        "p95": 2768.930000066757,
+        "max": 4273.235000014305
+      },
+      "slices": {
+        "count": 138,
+        "mean": 0.3653623168019281,
+        "p95": 1.0200001001358032,
+        "max": 2.375
+      },
+      "draw": {
+        "count": 181,
+        "mean": 10.50627071752074,
+        "p95": 14.350000023841858,
+        "max": 121.40500009059906
+      },
+      "loading": {
+        "textureUploads": null,
+        "longFrames": null,
+        "frames": null,
+        "readyMs": 25076.81500005722,
+        "phases": []
+      },
+      "blockingRecoveries": 0
+    }
+  ]
+}

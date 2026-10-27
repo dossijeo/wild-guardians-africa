@@ -1,0 +1,115 @@
+diff --git a/tests/logical-tree-region-index.test.js b/tests/logical-tree-region-index.test.js
+new file mode 100644
+index 000000000..fd429cb04
+--- /dev/null
++++ b/tests/logical-tree-region-index.test.js
+@@ -0,0 +1,23 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {LogicalTreeRegionIndex} from '../tools/experiments/logical-tree-region-index.js';
++import {logicalNativeStandbyEntries} from '../tools/experiments/logical-native-standby.js';
++const metadata={impostorHeight:12,sourceBounds:{min:[-3,0,-4],max:[3,12,4]}};
++test('regional index preserves exact selections, LOD hysteresis and matrices across moving cameras',()=>{
++ let seed=121;const random=()=>((seed=Math.imul(seed,1664525)+1013904223>>>0)/4294967296);
++ const trees=Array.from({length:3000},(_,i)=>{const x=(random()-.5)*1600,z=(random()-.5)*1600;return {id:'tree-'+i,x:x+1,y:2,z:z-2,origin:{x,y:1,z},yaw:random()*6,sx:.5+random(),sy:.5+random(),sz:.5+random()};});
++ const index=new LogicalTreeRegionIndex(trees);let previousLevels=null;
++ for(let i=0;i<120;i++){
++  const camera={x:(random()-.5)*900,y:random()*200,z:(random()-.5)*900};
++  const opts={metadata,camera,quality:['baja','media','alta'][i%3],range:80+random()*260,maxTrees:20+i%100,physicalIds:new Set(trees.filter((_,j)=>j%7===i%7).map(t=>t.id)),suppressed:new Set(['tree-'+i]),angularLod:!!(i%2),preloadBounds:i%3?[-120,-120,120,120]:null,previousLevels};
++  const expected=logicalNativeStandbyEntries(trees,opts),actual=logicalNativeStandbyEntries(trees,{...opts,spatialIndex:index});
++  assert.deepEqual(actual,expected,'selection '+i);previousLevels=new Map(actual.map(t=>[t.id,t]));
++ }
++ assert.throws(()=>logicalNativeStandbyEntries([...trees],{metadata,camera:{x:0,y:0,z:0},range:100,physicalIds:new Set(),suppressed:new Set(),spatialIndex:index}),/Mismatched/);
++});
++test('broad phase includes negative cell boundaries and exact circular range edges',()=>{
++ const trees=[[-64,0],[64,0],[0,-64],[0,64],[-64,-64],[64,64]].map(([x,z],id)=>({id:String(id),x,z}));
++ const index=new LogicalTreeRegionIndex(trees);
++ assert.deepEqual(new Set(index.candidates({x:0,z:0},64)),new Set(trees));
++ assert.equal(index.candidates({x:1000,z:1000},5).length,0);
++});
+diff --git a/tools/experiments/attach-native-far-world.js b/tools/experiments/attach-native-far-world.js
+index 5b30e1565..abb6777a2 100644
+--- a/tools/experiments/attach-native-far-world.js
++++ b/tools/experiments/attach-native-far-world.js
+@@ -1,3 +1,4 @@
++import {LogicalTreeRegionIndex} from './logical-tree-region-index.js';
+ import {FarSceneStream} from './far-scene-stream.js';
+ import {loadingAwaitWitness} from '../../src/rendering/loading-sync-witness.js';
+ import {treeTransitionRange,validateTreeTransitionPolicy} from './tree-transition-range.js';
+@@ -66,12 +67,12 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
+  // change on the next camera update, before a first standby upload completes.
+  const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision+':'+world.chunkRevision;},has(id,suppressed){return standbyAvailable(id,suppressed);}};
+  let referencesRevision=-1;const nativeReferences=new Map();
+- let logicalPlan=null;
++ let logicalPlan=null,logicalIndex=null;
+  function scheduleLogicalPreload(currentSignature){
+   if(!logicalStandbyPreload||!layer.current||isCancelled()||nativeFarGpuContextLost(world.renderer))return;
+   const bounds=logicalPreloadMargin===null?null:world.nearBounds,preloadBounds=adoptedLogicalPreloadBounds(bounds,logicalPreloadMargin);if(preloadBounds===undefined)return;const camera=world.camera.position,x=Math.round(camera.x/8),y=Math.round(camera.y/8),z=Math.round(camera.z/8),suppressed=world.nav.suppressed;
+   if(logicalPlan?.x===x&&logicalPlan.y===y&&logicalPlan.z===z&&logicalPlan.region===layer.revision&&logicalPlan.chunk===world.chunkRevision&&logicalPlan.quality===world.quality&&logicalPlan.signature===currentSignature&&logicalPlan.suppressed===suppressed&&(bounds===null||logicalPlan.minX===bounds[0]&&logicalPlan.minZ===bounds[1]&&logicalPlan.maxX===bounds[2]&&logicalPlan.maxZ===bounds[3]))return;
+-  logicalPlan={x,y,z,...(bounds?{minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]}:{}),region:layer.revision,chunk:world.chunkRevision,quality:world.quality,signature:currentSignature,suppressed};const entries=logicalNativeStandbyEntries(layer.current.trees,{metadata,camera,quality:world.quality,range:angularLod?fadeEnd:maxTransitionEnd+24,physicalIds:angularLod?new Set(nativeReferences.keys()):physicalIds,suppressed,maxTrees:standby.maxTrees,levels:world.prototypes[slot].length,preloadBounds,angularLod,previousLevels:angularLod?standby.active?.entries:null,preloadHeightPolicy:logicalSizePreload?transitionHeight:null});
++  logicalPlan={x,y,z,...(bounds?{minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]}:{}),region:layer.revision,chunk:world.chunkRevision,quality:world.quality,signature:currentSignature,suppressed};if(logicalIndex?.trees!==layer.current.trees)logicalIndex=new LogicalTreeRegionIndex(layer.current.trees);const entries=logicalNativeStandbyEntries(layer.current.trees,{spatialIndex:logicalIndex,metadata,camera,quality:world.quality,range:angularLod?fadeEnd:maxTransitionEnd+24,physicalIds:angularLod?new Set(nativeReferences.keys()):physicalIds,suppressed,maxTrees:standby.maxTrees,levels:world.prototypes[slot].length,preloadBounds,angularLod,previousLevels:angularLod?standby.active?.entries:null,preloadHeightPolicy:logicalSizePreload?transitionHeight:null});
+   stats.logicalPreloads++;stats.logicalPreloadEntries=entries.length;if(entries.length)standby.request(entries,camera);
+  }
+  function frozenEntries(snapshot){const rows=[],matrix=new Matrix4();for(const [,record] of snapshot.entries){record.group.updateMatrixWorld(true);for(const [i,index] of record.batch.orders[record.level].entries()){const tree=record.batch.instances[index];if(!record.ids.has(tree.id))continue;matrix.fromArray(record.mesh.instanceMatrix.array,i*16).premultiply(record.group.matrixWorld);rows.push({id:tree.id,key:standbyTreeKey(tree),x:tree.x,z:tree.z,sy:tree.sy,level:record.level,matrix:matrix.toArray()});}}return rows;}
+@@ -108,7 +109,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
+   if(this.enabled){layer.update(world.chunks,world.camera,joint,true,dt,world.renderOrigin,world.nav.suppressed,prepared);if(layer.current)standby.update(world.camera.position,layer.current.treeById,id=>layer.current.prototype.treeState(id),id=>prepared.has(id)||!standbyAvailable(id,world.nav.suppressed),world.nav.suppressed,id=>{const ref=nativeReferences.get(id);return ref?.batch.fade?.attribute.getX(ref.index)??1;},frustum);}
+   else layer.fade.update(world.chunks,world.camera,()=>null,'disabled');
+   if(standby.active)standby.active.root.visible=this.enabled;stats.standby=standby.stats;
+- },dispose(){if(closed)return;closed=true;standby.dispose();nativeReferences.clear();layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(ownsWorld)releaseNativeFarGpuCache(world.renderer);if(world.farVegetation===adapter)world.farVegetation=null;}};
++ },dispose(){if(closed)return;closed=true;logicalIndex=null;standby.dispose();nativeReferences.clear();layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(ownsWorld)releaseNativeFarGpuCache(world.renderer);if(world.farVegetation===adapter)world.farVegetation=null;}};
+  if(ownsWorld)world.farVegetation=adapter;
+  await region(tracker.center);
+  if(isCancelled()){adapter.dispose();throw Error('Far world attachment cancelled');}
+diff --git a/tools/experiments/logical-native-standby.js b/tools/experiments/logical-native-standby.js
+index a72e440e6..e347139c5 100644
+--- a/tools/experiments/logical-native-standby.js
++++ b/tools/experiments/logical-native-standby.js
+@@ -1,4 +1,4 @@
+-import {horizonCardWeight} from './far-impostor-math.js';
++import {horizonCardWeight} from './far-impostor-math.js';
+ import {Object3D} from 'three';
+ import {nativeLodBins} from '../../src/rendering/lod-source.js';
+ import {standbyTreeKey} from './native-tree-standby.js';
+@@ -15,11 +15,13 @@ export function adoptedLogicalPreloadBounds(bounds,margin){
+ 
+ // Data only: use the existing procedural population, source dimensions and LOD
+ // recipe. No terrain mesh, collider, worker task or distant shadow is created.
+-export function logicalNativeStandbyEntries(trees,{metadata,camera,quality,range,physicalIds,suppressed,maxTrees=1024,levels=3,preloadBounds=null,preloadHeightPolicy=null,angularLod=false,previousLevels=null}){
++export function logicalNativeStandbyEntries(trees,{metadata,camera,quality,range,physicalIds,suppressed,maxTrees=1024,levels=3,preloadBounds=null,preloadHeightPolicy=null,angularLod=false,previousLevels=null,spatialIndex=null}){
+  if(!Number.isFinite(range)||range<=0||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid logical standby budget');
+  if(preloadBounds!==null&&(!Array.isArray(preloadBounds)||preloadBounds.length!==4||!preloadBounds.every(Number.isFinite)||preloadBounds[2]<=preloadBounds[0]||preloadBounds[3]<=preloadBounds[1]))throw Error('Invalid logical preload bounds');
+  if(preloadHeightPolicy!==null&&(!Number.isFinite(preloadHeightPolicy.minimumHeight)||preloadHeightPolicy.minimumHeight<=0))throw Error('Invalid logical preload height policy');
+- const selected=trees.filter(t=>(preloadBounds===null||angularLod&&horizonCardWeight(Math.hypot(t.x-camera.x,t.z-camera.z),camera.y-t.y)<1||t.x>=preloadBounds[0]&&t.z>=preloadBounds[1]&&t.x<=preloadBounds[2]&&t.z<=preloadBounds[3]||treeTransitionWeight(t,metadata.impostorHeight,preloadHeightPolicy))&&!physicalIds.has(t.id)&&!suppressed.has(t.id)&&Math.hypot(t.x-camera.x,t.z-camera.z)<=range)
++ if(spatialIndex&&spatialIndex.trees!==trees)throw Error('Mismatched logical region index');
++ const candidates=spatialIndex?spatialIndex.candidates(camera,range):trees;
++ const selected=candidates.filter(t=>(preloadBounds===null||angularLod&&horizonCardWeight(Math.hypot(t.x-camera.x,t.z-camera.z),camera.y-t.y)<1||t.x>=preloadBounds[0]&&t.z>=preloadBounds[1]&&t.x<=preloadBounds[2]&&t.z<=preloadBounds[3]||treeTransitionWeight(t,metadata.impostorHeight,preloadHeightPolicy))&&!physicalIds.has(t.id)&&!suppressed.has(t.id)&&Math.hypot(t.x-camera.x,t.z-camera.z)<=range)
+   .sort((a,b)=>Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id)).slice(0,maxTrees);
+  const native=selected.map(t=>({...t,...t.origin})),b=metadata.sourceBounds,prototype={size:b.max.map((v,i)=>v-b.min[i]),centerY:(b.min[1]+b.max[1])/2};
+  const bins=nativeLodBins(native,prototype,0,[camera.x,camera.y,camera.z],quality,levels),dummy=new Object3D(),rows=[];
+diff --git a/tools/experiments/logical-tree-region-index.js b/tools/experiments/logical-tree-region-index.js
+new file mode 100644
+index 000000000..e18ebcb3b
+--- /dev/null
++++ b/tools/experiments/logical-tree-region-index.js
+@@ -0,0 +1,21 @@
++// Immutable regional billboard anchors only; not authoritative navigation data.
++// One index per adopted regional array. Replacement/disposal releases its owner.
++export class LogicalTreeRegionIndex {
++ constructor(trees){
++  this.trees=trees;this.columns=new Map();
++  for(const tree of trees){
++   const x=Math.floor(tree.x/64),z=Math.floor(tree.z/64);
++   let column=this.columns.get(x);if(!column)this.columns.set(x,column=new Map());
++   let cell=column.get(z);if(!cell)column.set(z,cell=[]);cell.push(tree);
++  }
++ }
++ candidates(camera,range){
++  const result=[],minX=camera.x-range,maxX=camera.x+range,minZ=camera.z-range,maxZ=camera.z+range;
++  for(let x=Math.floor(minX/64);x<=Math.floor(maxX/64);x++){
++   const column=this.columns.get(x);if(!column)continue;
++   for(let z=Math.floor(minZ/64);z<=Math.floor(maxZ/64);z++)for(const t of column.get(z)??[])
++    if(t.x>=minX&&t.x<=maxX&&t.z>=minZ&&t.z<=maxZ)result.push(t);
++  }
++  return result;
++ }
++}

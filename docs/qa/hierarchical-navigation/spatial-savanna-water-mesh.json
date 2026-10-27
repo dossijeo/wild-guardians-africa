@@ -1,0 +1,14 @@
+{
+  "scope": "Experimental Sabana C++/WASM visual water mesh, not production integration",
+  "source": "tests/browser/spatial-savanna-transfer.html?seed=28 in local Windows in-app browser through Vite",
+  "wasmBytes": 73807,
+  "baseline": "Commit 2d557482 used an occupancy-cell preview for water; its 69903-byte WASM binary and prior results are preserved in spatial-savanna-ponds.json",
+  "runs": [
+    {"currentRoundtripMs": [90.4,49.1], "spatialRoundtripMs": [47.3,26.8], "spatialGenerationAndNavMs": [20.3,26.4], "spatialTransferBytes": [60716,57436]},
+    {"currentRoundtripMs": [72.7,43.9], "spatialRoundtripMs": [50,21.9], "spatialGenerationAndNavMs": [27.6,21.6], "spatialTransferBytes": [60716,57436], "waterVertices": [378,51], "terrainAndWaterGeometryMs": [3.2,2.9]},
+    {"currentRoundtripMs": [78.8,52.5], "spatialRoundtripMs": [55,22.2], "spatialGenerationAndNavMs": [30.3,21.8], "spatialTransferBytes": [60716,57436], "waterVertices": [378,51], "terrainAndWaterGeometryMs": [4.9,2.6]},
+    {"currentRoundtripMs": [73.6,43.3], "spatialRoundtripMs": [52.3,21], "spatialGenerationAndNavMs": [29.3,20.6], "spatialTransferBytes": [60716,57436], "waterVertices": [378,51], "terrainAndWaterGeometryMs": [3.9,2.4]}
+  ],
+  "checks": ["river and pond visual triangles originate in C++ from the same river and pond parameters as navigation", "pond mesh is clipped to chunk bounds", "pond water vertices match across the chunk seam", "browser visual comparison loads with no JavaScript errors", "14 spatial prototype tests pass"],
+  "limitations": ["different world recipes and visual workloads remain incomparable", "short development-server runs only", "no GPU upload or full game streaming measurement", "production river banks and material treatment are still absent"]
+}

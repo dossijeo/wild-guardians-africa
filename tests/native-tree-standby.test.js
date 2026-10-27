@@ -218,3 +218,11 @@ test('compact draw mapping stays an exact prepared subset through moving masks, 
  f.owner.update({x:39,z:0},map,()=>({enabled:true,ready:1}),id=>(Number(id.slice(3))+39)%4===0,new Set([trees[39%24].id]));assert.deepEqual(bank.meshes.map(m=>[m.instanceMatrix.version,m.geometry.attributes.nativeVisibility.version]),versions);
  epoch++;f.owner.update({x:39,z:0},map,()=>({enabled:true,ready:1}),()=>false,new Set());assert.equal(f.owner.stats.rendered,0);assert.ok(bank.meshes.every(m=>m.count===0));assert.equal(f.owner.has(trees[0].id,trees[0]),false);f.close();
 });
+
+test('angular preparation evicts retained history instead of overflowing its fixed bank',async()=>{
+ const f=fixture();f.owner.angularLod=true;f.owner.maxTrees=2;
+ f.owner.request([descriptor(tree('old',1)),descriptor(tree('keep',2))],{x:0,z:0});await settled(f.owner);
+ f.owner.request([descriptor(tree('new',3)),descriptor(tree('keep',2))],{x:0,z:0});await settled(f.owner);
+ assert.deepEqual([...f.owner.active.entries.keys()].sort(),['keep','new']);assert.equal(f.owner.stats.trees,2);assert.deepEqual(f.owner.stats.errors,[]);
+ const revision=f.owner.revision;f.owner.request([descriptor(tree('new',3)),descriptor(tree('keep',2))],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.revision,revision);f.close();
+});

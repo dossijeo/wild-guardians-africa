@@ -1,0 +1,41 @@
+{
+  "scope": "ABBA, seed-712 Sabana, 80 two-chunk residency steps, worker profile. Before is committed 04bf61e8 WASM; after retains prop records per resident chunk. Isolated synchronous cost, no rendering or game tick.",
+  "rows": [
+    {
+      "version": "before",
+      "medianStepMs": 12.572699999999998,
+      "p95StepMs": 14.745399999999961,
+      "totalStepMs": 1000.9774999999995,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "residentPropRecords": null
+    },
+    {
+      "version": "after",
+      "medianStepMs": 12.541300000000092,
+      "p95StepMs": 14.748199999999997,
+      "totalStepMs": 1013.6623000000004,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "residentPropRecords": 34
+    },
+    {
+      "version": "after",
+      "medianStepMs": 12.513100000000122,
+      "p95StepMs": 15.035300000000007,
+      "totalStepMs": 1009.6908999999991,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "residentPropRecords": 34
+    },
+    {
+      "version": "before",
+      "medianStepMs": 12.034599999999955,
+      "p95StepMs": 14.44990000000007,
+      "totalStepMs": 977.8646000000003,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "residentPropRecords": null
+    }
+  ]
+}

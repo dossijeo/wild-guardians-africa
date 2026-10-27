@@ -1,0 +1,29 @@
+{
+  "scope": "QA isolation reproduction, not a speed benchmark or full visual acceptance.",
+  "runs": [
+    {
+      "case": "original",
+      "chunks": 25,
+      "links": 90,
+      "worldLinks": 89,
+      "sameWorldShaderMultiset": true,
+      "nonX4000Entries": []
+    },
+    {
+      "case": "ground",
+      "chunks": 25,
+      "links": 90,
+      "worldLinks": 89,
+      "sameWorldShaderMultiset": true,
+      "nonX4000Entries": []
+    },
+    {
+      "case": "shared",
+      "chunks": 25,
+      "links": 89,
+      "worldLinks": 88,
+      "sameWorldShaderMultiset": true,
+      "nonX4000Entries": []
+    }
+  ]
+}

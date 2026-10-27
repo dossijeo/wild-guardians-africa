@@ -1,0 +1,7 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><base href="/"><link rel="stylesheet" href="/content/fonts.css"><title>Campaign cinematics QA</title></head><body style="margin:0;background:#182b20"><script type="module">
+import {CampaignCinematics} from '/src/ui/campaign-cinematics.js';
+window.WildGuardiansLanguage={getLanguage:()=>new URLSearchParams(location.search).get('lang')??'es'};
+const player=new CampaignCinematics({onComplete:()=>{document.body.dataset.completed='true'},onError:error=>{document.body.dataset.error=error.message}});
+window.campaignCinemaQa=player;
+player.play(Number(new URLSearchParams(location.search).get('act')??1));
+</script></body></html>

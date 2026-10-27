@@ -1,0 +1,221 @@
+{
+  "scope": "Controlled serial ABAB: A legacy recovery admission, B global admission with a fresh grace per batch. Both use the existing opt-in scheduler bundle. Rejected iteration, no acceptance claim. Quantiles are per short transition windows, not steady-state FPS.",
+  "rows": [
+    {
+      "run": "a1",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1008.7600000500679,
+      "diagnosticMs": 313.7099999785423,
+      "p95Ms": 123.5799999833107,
+      "p99Ms": 123.5799999833107,
+      "maxMs": 186.9800000190735,
+      "frames": 12,
+      "completion": {
+        "settleFramesMs": 996.9449999928474,
+        "explicitRenderCpuMs": 9.870000004768372,
+        "chunkWaitMs": 0.019999980926513672,
+        "programWaitMs": 0.004999995231628418,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "a1",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 815.5199999809265,
+      "diagnosticMs": 261.9950000047684,
+      "p95Ms": 122.26500004529953,
+      "p99Ms": 122.26500004529953,
+      "maxMs": 136.24000000953674,
+      "frames": 12,
+      "completion": {
+        "settleFramesMs": 802.4200000166893,
+        "explicitRenderCpuMs": 8.064999997615814,
+        "chunkWaitMs": 3.725000023841858,
+        "programWaitMs": 0.014999985694885254,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "a1",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 3368.0349999666214,
+      "diagnosticMs": 320.5250000357628,
+      "p95Ms": 127.31499999761581,
+      "p99Ms": 133.6850000023842,
+      "maxMs": 135.15499997138977,
+      "frames": 40,
+      "completion": {
+        "settleFramesMs": 666.7549999952316,
+        "explicitRenderCpuMs": 10.089999973773956,
+        "chunkWaitMs": 2690.435000002384,
+        "programWaitMs": 0,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "b1",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1618.1200000047684,
+      "diagnosticMs": 422.4099999666214,
+      "p95Ms": 171.3499999642372,
+      "p99Ms": 171.3499999642372,
+      "maxMs": 219.28500002622604,
+      "frames": 14,
+      "completion": {
+        "settleFramesMs": 1204.300000011921,
+        "explicitRenderCpuMs": 6.839999973773956,
+        "chunkWaitMs": 0.02499997615814209,
+        "programWaitMs": 404.0750000476837,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "b1",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 2041.9449999928474,
+      "diagnosticMs": 586.5849999785423,
+      "p95Ms": 200.92499995231628,
+      "p99Ms": 200.92499995231628,
+      "maxMs": 227.81999999284744,
+      "frames": 14,
+      "completion": {
+        "settleFramesMs": 1499.6550000309944,
+        "explicitRenderCpuMs": 7.864999949932098,
+        "chunkWaitMs": 1.0850000381469727,
+        "programWaitMs": 531.9950000047684,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "b1",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 2706.6200000047684,
+      "diagnosticMs": 199.1799999475479,
+      "p95Ms": 127.81000000238419,
+      "p99Ms": 133.25999999046326,
+      "maxMs": 278.32499998807907,
+      "frames": 37,
+      "completion": {
+        "settleFramesMs": 951.1299999952316,
+        "explicitRenderCpuMs": 5.129999995231628,
+        "chunkWaitMs": 1749.1299999952316,
+        "programWaitMs": 0.005000054836273193,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "a2",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 788.1800000071526,
+      "diagnosticMs": 238.73500001430511,
+      "p95Ms": 84.93500000238419,
+      "p99Ms": 84.93500000238419,
+      "maxMs": 214.03999996185303,
+      "frames": 12,
+      "completion": {
+        "settleFramesMs": 778.4549999833107,
+        "explicitRenderCpuMs": 7.735000014305115,
+        "chunkWaitMs": 0.019999980926513672,
+        "programWaitMs": 0,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "a2",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 856.0649999976158,
+      "diagnosticMs": 355.10000002384186,
+      "p95Ms": 103.82499998807907,
+      "p99Ms": 103.82499998807907,
+      "maxMs": 148.66000002622604,
+      "frames": 12,
+      "completion": {
+        "settleFramesMs": 844.8600000143051,
+        "explicitRenderCpuMs": 9.310000002384186,
+        "chunkWaitMs": 1.0049999952316284,
+        "programWaitMs": 0.004999995231628418,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "a2",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 2497.2400000095367,
+      "diagnosticMs": 211.9399999976158,
+      "p95Ms": 104.5450000166893,
+      "p99Ms": 127.56000000238419,
+      "maxMs": 142.2950000166893,
+      "frames": 36,
+      "completion": {
+        "settleFramesMs": 769.3700000047684,
+        "explicitRenderCpuMs": 12.115000009536743,
+        "chunkWaitMs": 1715.0649999976158,
+        "programWaitMs": 0,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "b2",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1410.8999999761581,
+      "diagnosticMs": 153.81999999284744,
+      "p95Ms": 138.0199999809265,
+      "p99Ms": 138.0199999809265,
+      "maxMs": 140.9650000333786,
+      "frames": 20,
+      "completion": {
+        "settleFramesMs": 699.5500000119209,
+        "explicitRenderCpuMs": 8.169999957084656,
+        "chunkWaitMs": 0.020000040531158447,
+        "programWaitMs": 701.2099999785423,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "b2",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 1170.0300000309944,
+      "diagnosticMs": 265.1899999976158,
+      "p95Ms": 106.39499998092651,
+      "p99Ms": 106.39499998092651,
+      "maxMs": 110.61500000953674,
+      "frames": 15,
+      "completion": {
+        "settleFramesMs": 701.1549999713898,
+        "explicitRenderCpuMs": 6.814999997615814,
+        "chunkWaitMs": 0.0350000262260437,
+        "programWaitMs": 460.10999995470047,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    },
+    {
+      "run": "b2",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 3270.2999999523163,
+      "diagnosticMs": 225.44499999284744,
+      "p95Ms": 135.19999998807907,
+      "p99Ms": 137.43000000715256,
+      "maxMs": 178.58499997854233,
+      "frames": 35,
+      "completion": {
+        "settleFramesMs": 857.3349999785423,
+        "explicitRenderCpuMs": 4.4200000166893005,
+        "chunkWaitMs": 2406.604999959469,
+        "programWaitMs": 0.004999995231628418,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      }
+    }
+  ]
+}

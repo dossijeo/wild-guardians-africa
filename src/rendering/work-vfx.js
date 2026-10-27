@@ -47,7 +47,7 @@ export class WorkVfx {
     const desired=new Set(),environment=vfxEnvironment(state.time>=300?1:0);
     for(const plan of workVfxPlans(state,this.targetIndex)){
       desired.add(plan.key);let effect=this.effects.get(plan.key);
-      if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.id==='water'&&this.waterSource?{waterSource:time=>this.waterSource(plan.workerId,time,effect)}:{}),...(plan.stepMode?{stepMode:true}:{})});this.effects.set(plan.key,effect);this.scene.add(effect);}
+      if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.id==='water'?{softParticleDepth:false}:{}),...(plan.id==='water'&&this.waterSource?{waterSource:time=>this.waterSource(plan.workerId,time,effect)}:{}),...(plan.stepMode?{stepMode:true}:{})});this.effects.set(plan.key,effect);this.scene.add(effect);}
       effect.position.set(plan.x,this.surface(plan.x,plan.z),plan.z);effect.rotation.y=plan.yaw;effect.environment=environment;
       if(plan.time<effect.native.time||effect.native.time===0)effect.seek(plan.time);else effect.advance(plan.time-effect.native.time);
     }

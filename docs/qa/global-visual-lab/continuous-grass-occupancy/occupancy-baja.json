@@ -1,0 +1,67 @@
+{
+  "result": {
+    "baseline": [
+      {
+        "type": "CropHit",
+        "marks": 1
+      },
+      {
+        "type": "CropMatured",
+        "marks": 1
+      },
+      {
+        "type": "StructureHit",
+        "marks": 1
+      }
+    ],
+    "filtered": [
+      {
+        "type": "CropHit",
+        "marks": 0
+      },
+      {
+        "type": "CropMatured",
+        "marks": 0
+      },
+      {
+        "type": "StructureHit",
+        "marks": 0
+      }
+    ],
+    "probe": {
+      "x": 144.28897094726562,
+      "z": 56.203678131103516,
+      "beforeCount": 4620,
+      "occupiedCount": 4557,
+      "intrusions": 0,
+      "restored": true
+    },
+    "stationarySelections": 0,
+    "glError": 0,
+    "audit": {
+      "variant": "C",
+      "active": true,
+      "nearDistance": 0,
+      "moduleSpacing": 0.5,
+      "near": 0,
+      "far": 4620,
+      "leaves": 36960,
+      "triangles": 36960,
+      "chunks": 25,
+      "cachedTiles": 30,
+      "bufferBytes": 1206456,
+      "stats": {
+        "buildMs": 105.99999982118607,
+        "selectionMs": 113.59999996423721,
+        "selectionCount": 7,
+        "candidates": 46080,
+        "masked": 8295,
+        "overflow": 0
+      },
+      "engineQueries": 0,
+      "castShadow": false
+    }
+  },
+  "errors": [],
+  "note": "Synthetic crop fixture in isolated paused QA world; tests renderer occupancy invalidation, not gameplay placement or simulation rules."
+}

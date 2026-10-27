@@ -1,0 +1,101 @@
+{
+  "scope": "Paused populated scene; four quality changes then WebGL loss/restore. CPU mask bytes checked against visible chunks; actual renderer restoration verified. Not a frame-time benchmark or all-camera visual proof.",
+  "rows": [
+    {
+      "biome": "sabana",
+      "before": [
+        {
+          "textureId": 149,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "afterQuality": [
+        {
+          "textureId": 149,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "afterContext": [
+        {
+          "textureId": 149,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "worldUnchanged": true,
+      "contextRecoveryMs": 1183.9750000238419,
+      "nativeBytes": 16777216
+    },
+    {
+      "biome": "manglares",
+      "before": [
+        {
+          "textureId": 184,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "afterQuality": [
+        {
+          "textureId": 184,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "afterContext": [
+        {
+          "textureId": 184,
+          "version": 1,
+          "bytes": 256,
+          "residentCells": 25,
+          "bounds": [
+            -24,
+            -72,
+            216,
+            168
+          ]
+        }
+      ],
+      "worldUnchanged": true,
+      "contextRecoveryMs": 1307.2799999713898,
+      "nativeBytes": 16777216
+    }
+  ]
+}

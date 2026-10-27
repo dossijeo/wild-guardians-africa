@@ -1,3 +1,4 @@
+import {loadGuardianCue} from './guardian-cue-bank.js';
 export const VISEMES=Object.freeze(['A','B','C','D','E','F','G','H','X']);
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const smooth=x=>{x=clamp(x,0,1);return x*x*(3-2*x);};
@@ -23,7 +24,7 @@ export function blinkAt(time){
  return 0;
 }
 export class GuardianFace {
- constructor(root,{fetchJson=url=>fetch(url).then(r=>{if(!r.ok)throw Error(`Lip sync ${r.status}`);return r.json();}),resolve=path=>path}={}){
+ constructor(root,{fetchJson=loadGuardianCue,resolve=path=>path}={}){
   this.meshes=[];root.traverse(o=>{if(o.morphTargetDictionary)this.meshes.push(o);});this.fetchJson=fetchJson;this.resolve=resolve;this.ticket=0;this.cache=new Map();this.data=null;this.error=null;
  }
  async setRecord(record){

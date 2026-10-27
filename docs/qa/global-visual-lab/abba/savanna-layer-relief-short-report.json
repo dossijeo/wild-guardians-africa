@@ -1,0 +1,52 @@
+{
+  "origin": "http://127.0.0.1:5188",
+  "variants": [
+    "layer",
+    "layer-relief"
+  ],
+  "cases": [
+    1
+  ],
+  "records": [
+    {
+      "sceneCase": 1,
+      "variant": "layer",
+      "phase": "day",
+      "drawCalls": 87,
+      "triangles": 1267266,
+      "cpuSubmissionMs": 5.105555555886692,
+      "fps": 52.041170348097594,
+      "gpuFrameMs": 17.639694894444446
+    },
+    {
+      "sceneCase": 1,
+      "variant": "layer",
+      "phase": "night",
+      "drawCalls": 87,
+      "triangles": 1267266,
+      "cpuSubmissionMs": 4.789999999768204,
+      "fps": 50.349650349650354,
+      "gpuFrameMs": 18.305715955555556
+    },
+    {
+      "sceneCase": 1,
+      "variant": "layer-relief",
+      "phase": "day",
+      "drawCalls": 87,
+      "triangles": 1267266,
+      "cpuSubmissionMs": 5.323888888292842,
+      "fps": 49.42746519482659,
+      "gpuFrameMs": 18.585798422222222
+    },
+    {
+      "sceneCase": 1,
+      "variant": "layer-relief",
+      "phase": "night",
+      "drawCalls": 87,
+      "triangles": 1267266,
+      "cpuSubmissionMs": 4.5844444438815115,
+      "fps": 48.32474226804125,
+      "gpuFrameMs": 18.970343311111108
+    }
+  ]
+}

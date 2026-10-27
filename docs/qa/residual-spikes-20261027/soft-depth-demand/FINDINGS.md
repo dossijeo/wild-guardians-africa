@@ -1,0 +1,5 @@
+# Offscreen soft-depth demand attribution
+
+Read-only real-game Manglares active quality/camera run: 136 depth captures, 77 with all soft sprites outside conservative frustum spheres, no uncertain bounds and no destruction smoke. Those 77 calls consumed 290.075 ms cumulative synchronous CPU; all captures 587.810 ms. Observer overhead 1.660 ms total, max 0.110 ms. These are invocation times, not GPU execution or promised savings. All 240 travel frames advanced simulation, 15 chunks added, no failed/pending chunks.
+
+New hypothesis supported: avoid a complete depth pass when no particle can sample it on screen, rather than region scissoring/cropping (previously rejected). No rendering was changed. Next: implement conservative visibility predicate with fallback, test transformed/rotated/oriented sprites, camera edge/near plane and destruction smoke, verify real pixel equivalence and ABAB total frame/streaming. Keep local lights and other effect geometry intact. Do not claim acceptance from this one attribution run.

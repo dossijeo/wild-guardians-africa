@@ -1,0 +1,118 @@
+{
+  "scope": "Low/night authored-camera fixture. Fixed pin is QA diagnosis, not a production policy or performance comparison.",
+  "runs": [
+    {
+      "source": "sabana-coalesced-low-night",
+      "mode": "coalesced",
+      "qaResidentChunk": null,
+      "pausedFrames": 93,
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "elapsed": 132.48709999999718,
+      "residentChunks": 25,
+      "errors": [
+        "SpatialChunkUnavailable: Spatial navigation needs more resident chunks\n    at path (http://127.0.0.1:5190/src/world/wild-engine/spatial-navigation-movement.js:120:13)\n    at Object.workerPath (http://127.0.0.1:5190/src/world/wild-engine/spatial-navigation-movement.js:332:52)\n    at walkTo (http://127.0.0.1:5190/src/simulation/game.js:851:47)\n    at updateWorkers (http://127.0.0.1:5190/src/simulation/game.js:1402:23)\n    at tick (http://127.0.0.1:5190/src/simulation/game.js:1610:28)\n    at Module.advanceReal (http://127.0.0.1:5190/src/simulation/game.js:1624:5)\n    at frame (http://127.0.0.1:5190/src/app/main.js?t=1792898288967:577:395)"
+      ]
+    },
+    {
+      "source": "sabana-sync-low-night-diagnostic",
+      "mode": "sync",
+      "qaResidentChunk": null,
+      "pausedFrames": 93,
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "elapsed": 132.40099999999705,
+      "residentChunks": 25,
+      "errors": [
+        "SpatialChunkUnavailable: Spatial navigation needs more resident chunks\n    at path (http://127.0.0.1:5190/src/world/wild-engine/spatial-navigation-movement.js:120:13)\n    at Object.workerPath (http://127.0.0.1:5190/src/world/wild-engine/spatial-navigation-movement.js:332:52)\n    at walkTo (http://127.0.0.1:5190/src/simulation/game.js:851:47)\n    at updateWorkers (http://127.0.0.1:5190/src/simulation/game.js:1402:23)\n    at tick (http://127.0.0.1:5190/src/simulation/game.js:1610:28)\n    at Module.advanceReal (http://127.0.0.1:5190/src/simulation/game.js:1624:5)\n    at frame (http://127.0.0.1:5190/src/app/main.js?t=1792898288967:577:395)"
+      ]
+    },
+    {
+      "source": "sabana-low-night-retain-home-probe",
+      "mode": "coalesced",
+      "qaResidentChunk": "1,0",
+      "pausedFrames": 0,
+      "created": 10,
+      "actorsReadyFrames": 180,
+      "elapsed": 141.407366188912,
+      "residentChunks": 26,
+      "errors": []
+    }
+  ],
+  "failure": {
+    "start": {
+      "x": 92.17041585165633,
+      "z": -8.97372946865972
+    },
+    "end": {
+      "x": 60,
+      "z": 0
+    },
+    "missing": [],
+    "details": {
+      "routeReason": "end-connector",
+      "startRegions": {
+        "ids": [
+          5328
+        ],
+        "unknown": false
+      },
+      "endRegions": {
+        "ids": [],
+        "unknown": true
+      },
+      "startProps": "ready",
+      "endProps": "unknown"
+    },
+    "elapsed": 132.40099999999705,
+    "loaded": [
+      "2,1",
+      "2,0",
+      "3,0",
+      "3,1",
+      "2,-1",
+      "2,2",
+      "3,-1",
+      "3,2",
+      "4,0",
+      "4,1",
+      "4,-1",
+      "2,3",
+      "4,2",
+      "3,3",
+      "4,3",
+      "5,0",
+      "5,1",
+      "5,-1",
+      "5,2",
+      "5,3"
+    ],
+    "desired": [
+      "2,-1",
+      "3,-1",
+      "4,-1",
+      "5,-1",
+      "6,-1",
+      "2,0",
+      "3,0",
+      "4,0",
+      "5,0",
+      "6,0",
+      "2,1",
+      "3,1",
+      "4,1",
+      "5,1",
+      "6,1",
+      "2,2",
+      "3,2",
+      "4,2",
+      "5,2",
+      "6,2",
+      "2,3",
+      "3,3",
+      "4,3",
+      "5,3",
+      "6,3"
+    ]
+  }
+}

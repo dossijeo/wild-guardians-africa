@@ -1,0 +1,15 @@
+{
+  "species": "warthog",
+  "baseline": "ead3780fa",
+  "before": "/assets/35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020.glb",
+  "after": "/assets/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
+  "changedBytes": 2777,
+  "metadata": {
+    "tool": "tools/experiments/repair-beast-foot-weights.mjs",
+    "sourceSha256": "35c3eedfab9f2de44e64946419744d1dfecb714d5e3e3f9fc183bd300e87e020",
+    "changedVertices": 412,
+    "rigidBelowAnkle": -0.015,
+    "authoredAboveAnkle": 0.06
+  },
+  "invariants": "All JSON except provenance identical; every changed BIN byte belongs to WEIGHTS_0. Positions, indices, normals, UVs, textures, joints, inverse bind matrices, animations and presentation scale unchanged. All weights normalized."
+}

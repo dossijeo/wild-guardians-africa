@@ -1,0 +1,305 @@
+{
+  "days": 9,
+  "seed": 712,
+  "strategy": "good",
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "backend": "wild-engine",
+  "stateHash": "2520672aa21b8e38d80e773264780c5fc10b96854b9354998aee8bd4d8a3406a",
+  "completedNights": 9,
+  "result": null,
+  "money": 1028,
+  "living": 126,
+  "staff": 24,
+  "delivered": 781,
+  "collisionRecoveries": 9,
+  "gameTickMs": 23724.225400000043,
+  "sampledTicks": 3631,
+  "overlapTicks": 17,
+  "lateOverlapTicks": 5,
+  "pairs": 293,
+  "maxPenetration": 0.56,
+  "villageEntry": {
+    "x": 60,
+    "z": 0
+  },
+  "diagnostic": null,
+  "overlapWindows": {
+    "0-3": 12,
+    "3-10": 3,
+    "10-30": 0,
+    "30+": 2
+  },
+  "workOverlapPairs": 2,
+  "phasedWorkOverlapPairs": 2,
+  "distinctWorkPairs": 2,
+  "maxWorkPenetration": 0.0257408281660525,
+  "byDay": [
+    [
+      1,
+      {
+        "ticks": 1,
+        "pairs": 6,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      2,
+      {
+        "ticks": 1,
+        "pairs": 3,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      3,
+      {
+        "ticks": 2,
+        "pairs": 21,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 2.0000000000000004
+      }
+    ],
+    [
+      5,
+      {
+        "ticks": 1,
+        "pairs": 3,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      6,
+      {
+        "ticks": 1,
+        "pairs": 10,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      7,
+      {
+        "ticks": 1,
+        "pairs": 15,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      8,
+      {
+        "ticks": 4,
+        "pairs": 67,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 158.99999999999451
+      }
+    ],
+    [
+      9,
+      {
+        "ticks": 6,
+        "pairs": 168,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 5.999999999999995
+      }
+    ]
+  ],
+  "byStatus": [
+    [
+      "arriving/arriving",
+      6
+    ],
+    [
+      "walking/walking",
+      287
+    ]
+  ],
+  "examples": [
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-14",
+      "b": "worker-16",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.5006039571848274,
+      "penetration": 0.059396042815172634
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-14",
+      "b": "worker-18",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.21599999999999397,
+      "penetration": 0.3440000000000061
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-14",
+      "b": "worker-20",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.21599999999999397,
+      "penetration": 0.3440000000000061
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-16",
+      "b": "worker-18",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.32399999999999607,
+      "penetration": 0.23600000000000398
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-16",
+      "b": "worker-20",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.32399999999999607,
+      "penetration": 0.23600000000000398
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-18",
+      "b": "worker-20",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0,
+      "penetration": 0.56
+    },
+    {
+      "day": 2,
+      "time": 0.9999999999999999,
+      "a": "worker-464",
+      "b": "worker-466",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.23999999999999713,
+      "penetration": 0.32000000000000295
+    },
+    {
+      "day": 2,
+      "time": 0.9999999999999999,
+      "a": "worker-464",
+      "b": "worker-468",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.23999999999999713,
+      "penetration": 0.32000000000000295
+    },
+    {
+      "day": 2,
+      "time": 0.9999999999999999,
+      "a": "worker-466",
+      "b": "worker-468",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0,
+      "penetration": 0.56
+    },
+    {
+      "day": 3,
+      "time": 0.9999999999999999,
+      "a": "worker-923",
+      "b": "worker-924",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.4075857713102282,
+      "penetration": 0.15241422868977184
+    },
+    {
+      "day": 3,
+      "time": 0.9999999999999999,
+      "a": "worker-923",
+      "b": "worker-925",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.10799999999999699,
+      "penetration": 0.45200000000000307
+    },
+    {
+      "day": 3,
+      "time": 0.9999999999999999,
+      "a": "worker-923",
+      "b": "worker-926",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.3523138511757853,
+      "penetration": 0.20768614882421477
+    }
+  ],
+  "workExamples": [
+    {
+      "day": 8,
+      "time": 148.99999999999523,
+      "a": "worker-5772",
+      "b": "worker-5781",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "aPhase": 0,
+      "bPhase": 2.9,
+      "ax": 90.7252481911196,
+      "az": -0.419950371229454,
+      "bx": 91.00324565901751,
+      "bz": 0.03628451403366252,
+      "aDestination": "plant-5332",
+      "bDestination": "native-point-task-6151",
+      "aNext": {
+        "x": 90,
+        "z": -5.551115123125783e-17
+      },
+      "bNext": {
+        "x": 91.21926879882812,
+        "z": -0.7189173102378845
+      },
+      "aPathLength": 12,
+      "bPathLength": 1,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.5342591718339476,
+      "penetration": 0.0257408281660525
+    },
+    {
+      "day": 8,
+      "time": 158.99999999999451,
+      "a": "worker-5776",
+      "b": "worker-5781",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "aPhase": 0,
+      "bPhase": 0.19999999999999848,
+      "ax": 88.85857292846448,
+      "az": -1.3319152606565172,
+      "bx": 89.30449163331494,
+      "bz": -1,
+      "aDestination": "plant-5280",
+      "bDestination": "native-point-task-6204",
+      "aNext": {
+        "x": 88,
+        "z": -1
+      },
+      "bNext": {
+        "x": 89,
+        "z": -1
+      },
+      "aPathLength": 13,
+      "bPathLength": 8,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.5558877868708683,
+      "penetration": 0.004112213129131792
+    }
+  ]
+}

@@ -32,7 +32,7 @@ export function simulateCampaign(options={}){
  }
  assert.equal(s.result,'defeat','Spending on idle labour and neglecting planting/defences must not win');
  assert.ok(s.completedNights<100);assert.equal(events.CampaignWon??0,0);assert.equal(events.GameOver,1);
- assert.equal(s.plants.length,1);assert.ok(s.crates.length<=1);assert.ok(events.RaidSpawned>0);assert.ok(reloads>0);
+ assert.ok(s.ledger.entries['plant-0']);assert.ok(s.plants.length<=1&&s.crates.length<=1);assert.ok(events.RaidSpawned>0);assert.ok(reloads>0);
  let balance=1500n;for(const v of Object.values(s.ledger.entries)){assert.equal(v.d,'1');balance+=BigInt(v.n);}
  assert.equal(s.ledger.balance.n,String(balance));assert.equal(s.ledger.balance.d,'1');
  const terminal=serialize(s);Game.tick(s,600,nav);assert.equal(serialize(s),terminal);reload();

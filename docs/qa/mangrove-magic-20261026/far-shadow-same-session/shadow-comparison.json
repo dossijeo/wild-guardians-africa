@@ -1,0 +1,53 @@
+{
+  "diagnostics": [
+    {
+      "strength": 0,
+      "rows": [
+        {
+          "width": 433,
+          "height": 433,
+          "bytes": 187489,
+          "affected": 31101
+        }
+      ],
+      "night": 0,
+      "fog": {
+        "near": 90,
+        "far": 480
+      }
+    },
+    {
+      "strength": 0.3,
+      "rows": [
+        {
+          "width": 433,
+          "height": 433,
+          "bytes": 187489,
+          "affected": 31101
+        }
+      ],
+      "night": 0,
+      "fog": {
+        "near": 90,
+        "far": 480
+      }
+    },
+    {
+      "strength": 0.55,
+      "rows": [
+        {
+          "width": 433,
+          "height": 433,
+          "bytes": 187489,
+          "affected": 31101
+        }
+      ],
+      "night": 0,
+      "fog": {
+        "near": 90,
+        "far": 480
+      }
+    }
+  ],
+  "scope": "Same-session visual strength test; all variants retain sampler so this is NOT a GPU overhead A/B."
+}

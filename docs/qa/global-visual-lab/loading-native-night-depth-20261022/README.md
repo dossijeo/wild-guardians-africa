@@ -1,0 +1,7 @@
+# Loading night depth
+
+Selected a blue atmospheric fill outside the beam and larger, denser stars with soft halos. Star cells account for viewport aspect, avoiding elongated portrait points. Existing mist shader: no new geometry, textures or draws. Original default unchanged; diffuse option only.
+
+Reproduce QA trial with capture-loading-night-depth-20261022.mjs and native confirmation with capture-loading-native-night-depth-20261022.mjs (Vite 5190). Four native images exactly match the trial. Daytime differs from the previous version by at most one 8-bit channel level due to compositing arithmetic; it is visually unchanged, not pixel-identical. Seed 712, fixed cameras, progress .75, day 150/night 350, landscape and portrait. No console/GL errors; six shadow direction checks and world handoff pass. Three focused tests pass. Six draws / 16002 triangles per static capture.
+
+Extra arithmetic has no reliable GPU timing attribution because previous timer series showed substantial drift. No FPS claim. Stars remain screen anchored; this is a loading composition, not a global sky replacement. Global sky grading remains a QA route. Peripheral ground detail, daytime warmth, UI and portrait initial leaves remain pending. The three-way comparison shows stronger stars and a bluer background closer to the mockup, without changing original models or camera. Full artistic equivalence is not claimed.

@@ -1,7 +1,5 @@
 /* BIOMA / Cultivos LAB v3.0 · self-contained, no remote requests.
- * Unchanged original geometry and anchored V1 growth outside stage transitions.
- * Only former dither intervals use a short-lived, opaque regional geometry bridge.
- * No claim of botanical vertex correspondence. Original GLB payload is bit-identical.
+ * Crop states and baked transitions share the production V4 GLBs.
  */
 (()=>{'use strict';
 const $=id=>document.getElementById(id),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
@@ -116,10 +114,10 @@ function prepareModels(gltf){
   if(!o.isMesh)return;const meta=o.userData;if(!Number.isInteger(meta.cropIndex)||!meta.stage)throw new Error('Falta la clasificación de un modelo');
   const i=meta.cropIndex*5+meta.stage-1,geo=o.geometry;
   geo.setAttribute('iGrowth',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));
-  const material=o.material.clone();material.metalness=0;material.roughness=.91;material.metalnessMap=null;material.roughnessMap=null;if(material.normalScale)material.normalScale.set(.48,.48);material.side=THREE.DoubleSide;material.shadowSide=THREE.DoubleSide;
+  const material=o.material.clone();material.metalness=0;material.roughness=.91;material.metalnessMap=null;material.roughnessMap=null;if(material.normalScale)material.normalScale.set(.48,.48);material.side=THREE.FrontSide;material.shadowSide=THREE.FrontSide;
   if(material.map)material.map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
   patchGrowth(material,meta);const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=o.name;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.count=0;mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;
-  const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.DoubleSide});patchGrowth(depth,meta,true);mesh.customDepthMaterial=depth;
+  const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.FrontSide});patchGrowth(depth,meta,true);mesh.customDepthMaterial=depth;
   models[i]={mesh,meta,geo,material,growthAttr:geo.getAttribute('iGrowth')};scene.add(mesh);
  });
  if(models.filter(Boolean).length!==40)throw new Error('Se esperaban 40 geometrías y no se han podido leer todas');
@@ -208,8 +206,24 @@ function patchBridge(material,a,b,depth=false){
  };
  material.customProgramCacheKey=()=>depth?'bioma-local-bridge-depth-v3':'bioma-local-bridge-pbr-v3';
 }
-function prepareBridges(data){
+function prepareBridges(data,bridgeGltf){
  if(!data||data.models?.length!==40||data.pairs?.length!==32)throw new Error('Datos de transición incompletos');
+ if(data.recipeVersion===4){
+  const baked=new Map();bridgeGltf.scene.traverse(o=>{if(o.isMesh){const index=o.userData?.bridgeIndex;if(!Number.isInteger(index)||index<0||index>=32||baked.has(index))throw new Error('Puente V4 incorrecto');baked.set(index,o);}});
+  if(baked.size!==32)throw new Error('Faltan los 32 puentes V4 de producción');
+  for(const pair of data.pairs){
+   const A=models[pair.a],B=models[pair.b],index=A.meta.cropIndex*4+A.meta.stage-1,template=baked.get(index);
+   if(!template||template.userData.a!==pair.a||template.userData.b!==pair.b)throw new Error('Puente V4 desalineado: '+index);
+   const geo=template.geometry.clone();
+   for(const [name,loaded] of [['aRoot','_aroot'],['aPeerRoot','_apeerroot'],['aSpin','_aspin'],['aPart','_apart']]){const source=geo.getAttribute(loaded);if(!source)throw new Error('Atributo V4 ausente: '+loaded);geo.setAttribute(name,source);geo.deleteAttribute(loaded);}
+   const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);geo.computeBoundingSphere();
+   const material=A.material.clone();material.transparent=false;material.opacity=1;material.depthWrite=true;material.alphaTest=0;material.side=THREE.FrontSide;material.shadowSide=THREE.FrontSide;patchBridge(material,A.meta,B.meta);
+   const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=template.name;mesh.count=0;mesh.visible=false;mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.FrontSide});patchBridge(depth,A.meta,B.meta,true);mesh.customDepthMaterial=depth;
+   bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);
+  }
+  return;
+ }
  const v1=new THREE.Vector3(),v2=new THREE.Vector3(),q=new THREE.Quaternion();
  for(const pair of data.pairs){
   const A=models[pair.a],B=models[pair.b];
@@ -465,11 +479,14 @@ async function boot(){
   const raw=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();loadProgress(52,'Cargando materiales y clasificando los 40 estados…');
   const gltf=await new Promise((resolve,reject)=>new THREE.GLTFLoader().parse(raw,'',resolve,reject));prepareModels(gltf);loadProgress(76,'Preparando 32 puentes geométricos locales…');
    const bridgeText=atob($('bridgeData').textContent.trim()),bridgeBytes=new Uint8Array(bridgeText.length);for(let i=0;i<bridgeText.length;i++)bridgeBytes[i]=bridgeText.charCodeAt(i);
-   const bridgeRaw=await new Response(new Blob([bridgeBytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();prepareBridges(JSON.parse(bridgeRaw));loadProgress(90,'Preparando los shaders opacos y sus sombras…');
+  const bridgeRaw=await new Response(new Blob([bridgeBytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  const bakedText=atob($('bakedBridges').textContent.trim()),bakedBytes=new Uint8Array(bakedText.length);for(let i=0;i<bakedText.length;i++)bakedBytes[i]=bakedText.charCodeAt(i);
+  const bakedRaw=await new Response(new Blob([bakedBytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  const bridgeGltf=await new Promise((resolve,reject)=>new THREE.GLTFLoader().parse(bakedRaw,'',resolve,reject));prepareBridges(JSON.parse(bridgeRaw),bridgeGltf);loadProgress(90,'Preparando los shaders opacos y sus sombras…');
   loaded=true;let restored=false;try{const saved=localStorage.getItem(STORE);if(saved){restore(JSON.parse(saved));restored=true;}}catch{}
   setCrop(state.crop);setQuality(state.quality);buildInstances();renderer.render(scene,camera);updateUI(true);exposeAPI();loadProgress(100,'La parcela está lista.');
   // Release the large textual payload in the live DOM. Geometry and textures stay in memory.
-  $('assetData').textContent='';$('thumbnailData').textContent='';$('bridgeData').textContent='';
+  $('assetData').textContent='';$('thumbnailData').textContent='';$('bridgeData').textContent='';$('bakedBridges').textContent='';
   await new Promise(r=>setTimeout(r,150));$('loading').classList.add('hidden');if(restored)toast('Parcela recuperada del guardado local.');requestAnimationFrame(renderFrame);
   window.addEventListener('beforeunload',autoSave);document.addEventListener('visibilitychange',()=>{lastFrame=0;if(document.hidden)autoSave();});
  }catch(e){notifyError(e);}

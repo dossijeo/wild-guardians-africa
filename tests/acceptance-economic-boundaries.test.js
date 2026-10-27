@@ -62,6 +62,21 @@ for(const culture of Game.CULTURES)test(`QA-131: ${culture} dawn checks operatio
  }
 });
 
+test('dawn defeat uses spendable coins, not hypothetical resale of surviving walls',()=>{
+ const {s,nav}=farm();
+ assert.equal(Game.buildWallChain(s,'surviving-walls','zarzas',[[25,8],[35,8]],nav,
+  {smooth:false,snap:false}),true);
+ assert.ok(s.structures.some(structure=>structure.kind==='wall'&&structure.status==='intact'));
+ destroy(s,nav);
+ s.ledger.balance=rational(80);s.time=599.9;s.nightPlan={done:true};
+ s.dayPlan={done:true};s.eventPlan=null;
+ assert.equal(dawnMinimum(s),835);
+ Game.tick(s,.1,nav);
+ assert.equal(s.result,'defeat');assert.equal(numberOf(s.ledger.balance),80);
+ assert.equal(s.events.filter(event=>event.type==='GameOver').length,1);
+ assert.ok(s.structures.some(structure=>structure.kind==='wall'&&structure.status==='intact'));
+});
+
 for(const culture of Game.CULTURES)test(`QA-130: ${culture} 830 permits a new center while reserving wages after an explicit raid at a daylight clock has physically ended`,()=>{
  const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(830);
  hitStructure(s.structures[0],300,s.elapsed);assert.equal(s.structures[0].status,'intact');
@@ -100,14 +115,18 @@ test('QA-132: an unaffordable remembered selection does not defeat an otherwise 
  assert.equal(Game.hire(loaded,'repeat',{olderFemale:1}),false);assert.equal(loaded.workers.length,1);
 });
 
-test('QA-134: final horde resolves before victory; an undefended insolvent farm can lose',()=>{
- for(const culture of Game.CULTURES)for(const capital of [105,1000]){
-  const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};s.ledger.balance=rational(capital);
+test('QA-134: starting night 100 is not a victory before the guaranteed incursion resolves',()=>{
+ for(const culture of Game.CULTURES){
+  const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};
+  // A real late-game raid can destroy this deliberately unprotected center.
+  // Keep enough capital for native recovery so this case isolates the timing
+  // of victory; the 799/800/835 defeat boundaries are exercised above.
+  s.ledger.balance=rational(10000);
   Game.tick(s,.1,nav);assert.equal(s.time,300);assert.equal(s.result,null);assert.equal(s.completedNights,99);
   assert.equal(s.events.filter(e=>e.type==='NightStarted').length,1);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);
-  for(let i=0;!s.result&&i<1200;i++){Game.tick(s,1,nav);if(s.raid){assert.equal(s.completedNights,99);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);}}
-  if(capital===105){assert.equal(s.result,'defeat');assert.equal(s.completedNights,99);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);}
-  else {assert.equal(s.result,'victory');assert.equal(s.raid,null);assert.equal(s.completedNights,100);assert.equal(s.day,101);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,1);}
+  Game.tick(s,299.9,nav);assert.equal(s.result,null);assert.equal(s.completedNights,99);assert.equal(s.raid,null);
+  Game.tick(s,.1,nav);assert.equal(s.result,'victory');assert.equal(s.completedNights,100);assert.equal(s.day,101);
+  assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,1);
  }
 });
 

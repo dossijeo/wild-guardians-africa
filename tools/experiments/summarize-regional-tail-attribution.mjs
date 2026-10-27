@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const root=process.argv[2]??'docs/qa/residual-spikes-20261027/regional-tail-attribution';
+const r=JSON.parse(fs.readFileSync(root+'/1-baseline/raid-ui.json')),c=r.casts[0],start=c.start,end=start+40000;
+assert(r.ok);assert.deepEqual(r.errors,[]);assert.deepEqual(r.consoleErrors,[]);assert.equal(r.regionalTail.dropped,0);
+const stats=rows=>{const groups=new Map();for(const x of rows){const k=x.label+'|'+x.scope,v=groups.get(k)??{label:x.label,scope:x.scope,count:0,total:0,max:0};v.count++;v.total+=x.duration;v.max=Math.max(v.max,x.duration);groups.set(k,v);}return [...groups.values()].sort((a,b)=>b.max-a.max);};
+const rows=r.regionalTail.rows,timed=rows.filter(x=>x.start>=start&&x.start+x.duration<=end),slow=r.wholeFrame.longFrames.filter(x=>x.startTime>=start&&x.startTime+x.duration<=end&&x.scripts?.some(s=>s.invoker==='Worker.onmessage'));
+assert(rows.some(x=>x.label==='worker-receiver'));assert(rows.some(x=>x.label.startsWith('scheduler-unit:')));assert(rows.some(x=>x.label==='far-region-create'));
+const result={window:{start,end},timed:stats(timed),all:stats(rows),slowWorkerFrames:slow.map(x=>({...x,spans:timed.filter(s=>s.start<x.startTime+x.duration&&s.start+s.duration>x.startTime)})),largestSynchronous:timed.filter(x=>x.scope.startsWith('Synchronous')).sort((a,b)=>b.duration-a.duration).slice(0,30),limits:['Diagnostic source instrumentation changes observation overhead; no optimization treatment.','Async spans are elapsed latency including concurrent work, not exclusive CPU.','Nested spans overlap and must not be summed.','Scheduler units below 1ms are not recorded; totals are incomplete by design.']};
+fs.writeFileSync(root+'/attribution.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result.timed,null,2));

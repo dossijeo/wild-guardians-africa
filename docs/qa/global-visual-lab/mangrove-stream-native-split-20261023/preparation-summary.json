@@ -1,0 +1,138 @@
+[
+  {
+    "label": "bindMangroveMudEdges",
+    "count": 30,
+    "totalMs": 100.10000002384186,
+    "meanMs": 3.336666667461395,
+    "p95Ms": 6,
+    "maxMs": 6.299999952316284
+  },
+  {
+    "label": "biomeGround.attach",
+    "count": 31,
+    "totalMs": 22.599999845027924,
+    "meanMs": 0.7290322530654169,
+    "p95Ms": 1.0999999642372131,
+    "maxMs": 1.300000011920929
+  },
+  {
+    "label": "buildPropSlot",
+    "count": 600,
+    "totalMs": 42.19999986886978,
+    "meanMs": 0.07033333311478297,
+    "p95Ms": 0.30000001192092896,
+    "maxMs": 1
+  },
+  {
+    "label": "chunkStream.build",
+    "count": 30,
+    "totalMs": 1437.5000000596046,
+    "meanMs": 47.91666666865349,
+    "p95Ms": 59.90000003576279,
+    "maxMs": 63.59999996423721
+  },
+  {
+    "label": "chunkStream.receive",
+    "count": 30,
+    "totalMs": 453.700000166893,
+    "meanMs": 15.123333338896433,
+    "p95Ms": 29.19999998807907,
+    "maxMs": 37.40000003576279
+  },
+  {
+    "label": "core.addChunk",
+    "count": 30,
+    "totalMs": 1426.0,
+    "meanMs": 47.53333333333333,
+    "p95Ms": 59.5,
+    "maxMs": 63.30000001192093
+  },
+  {
+    "label": "core.chunkPayload",
+    "count": 30,
+    "totalMs": 10.900000095367432,
+    "meanMs": 0.3633333365122477,
+    "p95Ms": 0.5,
+    "maxMs": 0.6000000238418579
+  },
+  {
+    "label": "core.selectChunk",
+    "count": 30,
+    "totalMs": 0,
+    "meanMs": 0,
+    "p95Ms": 0,
+    "maxMs": 0
+  },
+  {
+    "label": "groundDetails.chunk",
+    "count": 30,
+    "totalMs": 8.5,
+    "meanMs": 0.2833333333333333,
+    "p95Ms": 0.800000011920929,
+    "maxMs": 1.0999999642372131
+  },
+  {
+    "label": "groundDetails.flush",
+    "count": 240,
+    "totalMs": 0.7000001072883606,
+    "meanMs": 0.0029166671137015026,
+    "p95Ms": 0,
+    "maxMs": 0.40000003576278687
+  },
+  {
+    "label": "horizon.update",
+    "count": 240,
+    "totalMs": 4.899999797344208,
+    "meanMs": 0.020416665822267532,
+    "p95Ms": 0.10000002384185791,
+    "maxMs": 0.10000002384185791
+  },
+  {
+    "label": "installChunk",
+    "count": 30,
+    "totalMs": 452.8000001311302,
+    "meanMs": 15.09333333770434,
+    "p95Ms": 29.100000023841858,
+    "maxMs": 37.30000001192093
+  },
+  {
+    "label": "mudPatches.chunk",
+    "count": 30,
+    "totalMs": 85.60000014305115,
+    "meanMs": 2.853333338101705,
+    "p95Ms": 5.200000047683716,
+    "maxMs": 5.699999988079071
+  },
+  {
+    "label": "prepareMangroveBank",
+    "count": 18,
+    "totalMs": 30.700000047683716,
+    "meanMs": 1.7055555582046509,
+    "p95Ms": 5.400000035762787,
+    "maxMs": 5.400000035762787
+  },
+  {
+    "label": "prepareNaturalWater",
+    "count": 18,
+    "totalMs": 121.69999992847443,
+    "meanMs": 6.761111107137468,
+    "p95Ms": 19.69999998807907,
+    "maxMs": 19.69999998807907
+  },
+  {
+    "label": "removeChunk",
+    "count": 25,
+    "totalMs": 107.80000007152557,
+    "meanMs": 4.312000002861023,
+    "p95Ms": 8.199999988079071,
+    "maxMs": 10
+  },
+  {
+    "label": "terrain",
+    "count": 30,
+    "totalMs": 439.0,
+    "meanMs": 14.633333333333333,
+    "p95Ms": 28.399999976158142,
+    "maxMs": 35.700000047683716
+  }
+]

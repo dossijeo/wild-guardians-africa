@@ -1,0 +1,1666 @@
+import {centerGeometry,centerServicePoint} from '../centers.js';
+import {contractExpired,PROFILES} from '../../simulation/workforce.js';
+import {observeGameEvents,repairCost} from '../../simulation/game.js';
+import {BALANCE} from '../../simulation/balance.js';
+import {activeCrops} from '../../simulation/active-crops.js';
+import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
+import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
+import {targetReservationKey} from '../../simulation/raid-target-reservations.js';
+import {actorBlockers} from '../../simulation/actor-motion.js';
+import {wallCollisionFrame} from '../wall-collision-frame.js';
+import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
+  observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
+
+// Event-fed bridge. Game.tick uses its worker task gate when the opt-in native
+// intent planner is attached; animal attack selection remains in raids.js.
+const width=10,maxBatch=4096;
+const profileEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
+const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
+const cropCodes=new Map(BALANCE.crops.map((crop,index)=>[crop.id,index+1]));
+const cropValues=new Map(BALANCE.crops.map(crop=>[crop.id,crop.base_harvest_value]));
+const structureStatus={intact:0,collapsing:1,ruined:2};
+const numericId=id=>{
+  const match=/-(\d+)$/.exec(id??'');
+  if(!match||!Number.isSafeInteger(Number(match[1]))||Number(match[1])<1)
+    throw TypeError(`Unsupported native intent ID: ${id}`);
+  return Number(match[1]);
+};
+const lexicalRank=id=>Number(`0.${/-(\d+)$/.exec(id)[1]}`);
+const workerRow=(worker,state)=>[1,1,numericId(worker.id),
+  worker.centerId?numericId(worker.centerId):0,worker.x,worker.z,
+  !!worker.centerId&&(worker.status==='idle'||
+    worker.status==='arriving'&&!worker.raidReturn)&&
+    !worker.taskId&&!worker.incapacitated&&
+    !contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0)?1:0,
+  worker.status==='acting'?1:0,0,lexicalRank(worker.id)];
+const targetRow=(entity,state)=>{
+  if('alive' in entity)return [1,2,numericId(entity.id),
+    entity.species==='platano'?2:1,entity.x,entity.z,entity.alive?1:0,0,0,0];
+  if(entity.kind==='wall'){
+    const frame=wallCollisionFrame(entity);
+    return [1,2,numericId(entity.id),3,entity.x,entity.z,1,
+      Math.round(frame.depth/.22*100),frame.yaw,frame.width/1.09];
+  }
+  if(entity.kind==='center')return [1,2,numericId(entity.id),4,
+    entity.x,entity.z,1,0,entity.yaw??0,centerGeometry(entity,state).radius];
+  return [1,2,numericId(entity.id),0,entity.x,entity.z,
+    entity.delivered?0:1,0,0,0];
+};
+const taskRow=task=>[1,3,numericId(task.id),numericId(task.centerId),
+  task.kind==='initial'||task.kind==='water'?1:task.kind==='repair'?2:0,
+  0,task.workerId?numericId(task.workerId):0,numericId(task.targetId),
+  task.created,lexicalRank(task.id)];
+const structureMetaRow=structure=>{
+  const material=structure.kind==='wall'?materialCodes.get(structure.material):0;
+  if(material===undefined||structureStatus[structure.status]===undefined)
+    throw TypeError(`Unsupported structure metadata: ${structure.id}`);
+  return [1,4,numericId(structure.id),structure.kind==='wall'?3:4,
+    structure.hp,structure.maxHp,structureStatus[structure.status],material,0,0];
+};
+const cropMetaRow=plant=>{
+  const species=cropCodes.get(plant.species),value=cropValues.get(plant.species);
+  if(!species||!Number.isFinite(value))throw TypeError(`Unsupported crop: ${plant.id}`);
+  return [1,5,numericId(plant.id),species,value,0,0,0,0,0];
+};
+const centerAccessRow=(center,state)=>{
+  const point=centerServicePoint(center,state,.8);
+  return [1,6,numericId(center.id),4,point.x,point.z,0,0,0,0];
+};
+const taskTargetLookup=state=>{
+  const plant=workerEntityLookup(()=>activeCrops(state.plants),
+    {reuse:true,appendOnly:true});
+  const crate=workerEntityLookup(()=>state.crates,{reuse:true,appendOnly:true});
+  const structure=workerEntityLookup(()=>state.structures,{reuse:true});
+  return id=>id.startsWith('plant-')?plant(id):
+    id.startsWith('crate-')?crate(id):structure(id);
+};
+
+export function createSpatialIntentBridge(session){
+  const wasm=session?.core?.wasm;
+  for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
+    'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
+    'nav_intent_restore_assigned_tasks',
+    'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
+    'nav_intent_damaged_ptr','nav_intent_crop_groups',
+    'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr',
+    'nav_intent_find_planting_site','nav_intent_planting_site_ptr',
+    'nav_intent_release_planting_site','nav_intent_change_count',
+    'nav_intent_change_ptr','nav_intent_clear_changes',
+    'nav_intent_route_points','nav_intent_route_ptr',
+    'nav_intent_route_progress_input_ptr','nav_intent_route_progress',
+    'nav_intent_reconcile_topology','nav_intent_replan_attack_route',
+    'spatial_world_route_reason',
+    'nav_intent_replan_pending_routes',
+    'nav_intent_request_reroute',
+    'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
+    'nav_intent_plan_retreat','nav_intent_restore_retreat',
+    'nav_intent_plan_home','nav_intent_restore_home',
+    'nav_intent_cancel_home',
+    'nav_intent_register_attack_site',
+    'nav_intent_track_wall_opportunities',
+    'nav_intent_wall_opportunity_candidates',
+    'nav_intent_wall_opportunity_candidates_ptr',
+    'nav_intent_reconsider_wall_opportunity',
+    'nav_intent_attack_blockers_ptr','nav_intent_attack_reserved_targets_ptr',
+    'nav_intent_plan_attack_crop',
+    'nav_intent_attack_result_ptr',
+    'nav_intent_plan_attack_wall','nav_intent_wall_attack_result_ptr',
+    'nav_intent_attack_action_active','nav_intent_restore_attack_action',
+    'nav_intent_restore_attack_pending','nav_intent_restore_attack_site',
+    'nav_intent_attack_finished',
+    'nav_intent_attack_cancel',
+    'nav_intent_action_active','nav_intent_finish',
+    'nav_intent_actor_planning_calls','nav_intent_retire_actor',
+    'nav_intent_routes_ptr',
+    'nav_intent_route_point_count'])
+    if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
+  let sequence=0,initialized=false;
+  const structuresById=new Map();
+  const cropsById=new Map();
+  const cropObjects=new Map();
+  const apply=rows=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    for(let offset=0;offset<rows.length;offset+=maxBatch){
+      const batch=rows.slice(offset,offset+maxBatch),ptr=wasm.nav_intent_changes_ptr(batch.length);
+      if(!ptr)throw Error('Native intent change allocation failed');
+      new Float64Array(wasm.memory.buffer,ptr,batch.length*width).set(batch.flat());
+      if(wasm.nav_intent_apply_changes(sequence+1,batch.length)!==1)
+        throw Error('Native intent delta was rejected; rebuild from a saved state');
+      sequence++;
+    }
+    return sequence;
+  };
+  const resetFromState=state=>{
+    wasm.nav_intent_reset();sequence=0;initialized=true;
+    try{
+      const workers=[...state.workers].sort((a,b)=>a.id.localeCompare(b.id));
+      const tasks=[...state.tasks].sort((a,b)=>
+        a.created-b.created||a.id.localeCompare(b.id));
+      const rows=[...workers.map(worker=>workerRow(worker,state)),
+        ...state.plants.filter(plant=>plant.alive).map(plant=>targetRow(plant,state)),
+        ...state.plants.filter(plant=>plant.alive).map(cropMetaRow),
+        ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
+        ...state.structures.map(structure=>targetRow(structure,state)),
+        ...state.structures.map(structure=>structureMetaRow(structure)),
+        ...state.structures.filter(item=>item.kind==='center')
+          .map(center=>centerAccessRow(center,state)),
+        ...tasks.map(task=>taskRow(task))];
+      apply(rows);
+      structuresById.clear();
+      cropsById.clear();
+      cropObjects.clear();
+      for(const structure of state.structures)
+        structuresById.set(numericId(structure.id),{...structure});
+      for(const crop of state.plants)if(crop.alive){
+        cropsById.set(numericId(crop.id),crop.id);
+        cropObjects.set(numericId(crop.id),crop);
+      }
+    }
+    catch(error){
+      wasm.nav_intent_reset();sequence=0;initialized=false;
+      throw error;
+    }
+    return {sequence,workers:wasm.nav_intent_worker_count(),
+      targets:wasm.nav_intent_target_count(),tasks:wasm.nav_intent_task_count()};
+  };
+  // Call only for committed game events, not every tick or actor position.
+  // A moving worker needs an update when a new action is requested.
+  const applyEvents=(state,events)=>{
+    const rows=[];
+    for(const event of events){
+      if(event.type==='worker')rows.push(event.remove?
+        [0,1,numericId(event.id),0,0,0,0,0,0,0]:
+        workerRow(event.entity,state));
+      else if(event.type==='target')rows.push(event.remove?
+        [0,2,numericId(event.id),0,0,0,0,0,0,0]:
+        targetRow(event.entity,state));
+      else if(event.type==='structureDamage')
+        rows.push(structureMetaRow(event.entity));
+      else if(event.type==='task')rows.push(event.remove?
+        [0,3,numericId(event.id),0,0,0,0,0,0,0]:
+        taskRow(event.entity));
+      else throw TypeError(`Unsupported intent event: ${event.type}`);
+      if(event.type==='target'&&!event.remove&&
+        (event.entity.kind==='wall'||event.entity.kind==='center'))
+        rows.push(structureMetaRow(event.entity));
+      if(event.type==='target'&&!event.remove&&event.entity.kind==='center')
+        rows.push(centerAccessRow(event.entity,state));
+      if(event.type==='target'&&!event.remove&&'alive' in event.entity)
+        rows.push(cropMetaRow(event.entity));
+    }
+    try{
+      const result=apply(rows);
+      for(const event of events){
+        if(event.type==='structureDamage'||event.type==='target'){
+          const id=numericId(event.remove?event.id:event.entity.id);
+          if(event.remove)structuresById.delete(id);
+          else if(event.entity.kind==='wall'||event.entity.kind==='center')
+            structuresById.set(id,{...event.entity});
+        }
+        if(event.type==='target'){
+          const id=numericId(event.remove?event.id:event.entity.id);
+          if(event.remove||'alive' in event.entity&&!event.entity.alive){
+            cropsById.delete(id);cropObjects.delete(id);
+          }else if('alive' in event.entity){
+            cropsById.set(id,event.entity.id);cropObjects.set(id,event.entity);
+          }
+        }
+      }
+      return result;
+    }
+    catch(error){
+      // A multi-batch event may have partially reached WASM. JS remains the
+      // authority, so rebuild the derived read model before surfacing failure.
+      resetFromState(state);
+      throw error;
+    }
+  };
+  // Translate only confirmed simulation events. A restored game uses
+  // resetFromState(); this incremental projection never owns game rules.
+  const applyCommittedEvents=(state,events)=>{
+    const changes=[];
+    let structures=null,plants=null,crates=null;
+    const structureFor=id=>state.structures.at(-1)?.id===id?state.structures.at(-1):
+      (structures??=new Map(state.structures.map(item=>[item.id,item]))).get(id);
+    const plantFor=id=>state.plants.at(-1)?.id===id?state.plants.at(-1):
+      (plants??=new Map(state.plants.filter(item=>item.alive)
+        .map(item=>[item.id,item]))).get(id);
+    const crateFor=id=>state.crates.at(-1)?.id===id?state.crates.at(-1):
+      (crates??=new Map(state.crates.map(item=>[item.id,item]))).get(id);
+    for(const event of events){
+      if(event.type==='CropPlaced'){
+        const entity=plantFor(event.targetId);
+        if(entity)changes.push({type:'target',entity});
+      }else if(event.type==='CropDestroyed'||event.type==='CropPicked'){
+        changes.push({type:'target',remove:true,id:event.targetId});
+        if(event.type==='CropPicked'&&event.crateId){
+          const crate=crateFor(event.crateId);
+          if(crate&&!crate.delivered)changes.push({type:'target',entity:crate});
+        }
+      }else if(event.type==='CrateDropped'){
+        const crate=crateFor(event.targetId);
+        if(crate&&!crate.delivered)changes.push({type:'target',entity:crate});
+      }else if(event.type==='CrateDelivered')
+        changes.push({type:'target',remove:true,id:event.targetId});
+      else if(event.type==='PlacementCommitted'&&
+        (event.kind==='center'||event.kind==='wall')){
+        const entity=structureFor(event.targetId);
+        if(entity)changes.push({type:'target',entity});
+      }else if(event.type==='WallChainBuilt'){
+        const first=numericId(event.targetId),latest=state.structures.slice(-event.count);
+        for(let offset=0;offset<event.count;offset++){
+          const id=`structure-${first+offset}`;
+          const entity=latest[offset]?.id===id?latest[offset]:structureFor(id);
+          if(entity)changes.push({type:'target',entity});
+        }
+      }else if(event.type==='WallRemoved')
+        changes.push({type:'target',remove:true,id:event.targetId});
+      else if(['StructureHit','StructureRuined','RepairApplied'].includes(event.type)){
+        const entity=structureFor(event.targetId);
+        if(entity)changes.push({type:'structureDamage',entity});
+      }
+    }
+    if(changes.length)applyEvents(state,changes);
+    return changes.length;
+  };
+  const planTasks=()=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    session.actorSectorRevision({worker:true});
+    const count=wasm.nav_intent_plan_tasks();
+    if(count<0)throw Error(`Native intent planning failed: ${count}`);
+    const pointer=wasm.nav_intent_results_ptr();
+    const data=Array.from(new Float64Array(wasm.memory.buffer,pointer,count*8));
+    return Array.from({length:count},(_,index)=>{
+      const at=index*8;
+      return {taskId:data[at],workerId:data[at+1]||null,status:data[at+2],
+        routeOffset:data[at+3],routeCount:data[at+4],cause:data[at+5],
+        approach:{x:data[at+6],z:data[at+7]}};
+    });
+  };
+  const restoreAssignedTasks=state=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    const workers=new Map(state.workers.map(worker=>[worker.id,worker]));
+    for(const task of state.tasks)if(task.workerId){
+      const worker=workers.get(task.workerId);
+      if(!worker||worker.taskId!==task.id||worker.centerId!==task.centerId)
+        throw Error(`Inconsistent saved task assignment: ${task.id}`);
+    }
+    session.actorSectorRevision({worker:true});
+    const restored=wasm.nav_intent_restore_assigned_tasks();
+    if(restored<0)throw Error(`Native assigned-task restoration failed: ${restored}`);
+    const routed=restored?wasm.nav_intent_replan_pending_routes():0;
+    return {restored,routed};
+  };
+  const proposalRoute=row=>{
+    const {routeOffset,routeCount}=row,total=wasm.nav_intent_route_point_count();
+    if(!Number.isInteger(routeOffset)||!Number.isInteger(routeCount)||routeCount<1||
+      routeOffset<0||routeOffset+routeCount>total)
+      throw Error('Invalid native task route range');
+    const points=new Float32Array(wasm.memory.buffer,
+      wasm.nav_intent_routes_ptr()+routeOffset*8,routeCount*2);
+    return Array.from({length:routeCount},(_,index)=>
+      ({x:points[index*2],z:points[index*2+1]}));
+  };
+  const getDamaged=kind=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(kind!=='wall'&&kind!=='center')throw TypeError('Unknown structure kind');
+    const count=wasm.nav_intent_damaged_structures(kind==='wall'?3:4);
+    if(count<0)throw Error('Native damage query failed');
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_damaged_ptr(),count*8);
+    return Array.from({length:count},(_,index)=>{
+      const offset=index*8,id=data[offset],structure=structuresById.get(id);
+      if(!structure)throw Error(`Missing authoritative structure ${id}`);
+      const cost=repairCost(structure),numerator=BigInt(cost.n),denominator=BigInt(cost.d);
+      return {id:structure.id,hp:data[offset+1],maxHp:data[offset+2],
+        damageRatio:data[offset+3],status:structure.status,material:structure.material??null,
+        gate:!!structure.gate,
+        enclosureId:structure.defenseEnclosureId??null,
+        plannedGroupId:structure.defenseGroupId??null,
+        cost,paidCoins:Number((numerator+denominator-1n)/denominator),
+        revision:data[offset+6],kind};
+    });
+  };
+  const getUnprotectedCropGroups=({includeProtected=false}={})=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    const groups=new Map();
+    const revisions=[];
+    for(const [species,profile] of Object.entries(ANIMAL_SPATIAL_PROFILES)){
+      session.actorSectorRevision({worker:false,species});
+      const count=wasm.nav_intent_crop_groups(profile.radius);
+      if(count<0)throw Error('Native crop group query failed');
+      const rows=Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_crop_groups_ptr(),count*12));
+      const memberCount=rows.reduce((max,_,index)=>index%12===0?
+        Math.max(max,rows[index+9]+rows[index+10]):max,0);
+      const members=Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_crop_members_ptr(),memberCount));
+      revisions.push({species,topology:wasm.nav_intent_topology_revision()});
+      for(let index=0;index<count;index++){
+        const at=index*12,id=rows[at],status=rows[at+8];
+        let group=groups.get(id);
+        if(!group){
+          const ids=members.slice(rows[at+9],rows[at+9]+rows[at+10]);
+          const centerIds=[...new Set(ids.map(item=>cropObjects.get(item)?.centerId)
+            .filter(Boolean))].sort();
+          group={id:`crop:${cropsById.get(id)??id}`,cropIds:ids.map(item=>cropsById.get(item)??item),
+            associatedCenterIds:centerIds,
+            value:rows[at+1],position:{x:rows[at+2],z:rows[at+3]},
+            bounds:{minX:rows[at+4],minZ:rows[at+5],maxX:rows[at+6],maxZ:rows[at+7]},
+            protection:'protected',profiles:{},revision:{crops:rows[at+11],topology:revisions}};
+          groups.set(id,group);
+        }
+        group.profiles[species]=status===1?'protected':status===0?'unprotected':'unknown';
+        if(status===0)group.protection='unprotected';
+        else if(status<0&&group.protection==='protected')group.protection='unknown';
+      }
+    }
+    return [...groups.values()].filter(group=>includeProtected||
+      group.protection!=='protected').sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  };
+  const findPlantingSite=(centerId,{budget=64,reserve=true}={})=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(!Number.isInteger(budget)||budget<1||budget>4096)
+      throw RangeError('Plant search budget must be 1–4096');
+    const center=structuresById.get(numericId(centerId));
+    if(center?.kind!=='center'||center.status!=='intact')
+      throw TypeError(`Unknown operational center: ${centerId}`);
+    session.actorSectorRevision({worker:true});
+    const resident=[...session.stream.loaded().keys()].map(key=>key.split(',').map(Number))
+      .filter(([cx,cz])=>Number.isInteger(cx)&&Number.isInteger(cz));
+    if(!resident.length)return {status:'unknown',reason:'no-resident-sectors'};
+    const bounds=resident.reduce((b,[cx,cz])=>[
+      Math.min(b[0],cx*48-24),Math.min(b[1],cz*48-24),
+      Math.max(b[2],cx*48+24),Math.max(b[3],cz*48+24)],
+    [Infinity,Infinity,-Infinity,-Infinity]);
+    const status=wasm.nav_intent_find_planting_site(numericId(centerId),
+      ...bounds,budget,reserve?1:0);
+    if(status===-2)throw Error('Native planting-site query rejected');
+    const row=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_planting_site_ptr(),8));
+    return {status:status===1?'found':status===2?'pending':
+      status===3?'blocked':status===0?'no-space':'unknown',
+      point:status===1||status===-1?{x:row[1],z:row[2]}:null,
+      reservationId:row[3]||null,examined:row[4],
+      revision:{crops:row[5],topology:row[6]},reason:row[7],bounds};
+  };
+  const releasePlantingSite=(reservationId,{committed=false}={})=>
+    wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
+  const intentChanges=()=>{
+    const count=wasm.nav_intent_change_count();
+    if(!count)return [];
+    const data=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_change_ptr(),count*8));
+    wasm.nav_intent_clear_changes();
+    return Array.from({length:count},(_,index)=>{
+      const at=index*8;
+      return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
+        targetId:data[at+3]||null,routeHandle:data[at+6]?
+          {session:data[at+4],slot:data[at+5],generation:data[at+6]}:null,
+        topologyRevision:data[at+7]};
+    });
+  };
+  const routePoints=handle=>{
+    const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
+    if(count<0)return null;
+    // Movement may retain these points while WASM grows its memory. Copy once
+    // when an action changes; ordinary ticks keep using the same JS view.
+    return Float32Array.from(new Float32Array(wasm.memory.buffer,
+      wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2));
+  };
+  const projectRouteProgress=state=>{
+    let accepted=0;
+    for(const actors of [state.workers,state.raid?.animals??[]])for(const actor of actors){
+      const path=actor.path;
+      if(!Array.isArray(path)||path.length>4096||
+         path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z)))
+        continue;
+      const pointer=wasm.nav_intent_route_progress_input_ptr(path.length);
+      if(path.length&&!pointer)throw Error('Native route progress allocation failed');
+      if(path.length){
+        const input=new Float32Array(wasm.memory.buffer,pointer,path.length*2);
+        for(let i=0;i<path.length;i++){
+          input[i*2]=path[i].x;input[i*2+1]=path[i].z;
+        }
+      }
+      if(wasm.nav_intent_route_progress(numericId(actor.id),actor.x,actor.z,
+        path.length)===1)accepted++;
+    }
+    return accepted;
+  };
+  // A committed world event is the only reason to reconsider live routes.
+  // The caller projects affected actor positions in the same delta batch;
+  // normal movement reads routePoints() without entering the planner.
+  const processEventBoundary=(state,events,{topologyChanged=false}={})=>{
+    applyEvents(state,events);
+    if(topologyChanged)session.actorSectorRevision({worker:true});
+    const invalidated=topologyChanged?wasm.nav_intent_reconcile_topology():0;
+    const rerouted=invalidated?wasm.nav_intent_replan_pending_routes():0;
+    return {invalidated,rerouted,changes:intentChanges()};
+  };
+  const requestReroute=actorId=>{
+    session.actorSectorRevision({worker:true});
+    if(wasm.nav_intent_request_reroute(numericId(actorId))!==1)return false;
+    wasm.nav_intent_replan_pending_routes();
+    return true;
+  };
+  const registerAttackIntent=(state,animal,target,path)=>{
+    if(!initialized||!state.raid||animal.targetId!==target.id||
+      !animal.reservation||state.raid.reservations[animal.reservation]!==animal.id)
+      throw Error('Animal attack must be confirmed before native registration');
+    if(!Array.isArray(path)||path.length>4096||
+      path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z)))
+      throw TypeError('Expected a finite confirmed animal route');
+    session.actorSectorRevision({worker:false,species:animal.species});
+    if(path.length){
+      const ptr=wasm.nav_intent_attack_route_input_ptr(path.length);
+      if(!ptr)throw Error('Native attack route allocation failed');
+      const points=new Float32Array(wasm.memory.buffer,ptr,path.length*2);
+      for(let index=0;index<path.length;index++){
+        points[index*2]=path[index].x;points[index*2+1]=path[index].z;
+      }
+    }
+    if(!animal.approach||!Number.isFinite(animal.approach.x)||
+       !Number.isFinite(animal.approach.z))
+      throw Error('Confirmed animal attack has no finite approach point');
+    const status=wasm.nav_intent_register_attack_site(numericId(animal.id),
+      numericId(target.id),animal.x,animal.z,path.length,
+      animal.approach.x,animal.approach.z,animal.radius??.28);
+    if(status!==1)throw Error(`Native attack intention rejected: ${status}`);
+    if(target.kind==='wall')
+      wasm.nav_intent_track_wall_opportunities(numericId(animal.id),
+        animal.x,animal.z,animal.radius);
+    return true;
+  };
+  const reconsiderWallOpportunity=animal=>{
+    session.actorSectorRevision({worker:false,species:animal.species});
+    return wasm.nav_intent_reconsider_wall_opportunity(numericId(animal.id),
+      animal.x,animal.z,animal.radius);
+  };
+  const wallOpportunityCandidates=()=>{
+    const count=wasm.nav_intent_wall_opportunity_candidates();
+    return count?Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_wall_opportunity_candidates_ptr(),count)):[];
+  };
+  const prepareAttackTransients=(state,animal)=>{
+    // Shield borders and introductory crop quotas alter interaction geometry
+    // and eligibility. Keep those cases on the established selector until the
+    // corresponding confirmed facts are projected into the native index.
+    if(state.raid.introCropLimit!==undefined||
+      state.spells.some(spell=>spell.kind==='shield'&&spell.remaining>0))
+      return null;
+    session.actorSectorRevision({worker:false,species:animal.species});
+    const blockers=actorBlockers(state,animal,false);
+    // Physical bodies and reserved future attack sites are different facts.
+    // Send both in the same transient batch so native site selection cannot
+    // return an approach that the confirmed raid reservation would reject.
+    for(const other of state.raid.animals){
+      if(other===animal||!other.approach||
+        ['gone','retreating','waiting'].includes(other.status))continue;
+      blockers.push({x:other.approach.x,z:other.approach.z,
+        radius:(other.radius??.28)+.1});
+    }
+    const reservedTargets=state.raid.animals.filter(other=>other!==animal&&
+      other.targetId&&!other.targetId.startsWith('center-')&&
+      !['gone','retreating','waiting'].includes(other.status))
+      .map(other=>numericId(other.targetId));
+    const blockerPtr=wasm.nav_intent_attack_blockers_ptr(blockers.length);
+    if(!blockerPtr&&blockers.length)
+      throw Error('Native attack blocker allocation failed');
+    if(blockers.length){
+      const rows=new Float64Array(wasm.memory.buffer,blockerPtr,
+        blockers.length*3);
+      for(let index=0;index<blockers.length;index++){
+        const blocker=blockers[index],offset=index*3;
+        rows[offset]=blocker.x;rows[offset+1]=blocker.z;
+        rows[offset+2]=blocker.radius??.28;
+      }
+    }
+    const reservedPtr=wasm.nav_intent_attack_reserved_targets_ptr(
+      reservedTargets.length);
+    if(!reservedPtr&&reservedTargets.length)
+      throw Error('Native attack target lease allocation failed');
+    if(reservedTargets.length)new Float64Array(wasm.memory.buffer,reservedPtr,
+      reservedTargets.length).set(reservedTargets);
+    return {blockerCount:blockers.length,reservedTargetCount:reservedTargets.length};
+  };
+  const planAttackCrop=(state,animal)=>{
+    if(!initialized||!state.raid)throw Error('No native raid intention session');
+    const transient=prepareAttackTransients(state,animal);
+    if(!transient)return null;
+    const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
+      animal.x,animal.z,animal.radius,1,transient.blockerCount,
+      transient.reservedTargetCount);
+    if(status<0)throw Error(`Native crop intention rejected: ${status}`);
+    const values=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_attack_result_ptr(),13);
+    if(status!==1)return {status:status===3?'unknown':
+      status===4?'occupied':status===2?'blocked':'none',
+      frontier:values[12]===1?{x:values[10],z:values[11]}:null,
+      regionQueries:values[8],routeQueries:values[9],
+      diagnostics:{firstCandidateCrop:values[1],preferredTrials:values[2],
+        lastPreferredRouteCount:values[3],siteTrials:values[4],
+        lastRouteCount:values[5],lastRegisterResult:values[6],
+        unknownCauseMask:values[7]}};
+    const targetId=values[1],target=cropObjects.get(targetId);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const coordinates=routePoints(routeHandle);
+    if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
+      wasm.nav_intent_attack_cancel(numericId(animal.id));
+      throw Error('Native crop intention has no confirmed JS target or route');
+    }
+    return {status:'found',target,reservation:targetReservationKey(target,animal),
+      approach:{point:{id:`native-approach-${target.id}`,
+        x:values[2],z:values[3]},path:Array.from(
+        {length:coordinates.length/2},(_,index)=>({
+          x:coordinates[index*2],z:coordinates[index*2+1]}))},
+      native:true,routeHandle,groupId:values[7],
+      regionQueries:values[8],routeQueries:values[9]};
+  };
+  const planAttackWall=(state,animal)=>{
+    if(!initialized||!state.raid)throw Error('No native raid intention session');
+    if(!prepareAttackTransients(state,animal))return null;
+    const status=wasm.nav_intent_plan_attack_wall(numericId(animal.id),
+      animal.x,animal.z,animal.radius);
+    if(status<0)throw Error(`Native wall intention rejected: ${status}`);
+    const values=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_wall_attack_result_ptr(),10);
+    if(status!==1)return {status:status===3?'unknown':
+      status===4?'occupied':status===2?'blocked':'none',
+      candidatesExamined:values[8],routeQueries:values[9]};
+    const target=state.structures.find(structure=>
+      numericId(structure.id)===values[1]&&structure.kind==='wall'&&
+      structure.status==='intact');
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const coordinates=routePoints(routeHandle);
+    if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
+      wasm.nav_intent_attack_cancel(numericId(animal.id));
+      throw Error('Native wall intention has no confirmed JS target or route');
+    }
+    return {status:'found',target,reservation:targetReservationKey(target,animal),
+      approach:{point:{id:`native-approach-${target.id}`,
+        x:values[2],z:values[3]},path:Array.from(
+        {length:coordinates.length/2},(_,index)=>({
+          x:coordinates[index*2],z:coordinates[index*2+1]}))},
+      native:true,routeHandle,groupId:values[7],
+      candidatesExamined:values[8],routeQueries:values[9]};
+  };
+  const replanAttackRoute=animal=>{
+    if(!animal.approach)throw Error('Animal has no confirmed attack approach');
+    session.actorSectorRevision({worker:false,species:animal.species});
+    const status=wasm.nav_intent_replan_attack_route(numericId(animal.id),
+      animal.x,animal.z,animal.approach.x,animal.approach.z);
+    // The native route planner distinguishes an incomplete graph from a
+    // physically blocked route to this particular interaction point. Neither
+    // verdict certifies that every side of the target is blocked.
+    if(status===3)return {status:wasm.spatial_world_route_reason()===0?
+      'blocked-approach':'unknown'};
+    if(status!==1)throw Error(`Native attack reroute rejected: ${status}`);
+    if(wasm.nav_intent_actor(numericId(animal.id))!==1)
+      throw Error('Native attack reroute lost its active intention');
+    const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const points=routePoints(routeHandle);
+    if(!points||points.length<2||points.length%2)
+      throw Error('Native attack reroute has no usable points');
+    return {status:'found',routeHandle,path:Array.from(
+      {length:points.length/2},(_,index)=>({
+        x:points[index*2],z:points[index*2+1]}))};
+  };
+  const planRetreatRoute=animal=>{
+    const exit=animal.exit??animal.spawn;
+    if(!exit)throw Error('Animal has no confirmed retreat exit');
+    session.actorSectorRevision({worker:false,species:animal.species});
+    const status=wasm.nav_intent_plan_retreat(numericId(animal.id),
+      animal.x,animal.z,exit.x,exit.z);
+    if(status===0||status===3)
+      return {status:status===3?'unknown':'blocked'};
+    if(status!==1)throw Error(`Native retreat route rejected: ${status}`);
+    if(wasm.nav_intent_actor(numericId(animal.id))!==1)
+      throw Error('Native retreat route lost its active intention');
+    const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const points=routePoints(routeHandle);
+    if(!points||points.length<2||points.length%2)
+      throw Error('Native retreat route has no usable points');
+    return {status:'found',routeHandle,path:Array.from(
+      {length:points.length/2},(_,index)=>({
+        x:points[index*2],z:points[index*2+1]}))};
+  };
+  const planHomeRoute=(worker,home)=>{
+    session.actorSectorRevision({worker:true});
+    const status=wasm.nav_intent_plan_home(numericId(worker.id),
+      worker.x,worker.z,home.x,home.z);
+    if(status===-2)return {status:'unavailable'};
+    if(status===0||status===3)
+      return {status:status===3?'unknown':'blocked'};
+    if(status!==1)throw Error(`Native home route rejected: ${status}`);
+    if(wasm.nav_intent_actor(numericId(worker.id))!==1)
+      throw Error('Native home route lost its active intention');
+    const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const points=routePoints(routeHandle);
+    if(!points||points.length<2||points.length%2)
+      throw Error('Native home route has no usable points');
+    return {status:'found',routeHandle,path:Array.from(
+      {length:points.length/2},(_,index)=>({
+        x:points[index*2],z:points[index*2+1]}))};
+  };
+  const restoreAttackIntents=state=>{
+    let committed=0,travelling=0,staleRoutes=0;
+    const pendingAttackRouteIds=[],pendingAttackRouteResults=[];
+    for(const animal of [...(state.raid?.animals??[])]
+      .sort((left,right)=>numericId(left.id)-numericId(right.id))){
+      if(!animal.targetId||['gone','retreating','waiting'].includes(animal.status))
+        continue;
+      session.actorSectorRevision({worker:false,species:animal.species});
+      // The confirmed read model already indexes live crops and structures.
+      // Saved crop history may be large and must not be scanned per animal.
+      const targetId=numericId(animal.targetId);
+      const target=animal.targetId.startsWith('plant-')?
+        cropObjects.get(targetId):structuresById.get(targetId);
+      if(animal.status==='attacking'){
+        if(wasm.nav_intent_restore_attack_action(numericId(animal.id),
+          numericId(animal.targetId),Number(!!animal.reservation&&
+            state.raid.reservations[animal.reservation]===animal.id))!==1)
+          throw Error(`Cannot restore committed animal attack ${animal.id}`);
+        if(animal.approach)wasm.nav_intent_restore_attack_site(
+          numericId(animal.id),animal.approach.x,animal.approach.z,
+          animal.radius??.28);
+        if(target?.kind==='wall'&&target.status==='intact')
+          wasm.nav_intent_track_wall_opportunities(numericId(animal.id),
+            animal.x,animal.z,animal.radius);
+        committed++;continue;
+      }
+      if(!target||!animal.reservation||
+        state.raid.reservations[animal.reservation]!==animal.id||
+        'status' in target&&target.status!=='intact')continue;
+      if(!Array.isArray(animal.path)||!animal.path.length){
+        if(!animal.approach)continue;
+        if(wasm.nav_intent_restore_attack_pending(numericId(animal.id),
+          numericId(animal.targetId),1)!==1)
+          throw Error(`Cannot restore pending animal attack ${animal.id}`);
+        wasm.nav_intent_restore_attack_site(numericId(animal.id),
+          animal.approach.x,animal.approach.z,animal.radius??.28);
+        const replacement=replanAttackRoute(animal);
+        if(replacement.status!=='found'){
+          pendingAttackRouteIds.push(animal.id);
+          pendingAttackRouteResults.push({id:animal.id,status:replacement.status});
+        }else {
+          animal.path=replacement.path;
+          animal.destinationId=animal.approach.id;
+          animal.pathVersion=session.topologySource.revision();
+        }
+        continue;
+      }
+      try{registerAttackIntent(state,animal,target,animal.path);travelling++;}
+      catch(error){
+        if(!/Native attack intention rejected: -5/.test(String(error)))throw error;
+        animal.path=null;staleRoutes++;
+        if(wasm.nav_intent_restore_attack_pending(numericId(animal.id),
+          numericId(animal.targetId),1)!==1)
+          throw Error(`Cannot restore stale animal route ${animal.id}`);
+        if(animal.approach)wasm.nav_intent_restore_attack_site(
+          numericId(animal.id),animal.approach.x,animal.approach.z,
+          animal.radius??.28);
+        const replacement=replanAttackRoute(animal);
+        if(replacement.status!=='found'){
+          pendingAttackRouteIds.push(animal.id);
+          pendingAttackRouteResults.push({id:animal.id,status:replacement.status});
+        }else {
+          animal.path=replacement.path;
+          animal.destinationId=animal.approach.id;
+          animal.pathVersion=session.topologySource.revision();
+        }
+      }
+    }
+    return {restoredAnimalAttacks:committed,restoredAnimalRoutes:travelling,
+      invalidSavedAnimalRoutes:staleRoutes,pendingAttackRouteIds,
+      pendingAttackRouteResults};
+  };
+  const restoreRetreatIntents=state=>{
+    const restoredRetreatRouteIds=[];
+    let invalidSavedRetreatRoutes=0;
+    for(const animal of [...(state.raid?.animals??[])]
+      .filter(item=>item.status==='retreating'&&item.path?.length)
+      .sort((left,right)=>numericId(left.id)-numericId(right.id))){
+      const exit=animal.exit??animal.spawn;
+      if(!exit||animal.path.length>4096){invalidSavedRetreatRoutes++;continue;}
+      session.actorSectorRevision({worker:false,species:animal.species});
+      const pointer=wasm.nav_intent_attack_route_input_ptr(animal.path.length);
+      if(!pointer){invalidSavedRetreatRoutes++;continue;}
+      const input=new Float32Array(wasm.memory.buffer,pointer,
+        animal.path.length*2);
+      for(let index=0;index<animal.path.length;index++){
+        input[index*2]=animal.path[index].x;
+        input[index*2+1]=animal.path[index].z;
+      }
+      const status=wasm.nav_intent_restore_retreat(numericId(animal.id),
+        animal.x,animal.z,exit.x,exit.z,animal.path.length);
+      if(status===1)restoredRetreatRouteIds.push(animal.id);
+      else invalidSavedRetreatRoutes++;
+    }
+    return {restoredRetreatRouteIds,invalidSavedRetreatRoutes};
+  };
+  const restoreHomeIntents=state=>{
+    const restoredHomeRouteIds=[];
+    let invalidSavedHomeRoutes=0;
+    const villages=new Map(state.villages.map(village=>[village.id,village]));
+    for(const worker of [...state.workers]
+      .filter(item=>['returning','fleeing','incapacitated'].includes(item.status)&&
+        item.path?.length)
+      .sort((left,right)=>numericId(left.id)-numericId(right.id))){
+      const village=villages.get(worker.villageId),home=village?.entry??village;
+      if(!home||worker.path.length>4096){invalidSavedHomeRoutes++;continue;}
+      session.actorSectorRevision({worker:true});
+      const pointer=wasm.nav_intent_attack_route_input_ptr(worker.path.length);
+      if(!pointer){invalidSavedHomeRoutes++;continue;}
+      const input=new Float32Array(wasm.memory.buffer,pointer,
+        worker.path.length*2);
+      for(let index=0;index<worker.path.length;index++){
+        input[index*2]=worker.path[index].x;
+        input[index*2+1]=worker.path[index].z;
+      }
+      const status=wasm.nav_intent_restore_home(numericId(worker.id),
+        worker.x,worker.z,home.x,home.z,worker.path.length);
+      if(status===1)restoredHomeRouteIds.push(worker.id);
+      else invalidSavedHomeRoutes++;
+    }
+    return {restoredHomeRouteIds,invalidSavedHomeRoutes};
+  };
+  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
+    restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
+    restoreHomeIntents,
+    proposalRoute,
+    getDamagedWalls:()=>getDamaged('wall'),
+    getDamagedCenters:()=>getDamaged('center'),
+    structureFor:id=>structuresById.get(numericId(id))??null,
+    getUnprotectedCropGroups,
+    findPlantingSite,releasePlantingSite,
+    intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
+    registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
+    planRetreatRoute,planHomeRoute,
+    cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
+    reconsiderWallOpportunity,wallOpportunityCandidates,
+    markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
+    finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
+    cancelAttackIntent:actorId=>wasm.nav_intent_attack_cancel(numericId(actorId))===1,
+    retireActor:actorId=>wasm.nav_intent_retire_actor(numericId(actorId))===1,
+    reconcileTopology:()=>wasm.nav_intent_reconcile_topology(),
+    replanPendingRoutes:()=>wasm.nav_intent_replan_pending_routes(),
+    markActionActive:actorId=>wasm.nav_intent_action_active(numericId(actorId))===1,
+    finishAction:actorId=>wasm.nav_intent_finish(numericId(actorId))===1,
+    discard:()=>wasm.nav_intent_discard(),
+    commit:()=>wasm.nav_intent_commit(),
+    sequence:()=>sequence};
+}
+
+function structureCondition(structure){
+  const hp=structure.hp,maxHp=structure.maxHp;
+  const damage=maxHp>0?Math.max(0,1-hp/maxHp):0;
+  const severity=structure.status==='ruined'?'breach':
+    structure.status==='collapsing'||damage>=.8?'critical':
+    damage>=.5?'severe':damage>=.2?'repairable':
+    damage>0?'minor':'healthy';
+  return {hp,maxHp,status:structure.status,kind:structure.kind,
+    gate:!!structure.gate,severity,
+    enclosureId:structure.defenseEnclosureId??null,
+    plannedGroupId:structure.defenseGroupId??null};
+}
+
+// Experimental action-level gate for the global worker task queue. Callers
+// deliver committed deltas at action boundaries; ordinary movement never
+// invokes the native planner. A pending physical result gets one bounded
+// recovery retry in case a dynamic obstruction produced no reliable event.
+export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
+  if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
+    throw RangeError('retrySeconds must be positive');
+  const bridge=createSpatialIntentBridge(session);
+  const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
+    workerPlanCounts=new Map(),animalPlanCounts=new Map(),
+    workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
+    projectedPositions=new Map(),pendingAttackRoutes=new Map(),
+    tacticalReconsiderations=new Set(),retreatRoutes=new Set(),
+    homeRoutes=new Set(),homeAttempts=new Map(),
+    cropProtectionListeners=new Set(),structureConditionListeners=new Set();
+  let cropProtectionSnapshot=null;
+  let structureConditionSnapshot=null;
+  let pendingTaskEvents=[];
+  let pendingWorldEvents=[];
+  let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
+  let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,
+    animalTotal=0,taskRouteQueries=0,taskCandidates=0,initialized=false;
+  let homePlanAttempts=0,homePlanFound=0,homePlanFallbacks=0,
+    homeRoutesRestored=0;
+  const homeFallbacksByStatus={blocked:0,unknown:0,unavailable:0};
+  const homeFallbackSamples=[];
+  let topologyReconciliations=0,topologyRouteInvalidations=0;
+  let lastNavigationVersion=null,pendingNativeChanges=true;
+  let lastPlan=null,lastPlanFacts=null,sourceState=null;
+  const markPendingAttackRoute=(actorId,status,elapsed)=>{
+    const id=typeof actorId==='number'?actorId:numericId(actorId);
+    pendingAttackRoutes.set(id,{
+      status,since:elapsed,nextRetry:elapsed+retrySeconds,attempts:0});
+  };
+  const setWorker=(worker,state)=>{
+    const id=numericId(worker.id);
+    if(workerRow(worker,state)[6])eligible.add(id);
+    else eligible.delete(id);
+    projectedPositions.set(id,[worker.x,worker.z]);
+  };
+  const resetFromState=state=>{
+    initialized=false;
+    sourceState=state;
+    if(observedTaskState!==state){
+      stopTaskObserver?.();stopTaskObserver=null;
+      stopWorldObserver?.();stopWorldObserver=null;
+      observedTaskState=null;
+    }
+    const result=bridge.resetFromState(state);
+    const restored=bridge.restoreAssignedTasks(state);
+    const restoredAnimals=bridge.restoreAttackIntents(state);
+    const restoredRetreats=bridge.restoreRetreatIntents(state);
+    const restoredHomes=bridge.restoreHomeIntents(state);
+    homeRoutesRestored=restoredHomes.restoredHomeRouteIds.length;
+    eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
+    retreatRoutes.clear();
+    homeRoutes.clear();homeAttempts.clear();
+    for(const id of restoredRetreats.restoredRetreatRouteIds)
+      retreatRoutes.add(numericId(id));
+    for(const id of restoredHomes.restoredHomeRouteIds)
+      homeRoutes.add(numericId(id));
+    tacticalReconsiderations.clear();
+    requests.clear();animalRequests.clear();
+    workerPlanCounts.clear();animalPlanCounts.clear();
+    workerPeakPerMinute.clear();animalPeakPerMinute.clear();
+    for(const pending of restoredAnimals.pendingAttackRouteResults)
+      markPendingAttackRoute(pending.id,pending.status,state.elapsed);
+    pendingTaskEvents=[];pendingWorldEvents=[];
+    total=0;animalTotal=0;taskRouteQueries=0;taskCandidates=0;
+    homePlanAttempts=0;homePlanFound=0;homePlanFallbacks=0;
+    topologyReconciliations=0;topologyRouteInvalidations=0;
+    lastPlan=null;lastPlanFacts=null;
+    for(const worker of state.workers)setWorker(worker,state);
+    dirty=true;nextRetry=Infinity;lastTime=-Infinity;
+    lastNavigationVersion=null;
+    pendingNativeChanges=true;
+    initialized=true;
+    if(cropProtectionListeners.size)cropProtectionSnapshot=new Map(
+      bridge.getUnprotectedCropGroups({includeProtected:true})
+        .map(group=>[group.id,group]));
+    else cropProtectionSnapshot=null;
+    structureConditionSnapshot=structureConditionListeners.size?
+      new Map(state.structures.map(item=>[item.id,structureCondition(item)])):null;
+    return {...result,...restored,...restoredAnimals,...restoredRetreats,
+      ...restoredHomes};
+  };
+  const publishCropProtectionChanges=({cropOnly=false,cropAdded=false}={})=>{
+    if(!cropProtectionListeners.size)return;
+    if(cropOnly&&!cropAdded&&!Array.from(cropProtectionSnapshot?.values()??[])
+      .some(group=>group.protection==='protected'))return;
+    const next=new Map(bridge.getUnprotectedCropGroups({includeProtected:true})
+      .map(group=>[group.id,group]));
+    const previous=cropProtectionSnapshot;
+    cropProtectionSnapshot=next;
+    if(!previous)return;
+    // A native group's ID is its lowest crop ID. Harvesting that crop can
+    // change the ID in the same event batch that opens a wall breach. Follow
+    // surviving members so the protection transition is still delivered.
+    let priorByCrop;
+    if([...next.keys()].some(id=>!previous.has(id))||
+       [...previous.keys()].some(id=>!next.has(id))){
+      priorByCrop=new Map();
+      for(const group of previous.values())
+        for(const cropId of group.cropIds)priorByCrop.set(cropId,group);
+    }
+    for(const [id,group] of next){
+      let old=previous.get(id);
+      if(priorByCrop){
+        const ancestors=group.cropIds.map(cropId=>priorByCrop.get(cropId))
+          .filter(Boolean);
+        if(group.protection!=='protected')
+          old=ancestors.find(ancestor=>ancestor.protection==='protected')??old;
+        old??=ancestors[0];
+      }
+      if((!old&&group.protection!=='unprotected')||
+          old?.protection===group.protection)continue;
+      const change={type:'CropGroupProtectionChanged',groupId:id,
+        previous:old?.protection??null,protection:group.protection,group};
+      for(const listener of cropProtectionListeners)listener(change);
+    }
+  };
+  const observeCropProtection=listener=>{
+    if(!initialized)throw Error('Reset the native intent session before observing crop protection');
+    if(typeof listener!=='function')throw TypeError('Expected a crop protection listener');
+    if(!cropProtectionListeners.size)cropProtectionSnapshot=new Map(
+      bridge.getUnprotectedCropGroups({includeProtected:true})
+        .map(group=>[group.id,group]));
+    cropProtectionListeners.add(listener);
+    return ()=>{
+      cropProtectionListeners.delete(listener);
+      if(!cropProtectionListeners.size)cropProtectionSnapshot=null;
+    };
+  };
+  const publishStructureConditionChanges=events=>{
+    if(!structureConditionListeners.size)return;
+    const ids=new Set(events.filter(event=>
+      ['StructureHit','StructureRuined','RepairApplied','WallRemoved']
+        .includes(event.type)).map(event=>event.targetId));
+    for(const event of events){
+      if(event.type==='PlacementCommitted'&&
+        (event.kind==='wall'||event.kind==='center')&&
+        !ids.has(event.targetId)){
+        const entity=bridge.structureFor(event.targetId);
+        if(entity)structureConditionSnapshot.set(entity.id,structureCondition(entity));
+      }else if(event.type==='WallChainBuilt'){
+        const first=numericId(event.targetId);
+        for(let offset=0;offset<event.count;offset++){
+          const id=`structure-${first+offset}`;
+          if(ids.has(id))continue;
+          const entity=bridge.structureFor(id);
+          if(entity)structureConditionSnapshot.set(id,structureCondition(entity));
+        }
+      }
+    }
+    for(const id of [...ids].sort((a,b)=>numericId(a)-numericId(b))){
+      const before=structureConditionSnapshot.get(id)??null;
+      const current=bridge.structureFor(id);
+      const after=current?structureCondition(current):null;
+      if(!before&&!after)continue;
+      if(after)structureConditionSnapshot.set(id,after);
+      else structureConditionSnapshot.delete(id);
+      if(before?.hp===after?.hp&&before?.status===after?.status)continue;
+      const kind=!after?'removed':after.status==='ruined'&&
+        before?.status!=='ruined'?(after.kind==='wall'?'breach':'ruined'):
+        after.hp>(before?.hp??after.maxHp)?
+        'repaired':'damaged';
+      const change={type:'StructureConditionChanged',change:kind,
+        structureId:id,kind:after?.kind??before.kind,
+        gate:after?.gate??before.gate,enclosureId:after?.enclosureId??
+          before?.enclosureId??null,plannedGroupId:after?.plannedGroupId??
+          before?.plannedGroupId??null,
+        hp:after?.hp??0,maxHp:after?.maxHp??before.maxHp,
+        previousHp:before?.hp??null,status:after?.status??'removed',
+        previousStatus:before?.status??null,
+        severity:after?.severity??'breach',
+        thresholdCrossed:before?.severity!==after?.severity};
+      for(const listener of structureConditionListeners)listener(change);
+    }
+  };
+  const observeStructureCondition=listener=>{
+    if(!initialized)throw Error('Reset the native intent session before observing structures');
+    if(typeof listener!=='function')throw TypeError('Expected a structure condition listener');
+    if(!structureConditionListeners.size)structureConditionSnapshot=new Map(
+      (observedTaskState??sourceState).structures.map(item=>
+        [item.id,structureCondition(item)]));
+    structureConditionListeners.add(listener);
+    return ()=>{
+      structureConditionListeners.delete(listener);
+      if(!structureConditionListeners.size)structureConditionSnapshot=null;
+    };
+  };
+  const applyEvents=(state,events)=>{
+    lastPlan=null;lastPlanFacts=null;
+    let result;
+    const previousChanges=session.core.wasm.nav_intent_change_count();
+    try{result=bridge.applyEvents(state,events);}
+    catch(error){
+      // The bridge has rebuilt WASM from authoritative JS state. Rebuild this
+      // gate's eligibility view as well, so recovery cannot miss a wakeup.
+      eligible.clear();projectedPositions.clear();
+      for(const worker of state.workers)setWorker(worker,state);
+      dirty=true;nextRetry=Infinity;
+      throw error;
+    }
+    for(const event of events)if(event.type==='worker'){
+      if(event.remove){
+        const id=numericId(event.id);
+        eligible.delete(id);projectedPositions.delete(id);
+        requests.delete(id);workerPlanCounts.delete(id);workerPeakPerMinute.delete(id);
+        homeRoutes.delete(id);homeAttempts.delete(id);
+      }
+      else setWorker(event.entity,state);
+    }
+    const planningChanged=events.some(event=>event.type!=='structureDamage');
+    if(planningChanged)dirty=true;
+    if(planningChanged||
+      session.core.wasm.nav_intent_change_count()>previousChanges)
+      pendingNativeChanges=true;
+    const topology=events.some(event=>event.type==='target'&&!event.remove&&
+      (event.entity.kind==='wall'||event.entity.kind==='center'));
+    const crops=events.some(event=>event.type==='target'&&
+      (event.remove||'alive' in event.entity));
+    if(topology||crops)publishCropProtectionChanges({cropOnly:!topology,
+      cropAdded:events.some(event=>event.type==='target'&&!event.remove&&
+        event.entity.id?.startsWith('plant-'))});
+    return result;
+  };
+  const planIfNeeded=simulatedSeconds=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(!Number.isFinite(simulatedSeconds)||simulatedSeconds<lastTime)
+      throw RangeError('Simulation time must be finite and monotonic');
+    lastTime=simulatedSeconds;
+    if(pendingWorldEvents.length)flushWorldEvents();
+    if(pendingTaskEvents.length)flushTaskEvents();
+    if(!dirty&&simulatedSeconds<nextRetry)return null;
+    if(!eligible.size||!session.core.wasm.nav_intent_task_count()){
+      dirty=false;nextRetry=Infinity;lastPlan=[];lastPlanFacts=new Map();return lastPlan;
+    }
+    // Idle workers can move while awaiting a task. Refresh only changed
+    // positions at an actual planning boundary; movement ticks do not query
+    // native navigation or rebuild the worker roster.
+    syncChangedPositions(false);
+    const before=new Map([...eligible].map(id=>
+      [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
+    const result=bridge.planTasks();
+    taskRouteQueries+=session.core.wasm.nav_intent_route_queries();
+    taskCandidates+=session.core.wasm.nav_intent_candidate_count();
+    lastPlan=result;
+    const state=observedTaskState??sourceState;
+    const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
+    const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const targetFor=taskTargetLookup(state);
+    lastPlanFacts=new Map(result.filter(row=>row.status===1).map(row=>{
+      const task=tasks.get(row.taskId),worker=workers.get(row.workerId);
+      const target=task&&targetFor(task.targetId);
+      if(!task||!worker||!target)throw Error('Native task proposal has no JS counterpart');
+      return [task.id,{workerId:worker.id,targetId:task.targetId,
+        centerId:task.centerId,kind:task.kind,
+        workerX:worker.x,workerZ:worker.z,targetX:target.x,targetZ:target.z}];
+    }));
+    dirty=false;
+    nextRetry=result.some(row=>row.status===2||row.status===3)?
+      simulatedSeconds+retrySeconds:Infinity;
+    total++;
+    for(const id of eligible){
+      const count=session.core.wasm.nav_intent_actor_planning_calls(id)-before.get(id);
+      if(!count)continue;
+      let times=requests.get(id);
+      if(!times)requests.set(id,times=[]);
+      for(let index=0;index<count;index++)times.push(simulatedSeconds);
+      while(times.length&&times[0]<=simulatedSeconds-60)times.shift();
+      workerPlanCounts.set(id,(workerPlanCounts.get(id)??0)+count);
+      workerPeakPerMinute.set(id,Math.max(workerPeakPerMinute.get(id)??0,times.length));
+    }
+    return result;
+  };
+  const commitTaskBatchToState=(state,plan,{navVersion}={})=>{
+    if(plan!==lastPlan||!Number.isFinite(navVersion))
+      throw Error('Native proposal is not the current planning batch');
+    if(pendingTaskEvents.length||pendingWorldEvents.length)
+      throw Error('Confirmed events must be processed before committing a proposal');
+    const tasksByNumericId=new Map(state.tasks.map(task=>[numericId(task.id),task]));
+    const workersByNumericId=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const targetFor=taskTargetLookup(state);
+    const assignments=[];
+    for(const row of plan){
+      if(row.status!==1)continue;
+      const task=tasksByNumericId.get(row.taskId),worker=workersByNumericId.get(row.workerId);
+      const target=task&&targetFor(task.targetId);
+      if(!task||!worker||!target||'alive' in target&&!target.alive||
+        'delivered' in target&&target.delivered||
+        task.kind==='repair'&&target.hp>=target.maxHp)
+        throw Error('Native proposal target changed before commit');
+      const fact=lastPlanFacts.get(task.id);
+      if(!fact||fact.workerId!==worker.id||fact.targetId!==task.targetId||
+        fact.centerId!==task.centerId||fact.kind!==task.kind||
+        fact.workerX!==worker.x||fact.workerZ!==worker.z||
+        fact.targetX!==target.x||fact.targetZ!==target.z||
+        workerRow(worker,state)[6]!==1)
+        throw Error('Native proposal inputs changed before commit');
+      const path=bridge.proposalRoute(row);
+      const interaction=['repair','initial','water'].includes(task.kind);
+      const destination=interaction?{
+        id:`native-point-${task.id}`,x:row.approach.x,z:row.approach.z}:target;
+      assignments.push({taskId:task.id,workerId:worker.id,path,destination});
+    }
+    // Validate the JS side before committing WASM. A stale native revision
+    // rejects the whole lease; no JS task or worker has changed yet.
+    applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true});
+    const committed=bridge.commit();
+    if(committed!==assignments.length){
+      lastPlan=null;bridge.resetFromState(state);
+      throw Error('Native task proposal became stale before commit');
+    }
+    const count=applyConfirmedTaskAssignments(state,assignments,navVersion);
+    pendingNativeChanges=true;
+    for(const row of plan){
+      const task=tasksByNumericId.get(row.taskId);
+      if(task&&row.status!==1)task.blocked=row.status===2;
+    }
+    lastPlan=null;lastPlanFacts=null;
+    // Assignment notifications mirror the lease just committed in WASM.
+    // Project them now, without treating that echo as a second reason to plan.
+    flushTaskEvents();
+    if(!pendingWorldEvents.length)dirty=false;
+    return count;
+  };
+  const metrics=simulatedSeconds=>({nativePlanningCalls:total,
+    nativeLifecycleInvalidations:session.core.wasm.nav_intent_invalidation_count(),
+    nativeTopologyReconciliations:topologyReconciliations,
+    nativeTopologyRouteInvalidations:topologyRouteInvalidations,
+    nativeTaskRouteQueries:taskRouteQueries,nativeTaskCandidates:taskCandidates,
+    nativeHomePlanAttempts:homePlanAttempts,
+    nativeHomePlansFound:homePlanFound,
+    nativeHomePlanFallbacks:homePlanFallbacks,
+    nativeHomeFallbacksByStatus:{...homeFallbacksByStatus},
+    nativeHomeFallbackSamples:homeFallbackSamples.map(sample=>({...sample})),
+    nativeHomeRoutesRestored:homeRoutesRestored,
+    perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
+      [id,times.filter(time=>time>simulatedSeconds-60).length])),
+    workerPlansByActor:Object.fromEntries(workerPlanCounts),
+    workerPeakPlansPerMinute:Object.fromEntries(workerPeakPerMinute),
+    nativeAnimalPlans:animalTotal,
+    perAnimalPerMinute:Object.fromEntries([...animalRequests].map(([id,times])=>
+      [id,times.filter(time=>time>simulatedSeconds-60).length])),
+    animalPlansByActor:Object.fromEntries(animalPlanCounts),
+    animalPeakPlansPerMinute:Object.fromEntries(animalPeakPerMinute)});
+  const recordAnimalPlan=(animal,elapsed)=>{
+    animalTotal++;
+    const id=numericId(animal.id),times=animalRequests.get(id)??[];
+    times.push(elapsed);
+    while(times.length&&times[0]<=elapsed-60)times.shift();
+    animalRequests.set(id,times);
+    animalPlanCounts.set(id,(animalPlanCounts.get(id)??0)+1);
+    animalPeakPerMinute.set(id,Math.max(animalPeakPerMinute.get(id)??0,times.length));
+  };
+  const recordWorkerRoutePlan=(worker,elapsed)=>{
+    const id=numericId(worker.id),times=requests.get(id)??[];
+    times.push(elapsed);
+    while(times.length&&times[0]<=elapsed-60)times.shift();
+    requests.set(id,times);
+    workerPlanCounts.set(id,(workerPlanCounts.get(id)??0)+1);
+    workerPeakPerMinute.set(id,Math.max(workerPeakPerMinute.get(id)??0,times.length));
+  };
+  const recordHomePlan=(worker,elapsed,result)=>{
+    recordWorkerRoutePlan(worker,elapsed);
+    homePlanAttempts++;
+    if(result.status==='found')homePlanFound++;
+    else{
+      homePlanFallbacks++;
+      if(result.status in homeFallbacksByStatus)
+        homeFallbacksByStatus[result.status]++;
+      if(homeFallbackSamples.length<32)homeFallbackSamples.push({
+        day:sourceState?.day??null,time:sourceState?.time??null,
+        workerId:worker.id,status:result.status,
+        x:worker.x,z:worker.z,villageId:worker.villageId});
+    }
+  };
+  const hasPendingAt=simulatedSeconds=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    return dirty||pendingTaskEvents.length>0||pendingWorldEvents.length>0||
+      simulatedSeconds>=nextRetry;
+  };
+  // The game advances movement every tick, but native intention changes are
+  // delivered only at a confirmed event or topology boundary. This cheap JS
+  // gate avoids asking WASM for an empty change list during ordinary travel.
+  const needsReconciliation=navVersion=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
+    return lastNavigationVersion!==navVersion||pendingNativeChanges||
+      pendingTaskEvents.length>0||pendingWorldEvents.length>0;
+  };
+  const syncChangedPositions=all=>{
+    if(!observedTaskState)return 0;
+    const moved=[];
+    for(const worker of observedTaskState.workers){
+      const id=numericId(worker.id),position=projectedPositions.get(id);
+      if(position&&(all||eligible.has(id))&&
+        (position[0]!==worker.x||position[1]!==worker.z))
+        moved.push({type:'worker',entity:worker});
+    }
+    if(moved.length)applyEvents(observedTaskState,moved);
+    return moved.length;
+  };
+  const reconcileTopology=()=>{
+    topologyReconciliations++;
+    // JS consumes native path points while moving. Publish only a verified
+    // remaining suffix at a topology event, never on ordinary walking ticks.
+    bridge.projectRouteProgress(observedTaskState??sourceState);
+    const invalidated=session.core.wasm.nav_intent_reconcile_topology();
+    topologyRouteInvalidations+=invalidated;
+    if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+    return invalidated;
+  };
+  const flushWorldEvents=()=>{
+    if(!pendingWorldEvents.length)return 0;
+    const events=pendingWorldEvents;pendingWorldEvents=[];
+    const topologyChanged=events.some(event=>
+      ['WallRemoved','WallChainBuilt','StructureRuined','PlacementCommitted']
+        .includes(event.type)||event.type==='RepairApplied'&&
+        event.repair?.previousStatus!=='intact');
+    if(topologyChanged)syncChangedPositions(true);
+    const previousChanges=session.core.wasm.nav_intent_change_count();
+    bridge.applyCommittedEvents(observedTaskState,events);
+    publishStructureConditionChanges(events);
+    if(events.some(event=>event.type!=='StructureHit')||
+      session.core.wasm.nav_intent_change_count()>previousChanges)
+      pendingNativeChanges=true;
+    if(events.some(event=>event.type==='StructureRuined'||
+      event.type==='WallRemoved')&&observedTaskState.raid){
+      const structures=new Map(observedTaskState.structures.map(item=>
+        [item.id,item]));
+      const animals=new Map(observedTaskState.raid.animals.map(item=>
+        [numericId(item.id),item]));
+      for(const actorId of bridge.wallOpportunityCandidates()){
+        const animal=animals.get(actorId);
+        if(!animal)continue;
+        const target=structures.get(animal.targetId);
+        if(target?.kind!=='wall'||target.status!=='intact')continue;
+        if(bridge.reconsiderWallOpportunity(animal)===1&&
+          animal.status!=='attacking')
+          tacticalReconsiderations.add(animal.id);
+      }
+    }
+    if(topologyChanged){
+      session.actorSectorRevision({worker:true});
+      reconcileTopology();
+    }
+    if(events.some(event=>event.type==='CrateDropped'))
+      session.core.wasm.nav_intent_replan_pending_routes();
+    const cropChanged=events.some(event=>
+      ['CropPlaced','CropDestroyed','CropPicked'].includes(event.type));
+    if(topologyChanged||cropChanged)
+      publishCropProtectionChanges({cropOnly:!topologyChanged,
+        cropAdded:events.some(event=>event.type==='CropPlaced')});
+    return events.length;
+  };
+  // A revision is an event, not a reason to poll paths on every tick. The
+  // native graph decides whether each pinned route remains physically valid.
+  const reconcileNavigationRevision=(state,version)=>{
+    if(!Number.isFinite(version))throw TypeError('Expected a navigation revision');
+    if(lastNavigationVersion===version)return 0;
+    lastNavigationVersion=version;
+    syncChangedPositions(true);
+    session.actorSectorRevision({worker:true});
+    const invalidated=reconcileTopology();
+    pendingNativeChanges=true;
+    // Existing JS paths are the movement copy of native-pinned routes. A
+    // changed graph revision has now been validated, including the routes
+    // whose replacement or waiting state will be delivered below.
+    for(const worker of state.workers)if(worker.path&&
+      (worker.taskId&&worker.status==='walking'||
+       homeRoutes.has(numericId(worker.id))))worker.pathVersion=version;
+    for(const animal of state.raid?.animals??[])
+      if(animal.path&&animal.status!=='attacking'&&
+        (animal.targetId||retreatRoutes.has(numericId(animal.id))))
+        animal.pathVersion=version;
+    publishCropProtectionChanges();
+    return invalidated;
+  };
+  const requestReroute=(state,worker)=>{
+    const wasDirty=dirty;
+    applyEvents(state,[{type:'worker',entity:worker}]);
+    dirty=wasDirty;
+    return bridge.requestReroute(worker.id);
+  };
+  const reconcileWorkerRoutes=(state,{navVersion}={})=>{
+    if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
+    const changes=bridge.intentChanges();
+    pendingNativeChanges=false;
+    if(!changes.length)return changes;
+    const latest=new Map();
+    for(const change of changes)latest.set(change.actorId,change);
+    const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const animals=new Map((state.raid?.animals??[])
+      .map(animal=>[numericId(animal.id),animal]));
+    const villages=new Map(state.villages.map(village=>[village.id,village]));
+    const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
+    const targetFor=taskTargetLookup(state);
+    for(const change of latest.values()){
+      const worker=workers.get(change.actorId);
+      if(worker&&homeRoutes.has(change.actorId)&&
+        ['returning','fleeing','incapacitated'].includes(worker.status)){
+        if(change.state===0){
+          const village=villages.get(worker.villageId);
+          const home=village?.entry??village;
+          if(!home)throw Error(`Worker ${worker.id} has no return village`);
+          const replacement=bridge.planHomeRoute(worker,home);
+          recordHomePlan(worker,state.elapsed,replacement);
+          if(replacement.status==='found'){
+            worker.path=replacement.path;
+            worker.destinationId=`home-${village.id}`;
+            worker.pathVersion=navVersion;
+            pendingNativeChanges=true;
+          }else{
+            homeRoutes.delete(change.actorId);
+            homeAttempts.set(change.actorId,navVersion);
+            worker.path=null;
+          }
+        }
+        if(change.state===5)homeRoutes.delete(change.actorId);
+        continue;
+      }
+      const animal=animals.get(change.actorId);
+      if(animal?.status==='retreating'&&retreatRoutes.has(change.actorId)){
+        if(change.state===0){
+          const replacement=bridge.planRetreatRoute(animal);
+          recordAnimalPlan(animal,state.elapsed);
+          if(replacement.status==='found'){
+            animal.path=replacement.path;
+            animal.destinationId=`exit-${animal.id}`;
+            animal.pathVersion=navVersion;
+            pendingNativeChanges=true;
+          }else{
+            retreatRoutes.delete(change.actorId);
+            animal.path=null;
+          }
+        }
+        if(change.state===5)retreatRoutes.delete(change.actorId);
+        continue;
+      }
+      if(animal&&change.state===1&&animal.status!=='attacking'&&
+        !animal.path&&animal.targetId&&
+        numericId(animal.targetId)===change.targetId){
+        const coordinates=bridge.routePoints(change.routeHandle);
+        if(!coordinates||coordinates.length<2||coordinates.length%2)
+          throw Error('Restored animal intention has no native route');
+        animal.path=Array.from({length:coordinates.length/2},(_,index)=>({
+          x:coordinates[index*2],z:coordinates[index*2+1]}));
+        animal.destinationId=animal.approach.id;
+        animal.pathVersion=navVersion;
+        pendingAttackRoutes.delete(change.actorId);
+      }
+      if(animal&&change.state===0&&animal.status!=='attacking'&&
+        animal.targetId&&numericId(animal.targetId)===change.targetId){
+        if(tacticalReconsiderations.has(animal.id))continue;
+        const target=targetFor(animal.targetId);
+        if(target&&(!('alive' in target)||target.alive)&&
+          (!('status' in target)||target.status==='intact')&&
+          animal.reservation&&state.raid.reservations[animal.reservation]===animal.id){
+          const replacement=bridge.replanAttackRoute(animal);
+          pendingNativeChanges=true;
+          recordAnimalPlan(animal,state.elapsed);
+          animal.path=replacement.status==='found'?replacement.path:null;
+          if(animal.path){
+            animal.destinationId=animal.approach.id;
+            animal.pathVersion=navVersion;
+            pendingAttackRoutes.delete(change.actorId);
+          }else markPendingAttackRoute(change.actorId,replacement.status,state.elapsed);
+          continue;
+        }
+      }
+      if(animal&&change.state===5&&animal.status!=='attacking'&&
+        animal.targetId&&numericId(animal.targetId)===change.targetId){
+        pendingAttackRoutes.delete(change.actorId);
+        const target=targetFor(animal.targetId);
+        // The native route was invalidated by a confirmed world change.
+        // Retain a still-valid target and lease; the raid controller will
+        // request one replacement route at its next action boundary.
+        animal.path=null;
+        if(!target||'alive' in target&&!target.alive||
+          ('status' in target&&target.status!=='intact')){
+          if(animal.reservation&&state.raid.reservations[animal.reservation]===animal.id){
+            delete state.raid.reservations[animal.reservation];
+            state.raid.waitRevision=((state.raid.waitRevision??0)+1)>>>0;
+          }
+          animal.targetId=null;animal.reservation=null;
+          animal.approach=null;animal.approachShieldId=null;
+        }
+      }
+      if(!worker||!worker.taskId||numericId(worker.taskId)!==change.taskId)continue;
+      const task=tasks.get(change.taskId);
+      if(change.state===1){
+        const coordinates=bridge.routePoints(change.routeHandle);
+        if(!coordinates||coordinates.length<2||coordinates.length%2)
+          throw Error('Native active intention has no valid route');
+        const path=Array.from({length:coordinates.length/2},(_,index)=>
+          ({x:coordinates[index*2],z:coordinates[index*2+1]}));
+        const endpoint=path.at(-1),target=task&&targetFor(task.targetId);
+        if(!target)throw Error('Native reroute lost its JS task target');
+        const interaction=['repair','initial','water'].includes(task.kind);
+        const destination=interaction?{
+          id:`native-point-${task.id}`,x:endpoint.x,z:endpoint.z}:target;
+        worker.path=path;worker.destinationId=destination.id;
+        worker.pathVersion=navVersion;
+        worker.taskApproach=interaction?{taskId:task.id,destination}:null;
+        if(worker.status==='waiting-task'){
+          worker.status='walking';notifyWorkerPlanningChange(state,worker);
+        }
+      }else if(change.state===0||change.state===3||change.state===4){
+        const target=task&&targetFor(task.targetId);
+        if(!task||!target||'alive' in target&&!target.alive||target.delivered){
+          releaseTask(state,worker);worker.status='idle';worker.path=null;
+          notifyWorkerPlanningChange(state,worker);
+          if(task)replaceTasks(state,state.tasks.filter(item=>item.id!==task.id));
+        }else{
+          worker.path=null;worker.status='waiting-task';
+          notifyWorkerPlanningChange(state,worker);
+        }
+      }else if(change.state===5){
+        releaseTask(state,worker);worker.status='idle';worker.path=null;
+        notifyWorkerPlanningChange(state,worker);
+      }
+    }
+    return changes;
+  };
+  const flushTaskEvents=()=>{
+    if(!pendingTaskEvents.length)return 0;
+    const workerEvents=new Map(),taskEvents=[];
+    for(const event of pendingTaskEvents){
+      if(event.type==='worker'){
+        const id=event.remove?event.id:event.entity.id;
+        workerEvents.set(id,event);
+      }else taskEvents.push(event);
+    }
+    const events=[...taskEvents,...[...workerEvents]
+      .sort(([a],[b])=>numericId(a)-numericId(b)).map(([,event])=>event)];
+    const wasDirty=dirty;
+    const eligibilityChanged=events.some(event=>event.type==='worker'&&
+      eligible.has(numericId(event.remove?event.id:event.entity.id))!==
+      (!event.remove&&workerRow(event.entity,observedTaskState)[6]===1));
+    pendingTaskEvents=[];
+    applyEvents(observedTaskState,events);
+    if(!taskEvents.length&&!eligibilityChanged)dirty=wasDirty;
+    return events.length;
+  };
+  const observeTasks=state=>{
+    if(!initialized)throw Error('Reset the native intent session before observing tasks');
+    if(stopTaskObserver)throw Error('A task observer is already attached');
+    observedTaskState=state;
+    const stop=observeTaskChanges(state,event=>{
+      if(event.type==='worker'){
+        pendingTaskEvents.push({type:'worker',entity:event.worker});
+        if(eligible.has(numericId(event.worker.id))!==
+          (workerRow(event.worker,state)[6]===1))dirty=true;
+        return;
+      }
+      if(event.type==='worker-removed'){
+        pendingTaskEvents.push({type:'worker',remove:true,id:event.workerId});
+        dirty=true;return;
+      }
+      const nativeEvent=event.type==='removed'?
+        {type:'task',remove:true,id:event.taskId}:
+        {type:'task',entity:{id:event.taskId,centerId:event.centerId,
+          targetId:event.targetId,kind:event.kind,created:event.created,
+          workerId:event.workerId}};
+      pendingTaskEvents.push(nativeEvent);
+      if(event.worker)pendingTaskEvents.push({type:'worker',entity:event.worker});
+      dirty=true;
+    });
+    stopTaskObserver=stop;
+    return ()=>{
+      if(stopTaskObserver!==stop)return;
+      stop();stopTaskObserver=null;pendingTaskEvents=[];
+      if(!stopWorldObserver)observedTaskState=null;
+    };
+  };
+  const observeWorld=state=>{
+    if(!initialized)throw Error('Reset the native intent session before observing events');
+    if(stopWorldObserver)throw Error('A world event observer is already attached');
+    if(observedTaskState&&observedTaskState!==state)
+      throw Error('World and task observers must share one game state');
+    observedTaskState=state;
+    const relevant=new Set(['CropPlaced','CropDestroyed','CropPicked',
+      'CrateDropped','CrateDelivered',
+      'PlacementCommitted','WallChainBuilt','WallRemoved','StructureHit',
+      'StructureRuined','RepairApplied']);
+    const stop=observeGameEvents(state,event=>{
+      if(!relevant.has(event.type))return;
+      pendingWorldEvents.push(event);
+      if(event.type!=='StructureHit')dirty=true;
+    });
+    stopWorldObserver=stop;
+    return ()=>{
+      if(stopWorldObserver!==stop)return;
+      stop();stopWorldObserver=null;pendingWorldEvents=[];
+      if(!stopTaskObserver)observedTaskState=null;
+    };
+  };
+  return {resetFromState,applyEvents,observeTasks,observeWorld,
+    observeCropProtection,observeStructureCondition,
+    getUnprotectedCropGroups:bridge.getUnprotectedCropGroups,
+    getDamagedWalls:()=>{flushWorldEvents();return bridge.getDamagedWalls();},
+    getDamagedCenters:()=>{flushWorldEvents();return bridge.getDamagedCenters();},
+    findPlantingSite:(...args)=>{
+      flushWorldEvents();return bridge.findPlantingSite(...args);
+    },
+    releasePlantingSite:bridge.releasePlantingSite,
+    flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
+    reconcileWorkerRoutes,planIfNeeded,
+    hasPendingAt,needsReconciliation,metrics,
+    commitTaskBatchToState,
+    registerAttackIntent:(...args)=>{
+      const result=bridge.registerAttackIntent(...args);
+      pendingNativeChanges=true;
+      pendingAttackRoutes.delete(numericId(args[1].id));
+      return result;
+    },
+    planAttackCrop:(state,animal)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      // A preceding strike or harvest may have removed a crop earlier in this
+      // same Game.tick. Project confirmed events before choosing and leasing
+      // another target; never let the native index lag its JS authority here.
+      if(pendingWorldEvents.length)flushWorldEvents();
+      const result=bridge.planAttackCrop(state,animal);
+      if(result!==null){
+        recordAnimalPlan(animal,state.elapsed);
+        if(result.status==='found')pendingNativeChanges=true;
+      }
+      return result;
+    },
+    planAttackWall:(state,animal)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      if(pendingWorldEvents.length)flushWorldEvents();
+      const result=bridge.planAttackWall(state,animal);
+      if(result!==null){
+        recordAnimalPlan(animal,state.elapsed);
+        if(result.status==='found')pendingNativeChanges=true;
+      }
+      return result;
+    },
+    planRetreatRoute:(state,animal)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      if(pendingWorldEvents.length)flushWorldEvents();
+      const result=bridge.planRetreatRoute(animal);
+      recordAnimalPlan(animal,state.elapsed);
+      if(result.status==='found'){
+        retreatRoutes.add(numericId(animal.id));pendingNativeChanges=true;
+      }else retreatRoutes.delete(numericId(animal.id));
+      return result;
+    },
+    planHomeRoute:(state,worker,home,navVersion)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      const id=numericId(worker.id);
+      if(homeRoutes.has(id))return {status:'active'};
+      if(homeAttempts.get(id)===navVersion)return {status:'fallback'};
+      if(pendingWorldEvents.length)flushWorldEvents();
+      if(pendingTaskEvents.length)flushTaskEvents();
+      const result=bridge.planHomeRoute(worker,home);
+      recordHomePlan(worker,state.elapsed,result);
+      homeAttempts.set(id,navVersion);
+      if(result.status==='found'){
+        homeRoutes.add(id);pendingNativeChanges=true;
+      }
+      return result;
+    },
+    homeRouteActive:actorId=>homeRoutes.has(numericId(actorId)),
+    finishHomeIntent:actorId=>{
+      const id=numericId(actorId);
+      homeRoutes.delete(id);homeAttempts.delete(id);
+      const result=bridge.cancelHomeIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    retreatRouteActive:actorId=>retreatRoutes.has(numericId(actorId)),
+    finishRetreatIntent:actorId=>{
+      retreatRoutes.delete(numericId(actorId));
+      const result=bridge.cancelAttackIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    retireRaidActors:animals=>{
+      for(const animal of animals){
+        const id=numericId(animal.id);
+        bridge.retireActor(animal.id);
+        animalRequests.delete(id);animalPlanCounts.delete(id);
+        animalPeakPerMinute.delete(id);pendingAttackRoutes.delete(id);
+        tacticalReconsiderations.delete(id);retreatRoutes.delete(id);
+      }
+    },
+    attackRoutePending:actorId=>pendingAttackRoutes.has(numericId(actorId)),
+    retryPendingAttackRoute:(state,animal,navVersion)=>{
+      const id=numericId(animal.id),pending=pendingAttackRoutes.get(id);
+      if(!pending)return 'ready';
+      if(pending.status==='blocked-approach')return 'reconsider';
+      // A missing sector or a temporarily invalid interaction point is not a
+      // proof that the target is blocked. Give the same lease a few slow
+      // recovery attempts, then end an otherwise unbounded raid wait.
+      if(state.elapsed-pending.since>=90)return 'expired';
+      if(state.elapsed<pending.nextRetry)return 'waiting';
+      if(session.core.wasm.nav_intent_request_reroute(id)!==1)return 'expired';
+      const replacement=bridge.replanAttackRoute(animal);
+      recordAnimalPlan(animal,state.elapsed);
+      pendingNativeChanges=true;
+      if(replacement.status==='found'){
+        animal.path=replacement.path;
+        animal.destinationId=animal.approach.id;
+        animal.pathVersion=navVersion;
+        pendingAttackRoutes.delete(id);
+        return 'found';
+      }
+      if(replacement.status==='blocked-approach'){
+        pending.status=replacement.status;
+        return 'reconsider';
+      }
+      pending.attempts++;
+      pending.nextRetry=state.elapsed+retrySeconds*2**Math.min(pending.attempts,3);
+      return 'waiting';
+    },
+    drainTacticalReconsiderations:()=>{
+      const actors=[...tacticalReconsiderations]
+        .sort((a,b)=>numericId(a)-numericId(b));
+      tacticalReconsiderations.clear();
+      return actors;
+    },
+    markAttackActive:actorId=>{
+      const result=bridge.markAttackActive(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    finishAttackIntent:actorId=>{
+      pendingAttackRoutes.delete(numericId(actorId));
+      const result=bridge.finishAttackIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    cancelAttackIntent:actorId=>{
+      pendingAttackRoutes.delete(numericId(actorId));
+      retreatRoutes.delete(numericId(actorId));
+      tacticalReconsiderations.delete(actorId);
+      const result=bridge.cancelAttackIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    markActionActive:actorId=>{
+      const result=bridge.markActionActive(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    finishAction:actorId=>{
+      const result=bridge.finishAction(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
+    discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
+}

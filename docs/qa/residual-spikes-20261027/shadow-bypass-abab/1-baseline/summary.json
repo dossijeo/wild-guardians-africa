@@ -1,0 +1,1190 @@
+{
+  "biome": "manglares",
+  "reservationVersion": 2,
+  "simulationElapsed": {
+    "before": 2.0856900000095346,
+    "after": 133.48405500000882
+  },
+  "runtimeProfile": {
+    "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&farWaterSurface=1&farAngularLod=1&qa-visibility=",
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "regionalWater": 1
+  },
+  "ok": true,
+  "scope": "Streaming control without casting; active agricultural simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 6262,
+    "p50": 16.664999999979045,
+    "p95": 33.41000000000349,
+    "p99": 50,
+    "max": 83.25499999997555
+  },
+  "programWaits": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  },
+  "casts": [
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 97507.33999991417,
+      "commandMs": 0,
+      "simulationStart": 3.2997600000095386,
+      "after": {
+        "elapsed": 5.52778000000953,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 25,
+        "finalChunks": 14,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 93,
+        "p50": 16.69000000000233,
+        "p95": 33.42500000000291,
+        "p99": 50.020000000004075,
+        "max": 50.020000000004075
+      },
+      "programWaits": []
+    },
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 187505.58999991417,
+      "commandMs": 0,
+      "simulationStart": 93.30978500001028,
+      "after": {
+        "elapsed": 95.5211450000102,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 25,
+        "finalChunks": 16,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 107,
+        "p50": 16.64999999999418,
+        "p95": 33.29000000000815,
+        "p99": 49.889999999984866,
+        "max": 50.03500000000349
+      },
+      "programWaits": []
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "No spells cast; matched simulation spacing, no pointer targeting test.",
+    "CPU World.render includes GPU-query bookkeeping; simulation/UI outside this call are excluded. GPU queries do not include asynchronous preparation outside the envelope."
+  ],
+  "shadowCache": {
+    "draws": 6547,
+    "hits": 2,
+    "untracked": 0,
+    "hitFraction": 0.00030539013589861045,
+    "scope": "Counter differences across recorded run, not CPU or GPU timings. Untracked attempts overlap draws; do not add them to total attempts."
+  },
+  "residual": {
+    "hardware": {
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "hardwareConcurrency": 16,
+      "devicePixelRatio": 1,
+      "canvas": [
+        1280,
+        720
+      ],
+      "crossOriginIsolated": true
+    },
+    "cpuScope": "World.render synchronous wall time including timer polling and submission; excludes simulation/UI and asynchronous preparation outside this call.",
+    "cpuWorldRenderMs": {
+      "samples": 6288,
+      "p50": 7.774999976158142,
+      "p95": 15.15499997138977,
+      "p99": 21.110000014305115,
+      "max": 55.81000006198883
+    },
+    "gpuWorldRenderMs": {
+      "samples": 6286,
+      "p50": 16.34427,
+      "p95": 25.082291,
+      "p99": 28.684218,
+      "max": 35.046145
+    },
+    "gpuStatus": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "pendingBeforeDispose": 2,
+      "unresolvedAtDispose": 2
+    },
+    "gpuScope": "GPU elapsed query over synchronous presentation commands including subdraws; excludes async uploads/preparation outside the envelope. Polling overhead means RAF is diagnostic, not an uninstrumented performance comparison. lastRender is renderer.info after the call; autoReset may restrict it to the final subpass, not the entire query.",
+    "gpuSanity": {
+      "observedSpanMs": 131798.37999999523,
+      "impossibleSamples": [],
+      "usable": true,
+      "scope": "Conservative sanity bound only; passing does not independently prove timer accuracy. Raw samples are never clipped or discarded here."
+    },
+    "phases": {
+      "world-frame-stage:0": {
+        "samples": 6288,
+        "p50": 0.3500000238418579,
+        "p95": 0.6399999856948853,
+        "p99": 0.940000057220459,
+        "max": 6.695000052452087
+      },
+      "world-frame-stage:1": {
+        "samples": 6288,
+        "p50": 0.42500007152557373,
+        "p95": 2.2899999618530273,
+        "p99": 3.784999966621399,
+        "max": 5.415000081062317
+      },
+      "world-frame-stage:2": {
+        "samples": 6288,
+        "p50": 0.2049999237060547,
+        "p95": 0.5749999284744263,
+        "p99": 0.8149999380111694,
+        "max": 2.0199999809265137
+      },
+      "world-frame-stage:3": {
+        "samples": 6288,
+        "p50": 1.0149999856948853,
+        "p95": 3.409999966621399,
+        "p99": 6.995000004768372,
+        "max": 18.855000019073486
+      },
+      "world-frame-stage:4": {
+        "samples": 6288,
+        "p50": 0.7850000858306885,
+        "p95": 1.6400001049041748,
+        "p99": 2.4199999570846558,
+        "max": 6.314999938011169
+      },
+      "world-frame-stage:5": {
+        "samples": 6288,
+        "p50": 0.05500006675720215,
+        "p95": 0.10000002384185791,
+        "p99": 0.15999996662139893,
+        "max": 0.6200000047683716
+      },
+      "world-frame-stage:6": {
+        "samples": 6288,
+        "p50": 0,
+        "p95": 0.004999995231628418,
+        "p99": 0.005000114440917969,
+        "max": 0.02499997615814209
+      },
+      "world-frame-stage:7": {
+        "samples": 6288,
+        "p50": 0.004999995231628418,
+        "p95": 0.009999990463256836,
+        "p99": 0.029999971389770508,
+        "max": 1.2249999046325684
+      },
+      "world-frame-stage:8": {
+        "samples": 6288,
+        "p50": 0,
+        "p95": 0.004999995231628418,
+        "p99": 0.004999995231628418,
+        "max": 0.039999961853027344
+      },
+      "world-frame-draw": {
+        "samples": 6288,
+        "p50": 4.639999985694885,
+        "p95": 7.865000009536743,
+        "p99": 10.02999997138977,
+        "max": 19.524999976158142
+      },
+      "native:removeChunks": {
+        "samples": 13,
+        "p50": 1.6649999618530273,
+        "p95": 2.409999966621399,
+        "p99": 2.409999966621399,
+        "max": 2.409999966621399
+      },
+      "subsystem:spatialRelease": {
+        "samples": 13,
+        "p50": 1.7200000286102295,
+        "p95": 2.6799999475479126,
+        "p99": 2.6799999475479126,
+        "max": 2.6799999475479126
+      },
+      "subsystem:contacts": {
+        "samples": 9,
+        "p50": 1.2649999856948853,
+        "p95": 2.0299999713897705,
+        "p99": 2.0299999713897705,
+        "max": 2.0299999713897705
+      },
+      "subsystem:syncChunks": {
+        "samples": 24,
+        "p50": 2.5149999856948853,
+        "p95": 5.985000014305115,
+        "p99": 6.40500009059906,
+        "max": 6.40500009059906
+      }
+    },
+    "droppedPhases": 0,
+    "phaseScope": "World-frame phases cover synchronous frame units. Subsystem spans are nested, include only calls >=1ms, have conditional percentiles, and must not be summed with parent phases.",
+    "slowestRenderFrames": [
+      {
+        "frame": 2,
+        "at": 96480.43999993801,
+        "ms": 55.81000006198883,
+        "gpuMs": 19.810935,
+        "phases": [
+          {
+            "frame": 2,
+            "label": "native:removeChunks",
+            "at": 96482.36500000954,
+            "ms": 2.409999966621399,
+            "selectedRequested": true,
+            "requested": 5,
+            "removed": 5,
+            "selectedBefore": {
+              "cx": 0,
+              "cz": 3,
+              "count": 313
+            },
+            "selectedAfter": {
+              "cx": 0,
+              "cz": 2,
+              "count": 298
+            }
+          },
+          {
+            "frame": 2,
+            "label": "subsystem:spatialRelease",
+            "at": 96482.16499996185,
+            "ms": 2.6799999475479126
+          },
+          {
+            "frame": 2,
+            "label": "subsystem:contacts",
+            "at": 96485.2049999237,
+            "ms": 2.0299999713897705
+          },
+          {
+            "frame": 2,
+            "label": "subsystem:syncChunks",
+            "at": 96480.83999991417,
+            "ms": 6.40500009059906
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:0",
+            "at": 96480.55999994278,
+            "ms": 6.695000052452087,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:1",
+            "at": 96487.26999998093,
+            "ms": 4.309999942779541,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:2",
+            "at": 96491.58499991894,
+            "ms": 0.9500000476837158,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:3",
+            "at": 96492.54499995708,
+            "ms": 18.855000019073486,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:4",
+            "at": 96511.41999995708,
+            "ms": 5.159999966621399,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:5",
+            "at": 96516.58499991894,
+            "ms": 0.09500002861022949,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:6",
+            "at": 96516.67999994755,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:7",
+            "at": 96516.67999994755,
+            "ms": 0.009999990463256836,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-stage:8",
+            "at": 96516.68999993801,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 2,
+            "label": "world-frame-draw",
+            "at": 96516.68999993801,
+            "ms": 19.524999976158142,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 5023,
+        "at": 198230.3449999094,
+        "ms": 32.94500005245209,
+        "gpuMs": 26.678123,
+        "phases": [
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:0",
+            "at": 198230.43499994278,
+            "ms": 1.1349999904632568,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:1",
+            "at": 198231.57499992847,
+            "ms": 4.935000061988831,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:2",
+            "at": 198236.52499997616,
+            "ms": 1.059999942779541,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:3",
+            "at": 198237.58499991894,
+            "ms": 8.665000081062317,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:4",
+            "at": 198246.25499999523,
+            "ms": 2.125,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:5",
+            "at": 198248.38499999046,
+            "ms": 0.11500000953674316,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:6",
+            "at": 198248.50999999046,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:7",
+            "at": 198248.50999999046,
+            "ms": 1.0449999570846558,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-stage:8",
+            "at": 198249.55499994755,
+            "ms": 0.004999995231628418,
+            "failed": false
+          },
+          {
+            "frame": 5023,
+            "label": "world-frame-draw",
+            "at": 198249.55999994278,
+            "ms": 13.715000033378601,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 270,
+        "at": 103351.2349998951,
+        "ms": 31.47000002861023,
+        "gpuMs": 29.262603,
+        "phases": [
+          {
+            "frame": 270,
+            "label": "native:removeChunks",
+            "at": 103354.28999996185,
+            "ms": 2.284999966621399,
+            "selectedRequested": false,
+            "requested": 4,
+            "removed": 4,
+            "selectedBefore": {
+              "cx": 5,
+              "cz": 2,
+              "count": 272
+            },
+            "selectedAfter": {
+              "cx": 5,
+              "cz": 2,
+              "count": 272
+            }
+          },
+          {
+            "frame": 270,
+            "label": "subsystem:spatialRelease",
+            "at": 103354.12000000477,
+            "ms": 2.46999990940094
+          },
+          {
+            "frame": 270,
+            "label": "subsystem:syncChunks",
+            "at": 103351.54999995232,
+            "ms": 5.985000014305115
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:0",
+            "at": 103351.29499995708,
+            "ms": 6.245000004768372,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:1",
+            "at": 103357.54499995708,
+            "ms": 4.2799999713897705,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:2",
+            "at": 103361.83999991417,
+            "ms": 0.8200000524520874,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:3",
+            "at": 103362.66499996185,
+            "ms": 9.424999952316284,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:4",
+            "at": 103372.0949999094,
+            "ms": 2.5049999952316284,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:5",
+            "at": 103374.60499989986,
+            "ms": 0.12000000476837158,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:6",
+            "at": 103374.72499990463,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:7",
+            "at": 103374.72499990463,
+            "ms": 0.009999990463256836,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-stage:8",
+            "at": 103374.7349998951,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 270,
+            "label": "world-frame-draw",
+            "at": 103374.7349998951,
+            "ms": 7.945000052452087,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 1392,
+        "at": 131814.91999995708,
+        "ms": 29.649999976158142,
+        "gpuMs": 29.158228,
+        "phases": [
+          {
+            "frame": 1392,
+            "label": "native:removeChunks",
+            "at": 131816.28999996185,
+            "ms": 1.774999976158142,
+            "selectedRequested": false,
+            "requested": 5,
+            "removed": 5,
+            "selectedBefore": {
+              "cx": 2,
+              "cz": 1,
+              "count": 263
+            },
+            "selectedAfter": {
+              "cx": 2,
+              "cz": 1,
+              "count": 263
+            }
+          },
+          {
+            "frame": 1392,
+            "label": "subsystem:spatialRelease",
+            "at": 131816.2649999857,
+            "ms": 1.809999942779541
+          },
+          {
+            "frame": 1392,
+            "label": "subsystem:syncChunks",
+            "at": 131815.2349998951,
+            "ms": 3.4600000381469727
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:0",
+            "at": 131814.97499990463,
+            "ms": 3.7200000286102295,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:1",
+            "at": 131818.69999992847,
+            "ms": 3.5299999713897705,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:2",
+            "at": 131822.24000000954,
+            "ms": 0.4249999523162842,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:3",
+            "at": 131822.66499996185,
+            "ms": 9.649999976158142,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:4",
+            "at": 131832.31999993324,
+            "ms": 2.6299999952316284,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:5",
+            "at": 131834.95999991894,
+            "ms": 0.09000003337860107,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:6",
+            "at": 131835.04999995232,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:7",
+            "at": 131835.04999995232,
+            "ms": 0.004999995231628418,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-stage:8",
+            "at": 131835.05499994755,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 1392,
+            "label": "world-frame-draw",
+            "at": 131835.05499994755,
+            "ms": 9.5,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 6025,
+        "at": 221828.9849998951,
+        "ms": 28.91000008583069,
+        "gpuMs": 30.228384,
+        "phases": [
+          {
+            "frame": 6025,
+            "label": "native:removeChunks",
+            "at": 221830.46499991417,
+            "ms": 2.055000066757202,
+            "selectedRequested": false,
+            "requested": 5,
+            "removed": 5,
+            "selectedBefore": {
+              "cx": 2,
+              "cz": 2,
+              "count": 282
+            },
+            "selectedAfter": {
+              "cx": 2,
+              "cz": 2,
+              "count": 282
+            }
+          },
+          {
+            "frame": 6025,
+            "label": "subsystem:spatialRelease",
+            "at": 221830.439999938,
+            "ms": 2.090000033378601
+          },
+          {
+            "frame": 6025,
+            "label": "subsystem:syncChunks",
+            "at": 221829.29499995708,
+            "ms": 3.899999976158142
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:0",
+            "at": 221829.04499995708,
+            "ms": 4.149999976158142,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:1",
+            "at": 221833.19999992847,
+            "ms": 3.3949999809265137,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:2",
+            "at": 221836.59999990463,
+            "ms": 0.46000003814697266,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:3",
+            "at": 221837.064999938,
+            "ms": 9.47000002861023,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:4",
+            "at": 221846.53999996185,
+            "ms": 1.6549999713897705,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:5",
+            "at": 221848.19999992847,
+            "ms": 0.05000007152557373,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:6",
+            "at": 221848.25,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:7",
+            "at": 221848.25,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-stage:8",
+            "at": 221848.25,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 6025,
+            "label": "world-frame-draw",
+            "at": 221848.25,
+            "ms": 9.629999995231628,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 277,
+        "at": 103626.99500000477,
+        "ms": 28.68499994277954,
+        "gpuMs": 29.717029,
+        "phases": [
+          {
+            "frame": 277,
+            "label": "world-frame-stage:0",
+            "at": 103627.05499994755,
+            "ms": 0.3700000047683716,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:1",
+            "at": 103627.42499995232,
+            "ms": 4.764999985694885,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:2",
+            "at": 103632.19499993324,
+            "ms": 0.6449999809265137,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:3",
+            "at": 103632.8449999094,
+            "ms": 7.900000095367432,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:4",
+            "at": 103640.75,
+            "ms": 2.9399999380111694,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:5",
+            "at": 103643.69499993324,
+            "ms": 0.1499999761581421,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:6",
+            "at": 103643.8449999094,
+            "ms": 0.004999995231628418,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:7",
+            "at": 103643.84999990463,
+            "ms": 0.004999995231628418,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-stage:8",
+            "at": 103643.85499989986,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 277,
+            "label": "world-frame-draw",
+            "at": 103643.85499989986,
+            "ms": 11.800000071525574,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 256,
+        "at": 102802.72499990463,
+        "ms": 28.31000006198883,
+        "gpuMs": 27.725831,
+        "phases": [
+          {
+            "frame": 256,
+            "label": "world-frame-stage:0",
+            "at": 102802.79999995232,
+            "ms": 0.4299999475479126,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:1",
+            "at": 102803.2349998951,
+            "ms": 5.415000081062317,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:2",
+            "at": 102808.65499997139,
+            "ms": 0.8350000381469727,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:3",
+            "at": 102809.49500000477,
+            "ms": 4.424999952316284,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:4",
+            "at": 102813.92999994755,
+            "ms": 4.115000009536743,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:5",
+            "at": 102818.05499994755,
+            "ms": 0.10500001907348633,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:6",
+            "at": 102818.16499996185,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:7",
+            "at": 102818.16499996185,
+            "ms": 0.02499997615814209,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-stage:8",
+            "at": 102818.18999993801,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 256,
+            "label": "world-frame-draw",
+            "at": 102818.18999993801,
+            "ms": 12.820000052452087,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 1563,
+        "at": 136299.86500000954,
+        "ms": 27.43499994277954,
+        "gpuMs": 16.397082,
+        "phases": [
+          {
+            "frame": 1563,
+            "label": "native:removeChunks",
+            "at": 136301.064999938,
+            "ms": 1.6850000619888306,
+            "selectedRequested": false,
+            "requested": 5,
+            "removed": 5,
+            "selectedBefore": {
+              "cx": 1,
+              "cz": 0,
+              "count": 90
+            },
+            "selectedAfter": {
+              "cx": 1,
+              "cz": 0,
+              "count": 90
+            }
+          },
+          {
+            "frame": 1563,
+            "label": "subsystem:spatialRelease",
+            "at": 136301.04999995232,
+            "ms": 1.7200000286102295
+          },
+          {
+            "frame": 1563,
+            "label": "subsystem:syncChunks",
+            "at": 136300.2049999237,
+            "ms": 3.149999976158142
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:0",
+            "at": 136299.90999996662,
+            "ms": 3.444999933242798,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:1",
+            "at": 136303.3599998951,
+            "ms": 1.9350000619888306,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:2",
+            "at": 136305.29999995232,
+            "ms": 0.309999942779541,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:3",
+            "at": 136305.6099998951,
+            "ms": 10.365000009536743,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:4",
+            "at": 136315.97999989986,
+            "ms": 2.1850000619888306,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:5",
+            "at": 136318.16499996185,
+            "ms": 0.09000003337860107,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:6",
+            "at": 136318.25499999523,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:7",
+            "at": 136318.25499999523,
+            "ms": 0.009999990463256836,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-stage:8",
+            "at": 136318.2649999857,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 1563,
+            "label": "world-frame-draw",
+            "at": 136318.2649999857,
+            "ms": 9.014999985694885,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 179,
+        "at": 100422.21499991417,
+        "ms": 27.40000009536743,
+        "gpuMs": 25.733228,
+        "phases": [
+          {
+            "frame": 179,
+            "label": "world-frame-stage:0",
+            "at": 100422.27499997616,
+            "ms": 0.8400000333786011,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:1",
+            "at": 100423.12000000477,
+            "ms": 2.9649999141693115,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:2",
+            "at": 100426.08999991417,
+            "ms": 0.5500000715255737,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:3",
+            "at": 100426.6399999857,
+            "ms": 9.459999918937683,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:4",
+            "at": 100436.12000000477,
+            "ms": 2.4499999284744263,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:5",
+            "at": 100438.57499992847,
+            "ms": 0.07500004768371582,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:6",
+            "at": 100438.65499997139,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:7",
+            "at": 100438.65499997139,
+            "ms": 0.3700000047683716,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-stage:8",
+            "at": 100439.02999997139,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 179,
+            "label": "world-frame-draw",
+            "at": 100439.02999997139,
+            "ms": 10.56499993801117,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "frame": 216,
+        "at": 101512.20999991894,
+        "ms": 27.19000005722046,
+        "gpuMs": 30.754008,
+        "phases": [
+          {
+            "frame": 216,
+            "label": "world-frame-stage:0",
+            "at": 101512.27499997616,
+            "ms": 0.48000001907348633,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:1",
+            "at": 101512.75499999523,
+            "ms": 2.6100000143051147,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:2",
+            "at": 101515.36500000954,
+            "ms": 1.0699999332427979,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:3",
+            "at": 101516.43499994278,
+            "ms": 8.195000052452087,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:4",
+            "at": 101524.6399999857,
+            "ms": 6.314999938011169,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:5",
+            "at": 101530.96499991417,
+            "ms": 0.12000000476837158,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:6",
+            "at": 101531.08499991894,
+            "ms": 0.014999985694885254,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:7",
+            "at": 101531.09999990463,
+            "ms": 0.004999995231628418,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-stage:8",
+            "at": 101531.10499989986,
+            "ms": 0,
+            "failed": false
+          },
+          {
+            "frame": 216,
+            "label": "world-frame-draw",
+            "at": 101531.10499989986,
+            "ms": 8.265000104904175,
+            "failed": false
+          }
+        ]
+      }
+    ]
+  }
+}

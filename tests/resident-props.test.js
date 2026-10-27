@@ -54,3 +54,36 @@ test('an affected asset pool retires its material and instance buffer while pres
   refreshResidentProps(f.chunks,new Set(['prop-0']),f.build);
   assert.equal(pool.parent,null);assert.equal(matrices,1);assert.equal(materials,1);assert.equal(vertices,0);geometry.dispose();f.close();
 });
+
+
+test('explicit confirmed actions detect in-place Engine suppression changes and restore only their slot',()=>{
+ const f=fixture(25),suppressed=new Set();let invalidations=0;
+ const world={nav:{suppressed,config:{layers:[]}},prototypes:[],chunks:f.chunks,chunkRevision:0,nearBounds:[],buildPropSlot:f.build,contacts:{update(){}},releaseNativeShadow:{cache:{invalidate(){invalidations++}}}};
+ const sync=()=>WorldScene.prototype.syncResidentProps.call(world);
+ sync();const untouched=f.chunks.get('4').userData.lodBatches[0];
+ suppressed.add('prop-7');assert.deepEqual(sync(),{chunks:1,slots:1});assert.equal(f.chunks.get('7').userData.lodBatches.length,0);
+ assert.equal(f.chunks.get('4').userData.lodBatches[0],untouched);assert.deepEqual(sync(),{chunks:0,slots:0});
+ suppressed.delete('prop-7');assert.deepEqual(sync(),{chunks:1,slots:1});assert.equal(f.chunks.get('7').userData.lodBatches[0].instances[0].id,'prop-7');
+ assert.equal(world.nav.suppressed,suppressed);assert.equal(invalidations,2);f.close();
+});
+
+test('camera-driven chunk synchronization does not poll the unchanged suppression population',()=>{
+ const suppressed=new Set();let polls=0;
+ const world={nav:{suppressed,config:{layers:[]}},prototypes:[],chunks:new Map(),camera:{position:new THREE.Vector3(0,5,0)},controls:{target:new THREE.Vector3()},quality:'media',pack:{profile:{}},horizon:{update(_config,_profile,region){return region;}},chunkStream:{plan(){},dispatch(){}},contacts:{update(){}},propSuppressionSource:suppressed,
+ syncResidentProps(){polls++;this.propSuppressionSource=this.nav.suppressed;}};
+ for(const x of [1,2,3,10]){world.camera.position.x=x;WorldScene.prototype.syncChunks.call(world);}
+ assert.equal(polls,0);world.nav.suppressed=new Set();WorldScene.prototype.syncChunks.call(world);assert.equal(polls,1);
+ WorldScene.prototype.syncChunks.call(world);assert.equal(polls,1);
+});
+
+
+test('all quality presets retain individual color culling',()=>{
+ let invalidations=0;
+ const world={scene:new THREE.Scene(),assetGroups:{instanceCulling:true,invalidateMaterials(){invalidations++;}},toon:{uniforms:{uGroundDetail:{value:0}}},destructionPass:{},renderer:{shadowMap:{}},sun:new THREE.DirectionalLight(),terrainMeshes:[],resize(){}};
+ for(const quality of ['muy_baja','baja','media','alta','muy_baja']){
+  world.transactionalPrograms=WorldScene.prototype.transactionalPrograms;world.refreshStreamingPrograms??=WorldScene.prototype.refreshStreamingPrograms;world.releaseRetainedPrograms=WorldScene.prototype.releaseRetainedPrograms;WorldScene.prototype.qualitySetting.call(world,quality);
+  assert.equal(world.assetGroups.instanceCulling,true);
+  assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));
+ }
+ assert.equal(invalidations,3,'only shadow enable transitions invalidate compiled materials');
+});

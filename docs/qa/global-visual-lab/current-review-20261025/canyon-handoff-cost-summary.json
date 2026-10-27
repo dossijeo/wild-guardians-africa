@@ -1,0 +1,110 @@
+{
+  "scope": "Paused streaming cost pilot; A may draw missing terrain. No visual-equivalence or GPU speedup claim. RAF intervals include CPU and presentation; GPU query intervals may include bubbles. WASM bytes are not GPU memory.",
+  "conditions": [
+    "gran-canon",
+    "media",
+    "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    {
+      "axis": "z",
+      "pose": {
+        "camera": [
+          -25.08912754058838,
+          16.91928654060472,
+          194.00891007139165
+        ],
+        "target": [
+          -25.08912754058838,
+          3.9678425121307375,
+          162.57230564951897
+        ],
+        "time": 150
+      },
+      "visualSteps": false,
+      "terrainCamera": false,
+      "mainPhases": false,
+      "lockRaidCamera": false,
+      "completeLegs": false,
+      "pinPrograms": false,
+      "zigzag": false,
+      "active": false,
+      "gpu": true,
+      "depthWarm": false,
+      "glDetail": false,
+      "frames": 180,
+      "distance": 144
+    },
+    [
+      -25.08912754058838,
+      16.91928654060472,
+      194.00891007139165
+    ],
+    [
+      -25.08912754058838,
+      3.9678425121307375,
+      162.57230564951897
+    ],
+    119.99999999999746
+  ],
+  "rows": [
+    {
+      "run": "a1",
+      "gpuMs": 17.115964027777768,
+      "gpuSamples": 108,
+      "presentationMs": 21.224378881987576,
+      "presentationP95": 33.33499999999913,
+      "presentationP99": 33.54000000000087,
+      "presentationMax": 149.45500000000175,
+      "observedFrames": 322,
+      "elapsedMs": 6834.25,
+      "renderCpuMs": 7.05506192124665,
+      "created": 15,
+      "wasmBytes": 16777216,
+      "nativeChunks": 29
+    },
+    {
+      "run": "b1",
+      "gpuMs": 16.652313687500005,
+      "gpuSamples": 112,
+      "presentationMs": 20.511781437125762,
+      "presentationP95": 33.32499999999709,
+      "presentationP99": 33.52499999999418,
+      "presentationMax": 49.859999999993306,
+      "observedFrames": 334,
+      "elapsedMs": 6850.935000000005,
+      "renderCpuMs": 7.0015522359022455,
+      "created": 15,
+      "wasmBytes": 16777216,
+      "nativeChunks": 29
+    },
+    {
+      "run": "a2",
+      "gpuMs": 16.915466920353985,
+      "gpuSamples": 113,
+      "presentationMs": 20.72499999999999,
+      "presentationP95": 33.279999999998836,
+      "presentationP99": 33.45999999999913,
+      "presentationMax": 133.1800000000003,
+      "observedFrames": 337,
+      "elapsedMs": 6984.324999999997,
+      "renderCpuMs": 6.584319525921838,
+      "created": 15,
+      "wasmBytes": 16777216,
+      "nativeChunks": 29
+    },
+    {
+      "run": "b2",
+      "gpuMs": 16.24753552586207,
+      "gpuSamples": 116,
+      "presentationMs": 19.791296829971188,
+      "presentationP95": 33.30999999999767,
+      "presentationP99": 33.43500000000495,
+      "presentationMax": 33.54000000000087,
+      "observedFrames": 347,
+      "elapsedMs": 6867.580000000002,
+      "renderCpuMs": 6.839626438316258,
+      "created": 15,
+      "wasmBytes": 16777216,
+      "nativeChunks": 29
+    }
+  ]
+}

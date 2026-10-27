@@ -33,11 +33,10 @@ test('watering approaches avoid solids and fluid, except canyon water, and rejec
  nav.obstacles=[{id:'rock',kind:'house',x:0,z:1.03,radius:.3}];
  const route=wateringRoute(worker,plant,nav);assert.ok(route);assert.notEqual(route.destination.x,0);assert.ok(Math.hypot(route.destination.x,route.destination.z)>1);
  let previous=worker;for(const point of route.path){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}
- nav.field={blocked:()=>true,slope:()=>0,surface:()=>0};nav.walkCache.clear();
- nav.segmentCache.clear();nav.failedPaths.clear();assert.equal(wateringRoute(worker,plant,nav),null);
- nav.field.canyon=true;nav.field.riverLevel=.2;nav.field.waterInfo=()=>({inside:true,level:.2});nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
+ nav.field={blocked:()=>true,slope:()=>0,surface:()=>0};nav.invalidateGeometryQueries();assert.equal(wateringRoute(worker,plant,nav),null);
+ nav.field.canyon=true;nav.field.riverLevel=.2;nav.field.waterInfo=()=>({inside:true,level:.2});nav.invalidateGeometryQueries();
  const fluidRoute=wateringRoute(worker,plant,nav);assert.ok(fluidRoute);
  previous=worker;for(const point of fluidRoute.path){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}
- nav.field.canyon=false;nav.field.waterInfo=()=>({inside:false});nav.field.slope=()=>.6;nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
+ nav.field.canyon=false;nav.field.waterInfo=()=>({inside:false});nav.field.slope=()=>.6;nav.invalidateGeometryQueries();
  assert.equal(wateringRoute(worker,plant,nav),null);
 });

@@ -1,0 +1,41 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA: cierre con trabajador dentro</title>
+<style>body{margin:0;font:14px system-ui;background:#d5c8ad}header{position:absolute;z-index:5;background:#fffc;padding:10px;max-width:90vw}button{padding:8px;margin:3px}canvas#world{width:100vw;height:100vh;display:block}#narrator{position:fixed;bottom:0;width:100%;z-index:6}#panel{position:absolute;right:10px;bottom:10px;background:#fff3dc;padding:15px;z-index:7}#status{display:block}</style>
+<header>QA aislado: navegación nativa en suelo plano, compras pagadas y modelos originales.<br><button id="close">Cerrar muralla</button><button id="step">Avanzar 0,1 s</button><button id="return">Regresar por la puerta</button><button id="reload">Guardar/cargar</button><button id="tutorial">Mostrar Espíritu</button><button id="open-panel">Abrir panel</button><button id="close-panel">Cerrar panel</button><span id="status">Cargando…</span></header><div id="panel" hidden>Panel de prueba</div><canvas id="world"></canvas><div id="narrator"></div>
+<script type="module">
+import * as THREE from 'three';
+import {clone} from 'three/addons/utils/SkeletonUtils.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {NativeWall} from '../../src/rendering/walls.js';
+import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
+import {Navigation} from '../../src/world/navigation.js';
+import * as Game from '../../src/simulation/game.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {rational} from '../../src/simulation/money.js';
+import {TutorialController} from '../../src/tutorial/controller.js';
+import {NativeGuardian} from '../../src/ui/guardian.js';
+const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const canvas=document.querySelector('#world'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const scene=new THREE.Scene();scene.background=new THREE.Color('#d3dac6');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-4,8,5);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(40,1,.1,80);camera.position.set(-11,9,13);camera.lookAt(2,0,4);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:'#cfb988',roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;scene.add(floor);
+const assets=new Assets(),prototypes=await assets.walls(await json('../../content/walls.json')),libraries=await json('../../content/worker-actions.json');
+const material=new URLSearchParams(location.search).get('material')??'zarzas';
+let s=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',{});nav.field={slope:()=>0,surface:()=>0};nav.propsAt=()=>[];s.villages[0].entry={x:-4,z:4};s.villages[0].buildings=[];
+Game.placeStructure(s,'center',{x:-10,z:-10},nav);s.ledger.balance=rational(20000);Game.pause(s,'hiring');Game.hire(s,'hire-one',{olderMale:1});let w=s.workers[0];Object.assign(w,{x:.1,z:4,status:'idle',path:null});
+Game.buildWallChain(s,'first',material,[[0,0],[8,0],[8,8],[0,8]],nav,{smooth:false,snap:false});s.pauses=[];s.time=251;s.elapsed=251;s.nightPlan={done:true,group:[]};
+const gltf=await assets.model(libraries.olderMale.url),model=clone(gltf.scene),root=new THREE.Group();root.add(model);scene.add(root);const data={model,mixer:new THREE.AnimationMixer(model),clips:gltf.animations,name:null},walls=new Map();let crossed=false,steps=0;
+function sync(){for(const p of s.structures.filter(p=>p.kind==='wall')){if(!walls.has(p.id)){const mesh=new NativeWall(prototypes,p);mesh.position.set(p.x,0,p.z);mesh.rotation.y=p.yaw;walls.set(p.id,mesh);scene.add(mesh);}walls.get(p.id).update(p);}root.position.set(w.x,0,w.z);root.rotation.y=w.heading??0;applyWorkerPose(data,w,null,s.elapsed,libraries.olderMale);document.querySelector('#status').textContent=`${material} · ${w.status} · (${w.x.toFixed(2)}, ${w.z.toFixed(2)}) · puerta ${s.structures.filter(p=>p.autoGate).length} · cruce ${crossed} · pasos ${steps}`;}
+function step(){const x=w.x;Game.tick(s,.1,nav);steps++;crossed||=x>=0&&w.x<0;sync();}
+document.querySelector('#close').onclick=()=>{Game.buildWallChain(s,'close',material,[[0,8],[0,0]],nav,{smooth:false,snap:false});sync();};
+document.querySelector('#step').onclick=step;document.querySelector('#return').onclick=()=>{for(let i=0;i<600&&w.status!=='home';i++)step();};
+document.querySelector('#reload').onclick=()=>{s=deserialize(serialize(s));nav.setState(s);w=s.workers[0];sync();};
+const voice={active:false,plays:0,stops:0,status:'playing',play(){this.active=true;this.plays++;},stop(){this.active=false;this.stops++;}}; // Deterministic media edge: not a real audio playback test.
+const tutorialState=Game.newGame({seed:123}),profile={read:()=>new Set(),record(){},basicCompleted:false};let guardian;
+const controller=new TutorialController(tutorialState,profile,{isNarrating:()=>!!guardian?.voice?.active});guardian=new NativeGuardian(document.querySelector('#narrator'),e=>errors.push(String(e)),()=>{},voice);await guardian.ready;
+document.querySelector('#tutorial').onclick=()=>{controller.update();const message=controller.presentation();if(message)guardian.show({key:message.id+':reading:',text:message.text,dismiss:()=>controller.dismiss({message})});};
+document.querySelector('#open-panel').onclick=()=>{guardian.hide({immediate:true,interrupt:true});document.querySelector('#panel').hidden=false;};
+document.querySelector('#close-panel').onclick=()=>{document.querySelector('#panel').hidden=true;controller.update();};
+window.qa={report:()=>({material,status:w.status,x:w.x,z:w.z,crossed,steps,gates:s.structures.filter(p=>p.autoGate).length,errors,voicePlays:voice.plays,voiceActive:voice.active,shownToday:tutorialState.tutorial.shownToday,reading:tutorialState.tutorial.reading}),ready:true};
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);resize();sync();
+renderer.setAnimationLoop(()=>{guardian.update();renderer.render(scene,camera);});
+</script></html>

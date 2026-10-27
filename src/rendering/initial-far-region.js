@@ -1,12 +1,12 @@
 import {json} from './assets.js';
 import {loadFarSceneData} from '../../tools/experiments/far-scene-loader.js';
-import {nativeFarRegionRequest} from '../../tools/experiments/far-region-tracker.js';
+import {nativeFarRegionRequest,nativeFarInitialCenter} from '../../tools/experiments/far-region-tracker.js';
 import {loadingAwaitWitness,loadingSyncWitness} from './loading-sync-witness.js';
 
 // Start only procedural data after the real home camera has been chosen.
 // GPU roots, textures, ground seams and fences are still admitted later.
 export function startInitialFarRegion(world,options={},services={}){
- const controller=new AbortController(),signal=world.loading.signal,center={x:world.camera.position.x,z:world.camera.position.z};
+ const controller=new AbortController(),signal=world.loading.signal,center=nativeFarInitialCenter(world.camera.position,world.toon?.globalVisualLighting===true);
  const config=structuredClone(world.nav.config),profile=structuredClone(world.pack.profile);
  const loadManifest=services.loadManifest??json,loadRegion=services.loadRegion??loadFarSceneData;
  const abort=()=>controller.abort();signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();
@@ -16,7 +16,7 @@ export function startInitialFarRegion(world,options={},services={}){
   const species=payload.biomes[config.biome];if(!species?.length)throw Error('Missing biome impostors');
   const metadata=species[0],groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   const includeGround=(options.includeFarGround??true)&&metadata.slot===0&&!['canyons','desert'].includes(config.biome);
-  descriptor={...nativeFarRegionRequest(config,profile,center,{groundStep:16,...options,metadata,slot:metadata.slot,groundTreeBases,includeGround,bakedOnly:true}),treesOnly:!includeGround};
+  descriptor={...nativeFarRegionRequest(config,profile,center,{groundStep:16,...options,metadata,slot:metadata.slot,groundTreeBases,includeGround,bakedOnly:true}),treesOnly:!includeGround,...(world.spatialSession?{spatialTerrain:world.spatialSession.horizonSource.snapshot()}: {})};
   return loadingAwaitWitness(world.onLoadingSpan,'initial-far-region-worker',()=>loadRegion(descriptor,{signal:controller.signal}));
  }).finally(()=>signal.removeEventListener('abort',abort));
  // The request starts before its consumer exists. Observe failures now, but

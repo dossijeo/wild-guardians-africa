@@ -48,3 +48,14 @@ export class NearTreeSelection {
   if(count!==oldLength)changed=true;this.indices.length=count;return changed;
  }
 }
+
+// Horizon cards lose coverage between 20 and 35 degrees above their root.
+// Readiness is applied last: unavailable geometry must never create a hole.
+export function horizonCardWeight(horizontal,vertical){
+ const slope=Math.max(0,vertical)/Math.max(.001,horizontal);
+ const t=Math.max(0,Math.min(1,(slope-.3639702343)/(.7002075382-.3639702343)));
+ return 1-t*t*(3-2*t);
+}
+export function angularLodMix(distance,height,start,end,ready=1){
+ return 1-Math.max(0,Math.min(1,ready))*(1-lodMix(distance,start,end)*horizonCardWeight(distance,height));
+}

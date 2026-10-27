@@ -1,0 +1,28 @@
+{
+  "scope": "Fixed Manglares night low720p visual A/B, same scheduler with cache prep explicitly0 versus implicit bundle default. Not performance acceptance.",
+  "rows": [
+    {
+      "variant": "control",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&groundCachePreparation=0&frameScheduler=1",
+      "readyMs": 34177.63499999046,
+      "cacheRecipe": [],
+      "chunks": 25,
+      "pending": 0
+    },
+    {
+      "variant": "candidate",
+      "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+      "readyMs": 31825.985000014305,
+      "cacheRecipe": [
+        {
+          "label": "warm-ground-cache-recipe",
+          "ms": 65.16000002622604
+        }
+      ],
+      "chunks": 25,
+      "pending": 0
+    }
+  ],
+  "rgbMad": 0.0026255063657407408,
+  "fractionPixelsAbove8": 0.00012044270833333334
+}

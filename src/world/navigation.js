@@ -1,26 +1,45 @@
+import {cachedFractionalWalkability} from './fractional-walkability-cache.js';
 import {ViewMap,ViewSet,trimViewRegions} from './worker-view-cache.js';
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
-import {navigationPathKey} from './raid-navigation-warmth.js';
-import {navigationQueryResult,rememberNavigationQuery} from './navigation-query-scope.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
-import {SearchFrontier} from './search-frontier.js';
 import {evictOldest} from './fifo-eviction.js';
-import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
+import {gateFrameFootprints,gateSwingPolygon} from './gate-passages.js';
 import {validActiveBounds} from './active-region.js';
 import {wallCollisionFrame,wallCollisionPolygon,wallCollisionBounds} from './wall-collision-frame.js';
-import {shortenBuildingRoute} from './building-route-shortcut.js';
 import {animalSegmentClearance} from './animal-segment-clearance.js';
-export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
+import {createHierarchicalNavigationAdapter} from './hierarchical-navigation-adapter.js';
+import {BIOME_IDS} from './biome-ids.js';
+export {BIOME_IDS};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-const approachRegionCertificates=new WeakMap();
+const geometryKey=o=>JSON.stringify([o.kind,o.x,o.z,o.radius,o.yaw,o.baseScaleX,o.material,o.gate,o.gateOpen,o.status,o.footprint]);
+const geometryBounds=o=>o.kind==='wall'?wallCollisionBounds(o,3):navigationBounds(o);
+function changedGeometry(previous,current){
+  const before=new Map(previous.map(o=>[o.id,{key:geometryKey(o),bounds:geometryBounds(o)}]));
+  const after=new Map(current.map(o=>[o.id,{key:geometryKey(o),bounds:geometryBounds(o)}]));
+  const changes=[];
+  for(const [id,old] of before){const next=after.get(id);if(!next||next.key!==old.key){changes.push(old.bounds);if(next)changes.push(next.bounds);}}
+  for(const [id,next] of after)if(!before.has(id))changes.push(next.bounds);
+  return changes;
+}
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
     this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];this.searchNeighborCache=new Map();
+  }
+  invalidateGeometryQueries(){
+    // In-place editor/connector geometry edits must invalidate exact as well
+    // as integer coordinates, and rebuild broad-phase collision bounds.
+    this.version=(this.version??0)+1;
+    if(Object.hasOwn(this,'state')&&this.state)this.state.navigationVersion=this.version;
+    this.workerRouteCache=new Map();this.portalGraphs=new Map();this.preparedPaths=null;
+    this.walkCache.clear();this.segmentCache.clear();this.failedPaths.clear();this.closedRegions.clear();
+    this.searchedRegions=[];this.searchNeighborCache=new Map();
+    this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
+    this._hierarchical?.clear();
   }
   setActiveBounds(bounds){
     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
@@ -53,6 +72,7 @@ export class Navigation {
     return result;
   }
   setState(state) {
+    const oldField=this.field,oldObstacles=this.obstacles,oldSuppressed=this.suppressed;
     this.workerRouteCache=new Map();
     // New worlds persist their platform once. Legacy saves retain their original
     // relief and prop IDs; adding a visual material never migrates their terrain.
@@ -84,6 +104,14 @@ export class Navigation {
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
     for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
     this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
+    if(this._hierarchical){
+      if(oldField!==this.field||oldSuppressed.size!==this.suppressed.size||[...oldSuppressed].some(id=>!this.suppressed.has(id)))this._hierarchical.clear();
+      else {
+        const changed=changedGeometry(oldObstacles,this.obstacles);
+        if(changed.length>128)this._hierarchical.clear();
+        else for(const bounds of changed)if(bounds)this._hierarchical.invalidateRect(...bounds);
+      }
+    }
   }
   syncCropPlacement(state,removedProps=[]) {
     // Crops are not navigation obstacles. Replanting already cleared ground
@@ -107,22 +135,24 @@ export class Navigation {
     return Object.assign(Object.create(this),{
       obstacles:[...this.obstacles,building],suppressed:new Set([...(this.suppressed??[]),...suppress]),
       preparedPaths:null,walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),searchNeighborCache:new Map(),
+      _hierarchical:null,
     });
   }
   workerSurface(x,z){
     const ground=this.field.surface(x,z);
-    return this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
+    return this.field.wetland?Math.max(ground,this.field.wetlandLevel()):
+      this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
   }
   actorSurface(x,z){
-    const ground=this.field.surface(x,z),water=this.field.canyon&&this.field.waterInfo(x,z);
+    const ground=this.field.surface(x,z),water=(this.field.canyon||this.field.wetland)&&this.field.waterInfo(x,z);
     return water?.inside?Math.max(ground,water.level-.10):ground;
   }
   terrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
     // Keep all five samples and their order without six temporary arrays.
     for(let sample=0;sample<5;sample++) {
       const dx=sample===1?radius:sample===2?-radius:0,dz=sample===3?radius:sample===4?-radius:0;
-      if(!allowFluid&&!this.field.canyon&&fluidAt(this.field,x+dx,z+dz))return false;
-      if(this.field.canyon){
+      if(!allowFluid&&!this.field.wetland&&!(worker&&this.field.canyon)&&fluidAt(this.field,x+dx,z+dz))return false;
+      if(this.field.canyon||this.field.wetland){
         const surface=(px,pz)=>this.workerSurface(px,pz);
         const value=Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6;if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;
       }else {const value=this.field.slope(x+dx,z+dz);if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;}
@@ -131,6 +161,7 @@ export class Navigation {
   }
   walkable(x,z,radius=.3,ignore=null,worker=false) {
     const exact=Number.isInteger(x)&&Number.isInteger(z),key=`${x},${z}:${radius}:${ignore}:${worker}`;
+    if(!exact)return cachedFractionalWalkability(this,x,z,radius,ignore,worker);
     if(exact&&this.walkCache.has(key))return this.walkCache.get(key);
     const result=this.testWalkable(x,z,radius,ignore,worker);
     if(exact){if(this.walkCache.size>=50000)evictOldest(this.walkCache);this.walkCache.set(key,result);}
@@ -203,18 +234,20 @@ export class Navigation {
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true,margin=16) {
-    const key=navigationPathKey(start,end,radius,ignore,worker,margin);
-    if(this.failedPaths.has(key))return null;
-    const prepared=this.preparedPaths&&this.preparedPaths.version===this.version&&this.preparedPaths.entries.get(key);
-    if(prepared)return prepared.map(p=>({...p}));
-    const reused=navigationQueryResult(this,key);if(reused)return reused;
-    const found=this.findPath(start,end,radius,ignore,worker,margin);
-    const result=found&&worker?shortenBuildingRoute(this,start,end,this.smoothPath(start,found,radius,ignore,worker),radius,ignore):found;
-    // Capacity pressure is not a geometry change. Retain other proven failures
-    // instead of forcing up to 50,000 searches again after one new query.
-    if(!result){if(this.failedPaths.size>=50000)evictOldest(this.failedPaths);this.failedPaths.add(key);}
-    if(result)rememberNavigationQuery(this,key,result);
-    return result;
+    // A destination outside the unit's physical clearance cannot become
+    // reachable through an abstract sector connection (including sub-cell
+    // routes). Reject it before constructing or consulting the graph.
+    if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
+    this._hierarchical??=createHierarchicalNavigationAdapter(this);
+    return this._hierarchical.path(start,end,radius,ignore,worker,margin);
+  }
+  regionFor(point,radius=.3,ignore=null,worker=true){
+    this._hierarchical??=createHierarchicalNavigationAdapter(this);
+    return this._hierarchical.region(point,radius,ignore,worker);
+  }
+  regionConnected(from,to,radius=.3,ignore=null,worker=true,margin=32){
+    this._hierarchical??=createHierarchicalNavigationAdapter(this);
+    return this._hierarchical.connected(from,to,radius,ignore,worker,margin);
   }
   propOverlapExitPath(start,end,radius,ignore=null,worker=false) {
     const props=this.propsAt(start.x,start.z,radius+4).filter(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(start,p)<(p.radius??1.5)+radius);
@@ -233,167 +266,16 @@ export class Navigation {
     }
     return null;
   }
-  smoothPath(start,path,radius,ignore,worker){
-    const route=[];let anchor=start,index=0;
-    while(index<path.length){
-      let next=index;
-      // Bound shortcut checks. Routes are computed only on destination or
-      // obstacle changes, never per rendered frame; collision tests are shared.
-      for(let j=Math.min(path.length-1,index+32);j>index;j--)if(this.segmentClear(anchor,path[j],radius,ignore,worker)){next=j;break;}
-      anchor=path[next];route.push(anchor);index=next+1;
-    }
-    return route;
-  }
-  canApproachFrom(start,radius){
-    // approachPath searches in reverse, making the animal's current position
-    // its destination. Every candidate fails immediately if that point is solid.
-    return this.walkable(start.x,start.z,radius,null,false);
-  }
   approachPath(start,end,radius,margin=16){
-    // Animal routes have symmetric terrain/solid collision rules. Search from
-    // the service point: an enclosed island then proves failure after exploring
-    // its finite component, rather than repeatedly exploring the outer land.
-    const reverse=this.path(end,start,radius,null,false,margin);
-    if(!reverse)return null;
-    return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
+    return this.path(start,end,radius,null,false,margin);
   }
-  approachGroupBlocked(start,targets,radius,reach){
-    if(!targets.length)return false;
-    const bounds=[Infinity,Infinity,-Infinity,-Infinity];
-    for(const t of targets){bounds[0]=Math.min(bounds[0],t.x);bounds[1]=Math.min(bounds[1],t.z);bounds[2]=Math.max(bounds[2],t.x);bounds[3]=Math.max(bounds[3],t.z);}
-    return this.approachRegionBlocked(start,targets[0],radius,reach,bounds);
+  findPath(start,end,radius=.3,ignore=null,worker=true,margin=16){
+    return this.path(start,end,radius,ignore,worker,margin);
   }
-  approachRegionBlocked(start,focus,radius,reach,bounds=null){
-    // Only a COMPLETE native closed-component certificate can reject every
-    // service point. All possible 3x3 origin connectors must belong to that
-    // same component; near its boundary fall back to ordinary path searches.
-    const key=(x,z)=>`${x},${z}`,regionKey=(x,z)=>`${radius}:null:false|${key(x,z)}`;
-    let cache=approachRegionCertificates.get(this);
-    if(!cache||cache.version!==this.version){cache={version:this.version,entries:new Map()};approachRegionCertificates.set(this,cache);}
-    const minX=Math.floor((bounds?.[0]??focus.x)-reach)-2,maxX=Math.ceil((bounds?.[2]??focus.x)+reach)+2,minZ=Math.floor((bounds?.[1]??focus.z)-reach)-2,maxZ=Math.ceil((bounds?.[3]??focus.z)+reach)+2;
-    if((maxX-minX+1)*(maxZ-minZ+1)>4096)return false;
-    const certificateKey=`${radius}:${minX}:${minZ}:${maxX}:${maxZ}`;
-    let region=cache.entries.get(certificateKey)??this.closedRegions.get(regionKey(Math.round(focus.x),Math.round(focus.z)));
-    if(!region)for(let z=minZ;z<=maxZ&&!region;z++)for(let x=minX;x<=maxX&&!region;x++)region=this.closedRegions.get(regionKey(x,z));
-    if(!region)return false;
-    if(!cache.entries.has(certificateKey)){
-      for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)if(!region.has(key(x,z))&&this.walkable(x,z,radius,null,false))return false;
-      if(cache.entries.size>=512)evictOldest(cache.entries);cache.entries.set(certificateKey,region);
-    }
-    // A connection to any destination grid cell means the actor may reach the
-    // island. No negative inference from merely crossing a wall visually.
-    const ex=Math.round(start.x),ez=Math.round(start.z);
-    for(let z=ez-1;z<=ez+1;z++)for(let x=ex-1;x<=ex+1;x++)if(region.has(key(x,z)))return false;
-    return true;
-  }
-  portalGraph(radius,ignore){
-    this.portalGraphs??=new Map();const cacheKey=`${radius}:${ignore}`;
-    if(this.portalGraphs.has(cacheKey))return this.portalGraphs.get(cacheKey);
-    const nodes=new Map(),links=new Map(),key=p=>`${p.x},${p.z}`;
-    for(const gate of this.obstacles.filter(o=>o.gate&&o.id!==ignore)){
-      const points=gatePortalPoints(gate,radius);if(points.length!==2)continue;
-      for(let i=0;i<2;i++){
-        const point=points[i],node={...point,neighbors:[points[1-i]]};
-        for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){
-          const grid={x:Math.round(point.x)+dx,z:Math.round(point.z)+dz};node.neighbors.push(grid);
-          const gridKey=key(grid);if(!links.has(gridKey))links.set(gridKey,[]);links.get(gridKey).push(point);
-        }
-        nodes.set(key(point),node);
-      }
-    }
-    const graph={nodes,links};this.portalGraphs.set(cacheKey,graph);return graph;
-  }
-  searchNeighbors(cur,radius,ignore,worker,portals) {
-    const ck=`${cur.x},${cur.z}`,cacheKey=`${ck}:${radius}:${ignore}:${worker}`,cache=this.searchNeighborCache;
-    if(cache?.has(cacheKey))return cache.get(cacheKey);
-    const extras=portals.nodes.get(ck)?.neighbors??portals.links.get(ck)??[];
-    const points=portals.nodes.has(ck)?extras:[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]].map(([dx,dz])=>({x:cur.x+dx,z:cur.z+dz,gridStep:true})).concat(extras);
-    if(!cache)return points;
-    const neighbors=points.map(p=>({x:p.x,z:p.z,gridStep:p.gridStep,key:`${p.x},${p.z}`,length:Math.hypot(p.x-cur.x,p.z-cur.z),walkable:undefined}));
-    // Bound transient graph memory; no routes or destinations are persisted here.
-    if(cache.size>=4096)evictOldest(cache);cache.set(cacheKey,neighbors);
-    return neighbors;
-  }
-  findPath(start,end,radius=.3,ignore=null,worker=true,margin=16) {
-    const search=this.findPathSteps(start,end,radius,ignore,worker,margin);let step;
-    do{step=search.next();}while(!step.done);return step.value;
-  }
-  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16) {
-    if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
-    if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
-    // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
-    const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
-    const maxVisited=12000*Math.max(1,(margin/16)**2),minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
-    const portals=worker?this.portalGraph(radius,ignore):{nodes:new Map(),links:new Map()},inside=p=>p.x>=minX&&p.x<=maxX&&p.z>=minZ&&p.z<=maxZ;
-    const open=new SearchFrontier(),costs=new Map(),previous=new Map();
-    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
-      const point={x:sx+dx,z:sz+dz};
-      if(!this.walkable(point.x,point.z,radius,ignore,worker)||!this.segmentClear(start,point,radius,ignore,worker))continue;
-      const g=distance(start,point);open.push({...point,g,f:g+Math.hypot(ex-point.x,ez-point.z)});costs.set(key(point.x,point.z),g);
-    }
-    for(const point of portals.nodes.values())if(inside(point)&&distance(start,point)<=4&&this.walkable(point.x,point.z,radius,ignore,worker)&&this.segmentClear(start,point,radius,ignore,worker)){
-      const g=distance(start,point);open.push({...point,g,f:g+Math.hypot(ex-point.x,ez-point.z)});costs.set(key(point.x,point.z),g);
-    }
-    const regionKey=k=>`${radius}:${ignore}:${worker}|${k}`;
-    const reachesEnd=region=>{
-      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
-        const point={x:ex+dx,z:ez+dz};
-        if(region.has(key(point.x,point.z))&&this.segmentClear(point,end,radius,ignore,worker))return true;
-      }
-      for(const point of portals.nodes.values())if(distance(point,end)<=4&&region.has(key(point.x,point.z))&&this.segmentClear(point,end,radius,ignore,worker))return true;
-      return false;
-    };
-    // An exhausted bounded search also proves failures for contained corridors,
-    // provided every new origin connector belongs to its explored region.
-    for(const searched of this.searchedRegions){
-      if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
-        minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
-      if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))&&!reachesEnd(searched.nodes))return null;
-    }
-    const known=open.values().map(p=>this.closedRegions.get(regionKey(key(p.x,p.z))));
-    if(known.length&&known.every(Boolean)){
-      if(![...new Set(known)].some(reachesEnd))return null;
-    }
-    let visited=0,touchesBoundary=false;
-    while(open.length&&visited++<maxVisited) {
-      if(visited%8===0)yield null;
-      const cur=open.pop(),ck=key(cur.x,cur.z);
-      // A cheaper entry for this cell has already been processed. Keep the
-      // original pop budget, but avoid repeating its collision/neighbor work.
-      if(cur.g>costs.get(ck))continue;
-      if(cur.x===minX||cur.x===maxX||cur.z===minZ||cur.z===maxZ)touchesBoundary=true;
-      if((Math.hypot(cur.x-ex,cur.z-ez)<1.5||portals.nodes.has(ck)&&distance(cur,end)<=4)&&this.segmentClear(cur,end,radius,ignore,worker)) {
-        const route=[{x:end.x,z:end.z}];let k=ck;
-        while(true){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});if(!previous.has(k))break;k=previous.get(k);}
-        return route.reverse();
-      }
-      const neighbors=this.searchNeighbors(cur,radius,ignore,worker,portals);
-      for(const point of neighbors){
-        const {x,z}=point,dx=x-cur.x,dz=z-cur.z;
-        if(!inside(point)){if(!point.gridStep)touchesBoundary=true;continue;}
-        // Resolve collision lazily, only for neighbors inside this search corridor.
-        // The result is shared across searches in the same navigation epoch.
-        const walkable=point.walkable??(this.walkable(x,z,radius,ignore,worker)&&!(point.gridStep&&dx&&dz&&(!this.walkable(cur.x+dx,cur.z,radius,ignore,worker)||!this.walkable(cur.x,cur.z+dz,radius,ignore,worker))));
-        if(this.searchNeighborCache)point.walkable=walkable;
-        if(!walkable)continue;
-        const k=point.key??key(x,z),g=cur.g+(point.length??Math.hypot(dx,dz));
-        if(g>=(costs.get(k)??Infinity))continue;
-        if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
-        costs.set(k,g);previous.set(k,ck);open.push({x,z,g,f:g+Math.hypot(ex-x,ez-z)});
-      }
-    }
-    // Only an exhaustive search wholly inside the corridor proves a finite,
-    // closed grid region. Time/bounds limited failures never prove isolation.
-    if(!open.length&&visited<maxVisited&&costs.size){
-      const region=new Set(costs.keys());
-      while(this.searchedRegions.length&&(this.searchedRegions.length>=32||this.searchedRegions.reduce((sum,r)=>sum+r.nodes.size,0)+region.size>50000))this.searchedRegions.shift();
-      this.searchedRegions.push({nodes:region,minX,maxX,minZ,maxZ,radius,ignore,worker});
-      if(!touchesBoundary){
-        if(this.closedRegions.size+costs.size>50000)this.closedRegions.clear();
-        for(const k of region)this.closedRegions.set(regionKey(k),region);
-      }
-    }
-    return null;
+  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16,{yieldEvery=8}={}){
+    if(!Number.isSafeInteger(yieldEvery)||yieldEvery<1||yieldEvery>8)throw Error('Invalid navigation yield quantum');
+    yield null;
+    return this.path(start,end,radius,ignore,worker,margin);
   }
   segmentClear(start,end,radius,ignore,worker) {
     // Repeated A* searches share exact directed grid edges. Geometry remains
@@ -441,8 +323,7 @@ export class Navigation {
       const points=source.map(p=>({x:p.x,z:p.z}));
       // Portal positions/links depend only on unchanged native gates and radius;
       // every usable edge is still checked against this view's avoided points.
-      this.portalGraph(radius,ignore);
-      view=Object.assign(Object.create(this),{segmentCache:new ViewMap(4096),walkCache:new ViewMap(2048),failedPaths:new ViewSet(128),closedRegions:new ViewMap(2048),searchedRegions:[],searchNeighborCache:new ViewMap(512),portalGraphs:this.portalGraphs,preparedPaths:null,workerRouteCache:new ViewMap(2048)});
+      view=Object.assign(Object.create(this),{segmentCache:new ViewMap(4096),walkCache:new ViewMap(2048),failedPaths:new ViewSet(128),closedRegions:new ViewMap(2048),searchedRegions:[],searchNeighborCache:new ViewMap(512),portalGraphs:this.portalGraphs,preparedPaths:null,workerRouteCache:new ViewMap(2048),_hierarchical:null});
       const test=view.testSegmentClear,walk=view.testWalkable;
       view.testSegmentClear=function(a,b,...args){return !points.some(p=>edgeDistance(a,b,p.x,p.z)<.00001)&&test.call(this,a,b,...args);};
       view.testWalkable=function(x,z,...args){return !points.some(p=>Math.hypot(x-p.x,z-p.z)<.00001)&&walk.call(this,x,z,...args);};

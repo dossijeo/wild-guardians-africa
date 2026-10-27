@@ -5,7 +5,7 @@ import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
 import {raidEntryKey} from '../src/world/raid-entry-data.js';
 import {topologyFixture} from '../tools/probe-raid-entry-topology.mjs';
 import test from 'node:test';import assert from 'node:assert/strict';import {WorldScene} from '../src/rendering/scene.js';import {raidEntryChunks,raidResidentDemand} from '../src/world/raid-entry-residency.js';import {Navigation} from '../src/world/navigation.js';
-function world(){const nav=new Navigation(712,'sabana',{}),state={raid:null},planned=[];nav.setState({structures:[],villages:[],plants:[],suppressed:[],spells:[]});const w={nav,state,prototypes:[],camera:{position:{x:0,z:0}},quality:'media',pack:{profile:{}},horizon:{update(){}},chunks:new Map(),terrainMeshes:[],scene:{remove(){}},controls:{target:{x:0,z:0}},chunkStream:{plan(jobs){planned.push(new Map(jobs));},dispatch(){}},syncResidentProps(){},contacts:{update(){}}};return {w,nav,state,planned};}
+function world(){const nav=new Navigation(712,'sabana',{}),state={raid:null},planned=[];nav.setState({structures:[],villages:[],plants:[],suppressed:[],spells:[]});const w={nav,state,prototypes:[],camera:{position:{x:0,z:0}},quality:'media',pack:{profile:{}},horizon:{update(){}},chunks:new Map(),removeInstalledChunk(key){this.chunks.delete(key);},terrainMeshes:[],scene:{remove(){}},controls:{target:{x:0,z:0}},chunkStream:{plan(jobs){planned.push(new Map(jobs));},dispatch(){}},syncResidentProps(){},contacts:{update(){}}};return {w,nav,state,planned};}
 test('residency pins actual sparse birth/exit chunks without generating the expanded rectangle',()=>{const {w,nav,planned}=world();const entry={entries:[{x:0,z:320}],exits:[{x:0,z:323}]};nav.raidEntryDemand={entry,radii:[1.1]};WorldScene.prototype.syncChunks.call(w);const pins=raidEntryChunks(entry,[1.1]),jobs=planned.at(-1);assert.equal(jobs.size,25+pins.size);for(const key of pins)assert(jobs.has(key));assert(nav.activeBounds[3]>=323+1.1);assert(!jobs.has('0,4'),'Intervening rectangle is not filled');});
 test('pins are evicted and bounds restored after cancellation, without disrupting normal chunks',()=>{const {w,nav,planned}=world();const entry={entries:[{x:0,z:320}],exits:[{x:0,z:323}]};nav.raidEntryDemand={entry,radii:[1.1]};WorldScene.prototype.syncChunks.call(w);const key=[...raidEntryChunks(entry,[1.1])][0];w.chunks.set(key,{userData:{},traverse(){}});delete nav.raidEntryDemand;WorldScene.prototype.syncChunks.call(w);assert.equal(w.chunks.has(key),false);assert.equal(planned.at(-1).size,25);assert.deepEqual(nav.activeBounds,[-120,-120,120,120]);});
 test('active actor next-step corridor remains pinned and all demand disappears after real departure',()=>{const {nav,state}=world();state.raid={animals:[{x:23,z:0,radius:1.1,exit:{x:0,z:0},path:[{x:60,z:0}],status:'walking'}]};const keys=raidResidentDemand(state,nav);assert(keys.has('0,0'));assert(keys.has('1,0'));state.raid.animals[0].status='gone';assert.equal(raidResidentDemand(state,nav).size,0);});
@@ -20,4 +20,30 @@ test('headless driver waits for the same retained daytime owner instead of the n
  const driver=new NativeCampaignEntryDriver(nav,{createWorker:()=>worker,maxWaitMilliseconds:1000});
  const ready=await driver.waitForEntry(s);assert(ready.entry);assert.deepEqual(driver.waits[0].group,['warthog']);
  assert.deepEqual(driver.contexts[0].group,['warthog']);assert.equal(serialize(s),before);await driver.dispose();
+});
+
+test('headless Wild Engine entry uses native synchronous selection without a legacy terrain worker',async()=>{
+ const {s}=topologyFixture('closed');let serviced=0,workers=0;
+ const nav={navigationAuthority:'wild-engine',
+  serviceRaidConnectivityDemand(){serviced++;}};
+ const before=serialize(s),driver=new NativeCampaignEntryDriver(nav,{
+  createWorker(){workers++;throw Error('legacy worker must not start');}});
+ await driver.advancePresentation(s);
+ assert.equal(await driver.waitForEntry(s),null);
+ assert.equal(workers,0);assert.equal(serviced,1);
+ assert.equal(driver.report().mode,'native-spatial-synchronous');
+ assert.equal(serialize(s),before);
+ await driver.dispose();
+});
+
+test('legacy preparation reports worker computation errors immediately',async()=>{
+ const {s,nav}=topologyFixture('closed');s.nightPlan={at:500,group:['warthog'],done:false};
+ const worker={closed:Promise.resolve(),postMessage(request){
+  queueMicrotask(()=>this.onmessage({data:{key:request.key,
+   token:request.token,error:'missing terrain profile'}}));},terminate(){}};
+ const driver=new NativeCampaignEntryDriver(nav,{createWorker:()=>worker,
+  maxWaitMilliseconds:1000});
+ await assert.rejects(driver.waitForEntry(s),/missing terrain profile/);
+ assert.equal(driver.report().preparer.failed,1);
+ await driver.dispose();
 });

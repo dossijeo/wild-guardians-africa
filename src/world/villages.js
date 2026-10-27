@@ -1,7 +1,15 @@
+import {canyonLandAccessSteps} from './canyon-land-access.js';
 import {TerrainField,canyonFrame} from './terrain.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint,centerServicePoint} from './centers.js';
 import {footprintsOverlap} from './footprints.js';
+function resetProvisionalNavigation(nav){
+  // Village search temporarily replaces terrain, suppressions and buildings.
+  // A sector sampled for one candidate must never survive into the next one.
+  nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();
+  nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];
+  nav._hierarchical?.clear();
+}
 export function nearestVillageRoute(nav,departure,villages){
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
   const candidates=villages.map(v=>({v,lower:distance(departure,v.entry??v)}));
@@ -44,15 +52,23 @@ export function canyonVillageLayout(payload,field,z) {
   return {buildings:layout,endZ:Math.max(...rows)};
 }
 export function findVillageEntry(nav,layout,x,z,destination=null,additionalObstacles=[]) {
-  const oldObstacles=nav.obstacles;
-  nav.obstacles=[...(oldObstacles??[]),...additionalObstacles,...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];nav.walkCache?.clear();
-  try {
+  const search=preview=>{
     for(let radius=0;radius<=20;radius+=2)for(let angle=0;angle<(radius?16:1);angle++){
       const point={x:x+Math.cos(angle/16*Math.PI*2)*radius,z:z+Math.sin(angle/16*Math.PI*2)*radius};
-      if(nav.walkable(point.x,point.z,.28,null,true)&&(!destination||nav.path(point,destination,.28,null,true)))return point;
+      const free=preview?preview.walkable(point):nav.walkable(point.x,point.z,.28,null,true);
+      if(free!==true)continue;
+      const connected=!destination||(
+        preview?preview.reachable(point,destination)==='found':
+          nav.path(point,destination,.28,null,true));
+      if(connected)return point;
     }
     return null;
-  }finally {nav.obstacles=oldObstacles;nav.walkCache?.clear();}
+  };
+  if(nav.withVillageEntryPreview)return nav.withVillageEntryPreview(
+    [...layout,...additionalObstacles],search);
+  const oldObstacles=nav.obstacles;
+  nav.obstacles=[...(oldObstacles??[]),...additionalObstacles,...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];resetProvisionalNavigation(nav);
+  try {return search();}finally {nav.obstacles=oldObstacles;resetProvisionalNavigation(nav);}
 }
 function* initialLocations(nav,payload,legacy=false) {
   const originalField=nav.field;
@@ -78,7 +94,7 @@ function* initialLocations(nav,payload,legacy=false) {
     if(!legacy&&originalField instanceof TerrainField){
       terrainSite=villageTerrainSite({x,z,buildings:[...layout,centerFootprint(center)]},originalField);
       nav.config.settlementSite=terrainSite;nav.field=new TerrainField(nav.config);nav.chunks.clear();
-      nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();nav.closedRegions.clear();nav.portalGraphs?.clear();
+      resetProvisionalNavigation(nav);
     }
     const checks=[];
     for(const building of layout){const check=nav.placementFootprint(building);checks.push(check);if(!check.valid)break;}
@@ -86,18 +102,19 @@ function* initialLocations(nav,payload,legacy=false) {
     const shape=centerFootprint(center);
     const centerCheck=nav.placementFootprint(shape);
     if(!centerCheck.valid||layout.some(b=>b.kind!=='Zona común'&&b.footprint&&footprintsOverlap(shape.footprint,b.footprint)))continue;
-    let workable=0;
+    let workable=0,landAccess=null;const farmPoints=[];
     const oldObstacles=nav.obstacles,oldSuppressed=nav.suppressed;
     nav.obstacles=[...(oldObstacles??[]),{id:'initial-center',kind:'center',...shape},...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,kind:'house'}))];
-    nav.suppressed=new Set([...(oldSuppressed??[]),...checks.flatMap(c=>c.suppress??[]),...(centerCheck.suppress??[])]);nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];
+    nav.suppressed=new Set([...(oldSuppressed??[]),...checks.flatMap(c=>c.suppress??[]),...(centerCheck.suppress??[])]);resetProvisionalNavigation(nav);
     try {
       const departure=centerServicePoint(center,null,.8);
-      for(let dz=-9;dz<=9&&workable<12;dz+=1.5)for(let dx=4.5;dx<=15&&workable<12;dx+=1.5){
+      for(let dz=-9;dz<=9&&(workable<12||canyon&&!landAccess);dz+=1.5)for(let dx=4.5;dx<=15&&(workable<12||canyon&&!landAccess);dx+=1.5){
         const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
-        if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,departure,.28,null,true))workable++;
+        if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,departure,.28,null,true)){workable++;farmPoints.push(point);if(canyon&&workable>=12&&!landAccess)landAccess=yield* canyonLandAccessSteps(nav,[point],{fastOnly:true});}
       }
-    }finally{nav.obstacles=oldObstacles;nav.suppressed=oldSuppressed;nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];}
-    if(workable<12)continue;
+      if(canyon&&workable>=12&&!landAccess)landAccess=yield* canyonLandAccessSteps(nav,farmPoints);
+    }finally{nav.obstacles=oldObstacles;nav.suppressed=oldSuppressed;resetProvisionalNavigation(nav);}
+    if(workable<12||canyon&&!landAccess)continue;
     const entry=findVillageEntry(nav,layout,x,z,centerServicePoint(center,null,.8),[{id:'initial-center',kind:'center',...shape}]);
     if(entry)return {x,z,buildings:layout,center,entry,...(terrainSite?{terrainSite}:{}),suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))]};
   }

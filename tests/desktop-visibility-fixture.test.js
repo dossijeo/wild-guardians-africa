@@ -5,8 +5,9 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {resumeLoadedWorld} from '../src/app/resume-loaded-world.js';
 import * as Game from '../src/simulation/game.js';
 
-test('desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged',()=>{
-  const fixture=createDesktopVisibilityFixture(),state=deserialize(fixture.snapshot);
+test('desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged',async()=>{
+  const fixture=await createDesktopVisibilityFixture(),state=deserialize(fixture.snapshot);
+  assert.equal(state.wildEngineWorldVersion,1);
   assert.equal(state.day,1);assert.ok(state.raid);assert.equal(state.result,null);
   assert.equal(state.plants[0].species,'yuca');assert.equal(state.plants[0].water[0].status,'manual');assert.ok(state.plants[0].growth>0);
   assert.equal(state.ledger.balance.n,'648');assert.equal(state.ledger.balance.d,'1');

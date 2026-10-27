@@ -1,0 +1,113 @@
+{
+  "samples": 2880,
+  "rows": [
+    {
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpuMedian": 16.741718,
+        "cpuMedian": 5.0999999940395355,
+        "triangles": 199580,
+        "calls": 77
+      },
+      "candidate": {
+        "gpuMedian": 13.8257545,
+        "cpuMedian": 5.399999976158142,
+        "triangles": 198332,
+        "calls": 77
+      },
+      "gpuDelta": -2.9159634999999984,
+      "baselineDrift": 4.017682999999998
+    },
+    {
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpuMedian": 30.6398945,
+        "cpuMedian": 3.600000023841858,
+        "triangles": 199580,
+        "calls": 77
+      },
+      "candidate": {
+        "gpuMedian": 28.602395,
+        "cpuMedian": 4.5,
+        "triangles": 198332,
+        "calls": 77
+      },
+      "gpuDelta": -2.037499499999999,
+      "baselineDrift": -1.307291499999998
+    },
+    {
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpuMedian": 29.3668215,
+        "cpuMedian": 3.2999999821186066,
+        "triangles": 258388,
+        "calls": 70
+      },
+      "candidate": {
+        "gpuMedian": 28.48664,
+        "cpuMedian": 3.0999999940395355,
+        "triangles": 170508,
+        "calls": 70
+      },
+      "gpuDelta": -0.8801814999999991,
+      "baselineDrift": -1.225156499999997
+    },
+    {
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpuMedian": 27.8130455,
+        "cpuMedian": 3.9000000059604645,
+        "triangles": 258388,
+        "calls": 70
+      },
+      "candidate": {
+        "gpuMedian": 30.3121085,
+        "cpuMedian": 3.2999999821186066,
+        "triangles": 170508,
+        "calls": 70
+      },
+      "gpuDelta": 2.4990629999999996,
+      "baselineDrift": -11.682187500000005
+    },
+    {
+      "view": "elevated",
+      "phase": "day",
+      "original": {
+        "gpuMedian": 15.830468,
+        "cpuMedian": 3.199999988079071,
+        "triangles": 341656,
+        "calls": 53
+      },
+      "candidate": {
+        "gpuMedian": 14.743202,
+        "cpuMedian": 3.0999999940395355,
+        "triangles": 91640,
+        "calls": 52
+      },
+      "gpuDelta": -1.0872659999999996,
+      "baselineDrift": 0.5500780000000027
+    },
+    {
+      "view": "elevated",
+      "phase": "night",
+      "original": {
+        "gpuMedian": 18.3635145,
+        "cpuMedian": 3.2999999970197678,
+        "triangles": 341656,
+        "calls": 53
+      },
+      "candidate": {
+        "gpuMedian": 16.141067,
+        "cpuMedian": 3.0,
+        "triangles": 91640,
+        "calls": 52
+      },
+      "gpuDelta": -2.2224475000000012,
+      "baselineDrift": 2.2760159999999985
+    }
+  ]
+}

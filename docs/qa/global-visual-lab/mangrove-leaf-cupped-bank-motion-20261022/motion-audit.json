@@ -1,0 +1,61 @@
+{
+  "records": [
+    {
+      "phase": "day",
+      "variant": "original",
+      "requestedFrames": 240,
+      "encodedFrames": 235,
+      "nearRange": [
+        2254,
+        3815
+      ],
+      "farRange": [
+        1682,
+        5084
+      ]
+    },
+    {
+      "phase": "day",
+      "variant": "cupped",
+      "requestedFrames": 240,
+      "encodedFrames": 236,
+      "nearRange": [
+        2254,
+        3815
+      ],
+      "farRange": [
+        1682,
+        5084
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "original",
+      "requestedFrames": 240,
+      "encodedFrames": 235,
+      "nearRange": [
+        2254,
+        3815
+      ],
+      "farRange": [
+        1682,
+        5084
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "cupped",
+      "requestedFrames": 240,
+      "encodedFrames": 235,
+      "nearRange": [
+        2254,
+        3815
+      ],
+      "farRange": [
+        1682,
+        5084
+      ]
+    }
+  ],
+  "note": "Camera and leaf counts exact across variants; video uses wall-clock timestamps and can drop frames. Not a timing benchmark or a proof of pixel equality."
+}

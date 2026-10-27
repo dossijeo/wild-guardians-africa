@@ -1,0 +1,1031 @@
+{
+  "scope": "Native route differential against standalone for all six actor profiles; no live actor movement or raid simulation",
+  "rows": [
+    {
+      "biome": "sabana",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 80
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 98
+        }
+      ],
+      "gateStatus": 2,
+      "gatePoint": {
+        "x": 15,
+        "z": -18,
+        "start": {
+          "x": 14.3,
+          "z": -18
+        },
+        "end": {
+          "x": 15.7,
+          "z": -18
+        }
+      },
+      "gateChecks": [
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        }
+      ]
+    },
+    {
+      "biome": "desierto",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 144
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 132
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 132
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 54
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 144
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 144
+        }
+      ],
+      "gateStatus": 2,
+      "gatePoint": {
+        "x": -18,
+        "z": -18,
+        "start": {
+          "x": -18.7,
+          "z": -18
+        },
+        "end": {
+          "x": -17.3,
+          "z": -18
+        }
+      },
+      "gateChecks": [
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 80
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 98
+        }
+      ],
+      "gateStatus": 2,
+      "gatePoint": {
+        "x": 15,
+        "z": -18,
+        "start": {
+          "x": 14.3,
+          "z": -18
+        },
+        "end": {
+          "x": 15.7,
+          "z": -18
+        }
+      },
+      "gateChecks": [
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 97
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 85
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 85
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 67
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 97
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 97
+        }
+      ],
+      "gateStatus": 2,
+      "gatePoint": {
+        "x": 15,
+        "z": -18,
+        "start": {
+          "x": 14.3,
+          "z": -18
+        },
+        "end": {
+          "x": 15.7,
+          "z": -18
+        }
+      },
+      "gateChecks": [
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 51
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 45
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 45
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 79
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 51
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 51
+        }
+      ],
+      "gateStatus": 2,
+      "gatePoint": {
+        "x": -18,
+        "z": -18,
+        "start": {
+          "x": -18.7,
+          "z": -18
+        },
+        "end": {
+          "x": -17.3,
+          "z": -18
+        }
+      },
+      "gateChecks": [
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 38
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 31
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 31
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 99
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 38
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 38
+        }
+      ],
+      "gateStatus": 2,
+      "gatePoint": {
+        "x": -18,
+        "z": -18,
+        "start": {
+          "x": -18.7,
+          "z": -18
+        },
+        "end": {
+          "x": -17.3,
+          "z": -18
+        }
+      },
+      "gateChecks": [
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": true,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 2,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 3,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 4,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 5,
+          "workerOnly": true,
+          "clear": false
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 1,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 0,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 2,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 3,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 4,
+          "workerOnly": false,
+          "clear": true
+        },
+        {
+          "profile": 5,
+          "workerOnly": false,
+          "clear": true
+        }
+      ]
+    }
+  ]
+}

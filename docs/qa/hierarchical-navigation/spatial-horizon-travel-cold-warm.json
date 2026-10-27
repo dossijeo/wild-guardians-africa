@@ -1,0 +1,199 @@
+{
+  "base": "http://127.0.0.1:5188",
+  "report": [
+    {
+      "biome": "canyons",
+      "topology": "initial",
+      "roundtripMs": 103.1,
+      "terrainBytes": 3715632,
+      "waterBytes": 165888,
+      "wasmMemoryBytes": 4980736,
+      "stateBytes": 59,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 13.3,
+      "largestDelta": 0
+    },
+    {
+      "biome": "canyons",
+      "topology": "settlement",
+      "roundtripMs": 61.6,
+      "terrainBytes": 3715632,
+      "waterBytes": 165888,
+      "wasmMemoryBytes": 4980736,
+      "stateBytes": 87,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 16.9,
+      "largestDelta": 0
+    },
+    {
+      "biome": "canyons",
+      "topology": "controller",
+      "revision": 2,
+      "terrainVertices": 103212
+    },
+    {
+      "biome": "canyons",
+      "topology": "travel-50-settlements",
+      "settlements": 52,
+      "stateBytes": 1824,
+      "coldRenderMs": 42,
+      "frames": 32,
+      "travel": [
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 81.4,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 5.6,
+          "largestFrameGapMs": 17.3,
+          "largestRenderMs": 6.2
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 84.8,
+          "snapshotAndPostMs": 0,
+          "installMs": 4.7,
+          "largestFrameGapMs": 19,
+          "largestRenderMs": 5.7
+        },
+        {
+          "cx": 2,
+          "cz": 0,
+          "totalMs": 80.4,
+          "snapshotAndPostMs": 0.2,
+          "installMs": 3.8,
+          "largestFrameGapMs": 16.8,
+          "largestRenderMs": 5.2
+        },
+        {
+          "cx": 3,
+          "cz": 0,
+          "totalMs": 83.7,
+          "snapshotAndPostMs": 0,
+          "installMs": 3.6,
+          "largestFrameGapMs": 38.3,
+          "largestRenderMs": 5.5
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 82.5,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 3,
+          "largestFrameGapMs": 16.8,
+          "largestRenderMs": 5.2
+        },
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 83.8,
+          "snapshotAndPostMs": 0.2,
+          "installMs": 4.4,
+          "largestFrameGapMs": 16.8,
+          "largestRenderMs": 5.9
+        }
+      ]
+    },
+    {
+      "biome": "desert",
+      "topology": "initial",
+      "roundtripMs": 165.4,
+      "terrainBytes": 4608576,
+      "waterBytes": 0,
+      "wasmMemoryBytes": 6356992,
+      "stateBytes": 58,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 16.9,
+      "largestDelta": 0
+    },
+    {
+      "biome": "desert",
+      "topology": "settlement",
+      "roundtripMs": 136.1,
+      "terrainBytes": 4608576,
+      "waterBytes": 0,
+      "wasmMemoryBytes": 6356992,
+      "stateBytes": 86,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 17.8,
+      "largestDelta": 0
+    },
+    {
+      "biome": "desert",
+      "topology": "controller",
+      "revision": 2,
+      "terrainVertices": 128016
+    },
+    {
+      "biome": "desert",
+      "topology": "travel-50-settlements",
+      "settlements": 52,
+      "stateBytes": 1823,
+      "coldRenderMs": 12.5,
+      "frames": 61,
+      "travel": [
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 155.2,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 5.6,
+          "largestFrameGapMs": 21.3,
+          "largestRenderMs": 0.6
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 180.2,
+          "snapshotAndPostMs": 0,
+          "installMs": 4.5,
+          "largestFrameGapMs": 16.9,
+          "largestRenderMs": 2.7
+        },
+        {
+          "cx": 2,
+          "cz": 0,
+          "totalMs": 167,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 3,
+          "largestFrameGapMs": 17.7,
+          "largestRenderMs": 2.2
+        },
+        {
+          "cx": 3,
+          "cz": 0,
+          "totalMs": 151.7,
+          "snapshotAndPostMs": 0,
+          "installMs": 3.8,
+          "largestFrameGapMs": 20.4,
+          "largestRenderMs": 1.6
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 162.4,
+          "snapshotAndPostMs": 0,
+          "installMs": 3.2,
+          "largestFrameGapMs": 17.3,
+          "largestRenderMs": 1.9
+        },
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 168,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 4.9,
+          "largestFrameGapMs": 19.6,
+          "largestRenderMs": 0.4
+        }
+      ]
+    }
+  ],
+  "error": null,
+  "errors": []
+}

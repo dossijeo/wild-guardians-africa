@@ -1,0 +1,344 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+  "result": {
+    "farDraws": [
+      {
+        "slot": "world-loading",
+        "ms": 897.8000000119209,
+        "failed": false,
+        "api": {
+          "texImage2D": {
+            "count": 1,
+            "ms": 0,
+            "maxMs": 0
+          },
+          "drawArrays": {
+            "count": 13,
+            "ms": 0.009999990463256836,
+            "maxMs": 0.004999995231628418
+          },
+          "bufferData": {
+            "count": 359,
+            "ms": 1.2250002026557922,
+            "maxMs": 0.019999980926513672
+          },
+          "bufferSubData": {
+            "count": 24,
+            "ms": 0.04500001668930054,
+            "maxMs": 0.009999990463256836
+          },
+          "drawElementsInstanced": {
+            "count": 54,
+            "ms": 0.05500000715255737,
+            "maxMs": 0.005000054836273193
+          },
+          "drawElements": {
+            "count": 46,
+            "ms": 0.0350000262260437,
+            "maxMs": 0.009999990463256836
+          },
+          "texSubImage2D": {
+            "count": 4,
+            "ms": 2.284999966621399,
+            "maxMs": 2.2549999952316284
+          },
+          "drawArraysInstanced": {
+            "count": 2,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          },
+          "compileShader": {
+            "count": 6,
+            "ms": 0.019999980926513672,
+            "maxMs": 0.019999980926513672
+          },
+          "linkProgram": {
+            "count": 3,
+            "ms": 0.019999980926513672,
+            "maxMs": 0.009999990463256836
+          },
+          "getProgramInfoLog": {
+            "count": 3,
+            "ms": 875.789999961853,
+            "maxMs": 848.2199999690056
+          },
+          "getShaderInfoLog": {
+            "count": 6,
+            "ms": 1.1500000357627869,
+            "maxMs": 0.30000001192092896
+          },
+          "getProgramParameter": {
+            "count": 9,
+            "ms": 0.46000003814697266,
+            "maxMs": 0.17499995231628418
+          },
+          "getActiveUniform": {
+            "count": 78,
+            "ms": 0.08499997854232788,
+            "maxMs": 0.009999990463256836
+          },
+          "getUniformLocation": {
+            "count": 78,
+            "ms": 0.13999998569488525,
+            "maxMs": 0.020000040531158447
+          },
+          "getActiveAttrib": {
+            "count": 8,
+            "ms": 0.009999990463256836,
+            "maxMs": 0.004999995231628418
+          },
+          "getAttribLocation": {
+            "count": 8,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          },
+          "generateMipmap": {
+            "count": 1,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [
+          {
+            "ms": 10.48499995470047,
+            "material": "",
+            "type": "MeshDepthMaterial",
+            "object": "",
+            "vertices": 1637
+          },
+          {
+            "ms": 21.865000009536743,
+            "material": "",
+            "type": "ShaderMaterial",
+            "object": "",
+            "vertices": 104
+          },
+          {
+            "ms": 851.9499999880791,
+            "material": "",
+            "type": "MeshStandardMaterial",
+            "object": "",
+            "vertices": 2401
+          }
+        ],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": "world-loading",
+        "ms": 10.254999995231628,
+        "failed": false,
+        "api": {
+          "drawArrays": {
+            "count": 13,
+            "ms": 0.009999990463256836,
+            "maxMs": 0.004999995231628418
+          },
+          "bufferSubData": {
+            "count": 25,
+            "ms": 0.09500008821487427,
+            "maxMs": 0.025000035762786865
+          },
+          "drawElementsInstanced": {
+            "count": 43,
+            "ms": 0.04500001668930054,
+            "maxMs": 0.01500004529953003
+          },
+          "drawElements": {
+            "count": 46,
+            "ms": 0.04999995231628418,
+            "maxMs": 0.004999995231628418
+          },
+          "texSubImage2D": {
+            "count": 2,
+            "ms": 0.029999971389770508,
+            "maxMs": 0.02499997615814209
+          },
+          "drawArraysInstanced": {
+            "count": 2,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          },
+          "bufferData": {
+            "count": 9,
+            "ms": 0.030000030994415283,
+            "maxMs": 0.014999985694885254
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      },
+      {
+        "slot": "world-loading",
+        "ms": 10.824999988079071,
+        "failed": false,
+        "api": {
+          "drawArrays": {
+            "count": 13,
+            "ms": 0.010000050067901611,
+            "maxMs": 0.005000054836273193
+          },
+          "bufferSubData": {
+            "count": 25,
+            "ms": 0.10999995470046997,
+            "maxMs": 0.02499997615814209
+          },
+          "drawElementsInstanced": {
+            "count": 44,
+            "ms": 0.07999998331069946,
+            "maxMs": 0.029999971389770508
+          },
+          "drawElements": {
+            "count": 46,
+            "ms": 0.07500004768371582,
+            "maxMs": 0.029999971389770508
+          },
+          "texSubImage2D": {
+            "count": 2,
+            "ms": 0.030000030994415283,
+            "maxMs": 0.019999980926513672
+          },
+          "drawArraysInstanced": {
+            "count": 2,
+            "ms": 0.004999995231628418,
+            "maxMs": 0.004999995231628418
+          }
+        },
+        "materials": [],
+        "scope": "Instrumented synchronous CPU submission wall time; nested material/API durations overlap, not GPU time."
+      }
+    ],
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 622.535000026226,
+      "bindings": {
+        "initialized": 56,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 56,
+        "released": 56,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": null,
+      "longFrames": null,
+      "frames": null,
+      "readyMs": 32640.194999992847,
+      "phases": []
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 11.354999959468842,
+      "maxTaskMs": 7.324999988079071,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 918,
+      "workMs": 312.9699998497963,
+      "coordinationMs": 29.450000822544098,
+      "maxUnitMs": 7.894999980926514,
+      "overruns": 18,
+      "deadlineLoans": 12,
+      "oversizeRecoveries": 0,
+      "continuationMs": 20.725000143051147,
+      "continuationTurns": 811,
+      "median": 33.424999999995634,
+      "p95": 66.67499999999563,
+      "p99": 66.74499999999534,
+      "cpu95": 6.564999997615814,
+      "jitter": 33.25,
+      "budgetMs": 1.9501953920115378,
+      "pending": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

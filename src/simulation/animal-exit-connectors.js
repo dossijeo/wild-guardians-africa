@@ -1,5 +1,7 @@
 import {SearchFrontier} from '../world/search-frontier.js';
-import {animalFootprintConnector} from './animal-footprint-connectors.js';
+import {animalFootprintConnector,animalFootprintConnectorFailed} from './animal-footprint-connectors.js';
+import {animalGridExitBridge} from './animal-grid-exit-bridge.js';
+import {animalNativeExitBridge} from './animal-native-exit-bridge.js';
 const distances=[4,8,12,16,24,32];
 const angles=32,budget=8;
 // An open fractional corridor can have no usable one-metre grid cells. Try
@@ -8,10 +10,19 @@ const angles=32,budget=8;
 export function animalExitConnector(actor,end,nav){
  const radius=actor.radius??.28;
  if(!nav.segmentClear||!nav.walkable)return null;
+ // Preserve ordinary retreat routing. The native bridge is a final chance
+ // after the existing bounded physical search has exhausted its candidates.
+ if(actor.exitConnectorSearch?.exhausted){
+  const native=animalNativeExitBridge(actor,end,nav);
+  if(native.path){delete actor.exitConnectorSearch;return native.path;}
+  if(native.pending)return null;
+ }
  const key=JSON.stringify([nav.version??0,actor.x,actor.z,end.x,end.z,radius]);
  let search=actor.exitConnectorSearch;
  if(!search||search.key!==key)search=actor.exitConnectorSearch={key,next:0};
+ if(search.exhausted)return null;
  const heading=Math.atan2(end.x-actor.x,end.z-actor.z);
+ const ringWasPending=search.next<distances.length*angles;
  const limit=Math.min(distances.length*angles,search.next+budget);
  for(;search.next<limit;){
   const index=search.next++,sample=index%angles;
@@ -24,11 +35,28 @@ export function animalExitConnector(actor,end,nav){
   delete actor.exitConnectorSearch;
   return [point,{x:end.x,z:end.z}];
  }
+ // Completing the radial phase must not also drain the fractional and
+ // quarter-metre phases in this same simulation tick. Large hordes would
+ // otherwise multiply the worst-case navigation work on one frame.
+ if(ringWasPending)return null;
  if(search.next===distances.length*angles){
   const path=fractionalExit(actor,end,nav,search,radius);if(path)return path;
   // A lattice can still miss a passage narrower than its cell spacing. Use
   // footprint-derived physical corners only after the unchanged search ends.
-  if(search.fine?.visited&&(search.fine.visited>=4096||!search.fine.items.length))return animalFootprintConnector(actor,end,nav);
+  if(search.fine?.visited&&(search.fine.visited>=4096||!search.fine.items.length)){
+   const bridge=animalGridExitBridge(actor,end,nav);
+   if(bridge.path){delete actor.exitConnectorSearch;return bridge.path;}
+   if(bridge.pending)return null;
+   // A narrow bent corridor may need a quarter-metre lateral adjustment that
+   // both lattices above miss. Retain the same bounded frontier and native
+   // swept tests; this never changes the animal's radius or wall collision.
+   const quarter=fractionalExit(actor,end,nav,search,radius,.25,'quarter');
+   if(quarter)return quarter;
+   if(search.quarter?.items.length&&search.quarter.visited<4096)return null;
+   const footprint=animalFootprintConnector(actor,end,nav);
+   if(!footprint&&animalFootprintConnectorFailed(actor))search.exhausted=true;
+   return footprint;
+  }
  }
  return null;
 }
@@ -37,9 +65,9 @@ export function animalExitConnector(actor,end,nav){
 // miss a winding, physically open corridor. Search a half-metre lattice
 // anchored to the actual actor, retaining its bounded frontier across ticks
 // and saves. Native swept checks remain the sole definition of clearance.
-function fractionalExit(actor,end,nav,search,radius){
- const maxNodes=4096,step=.5;
- const fine=search.fine??= {items:[],sequence:0,costs:{'0,0':0},previous:{},visited:0,nodeCount:1};
+function fractionalExit(actor,end,nav,search,radius,step=.5,field='fine'){
+ const maxNodes=4096;
+ const fine=search[field]??= {items:[],sequence:0,costs:{'0,0':0},previous:{},visited:0,nodeCount:1};
  const frontier=new SearchFrontier();frontier.items=fine.items;frontier.sequence=fine.sequence;
  if(!fine.visited&&!frontier.length)frontier.push({i:0,j:0,g:0,f:Math.hypot(end.x-actor.x,end.z-actor.z)});
  const point=(i,j)=>({x:actor.x+i*step,z:actor.z+j*step});

@@ -1,0 +1,198 @@
+import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
+import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
+import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
+import {observeGameEvents} from '../../src/simulation/game.js';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {dirname} from 'node:path';
+import {createHash} from 'node:crypto';
+import {serialize} from '../../src/persistence/snapshots.js';
+
+const [daysArg='14',seedArg='712',strategy='good',biome='sabana',culture='mapungubwe',
+  backend='wild-engine']=process.argv.slice(2);
+const days=Number(daysArg),seed=Number(seedArg);
+if(!Number.isSafeInteger(days)||days<1||days>100||!Number.isSafeInteger(seed)||seed<0||
+  !['wild-engine','legacy'].includes(backend))
+  throw Error('Usage: node tools/experiments/probe-worker-overlaps.mjs [days] [seed] [strategy] [biome] [culture] [wild-engine|legacy]');
+
+let sampledTicks=0,overlapTicks=0,lateOverlapTicks=0,pairs=0,maxPenetration=0;
+let workOverlapPairs=0,phasedWorkOverlapPairs=0,maxWorkPenetration=0;
+const distinctWorkPairs=new Set();
+const byDay=new Map(),byStatus=new Map(),examples=[],workExamples=[];
+const overlapWindows={'0-3':0,'3-10':0,'10-30':0,'30+':0};
+let villageEntry=null;
+const captureRouteProgress=process.env.WG_WORKER_ROUTE_PROGRESS_DETAIL==='1';
+const captureRecoveries=process.env.WG_WORKER_RECOVERY_DETAIL==='1'||captureRouteProgress;
+if(captureRecoveries&&backend!=='wild-engine')
+  throw Error('Recovery detail currently requires the continuous Wild Engine opening');
+const recoverySamples=[];
+const motionSamples=[];
+const routeProgressByActor=new Map();
+const remainingRoute=actor=>{
+  let distance=0,prior=actor;
+  for(const point of actor.path??[]){
+    distance+=Math.hypot(point.x-prior.x,point.z-prior.z);prior=point;
+  }
+  return distance;
+};
+const inspectDay=Number(process.env.WG_WORKER_INSPECT_DAY??0),
+  inspectTime=Number(process.env.WG_WORKER_INSPECT_TIME??0),
+  inspectIds=new Set((process.env.WG_WORKER_INSPECT_IDS??'').split(',').filter(Boolean));
+let diagnostic=null;
+const captureOutput=process.env.WG_WORKER_CAPTURE_OUTPUT;
+const captureDay=Number(process.env.WG_WORKER_CAPTURE_DAY??0);
+const captureTime=Number(process.env.WG_WORKER_CAPTURE_TIME??0);
+if(captureOutput&&(!Number.isSafeInteger(captureDay)||captureDay<1||captureDay>days||
+  !Number.isFinite(captureTime)||captureTime<0||captureTime>600))
+  throw Error('WG_WORKER_CAPTURE_OUTPUT requires a valid day and time');
+let captured=false;
+const captureRecovery=(state,event)=>{
+  if(event.type!=='ActorMobileCollisionRecovery'||recoverySamples.length>=256)return;
+  const actor=state.workers.find(w=>w.id===event.actorId);
+  if(!actor)return;
+  const next=actor.path?.[0],distance=next?Math.hypot(next.x-actor.x,next.z-actor.z):0;
+  const probe=distance>1e-8?{x:actor.x+(next.x-actor.x)*Math.min(.5,distance)/distance,
+    z:actor.z+(next.z-actor.z)*Math.min(.5,distance)/distance}:null;
+  const blockers=probe?actorBlockers(state,actor,true,8)
+    .filter(other=>!actorSegmentClear(actor,probe,actor,[other]))
+    .map(other=>({id:other.id,status:other.status,x:other.x,z:other.z,
+      radius:other.radius??.28,distance:Math.hypot(actor.x-other.x,actor.z-other.z),
+      next:other.path?.[0]??null})):[];
+  recoverySamples.push({day:state.day,time:state.time,elapsed:state.elapsed,
+    actorId:actor.id,status:actor.status,x:event.x,z:event.z,
+    destinationId:actor.destinationId,pathLength:actor.path?.length??0,
+    next:next??null,probe,blockers,
+    ...(captureRouteProgress?{priorMotion:(routeProgressByActor.get(actor.id)??[])
+      .filter(sample=>sample.elapsed>=state.elapsed-12.1)}:{})});
+};
+const onTick=(state,nav)=>{
+  if(captureOutput&&!captured&&state.day===captureDay&&state.time>=captureTime){
+    mkdirSync(dirname(captureOutput),{recursive:true});
+    writeFileSync(captureOutput,serialize(state));
+    captured=true;
+  }
+  villageEntry??=state.villages[0]?.entry??null;
+  sampledTicks++;
+  const workers=state.workers.filter(w=>w.status!=='home'&&Number.isFinite(w.x)&&Number.isFinite(w.z));
+  if(captureRouteProgress){
+    const villageEntries=new Map(state.villages.map(village=>
+      [village.id,village.entry??village]));
+    const activeIds=new Set(workers.map(worker=>worker.id));
+    for(const id of routeProgressByActor.keys())if(!activeIds.has(id))routeProgressByActor.delete(id);
+    for(const worker of workers){
+      const history=routeProgressByActor.get(worker.id)??[];
+      if(history.length&&state.elapsed-history.at(-1).elapsed<.5)continue;
+      const home=worker.status==='returning'?villageEntries.get(worker.villageId):null;
+      history.push({elapsed:state.elapsed,x:worker.x,z:worker.z,
+        directHomeDistance:home?Math.hypot(worker.x-home.x,worker.z-home.z):null,
+        progressThresholdDistance:worker.mobileProgressDistance??null,
+        remainingRoute:remainingRoute(worker),pathLength:worker.path?.length??0,
+        next:worker.path?.[0]??null,
+        progressAt:worker.mobileProgressAt??null,
+        stationarySeconds:worker.dynamicStallSeconds??0});
+      while(history.length&&history[0].elapsed<state.elapsed-12.1)history.shift();
+      routeProgressByActor.set(worker.id,history);
+    }
+  }
+  let found=false;
+  for(let i=0;i<workers.length;i++)for(let j=i+1;j<workers.length;j++){
+    const a=workers[i],b=workers[j],distance=Math.hypot(a.x-b.x,a.z-b.z);
+    const penetration=(a.radius??.28)+(b.radius??.28)-distance;
+    if(penetration<=1e-6)continue;
+    found=true;pairs++;maxPenetration=Math.max(maxPenetration,penetration);
+    const day=byDay.get(state.day)??{ticks:0,pairs:0,firstTime:state.time,lastTime:state.time};
+    day.pairs++;day.firstTime=Math.min(day.firstTime,state.time);day.lastTime=Math.max(day.lastTime,state.time);
+    byDay.set(state.day,day);
+    const status=[a.status,b.status].sort().join('/');
+    byStatus.set(status,(byStatus.get(status)??0)+1);
+    if(state.time>30+1e-6){
+      workOverlapPairs++;
+      maxWorkPenetration=Math.max(maxWorkPenetration,penetration);
+      distinctWorkPairs.add(`${state.day}:${a.id}:${b.id}`);
+      if((a.mobilePhaseRemaining??0)>0||(b.mobilePhaseRemaining??0)>0)
+        phasedWorkOverlapPairs++;
+    }
+    if(examples.length<12)examples.push({day:state.day,time:state.time,a:a.id,b:b.id,
+      aStatus:a.status,bStatus:b.status,distance,penetration});
+    if(state.time>10&&workExamples.length<500)workExamples.push({day:state.day,time:state.time,
+      a:a.id,b:b.id,aStatus:a.status,bStatus:b.status,
+      aPhase:a.mobilePhaseRemaining??0,bPhase:b.mobilePhaseRemaining??0,
+      ax:a.x,az:a.z,bx:b.x,bz:b.z,
+      aDestination:a.destinationId,bDestination:b.destinationId,
+      aNext:a.path?.[0]??null,bNext:b.path?.[0]??null,
+      aPathLength:a.path?.length??0,bPathLength:b.path?.length??0,
+      aRaidReturn:a.raidReturn??false,bRaidReturn:b.raidReturn??false,
+      distance,penetration});
+    if(!diagnostic&&inspectDay===state.day&&state.time>=inspectTime&&
+      inspectIds.has(a.id)&&inspectIds.has(b.id)){
+      const inspect=w=>{
+        const next=w.path?.[0],blockers=actorBlockers(state,w,true,8);
+        return {id:w.id,x:w.x,z:w.z,status:w.status,destinationId:w.destinationId,
+          next,pathLength:w.path?.length??0,phase:w.mobilePhaseRemaining??0,
+          blockers:blockers.map(item=>({id:item.id,x:item.x,z:item.z,status:item.status})),
+          nextChecks:next?{stand:nav.walkable(next.x,next.z,w.radius??.28,null,true),
+            static:nav.workerMotionClear(w,next,w.radius??.28),
+            dynamic:actorSegmentClear(w,next,w,blockers)}:null};
+      };
+      diagnostic={day:state.day,time:state.time,villageEntry,workers:[inspect(a),inspect(b)]};
+    }
+  }
+  if(found){
+    overlapTicks++;byDay.get(state.day).ticks++;
+    if(state.time>3+1e-6)lateOverlapTicks++;
+    overlapWindows[state.time<=3+1e-6?'0-3':state.time<=10+1e-6?'3-10':
+      state.time<=30+1e-6?'10-30':'30+']++;
+  }
+};
+
+const result=await simulateNativeCampaign({days,strategy,seed,biome,culture,
+  slotId:`native-${strategy}-${seed}`,
+  ...(backend==='wild-engine'?{openingFactory:async world=>{
+    const opening=await createSpatialCampaignOpening(world);
+    if(captureRecoveries){
+      observeGameEvents(opening.s,event=>captureRecovery(opening.s,event));
+      opening.nav.motionObserver=event=>motionSamples.push({day:opening.s.day,
+        time:opening.s.time,...event});
+    }
+    return opening;
+  },
+    spatialAdvice:true,nativeIntents:true,nativeWallPlans:true,reloadRaids:false}:{}),
+  onTick});
+if(captureOutput&&!captured)throw Error('Requested worker passage snapshot was not reached');
+const report={days,seed,strategy,biome,culture,backend,
+  stateHash:createHash('sha256').update(serialize(result.state)).digest('hex'),
+  completedNights:result.completedNights,result:result.result,
+  money:result.money,living:result.daily?.at(-1)?.living,staff:result.daily?.at(-1)?.staff,
+  delivered:result.counts?.CrateDelivered,
+  collisionRecoveries:result.counts?.ActorMobileCollisionRecovery,
+  gameTickMs:result.daily?.reduce((n,d)=>n+(d.wallTime?.gameTickMs??0),0),
+  sampledTicks,overlapTicks,lateOverlapTicks,pairs,maxPenetration,
+  villageEntry,diagnostic,overlapWindows,workOverlapPairs,phasedWorkOverlapPairs,
+  distinctWorkPairs:distinctWorkPairs.size,maxWorkPenetration,
+  byDay:[...byDay],byStatus:[...byStatus],examples,workExamples};
+if(captureRecoveries){
+  report.recoverySamples=recoverySamples;report.motionSamples=motionSamples;
+  const work=workExamples.filter(example=>example.time>30),byTrigger={};
+  let linked=0;
+  for(const example of work){
+    const recovery=motionSamples.filter(sample=>sample.day===example.day&&
+      (sample.actorId===example.a||sample.actorId===example.b)&&
+      sample.time<=example.time+1e-6&&example.time-sample.time<=3.2)
+      .sort((a,b)=>b.time-a.time)[0];
+    if(!recovery)continue;
+    linked++;byTrigger[recovery.trigger]=(byTrigger[recovery.trigger]??0)+1;
+  }
+  report.workRecoveryAttribution={sampledWorkExamples:work.length,linked,
+    unlinked:work.length-linked,byTrigger};
+}
+const output=process.env.WG_WORKER_PROBE_OUTPUT;
+if(output){
+  mkdirSync(dirname(output),{recursive:true});
+  writeFileSync(output,JSON.stringify(report,null,2)+'\n');
+  console.log(JSON.stringify({output,days,seed,biome,culture,backend,
+    stateHash:report.stateHash,
+    completedNights:report.completedNights,result:report.result,
+    money:report.money,living:report.living,delivered:report.delivered,
+    collisionRecoveries:report.collisionRecoveries,overlapTicks,
+    workOverlapPairs,phasedWorkOverlapPairs,distinctWorkPairs:distinctWorkPairs.size,
+    maxPenetration,maxWorkPenetration}));
+}else console.log(JSON.stringify(report));

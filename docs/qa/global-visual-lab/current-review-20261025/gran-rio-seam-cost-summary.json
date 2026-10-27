@@ -1,0 +1,698 @@
+{
+  "scope": "Stationary, paused, 360 authored frames after 60 warm frames (Sabana and Gran Rio add 12 idle confirmation frames), no recording. GPU elapsed includes pipeline bubbles. No FPS improvement claim. Only ground geometry sampling changes. Moving camera and generation cost are not measured here.",
+  "protocolVerified": true,
+  "runs": [
+    {
+      "run": "a1",
+      "groundStep": 32,
+      "presentationMs": {
+        "count": 372,
+        "mean": 16.627110215053772,
+        "p95": 16.81999999999971,
+        "max": 17.160000000003492
+      },
+      "gpuElapsedMs": {
+        "count": 125,
+        "mean": 13.536040328000004,
+        "p95": 15.035104,
+        "max": 25.043541
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 373,
+          "mean": 6.789436999978073,
+          "p95": 8.775000095367432,
+          "max": 9.855000019073486
+        },
+        "draw": {
+          "count": 373,
+          "mean": 3.8559651496263356,
+          "p95": 5.144999980926514,
+          "max": 5.979999899864197
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 372,
+          "mean": 16.627110215053772,
+          "p95": 16.81999999999971,
+          "max": 17.160000000003492
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "posePreparation": {
+        "elapsedMs": 2221.9500000476837,
+        "farBuilds": [
+          {
+            "key": "192:96:1",
+            "buildMs": 981.3050000667572
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 719.914999961853
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 726.9199999570847
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 727.9800000190735
+          }
+        ],
+        "stream": {
+          "created": 35,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      }
+    },
+    {
+      "run": "b1",
+      "groundStep": 16,
+      "presentationMs": {
+        "count": 372,
+        "mean": 16.673239247311827,
+        "p95": 16.834999999999127,
+        "max": 33.18000000000029
+      },
+      "gpuElapsedMs": {
+        "count": 125,
+        "mean": 13.69200748,
+        "p95": 15.641614,
+        "max": 18.046406
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 373,
+          "mean": 6.835536193272383,
+          "p95": 8.799999952316284,
+          "max": 11
+        },
+        "draw": {
+          "count": 373,
+          "mean": 3.8238203758848255,
+          "p95": 5.2200000286102295,
+          "max": 6.289999961853027
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 372,
+          "mean": 16.673239247311827,
+          "p95": 16.834999999999127,
+          "max": 33.18000000000029
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "posePreparation": {
+        "elapsedMs": 4136.280000090599,
+        "farBuilds": [
+          {
+            "key": "192:96:1",
+            "buildMs": 970.3500000238419
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 710.6549999713898
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 707.6200000047684
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 680
+          }
+        ],
+        "stream": {
+          "created": 35,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      }
+    },
+    {
+      "run": "a2",
+      "groundStep": 32,
+      "presentationMs": {
+        "count": 372,
+        "mean": 16.628736559139785,
+        "p95": 16.82499999999709,
+        "max": 19.2699999999968
+      },
+      "gpuElapsedMs": {
+        "count": 125,
+        "mean": 13.811334120000005,
+        "p95": 15.65177,
+        "max": 26.655312
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 373,
+          "mean": 6.9504021438133305,
+          "p95": 9.245000004768372,
+          "max": 10.945000052452087
+        },
+        "draw": {
+          "count": 373,
+          "mean": 3.8981903506987217,
+          "p95": 5.549999952316284,
+          "max": 6.695000052452087
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 372,
+          "mean": 16.628736559139785,
+          "p95": 16.82499999999709,
+          "max": 19.2699999999968
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "posePreparation": {
+        "elapsedMs": 3475.514999985695,
+        "farBuilds": [
+          {
+            "key": "192:96:1",
+            "buildMs": 929.7900000810623
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 753.4150000810623
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 719.9950000047684
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 740.5749999284744
+          }
+        ],
+        "stream": {
+          "created": 35,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      }
+    },
+    {
+      "run": "b2",
+      "groundStep": 16,
+      "presentationMs": {
+        "count": 372,
+        "mean": 16.628387096774198,
+        "p95": 16.82999999999447,
+        "max": 17.349999999998545
+      },
+      "gpuElapsedMs": {
+        "count": 125,
+        "mean": 13.940321176,
+        "p95": 15.832447,
+        "max": 30.252968
+      },
+      "cpuScopes": {
+        "slices": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationCpu": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "preparationLatency": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "generate": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "remove": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "removeBatch": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "admit": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "cancel": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "publish": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "install": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "terrain": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "props": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "mud": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "attach": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "details": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "render": {
+          "count": 373,
+          "mean": 7.078042898037478,
+          "p95": 8.945000052452087,
+          "max": 10.149999976158142
+        },
+        "draw": {
+          "count": 373,
+          "mean": 4.0130428970659064,
+          "p95": 5.434999942779541,
+          "max": 6.379999995231628
+        },
+        "cache": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "nativeCompute": {
+          "count": 0,
+          "mean": 0,
+          "p95": null,
+          "max": null
+        },
+        "frames": {
+          "count": 372,
+          "mean": 16.628387096774198,
+          "p95": 16.82999999999447,
+          "max": 17.349999999998545
+        }
+      },
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "posePreparation": {
+        "elapsedMs": 2023.179999947548,
+        "farBuilds": [
+          {
+            "key": "192:96:1",
+            "buildMs": 890.9650000333786
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 718.0449999570847
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 720.5900000333786
+          },
+          {
+            "key": "192:96:1",
+            "buildMs": 719.2749999761581
+          }
+        ],
+        "stream": {
+          "created": 35,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      }
+    }
+  ]
+}

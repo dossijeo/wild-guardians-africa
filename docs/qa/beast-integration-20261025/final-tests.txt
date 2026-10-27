@@ -1,0 +1,656 @@
+TAP version 13
+# Subtest: all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+ok 1 - all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+  ---
+  duration_ms: 36.1404
+  ...
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 2 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 7.5479
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 3 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 2.7384
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 4 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 2.7085
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 5 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.7221
+  ...
+# (node:23344) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: warthog/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 6 - warthog/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 24.7517
+  ...
+# Subtest: warthog/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 7 - warthog/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.6469
+  ...
+# Subtest: warthog/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 8 - warthog/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.3474
+  ...
+# Subtest: warthog/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 9 - warthog/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.3352
+  ...
+# Subtest: hyena/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 10 - hyena/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.4982
+  ...
+# Subtest: hyena/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 11 - hyena/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.023
+  ...
+# Subtest: hyena/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 12 - hyena/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.8842
+  ...
+# Subtest: hyena/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 13 - hyena/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.4929
+  ...
+# Subtest: buffalo/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 14 - buffalo/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 4.5083
+  ...
+# Subtest: buffalo/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 15 - buffalo/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.5116
+  ...
+# Subtest: buffalo/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 16 - buffalo/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.606
+  ...
+# Subtest: buffalo/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 17 - buffalo/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.4848
+  ...
+# Subtest: lion/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 18 - lion/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.6085
+  ...
+# Subtest: lion/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 19 - lion/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.2718
+  ...
+# Subtest: lion/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 20 - lion/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.8779
+  ...
+# Subtest: lion/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 21 - lion/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.9399
+  ...
+# Subtest: rhino/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 22 - rhino/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8773
+  ...
+# Subtest: rhino/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 23 - rhino/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.9418
+  ...
+# Subtest: rhino/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 24 - rhino/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8048
+  ...
+# Subtest: rhino/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 25 - rhino/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8975
+  ...
+# Subtest: An invalidated target cannot be replaced underneath a committed attack or receive phantom damage
+ok 26 - An invalidated target cannot be replaced underneath a committed attack or receive phantom damage
+  ---
+  duration_ms: 0.7059
+  ...
+# Subtest: Exhausting a budget during an attack finishes its presentation without granting another hit
+ok 27 - Exhausting a budget during an attack finishes its presentation without granting another hit
+  ---
+  duration_ms: 0.6844
+  ...
+# Subtest: Shield contact consumes one completed attack without damage, and blocking pause freezes the clip phase
+ok 28 - Shield contact consumes one completed attack without damage, and blocking pause freezes the clip phase
+  ---
+  duration_ms: 1.7703
+  ...
+# Subtest: warthog: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 29 - warthog: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 1781.9119
+  ...
+# {"species":"warthog","groundingComparisonPoses":72,"maximumGroundError":2.2738755323103987e-13}
+# Subtest: hyena: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 30 - hyena: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 1335.2589
+  ...
+# {"species":"hyena","groundingComparisonPoses":72,"maximumGroundError":2.273702059962801e-13}
+# Subtest: buffalo: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 31 - buffalo: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 3839.1021
+  ...
+# {"species":"buffalo","groundingComparisonPoses":72,"maximumGroundError":2.2736673654932815e-13}
+# Subtest: lion: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 32 - lion: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 1631.9216
+  ...
+# {"species":"lion","groundingComparisonPoses":72,"maximumGroundError":2.2734938931456838e-13}
+# Subtest: rhino: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 33 - rhino: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 3316.4688
+  ...
+# {"species":"rhino","groundingComparisonPoses":72,"maximumGroundError":2.274014310188477e-13}
+# Subtest: secondary cloth and tail are excluded from grounding and walking body clearance
+ok 34 - secondary cloth and tail are excluded from grounding and walking body clearance
+  ---
+  duration_ms: 1.5179
+  ...
+# Subtest: late callers on a disposed pool never resolve descriptors, fetch models or create rigs
+ok 35 - late callers on a disposed pool never resolve descriptors, fetch models or create rigs
+  ---
+  duration_ms: 5.8249
+  ...
+# Subtest: preload deduplicates concurrent downloads and hands the warmed rig to the first animal
+ok 36 - preload deduplicates concurrent downloads and hands the warmed rig to the first animal
+  ---
+  duration_ms: 16.5561
+  ...
+# Subtest: failed preloads can retry, and a disposed pool does not create a rig after a delayed load
+ok 37 - failed preloads can retry, and a disposed pool does not create a rig after a delayed load
+  ---
+  duration_ms: 8.3256
+  ...
+# Subtest: concurrent animals consume the reserve once and get distinct rigs with shared assets
+ok 38 - concurrent animals consume the reserve once and get distinct rigs with shared assets
+  ---
+  duration_ms: 4.6641
+  ...
+# Subtest: planned reserves create one rig per frame and remove synchronous creation from group take
+ok 39 - planned reserves create one rig per frame and remove synchronous creation from group take
+  ---
+  duration_ms: 4.1983
+  ...
+# Subtest: changed plans release excess reserves and cancel a waiting generation
+ok 40 - changed plans release excess reserves and cancel a waiting generation
+  ---
+  duration_ms: 5.6155
+  ...
+# Subtest: taking a reserve during preparation reduces remaining demand instead of refilling the whole group
+ok 41 - taking a reserve during preparation reduces remaining demand instead of refilling the whole group
+  ---
+  duration_ms: 2.1635
+  ...
+# Subtest: dispose during reserve preparation releases the unregistered rig
+ok 42 - dispose during reserve preparation releases the unregistered rig
+  ---
+  duration_ms: 1.799
+  ...
+# Subtest: failed GPU preparation releases the new rig and retains existing reserves for retry
+ok 43 - failed GPU preparation releases the new rig and retains existing reserves for retry
+  ---
+  duration_ms: 2.3351
+  ...
+# Subtest: an obsolete preparation failure cancels quietly even when the same composition returns
+ok 44 - an obsolete preparation failure cancels quietly even when the same composition returns
+  ---
+  duration_ms: 3.992
+  ...
+# Subtest: leaving actors release private bone textures once while retaining shared model resources
+ok 45 - leaving actors release private bone textures once while retaining shared model resources
+  ---
+  duration_ms: 3.3711
+  ...
+# (node:43096) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unchanged plan prepares once and an identical group on the next day prepares again
+ok 46 - an unchanged plan prepares once and an identical group on the next day prepares again
+  ---
+  duration_ms: 4.6949
+  ...
+# Subtest: active raids do not reset pool demand and completion refreshes an unchanged pending plan
+ok 47 - active raids do not reset pool demand and completion refreshes an unchanged pending plan
+  ---
+  duration_ms: 0.3054
+  ...
+# Subtest: a completed night releases additional reserves back to the baseline
+ok 48 - a completed night releases additional reserves back to the baseline
+  ---
+  duration_ms: 0.2547
+  ...
+# Subtest: reserve errors wait before retrying and do not repeat every render
+ok 49 - reserve errors wait before retrying and do not repeat every render
+  ---
+  duration_ms: 0.8077
+  ...
+# Subtest: closed or GPU-unprepared worlds do not begin reserve preparation
+ok 50 - closed or GPU-unprepared worlds do not begin reserve preparation
+  ---
+  duration_ms: 0.2088
+  ...
+# (node:25388) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: saved active raid reserves every remaining animal, ignoring its already consumed night plan
+ok 51 - saved active raid reserves every remaining animal, ignoring its already consumed night plan
+  ---
+  duration_ms: 2.7396
+  ...
+# Subtest: saved actor readiness waits for its model and skips gone animals
+ok 52 - saved actor readiness waits for its model and skips gone animals
+  ---
+  duration_ms: 2.0287
+  ...
+# Subtest: saved actor errors and cancellation prevent world readiness
+ok 53 - saved actor errors and cancellation prevent world readiness
+  ---
+  duration_ms: 1.2968
+  ...
+# Subtest: every emitted mud triangle centroid is classified by its exact resident outline in signed chunks
+ok 54 - every emitted mud triangle centroid is classified by its exact resident outline in signed chunks
+  ---
+  duration_ms: 134.1624
+  ...
+# Subtest: concave contour rejects its bounding-circle corners and includes edges
+ok 55 - concave contour rejects its bounding-circle corners and includes edges
+  ---
+  duration_ms: 0.8715
+  ...
+# Subtest: youngMale: the authored toe point chooses mud even when the body is on moss
+ok 56 - youngMale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 11.0942
+  ...
+# Subtest: youngFemale: the authored toe point chooses mud even when the body is on moss
+ok 57 - youngFemale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 3.395
+  ...
+# Subtest: olderMale: the authored toe point chooses mud even when the body is on moss
+ok 58 - olderMale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 1.0271
+  ...
+# Subtest: olderFemale: the authored toe point chooses mud even when the body is on moss
+ok 59 - olderFemale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 0.9249
+  ...
+# Subtest: runner: surface-independent originals never query mud
+ok 60 - runner: surface-independent originals never query mud
+  ---
+  duration_ms: 2.7064
+  ...
+# Subtest: beast: surface-independent originals never query mud
+ok 61 - beast: surface-independent originals never query mud
+  ---
+  duration_ms: 1.8482
+  ...
+# (node:16012) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera heading 0: the complete epic group appears just behind the eye, without overlaps
+ok 62 - camera heading 0: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 20.5935
+  ...
+# Subtest: camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+ok 63 - camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.8033
+  ...
+# Subtest: camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+ok 64 - camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 7.331
+  ...
+# Subtest: camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+ok 65 - camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.9708
+  ...
+# Subtest: a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+ok 66 - a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+  ---
+  duration_ms: 5.9565
+  ...
+# Subtest: disconnected water behind the camera uses the near farm side with bounded route searches
+ok 67 - disconnected water behind the camera uses the near farm side with bounded route searches
+  ---
+  duration_ms: 1.4923
+  ...
+# Subtest: camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+ok 68 - camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+  ---
+  duration_ms: 5.2811
+  ...
+# (node:22404) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 69 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2312.151
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 70 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1731.6512
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 71 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1171.8864
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 72 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1336.4734
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 73 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4580.7707
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 74 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3106.1895
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 75 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1274.1993
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 76 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1252.3846
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 77 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 955.3894
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 78 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1236.6524
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 79 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4282.0661
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 80 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3010.411
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 81 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1246.4129
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 82 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1212.0585
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 83 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1022.9367
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 84 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1207.9226
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 85 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4543.6831
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 86 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2984.5559
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 87 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1247.6871
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 88 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1220.9769
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 89 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1025.7349
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 90 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1311.416
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 91 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4250.616
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 92 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2778.6159
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 93 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1382.2547
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 94 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1229.1029
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 95 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1415.2653
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 96 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1339.8084
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 97 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4467.8291
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 98 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2883.7537
+  ...
+# (node:38108) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: travel tracks the approaching animal until farm entry, then leaves camera there once per incursion
+ok 99 - travel tracks the approaching animal until farm entry, then leaves camera there once per incursion
+  ---
+  duration_ms: 11.85
+  ...
+# Subtest: entry during the initial trip freezes its destination without a snap or further pursuit
+ok 100 - entry during the initial trip freezes its destination without a snap or further pursuit
+  ---
+  duration_ms: 1.5495
+  ...
+# Subtest: manual input cancels ongoing approach tracking without restarting it
+ok 101 - manual input cancels ongoing approach tracking without restarting it
+  ---
+  duration_ms: 1.1193
+  ...
+# Subtest: hidden pause freezes tracking after initial travel and resumes only when visible
+ok 102 - hidden pause freezes tracking after initial travel and resumes only when visible
+  ---
+  duration_ms: 1.4288
+  ...
+# Subtest: manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+ok 103 - manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+  ---
+  duration_ms: 1.0349
+  ...
+# Subtest: menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+ok 104 - menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+  ---
+  duration_ms: 0.9877
+  ...
+# Subtest: a departing animal or ended raid stops the trip; saved focus does not replay on reload
+ok 105 - a departing animal or ended raid stops the trip; saved focus does not replay on reload
+  ---
+  duration_ms: 4.1308
+  ...
+# Subtest: sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 106 - sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1864.9107
+  ...
+# Subtest: gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 107 - gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1078.6528
+  ...
+# Subtest: manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 108 - manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 988.2036
+  ...
+# Subtest: volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 109 - volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1338.9194
+  ...
+# Subtest: gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 110 - gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 4395.6946
+  ...
+# Subtest: desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 111 - desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 2744.687
+  ...
+# Subtest: raid framing approaches smoothly without zooming out an already close player view
+ok 112 - raid framing approaches smoothly without zooming out an already close player view
+  ---
+  duration_ms: 0.7428
+  ...
+# (node:23140) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: recorded native Manglares day 65: replant inside the remaining shield charges once and queues initial watering
+ok 113 - recorded native Manglares day 65: replant inside the remaining shield charges once and queues initial watering
+  ---
+  duration_ms: 821.985
+  ...
+# Subtest: shield: point, footprint and wall occupancy use physical buildings only
+ok 114 - shield: point, footprint and wall occupancy use physical buildings only
+  ---
+  duration_ms: 2.592
+  ...
+# Subtest: house: point, footprint and wall occupancy use physical buildings only
+ok 115 - house: point, footprint and wall occupancy use physical buildings only
+  ---
+  duration_ms: 0.6491
+  ...
+# Subtest: center: point, footprint and wall occupancy use physical buildings only
+ok 116 - center: point, footprint and wall occupancy use physical buildings only
+  ---
+  duration_ms: 0.4402
+  ...
+# Subtest: shield does not override water/lava or solid vegetation placement restrictions
+ok 117 - shield does not override water/lava or solid vegetation placement restrictions
+  ---
+  duration_ms: 0.8574
+  ...
+# (node:18404) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+ok 118 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+  ---
+  duration_ms: 14.3088
+  ...
+# Subtest: intent hook handles field changes and preserves external pan edits and update return values
+ok 119 - intent hook handles field changes and preserves external pan edits and update return values
+  ---
+  duration_ms: 0.4186
+  ...
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 120 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 10.6386
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 121 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 955.3807
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 122 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 1.6884
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 123 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.0209
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 124 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 5.0168
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 125 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 1.6649
+  ...
+1..125
+# tests 125
+# suites 0
+# pass 125
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 63613.0951

@@ -1,0 +1,54 @@
+{
+  "rows": [
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "night": true,
+      "scope": "Pthread path with experimental waterShoreWorker=1, active simulation and continuous camera. Night uses an explicit time-450 fixture and QA override of raid-camera movement, not a tested dusk transition or normal night-camera interaction. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "preparedWater": {
+        "count": 8,
+        "bytes": 109820
+      },
+      "elapsed": 12.388779999992835,
+      "frames": {
+        "count": 360,
+        "mean": 34.68855555555557,
+        "p95": 50.29000000000087,
+        "max": 166.0550000000003
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7490000089009603,
+        "p95": 1.1100000143051147,
+        "max": 1.5049999952316284
+      },
+      "eviction": {
+        "count": 13,
+        "mean": 2.3699999955984263,
+        "p95": 4.504999995231628,
+        "max": 6.719999969005585
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.013559558715186291,
+        "p95": 0.025000035762786865,
+        "max": 0.10500001907348633
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 26.8979495785124,
+        "p95": 38.27453,
+        "max": 41.945364
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-prepared-shore-night/manglares.json",
+      "preparedShore": {
+        "count": 8,
+        "bytes": 96900
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import {BALANCE as B} from './balance.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {nextRandom} from './rules.js';
 import {emit} from './game.js';
+import {notifyWorkerPlanningChange} from './tasks.js';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function sweptDistance(a,w,previousA=a,previousW=w){
   const x=previousW.x-previousA.x,z=previousW.z-previousA.z;
@@ -57,6 +58,7 @@ export function updateWorkerEncounters(state,nav){
       }
       if(worker.hits>=2){
         worker.incapacitated=true;worker.status='incapacitated';worker.fallRemaining=0;
+        notifyWorkerPlanningChange(state,worker);
         const person=state.people.find(p=>p.id===worker.personId);if(person)person.recoveryUntil=state.day+1;
         emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }else{

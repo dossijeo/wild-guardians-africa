@@ -1,0 +1,45 @@
+{
+  "url": "http://127.0.0.1:5188",
+  "records": [
+    {
+      "seed": 712,
+      "file": "docs/qa/hierarchical-navigation/screenshots/sabana-seed-712-js-vs-wasm-palette-1600x900.png",
+      "stats": {
+        "seed": 712,
+        "baseline": {
+          "count": 202,
+          "vertices": 13824,
+          "waterVertices": 90,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 236,
+          "vertices": 2401,
+          "waterVertices": 270,
+          "prototype": true
+        }
+      },
+      "errors": []
+    },
+    {
+      "seed": 28,
+      "file": "docs/qa/hierarchical-navigation/screenshots/sabana-seed-28-js-vs-wasm-palette-1600x900.png",
+      "stats": {
+        "seed": 28,
+        "baseline": {
+          "count": 176,
+          "vertices": 13824,
+          "waterVertices": 222,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 223,
+          "vertices": 2401,
+          "waterVertices": 378,
+          "prototype": true
+        }
+      },
+      "errors": []
+    }
+  ]
+}

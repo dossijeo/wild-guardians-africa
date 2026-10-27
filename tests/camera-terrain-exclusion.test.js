@@ -55,7 +55,7 @@ test('scene resolver reconciles terrain after focus recovery and remains stable 
  const scene={camera,nav:{field},objects:new Map([[1,root]]),state:{villages:[],structures:[{id:1,kind:'center'}]}};
  WorldScene.prototype.setCameraExclusion.call(scene,true,{centerMargin:0});
  focusTerrainCamera(camera,controls,field,{x:0,z:0});
- const first=camera.position.clone();assert.ok(first.y>=2&&first.y<=20);
+ const first=camera.position.clone();assert.ok(first.y>=30.45&&first.y<=33);
  assert.equal(scene.cameraExclusion.registry.index.sweep(first.toArray(),first.toArray(),.45),null);
  for(let i=0;i<200;i++)protectTerrainCamera(camera,controls,field);
  assert.ok(camera.position.distanceTo(first)<.001,JSON.stringify({first:first.toArray(),last:camera.position.toArray(),stats:scene.cameraExclusion.motion.stats}));assert.equal(scene.cameraExclusion.motion.stats.terrainConflict,false);

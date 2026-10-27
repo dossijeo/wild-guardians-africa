@@ -1,0 +1,3803 @@
+{
+  "arm": "batch",
+  "days": 100,
+  "seed": 712,
+  "biome": "volcanes",
+  "sourceSha256": "d169104538500fcb87f4dda20ecf93db0715df9087e7e9117175d7f7ae5b7781",
+  "wasmSha256": "6feeea330cf5c8d0e338503e85abbb007d6803cd1727c0b425623956234ec551",
+  "elapsedMs": 441147.6769,
+  "completedNights": 100,
+  "gameResult": "victory",
+  "raidEvidenceStatus": "verified",
+  "raidEvidenceIssues": [],
+  "rows": [
+    {
+      "day": 1,
+      "stateSha256": "219eecc669f2beea3042a69d8e5f2f6acd2e2ba76ef8d19963e423a7864bedaa",
+      "living": 70,
+      "money": 368,
+      "destroyed": 0,
+      "gameTickMs": 468.905000000007,
+      "decisionMs": 85.33550000000469,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 1,
+          "ms": 0.18539999999984502
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 1,
+          "ms": 0.02999999999974534
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 2.3032999999968524
+        },
+        "plot.nativeSite": {
+          "calls": 112,
+          "ms": 15.516499999999269
+        },
+        "other": {
+          "calls": 0,
+          "ms": 83.03220000000783
+        }
+      }
+    },
+    {
+      "day": 2,
+      "stateSha256": "05182f5833c63c7fb7d841974ab5fc64e7e33ec6fd82331f16ae1731ce65346d",
+      "living": 64,
+      "money": 530,
+      "destroyed": 0,
+      "gameTickMs": 732.1534999999967,
+      "decisionMs": 384.0808999999972,
+      "decisionPhases": {
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 8.536000000000058
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 302.68370000000004
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 313.5110999999979
+        },
+        "plot.nativeSite": {
+          "calls": 79,
+          "ms": 12.447799999997187
+        },
+        "other": {
+          "calls": 0,
+          "ms": 70.5697999999993
+        }
+      }
+    },
+    {
+      "day": 3,
+      "stateSha256": "0861995d5cdd3e9e556c4916315b4a69b315ba2ea7f69f48c3f8bb72f8197e52",
+      "living": 58,
+      "money": 794,
+      "destroyed": 0,
+      "gameTickMs": 1030.7679000000126,
+      "decisionMs": 150.80270000000564,
+      "decisionPhases": {
+        "defense.act": {
+          "calls": 300,
+          "ms": 2.116000000004533
+        },
+        "plot.nativeSite": {
+          "calls": 101,
+          "ms": 17.28650000000289
+        },
+        "other": {
+          "calls": 0,
+          "ms": 148.6867000000011
+        }
+      }
+    },
+    {
+      "day": 4,
+      "stateSha256": "68d63f76a995291c6bd4eddc6799155aefb5dca28487888d99ba91457b036bc5",
+      "living": 72,
+      "money": 510,
+      "destroyed": 0,
+      "gameTickMs": 1020.2275000000091,
+      "decisionMs": 417.2546000000066,
+      "decisionPhases": {
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 8.392900000000736
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 171.72109999999975
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 254.0855999999976
+        },
+        "plot.nativeSite": {
+          "calls": 102,
+          "ms": 18.91200000000117
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 72.51580000000013
+        },
+        "other": {
+          "calls": 0,
+          "ms": 163.16900000000896
+        }
+      }
+    },
+    {
+      "day": 5,
+      "stateSha256": "6792f9fc019127096920c2c56e7c038b501d7282c106d1a6fbb15ccdc2e9766c",
+      "living": 82,
+      "money": 607,
+      "destroyed": 0,
+      "gameTickMs": 1100.913299999992,
+      "decisionMs": 158.76400000000103,
+      "decisionPhases": {
+        "defense.act": {
+          "calls": 300,
+          "ms": 1.458400000000438
+        },
+        "plot.nativeSite": {
+          "calls": 88,
+          "ms": 12.651400000000649
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 0.11890000000039436
+        },
+        "other": {
+          "calls": 0,
+          "ms": 157.3056000000006
+        }
+      }
+    },
+    {
+      "day": 6,
+      "stateSha256": "4eb29c1f5a935fd3f971528d4d1140dec281cec0305cd4a1894d233e8ba7458c",
+      "living": 104,
+      "money": 543,
+      "destroyed": 0,
+      "gameTickMs": 1409.2643999999855,
+      "decisionMs": 162.81129999999575,
+      "decisionPhases": {
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 10.641700000001947
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 12.049099999980172
+        },
+        "plot.nativeSite": {
+          "calls": 116,
+          "ms": 16.431999999993423
+        },
+        "other": {
+          "calls": 0,
+          "ms": 150.76220000001558
+        }
+      }
+    },
+    {
+      "day": 7,
+      "stateSha256": "519d388e615291480eb5045bd415aa6484a76973f3bddf05c0ea506c43248d0b",
+      "living": 119,
+      "money": 637,
+      "destroyed": 0,
+      "gameTickMs": 2682.441899999998,
+      "decisionMs": 278.9423999999817,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 6,
+          "ms": 0.21270000000004075
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 6,
+          "ms": 0.7875000000040018
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 8.491400000002614
+        },
+        "plot.nativeSite": {
+          "calls": 135,
+          "ms": 25.262500000000728
+        },
+        "defense.nativeGroups": {
+          "calls": 2,
+          "ms": 0.13290000000051805
+        },
+        "other": {
+          "calls": 0,
+          "ms": 270.4509999999791
+        }
+      }
+    },
+    {
+      "day": 8,
+      "stateSha256": "aa3c83af211255494229792becd1c9f375a44fc8d8b50c2fdbc43470a5d8cb11",
+      "living": 114,
+      "money": 871,
+      "destroyed": 0,
+      "gameTickMs": 2186.3750000000327,
+      "decisionMs": 220.26690000000235,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 4,
+          "ms": 0.034900000000561704
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 4,
+          "ms": 0.17749999999978172
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 13.986100000000079
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 18.596000000005006
+        },
+        "plot.nativeSite": {
+          "calls": 132,
+          "ms": 17.833799999987605
+        },
+        "other": {
+          "calls": 0,
+          "ms": 201.67089999999735
+        }
+      }
+    },
+    {
+      "day": 9,
+      "stateSha256": "1dc8989f58f97edbc480b1ec7fa16a649a9f5853b7658c4fb22b463ed58b1753",
+      "living": 121,
+      "money": 956,
+      "destroyed": 0,
+      "gameTickMs": 2031.9986999999746,
+      "decisionMs": 268.2008999999416,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 10,
+          "ms": 0.06260000000838772
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 10,
+          "ms": 0.77639999999883
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 12.77589999999691
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 18.811500000014348
+        },
+        "plot.nativeSite": {
+          "calls": 137,
+          "ms": 20.683900000014546
+        },
+        "other": {
+          "calls": 0,
+          "ms": 249.38939999992726
+        }
+      }
+    },
+    {
+      "day": 10,
+      "stateSha256": "3c68c0729f4e4d2670107b008cad03bee7760b7e46133f87a4116f5df590bab3",
+      "living": 143,
+      "money": 951,
+      "destroyed": 0,
+      "gameTickMs": 3756.6636000000253,
+      "decisionMs": 377.96850000000995,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 3,
+          "ms": 0.02140000000508735
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 3,
+          "ms": 0.18470000000161235
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 4.334399999996094
+        },
+        "plot.nativeSite": {
+          "calls": 145,
+          "ms": 27.751099999986764
+        },
+        "defense.nativeGroups": {
+          "calls": 2,
+          "ms": 0.14860000000044238
+        },
+        "other": {
+          "calls": 0,
+          "ms": 373.63410000001386
+        }
+      }
+    },
+    {
+      "day": 11,
+      "stateSha256": "8e4c8a0c05453867b62cd8becb1a04ca3ef7578a919cbf6c9c55b42c64411161",
+      "living": 135,
+      "money": 1106,
+      "destroyed": 0,
+      "gameTickMs": 3881.1970999999903,
+      "decisionMs": 620.0117999999784,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 19,
+          "ms": 0.20249999999214197
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 19,
+          "ms": 2.9460999999973865
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 29.817699999999604
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 49.277700000009645
+        },
+        "plot.nativeSite": {
+          "calls": 160,
+          "ms": 39.04250000002503
+        },
+        "other": {
+          "calls": 0,
+          "ms": 570.7340999999687
+        }
+      }
+    },
+    {
+      "day": 12,
+      "stateSha256": "6a2b0a69af8947848ab2a00f3b145cb4195c11b27a97c41f98034a4632c48918",
+      "living": 150,
+      "money": 976,
+      "destroyed": 0,
+      "gameTickMs": 3657.333300000071,
+      "decisionMs": 563.3756000000576,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 20,
+          "ms": 0.1777000000111002
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 20,
+          "ms": 2.4605999999948835
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 23.852799999996932
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 40.183300000007875
+        },
+        "plot.nativeSite": {
+          "calls": 166,
+          "ms": 34.4547000000166
+        },
+        "other": {
+          "calls": 0,
+          "ms": 523.1923000000497
+        }
+      }
+    },
+    {
+      "day": 13,
+      "stateSha256": "3e6b1dc199ca73a8f61d60a439b0704f968f27886f13e802ebbd7fe26a74f721",
+      "living": 125,
+      "money": 842,
+      "destroyed": 13,
+      "gameTickMs": 4778.313699999955,
+      "decisionMs": 604.8443999999872,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.2777000000278349
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 3.7735999999786145
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 18.0934999999954
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 45.97370000002411
+        },
+        "plot.nativeSite": {
+          "calls": 141,
+          "ms": 36.77380000001722
+        },
+        "other": {
+          "calls": 0,
+          "ms": 558.8706999999631
+        }
+      }
+    },
+    {
+      "day": 14,
+      "stateSha256": "83a521b277c1601d367d76709cfab62b533a0883266c16f7e8a925553cc4067b",
+      "living": 116,
+      "money": 954,
+      "destroyed": 8,
+      "gameTickMs": 3896.217700000001,
+      "decisionMs": 1121.3988999999565,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.2703000000110478
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 3.0401999999958207
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 14.775300000001153
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 533.0859999999957
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 566.7151000000085
+        },
+        "plot.nativeSite": {
+          "calls": 150,
+          "ms": 35.49009999999544
+        },
+        "other": {
+          "calls": 0,
+          "ms": 554.683799999948
+        }
+      }
+    },
+    {
+      "day": 15,
+      "stateSha256": "0b5b3a03a26d24c5495c4229e1fa153800f1ee384143b0283a664d708cbeb05d",
+      "living": 126,
+      "money": 1125,
+      "destroyed": 31,
+      "gameTickMs": 3232.265100000048,
+      "decisionMs": 867.8157000000137,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 22,
+          "ms": 0.15300000000570435
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 22,
+          "ms": 3.160299999988638
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 29.919999999998254
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 413.0031000000017
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 461.0783000000447
+        },
+        "plot.nativeSite": {
+          "calls": 186,
+          "ms": 31.672800000058487
+        },
+        "other": {
+          "calls": 0,
+          "ms": 406.73739999996906
+        }
+      }
+    },
+    {
+      "day": 16,
+      "stateSha256": "133b18a59ba7bea57bff6bd78caa3682f704868671eb13e631d2bd703c5569b5",
+      "living": 113,
+      "money": 1011,
+      "destroyed": 34,
+      "gameTickMs": 3362.3132000000187,
+      "decisionMs": 794.4481000000596,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 15,
+          "ms": 0.08510000000387663
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 15,
+          "ms": 1.4021999999968102
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.213000000003376
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 371.58639999999286
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 396.75690000002214
+        },
+        "plot.nativeSite": {
+          "calls": 163,
+          "ms": 26.179499999991094
+        },
+        "other": {
+          "calls": 0,
+          "ms": 397.6912000000375
+        }
+      }
+    },
+    {
+      "day": 17,
+      "stateSha256": "a7eb9aea85817bc4ca4358c911ea8d81ac7a5c43d5f1e1d1641d8ff4e2ff3e43",
+      "living": 147,
+      "money": 835,
+      "destroyed": 14,
+      "gameTickMs": 2970.0560999999725,
+      "decisionMs": 689.4241999999285,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 13,
+          "ms": 0.07490000001416774
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 13,
+          "ms": 1.3304000000061933
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 12.129100000005565
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 280.3804000000018
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 303.5475999999762
+        },
+        "plot.nativeSite": {
+          "calls": 182,
+          "ms": 27.424899999976333
+        },
+        "other": {
+          "calls": 0,
+          "ms": 385.8765999999523
+        }
+      }
+    },
+    {
+      "day": 18,
+      "stateSha256": "46e10f84403498cf4c4f1f2a6445ab3554f91b2b8cab8b5d348bd9dd1b0236d4",
+      "living": 141,
+      "money": 1086,
+      "destroyed": 5,
+      "gameTickMs": 3940.0651999999973,
+      "decisionMs": 955.386899999954,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 14,
+          "ms": 0.14439999999740394
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 14,
+          "ms": 1.6801999999879627
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 15.070800000001327
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 363.52640000000247
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 395.3267999999953
+        },
+        "plot.nativeSite": {
+          "calls": 166,
+          "ms": 30.80829999996058
+        },
+        "other": {
+          "calls": 0,
+          "ms": 560.0600999999588
+        }
+      }
+    },
+    {
+      "day": 19,
+      "stateSha256": "eaa236adb2346fd2b53a50811c15b58d8c2aae37d62a1bee508d1913a13fdc18",
+      "living": 126,
+      "money": 1078,
+      "destroyed": 22,
+      "gameTickMs": 5783.318699999822,
+      "decisionMs": 1081.3388999999152,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 22,
+          "ms": 0.2290999999968335
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 22,
+          "ms": 11.115400000009686
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 26.074900000006892
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 325.4412000000011
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 387.64079999994283
+        },
+        "plot.nativeSite": {
+          "calls": 169,
+          "ms": 45.08909999986645
+        },
+        "other": {
+          "calls": 0,
+          "ms": 693.6980999999723
+        }
+      }
+    },
+    {
+      "day": 20,
+      "stateSha256": "a6f7cb15d57ff08ec2af2844105a40806059ee894776df6abb65abdfb743895d",
+      "living": 161,
+      "money": 1231,
+      "destroyed": 0,
+      "gameTickMs": 3119.328000000154,
+      "decisionMs": 967.5140000000247,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 21,
+          "ms": 0.15319999995699618
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 21,
+          "ms": 2.3198000000120373
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.329800000006799
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 382.145199999999
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 413.8253999999288
+        },
+        "plot.nativeSite": {
+          "calls": 177,
+          "ms": 36.14750000005006
+        },
+        "other": {
+          "calls": 0,
+          "ms": 553.6886000000959
+        }
+      }
+    },
+    {
+      "day": 21,
+      "stateSha256": "0e3016f5e0724c19d4af6a9c68aa4dcb2c83587e8077b99a6392b15f4f83a905",
+      "living": 118,
+      "money": 1128,
+      "destroyed": 27,
+      "gameTickMs": 5248.428800000052,
+      "decisionMs": 422.4289000000572,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 19,
+          "ms": 0.11780000002181623
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 19,
+          "ms": 1.0073000000120373
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 17.322999999974854
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 31.509199999753037
+        },
+        "plot.nativeSite": {
+          "calls": 122,
+          "ms": 15.99729999997362
+        },
+        "other": {
+          "calls": 0,
+          "ms": 390.91970000030415
+        }
+      }
+    },
+    {
+      "day": 22,
+      "stateSha256": "45187d3d6d3e93b0085f75edda8fc71accac38bec59912965978c88a88f6f200",
+      "living": 122,
+      "money": 838,
+      "destroyed": 31,
+      "gameTickMs": 5151.032799999986,
+      "decisionMs": 770.6673000001174,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.16849999999976717
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 1.6935999999550404
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.204100000002654
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 308.86780000000726
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 336.56529999992927
+        },
+        "plot.nativeSite": {
+          "calls": 147,
+          "ms": 25.048900000023423
+        },
+        "other": {
+          "calls": 0,
+          "ms": 434.1020000001881
+        }
+      }
+    },
+    {
+      "day": 23,
+      "stateSha256": "856caf15c4bc560761f7efe428bac1857359b12146a1089ae233bb28fe5593e9",
+      "living": 145,
+      "money": 793,
+      "destroyed": 9,
+      "gameTickMs": 4377.2753999999695,
+      "decisionMs": 894.63939999984,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 33,
+          "ms": 0.20150000002468005
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 33,
+          "ms": 3.5978000000177417
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.96500000001106
+        },
+        "defense.nativeEnclosure": {
+          "calls": 4,
+          "ms": 460.13340000002063
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 502.0645999999397
+        },
+        "plot.nativeSite": {
+          "calls": 180,
+          "ms": 26.666900000011083
+        },
+        "other": {
+          "calls": 0,
+          "ms": 392.5747999999003
+        }
+      }
+    },
+    {
+      "day": 24,
+      "stateSha256": "e3d707881565ad2d146e3771cfde97f7e0899e2c1a0c094c28181e9454048f24",
+      "living": 110,
+      "money": 1042,
+      "destroyed": 15,
+      "gameTickMs": 4196.477699999639,
+      "decisionMs": 704.5015000000276,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 32,
+          "ms": 0.2067999999562744
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 32,
+          "ms": 2.7752000000182306
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 20.24179999998887
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 308.33490000000165
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 349.88209999994433
+        },
+        "plot.nativeSite": {
+          "calls": 133,
+          "ms": 18.85570000000007
+        },
+        "other": {
+          "calls": 0,
+          "ms": 354.61940000008326
+        }
+      }
+    },
+    {
+      "day": 25,
+      "stateSha256": "049322102ab62ff107d8b92b03a61d0047d5eaddfcc739bc9808acb8301b59c9",
+      "living": 142,
+      "money": 1096,
+      "destroyed": 13,
+      "gameTickMs": 5160.752300000051,
+      "decisionMs": 596.9455999997299,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.1610000000509899
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 2.1578999999910593
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 11.446500000005472
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 189.55509999999776
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 218.18619999985094
+        },
+        "plot.nativeSite": {
+          "calls": 163,
+          "ms": 25.79279999998107
+        },
+        "other": {
+          "calls": 0,
+          "ms": 378.75939999987895
+        }
+      }
+    },
+    {
+      "day": 26,
+      "stateSha256": "764a207e9b51b64042d02dc1652a1f856be8363cc2018ce757139d4b5bae9b5b",
+      "living": 120,
+      "money": 1368,
+      "destroyed": 31,
+      "gameTickMs": 4860.856299999694,
+      "decisionMs": 632.2490999999718,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 42,
+          "ms": 0.23250000004190952
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 42,
+          "ms": 3.508499999967171
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.275999999998021
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 203.04769999999553
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 238.33719999990717
+        },
+        "plot.nativeSite": {
+          "calls": 151,
+          "ms": 24.38459999996121
+        },
+        "other": {
+          "calls": 0,
+          "ms": 393.91190000006463
+        }
+      }
+    },
+    {
+      "day": 27,
+      "stateSha256": "3440404e1c192019f294dc463990a99ac5acc8b6d0712830d85895f070695b35",
+      "living": 143,
+      "money": 1014,
+      "destroyed": 25,
+      "gameTickMs": 5155.154499999699,
+      "decisionMs": 1024.775199999829,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 17,
+          "ms": 0.12650000001303852
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 17,
+          "ms": 1.2423999999882653
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.211599999980535
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 518.743100000007
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 553.1292999999569
+        },
+        "plot.nativeSite": {
+          "calls": 204,
+          "ms": 32.54880000001867
+        },
+        "other": {
+          "calls": 0,
+          "ms": 471.6458999998722
+        }
+      }
+    },
+    {
+      "day": 28,
+      "stateSha256": "f7550f42fcf76fbfd0a60399dc7de22d6e1596486773e28d4ec37fd8b086afff",
+      "living": 108,
+      "money": 1260,
+      "destroyed": 43,
+      "gameTickMs": 5211.3520999998,
+      "decisionMs": 739.1566000001039,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 19,
+          "ms": 0.11980000000039581
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 19,
+          "ms": 1.3757999999506865
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 14.140700000003562
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 244.13120000000345
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 278.08459999988554
+        },
+        "plot.nativeSite": {
+          "calls": 174,
+          "ms": 26.045999999929336
+        },
+        "other": {
+          "calls": 0,
+          "ms": 461.0720000002184
+        }
+      }
+    },
+    {
+      "day": 29,
+      "stateSha256": "b880fe2a84cba5346782fd3d1df1ec90a3e4c9c0ed66164646ba84090822d6f9",
+      "living": 136,
+      "money": 1099,
+      "destroyed": 28,
+      "gameTickMs": 5420.606699999684,
+      "decisionMs": 678.2690000004804,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 13,
+          "ms": 0.08309999998891726
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 13,
+          "ms": 0.8586000000068452
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 10.536200000002282
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 105.76929999999993
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 134.5171999999875
+        },
+        "plot.nativeSite": {
+          "calls": 209,
+          "ms": 42.19560000007914
+        },
+        "other": {
+          "calls": 0,
+          "ms": 543.751800000493
+        }
+      }
+    },
+    {
+      "day": 30,
+      "stateSha256": "a761f2d370d0d890708c1939c7664bcffd2ae36dedcc8f274d78f3d2bb605414",
+      "living": 158,
+      "money": 1003,
+      "destroyed": 16,
+      "gameTickMs": 5632.126000000484,
+      "decisionMs": 1008.7092000004777,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.1969000001263339
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 2.537300000054529
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 17.239199999981793
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 393.4908000000287
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 432.273599999462
+        },
+        "plot.nativeSite": {
+          "calls": 191,
+          "ms": 35.575199999671895
+        },
+        "other": {
+          "calls": 0,
+          "ms": 576.4356000010157
+        }
+      }
+    },
+    {
+      "day": 31,
+      "stateSha256": "0a6341e168854afaa22db1c38c91a8564e6ddd75048eb6789ae6aae50c558f17",
+      "living": 121,
+      "money": 1132,
+      "destroyed": 19,
+      "gameTickMs": 5030.056600000389,
+      "decisionMs": 786.9698000001954,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 39,
+          "ms": 0.2445000001171138
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 39,
+          "ms": 4.2207000000053085
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 15.573400000022957
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 258.4008000000031
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 305.7398000000685
+        },
+        "plot.nativeSite": {
+          "calls": 157,
+          "ms": 24.761799999861978
+        },
+        "other": {
+          "calls": 0,
+          "ms": 481.2300000001269
+        }
+      }
+    },
+    {
+      "day": 32,
+      "stateSha256": "b34d8a0197bad75db2fe4950f0c1b820c57f1b136ca0027ab679f677ada99498",
+      "living": 129,
+      "money": 875,
+      "destroyed": 22,
+      "gameTickMs": 5090.398299999855,
+      "decisionMs": 834.7747999996063,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.17749999996158294
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 2.5339000000385568
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 14.624299999995856
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 253.9088000000338
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 292.25640000004205
+        },
+        "plot.nativeSite": {
+          "calls": 150,
+          "ms": 23.314599999954225
+        },
+        "other": {
+          "calls": 0,
+          "ms": 542.5183999995643
+        }
+      }
+    },
+    {
+      "day": 33,
+      "stateSha256": "ecef42e9f15ba8a866037c709fc955ea98700f7c49847d63c019f27023c49f1a",
+      "living": 155,
+      "money": 931,
+      "destroyed": 0,
+      "gameTickMs": 3914.4122000002535,
+      "decisionMs": 798.2927000002237,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.18159999989438802
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 2.452499999984866
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 15.365500000014435
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 224.58280000003288
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 261.08689999982016
+        },
+        "plot.nativeSite": {
+          "calls": 172,
+          "ms": 29.130299999960698
+        },
+        "other": {
+          "calls": 0,
+          "ms": 537.2058000004035
+        }
+      }
+    },
+    {
+      "day": 34,
+      "stateSha256": "9f547db22d8e38a8277bcef381143872b98aad04eb9398dcba825f08d153e915",
+      "living": 76,
+      "money": 1014,
+      "destroyed": 44,
+      "gameTickMs": 4276.671300000191,
+      "decisionMs": 759.362999999692,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 40,
+          "ms": 0.24049999995622784
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 40,
+          "ms": 5.053900000144495
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 20.94649999999092
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 223.85639999998966
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 279.111100000242
+        },
+        "plot.nativeSite": {
+          "calls": 120,
+          "ms": 19.150399999838555
+        },
+        "other": {
+          "calls": 0,
+          "ms": 480.25189999944996
+        }
+      }
+    },
+    {
+      "day": 35,
+      "stateSha256": "b67abadc73a56a431142dee6db9d38b52c8ffd2c117b0620ed9782b23184ef27",
+      "living": 136,
+      "money": 922,
+      "destroyed": 26,
+      "gameTickMs": 5017.600499999855,
+      "decisionMs": 842.6702000004298,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 16,
+          "ms": 0.13119999994523823
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 16,
+          "ms": 1.3597000000299886
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 9.58160000006319
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 155.54019999998854
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 186.82160000005388
+        },
+        "plot.nativeSite": {
+          "calls": 178,
+          "ms": 36.82589999976335
+        },
+        "other": {
+          "calls": 0,
+          "ms": 655.8486000003759
+        }
+      }
+    },
+    {
+      "day": 36,
+      "stateSha256": "edd54a1145166e0205fb64baa60ea255614245853473627db4d05ec49ccccee1",
+      "living": 93,
+      "money": 1144,
+      "destroyed": 32,
+      "gameTickMs": 6271.202699999994,
+      "decisionMs": 1173.3685000000987,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.19060000011813827
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 2.5119000000413507
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 19.9829000000027
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 417.32139999998617
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 472.2027999999409
+        },
+        "plot.nativeSite": {
+          "calls": 128,
+          "ms": 25.04209999999148
+        },
+        "other": {
+          "calls": 0,
+          "ms": 701.1657000001578
+        }
+      }
+    },
+    {
+      "day": 37,
+      "stateSha256": "20baa676c2f6dbeba61baa808911cb8ba0b49248da03f07d1afb62b1b249798b",
+      "living": 107,
+      "money": 799,
+      "destroyed": 35,
+      "gameTickMs": 4589.060400000162,
+      "decisionMs": 951.4293999998772,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 20,
+          "ms": 0.1491000000096392
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 20,
+          "ms": 1.344600000011269
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 9.39670000001206
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 240.31420000002254
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 277.6765000000596
+        },
+        "plot.nativeSite": {
+          "calls": 141,
+          "ms": 27.61419999989448
+        },
+        "other": {
+          "calls": 0,
+          "ms": 673.7528999998176
+        }
+      }
+    },
+    {
+      "day": 38,
+      "stateSha256": "410c56fa6160ccfc3282899a2aba94268363a93fb86b0de752e9bfbf9da729a3",
+      "living": 129,
+      "money": 1044,
+      "destroyed": 35,
+      "gameTickMs": 3552.041999999783,
+      "decisionMs": 858.1832000005816,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.1812000000209082
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 2.90239999993355
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 10.388699999981327
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 217.6775000000198
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 256.9828999998281
+        },
+        "plot.nativeSite": {
+          "calls": 180,
+          "ms": 34.728099999862025
+        },
+        "other": {
+          "calls": 0,
+          "ms": 601.2003000007535
+        }
+      }
+    },
+    {
+      "day": 39,
+      "stateSha256": "37a3cdb74f143e2d43cfb135c0ed19bab8ded24d916e90818abbfd428086669f",
+      "living": 127,
+      "money": 934,
+      "destroyed": 19,
+      "gameTickMs": 4910.298600000067,
+      "decisionMs": 996.6119999998191,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 31,
+          "ms": 0.21640000003390014
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 31,
+          "ms": 2.966000000073109
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 13.887199999997392
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 336.6398999999801
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 376.196100000001
+        },
+        "plot.nativeSite": {
+          "calls": 148,
+          "ms": 26.97860000000219
+        },
+        "other": {
+          "calls": 0,
+          "ms": 620.4158999998181
+        }
+      }
+    },
+    {
+      "day": 40,
+      "stateSha256": "de778696ac3186cf6387c0c6ed52f05443e0b3049761df6fa696716baa88eb74",
+      "living": 140,
+      "money": 981,
+      "destroyed": 29,
+      "gameTickMs": 5659.531299999973,
+      "decisionMs": 968.1634000001359,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 31,
+          "ms": 0.22330000009969808
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 31,
+          "ms": 2.4641000000410713
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 17.127100000012433
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 227.42539999997825
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 269.67070000013337
+        },
+        "plot.nativeSite": {
+          "calls": 202,
+          "ms": 40.03039999984321
+        },
+        "other": {
+          "calls": 0,
+          "ms": 698.4927000000025
+        }
+      }
+    },
+    {
+      "day": 41,
+      "stateSha256": "2e8c4d11dbadc09b3e2f2f3bc98f37e5dddf0131353b87da92014d61e4c63507",
+      "living": 113,
+      "money": 1042,
+      "destroyed": 36,
+      "gameTickMs": 3711.6655999999202,
+      "decisionMs": 1040.783500000136,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 43,
+          "ms": 0.2604999999748543
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 43,
+          "ms": 3.240399999951478
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 14.690300000016578
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 306.88469999999506
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 345.9343999999983
+        },
+        "plot.nativeSite": {
+          "calls": 191,
+          "ms": 33.61650000006193
+        },
+        "other": {
+          "calls": 0,
+          "ms": 694.8491000001377
+        }
+      }
+    },
+    {
+      "day": 42,
+      "stateSha256": "abef367d5abf4b84cc1ccc1eea7ed4677c3551d834aafe81460e6bd72938dd86",
+      "living": 139,
+      "money": 862,
+      "destroyed": 22,
+      "gameTickMs": 4031.5700999996334,
+      "decisionMs": 902.5624000002572,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.18899999998393469
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 2.363400000031106
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 15.790000000008149
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 199.65030000003753
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 243.80240000016056
+        },
+        "plot.nativeSite": {
+          "calls": 174,
+          "ms": 29.665399999852525
+        },
+        "other": {
+          "calls": 0,
+          "ms": 658.7600000000966
+        }
+      }
+    },
+    {
+      "day": 43,
+      "stateSha256": "9004000384a8b690f72f6382af43538a4128d47d2e93483f7e04954aca560caf",
+      "living": 114,
+      "money": 1148,
+      "destroyed": 15,
+      "gameTickMs": 3742.4993000001996,
+      "decisionMs": 920.7892999993637,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 29,
+          "ms": 0.18919999987701885
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 29,
+          "ms": 2.0607000001473352
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 12.96429999996326
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 213.47469999999157
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 249.2221000000136
+        },
+        "plot.nativeSite": {
+          "calls": 154,
+          "ms": 23.120200000004843
+        },
+        "other": {
+          "calls": 0,
+          "ms": 671.5671999993501
+        }
+      }
+    },
+    {
+      "day": 44,
+      "stateSha256": "dbeb83248574f224fa5e96dcb6383d81d93bca9d66068693e69f84c9630aef75",
+      "living": 146,
+      "money": 912,
+      "destroyed": 17,
+      "gameTickMs": 4091.258900000743,
+      "decisionMs": 1015.510900000023,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 25,
+          "ms": 0.14180000001215376
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 25,
+          "ms": 2.3742000000493135
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 12.642499999928987
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 214.75239999999758
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 265.6968000002089
+        },
+        "plot.nativeSite": {
+          "calls": 181,
+          "ms": 33.869299999874784
+        },
+        "other": {
+          "calls": 0,
+          "ms": 749.8140999998141
+        }
+      }
+    },
+    {
+      "day": 45,
+      "stateSha256": "2ff86419b69ae2addd564d09c370f9e47e5d74e8461a331c7df6f09018bb4560",
+      "living": 121,
+      "money": 1080,
+      "destroyed": 4,
+      "gameTickMs": 3127.377300000313,
+      "decisionMs": 1116.327099999471,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 36,
+          "ms": 0.24150000003282912
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 36,
+          "ms": 3.7088000000512693
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 18.425499999983003
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 269.2886999999755
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 332.57989999989513
+        },
+        "plot.nativeSite": {
+          "calls": 157,
+          "ms": 27.104100000171456
+        },
+        "other": {
+          "calls": 0,
+          "ms": 783.747199999576
+        }
+      }
+    },
+    {
+      "day": 46,
+      "stateSha256": "0809460fd29be3847cbecd3061614e0fb215aaaf014c6796cfc8b9c6e77c9872",
+      "living": 145,
+      "money": 940,
+      "destroyed": 13,
+      "gameTickMs": 3507.553099999961,
+      "decisionMs": 1007.2931999996072,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 25,
+          "ms": 0.1392000000050757
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 25,
+          "ms": 1.834999999991851
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 12.831800000014482
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 231.56260000003385
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 263.8777999995218
+        },
+        "plot.nativeSite": {
+          "calls": 191,
+          "ms": 33.92119999989518
+        },
+        "other": {
+          "calls": 0,
+          "ms": 743.4154000000854
+        }
+      }
+    },
+    {
+      "day": 47,
+      "stateSha256": "c2dde25e60b660b3fa1babc2ae44959fee4f24d001c3d114447a08737fb5e438",
+      "living": 132,
+      "money": 841,
+      "destroyed": 14,
+      "gameTickMs": 4223.54929999981,
+      "decisionMs": 1067.004000000219,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 38,
+          "ms": 0.1963000000687316
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 38,
+          "ms": 2.7562000000907574
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 15.531199999968521
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 359.8070000000007
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 409.38120000009076
+        },
+        "plot.nativeSite": {
+          "calls": 154,
+          "ms": 22.863499999890337
+        },
+        "other": {
+          "calls": 0,
+          "ms": 657.6228000001283
+        }
+      }
+    },
+    {
+      "day": 48,
+      "stateSha256": "a64f976e2af891e4c4077a0b2337d6c558caae2d3db93caba761c09b5555bce8",
+      "living": 107,
+      "money": 857,
+      "destroyed": 34,
+      "gameTickMs": 5216.14580000026,
+      "decisionMs": 1531.9004999998142,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 39,
+          "ms": 0.308500000013737
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 39,
+          "ms": 4.429900000104681
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 16.93080000000191
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 263.637400000036
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 338.3293999997841
+        },
+        "plot.nativeSite": {
+          "calls": 174,
+          "ms": 48.07940000004601
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1193.5711000000301
+        }
+      }
+    },
+    {
+      "day": 49,
+      "stateSha256": "a282ce4ab2d0a95b56838a007cad23f3d1ef12436ffb267583b06ac310606232",
+      "living": 140,
+      "money": 826,
+      "destroyed": 21,
+      "gameTickMs": 4054.5729000003776,
+      "decisionMs": 1181.033799999539,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 22,
+          "ms": 0.11360000009881333
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 22,
+          "ms": 1.966900000028545
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.918000000005122
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 234.03640000001178
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 273.9713000000629
+        },
+        "plot.nativeSite": {
+          "calls": 174,
+          "ms": 30.04539999985718
+        },
+        "other": {
+          "calls": 0,
+          "ms": 907.0624999994761
+        }
+      }
+    },
+    {
+      "day": 50,
+      "stateSha256": "e76d316f2e1fa55ad798827de70a31a56a6b7f6f9c58acac9d98c6ff54bfe10d",
+      "living": 80,
+      "money": 887,
+      "destroyed": 45,
+      "gameTickMs": 3866.2258000002766,
+      "decisionMs": 1186.3316999996314,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 29,
+          "ms": 0.403699999966193
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 29,
+          "ms": 2.820300000079442
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 13.366599999950267
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 314.62630000000354
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 360.33500000010827
+        },
+        "plot.nativeSite": {
+          "calls": 135,
+          "ms": 22.241499999858206
+        },
+        "other": {
+          "calls": 0,
+          "ms": 825.9966999995231
+        }
+      }
+    },
+    {
+      "day": 51,
+      "stateSha256": "fec40809a492c6882f41fd9dd32f93f7aa76eff5d077ca1f0643822073d8f25d",
+      "living": 93,
+      "money": 619,
+      "destroyed": 26,
+      "gameTickMs": 3036.888499999768,
+      "decisionMs": 906.6125000001339,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 21,
+          "ms": 0.12170000004698522
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 21,
+          "ms": 1.8942999999271706
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 11.372499999968568
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 209.0408999999927
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 253.47380000015255
+        },
+        "plot.nativeSite": {
+          "calls": 126,
+          "ms": 18.50060000026133
+        },
+        "other": {
+          "calls": 0,
+          "ms": 653.1386999999813
+        }
+      }
+    },
+    {
+      "day": 52,
+      "stateSha256": "e3ed58957d679881e3cf82db3bdbfd61b5d6bfe213ffa8e1fed9d89005d33059",
+      "living": 75,
+      "money": 708,
+      "destroyed": 30,
+      "gameTickMs": 2859.9721000002464,
+      "decisionMs": 819.7484000000113,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 18,
+          "ms": 0.09569999994710088
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 18,
+          "ms": 1.3679999999003485
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 10.030100000061793
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 167.3742000000202
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 194.31499999927473
+        },
+        "plot.nativeSite": {
+          "calls": 105,
+          "ms": 14.588899999827845
+        },
+        "other": {
+          "calls": 0,
+          "ms": 625.4334000007366
+        }
+      }
+    },
+    {
+      "day": 53,
+      "stateSha256": "e753622926d29eb66dace515708e26abf0f7725fa6f8cac99f5de7db01352c7f",
+      "living": 124,
+      "money": 693,
+      "destroyed": 9,
+      "gameTickMs": 2947.7357999995,
+      "decisionMs": 1415.4561000003596,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 28,
+          "ms": 0.1915999999619089
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 28,
+          "ms": 2.8873000002349727
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 9.852800000051502
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 255.2536999999429
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 325.2854999997653
+        },
+        "plot.nativeSite": {
+          "calls": 145,
+          "ms": 33.614000000292435
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1090.1706000005943
+        }
+      }
+    },
+    {
+      "day": 54,
+      "stateSha256": "b46858bddf77d9b94ff6eb16d4a50653d2cffddcef0fe0ab6d3120ea59b210a9",
+      "living": 104,
+      "money": 834,
+      "destroyed": 3,
+      "gameTickMs": 3479.7256999993697,
+      "decisionMs": 1477.9061999999685,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 34,
+          "ms": 0.20970000006491318
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 34,
+          "ms": 5.094599999894854
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 11.490000000048894
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 249.76979999995092
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 302.4112000001478
+        },
+        "plot.nativeSite": {
+          "calls": 110,
+          "ms": 23.018100000103004
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1175.4949999998207
+        }
+      }
+    },
+    {
+      "day": 55,
+      "stateSha256": "109705170bd54d281829d361a61f4197c86be403aced45d0617c865f06e8819f",
+      "living": 116,
+      "money": 826,
+      "destroyed": 4,
+      "gameTickMs": 3617.4451999994926,
+      "decisionMs": 1399.1663999995217,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 30,
+          "ms": 0.17280000040773302
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 30,
+          "ms": 3.0023999998811632
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 14.011199999949895
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 305.29470000002766
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 363.2931000011158
+        },
+        "plot.nativeSite": {
+          "calls": 152,
+          "ms": 30.438000000431202
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1035.8732999984059
+        }
+      }
+    },
+    {
+      "day": 56,
+      "stateSha256": "5435fdc0499379736b7e363089197007a26e91b7d4af1402403f981566c5e496",
+      "living": 136,
+      "money": 755,
+      "destroyed": 0,
+      "gameTickMs": 3744.2299000010244,
+      "decisionMs": 904.24640000012,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 21,
+          "ms": 0.10899999999674037
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 21,
+          "ms": 1.4075000000884756
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 12.574800000002142
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 210.36540000000969
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 247.99859999975888
+        },
+        "plot.nativeSite": {
+          "calls": 146,
+          "ms": 23.861100000096485
+        },
+        "other": {
+          "calls": 0,
+          "ms": 656.2478000003612
+        }
+      }
+    },
+    {
+      "day": 57,
+      "stateSha256": "78a4ce62cc069bed67297bc7054a4b4219a1dcf141c2a2658e43321fb6830af4",
+      "living": 87,
+      "money": 1124,
+      "destroyed": 0,
+      "gameTickMs": 3176.9475000000093,
+      "decisionMs": 946.6376999999629,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 21,
+          "ms": 0.1013999999850057
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 21,
+          "ms": 1.7201999997487292
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 15.63980000000447
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 221.69060000003083
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 256.3946000005817
+        },
+        "plot.nativeSite": {
+          "calls": 84,
+          "ms": 10.561599999899045
+        },
+        "other": {
+          "calls": 0,
+          "ms": 690.2430999993812
+        }
+      }
+    },
+    {
+      "day": 58,
+      "stateSha256": "7b3333345d9c84b969377bae231646f8618aba46e1f88b6508b8da3b0975c537",
+      "living": 115,
+      "money": 977,
+      "destroyed": 10,
+      "gameTickMs": 2545.978800000157,
+      "decisionMs": 753.2757000006386,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 10,
+          "ms": 0.05499999993480742
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 10,
+          "ms": 0.4390999999595806
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 8.74720000004163
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 31.17139999946812
+        },
+        "plot.nativeSite": {
+          "calls": 142,
+          "ms": 26.182299999694806
+        },
+        "other": {
+          "calls": 0,
+          "ms": 722.1043000011705
+        }
+      }
+    },
+    {
+      "day": 59,
+      "stateSha256": "4af353058ddb71c636686b767de07c45ded2161032a4ab9378e8c87f3e714db8",
+      "living": 91,
+      "money": 895,
+      "destroyed": 25,
+      "gameTickMs": 2988.0064999999013,
+      "decisionMs": 914.2423999997554,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.13630000001285225
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 2.5518000001320615
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 10.875699999916833
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 98.53109999996377
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 139.56319999904372
+        },
+        "plot.nativeSite": {
+          "calls": 117,
+          "ms": 16.993599999987055
+        },
+        "other": {
+          "calls": 0,
+          "ms": 774.6792000007117
+        }
+      }
+    },
+    {
+      "day": 60,
+      "stateSha256": "20e9433409c75a15b9a370e0934cf6625e0b350dfbff8174cec26e072bd134c7",
+      "living": 113,
+      "money": 724,
+      "destroyed": 20,
+      "gameTickMs": 3048.343399999838,
+      "decisionMs": 1128.3284999991301,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.14159999997355044
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 2.028600000194274
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 9.54969999997411
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 169.5524999999907
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 202.77610000042478
+        },
+        "plot.nativeSite": {
+          "calls": 162,
+          "ms": 28.94540000008419
+        },
+        "other": {
+          "calls": 0,
+          "ms": 925.5523999987054
+        }
+      }
+    },
+    {
+      "day": 61,
+      "stateSha256": "1857d5943dbb4d5ccb4278094f3b9d865dfba6224643617bf165414a81239d13",
+      "living": 100,
+      "money": 818,
+      "destroyed": 0,
+      "gameTickMs": 2397.0386000001454,
+      "decisionMs": 1070.17120000039,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 35,
+          "ms": 0.19339999987278134
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 35,
+          "ms": 3.7066999998060055
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 19.954100000031758
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 265.50089999998454
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 320.6217999996152
+        },
+        "plot.nativeSite": {
+          "calls": 102,
+          "ms": 15.21609999955399
+        },
+        "other": {
+          "calls": 0,
+          "ms": 749.5494000007748
+        }
+      }
+    },
+    {
+      "day": 62,
+      "stateSha256": "dc753fd3cfa65a176c18fc747d6064d13a015edd053a556cbed26e569ddcd9e4",
+      "living": 103,
+      "money": 741,
+      "destroyed": 27,
+      "gameTickMs": 2449.9076999996323,
+      "decisionMs": 602.6136999999289,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 16,
+          "ms": 0.07980000006500632
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 16,
+          "ms": 0.8442999999970198
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 9.971799999999348
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 25.777900000161026
+        },
+        "plot.nativeSite": {
+          "calls": 137,
+          "ms": 20.443300000042655
+        },
+        "other": {
+          "calls": 0,
+          "ms": 576.8357999997679
+        }
+      }
+    },
+    {
+      "day": 63,
+      "stateSha256": "026d1554eb3f92badb7772abdc1636f1f49b3a85e04634e1dbfb9f192583374f",
+      "living": 104,
+      "money": 782,
+      "destroyed": 7,
+      "gameTickMs": 2772.258199999924,
+      "decisionMs": 1275.4287000000477,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 29,
+          "ms": 0.1619999998365529
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 29,
+          "ms": 2.260199999785982
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 10.291000000026543
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 204.60759999998845
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 245.1852000001236
+        },
+        "plot.nativeSite": {
+          "calls": 139,
+          "ms": 25.55540000012843
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1030.243499999924
+        }
+      }
+    },
+    {
+      "day": 64,
+      "stateSha256": "5bd3b318ef5c682fe1237134bac5ed42f99be6582188449dc699e2767b95ebe5",
+      "living": 105,
+      "money": 750,
+      "destroyed": 3,
+      "gameTickMs": 2710.2961000007344,
+      "decisionMs": 1011.1605000006384,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 21,
+          "ms": 0.12239999999292195
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 21,
+          "ms": 1.6860999999335036
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 10.08019999996759
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 191.88689999998314
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 226.83789999969304
+        },
+        "plot.nativeSite": {
+          "calls": 97,
+          "ms": 14.021099999838043
+        },
+        "other": {
+          "calls": 0,
+          "ms": 784.3226000009454
+        }
+      }
+    },
+    {
+      "day": 65,
+      "stateSha256": "cc2d8b70f4b3aa45a37663a44ce0069919374c96fa3f3f2b9726d06e35caa9c3",
+      "living": 125,
+      "money": 838,
+      "destroyed": 33,
+      "gameTickMs": 4817.370800000266,
+      "decisionMs": 1278.511199998844,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 25,
+          "ms": 0.15049999969778582
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 25,
+          "ms": 2.285099999862723
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 19.37550000002375
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 217.02059999998892
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 266.84469999937573
+        },
+        "plot.nativeSite": {
+          "calls": 180,
+          "ms": 30.85879999998724
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1011.6664999994682
+        }
+      }
+    },
+    {
+      "day": 66,
+      "stateSha256": "495e449150a5c6d0e0c1aefb42bd6fde3eb7585546374e998214efe3945cfc4a",
+      "living": 95,
+      "money": 939,
+      "destroyed": 27,
+      "gameTickMs": 3502.8022000006167,
+      "decisionMs": 1757.4922000002698,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 29,
+          "ms": 0.18180000002030283
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 29,
+          "ms": 2.836299999849871
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 14.407699999923352
+        },
+        "defense.nativeEnclosure": {
+          "calls": 4,
+          "ms": 781.9090000000433
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 829.7651999996742
+        },
+        "plot.nativeSite": {
+          "calls": 143,
+          "ms": 24.169300000357907
+        },
+        "other": {
+          "calls": 0,
+          "ms": 927.7270000005956
+        }
+      }
+    },
+    {
+      "day": 67,
+      "stateSha256": "adf6c7f6fb3ca8312cc39c0d40b9d01b20ed7dfb92273a409c6e07e701a55ec7",
+      "living": 122,
+      "money": 720,
+      "destroyed": 16,
+      "gameTickMs": 3998.2896000014734,
+      "decisionMs": 1286.7016999995103,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 33,
+          "ms": 0.1940000001923181
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 33,
+          "ms": 3.7198000000207685
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 11.750800000037998
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 244.97509999998147
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 297.91760000027716
+        },
+        "plot.nativeSite": {
+          "calls": 160,
+          "ms": 28.777799999923445
+        },
+        "other": {
+          "calls": 0,
+          "ms": 988.7840999992331
+        }
+      }
+    },
+    {
+      "day": 68,
+      "stateSha256": "6122a1515785a9e6c38f0c2ff89c73ac7b784d81a0745859d728332427594bd4",
+      "living": 63,
+      "money": 928,
+      "destroyed": 34,
+      "gameTickMs": 2645.8805000008433,
+      "decisionMs": 1553.0041000004276,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 37,
+          "ms": 0.19169999996665865
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 37,
+          "ms": 4.275199999974575
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 12.447900000028312
+        },
+        "defense.nativeEnclosure": {
+          "calls": 4,
+          "ms": 672.5943999999436
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 722.9887999993516
+        },
+        "plot.nativeSite": {
+          "calls": 111,
+          "ms": 17.391800000099465
+        },
+        "other": {
+          "calls": 0,
+          "ms": 830.015300001076
+        }
+      }
+    },
+    {
+      "day": 69,
+      "stateSha256": "57a2304ebae7a508c0adb21cdacf76f42b2ad6a128725206408903d6f2e7df41",
+      "living": 93,
+      "money": 617,
+      "destroyed": 19,
+      "gameTickMs": 2377.347299999674,
+      "decisionMs": 1047.5759999993606,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 12,
+          "ms": 0.09120000002440065
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 12,
+          "ms": 0.5559999999240972
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 6.811799999966752
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 229.3334999999497
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 253.64140000002226
+        },
+        "plot.nativeSite": {
+          "calls": 115,
+          "ms": 20.99459999985993
+        },
+        "other": {
+          "calls": 0,
+          "ms": 793.9345999993384
+        }
+      }
+    },
+    {
+      "day": 70,
+      "stateSha256": "dc58d6c6913bbd72535113cdef60991d54a7c8a3aec173239ed541b6d764a796",
+      "living": 68,
+      "money": 806,
+      "destroyed": 29,
+      "gameTickMs": 2167.3890999992145,
+      "decisionMs": 1006.5962999989861,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 27,
+          "ms": 0.13689999986672774
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 27,
+          "ms": 1.5690000000176951
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 10.054000000003725
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 147.44089999998687
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 181.79769999947166
+        },
+        "plot.nativeSite": {
+          "calls": 122,
+          "ms": 18.53699999966193
+        },
+        "other": {
+          "calls": 0,
+          "ms": 824.7985999995144
+        }
+      }
+    },
+    {
+      "day": 71,
+      "stateSha256": "ea805db7b4a6b42ff997a29c2cceb8a8dbbe84593453dac677e5cd0e97ab8382",
+      "living": 79,
+      "money": 567,
+      "destroyed": 23,
+      "gameTickMs": 2026.7964000006323,
+      "decisionMs": 882.7645000001066,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 16,
+          "ms": 0.07950000010896474
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 16,
+          "ms": 0.7703999998630024
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 7.052799999946728
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 133.0564000000595
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 174.51289999985602
+        },
+        "plot.nativeSite": {
+          "calls": 103,
+          "ms": 14.627100000157952
+        },
+        "other": {
+          "calls": 0,
+          "ms": 708.2516000002506
+        }
+      }
+    },
+    {
+      "day": 72,
+      "stateSha256": "c119fcf76e15b148a9279b273589e36b3259a94bacd8d9397e871838778b6a4b",
+      "living": 79,
+      "money": 499,
+      "destroyed": 17,
+      "gameTickMs": 2293.9338999988977,
+      "decisionMs": 986.183500000101,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 35,
+          "ms": 0.19660000002477318
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 35,
+          "ms": 3.8069999997969717
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 8.995000000053551
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 137.26820000004955
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 193.07320000021718
+        },
+        "plot.nativeSite": {
+          "calls": 105,
+          "ms": 17.31289999978617
+        },
+        "other": {
+          "calls": 0,
+          "ms": 793.1102999998839
+        }
+      }
+    },
+    {
+      "day": 73,
+      "stateSha256": "57bae4401dd251795386dbe48537a69f02312cfafe68f5b00d3d363b4b8858e9",
+      "living": 53,
+      "money": 509,
+      "destroyed": 36,
+      "gameTickMs": 2374.340199999977,
+      "decisionMs": 946.1285000007483,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 28,
+          "ms": 0.16729999997187406
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 28,
+          "ms": 2.2678000000305474
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 7.9301000000559725
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 113.34279999998398
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 159.2603999998537
+        },
+        "plot.nativeSite": {
+          "calls": 103,
+          "ms": 14.235700000077486
+        },
+        "other": {
+          "calls": 0,
+          "ms": 786.8681000008946
+        }
+      }
+    },
+    {
+      "day": 74,
+      "stateSha256": "b094578c9bc7a1a38a3133844ac79b749a0d38b2269cb9f95be39fe1f533ce43",
+      "living": 59,
+      "money": 425,
+      "destroyed": 16,
+      "gameTickMs": 1914.7701000001398,
+      "decisionMs": 1175.2224999996251,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 18,
+          "ms": 0.13080000004265457
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 18,
+          "ms": 1.473399999900721
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 7.694199999968987
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 167.18469999998342
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 207.78440000052797
+        },
+        "plot.nativeSite": {
+          "calls": 77,
+          "ms": 17.880799999809824
+        },
+        "other": {
+          "calls": 0,
+          "ms": 967.4380999990972
+        }
+      }
+    },
+    {
+      "day": 75,
+      "stateSha256": "0cf925ea394ae5b86a1ab30b5d08e9a418598727648f5b17aa8e035778f4bc91",
+      "living": 54,
+      "money": 430,
+      "destroyed": 16,
+      "gameTickMs": 2422.2990000004065,
+      "decisionMs": 1603.1590000006254,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 31,
+          "ms": 0.23220000002766028
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 31,
+          "ms": 3.6333000001031905
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 12.994500000029802
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 119.86409999994794
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 186.18240000033984
+        },
+        "plot.nativeSite": {
+          "calls": 75,
+          "ms": 15.973699999973178
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1416.9766000002855
+        }
+      }
+    },
+    {
+      "day": 76,
+      "stateSha256": "ac25ca042d1e63e36ffcad562fddd1c861be7f476cace85f870f5429befecd91",
+      "living": 37,
+      "money": 454,
+      "destroyed": 20,
+      "gameTickMs": 2349.003799999249,
+      "decisionMs": 1051.5849000001326,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 31,
+          "ms": 0.22209999995538965
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 31,
+          "ms": 3.279299999878276
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 11.823199999984354
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 80.87599999998929
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 144.01229999988573
+        },
+        "plot.nativeSite": {
+          "calls": 59,
+          "ms": 11.824499999871477
+        },
+        "other": {
+          "calls": 0,
+          "ms": 907.5726000002469
+        }
+      }
+    },
+    {
+      "day": 77,
+      "stateSha256": "9e782256b03edc7aec18d03bddb110339715a8b2efb76a1b0120ed38e529ac49",
+      "living": 57,
+      "money": 310,
+      "destroyed": 3,
+      "gameTickMs": 1684.5199000008288,
+      "decisionMs": 884.5090999995591,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 21,
+          "ms": 0.13990000006742775
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 21,
+          "ms": 1.471200000087265
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 7.425799999968149
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 107.727600000042
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 143.64110000024084
+        },
+        "plot.nativeSite": {
+          "calls": 57,
+          "ms": 10.198899999901187
+        },
+        "other": {
+          "calls": 0,
+          "ms": 740.8679999993183
+        }
+      }
+    },
+    {
+      "day": 78,
+      "stateSha256": "0c8db8dc00f8e9c9b2fc37983bbfa8e3870efe70eb937b717e521152b3ce35a5",
+      "living": 45,
+      "money": 549,
+      "destroyed": 14,
+      "gameTickMs": 1675.4757000002428,
+      "decisionMs": 894.7758999999496,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 24,
+          "ms": 0.1493000000482425
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 24,
+          "ms": 1.672400000039488
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 6.930200000002515
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 47.660000000032596
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 84.09960000077263
+        },
+        "plot.nativeSite": {
+          "calls": 86,
+          "ms": 12.208199999760836
+        },
+        "other": {
+          "calls": 0,
+          "ms": 810.676299999177
+        }
+      }
+    },
+    {
+      "day": 79,
+      "stateSha256": "e2c03a2fddfa1ded8e21dcd49512d716687c86bc9703384f7ae3b1bb5cf173ab",
+      "living": 59,
+      "money": 446,
+      "destroyed": 2,
+      "gameTickMs": 1382.1148000000394,
+      "decisionMs": 736.4694000001764,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 17,
+          "ms": 0.08919999987119809
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 17,
+          "ms": 1.3427999999257736
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 6.0284999999566935
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 82.1585999999661
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 116.14679999987129
+        },
+        "plot.nativeSite": {
+          "calls": 67,
+          "ms": 13.109900000155903
+        },
+        "other": {
+          "calls": 0,
+          "ms": 620.3226000003051
+        }
+      }
+    },
+    {
+      "day": 80,
+      "stateSha256": "8efcbcd2fb0ca8c1759b75854cce60a424d6420afb7158c91ff27b681fa01515",
+      "living": 49,
+      "money": 490,
+      "destroyed": 14,
+      "gameTickMs": 1614.8803000001935,
+      "decisionMs": 798.0580000004848,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 37,
+          "ms": 0.19869999983347952
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 37,
+          "ms": 3.4090999999898486
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 10.599200000055134
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 33.1423000000068
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 78.6434000004665
+        },
+        "plot.nativeSite": {
+          "calls": 62,
+          "ms": 9.054199999780394
+        },
+        "other": {
+          "calls": 0,
+          "ms": 719.4146000000183
+        }
+      }
+    },
+    {
+      "day": 81,
+      "stateSha256": "18e9d92cc5400b9746faad513289e100d7402947dcdaeddec310141051447ca0",
+      "living": 72,
+      "money": 371,
+      "destroyed": 0,
+      "gameTickMs": 1557.1073999992223,
+      "decisionMs": 773.5591999999015,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 33,
+          "ms": 0.17929999995976686
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 33,
+          "ms": 2.65669999999227
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 5.901199999963865
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 54.57240000000456
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 95.38939999975264
+        },
+        "plot.nativeSite": {
+          "calls": 74,
+          "ms": 11.370000000111759
+        },
+        "other": {
+          "calls": 0,
+          "ms": 678.1698000001488
+        }
+      }
+    },
+    {
+      "day": 82,
+      "stateSha256": "5fa9a98ad12daf082915b9ded6036b050127ff9f8f8d2c323384628f84049f7b",
+      "living": 42,
+      "money": 418,
+      "destroyed": 36,
+      "gameTickMs": 2003.6324999998324,
+      "decisionMs": 690.7321000007214,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 28,
+          "ms": 0.14789999992353842
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 28,
+          "ms": 1.8713999999454245
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 7.395799999998417
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 30.334000000031665
+        },
+        "plot.nativeSite": {
+          "calls": 83,
+          "ms": 11.268300000112504
+        },
+        "other": {
+          "calls": 0,
+          "ms": 660.3981000006897
+        }
+      }
+    },
+    {
+      "day": 83,
+      "stateSha256": "644050d60eb190ffc19c399a7f2b58a973f1ddb7a5c35da181ebe122901d207e",
+      "living": 55,
+      "money": 336,
+      "destroyed": 6,
+      "gameTickMs": 1303.6828999998397,
+      "decisionMs": 658.034200000111,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 25,
+          "ms": 0.1159000001498498
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 25,
+          "ms": 1.479799999971874
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 4.966599999926984
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 76.91879999998491
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 104.7660999991349
+        },
+        "plot.nativeSite": {
+          "calls": 63,
+          "ms": 8.243499999633059
+        },
+        "other": {
+          "calls": 0,
+          "ms": 553.2681000009761
+        }
+      }
+    },
+    {
+      "day": 84,
+      "stateSha256": "609934a77e3d25741c9267ae58a0a141b7538f1e8bbcfb2a2e46e2fe6cf42b1f",
+      "living": 53,
+      "money": 440,
+      "destroyed": 8,
+      "gameTickMs": 1808.3865000007208,
+      "decisionMs": 1082.498700000171,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 29,
+          "ms": 0.1792000001296401
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 29,
+          "ms": 1.5715999999665655
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 0.3903000000282191
+        },
+        "defense.nativeEnclosure": {
+          "calls": 4,
+          "ms": 131.72100000001956
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 158.61319999973057
+        },
+        "plot.nativeSite": {
+          "calls": 74,
+          "ms": 11.359799999860115
+        },
+        "other": {
+          "calls": 0,
+          "ms": 923.8855000004405
+        }
+      }
+    },
+    {
+      "day": 85,
+      "stateSha256": "85027954c604366727b81cf90c6de7eb5c3b4698d8a56f74e154e851d210c39f",
+      "living": 37,
+      "money": 424,
+      "destroyed": 21,
+      "gameTickMs": 1556.4372000002186,
+      "decisionMs": 820.0694000006188,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 32,
+          "ms": 0.19820000021718442
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 32,
+          "ms": 2.3542999998899177
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 6.415500000119209
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 106.84539999999106
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 149.36620000033872
+        },
+        "plot.nativeSite": {
+          "calls": 59,
+          "ms": 8.785599999828264
+        },
+        "other": {
+          "calls": 0,
+          "ms": 670.70320000028
+        }
+      }
+    },
+    {
+      "day": 86,
+      "stateSha256": "8d01d9c863d2961c3a9c3a67286e6155c3f9224abf43f94c181817e49427f255",
+      "living": 34,
+      "money": 390,
+      "destroyed": 15,
+      "gameTickMs": 1306.99169999914,
+      "decisionMs": 625.1544000001741,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 23,
+          "ms": 0.11009999975794926
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 23,
+          "ms": 1.364299999899231
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 7.07069999986561
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 63.52720000001136
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 96.90930000075605
+        },
+        "plot.nativeSite": {
+          "calls": 51,
+          "ms": 6.909099999931641
+        },
+        "other": {
+          "calls": 0,
+          "ms": 528.245099999418
+        }
+      }
+    },
+    {
+      "day": 87,
+      "stateSha256": "74c464bfbe33f155d1861a4c6f39c800bd856da768b968681b4a71e5d27f4de7",
+      "living": 36,
+      "money": 252,
+      "destroyed": 12,
+      "gameTickMs": 1526.332899999863,
+      "decisionMs": 862.1332000009133,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 30,
+          "ms": 0.19539999985136092
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 30,
+          "ms": 2.453799999842886
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 4.3092999999644235
+        },
+        "defense.nativeEnclosure": {
+          "calls": 5,
+          "ms": 144.48579999996582
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 192.5525000001653
+        },
+        "plot.nativeSite": {
+          "calls": 42,
+          "ms": 7.05319999990752
+        },
+        "other": {
+          "calls": 0,
+          "ms": 669.580700000748
+        }
+      }
+    },
+    {
+      "day": 88,
+      "stateSha256": "b6edf8e56b82f4dcbd1af49f3d7af5df986612b2e11781e290046dbe49577d36",
+      "living": 21,
+      "money": 295,
+      "destroyed": 17,
+      "gameTickMs": 1206.015800000634,
+      "decisionMs": 686.6660999997403,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.13899999990826473
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 2.414500000071712
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 6.490300000063144
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 49.665999999968335
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 89.30749999987893
+        },
+        "plot.nativeSite": {
+          "calls": 42,
+          "ms": 6.00079999997979
+        },
+        "other": {
+          "calls": 0,
+          "ms": 597.3585999998613
+        }
+      }
+    },
+    {
+      "day": 89,
+      "stateSha256": "772cce771c6ae0c4b19b39ff66e304e9a31437d783e8342f9b77b4dd6533282f",
+      "living": 32,
+      "money": 200,
+      "destroyed": 0,
+      "gameTickMs": 922.8505999993067,
+      "decisionMs": 688.4290999999503,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 13,
+          "ms": 0.11650000000372529
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 13,
+          "ms": 1.0794999999343418
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 3.758299999986775
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 57.50609999994049
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 96.33040000032634
+        },
+        "plot.nativeSite": {
+          "calls": 31,
+          "ms": 4.357200000085868
+        },
+        "other": {
+          "calls": 0,
+          "ms": 592.0986999996239
+        }
+      }
+    },
+    {
+      "day": 90,
+      "stateSha256": "f6e880dedcc3cbe4511c2bdf981bbe9f003aca6608f24cc3c4f3c9b7670bbf28",
+      "living": 34,
+      "money": 285,
+      "destroyed": 0,
+      "gameTickMs": 1064.654900001071,
+      "decisionMs": 703.4590000000899,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 22,
+          "ms": 0.15280000009806827
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 22,
+          "ms": 1.5292999999364838
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 8.792799999995623
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 40.35319999983767
+        },
+        "plot.nativeSite": {
+          "calls": 38,
+          "ms": 5.841100000310689
+        },
+        "other": {
+          "calls": 0,
+          "ms": 663.1058000002522
+        }
+      }
+    },
+    {
+      "day": 91,
+      "stateSha256": "eff2ba6f2edb7fccf86cea6d46c8ca5a956864223c1561b8db9932af5cbd9706",
+      "living": 37,
+      "money": 374,
+      "destroyed": 0,
+      "gameTickMs": 1178.611499999999,
+      "decisionMs": 585.5033999998705,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 19,
+          "ms": 0.10119999991729856
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 19,
+          "ms": 11.544300000008661
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 4.592899999988731
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 33.241000000736676
+        },
+        "plot.nativeSite": {
+          "calls": 45,
+          "ms": 5.76610000024084
+        },
+        "other": {
+          "calls": 0,
+          "ms": 552.2623999991338
+        }
+      }
+    },
+    {
+      "day": 92,
+      "stateSha256": "4ffd5a8e8202363f135941cd85b882111a9b73e4e6b276af13f8f5fcfb3d6747",
+      "living": 39,
+      "money": 268,
+      "destroyed": 9,
+      "gameTickMs": 1762.1049000005005,
+      "decisionMs": 758.863799999177,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 23,
+          "ms": 0.1687999998102896
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 23,
+          "ms": 2.370600000140257
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 6.4148999999742955
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 52.074099999968894
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 115.76109999982873
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 13.170299999997951
+        },
+        "plot.nativeSite": {
+          "calls": 44,
+          "ms": 6.965399999986403
+        },
+        "other": {
+          "calls": 0,
+          "ms": 643.1026999993483
+        }
+      }
+    },
+    {
+      "day": 93,
+      "stateSha256": "3326dba4e0ae792453e6ea098d210a8d0e01020b6e710e9bcd793732f2f9181b",
+      "living": 22,
+      "money": 392,
+      "destroyed": 18,
+      "gameTickMs": 1590.8752000002423,
+      "decisionMs": 1618.200699999812,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 36,
+          "ms": 0.26690000004600734
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 36,
+          "ms": 5.123799999826588
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 8.194200000027195
+        },
+        "defense.nativeEnclosure": {
+          "calls": 5,
+          "ms": 197.05449999996927
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 268.02000000019325
+        },
+        "plot.nativeSite": {
+          "calls": 48,
+          "ms": 11.67749999964144
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1350.1806999996188
+        }
+      }
+    },
+    {
+      "day": 94,
+      "stateSha256": "c8bb098d0530eb41e4b89dd65071b3e3557b4ca2b6bea43bfec742bdd5825ce4",
+      "living": 34,
+      "money": 238,
+      "destroyed": 0,
+      "gameTickMs": 1475.889800000179,
+      "decisionMs": 832.1272999995854,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 13,
+          "ms": 0.16849999997066334
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 13,
+          "ms": 1.1889999999548309
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 5.151699999987613
+        },
+        "defense.nativeEnclosure": {
+          "calls": 2,
+          "ms": 90.75740000000224
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 133.54189999966184
+        },
+        "plot.nativeSite": {
+          "calls": 27,
+          "ms": 5.065399999904912
+        },
+        "other": {
+          "calls": 0,
+          "ms": 698.5853999999235
+        }
+      }
+    },
+    {
+      "day": 95,
+      "stateSha256": "e6ce2501fed96a6d9da93abbb8818a2c179c7361bf9e85dd7420eca482f5abe7",
+      "living": 26,
+      "money": 337,
+      "destroyed": 11,
+      "gameTickMs": 1971.4956000000238,
+      "decisionMs": 893.0352999996394,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.18609999999171123
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 3.2494000001461245
+        },
+        "defense.nativeGroups": {
+          "calls": 4,
+          "ms": 6.451299999956973
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 77.92580000060843
+        },
+        "plot.nativeSite": {
+          "calls": 42,
+          "ms": 7.082200000179
+        },
+        "other": {
+          "calls": 0,
+          "ms": 815.109499999031
+        }
+      }
+    },
+    {
+      "day": 96,
+      "stateSha256": "87fafecf3dd4980579692bc4f147b5b1616e5114a058601fca381e2a893180d6",
+      "living": 34,
+      "money": 239,
+      "destroyed": 0,
+      "gameTickMs": 1091.8644999993849,
+      "decisionMs": 639.1500999999698,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 26,
+          "ms": 0.1566000001039356
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 26,
+          "ms": 12.559099999954924
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 5.243099999905098
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 19.415799999958836
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 11.303400000033434
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 104.87879999994766
+        },
+        "plot.nativeSite": {
+          "calls": 34,
+          "ms": 5.006000000168569
+        },
+        "other": {
+          "calls": 0,
+          "ms": 534.2713000000222
+        }
+      }
+    },
+    {
+      "day": 97,
+      "stateSha256": "19d0bcd12e199c124d1a137acdce564d8fd36493e4c3868ec85c91bbd4efd5da",
+      "living": 41,
+      "money": 310,
+      "destroyed": 7,
+      "gameTickMs": 1889.5675999996602,
+      "decisionMs": 664.1137999995844,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 30,
+          "ms": 0.17870000004768372
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 30,
+          "ms": 3.128100000147242
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 5.045999999972992
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 52.833699999784585
+        },
+        "plot.nativeSite": {
+          "calls": 47,
+          "ms": 6.727600000158418
+        },
+        "other": {
+          "calls": 0,
+          "ms": 611.2800999997999
+        }
+      }
+    },
+    {
+      "day": 98,
+      "stateSha256": "ad2f259f20db0a586d977c28bf6ec5c7c38a71be1e372c582ee30a6c65e462d9",
+      "living": 9,
+      "money": 510,
+      "destroyed": 32,
+      "gameTickMs": 1627.9504000005545,
+      "decisionMs": 1310.0723000004655,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 36,
+          "ms": 0.26110000029439107
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 36,
+          "ms": 3.085300000035204
+        },
+        "defense.nativeGroups": {
+          "calls": 5,
+          "ms": 5.662100000074133
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 296.3795000000973
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 353.6857999993372
+        },
+        "plot.nativeSite": {
+          "calls": 56,
+          "ms": 9.549300000129733
+        },
+        "other": {
+          "calls": 0,
+          "ms": 956.3865000011283
+        }
+      }
+    },
+    {
+      "day": 99,
+      "stateSha256": "359e579be57db9461910289003d09ab34108bc10aa0e88278230ce3793ce772f",
+      "living": 35,
+      "money": 220,
+      "destroyed": 6,
+      "gameTickMs": 1468.9554000000935,
+      "decisionMs": 362.587700000091,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 13,
+          "ms": 0.07289999991189688
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 13,
+          "ms": 0.9189999999944121
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 2.5852000000304542
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 23.820599999977276
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 61.67419999977574
+        },
+        "plot.nativeSite": {
+          "calls": 33,
+          "ms": 3.703799999784678
+        },
+        "other": {
+          "calls": 0,
+          "ms": 300.91350000031525
+        }
+      }
+    },
+    {
+      "day": 100,
+      "stateSha256": "56e83450eb70fc9939053a3854634407de52c1c1db3df6469d0eba1119d19b42",
+      "living": 0,
+      "money": 275,
+      "destroyed": 40,
+      "gameTickMs": 1417.720900000655,
+      "decisionMs": 761.1216999990284,
+      "decisionPhases": {
+        "defense.nativeDamagedCenters": {
+          "calls": 24,
+          "ms": 0.1245000000926666
+        },
+        "defense.nativeDamagedWalls": {
+          "calls": 24,
+          "ms": 4.498799999943003
+        },
+        "defense.nativeGroups": {
+          "calls": 3,
+          "ms": 4.645399999979418
+        },
+        "defense.nativeEnclosure": {
+          "calls": 3,
+          "ms": 72.26480000000447
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 106.19099999940954
+        },
+        "plot.nativeSite": {
+          "calls": 40,
+          "ms": 5.104299999948125
+        },
+        "other": {
+          "calls": 0,
+          "ms": 654.9306999996188
+        }
+      }
+    }
+  ]
+}

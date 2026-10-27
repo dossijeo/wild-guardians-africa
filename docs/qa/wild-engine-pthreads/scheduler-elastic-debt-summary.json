@@ -1,0 +1,225 @@
+{
+  "scope": "Interleaved active Manglares Intel UHD 720p low, 360 frames/144m. All cases use scheduler, stable shadows and dormant crop depth preparation. elastic-debt: burst flag 0/1/0/1, rejected. required-terrain: deadline now+250/now/now+250/now, retained. Simulation varies with wall time, not final-state image equivalence. CPU/GPU separate; no isolated scheduler CPU cost claim from lifetime counters.",
+  "rows": [
+    {
+      "case": "A1",
+      "readyMs": 32244.319999992847,
+      "frames": {
+        "count": 360,
+        "mean": 27.34413888888889,
+        "p95": 49.94000000000233,
+        "max": 99.98999999999796,
+        "p99": 66.63999999999942
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.113501132231395,
+        "p95": 30.585207,
+        "max": 41.836979
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 690.6403333346049,
+        "p95": 1366.2549999952316,
+        "max": 1451
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 8.977666660149891,
+        "p95": 11.180000126361847,
+        "max": 12.644999742507935
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792854805303",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 499.97999995946884,
+        "coordinationMs": 67.12499898672104,
+        "maxUnitMs": 9.840000033378601,
+        "overruns": 79,
+        "deadlineLoans": 79,
+        "oversizeRecoveries": 0,
+        "continuationMs": 33.69000005722046,
+        "continuationTurns": 1329,
+        "median": 16.720000000001164,
+        "p95": 33.33999999999651,
+        "p99": 33.48500000000058,
+        "cpu95": 6.264999985694885,
+        "jitter": 16.619999999995343,
+        "budgetMs": 3.2397694467686025,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": null
+    },
+    {
+      "case": "B1",
+      "readyMs": 28705.719999969006,
+      "frames": {
+        "count": 360,
+        "mean": 27.62193055555557,
+        "p95": 49.96499999999651,
+        "max": 83.375,
+        "p99": 82.88500000000204
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.54765180165289,
+        "p95": 34.405833,
+        "max": 43.394531
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 722.2076666673024,
+        "p95": 1675.3849999904633,
+        "max": 1738.1100000143051
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 8.955333364009856,
+        "p95": 11.204999923706055,
+        "max": 12.750000059604645
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792854805303",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 482.1850011944771,
+        "coordinationMs": 55.48999845981598,
+        "maxUnitMs": 11.269999980926514,
+        "overruns": 108,
+        "deadlineLoans": 108,
+        "oversizeRecoveries": 0,
+        "continuationMs": 29.680000007152557,
+        "continuationTurns": 1162,
+        "median": 16.69000000000233,
+        "p95": 33.31999999999971,
+        "p99": 33.674999999995634,
+        "cpu95": 6.870000004768372,
+        "jitter": 16.62999999999738,
+        "budgetMs": 3.011898518438157,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": null
+    },
+    {
+      "case": "A2",
+      "readyMs": 28287.214999973774,
+      "frames": {
+        "count": 360,
+        "mean": 28.59177777777778,
+        "p95": 49.96499999999651,
+        "max": 99.79500000000553,
+        "p99": 66.59999999999854
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 22.096456876033066,
+        "p95": 33.394582,
+        "max": 40.880051
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 729.0569999972979,
+        "p95": 1155.160000026226,
+        "max": 1570.5999999642372
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.724333345890045,
+        "p95": 12.095000088214874,
+        "max": 14.615000188350677
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792854805303",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 520.5949996113777,
+        "coordinationMs": 53.9100022315979,
+        "maxUnitMs": 9.0450000166893,
+        "overruns": 91,
+        "deadlineLoans": 91,
+        "oversizeRecoveries": 0,
+        "continuationMs": 28.989999890327454,
+        "continuationTurns": 1186,
+        "median": 16.69499999999971,
+        "p95": 33.33999999999651,
+        "p99": 33.705000000001746,
+        "cpu95": 6.365000009536743,
+        "jitter": 16.6449999999968,
+        "budgetMs": 3.02160708311798,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": null
+    },
+    {
+      "case": "B2",
+      "readyMs": 28670.225000023842,
+      "frames": {
+        "count": 360,
+        "mean": 27.760402777777763,
+        "p95": 49.96999999999389,
+        "max": 99.80500000000029,
+        "p99": 66.65499999999884
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.85709571074379,
+        "p95": 32.420207,
+        "max": 38.377499
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 609.4593333204588,
+        "p95": 1122.6399999856949,
+        "max": 1201.7349999547005
+      },
+      "preparationCpu": {
+        "count": 15,
+        "mean": 9.122333347797394,
+        "p95": 10.37000024318695,
+        "max": 13.349999845027924
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "scheduler": {
+        "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792854805303",
+        "completed": 82,
+        "cancelled": 0,
+        "failed": 0,
+        "units": 1519,
+        "workMs": 484.96499997377396,
+        "coordinationMs": 55.61500173807144,
+        "maxUnitMs": 9.199999988079071,
+        "overruns": 82,
+        "deadlineLoans": 82,
+        "oversizeRecoveries": 0,
+        "continuationMs": 28.534999907016754,
+        "continuationTurns": 1252,
+        "median": 16.69000000000233,
+        "p95": 33.294999999998254,
+        "p99": 33.42000000000553,
+        "cpu95": 6.400000035762787,
+        "jitter": 16.604999999995925,
+        "budgetMs": 3.618781518884483,
+        "pending": 0,
+        "oldestMs": 0
+      },
+      "terrainPhases": null
+    }
+  ]
+}

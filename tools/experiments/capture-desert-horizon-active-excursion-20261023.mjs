@@ -1,0 +1,82 @@
+import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
+import {chromium} from 'playwright';
+import {mkdir,writeFile,readFile} from 'node:fs/promises';
+
+
+const selectedBiome='desierto';
+const sourceDir='docs/qa/global-visual-lab/desert-populated-closure-20261022';const out=process.env.WG_REVIEW_OUT??`docs/qa/global-visual-lab/${selectedBiome}-horizon-active-excursion-20261023`;await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const fixture=JSON.parse(await readFile(`${sourceDir}/native-fixture.json`,'utf8'));
+const saved=JSON.parse(fixture.timing.navigationContext.state);
+saved.tutorial.basicSkipped=true; // QA-only: do not allow onboarding to pause the active-play observation.
+const snapshot=JSON.stringify(saved);
+const browser=await chromium.launch({channel:'chrome',headless:true});
+try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (selectedBiome).split(',')){
+ const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
+ page.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.message)});page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
+ await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new');await route.fulfill({response,body});});
+ await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('world.render(0);loadingOverlay?.dispose();',"Game.pause(state,'menu');world.render(0);loadingOverlay?.dispose();");body=body.replace('} catch(e){if(loadingToken===loadingGeneration)', '} catch(e){globalThis.qaFarLoadError=String(e.stack??e);if(loadingToken===loadingGeneration)');await route.fulfill({response,body});});
+ await page.route('**/src/rendering/shader-failure.js*',async route=>{const response=await route.fetch();let body=await response.text();body=body.replace('throw failure.current;', 'globalThis.qaShaderFailure=failure.current.details;throw failure.current;');await route.fulfill({response,body});});
+ await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true})),quality);
+ await page.addInitScript(text=>localStorage.setItem('wild-guardians:slot:opening',text),snapshot);
+ await page.goto('http://127.0.0.1:5190/?qa-seed=712&'+globalClosureQuery(biome));
+ await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
+ await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
+ await frame.evaluate(biome=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin),biome);
+ await page.waitForFunction(()=>globalThis.qaFarLoadError||(document.querySelector('#stage[aria-busy="false"]')&&window.qaCampaignWorld?.state),null,{timeout:180000}).catch(async e=>{await writeFile(out+'/load-failure.json',JSON.stringify(await page.evaluate(()=>({text:document.body.innerText,far:globalThis.qaCampaignWorld?.farVegetation?.stats,adapters:globalThis.qaCampaignWorld?.farVegetation?.adapters?.map(a=>({stats:a.stats,pending:a.preparationStatus()}))})),null,2));throw Error(errors.join('\n')+'\n'+e.message)});
+ const failure=await page.evaluate(()=>globalThis.qaFarLoadError&&(globalThis.qaFarLoadError+'\n'+JSON.stringify(globalThis.qaShaderFailure)));if(failure){await writeFile(out+'/load-failure.json',JSON.stringify({error:failure},null,2));throw Error(failure);}
+ await page.evaluate(expected=>{if(Math.abs(window.qaCampaignWorld.state.elapsed-expected)>1e-8)throw Error('Fixture advanced before pause');},JSON.parse(snapshot).elapsed);
+ await page.evaluate(async()=>{const w=window.qaCampaignWorld;const gameUrl=performance.getEntriesByType('resource').map(r=>r.name).find(u=>/\/src\/simulation\/game\.js(?:\?|$)/.test(u));if(!gameUrl)throw Error('Canonical Game missing');const {pause}=await import(gameUrl);pause(w.state,'menu');w.simElapsed=w.state.elapsed;w.raidCamera?.beginManual();w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
+
+
+
+
+
+
+ await page.evaluate(({biome,canyonTarget})=>{
+ const w=window.qaCampaignWorld;
+ delete w.groundDetails.timeOverride;
+ },{biome,canyonTarget:[-47.868919372558594, 3.259999895095825, 102]});
+ await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;const o=w.controls.target.toArray();window.qaSandPath=[[30,5,25],[6,34,6],[-18,9,22]].map(([x,y,z])=>[o[0]+x,Math.max(o[1]+y,w.nav.field.surface(o[0]+x,o[2]+z)+1.2),o[2]+z]);w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();});
+
+ for(const phase of phases){
+  const result=await page.evaluate(async phase=>{
+   const w=qaCampaignWorld,gameUrl=performance.getEntriesByType('resource').map(r=>r.name).find(u=>/\/src\/simulation\/game\.js(?:\?|$)/.test(u));if(!gameUrl)throw Error('Canonical Game missing');const {resume,pause}=await import(gameUrl);
+   w.state.time=phase==='day'?150:350;w.state.day=1;w.camera.position.fromArray(qaSandPath[0]);
+   w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();
+   const {prepareInitialFarWorld}=await import('/src/app/far-world-loading.js');await prepareInitialFarWorld(w);
+   for(let i=0;i<60;i++){await new Promise(requestAnimationFrame);w.render(0);}
+   const snapshot=()=>JSON.parse(JSON.stringify({elapsed:w.state.elapsed,time:w.state.time,day:w.state.day,workers:w.state.workers,plants:w.state.plants,pauses:w.state.pauses}));
+   const before=snapshot(),base=w.camera.position.clone(),target=w.controls.target.clone(),original=w.render;
+   const stream=w.renderer.domElement.captureStream(0),track=stream.getVideoTracks()[0];
+   const mimeType=['video/webm;codecs=vp9','video/webm;codecs=vp8'].find(x=>MediaRecorder.isTypeSupported(x));if(!mimeType)throw Error('WebM unavailable');
+   const chunks=[],frames=[],shots=[],recorder=new MediaRecorder(stream,{mimeType,videoBitsPerSecond:6000000});
+   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};const stopped=new Promise(resolve=>recorder.onstop=resolve);
+   let start=0,last=0,shotIndex=0;
+   recorder.start();resume(w.state,'menu');
+   try{
+    if(w.state.pauses.length)throw Error('Unexpected active-play pause '+w.state.pauses.join(','));
+    await new Promise((resolve,reject)=>{
+     const timeout=setTimeout(()=>reject(Error('Active gameplay frame timeout')),90000);
+     w.render=function(...args){
+      const now=performance.now();if(!start)start=now;const elapsed=now-start,t=Math.min(1,elapsed/40000);
+      const shift=144*Math.sin(t*Math.PI)**2;w.controls.target.copy(target);w.controls.target.x+=shift;w.controls.target.z+=shift*.35;const dy=w.nav.field.surface(w.controls.target.x,w.controls.target.z)-w.nav.field.surface(target.x,target.z);w.controls.target.y+=dy;w.camera.position.copy(base);w.camera.position.x+=shift;w.camera.position.z+=shift*.35;w.camera.position.y=Math.max(base.y+dy,w.nav.field.surface(w.camera.position.x,w.camera.position.z)+1.5);
+      const auto=w.renderer.info.autoReset;w.renderer.info.autoReset=false;w.renderer.info.reset();
+      try{const value=original.apply(this,args);track.requestFrame();
+       frames.push({wallMs:elapsed,intervalMs:last?now-last:null,elapsed:w.state.elapsed,pauses:[...w.state.pauses],calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,geometry:w.renderer.info.memory.geometries,textures:w.renderer.info.memory.textures,pending:w.farVegetation.adapters.some(a=>a.preparationPending()),glError:w.renderer.getContext().getError(),camera:w.camera.position.toArray(),expectedShift:shift,target:w.controls.target.toArray(),origin:[w.renderOrigin.x,w.renderOrigin.z],chunkKeys:[...w.chunks.keys()].sort(),coverageChunks:w.groundDetails.audit?.().chunks??null});last=now;
+       if(elapsed>=shotIndex*5000){shots.push({wallMs:elapsed,state:snapshot(),data:w.renderer.domElement.toDataURL('image/png').split(',')[1]});shotIndex++;}
+       if(t===1){clearTimeout(timeout);resolve();}return value;
+      }catch(error){clearTimeout(timeout);reject(error);throw error;}finally{w.renderer.info.autoReset=auto;}
+     };
+    });
+   }finally{w.render=original;pause(w.state,'menu');recorder.stop();await stopped;stream.getTracks().forEach(t=>t.stop());}
+   const after=snapshot(),blob=new Blob(chunks,{type:mimeType});
+   const data=await new Promise(resolve=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.readAsDataURL(blob);});
+   return {before,after,frames,shots,data,mimeType,farEnabled:w.farVegetation.enabled,mountainsVisible:w.scene.getObjectByName('biome-2d-backdrop')?.visible,coverage:w.groundDetails.audit?.()??null};
+  },phase);
+  await writeFile(`${out}/${phase}.webm`,Buffer.from(result.data,'base64'));delete result.data;
+  for(const [i,shot]of result.shots.entries()){await writeFile(`${out}/${phase}-${i}.png`,Buffer.from(shot.data,'base64'));delete shot.data;}
+  result.errors=[...errors];records.push({biome,quality,phase,...result});await writeFile(out+'/active-play.json',JSON.stringify({seed:712,note:'Real app Game.advanceReal loop, no direct QA ticks. Forty wall-clock seconds per phase with a144m outward-and-return target/camera excursion and50.4m lateral component; Shallow horizon camera; altitude follows target terrain with1.5m clearance above camera-ground surface. Material/wind clocks live, streaming enabled. Recorder and checkpoint overhead present: observations, not performance benchmark. Night continues the day state; initial visual time selected for each phase.',records},null,2));
+  if(errors.length||result.frames.some(f=>f.glError)||result.after.elapsed-result.before.elapsed<10||result.frames.some(f=>f.pauses.length)||result.coverage?.stats.overflow)throw Error('Active play validation failed');console.log(biome,phase,'active elapsed',result.after.elapsed-result.before.elapsed);
+ }
+ await page.close();
+ }}finally{await browser.close()}

@@ -1,0 +1,167 @@
+{
+  "sequence": [
+    "A",
+    "C",
+    "S",
+    "S",
+    "C",
+    "A"
+  ],
+  "note": "Isolated host, two repetitions per condition; no conclusive performance improvement. QA fixture, not campaign.",
+  "measurements": [
+    {
+      "variant": "0",
+      "camera": "medium",
+      "phase": "day",
+      "repetitions": 2,
+      "cpuMs": 5.812777777678436,
+      "gpuMs": 14.224811013888885,
+      "drawCalls": 62,
+      "triangles": 580971,
+      "rendererTextures": 81,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "0",
+      "camera": "medium",
+      "phase": "night",
+      "repetitions": 2,
+      "cpuMs": 5.430555555721124,
+      "gpuMs": 15.145619766666666,
+      "drawCalls": 62,
+      "triangles": 580971,
+      "rendererTextures": 82,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "0",
+      "camera": "close",
+      "phase": "day",
+      "repetitions": 2,
+      "cpuMs": 5.2788888886157,
+      "gpuMs": 14.889285000000005,
+      "drawCalls": 65,
+      "triangles": 669724,
+      "rendererTextures": 82,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "0",
+      "camera": "close",
+      "phase": "night",
+      "repetitions": 2,
+      "cpuMs": 4.763333333200879,
+      "gpuMs": 15.336725405555553,
+      "drawCalls": 65,
+      "triangles": 669724,
+      "rendererTextures": 82,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "village-art",
+      "camera": "medium",
+      "phase": "day",
+      "repetitions": 2,
+      "cpuMs": 5.898333333225714,
+      "gpuMs": 14.002875558333338,
+      "drawCalls": 62,
+      "triangles": 580971,
+      "rendererTextures": 82,
+      "sceneMaterials": 206
+    },
+    {
+      "variant": "village-art",
+      "camera": "medium",
+      "phase": "night",
+      "repetitions": 2,
+      "cpuMs": 5.336388889244861,
+      "gpuMs": 14.589392758333322,
+      "drawCalls": 62,
+      "triangles": 580971,
+      "rendererTextures": 83,
+      "sceneMaterials": 206
+    },
+    {
+      "variant": "village-art",
+      "camera": "close",
+      "phase": "day",
+      "repetitions": 2,
+      "cpuMs": 5.061944444353381,
+      "gpuMs": 14.803881188888894,
+      "drawCalls": 65,
+      "triangles": 669724,
+      "rendererTextures": 83,
+      "sceneMaterials": 206
+    },
+    {
+      "variant": "village-art",
+      "camera": "close",
+      "phase": "night",
+      "repetitions": 2,
+      "cpuMs": 5.018888888797827,
+      "gpuMs": 15.304742447222225,
+      "drawCalls": 65,
+      "triangles": 669724,
+      "rendererTextures": 83,
+      "sceneMaterials": 206
+    },
+    {
+      "variant": "village-shared-art",
+      "camera": "medium",
+      "phase": "day",
+      "repetitions": 2,
+      "cpuMs": 5.685555555505886,
+      "gpuMs": 14.073081580555552,
+      "drawCalls": 62,
+      "triangles": 580971,
+      "rendererTextures": 81,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "village-shared-art",
+      "camera": "medium",
+      "phase": "night",
+      "repetitions": 2,
+      "cpuMs": 5.192777778415216,
+      "gpuMs": 13.992150150000004,
+      "drawCalls": 62,
+      "triangles": 580971,
+      "rendererTextures": 82,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "village-shared-art",
+      "camera": "close",
+      "phase": "day",
+      "repetitions": 2,
+      "cpuMs": 5.238611111210452,
+      "gpuMs": 15.033405925000002,
+      "drawCalls": 65,
+      "triangles": 669724,
+      "rendererTextures": 82,
+      "sceneMaterials": 205
+    },
+    {
+      "variant": "village-shared-art",
+      "camera": "close",
+      "phase": "night",
+      "repetitions": 2,
+      "cpuMs": 5.210277777744664,
+      "gpuMs": 14.572169675000001,
+      "drawCalls": 65,
+      "triangles": 669724,
+      "rendererTextures": 82,
+      "sceneMaterials": 205
+    }
+  ],
+  "resourceBytes": {
+    "A": 5985956,
+    "C": 7089352,
+    "S": 6104962
+  },
+  "extraRgbaMipTextureMiB": {
+    "A": 0,
+    "C": 21.333333,
+    "S": 0
+  }
+}

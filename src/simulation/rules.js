@@ -2,6 +2,8 @@ import {HIRING_RESERVE} from './budget.js';
 import {expansionVillagePriceForRuntime} from './village-expansion-price.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
+import {activeCrops} from './active-crops.js';
+import {activeCrates} from './active-crates.js';
 export const cropSpec = id => { const c=B.crops.find(c=>c.id===id); if(!c)throw new Error('Cultivo desconocido'); return c; };
 export const animalSpec = id => { const c=B.animals.find(c=>c.id===id); if(!c)throw new Error('Animal desconocido'); return c; };
 export const wallSpec = id => { const c=B.walls.find(c=>c.id===id); if(!c)throw new Error('Material desconocido'); return c; };
@@ -9,7 +11,7 @@ export function villageCost(ordinal) {
   return expansionVillagePriceForRuntime(ordinal,B.postgame.additional_village_cost.variant);
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
-export const spellUnlocked=(state,kind)=>['shield','attack'].includes(kind)?state.day>=1&&state.time>=300||state.day>1:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
+export const spellUnlocked=(state,kind)=>['shield','attack'].includes(kind)?state.day>=1&&state.time>=300||state.day>1:['growth','multiply'].includes(kind)&&state.day>=1;
 export function permission(state,action) {
   if(state.result || state.pauses.some(reason=>reason!=='tutorial-action')) return false;
   const hasCenter=state.structures.some(operational);
@@ -17,13 +19,12 @@ export function permission(state,action) {
   if(action==='camera')return true;
   if(!hasCenter) return action==='center' && peaceful;
   if(action==='shield')return true;
-  if(action==='attack')return !!state.raid?.animals.some(a=>!['gone','retreating'].includes(a.status));
+  if(action==='attack')return !!state.raid;
   if(!peaceful)return false;
-  if(action==='multiply')return state.workers.some(w=>!w.incapacitated && w.status!=='home');
   if(action==='village')return state.postgame;
   return true;
 }
-export function attraction(plants) { return plants.filter(p=>p.alive).reduce((sum,p)=>sum+cropSpec(p.species).base_harvest_value,0); }
+export function attraction(plants) { return activeCrops(plants).reduce((sum,p)=>sum+(p.alive?cropSpec(p.species).base_harvest_value:0),0); }
 export function threatTier(value) { return B.threat_tiers.find(t=>value>=t.attraction_min&&(t.attraction_max_exclusive===null||value<t.attraction_max_exclusive))??null; }
 export function compositions(budget,unlocked) {
   if(!Number.isSafeInteger(budget)||budget<1)return [];
@@ -43,7 +44,7 @@ export function compositions(budget,unlocked) {
 }
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
-  const resources=state.plants.some(p=>p.alive)||state.crates.some(c=>!c.delivered);
+  const resources=activeCrops(state.plants).some(p=>p.alive)||activeCrates(state.crates).length>0;
   return (center?0:B.work_center.cost)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }

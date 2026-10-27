@@ -1,15 +1,116 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {actorBlockers,actorSegmentClear} from '../src/simulation/actor-motion.js';
-import {walkTo,newGame} from '../src/simulation/game.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from '../src/simulation/actor-motion.js';
+import {walkTo,newGame,tick,workerAtVillageEntry} from '../src/simulation/game.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {updateWorkerEncounters} from '../src/simulation/encounters.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
 import {updateRaid,reachableApproach} from '../src/simulation/raids.js';
+import {reservedApproachClear} from '../src/simulation/raid-target-reservations.js';
 import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
+
+test('local worker buckets match the roster scan across movement and status changes',()=>{
+ const workers=Array.from({length:100},(_,i)=>({id:`worker-${i}`,
+   x:(i%20)*4-38,z:Math.floor(i/20)*4-8,radius:i%7===0?.42:.28,
+   status:i%11===0?'home':'idle'}));
+ const state={workers,raid:{animals:[{id:'animal',x:0,z:0,radius:.8,
+   status:'retreating',hitsRemaining:0}]}};
+ const index=createWorkerBodyIndex(workers);
+ const compare=()=>{
+   for(const actor of workers)assert.deepEqual(
+     actorBlockers(state,actor,true,8,index).map(b=>b.id),
+     actorBlockers(state,actor,true,8).map(b=>b.id));
+ };
+ compare();
+ for(let step=0;step<20;step++){
+   const worker=workers[(step*17)%workers.length];
+   worker.x+=step%2?13:-11;worker.z+=step%3?2:-12;
+   worker.status=step%4?'idle':'home';index.update(worker);
+   compare();
+ }
+});
+
+test('an unchanged failed local detour is not rebuilt without a terrain iterator',()=>{
+ const actor={id:'worker-a',x:-2,z:0,radius:.28,status:'walking',
+   path:[{x:2,z:0}]};
+ const blocker={id:'worker-b',x:0,z:0,radius:.28,status:'idle'};
+ const state={workers:[actor,blocker],raid:null};
+ let sampled=0,chunks=1;
+ const nav={version:7,walkable:(_x,z)=>{sampled++;return Math.abs(z)<.15;},
+   segmentClear:()=>true,routeStamp:()=>({chunks})};
+ prepareActorMotion(state,actor,nav,true);
+ const first=sampled;
+ assert.ok(first>0,'the first attempt examines the local graph');
+ prepareActorMotion(state,actor,nav,true);
+ assert.equal(sampled,first,'the identical failure reuses its certificate');
+ blocker.x=.01;
+ prepareActorMotion(state,actor,nav,true);
+ assert.ok(sampled>first,'moving a blocker retries the search');
+ const afterMove=sampled;
+ chunks++;
+ prepareActorMotion(state,actor,nav,true);
+ assert.ok(sampled>afterMove,'a residency revision also retries the search');
+ const afterResidency=sampled;
+ nav.version++;
+ prepareActorMotion(state,actor,nav,true);
+ assert.ok(sampled>afterResidency,'a topology revision also retries the search');
+ assert.deepEqual(actor.path,[{x:2,z:0}]);
+});
+
+test('village entry accepts a returning worker within body radius only across a static clear doorway',()=>{
+ const entry={x:60,z:0},worker={x:60.2263,z:-.0316,radius:.28};
+ let checks=0;
+ const nav={workerMotionClear:()=>{checks++;return true;}};
+ assert.equal(workerAtVillageEntry(worker,entry,nav),true);
+ assert.equal(checks,1);
+ assert.equal(workerAtVillageEntry({...worker,z:-.281},entry,nav),false);
+ assert.equal(checks,1,'distant workers do not query the doorway');
+ assert.equal(workerAtVillageEntry(worker,entry,{workerMotionClear:()=>false}),false,
+   'a wall across the short final segment still prevents arrival');
+});
+
+test('the first fleeing worker enters the village before a trailing body blocks its exact endpoint',()=>{
+ const {s,nav}=createOpeningWorld({seed:712});
+ nav.intentTaskPlanner={needsReconciliation:()=>false,
+   hasPendingAt:()=>false,finishHomeIntent:()=>true};
+ const entry=s.villages[0].entry;
+ s.workers.push({id:'worker-90001',personId:'person-90001',profile:'olderMale',
+   centerId:s.structures[0].id,villageId:s.villages[0].id,
+   x:entry.x+.2263,z:entry.z-.0316,status:'fleeing',radius:.28,
+   taskId:null,crateId:null,path:[{x:entry.x,z:entry.z}],
+   destinationId:`home-${s.villages[0].id}`,pathVersion:nav.version,
+   runRemaining:10,hits:0,incapacitated:false,recovering:false});
+ s.workers.push({id:'worker-90002',personId:'person-90002',profile:'olderMale',
+   centerId:s.structures[0].id,villageId:s.villages[0].id,
+   x:entry.x-.03,z:entry.z-.53,status:'fleeing',radius:.28,
+   taskId:null,crateId:null,path:[{x:entry.x,z:entry.z}],
+   destinationId:`home-${s.villages[0].id}`,pathVersion:nav.version,
+   runRemaining:10,hits:0,incapacitated:false,recovering:false});
+ assert.equal(actorSegmentClear(s.workers[0],entry,s.workers[0],
+   actorBlockers(s,s.workers[0],true,8)),false);
+ tick(s,.1,nav);
+ assert.equal(s.workers[0].status,'home');
+ assert.equal(s.workers[0].x,entry.x);
+ assert.equal(s.workers[0].z,entry.z);
+ assert.equal(s.workers[1].status,'fleeing');
+ for(let step=0;step<20&&s.workers[1].status!=='home';step++)tick(s,.1,nav);
+ assert.equal(s.workers[1].status,'home','the queue drains after the first worker enters');
+});
+
+test('failed route planning waits for a relevant event or a slow recovery retry',()=>{
+ const state={elapsed:0},actor={id:'pending-animal',x:0,z:0,radius:.8,species:'hyena',status:'walking',hitsRemaining:2};
+ const target={id:'crop-1',x:8,z:0};let calls=0,sectors=1;
+ const nav={version:1,spatialSectorRevision:()=>sectors,path:()=>{calls++;return null;}};
+ for(let i=0;i<7;i++){state.elapsed=i;assert.equal(walkTo(state,actor,target,1,nav,{worker:false}),false);}
+ assert.equal(calls,1,'movement ticks must not repeat the same failed route');
+ state.elapsed=7;sectors++;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,2,'sector arrival wakes the unit');
+ state.elapsed=7.5;nav.version++;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,3,'topology change wakes the unit');
+ state.elapsed=15;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,3);
+ state.elapsed=15.6;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,4,'dynamic recovery remains bounded');
+});
 
 test('opposed animals route around each other when both short lookahead goals are occupied',()=>{
  const a={id:'outbound',x:94.1096081493741,z:14.519706064422435,radius:1.1,status:'retreating',hitsRemaining:0};
@@ -84,15 +185,36 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals))test(`${species}: exhau
   assert.ok(arrived);assert.ok(detoured);assert.equal(worker.hits,0);assert.equal(animal.hitsRemaining,0);
   assert.equal(state.rng,rng);assert.equal(state.events.length,events);
 });
-test('An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home',()=>{
+test('An occupied narrow passage phases mobile collisions after a bounded wait, retaining static clearance',()=>{
   const {state,animal,worker,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
-  const destination={id:'exit',x:4,z:0};
-  for(let i=0;i<100;i++)walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
-  assert.ok(animal.x<0);assert.ok(Math.hypot(animal.x,animal.z)>=animal.radius+.28);
-  assert.equal(animal.destinationId,'exit');assert.ok(animal.path.length);assert.equal(worker.hits,0);
-  worker.status='home';let arrived=false;
-  for(let i=0;i<100&&!arrived;i++)arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+  const motion=[];nav.motionObserver=event=>motion.push(event);
+  const destination={id:'exit',x:4,z:0};let arrived=false;
+  for(let i=0;i<100&&!arrived;i++){
+    const before={x:animal.x,z:animal.z};
+    arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+    assert.ok(Math.hypot(animal.x-before.x,animal.z-before.z)<=.38+1e-8);
+    assert.ok(nav.segmentClear(before,animal,animal.radius,null,false));
+  }
   assert.ok(arrived);
+  assert.ok(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'));
+  assert.equal(motion.length,1);
+  assert.equal(motion[0].kind,'mobileCollisionRecovery');
+  assert.equal(motion[0].actorId,animal.id);
+  assert.ok(['stationary','destination-stall'].includes(motion[0].trigger));
+  assert.ok(motion[0].stationarySeconds>=3||motion[0].destinationStallSeconds>=12);
+  assert.equal(animal.destinationId,'exit');assert.equal(worker.hits,0);
+});
+test('mobile collision recovery stops after two attempts for the same destination',()=>{
+  const {state,animal,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
+  const destination={id:'exit',x:4,z:0};
+  animal.mobileRecoveryDestinationId=destination.id;
+  animal.mobileRecoveryVersion=nav.version;
+  animal.mobileRecoveryAttempts=2;
+  animal.dynamicStallSeconds=3;
+  walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+  assert.equal(animal.mobileRecoveryAttempts,2);
+  assert.equal(animal.mobilePhaseRemaining??0,0);
+  assert.equal(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'),false);
 });
 test('Workers avoid a retreating beast in both movement directions and charge only travelled running metres',()=>{
   const {state,animal,worker,nav}=fixture('rhino');animal.x=0;worker.x=-4;
@@ -103,6 +225,38 @@ test('Workers avoid a retreating beast in both movement directions and charge on
     assert.ok(travelled<=.24+1e-8);assert.ok(edgeDistance(before,worker,animal.x,animal.z)>=animal.radius+.28-1e-8);
   }
   assert.ok(arrived);assert.ok(total>8);assert.equal(worker.runRemaining,50);assert.equal(worker.hits,0);
+});
+test('Workers crossing opposite ways keep physical separation and both reach their destinations',()=>{
+  const {state,worker:a,nav}=fixture();state.raid=null;
+  Object.assign(a,{id:'worker-a',x:-4,z:0,status:'walking',path:null});
+  const b={...a,id:'worker-b',personId:'person-b',x:4,path:null};
+  state.workers=[a,b];
+  const targets=[[a,{id:'right',x:4,z:0}],[b,{id:'left',x:-4,z:0}]];
+  const arrived=new Set();
+  for(let step=0;step<500&&arrived.size<2;step++)for(const [actor,target] of targets){
+    if(arrived.has(actor.id))continue;
+    const other=actor===a?b:a,before={x:actor.x,z:actor.z};
+    if(walkTo(state,actor,target,.1,nav))arrived.add(actor.id);
+    assert.ok(edgeDistance(before,actor,other.x,other.z)>=.56-1e-8,
+      'worker bodies must not cross during an ordinary movement step');
+  }
+  assert.deepEqual([...arrived].sort(),['worker-a','worker-b']);
+});
+test('A walking worker detours around a stationary coworker without moving the coworker',()=>{
+  const {state,worker:traveller,nav}=fixture();state.raid=null;
+  Object.assign(traveller,{id:'traveller',x:-4,z:0,status:'walking',path:null});
+  const resting={...traveller,id:'resting',personId:'resting-person',x:0,path:null,status:'idle'};
+  state.workers=[traveller,resting];
+  const destination={id:'delivery',x:4,z:0};
+  let arrived=false,detoured=false;
+  for(let step=0;step<250&&!arrived;step++){
+    const before={x:traveller.x,z:traveller.z};
+    arrived=walkTo(state,traveller,destination,.1,nav);
+    assert.ok(edgeDistance(before,traveller,resting.x,resting.z)>=.56-1e-8);
+    detoured||=Math.abs(traveller.z)>.01;
+  }
+  assert.ok(arrived);assert.ok(detoured);
+  assert.deepEqual({x:resting.x,z:resting.z},{x:0,z:0});
 });
 test('A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route',()=>{
   const {state,animal,worker,nav}=fixture();animal.x=0;worker.x=-1.4;
@@ -152,7 +306,7 @@ test('Legacy overlaps may escape continuously but cannot move deeper or across t
   assert.equal(actorSegmentClear(actor,{x:.4,z:0},actor,[other]),false);
   assert.equal(actorSegmentClear(actor,{x:-2,z:0},actor,[other]),false);
 });
-test('Crowded crop approaches are recomputed outside the other native bodies and the raid completes',()=>{
+test('An occupied crop service ring waits for clearance and the raid then completes',()=>{
   const {state,nav}=fixture();state.workers=[];
   state.plants=[
     {id:'p1',x:228,z:34.5,species:'girasol',alive:true},
@@ -164,8 +318,14 @@ test('Crowded crop approaches are recomputed outside the other native bodies and
   const animals=positions.map((p,i)=>({id:'crowd-'+i,species:'warthog',...p,radius:1.1,hitsRemaining:2,status:'walking',targetId:state.plants[i].id,reservation:'crop:'+state.plants[i].id,spawn:{x:176.5936382952636,z:34.34991014827507+i*4},path:[endpoints[i]],approach:{id:'occupied-'+i,...endpoints[i]},destinationId:'occupied-'+i,pathVersion:nav.version}));
   state.raid.animals=animals;state.raid.reservations=Object.fromEntries(animals.map(a=>[a.reservation,a.id]));
   assert.equal(actorSegmentClear(endpoints[1],endpoints[1],animals[1],[animals[0],animals[2]]),false);
+  // The target's entire legal service ring is blocked by either a live body
+  // or another reserved approach. No finer angular search could find a point.
+  for(let i=0;i<1024;i++){
+    const angle=i*Math.PI*2/1024,point={x:state.plants[1].x+Math.sin(angle)*1.7,z:state.plants[1].z+Math.cos(angle)*1.7};
+    assert.ok(!reservedApproachClear(state,animals[1],point)||!actorSegmentClear(point,point,animals[1],[animals[0],animals[2]]));
+  }
   const approach=reachableApproach(animals[1],state.plants[1],nav);
-  assert.equal(approach,null,'Overlapping legacy attack-slot claims must not manufacture an impossible independent approach');
+  assert.equal(approach,null,'all service points are physically occupied until another animal moves');
   for(let i=0;i<3000&&state.raid;i++){
     state.elapsed+=.1;updateRaid(state,.1,nav);
     for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=2.2-1e-8);

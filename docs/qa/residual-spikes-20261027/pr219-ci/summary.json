@@ -1,0 +1,51 @@
+{
+  "head": "689340487fdd8190a21413d3727c8683e9b74276",
+  "windowsRun": 40484206273,
+  "linuxRun": 40484205843,
+  "checks": "Both SUCCESS observed from GitHub",
+  "rows": [
+    {
+      "name": "desktop-smoke.json",
+      "ok": true,
+      "world": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "height": 720,
+        "width": 1028
+      }
+    },
+    {
+      "name": "desktop-visibility.json",
+      "ok": true,
+      "world": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "height": 720,
+        "width": 1028
+      },
+      "visibilityPassed": true
+    },
+    {
+      "name": "desktop-exit-create.json",
+      "ok": true,
+      "exitButtonFound": true,
+      "nativeProcess": {
+        "exited": true,
+        "exitCode": 0,
+        "elapsedMs": 344346.8097
+      }
+    },
+    {
+      "name": "desktop-exit-restore.json",
+      "ok": true,
+      "exitButtonFound": true,
+      "restartRestored": true,
+      "nativeProcess": {
+        "exited": true,
+        "exitCode": 0,
+        "elapsedMs": 348580.2958
+      }
+    }
+  ],
+  "scope": "Windows runtime functional checks on CI hardware; not Intel UHD performance evidence."
+}

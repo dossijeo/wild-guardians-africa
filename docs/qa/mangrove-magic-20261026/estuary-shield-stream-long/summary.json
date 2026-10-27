@@ -1,0 +1,94 @@
+{
+  "ok": true,
+  "scope": "Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 3997,
+    "p50": 33.22499999997672,
+    "p95": 66.55000000001746,
+    "p99": 99.77999999999884,
+    "max": 149.66999999999825
+  },
+  "programWaits": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  },
+  "casts": [
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 77315.65499997139,
+      "before": {
+        "elapsed": 3.319055000004768,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 4.695000052452087,
+      "after": {
+        "elapsed": 5.5304550000047525,
+        "cooldown": 87.78860000000027,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.788600000000027
+          }
+        ]
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 21,
+        "finalChunks": 16,
+        "uniqueChunks": 38
+      },
+      "activationFrames": {
+        "samples": 46,
+        "p50": 33.38999999999942,
+        "p95": 83.16999999999825,
+        "p99": 99.75500000000466,
+        "max": 99.75500000000466
+      },
+      "programWaits": []
+    },
+    {
+      "kind": "shield",
+      "accepted": true,
+      "start": 167796.92999994755,
+      "before": {
+        "elapsed": 93.35111000000457,
+        "cooldown": 0,
+        "spells": 0
+      },
+      "commandMs": 3.9100000858306885,
+      "after": {
+        "elapsed": 95.56257500000422,
+        "cooldown": 87.78853500000035,
+        "spells": [
+          {
+            "kind": "shield",
+            "remaining": 17.78853500000004
+          }
+        ]
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 25,
+        "finalChunks": 15,
+        "uniqueChunks": 34
+      },
+      "activationFrames": {
+        "samples": 48,
+        "p50": 33.38500000000931,
+        "p95": 83.18500000002678,
+        "p99": 99.80499999999302,
+        "max": 99.80499999999302
+      },
+      "programWaits": []
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "Commands invoke legal Game.cast; no pointer targeting test."
+  ]
+}

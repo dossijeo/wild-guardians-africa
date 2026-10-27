@@ -1,0 +1,76 @@
+{
+  "node": "v20.11.0",
+  "operations": 100000,
+  "sourceHashes": {
+    "candidate": "28b4f21c6fc897e2d2efdde6cc24e21e22f8ebbb3fe2adc2d2bf0e51694ccb0c",
+    "control": "17d50a3f28b7db202a9a80b57a53d4f312ad35593191bacff0e47f823e15708d"
+  },
+  "summary": {
+    "candidate": {
+      "elapsedMs": 148.53095,
+      "retainedHeapBytes": 201768,
+      "retainedRssBytes": 4882432,
+      "peakRssAboveStartBytes": 6311936
+    },
+    "control": {
+      "elapsedMs": 71.17115000000001,
+      "retainedHeapBytes": 63808,
+      "retainedRssBytes": 4597760,
+      "peakRssAboveStartBytes": 6053888
+    }
+  },
+  "samples": {
+    "candidate": [
+      {
+        "elapsedMs": 137.89870000000002,
+        "retainedHeapBytes": 201768,
+        "retainedRssBytes": 5029888,
+        "peakRssAboveStartBytes": 6381568
+      },
+      {
+        "elapsedMs": 152.2832,
+        "retainedHeapBytes": 201768,
+        "retainedRssBytes": 4890624,
+        "peakRssAboveStartBytes": 6213632
+      },
+      {
+        "elapsedMs": 145.4577,
+        "retainedHeapBytes": 201768,
+        "retainedRssBytes": 4874240,
+        "peakRssAboveStartBytes": 6348800
+      },
+      {
+        "elapsedMs": 151.6042,
+        "retainedHeapBytes": 201768,
+        "retainedRssBytes": 4718592,
+        "peakRssAboveStartBytes": 6275072
+      }
+    ],
+    "control": [
+      {
+        "elapsedMs": 81.84609999999999,
+        "retainedHeapBytes": 63680,
+        "retainedRssBytes": 4595712,
+        "peakRssAboveStartBytes": 5963776
+      },
+      {
+        "elapsedMs": 66.32950000000001,
+        "retainedHeapBytes": 63808,
+        "retainedRssBytes": 4579328,
+        "peakRssAboveStartBytes": 5939200
+      },
+      {
+        "elapsedMs": 76.0128,
+        "retainedHeapBytes": 63808,
+        "retainedRssBytes": 4599808,
+        "peakRssAboveStartBytes": 6144000
+      },
+      {
+        "elapsedMs": 63.805899999999994,
+        "retainedHeapBytes": 63808,
+        "retainedRssBytes": 4616192,
+        "peakRssAboveStartBytes": 6324224
+      }
+    ]
+  }
+}

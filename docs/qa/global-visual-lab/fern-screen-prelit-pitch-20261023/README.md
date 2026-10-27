@@ -1,0 +1,15 @@
+# Screen-size prelit fern LOD: camera pitch roundtrip
+
+Source9ffae5d01. Native approved holly versus QA prelit far composite + screen-size selector. Same seed712,medium,1280x720,full backgrounds enabled.120sampled frames per variant per phase,4seconds authored30Hz. Oblique camera target+(22,16,18) to target+(.01,38,.01) and back via sin-squared. Wind sample clock advances; simulation paused, material clock frozen. NOT real-time FPS, active-world or benchmark evidence.
+
+480PNGs captured. Audit verifies120frames per sequence, exact paired camera/target/elapsed/sampletime and equal total selected instances at EVERY frame, no GL/page errors or coverage overflow. Far preparation pending14–15frames per sequence; this is not an all-resident capture and background timing can differ. Native/candidate ground coverage totals match despite preparation.
+
+Candidate near count0..1209. Initial/end1209/1154 at effectively same camera due hysteresis history; expected, not a lost-instance claim (totals equal). Day/night selection histories match. Largest net near-count drop305atframe40, with total count increasing156; camera/frustum changes mean count deltas are NOT exact per-instance transition counts. Frame84net near+174 with unchanged total, another useful transition inspection point. Hysteresis suppresses small threshold oscillations but still switches each module instantly; no crossfade or morph implemented.
+
+Inspected day/night contact sheets (frames0,30,39,40,59,90,119), plus full candidate daytimeframe30. Dense coverage retained in inspected frames. Candidate differs in frond structure, crown brightness and ground shadows; equivalence to approved art unproven. Contact sheets do not establish smooth playback or absence of all temporal artifacts. No claim of complete video review. Code demonstrates hard switches, and selection telemetry identifies where to focus subsequent visual work.
+
+Two local MP4s: day-comparison.mp4/night-comparison.mp4, originalLEFT candidateRIGHT. ffprobe confirms2560x720,120frames,4.000seconds,30Hz. These are videos assembled from actual renderer PNGs, not generated mockups and not measured runtime FPS. Large raw PNGs/videos remain local; tracked contact sheets/telemetry/probes are reproducible.
+
+Reproduce: node tools/experiments/capture-fern-screen-prelit-pitch-20261023.mjs; python tools/experiments/audit-fern-screen-prelit-pitch-20261023.py. Encode each phase using ffmpeg two30fps inputs native/PHASE/%04d.png and prelit/PHASE/%04d.png, hstack,libx264crf20,yuv420p. See videos.json for dimensions/duration.
+
+Decision: retain promising elevated-camera candidate and measured13–15%dayGPU saving from prior topdown cost study, but DO NOT promote. Next implementation must address different projected silhouette/lighting during transition, external-shadow reception and native wind loss before production acceptance. A smooth transition must not silently replace approved coverage with thinner geometry or use a visually worse simplification merely for FPS. Normal-camera cost/active-world remain unverified for screen-size variant. Main, approved native renderer, simulation unchanged.

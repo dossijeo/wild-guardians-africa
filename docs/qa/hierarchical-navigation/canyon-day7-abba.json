@@ -1,0 +1,109 @@
+{
+  "input": "C:\\Users\\PC\\source\\repos\\wild-guardians-event-driven-player\\docs\\qa\\event-driven-virtual-player\\pilot-good-canyon-2026-day7-phase\\checkpoint-state.json.gz",
+  "day": 7,
+  "time": 480.0000000000409,
+  "requests": 13,
+  "rows": [
+    {
+      "variant": "native",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 195.44070000000002,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "80798a46065e98874d1746b39081196b14ee954e4ca66cb0ad1808cd535c5efd"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 26.03649999999999,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "80798a46065e98874d1746b39081196b14ee954e4ca66cb0ad1808cd535c5efd"
+        }
+      ],
+      "rssDeltaBytes": 23019520,
+      "metrics": null
+    },
+    {
+      "variant": "hierarchical",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 565.5926,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "ca2f4a05f1ec5a0e9d2cda8f1465cfe12698908d577de26b0bd868c1878311fe"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 7.925599999999918,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "ca2f4a05f1ec5a0e9d2cda8f1465cfe12698908d577de26b0bd868c1878311fe"
+        }
+      ],
+      "rssDeltaBytes": 18956288,
+      "metrics": {
+        "sectorsBuilt": 52,
+        "sectorsInvalidated": 0,
+        "cellSamples": 7488,
+        "edgeSamples": 18427,
+        "graphSearches": 6,
+        "graphNodes": 198,
+        "localSearches": 66
+      }
+    },
+    {
+      "variant": "hierarchical",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 516.1406,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "ca2f4a05f1ec5a0e9d2cda8f1465cfe12698908d577de26b0bd868c1878311fe"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 5.226400000000012,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "ca2f4a05f1ec5a0e9d2cda8f1465cfe12698908d577de26b0bd868c1878311fe"
+        }
+      ],
+      "rssDeltaBytes": 12308480,
+      "metrics": {
+        "sectorsBuilt": 52,
+        "sectorsInvalidated": 0,
+        "cellSamples": 7488,
+        "edgeSamples": 18427,
+        "graphSearches": 6,
+        "graphNodes": 198,
+        "localSearches": 66
+      }
+    },
+    {
+      "variant": "native",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 143.0999999999999,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "80798a46065e98874d1746b39081196b14ee954e4ca66cb0ad1808cd535c5efd"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 21.679300000000012,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "80798a46065e98874d1746b39081196b14ee954e4ca66cb0ad1808cd535c5efd"
+        }
+      ],
+      "rssDeltaBytes": 11034624,
+      "metrics": null
+    }
+  ],
+  "candidateDeterministic": true
+}

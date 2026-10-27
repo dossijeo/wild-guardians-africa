@@ -1,11 +1,13 @@
 // Connected groups remain valuation zones. Ownership belongs to one target,
 // or one physically separated approach for a large work center.
+import {activeCrops} from './active-crops.js';
 const active=a=>!['gone','retreating','waiting'].includes(a.status);
 const indices=new WeakMap();
 function targetIndex(state){
  const old=indices.get(state);
  if(old&&old.plants===state.plants&&old.plantLength===state.plants.length&&old.structures===state.structures&&old.structureLength===state.structures.length)return old.byId;
- const byId=new Map([...state.plants,...state.structures].map(t=>[t.id,t]));
+ const byId=new Map([...activeCrops(state.plants),...state.structures]
+  .map(t=>[t.id,t]));
  indices.set(state,{plants:state.plants,plantLength:state.plants.length,structures:state.structures,structureLength:state.structures.length,byId});return byId;
 }
 export function targetReservationKey(target,animal){
@@ -24,14 +26,19 @@ export function reconcileTargetReservations(state,release){
   if(!active(a)||!a.targetId)continue;
   const target=byId.get(a.targetId);
   if(!target||('alive' in target?!target.alive:target.status!=='intact'||target.hp<=0)){
-   // A committed attack must finish its animation and spend its hit at the
-   // original logical instant, even when its target disappears meanwhile.
-   // Release the reservation now but retain the target ID for a logical miss.
-   if(a.status==='attacking')a.reservation=null;else release(state,a);
+   // A strike already in its animation remains committed to the original ID.
+   // Drop the obsolete lease now, then let attack completion record a miss.
+   // Clearing targetId here would erase that commitment before the hit frame.
+   if(a.status==='attacking')a.reservation=null;
+   else release(state,a);
    continue;
   }
   const key=targetReservationKey(target,a);
   if(claimed.has(key)||a.approach&&approaches.some(other=>Math.hypot(a.approach.x-other.approach.x,a.approach.z-other.approach.z)<(a.radius??.28)+(other.radius??.28)+.1)){
+   // A collision or stale lease discovered after the attack animation starts
+   // cannot cancel its committed damage frame. Drop the duplicate claim and
+   // let the existing clip resolve against its original target before retargeting.
+   if(a.status==='attacking'){a.reservation=null;continue;}
    release(state,a);a.status='walking';a.attackRemaining=0;a.attackId=null;a.hitApplied=false;continue;
   }
   claimed.add(key);a.reservation=key;owners[key]=a.id;if(a.approach)approaches.push(a);

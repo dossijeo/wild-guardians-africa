@@ -35,15 +35,23 @@ export function simulateOpening(profile,requestedCount=8,worldOptions={}) {
   plots.sort((a,b)=>a.distance-b.distance||a.z-b.z||a.x-b.x);
   const count=Math.min(requestedCount,profile.startsWith('young')?16:20);
   for(const [i,p] of plots.slice(0,count).entries())Game.plant(s,'plant-'+i,'mijo',p.x,p.z,nav);
+  const planted=Math.min(count,plots.length),harvested=[];
+  const observe=event=>{if(event.type==='CropPicked'){
+    const plant=s.plants.find(item=>item.id===event.targetId);
+    if(plant)harvested.push({id:plant.id,species:plant.species,growth:plant.growth,water:plant.water.map(item=>item.status)});
+  }};
+  let stop=Game.observeGameEvents(s,observe);
   Game.openInitialHiring(s);Game.hire(s,'hire',{[profile]:1});
   const initialBalance=numberOf(s.ledger.balance);
   let maximumTime=0;
   while(s.day===1&&!s.result&&!s.pauses.length) {
-    s=worldOptions.onTick?.(s,nav)??s;
+    const next=worldOptions.onTick?.(s,nav)??s;
+    if(next!==s){stop();s=next;stop=Game.observeGameEvents(s,observe);}
     Game.tick(s,.5,nav);
     maximumTime=Math.max(maximumTime,s.time);
   }
-  return {profile,plots:s.plants.length,initialBalance,delivered:s.crates.filter(c=>c.delivered).length,
+  stop();
+  return {profile,plots:planted,initialBalance,delivered:Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length,harvested,
     mature:s.plants.filter(isMature).length,living:s.plants.filter(p=>p.alive).length,money:numberOf(s.ledger.balance),result:s.result,day:s.day,
     maximumTime,pauses:s.pauses,ledger:s.ledger,plants:s.plants,crates:s.crates,state:s,nav};
 }

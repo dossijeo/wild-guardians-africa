@@ -7,6 +7,7 @@ export function workerRiskClearance(actor,nav,{radius,ignore},dynamicClear){
  // Native Navigation always provides the terrain-risk metadata methods.
  if(typeof nav.knownWorkerSegmentRisk!=='function'||typeof nav.workerSegmentRisk!=='function')return null;
  let blocked=false;
+ let failedSegment=null;
  const clear=(start,end)=>{
   if(dynamicClear&&!dynamicClear(start,end))return false;
   const point=actor.path[0];if(!point)return true;
@@ -21,17 +22,18 @@ export function workerRiskClearance(actor,nav,{radius,ignore},dynamicClear){
    record={nav,version:nav.version,radius,ignore,path:actor.path,point,px:point.x,pz:point.z,boundary,risky:!risk.valid||risk.peak>=.46};
   }
   if(record.risky)nav.workerMotionStats.guarded++;
-  if(record.risky?!nav.terrainValid(end.x,end.z,radius,true):!actorFluidClear(nav,end,radius)){
+  if(record.risky?!nav.terrainValid(end.x,end.z,radius,true):!actorFluidClear(nav,end,radius,true)){
     // Retain the existing marginal, improving recovery, never a new task exception.
     const recovering=['fleeing','returning','incapacitated'].includes(actor.status)&&!nav.terrainValid(start.x,start.z,radius,true);
     const before=recovering?peak(nav,start,radius):Infinity,after=recovering?peak(nav,end,radius):Infinity;
     const collision=Object.assign(Object.create(nav),{terrainValid:(x,z,r)=>nav.field.canyon||[[0,0],[r,0],[-r,0],[0,r],[0,-r]].every(([dx,dz])=>!fluidAt(nav.field,x+dx,z+dz)),segmentCache:new Map(),workerRouteCache:new Map()});
     if(!(recovering&&before<=.51&&after<=before+1e-10&&collision.workerMotionClear(start,end,radius))){
      actor.terrainAvoidance??=[];actor.terrainAvoidance.push({x:end.x,z:end.z});if(actor.terrainAvoidance.length>8)actor.terrainAvoidance.shift();
-     blocked=true;nav.workerMotionStats.rejected++;verified.delete(actor);return false;
+     blocked=true;failedSegment={start:{x:start.x,z:start.z},end:{x:end.x,z:end.z}};
+     nav.workerMotionStats.rejected++;verified.delete(actor);return false;
     }
   }
   record.x=end.x;record.z=end.z;verified.set(actor,record);return true;
  };
- return {clear,blocked:()=>blocked};
+ return {clear,blocked:()=>blocked,blockedSegment:()=>failedSegment};
 }

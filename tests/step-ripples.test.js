@@ -30,12 +30,13 @@ for(const id of Object.keys(FOOTSTEPS.sources))test(`${id}: measured water steps
  const count=manager.ripples.contacts.length;manager.update(state);assert.equal(manager.ripples.contacts.length,count);
  state.elapsed=0;manager.update(state);assert.equal(scene.children.length,0,'reload/backwards time clears stale rings');manager.dispose();
 });
-test('canyon actors sink only their feet rather than standing on the river bed; routes use the water plane',()=>{
+test('canyon workers sink only their feet while the river remains closed to animals',()=>{
  const nav=new Navigation(712,'gran-canon',{}),z=0,x=nav.field.riverX(z),water=nav.field.waterInfo(x,z);
  assert.equal(water.inside,true);assert.equal(nav.workerSurface(x,z),water.level);
  assert.equal(nav.actorSurface(x,z),water.level-.1);
  assert.ok(nav.actorSurface(x,z)>nav.field.surface(x,z)+.5);
- for(const worker of [false,true])assert.equal(nav.terrainValid(x,z,0,worker),true);
+ assert.equal(nav.terrainValid(x,z,0,true),true);
+ assert.equal(nav.terrainValid(x,z,0,false),false);
  const dry=new Navigation(712,'volcanes',{});dry.field={surface:()=>2,waterInfo:()=>({inside:false}),slope:()=>0};
  assert.equal(dry.actorSurface(0,0),2);
 });

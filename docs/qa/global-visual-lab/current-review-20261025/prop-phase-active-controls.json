@@ -1,0 +1,61 @@
+{
+  "scope": "Two active candidate controls, second instrumented for attribution; not A/B/A/B. No screenshots during measured camera path.",
+  "runs": [
+    {
+      "source": "gran-rio-phase-separated-active",
+      "frames": {
+        "count": 180,
+        "mean": 40.186527777777805,
+        "p95": 66.7300000000032,
+        "max": 166.27500000000146
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 28.626101999999992,
+        "p95": 34.659582,
+        "max": 43.036249
+      },
+      "draw": {
+        "count": 181,
+        "mean": 11.29441989258508,
+        "p95": 16.02999997138977,
+        "max": 126.125
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 4.643500006198883,
+        "p95": 6.784999966621399,
+        "max": 7.149999976158142
+      },
+      "blockingRecoveries": 0
+    },
+    {
+      "source": "gran-rio-asset-water-attribution",
+      "frames": {
+        "count": 190,
+        "mean": 40.784078947368414,
+        "p95": 67,
+        "max": 149.73999999999796
+      },
+      "gpu": {
+        "count": 64,
+        "mean": 29.273490953125005,
+        "p95": 36.735572,
+        "max": 47.171145
+      },
+      "draw": {
+        "count": 191,
+        "mean": 11.20709424618027,
+        "p95": 13.995000004768372,
+        "max": 139.58000004291534
+      },
+      "preparation": {
+        "count": 10,
+        "mean": 5.426999974250793,
+        "p95": 7.779999732971191,
+        "max": 12.934999823570251
+      },
+      "blockingRecoveries": 0
+    }
+  ]
+}

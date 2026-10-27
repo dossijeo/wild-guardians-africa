@@ -1,0 +1,78 @@
+{
+  "captures": [
+    {
+      "view": "close",
+      "phase": "day",
+      "controlExact": true,
+      "resourcesAndPoseEqual": true
+    },
+    {
+      "view": "close",
+      "phase": "night",
+      "controlExact": true,
+      "resourcesAndPoseEqual": true
+    },
+    {
+      "view": "game",
+      "phase": "day",
+      "controlExact": true,
+      "resourcesAndPoseEqual": true
+    },
+    {
+      "view": "game",
+      "phase": "night",
+      "controlExact": true,
+      "resourcesAndPoseEqual": true
+    }
+  ],
+  "timing": [
+    {
+      "view": "close",
+      "phase": "day",
+      "original": {
+        "gpu": 27.5214155,
+        "cpu": 3.0858333335568506
+      },
+      "dry": {
+        "gpu": 28.879926554166666,
+        "cpu": 3.1441666673868895
+      }
+    },
+    {
+      "view": "close",
+      "phase": "night",
+      "original": {
+        "gpu": 27.398145733333333,
+        "cpu": 3.138750000918905
+      },
+      "dry": {
+        "gpu": 28.340975354166666,
+        "cpu": 3.304166665424903
+      }
+    },
+    {
+      "view": "game",
+      "phase": "day",
+      "original": {
+        "gpu": 23.7171193,
+        "cpu": 2.7795833319425585
+      },
+      "dry": {
+        "gpu": 23.376691991666668,
+        "cpu": 2.6716666661202906
+      }
+    },
+    {
+      "view": "game",
+      "phase": "night",
+      "original": {
+        "gpu": 25.418617158333333,
+        "cpu": 2.7416666659216085
+      },
+      "dry": {
+        "gpu": 25.322967145833335,
+        "cpu": 2.8620833323647576
+      }
+    }
+  ]
+}

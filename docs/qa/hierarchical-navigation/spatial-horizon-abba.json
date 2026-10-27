@@ -1,0 +1,120 @@
+{
+  "kind": "isolated-horizon-cpu-abba",
+  "note": "The existing JS generator uses a different world; spatial-js and native use the same C++ world. Excludes GPU upload, browser worker, and gameplay frames.",
+  "cases": [
+    {
+      "biome": "canyons",
+      "seed": 712,
+      "region": [
+        -120,
+        -120,
+        120,
+        120
+      ],
+      "timings": [
+        {
+          "implementation": "js",
+          "ms": 175.58,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "spatial-js",
+          "ms": 158.07,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "native",
+          "ms": 66.95,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "native",
+          "ms": 53.16,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "spatial-js",
+          "ms": 141.42,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "js",
+          "ms": 113.48,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        }
+      ],
+      "spatialMetrics": {
+        "memoryBytes": 5373952,
+        "loadedChunks": 1,
+        "residentPropRecords": 12,
+        "loadedSectors": 0,
+        "sectorSlots": 0,
+        "sectorUpdates": 0,
+        "haloProps": 1
+      }
+    },
+    {
+      "biome": "desert",
+      "seed": 712,
+      "region": [
+        -120,
+        -120,
+        120,
+        120
+      ],
+      "timings": [
+        {
+          "implementation": "js",
+          "ms": 184.46,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "spatial-js",
+          "ms": 312.96,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "native",
+          "ms": 123.7,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "native",
+          "ms": 111.65,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "spatial-js",
+          "ms": 320.61,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "js",
+          "ms": 173.81,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        }
+      ],
+      "spatialMetrics": {
+        "memoryBytes": 6815744,
+        "loadedChunks": 1,
+        "residentPropRecords": 6,
+        "loadedSectors": 0,
+        "sectorSlots": 0,
+        "sectorUpdates": 0,
+        "haloProps": 2
+      }
+    }
+  ]
+}

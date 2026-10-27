@@ -1,0 +1,524 @@
+[
+  {
+    "source": "sabana-current-motion-attribution",
+    "sparseGl": false,
+    "createdDuringCapture": 1,
+    "finalStream": {
+      "created": 35,
+      "discarded": 3,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 15,
+      "busy": true,
+      "preparing": 2,
+      "stale": 0,
+      "epoch": 0
+    },
+    "errors": [],
+    "elapsedAdvance": 39.92559000000752,
+    "finalGlError": null,
+    "checkpoints": [
+      {
+        "wallMs": 0,
+        "stream": {
+          "created": 34,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": []
+      },
+      {
+        "wallMs": 5002.875,
+        "stream": {
+          "created": 34,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 3,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:setup",
+            "age": 1287.789999961853,
+            "waiting": false,
+            "cost": 0.02699997425079346
+          },
+          {
+            "label": "terrain 1,3:setup",
+            "age": 1210.5900000333786,
+            "waiting": false,
+            "cost": 0.02699997425079346
+          }
+        ]
+      },
+      {
+        "wallMs": 10037.925000071526,
+        "stream": {
+          "created": 34,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 7,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:setup",
+            "age": 6307.289999961853,
+            "waiting": false,
+            "cost": 0.02699997425079346
+          },
+          {
+            "label": "terrain 1,3:setup",
+            "age": 6230.080000042915,
+            "waiting": false,
+            "cost": 0.02699997425079346
+          }
+        ]
+      },
+      {
+        "wallMs": 15015.445000052452,
+        "stream": {
+          "created": 34,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 11,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:ground",
+            "age": 11279.129999995232,
+            "waiting": false,
+            "cost": 1.7149999141693115
+          },
+          {
+            "label": "terrain 1,3:setup",
+            "age": 11201.914999961853,
+            "waiting": false,
+            "cost": 0.034999966621398926
+          }
+        ]
+      },
+      {
+        "wallMs": 20005.045000076294,
+        "stream": {
+          "created": 34,
+          "discarded": 1,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 15,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:prop-slots-0",
+            "age": 16267.710000038147,
+            "waiting": false,
+            "cost": 0.5099999904632568
+          },
+          {
+            "label": "terrain 4,1:prop-slots-8",
+            "age": 4635.960000038147,
+            "waiting": false,
+            "cost": 0.5950000286102295
+          }
+        ]
+      },
+      {
+        "wallMs": 25023.634999990463,
+        "stream": {
+          "created": 35,
+          "discarded": 1,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 14,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:prop-slots-4",
+            "age": 21296.28499996662,
+            "waiting": false,
+            "cost": 0.9099999666213989
+          },
+          {
+            "label": "terrain 4,2:setup",
+            "age": 4902.150000095367,
+            "waiting": false,
+            "cost": 0.039999961853027344
+          }
+        ]
+      },
+      {
+        "wallMs": 30020.06000006199,
+        "stream": {
+          "created": 35,
+          "discarded": 1,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 14,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:prop-slots-8",
+            "age": 26293.774999976158,
+            "waiting": false,
+            "cost": 0.5355000257492065
+          },
+          {
+            "label": "terrain 4,2:setup",
+            "age": 9899.629999995232,
+            "waiting": false,
+            "cost": 0.039999961853027344
+          }
+        ]
+      },
+      {
+        "wallMs": 35017.43500006199,
+        "stream": {
+          "created": 35,
+          "discarded": 2,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 15,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:prop-slots-8",
+            "age": 31293.950000047684,
+            "waiting": false,
+            "cost": 0.5355000257492065
+          },
+          {
+            "label": "terrain 1,1:setup",
+            "age": 838.795000076294,
+            "waiting": false,
+            "cost": 0.035999965667724614
+          }
+        ]
+      },
+      {
+        "wallMs": 40015.360000014305,
+        "stream": {
+          "created": 35,
+          "discarded": 3,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 15,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 1,1:setup",
+            "age": 5828.210000038147,
+            "waiting": false,
+            "cost": 0.035999965667724614
+          },
+          {
+            "label": "terrain 1,0:setup",
+            "age": 3613.9249999523163,
+            "waiting": false,
+            "cost": 0.035999965667724614
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": "sabana-current-motion-sparse-gl",
+    "sparseGl": true,
+    "createdDuringCapture": 39,
+    "finalStream": {
+      "created": 73,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "errors": [],
+    "elapsedAdvance": 39.312965000009726,
+    "finalGlError": 0,
+    "checkpoints": [
+      {
+        "wallMs": 0,
+        "stream": {
+          "created": 34,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": []
+      },
+      {
+        "wallMs": 5020.625,
+        "stream": {
+          "created": 34,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 3,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 2,3:prop-slots-8",
+            "age": 1272.625,
+            "waiting": false,
+            "cost": 0.7599999904632568
+          },
+          {
+            "label": "terrain 1,3:prop-slots-4",
+            "age": 1220.0800000429153,
+            "waiting": false,
+            "cost": 0.4100625
+          }
+        ]
+      },
+      {
+        "wallMs": 10029.389999985695,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 1,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 4,-1:prop-slots-8",
+            "age": 1275.875,
+            "waiting": false,
+            "cost": 0.7559999227523804
+          },
+          {
+            "label": "terrain 4,2:prop-slots-8",
+            "age": 967.710000038147,
+            "waiting": false,
+            "cost": 0.7559999227523804
+          }
+        ]
+      },
+      {
+        "wallMs": 15015.769999980927,
+        "stream": {
+          "created": 48,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": []
+      },
+      {
+        "wallMs": 20036.524999976158,
+        "stream": {
+          "created": 52,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": true,
+          "preparing": 1,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 6,-1:water-geometry",
+            "age": 340.1200000047684,
+            "waiting": false,
+            "cost": 0.16038002085685732
+          }
+        ]
+      },
+      {
+        "wallMs": 25037.325000047684,
+        "stream": {
+          "created": 56,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": true,
+          "preparing": 1,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 1,3:setup",
+            "age": 41.75999999046326,
+            "waiting": false,
+            "cost": 0.029524542235136033
+          }
+        ]
+      },
+      {
+        "wallMs": 30019.77999997139,
+        "stream": {
+          "created": 58,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 3,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain 0,1:prop-slots-12",
+            "age": 357.68999993801117,
+            "waiting": false,
+            "cost": 0.3700000047683716
+          },
+          {
+            "label": "terrain 0,0:water-geometry",
+            "age": 314.7849999666214,
+            "waiting": false,
+            "cost": 0.12959997296333314
+          }
+        ]
+      },
+      {
+        "wallMs": 35005.22500002384,
+        "stream": {
+          "created": 64,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 2,
+          "busy": true,
+          "preparing": 2,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": [
+          {
+            "label": "terrain -1,0:prop-slots-12",
+            "age": 817.2900000810623,
+            "waiting": false,
+            "cost": 0.19663317253410817
+          },
+          {
+            "label": "terrain -1,-1:water-core",
+            "age": 330.2900000810623,
+            "waiting": false,
+            "cost": 0.004999995231628418
+          }
+        ]
+      },
+      {
+        "wallMs": 40016.57000005245,
+        "stream": {
+          "created": 73,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "jobs": []
+      }
+    ]
+  }
+]

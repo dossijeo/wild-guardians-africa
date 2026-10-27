@@ -66,6 +66,7 @@ export class Assets {
   async biome(pack) {
     this.assertOpen();
     const [buffer,entries]=await Promise.all([bytes(pack.binary.url,{signal:this.preparation.signal}),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);this.assertOpen();
+    const textureSets=await Promise.all((pack.textureSets??[]).map(set=>Promise.all(set.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')])).then(Object.fromEntries)));this.assertOpen();
     const preparedTangents=this.asyncTextureImages?await prepareBiomeTangentsAsync(buffer,pack.assets,{signal:this.preparation.signal}):null;this.assertOpen();
     let preparationFrame=performance.now();
     const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array};
@@ -75,13 +76,22 @@ export class Assets {
       geometry.setAttribute('tangent',new THREE.BufferAttribute(preparedTangents?.[index][level]??computeTangents(geometry.attributes.position.array,geometry.attributes.normal.array,geometry.attributes.uv.array,geometry.index.array),4));geometry.computeBoundingBox();
       levels.push(geometry);
       if(this.asyncTextureImages&&performance.now()-preparationFrame>=4){await new Promise(resolve=>requestAnimationFrame(resolve));this.assertOpen();preparationFrame=performance.now();}
-    }const material=this.own(nativeAssetMaterial(pack,a,index,textures,levels[0].boundingBox));result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
+    }const material=this.own(nativeAssetMaterial(pack,a,index,a.textureSet===undefined?textures:textureSets[a.textureSet],levels[0].boundingBox));result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
   }
   async village(payload) {
     this.assertOpen();
-    const buffer=await bytes(payload.binary.url,{signal:this.preparation.signal}),vertices=new Float32Array(buffer,0,payload.vertexBytes/4),index=new Uint32Array(buffer,payload.vertexBytes,payload.indexCount);
-    const interleaved=new THREE.InterleavedBuffer(vertices,8),map=await this.texture(payload.textures.color,true);
+    // Authoring variants remain available in development; release builds use native villages.
+    const labVariant=import.meta.env?.PROD?'':this.visualLab;
+    const sharedArt=labVariant==='village-shared-art'&&payload.id==='mapungubwe';
+    const buffer=await bytes(sharedArt?'/assets/visual-lab/mapungubwe-shared-art.bin':payload.binary.url,{signal:this.preparation.signal}),vertexBytes=sharedArt?buffer.byteLength-payload.indexCount*4:payload.vertexBytes,vertices=new Float32Array(buffer,0,vertexBytes/4),index=new Uint32Array(buffer,vertexBytes,payload.indexCount);
+    const pilotCulture=['mapungubwe','musgum'].includes(payload.id);
+    const experimentalColor=sharedArt?'/assets/visual-lab/mapungubwe-shared-art.webp':labVariant==='texture-detail'&&pilotCulture?`/assets/visual-lab/${payload.id}-color-detail.webp`:payload.textures.color;
+    const experimentalAtlas=labVariant==='normal-enhanced'&&pilotCulture?`/assets/visual-lab/${payload.id}-normal-enhanced.webp`:payload.textures.normal;
+    const interleaved=new THREE.InterleavedBuffer(vertices,8),[map,normalMap]=await Promise.all([this.texture(experimentalColor,true),labVariant?.startsWith('normal')&&experimentalAtlas?this.texture(experimentalAtlas):null]);
+    const repacked=import.meta.env?.PROD?null:['village-repacked','village-art','village-finish','village-surface','village-details'].includes(labVariant)&&payload.id==='mapungubwe'?await Promise.all([bytes(['village-surface','village-details'].includes(labVariant)?'/assets/visual-lab/mapu-0-surface.bin':labVariant==='village-finish'?'/assets/visual-lab/mapu-0-finish.bin':labVariant!=='village-repacked'?'/assets/visual-lab/mapu-0-art.bin':'/assets/visual-lab/mapu-0-repacked.bin',{signal:this.preparation.signal}),this.texture(labVariant==='village-details'?'/assets/visual-lab/mapu-0-color-details.webp':labVariant==='village-surface'?'/assets/visual-lab/mapu-0-color-surface.webp':labVariant==='village-finish'?'/assets/visual-lab/mapu-0-color-finish.webp':labVariant==='village-art'?'/assets/visual-lab/mapu-0-color-art.webp':'/assets/visual-lab/mapu-0-color-repacked.webp',true)]):null;
+    if(labVariant==='texture-aniso'){map.anisotropy=8;map.needsUpdate=true;}
     this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}));
+    if(normalMap){material.normalMap=normalMap;material.normalScale.setScalar(labVariant==='normal'?1.15:1.35);material.userData.visualLabNormal=true;material.userData.visualLabNormalDetail=labVariant!=='normal';material.needsUpdate=true;}
     material.userData.artSurface=5;material.userData.artBounds={min:new THREE.Vector3(),size:new THREE.Vector3(1,1,1),crown:.43};
     return payload.units.map(unit=>{
       const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(interleaved,2,6));geometry.setIndex(new THREE.BufferAttribute(index,1));geometry.setDrawRange(unit.offset,unit.count);
@@ -89,6 +99,12 @@ export class Assets {
       // Three's automatic bounds. Use the authored unit envelope for both passes.
       geometry.boundingBox=new THREE.Box3(new THREE.Vector3().fromArray(unit.min),new THREE.Vector3().fromArray(unit.max));
       geometry.boundingSphere=geometry.boundingBox.getBoundingSphere(new THREE.Sphere());
+      if(repacked&&unit.key==='mapu-0'){
+        const [packedBytes,packedMap]=repacked,vertexBytes=packedBytes.byteLength-unit.count*4,packedVertices=new Float32Array(packedBytes,0,vertexBytes/4),packedIndex=new Uint32Array(packedBytes,vertexBytes,unit.count),packedInterleaved=new THREE.InterleavedBuffer(packedVertices,8);
+        const packedGeometry=this.own(new THREE.BufferGeometry());packedGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(packedInterleaved,3,0));packedGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(packedInterleaved,3,3));packedGeometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(packedInterleaved,2,6));packedGeometry.setIndex(new THREE.BufferAttribute(packedIndex,1));packedGeometry.boundingBox=geometry.boundingBox.clone();packedGeometry.boundingSphere=geometry.boundingSphere.clone();
+        const packedMaterial=this.own(material.clone());packedMaterial.map=packedMap;packedMaterial.needsUpdate=true;
+        const packedMesh=new THREE.Mesh(packedGeometry,packedMaterial);packedMesh.userData.unit=unit;packedMesh.castShadow=packedMesh.receiveShadow=true;return packedMesh;
+      }
       const mesh=new THREE.Mesh(geometry,material);mesh.userData.unit=unit;mesh.castShadow=mesh.receiveShadow=true;return mesh;
     });
   }

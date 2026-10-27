@@ -1,0 +1,80 @@
+diff --git a/src/app/global-frame-scheduler.js b/src/app/global-frame-scheduler.js
+index b84bd2dc4..f94f6beb5 100644
+--- a/src/app/global-frame-scheduler.js
++++ b/src/app/global-frame-scheduler.js
+@@ -1,8 +1,9 @@
+ // Presentation owns this scheduler. No timers, RAF loop or native execution.
+ // CPU measurements are wall durations of synchronous JS, never GPU timings.
+ export class GlobalFrameScheduler {
+-  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128,diagnostics=false}={}) {
++  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128,deadlineBatching=false,diagnostics=false}={}) {
+     this.diagnostics=diagnostics?{idlePendingFrames:0,noHeadroom:0,mandatoryPressure:0,lateCallback:0,policyLimited:0,elapsedGuard:0,cpuSum:0,latenessSum:0,maxLateness:0}:null;
++    this.deadlineBatching=deadlineBatching;
+     this.now=now;this.targetMs=targetMs;this.maxPending=maxPending;
+     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
+     this.budget=0;this.nextOversizeRecovery=0;this.cooldown=0;this.lastPolicy=-Infinity;
+@@ -79,8 +80,9 @@ export class GlobalFrameScheduler {
+         // Explicit deadline debt, NOT idle time: permit one measured small unit
+         // to miss the next refresh rather than starve a required chunk forever.
+         // Bound both total synchronous CPU and elapsed presentation latency.
+-        const loan=!fits&&time>=job.deadline&&work===0&&cost<=period*.5&&
+-          cpu<period*.85&&cpu+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
++        const loan=!fits&&time>=job.deadline&&
++          (work===0||(this.deadlineBatching&&time-began+cost<=period*.12))&&cost<=period*.5&&
++          cpu<period*.85&&cpu+(time-began)+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
+         // A conservative historical outlier must not poison a required unit
+         // forever. After one observation window overdue, allow ONE bounded
+         // oversized retry on a cheap CPU frame, globally rate-limited. This is
+@@ -101,7 +103,7 @@ export class GlobalFrameScheduler {
+       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
+       const duration=this.now()-start;work+=duration;if(borrowed&&!oversized)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
+       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
+-      if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
++      if(oversized||(borrowed&&(!this.deadlineBatching||this.now()-began>=period*.12))||(!borrowed&&this.now()-began>=remaining)){this.stats.overruns++;break;}
+     }
+     if(this.diagnostics&&work===0&&this.jobs.size){
+       const d=this.diagnostics,lateness=frame.start-frame.timestamp;d.idlePendingFrames++;d.cpuSum+=cpu;d.latenessSum+=lateness;d.maxLateness=Math.max(d.maxLateness,lateness);
+@@ -115,6 +117,6 @@ export class GlobalFrameScheduler {
+   }
+   snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
+ }
+-export const globalFrameScheduler=new GlobalFrameScheduler({diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
++export const globalFrameScheduler=new GlobalFrameScheduler({deadlineBatching:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDeadlineBatching')==='1',diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
+ const enabled=new URLSearchParams(globalThis.location?.search??'').get('frameScheduler')==='1';
+ export const globalFrameSchedulerEnabled=()=>enabled;
+diff --git a/tests/global-frame-scheduler.test.js b/tests/global-frame-scheduler.test.js
+index c9b0242ef..fe203c9ff 100644
+--- a/tests/global-frame-scheduler.test.js
++++ b/tests/global-frame-scheduler.test.js
+@@ -83,3 +83,19 @@ test('historical oversized estimates recover without permanent starvation or dro
+  time=3300;await frame(4);assert.equal(calls,1);
+  time=5300;await frame(4);assert.equal(await b,'b');assert.equal(calls,2);assert.equal(scheduler.snapshot().pending,0);
+ });
++
++test('optional deadline batching admits multiple cheap units within cumulative debt, not a full extra frame',async()=>{
++ let time=1000,units=0;const scheduler=new GlobalFrameScheduler({now:()=>time,deadlineBatching:true});
++ const pending=scheduler.submit((function*(){for(let i=0;i<20;i++){units++;time+=.5;yield;}})(),{deadline:0,estimateMs:.5});
++ time+=8;scheduler.beginFrame(1000);time+=12;await scheduler.endFrame();
++ assert.equal(units,4);assert.equal(scheduler.snapshot().workMs,2);
++ for(const key of scheduler.jobs.keys())scheduler.cancel(key);await pending;
++});
++test('deadline batching preserves mandatory CPU and elapsed-time guards',async()=>{
++ for(const [cpu,late] of [[17,0],[4,40]]){
++  let time=1000,units=0;const scheduler=new GlobalFrameScheduler({now:()=>time,deadlineBatching:true});
++  const pending=scheduler.submit((function*(){units++;})(),{deadline:0});
++  time+=late;scheduler.beginFrame(1000);time+=cpu;await scheduler.endFrame();assert.equal(units,0);
++  for(const key of scheduler.jobs.keys())scheduler.cancel(key);await pending;
++ }
++});
+diff --git a/tools/experiments/check-spatial-thread-game.mjs b/tools/experiments/check-spatial-thread-game.mjs
+index 7cc6cdf4f..c749c5607 100644
+--- a/tools/experiments/check-spatial-thread-game.mjs
++++ b/tools/experiments/check-spatial-thread-game.mjs
+@@ -30,6 +30,7 @@ try{
+  const gameUrl=new URL(`http://127.0.0.1:${process.env.WG_THREAD_PORT??5192}/?`+globalClosureQuery(biome)+'&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads='+(threaded?'1':'0')+'&chunkInstall='+(process.env.WG_CHUNK_INSTALL??'sync')+'&horizonBedBudget='+(process.env.WG_HORIZON_BED_BUDGET??'2')+'&horizonBed='+(process.env.WG_HORIZON_BED??'sync')+'&chunkEviction='+(process.env.WG_CHUNK_EVICTION??'single')+'&ownedFarGpu='+(process.env.WG_THREAD_OWNED_FAR??'1')+'&streamingRecovery='+(process.env.WG_THREAD_RECOVERY??'auto')+'&waterShoreWorker='+(process.env.WG_THREAD_WATER_SHORE_WORKER??'0')+'&waterBedWorker='+(process.env.WG_THREAD_WATER_BED_WORKER??'auto')+'&waterBedDirect='+(process.env.WG_THREAD_WATER_BED_DIRECT??'0')+'&warmObstruction='+(process.env.WG_THREAD_WARM_OBSTRUCTION??'0')+'&retainPrograms='+(process.env.WG_THREAD_RETAIN_APP??'0'));
+  if(process.env.WG_FRAME_SCHEDULER_DIAGNOSTICS==='1')gameUrl.searchParams.set('frameSchedulerDiagnostics','1');
+  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
++ if(process.env.WG_FRAME_SCHEDULER_DEADLINE_BATCHING==='1')gameUrl.searchParams.set('frameSchedulerDeadlineBatching','1');
+  if(process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY)gameUrl.searchParams.set('qualityCompileConcurrency',process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY);
+  if(process.env.WG_THREAD_QUALITY_MENU_PROTOCOL==='1')gameUrl.searchParams.set('qualityMenuProtocol','1');
+  if(process.env.WG_THREAD_CROP_DEPTH_PREPARATION==='1')gameUrl.searchParams.set('cropDepthPreparation','1');

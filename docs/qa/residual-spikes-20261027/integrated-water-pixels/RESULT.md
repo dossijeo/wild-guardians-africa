@@ -1,0 +1,5 @@
+# Live water-bed pixel equivalence
+
+Day and night runs passed at 1280x720: zero changed channels between synchronous and incremental bed uploads, and zero change in repeated control renders. Hiding the tested resident water changed 126950 channels by day and 122943 by night, confirming a visible contribution. Packed bed data also match. Both captures were inspected: banks, ferns, buildings and shadows remain present. No captured errors. Cancellation releases each resource once.
+
+Reproduce with run-chunk-water-bed-live-visual.mjs OUTPUT --pixels; add --night for the night run. This uses the real scene and shader with frozen camera, time and uniforms. Only the uploaded bed bytes differ. Readbacks are synchronous and exclusively QA; timing data in these reports are not performance acceptance. The screenshot is contextual; strict pixel comparison covers the main color render, not HUD/postprocess. This closes the narrow affected-material image check, not all-biome artistic equivalence or active nocturnal raids. Night evidence is in ../integrated-water-pixels-night.

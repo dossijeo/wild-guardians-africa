@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: full fixed512 cache reserves replacement space and deferred chunks cannot starve edits
+not ok 1 - full fixed512 cache reserves replacement space and deferred chunks cannot starve edits
+  ---
+  duration_ms: 10.5814
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-global-visual/tests/mangrove-cache-budget.test.js:6:1'
+  failureType: 'testCodeFailure'
+  error: 'deferred chunks must not starve resident edit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 30
+  actual: 29
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-global-visual/tests/mangrove-cache-budget.test.js:22:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 154.5819

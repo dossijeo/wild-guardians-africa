@@ -1,0 +1,150 @@
+{
+  "scope": "Diagnostic only; ownership traversal outside each measured initTexture call adds untimed overhead. CPU wall spans, not GPU measurements or A/B results. Counts only this initial warm-upload pass.",
+  "calls": 115,
+  "totalInvocationMs": 770.2749997973442,
+  "repeatedTextureObjects": 0,
+  "distinctSources": 113,
+  "alreadyInitialized": 7,
+  "largest": [
+    {
+      "ms": 119.50499999523163,
+      "name": "texture_0",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data"
+      ]
+    },
+    {
+      "ms": 52.8299999833107,
+      "name": "",
+      "width": 4096,
+      "height": 2048,
+      "initialized": false,
+      "version": 2,
+      "beforeVersion": null,
+      "modelSources": []
+    },
+    {
+      "ms": 52.3299999833107,
+      "name": "texture_0_metallic-texture_0_roughness",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data"
+      ]
+    },
+    {
+      "ms": 50.7399999499321,
+      "name": "texture_0_normal",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data"
+      ]
+    },
+    {
+      "ms": 32.9099999666214,
+      "name": "texture_0_normal",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data"
+      ]
+    },
+    {
+      "ms": 30.12999999523163,
+      "name": "",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": []
+    },
+    {
+      "ms": 28.72000002861023,
+      "name": "texture_0_normal",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data"
+      ]
+    },
+    {
+      "ms": 28.519999980926514,
+      "name": "texture_0_metallic-texture_0_roughness",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data"
+      ]
+    },
+    {
+      "ms": 24.899999976158142,
+      "name": "texture_0",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data"
+      ]
+    },
+    {
+      "ms": 24.660000026226044,
+      "name": "texture_0",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data"
+      ]
+    },
+    {
+      "ms": 22.4200000166893,
+      "name": "texture_0_metallic-texture_0_roughness",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data"
+      ]
+    },
+    {
+      "ms": 22.25499999523163,
+      "name": "texture_0",
+      "width": 2048,
+      "height": 2048,
+      "initialized": false,
+      "version": 1,
+      "beforeVersion": null,
+      "modelSources": [
+        null
+      ]
+    }
+  ]
+}

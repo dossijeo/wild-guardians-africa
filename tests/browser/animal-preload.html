@@ -34,7 +34,7 @@ if(params.get('motion')==='1'&&params.has('attack-species')||params.get('load-re
 const savedReserves=params.get('load-reserves')==='1',savedActive=params.get('load-active')==='1';let savedPlan=null,savedRaid=null;
 if(savedActive){const camera=new PerspectiveCamera(),controls={target:new Vector3(),update(){}};focusTerrainCamera(camera,controls,nav.field,state.structures[0]);nav.setRaidView(camera.position,controls.target);nav.setActiveBounds(activeChunkRegion(camera.position).bounds);}
 if(savedReserves||savedActive){const count=Number(params.get('copies')??1);if(!Number.isInteger(count)||count<1||count>4)throw Error('Invalid saved group copies');Game.tick(state,300,nav);state.nightPlan={at:400,group:Array.from({length:count},()=>params.has('attack-species')?[params.get('attack-species')]:['warthog','hyena','buffalo','lion','rhino']).flat(),done:false};Game.tick(state,99.9,nav);if(savedActive){Game.tick(state,.2,nav);savedRaid=JSON.stringify(state.raid);}savedPlan=JSON.stringify(state.nightPlan);state=deserialize(serialize(state));nav.setState(state);}
-const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting(quality);
+const world=new WorldScene(document.querySelector('canvas'),()=>{},{approvedVisuals:params.get('approved')==='1'});world.onError=e=>errors.push(e.message);world.qualitySetting(quality);
 if(params.get('reuse-group-static')==='1'){world.assetGroups.dispose();world.assetGroups=new StaticGeometryResizeGroups(world.scene);}
 if(params.get('legacy-group-resize')==='1')world.assetGroups.reuseStaticOnResize=false;
 world.animalSkinEnvelope=params.get('skin-envelope')==='1';

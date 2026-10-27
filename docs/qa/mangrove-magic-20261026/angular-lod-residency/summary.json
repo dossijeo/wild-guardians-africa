@@ -1,0 +1,103 @@
+{
+  "nearTrees": 106,
+  "nearUnready": 0,
+  "elevatedAdapters": [
+    {
+      "status": {
+        "native": false,
+        "regional": 0,
+        "worker": false,
+        "standby": false,
+        "closed": false
+      },
+      "standby": {
+        "cancelledPreparations": 0,
+        "preparations": 9,
+        "rendered": 114,
+        "submittedInstances": 114,
+        "maskedInstances": 0,
+        "submittedTriangles": 257070,
+        "visibleTriangles": 257070,
+        "trees": 767,
+        "estimatedOwnedGpuBytes": 4327020,
+        "estimatedPreparedMatrixCpuBytes": 294912,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "status": {
+        "native": false,
+        "regional": 0,
+        "worker": false,
+        "standby": false,
+        "closed": false
+      },
+      "standby": {
+        "cancelledPreparations": 0,
+        "preparations": 7,
+        "rendered": 108,
+        "submittedInstances": 108,
+        "maskedInstances": 0,
+        "submittedTriangles": 274320,
+        "visibleTriangles": 274320,
+        "trees": 706,
+        "estimatedOwnedGpuBytes": 4823088,
+        "estimatedPreparedMatrixCpuBytes": 294912,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "status": {
+        "native": false,
+        "regional": 0,
+        "worker": false,
+        "standby": false,
+        "closed": false
+      },
+      "standby": {
+        "cancelledPreparations": 0,
+        "preparations": 5,
+        "rendered": 28,
+        "submittedInstances": 28,
+        "maskedInstances": 0,
+        "submittedTriangles": 19824,
+        "visibleTriangles": 19824,
+        "trees": 169,
+        "estimatedOwnedGpuBytes": 1228308,
+        "estimatedPreparedMatrixCpuBytes": 73728,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "status": {
+        "native": false,
+        "regional": 0,
+        "worker": false,
+        "standby": false,
+        "closed": false
+      },
+      "standby": {
+        "cancelledPreparations": 0,
+        "preparations": 4,
+        "rendered": 17,
+        "submittedInstances": 17,
+        "maskedInstances": 0,
+        "submittedTriangles": 7820,
+        "visibleTriangles": 7820,
+        "trees": 153,
+        "estimatedOwnedGpuBytes": 856164,
+        "estimatedPreparedMatrixCpuBytes": 61440,
+        "errors": []
+      },
+      "errors": []
+    }
+  ],
+  "limitations": [
+    "Opt-in farAngularLod=1; no default change",
+    "Single biome/seed, no frametime benchmark",
+    "Motion/hysteresis and remaining biomes pending"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "gameUrl": "http://127.0.0.1:5187/?qa-seed=712&qa-visibility",
+  "hiddenDurationRequestedSeconds": 300.0,
+  "browser": "Chrome/155.0.8059.85",
+  "sourceCommit": "c98c8a8d952307c3ab10d9226e96b576c0a9a645",
+  "qaSourceSha256": {
+    "src/app/main.js": "e8c063c36e5008a88aedb396eb5e817a1d193aaf71ba1337a202ad90ec6cfe67",
+    "tools/experiments/qa-browser-visibility.py": "ee8f7ec98e77ad570e91fdac69a3a24960d891cdec60c863ed1855315389afab"
+  },
+  "fixture": {
+    "path": "docs/qa/recalled-hiring/confirmed-snapshot.json",
+    "slotId": "qa-recalled-hiring"
+  },
+  "error": "Loading failed: No se ha podido preparar tu mundo.Esta partida utiliza el generador de terreno anterior y no es compatible con Wild Engine. Inicia una partida nueva.Cerrar",
+  "ok": false
+}

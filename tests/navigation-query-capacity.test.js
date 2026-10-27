@@ -48,11 +48,12 @@ test('native segment cache stays bounded, directed and separated by radius, igno
   queries.forEach((args,i)=>assert.equal(nav.segmentClear(...args),expected[i]));
   assert.equal(calls,queries.length*2+2);
 });
-test('fractional walk queries remain uncached under pressure',()=>{
-  const {nav}=createOpeningWorld();pressure(nav.walkCache,50000);
+test('exact fractional walk queries reuse their separate cache until topology changes',()=>{
+  const {s,nav}=createOpeningWorld();pressure(nav.walkCache,50000);
   let calls=0;const raw=nav.testWalkable.bind(nav);
   nav.testWalkable=(...args)=>{calls++;return raw(...args);};
   const args=[.25,.75,.28,null,true],expected=raw(...args);
   assert.equal(nav.walkable(...args),expected);assert.equal(nav.walkable(...args),expected);
-  assert.equal(calls,2);assert.equal(nav.walkCache.size,50000);
+  assert.equal(calls,1);assert.equal(nav.walkCache.size,50000);
+  nav.setState(s);assert.equal(nav.walkable(...args),expected);assert.equal(calls,2);
 });

@@ -1,0 +1,1099 @@
+{
+  "rows": [
+    {
+      "dir": "1-baseline",
+      "candidate": false,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "ready": {
+        "start": 119148.27499997616,
+        "end": 121371.48000001907,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 32.1922449999901,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "cpu": {
+        "n": 741,
+        "p50": 12.919999957084656,
+        "p95": 25.83999991416931,
+        "p99": 32.81000006198883,
+        "p999": 49.2849999666214,
+        "max": 49.2849999666214
+      },
+      "mainCallback": {
+        "n": 740,
+        "p50": 14.555000066757202,
+        "p95": 26.855000019073486,
+        "p99": 33.97000002861023,
+        "p999": 50.769999980926514,
+        "max": 50.769999980926514
+      },
+      "slowPresentation": {
+        "over50": 262,
+        "over100": 44,
+        "total": 740
+      },
+      "presentation": {
+        "n": 740,
+        "p50": 49.85999999998603,
+        "p95": 116.34999999997672,
+        "p99": 166.19000000000233,
+        "p999": 216.14999999999418,
+        "max": 216.14999999999418
+      },
+      "gpu": {
+        "n": 741,
+        "p50": 27.419321,
+        "p95": 67.146458,
+        "p99": 97.637395,
+        "p999": 124.180468,
+        "max": 124.180468
+      },
+      "waterUnitsOver1ms": {
+        "n": 13,
+        "p50": 1.4450000524520874,
+        "p95": 6.770000100135803,
+        "p99": 6.770000100135803,
+        "p999": 6.770000100135803,
+        "max": 6.770000100135803
+      },
+      "terrainUnitsOver1ms": {
+        "n": 70,
+        "p50": 3.149999976158142,
+        "p95": 8.105000019073486,
+        "p99": 14.884999990463257,
+        "p999": 14.884999990463257,
+        "max": 14.884999990463257
+      },
+      "delivery": {
+        "requested": 30,
+        "completed": 20,
+        "cancelled": 0,
+        "unresolved": 10,
+        "latency": {
+          "n": 20,
+          "p50": 7764.570000052452,
+          "p95": 13053.509999990463,
+          "p99": 14661.884999990463,
+          "p999": 14661.884999990463,
+          "max": 14661.884999990463
+        },
+        "preparationLatency": {
+          "n": 20,
+          "p50": 2310.335000038147,
+          "p95": 4662.524999976158,
+          "p99": 5008.834999918938,
+          "p999": 5008.834999918938,
+          "max": 5008.834999918938
+        },
+        "installation": {
+          "n": 20,
+          "p50": 0.7549999952316284,
+          "p95": 1.2950000762939453,
+          "p99": 1.6299999952316284,
+          "p999": 1.6299999952316284,
+          "max": 1.6299999952316284
+        },
+        "completedKeys": [
+          "1,-1",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "5,-1",
+          "5,-2",
+          "5,0",
+          "5,1",
+          "5,2",
+          "6,-1",
+          "6,-2",
+          "6,0",
+          "6,1",
+          "6,2",
+          "7,-1",
+          "7,-2",
+          "7,0",
+          "7,1",
+          "7,2"
+        ],
+        "unresolvedKeys": [
+          "2,2",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "0,-2",
+          "0,-1",
+          "0,0",
+          "0,1",
+          "0,2"
+        ]
+      },
+      "distinctChunks": 40,
+      "exposure": {
+        "calls": 3,
+        "yields": 122
+      },
+      "uploads": {
+        "scope": "Synchronous JS WebGL call timings, not GPU execution. Source buffer owners scanned only at endpoints; intermediate/disposed objects can be unknown. Shared backing buffers may have multiple owners. Diagnostic overhead included.",
+        "windowMs": 40820.729999899864,
+        "calls": 22008,
+        "bytes": 551144512,
+        "coverageBytes": 407520000,
+        "maxCpuMs": 1.4250000715255737
+      }
+    },
+    {
+      "dir": "2-candidate",
+      "candidate": true,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "ready": {
+        "start": 107159.8899999857,
+        "end": 108388.36499989033,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 31.249415000042845,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "cpu": {
+        "n": 1418,
+        "p50": 8.43500006198883,
+        "p95": 18.100000023841858,
+        "p99": 23.355000019073486,
+        "p999": 34.300000071525574,
+        "max": 52.574999928474426
+      },
+      "mainCallback": {
+        "n": 1418,
+        "p50": 9.159999966621399,
+        "p95": 18.87000000476837,
+        "p99": 24.105000019073486,
+        "p999": 34.77999997138977,
+        "max": 53.7299998998642
+      },
+      "slowPresentation": {
+        "over50": 60,
+        "over100": 0,
+        "total": 1416
+      },
+      "presentation": {
+        "n": 1416,
+        "p50": 33.13499999999476,
+        "p95": 49.97499999999127,
+        "p99": 66.62999999997555,
+        "p999": 83.21499999999651,
+        "max": 99.75
+      },
+      "gpu": {
+        "n": 1418,
+        "p50": 22.836145,
+        "p95": 31.368385,
+        "p99": 36.631926,
+        "p999": 41.582551,
+        "max": 46.430936
+      },
+      "waterUnitsOver1ms": {
+        "n": 21,
+        "p50": 1.0950000286102295,
+        "p95": 4.379999995231628,
+        "p99": 5.270000100135803,
+        "p999": 5.270000100135803,
+        "max": 5.270000100135803
+      },
+      "terrainUnitsOver1ms": {
+        "n": 75,
+        "p50": 2.4149999618530273,
+        "p95": 5.819999933242798,
+        "p99": 10.600000023841858,
+        "p999": 10.600000023841858,
+        "max": 10.600000023841858
+      },
+      "delivery": {
+        "requested": 30,
+        "completed": 23,
+        "cancelled": 0,
+        "unresolved": 7,
+        "latency": {
+          "n": 23,
+          "p50": 1145.0899999141693,
+          "p95": 6435.870000004768,
+          "p99": 6680.064999938011,
+          "p999": 6680.064999938011,
+          "max": 6680.064999938011
+        },
+        "preparationLatency": {
+          "n": 23,
+          "p50": 538.7649999856949,
+          "p95": 3049.985000014305,
+          "p99": 4212.084999918938,
+          "p999": 4212.084999918938,
+          "max": 4212.084999918938
+        },
+        "installation": {
+          "n": 23,
+          "p50": 0.5399999618530273,
+          "p95": 0.7350000143051147,
+          "p99": 0.9900000095367432,
+          "p999": 0.9900000095367432,
+          "max": 0.9900000095367432
+        },
+        "completedKeys": [
+          "1,-1",
+          "1,0",
+          "1,1",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "5,-1",
+          "5,-2",
+          "5,0",
+          "5,1",
+          "5,2",
+          "6,-1",
+          "6,-2",
+          "6,0",
+          "6,1",
+          "6,2",
+          "7,-1",
+          "7,-2",
+          "7,0",
+          "7,1",
+          "7,2"
+        ],
+        "unresolvedKeys": [
+          "1,-2",
+          "1,2",
+          "0,-2",
+          "0,-1",
+          "0,0",
+          "0,1",
+          "0,2"
+        ]
+      },
+      "distinctChunks": 40,
+      "exposure": {
+        "calls": 3,
+        "yields": 104
+      },
+      "uploads": {
+        "scope": "Synchronous JS WebGL call timings, not GPU execution. Source buffer owners scanned only at endpoints; intermediate/disposed objects can be unknown. Shared backing buffers may have multiple owners. Diagnostic overhead included.",
+        "windowMs": 40585.93000006676,
+        "calls": 26807,
+        "bytes": 229848132,
+        "coverageBytes": 49165920,
+        "maxCpuMs": 0.3299999237060547
+      }
+    },
+    {
+      "dir": "3-baseline",
+      "candidate": false,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "ready": {
+        "start": 90394.8299999237,
+        "end": 91605.87000000477,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 31.246430000009408,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "cpu": {
+        "n": 797,
+        "p50": 11.170000076293945,
+        "p95": 21.585000038146973,
+        "p99": 25.50499999523163,
+        "p999": 50.89999997615814,
+        "max": 50.89999997615814
+      },
+      "mainCallback": {
+        "n": 797,
+        "p50": 12.610000014305115,
+        "p95": 22.429999947547913,
+        "p99": 26.62999999523163,
+        "p999": 52.450000047683716,
+        "max": 52.450000047683716
+      },
+      "slowPresentation": {
+        "over50": 256,
+        "over100": 44,
+        "total": 797
+      },
+      "presentation": {
+        "n": 797,
+        "p50": 49.76499999999942,
+        "p95": 116.3350000000064,
+        "p99": 149.76499999999942,
+        "p999": 199.40499999999884,
+        "max": 199.40499999999884
+      },
+      "gpu": {
+        "n": 797,
+        "p50": 27.637395,
+        "p95": 58.576249,
+        "p99": 83.830468,
+        "p999": 97.482239,
+        "max": 97.482239
+      },
+      "waterUnitsOver1ms": {
+        "n": 28,
+        "p50": 1.1049998998641968,
+        "p95": 4.860000014305115,
+        "p99": 6.7799999713897705,
+        "p999": 6.7799999713897705,
+        "max": 6.7799999713897705
+      },
+      "terrainUnitsOver1ms": {
+        "n": 79,
+        "p50": 2.0500000715255737,
+        "p95": 5.544999957084656,
+        "p99": 15.170000076293945,
+        "p999": 15.170000076293945,
+        "max": 15.170000076293945
+      },
+      "delivery": {
+        "requested": 30,
+        "completed": 20,
+        "cancelled": 0,
+        "unresolved": 10,
+        "latency": {
+          "n": 20,
+          "p50": 2923.314999938011,
+          "p95": 6280.569999933243,
+          "p99": 6280.955000042915,
+          "p999": 6280.955000042915,
+          "max": 6280.955000042915
+        },
+        "preparationLatency": {
+          "n": 20,
+          "p50": 1387.7450000047684,
+          "p95": 3273.695000052452,
+          "p99": 3432.2450000047684,
+          "p999": 3432.2450000047684,
+          "max": 3432.2450000047684
+        },
+        "installation": {
+          "n": 20,
+          "p50": 0.5999999046325684,
+          "p95": 1.1899999380111694,
+          "p99": 1.340000033378601,
+          "p999": 1.340000033378601,
+          "max": 1.340000033378601
+        },
+        "completedKeys": [
+          "1,-1",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "5,-1",
+          "5,-2",
+          "5,0",
+          "5,1",
+          "5,2",
+          "6,-1",
+          "6,-2",
+          "6,0",
+          "6,1",
+          "6,2",
+          "7,-1",
+          "7,-2",
+          "7,0",
+          "7,1",
+          "7,2"
+        ],
+        "unresolvedKeys": [
+          "2,2",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "0,-2",
+          "0,-1",
+          "0,0",
+          "0,1",
+          "0,2"
+        ]
+      },
+      "distinctChunks": 40,
+      "exposure": {
+        "calls": 3,
+        "yields": 101
+      },
+      "uploads": {
+        "scope": "Synchronous JS WebGL call timings, not GPU execution. Source buffer owners scanned only at endpoints; intermediate/disposed objects can be unknown. Shared backing buffers may have multiple owners. Diagnostic overhead included.",
+        "windowMs": 40801.354999899864,
+        "calls": 23027,
+        "bytes": 558677300,
+        "coverageBytes": 406800000,
+        "maxCpuMs": 0.44499993324279785
+      }
+    },
+    {
+      "dir": "4-candidate",
+      "candidate": true,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "ready": {
+        "start": 114121.47499990463,
+        "end": 116401.62999999523,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 32.287135000080724,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "cpu": {
+        "n": 779,
+        "p50": 11.454999923706055,
+        "p95": 21.96499991416931,
+        "p99": 28.444999933242798,
+        "p999": 36.61500000953674,
+        "max": 36.61500000953674
+      },
+      "mainCallback": {
+        "n": 779,
+        "p50": 13.09500002861023,
+        "p95": 22.955000042915344,
+        "p99": 29.399999976158142,
+        "p999": 37.355000019073486,
+        "max": 37.355000019073486
+      },
+      "slowPresentation": {
+        "over50": 249,
+        "over100": 57,
+        "total": 779
+      },
+      "presentation": {
+        "n": 779,
+        "p50": 49.804999999993015,
+        "p95": 116.41000000000349,
+        "p99": 149.52000000000407,
+        "p999": 199.42499999998836,
+        "max": 199.42499999998836
+      },
+      "gpu": {
+        "n": 779,
+        "p50": 27.835728,
+        "p95": 61.398125,
+        "p99": 78.355937,
+        "p999": 88.936822,
+        "max": 88.936822
+      },
+      "waterUnitsOver1ms": {
+        "n": 14,
+        "p50": 1.1449999809265137,
+        "p95": 6.865000009536743,
+        "p99": 6.865000009536743,
+        "p999": 6.865000009536743,
+        "max": 6.865000009536743
+      },
+      "terrainUnitsOver1ms": {
+        "n": 64,
+        "p50": 3.509999990463257,
+        "p95": 6.174999952316284,
+        "p99": 17.260000109672546,
+        "p999": 17.260000109672546,
+        "max": 17.260000109672546
+      },
+      "delivery": {
+        "requested": 30,
+        "completed": 21,
+        "cancelled": 0,
+        "unresolved": 9,
+        "latency": {
+          "n": 21,
+          "p50": 4958.509999990463,
+          "p95": 7453.245000004768,
+          "p99": 9997.144999980927,
+          "p999": 9997.144999980927,
+          "max": 9997.144999980927
+        },
+        "preparationLatency": {
+          "n": 21,
+          "p50": 1978.6050000190735,
+          "p95": 4107.954999923706,
+          "p99": 4311.02999997139,
+          "p999": 4311.02999997139,
+          "max": 4311.02999997139
+        },
+        "installation": {
+          "n": 21,
+          "p50": 0.7250000238418579,
+          "p95": 1.0299999713897705,
+          "p99": 1.2000000476837158,
+          "p999": 1.2000000476837158,
+          "max": 1.2000000476837158
+        },
+        "completedKeys": [
+          "1,-1",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "5,-1",
+          "5,-2",
+          "5,0",
+          "5,1",
+          "5,2",
+          "6,-1",
+          "6,-2",
+          "6,0",
+          "6,1",
+          "6,2",
+          "7,-1",
+          "7,-2",
+          "7,0",
+          "7,1",
+          "7,2"
+        ],
+        "unresolvedKeys": [
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "0,-2",
+          "0,-1",
+          "0,0",
+          "0,1",
+          "0,2"
+        ]
+      },
+      "distinctChunks": 40,
+      "exposure": {
+        "calls": 3,
+        "yields": 117
+      },
+      "uploads": {
+        "scope": "Synchronous JS WebGL call timings, not GPU execution. Source buffer owners scanned only at endpoints; intermediate/disposed objects can be unknown. Shared backing buffers may have multiple owners. Diagnostic overhead included.",
+        "windowMs": 40775.05499994755,
+        "calls": 22057,
+        "bytes": 190973692,
+        "coverageBytes": 47155280,
+        "maxCpuMs": 0.1700000762939453
+      }
+    }
+  ],
+  "matchedDelivery": [
+    {
+      "baseline": "1-baseline",
+      "candidate": "2-candidate",
+      "pairs": [
+        {
+          "key": "5,-2",
+          "baselineMs": 9856.435000061989,
+          "candidateMs": 846.0499999523163,
+          "deltaMs": -9010.385000109673
+        },
+        {
+          "key": "5,-1",
+          "baselineMs": 4782.759999990463,
+          "candidateMs": 365.7350000143051,
+          "deltaMs": -4417.024999976158
+        },
+        {
+          "key": "5,0",
+          "baselineMs": 3937.710000038147,
+          "candidateMs": 365.34500002861023,
+          "deltaMs": -3572.3650000095367
+        },
+        {
+          "key": "5,1",
+          "baselineMs": 7850.555000066757,
+          "candidateMs": 773.1449999809265,
+          "deltaMs": -7077.410000085831
+        },
+        {
+          "key": "5,2",
+          "baselineMs": 14661.884999990463,
+          "candidateMs": 976.5199999809265,
+          "deltaMs": -13685.365000009537
+        },
+        {
+          "key": "6,-2",
+          "baselineMs": 11506.235000014305,
+          "candidateMs": 1544.0299999713898,
+          "deltaMs": -9962.205000042915
+        },
+        {
+          "key": "6,-1",
+          "baselineMs": 8144.050000071526,
+          "candidateMs": 947.0249999761581,
+          "deltaMs": -7197.025000095367
+        },
+        {
+          "key": "6,0",
+          "baselineMs": 7764.570000052452,
+          "candidateMs": 946.664999961853,
+          "deltaMs": -6817.905000090599
+        },
+        {
+          "key": "6,1",
+          "baselineMs": 10000.240000009537,
+          "candidateMs": 1327.704999923706,
+          "deltaMs": -8672.53500008583
+        },
+        {
+          "key": "6,2",
+          "baselineMs": 13053.509999990463,
+          "candidateMs": 2152.7949999570847,
+          "deltaMs": -10900.715000033379
+        },
+        {
+          "key": "7,-2",
+          "baselineMs": 8504.885000109673,
+          "candidateMs": 766.9199999570847,
+          "deltaMs": -7737.965000152588
+        },
+        {
+          "key": "7,-1",
+          "baselineMs": 7656.8550000190735,
+          "candidateMs": 632.6449999809265,
+          "deltaMs": -7024.210000038147
+        },
+        {
+          "key": "7,0",
+          "baselineMs": 6699.040000081062,
+          "candidateMs": 413.6449999809265,
+          "deltaMs": -6285.395000100136
+        },
+        {
+          "key": "7,1",
+          "baselineMs": 8189.435000061989,
+          "candidateMs": 766.3599998950958,
+          "deltaMs": -7423.075000166893
+        },
+        {
+          "key": "7,2",
+          "baselineMs": 8968.580000042915,
+          "candidateMs": 1145.0899999141693,
+          "deltaMs": -7823.490000128746
+        },
+        {
+          "key": "2,-2",
+          "baselineMs": 7275.754999995232,
+          "candidateMs": 6435.870000004768,
+          "deltaMs": -839.8849999904633
+        },
+        {
+          "key": "2,-1",
+          "baselineMs": 2425.8550000190735,
+          "candidateMs": 2179.1699999570847,
+          "deltaMs": -246.68500006198883
+        },
+        {
+          "key": "2,0",
+          "baselineMs": 3156.100000023842,
+          "candidateMs": 1545.5599999427795,
+          "deltaMs": -1610.5400000810623
+        },
+        {
+          "key": "2,1",
+          "baselineMs": 6393.800000071526,
+          "candidateMs": 4410.699999928474,
+          "deltaMs": -1983.1000001430511
+        },
+        {
+          "key": "1,-1",
+          "baselineMs": 4955.534999966621,
+          "candidateMs": 3444.5950000286102,
+          "deltaMs": -1510.9399999380112
+        }
+      ],
+      "faster": 20,
+      "delta": {
+        "n": 20,
+        "p50": -7077.410000085831,
+        "p95": -839.8849999904633,
+        "p99": -246.68500006198883,
+        "p999": -246.68500006198883,
+        "max": -246.68500006198883
+      },
+      "limitation": "Only keys completed in both runs; does not include pending demands and is not an uncensored whole-stream estimator."
+    },
+    {
+      "baseline": "3-baseline",
+      "candidate": "4-candidate",
+      "pairs": [
+        {
+          "key": "5,-2",
+          "baselineMs": 1284.75,
+          "candidateMs": 3547.4249999523163,
+          "deltaMs": 2262.6749999523163
+        },
+        {
+          "key": "5,-1",
+          "baselineMs": 668.3450000286102,
+          "candidateMs": 2053.764999985695,
+          "deltaMs": 1385.4199999570847
+        },
+        {
+          "key": "5,0",
+          "baselineMs": 667.5550000667572,
+          "candidateMs": 2052.929999947548,
+          "deltaMs": 1385.3749998807907
+        },
+        {
+          "key": "5,1",
+          "baselineMs": 964.5350000858307,
+          "candidateMs": 3266.4649999141693,
+          "deltaMs": 2301.9299998283386
+        },
+        {
+          "key": "5,2",
+          "baselineMs": 1285.3700000047684,
+          "candidateMs": 5991.959999918938,
+          "deltaMs": 4706.589999914169
+        },
+        {
+          "key": "6,-2",
+          "baselineMs": 2998.7450000047684,
+          "candidateMs": 7453.245000004768,
+          "deltaMs": 4454.5
+        },
+        {
+          "key": "6,-1",
+          "baselineMs": 1551.0299999713898,
+          "candidateMs": 5817.22000002861,
+          "deltaMs": 4266.1900000572205
+        },
+        {
+          "key": "6,0",
+          "baselineMs": 1333.4349999427795,
+          "candidateMs": 4197.455000042915,
+          "deltaMs": 2864.020000100136
+        },
+        {
+          "key": "6,1",
+          "baselineMs": 2998.2699999809265,
+          "candidateMs": 6832.9400000572205,
+          "deltaMs": 3834.670000076294
+        },
+        {
+          "key": "6,2",
+          "baselineMs": 5559.679999947548,
+          "candidateMs": 9997.144999980927,
+          "deltaMs": 4437.465000033379
+        },
+        {
+          "key": "7,-2",
+          "baselineMs": 4107.054999947548,
+          "candidateMs": 5174.004999995232,
+          "deltaMs": 1066.9500000476837
+        },
+        {
+          "key": "7,-1",
+          "baselineMs": 2923.314999938011,
+          "candidateMs": 3689.914999961853,
+          "deltaMs": 766.6000000238419
+        },
+        {
+          "key": "7,0",
+          "baselineMs": 2638.9950000047684,
+          "candidateMs": 3689.3349999189377,
+          "deltaMs": 1050.3399999141693
+        },
+        {
+          "key": "7,1",
+          "baselineMs": 3604.3649998903275,
+          "candidateMs": 4575.870000004768,
+          "deltaMs": 971.5050001144409
+        },
+        {
+          "key": "7,2",
+          "baselineMs": 4317.495000004768,
+          "candidateMs": 5175.074999928474,
+          "deltaMs": 857.579999923706
+        },
+        {
+          "key": "2,-2",
+          "baselineMs": 6280.955000042915,
+          "candidateMs": 6864.384999990463,
+          "deltaMs": 583.4299999475479
+        },
+        {
+          "key": "2,-1",
+          "baselineMs": 2784.110000014305,
+          "candidateMs": 2526.8300000429153,
+          "deltaMs": -257.27999997138977
+        },
+        {
+          "key": "2,0",
+          "baselineMs": 2971.889999985695,
+          "candidateMs": 3673.225000023842,
+          "deltaMs": 701.335000038147
+        },
+        {
+          "key": "2,1",
+          "baselineMs": 6280.569999933243,
+          "candidateMs": 5301.754999995232,
+          "deltaMs": -978.8149999380112
+        },
+        {
+          "key": "1,-1",
+          "baselineMs": 3358.8799999952316,
+          "candidateMs": 4958.509999990463,
+          "deltaMs": 1599.6299999952316
+        }
+      ],
+      "faster": 2,
+      "delta": {
+        "n": 20,
+        "p50": 1385.3749998807907,
+        "p95": 4454.5,
+        "p99": 4706.589999914169,
+        "p999": 4706.589999914169,
+        "max": 4706.589999914169
+      },
+      "limitation": "Only keys completed in both runs; does not include pending demands and is not an uncensored whole-stream estimator."
+    }
+  ],
+  "limits": [
+    "Instrumented interleaved four-run comparison, subject to previously measured A/A variability.",
+    "Chunk latency ends when onData returns; this does not prove GPU readiness. Pending/cancelled demands are retained separately.",
+    "Terrain unit probe records only units >=1ms; percentile distributions are censored and not whole-work totals.",
+    "Dynamic simulation state is not forced identical.",
+    "Upload counts cover the complete instrumented capture window, not only the 40-second performance window; compare durations and do not treat them as matched rates.",
+    "GPU queries include possible bubbles and driver scheduling.",
+    "Screenshots after traversal do not constitute full visual/lifecycle validation."
+  ]
+}

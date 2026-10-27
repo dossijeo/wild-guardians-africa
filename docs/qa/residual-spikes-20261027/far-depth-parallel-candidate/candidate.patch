@@ -1,0 +1,23 @@
+diff --git a/tools/experiments/prepare-native-far-gpu.js b/tools/experiments/prepare-native-far-gpu.js
+index 24217fd2b..c883580ac 100644
+--- a/tools/experiments/prepare-native-far-gpu.js
++++ b/tools/experiments/prepare-native-far-gpu.js
+@@ -68,13 +68,17 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
+   }
+   endSpan('texture-uploads',textureStart);check();
+   const compileDrawAndFence=async()=>{check();
+-  if(depthWorld){await prepareNativeFarDepth(depthWorld,root,()=>{check();return false;});check();}
+   // Explicit QA gate: preserve the original recipe until native cancellation,
+   // visual and traveling checks validate the owned readiness poll.
+   const compileStart=beginSpan();
++  const compileBeauty=async()=>{
+   if(cooperative)await compileLoadingPrograms(renderer,root,camera,scene,{screen:true,timeout,onProgramReady:new URLSearchParams(globalThis.location?.search??'').get('farValidatedBindings')==='1'?program=>{const start=beginSpan();try{initializeValidatedProgramBindings(renderer,program);}finally{endSpan('validated-bindings',start);}}:undefined,cancelled:()=>{check();return false;}});
+   else if(ownedCompilation)await compileGpuPreparation(renderer,root,camera,scene,{check});
+   else await renderer.compileAsync(root,camera,scene);
++  };
++  // Both submissions restore borrowed state before yielding. Publish only when
++  // both exact recipes are ready; do not serialize independent driver waits.
++  await Promise.all([depthWorld?prepareNativeFarDepth(depthWorld,root,()=>{check();return false;}):Promise.resolve(),compileBeauty()]);
+   endSpan('compile',compileStart);check();checkErrors('after compilation');
+   // Keep the normal target/output recipe: another render target creates shader
+   // variants. A zero viewport/scissor uploads vertex buffers without touching

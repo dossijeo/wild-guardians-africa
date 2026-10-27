@@ -1,0 +1,153 @@
+{
+  "scope": "Serial ABAB, active Manglares media720p, 360 frames/144m after60warmframes. Both scheduler=1; B mudEdgeWorker=1. Initial immutable equivalence probe outside streaming timing. GPU intervals include bubbles. Not broad acceptance.",
+  "rows": [
+    {
+      "run": "a1",
+      "readyMs": 31185.139999985695,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 8.337333345413208,
+        "p95": 10.625000059604645,
+        "max": 11.114999771118164
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 2307.8586666703222,
+        "p95": 5194.049999952316,
+        "max": 5239.985000014305
+      },
+      "frames": {
+        "count": 360,
+        "mean": 120.833875,
+        "p95": 216.18499999999767,
+        "max": 398.8999999999942,
+        "p99": 316.0400000000009
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 91.34429735537194,
+        "p95": 167.490259,
+        "max": 210.889114
+      },
+      "created": 15,
+      "worker": null,
+      "identicalChunks": 21
+    },
+    {
+      "run": "b1",
+      "readyMs": 31926.10499995947,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 5.677666648228963,
+        "p95": 6.399999916553497,
+        "max": 9.134999930858612
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 1601.0786666631698,
+        "p95": 2969.3949999809265,
+        "max": 3116.2999999523163
+      },
+      "frames": {
+        "count": 360,
+        "mean": 114.96722222222222,
+        "p95": 199.62999999999738,
+        "max": 382.5199999999968,
+        "p99": 265.95500000000175
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 86.4041377190082,
+        "p95": 148.855989,
+        "max": 203.642968
+      },
+      "created": 15,
+      "worker": {
+        "submitted": 36,
+        "completed": 36,
+        "cancelled": 0,
+        "failed": 0,
+        "postCpuMs": 3.6849997639656067,
+        "computeMs": 166.6050000190735,
+        "peakPending": 2,
+        "pending": 0,
+        "closed": false
+      },
+      "identicalChunks": 21
+    },
+    {
+      "run": "a2",
+      "readyMs": 33354.064999997616,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 8.39399999777476,
+        "p95": 10.470000147819519,
+        "max": 12.245000004768372
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 2418.021999998887,
+        "p95": 5722.704999983311,
+        "max": 6391.170000016689
+      },
+      "frames": {
+        "count": 360,
+        "mean": 115.4760972222222,
+        "p95": 232.8399999999965,
+        "max": 449.06499999999505,
+        "p99": 316.01000000000204
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 86.22638406611573,
+        "p95": 175.299009,
+        "max": 205.066145
+      },
+      "created": 15,
+      "worker": null,
+      "identicalChunks": 21
+    },
+    {
+      "run": "b2",
+      "readyMs": 32784.35499995947,
+      "preparationCpu": {
+        "count": 15,
+        "mean": 5.990666671593984,
+        "p95": 6.96999990940094,
+        "max": 9.590000033378601
+      },
+      "preparationLatency": {
+        "count": 15,
+        "mean": 1597.4426666617394,
+        "p95": 2607.4049999713898,
+        "max": 3080.9099999666214
+      },
+      "frames": {
+        "count": 360,
+        "mean": 104.3435277777778,
+        "p95": 216.19000000000233,
+        "max": 482.4250000000029,
+        "p99": 299.26000000000204
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 76.39875498347104,
+        "p95": 147.429218,
+        "max": 189.666354
+      },
+      "created": 15,
+      "worker": {
+        "submitted": 36,
+        "completed": 36,
+        "cancelled": 0,
+        "failed": 0,
+        "postCpuMs": 3.9350001215934753,
+        "computeMs": 184.40500009059906,
+        "peakPending": 2,
+        "pending": 0,
+        "closed": false
+      },
+      "identicalChunks": 21
+    }
+  ]
+}

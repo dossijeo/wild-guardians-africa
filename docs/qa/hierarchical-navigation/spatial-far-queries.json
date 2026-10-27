@@ -1,0 +1,185 @@
+{
+  "scope": "One precompiled WASM module; 1024 height queries per pass, five passes per case, Sabana-compatible settlement near origin. Far same-chunk and dispersed queries do not make chunks resident; resident queries run after explicitly loading the common distant chunk. Node desktop; no Three.js, browser or frame-time measurement.",
+  "rows": [
+    {
+      "biome": "sabana",
+      "farSame": {
+        "medianMs": 1.5381999999999962,
+        "rangeMs": [
+          1.0493999999999986,
+          1.9629000000000048
+        ],
+        "checksum": 9782.52176952362
+      },
+      "farDispersed": {
+        "medianMs": 1.2058999999999997,
+        "rangeMs": [
+          1.0416000000000025,
+          1.8877999999999986
+        ],
+        "checksum": 9893.919844150543
+      },
+      "resident": {
+        "medianMs": 0.15959999999999752,
+        "rangeMs": [
+          0.11169999999999902,
+          0.5896000000000043
+        ],
+        "checksum": 9782.52176952362
+      },
+      "chunksAfterFar": 1,
+      "sectorsAfterFar": 0,
+      "memoryBytesAfterFar": 4194304
+    },
+    {
+      "biome": "gran-rio",
+      "farSame": {
+        "medianMs": 1.1208999999999918,
+        "rangeMs": [
+          0.9879999999999995,
+          1.7325000000000017
+        ],
+        "checksum": 9782.52176952362
+      },
+      "farDispersed": {
+        "medianMs": 1.0294999999999987,
+        "rangeMs": [
+          0.8943000000000012,
+          1.3340000000000032
+        ],
+        "checksum": 9893.919844150543
+      },
+      "resident": {
+        "medianMs": 0.07580000000000098,
+        "rangeMs": [
+          0.05999999999998806,
+          0.12600000000000477
+        ],
+        "checksum": 9782.52176952362
+      },
+      "chunksAfterFar": 1,
+      "sectorsAfterFar": 0,
+      "memoryBytesAfterFar": 4194304
+    },
+    {
+      "biome": "manglares",
+      "farSame": {
+        "medianMs": 0.33500000000000796,
+        "rangeMs": [
+          0.2804000000000002,
+          0.7995999999999981
+        ],
+        "checksum": 3399.679931640625
+      },
+      "farDispersed": {
+        "medianMs": 0.3073000000000121,
+        "rangeMs": [
+          0.2002999999999986,
+          0.33379999999999654
+        ],
+        "checksum": 3399.679931640625
+      },
+      "resident": {
+        "medianMs": 0.049000000000006594,
+        "rangeMs": [
+          0.04840000000000089,
+          0.054199999999994475
+        ],
+        "checksum": 3399.679931640625
+      },
+      "chunksAfterFar": 1,
+      "sectorsAfterFar": 0,
+      "memoryBytesAfterFar": 4194304
+    },
+    {
+      "biome": "volcanes",
+      "farSame": {
+        "medianMs": 0.8404999999999916,
+        "rangeMs": [
+          0.8002000000000038,
+          2.7821
+        ],
+        "checksum": 9782.52176952362
+      },
+      "farDispersed": {
+        "medianMs": 0.820999999999998,
+        "rangeMs": [
+          0.8142000000000138,
+          0.8521999999999963
+        ],
+        "checksum": 9893.919844150543
+      },
+      "resident": {
+        "medianMs": 0.05559999999999832,
+        "rangeMs": [
+          0.05350000000001387,
+          0.06459999999998445
+        ],
+        "checksum": 9782.52176952362
+      },
+      "chunksAfterFar": 1,
+      "sectorsAfterFar": 0,
+      "memoryBytesAfterFar": 4194304
+    },
+    {
+      "biome": "gran-canon",
+      "farSame": {
+        "medianMs": 0.6942999999999984,
+        "rangeMs": [
+          0.6809000000000083,
+          1.2986000000000217
+        ],
+        "checksum": 28575.227600097656
+      },
+      "farDispersed": {
+        "medianMs": 0.728100000000012,
+        "rangeMs": [
+          0.7175000000000011,
+          0.7881000000000142
+        ],
+        "checksum": 33475.35068130493
+      },
+      "resident": {
+        "medianMs": 0.0484000000000151,
+        "rangeMs": [
+          0.046899999999993724,
+          0.05519999999998504
+        ],
+        "checksum": 28575.227600097656
+      },
+      "chunksAfterFar": 1,
+      "sectorsAfterFar": 0,
+      "memoryBytesAfterFar": 4194304
+    },
+    {
+      "biome": "desierto",
+      "farSame": {
+        "medianMs": 0.8684000000000083,
+        "rangeMs": [
+          0.7853999999999814,
+          1.3818000000000268
+        ],
+        "checksum": 6440.1782302856445
+      },
+      "farDispersed": {
+        "medianMs": 0.926400000000001,
+        "rangeMs": [
+          0.9198999999999842,
+          0.9522000000000048
+        ],
+        "checksum": 11404.91771030426
+      },
+      "resident": {
+        "medianMs": 0.05269999999998731,
+        "rangeMs": [
+          0.04939999999999145,
+          0.06220000000001846
+        ],
+        "checksum": 6440.1782302856445
+      },
+      "chunksAfterFar": 1,
+      "sectorsAfterFar": 0,
+      "memoryBytesAfterFar": 4194304
+    }
+  ]
+}

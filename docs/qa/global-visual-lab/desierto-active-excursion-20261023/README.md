@@ -1,0 +1,11 @@
+# Desert active excursion: preserve approved dune/shadow art
+
+Sourcecd548b75b. Existing globalClosureQuery/desierto unchanged; medium1280x720,seed712, paid campaign fixture from desert-populated-closure-20261022.40wall seconds each day/night.144m X +50.4m Z out/back, terrain-following elevation. QA uses existing manual raid-camera hold and skips onboarding to avoid unrelated pauses. Native Game.advanceReal loop remains active, no direct QA simulation ticks. Night continues changed day state.
+
+Day1612observed frames,39.4434simulation seconds advanced,40distinct chunk sets,236pending-background frames,origin0/0→144/0. Night1438frames,56.3105simulation seconds,38chunk sets,217pending,origin144/0. X/Z route checked for every frame against requested displacement. No captured JS/shader/GL errors or unexpected pauses; workers changed in both phases. Coverage-specific checks are N/A when no continuous-grass component exists, not a fictitious pass.
+
+Video decode: day1607frames39.862s/night1433frames39.888s at1280x720. Recorder/checkpoints affect pacing; no FPS/GPU-performance claim. Resources vary with streamed scene (day116–180geometries71–84textures;night135–186/72–81). Not proof of leak freedom or exact memory return. Existing controlled profile evidence remains desert-populated-frozen-cost-20261022.
+
+Full-resolution day farthest-point and night nine-checkpoint sheet inspected: approved warm sand relief/cast shadows retained, crops/settlement remain legible on return, no obvious terrain disappearance in sampled views. Background processing is sometimes pending. Elevated path looks mostly down: it does not establish distant mountain/horizon appearance or exhaustive temporal correctness. Preserve medium as artistic reference; no new material or profile reduction. Desert has no authored water; no oasis invented for QA.
+
+Reproduce with Vite5190: node tools/experiments/capture-desert-active-excursion-20261023.mjs; python tools/experiments/audit-desert-active-excursion-20261023.py docs/qa/global-visual-lab/desierto-active-excursion-20261023. Full frames metadata, checkpoints and clips retained. Main/simulation/renderer sources unchanged. Six-biome consolidated review remains open; Volcano provisional resource benchmark still needs separate resolution.

@@ -1,0 +1,153 @@
+{
+  "report": {
+    "stats": {
+      "seed": 712,
+      "biome": "canyons",
+      "sceneFormat": true,
+      "settlement": false,
+      "current": [
+        {
+          "roundtripMs": 87,
+          "bytes": 502564,
+          "props": 20
+        },
+        {
+          "roundtripMs": 27.899999856948853,
+          "bytes": 502564,
+          "props": 32
+        }
+      ],
+      "spatial": [
+        {
+          "roundtripMs": 63.90000009536743,
+          "compiledMs": 9.700000047683716,
+          "spatialMs": 32.799999952316284,
+          "copyMs": 1.9000000953674316,
+          "transferBytes": 95212,
+          "three": {
+            "ms": 7.199999809265137,
+            "vertices": 2401,
+            "waterVertices": 420
+          },
+          "props": 54,
+          "metrics": {
+            "loadedChunks": 1,
+            "loadedSectors": 16,
+            "sectorUpdates": 16,
+            "memoryBytes": 4194304
+          }
+        },
+        {
+          "roundtripMs": 26.5,
+          "compiledMs": 9.700000047683716,
+          "spatialMs": 24,
+          "copyMs": 1.9000000953674316,
+          "transferBytes": 90172,
+          "three": {
+            "ms": 1.5999999046325684,
+            "vertices": 2401,
+            "waterVertices": 0
+          },
+          "props": 139,
+          "metrics": {
+            "loadedChunks": 2,
+            "loadedSectors": 32,
+            "sectorUpdates": 36,
+            "memoryBytes": 4194304
+          }
+        }
+      ],
+      "topology": {
+        "crossing": {
+          "x": 23,
+          "z": 8,
+          "nx": 24,
+          "nz": 8
+        },
+        "routePointCount": 1,
+        "closedStatus": "blocked",
+        "reopenedStatus": "found",
+        "workerClosedStatus": "blocked",
+        "workerReopenedStatus": "found",
+        "wallAddMs": 5.3999998569488525,
+        "wallRemoveMs": 1.6999998092651367,
+        "sectorUpdatesAfterAdd": 44,
+        "sectorUpdatesAfterRemove": 52,
+        "evictMs": 3.1000001430511475,
+        "reloadMs": 45.799999952316284,
+        "sameVisualPayload": true,
+        "loadedSectorsAfterReload": 32,
+        "memoryBytesAfterReload": 4194304
+      },
+      "barrierTopology": {
+        "workerOpen": true,
+        "animalClosed": false,
+        "workerClosed": false,
+        "workerReopened": true,
+        "animalReopened": true,
+        "localUpdates": 4,
+        "addMs": 1.5999999046325684,
+        "closeMs": 3.200000047683716,
+        "reopenMs": 1.5
+      },
+      "batchTopology": {
+        "count": 12,
+        "sectorUpdates": 6,
+        "operationMs": 3.8000001907348633
+      },
+      "multipleSettlements": {
+        "secondLevel": 38.3246955871582,
+        "localSectorUpdates": 16,
+        "sameFirstSettlement": true,
+        "secondChunkChanged": true,
+        "memoryBytes": 4194304
+      },
+      "surfaceView": {
+        "sample": {
+          "x": 30.3,
+          "z": 5.7
+        },
+        "height": 38.490024948120116,
+        "difference": 3.8146972514141453e-7
+      },
+      "spatialReload": {
+        "version": 3,
+        "settlements": 1,
+        "removedProps": 1,
+        "barriers": 1,
+        "nextBarrierId": 16,
+        "routeStatus": "blocked",
+        "restoredMemoryBytes": 4194304
+      },
+      "propRemoval": {
+        "id": "spatial:0:0:-2",
+        "operationMs": 23.40000009536743,
+        "sectorUpdates": 4
+      },
+      "speciesProfiles": {
+        "smallSectors": 32,
+        "largeSectors": 32,
+        "smallPass": false,
+        "largePass": false,
+        "buildMs": 39.59999990463257,
+        "memoryBytes": 4194304
+      },
+      "checks": {
+        "transferLengths": true,
+        "terrainSeam": true,
+        "wallEdit": true,
+        "routePoints": true,
+        "speciesProfiles": true,
+        "dynamicPassage": true,
+        "batchedTopology": true,
+        "evictionRegeneration": true,
+        "multipleSettlements": true,
+        "spatialReload": true,
+        "propRemoval": true,
+        "surfaceView": true
+      }
+    },
+    "error": null
+  },
+  "errors": []
+}

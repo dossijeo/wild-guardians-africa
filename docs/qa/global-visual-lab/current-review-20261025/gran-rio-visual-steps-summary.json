@@ -1,0 +1,133 @@
+{
+  "scope": "Paused visual sampling; failed streaming completion; NOT a performance benchmark. Screenshot awaits change cadence.",
+  "biome": "gran-rio",
+  "quality": "media",
+  "resolution": [
+    1280,
+    720
+  ],
+  "recipe": "WG_CURRENT_REVIEW=1",
+  "options": {
+    "WG_THREADS": 1,
+    "WG_THREAD_BENCH": 1,
+    "WG_THREAD_FROZEN": 1,
+    "WG_THREAD_ACTIVE": 0,
+    "WG_THREAD_GPU": 0,
+    "WG_THREAD_VISUAL_STEPS": 1,
+    "WG_FRAME_SCHEDULER": 1,
+    "WG_THREAD_DEFAULT_STREAMING": 1
+  },
+  "terminal": "failed",
+  "stream": {
+    "created": 34,
+    "discarded": 0,
+    "failed": 0,
+    "fallbacks": 0,
+    "worker": false,
+    "asyncPreparation": true,
+    "queued": 0,
+    "busy": true,
+    "preparing": 1,
+    "stale": 0,
+    "epoch": 0
+  },
+  "scheduler": {
+    "completed": 82,
+    "cancelled": 0,
+    "failed": 0,
+    "units": 437,
+    "workMs": 696.1599987745285,
+    "coordinationMs": 289.4350049495697,
+    "maxUnitMs": 53.72000002861023,
+    "overruns": 86,
+    "deadlineLoans": 26,
+    "oversizeRecoveries": 50,
+    "blockingRecoveries": 26,
+    "continuationMs": 27.944999933242798,
+    "continuationTurns": 1254,
+    "median": 16.650000000023283,
+    "p95": 33.320000000006985,
+    "p99": 33.40999999997439,
+    "cpu95": 11.68999993801117,
+    "jitter": 16.669999999983702,
+    "budgetMs": 0.8447097652073517,
+    "pending": 1,
+    "waiting": 0,
+    "oldestMs": 29869.769999980927
+  },
+  "jobs": [
+    {
+      "label": "terrain 6,3:prop-slots",
+      "cost": 0.7741440429687501,
+      "estimate": 31.769819944381716,
+      "deadline": 241092.27499997616,
+      "age": 29869.93499994278,
+      "waiting": false
+    }
+  ],
+  "horizon": {
+    "latest": false,
+    "busy": false,
+    "pending": false
+  },
+  "farPending": [
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    },
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    },
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    },
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    }
+  ],
+  "images": [
+    {
+      "path": "gran-rio-visual-steps-frame-000.png",
+      "sha256": "029e0f53898093759a1a78932dab6cd3c976145e55cce3d9dd8d15f9f19d5254"
+    },
+    {
+      "path": "gran-rio-visual-steps-frame-030.png",
+      "sha256": "c4c804bc78a286f00e6126dc6cf04683be66bca9ff0888af452143153aac360e"
+    },
+    {
+      "path": "gran-rio-visual-steps-frame-060.png",
+      "sha256": "ec9217592b08d101a3bc4d52ea24b3b59e2fd7632cf0afffdcc8beea0d1d1300"
+    },
+    {
+      "path": "gran-rio-visual-steps-frame-090.png",
+      "sha256": "0f50a6ebb74392de687de4e705c18cb3c1d1177a15ffda7abb020df67b3fe039"
+    },
+    {
+      "path": "gran-rio-visual-steps-frame-120.png",
+      "sha256": "614ad564f3d0e7c9aa3a78cd21c56b0dad1ce247cdfabbb74a8b727bd81a6cf4"
+    },
+    {
+      "path": "gran-rio-visual-steps-frame-150.png",
+      "sha256": "094a47e4536d763ce2b81d051d87d382131742295c6813461d1e4f38afadac65"
+    },
+    {
+      "path": "gran-rio-visual-steps-frame-179.png",
+      "sha256": "9a91ba6001b811446ffae7ad9f826d7625a23e9c6cdece3f2c3bf9805ac2445f"
+    }
+  ]
+}

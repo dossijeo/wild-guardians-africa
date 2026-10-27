@@ -1,0 +1,24 @@
+{
+  "scenario": "25 resident 48 m chunks, 14 synthetic wall positions inside one local chunk, build/demolish alternating; renderer-only CPU benchmark",
+  "seed": "712",
+  "residentChunks": 25,
+  "initialInstances": 502,
+  "samples": 30,
+  "build": {
+    "medianMs": 0.515199999999993,
+    "p95Ms": 1.6293000000000006,
+    "minMs": 0.3902999999999963,
+    "maxMs": 1.9091999999999985
+  },
+  "remove": {
+    "medianMs": 0.5360000000000014,
+    "p95Ms": 1.9088999999999885,
+    "minMs": 0.3920999999999992,
+    "maxMs": 2.4294000000000153
+  },
+  "resampledChunks": 136,
+  "resampledCandidates": 78336,
+  "possibleFullResamples": 1700,
+  "idleFlushMs": 0,
+  "instanceBufferBytes": 32768
+}

@@ -1,0 +1,239 @@
+{
+  "blocks": 8,
+  "gpuSamples": 480,
+  "cadenceFrames": 720,
+  "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "results": [
+    {
+      "phase": "day",
+      "variant": "base",
+      "gpuMs": [
+        17.004232616666666,
+        19.456388933333333
+      ],
+      "gpuMsP95": [
+        18.773384,
+        24.350885
+      ],
+      "cpuRenderMs": [
+        3.211111112104522,
+        3.1344444457027647
+      ],
+      "cpuRenderMsP95": [
+        4,
+        3.7999999821186066
+      ],
+      "intervalMs": [
+        20.805555555555557,
+        19.147777777910232
+      ],
+      "intervalMsP95": [
+        25.5,
+        21.5
+      ],
+      "intervalP95Ms": [
+        25.5,
+        21.5
+      ]
+    },
+    {
+      "phase": "day",
+      "variant": "combined",
+      "gpuMs": [
+        16.67489228333333,
+        17.70313625
+      ],
+      "gpuMsP95": [
+        18.25578,
+        19.874218
+      ],
+      "cpuRenderMs": [
+        3.3644444475571316,
+        3.2611111101177004
+      ],
+      "cpuRenderMsP95": [
+        4.5,
+        4.600000023841858
+      ],
+      "intervalMs": [
+        20.622222222222224,
+        20.356666666931577
+      ],
+      "intervalMsP95": [
+        26.099999994039536,
+        25.5
+      ],
+      "intervalP95Ms": [
+        26.099999994039536,
+        25.5
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "base",
+      "gpuMs": [
+        20.55535395,
+        18.7032387
+      ],
+      "gpuMsP95": [
+        24.110884,
+        20.91526
+      ],
+      "cpuRenderMs": [
+        3.114444444245762,
+        3.158888887696796
+      ],
+      "cpuRenderMsP95": [
+        3.9000000059604645,
+        4
+      ],
+      "intervalMs": [
+        20.58888888888889,
+        21.34666666686535
+      ],
+      "intervalMsP95": [
+        26.30000001192093,
+        26.80000001192093
+      ],
+      "intervalP95Ms": [
+        26.30000001192093,
+        26.80000001192093
+      ]
+    },
+    {
+      "phase": "night",
+      "variant": "combined",
+      "gpuMs": [
+        18.45592355,
+        20.199716216666666
+      ],
+      "gpuMsP95": [
+        22.34453,
+        23.066978
+      ],
+      "cpuRenderMs": [
+        3.175555556350284,
+        3.429999997549587
+      ],
+      "cpuRenderMsP95": [
+        3.899999976158142,
+        4.5999999940395355
+      ],
+      "intervalMs": [
+        20.331111111243565,
+        23.68222222228845
+      ],
+      "intervalMsP95": [
+        24.400000005960464,
+        31.799999982118607
+      ],
+      "intervalP95Ms": [
+        24.400000005960464,
+        31.799999982118607
+      ]
+    }
+  ],
+  "note": "Two block means per variant/phase; not confidence intervals. CPU render excludes simulation; intervals are render entries, not presentation.",
+  "resourceCounts": [
+    {
+      "variant": "base",
+      "phase": "day",
+      "gpu": {
+        "geometries": 177,
+        "textures": 65
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 65
+      }
+    },
+    {
+      "variant": "base",
+      "phase": "night",
+      "gpu": {
+        "geometries": 177,
+        "textures": 65
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 65
+      }
+    },
+    {
+      "variant": "combined",
+      "phase": "day",
+      "gpu": {
+        "geometries": 177,
+        "textures": 64
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 64
+      }
+    },
+    {
+      "variant": "combined",
+      "phase": "night",
+      "gpu": {
+        "geometries": 177,
+        "textures": 64
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 64
+      }
+    },
+    {
+      "variant": "combined",
+      "phase": "day",
+      "gpu": {
+        "geometries": 177,
+        "textures": 63
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 63
+      }
+    },
+    {
+      "variant": "combined",
+      "phase": "night",
+      "gpu": {
+        "geometries": 177,
+        "textures": 63
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 63
+      }
+    },
+    {
+      "variant": "base",
+      "phase": "day",
+      "gpu": {
+        "geometries": 177,
+        "textures": 63
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 63
+      }
+    },
+    {
+      "variant": "base",
+      "phase": "night",
+      "gpu": {
+        "geometries": 177,
+        "textures": 63
+      },
+      "cadence": {
+        "geometries": 177,
+        "textures": 63
+      }
+    }
+  ],
+  "limitations": [
+    "Texture counts differ across variants; not a VRAM saving measurement or proof of equal resource residency.",
+    "Stationary camera: excludes mask generation and streaming cost."
+  ]
+}

@@ -1,0 +1,260 @@
+{
+  "scope": "QA-only four resident Sabana chunks, alternating worker and animal radii 20 times; existing single-graph rebuild baseline.",
+  "summary": {
+    "worker": {
+      "switches": 20,
+      "medianMs": 76.93769999999995,
+      "p95Ms": 91.1562,
+      "totalMs": 1572.9338999999998
+    },
+    "animal": {
+      "switches": 20,
+      "medianMs": 67.24029999999993,
+      "p95Ms": 78.05229999999983,
+      "totalMs": 1365.5692000000004
+    }
+  },
+  "maxMemoryBytes": 4194304,
+  "rows": [
+    {
+      "cycle": 0,
+      "profile": "worker",
+      "durationMs": 91.1562,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 0,
+      "profile": "animal",
+      "durationMs": 70.8433,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 1,
+      "profile": "worker",
+      "durationMs": 76.2056,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 1,
+      "profile": "animal",
+      "durationMs": 65.7935,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 2,
+      "profile": "worker",
+      "durationMs": 81.5815,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 2,
+      "profile": "animal",
+      "durationMs": 75.46650000000005,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 3,
+      "profile": "worker",
+      "durationMs": 76.2695,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 3,
+      "profile": "animal",
+      "durationMs": 65.8673,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 4,
+      "profile": "worker",
+      "durationMs": 74.54010000000005,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 4,
+      "profile": "animal",
+      "durationMs": 65.06380000000001,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 5,
+      "profile": "worker",
+      "durationMs": 75.55179999999996,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 5,
+      "profile": "animal",
+      "durationMs": 65.83069999999998,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 6,
+      "profile": "worker",
+      "durationMs": 81.41579999999999,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 6,
+      "profile": "animal",
+      "durationMs": 72.0494000000001,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 7,
+      "profile": "worker",
+      "durationMs": 75.18899999999985,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 7,
+      "profile": "animal",
+      "durationMs": 64.77459999999996,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 8,
+      "profile": "worker",
+      "durationMs": 76.3427999999999,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 8,
+      "profile": "animal",
+      "durationMs": 69.42810000000009,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 9,
+      "profile": "worker",
+      "durationMs": 78.56990000000019,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 9,
+      "profile": "animal",
+      "durationMs": 70.06880000000001,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 10,
+      "profile": "worker",
+      "durationMs": 75.5136,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 10,
+      "profile": "animal",
+      "durationMs": 67.24029999999993,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 11,
+      "profile": "worker",
+      "durationMs": 81.60680000000002,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 11,
+      "profile": "animal",
+      "durationMs": 66.93939999999998,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 12,
+      "profile": "worker",
+      "durationMs": 77.63490000000002,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 12,
+      "profile": "animal",
+      "durationMs": 63.32629999999995,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 13,
+      "profile": "worker",
+      "durationMs": 86.80129999999986,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 13,
+      "profile": "animal",
+      "durationMs": 78.05229999999983,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 14,
+      "profile": "worker",
+      "durationMs": 84.41429999999991,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 14,
+      "profile": "animal",
+      "durationMs": 67.86550000000034,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 15,
+      "profile": "worker",
+      "durationMs": 76.93769999999995,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 15,
+      "profile": "animal",
+      "durationMs": 66.9689000000003,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 16,
+      "profile": "worker",
+      "durationMs": 72.19720000000007,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 16,
+      "profile": "animal",
+      "durationMs": 66.39319999999998,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 17,
+      "profile": "worker",
+      "durationMs": 76.63409999999976,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 17,
+      "profile": "animal",
+      "durationMs": 64.9049,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 18,
+      "profile": "worker",
+      "durationMs": 81.01080000000002,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 18,
+      "profile": "animal",
+      "durationMs": 69.2190999999998,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 19,
+      "profile": "worker",
+      "durationMs": 73.36100000000033,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 19,
+      "profile": "animal",
+      "durationMs": 69.47330000000011,
+      "memoryBytes": 4194304
+    }
+  ]
+}

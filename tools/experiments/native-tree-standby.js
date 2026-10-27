@@ -1,8 +1,9 @@
+import {smoothStandbyMaterial} from '../../src/rendering/smooth-far-transitions.js';
 import {treeTransitionRange,validateTreeTransitionPolicy} from './tree-transition-range.js';
 import {obstructionMaterial} from '../../src/rendering/obstruction.js';
 import * as THREE from 'three';
 import {NativeFarGpuCancelled} from './prepare-native-far-gpu.js';
-import {lodMix} from './far-impostor-math.js';
+import {lodMix,angularLodMix} from './far-impostor-math.js';
 
 // Immutable logical identity survives changes of native instance order/LOD.
 // The standby itself receives a real upload draw/fence, never a CPU-only proof.
@@ -31,28 +32,34 @@ function geometryView(source,capacity){
 // Two owned banks: one prepared/immutable while its replacement uploads.
 // They render only IDs whose normal native representation is awaiting proof.
 export class NativeTreeStandby {
- constructor({scene,sources,prepare,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
+ constructor({scene,sources,prepare,angularLod=false,smoothTransitions=false,start=40,end=60,treeHeight=1,transitionHeight=null,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<(transitionHeight?.end??end)||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
+  Object.assign(this,{angularLod,scene,sources,prepare,smoothTransitions,start,end,treeHeight,transitionHeight,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={requests:0,queuedReplacements:0,addedEntries:0,identityChanges:0,lodChanges:0,resourceDrops:0,distanceDrops:0,budgetEvictions:0,cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
  request(entries,camera){
-  if(this.closed)return;this.pending={entries:entries.map(d=>({...d,matrix:new Float64Array(d.matrix)})),camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
+  if(this.closed)return;this.stats.requests++;if(this.pending)this.stats.queuedReplacements++;this.pending={entries:entries.map(d=>({...d,matrix:new Float64Array(d.matrix)})),camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
  }
  async run(){
   this.busy=true;
   try{while(!this.closed&&this.pending){
    const {entries,camera}=this.pending;this.pending=null;const wanted=new Map();
-   for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===this.sourceKey(d.level))wanted.set(id,d);
-   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,transitionRange:treeTransitionRange(d,this.treeHeight,this.start,this.end,this.transitionHeight),matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
+   for(const [id,d] of this.active?.entries??[]){if(d.resource!==this.sourceKey(d.level)){this.stats.resourceDrops++;continue;}if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance){this.stats.distanceDrops++;continue;}wanted.set(id,d);}
+   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old)this.stats.addedEntries++;else if(old.key!==d.key)this.stats.identityChanges++;else if(old.level!==d.level)this.stats.lodChanges++;if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,transitionRange:treeTransitionRange(d,this.treeHeight,this.start,this.end,this.transitionHeight),matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
+   if(wanted.size>this.maxTrees&&this.angularLod){
+    // Current requests precede retained history; never grow the bank because
+    // a moving camera has visited several overlapping preparation regions.
+    const requested=new Set(entries.map(d=>d.id)),ranked=[...wanted.values()].sort((a,b)=>Number(requested.has(b.id))-Number(requested.has(a.id))||Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
+    this.stats.budgetEvictions+=wanted.size-this.maxTrees;for(const d of ranked.slice(this.maxTrees))wanted.delete(d.id);
+   }
    if(wanted.size>this.maxTrees)throw Error('Standby tree budget exceeded');
    if(this.active&&wanted.size===this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d))continue;
    if(!wanted.size){if(this.active){this.active.root.removeFromParent();this.active=null;this.revision++;this.stats.trees=0;}continue;}
    const index=this.active===this.banks[0]?1:0;let bank=this.banks[index];const capacity=2**Math.ceil(Math.log2(Math.max(8,wanted.size))),layout=this.sources.map(source=>source.geometry.uuid+':'+source.material.uuid).join('|');
    if(bank&&(bank.capacity<capacity||bank.layout!==layout)){this.release(bank);bank=null;}
-   if(!bank){const root=new THREE.Group();root.name='native-tree-standby';bank={root,capacity,layout,meshes:this.sources.map(source=>{const mesh=new THREE.InstancedMesh(geometryView(source.geometry,capacity),source.material,capacity);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=true;mesh.frustumCulled=false;root.add(mesh);return mesh;}),entries:null,rows:[]};this.banks[index]=bank;}
+   if(!bank){const root=new THREE.Group();root.name='native-tree-standby';bank={root,capacity,layout,meshes:this.sources.map(source=>{const mesh=new THREE.InstancedMesh(geometryView(source.geometry,capacity),this.smoothTransitions?smoothStandbyMaterial(source.material):source.material,capacity);if(this.smoothTransitions){mesh.userData.materialRegistryExcluded=true;mesh.renderOrder=1;}mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=true;mesh.frustumCulled=false;root.add(mesh);return mesh;}),entries:null,rows:[]};this.banks[index]=bank;}
    // Keep global matrices in CPU doubles. Subtract a fixed bank anchor before
    // writing GPU floats, like native merged groups; large-world visits must not
    // lose the tree's fractional placement through a global Float32 translation.
@@ -89,7 +96,7 @@ export class NativeTreeStandby {
   const bank=this.active;for(const [level,mesh] of bank.meshes.entries()){
    const attribute=mesh.geometry.attributes.nativeVisibility,drawRows=bank.drawRows[level],prepared=bank.preparedMatrices[level];let first=Infinity,last=-1,matrixFirst=Infinity,matrixLast=-1,live=0;
    for(const [i,d]of bank.rows[level].entries()){
-    const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround((!frustum||frustum.intersectsBox(d.bounds))&&!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),...(d.transitionRange??[this.start,this.end]),state.ready)):0);
+    const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround((!frustum||frustum.intersectsBox(d.bounds))&&!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-(this.angularLod?angularLodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),camera.y-tree.y,...(d.transitionRange??[this.start,this.end]),state.ready):lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),...(d.transitionRange??[this.start,this.end]),state.ready))):0);
     if(value<=0)continue;
     // A permutation contains only exact, already-fenced transforms. No new
     // source/identity/LOD is accepted by this draw packing operation.
@@ -103,7 +110,7 @@ export class NativeTreeStandby {
   }Object.assign(this.stats,{rendered,submittedInstances,maskedInstances:submittedInstances-rendered,submittedTriangles,visibleTriangles});
  }
 
- release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();}}
+ release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();if(this.smoothTransitions)mesh.material.dispose();}}
  clearStats(){this.stats.estimatedPreparedMatrixCpuBytes=0;this.stats.submittedInstances=0;this.stats.maskedInstances=0;this.stats.submittedTriangles=0;this.stats.visibleTriangles=0;this.stats.rendered=0;this.stats.trees=0;this.stats.estimatedOwnedGpuBytes=0;}
  dispose(){if(this.closed)return;this.closed=true;this.pending=null;this.active?.root.removeFromParent();this.stats.rendered=0;if(!this.busy){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}}
 }

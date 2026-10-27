@@ -1,0 +1,281 @@
+{
+  "blocks": 8,
+  "gpuSamples": 960,
+  "cadenceFrames": 1440,
+  "results": [
+    {
+      "phase": "day",
+      "values": [
+        {
+          "variant": "base",
+          "groupBufferBytes": [
+            152736,
+            152736
+          ],
+          "memory": [
+            {
+              "geometries": 169,
+              "textures": 60
+            },
+            {
+              "geometries": 169,
+              "textures": 58
+            }
+          ],
+          "groupCpuMs": [
+            1.4205555571450128,
+            1.2011111115415891
+          ],
+          "uploadsPerFrame": [
+            11.238888888888889,
+            11.311111111111112
+          ],
+          "gpuMs": [
+            20.354941783333334,
+            16.7797865
+          ],
+          "cpuMs": [
+            6.425000000331137,
+            5.595555554827055
+          ],
+          "intervalMs": [
+            24.493888888756434,
+            22.28166666660044
+          ],
+          "intervalP95Ms": [
+            40,
+            33.599999994039536
+          ],
+          "calls": 70,
+          "triangles": 1196927,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 53.099999994039536,
+              "selectionMs": 202.10000011324883,
+              "selectionCount": 314,
+              "candidates": 16640,
+              "masked": 1636,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        },
+        {
+          "variant": "combined",
+          "groupBufferBytes": [
+            283840,
+            283840
+          ],
+          "memory": [
+            {
+              "geometries": 336,
+              "textures": 58
+            },
+            {
+              "geometries": 336,
+              "textures": 58
+            }
+          ],
+          "groupCpuMs": [
+            1.8938888892531396,
+            2.014999999768204
+          ],
+          "uploadsPerFrame": [
+            17.6,
+            17.533333333333335
+          ],
+          "gpuMs": [
+            18.654512583333332,
+            19.046938366666666
+          ],
+          "cpuMs": [
+            7.445000001457003,
+            7.810000000894069
+          ],
+          "intervalMs": [
+            25.092222222189108,
+            26.19277777771155
+          ],
+          "intervalP95Ms": [
+            41.79999998211861,
+            42.599999994039536
+          ],
+          "calls": 152,
+          "triangles": 1196927,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 48,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 51.80000001192093,
+              "selectionMs": 200.4999998509884,
+              "selectionCount": 312,
+              "candidates": 12288,
+              "masked": 1403,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        }
+      ]
+    },
+    {
+      "phase": "night",
+      "values": [
+        {
+          "variant": "base",
+          "groupBufferBytes": [
+            152736,
+            152736
+          ],
+          "memory": [
+            {
+              "geometries": 169,
+              "textures": 60
+            },
+            {
+              "geometries": 169,
+              "textures": 58
+            }
+          ],
+          "groupCpuMs": [
+            1.3488888897829585,
+            1.0661111118064985
+          ],
+          "uploadsPerFrame": [
+            11.277777777777779,
+            11.311111111111112
+          ],
+          "gpuMs": [
+            18.4832148,
+            17.728618008333335
+          ],
+          "cpuMs": [
+            6.163888889716731,
+            5.092222221692404
+          ],
+          "intervalMs": [
+            23.780000000033112,
+            21.502777777777776
+          ],
+          "intervalP95Ms": [
+            38.79999998211861,
+            34.39999997615814
+          ],
+          "calls": 70,
+          "triangles": 1196927,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 65,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 55.099999994039536,
+              "selectionMs": 337.0000001490116,
+              "selectionCount": 622,
+              "candidates": 16640,
+              "masked": 1636,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        },
+        {
+          "variant": "combined",
+          "groupBufferBytes": [
+            283840,
+            283840
+          ],
+          "memory": [
+            {
+              "geometries": 336,
+              "textures": 58
+            },
+            {
+              "geometries": 336,
+              "textures": 58
+            }
+          ],
+          "groupCpuMs": [
+            1.9694444441133074,
+            1.8955555554893282
+          ],
+          "uploadsPerFrame": [
+            17.522222222222222,
+            17.6
+          ],
+          "gpuMs": [
+            18.861202091666666,
+            19.29757980833333
+          ],
+          "cpuMs": [
+            7.643888889418708,
+            7.3227777779102325
+          ],
+          "intervalMs": [
+            27.01499999993377,
+            25.15277777777778
+          ],
+          "intervalP95Ms": [
+            40.30000001192093,
+            37.900000005960464
+          ],
+          "calls": 152,
+          "triangles": 1196927,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4686,
+            "leaves": 37488,
+            "triangles": 37488,
+            "chunks": 25,
+            "cachedTiles": 48,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 54.00000002980232,
+              "selectionMs": 339.9000002145767,
+              "selectionCount": 620,
+              "candidates": 12288,
+              "masked": 1403,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        }
+      ]
+    }
+  ]
+}

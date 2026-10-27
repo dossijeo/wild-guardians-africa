@@ -1,0 +1,125 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>QA · horizonte espacial en Worker</title></head>
+<body><pre id="status">Preparando WASM…</pre><script type="module">
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
+import {activeChunkRegion} from '../../src/world/active-region.js';
+import {NativeHorizon} from '../../src/rendering/horizon.js';
+import * as THREE from 'three';
+import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
+
+const status=document.querySelector('#status'),report=[];
+try{
+  const bytes=await fetch(wasmUrl).then(response=>response.arrayBuffer());
+  const module=new WebAssembly.Module(bytes),region=activeChunkRegion({x:0,z:0},'media');
+  let serial=0;
+  for(const biome of ['canyons','desert']){
+    const core=createSpatialWorld(module);core.generate(712,0,0,biome);
+    const worker=new Worker(new URL('../../src/world/wild-engine/spatial-horizon-worker.js',import.meta.url),{type:'module'});
+    const color=[58/255,173/255,182/255];
+    let largestFrameGap=0,lastFrame=performance.now(),active=true;
+    const sampleFrame=()=>{
+      const now=performance.now();largestFrameGap=Math.max(largestFrameGap,now-lastFrame);lastFrame=now;
+      if(active)requestAnimationFrame(sampleFrame);
+    };
+    requestAnimationFrame(sampleFrame);
+    const ask=state=>new Promise((resolve,reject)=>{
+      const id=++serial,start=performance.now();
+      const timeout=setTimeout(()=>reject(Error('Spatial horizon worker timeout')),120000);
+      worker.onmessage=({data})=>{
+        if(data.id!==id)return;
+        clearTimeout(timeout);
+        data.error?reject(Error(data.error)):resolve({...data,roundtripMs:performance.now()-start});
+      };
+      worker.onerror=error=>{clearTimeout(timeout);reject(error);};
+      worker.postMessage({id,state,region,waterColor:color,river:true});
+    });
+    try{
+      for(const topology of ['initial','settlement']){
+        if(topology==='settlement')core.setSettlement(12,8,8,7);
+        const expected=core.horizon(region,color);
+        largestFrameGap=0;lastFrame=performance.now();
+        const state=core.terrainState(),response=await ask(state);
+        const {terrain,water}=response.data;
+        if(terrain.length!==expected.terrain.length||water.length!==expected.water.length)
+          throw Error(`${biome} ${topology}: wrong buffer lengths`);
+        let largestDelta=0;
+        for(let i=0;i<terrain.length;i++)largestDelta=Math.max(largestDelta,Math.abs(terrain[i]-expected.terrain[i]));
+        for(let i=0;i<water.length;i++)largestDelta=Math.max(largestDelta,Math.abs(water[i]-expected.water[i]));
+        if(largestDelta>.001)throw Error(`${biome} ${topology}: ${largestDelta} buffer difference`);
+        report.push({biome,topology,roundtripMs:+response.roundtripMs.toFixed(2),
+          terrainBytes:terrain.byteLength,waterBytes:water.byteLength,
+          wasmMemoryBytes:response.metrics.memoryBytes,
+          stateBytes:JSON.stringify(state).length,
+          loadedChunks:response.metrics.loadedChunks,loadedSectors:response.metrics.loadedSectors,
+          largestFrameGapMs:+largestFrameGap.toFixed(2),largestDelta});
+      }
+    }finally{active=false;worker.terminate();}
+    let revision=1;
+    const scene=new THREE.Scene(),controller=new NativeHorizon(scene,
+      ()=>new THREE.MeshBasicMaterial(),null,null,{spatial:{revision:()=>revision,
+        snapshot:()=>core.terrainState()}});
+    try{
+      const config={biome,seed:712,river:true},profile={colors:{water:'#3aadb6'}};
+      controller.update(config,profile,region,'media');
+      await controller.whenReady();controller.update(config,profile,region,'media');
+      if(!controller.group||scene.children.length!==1)throw Error(`${biome}: horizon controller did not install native mesh`);
+      const previous=controller.group;
+      core.addSettlement(96,0,7,6);revision++;
+      controller.update(config,profile,region,'media');
+      if(controller.group!==previous)throw Error(`${biome}: old horizon was removed before replacement`);
+      await controller.whenReady();controller.update(config,profile,region,'media');
+      if(controller.group===previous||scene.children.length!==1)
+        throw Error(`${biome}: revised horizon was not installed`);
+      report.push({biome,topology:'controller',revision,terrainVertices:
+        controller.group.children[0].geometry.getAttribute('position').count});
+      // Travel exercises the actual horizon owner, including main-thread
+      // snapshot creation, worker transfer, and BufferGeometry installation.
+      // Distant villages must not trigger JS geometry sampling or grow the
+      // message with wall/prop topology.
+      for(let i=0;i<50;i++)core.addSettlement(5000+i*120,4000,7,6);
+      revision++;
+      const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'low-power'});
+      renderer.setSize(320,180,false);
+      const camera=new THREE.PerspectiveCamera(65,320/180,.1,3000);
+      camera.position.set(0,110,170);camera.lookAt(0,0,0);
+      const coldRenderStart=performance.now();renderer.render(scene,camera);
+      const coldRenderMs=performance.now()-coldRenderStart;
+      let frames=true,frameLast=performance.now(),maxGap=0,maxRenderMs=0,frameCount=0;
+      const renderFrame=()=>{if(!frames)return;const now=performance.now();
+        maxGap=Math.max(maxGap,now-frameLast);frameLast=now;frameCount++;
+        renderer.render(scene,camera);
+        maxRenderMs=Math.max(maxRenderMs,performance.now()-now);
+        requestAnimationFrame(renderFrame);};
+      requestAnimationFrame(renderFrame);
+      const travel=[];
+      let liveGeometries=0;
+      try{
+        for(const x of [0,48,96,144,48,0]){
+          const target=activeChunkRegion({x,z:0},'media');
+          maxGap=maxRenderMs=0;frameLast=performance.now();
+          const started=performance.now();
+          controller.update(config,profile,target,'media');
+          const snapshotAndPostMs=performance.now()-started;
+          await controller.whenReady();
+          const installStarted=performance.now();
+          controller.update(config,profile,target,'media');
+          const installMs=performance.now()-installStarted;
+          if(controller.region.cx!==target.cx||controller.region.cz!==target.cz||scene.children.length!==1)
+            throw Error(`${biome}: travel did not adopt region ${target.cx},${target.cz}`);
+          await new Promise(resolve=>requestAnimationFrame(resolve));
+          travel.push({cx:target.cx,cz:target.cz,
+            totalMs:+(performance.now()-started).toFixed(2),
+            snapshotAndPostMs:+snapshotAndPostMs.toFixed(2),installMs:+installMs.toFixed(2),
+            largestFrameGapMs:+maxGap.toFixed(2),largestRenderMs:+maxRenderMs.toFixed(2)});
+        }
+        liveGeometries=renderer.info.memory.geometries;
+        if(liveGeometries>(biome==='canyons'?2:1))
+          throw Error(`${biome}: old horizon geometry remained on the GPU`);
+      }finally{frames=false;renderer.dispose();renderer.forceContextLoss();}
+      report.push({biome,topology:'travel-50-settlements',settlements:core.terrainState().settlements.length,
+        stateBytes:JSON.stringify(core.terrainState()).length,coldRenderMs:+coldRenderMs.toFixed(2),
+        liveGeometries,frames:frameCount,travel});
+    }finally{controller.dispose();}
+  }
+  window.qaReport=report;window.qaReady=true;status.textContent=JSON.stringify(report,null,2);
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+</script></body></html>

@@ -1,0 +1,15 @@
+{
+  "species": "hyena",
+  "baseline": "ead3780fa",
+  "before": "/assets/f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420.glb",
+  "after": "/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+  "changedBytes": 3780,
+  "metadata": {
+    "tool": "tools/experiments/repair-beast-foot-weights.mjs",
+    "sourceSha256": "f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420",
+    "changedVertices": 542,
+    "rigidBelowAnkle": -0.015,
+    "authoredAboveAnkle": 0.06
+  },
+  "invariants": "All JSON except provenance identical; every changed BIN byte belongs to WEIGHTS_0. Positions, indices, normals, UVs, textures, joints, inverse bind matrices, animations and presentation scale unchanged. All weights normalized."
+}

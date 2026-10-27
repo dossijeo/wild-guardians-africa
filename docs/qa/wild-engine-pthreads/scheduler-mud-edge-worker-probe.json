@@ -1,0 +1,438 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+  "result": {
+    "farDraws": null,
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 897.1950000524521,
+      "bindings": {
+        "initialized": 59,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 59,
+        "released": 59,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": null,
+      "longFrames": null,
+      "frames": null,
+      "readyMs": 31704.285000026226,
+      "phases": []
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 12.939999997615814,
+      "maxTaskMs": 8.280000030994415,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "mudEdgeWorker": {
+      "rows": [
+        {
+          "origin": [
+            96,
+            48
+          ],
+          "vertices": 4092,
+          "setupCpuMs": 0.07500004768371582,
+          "postCpuMs": 0.125,
+          "computeMs": 7.245000004768372,
+          "roundTripMs": 56.939999997615814,
+          "outputBytes": 114576,
+          "inputBytes": 135540,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            96,
+            0
+          ],
+          "vertices": 4056,
+          "setupCpuMs": 0.014999985694885254,
+          "postCpuMs": 0.12999999523162842,
+          "computeMs": 5.480000019073486,
+          "roundTripMs": 6.014999985694885,
+          "outputBytes": 113568,
+          "inputBytes": 135108,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            48,
+            0
+          ],
+          "vertices": 6636,
+          "setupCpuMs": 0.02499997615814209,
+          "postCpuMs": 0.12999999523162842,
+          "computeMs": 7.044999957084656,
+          "roundTripMs": 7.814999997615814,
+          "outputBytes": 185808,
+          "inputBytes": 166068,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            144,
+            0
+          ],
+          "vertices": 4086,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.10500001907348633,
+          "computeMs": 5.444999992847443,
+          "roundTripMs": 6.214999973773956,
+          "outputBytes": 114408,
+          "inputBytes": 135468,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            48,
+            48
+          ],
+          "vertices": 5982,
+          "setupCpuMs": 0.014999985694885254,
+          "postCpuMs": 0.13499999046325684,
+          "computeMs": 7.274999976158142,
+          "roundTripMs": 7.995000004768372,
+          "outputBytes": 167496,
+          "inputBytes": 158220,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            144,
+            48
+          ],
+          "vertices": 582,
+          "setupCpuMs": 0,
+          "postCpuMs": 0.07999998331069946,
+          "computeMs": 1.0600000023841858,
+          "roundTripMs": 1.4950000047683716,
+          "outputBytes": 16296,
+          "inputBytes": 93420,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            96,
+            -48
+          ],
+          "vertices": 4074,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.13999998569488525,
+          "computeMs": 6.100000023841858,
+          "roundTripMs": 6.524999976158142,
+          "outputBytes": 114072,
+          "inputBytes": 135324,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            96,
+            96
+          ],
+          "vertices": 3708,
+          "setupCpuMs": 0,
+          "postCpuMs": 0.10000002384185791,
+          "computeMs": 4.139999985694885,
+          "roundTripMs": 4.730000019073486,
+          "outputBytes": 103824,
+          "inputBytes": 130932,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            48,
+            -48
+          ],
+          "vertices": 4326,
+          "setupCpuMs": 0.005000054836273193,
+          "postCpuMs": 0.1549999713897705,
+          "computeMs": 6.044999957084656,
+          "roundTripMs": 6.655000030994415,
+          "outputBytes": 121128,
+          "inputBytes": 138348,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            144,
+            -48
+          ],
+          "vertices": 4380,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.12999999523162842,
+          "computeMs": 6.355000019073486,
+          "roundTripMs": 6.949999988079071,
+          "outputBytes": 122640,
+          "inputBytes": 138996,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            0,
+            0
+          ],
+          "vertices": 2340,
+          "setupCpuMs": 0,
+          "postCpuMs": 0.12999999523162842,
+          "computeMs": 3.865000009536743,
+          "roundTripMs": 4.319999992847443,
+          "outputBytes": 65520,
+          "inputBytes": 114516,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            48,
+            96
+          ],
+          "vertices": 3720,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.11500000953674316,
+          "computeMs": 4.7299999594688416,
+          "roundTripMs": 5.254999995231628,
+          "outputBytes": 104160,
+          "inputBytes": 131076,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            0,
+            48
+          ],
+          "vertices": 4026,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.09499996900558472,
+          "computeMs": 3.3550000190734863,
+          "roundTripMs": 3.7800000309944153,
+          "outputBytes": 112728,
+          "inputBytes": 134748,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            192,
+            0
+          ],
+          "vertices": 3144,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.0899999737739563,
+          "computeMs": 2.1200000047683716,
+          "roundTripMs": 2.564999997615814,
+          "outputBytes": 88032,
+          "inputBytes": 124164,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            192,
+            48
+          ],
+          "vertices": 5034,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.11000001430511475,
+          "computeMs": 4.534999966621399,
+          "roundTripMs": 4.944999992847443,
+          "outputBytes": 140952,
+          "inputBytes": 146844,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            0,
+            -48
+          ],
+          "vertices": 3552,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.15500003099441528,
+          "computeMs": 3.284999966621399,
+          "roundTripMs": 9.415000021457672,
+          "outputBytes": 99456,
+          "inputBytes": 129060,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            192,
+            -48
+          ],
+          "vertices": 3390,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.12999999523162842,
+          "computeMs": 3.3449999690055847,
+          "roundTripMs": 3.924999952316284,
+          "outputBytes": 94920,
+          "inputBytes": 127116,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            0,
+            96
+          ],
+          "vertices": 2046,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.15000003576278687,
+          "computeMs": 1.9700000286102295,
+          "roundTripMs": 2.5899999737739563,
+          "outputBytes": 57288,
+          "inputBytes": 110988,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            192,
+            96
+          ],
+          "vertices": 5160,
+          "setupCpuMs": 0,
+          "postCpuMs": 0.11500000953674316,
+          "computeMs": 3.825000047683716,
+          "roundTripMs": 4.179999947547913,
+          "outputBytes": 144480,
+          "inputBytes": 148356,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            144,
+            144
+          ],
+          "vertices": 2700,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.09499996900558472,
+          "computeMs": 4.014999985694885,
+          "roundTripMs": 4.51500004529953,
+          "outputBytes": 75600,
+          "inputBytes": 118836,
+          "byteIdentical": true
+        },
+        {
+          "origin": [
+            192,
+            144
+          ],
+          "vertices": 2712,
+          "setupCpuMs": 0.004999995231628418,
+          "postCpuMs": 0.11500000953674316,
+          "computeMs": 3.725000023841858,
+          "roundTripMs": 4.2200000286102295,
+          "outputBytes": 75936,
+          "inputBytes": 118980,
+          "byteIdentical": true
+        }
+      ],
+      "scope": "One serial reusable Web Worker, structured-clone inputs (original buffers never detached), transferable outputs. Includes first boot in first round trip. Main world still renders; no scheduler/streaming integration or FPS improvement claimed."
+    },
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 918,
+      "workMs": 284.63999992609024,
+      "coordinationMs": 29.40999937057495,
+      "maxUnitMs": 9.115000009536743,
+      "overruns": 8,
+      "deadlineLoans": 4,
+      "oversizeRecoveries": 0,
+      "continuationMs": 77.66000002622604,
+      "continuationTurns": 802,
+      "median": 83.02500000000146,
+      "p95": 116.56500000000233,
+      "p99": 133.07500000000437,
+      "cpu95": 6.064999997615814,
+      "jitter": 33.54000000000087,
+      "budgetMs": 2.1249142102794862,
+      "pending": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

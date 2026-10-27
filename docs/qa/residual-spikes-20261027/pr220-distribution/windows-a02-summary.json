@@ -1,0 +1,30 @@
+{
+  "run": 40533305554,
+  "scope": "Previous PR commit a02c10f84; runtime source unchanged at final 33aaa5783. Not a substitute for pending final-head Windows run 40534122871. Functional CI evidence, not hardware performance acceptance.",
+  "reports": {
+    "visibility": {
+      "ok": true,
+      "errors": [],
+      "origin": "http://tauri.localhost",
+      "secureContext": true,
+      "worker": true,
+      "storage": true,
+      "sha256": "21266798a74c6d66cd8ae7721e8317da4fefb7b22f807c3d84ce755eedf37a83",
+      "visibility": {
+        "passed": true,
+        "hiddenMs": 300118.56499999994,
+        "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange."
+      }
+    },
+    "smoke": {
+      "ok": true,
+      "errors": [],
+      "origin": "http://tauri.localhost",
+      "secureContext": true,
+      "worker": true,
+      "storage": true,
+      "sha256": "7ea98ff42a57999d4971ae11f69153708e4d006a6723a8995adeea724e9996de",
+      "visibility": null
+    }
+  }
+}

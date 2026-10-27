@@ -6,43 +6,46 @@
     "docs/qa/audio-buses/context-reservations.md": "d3d79f3df2dea4378a77887b427a6025edaf5170c01b7bd1cba2ebb506d7450f",
     "docs/qa/audio-buses/farm-markers.md": "60259180e57b084063a738acf1f5fe570bf24f25459b7b8d5f3c9c644b0592ea",
     "docs/qa/repair-contact-reservation/README.md": "1cadac96b139d6ab6b9b9a0dc363b2a4ae66b116a148ada51954a857f7224780",
-    "public/content/sfx-routing.json": "c39ba039cde2ff77ef55e8d7fa4748c51d5f139cf29887a538ea61552f9ecae6",
+    "public/content/sfx-routing.json": "64c6b90a93f40bab4227f6a784a952efc58e37862d6b370fcf1559af2f40318e",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
-    "src/app/main.js": "3769248fe5aa050d832de2a0186a7cb9ea831a0e383fd7773b69b7eb5e8e6aa8",
+    "src/app/main.js": "04aa68c2d1f5c76db2f7590a31126d29eaf5019459f07e8e7a881113f419465e",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
-    "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
-    "src/audio/audio.js": "0cec796e5fe698b1cc192fe75a545a953cfea11ce33126f3ea6c93bc317eafbb",
+    "src/audio/animal-audio.js": "1e2168bdbe22e3b5ecbd555f945f48d4d14eac972a95b59d1000a996c8f8555b",
+    "src/audio/audio.js": "27e55cf1fe6047f272f756c883735820e3693266f9e7d7047271460719924dab",
     "src/audio/destruction-audio.js": "94de98cf0f807f9a598ae1212545d3a306faa6ccb3dae5ec7ec0ebe6741debec",
     "src/audio/farm-contact-audio.js": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
     "src/audio/movement-audio.js": "52439fae0d1dd7c30a59bf5ae6074bd17fa38fd3ed1349f0f24c0911dbee1669",
-    "src/audio/power-ready-audio.js": "89d14cc33e149b4f4574cbe5a554d94bd550425ca342a1bcb24d54ad283c3a77",
+    "src/audio/power-ready-audio.js": "6df7f06ba1c42b13215fdf5e1c74395cd941551f00fb4b773345f3666fa79800",
     "src/audio/raid-arrival-audio.js": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
     "src/audio/structure-audio.js": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21",
     "src/audio/ui-audio.js": "5ce70f1ae025c9b94652ebe434ccc1d78e4c4c5bbf3922936a167488ab1e9472",
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
     "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
-    "src/rendering/building-effects.js": "3749b6cea1becba3cc9b6bd23c02315a89dcdd4927f81e51e2104689c622dd9e",
+    "src/microevents/controller.js": "e8f4c24e827afebcfffb2d8c3a928c1ff45b86f2dd3c4e01d9d6863ab024a871",
+    "src/microevents/definitions.js": "63304de112c989b6ea880789b18210b07fea62c1187b38c488864eebe4c01e86",
+    "src/microevents/feedback.js": "be6041bc86d7f12288ec5e574e1146981e9da691a85138588e88bc1ad4f6eb4c",
+    "src/rendering/building-effects.js": "7d9f4785375d44a88fdfec325a66b50ed941417337938ba99f0d0c465c55d391",
     "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
-    "src/rendering/scene.js": "9e9aae7b6fde6ba7d31ae0de09151dd50e64bedde0e4b48110fd243338526252",
-    "src/simulation/encounters.js": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
-    "src/simulation/game.js": "f42f50a1e1faf7a6d49ff1f008c8c72ae6fe4895dc705e1301b8cd9f44937bcc",
-    "src/simulation/raids.js": "0b5db5cfb3f0bdef2cef7b4444680ded9d0be6d50255c7e50e2f9ccdc4d8b363",
-    "src/tutorial/controller.js": "2d9b23d425246c3d8fef067cf4b67638f99a6afdcc420cc28319186cfc5f97e9",
-    "src/world/navigation.js": "68957cd8e407e6e6cd944af8fc5bfd7bc1f14c39bbc52f302884c2d2e6cf70a1",
-    "tools/audit_sfx_catalog.mjs": "fa7820460855ab74ba159c6ad2888dee5d2709b48e044659adf48f2412a3936f"
+    "src/rendering/scene.js": "27bcb8913c2f4952e0f030ab7ec3bfd225951a86e0b75c35d1183a97fd5e281d",
+    "src/simulation/encounters.js": "923b460629c6b61b950a469df10b12ec216ca5600efd5b5b2b30785f052d8ea2",
+    "src/simulation/game.js": "816c9243ab448c664c769aba05b721c54be8b25a39feef035bb737f1ebe90ef1",
+    "src/simulation/raids.js": "436efbdecbfbaacd178e590c8f7235b2ded9862ca01055f152488942c16c2697",
+    "src/tutorial/controller.js": "1d58ea14160ea44883c72a7b6806e630103a607d6866e4edf587582aec80f774",
+    "src/world/navigation.js": "f24f32e8b8728f70590bf0214cd84f1cc01dd63bd7f325e991aea80f3bc3ff94",
+    "tools/audit_sfx_catalog.mjs": "5b4a0ecd80a98f32a8cf20d4d4f6c79078dbf90d0605cfd8b4cb024250e72c2f"
   },
   "classificationCounts": {
-    "assigned-compatible-source": 100,
+    "assigned-compatible-source": 101,
     "context-exception": 4,
-    "scope-reserve": 12,
+    "scope-reserve": 11,
     "unbound-alternative": 10
   },
   "byteDuplicateGroups": [],
   "total": 126,
-  "assigned": 100,
-  "unassigned": 26,
+  "assigned": 101,
+  "unassigned": 25,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -129,7 +132,6 @@
     "Reserva documentada / unassigned": [
       "amb_rain",
       "amb_thunder",
-      "farm_sack_handle",
       "beast_take_damage",
       "beast_defeat",
       "lion_hurt",
@@ -179,6 +181,9 @@
       "game_building_attacked",
       "game_wall_critical",
       "game_farmer_hurt"
+    ],
+    "Reserva documentada / assigned": [
+      "farm_sack_handle"
     ]
   },
   "rows": [
@@ -216,12 +221,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAmbient("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 190,
+              "line": 192,
               "selector": "this.ambient.update(state,options);"
             }
           ]
@@ -313,12 +318,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAmbient("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 190,
+              "line": 192,
               "selector": "this.ambient.update(state,options);"
             }
           ]
@@ -374,12 +379,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAmbient("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 190,
+              "line": 192,
               "selector": "this.ambient.update(state,options);"
             }
           ]
@@ -439,12 +444,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAmbient("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 190,
+              "line": 192,
               "selector": "this.ambient.update(state,options);"
             }
           ]
@@ -504,12 +509,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAmbient("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 190,
+              "line": 192,
               "selector": "this.ambient.update(state,options);"
             }
           ]
@@ -565,12 +570,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAmbient("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 190,
+              "line": 192,
               "selector": "this.ambient.update(state,options);"
             }
           ]
@@ -674,12 +679,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -739,12 +744,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -804,12 +809,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -869,12 +874,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -934,12 +939,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -997,12 +1002,12 @@
         "sources": [
           {
             "file": "src/world/navigation.js",
-            "line": 155,
+            "line": 186,
             "selector": "p.slot>=18"
           },
           {
             "file": "src/rendering/scene.js",
-            "line": 89,
+            "line": 122,
             "selector": "this.movementSurfaceAt="
           }
         ],
@@ -1045,12 +1050,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -1168,12 +1173,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 281,
+              "line": 290,
               "selector": "this.farm.update(state,options);"
             }
           ]
@@ -1208,6 +1213,18 @@
       "runtimeStatus": "assigned",
       "codePoints": [
         {
+          "file": "src/microevents/feedback.js",
+          "line": 14,
+          "selector": "feedback.seeds=",
+          "trigger": "Owned microevent contact: seeds"
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 18,
+          "selector": "feedback.rareseed=",
+          "trigger": "Owned microevent contact: rareseed"
+        },
+        {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
           "selector": "export const FARM_CONTACT_IDS",
@@ -1221,6 +1238,46 @@
       "runtimeChains": [
         {
           "assignment": {
+            "file": "src/microevents/feedback.js",
+            "line": 14,
+            "selector": "feedback.seeds=",
+            "trigger": "Owned microevent contact: seeds"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 73,
+              "selector": "this.sound(contact)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/microevents/feedback.js",
+            "line": 18,
+            "selector": "feedback.rareseed=",
+            "trigger": "Owned microevent contact: rareseed"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 73,
+              "selector": "this.sound(contact)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
             "file": "src/audio/farm-contact-audio.js",
             "line": 4,
             "selector": "export const FARM_CONTACT_IDS",
@@ -1229,12 +1286,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 281,
+              "line": 290,
               "selector": "this.farm.update(state,options);"
             }
           ]
@@ -1248,6 +1305,14 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 13
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 14
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 18
         }
       ],
       "byteDuplicates": [],
@@ -1290,12 +1355,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 277,
+              "line": 286,
               "selector": "this.work.update(state,options);"
             }
           ]
@@ -1351,12 +1416,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 281,
+              "line": 290,
               "selector": "this.farm.update(state,options);"
             }
           ]
@@ -1391,6 +1456,12 @@
       "runtimeStatus": "assigned",
       "codePoints": [
         {
+          "file": "src/microevents/feedback.js",
+          "line": 17,
+          "selector": "feedback.flower=",
+          "trigger": "Owned microevent contact: flower"
+        },
+        {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
           "selector": "export const FARM_CONTACT_IDS",
@@ -1404,6 +1475,26 @@
       "runtimeChains": [
         {
           "assignment": {
+            "file": "src/microevents/feedback.js",
+            "line": 17,
+            "selector": "feedback.flower=",
+            "trigger": "Owned microevent contact: flower"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 73,
+              "selector": "this.sound(contact)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
             "file": "src/audio/farm-contact-audio.js",
             "line": 4,
             "selector": "export const FARM_CONTACT_IDS",
@@ -1412,12 +1503,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 281,
+              "line": 290,
               "selector": "this.farm.update(state,options);"
             }
           ]
@@ -1431,6 +1522,10 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 15
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 17
         }
       ],
       "byteDuplicates": [],
@@ -1452,6 +1547,12 @@
       "runtimeStatus": "assigned",
       "codePoints": [
         {
+          "file": "src/microevents/feedback.js",
+          "line": 16,
+          "selector": "feedback.weeds=",
+          "trigger": "Owned microevent contact: weeds"
+        },
+        {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
           "selector": "export const FARM_CONTACT_IDS",
@@ -1465,6 +1566,26 @@
       "runtimeChains": [
         {
           "assignment": {
+            "file": "src/microevents/feedback.js",
+            "line": 16,
+            "selector": "feedback.weeds=",
+            "trigger": "Owned microevent contact: weeds"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 73,
+              "selector": "this.sound(contact)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
             "file": "src/audio/farm-contact-audio.js",
             "line": 4,
             "selector": "export const FARM_CONTACT_IDS",
@@ -1473,12 +1594,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 281,
+              "line": 290,
               "selector": "this.farm.update(state,options);"
             }
           ]
@@ -1492,6 +1613,10 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 15
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 16
         }
       ],
       "byteDuplicates": [],
@@ -1514,7 +1639,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "CropPicked"
         }
@@ -1527,24 +1652,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "CropPicked"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 442,
+              "line": 1197,
               "selector": "emit(s,'CropPicked'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1553,7 +1678,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -1576,7 +1701,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "CrateDropped"
         }
@@ -1589,24 +1714,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "CrateDropped"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 336,
+              "line": 688,
               "selector": "emit(s,'CrateDropped'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1615,7 +1740,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -1634,19 +1759,52 @@
       "sha256": "581c16d0a33a31b21daace30319d4cc165f1f239d4e98ff48bd4f26bfa99fea2",
       "planClass": "Reserva documentada",
       "plannedAction": "Reserva de manejo de saco; no hay un objeto saco jugable aprobado.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "classification": "scope-reserve",
-      "runtimeUnused": true,
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 15,
+          "selector": "feedback.grain=",
+          "trigger": "Owned microevent contact: grain"
+        }
+      ],
+      "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
       "audiblePlaybackVerified": false,
-      "runtimeChains": [],
-      "sourceMentions": [],
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/microevents/feedback.js",
+            "line": 15,
+            "selector": "feedback.grain=",
+            "trigger": "Owned microevent contact: grain"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 73,
+              "selector": "this.sound(contact)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 15
+        }
+      ],
       "byteDuplicates": [],
       "semanticAlternatives": [],
       "contextEvidence": null,
-      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 28,
@@ -1694,13 +1852,13 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "PlacementCommitted"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "WallChainBuilt"
         }
@@ -1713,24 +1871,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "PlacementCommitted"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 103,
+              "line": 173,
               "selector": "emit(s,'PlacementCommitted'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1738,24 +1896,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "WallChainBuilt"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 198,
+              "line": 540,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1764,7 +1922,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -1800,7 +1958,7 @@
         "sources": [
           {
             "file": "src/simulation/game.js",
-            "line": 565,
+            "line": 1504,
             "selector": "if(t.kind==='repair'){completeTask"
           }
         ],
@@ -1843,17 +2001,17 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 198,
+              "line": 540,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1905,17 +2063,17 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 198,
+              "line": 540,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1973,17 +2131,17 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 198,
+              "line": 540,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -1998,17 +2156,17 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 198,
+              "line": 540,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2040,19 +2198,19 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 22,
+          "line": 23,
           "selector": "export const eventExtraSound=",
           "trigger": "PlacementCommitted (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 22,
+          "line": 23,
           "selector": "export const eventExtraSound=",
           "trigger": "WallChainBuilt (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 22,
+          "line": 23,
           "selector": "export const eventExtraSound=",
           "trigger": "VillageFounded (extra contact/completion)"
         }
@@ -2065,24 +2223,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 22,
+            "line": 23,
             "selector": "export const eventExtraSound=",
             "trigger": "PlacementCommitted (extra contact/completion)"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 103,
+              "line": 173,
               "selector": "emit(s,'PlacementCommitted'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 223,
+              "line": 232,
               "selector": "const extra=eventExtraSound[event.type]"
             }
           ]
@@ -2090,24 +2248,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 22,
+            "line": 23,
             "selector": "export const eventExtraSound=",
             "trigger": "WallChainBuilt (extra contact/completion)"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 198,
+              "line": 540,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 223,
+              "line": 232,
               "selector": "const extra=eventExtraSound[event.type]"
             }
           ]
@@ -2115,24 +2273,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 22,
+            "line": 23,
             "selector": "export const eventExtraSound=",
             "trigger": "VillageFounded (extra contact/completion)"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 612,
+              "line": 1563,
               "selector": "emit(s,'VillageFounded'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 223,
+              "line": 232,
               "selector": "const extra=eventExtraSound[event.type]"
             }
           ]
@@ -2141,7 +2299,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 22
+          "line": 23
         }
       ],
       "byteDuplicates": [],
@@ -2164,7 +2322,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "RepairApplied"
         }
@@ -2177,24 +2335,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "RepairApplied"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 456,
+              "line": 1219,
               "selector": "emit(s,'RepairApplied'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2203,7 +2361,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -2226,7 +2384,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "WallRemoved"
         }
@@ -2239,24 +2397,34 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "WallRemoved"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 209,
+              "line": 171,
+              "selector": "emit(s,'WallRemoved'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 537,
+              "selector": "emit(s,'WallRemoved'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 551,
               "selector": "emit(s,'WallRemoved'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2265,7 +2433,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -2308,17 +2476,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2370,17 +2538,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2432,17 +2600,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2494,17 +2662,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2556,17 +2724,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2618,17 +2786,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 217,
+              "line": 226,
               "selector": "const detail=event.type==="
             }
           ]
@@ -2659,6 +2827,12 @@
       "runtimeStatus": "assigned",
       "codePoints": [
         {
+          "file": "src/microevents/feedback.js",
+          "line": 19,
+          "selector": "feedback.fallingdebris=",
+          "trigger": "Owned microevent contact: fallingdebris"
+        },
+        {
           "file": "src/audio/destruction-audio.js",
           "line": 1,
           "selector": "export const DESTRUCTION_SOUND_ROUTES",
@@ -2670,6 +2844,26 @@
       "runtimeUnused": false,
       "audiblePlaybackVerified": false,
       "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/microevents/feedback.js",
+            "line": 19,
+            "selector": "feedback.fallingdebris=",
+            "trigger": "Owned microevent contact: fallingdebris"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 73,
+              "selector": "this.sound(contact)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
         {
           "assignment": {
             "file": "src/audio/destruction-audio.js",
@@ -2685,12 +2879,12 @@
             },
             {
               "file": "src/app/main.js",
-              "line": 202,
+              "line": 257,
               "selector": "world.destructionPass.onDestructionCue="
             },
             {
               "file": "src/audio/audio.js",
-              "line": 170,
+              "line": 172,
               "selector": "destructionSounds(counts)"
             }
           ]
@@ -2700,6 +2894,10 @@
         {
           "file": "src/audio/destruction-audio.js",
           "line": 1
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 19
         }
       ],
       "byteDuplicates": [],
@@ -2742,17 +2940,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 217,
+              "line": 226,
               "selector": "const detail=event.type==="
             }
           ]
@@ -2784,7 +2982,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "StructureRuined"
         }
@@ -2797,24 +2995,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "StructureRuined"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 650,
+              "line": 1599,
               "selector": "emit(s,'StructureRuined'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -2823,7 +3021,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -2871,12 +3069,12 @@
             },
             {
               "file": "src/app/main.js",
-              "line": 202,
+              "line": 257,
               "selector": "world.destructionPass.onDestructionCue="
             },
             {
               "file": "src/audio/audio.js",
-              "line": 170,
+              "line": 172,
               "selector": "destructionSounds(counts)"
             }
           ]
@@ -2928,12 +3126,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -2989,12 +3187,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateMovement("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 300,
+              "line": 309,
               "selector": "this.movement.update(state,options);"
             }
           ]
@@ -3085,7 +3283,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "StructureHit"
         }
@@ -3098,24 +3296,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "StructureHit"
           },
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -3124,7 +3322,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/structure-audio.js",
@@ -3151,13 +3349,13 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 22,
+          "line": 23,
           "selector": "export const eventExtraSound=",
           "trigger": "WorkerHit (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 22,
+          "line": 23,
           "selector": "export const eventExtraSound=",
           "trigger": "WorkerIncapacitated (extra contact/completion)"
         }
@@ -3170,24 +3368,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 22,
+            "line": 23,
             "selector": "export const eventExtraSound=",
             "trigger": "WorkerHit (extra contact/completion)"
           },
           "callers": [
             {
               "file": "src/simulation/encounters.js",
-              "line": 64,
+              "line": 66,
               "selector": "emit(state,'WorkerHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 223,
+              "line": 232,
               "selector": "const extra=eventExtraSound[event.type]"
             }
           ]
@@ -3195,24 +3393,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 22,
+            "line": 23,
             "selector": "export const eventExtraSound=",
             "trigger": "WorkerIncapacitated (extra contact/completion)"
           },
           "callers": [
             {
               "file": "src/simulation/encounters.js",
-              "line": 61,
+              "line": 63,
               "selector": "emit(state,'WorkerIncapacitated'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 223,
+              "line": 232,
               "selector": "const extra=eventExtraSound[event.type]"
             }
           ]
@@ -3221,19 +3419,19 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 22
+          "line": 23
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         },
         {
           "file": "src/audio/audio.js",
-          "line": 31
+          "line": 33
         },
         {
           "file": "src/audio/audio.js",
-          "line": 223
+          "line": 232
         }
       ],
       "byteDuplicates": [],
@@ -3259,7 +3457,16 @@
       "runtimeUnused": true,
       "audiblePlaybackVerified": false,
       "runtimeChains": [],
-      "sourceMentions": [],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 217
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 218
+        }
+      ],
       "byteDuplicates": [],
       "semanticAlternatives": [],
       "contextEvidence": null,
@@ -3414,12 +3621,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3466,12 +3673,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3518,12 +3725,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3594,12 +3801,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3646,12 +3853,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3698,12 +3905,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3750,12 +3957,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3826,12 +4033,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3878,12 +4085,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3930,12 +4137,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -3982,12 +4189,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4058,12 +4265,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4110,12 +4317,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4162,12 +4369,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4214,12 +4421,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4290,12 +4497,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4342,12 +4549,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4394,12 +4601,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4446,12 +4653,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4522,12 +4729,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 287,
+              "line": 296,
               "selector": "this.animals.update(state,options);"
             }
           ]
@@ -4574,12 +4781,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 263,
+              "line": 272,
               "selector": "this.workers.update(state,options);"
             }
           ]
@@ -4639,12 +4846,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 263,
+              "line": 272,
               "selector": "this.workers.update(state,options);"
             }
           ]
@@ -4704,12 +4911,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 263,
+              "line": 272,
               "selector": "this.workers.update(state,options);"
             }
           ]
@@ -4753,7 +4960,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "WorkerHit"
         }
@@ -4766,24 +4973,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "WorkerHit"
           },
           "callers": [
             {
               "file": "src/simulation/encounters.js",
-              "line": 64,
+              "line": 66,
               "selector": "emit(state,'WorkerHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -4792,7 +4999,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -4815,7 +5022,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "WorkerIncapacitated"
         }
@@ -4828,24 +5035,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "WorkerIncapacitated"
           },
           "callers": [
             {
               "file": "src/simulation/encounters.js",
-              "line": 61,
+              "line": 63,
               "selector": "emit(state,'WorkerIncapacitated'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -4854,11 +5061,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         }
       ],
       "byteDuplicates": [],
@@ -4901,12 +5108,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 263,
+              "line": 272,
               "selector": "this.workers.update(state,options);"
             }
           ]
@@ -4962,12 +5169,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 395,
+              "line": 480,
               "selector": "audio.guardianPhase("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 259,
+              "line": 268,
               "selector": "this.guardianAudio.observe(phase);"
             }
           ]
@@ -4981,6 +5188,10 @@
         {
           "file": "src/audio/guardian-audio.js",
           "line": 21
+        },
+        {
+          "file": "src/rendering/guardian-summons.js",
+          "line": 58
         }
       ],
       "byteDuplicates": [],
@@ -5023,12 +5234,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 395,
+              "line": 480,
               "selector": "audio.guardianPhase("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 259,
+              "line": 268,
               "selector": "this.guardianAudio.observe(phase);"
             }
           ]
@@ -5046,6 +5257,10 @@
         {
           "file": "src/audio/guardian-audio.js",
           "line": 20
+        },
+        {
+          "file": "src/rendering/guardian-summons.js",
+          "line": 70
         }
       ],
       "byteDuplicates": [],
@@ -5115,12 +5330,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 265,
+              "line": 338,
               "selector": "uiAudio.selectSpell("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5155,6 +5370,36 @@
       "runtimeStatus": "assigned",
       "codePoints": [
         {
+          "file": "src/microevents/definitions.js",
+          "line": 15,
+          "selector": "fireflies:",
+          "trigger": "Completed microevent: fireflies"
+        },
+        {
+          "file": "src/microevents/definitions.js",
+          "line": 27,
+          "selector": "spirit:",
+          "trigger": "Completed microevent: spirit"
+        },
+        {
+          "file": "src/microevents/definitions.js",
+          "line": 29,
+          "selector": "star:",
+          "trigger": "Completed microevent: star"
+        },
+        {
+          "file": "src/microevents/definitions.js",
+          "line": 30,
+          "selector": "pollen:",
+          "trigger": "Completed microevent: pollen"
+        },
+        {
+          "file": "src/microevents/definitions.js",
+          "line": 31,
+          "selector": "rainbow:",
+          "trigger": "Completed microevent: rainbow"
+        },
+        {
           "file": "src/audio/ui-audio.js",
           "line": 1,
           "selector": "export const UI_SOUND_ROUTES",
@@ -5168,6 +5413,106 @@
       "runtimeChains": [
         {
           "assignment": {
+            "file": "src/microevents/definitions.js",
+            "line": 15,
+            "selector": "fireflies:",
+            "trigger": "Completed microevent: fireflies"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 55,
+              "selector": "this.sound(a.def.sound)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/microevents/definitions.js",
+            "line": 27,
+            "selector": "spirit:",
+            "trigger": "Completed microevent: spirit"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 55,
+              "selector": "this.sound(a.def.sound)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/microevents/definitions.js",
+            "line": 29,
+            "selector": "star:",
+            "trigger": "Completed microevent: star"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 55,
+              "selector": "this.sound(a.def.sound)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/microevents/definitions.js",
+            "line": 30,
+            "selector": "pollen:",
+            "trigger": "Completed microevent: pollen"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 55,
+              "selector": "this.sound(a.def.sound)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/microevents/definitions.js",
+            "line": 31,
+            "selector": "rainbow:",
+            "trigger": "Completed microevent: rainbow"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 55,
+              "selector": "this.sound(a.def.sound)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
             "file": "src/audio/ui-audio.js",
             "line": 1,
             "selector": "export const UI_SOUND_ROUTES",
@@ -5176,12 +5521,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 220,
+              "line": 289,
               "selector": "uiAudio.guidedTouch("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5195,6 +5540,10 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 17
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 12
         }
       ],
       "byteDuplicates": [],
@@ -5237,12 +5586,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 201,
+              "line": 256,
               "selector": "uiAudio.wallGesture("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5298,12 +5647,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 201,
+              "line": 256,
               "selector": "uiAudio.wallGesture("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5359,12 +5708,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 240,
+              "line": 313,
               "selector": "uiAudio.guidedPlacement("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5426,7 +5775,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "SpellActivated"
         }
@@ -5439,24 +5788,29 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "SpellActivated"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 390,
+              "line": 757,
+              "selector": "emit(s,'SpellActivated'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 763,
               "selector": "emit(s,'SpellActivated'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -5465,11 +5819,15 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 32
         }
       ],
       "byteDuplicates": [],
@@ -5512,12 +5870,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateUnlocks("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 255,
+              "line": 264,
               "selector": "this.powerReady.update(state);"
             }
           ]
@@ -5526,7 +5884,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 244
+          "line": 253
         },
         {
           "file": "src/audio/power-ready-audio.js",
@@ -5534,7 +5892,7 @@
         },
         {
           "file": "src/audio/power-ready-audio.js",
-          "line": 18
+          "line": 19
         }
       ],
       "byteDuplicates": [],
@@ -5557,7 +5915,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "TutorialMessageStarted"
         }
@@ -5570,24 +5928,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "TutorialMessageStarted"
           },
           "callers": [
             {
               "file": "src/tutorial/controller.js",
-              "line": 111,
+              "line": 131,
               "selector": "emit(s,'TutorialMessageStarted'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -5596,11 +5954,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         }
       ],
       "byteDuplicates": [],
@@ -5623,7 +5981,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "HarvestRequested"
         }
@@ -5636,29 +5994,29 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "HarvestRequested"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 237,
+              "line": 579,
               "selector": "emit(s,'HarvestRequested'"
             },
             {
               "file": "src/simulation/game.js",
-              "line": 280,
+              "line": 627,
               "selector": "emit(s,'HarvestRequested'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -5667,7 +6025,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -5710,12 +6068,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 290,
+              "line": 363,
               "selector": "uiAudio.surface("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5771,12 +6129,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 246,
+              "line": 319,
               "selector": "uiAudio.close("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5832,12 +6190,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 290,
+              "line": 363,
               "selector": "uiAudio.surface("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -5873,7 +6231,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "CropPlaced"
         }
@@ -5886,24 +6244,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "CropPlaced"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 224,
+              "line": 566,
               "selector": "emit(s,'CropPlaced'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -5912,7 +6270,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -5981,12 +6339,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 112,
+              "line": 154,
               "selector": "uiAudio.error("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -6022,7 +6380,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "HiringConfirmed"
         }
@@ -6035,29 +6393,29 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "HiringConfirmed"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 257,
+              "line": 600,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
               "file": "src/simulation/game.js",
-              "line": 275,
+              "line": 622,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -6066,7 +6424,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -6089,7 +6447,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 23,
+          "line": 24,
           "selector": "export const eventAlertSound=",
           "trigger": "TutorialCompleted (grouped gameplay warning)"
         }
@@ -6102,24 +6460,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 23,
+            "line": 24,
             "selector": "export const eventAlertSound=",
             "trigger": "TutorialCompleted (grouped gameplay warning)"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 534,
+              "line": 1458,
               "selector": "emit(s,'TutorialCompleted'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 211,
+              "line": 220,
               "selector": "const alert=event.type==="
             }
           ]
@@ -6128,11 +6486,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 23
+          "line": 24
         },
         {
           "file": "src/audio/audio.js",
-          "line": 213
+          "line": 222
         }
       ],
       "byteDuplicates": [],
@@ -6179,7 +6537,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "PostgameStarted"
         },
@@ -6198,24 +6556,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "PostgameStarted"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 592,
+              "line": 1543,
               "selector": "emit(s,'PostgameStarted'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -6230,12 +6588,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateUnlocks("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 254,
+              "line": 263,
               "selector": "this.unlocks.update(state);"
             }
           ]
@@ -6244,11 +6602,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 30
+          "line": 31
         },
         {
           "file": "src/audio/unlock-audio.js",
@@ -6299,12 +6657,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 290,
+              "line": 363,
               "selector": "uiAudio.pause("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -6360,12 +6718,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 290,
+              "line": 363,
               "selector": "uiAudio.pause("
             },
             {
               "file": "src/app/main.js",
-              "line": 99,
+              "line": 136,
               "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
             }
           ]
@@ -6400,8 +6758,14 @@
       "runtimeStatus": "assigned",
       "codePoints": [
         {
+          "file": "src/microevents/definitions.js",
+          "line": 14,
+          "selector": "seeds:",
+          "trigger": "Completed microevent: seeds"
+        },
+        {
           "file": "src/audio/audio.js",
-          "line": 24,
+          "line": 25,
           "selector": "export const eventRefundSound=",
           "trigger": "WallRemoved (positive committed refund only)"
         }
@@ -6413,25 +6777,55 @@
       "runtimeChains": [
         {
           "assignment": {
+            "file": "src/microevents/definitions.js",
+            "line": 14,
+            "selector": "seeds:",
+            "trigger": "Completed microevent: seeds"
+          },
+          "callers": [
+            {
+              "file": "src/microevents/controller.js",
+              "line": 55,
+              "selector": "this.sound(a.def.sound)"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 132,
+              "selector": "sound:id=>audio.sound(id,"
+            }
+          ]
+        },
+        {
+          "assignment": {
             "file": "src/audio/audio.js",
-            "line": 24,
+            "line": 25,
             "selector": "export const eventRefundSound=",
             "trigger": "WallRemoved (positive committed refund only)"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 209,
+              "line": 171,
+              "selector": "emit(s,'WallRemoved'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 537,
+              "selector": "emit(s,'WallRemoved'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 551,
               "selector": "emit(s,'WallRemoved'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 224,
+              "line": 233,
               "selector": "const refund=eventRefundSound[event.type]"
             }
           ]
@@ -6440,7 +6834,15 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 24
+          "line": 25
+        },
+        {
+          "file": "src/microevents/controller.js",
+          "line": 55
+        },
+        {
+          "file": "src/microevents/feedback.js",
+          "line": 14
         }
       ],
       "byteDuplicates": [],
@@ -6463,7 +6865,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 25,
+          "line": 26,
           "selector": "export const eventSpendSound=",
           "trigger": "HiringConfirmed (positive committed payroll only)"
         }
@@ -6476,29 +6878,29 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 25,
+            "line": 26,
             "selector": "export const eventSpendSound=",
             "trigger": "HiringConfirmed (positive committed payroll only)"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 257,
+              "line": 600,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
               "file": "src/simulation/game.js",
-              "line": 275,
+              "line": 622,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 228,
+              "line": 237,
               "selector": "const spend=eventSpendSound[event.type]"
             }
           ]
@@ -6507,7 +6909,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 25
+          "line": 26
         }
       ],
       "byteDuplicates": [],
@@ -6530,7 +6932,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "CrateDelivered"
         }
@@ -6543,24 +6945,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "CrateDelivered"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 533,
+              "line": 1456,
               "selector": "emit(s,'CrateDelivered'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -6569,7 +6971,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         }
       ],
       "byteDuplicates": [],
@@ -6612,12 +7014,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateFarmActors("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 281,
+              "line": 290,
               "selector": "this.farm.update(state,options);"
             }
           ]
@@ -6677,7 +7079,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "RaidSpawned"
         }
@@ -6690,24 +7092,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "RaidSpawned"
           },
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 180,
+              "line": 389,
               "selector": "emit(s,wave?'RaidWaveSpawned':'RaidSpawned'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -6716,11 +7118,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         }
       ],
       "byteDuplicates": [],
@@ -6763,12 +7165,12 @@
           "callers": [
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.updateAnimals("
             },
             {
               "file": "src/audio/audio.js",
-              "line": 285,
+              "line": 294,
               "selector": "this.raidArrival.update(state);"
             }
           ]
@@ -6777,11 +7179,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         },
         {
           "file": "src/audio/audio.js",
-          "line": 294
+          "line": 303
         },
         {
           "file": "src/audio/raid-arrival-audio.js",
@@ -6832,17 +7234,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 211,
+              "line": 220,
               "selector": "const alert=event.type==="
             }
           ]
@@ -6851,7 +7253,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         },
         {
           "file": "src/audio/structure-audio.js",
@@ -6898,17 +7300,17 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 284,
+              "line": 810,
               "selector": "emit(s,'StructureHit'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 211,
+              "line": 220,
               "selector": "const alert=event.type==="
             }
           ]
@@ -6917,7 +7319,7 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         },
         {
           "file": "src/audio/structure-audio.js",
@@ -6944,7 +7346,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 23,
+          "line": 24,
           "selector": "export const eventAlertSound=",
           "trigger": "WorkerIncapacitated (grouped gameplay warning)"
         }
@@ -6957,24 +7359,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 23,
+            "line": 24,
             "selector": "export const eventAlertSound=",
             "trigger": "WorkerIncapacitated (grouped gameplay warning)"
           },
           "callers": [
             {
               "file": "src/simulation/encounters.js",
-              "line": 61,
+              "line": 63,
               "selector": "emit(state,'WorkerIncapacitated'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 211,
+              "line": 220,
               "selector": "const alert=event.type==="
             }
           ]
@@ -6983,15 +7385,15 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 23
+          "line": 24
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         },
         {
           "file": "src/audio/audio.js",
-          "line": 213
+          "line": 222
         }
       ],
       "byteDuplicates": [],
@@ -7014,7 +7416,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "RaidEnded"
         }
@@ -7027,24 +7429,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "RaidEnded"
           },
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 353,
+              "line": 998,
               "selector": "emit(s,'RaidEnded'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -7053,11 +7455,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         }
       ],
       "byteDuplicates": [],
@@ -7080,7 +7482,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "CampaignWon"
         }
@@ -7093,24 +7495,24 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "CampaignWon"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 588,
+              "line": 1539,
               "selector": "emit(s,'CampaignWon'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -7119,11 +7521,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         }
       ],
       "byteDuplicates": [],
@@ -7146,7 +7548,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 21,
+          "line": 22,
           "selector": "export const eventSound=",
           "trigger": "GameOver"
         }
@@ -7159,29 +7561,29 @@
         {
           "assignment": {
             "file": "src/audio/audio.js",
-            "line": 21,
+            "line": 22,
             "selector": "export const eventSound=",
             "trigger": "GameOver"
           },
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 587,
+              "line": 1538,
               "selector": "emit(s,'GameOver'"
             },
             {
               "file": "src/simulation/raids.js",
-              "line": 354,
+              "line": 999,
               "selector": "emit(s,'GameOver'"
             },
             {
               "file": "src/app/main.js",
-              "line": 495,
+              "line": 588,
               "selector": "audio.process(state.events,"
             },
             {
               "file": "src/audio/audio.js",
-              "line": 207,
+              "line": 211,
               "selector": "const id=event.type==="
             }
           ]
@@ -7190,11 +7592,11 @@
       "sourceMentions": [
         {
           "file": "src/audio/audio.js",
-          "line": 21
+          "line": 22
         },
         {
           "file": "src/audio/audio.js",
-          "line": 27
+          "line": 28
         }
       ],
       "byteDuplicates": [],

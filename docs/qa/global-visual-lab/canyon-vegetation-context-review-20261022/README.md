@@ -1,0 +1,1 @@
+Rejected A/B setup: farEnabled is false in both arms despite settings. Active spatialSession suppresses older farVegetation in src/app/main.js. Captures not used as evidence of visual equivalence between enabled/disabled vegetation. See audit.json. Follow-up: canyon-scatter-restoration-review-20261022.

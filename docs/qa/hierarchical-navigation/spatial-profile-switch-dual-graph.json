@@ -1,0 +1,266 @@
+{
+  "scope": "QA-only four resident Sabana chunks, alternating worker and animal radii 20 times; first sample for each profile includes its cold graph build.",
+  "summary": {
+    "worker": {
+      "switches": 20,
+      "medianMs": 0.0004000000000132786,
+      "p95Ms": 109.05280000000002,
+      "totalMs": 109.06530000000006,
+      "coldBuildMs": 109.05280000000002,
+      "warmMedianMs": 0.0004000000000132786,
+      "warmTotalMs": 0.012500000000045475
+    },
+    "animal": {
+      "switches": 20,
+      "medianMs": 0.0004999999999881766,
+      "p95Ms": 86.2208,
+      "totalMs": 86.2360000000001,
+      "coldBuildMs": 86.2208,
+      "warmMedianMs": 0.0004000000000132786,
+      "warmTotalMs": 0.015200000000106684
+    }
+  },
+  "maxMemoryBytes": 4194304,
+  "rows": [
+    {
+      "cycle": 0,
+      "profile": "worker",
+      "durationMs": 109.05280000000002,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 0,
+      "profile": "animal",
+      "durationMs": 86.2208,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 1,
+      "profile": "worker",
+      "durationMs": 0.002200000000016189,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 1,
+      "profile": "animal",
+      "durationMs": 0.0006999999999948159,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 2,
+      "profile": "worker",
+      "durationMs": 0.0023000000000479304,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 2,
+      "profile": "animal",
+      "durationMs": 0.00050000000004502,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 3,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 3,
+      "profile": "animal",
+      "durationMs": 0.0020999999999844476,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 4,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 4,
+      "profile": "animal",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 5,
+      "profile": "worker",
+      "durationMs": 0.001599999999996271,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 5,
+      "profile": "animal",
+      "durationMs": 0.001599999999996271,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 6,
+      "profile": "worker",
+      "durationMs": 0.0005999999999630745,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 6,
+      "profile": "animal",
+      "durationMs": 0.0004999999999881766,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 7,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 7,
+      "profile": "animal",
+      "durationMs": 0.0004999999999881766,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 8,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 8,
+      "profile": "animal",
+      "durationMs": 0.0003999999999564352,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 9,
+      "profile": "worker",
+      "durationMs": 0.0003999999999564352,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 9,
+      "profile": "animal",
+      "durationMs": 0.0004999999999881766,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 10,
+      "profile": "worker",
+      "durationMs": 0.0003999999999564352,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 10,
+      "profile": "animal",
+      "durationMs": 0.00050000000004502,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 11,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 11,
+      "profile": "animal",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 12,
+      "profile": "worker",
+      "durationMs": 0.0003999999999564352,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 12,
+      "profile": "animal",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 13,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 13,
+      "profile": "animal",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 14,
+      "profile": "worker",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 14,
+      "profile": "animal",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 15,
+      "profile": "worker",
+      "durationMs": 0.00050000000004502,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 15,
+      "profile": "animal",
+      "durationMs": 0.004700000000013915,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 16,
+      "profile": "worker",
+      "durationMs": 0.0004999999999881766,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 16,
+      "profile": "animal",
+      "durationMs": 0.0004000000000132786,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 17,
+      "profile": "worker",
+      "durationMs": 0.00029999999998153726,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 17,
+      "profile": "animal",
+      "durationMs": 0.0003000000000383807,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 18,
+      "profile": "worker",
+      "durationMs": 0.0002000000000066393,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 18,
+      "profile": "animal",
+      "durationMs": 0.00029999999998153726,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 19,
+      "profile": "worker",
+      "durationMs": 0.0003000000000383807,
+      "memoryBytes": 4194304
+    },
+    {
+      "cycle": 19,
+      "profile": "animal",
+      "durationMs": 0.0002000000000066393,
+      "memoryBytes": 4194304
+    }
+  ]
+}

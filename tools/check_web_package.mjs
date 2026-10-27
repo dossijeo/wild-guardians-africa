@@ -1,12 +1,26 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {publicText} from './web-package.mjs';
+import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,UNUSED_ANIMAL_LAB_MODELS,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
+for(const path of inventory)if(['.js','.mjs','.json','.html','.css'].includes(extname(path))){const text=await readFile(resolve(root,path),'utf8');for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(!text.includes('assets/visual-lab/'+name+'/'),'Packaged code references excluded QA assets: '+path+' -> '+name);}
+for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(![...inventory].some(path=>path.startsWith(`assets/visual-lab/${name}/`)),'QA-only visual assets must not ship: '+name);
+for(const name of [...QA_ONLY_VILLAGE_FILES,...QA_ONLY_GROUND_FILES]){assert(!inventory.has('assets/visual-lab/'+name),'Workshop QA asset must not ship: '+name);for(const path of inventory)if(path.endsWith('.js'))assert(!(await readFile(resolve(root,path),'utf8')).includes(name),'Release code references workshop experiment: '+path+' -> '+name);}
+const libraryManifest=JSON.parse(await readFile(resolve(root,'library/manifest.json'),'utf8'));
+assert.deepEqual(Object.keys(libraryManifest).sort(),['crops','destruction','sfx','walls'],'Only linked Library labs should ship');
+const gameplayCrop=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8')).find(model=>model.source.includes('Cultivos'));
+assert(gameplayCrop,'Gameplay crop model missing');
+assert.equal(libraryManifest.crops.payloads.find(payload=>payload.id==='assetData')?.url,gameplayCrop.url.replace(/^\//,''),'Library must use gameplay crop GLB');
+const cropBridges=JSON.parse(await readFile(resolve(root,'content/crop-bridges.json'),'utf8'));
+assert.equal(libraryManifest.crops.payloads.find(payload=>payload.id==='bakedBridges')?.url,cropBridges.bakedAsset.replace(/^\//,''),'Library must use gameplay bridge GLB');
+assert.equal(libraryManifest.crops.payloads.find(payload=>payload.id==='bridgeData')?.path,'content/crop-bridges.json','Library must use gameplay bridge metadata');
+assert(!inventory.has('library/crops/bridgeData.json'),'Superseded crop bridge metadata must not ship');
+for(const name of ['worker-older-male','worker-older-female','worker-young-male','worker-young-female'])
+ assert(![...inventory].some(path=>path.startsWith(`library/${name}/`)),`Unused ${name} lab must not ship`);
 const spiritManifest=JSON.parse(await readFile('content/manifests/spirit-voices.json','utf8'));
 assert.equal(spiritManifest.records.length,54);
 for(const record of spiritManifest.records){
@@ -14,7 +28,16 @@ for(const record of spiritManifest.records){
  assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,'Original Spirit clip changed in package: '+record.path);
 }
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
-for(const item of manifest.records){assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
+for(const item of manifest.records){
+ assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');
+ assert.equal(await exists(resolve(root,item.runtime)),!new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]).has(item.source),'Incorrect runtime GLB inventory: '+item.source);
+}
+const packagedModels=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8'));
+const packagedAssets=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
+for(const source of [...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]){
+ assert(!packagedModels.some(model=>model.url.replace(/^\//,'')===source),'Unused worker lab model listed in runtime catalogue');
+ assert(!packagedAssets.records.some(item=>item.source===source),'Unused worker lab model listed in runtime asset map');
+}
 const musicManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
 const sfxManifest=JSON.parse(await readFile('content/manifests/sfx-runtime.json','utf8'));
 const audioManifest={records:[...musicManifest.records,...sfxManifest.records]};
@@ -33,12 +56,14 @@ const imageManifest=JSON.parse(await readFile('content/manifests/image-runtime.j
 const {default:sharp}=await import('sharp');
 for(const item of imageManifest.records){
  assert(!await exists(resolve(root,item.source)),'Original image duplicated: '+item.source);
+ if(RETIRED_MENU_ASSETS.has(item.source)){assert(!await exists(resolve(root,item.runtime)),'Retired menu image still ships');continue;}
  const output=await readFile(resolve(root,item.runtime));assert.equal(sha(output),item.runtimeSha256,'Runtime image bytes changed');
  if(item.kind==='data-image'){const {compareDataPixels}=await import('./lossless-data-image.mjs');const comparison=await compareDataPixels(await readFile(resolve('public',item.source)),output);assert(comparison.rawPixelsEqual,'Shader data channels changed');assert.equal(comparison.runtimePixelSha256,item.runtimePixelSha256);}
  const info=await sharp(output).metadata();assert.equal(info.format,'webp');assert.equal(info.width,item.width);assert.equal(info.height,item.height);assert.equal(info.hasAlpha,item.hasAlpha);
 }
 const packagedManifest=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
-for(const item of imageManifest.records)assert(packagedManifest.records.some(r=>r.source===item.source&&r.runtime===item.runtime),'Missing packaged image alias');
+for(const item of imageManifest.records)assert.equal(packagedManifest.records.some(r=>r.source===item.source&&r.runtime===item.runtime),!RETIRED_MENU_ASSETS.has(item.source),'Incorrect packaged image alias: '+item.source);
+for(const source of RETIRED_MENU_ASSETS)assert(!await exists(resolve(root,source)),'Retired menu source still ships');
 for(const pack of ['a','b']){
  const index=JSON.parse(await readFile(resolve(root,`content/music-opus-windows-${pack}.json`),'utf8'));
  for(const track of index.tracks){
@@ -68,4 +93,20 @@ const groundBake=JSON.parse(await readFile('content/manifests/mangrove-ground-ba
 for(const url of groundBake.archiveOnly)assert(!await exists(resolve(root,url.slice(1))),'Original mangrove texture duplicated in package');
 for(const item of Object.values({...groundBake.maps,...Object.fromEntries(Object.entries(groundBake.mudMaps??{}).map(([k,v])=>['mud-'+k,v]))}))assert(await exists(resolve(root,item.url.slice(1))),'Baked mangrove texture missing');
 
-console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${manifest.records.length} runtime GLBs, no original GLBs, demo village or superseded ground duplicates`);
+const retiredBiomes=JSON.parse(await readFile('content/manifests/retired-biome-geometry.json','utf8'));
+for(const record of retiredBiomes.records){
+ assert(!inventory.has(record.archive.slice(1)),'Retired biome geometry must not ship');
+ assert(inventory.has(record.current.slice(1)),'Approved biome geometry missing');
+ const pack=JSON.parse(await readFile(resolve(root,`content/biome-${record.biome}.json`),'utf8'));
+ assert.equal(pack.binary.url.replace(/^(?:\.\.\/|\.\/|\/)+/,''),record.current.slice(1));
+ for(const file of inventory)if(/\.(json|js|mjs|html|css)$/.test(file))assert(!(await readFile(resolve(root,file),'utf8')).includes(record.archive.split('/').at(-1)),'Packaged reference to retired geometry: '+file);
+}
+const cueBank=JSON.parse(await readFile(resolve(root,'content/guardian/lipsync/bank.json'),'utf8'));
+assert.equal(cueBank.version,1);assert.equal(Object.keys(cueBank.records).length,54);
+for(const record of spiritManifest.records){
+ assert.deepEqual(cueBank.records[record.id],JSON.parse(publicText(await readFile(`public/content/guardian/lipsync/${record.id}.json`,'utf8'),`content/guardian/lipsync/${record.id}.json`,packagedAssets)),'Packed cues must preserve every authored timing and gesture');
+ assert(!inventory.has(`content/guardian/lipsync/${record.id}.json`),'Individual cues duplicated in release');
+}
+assert(files<=1000,'itch.io package exceeds 1000 files');
+assert(bytes<=500_000_000,'itch.io package exceeds 500 MB');
+console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${packagedAssets.records.filter(item=>item.runtime.endsWith('.glb')).length} runtime GLBs, no unused worker labs, original GLBs, demo village or superseded ground duplicates`);

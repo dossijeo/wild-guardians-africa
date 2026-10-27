@@ -5,6 +5,12 @@ import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 export function prepareAnimalModel(model,species){
   model.scale.setScalar(ANIMAL_ACTIONS.animals[species].presentation.scale);
   model.position.y=0;
+  model.traverse(mesh=>{
+    if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
+      material.userData.beastSurface=true;
+      if(species==='warthog')material.userData.warthogSurface=true;
+    }
+  });
   return model;
 }
 
@@ -50,6 +56,7 @@ export function animalGroundSamples(model){
     for(let i=0;i<positions.count;i+=2)if(positions.getY(i)<.45){
       let flexible=false;
       for(let j=0;j<4;j++)if(weights.getComponent(i,j)>.01&&/^(Tail_|ClothRear_)/.test(mesh.skeleton.bones[indices.getComponent(i,j)].name)){flexible=true;break;}
+      // Loose cloth and tails may approach the floor; they never lift the body.
       if(!flexible)samples.push({mesh,index:i});
     }
   });

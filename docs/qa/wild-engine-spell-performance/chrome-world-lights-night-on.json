@@ -1,0 +1,316 @@
+{
+  "kind": "synthetic-interactive-frame-qa",
+  "seed": 712,
+  "biome": "sabana",
+  "counts": [
+    1500
+  ],
+  "spellCount": 20,
+  "spellAge": 5,
+  "realCast": true,
+  "renderTime": 400,
+  "arms": [
+    "control",
+    "growth",
+    "multiply",
+    "control-after"
+  ],
+  "gpuEnabled": true,
+  "mode": "raf",
+  "browserName": "chrome",
+  "disableAgricultureLights": false,
+  "forceAgricultureLights": true,
+  "forceSoftDepth": false,
+  "webglRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "note": "Synthetic plants in the real Wild Engine browser renderer. Each agricultural spell targets exactly one living plant. WG_QA_REAL_CAST=1 invokes Game.cast with a temporary QA-only unpause; otherwise it constructs equivalent spell state. RAF, crop synchronization and VFX run while simulation is paused. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.",
+  "errors": [],
+  "complete": true,
+  "results": [
+    {
+      "count": 1500,
+      "kind": "control",
+      "spellFixture": {
+        "count": 0,
+        "first": null
+      },
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 2728,
+      "interval": {
+        "count": 49,
+        "median": 49.80000000000291,
+        "p95": 50.10000000000218,
+        "max": 83.20000000000073
+      },
+      "firstIntervals": [
+        49.79999999999927,
+        50,
+        49.900000000001455,
+        49.79999999999927,
+        50.10000000000218,
+        49.79999999999927,
+        66.39999999999782,
+        50.10000000000218
+      ],
+      "render": {
+        "count": 50,
+        "median": 5.2000000001862645,
+        "p95": 7.400000000372529,
+        "max": 8.799999999813735
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.39999999944120646,
+        "p95": 0.599999999627471,
+        "max": 0.599999999627471
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "depthCaptures": 0,
+      "depthCapture": null,
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 44,
+          "median": 33.745833,
+          "p95": 36.390103,
+          "max": 37.810051
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 205,
+        "textures": 69
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "growth",
+      "spellFixture": {
+        "count": 20,
+        "first": {
+          "kind": "growth",
+          "radius": 0.65,
+          "targetPlantId": "spell-frame-1500-0",
+          "remaining": 25
+        }
+      },
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 8631.699999999255,
+      "interval": {
+        "count": 49,
+        "median": 66.60000000000218,
+        "p95": 83.29999999999927,
+        "max": 99.79999999999927
+      },
+      "firstIntervals": [
+        4107.299999999999,
+        249.5,
+        16.5,
+        99.80000000000291,
+        50,
+        133,
+        116.39999999999782,
+        83
+      ],
+      "render": {
+        "count": 50,
+        "median": 6.5,
+        "p95": 9.5,
+        "max": 11.399999999441206
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.40000000037252903,
+        "p95": 0.7999999998137355,
+        "max": 1
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.20000000018626451,
+        "max": 0.20000000018626451
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.40000000037252903,
+        "p95": 0.7000000001862645,
+        "max": 0.8999999994412065
+      },
+      "depthCaptures": 0,
+      "depthCapture": null,
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 58.50151,
+          "p95": 69.611614,
+          "max": 79.799062
+        }
+      },
+      "activeEffects": 20,
+      "nativeVfxInstances": 20,
+      "rendererMemory": {
+        "geometries": 265,
+        "textures": 69
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "multiply",
+      "spellFixture": {
+        "count": 20,
+        "first": {
+          "kind": "multiply",
+          "radius": 0.65,
+          "targetPlantId": "spell-frame-1500-0",
+          "remaining": 10
+        }
+      },
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 4561.299999999814,
+      "interval": {
+        "count": 49,
+        "median": 66.70000000000073,
+        "p95": 99.70000000000073,
+        "max": 99.80000000000291
+      },
+      "firstIntervals": [
+        99.89999999999782,
+        83,
+        66.5,
+        66.5,
+        116.29999999999927,
+        50,
+        66.70000000000073,
+        83.20000000000073
+      ],
+      "render": {
+        "count": 50,
+        "median": 6.099999999627471,
+        "p95": 7.099999999627471,
+        "max": 8
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.40000000037252903,
+        "p95": 0.6000000005587935,
+        "max": 0.8999999994412065
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.20000000018626451,
+        "max": 0.20000000018626451
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.40000000037252903,
+        "p95": 0.5,
+        "max": 0.6000000005587935
+      },
+      "depthCaptures": 0,
+      "depthCapture": null,
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 63.097083,
+          "p95": 71.200311,
+          "max": 78.209061
+        }
+      },
+      "activeEffects": 20,
+      "nativeVfxInstances": 20,
+      "rendererMemory": {
+        "geometries": 265,
+        "textures": 69
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "control-after",
+      "spellFixture": {
+        "count": 0,
+        "first": null
+      },
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 3099,
+      "interval": {
+        "count": 49,
+        "median": 49.900000000001455,
+        "p95": 50,
+        "max": 50.099999999998545
+      },
+      "firstIntervals": [
+        66.5,
+        66.59999999999854,
+        99.80000000000291,
+        66.39999999999782,
+        66.60000000000218,
+        49.69999999999709,
+        50,
+        66.5
+      ],
+      "render": {
+        "count": 50,
+        "median": 4.8999999994412065,
+        "p95": 5.5,
+        "max": 5.7000000001862645
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.30000000074505806,
+        "p95": 0.5,
+        "max": 0.7000000001862645
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.10000000055879354,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999962747097
+      },
+      "depthCaptures": 0,
+      "depthCapture": null,
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 38.188228,
+          "p95": 41.023229,
+          "max": 42.941822
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 205,
+        "textures": 69
+      }
+    }
+  ]
+}

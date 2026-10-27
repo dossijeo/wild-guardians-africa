@@ -8,7 +8,6 @@ import {Navigation} from '../src/world/navigation.js';
 import {villageLayout,findVillageEntry} from '../src/world/villages.js';
 import {footprintsOverlap} from '../src/world/footprints.js';
 import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
-import {villageCost} from '../src/simulation/rules.js';
 
 const catalogue=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'));
 const payload=culture=>catalogue.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
@@ -31,6 +30,10 @@ function fixture(culture='mapungubwe',balance=200000000){
  s.ledger.balance=rational(balance);return {s,nav};
 }
 function saved(s){const values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)};const repo=new SaveRepository(storage);repo.save(s);return repo.load(s.slotId);}
+const expectedVillageCost=ordinal=>{
+ const power=BigInt(ordinal-2),numerator=50n*8n**power,denominator=5n**power;
+ return ((2n*numerator+denominator)/(2n*denominator))*1000n;
+};
 
 for(const culture of Game.CULTURES)test(`QA-142 ${culture}: paid native founding/reload and duplicate confirmation are idempotent`,()=>{
  const {s}=fixture(culture),draft=villageLayout(payload(culture),150,0);
@@ -75,22 +78,22 @@ for(const culture of Game.CULTURES)test(`QA-141 ${culture}: contiguous complete 
 });
 
 test('QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs',()=>{
- const capital=Array.from({length:99},(_,i)=>BigInt(villageCost(i+2))).reduce((a,b)=>a+b,200000000n);
- const {s,nav}=fixture('mapungubwe',capital),milestones=new Map([[2,50000],[3,80000],[4,128000],[10,2147000]]);let spent=0n;
+ const initialBalance=Array.from({length:99},(_,i)=>expectedVillageCost(i+2)).reduce((sum,cost)=>sum+cost,10000n);
+ const {s,nav}=fixture('mapungubwe',initialBalance),milestones=new Set([2,3,4,10,20,50,100]);let spent=0n;
  let routeQueries=0;const path=nav.path.bind(nav);nav.path=(...args)=>{routeQueries++;return path(...args);};
  for(let ordinal=2;ordinal<=100;ordinal++){
   const i=ordinal-2,culture=Game.CULTURES[i%5],x=150+(i%10)*80,z=Math.floor(i/10)*80,native=payload(culture),before=BigInt(s.ledger.balance.n);
   const preview=Game.previewVillage(s,culture,x,z,native,nav);assert.equal(preview.valid,true,`ordinal ${ordinal}`);
-  if(milestones.has(ordinal))assert.equal(preview.cost,milestones.get(ordinal));
+  if(milestones.has(ordinal))assert.equal(BigInt(preview.cost),expectedVillageCost(ordinal));
   assert.equal(Game.foundVillage(s,'qa-ordinal-'+ordinal,culture,x,z,native,nav),true);spent+=BigInt(preview.cost);
-  assert.equal(s.villages.length,ordinal);assert.equal(before-BigInt(s.ledger.balance.n),BigInt(preview.cost));assert.equal(BigInt(s.ledger.balance.n),capital-spent);
+  assert.equal(s.villages.length,ordinal);assert.equal(before-BigInt(s.ledger.balance.n),BigInt(preview.cost));assert.deepEqual(s.ledger.balance,rational(initialBalance-spent));
   assert.equal(s.villages.at(-1).buildings.length,native.units.length);assert.equal(s.villages.at(-1).culture,culture);
   assert.equal(s.structures[0].villageId,'village-1','the reachable nearest home remains selected');
  }
  assert.equal(s.events.filter(e=>e.type==='VillageFounded').length,99);assert.equal(Object.keys(s.ledger.entries).filter(k=>k.startsWith('qa-ordinal-')).length,99);
- const loaded=saved(s);assert.equal(serialize(loaded),serialize(s));const fresh=navigation(loaded);assert.equal(Game.previewVillage(loaded,'mapungubwe',1200,0,payload('mapungubwe'),fresh).cost,villageCost(101));
+ const loaded=saved(s);assert.equal(serialize(loaded),serialize(s));const fresh=navigation(loaded);assert.equal(BigInt(Game.previewVillage(loaded,'mapungubwe',1200,0,payload('mapungubwe'),fresh).cost),expectedVillageCost(101));
  assert.ok(routeQueries<=198,'native routing remains active while distant candidates are bounded');
- console.log('QA-137: '+JSON.stringify({villages:s.villages.length,routeQueries,spent:String(spent),balance:s.ledger.balance.n}));
+ console.log('QA-137: '+JSON.stringify({villages:s.villages.length,routeQueries,spent:String(spent),balance:s.ledger.balance}));
 });
 
 

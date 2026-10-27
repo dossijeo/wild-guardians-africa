@@ -1,0 +1,233 @@
+{
+  "blocks": 8,
+  "gpuSamples": 960,
+  "cadenceFrames": 1440,
+  "results": [
+    {
+      "phase": "day",
+      "values": [
+        {
+          "variant": "base",
+          "groupCpuMs": [
+            0.9294444441795349,
+            0.8827777778108915
+          ],
+          "uploadsPerFrame": [
+            8.727777777777778,
+            8.727777777777778
+          ],
+          "gpuMs": [
+            11.654547449999999,
+            11.109029291666667
+          ],
+          "cpuMs": [
+            4.837777777347299,
+            4.5633333330353105
+          ],
+          "intervalMs": [
+            17.365555555621782,
+            17.36722222218911
+          ],
+          "intervalP95Ms": [
+            28,
+            26.30000001192093
+          ],
+          "calls": 66,
+          "triangles": 532149,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4502,
+            "leaves": 36016,
+            "triangles": 36016,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 47,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 44.8999999165535,
+              "selectionMs": 136.8000001013279,
+              "selectionCount": 301,
+              "candidates": 12032,
+              "masked": 4842,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        },
+        {
+          "variant": "combined",
+          "groupCpuMs": [
+            1.0561111097534497,
+            0.9733333326048321
+          ],
+          "uploadsPerFrame": [
+            8.727777777777778,
+            8.727777777777778
+          ],
+          "gpuMs": [
+            11.68175285,
+            11.440398791666667
+          ],
+          "cpuMs": [
+            5.133888888193502,
+            4.830555555389987
+          ],
+          "intervalMs": [
+            17.46055555558867,
+            17.462222222321564
+          ],
+          "intervalP95Ms": [
+            26.80000001192093,
+            29.399999976158142
+          ],
+          "calls": 66,
+          "triangles": 532149,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4502,
+            "leaves": 36016,
+            "triangles": 36016,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 47,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 40.29999998211861,
+              "selectionMs": 129.99999955296516,
+              "selectionCount": 301,
+              "candidates": 12032,
+              "masked": 4842,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        }
+      ]
+    },
+    {
+      "phase": "night",
+      "values": [
+        {
+          "variant": "base",
+          "groupCpuMs": [
+            0.8716666668653488,
+            0.9516666660706202
+          ],
+          "uploadsPerFrame": [
+            8.727777777777778,
+            8.727777777777778
+          ],
+          "gpuMs": [
+            12.125962858333333,
+            11.618958991666666
+          ],
+          "cpuMs": [
+            4.593333332902855,
+            4.706666666600439
+          ],
+          "intervalMs": [
+            17.645555555489327,
+            17.456111111078
+          ],
+          "intervalP95Ms": [
+            26.5,
+            28.19999998807907
+          ],
+          "calls": 66,
+          "triangles": 532149,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4502,
+            "leaves": 36016,
+            "triangles": 36016,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 47,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 47.09999990463257,
+              "selectionMs": 225.90000012516975,
+              "selectionCount": 601,
+              "candidates": 12032,
+              "masked": 4842,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        },
+        {
+          "variant": "combined",
+          "groupCpuMs": [
+            0.907222224606408,
+            0.8922222233480878
+          ],
+          "uploadsPerFrame": [
+            8.727777777777778,
+            8.727777777777778
+          ],
+          "gpuMs": [
+            11.42062925,
+            13.429569183333333
+          ],
+          "cpuMs": [
+            4.4861111116078165,
+            4.4761111092236305
+          ],
+          "intervalMs": [
+            18.012222222155994,
+            18.014444444411332
+          ],
+          "intervalP95Ms": [
+            29.80000001192093,
+            25.799999982118607
+          ],
+          "calls": 66,
+          "triangles": 532149,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "nearDistance": 0,
+            "moduleSpacing": 0.5,
+            "near": 0,
+            "far": 4502,
+            "leaves": 36016,
+            "triangles": 36016,
+            "waterTriangles": 1279,
+            "waterBucketReferences": 4014,
+            "chunks": 25,
+            "cachedTiles": 47,
+            "bufferBytes": 1206456,
+            "stats": {
+              "buildMs": 42.40000003576279,
+              "selectionMs": 215.89999976754189,
+              "selectionCount": 601,
+              "candidates": 12032,
+              "masked": 4842,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          }
+        }
+      ]
+    }
+  ]
+}

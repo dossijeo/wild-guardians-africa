@@ -23,3 +23,23 @@ export async function initializeProgramBindingsAsync(renderer,{cancelled=()=>fal
  }
  return stats;
 }
+
+// Validate the actual linked program before initializing Three r180 bindings.
+// Successful shader log strings can force expensive driver round trips even
+// after KHR readiness. Preserve full Three diagnostics on failure; never disable
+// checking for unrelated programs or across an asynchronous boundary.
+export function initializeValidatedProgramBindings(renderer,program){
+ const gl=renderer.getContext();
+ if(!program?.program||typeof program.getUniforms!=='function'||typeof program.getAttributes!=='function')throw Error('Unsupported program binding validation');
+ if(gl.isContextLost())throw Error('Program binding validation cancelled');
+ const linked=gl.getProgramParameter(program.program,gl.LINK_STATUS);
+ if(linked!==true){
+  const before=renderer.debug.checkShaderErrors;
+  try{renderer.debug.checkShaderErrors=true;program.getUniforms();}finally{renderer.debug.checkShaderErrors=before;}
+  throw Error('GPU program failed link validation: '+(program.name??''));
+ }
+ const before=renderer.debug.checkShaderErrors;
+ try{renderer.debug.checkShaderErrors=false;program.getUniforms();program.getAttributes();}
+ finally{renderer.debug.checkShaderErrors=before;}
+ if(gl.isContextLost())throw Error('Program binding validation cancelled');
+}

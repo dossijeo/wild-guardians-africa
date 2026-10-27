@@ -1,0 +1,55 @@
+{
+  "rows": [
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "night": true,
+      "reuse": true,
+      "scope": "Combined prepared-bank/reuse candidate;  active simulation and continuous camera. Night uses an explicit time-450 fixture and QA override of raid-camera movement, not a tested dusk transition or normal night-camera interaction. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "preparedWater": {
+        "count": 8,
+        "bytes": 109820
+      },
+      "preparedShore": {
+        "count": 8,
+        "bytes": 96900
+      },
+      "elapsed": 12.37176499999265,
+      "frames": {
+        "count": 360,
+        "mean": 34.27355555555555,
+        "p95": 50.044999999998254,
+        "max": 99.78500000000349
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.6863333304723104,
+        "p95": 0.875,
+        "max": 0.8899999856948853
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.015138504082476334,
+        "p95": 0.029999971389770508,
+        "max": 0.04000002145767212
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 26.564540479338838,
+        "p95": 36.996041,
+        "max": 48.010312
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-prepared-reuse-night/manglares.json"
+    }
+  ]
+}

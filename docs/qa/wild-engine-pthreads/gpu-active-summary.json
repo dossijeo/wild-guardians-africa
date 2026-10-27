@@ -1,0 +1,133 @@
+{
+  "scope": "Intel UHD 720p medium Mangroves active ABAB. Asynchronous elapsed GPU query around WorldScene.render every three frames. Includes pipeline bubbles; active end states differ. Whole render interval, not per-pass attribution.",
+  "runs": [
+    {
+      "run": "a1",
+      "backend": "standalone",
+      "gpu": {
+        "count": 201,
+        "mean": 25.853970039801005,
+        "p95": 39.376145,
+        "max": 55.418592
+      },
+      "submitted": 201,
+      "frames": {
+        "count": 600,
+        "mean": 32.259499999999996,
+        "p95": 66.51000000000204,
+        "max": 166.63999999999942
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 25,
+        "mean": 43.116200001239775,
+        "p95": 53.25,
+        "max": 56.564999997615814
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "elapsed": 139.09072499999934
+    },
+    {
+      "run": "b1",
+      "backend": "pthreads",
+      "gpu": {
+        "count": 201,
+        "mean": 26.06074369154229,
+        "p95": 39.853644,
+        "max": 50.909739
+      },
+      "submitted": 201,
+      "frames": {
+        "count": 600,
+        "mean": 31.510850000000005,
+        "p95": 50.12000000000262,
+        "max": 182.98999999999796
+      },
+      "publication": {
+        "count": 25,
+        "mean": 0.7251999974250793,
+        "p95": 1.0299999713897705,
+        "max": 1.340000033378601
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "elapsed": 138.67522999999892
+    },
+    {
+      "run": "a2",
+      "backend": "standalone",
+      "gpu": {
+        "count": 201,
+        "mean": 25.66800044776119,
+        "p95": 38.329218,
+        "max": 44.51927
+      },
+      "submitted": 201,
+      "frames": {
+        "count": 600,
+        "mean": 32.03779166666666,
+        "p95": 66.54499999999825,
+        "max": 182.84500000000116
+      },
+      "publication": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "generation": {
+        "count": 25,
+        "mean": 42.03180000305176,
+        "p95": 52.38499999046326,
+        "max": 62.435000002384186
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "elapsed": 139.09053499999885
+    },
+    {
+      "run": "b2",
+      "backend": "pthreads",
+      "gpu": {
+        "count": 201,
+        "mean": 26.88252907960199,
+        "p95": 38.43078,
+        "max": 46.16479
+      },
+      "submitted": 201,
+      "frames": {
+        "count": 600,
+        "mean": 32.48076666666667,
+        "p95": 50.24500000000262,
+        "max": 182.94000000000233
+      },
+      "publication": {
+        "count": 25,
+        "mean": 0.7920000052452087,
+        "p95": 1.050000011920929,
+        "max": 1.7750000357627869
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "created": 25,
+      "pausedFrames": 0,
+      "elapsed": 139.273269999999
+    }
+  ]
+}

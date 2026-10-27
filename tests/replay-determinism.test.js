@@ -22,7 +22,7 @@ for(const seed of [712,781])test(`seed ${seed}: native paid command replay survi
  assert.equal(base.state.day,3);assert.equal(base.state.result,null);assert.ok(visualCalls>=25&&sprites>0);
  assert.equal(base.events.filter(e=>e.type==='Dawn').length,2);assert.ok(base.events.some(e=>e.type==='RaidSpawned'));assert.ok(base.events.some(e=>e.type==='RaidEnded'));
  assert.ok(!base.commands.some(c=>c.kind==='harvest'));assert.ok(base.events.some(e=>e.type==='HarvestRequested'&&e.automatic));assert.ok(base.events.some(e=>e.type==='CrateDelivered'));
- if(seed===781){assert.ok(base.events.some(e=>e.type==='HarvestRequested'&&e.automatic));assert.ok(base.state.crates.some(c=>c.delivered&&Number(c.value?.n)>0));}
+ if(seed===781){assert.ok(base.events.some(e=>e.type==='HarvestRequested'&&e.automatic));assert.ok(Object.entries(base.state.ledger.entries).some(([id,value])=>id.startsWith('deliver:')&&Number(value.n)>0));}
  const clone=deserialize(serialize(base.state)),before=base.state.rng;
  assert.deepEqual(Array.from({length:128},()=>nextRandom(clone)),Array.from({length:128},()=>nextRandom(decorated.state)));
  assert.equal(base.state.rng,before);

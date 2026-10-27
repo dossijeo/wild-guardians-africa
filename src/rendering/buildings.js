@@ -1,4 +1,5 @@
 import {loadingYieldBudget} from './loading-yield-budget.js';
+import {withScreenTarget} from './screen-target.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import * as THREE from 'three';
@@ -52,7 +53,7 @@ export function prepareNativeBuilding(gltf,building,{source=buildingInput(gltf),
   return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),
     dispose(){if(disposed)return;disposed=true;body.dispose();ash.dispose();noise.dispose();original.dispose();for(const texture of new Set(Object.values(mesh.material).filter(v=>v?.isTexture)))texture.dispose();mesh.material.dispose();}};
 }
-function shaderMaterial(uniforms,fragmentShader){
+function shaderMaterial(uniforms,fragmentShader,visualSearch){
   if(fragmentShader===destructionFragment){
     // The lab fog belongs to its standalone camera. Use the enclosing world
     // distance/color instead, while retaining its material and damage shading.
@@ -62,7 +63,7 @@ function shaderMaterial(uniforms,fragmentShader){
     const start=fragmentShader.indexOf(' float dist=length(uEye-vWorld);'),end=fragmentShader.indexOf('\n}',start);
     fragmentShader=fragmentShader.slice(0,start)+' float fog=smoothstep(uWorldFogRange.x,uWorldFogRange.y,length(uEye-vWorld)*uWorldScale);\n fragColor=vec4(mix(toSRGB(tonemap(color)),uWorldFogColor,fog),1.);'+fragmentShader.slice(end);
   }
-  if(fragmentShader.includes('uWorldFogColor'))fragmentShader=toonDestruction(fragmentShader);
+  if(fragmentShader.includes('uWorldFogColor'))fragmentShader=toonDestruction(fragmentShader,visualSearch);
   return new THREE.RawShaderMaterial({vertexShader:glsl(destructionVertex),fragmentShader:glsl(fragmentShader),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
 }
 export class NativeBuilding extends THREE.Group {
@@ -73,7 +74,7 @@ export class NativeBuilding extends THREE.Group {
     this.uniforms={uFineNoise:pipeline.fineNoiseUniform??value(1),uWorldOrigin:pipeline.worldOriginUniform??value(new THREE.Vector2()),uVP:value(new THREE.Matrix4()),uLightVP:value(new THREE.Matrix4()),uDamage:value(0),uInner:value(0),uMode:value(0),uHoles:value(Array.from({length:8},()=>new THREE.Vector4())),uNoise:value(template.noise),uEye:value(new THREE.Vector3()),uSun:value(new THREE.Vector3(-8,13,9).normalize()),uAlbedo:value(material.map),uNormalMap:value(material.normalMap),uMR:value(material.roughnessMap),uShadow:value(null),uIntactDepth:value(pipeline.target.depthTexture),uOpeningMask:value(pipeline.target.texture),uResolution:value(new THREE.Vector2(1,1)),uAshAge:value(0),uRepair:value(template.building.repairPlaster?1:0),uTime:value(0),uShadowSize:value(1024),uShadows:value(0),uEmbers:value(1),uQuality:value(1)};
     Object.assign(this.uniforms,{uWorldFogColor:value(new THREE.Color()),uWorldFogRange:value(new THREE.Vector2(1e8,1e9)),uWorldScale:value(template.scale),uWorldSun:value(1),uWorldAmbient:value(1),uToonModel:value(new THREE.Matrix4()),uNight:value(0),uNightLight:value(1),uExposure:value(1),uKind:value(0),uSurfaceType:value(1)});
     Object.assign(this.uniforms,pipeline.environmentUniforms??{uEnvEndpoints:value(1),uNativeEnvEnabled:value(0),uEnvDay:value(null),uEnvNight:value(null),uEnvYaw:value(0)});
-    this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment));
+    this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment,pipeline.visualSearch));
     const depthFragment=destructionDepthFragment.replace('uniform int uMode;uniform float uUncut;','uniform int uMode;uniform float uUncut;\n#include <packing>\nout vec4 packedDepth;').replace('if(damageField(vOriginal)<0.)discard;}','if(damageField(vOriginal)<0.)discard;packedDepth=packDepthToRGBA(gl_FragCoord.z);}');
     this.outer.customDepthMaterial=shaderMaterial({...this.uniforms,uUncut:value(0)},depthFragment);this.outer.castShadow=true;this.outer.material.shadowSide=THREE.DoubleSide;
     this.outer.customDepthMaterial.userData.worldDepthCompatible=true;
@@ -83,8 +84,8 @@ export class NativeBuilding extends THREE.Group {
     this.outer.userData.nativeShadowCallback=this.outer.onBeforeShadow;
     this.outer.customDepthMaterial.userData.nativeShadowInputs=()=>['uDamage','uInner','uMode','uHoles','uNoise','uUncut'].map(k=>this.outer.customDepthMaterial.uniforms[k].value);
     const innerUniforms={...this.uniforms,uInner:value(1)},ashUniforms={...this.uniforms,uMode:value(2)};
-    this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
-    this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment));
+    this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment,pipeline.visualSearch));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
+    this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment,pipeline.visualSearch));
     // QA opt-in only: combined depth readbacks still differ at some angles.
     // Gameplay keeps the native color recipe until equivalence is established.
     if(pipeline.auxiliaryDepth===true)for(const mesh of [this.inner,this.ash]){
@@ -111,7 +112,7 @@ export class NativeBuilding extends THREE.Group {
     if(shadow?.map){this.uniforms.uShadow.value=shadow.map.texture;this.uniforms.uShadowSize.value=shadow.mapSize.x;this.uniforms.uLightVP.value.copy(shadow.camera.projectionMatrix).multiply(shadow.camera.matrixWorldInverse).multiply(mesh.matrixWorld);}
     this.uniforms.uNight.value=this.pipeline.night??((this.pipeline.sun?.intensity??3)<1?1:0);
     this.uniforms.uNightLight.value=this.pipeline.nightLight??1.12;
-    this.uniforms.uShadows.value=this.pipeline.renderer.shadowMap.enabled&&this.pipeline.sun?.castShadow&&shadow?.map?1:0;
+    this.uniforms.uShadows.value=this.pipeline.renderer.shadowMap.enabled&&!this.pipeline.sun?.userData?.nativeShadowDisabled&&this.pipeline.sun?.castShadow&&shadow?.map?1:0;
   }
   update(entity,elapsed){
     this.damage=centerVisualDamage(entity);this.uniforms.uDamage.value=this.damage;this.uniforms.uTime.value=elapsed;
@@ -160,12 +161,13 @@ export class BuildingDestructionPass {
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true,materialArrays:this.materialArrayDepth===true};}
-  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onPrepare,frameSlack,cpuBudget=false,getFrame,frameBudget=16}={}){
+  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onPrepare,frameSlack,cpuBudget=false,getFrame,frameBudget=16,scheduler=null}={}){
     if(batchSize){
       if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Invalid depth preload batch size');
       const options=this.depthCaptureOptions(),objects=[];world[options.visibleOnly?'traverseVisible':'traverse'](object=>{if(object.material)objects.push(object);});
       const stats={specialized:0,fallback:0,excluded:0,emptySkipped:0,stockAlphaSpecialized:0};
-      const lane=frameSlack?.createLane(),yieldWork=cpuBudget?loadingYieldBudget({frameBudget,cpuBudget,getFrame,now,nextFrame,signal,cancelled,timeout,pollIntervalMs,onYield:onPrepare}):null;
+      const deadline=now()+250;let estimate=.25;
+      const lane=scheduler?null:frameSlack?.createLane(),yieldWork=!scheduler&&cpuBudget?loadingYieldBudget({frameBudget,cpuBudget,getFrame,now,nextFrame,signal,cancelled,timeout,pollIntervalMs,onYield:onPrepare}):null;
       const check=()=>{if(signal?.aborted||cancelled())throw Error('Loading depth preload cancelled');};
       for(let start=0;start<objects.length;start+=batchSize){
         check();
@@ -174,12 +176,21 @@ export class BuildingDestructionPass {
         // state synchronously before awaiting its programs or the next frame.
         const witness=onPrepare?span=>{try{onPrepare({...span,batchIndex:start/batchSize,objects:batch.length});}catch{}}:undefined;
         const submission=()=>this.prepareDepth(camera,view,{compile:(scene,camera)=>compile(scene,camera,world)});
-        const submitStart=lane||cpuBudget?now():0;
-        const pending=loadingSyncWitness(witness,'loading-depth-batch-submit',submission,now);
-        lane?.recordWork(now()-submitStart);yieldWork?.recordWork(now()-submitStart);
+        const execute=()=>{
+          check();const submitStart=now();
+          const pending=loadingSyncWitness(witness,'loading-depth-batch-submit',submission,now);
+          const cost=now()-submitStart;estimate=Math.max(cost,estimate*.8);
+          lane?.recordWork(cost);yieldWork?.recordWork(cost);return pending;
+        };
+        // Admission encloses ALL borrowed state. The returned promise waits for
+        // programs outside scheduler CPU accounting, after state restoration.
+        // Required readiness work: a driver outlier must not permanently poison
+        // admission. The global scheduler rate-limits exceptional retries.
+        const pending=scheduler?scheduler.submit((function*(){return execute();})(),{signal,valid:()=>{check();return true;},priority:20,deadline,estimate:()=>estimate,label:'depth-preparation',allowBlockingRecovery:true}):execute();
         await loadingAwaitWitness(witness,'loading-depth-batch-program-wait',()=>pending,now);
-        for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;
         check();
+        for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;
+        if(scheduler)continue;
         if(yieldWork){await yieldWork();continue;}
         // Optional QA lane uses real presentation deadlines. With missing, late
         // or uncertain observations, retain the original unconditional barrier.
@@ -208,6 +219,15 @@ export class BuildingDestructionPass {
       renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);
       this.depthCaptureStats=withDepthCaptureMaterials(world,()=>renderer.render(world,camera),this.depthCaptureOptions());
     }finally{renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+  }
+  prepareSmokePrograms(camera){
+    const renderer=this.renderer,shadows=renderer.shadowMap.enabled;
+    try{
+      renderer.shadowMap.enabled=false;
+      // Submit the actual smoke scene, which has no world lights. Compilation
+      // starts synchronously; restore shared renderer state before awaiting it.
+      return withScreenTarget(renderer,()=>renderer.compileAsync(this.smokeScene,camera));
+    }finally{renderer.shadowMap.enabled=shadows;}
   }
   renderSmoke(camera,world,{depthPrepared=false}={}){
     if(![...this.buildings].some(b=>b.effects.native.smoke.length))return;

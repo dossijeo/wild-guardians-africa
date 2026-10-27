@@ -16,17 +16,22 @@ function native(){
 }
 function clearRoute(nav,a,route){let previous=a;for(const point of route){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}}
 test('recorded canyon route uses the physical corner corridor instead of walking around the entire center',()=>{
- const {nav}=native(),old=nav.smoothPath(start,nav.findPath(start,end,.28,null,true),.28,null,true);
- assert.ok(length(start,old)>38);assert.equal(nav.segmentClear(start,end,.28,null,true),false);
- const route=nav.path(start,end,.28,null,true);assert.ok(length(start,route)<7);assert.deepEqual(route.at(-1),end);clearRoute(nav,start,route);
- // Animal routing remains the original lattice route.
+ const {nav}=native(),lattice=nav.path(start,end,.28,null,true);
+ assert.ok(length(start,lattice)>38);assert.equal(nav.segmentClear(start,end,.28,null,true),false);
+ const route=shortenBuildingRoute(nav,start,end,lattice,.28,null);
+ assert.ok(length(start,route)<7);assert.deepEqual(route.at(-1),end);clearRoute(nav,start,route);
+ // Workers may use the physically checked local connector at a work point;
+ // animal navigation still follows its own valid hierarchical route.
  assert.ok(length(start,nav.path(start,end,.28,null,false))>38);
 });
 test('new solids invalidate the shortcut rather than reusing a terrain-dependent cached corner route',()=>{
- const {nav,state}=native(),before=nav.path(start,end,.28,null,true),corner=before[0];
+ const {nav,state}=native(),base=nav.path(start,end,.28,null,true),before=shortenBuildingRoute(nav,start,end,base,.28,null),corner=base[0];
+ assert.ok(length(start,before)<7);
  state.structures.push({id:'new-wall',kind:'wall',material:'piedra',x:corner.x,z:corner.z,status:'intact',hp:100});nav.setState(state);
  assert.equal(nav.walkable(corner.x,corner.z,.28,null,true),false);
- const route=nav.path(start,end,.28,null,true);assert.ok(route);clearRoute(nav,start,route);assert.notDeepEqual(route,before);
+ const route=nav.path(start,end,.28,null,true);
+ assert.equal(route,null,'the new solid closes the available integer-grid access');
+ assert.equal(shortenBuildingRoute(nav,start,end,base,.28,null),base,'the old corner shortcut must not be reused');
 });
 for(const culture of Object.keys(CENTER_GEOMETRIES))for(const yaw of [0,.67,1.8])test(`${culture}/${yaw}: corner candidates preserve rotated authored solid clearance`,()=>{
  const nav=new Navigation(712,'sabana',{});nav.field={slope:()=>0,blocked:()=>false,waterInfo:()=>({inside:false})};nav.propsAt=()=>[];
@@ -39,10 +44,10 @@ for(const culture of Object.keys(CENTER_GEOMETRIES))for(const yaw of [0,.67,1.8]
 test('fractional candidates do not bypass fluid restrictions or increase work without a large detour',()=>{
  const {nav}=native(),route=nav.path(start,end,.28,null,true);let checks=0;nav.walkable=()=>{checks++;return false;};
  const long=[{x:-27,z:53},{x:-27,z:65},end];assert.equal(shortenBuildingRoute(nav,start,end,long,.28,null),long);assert.ok(checks<=48);
- checks=0;assert.equal(shortenBuildingRoute(nav,start,end,route,.28,null),route);assert.equal(checks,0);
+ checks=0;assert.equal(shortenBuildingRoute(nav,start,end,route,.28,null),route);assert.ok(checks<=48);
 });
 test('native swept fluid tests reject all short corner routes across a pond',()=>{
- const {nav}=native(),long=nav.smoothPath(start,nav.findPath(start,end,.28,null,true),.28,null,true);
+ const {nav}=native(),long=nav.path(start,end,.28,null,true);
  nav.field={canyon:false,slope:()=>0,waterInfo:(x,z)=>({inside:x>-18&&x<-12&&z>54&&z<58})};nav.propsAt=()=>[];
  nav.walkCache.clear();nav.segmentCache.clear();nav.workerRouteCache.clear();
  clearRoute(nav,start,long);

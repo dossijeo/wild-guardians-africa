@@ -2,11 +2,16 @@ import {navigationPathKey} from '../world/raid-navigation-warmth.js';
 import {evictOldest} from '../world/fifo-eviction.js';
 const searches=new WeakMap();
 const MAX_ACTIVE=8,MAX_SLICES=4096;
+export function workerReturnRoutePending(nav,actor){return searches.get(nav)?.active.has(actor)??false;}
 // Returning people may need to leave the default 16-cell search corridor.
 // Wider bounds are not relaxed collision: use the same native worker view,
 // gate graph and swept edges. Keep at most eight resumable searches per world.
 export function workerReturnRoute(nav,actor,end,radius=.28){
  if(!['fleeing','returning','incapacitated'].includes(actor.status)||!nav.findPathSteps)return null;
+ // walkTo has already tried the bounded physical overlap/slope recovery.
+ // A still-invalid origin cannot seed this ordinary swept-body search; do
+ // not spend thousands of wider A* slices on the same enclosed body.
+ if(nav.walkable&&!nav.walkable(actor.x,actor.z,radius,null,true))return null;
  let memo=searches.get(nav);
  if(!memo||memo.version!==nav.version){memo={version:nav.version,active:new Map(),failed:new Set()};searches.set(nav,memo);}
  const key=navigationPathKey(actor,end,radius,null,true,32)+JSON.stringify(actor.terrainAvoidance??[]);

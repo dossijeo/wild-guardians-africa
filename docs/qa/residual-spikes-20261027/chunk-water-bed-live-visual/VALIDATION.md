@@ -1,0 +1,9 @@
+# Water-bed lifecycle and live geometry checks
+
+16 tests pass across chunk-water-bed-lifecycle, chunk-water-bed-candidate and prepare-terrain-chunk. New lifecycle tests use the real GlobalFrameScheduler and prepareTerrainChunk with a real Three geometry/real bed sampler and controlled field/clock. Mid-preparation obsolete demand, quality change, context epoch change, quality-roundtrip revision, teardown and abort all stop sampling, return null, close private work once, dispose owned geometry once and leave no scheduler jobs. Completion returns only a complete bed. This proves cooperative lifecycle integration at module level, not actual WebGL restoration or gameplay construction correctness.
+
+Live candidate game traversed40 seconds then selected resident water geometry from chunk2,0. Original synchronous preparation and incremental preparation over the same live geometry/field produced equal99x59 metadata and23364 identical bytes (zero differences), with23 yielded blocks. This recomputation check does not compare a previously installed worker-provided texture or every chunk. Simulation was paused only for this post-benchmark visual check; no performance claims use that paused segment.
+
+water-bank.png was visually inspected: river/bank surfaces, village shadows, foliage/ferns visible, no obvious hole in this daytime view. It is a candidate screenshot, NOT an independent old/new pixel comparison. No page/console errors. Same-sampling data equivalence is strong narrow evidence; full day/night, real quality/context and construction invalidation remain pending. Prototype still isolated from production.
+
+Reproduce with node tools/experiments/run-chunk-water-bed-live-visual.mjs. Raw JSON/log evidence compressed as gzip; lifecycle log likewise. Candidate source and harness/runtime hashes recorded in provenance. Tests: node --test tests/chunk-water-bed-lifecycle.test.js tests/chunk-water-bed-candidate.test.js tests/prepare-terrain-chunk.test.js.

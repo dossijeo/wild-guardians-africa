@@ -1,0 +1,54 @@
+{
+  "scope": "Real pthread queue cancellation for obsolete camera demand and forced epoch; not timing benchmark",
+  "cancellations": 3,
+  "releases": [
+    {
+      "id": 1,
+      "cancelled": 1,
+      "worker": 1
+    },
+    {
+      "id": 2,
+      "cancelled": 0,
+      "worker": 1
+    },
+    {
+      "id": 3,
+      "cancelled": 1,
+      "worker": 1
+    },
+    {
+      "id": 4,
+      "cancelled": 0,
+      "worker": 1
+    },
+    {
+      "id": 5,
+      "cancelled": 1,
+      "worker": 1
+    },
+    {
+      "id": 6,
+      "cancelled": 0,
+      "worker": 1
+    }
+  ],
+  "stream": {
+    "created": 3,
+    "discarded": 3,
+    "failed": 0,
+    "fallbacks": 0,
+    "worker": false,
+    "asyncPreparation": true,
+    "queued": 0,
+    "busy": false,
+    "stale": 0,
+    "epoch": 1
+  },
+  "loaded": [
+    "2,0",
+    "3,0",
+    "4,0"
+  ],
+  "errors": []
+}

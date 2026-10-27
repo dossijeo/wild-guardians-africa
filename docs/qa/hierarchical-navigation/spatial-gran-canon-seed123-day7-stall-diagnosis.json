@@ -1,0 +1,1715 @@
+{
+  "day": 7,
+  "time": 600,
+  "rows": [
+    {
+      "id": "animal-3053",
+      "species": "warthog",
+      "status": "retreating",
+      "hitsRemaining": 0,
+      "x": 1.5325337208306231,
+      "z": 53,
+      "next": {
+        "x": 1,
+        "z": 53
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [],
+      "overlappingWalls": [],
+      "nearBuildings": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "x": -4.514337539672852,
+          "z": 54.57230564951897,
+          "status": "intact"
+        }
+      ],
+      "localExits": [
+        {
+          "angle": 2,
+          "point": {
+            "x": 2.9467472832037185,
+            "z": 54.41421356237309
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 3,
+          "point": {
+            "x": 2.297900585560803,
+            "z": 54.84775906502257
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": 1.5325337208306233,
+            "z": 55
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 5,
+          "point": {
+            "x": 0.7671668561004437,
+            "z": 54.84775906502257
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": 0.7671668561004424,
+            "z": 51.15224093497743
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": 1.5325337208306227,
+            "z": 51
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3055",
+          "x": 1,
+          "z": 55.43020391733302,
+          "status": "retreating"
+        },
+        {
+          "id": "animal-3056",
+          "x": 1,
+          "z": 50.82992016315447,
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "id": "animal-3054",
+      "species": "warthog",
+      "status": "walking",
+      "hitsRemaining": 3,
+      "x": -0.811497025225375,
+      "z": 46.41351648806096,
+      "next": {
+        "x": 0,
+        "z": 49
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [
+        {
+          "id": "structure-983",
+          "x": -2.4,
+          "z": 42,
+          "status": "intact",
+          "hp": 37,
+          "gate": false
+        },
+        {
+          "id": "structure-984",
+          "x": -0.2666666666666666,
+          "z": 42,
+          "status": "intact",
+          "hp": 100,
+          "gate": false
+        }
+      ],
+      "overlappingWalls": [],
+      "nearBuildings": [],
+      "localExits": [
+        {
+          "angle": 3,
+          "point": {
+            "x": -0.04613016049519536,
+            "z": 48.26127555308353
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": -0.8114970252253749,
+            "z": 48.41351648806096
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 5,
+          "point": {
+            "x": -1.5768638899555545,
+            "z": 48.26127555308353
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 6,
+          "point": {
+            "x": -2.2257105875984697,
+            "z": 47.82773005043405
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 7,
+          "point": {
+            "x": -2.6592560902479487,
+            "z": 47.17888335279114
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 8,
+          "point": {
+            "x": -2.811497025225375,
+            "z": 46.41351648806096
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 9,
+          "point": {
+            "x": -2.6592560902479487,
+            "z": 45.648149623330774
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 10,
+          "point": {
+            "x": -2.2257105875984706,
+            "z": 44.999302925687864
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": -1.5768638899555558,
+            "z": 44.565757423038384
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3057",
+          "x": -4.651066906205534,
+          "z": 48,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3058",
+          "x": -2.367032411011494,
+          "z": 48,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3059",
+          "x": -2.8943333565453004,
+          "z": 45.34764984284341,
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "id": "animal-3055",
+      "species": "warthog",
+      "status": "retreating",
+      "hitsRemaining": 0,
+      "x": 1,
+      "z": 55.43020391733302,
+      "next": {
+        "x": 1,
+        "z": 55
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [],
+      "overlappingWalls": [],
+      "nearBuildings": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "x": -4.514337539672852,
+          "z": 54.57230564951897,
+          "status": "intact"
+        }
+      ],
+      "localExits": [
+        {
+          "angle": 0,
+          "point": {
+            "x": 3,
+            "z": 55.43020391733302
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 1,
+          "point": {
+            "x": 2.8477590650225735,
+            "z": 56.1955707820632
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 2,
+          "point": {
+            "x": 2.414213562373095,
+            "z": 56.84441747970611
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 3,
+          "point": {
+            "x": 1.7653668647301797,
+            "z": 57.27796298235559
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": 1.0000000000000002,
+            "z": 57.43020391733302
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": 0.9999999999999997,
+            "z": 53.43020391733302
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 13,
+          "point": {
+            "x": 1.7653668647301801,
+            "z": 53.582444852310445
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 14,
+          "point": {
+            "x": 2.414213562373095,
+            "z": 54.015990354959925
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 15,
+          "point": {
+            "x": 2.847759065022573,
+            "z": 54.664837052602834
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3053",
+          "x": 1.5325337208306231,
+          "z": 53,
+          "status": "retreating"
+        }
+      ]
+    },
+    {
+      "id": "animal-3056",
+      "species": "warthog",
+      "status": "walking",
+      "hitsRemaining": 2,
+      "x": 1,
+      "z": 50.82992016315447,
+      "next": {
+        "x": 1,
+        "z": 51
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [],
+      "overlappingWalls": [],
+      "nearBuildings": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "x": -4.514337539672852,
+          "z": 54.57230564951897,
+          "status": "intact"
+        }
+      ],
+      "localExits": [
+        {
+          "angle": 2,
+          "point": {
+            "x": 2.414213562373095,
+            "z": 52.24413372552756
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 3,
+          "point": {
+            "x": 1.7653668647301797,
+            "z": 52.67767922817704
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": 1.0000000000000002,
+            "z": 52.82992016315447
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 8,
+          "point": {
+            "x": -1,
+            "z": 50.82992016315447
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 9,
+          "point": {
+            "x": -0.8477590650225737,
+            "z": 50.064553298424286
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 10,
+          "point": {
+            "x": -0.41421356237309537,
+            "z": 49.41570660078138
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": 0.23463313526981933,
+            "z": 48.9821610981319
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": 0.9999999999999997,
+            "z": 48.82992016315447
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3053",
+          "x": 1.5325337208306231,
+          "z": 53,
+          "status": "retreating"
+        },
+        {
+          "id": "animal-3060",
+          "x": -2.6700086839650266,
+          "z": 50.84320446771263,
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "id": "animal-3057",
+      "species": "warthog",
+      "status": "walking",
+      "hitsRemaining": 3,
+      "x": -4.651066906205534,
+      "z": 48,
+      "next": {
+        "x": -4,
+        "z": 48
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [],
+      "overlappingWalls": [],
+      "nearBuildings": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "x": -4.514337539672852,
+          "z": 54.57230564951897,
+          "status": "intact"
+        }
+      ],
+      "localExits": [
+        {
+          "angle": 0,
+          "point": {
+            "x": -2.651066906205534,
+            "z": 48
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 1,
+          "point": {
+            "x": -2.8033078411829604,
+            "z": 48.76536686473018
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 2,
+          "point": {
+            "x": -3.236853343832439,
+            "z": 49.41421356237309
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 3,
+          "point": {
+            "x": -3.885700041475354,
+            "z": 49.84775906502257
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": -4.651066906205534,
+            "z": 50
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 5,
+          "point": {
+            "x": -5.416433770935713,
+            "z": 49.84775906502257
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 6,
+          "point": {
+            "x": -6.065280468578629,
+            "z": 49.41421356237309
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 7,
+          "point": {
+            "x": -6.498825971228108,
+            "z": 48.76536686473018
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 8,
+          "point": {
+            "x": -6.651066906205534,
+            "z": 48
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 9,
+          "point": {
+            "x": -6.498825971228108,
+            "z": 47.23463313526982
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 10,
+          "point": {
+            "x": -6.06528046857863,
+            "z": 46.58578643762691
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": -5.416433770935715,
+            "z": 46.15224093497743
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": -4.651066906205534,
+            "z": 46
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 13,
+          "point": {
+            "x": -3.8857000414753537,
+            "z": 46.15224093497743
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 14,
+          "point": {
+            "x": -3.236853343832439,
+            "z": 46.58578643762691
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 15,
+          "point": {
+            "x": -2.803307841182961,
+            "z": 47.23463313526982
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3054",
+          "x": -0.811497025225375,
+          "z": 46.41351648806096,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3058",
+          "x": -2.367032411011494,
+          "z": 48,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3059",
+          "x": -2.8943333565453004,
+          "z": 45.34764984284341,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3060",
+          "x": -2.6700086839650266,
+          "z": 50.84320446771263,
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "id": "animal-3058",
+      "species": "warthog",
+      "status": "walking",
+      "hitsRemaining": 3,
+      "x": -2.367032411011494,
+      "z": 48,
+      "next": {
+        "x": -2,
+        "z": 48
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [],
+      "overlappingWalls": [],
+      "nearBuildings": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "x": -4.514337539672852,
+          "z": 54.57230564951897,
+          "status": "intact"
+        }
+      ],
+      "localExits": [
+        {
+          "angle": 0,
+          "point": {
+            "x": -0.3670324110114942,
+            "z": 48
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 1,
+          "point": {
+            "x": -0.5192733459889207,
+            "z": 48.76536686473018
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 2,
+          "point": {
+            "x": -0.952818848638399,
+            "z": 49.41421356237309
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 3,
+          "point": {
+            "x": -1.6016655462813145,
+            "z": 49.84775906502257
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": -2.367032411011494,
+            "z": 50
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 5,
+          "point": {
+            "x": -3.1323992757416734,
+            "z": 49.84775906502257
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 6,
+          "point": {
+            "x": -3.781245973384589,
+            "z": 49.41421356237309
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 7,
+          "point": {
+            "x": -4.214791476034067,
+            "z": 48.76536686473018
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 8,
+          "point": {
+            "x": -4.367032411011494,
+            "z": 48
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 9,
+          "point": {
+            "x": -4.214791476034068,
+            "z": 47.23463313526982
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 10,
+          "point": {
+            "x": -3.7812459733845896,
+            "z": 46.58578643762691
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": -3.1323992757416748,
+            "z": 46.15224093497743
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": -2.3670324110114946,
+            "z": 46
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 13,
+          "point": {
+            "x": -1.601665546281314,
+            "z": 46.15224093497743
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 14,
+          "point": {
+            "x": -0.9528188486383995,
+            "z": 46.58578643762691
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 15,
+          "point": {
+            "x": -0.5192733459889212,
+            "z": 47.23463313526982
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3054",
+          "x": -0.811497025225375,
+          "z": 46.41351648806096,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3057",
+          "x": -4.651066906205534,
+          "z": 48,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3059",
+          "x": -2.8943333565453004,
+          "z": 45.34764984284341,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3060",
+          "x": -2.6700086839650266,
+          "z": 50.84320446771263,
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "id": "animal-3059",
+      "species": "warthog",
+      "status": "walking",
+      "hitsRemaining": 2,
+      "x": -2.8943333565453004,
+      "z": 45.34764984284341,
+      "next": {
+        "x": -1.6933639712704203,
+        "z": 46.399469195144576
+      },
+      "staticClear": true,
+      "dynamicClear": false,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [
+        {
+          "id": "structure-862",
+          "x": -4.533333333333333,
+          "z": 42,
+          "status": "ruined",
+          "hp": 0,
+          "gate": false
+        },
+        {
+          "id": "structure-983",
+          "x": -2.4,
+          "z": 42,
+          "status": "intact",
+          "hp": 37,
+          "gate": false
+        },
+        {
+          "id": "structure-984",
+          "x": -0.2666666666666666,
+          "z": 42,
+          "status": "intact",
+          "hp": 100,
+          "gate": false
+        }
+      ],
+      "overlappingWalls": [],
+      "nearBuildings": [],
+      "localExits": [
+        {
+          "angle": 0,
+          "point": {
+            "x": -0.8943333565453004,
+            "z": 45.34764984284341
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 1,
+          "point": {
+            "x": -1.046574291522727,
+            "z": 46.11301670757359
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 2,
+          "point": {
+            "x": -1.4801197941722053,
+            "z": 46.7618634052165
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 3,
+          "point": {
+            "x": -2.1289664918151208,
+            "z": 47.19540890786598
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 4,
+          "point": {
+            "x": -2.8943333565453004,
+            "z": 47.34764984284341
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 5,
+          "point": {
+            "x": -3.6597002212754797,
+            "z": 47.19540890786598
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 6,
+          "point": {
+            "x": -4.308546918918395,
+            "z": 46.7618634052165
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 7,
+          "point": {
+            "x": -4.7420924215678735,
+            "z": 46.11301670757359
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 8,
+          "point": {
+            "x": -4.8943333565453,
+            "z": 45.34764984284341
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 9,
+          "point": {
+            "x": -4.742092421567874,
+            "z": 44.58228297811323
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 10,
+          "point": {
+            "x": -4.308546918918395,
+            "z": 43.93343628047032
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": -3.659700221275481,
+            "z": 43.49989077782084
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": -2.894333356545301,
+            "z": 43.34764984284341
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 13,
+          "point": {
+            "x": -2.1289664918151203,
+            "z": 43.49989077782084
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3054",
+          "x": -0.811497025225375,
+          "z": 46.41351648806096,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3057",
+          "x": -4.651066906205534,
+          "z": 48,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3058",
+          "x": -2.367032411011494,
+          "z": 48,
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "id": "animal-3060",
+      "species": "warthog",
+      "status": "walking",
+      "hitsRemaining": 2,
+      "x": -2.6700086839650266,
+      "z": 50.84320446771263,
+      "next": {
+        "x": -5.2088431280711145,
+        "z": 50.604835708391
+      },
+      "staticClear": true,
+      "dynamicClear": true,
+      "standing": true,
+      "standGrid": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "nearProps": [],
+      "nearWalls": [],
+      "overlappingWalls": [],
+      "nearBuildings": [
+        {
+          "id": "structure-2",
+          "kind": "center",
+          "x": -4.514337539672852,
+          "z": 54.57230564951897,
+          "status": "intact"
+        }
+      ],
+      "localExits": [
+        {
+          "angle": 0,
+          "point": {
+            "x": -0.6700086839650266,
+            "z": 50.84320446771263
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 8,
+          "point": {
+            "x": -4.670008683965026,
+            "z": 50.84320446771263
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 9,
+          "point": {
+            "x": -4.5177677489876,
+            "z": 50.07783760298245
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 10,
+          "point": {
+            "x": -4.084222246338122,
+            "z": 49.42899090533954
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 11,
+          "point": {
+            "x": -3.435375548695207,
+            "z": 48.99544540269006
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 12,
+          "point": {
+            "x": -2.670008683965027,
+            "z": 48.84320446771263
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 13,
+          "point": {
+            "x": -1.9046418192348464,
+            "z": 48.99544540269006
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 14,
+          "point": {
+            "x": -1.2557951215919319,
+            "z": 49.42899090533954
+          },
+          "walkable": true,
+          "clear": true
+        },
+        {
+          "angle": 15,
+          "point": {
+            "x": -0.8222496189424535,
+            "z": 50.07783760298245
+          },
+          "walkable": true,
+          "clear": true
+        }
+      ],
+      "blockers": [
+        {
+          "id": "animal-3056",
+          "x": 1,
+          "z": 50.82992016315447,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3057",
+          "x": -4.651066906205534,
+          "z": 48,
+          "status": "walking"
+        },
+        {
+          "id": "animal-3058",
+          "x": -2.367032411011494,
+          "z": 48,
+          "status": "walking"
+        }
+      ]
+    }
+  ]
+}

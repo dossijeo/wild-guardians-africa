@@ -1,3 +1,4 @@
+import {withRaisedMountainBase} from './raised-mountain-base.js';
 import {loadingAwaitWitness} from './loading-sync-witness.js';
 import {validateTreeTransitionPolicy} from '../../tools/experiments/tree-transition-range.js';
 import {releaseNativeFarGpuCache,registerNativeFarTextureOwner} from '../../tools/experiments/prepare-native-far-gpu.js';
@@ -7,7 +8,8 @@ import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
 import {json} from './assets.js';
 import {farAtmosphere} from './far-atmosphere.js';
-import {farVegetationProfile} from './far-vegetation-profile.js';
+import {farVegetationProfile,farGroundReviewOverrides} from './far-vegetation-profile.js';
+import {smoothFarTransitionsEnabled} from './smooth-far-transitions.js';
 import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-world.js';
 
 // RGBA8 plus mip estimate from loaded dimensions; this is not driver RAM.
@@ -15,7 +17,7 @@ const textureStorageEstimate=(texture,width,height)=>{const image=texture.image;
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,parallelAssets=false,initialRegion=null,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,smoothTransitions=smoothFarTransitionsEnabled(world.visualSearch),parallelAssets=false,initialRegion=null,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
  if(typeof parallelAssets!=='boolean')throw Error('Invalid parallel far assets option');
  const phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,'far-assets:'+label,run);
@@ -24,7 +26,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  if(typeof includeFarGround!=='boolean')throw Error('Invalid far ground option');
  if(options.qualityDriven!==undefined&&typeof options.qualityDriven!=='boolean')throw Error('Invalid far quality policy');
  if(options.backdropHQ!==undefined&&typeof options.backdropHQ!=='boolean')throw Error('Invalid HQ mountain policy');
- const mountain=options.backdropHQ?mountainBackdropProfile(world.nav.config.biome,world.state?.seed??world.nav.config.seed):null;
+ const mountain=withRaisedMountainBase(options.backdropHQ?mountainBackdropProfile(world.nav.config.biome,world.state?.seed??world.nav.config.seed):null,world.nav.config.biome);
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end<=start||!Number.isFinite(transitionMargin)||transitionMargin<0||transitionMargin>24)throw Error('Invalid far transition distances');
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
@@ -60,14 +62,14 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   for(const result of results){if(cancelled())throw Error('Far vegetation attachment cancelled');const {metadata,day,night}=result.value;
-   const adapter=await phase('attach:'+metadata.slot,()=>attachSpecies(world,{initialRegion:result===results[0]?initialRegion:null,groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end}));
+   const adapter=await phase('attach:'+metadata.slot,()=>attachSpecies(world,{initialRegion:result===results[0]?initialRegion:null,groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,smoothTransitions,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end}));
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
   if(!parallelAssets)backdropTexture=await phase('backdrop',()=>load(backdropPath));
   backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,arcLayout:options.backdropArcLayout??mountain?.arcLayout,stableAltitude:options.backdropStableAltitude??mountain?.stableAltitude,mirrored:options.backdropMirrored,fogBaseMix:options.backdropFogBaseMix??mountain?.fogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
   owner={enabled:true,adapters,configureQuality(quality){
    if(closed||!options.qualityDriven)return false;
-   const next=farVegetationProfile({quality,biome:world.nav.config.biome});
+   const next=farVegetationProfile({quality,biome:world.nav.config.biome},farGroundReviewOverrides(world.nav.config.biome,world.visualSearch));
    // Quality changes only the small-tree band. The large-tree/prewarm extent
    // stays owned by the existing banks, so no atlas or geometry is reloaded.
    if(JSON.stringify(next.transitionHeight)!==JSON.stringify(transitionHeight)||next.end>transitionEnd)throw Error('Far quality policy exceeds prepared extent');

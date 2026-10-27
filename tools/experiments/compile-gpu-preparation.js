@@ -3,7 +3,7 @@ import {waitGpuPreparation} from './wait-gpu-preparation.js';
 // Candidate for Three r180's normal target/output recipe. Own the readiness
 // polling rather than leaving compileAsync's internal timer alive on abort.
 // compile() still submits synchronously; this does not interrupt driver work.
-export async function compileGpuPreparation(renderer,root,camera,scene,{check,signal,pollIntervalMs=10,selectPrograms}={}) {
+export async function compileGpuPreparation(renderer,root,camera,scene,{check,signal,pollIntervalMs=10,selectPrograms,onProgramReady}={}) {
  if(typeof check!=='function')throw Error('GPU compilation requires a lifetime check');
  if(selectPrograms!==undefined&&typeof selectPrograms!=='function')throw Error('Invalid GPU program selector');
  if(!Number.isFinite(pollIntervalMs)||pollIntervalMs<=0)throw Error('Invalid GPU compilation polling interval');
@@ -27,7 +27,7 @@ export async function compileGpuPreparation(renderer,root,camera,scene,{check,si
  const ready=new Promise(resolve=>{resolveReady=resolve;});
  const poll=()=>{
   guard();
-  for(const program of programs){guard();if(program.isReady())programs.delete(program);}
+  for(const program of programs){guard();if('program' in program&&!program.program){const error=new Error('GPU compilation cancelled: selected program disposed');error.code='GPU_PROGRAM_DISPOSED';throw error;}if(program.isReady()){onProgramReady?.(program);guard();programs.delete(program);}}
   guard();if(programs.size===0)resolveReady();
  };
  try{

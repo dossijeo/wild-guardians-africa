@@ -1,0 +1,295 @@
+{
+  "scope": "Query and metadata reconciliation only. Does not establish source equivalence across commits or visual correctness.",
+  "reports": [
+    {
+      "directory": "manglares-resident-mask-low",
+      "sha256": "674e7ae4847a6b1b29278a57c2d4df6ca917990a466f7dc045d721a0e1ee6a3f",
+      "records": [
+        {
+          "biome": "manglares",
+          "quality": "baja",
+          "phase": "day",
+          "groundStep": null,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            }
+          ],
+          "frames": 1295,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": null
+        },
+        {
+          "biome": "manglares",
+          "quality": "baja",
+          "phase": "night",
+          "groundStep": null,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            }
+          ],
+          "frames": 1051,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": null
+        }
+      ]
+    },
+    {
+      "directory": "desierto-clearance-corrected-motion",
+      "sha256": "e8c056bbf88d649159714e18836a09843f9ed9d87f0063672e9c14b4afb9399e",
+      "records": [
+        {
+          "biome": "desierto",
+          "quality": "media",
+          "phase": "day",
+          "groundStep": 32,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            }
+          ],
+          "frames": 1707,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": "diagonal-xz"
+        },
+        {
+          "biome": "desierto",
+          "quality": "media",
+          "phase": "night",
+          "groundStep": 32,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            }
+          ],
+          "frames": 1476,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": "diagonal-xz"
+        }
+      ]
+    },
+    {
+      "directory": "volcanes-step16-motion-low",
+      "sha256": "f94b576d77b6540b5a1976656964ed7729c8d8db258df19c7e1912b75384e044",
+      "records": [
+        {
+          "biome": "volcanes",
+          "quality": "baja",
+          "phase": "day",
+          "groundStep": 16,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "volcanicGround",
+              "recorded": null,
+              "current": "fine"
+            }
+          ],
+          "frames": 1520,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": null
+        },
+        {
+          "biome": "volcanes",
+          "quality": "baja",
+          "phase": "night",
+          "groundStep": 16,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "volcanicGround",
+              "recorded": null,
+              "current": "fine"
+            }
+          ],
+          "frames": 1255,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": null
+        }
+      ]
+    },
+    {
+      "directory": "canyon-handoff-integrated-low",
+      "sha256": "1d23437f7535d07e770d5a411ed28850e0787d24e952503bd916f7c871a43839",
+      "records": [
+        {
+          "biome": "gran-canon",
+          "quality": "baja",
+          "phase": "day",
+          "groundStep": 32,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            }
+          ],
+          "frames": 1523,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": "canyon-z"
+        },
+        {
+          "biome": "gran-canon",
+          "quality": "baja",
+          "phase": "night",
+          "groundStep": 32,
+          "differences": [
+            {
+              "key": "qa-seed",
+              "recorded": "712",
+              "current": null
+            },
+            {
+              "key": "mountainBase",
+              "recorded": "raised",
+              "current": null
+            },
+            {
+              "key": "wildEngineThreads",
+              "recorded": "1",
+              "current": null
+            },
+            {
+              "key": "frameScheduler",
+              "recorded": "1",
+              "current": null
+            }
+          ],
+          "frames": 1409,
+          "errors": [],
+          "finalGlError": 0,
+          "motionPath": "canyon-z"
+        }
+      ]
+    }
+  ]
+}

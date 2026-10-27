@@ -1,0 +1,80 @@
+[
+  {
+    "phase": "day",
+    "variant": "base",
+    "cpuMs": {
+      "mean": 4.225833333656192,
+      "p95": 5.299999982118607,
+      "max": 24.900000005960464
+    },
+    "intervalMs": {
+      "mean": 18.010416666666668,
+      "p95": 26.900000005960464,
+      "max": 45.599999994039536
+    },
+    "chunkChanges": 42,
+    "finalMemory": {
+      "geometries": 84,
+      "textures": 56
+    }
+  },
+  {
+    "phase": "day",
+    "variant": "combined",
+    "cpuMs": {
+      "mean": 4.354166665549079,
+      "p95": 5.700000017881393,
+      "max": 26.900000005960464
+    },
+    "intervalMs": {
+      "mean": 17.94333333335817,
+      "p95": 28.400000005960464,
+      "max": 46.400000005960464
+    },
+    "chunkChanges": 42,
+    "finalMemory": {
+      "geometries": 84,
+      "textures": 54
+    },
+    "framesDifferentChunkSets": 18
+  },
+  {
+    "phase": "night",
+    "variant": "base",
+    "cpuMs": {
+      "mean": 4.064583335195978,
+      "p95": 5.0999999940395355,
+      "max": 24.099999994039536
+    },
+    "intervalMs": {
+      "mean": 17.7375,
+      "p95": 26.600000023841858,
+      "max": 46.29999998211861
+    },
+    "chunkChanges": 42,
+    "finalMemory": {
+      "geometries": 84,
+      "textures": 56
+    }
+  },
+  {
+    "phase": "night",
+    "variant": "combined",
+    "cpuMs": {
+      "mean": 4.052500000720223,
+      "p95": 4.699999988079071,
+      "max": 34.79999998211861
+    },
+    "intervalMs": {
+      "mean": 17.875833333283662,
+      "p95": 27.599999994039536,
+      "max": 55.29999998211861
+    },
+    "chunkChanges": 42,
+    "finalMemory": {
+      "geometries": 84,
+      "textures": 54
+    },
+    "framesDifferentChunkSets": 6
+  }
+]

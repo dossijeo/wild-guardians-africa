@@ -1,0 +1,199 @@
+{
+  "fixture": "tests/fixtures/manglares-123-d10-raid-state.json.gz",
+  "fixtureSha256": "764d2d569ea6f893f8d074eefb155d7255cb40cbe7400ccf9f4d2516ac144364",
+  "wasmSha256": "275044aa697eaa87de5917ce36dadf636d2ab700ef454c36828faa5cb7bfb4c5",
+  "count": 30,
+  "rows": [
+    {
+      "mode": "A",
+      "ticks": 30,
+      "totalMs": 4374.989399999998,
+      "routeMs": 23.56210000000192,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 33816576,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 101,
+          "attackSelection": 28,
+          "routeDeferred": 6808
+        },
+        "planningRequestsPerActorMinute": [
+          {
+            "actorId": "animal-7752",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "animal-7753",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "animal-7754",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "animal-7755",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "animal-7757",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "animal-7758",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "animal-7759",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "worker-6926",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "worker-6927",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          },
+          {
+            "actorId": "worker-6928",
+            "requests": 4,
+            "perMinute": 7.999999999970896
+          }
+        ],
+        "maxActorCount": {
+          "routeRefresh": 4,
+          "attackSelection": 4,
+          "routeDeferred": 296
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 4,
+              "routeDeferred": 296
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeDeferred:worker-6926:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6927:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6928:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6929:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6930:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6931:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6932:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6933:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6934:home-village-1",
+            296
+          ],
+          [
+            "routeDeferred:worker-6935:home-village-1",
+            296
+          ]
+        ]
+      },
+      "stateSha256": "b2f4d4ef78616bc5257f098fb35cf4bfbd96dfaca014f26c7c69f2ccb77be987",
+      "firstDifference": null
+    }
+  ]
+}

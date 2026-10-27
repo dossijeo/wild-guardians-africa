@@ -1,0 +1,1465 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "33b5033174455cb2eec708110aa4785e8ccff542ef19e4e773d0de395a0c5a02",
+  "wasmSha256": "0d0b51639909d3ba0c0dfc52dcb7791218258d5aa2881464fa62604c40b185cf",
+  "elapsedSeconds": 8.421458299999998,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 4160.054,
+    "gameTickMs": 2869.7019000000028
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "existingGates": [],
+    "rows": [
+      {
+        "name": "cut",
+        "ms": 231.76560000000063,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 6.124099999999089,
+        "conversionMs": 1.7620999999999185,
+        "validationMs": 220.91029999999955,
+        "cutEdges": 21,
+        "boundarySegments": 144,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -10.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -9.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              75.5,
+              5.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              90.5,
+              10.5
+            ]
+          }
+        ],
+        "terminalContext": [
+          {
+            "point": [
+              72.5,
+              -10.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "id": "structure-807",
+                "kind": "wall",
+                "x": 73.08,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 1.2799999999999994
+              },
+              {
+                "id": "structure-841",
+                "kind": "wall",
+                "x": 75.24,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.09618701455762
+              },
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 2.2373925289129075
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 1.2799999713897705
+          },
+          {
+            "point": [
+              72.5,
+              -9.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 1.2975479725215888
+              },
+              {
+                "id": "structure-807",
+                "kind": "wall",
+                "x": 73.08,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.2799999999999994
+              },
+              {
+                "id": "structure-841",
+                "kind": "wall",
+                "x": 75.24,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.820283673675396
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 1.297548770904541
+          },
+          {
+            "point": [
+              75.5,
+              5.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "kind": "Estructura",
+                "x": 74.25968885421753,
+                "z": 3.85088849067688,
+                "radius": 1.2800342800623632,
+                "pointToSurface": 0.9635284009659948
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.9635283946990967
+          },
+          {
+            "point": [
+              90.5,
+              10.5
+            ],
+            "props": [
+              {
+                "x": 97.31031799316406,
+                "z": 12.31293773651123,
+                "radius": 1.3213688135147095,
+                "slot": 12,
+                "clearSpan": 5.72612537977702
+              },
+              {
+                "x": 99.82867431640625,
+                "z": 4.899447441101074,
+                "radius": 2.648141384124756,
+                "slot": 1,
+                "clearSpan": 8.232591746807504
+              }
+            ],
+            "obstacles": [
+              {
+                "id": "structure-1399",
+                "kind": "wall",
+                "x": 92.28,
+                "z": 12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 1.4589036979869514
+              },
+              {
+                "id": "structure-1398",
+                "kind": "wall",
+                "x": 94.44,
+                "z": 12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 3.1333687941255937
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 1.4589030742645264
+          }
+        ],
+        "contours": [
+          [
+            [
+              72.5,
+              -10.5
+            ],
+            [
+              72.5,
+              -9.5
+            ]
+          ],
+          [
+            [
+              75.5,
+              5.5
+            ],
+            [
+              76.5,
+              5.5
+            ],
+            [
+              77.5,
+              5.5
+            ],
+            [
+              78.5,
+              5.5
+            ],
+            [
+              79.5,
+              5.5
+            ],
+            [
+              80.5,
+              5.5
+            ],
+            [
+              81.5,
+              5.5
+            ],
+            [
+              81.5,
+              6.5
+            ],
+            [
+              82.5,
+              6.5
+            ],
+            [
+              82.5,
+              7.5
+            ],
+            [
+              83.5,
+              7.5
+            ],
+            [
+              83.5,
+              8.5
+            ],
+            [
+              84.5,
+              8.5
+            ],
+            [
+              85.5,
+              8.5
+            ],
+            [
+              85.5,
+              9.5
+            ],
+            [
+              86.5,
+              9.5
+            ],
+            [
+              86.5,
+              10.5
+            ],
+            [
+              87.5,
+              10.5
+            ],
+            [
+              88.5,
+              10.5
+            ],
+            [
+              89.5,
+              10.5
+            ],
+            [
+              90.5,
+              10.5
+            ]
+          ]
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "frontierStatus": "locally-open",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 11,
+          "cost": 110,
+          "gates": 0,
+          "suppressed": [],
+          "placedPieces": [
+            {
+              "x": 72.5,
+              "z": -10,
+              "yaw": -1.5707963267948966,
+              "baseScaleX": 0.4587155963302752
+            },
+            {
+              "x": 76.5,
+              "z": 5.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 78.5,
+              "z": 5.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 80.5,
+              "z": 5.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 82,
+              "z": 6,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 83,
+              "z": 7,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 84,
+              "z": 8,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 85,
+              "z": 9,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 86,
+              "z": 10,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 87.5,
+              "z": 10.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 89.5,
+              "z": 10.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            }
+          ],
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "placedJunctions": {
+            "status": "ready",
+            "junctions": [
+              {
+                "strokeIndex": 0,
+                "end": "start",
+                "pieceId": "structure-1502",
+                "point": [
+                  72.5,
+                  -10.5
+                ]
+              },
+              {
+                "strokeIndex": 0,
+                "end": "finish",
+                "pieceId": "structure-1502",
+                "point": [
+                  72.5,
+                  -9.5
+                ]
+              },
+              {
+                "strokeIndex": 1,
+                "end": "start",
+                "pieceId": "structure-1503",
+                "point": [
+                  75.5,
+                  5.5
+                ]
+              },
+              {
+                "strokeIndex": 1,
+                "end": "finish",
+                "pieceId": "structure-1512",
+                "point": [
+                  90.5,
+                  10.5
+                ]
+              }
+            ]
+          },
+          "workerAccess": {
+            "before": [
+              {
+                "centerId": "structure-2",
+                "status": "reachable"
+              }
+            ],
+            "after": [
+              {
+                "centerId": "structure-2",
+                "status": "reachable"
+              }
+            ]
+          },
+          "gridProbe": {
+            "center": [
+              90,
+              -1
+            ],
+            "bySpecies": {
+              "warthog": {
+                "firstCropCells": {
+                  "sealed": 38,
+                  "uncertified": 0,
+                  "blocked": 11,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 56,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 10
+                }
+              },
+              "hyena": {
+                "firstCropCells": {
+                  "sealed": 39,
+                  "uncertified": 0,
+                  "blocked": 10,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 59,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 7
+                }
+              },
+              "buffalo": {
+                "firstCropCells": {
+                  "sealed": 38,
+                  "uncertified": 0,
+                  "blocked": 11,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 57,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 9
+                }
+              },
+              "lion": {
+                "firstCropCells": {
+                  "sealed": 41,
+                  "uncertified": 0,
+                  "blocked": 8,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 66,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 0
+                }
+              },
+              "rhino": {
+                "firstCropCells": {
+                  "sealed": 37,
+                  "uncertified": 0,
+                  "blocked": 12,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 52,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 14
+                }
+              }
+            }
+          },
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 2,
+            "edge": [
+              74,
+              -11,
+              74,
+              -10
+            ],
+            "endpoints": [
+              [
+                73.5,
+                -10.5
+              ],
+              [
+                74.5,
+                -10.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7799999713897705,
+              1.2799999713897705
+            ],
+            "queries": 5,
+            "nativeCrossings": {
+              "warthog": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                }
+              ],
+              "hyena": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                }
+              ],
+              "buffalo": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                }
+              ],
+              "lion": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                }
+              ],
+              "rhino": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                }
+              ]
+            },
+            "shortBoundaryCrossings": {
+              "warthog": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "inside": true,
+                  "crossing": false
+                }
+              ],
+              "hyena": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                }
+              ],
+              "buffalo": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                }
+              ],
+              "lion": [
+                {
+                  "offset": -0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": -0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                }
+              ],
+              "rhino": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "inside": true,
+                  "crossing": false
+                }
+              ]
+            }
+          },
+          "boundaryGapScan": {
+            "warthog": {
+              "tested": 144,
+              "open": 0,
+              "examples": []
+            },
+            "hyena": {
+              "tested": 144,
+              "open": 49,
+              "examples": [
+                {
+                  "segment": 2,
+                  "edge": [
+                    74,
+                    -11,
+                    74,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 3,
+                  "edge": [
+                    75,
+                    -11,
+                    75,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 4,
+                  "edge": [
+                    76,
+                    -11,
+                    76,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 5,
+                  "edge": [
+                    77,
+                    -11,
+                    77,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 6,
+                  "edge": [
+                    78,
+                    -11,
+                    78,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 7,
+                  "edge": [
+                    79,
+                    -11,
+                    79,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 8,
+                  "edge": [
+                    80,
+                    -11,
+                    80,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 9,
+                  "edge": [
+                    81,
+                    -11,
+                    81,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 10,
+                  "edge": [
+                    82,
+                    -11,
+                    82,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 11,
+                  "edge": [
+                    83,
+                    -11,
+                    83,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 12,
+                  "edge": [
+                    84,
+                    -11,
+                    84,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 13,
+                  "edge": [
+                    85,
+                    -11,
+                    85,
+                    -10
+                  ]
+                }
+              ]
+            },
+            "buffalo": {
+              "tested": 144,
+              "open": 44,
+              "examples": [
+                {
+                  "segment": 2,
+                  "edge": [
+                    74,
+                    -11,
+                    74,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 3,
+                  "edge": [
+                    75,
+                    -11,
+                    75,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 4,
+                  "edge": [
+                    76,
+                    -11,
+                    76,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 5,
+                  "edge": [
+                    77,
+                    -11,
+                    77,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 6,
+                  "edge": [
+                    78,
+                    -11,
+                    78,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 7,
+                  "edge": [
+                    79,
+                    -11,
+                    79,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 8,
+                  "edge": [
+                    80,
+                    -11,
+                    80,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 9,
+                  "edge": [
+                    81,
+                    -11,
+                    81,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 10,
+                  "edge": [
+                    82,
+                    -11,
+                    82,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 11,
+                  "edge": [
+                    83,
+                    -11,
+                    83,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 12,
+                  "edge": [
+                    84,
+                    -11,
+                    84,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 13,
+                  "edge": [
+                    85,
+                    -11,
+                    85,
+                    -10
+                  ]
+                }
+              ]
+            },
+            "lion": {
+              "tested": 144,
+              "open": 53,
+              "examples": [
+                {
+                  "segment": 2,
+                  "edge": [
+                    74,
+                    -11,
+                    74,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 3,
+                  "edge": [
+                    75,
+                    -11,
+                    75,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 4,
+                  "edge": [
+                    76,
+                    -11,
+                    76,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 5,
+                  "edge": [
+                    77,
+                    -11,
+                    77,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 6,
+                  "edge": [
+                    78,
+                    -11,
+                    78,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 7,
+                  "edge": [
+                    79,
+                    -11,
+                    79,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 8,
+                  "edge": [
+                    80,
+                    -11,
+                    80,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 9,
+                  "edge": [
+                    81,
+                    -11,
+                    81,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 10,
+                  "edge": [
+                    82,
+                    -11,
+                    82,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 11,
+                  "edge": [
+                    83,
+                    -11,
+                    83,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 12,
+                  "edge": [
+                    84,
+                    -11,
+                    84,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 13,
+                  "edge": [
+                    85,
+                    -11,
+                    85,
+                    -10
+                  ]
+                }
+              ]
+            },
+            "rhino": {
+              "tested": 144,
+              "open": 0,
+              "examples": []
+            }
+          },
+          "cutCrossings": {
+            "before": {
+              "warthog": {
+                "tested": 105,
+                "clear": 100,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "hyena": {
+                "tested": 105,
+                "clear": 102,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "buffalo": {
+                "tested": 105,
+                "clear": 101,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "lion": {
+                "tested": 105,
+                "clear": 102,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "rhino": {
+                "tested": 105,
+                "clear": 92,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 2,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 2,
+                    "offset": 0
+                  }
+                ]
+              }
+            },
+            "after": {
+              "warthog": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "hyena": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "buffalo": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "lion": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "rhino": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              }
+            }
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 14,
+          "wallPlacement": 33,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 288
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}

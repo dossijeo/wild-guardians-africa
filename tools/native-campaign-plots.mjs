@@ -2,7 +2,12 @@ import {activeChunkRegion} from '../src/world/active-region.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {centerServicePoint} from '../src/world/centers.js';
 // Bounded searches and genuine camera residency; no permanent gigantic bounds.
-export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDecision=8}={}){
+export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDecision=8,measure=null}={}){
+ const timed=(kind,fn)=>{
+  if(!measure)return fn();
+  const start=performance.now();
+  try{return fn();}finally{measure(kind,performance.now()-start);}
+ };
  let candidates=[],index=0,regions=new Set(),plots=[],transitions=[],lastReason='searching',reuseCursor=0,regionAnchor=null;
  const offsets=[[0,0],[96,0],[-96,0],[0,96],[0,-96],[96,96],[-96,96],[96,-96],[-96,-96]];
  const focus=p=>{
@@ -18,16 +23,16 @@ export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDec
    candidates.sort((a,b)=>Math.hypot(a.x-origin.x,a.z-origin.z)-Math.hypot(b.x-origin.x,b.z-origin.z)||a.z-b.z||a.x-b.x);return true;
   }return false;
  }
- function valid(p,s){const c=s.structures.find(c=>c.id===p.centerId&&c.status==='intact');if(!c)return false;const origin=centerServicePoint(c,s,.8);return nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true);}
+ function valid(p,s){const c=s.structures.find(c=>c.id===p.centerId&&c.status==='intact');if(!c)return false;const origin=centerServicePoint(c,s,.8);return timed('plot.placement',()=>nav.placement(p.x,p.z,.4).valid)&&timed('plot.outwardPath',()=>Boolean(nav.path(origin,p,.28,null,true)))&&timed('plot.returnPath',()=>Boolean(nav.path(p,origin,.28,null,true)));}
  function choose(){
   const s=getState(),occupied=new Set(s.plants.filter(p=>p.alive).map(p=>p.x+','+p.z));
   // Reused plots revalidate current walls, fluids and paths; old legality is not cached.
   let attempts=0;
   for(let n=0;n<plots.length&&attempts<checksPerDecision;n++){
-   const p=plots[reuseCursor++%plots.length];if(occupied.has(p.x+','+p.z))continue;attempts++;focus(p);if(valid(p,s)){lastReason='active';return p;}
+   const p=plots[reuseCursor++%plots.length];if(occupied.has(p.x+','+p.z))continue;attempts++;timed('plot.focus',()=>focus(p));if(valid(p,s)){lastReason='active';return p;}
   }
-  if(index>=candidates.length&&!nextRegion(s)){lastReason='space';return null;}
-  if(regionAnchor)focus(regionAnchor);
+  if(index>=candidates.length&&!timed('plot.newRegion',()=>nextRegion(s))){lastReason='space';return null;}
+  if(regionAnchor)timed('plot.focus',()=>focus(regionAnchor));
   for(let n=0;n<checksPerDecision&&index<candidates.length;n++){
    const p=candidates[index++];if(occupied.has(p.x+','+p.z)||!valid(p,s))continue;plots.push(p);lastReason='active';return p;
   }lastReason='searching';return null;

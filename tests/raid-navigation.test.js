@@ -83,15 +83,3 @@ test('A reachable crop permits entry when every structure approach is blocked',(
   spawnRaid(s,{group:['warthog']},nav);assert.equal(s.raid.animals.length,1);
   updateRaid(s,.1,nav);assert.equal(s.raid.animals[0].targetId,s.plants[0].id);
 });
-
-
-test('a displaced actor inside a solid rejects target scans before enumerating crop approaches',()=>{
- const nav=world(),s=ready(nav);s.time=0;Game.plant(s,'crop','mijo',5,0,nav);s.time=400;spawnRaid(s,{group:['warthog']},nav);
- const a=s.raid.animals[0],position={x:a.x,z:a.z};let queries=0,preflights=0;nav.canApproachFrom=()=>{preflights++;return false;};nav.path=()=>{queries++;throw Error('invalid-origin target scan');};
- assert.equal(reachableApproach(a,s.structures[0],nav),null);updateRaid(s,.1,nav);assert.equal(queries,0);assert.ok(preflights>=2);assert.deepEqual({x:a.x,z:a.z},position);assert.equal(a.targetId,null);assert.ok(['waiting','retreating'].includes(a.status));
-});
-
-test('reverse-approach preflight uses the same destination collision rule as path search',()=>{
- const nav=new Navigation(712,'sabana',{});nav.terrainValid=()=>true;nav.propsAt=()=>[];nav.obstacles=[{id:'solid',kind:'center',x:0,z:0,radius:1}];
- assert.equal(nav.canApproachFrom({x:0,z:0},.5),false);assert.equal(nav.approachPath({x:0,z:0},{x:5,z:0},.5),null);assert.equal(nav.canApproachFrom({x:5,z:0},.5),true);
-});

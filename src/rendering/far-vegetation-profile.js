@@ -7,3 +7,11 @@ export function farVegetationProfile({quality,biome},overrides={}){
  const authoredSize={minimumHeight:24,start:200,end:240};
  return {...{qualityDriven:true,backdropHQ:true,start:distances[0],end:distances[1],visualRange:quality==='alta'?2:1,preserveTerrain:true,logicalStandbyPreload:true,logicalPreloadMargin:16,logicalSizePreload:true,transitionHeight:authoredSize,cullZeroImpostors:true,densityStart:270,densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,importanceHeight:16,importanceMaxBoost:4,groundStep:32,groundColorStep:4,groundWash:0,nativeWaterMask:true,groundSeam:true,simplifiedFarGround:false,includeFarGround:!['canyons','desert'].includes(biome),fogStart:90,fogEnd:480,fogDayColor:'#b3b5c0',fogNightColor:'#3f4140'},...overrides};
 }
+
+// Selected visual profiles and explicit QA controls. Regional estuary coverage
+// refines only the mask; its terrain mesh retains the original spacing.
+export function farGroundReviewOverrides(biome,search=''){
+ if(biome==='mangrove'&&new URLSearchParams(search).get('farWaterSurface')==='1')return {regionalWaterBed:true,groundColorStep:2};
+ const flag={volcanoes:'volcanicGround',savanna:'savannaGround',grand_river:'riverGround'}[biome];
+ return flag&&new URLSearchParams(search).get(flag)==='fine'?{groundStep:16}:{};
+}

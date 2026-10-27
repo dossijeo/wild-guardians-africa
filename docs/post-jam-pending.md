@@ -1,6 +1,40 @@
 # Tareas pendientes posteriores a la Jam
 
-## Feedback de guardado y salida Windows — pendiente, sin desplazar balance
+## Pulido de usabilidad — implementado y validado, 11 de octubre
+
+Cámara contextual, layouts móviles de los cuatro labs y salida nativa Windows
+se desarrollaron y validaron en `feature/post-jam-usability-polish` y ya están
+incorporados a `main`, sin alterar balance ni campañas.
+
+Cámara conserva giro, desplazamiento, inclinación y sobrevuelo, con volúmenes
+finitos e invalidación incremental. Biblioteca supera capturas reales en Chrome
+1280×720, 844×390, 390×844 y 360×640, controles, ES/EN, touch/orientación emulados
+y restauración musical del lab SFX. Salida Tauri termina realmente el proceso
+empaquetado con código 0 y recupera exactamente el guardado al reiniciar.
+
+Validate38163747763: 3992 pass, cero fallos, un skip, build y paquete itch.io
+correctos. Windows38160568081: build, WebView2, recuperación de ventana y botón
+Salir/reinicio correctos. El benchmark CPU aislado cubre una puerta animada y
+destrucciones múltiples en 1000 piezas. Los checks de la PR cierran la integración.
+
+[Evidencia, negativos, fuentes y límites](qa/post-jam-usability-polish/README.md).
+Android físico no se ha ejecutado; no se confunde emulación de Chrome con esa
+aceptación. Las entradas anteriores se conservan como historial.
+
+## Feedback de guardado y salida Windows — implementados; aceptación adicional pendiente
+
+Estado actual comprobado el 17 de octubre: `src/app/save-game.js` anuncia el
+guardado manual solo después de que la escritura termine correctamente y comunica
+el error si falla. `src/app/desktop-exit.js` espera ese guardado, agrupa clics
+simultáneos y solo entonces invoca el comando nativo `exit_application`; la
+versión web no intenta cerrar la pestaña. Las pruebas dirigidas
+`tests/save-game.test.js`, `tests/game-juice.test.js` y
+`tests/desktop-exit.test.mjs` pasan 15/15. La prueba del ejecutable empaquetado
+consta en [QA de usabilidad](qa/post-jam-usability-polish/README.md). El estado
+de integración y la aceptación física deben leerse en esas evidencias, no en
+las instrucciones antiguas que se conservan a continuación.
+
+### Solicitud original del 10 de octubre (histórica)
 
 Solicitud del10 de octubre:
 
@@ -8,6 +42,9 @@ Solicitud del10 de octubre:
   resultado real del guardado. Ahora parece que no hace nada. Revisar confirmación
   de éxito y error sin anunciar éxito antes de que la persistencia termine; cubrir
   español e inglés y no disparar un guardado adicional para mostrar el mensaje.
+  Implementado y probado en `feature/game-juice-polish`, pendiente de integración
+  con CI correcta: [evidencia y límites](qa/game-juice/README.md). No darlo por
+  publicado hasta fusionar esa rama; el ejecutable Windows requiere aceptación.
 - **Salir del menú principal en Windows:** cerrar realmente la aplicación Tauri
   desde ese botón, con su API/capacidad correspondiente y prueba del ejecutable.
   El comportamiento web debe tratarse por separado, sin suponer que el navegador
@@ -441,6 +478,15 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 ## Protección de cámara en primeros planos (pedido el 6 de octubre de 2026)
+
+Actualización del 11 de octubre: implementación y QA completas en la rama
+`feature/post-jam-usability-polish`, entregada mediante PR. La protección
+contextual finita, sobrevuelo, murallas/puertas y los cuatro labs móviles cuentan
+con [evidencia y CI](qa/post-jam-usability-polish/README.md). La salida nativa
+se ha verificado mediante proceso Windows empaquetado y recuperación exacta
+tras reinicio. Android físico conserva aceptación no ejecutada; las pruebas de
+viewports/touch/orientación son emulación en Chrome. Se conserva debajo la
+especificación histórica.
 
 - Seguir la [especificación independiente de protección de cámara](camera-close-protection-post-jam.md), junto a distancia de dibujado/impostores/horizonte pero sin confundir sus objetivos.
 - Evitar penetraciones y ampliaciones problemáticas con soft collision y volúmenes de exclusión finitos, márgenes contextuales por categoría/modelo y desaceleración suave.

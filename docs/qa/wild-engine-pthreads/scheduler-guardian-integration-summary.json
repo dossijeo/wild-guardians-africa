@@ -1,0 +1,143 @@
+{
+  "scope": "Initial loading and separate first5s post-ready ABAB in frozen populated Manglares media720p. Presentation intervals, not GPU time. Small tail samples; no general FPS or six-biome acceptance claim.",
+  "loading": [
+    {
+      "run": "a1",
+      "samples": 1313,
+      "readyMs": 31730.34000003338,
+      "p95Ms": 49.99499999999989,
+      "p99Ms": 132.84500000000116,
+      "maxMs": 415.69499999999994,
+      "guardian": {
+        "backend": "main",
+        "ready": true,
+        "stats": null,
+        "fallback": null
+      }
+    },
+    {
+      "run": "b1",
+      "samples": 1373,
+      "readyMs": 31364.110000014305,
+      "p95Ms": 49.93999999999869,
+      "p99Ms": 116.3650000000016,
+      "maxMs": 449.1300000000001,
+      "guardian": {
+        "backend": "worker",
+        "ready": true,
+        "stats": {
+          "submitted": 1,
+          "completed": 1,
+          "coalesced": 0,
+          "setupMs": 1834.0600000023842,
+          "failed": 0
+        },
+        "fallback": null
+      }
+    },
+    {
+      "run": "a2",
+      "samples": 1289,
+      "readyMs": 31901.910000026226,
+      "p95Ms": 66.46499999999969,
+      "p99Ms": 133.15500000000247,
+      "maxMs": 382.70500000000015,
+      "guardian": {
+        "backend": "main",
+        "ready": true,
+        "stats": null,
+        "fallback": null
+      }
+    },
+    {
+      "run": "b2",
+      "samples": 1417,
+      "readyMs": 32014.12000000477,
+      "p95Ms": 49.95999999999913,
+      "p99Ms": 116.42499999999927,
+      "maxMs": 382.55999999999995,
+      "guardian": {
+        "backend": "worker",
+        "ready": true,
+        "stats": {
+          "submitted": 1,
+          "completed": 1,
+          "coalesced": 0,
+          "setupMs": 2016.3650000095367,
+          "failed": 0
+        },
+        "fallback": null
+      }
+    }
+  ],
+  "postReady": [
+    {
+      "run": "a1",
+      "samples": 47,
+      "readyMs": 33143.82499998808,
+      "p95Ms": 149.65000000000146,
+      "p99Ms": 199.52000000000407,
+      "maxMs": 714.7599999999948,
+      "guardian": {
+        "backend": "main",
+        "ready": true,
+        "stats": null,
+        "fallback": null
+      }
+    },
+    {
+      "run": "b1",
+      "samples": 89,
+      "readyMs": 33016.58500003815,
+      "p95Ms": 83.30499999999302,
+      "p99Ms": 133.02000000000407,
+      "maxMs": 498.90000000000146,
+      "guardian": {
+        "backend": "worker",
+        "ready": true,
+        "stats": {
+          "submitted": 1,
+          "completed": 1,
+          "coalesced": 0,
+          "setupMs": 1584.3949999809265,
+          "failed": 0
+        },
+        "fallback": null
+      }
+    },
+    {
+      "run": "a2",
+      "samples": 54,
+      "readyMs": 38234.77999997139,
+      "p95Ms": 166.25999999999476,
+      "p99Ms": 233.10000000000582,
+      "maxMs": 598.6699999999983,
+      "guardian": {
+        "backend": "main",
+        "ready": true,
+        "stats": null,
+        "fallback": null
+      }
+    },
+    {
+      "run": "b2",
+      "samples": 57,
+      "readyMs": 34246.97000002861,
+      "p95Ms": 149.8199999999997,
+      "p99Ms": 216.11000000000058,
+      "maxMs": 565.4150000000009,
+      "guardian": {
+        "backend": "worker",
+        "ready": true,
+        "stats": {
+          "submitted": 1,
+          "completed": 1,
+          "coalesced": 0,
+          "setupMs": 2473.0499999523163,
+          "failed": 0
+        },
+        "fallback": null
+      }
+    }
+  ]
+}

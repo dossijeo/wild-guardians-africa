@@ -1,0 +1,121 @@
+{
+  "scope": "Whole raid UI profile; inclusive categories overlap and must not be summed. Sampling is CPU/wall attribution, not GPU execution or precise attribution to a single slow frame.",
+  "wallMs": 15567.97,
+  "inclusiveSampledMs": {
+    "vfxRenderer": 2394.6539999999977,
+    "simulation": 202.95499999999998,
+    "wasm": 404.642,
+    "vfxNative": 1831.768999999999,
+    "gc": 215.378
+  },
+  "topSelf": [
+    {
+      "name": "(idle)",
+      "url": "",
+      "line": 0,
+      "sampledMs": 3589.5749999999966
+    },
+    {
+      "name": "(program)",
+      "url": "",
+      "line": 0,
+      "sampledMs": 891.0140000000002
+    },
+    {
+      "name": "update",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 14225,
+      "sampledMs": 561.5090000000004
+    },
+    {
+      "name": "multiplyMatrices",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 6652,
+      "sampledMs": 541.2009999999998
+    },
+    {
+      "name": "updateMatrixWorld",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 8325,
+      "sampledMs": 482.98900000000015
+    },
+    {
+      "name": "fxTri",
+      "url": "http://127.0.0.1:5220/src/rendering/vfx-native.js",
+      "line": 137,
+      "sampledMs": 465.37199999999984
+    },
+    {
+      "name": "applyBoneTransform",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 14092,
+      "sampledMs": 326.682
+    },
+    {
+      "name": "getParameters",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 35492,
+      "sampledMs": 279.6539999999999
+    },
+    {
+      "name": "prepare",
+      "url": "http://127.0.0.1:5220/src/rendering/vfx.js",
+      "line": 105,
+      "sampledMs": 264.9999999999999
+    },
+    {
+      "name": "at",
+      "url": "http://127.0.0.1:5220/src/rendering/vfx-native.js",
+      "line": 146,
+      "sampledMs": 250.0969999999999
+    },
+    {
+      "name": "projectObject",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 40593,
+      "sampledMs": 240.58399999999997
+    },
+    {
+      "name": "(garbage collector)",
+      "url": "",
+      "line": 0,
+      "sampledMs": 215.378
+    },
+    {
+      "name": "getProgram",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 40766,
+      "sampledMs": 202.69500000000002
+    },
+    {
+      "name": "norm",
+      "url": "http://127.0.0.1:5220/src/rendering/vfx-native.js",
+      "line": 5,
+      "sampledMs": 187.85300000000007
+    },
+    {
+      "name": "traverseVisible",
+      "url": "http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06",
+      "line": 8284,
+      "sampledMs": 185.8610000000001
+    }
+  ],
+  "longTasks": [
+    {
+      "start": 89887.28500008583,
+      "ms": 74
+    },
+    {
+      "start": 81083.77000010014,
+      "ms": 57
+    },
+    {
+      "start": 81028.8900001049,
+      "ms": 54
+    },
+    {
+      "start": 89740.92500007153,
+      "ms": 54
+    }
+  ]
+}

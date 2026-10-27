@@ -1,0 +1,121 @@
+{
+  "scope": "Two current-recipe repeat observations, not A/B or optimization evidence. Paused simulation, 60 warm frames, 180 authored X travel frames then variable settling. GPU queries include pipeline bubbles. CPU render includes draw and must not be summed with it. WASM bytes are not VRAM.",
+  "conditions": [
+    "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&chunkEviction=single&ownedFarGpu=1&streamingRecovery=auto&waterShoreWorker=0&waterBedWorker=auto&waterBedDirect=0&warmObstruction=0&retainPrograms=1&frameScheduler=1",
+    "gran-rio",
+    "media",
+    "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    {
+      "axis": "x",
+      "pose": null,
+      "visualSteps": false,
+      "terrainCamera": false,
+      "mainPhases": false,
+      "lockRaidCamera": false,
+      "completeLegs": false,
+      "pinPrograms": false,
+      "zigzag": false,
+      "active": false,
+      "gpu": true,
+      "depthWarm": false,
+      "glDetail": false,
+      "frames": 180,
+      "distance": 144
+    },
+    [
+      99.70247532024266,
+      22.023772089667386,
+      30.57367599590944
+    ],
+    [
+      83,
+      6.848869972229004,
+      0
+    ],
+    119.99999999999746
+  ],
+  "rows": [
+    {
+      "run": "r1",
+      "sha256": "6d5621b1b11d42654b91a92ecb7c0c411d6ae0903573a8f8d2d7d2dca3ea38ec",
+      "gpu": {
+        "count": 76,
+        "mean": 22.69006552631579,
+        "p95": 30.831249,
+        "max": 40.175885
+      },
+      "renderCpu": {
+        "count": 227,
+        "mean": 10.713722466372182,
+        "p95": 16.084999918937683,
+        "max": 47.700000047683716
+      },
+      "drawCpu": {
+        "count": 227,
+        "mean": 6.007312776233657,
+        "p95": 9.514999985694885,
+        "max": 12.704999923706055
+      },
+      "authoredFrames": {
+        "count": 180,
+        "mean": 31.685805555555554,
+        "p95": 66.45499999999447,
+        "p99": 83.0199999999968,
+        "maximum": 99.83499999999913
+      },
+      "allFrames": {
+        "count": 226,
+        "mean": 29.35674778761062,
+        "p95": 50.25,
+        "p99": 66.81000000000495,
+        "maximum": 99.83499999999913
+      },
+      "travelAndSettleMs": 6634.625,
+      "created": 15,
+      "wasmBytes": 16777216,
+      "nativeChunks": 27,
+      "loadingReadyMs": 25933.71500003338
+    },
+    {
+      "run": "r2",
+      "sha256": "19beea3c9816ece3bb0e9779d6ef8d78c8f60259ef5889438a66effbaa3cc271",
+      "gpu": {
+        "count": 64,
+        "mean": 22.861391328125006,
+        "p95": 27.943176,
+        "max": 29.258332
+      },
+      "renderCpu": {
+        "count": 191,
+        "mean": 12.061596858563847,
+        "p95": 17.24500000476837,
+        "max": 48.52999997138977
+      },
+      "drawCpu": {
+        "count": 191,
+        "mean": 6.6372774839401245,
+        "p95": 9.870000004768372,
+        "max": 13.369999885559082
+      },
+      "authoredFrames": {
+        "count": 180,
+        "mean": 31.31750000000001,
+        "p95": 50.12999999999738,
+        "p99": 66.78500000000349,
+        "maximum": 83.39999999999418
+      },
+      "allFrames": {
+        "count": 190,
+        "mean": 30.71865789473687,
+        "p95": 50.12999999999738,
+        "p99": 66.78500000000349,
+        "maximum": 83.39999999999418
+      },
+      "travelAndSettleMs": 5836.5450000000055,
+      "created": 15,
+      "wasmBytes": 16777216,
+      "nativeChunks": 27,
+      "loadingReadyMs": 25274.860000014305
+    }
+  ]
+}

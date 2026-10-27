@@ -1,0 +1,248 @@
+{
+  "rows": [
+    {
+      "run": 1,
+      "ready": {
+        "start": 104107.39499998093,
+        "end": 105405.27999997139,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 31.31919499994744,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "warmup": {
+        "target": 30,
+        "before": {
+          "elapsed": 3.2504699999475557,
+          "at": 77347.13499999046
+        },
+        "after": {
+          "elapsed": 30.005699999947442,
+          "at": 104105.69000005722
+        }
+      },
+      "capture": {
+        "start": 145582.64499998093,
+        "end": 145948.43000006676
+      },
+      "measurement": {
+        "start": 105426.24500000477,
+        "end": 145426.24500000477,
+        "scope": "Only intervals entirely inside the forty-second no-cast window; preflight and partial boundary intervals excluded."
+      },
+      "presentation": {
+        "n": 1441,
+        "p50": 33.10499999998137,
+        "p95": 49.93000000002212,
+        "p99": 66.52000000000407,
+        "max": 99.60000000000582
+      },
+      "cpu": {
+        "n": 1441,
+        "p50": 8.100000023841858,
+        "p95": 16.12999999523163,
+        "p99": 21.795000076293945,
+        "max": 33.11500000953674
+      },
+      "gpuQuery": {
+        "n": 1441,
+        "p50": 22.423593,
+        "p95": 30.81453,
+        "p99": 34.528436,
+        "max": 43.18203
+      },
+      "gpuDisjoint": 0,
+      "uniqueChunks": 40,
+      "simulationAdvance": 40.540305000001865,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "consoleErrors": []
+    },
+    {
+      "run": 2,
+      "ready": {
+        "start": 119976.57000005245,
+        "end": 122011.69500005245,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 32.06376499994245,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "warmup": {
+        "target": 30,
+        "before": {
+          "elapsed": 2.998349999942789,
+          "at": 92953.50499999523
+        },
+        "after": {
+          "elapsed": 30.01853499994248,
+          "at": 119973.4850000143
+        }
+      },
+      "capture": {
+        "start": 162211.90999996662,
+        "end": 162703.10500001907
+      },
+      "measurement": {
+        "start": 122022.85500001907,
+        "end": 162022.85500001907,
+        "scope": "Only intervals entirely inside the forty-second no-cast window; preflight and partial boundary intervals excluded."
+      },
+      "presentation": {
+        "n": 816,
+        "p50": 49.79999999998836,
+        "p95": 99.8299999999872,
+        "p99": 116.75999999998021,
+        "max": 149.76499999998487
+      },
+      "cpu": {
+        "n": 817,
+        "p50": 10.715000033378601,
+        "p95": 19.549999952316284,
+        "p99": 24.93500006198883,
+        "max": 31.929999947547913
+      },
+      "gpuQuery": {
+        "n": 817,
+        "p50": 33.87604,
+        "p95": 53.929635,
+        "p99": 70.656041,
+        "max": 91.718801
+      },
+      "gpuDisjoint": 0,
+      "uniqueChunks": 40,
+      "simulationAdvance": 39.88290000000259,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      },
+      "consoleErrors": []
+    }
+  ],
+  "sameInitialKeys": true,
+  "sameCamera": true,
+  "sameTarget": true,
+  "comparableStart": true,
+  "limitations": [
+    "A/A reproducibility check, not optimization evidence.",
+    "Active simulation state is not forced to equality; elapsed start times are retained.",
+    "Preflight may still expose natural world changes; matching chunk keys does not imply matching actor poses.",
+    "Screenshot occurs after the timed window; it does not validate visuals throughout traversal. Warmup reaches simulation elapsed 30s, followed by the residency gate; dynamic state is still not identical."
+  ]
+}

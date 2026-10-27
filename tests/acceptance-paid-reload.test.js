@@ -43,7 +43,7 @@ for(const profile of profiles)test(`QA-146: ${profile} reload keeps a paid initi
  assert.equal(s.workers[0].centerId,s.structures[0].id);assert.equal(JSON.stringify(s.ledger),cash);
 });
 
-for(const profile of profiles)test(`QA-147: ${profile} reload preserves one native carry phase and bonus-valued crate until one delivery`,()=>{
+for(const profile of profiles)test(`QA-147: ${profile} reload preserves one native carry phase and settles committed Multiply power once`,()=>{
  const {s,nav}=farm(profile);until(s,nav,()=>isMature(s.plants[0]));
  s.eventPlan={id:'fertile',kind:'fertile',negative:false,magnitude:.3};applyEvent(s);Game.harvest(s,'harvest',s.plants[0].id);
  until(s,nav,()=>s.workers[0].status==='acting',60);Game.cast(s,'multiply','multiply',8,4,nav);
@@ -52,9 +52,12 @@ for(const profile of profiles)test(`QA-147: ${profile} reload preserves one nati
  assert.equal(serialize(loaded),serialize(s));assert.equal(crate.carrierId,s.workers[0].id);assert.equal(s.workers[0].crateId,crate.id);
  assert.equal(pose(loaded).name,'Carry_Crate');assert.deepEqual(pose(loaded),pose(s));
  assert.equal(s.plants[0].alive,false);assert.equal(crate.sourcePlantId,s.plants[0].id);assert.equal(crate.delivered,false);
- const male=profile.endsWith('Male');assert.deepEqual(crate.value,male?rational(858,25):rational(143,5));
+ const male=profile.endsWith('Male');assert.deepEqual(crate.value,male?rational(429,25):rational(143,10));
+ assert.deepEqual(crate.multiplyPower.amount,rational(132,13),'The first Multiply cast commits bounded daily power to this harvest');
  paired(s,nav,loaded,restoredNav,40);assert.equal(s.crates.length,1);assert.equal(crate.delivered,true);assert.equal(s.spells.length,0);
- assert.equal(numberOf(s.ledger.balance),cash+(male?35:29));assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
+ assert.deepEqual(crate.multiplyIncome,rational(10));
+ assert.deepEqual(s.ledger.entries[`deliver:${crate.id}`],rational(male?28:25));
+ assert.equal(numberOf(s.ledger.balance),cash+(male?28:25));assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
  assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length,1);
  const settled=saved(loaded),settledNav=navigation(settled),value=numberOf(settled.ledger.balance);Game.tick(settled,5,settledNav);
  assert.equal(settled.crates.length,1);assert.equal(numberOf(settled.ledger.balance),value);assert.equal(settled.crates[0].delivered,true);

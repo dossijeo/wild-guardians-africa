@@ -33,13 +33,18 @@ function applyPose(camera,controls,field,desiredPose,rawEye,context='move'){
   lastPose.set(camera,{field,pose,desiredPose,rawEye});return pose;
 }
 
-function cameraPose(field,target,theta,phi,distance){
+function cameraPose(field,target,theta,phi,distance,maxClearance=20,minDistance=4){
   phi=clamp(phi,TERRAIN_CAMERA.minPhi,TERRAIN_CAMERA.maxPhi);
-  distance=clamp(distance,4,Math.min(65,20/Math.max(.19,Math.cos(phi))));
+  distance=clamp(distance,minDistance,Math.max(minDistance,Math.min(Math.max(65,maxClearance+4),maxClearance/Math.max(.19,Math.cos(phi)))));
   const aim=[target[0],field.surface(target[0],target[2])+.18,target[2]];
   const eye=[aim[0]+distance*Math.sin(phi)*Math.sin(theta),aim[1]+distance*Math.cos(phi),aim[2]+distance*Math.sin(phi)*Math.cos(theta)];
-  const rawEye=eye.slice(),ground=field.surface(eye[0],eye[2]);eye[1]=clamp(eye[1],ground+2,ground+20);
+  const rawEye=eye.slice(),ground=field.surface(eye[0],eye[2]);eye[1]=clamp(eye[1],ground+2,ground+maxClearance);
   return {pose:{target:aim,eye,altitude:eye[1]-ground},rawEye};
+}
+function contextualPose(camera,field,target,theta,phi,distance){
+ const clearance=poseResolvers.get(camera)?.clearance?.(target,distance,lastPose.get(camera)?.pose)??20;
+ const minDistance=poseResolvers.get(camera)?.minimumDistance?.(target)??4;
+ return cameraPose(field,target,theta,phi,distance,clearance,minDistance);
 }
 export function nativeCameraPose(field,target,theta,phi,distance){return cameraPose(field,target,theta,phi,distance).pose;}
 
@@ -54,7 +59,7 @@ export function protectTerrainCamera(camera,controls,field){
   // A static frame must not reinterpret the height correction as another orbit.
   if(previous?.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))return applyPose(camera,controls,field,previous.desiredPose,previous.rawEye);
   const offset=camera.position.clone().sub(controls.target),spherical=new THREE.Spherical().setFromVector3(offset);
-  const {pose,rawEye}=cameraPose(field,controls.target.toArray(),spherical.theta,spherical.phi,spherical.radius);
+  const {pose,rawEye}=contextualPose(camera,field,controls.target.toArray(),spherical.theta,spherical.phi,spherical.radius);
   return applyPose(camera,controls,field,pose,rawEye);
 }
 
@@ -67,7 +72,7 @@ export function updateTerrainCamera(camera,controls,field){
 
 export function focusTerrainCamera(camera,controls,field,point){
   const damping=controls.enableDamping;controls.enableDamping=false;try{controls.update?.();}finally{controls.enableDamping=damping;}
-  const {pose,rawEye}=cameraPose(field,[point.x,0,point.z],point.theta??(field.canyon?0:.50),field.canyon?1.18:1.16,point.distance??(field.canyon?34:38));
+  const {pose,rawEye}=contextualPose(camera,field,[point.x,0,point.z],point.theta??(field.canyon?0:.50),field.canyon?1.18:1.16,point.distance??(field.canyon?34:38));
   return applyPose(camera,controls,field,pose,rawEye,'focus');
 }
 
@@ -82,6 +87,7 @@ export function stepTerrainCameraTravel(camera,controls,field,travel,point,secon
   travel.age=Math.min(travel.duration,travel.age+Math.max(0,seconds));
   const t=travel.age/travel.duration,ease=t*t*(3-2*t);
   const x=travel.start[0]+(point.x-travel.start[0])*ease,z=travel.start[1]+(point.z-travel.start[1])*ease;
-  const {pose,rawEye}=cameraPose(field,[x,0,z],travel.theta,travel.phi,travel.distance);
+  const distance=THREE.MathUtils.lerp(travel.distance,travel.endDistance??travel.distance,ease);
+  const {pose,rawEye}=contextualPose(camera,field,[x,0,z],travel.theta,travel.phi,distance);
   applyPose(camera,controls,field,pose,rawEye);return t>=1;
 }

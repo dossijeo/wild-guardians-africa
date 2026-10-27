@@ -1,0 +1,138 @@
+{
+  "runtimePath": "C:\\Users\\PC\\source\\repos\\wild-guardians-global-visual\\.codex-tmp\\release-border-candidate\\spatial-threaded.mjs",
+  "scope": "Native differential: six profiles, retained/removed boundaries, obstacles, duplicate/missing requests, running job invalidation, retry and complete eviction. Not rendered performance.",
+  "rows": [
+    {
+      "biome": "sabana",
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 157
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 74
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 74
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "desierto",
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 170
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 77
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 77
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "gran-rio",
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 151
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 68
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 68
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "volcanes",
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 157
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 75
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 75
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "manglares",
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 243
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 130
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 130
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    },
+    {
+      "biome": "gran-canon",
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 294,
+          "found": 108
+        },
+        {
+          "stage": "batch-with-obstacles",
+          "queries": 294,
+          "found": 33
+        },
+        {
+          "stage": "retry-after-eviction",
+          "queries": 294,
+          "found": 33
+        }
+      ],
+      "removed": 5,
+      "finalChunks": 0
+    }
+  ]
+}

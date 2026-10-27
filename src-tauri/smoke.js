@@ -5,13 +5,16 @@
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
   // Explicit CI tolerance is not a performance target. Local smoke keeps its
   // original budget; always retain observed loading time independently.
-  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 300000 ? 300000 : 90000;
-  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 300000 ? 'ci-functional' : 'local-smoke'};
+  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 420000 ? 420000 : 90000;
+  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 420000 ? 'ci-functional' : 'local-smoke'};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
-  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
+  // The visibility fixture spends five minutes genuinely hidden after world
+  // readiness, so its outer CI watchdog must also cover the longer load.
+  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')),
+    worldTimeoutMs === 420000 ? 960000 : 720000);
   let finished = false;
   let worldStartedAt = null;
   let worldReadyAt = null;
@@ -25,9 +28,11 @@
     try {
       const stage = document.querySelector('#stage'), world = document.querySelector('#world');
       const progress = document.querySelector('.interactive-loading-track');
+      report.checks.nativeLoadingTrace = window.__wildGuardiansNativeLoadingSnapshot?.() ?? null;
       report.checks.loadingAtFinish = {
         worldWaitMs: worldStartedAt === null ? null : (worldReadyAt ?? performance.now()) - worldStartedAt,
         readyGateReached: worldReadyAt !== null,
+        failure: document.querySelector('.loading-failure')?.textContent ?? null,
         stageBusy: stage?.getAttribute('aria-busy') ?? null,
         displayedProgress: progress?.getAttribute('aria-valuenow') ?? null,
         phaseLabel: document.querySelector('.interactive-loading-title')?.textContent ?? null,
@@ -72,6 +77,10 @@
       while(!text||text===previous){if(performance.now()>deadline)throw Error('IndexedDB save did not commit');await wait(50);text=await readSlot();}
       const snapshot=JSON.parse(text);
       report.checks.saveBackend='IndexedDB';
+      // Native acceptance checks the presentation after the real commit, not
+      // just the save button or compilation. This runs only in smoke mode.
+      await until(()=>/Partida guardada|Game saved/.test(document.querySelector('.juice-saved.visible')?.textContent??''));
+      report.checks.manualSaveFeedback='confirmed-after-IndexedDB-commit';
       if(snapshot.slotId!==fixture.slotId)throw Error('Wrong visibility slot');
       if(resume)document.querySelector('#resume').click();
       return snapshot;
@@ -149,7 +158,11 @@
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     worldStartedAt = performance.now();
     const worldEnd = worldStartedAt + worldTimeoutMs;
-    while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
+    while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) {
+      const failure = document.querySelector('.loading-failure');
+      if (failure) throw Error(`Production loading failed: ${failure.textContent.trim()}`);
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     worldReadyAt = performance.now();
     await new Promise(resolve => setTimeout(resolve, 1000));

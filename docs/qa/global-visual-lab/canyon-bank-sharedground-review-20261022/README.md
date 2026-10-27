@@ -1,0 +1,11 @@
+# Canyon shared ground material pilot
+
+Reproduce with Vite5190: `node tools/experiments/capture-canyon-bank-sharedground-review-20261022.mjs`. Twelve real campaign frames, seed712/media/1280x720, three views day/night. All six pairs match camera/target/time/draw calls/triangles and resident texture/geometry counts, without captured errors (audit.json). Sheets: normalbasis left, sharedground right.
+
+The candidate invokes actual groundMaterial417 with the actual full/soft canyon sand patch. It borrows BiomeGround uniforms with mapped:false (owner retains the reusable unmapped texture); no per-chunk mask is created. Uses native gravel color adaptation, gravel normal/ARH and near-field POM, sand blend and normal fading, material AO/roughness. Existing QA bank attributes provide approximate depth. Flat bed normal and original color .5 remain approximations. Lighting still lacks ground contact AO, native warm shadow fill and native environment response: this is shared material evaluation, NOT full shading parity or refraction.
+
+Initial attempt lacked uBiome/uGroundDetail declarations in the water shader and did not complete. That run was interrupted, declarations added locally to QA, and both arms recaptured successfully. Final records are from the successful run only.
+
+All day/night comparison views inspected. No convincing game-scale gain; pale fringe and channel-like outline remain. Keep reproducible QA but do not adopt native or claim performance. No benchmark warranted as an art candidate yet. Shader cost increases: gravel normal and ARH plus the existing material context sample and potentially up to eight height samples, versus the prior manually mixed bed. Identical resident resource counts do not imply equal runtime cost or byte usage.
+
+Decision: close the current sequence of submerged microdetail trials. Correct shared material evaluation is insufficient to supply the original mockup's broad bank transition and visual distribution. Next investigation should target those larger-scale features while preserving authoritative terrain/silhouettes, rather than another isolated submerged normal/pigment adjustment. Existing accepted biomes and production renderer unchanged.

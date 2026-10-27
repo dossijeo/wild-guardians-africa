@@ -1,0 +1,34 @@
+{
+  "candidate": false,
+  "sources": {
+    "tools/experiments/check-shield-repeat-render.mjs": "f48adc4e46e2180a87e6fab1112e6ab4bf5d7814c487de73a9303359b0610c0d",
+    "tools/experiments/smooth-sort-original.js": "8e9027e1d1cffda87805edb339ed07f573ecc51e4772b5e29e429ba5e2c9b54b",
+    "tools/experiments/smooth-sort-orientation.js": "7bfac05276bc976f77f111adeef77b9da50bc4648a9773c7cb4e28c6c5dcecf5",
+    "src/rendering/smooth-far-transitions.js": "b15bc9b8375a6c3fd0b909a7f751dd5df35c867802d74e2a9e282d82cd3902ea",
+    "src/rendering/scene.js": "7661d9ead8aa5cfbdeb64a12f9d5d059cf3a32aa94e3b926942dca6c378c71b5",
+    "src/rendering/render-origin.js": "92aa71a8f0da4880af1111059fb954f68927ca0e53ec2fcb09bd4b3fe4b2c3ef",
+    "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+    "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b"
+  },
+  "commit": "e0f09d3750cac09db63c80d3f29dd393c7799598",
+  "conditions": {
+    "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/smooth-sort-exposure/1-baseline",
+    "WG_QA_URL": "http://127.0.0.1:5220",
+    "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+    "WG_MAGIC_PROFILE": "1",
+    "WG_MAGIC_CPU_SAMPLING": "0",
+    "WG_MAGIC_VIDEO": "0",
+    "WG_MAGIC_GPU": "1",
+    "WG_MAGIC_PHASES": "1",
+    "WG_MAGIC_CASTS": "1",
+    "WG_MAGIC_NO_CAST": "1",
+    "WG_MAGIC_STREAM": "1",
+    "WG_MAGIC_STREAM_DISTANCE": "144",
+    "WG_MAGIC_STREAM_SECONDS": "40",
+    "WG_MAGIC_SETTLE": "1",
+    "WG_MAGIC_WARMUP_ELAPSED": "30",
+    "WG_MAGIC_CAPTURE_AFTER_STREAM": "1",
+    "WG_DEPTH_MATRIX_REUSE": "0",
+    "WG_SMOOTH_SORT_SOURCE": "tools/experiments/smooth-sort-original.js"
+  }
+}

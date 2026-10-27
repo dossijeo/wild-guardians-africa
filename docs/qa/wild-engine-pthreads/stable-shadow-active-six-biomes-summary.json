@@ -1,0 +1,269 @@
+{
+  "scope": "Candidate functional coverage with tutorial explicitly disabled in the test fixture; no baseline or visual-equivalence claim. Presentation samples cover quality windows, not the whole camera path.",
+  "runs": [
+    {
+      "biome": "desierto",
+      "source": "stable-shadow-active-v3-desierto.json",
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 124.95588999999713,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "retentionExpected": false,
+      "transitions": [
+        {
+          "quality": "baja",
+          "latencyMs": 353.58999997377396,
+          "maxPresentationMs": 31.099999964237213
+        },
+        {
+          "quality": "media",
+          "latencyMs": 413.27999997138977,
+          "maxPresentationMs": 44.855000019073486
+        },
+        {
+          "quality": "baja",
+          "latencyMs": 286.89000004529953,
+          "maxPresentationMs": 25.435000002384186
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "source": "stable-shadow-active-v3-gran-canon.json",
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 124.40659999999733,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "retentionExpected": false,
+      "transitions": [
+        {
+          "quality": "baja",
+          "latencyMs": 502.83999997377396,
+          "maxPresentationMs": 133.2950000166893
+        },
+        {
+          "quality": "media",
+          "latencyMs": 292.3600000143051,
+          "maxPresentationMs": 25.084999978542328
+        },
+        {
+          "quality": "baja",
+          "latencyMs": 191.36999994516373,
+          "maxPresentationMs": 17.9549999833107
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "source": "stable-shadow-active-v3-gran-rio.json",
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.48379999999649,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "retentionExpected": false,
+      "transitions": [
+        {
+          "quality": "baja",
+          "latencyMs": 350.4350000023842,
+          "maxPresentationMs": 53.44499999284744
+        },
+        {
+          "quality": "media",
+          "latencyMs": 636.4049999713898,
+          "maxPresentationMs": 68.09500002861023
+        },
+        {
+          "quality": "baja",
+          "latencyMs": 659.9799999594688,
+          "maxPresentationMs": 119.16000002622604
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "source": "stable-shadow-active-v3-manglares.json",
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 128.44761499999655,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "retentionExpected": true,
+      "transitions": [
+        {
+          "quality": "baja",
+          "latencyMs": 427.0949999690056,
+          "maxPresentationMs": 67.67500001192093
+        },
+        {
+          "quality": "media",
+          "latencyMs": 615.285000026226,
+          "maxPresentationMs": 102.96499997377396
+        },
+        {
+          "quality": "baja",
+          "latencyMs": 820.25,
+          "maxPresentationMs": 82.01499998569489
+        }
+      ]
+    },
+    {
+      "biome": "sabana",
+      "source": "stable-shadow-active-v3-sabana.json",
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.6497649999966,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "retentionExpected": false,
+      "transitions": [
+        {
+          "quality": "baja",
+          "latencyMs": 346.07499998807907,
+          "maxPresentationMs": 47.03999996185303
+        },
+        {
+          "quality": "media",
+          "latencyMs": 588.1500000357628,
+          "maxPresentationMs": 86.85500001907349
+        },
+        {
+          "quality": "baja",
+          "latencyMs": 642.8050000071526,
+          "maxPresentationMs": 74.62000000476837
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "source": "stable-shadow-active-v3-volcanes.json",
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.11719999999677,
+        "travelFrame": 240,
+        "advancingFrames": 240,
+        "pausedFrames": 0,
+        "pauseReasons": {},
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "retentionExpected": false,
+      "transitions": [
+        {
+          "quality": "baja",
+          "latencyMs": 451.8699999451637,
+          "maxPresentationMs": 75.54000002145767
+        },
+        {
+          "quality": "media",
+          "latencyMs": 445.30000001192093,
+          "maxPresentationMs": 55.13499999046326
+        },
+        {
+          "quality": "baja",
+          "latencyMs": 707.9350000023842,
+          "maxPresentationMs": 97.70999997854233
+        }
+      ]
+    }
+  ]
+}

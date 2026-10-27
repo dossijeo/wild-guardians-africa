@@ -5,6 +5,28 @@ import {createHash} from 'node:crypto';
 import * as THREE from 'three';
 import {AfricanToon,paintedWaterMaterial,toonDestruction} from '../src/rendering/african-toon.js';
 import {toonFunctions,waterFunctions} from '../src/rendering/african-toon-source.js';
+import {prepareAnimalModel} from '../src/rendering/animal-actions.js';
+
+test('all beasts receive isolated material lighting while global and non-beast shaders remain unchanged',()=>{
+ const toon=new AfricanToon(),materials=[];
+ for(const species of ['warthog','hyena','buffalo','lion','rhino']){
+  const material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),root=new THREE.Group();root.add(mesh);
+  prepareAnimalModel(root,species);toon.apply(root);
+  const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});materials.push({material,shader});
+ }
+ const shaders=[];
+ for(const visualSearch of ['', '?beastLighting=legacy']){
+  const regular=new THREE.MeshStandardMaterial(),style=new AfricanToon({visualSearch});style.material(regular);
+  const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};regular.onBeforeCompile(shader,{});shaders.push(shader);
+ }
+ assert.equal(shaders[0].fragmentShader,shaders[1].fragmentShader);assert.equal(shaders[0].uniforms.uBeastStyle,undefined);
+ for(const {material,shader} of materials){
+  assert.match(material.customProgramCacheKey(),/beast-contrast/);assert.match(shader.fragmentShader,/legacyBeastToon4/);
+  assert.equal(shader.uniforms.uBeastStyle,toon.beastUniforms.uBeastStyle);assert.equal(shader.uniforms.uNight,toon.uniforms.uNight);
+ }
+ toon.beastUniforms.uBeastStyle.value=0;assert.equal(materials[2].shader.uniforms.uBeastStyle.value,0);
+ assert.equal(toon.uniforms.uExposure.value,1);
+});
 test('user source is preserved byte-for-byte and extracted function bodies are authentic',()=>{
   const bytes=readFileSync('content/shaders/1-African_Toon_Shader_V4_1_4.frag.glsl');
   const provenance=JSON.parse(readFileSync('content/shaders/provenance.json'));

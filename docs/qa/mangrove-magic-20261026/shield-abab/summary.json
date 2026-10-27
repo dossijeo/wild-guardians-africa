@@ -1,0 +1,1187 @@
+{
+  "scope": "Real renderer, same final-ten save, medium 1280x720, fresh Chrome per trial; A original lights / B stable lights. CPU sampling and video active in all trials. Call latency is not GPU time. Wall-clock activation can include automation overhead. No sustained GPU conclusion.",
+  "rows": [
+    {
+      "run": "A1",
+      "ok": true,
+      "elapsedBefore": 314.27773999999084,
+      "activeActorsBefore": 10,
+      "clickRoundtripMs": 92.42999994754791,
+      "frameSamples": 143,
+      "p50": 49.94999999999709,
+      "p95": 82.94500000000698,
+      "p99": 149.74500000000262,
+      "max": 5154.925000000003,
+      "activationMax": 5154.925000000003,
+      "programQueries": 36,
+      "programWaitMs": 4942.635000228882,
+      "programs": [
+        {
+          "ms": 217.375,
+          "afterClickMs": 436.59500002861023,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 173.01000010967255,
+          "afterClickMs": 664.8249999284744,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 182.6050000190735,
+          "afterClickMs": 849.0599999427795,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 24.225000023841858,
+          "afterClickMs": 1035.5699999332428,
+          "draw": {
+            "object": "coverage-refined",
+            "parents": [
+              "continuous-herbaceous-cover",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 8.34500002861023,
+          "afterClickMs": 1073.2849999666214,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 16.90499997138977,
+          "afterClickMs": 1084.8799999952316,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 25.31000006198883,
+          "afterClickMs": 1107.9049999713898,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 3.274999976158142,
+          "afterClickMs": 1147.4700000286102,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 3.71999990940094,
+          "afterClickMs": 1153.4850000143051,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 3.4299999475479126,
+          "afterClickMs": 1160.1150000095367,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 4.390000104904175,
+          "afterClickMs": 1175.0749999284744,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshDepthMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 2.8949999809265137,
+          "afterClickMs": 1180.960000038147,
+          "draw": {
+            "object": "Mesh0",
+            "parents": [
+              "target_character",
+              "Quata_Character"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshDepthMaterial",
+            "source": "BakedMaterial",
+            "side": 1
+          }
+        },
+        {
+          "ms": 3.6100000143051147,
+          "afterClickMs": 1187.704999923706,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_asset_shadow_pass",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshDepthMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 155.79499995708466,
+          "afterClickMs": 1193.9750000238419,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 197.39999997615814,
+          "afterClickMs": 1358.679999947548,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 207.02999997138977,
+          "afterClickMs": 1563.1299999952316,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 160.5900000333786,
+          "afterClickMs": 1783.0099999904633,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 277.6999999284744,
+          "afterClickMs": 1953.375,
+          "draw": {
+            "object": "Mesh_0",
+            "parents": [
+              "Armature",
+              "Scene"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshStandardMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        },
+        {
+          "ms": 351.52499997615814,
+          "afterClickMs": 2248.8550000190735,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshPhysicalMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        },
+        {
+          "ms": 333.29500007629395,
+          "afterClickMs": 2604.564999938011,
+          "draw": {
+            "object": "Mesh_0_2",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshStandardMaterial",
+            "source": "Mane repairs",
+            "side": 2
+          }
+        },
+        {
+          "ms": 369.02499997615814,
+          "afterClickMs": 2946.350000023842,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshPhysicalMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        },
+        {
+          "ms": 337.41999995708466,
+          "afterClickMs": 3324.6299999952316,
+          "draw": {
+            "object": "Mesh_0_2",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshStandardMaterial",
+            "source": "Mane repairs",
+            "side": 2
+          }
+        },
+        {
+          "ms": 788.6400001049042,
+          "afterClickMs": 3674.329999923706,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 118.62999999523163,
+          "afterClickMs": 4466.965000033379,
+          "draw": {
+            "object": "coverage-refined",
+            "parents": [
+              "continuous-herbaceous-cover",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 271.6050000190735,
+          "afterClickMs": 4594.495000004768,
+          "draw": {
+            "object": "Mesh0",
+            "parents": [
+              "target_character",
+              "Quata_Character"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshPhysicalMaterial",
+            "source": "BakedMaterial",
+            "side": 0
+          }
+        },
+        {
+          "ms": 64.94500005245209,
+          "afterClickMs": 4877.804999947548,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 14.884999990463257,
+          "afterClickMs": 4950.3550000190735,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 16.384999990463257,
+          "afterClickMs": 4971.664999961853,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 2.9299999475479126,
+          "afterClickMs": 4991.8949999809265,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 2.409999966621399,
+          "afterClickMs": 4999.22000002861,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 1.8600000143051147,
+          "afterClickMs": 5002.5599999427795,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 168.40499997138977,
+          "afterClickMs": 5007.794999957085,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 145.38500010967255,
+          "afterClickMs": 5180.454999923706,
+          "draw": {
+            "object": "native-obstruction-blend",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 194.38999998569489,
+          "afterClickMs": 5334.365000009537,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 14.855000019073486,
+          "afterClickMs": 5540.625,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native-tree-standby",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 78.43500006198883,
+          "afterClickMs": 10388.054999947548,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshDepthMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": "B1",
+      "ok": true,
+      "elapsedBefore": 314.2841349999621,
+      "activeActorsBefore": 10,
+      "clickRoundtripMs": 113.25499999523163,
+      "frameSamples": 151,
+      "p50": 49.924999999995634,
+      "p95": 83.20999999999913,
+      "p99": 132.97000000000116,
+      "max": 166.1999999999971,
+      "activationMax": 149.63000000000466,
+      "programQueries": 1,
+      "programWaitMs": 89.59500002861023,
+      "programs": [
+        {
+          "ms": 89.59500002861023,
+          "afterClickMs": 5513.745000004768,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshDepthMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": "A2",
+      "ok": true,
+      "elapsedBefore": 314.30003500003363,
+      "activeActorsBefore": 10,
+      "clickRoundtripMs": 76.43499994277954,
+      "frameSamples": 138,
+      "p50": 49.99500000000262,
+      "p95": 82.98500000000058,
+      "p99": 133.125,
+      "max": 5454.190000000002,
+      "activationMax": 5454.190000000002,
+      "programQueries": 36,
+      "programWaitMs": 5203.505000114441,
+      "programs": [
+        {
+          "ms": 190.77499997615814,
+          "afterClickMs": 457.8949999809265,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 154.89999997615814,
+          "afterClickMs": 660.1549999713898,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 172.03000009059906,
+          "afterClickMs": 823.0549999475479,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 23.68499994277954,
+          "afterClickMs": 999.3700000047684,
+          "draw": {
+            "object": "coverage-refined",
+            "parents": [
+              "continuous-herbaceous-cover",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 8.399999976158142,
+          "afterClickMs": 1030.4049999713898,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 14.710000038146973,
+          "afterClickMs": 1041.5199999809265,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 28.2150000333786,
+          "afterClickMs": 1062.7699999809265,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 7.5,
+          "afterClickMs": 1098.4550000429153,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 3.0800000429153442,
+          "afterClickMs": 1108.0649999380112,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 2.059999942779541,
+          "afterClickMs": 1114.8700000047684,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 3.1899999380111694,
+          "afterClickMs": 1124.5900000333786,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshDepthMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 2.6899999380111694,
+          "afterClickMs": 1131.5800000429153,
+          "draw": {
+            "object": "Mesh0",
+            "parents": [
+              "target_character",
+              "Quata_Character"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshDepthMaterial",
+            "source": "BakedMaterial",
+            "side": 1
+          }
+        },
+        {
+          "ms": 2.5850000381469727,
+          "afterClickMs": 1137.789999961853,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_asset_shadow_pass",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshDepthMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 195.34500002861023,
+          "afterClickMs": 1142.7949999570847,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 222.45999991893768,
+          "afterClickMs": 1348.085000038147,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 196.42500007152557,
+          "afterClickMs": 1603.9199999570847,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 175.25499999523163,
+          "afterClickMs": 1809.9950000047684,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 339.3949999809265,
+          "afterClickMs": 1993.0149999856949,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshPhysicalMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        },
+        {
+          "ms": 367.914999961853,
+          "afterClickMs": 2350.975000023842,
+          "draw": {
+            "object": "Mesh_0_2",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshStandardMaterial",
+            "source": "Mane repairs",
+            "side": 2
+          }
+        },
+        {
+          "ms": 375.5750000476837,
+          "afterClickMs": 2728.814999938011,
+          "draw": {
+            "object": "Mesh_0",
+            "parents": [
+              "Armature",
+              "Scene"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshStandardMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        },
+        {
+          "ms": 405.625,
+          "afterClickMs": 3113.4099999666214,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshPhysicalMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        },
+        {
+          "ms": 382.69000005722046,
+          "afterClickMs": 3523.6749999523163,
+          "draw": {
+            "object": "Mesh_0_2",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshStandardMaterial",
+            "source": "Mane repairs",
+            "side": 2
+          }
+        },
+        {
+          "ms": 754.9950000047684,
+          "afterClickMs": 3917.9900000095367,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 106.31500005722046,
+          "afterClickMs": 4686.02999997139,
+          "draw": {
+            "object": "coverage-refined",
+            "parents": [
+              "continuous-herbaceous-cover",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 300.9500000476837,
+          "afterClickMs": 4820.004999995232,
+          "draw": {
+            "object": "Mesh0",
+            "parents": [
+              "target_character",
+              "Quata_Character"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshPhysicalMaterial",
+            "source": "BakedMaterial",
+            "side": 0
+          }
+        },
+        {
+          "ms": 56.050000071525574,
+          "afterClickMs": 5133.174999952316,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 22.09500002861023,
+          "afterClickMs": 5203.52999997139,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 18.359999895095825,
+          "afterClickMs": 5232.825000047684,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshBasicMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 8.430000066757202,
+          "afterClickMs": 5257.194999933243,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 3.8249999284744263,
+          "afterClickMs": 5271.370000004768,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 2.3450000286102295,
+          "afterClickMs": 5276.304999947548,
+          "draw": {
+            "object": "smooth-far-opaque",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "ShaderMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 189.4800000190735,
+          "afterClickMs": 5281.174999952316,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 149.3550000190735,
+          "afterClickMs": 5474.899999976158,
+          "draw": {
+            "object": "native-obstruction-blend",
+            "parents": [
+              "native_merged_assets",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 207.86500000953674,
+          "afterClickMs": 5632.965000033379,
+          "draw": {
+            "object": "",
+            "parents": [
+              "",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 2
+          }
+        },
+        {
+          "ms": 18.2849999666214,
+          "afterClickMs": 5853.585000038147,
+          "draw": {
+            "object": "",
+            "parents": [
+              "native-tree-standby",
+              ""
+            ],
+            "type": "Mesh",
+            "material": "MeshStandardMaterial",
+            "source": "",
+            "side": 0
+          }
+        },
+        {
+          "ms": 90.64999997615814,
+          "afterClickMs": 10737.524999976158,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshDepthMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": "B2",
+      "ok": true,
+      "elapsedBefore": 314.2969399998954,
+      "activeActorsBefore": 10,
+      "clickRoundtripMs": 109.00499999523163,
+      "frameSamples": 151,
+      "p50": 49.95999999999913,
+      "p95": 66.65499999999884,
+      "p99": 116.38500000000204,
+      "max": 166.34999999999854,
+      "activationMax": 116.38500000000204,
+      "programQueries": 1,
+      "programWaitMs": 122.87000000476837,
+      "programs": [
+        {
+          "ms": 122.87000000476837,
+          "afterClickMs": 5627.1449999809265,
+          "draw": {
+            "object": "Mesh_0_1",
+            "parents": [
+              "Mesh_0",
+              "Armature"
+            ],
+            "type": "SkinnedMesh",
+            "material": "MeshDepthMaterial",
+            "source": "Material_0",
+            "side": 2
+          }
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

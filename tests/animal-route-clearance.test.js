@@ -53,3 +53,30 @@ test('a larger step cannot move beyond the cached safe prefix without another sw
  const guard=animalRouteClearance(actor,nav,{radius:.5},null);
  assert.equal(guard.clear(actor,{x:8,z:0}),false);assert.ok(guard.blocked());assert.ok(checks>1);
 });
+
+test('a fractional landing cannot enter a static pocket missed by the waypoint prefix',()=>{
+ const actor={x:0,z:0,path:[{x:1,z:0}]};
+ const nav={version:1,segmentClear:()=>true,
+  walkable:x=>x<.4||x>.6};
+ const guard=animalRouteClearance(actor,nav,{radius:.9},null);
+ assert.equal(guard.clear(actor,{x:.5,z:0}),false);
+ assert(guard.blocked());
+ assert.equal(animalRouteClearance(actor,nav,{radius:.9},null)
+  .clear(actor,{x:.3,z:0}),true);
+});
+
+test('a rejected static landing reports its segment to native navigation once',()=>{
+ const actor={id:'animal-1',x:0,z:0,radius:.9,status:'walking',
+  path:[{x:1,z:0}],pathVersion:1,destinationId:'crop'};
+ const rejected=[];
+ const nav={version:1,segmentClear:()=>true,walkable:x=>x<.4||x>.6,
+  rejectRouteSegment:(start,end,radius,worker)=>{
+   rejected.push({start,end,radius,worker});return true;
+  }};
+ const state={elapsed:0,structures:[],workers:[],raid:{animals:[actor]}};
+ assert.equal(walkTo(state,actor,{id:'crop',x:1,z:0},.5,nav,
+  {speed:1,worker:false}),false);
+ assert.equal(actor.path,null);
+ assert.deepEqual(rejected,[{start:{x:0,z:0},end:{x:.5,z:0},
+  radius:.9,worker:false}]);
+});

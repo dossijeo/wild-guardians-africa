@@ -1,0 +1,106 @@
+{
+  "scope": "Single diagnostic loads, not performance acceptance",
+  "runs": [
+    {
+      "label": "original",
+      "links": 90,
+      "late": 1,
+      "resident": 83,
+      "sources": [
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": true,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "66cf9391",
+          "first": true,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "66cf9391",
+          "first": false,
+          "exactMatch": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "label": "shared",
+      "links": 89,
+      "late": 1,
+      "resident": 82,
+      "sources": [
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": true,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "66cf9391",
+          "first": true,
+          "exactMatch": true
+        },
+        {
+          "context": 0,
+          "hash": "4301934e",
+          "first": false,
+          "exactMatch": true
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "pixelMean": [
+    0.0010546875,
+    0.0010785590277777777,
+    0.0012424045138888888
+  ],
+  "pixelBounds": [
+    218,
+    207,
+    1137,
+    496
+  ]
+}

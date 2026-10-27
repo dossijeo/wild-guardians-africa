@@ -1,0 +1,58 @@
+{
+  "scope": "Correct UTF-8 fixtures. Control and endurance use different camera protocols: correctness evidence only, NOT quantitative AB performance or visual equivalence. Endurance pause counters sample at leg boundaries.",
+  "fixture": {
+    "biome": "sabana",
+    "source": "docs\\qa\\global-visual-lab\\sabana-populated-frozen-20261022\\native-fixture.json",
+    "sourceSha256": "5618c1f0d2cdb7c003078b6d7ed2e99111bb65c1562a1d61a10348aae3ab890b",
+    "output": ".codex-tmp\\current-night-fixtures\\sabana.json",
+    "outputSha256": "09f4f2dbe067c6a0dd8b9663fc79d4f6aa4f94ae51d93a82d432c1d31141bce4",
+    "originalTime": 119.99999999999746,
+    "nightTime": 350,
+    "elapsed": 119.99999999999746
+  },
+  "control": {
+    "created": 10,
+    "pausedFrames": 72,
+    "errors": [
+      "SpatialChunkUnavailable: Spatial navigation needs more resident chunks\n    at path (http://127.0.0.1:5190/src/world/wild-engine/spatial-navigation-movement.js:120:13)\n    at Object.workerPath (http://127.0.0.1:5190/src/world/wild-engine/spatial-navigation-movement.js:332:52)\n    at walkTo (http://127.0.0.1:5190/src/simulation/game.js:851:47)\n    at updateWorkers (http://127.0.0.1:5190/src/simulation/game.js:1402:23)\n    at tick (http://127.0.0.1:5190/src/simulation/game.js:1610:28)\n    at Module.advanceReal (http://127.0.0.1:5190/src/simulation/game.js:1624:5)\n    at frame (http://127.0.0.1:5190/src/app/main.js?t=1792901469477:577:395)"
+    ]
+  },
+  "endurance": {
+    "legs": 12,
+    "created": 175,
+    "elapsed": [
+      119.99999999999746,
+      175.73050618891912
+    ],
+    "pausedAtLegBoundaries": 0,
+    "workersAfter": [
+      {
+        "id": "worker-28",
+        "x": 60,
+        "z": 0,
+        "status": "home"
+      },
+      {
+        "id": "worker-30",
+        "x": 60,
+        "z": 0,
+        "status": "home"
+      }
+    ],
+    "nativeCounts": [
+      27,
+      26,
+      27,
+      27,
+      27,
+      26,
+      27,
+      26,
+      27,
+      26,
+      27,
+      26
+    ],
+    "linearMemoryBytes": 16777216
+  }
+}

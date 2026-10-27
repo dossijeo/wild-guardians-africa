@@ -14,7 +14,12 @@ export async function prepareInitialFarWorld(world,{nextFrame,now=()=>performanc
   const adapters=owner.adapters??[];
   const errors=adapters.flatMap(adapter=>adapter.stats.errors);
   if(errors.length)throw Error('Far world preparation failed: '+errors[0]);
-  if(adapters.length&&adapters.every(adapter=>adapter.layer.current))return;
+  if(adapters.length&&adapters.every(adapter=>adapter.layer.current)){
+   // Far materials and the ground cache are installed after the earlier actor
+   // warmup. Prepare their real depth-target variants before gameplay VFX use.
+   await world.warmResidentDepth?.({nextFrame:async()=>{afterRender();await frame();}});
+   check();return;
+  }
   if(now()-started>=timeout)throw Error('Far world preparation timed out');
   await frame();
  }

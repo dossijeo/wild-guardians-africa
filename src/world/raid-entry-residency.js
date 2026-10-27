@@ -14,6 +14,7 @@ export function raidEntryChunks(entry, radii) {
 }
 export function raidResidentDemand(state, nav) {
   const keys = new Set(), pending = nav.raidEntryDemand ?? nav.pendingRaidEntry;
+  if(state.raid)for(const key of nav.raidConnectivityDemand??[])keys.add(key);
   const add = (entry, radii) => { for (const key of raidEntryChunks(entry, radii)) keys.add(key); };
   if (pending) add(pending.entry, pending.radii);
   for (const actor of state.raid?.animals ?? []) {

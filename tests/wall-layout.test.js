@@ -26,6 +26,54 @@ test('Module sampling preserves original straight, curved and closed paths',()=>
   assert.equal(wallStroke([[0,0],[8,0]],[],{smooth:false}).length,4);
   assert.throws(()=>wallStroke([[NaN,0],[8,0]],[]),/inválido/);
 });
+test('A ruined wall no longer hides a physically open stroke slot',()=>{
+  const stroke=[[0,0],[2.18,0]],slot=wallStroke(stroke,[],
+    {smooth:false,snap:false})[0];
+  const wall={kind:'wall',id:'old',created:1,material:'zarzas',
+    x:slot.x,z:slot.z,yaw:-slot.angle,baseScaleX:slot.scaleX,
+    maxHp:100,hp:0,status:'ruined'};
+  assert.equal(wallStroke(stroke,[wall],{smooth:false,snap:false}).length,1);
+  assert.equal(wallStroke(stroke,[{...wall,hp:100,status:'intact'}],
+    {smooth:false,snap:false}).length,0);
+  assert.equal(wallStroke(stroke,[{...wall,status:'collapsing'}],
+    {smooth:false,snap:false}).length,0);
+});
+test('rebuilding a ruined module removes its stale repair target atomically',()=>{
+  const {state,nav}=fixture(),stroke=[[0,0],[2.18,0]];
+  assert.ok(Game.buildWallChain(state,'first-wall','zarzas',stroke,nav,
+    {smooth:false,snap:false}));
+  const ruin=state.structures.find(item=>item.kind==='wall');
+  ruin.hp=0;ruin.status='ruined';nav.setState(state);
+  assert.ok(Game.requestRepair(state,'repair-old',ruin.id));
+  assert.equal(state.tasks.filter(task=>task.targetId===ruin.id).length,1);
+  const balance=Number(state.ledger.balance.n);
+  const quote=Game.quoteWallChain(state,'zarzas',stroke,nav,
+    {smooth:false,snap:false});
+  assert.equal(quote.pieces.length,1);
+  assert.deepEqual(quote.repairableRuins,[ruin.id]);
+  assert.ok(Game.buildWallChain(state,'replacement-wall','zarzas',stroke,nav,
+    {smooth:false,snap:false,preparedPlan:quote}));
+  assert.equal(state.structures.filter(item=>item.kind==='wall').length,1);
+  assert.equal(state.structures.some(item=>item.id===ruin.id),false);
+  assert.equal(state.tasks.some(task=>task.targetId===ruin.id),false);
+  assert.equal(Number(state.ledger.balance.n),balance-10);
+  assert.ok(state.events.some(event=>event.type==='WallRemoved'&&
+    event.targetId===ruin.id&&event.refund===0));
+  assert.equal(serialize(deserialize(serialize(state))),serialize(state));
+});
+test('a single paid wall also replaces a coincident ruin',()=>{
+  const {state,nav}=fixture();
+  assert.ok(Game.placeStructure(state,'first-single',
+    {kind:'wall',material:'zarzas',x:0,z:0,yaw:0},nav));
+  const ruin=state.structures.find(item=>item.kind==='wall');
+  ruin.hp=0;ruin.status='ruined';nav.setState(state);
+  const balance=Number(state.ledger.balance.n);
+  assert.ok(Game.placeStructure(state,'second-single',
+    {kind:'wall',material:'zarzas',x:0,z:0,yaw:0},nav));
+  assert.equal(state.structures.filter(item=>item.kind==='wall').length,1);
+  assert.equal(state.structures.some(item=>item.id===ruin.id),false);
+  assert.equal(Number(state.ledger.balance.n),balance-10);
+});
 test('Enclosure graph and deterministic gates match source including crossings and T junctions',()=>{
   const paths=[square,[...square,[8,4],[0,4]],[[0,0],[8,0],[8,8]],[[0,0],[8,8],[0,8],[8,0],[0,0]]];
   for(const path of paths){

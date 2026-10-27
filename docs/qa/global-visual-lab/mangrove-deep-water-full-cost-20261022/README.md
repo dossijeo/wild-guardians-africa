@@ -1,0 +1,3 @@
+# Full-scene ABAB attempt — invalid comparison
+
+This first full-background benchmark did not pass equal-work checks. First olive run: 71–111 calls and 725983–1136840 triangles; other runs: 72–112 calls and 731624–1142481 triangles. Difference: one call and 5641 triangles. Both day and night affected. No speedup, regression or FPS conclusion can be drawn for the color change from these records. The earlier 60-frame warmup did not establish repeatable draw work. Retry waits for all adapter preparation to finish and 45 stable renders; its separate output is mangrove-deep-water-full-settled-cost-20261022. Do not overwrite this failed diagnostic.

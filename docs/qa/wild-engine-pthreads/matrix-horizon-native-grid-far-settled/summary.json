@@ -1,0 +1,326 @@
+{
+  "commit": "aa564e79ebd387299cd0c6eecfee2103e72e62be",
+  "quality": "media",
+  "compare": "horizon-native-grid",
+  "farCompletionGate": true,
+  "horizonBedBudget": 2,
+  "scope": "Paused real game; equivalent completed streaming work, 720p, GPU timer every third render. Not active simulation or visual acceptance.",
+  "runs": [
+    {
+      "biome": "gran-canon",
+      "label": "a1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 149,
+        "mean": 18.189798657718136,
+        "p95": 16.960000000002765,
+        "max": 132.97999999999956
+      },
+      "gpu": {
+        "count": 50,
+        "mean": 8.849419219999998,
+        "p95": 16.81151,
+        "max": 19.033645
+      },
+      "programRetention": null,
+      "slowGlCount": 1,
+      "slowGlMs": 22.044999957084656,
+      "horizon": {
+        "count": 150,
+        "mean": 1.0684666669368743,
+        "p95": 0.04499995708465576,
+        "max": 94.06000000238419
+      },
+      "syncChunks": {
+        "count": 150,
+        "mean": 1.3436333338419597,
+        "p95": 0.6000000238418579,
+        "max": 99.26500004529953
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 4.450000017881393,
+        "p95": 3.8600000143051147,
+        "max": 5.040000021457672
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.050299991369247433,
+        "p95": 0.08499997854232788,
+        "max": 0.14000004529953003
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7321000039577484,
+        "p95": 1.1800000071525574,
+        "max": 1.449999988079071
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 30.0830029296875,
+        "p95": 37.7451171875,
+        "max": 50.0400390625
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.0100000047683717,
+        "p95": 10.145000040531158,
+        "max": 14.139999985694885
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2710.2800000000025,
+      "report": "docs/qa/wild-engine-pthreads/matrix-horizon-native-grid-far-settled/gran-canon-a1.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "b1",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 157,
+        "mean": 17.581942675159247,
+        "p95": 16.875,
+        "max": 66.52000000000044
+      },
+      "gpu": {
+        "count": 53,
+        "mean": 9.742367830188678,
+        "p95": 16.84177,
+        "max": 21.083854
+      },
+      "programRetention": null,
+      "slowGlCount": 2,
+      "slowGlMs": 47.250000059604645,
+      "horizon": {
+        "count": 203,
+        "mean": 0.3507389188400043,
+        "p95": 0.0549999475479126,
+        "max": 35.56999999284744
+      },
+      "syncChunks": {
+        "count": 203,
+        "mean": 0.5964532027690869,
+        "p95": 0.6949999928474426,
+        "max": 43.60499995946884
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 4.810000002384186,
+        "p95": 4.715000033378601,
+        "max": 4.9049999713897705
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.05829999923706055,
+        "p95": 0.10499995946884155,
+        "max": 0.2850000262260437
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6830999982357026,
+        "p95": 0.9350000023841858,
+        "max": 1.25
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 31.0260009765625,
+        "p95": 36.97998046875,
+        "max": 41.804931640625
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.298800004720688,
+        "p95": 13.539999961853027,
+        "max": 18.82499998807907
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2760.3650000000016,
+      "report": "docs/qa/wild-engine-pthreads/matrix-horizon-native-grid-far-settled/gran-canon-b1.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "a2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 151,
+        "mean": 18.170132450331117,
+        "p95": 16.849999999998545,
+        "max": 116.29500000000189
+      },
+      "gpu": {
+        "count": 51,
+        "mean": 9.354628764705884,
+        "p95": 16.62901,
+        "max": 20.597656
+      },
+      "programRetention": null,
+      "slowGlCount": 2,
+      "slowGlMs": 46.74500000476837,
+      "horizon": {
+        "count": 152,
+        "mean": 1.04796052724123,
+        "p95": 0.04500001668930054,
+        "max": 90.56499999761581
+      },
+      "syncChunks": {
+        "count": 152,
+        "mean": 1.3361184220564992,
+        "p95": 0.7200000286102295,
+        "max": 95.59999996423721
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 3.929999977350235,
+        "p95": 3.7649999856948853,
+        "max": 4.094999969005585
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.0471999990940094,
+        "p95": 0.06999999284744263,
+        "max": 0.10000002384185791
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.6712000000476838,
+        "p95": 1,
+        "max": 1.2850000262260437
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 29.583701171875,
+        "p95": 34.91015625,
+        "max": 37.3798828125
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.167700003385544,
+        "p95": 11.769999980926514,
+        "max": 16.155000030994415
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 2743.6899999999987,
+      "report": "docs/qa/wild-engine-pthreads/matrix-horizon-native-grid-far-settled/gran-canon-a2.json"
+    },
+    {
+      "biome": "gran-canon",
+      "label": "b2",
+      "backend": "pthreads",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "created": 50,
+      "frames": {
+        "count": 177,
+        "mean": 18.131751412429377,
+        "p95": 33.154999999998836,
+        "max": 83.10000000000218
+      },
+      "gpu": {
+        "count": 60,
+        "mean": 11.162383933333333,
+        "p95": 20.654166,
+        "max": 31.736927
+      },
+      "programRetention": null,
+      "slowGlCount": 2,
+      "slowGlMs": 41.93999993801117,
+      "horizon": {
+        "count": 178,
+        "mean": 0.524522468615114,
+        "p95": 0.06000000238418579,
+        "max": 46.2150000333786
+      },
+      "syncChunks": {
+        "count": 178,
+        "mean": 0.8021629204910793,
+        "p95": 0.7599999904632568,
+        "max": 54.58500003814697
+      },
+      "eviction": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "batchEviction": {
+        "count": 2,
+        "mean": 4.735000014305115,
+        "p95": 4.305000007152557,
+        "max": 5.165000021457672
+      },
+      "generation": {
+        "count": 0,
+        "mean": 0,
+        "p95": null,
+        "max": null
+      },
+      "admission": {
+        "count": 50,
+        "mean": 0.054300001859664916,
+        "p95": 0.07999998331069946,
+        "max": 0.08000004291534424
+      },
+      "publication": {
+        "count": 50,
+        "mean": 0.7555999994277954,
+        "p95": 1.1600000262260437,
+        "max": 1.8100000023841858
+      },
+      "nativeCompute": {
+        "count": 50,
+        "mean": 34.0765087890625,
+        "p95": 43.320068359375,
+        "max": 49.30517578125
+      },
+      "install": {
+        "count": 50,
+        "mean": 3.326399998664856,
+        "p95": 12.1700000166893,
+        "max": 14.129999995231628
+      },
+      "memoryBytes": 16777216,
+      "observedRafMs": 3209.3199999999997,
+      "report": "docs/qa/wild-engine-pthreads/matrix-horizon-native-grid-far-settled/gran-canon-b2.json"
+    }
+  ]
+}

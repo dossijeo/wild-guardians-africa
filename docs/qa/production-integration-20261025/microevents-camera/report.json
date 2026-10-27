@@ -1,0 +1,104 @@
+{
+  "scope": "Actual right-drag orbit and wheel in real renderer; pathleaves forced once and frozen only for world-position comparison, then unfreezed for expiry. QA fixture, not normal spawn.",
+  "rows": [
+    {
+      "label": "initial",
+      "active": "pathleaves",
+      "camera": [
+        99.70247532024266,
+        22.023772089667386,
+        30.57367599590944
+      ],
+      "instances": 13,
+      "maxWorldDrift": 0,
+      "records": [
+        {
+          "type": "spawn",
+          "at": 35857.3449999094,
+          "day": 1,
+          "eventType": "pathleaves",
+          "category": "nuisance"
+        }
+      ]
+    },
+    {
+      "label": "orbit",
+      "active": "pathleaves",
+      "camera": [
+        85.28930754693837,
+        26.848869972229004,
+        25.792137430858048
+      ],
+      "instances": 13,
+      "maxWorldDrift": 0,
+      "records": [
+        {
+          "type": "spawn",
+          "at": 35857.3449999094,
+          "day": 1,
+          "eventType": "pathleaves",
+          "category": "nuisance"
+        }
+      ]
+    },
+    {
+      "label": "zoom",
+      "active": "pathleaves",
+      "camera": [
+        84.66127658808992,
+        26.848869972229,
+        25.12811752610291
+      ],
+      "instances": 13,
+      "maxWorldDrift": 0,
+      "records": [
+        {
+          "type": "spawn",
+          "at": 35857.3449999094,
+          "day": 1,
+          "eventType": "pathleaves",
+          "category": "nuisance"
+        }
+      ]
+    },
+    {
+      "label": "expired",
+      "camera": [
+        84.59763115405744,
+        26.848869972229004,
+        25.059362989407877
+      ],
+      "instances": 0,
+      "maxWorldDrift": 0.14912398457398712,
+      "records": [
+        {
+          "type": "spawn",
+          "at": 35857.3449999094,
+          "day": 1,
+          "eventType": "pathleaves",
+          "category": "nuisance"
+        },
+        {
+          "type": "ignored",
+          "at": 47091.33499991894,
+          "day": 1,
+          "eventType": "pathleaves",
+          "duration": 6.510365000009539
+        },
+        {
+          "type": "economy",
+          "at": 47091.37000000477,
+          "day": 1,
+          "eventId": "micro:1",
+          "eventType": "pathleaves",
+          "targetId": "plant-7",
+          "applied": true,
+          "delta": 0,
+          "dailyCredit": 0,
+          "dailyReservedLoss": 0
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

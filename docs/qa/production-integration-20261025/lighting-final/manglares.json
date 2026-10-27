@@ -1,0 +1,365 @@
+{
+  "scope": "Real campaign renderer, seed 712, same camera and visual time; Integrated final daylight on/off with the same scene and time. DOF disabled in both arms to isolate lighting; no timing claim.",
+  "records": [
+    {
+      "arm": "original",
+      "phase": "day",
+      "file": "manglares-original-day.png",
+      "camera": [
+        114,
+        20.219999933242796,
+        10
+      ],
+      "target": [
+        92,
+        4.219999933242798,
+        -8
+      ],
+      "biome": "manglares",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 84,
+        "triangles": 363173,
+        "memory": {
+          "geometries": 229,
+          "textures": 147
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "holly-fronds",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1171,
+          "far": 1331,
+          "leaves": 10008,
+          "triangles": 48120,
+          "chunks": 25,
+          "cachedTiles": 65,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 97.56500017642975,
+            "selectionMs": 66.92000019550323,
+            "selectionCount": 86,
+            "candidates": 9760,
+            "masked": 6211,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 2502,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "original",
+      "phase": "night",
+      "file": "manglares-original-night.png",
+      "camera": [
+        114,
+        20.219999933242796,
+        10
+      ],
+      "target": [
+        92,
+        4.219999933242798,
+        -8
+      ],
+      "biome": "manglares",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&qa-seed=712&horizonFocus=0&finalDaylight=0",
+      "metrics": {
+        "calls": 84,
+        "triangles": 363173,
+        "memory": {
+          "geometries": 229,
+          "textures": 147
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "holly-fronds",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1171,
+          "far": 1331,
+          "leaves": 10008,
+          "triangles": 48120,
+          "chunks": 25,
+          "cachedTiles": 65,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 97.56500017642975,
+            "selectionMs": 66.92000019550323,
+            "selectionCount": 86,
+            "candidates": 9760,
+            "masked": 6211,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 2502,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "warm",
+      "phase": "day",
+      "file": "manglares-warm-day.png",
+      "camera": [
+        114,
+        20.219999933242796,
+        10
+      ],
+      "target": [
+        92,
+        4.219999933242798,
+        -8
+      ],
+      "biome": "manglares",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 84,
+        "triangles": 363173,
+        "memory": {
+          "geometries": 227,
+          "textures": 151
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "holly-fronds",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1171,
+          "far": 1331,
+          "leaves": 10008,
+          "triangles": 48120,
+          "chunks": 25,
+          "cachedTiles": 65,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 65.82500004768372,
+            "selectionMs": 54.21500015258789,
+            "selectionCount": 78,
+            "candidates": 9760,
+            "masked": 6211,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 2502,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "warm",
+      "phase": "night",
+      "file": "manglares-warm-night.png",
+      "camera": [
+        114,
+        20.219999933242796,
+        10
+      ],
+      "target": [
+        92,
+        4.219999933242798,
+        -8
+      ],
+      "biome": "manglares",
+      "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&qa-seed=712&horizonFocus=0&finalDaylight=1",
+      "metrics": {
+        "calls": 84,
+        "triangles": 363173,
+        "memory": {
+          "geometries": 227,
+          "textures": 151
+        },
+        "coverage": {
+          "distribution": "original",
+          "leafShape": "holly-fronds",
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 1,
+          "nearDistance": 24,
+          "moduleSpacing": 0.65,
+          "near": 1171,
+          "far": 1331,
+          "leaves": 10008,
+          "triangles": 48120,
+          "chunks": 25,
+          "cachedTiles": 65,
+          "bufferBytes": 1206340,
+          "stats": {
+            "buildMs": 65.82500004768372,
+            "selectionMs": 54.21500015258789,
+            "selectionCount": 78,
+            "candidates": 9760,
+            "masked": 6211,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": true,
+          "cardStudy": {
+            "representation": "native-holly-fern-balanced",
+            "shadowResolution": 2048,
+            "castsNativeShadow": true,
+            "sizeXZ": 1.35,
+            "sizeY": 1.6,
+            "colorContrast": 1.12,
+            "edgePadding": 1,
+            "frondsPerClump": 4,
+            "trianglesPerClump": 32,
+            "textureCount": 2,
+            "textureBytesEstimate": 11184810.666666666,
+            "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+            "reuseNativeInstanceBuffers": true,
+            "extraSelectionPass": false,
+            "stats": {
+              "instances": 2502,
+              "updates": 0,
+              "selectionMs": 0
+            },
+            "prelit": {
+              "nearAndFar": false,
+              "nearNative": true,
+              "orientations": 8,
+              "atlasWidth": 2048,
+              "atlasHeight": 256,
+              "solarShadowOpacity": 0.55,
+              "solarShadowQuad": true,
+              "liveNormalSampling": false,
+              "liveShadowCasting": false,
+              "liveWind": false,
+              "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+            }
+          },
+          "baseMeshesReplaced": true
+        },
+        "glError": 0
+      },
+      "errors": []
+    }
+  ]
+}

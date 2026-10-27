@@ -1,13 +1,13 @@
 // A player strategy using only ordinary commands on native terrain. No overrides
 // to balances, growth, task order, worker movement, RNG or animal damage/budgets.
 import {pathToFileURL} from 'node:url';
+import {performance} from 'node:perf_hooks';
 import {createOpeningWorld} from './check_opening.mjs';
 import * as Game from '../src/simulation/game.js';
 import {cropSpec,permission,operational} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
 import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
-import {centerServicePoint} from '../src/world/centers.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
@@ -16,70 +16,179 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
 import {createNativeExpandingDefensePolicy} from './native-expanding-defense-policy.mjs';
-import {createNativeClosedDefensePolicy} from './native-closed-defense-policy.mjs';
-import {createNativeFundedDefensePolicy} from './native-funded-defense-policy.mjs';
+import {createNativeTopologicalDefensePolicy} from './native-topological-defense-policy.mjs';
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
 import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
-import {nativeCampaignStrategy,campaignMagicAllowed,affordableOpening,villageSavingsForState,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
+import {nativeCampaignStrategy,affordableOpening,villageSavingsFromTotals,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
 import {createNativeCampaignPlots} from './native-campaign-plots.mjs';
 import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 
 import {campaignFinanceCheckpoint,campaignFinanceDelta} from './native-campaign-finance.mjs';
 
 import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-policy.mjs';
-import {createQ5LabourPolicy} from './native-q5-labour-policy.mjs';
-import {createQ6LabourPolicy} from './native-q6-labour-policy.mjs';
-import {createQ7LabourPolicy} from './native-q7-labour-policy.mjs';
-import {createQ8LabourPolicy} from './native-q8-labour-policy.mjs';
-import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,nativeEvidence=true,onDay,onTick,onDecision,...world}={}){
+export function syncNativeCampaignRaidView(state,nav,previousCenter){
+ const center=state.structures.find(operational);
+ if(!center)return null;
+ const key=`${center.id}:${center.x}:${center.z}`;
+ let context=previousCenter;
+ if(context?.key!==key){
+  const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
+  const eye={x:pose.eye[0],z:pose.eye[2]};
+  context={key,eye,bounds:activeChunkRegion(eye).bounds};
+ }
+ const view=nav.raidView;
+ const viewChanged=view?.eye?.x!==context.eye.x||view?.eye?.z!==context.eye.z||
+  view?.target?.x!==center.x||view?.target?.z!==center.z;
+ const bounds=nav.activeBounds;
+ const coversCamera=bounds?.length===4&&bounds[0]<=context.bounds[0]&&
+  bounds[1]<=context.bounds[1]&&bounds[2]>=context.bounds[2]&&
+  bounds[3]>=context.bounds[3];
+ if(viewChanged)nav.setRaidView(context.eye,center);
+ if(viewChanged||!coversCamera){
+  nav.setActiveBounds(context.bounds);
+ }
+ return context;
+}
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,wallSpendingEnabled=true,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,defenseEventDriven=nativeIntents,nativeWallPlans=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
- if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
- const protocol={...campaignProtocolForLabour(labourPolicy),profile},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8'].includes(labourPolicy),q6=['q6','q7','q8'].includes(labourPolicy),q7=['q7','q8'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
- const policy=nativeCampaignStrategy(strategy);defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
+ const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
+ const policy=nativeCampaignStrategy(strategy);defend=policy.defend&&wallSpendingEnabled;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
- const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
+ if(nativeWallPlans&&!nativeIntents)throw Error('Native wall plans require native intentions');
+ const opening=await openingFactory(world),nav=opening.nav;let s=opening.s,sequence=0;
+ const useSpatialAdvice=spatialAdvice??Boolean(opening.session);
+ if(useSpatialAdvice&&!opening.session)throw Error('Spatial advice requires a Wild Engine session');
+ if(nativeIntents&&(!opening.session||reloadRaids)){
+  await opening.dispose?.();
+  throw Error('Experimental native intentions require one continuous Wild Engine session');
+ }
+ const intentPlanner=nativeIntents?createEventDrivenTaskPlanner(opening.session):null;
+ intentPlanner?.resetFromState(s);
+ if(intentPlanner)intentPlanner.nativeWallSelectionEnabled=nativeWallPlans;
+ const stopIntentTasks=intentPlanner?.observeTasks(s),
+  stopIntentWorld=intentPlanner?.observeWorld(s);
+ if(intentPlanner)nav.intentTaskPlanner=intentPlanner;
+ const adviceInitStart=performance.now();
+ // A session has one native intent index. Spatial advice and action planning
+ // share it; constructing another bridge would reset active routes and leases.
+ const advice=useSpatialAdvice?(intentPlanner??createSpatialIntentBridge(opening.session)):null;
+ if(advice&&!intentPlanner)advice.resetFromState(s);
+ const spatialAdviceInitMs=advice?performance.now()-adviceInitStart:0;
+ const spatialSync={calls:0,events:0,ms:0};
+ let spatialEvents=[];
+ let stopSpatialEvents=advice&&!intentPlanner?
+  Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;
+ const syncAdvice=()=>{
+  if(!advice)return;
+  if(intentPlanner){
+   const started=performance.now(),events=intentPlanner.flushWorldEvents();
+   if(events){spatialSync.calls++;spatialSync.events+=events;
+    spatialSync.ms+=performance.now()-started;}
+   return;
+  }
+  const fresh=spatialEvents;
+  if(!fresh.length)return;
+  const started=performance.now();
+  advice.applyCommittedEvents(s,fresh);
+  spatialSync.calls++;spatialSync.events+=fresh.length;
+  spatialSync.ms+=performance.now()-started;
+  spatialEvents=[];
+ };
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
- if(!['legacy','expanding','closed','funded','routed'].includes(defensePolicy))throw Error('Unknown defense policy');
- if(!Number.isSafeInteger(defenseStartDay)||defenseStartDay<1||defenseStartDay!==1&&!['closed','funded','routed'].includes(defensePolicy))throw Error('Explicit defense start requires closed/funded/routed policy and positive integer day');
- const q5Policy=labourPolicy==='q8'?createQ8LabourPolicy({profile}):q7?createQ7LabourPolicy({profile}):q6?createQ6LabourPolicy({profile}):q5?createQ5LabourPolicy({profile}):null;
- const defense=defend?(['funded','routed'].includes(defensePolicy)?createNativeFundedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair,obstacleAware:defensePolicy==='routed'}):defensePolicy==='closed'?createNativeClosedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair}):defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
- const driver=new NativeCampaignEntryDriver(nav);let partialEvidence=()=>({});
+ if(!['legacy','expanding','topological'].includes(defensePolicy))
+  throw Error('Unknown defense policy');
+ let decisionPhases=null;
+ const measure=(kind,ms)=>{
+  if(!decisionPhases)return;
+  const row=decisionPhases[kind]??(decisionPhases[kind]={calls:0,ms:0});
+  row.calls++;row.ms+=ms;
+ };
+ const timed=(kind,fn)=>{
+  if(!decisionProfile)return fn();
+  const start=performance.now();
+  try{return fn();}finally{measure(kind,performance.now()-start);}
+ };
+ const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:defenseEventDriven?'next-stroke':'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):defensePolicy==='topological'?createNativeTopologicalDefensePolicy({session:opening.session,advice,repairWalls:policy.repair,repairCenters:policy.repair,centerRepairThreshold:reserveMaintenance?600:540,measure:decisionProfile?measure:null}):createFarmDefensePolicy()):null;
+ const observeDefenseEvents=()=>(defenseEventDriven||defensePolicy==='topological')&&defense?.onWorldEvent?
+  Game.observeGameEvents(s,event=>defense.onWorldEvent(event,s)):null;
+ let stopDefenseEvents=observeDefenseEvents();
+ const protectionEvents=[];
+ const stopProtectionEvents=intentPlanner&&advice?
+  intentPlanner.observeCropProtection(change=>{
+   protectionEvents.push({day:s.day,time:s.time,groupId:change.groupId,
+    previous:change.previous,protection:change.protection});
+   defense?.onCropProtectionChanged?.(change);
+  }):null;
+ const stopStructureEvents=intentPlanner&&defense?.onStructureConditionChanged?
+  intentPlanner.observeStructureCondition(change=>
+   defense.onStructureConditionChanged(change)):null;
+ const driver=entryDriverFactory(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
- const command=kind=>`intensive-${kind}-${sequence++}`,center=s.structures[0],origin=centerServicePoint(center,s,.8);
- if(cameraEntry){
-  const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
-  nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
- }
+ const command=kind=>`intensive-${kind}-${sequence++}`;
+ let raidViewCenter=null;
+ const syncRaidView=()=>{if(cameraEntry)raidViewCenter=syncNativeCampaignRaidView(s,nav,raidViewCenter);};
+ syncRaidView();
  const plots=[];let nextWages=worker.wage,staff=1,plantedSequence=0;
  const expansion=policy.foundVillages?createNativeCampaignExpansion():null;
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
  let financeStart=campaignFinanceCheckpoint(s);
- partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourObservations,labourReasons,...(q7?{trialHiring:q5Policy.report()}:{}),defense:defense?.report(s)??null,expansion:expansion?.report()??null});
- const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
- const plotSearch=createNativeCampaignPlots(nav,()=>s);
- const choosePlot=()=>{const p=plotSearch.choose();if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);return p;};
- const nextSpecies=()=>campaignCropChoice({policy:cropPolicy,mixed,day:s.day,cash:numberOf(s.ledger.balance),purchased:plantedSequence,reserved:labourReserve()+maintenanceReserve()+(defense?.reserve(s)??0)});
- const labourReserve=(additional=0)=>q5?q5Policy.reserve():q4?q4RecoveryReserve(s,worker.wage):policy.cashPolicy==='progressive-village'?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
- const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
- const savingsReserve=(additional=0)=>Math.min(villageSavingsForState(policy,s,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
- const plant=()=>{
-  const species=nextSpecies();if(q6&&!q5Policy.canSpend(s,cropSpec(species).plant_cost,{pendingRepair:maintenanceReserve()}))return false;if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1)+cropSpec(species).plant_cost)return false;
-  const p=choosePlot();if(!p)return false;
-  if(!Game.plant(s,command('plant'),species,p.x,p.z,nav))return false;plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
+ partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
+ const collect=()=>{syncAdvice();for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
+ const plotSearch=createNativeCampaignPlots(nav,()=>s,{measure:decisionProfile?measure:null});
+ const spatialSite={found:0,pending:0,blocked:0,'no-space':0,unknown:0,legacyFallback:0};
+ const choosePlot=()=>{
+  let p=null;
+  if(advice){
+   for(const center of s.structures.filter(operational)){
+    const site=timed('plot.nativeSite',()=>advice.findPlantingSite(center.id,{budget:64}));
+    spatialSite[site.status]=(spatialSite[site.status]??0)+1;
+    if(site.status==='found'){p={...site.point,centerId:center.id,
+      reservationId:site.reservationId};break;}
+    if(site.status==='pending')return null;
+   }
+  }
+  // Unknown or pending native space remains unresolved until Wild Engine loads
+  // the relevant sectors. A second JS site search would bypass that authority.
+  if(!p&&!advice)p=timed('plot.choose',()=>plotSearch.choose());
+  if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);
+  return p;
  };
- const canCast=(kind,p)=>campaignMagicAllowed(policy,kind)&&permission(s,kind)&&s.cooldowns[kind]===0&&
-  (kind!=='shield'||!s.spells.some(a=>a.kind==='shield'&&distance(a,p)<a.radius+Game.spellRadius(kind)))&&
+ const nextSpecies=()=>mixed&&s.day>=10&&numberOf(s.ledger.balance)>1000?['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'][plantedSequence%8]:'mijo';
+ const labourReserve=(additional=0)=>q4?q4RecoveryReserve(s,worker.wage):policy.cashPolicy==='progressive-village'?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
+ const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
+ const savingsReserve=(additional=0)=>Math.min(villageSavingsFromTotals(policy,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
+ const plant=()=>{
+  const species=nextSpecies(),living=s.plants.filter(p=>p.alive).length;
+  // Replacing the crop base that supports the current payroll precedes
+  // discretionary wall savings. Above that base, the defense target reserves
+  // the surplus without imposing a maximum farm size.
+  const defenseSavings=living<staff*plantsPerWorker?0:defense?.reserve(s)??0;
+  if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+defenseSavings+savingsReserve(1)+cropSpec(species).plant_cost)return false;
+  const p=choosePlot();if(!p)return false;
+  let planted=false;
+  try{planted=Game.plant(s,command('plant'),species,p.x,p.z,nav);}
+  finally{if(p.reservationId)advice.releasePlantingSite(p.reservationId,{committed:planted});}
+  if(!planted)return false;
+  syncAdvice();plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
+ };
+ const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
+  !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
  const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
- // Agricultural powers affect one plant. Preserve the eligible FIFO order;
- // the former area-coverage score no longer describes their effect.
- const bestMagicPoint=(kind,plants)=>plants.find(p=>canCast(kind,p))??null;
+ const bestMagicPoint=(kind,plants)=>{
+  let best=null,score=0;
+  for(const p of plants)if(canCast(kind,p)){
+   const coverage=plants.reduce((total,q)=>total+Number(distance(p,q)<=Game.spellRadius(kind)),0);
+   if(coverage>score){best=p;score=coverage;}
+  }
+  return best;
+ };
  const act=()=>{
   let actions=0;
   if(s.raid){
@@ -93,34 +202,32 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   if(!permission(s,'plant'))return {actions,reason:'night'};
   // Optional comparison: ordinary proportional hiring during the workday.
   // The original dawn-only strategy remains the default, including old runs.
-  if(q5&&middayHiring){
-   const plan=q5Policy.additional(s,{pendingRepair:maintenanceReserve(),seedCost:cropSpec(nextSpecies()).plant_cost});
-   if(plan&&['funded','routed'].includes(defensePolicy)){plan.defenseReserve=defense?.reserve(s)??0;if(plan.count&&numberOf(s.ledger.balance)<plan.required+plan.defenseReserve){plan.count=0;plan.reason='cash earmarked for physical defense';}}
-   if(plan){labourObservations.push({day:s.day,time:s.time,...plan});labourReasons[plan.reason]=(labourReasons[plan.reason]??0)+1;
-    if(plan.count){const id=command('hire'),beforeWorkers=new Set(s.workers.map(w=>w.id));if(Game.hireAdditional(s,id,{[profile]:plan.count},plan.centerId)){const workerIds=s.workers.filter(w=>!beforeWorkers.has(w.id)).map(w=>w.id);q5Policy.hired(s,plan.count,{id,workerIds,centerId:plan.centerId});staff+=plan.count;nextWages=q5Policy.reserve();actions++;labourHistory.push({day:s.day,time:s.time,id,kind:'additional',...plan,workerIds,paidCoins:-numberOf(s.ledger.entries[id])});}}
-   }
-  }
   if(q4&&middayHiring){
    const plan=q4AdditionalPlan(s,{profile,pendingRepair:maintenanceReserve(),seedCost:cropSpec(nextSpecies()).plant_cost});labourReasons[plan.reason]=(labourReasons[plan.reason]??0)+1;
    if(plan.count){const id=command('hire');if(Game.hireAdditional(s,id,{[profile]:plan.count},plan.centerId)){staff+=plan.count;nextWages=staff*worker.wage;actions++;labourHistory.push({day:s.day,time:s.time,id,kind:'additional',...plan,paidCoins:-numberOf(s.ledger.entries[id])});}}
   }
-  if(!q4&&!q5&&middayHiring&&s.time<worker.end-20){
+  if(!q4&&middayHiring&&s.time<worker.end-20){
    const desired=Math.max(1,Math.ceil(s.plants.filter(p=>p.alive).length/plantsPerWorker)),extra=desired-staff;
    if(extra>0){
     const selection={[profile]:extra},cost=hiringCost(selection,{time:s.time});
     const tomorrow=Math.max(labourReserve(),desired*worker.wage);
     if(numberOf(s.ledger.balance)>=cost+tomorrow+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve()){
-     if(Game.hireAdditional(s,command('hire'),selection,center.id)){staff+=extra;nextWages=staff*worker.wage;actions++;}
+     const hiringCenter=s.structures.find(operational);
+     if(hiringCenter&&Game.hireAdditional(s,command('hire'),selection,hiringCenter.id)){staff+=extra;nextWages=staff*worker.wage;actions++;}
     }
    }
   }
   // Request repairs before reinvesting, preserving their real FIFO position.
-  for(const c of (policy.repair?s.structures.filter(operational):[]))if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){const taskCount=s.tasks.length;Game.requestRepair(s,command('repair'),c.id);if(s.tasks.length>taskCount)actions++;}
+  const damagedCenters=policy.repair&&defensePolicy!=='topological'?(advice?advice.getDamagedCenters()
+   .sort((a,b)=>Number(a.id.split('-').at(-1))-Number(b.id.split('-').at(-1)))
+   .map(item=>s.structures.find(center=>center.id===item.id)).filter(operational):
+   s.structures.filter(operational)):[];
+  for(const c of damagedCenters)if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){const taskCount=s.tasks.length;Game.requestRepair(s,command('repair'),c.id);if(s.tasks.length>taskCount)actions++;}
   // Village savings are discretionary: building/maintaining physical protection
   // takes priority. Still retain wages and already requested native repairs.
-  // Closed policy itself accounts for every pending native repair. Pass only
-  // wage protection so the same repair is not reserved twice in its budget.
-  if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+(['closed','funded','routed'].includes(defensePolicy)?0:maintenanceReserve())});
+  if(defense)actions+=timed('defense.act',()=>defense.act(s,nav,{command,
+   reserve:labourReserve()+maintenanceReserve(),centerReserve:labourReserve()}));
+  syncAdvice();
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
   const live=s.plants.filter(p=>p.alive);
   for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
@@ -136,7 +243,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  Game.openInitialHiring(s);
  const hire=()=>{
   const money=numberOf(s.ledger.balance),living=s.plants.filter(p=>p.alive).length;
-  if(q5){const plan=q5Policy.dawn(s,{pendingRepair:maintenanceReserve(),seedCost:cropSpec(nextSpecies()).plant_cost});if(!plan.staff)throw Error('Q5 no affordable daily contract; native state retained');const id=command('hire');Game.hire(s,id,{[profile]:plan.staff});if(!s.ledger.entries[id])throw Error('Q5 native daily hire did not settle');staff=plan.staff;q5Policy.hired(s,staff,{daily:true});nextWages=q5Policy.reserve();labourHistory.push({day:s.day,time:s.time,id,kind:'daily',...plan,paidCoins:-numberOf(s.ledger.entries[id])});return;}
   if(q4){const plan=q4DawnPlan(s,{profile,pendingRepair:maintenanceReserve(),seedCost:cropSpec(nextSpecies()).plant_cost});if(!plan.staff)throw Error('Q4 no safe funded daily contract; native state retained');staff=plan.staff;const id=command('hire');Game.hire(s,id,{[profile]:staff});if(!s.ledger.entries[id])throw Error('Q4 native daily hire did not settle');nextWages=staff*worker.wage;labourHistory.push({day:s.day,time:s.time,id,kind:'daily',...plan,paidCoins:-numberOf(s.ledger.entries[id])});return;}
   const desired=s.day===1?affordableOpening({cash:money,living,wage:worker.wage,seedCost:cropSpec(nextSpecies()).plant_cost,plantsPerWorker,repairReserve:maintenanceReserve()}).staff:Math.max(1,Math.ceil(living/plantsPerWorker));
   const affordable=Math.floor(money/worker.wage);
@@ -146,14 +252,22 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  };
  hire();collect();
  while(s.day<=days&&!s.result){
+  decisionPhases=decisionProfile?{}:null;
   const day=s.day,start=s.elapsed,before=financeStart.balance,baseline={...counts},additionalBaseline={...additionalHiring},idle={budget:0,space:0,'shift-end':0,incursion:0,night:0},initialStaff=staff;
-  let longestIdle=0,idleRun=0,actions=0,daylightSeconds=0,unoccupiedSeconds=0;
+  let longestIdle=0,idleRun=0,actions=0,daylightSeconds=0,unoccupiedSeconds=0,
+    decisionWallMs=0,tickWallMs=0,presentationWallMs=0;
   while(s.day===day&&!s.result){
    if(s.pauses.length)throw new Error('Unexpected pause: '+s.pauses);
+   let wallStart=performance.now();
    await driver.advancePresentation(s);
    if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
+   presentationWallMs+=performance.now()-wallStart;
    const beforeRepairs=new Set(s.tasks.filter(t=>t.kind==='repair').map(t=>t.id));
+   wallStart=performance.now();
    const decision=act();actions+=decision.actions;
+   const decisionStepMs=performance.now()-wallStart;
+   syncRaidView();
+   decisionWallMs+=decisionStepMs;
    const centerRequests=s.tasks.filter(t=>t.kind==='repair'&&!beforeRepairs.has(t.id)&&s.structures.some(c=>c.id===t.targetId&&c.kind==='center')).length;
    const dt=s.time<300||s.raid?1:5;
    evidence?.decision(s,{seconds:dt,reason:decision.reason,otherActions:Math.max(0,decision.actions-centerRequests)});
@@ -164,19 +278,33 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     seedCost:cropSpec(nextSpecies()).plant_cost,nextWages,
     labourReserve:labourReserve(1),maintenanceReserve:maintenanceReserve(),
     defenseReserve:defense?.reserve(s)??0,living:s.plants.filter(p=>p.alive).length,
-    pendingTasks:s.tasks.length,...(q6?q5Policy.workingCapital(s):{})}));
+    pendingTasks:s.tasks.length}));
    raidEvidence.observe(s);
    const tickStart=s.elapsed,tickTime=s.time;
+   wallStart=performance.now();
    Game.tick(s,dt,nav);evidence?.finishDecision(s);
+   const tickStepMs=performance.now()-wallStart;
+   syncRaidView();
+   tickWallMs+=tickStepMs;
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;
-   collect();q5Policy?.observe(s);evidence?.observe(s);raidEvidence.observe(s);onTick?.(s,nav);await driver.advancePresentation(s);
-   if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;}
+   collect();evidence?.observe(s);raidEvidence.observe(s);
+   onTick?.(s,nav,{decisionMs:decisionStepMs,gameTickMs:tickStepMs,dt});
+   wallStart=performance.now();
+   await driver.advancePresentation(s);
+   presentationWallMs+=performance.now()-wallStart;
+   if(reloadRaids&&s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);stopSpatialEvents?.();stopDefenseEvents?.();s=deserialize(serialize(s));nav.setState(s);advice?.resetFromState(s);spatialEvents=[];stopSpatialEvents=advice?Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;stopDefenseEvents=observeDefenseEvents();reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }
   const finance=campaignFinanceDelta(financeStart,s);
-  const row={day,before,finance,daylightSeconds,unoccupiedSeconds,money:numberOf(s.ledger.balance),staff:initialStaff,wages:finance.wages,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result};
-  if(q6)row.workingCapital=q5Policy.workingCapital(s);
+  const row={day,before,finance,daylightSeconds,unoccupiedSeconds,money:numberOf(s.ledger.balance),staff:initialStaff,wages:finance.wages,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result,
+    wallTime:{decisionMs:decisionWallMs,gameTickMs:tickWallMs,presentationMs:presentationWallMs}};
+  if(intentPlanner)row.nativeIntent=intentPlanner.metrics(s.elapsed);
+  if(decisionProfile){
+   row.decisionPhases=decisionPhases;
+   row.decisionPhases.other={calls:0,ms:Math.max(0,decisionWallMs-
+    (decisionPhases['plot.choose']?.ms??0)-(decisionPhases['defense.act']?.ms??0))};
+  }
   row.additionalStaff=additionalHiring.count-additionalBaseline.count;row.additionalWages=additionalHiring.cost-additionalBaseline.cost;
   daily.push(row);onDay?.(row);
   if(s.result==='victory'&&s.day<=days){Game.continuePostgame(s);collect();}
@@ -184,6 +312,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol,strategy,labourPolicy,labourHistory,labourObservations,labourReasons,...(q7?{trialHiring:q5Policy.report()}:{}),raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,cropPolicy,middayHiring,plantsPerWorker,defend,shieldEnabled:policy.shield,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,defenseStartDay},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
- } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,policy:{shieldEnabled:policy.shield},seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {await driver.dispose();}
+ return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,wallSpendingEnabled,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,defenseEventDriven,nativeWallPlans},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),navigation:{authority:nav.navigationAuthority??'legacy',version:nav.version,bounds:nav.activeBounds,view:nav.raidView,entryFailure:nav.raidEntryFailure??null,residentChunks:opening.session?.stream?.loaded?.()?.size??null},receipts};throw error;} finally {stopStructureEvents?.();stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();stopDefenseEvents?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
 }

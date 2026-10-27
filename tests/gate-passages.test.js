@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {Navigation} from '../src/world/navigation.js';
-import {gateFrameFootprints} from '../src/world/gate-passages.js';
+import {gateFrameFootprints,gateSwingPolygon,gateTriggerRadius} from '../src/world/gate-passages.js';
 import {gateBodyHeight,nativeGateFrames} from '../src/world/gate-frames-native.js';
 import {containsPoint,footprintDistance} from '../src/world/footprints.js';
 const manifest=JSON.parse(readFileSync(new URL('../content/manifests/gate-frames-native.json',import.meta.url)));
@@ -39,6 +39,17 @@ test('Frame transforms are cached and update when placement or scale changes',()
   entity.x=5;entity.yaw=Math.PI/2;entity.baseScaleX=.5;const b=gateFrameFootprints(entity);assert.notEqual(a,b);
   for(const polygon of b)assert.ok(polygon.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.z)));
   assert.equal(gateFrameFootprints(gate('zarzas')).length,3,'planning includes the two pillars and the fully open leaf');
+});
+test('Gate trigger radius reuses the swing footprint and follows placement changes',()=>{
+  const entity=gate('empalizada'),expected=()=>Math.max(3.2,...gateSwingPolygon(entity)
+    .map(point=>Math.hypot(point.x-entity.x,point.z-entity.z)+1.2));
+  for(const change of [()=>{},()=>{entity.x=19;entity.z=-7;},
+    ()=>{entity.yaw=Math.PI/3;entity.baseScaleX=.6;},
+    ()=>{entity.material='reforzado';entity.baseScaleX=1.3;},
+    ()=>{entity.material='zarzas';entity.baseScaleX=1;}]){
+    change();assert.ok(Math.abs(gateTriggerRadius(entity)-expected())<1e-12);
+    assert.equal(gateTriggerRadius(entity),gateTriggerRadius(entity));
+  }
 });
 test('Convex frame projection retains side boundaries and a positive controller clearance',()=>{
   for(const material of ['adobe','piedra']){

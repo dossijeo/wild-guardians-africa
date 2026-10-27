@@ -1,6 +1,8 @@
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
+import {validateMicroState} from '../microevents/economy.js';
 import {validRaidContention} from './raid-contention-snapshot.js';
 import {validatePressureSnapshot} from './raid-pressure-snapshot.js';
+import {validateAgriculturalPower} from '../simulation/agricultural-power.js';
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
 export const SAVE_VERSION=1;
@@ -9,8 +11,13 @@ function wholeMoney(value){
 }
 export function validateSnapshot(state) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  if(state.mangroveSettlementVersion!==undefined&&(![1,2].includes(state.mangroveSettlementVersion)||state.biome!=='manglares'||!state.mangroveNetwork))throw new Error('Reserva de Manglares incompatible');
+  if(state.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
+  if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
+  validateMicroState(state);
   validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
+  if(state.cinematicSeenAct!==undefined&&(!Number.isSafeInteger(state.cinematicSeenAct)||state.cinematicSeenAct<0||state.cinematicSeenAct>10||state.cinematicSeenAct>Math.floor((state.completedNights??0)/10)))throw new Error('Progreso de cinemáticas inválido');
   if(!state.ledger||!wholeMoney(state.ledger.balance)||BigInt(state.ledger.balance.n)<0n)throw new Error('Saldo inválido');
   if(!state.ledger.entries||typeof state.ledger.entries!=='object'||Array.isArray(state.ledger.entries)||!Object.values(state.ledger.entries).every(wholeMoney))throw new Error('Libro monetario inválido');
   const tutorial=state.tutorial,validIds=ids=>Array.isArray(ids)&&ids.every(id=>TUTORIAL_IDS.includes(id))&&new Set(ids).size===ids.length;
@@ -41,10 +48,21 @@ export function validateSnapshot(state) {
     const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
   }
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
+  for(const animal of state.raid?.animals??[])if(animal.exitRouteRecovery!==undefined){
+    const recovery=animal.exitRouteRecovery;
+    if(!recovery||typeof recovery.destinationId!=='string'||
+      recovery.destinationId!==`exit-${animal.id}`||
+      !Number.isSafeInteger(recovery.version)||recovery.version<0||
+      recovery.startedAt!==undefined&&(!Number.isFinite(recovery.startedAt)||
+      recovery.startedAt<0||recovery.startedAt>state.elapsed))
+      throw new Error('Recuperación de salida inválida');
+  }
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
     if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');
+    if(search.exhausted!==undefined&&typeof search.exhausted!=='boolean')throw new Error('Agotamiento de salida inválido');
     if(search.fine!==undefined&&!validExitFrontier(search.fine))throw new Error('Conector fraccional inválido');
+    if(search.quarter!==undefined&&!validExitFrontier(search.quarter))throw new Error('Conector fraccional fino inválido');
   }
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');
@@ -54,11 +72,13 @@ export function validateSnapshot(state) {
     }
   }
   for(const p of state.plants)if(p.multiplyHarvest!==undefined&&typeof p.multiplyHarvest!=='boolean')throw new Error('Beneficio de multiplicación inválido');
-  for(const a of state.spells){
-    if(a.exposureApplied!==undefined&&(a.kind!=='multiply'||typeof a.exposureApplied!=='boolean'))throw new Error('Exposición mágica inválida');
-    if(a.targetId!==undefined&&(!['growth','multiply'].includes(a.kind)||typeof a.targetId!=='string'||!a.targetId))throw new Error('Objetivo mágico inválido');
+  for(const a of state.spells)if(a.exposureApplied!==undefined&&(a.kind!=='multiply'||typeof a.exposureApplied!=='boolean'))throw new Error('Exposición mágica inválida');
+  for(const a of state.spells)if(a.targetPlantId!==undefined&&(!['growth','multiply'].includes(a.kind)||typeof a.targetPlantId!=='string'||!state.plants.some(p=>p.id===a.targetPlantId)||!Number.isFinite(a.remaining)||a.remaining<0))throw new Error('Objetivo mágico inválido');
+  for(const a of state.spells)if(a.growthSecondsAdded!==undefined&&(a.kind!=='growth'||!Number.isFinite(a.growthSecondsAdded)||a.growthSecondsAdded<0||a.growthSecondsAdded>15+1e-6))throw new Error('Progreso mágico inválido');
+  for(const p of state.plants){
+    const hp=p.attackHitPoints??2;
+    if(![1,2].includes(hp)||p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*(hp===1?4:2))||p.attackHits<0||p.attackHits>hp||p.alive&&p.attackHits>=hp))throw new Error('Daño de cultivo inválido');
   }
-  for(const p of state.plants)if(p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*2)||p.attackHits<0||p.attackHits>2||p.alive&&p.attackHits>=2))throw new Error('Daño de cultivo inválido');
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
   for(const structure of state.structures)if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
@@ -87,6 +107,7 @@ export function validateSnapshot(state) {
       if(!crate||crate.delivered||crate.carrierId!==worker.id||worker.status!=='carrying')throw new Error('Carga de trabajador inválida');
     }else if(worker.status==='carrying')throw new Error('Trabajador sin carga');
   }
+  validateAgriculturalPower(state);
   return state;
 }
 export function serialize(state) { validateSnapshot(state);return JSON.stringify(state); }

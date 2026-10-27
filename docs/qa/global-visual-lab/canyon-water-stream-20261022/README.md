@@ -1,0 +1,7 @@
+# Canyon water bank streaming audit
+
+Real campaign out-and-back probe: seed 712, media, 1280x720; day/night, baseline/depth, home / +192 X / home return. Reproduce with WG_REVIEW_BIOMES=gran-canon and node tools/experiments/capture-canyon-water-stream-20261022.mjs; package-canyon-water-stream-20261022.py produces paired sheets.
+
+Six pairs match camera/target/time/draws/triangles. No GL/console/network errors. The initial eight resident river meshes contain 10218 existing vertices and 81744 bytes of new bank attributes. There are 352 coincident cross-chunk vertex comparisons with zero bank-coordinate discrepancy. Away, no resident river meshes remain; on return the same chunks and bank allocation size are restored. Origin changes from (0,0) to (144,96) to (-48,96) in the day pass. Night home-return is pixel-identical in both variants. Day return has small differences (max channel delta 19) also present in baseline; do not claim exact daytime identity or attribute that drift to the bank data.
+
+Visual inspection of the day sheet shows the retained shallow band at home and return without an obvious chunk seam. The away location contains no near river, so this does not validate the near/far-water transition. GPU resource deletion/fences and driver memory are not measured: resident attribute bytes are not a proof of no VRAM leak. No GPU/CPU timing claim. Future work must cover horizon water and continuous camera travel before integration; keep this attractive candidate while investigating cost.

@@ -1,0 +1,104 @@
+{
+  "scope": "One Sabana chunk, seed 712, ABBA. Different procedural worlds and unequal visual features: diagnostic architectural prototype only.",
+  "wasmBytes": 69903,
+  "rows": [
+    {
+      "kind": "current JavaScript generation + JavaScript physical sampling + sparse C++ graph",
+      "visualMs": 122.83230000000003,
+      "navigationMs": 487.822,
+      "totalMs": 610.6543,
+      "routeMs": 0.8045999999999367,
+      "found": 3,
+      "terrainBytes": 497664,
+      "waterBytes": 1080,
+      "maskBytes": 4900,
+      "propCount": 202,
+      "geometricCalls": {
+        "walkable": 2789,
+        "segmentClear": 5202
+      },
+      "metrics": {
+        "loaded": 16,
+        "updates": 16,
+        "memoryBytes": 4194304
+      }
+    },
+    {
+      "kind": "C++ generation + same-module logical graph; JS Three.js buffer construction",
+      "generationMs": 2.847500000000082,
+      "visualMs": 11.526200000000017,
+      "objectDecodeMs": 0.3908000000000129,
+      "navigationMs": 28.500400000000013,
+      "totalMs": 43.264900000000125,
+      "routeMs": 0.7421999999999116,
+      "found": 6,
+      "terrainBytes": 114084,
+      "waterBytes": 37260,
+      "propCount": 236,
+      "wallMs": 0.9287000000000489,
+      "removeWallMs": 0.7840999999999667,
+      "blockedAfterWall": "blocked",
+      "geometricCalls": {
+        "walkable": 0,
+        "segmentClear": 0
+      },
+      "metrics": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 1,
+        "loadedSectors": 16,
+        "sectorSlots": 16,
+        "sectorUpdates": 32,
+        "haloProps": 3
+      }
+    },
+    {
+      "kind": "C++ generation + same-module logical graph; JS Three.js buffer construction",
+      "generationMs": 0.7817000000000007,
+      "visualMs": 3.291900000000055,
+      "objectDecodeMs": 0.16890000000000782,
+      "navigationMs": 20.10439999999994,
+      "totalMs": 24.346900000000005,
+      "routeMs": 0.09320000000002437,
+      "found": 6,
+      "terrainBytes": 114084,
+      "waterBytes": 37260,
+      "propCount": 236,
+      "wallMs": 0.49520000000006803,
+      "removeWallMs": 0.4662999999999329,
+      "blockedAfterWall": "blocked",
+      "geometricCalls": {
+        "walkable": 0,
+        "segmentClear": 0
+      },
+      "metrics": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 1,
+        "loadedSectors": 16,
+        "sectorSlots": 16,
+        "sectorUpdates": 32,
+        "haloProps": 3
+      }
+    },
+    {
+      "kind": "current JavaScript generation + JavaScript physical sampling + sparse C++ graph",
+      "visualMs": 76.8587,
+      "navigationMs": 352.6651999999999,
+      "totalMs": 429.5238999999999,
+      "routeMs": 0.1145000000001346,
+      "found": 3,
+      "terrainBytes": 497664,
+      "waterBytes": 1080,
+      "maskBytes": 4900,
+      "propCount": 202,
+      "geometricCalls": {
+        "walkable": 2789,
+        "segmentClear": 5202
+      },
+      "metrics": {
+        "loaded": 16,
+        "updates": 16,
+        "memoryBytes": 4194304
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "baseCommit": "01f245331baba1e676fb95a2b305ba77964f221b",
+  "fixture": "sabana-712-day9-crossing.json.gz",
+  "campaign": {
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "seed": 712,
+    "strategy": "good",
+    "backend": "wild-engine",
+    "nativeIntents": true
+  },
+  "candidate": "At a worker's twelve-second mobile-recovery boundary, count a 0.75 m decrease in remaining waypoint-polyline length as progress.",
+  "runs": [
+    {"variant": "baseline", "nights": 9, "deliveries": 780, "coins": 1047, "livingCrops": 123, "recoveries": 24, "workOverlapPairs": 12, "stateHash": "60576f84a72a357ea078af79a9e7695428f41829215639fb552453168e48f5ef"},
+    {"variant": "candidate", "nights": 9, "deliveries": 781, "coins": 1028, "livingCrops": 126, "recoveries": 9, "workOverlapPairs": 2, "stateHash": "2520672aa21b8e38d80e773264780c5fc10b96854b9354998aee8bd4d8a3406a"},
+    {"variant": "baseline", "nights": 14, "deliveries": 1317, "coins": 899, "livingCrops": 145, "recoveries": 164, "workOverlapPairs": 43, "stateHash": "2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05"},
+    {"variant": "candidate", "nights": 14, "deliveries": 1257, "coins": 773, "livingCrops": 133, "recoveries": 40, "workOverlapPairs": 9, "stateHash": "ad28fa1588764d3f42d448809df5ef5c536f3673c5d28e8d55fa737b9e21bb57"}
+  ],
+  "decision": "rejected"
+}

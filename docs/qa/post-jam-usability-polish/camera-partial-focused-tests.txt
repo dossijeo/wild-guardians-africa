@@ -1,0 +1,129 @@
+TAP version 13
+# Subtest: registry preserves independent center and village horizontal/vertical margins through damage
+ok 1 - registry preserves independent center and village horizontal/vertical margins through damage
+  ---
+  duration_ms: 18.182
+  ...
+# Subtest: shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+ok 2 - shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+  ---
+  duration_ms: 18.515
+  ...
+# Subtest: registry updates native state, transform, replacement and removal without rebuilding idle volumes
+ok 3 - registry updates native state, transform, replacement and removal without rebuilding idle volumes
+  ---
+  duration_ms: 3.0909
+  ...
+# Subtest: village registry uses independent unit boxes and excludes unrelated decorative meshes
+ok 4 - village registry uses independent unit boxes and excludes unrelated decorative meshes
+  ---
+  duration_ms: 4.7512
+  ...
+# Subtest: pose resolver keeps desired eye separate from correction through synchronous updates and focus
+ok 5 - pose resolver keeps desired eye separate from correction through synchronous updates and focus
+  ---
+  duration_ms: 50.3649
+  ...
+# (node:51452) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
+ok 6 - terrain floor and a tall house cannot bounce recovery below ground forever
+  ---
+  duration_ms: 32.7867
+  ...
+# Subtest: recovery respects ceiling and finite roofs still allow overflight
+ok 7 - recovery respects ceiling and finite roofs still allow overflight
+  ---
+  duration_ms: 1.7529
+  ...
+# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
+ok 8 - candidate terrain height is resampled after lateral recovery on a cliff
+  ---
+  duration_ms: 1.2092
+  ...
+# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
+ok 9 - overlapping buildings expand the encountered envelope without scanning the scene
+  ---
+  duration_ms: 1.1477
+  ...
+# Subtest: clear poses remain stable and retain the native altitude range
+ok 10 - clear poses remain stable and retain the native altitude range
+  ---
+  duration_ms: 5.8884
+  ...
+# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
+ok 11 - bounded recovery reports unresolved pathological nesting rather than claiming safety
+  ---
+  duration_ms: 14.647
+  ...
+# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
+ok 12 - scene resolver reconciles terrain after focus recovery and remains stable while idle
+  ---
+  duration_ms: 54.6273
+  ...
+# Subtest: tree volume matches native chunk transform, authored pivot, scale and finite roof
+ok 13 - tree volume matches native chunk transform, authored pivot, scale and finite roof
+  ---
+  duration_ms: 17.0394
+  ...
+# Subtest: unchanged revision does no scene work; streaming and suppression rebuild only changed chunks
+ok 14 - unchanged revision does no scene work; streaming and suppression rebuild only changed chunks
+  ---
+  duration_ms: 3.4465
+  ...
+# Subtest: small trees, shrubs and props are excluded; clear preserves shared building volumes and source ownership
+ok 15 - small trees, shrubs and props are excluded; clear preserves shared building volumes and source ownership
+  ---
+  duration_ms: 2.2057
+  ...
+# Subtest: explicit invalidation updates edited source data and malformed replacement preserves previous volume
+ok 16 - explicit invalidation updates edited source data and malformed replacement preserves previous volume
+  ---
+  duration_ms: 3.1062
+  ...
+# Subtest: six native biome packs preserve deterministic tree IDs, world positions and metadata ownership
+ok 17 - six native biome packs preserve deterministic tree IDs, world positions and metadata ownership
+  ---
+  duration_ms: 8508.7917
+  ...
+# (node:51068) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wall volumes follow finite native part envelopes, gate hinge and deletion
+ok 18 - wall volumes follow finite native part envelopes, gate hinge and deletion
+  ---
+  duration_ms: 18.0001
+  ...
+# Subtest: contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+ok 19 - contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+  ---
+  duration_ms: 1715.3288
+  ...
+# Subtest: indexed neighborhood query excludes distant populations and retains large intersecting bounds
+ok 20 - indexed neighborhood query excludes distant populations and retains large intersecting bounds
+  ---
+  duration_ms: 12.2986
+  ...
+# Subtest: building focus has a contextual visual distance with a gradual boundary and crops stay close
+ok 21 - building focus has a contextual visual distance with a gradual boundary and crops stay close
+  ---
+  duration_ms: 24.7567
+  ...
+# Subtest: partial wall refresh retains unrelated pieces and removes explicit destroyed pieces
+ok 22 - partial wall refresh retains unrelated pieces and removes explicit destroyed pieces
+  ---
+  duration_ms: 4.2328
+  ...
+# Subtest: queued gate updates and multiple destruction keep other native camera records intact
+ok 23 - queued gate updates and multiple destruction keep other native camera records intact
+  ---
+  duration_ms: 23.9898
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9341.5738

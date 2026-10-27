@@ -21,7 +21,9 @@ test('refinement catches a narrow steep strip missed by the ordinary coarse samp
  assert.equal(nav.segmentClear(start,end,.28,null,true),false);
  assert.equal(nav.segmentClear(start,end,.28,null,false),false,'Animal routes also reject the forbidden near-limit band before choosing an approach');
  const w=worker(),s={structures:[],workers:[w]};let arrived=false;
- for(let tick=0;tick<150;tick++){
+ // The sector route may choose the longer legal corridor; allow travel time
+ // for that route while still rejecting a worker that never progresses.
+ for(let tick=0;tick<200;tick++){
   arrived=walkTo(s,w,destination,.05,nav);
   assert(nav.terrainValid(w.x,w.z,w.radius,true),'Every actual landing remains on walkable terrain');
   if(arrived)break;

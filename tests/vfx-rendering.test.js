@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
+import {ShadowCache,shadowSnapshot} from '../src/rendering/shadow-cache.js';
 import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import {TerrainField} from '../src/world/terrain.js';
@@ -39,6 +40,18 @@ test('All 18 Three.js VFX preserve native solid, ribbon and sprite uploads befor
     const solids=fx.native.rigidInstances();for(const [id,p] of Object.entries(solids)){const buffer=fx.buffers.get(id),mesh=fx.rigids.get(id);assert.equal(buffer.stride,23);assert.equal(mesh.geometry.getAttribute('iModel').itemSize,16);assert.equal(mesh.geometry.instanceCount,p.count);assert.deepEqual([...buffer.array.slice(0,p.count*23)],[...p.data.slice(0,p.count*23)]);}
     const vertices=fx.native.geometry();assert.equal(fx.ribbons.geometry.drawRange.count,vertices.length/11);assert.deepEqual([...fx.ribbonBuffer.array.slice(0,vertices.length)],[...vertices]);assert.ok(fx.ribbonCapacity<48000,'No maximum-sized per-effect ribbon allocation');fx.dispose();
   }
+  library.dispose();pipeline.dispose();
+});
+
+test('Sprite instances reuse their GPU upload buffer and update only live particles',()=>{
+  const {library,pipeline,camera}=setup(),fx=library.create('heal',pipeline,{agricultureMode:'growth'});
+  fx.seek(3);const storage=fx.spriteBuffer.array;fx.prepare(camera);
+  const live=fx.sprites.geometry.instanceCount;
+  assert.ok(live>0);assert.equal(fx.spriteBuffer.array,storage);
+  assert.deepEqual(fx.spriteBuffer.updateRanges.map(r=>[r.start,r.count]),[[0,live*25]]);
+  fx.seek(4);fx.prepare(camera);
+  assert.equal(fx.spriteBuffer.array,storage);
+  assert.deepEqual(fx.spriteBuffer.updateRanges.map(r=>[r.start,r.count]),[[0,fx.sprites.geometry.instanceCount*25]]);
   library.dispose();pipeline.dispose();
 });
 
@@ -86,5 +99,20 @@ test('Repeated particle packing reuses its upload buffer without stale active ro
  }
  assert.equal(packVfxSprites([],library.rects,cam,target).count,0);
  assert.throws(()=>packVfxSprites([],library.rects,cam,new Float32Array(1)),RangeError);
+ fx.dispose();library.dispose();
+});
+
+test('VFX shadow cache tracks depth inputs without depending on the view camera',()=>{
+ const {library,pipeline,camera}=setup(),scene=new THREE.Scene(),sun=new THREE.DirectionalLight(),fx=library.create('dig',pipeline);
+ sun.position.set(5,10,5);scene.add(sun,sun.target,fx);fx.seek(1.2);fx.prepare(camera);scene.updateMatrixWorld(true);
+ const renderer={shadowMap:{type:THREE.PCFSoftShadowMap}},cache=new ShadowCache();
+ const snapshot=()=>shadowSnapshot(renderer,sun,scene,camera);
+ const first=snapshot();assert.ok(first);cache.commit(first);assert.ok(cache.matches(snapshot()));
+ camera.position.x+=10;camera.updateMatrixWorld(true);fx.cameraUniforms(camera);assert.ok(cache.matches(snapshot()),'view-derived uVP must not invalidate depth');
+ for(const key of ['uTime','uWind']){fx.uniforms[key].value+=.5;assert.equal(cache.matches(snapshot()),false,key);cache.commit(snapshot());}
+ fx.position.x+=2;scene.updateMatrixWorld(true);assert.equal(cache.matches(snapshot()),false,'effect transform');cache.commit(snapshot());
+ const active=[...fx.rigids.values()].find(m=>m.visible&&m.geometry.instanceCount>0);assert.ok(active);
+ active.geometry.getAttribute('iModel').data.array[12]+=.25;assert.equal(cache.matches(snapshot()),false,'instance transform');cache.commit(snapshot());
+ active.onBeforeShadow=()=>{};assert.equal(snapshot(),null,'unknown callbacks must still fail closed');
  library.dispose();pipeline.dispose();
 });

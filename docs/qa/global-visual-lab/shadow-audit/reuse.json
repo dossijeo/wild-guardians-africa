@@ -1,0 +1,276 @@
+{
+  "origin": "http://127.0.0.1:5188",
+  "device": "Chrome headless, WebGL2 hardware-backed when available",
+  "cases": [
+    {
+      "biome": "sabana",
+      "snapshotCpuMs": {
+        "median": 0.5,
+        "p95": 1.3999999985098839,
+        "mean": 0.651666666691502
+      },
+      "snapshotValues": 14777,
+      "staticScene": {
+        "renderCpuMs": {
+          "median": 8.899999998509884,
+          "p95": 28.600000001490116,
+          "mean": 11.647500000149012
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "movingActor": {
+        "renderCpuMs": {
+          "median": 8.200000002980232,
+          "p95": 9.799999997019768,
+          "mean": 7.927499999850989
+        },
+        "draws": 40,
+        "hits": 0,
+        "untracked": 0
+      },
+      "cameraShift": {
+        "renderCpuMs": {
+          "median": 7,
+          "p95": 10,
+          "mean": 7.054999999888241
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "shadowMapSize": [
+        1024,
+        1024
+      ],
+      "actors": 9,
+      "objects": 127
+    },
+    {
+      "biome": "gran-rio",
+      "snapshotCpuMs": {
+        "median": 0.3999999985098839,
+        "p95": 1,
+        "mean": 0.49666666661699616
+      },
+      "snapshotValues": 14777,
+      "staticScene": {
+        "renderCpuMs": {
+          "median": 7.100000001490116,
+          "p95": 21.19999999552965,
+          "mean": 8.967499999888242
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "movingActor": {
+        "renderCpuMs": {
+          "median": 8.200000002980232,
+          "p95": 10.300000004470348,
+          "mean": 7.962500000186265
+        },
+        "draws": 40,
+        "hits": 0,
+        "untracked": 0
+      },
+      "cameraShift": {
+        "renderCpuMs": {
+          "median": 5.700000002980232,
+          "p95": 10.399999998509884,
+          "mean": 6.357499999925494
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "shadowMapSize": [
+        1024,
+        1024
+      ],
+      "actors": 9,
+      "objects": 127
+    },
+    {
+      "biome": "manglares",
+      "snapshotCpuMs": {
+        "median": 0.3999999985098839,
+        "p95": 1.3000000044703484,
+        "mean": 0.5333333333333333
+      },
+      "snapshotValues": 14777,
+      "staticScene": {
+        "renderCpuMs": {
+          "median": 7,
+          "p95": 19,
+          "mean": 9.342500000074505
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "movingActor": {
+        "renderCpuMs": {
+          "median": 6.600000001490116,
+          "p95": 9.300000004470348,
+          "mean": 6.727499999850989
+        },
+        "draws": 40,
+        "hits": 0,
+        "untracked": 0
+      },
+      "cameraShift": {
+        "renderCpuMs": {
+          "median": 5.5,
+          "p95": 10.299999997019768,
+          "mean": 6.144999999925494
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "shadowMapSize": [
+        1024,
+        1024
+      ],
+      "actors": 9,
+      "objects": 127
+    },
+    {
+      "biome": "volcanes",
+      "snapshotCpuMs": {
+        "median": 0.5,
+        "p95": 1.5,
+        "mean": 0.5449999999254942
+      },
+      "snapshotValues": 14777,
+      "staticScene": {
+        "renderCpuMs": {
+          "median": 7.699999995529652,
+          "p95": 22,
+          "mean": 10.047499999776482
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "movingActor": {
+        "renderCpuMs": {
+          "median": 8.599999994039536,
+          "p95": 10.300000004470348,
+          "mean": 8.519999999925494
+        },
+        "draws": 40,
+        "hits": 0,
+        "untracked": 0
+      },
+      "cameraShift": {
+        "renderCpuMs": {
+          "median": 8.799999997019768,
+          "p95": 12.199999995529652,
+          "mean": 8.90500000026077
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "shadowMapSize": [
+        1024,
+        1024
+      ],
+      "actors": 9,
+      "objects": 127
+    },
+    {
+      "biome": "gran-canon",
+      "snapshotCpuMs": {
+        "median": 0.30000000447034836,
+        "p95": 0.8000000044703484,
+        "mean": 0.37333333330849805
+      },
+      "snapshotValues": 14777,
+      "staticScene": {
+        "renderCpuMs": {
+          "median": 7.600000001490116,
+          "p95": 15.099999994039536,
+          "mean": 8.8625
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "movingActor": {
+        "renderCpuMs": {
+          "median": 4.9000000059604645,
+          "p95": 6.9000000059604645,
+          "mean": 5.125
+        },
+        "draws": 40,
+        "hits": 0,
+        "untracked": 0
+      },
+      "cameraShift": {
+        "renderCpuMs": {
+          "median": 4.899999998509884,
+          "p95": 6.300000004470348,
+          "mean": 4.917499999888241
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "shadowMapSize": [
+        1024,
+        1024
+      ],
+      "actors": 9,
+      "objects": 117
+    },
+    {
+      "biome": "desierto",
+      "snapshotCpuMs": {
+        "median": 0.30000000447034836,
+        "p95": 0.8999999985098839,
+        "mean": 0.4316666666418314
+      },
+      "snapshotValues": 14777,
+      "staticScene": {
+        "renderCpuMs": {
+          "median": 5.0999999940395355,
+          "p95": 12.600000001490116,
+          "mean": 6.682499999925494
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "movingActor": {
+        "renderCpuMs": {
+          "median": 4.700000002980232,
+          "p95": 6.699999995529652,
+          "mean": 5.035000000149012
+        },
+        "draws": 40,
+        "hits": 0,
+        "untracked": 0
+      },
+      "cameraShift": {
+        "renderCpuMs": {
+          "median": 4.899999998509884,
+          "p95": 8.399999998509884,
+          "mean": 5.472499999962747
+        },
+        "draws": 1,
+        "hits": 39,
+        "untracked": 0
+      },
+      "shadowMapSize": [
+        1024,
+        1024
+      ],
+      "actors": 9,
+      "objects": 128
+    }
+  ]
+}

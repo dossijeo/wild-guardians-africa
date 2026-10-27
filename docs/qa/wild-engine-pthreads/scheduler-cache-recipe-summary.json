@@ -1,0 +1,57 @@
+{
+  "scope": "Same Manglares720p media frozen save; scheduler enabled both. Only B prepares first fixed512 cache recipe before compile-world. Serial ABAB, fresh Chrome, existing RAF timings, no GL wrappers. Presentation interval is not CPU/GPU time.",
+  "rows": [
+    {
+      "run": "a1",
+      "readyMs": 33775.27000004053,
+      "p95": 66.51499999999942,
+      "p99": 150.3199999999997,
+      "max": 948.2049999999981,
+      "chunks": 25,
+      "pending": 0,
+      "cacheRecipeMs": null
+    },
+    {
+      "run": "b1",
+      "readyMs": 31973.82499998808,
+      "p95": 66.33499999999913,
+      "p99": 116.63499999999976,
+      "max": 415.81500000000005,
+      "chunks": 25,
+      "pending": 0,
+      "cacheRecipeMs": 65.30000001192093
+    },
+    {
+      "run": "a2",
+      "readyMs": 32234.014999985695,
+      "p95": 66.50999999999976,
+      "p99": 132.95000000000073,
+      "max": 931.1899999999987,
+      "chunks": 25,
+      "pending": 0,
+      "cacheRecipeMs": null
+    },
+    {
+      "run": "b2",
+      "readyMs": 31533.884999990463,
+      "p95": 50.04000000000087,
+      "p99": 99.81499999999869,
+      "max": 432.365,
+      "chunks": 25,
+      "pending": 0,
+      "cacheRecipeMs": 73.97499996423721
+    }
+  ],
+  "images": [
+    {
+      "pair": 1,
+      "rgbMad": 0.001482566550925926,
+      "fractionPixelsAbove8": 3.0381944444444444e-05
+    },
+    {
+      "pair": 2,
+      "rgbMad": 0.0004911747685185185,
+      "fractionPixelsAbove8": 6.510416666666667e-06
+    }
+  ]
+}

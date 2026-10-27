@@ -1,0 +1,217 @@
+{
+  "scope": "Menu-protocol A/B/A/B. Both arms skip active-quality requests. A direct current renderer, B scheduler + staged preparation + dormant crop preload. Diagnostic CPU/RAF attribution, not GPU timings or image equivalence.",
+  "runs": [
+    {
+      "name": "A1",
+      "source": "quality-menu-protocol-A1.json",
+      "readyMs": 28427.714999973774,
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.33445499999657,
+        "travelFrame": 240,
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "rows": [
+        {
+          "quality": "baja",
+          "transitionMs": 6734.795000016689,
+          "samples": 12,
+          "p95Ms": 6209.72000002861,
+          "p99Ms": 6209.72000002861,
+          "maxMs": 6209.72000002861,
+          "drawCalls": 79
+        },
+        {
+          "quality": "media",
+          "transitionMs": 647.8949999809265,
+          "samples": 12,
+          "p95Ms": 79.89999997615814,
+          "p99Ms": 79.89999997615814,
+          "maxMs": 79.89999997615814,
+          "drawCalls": 85
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 713.1700000166893,
+          "samples": 18,
+          "p95Ms": 64.84500002861023,
+          "p99Ms": 64.84500002861023,
+          "maxMs": 64.84500002861023,
+          "drawCalls": 23
+        }
+      ]
+    },
+    {
+      "name": "B1",
+      "source": "quality-menu-protocol-B1.json",
+      "readyMs": 28771.46500003338,
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.34995499999633,
+        "travelFrame": 240,
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "rows": [
+        {
+          "quality": "baja",
+          "transitionMs": 14655.180000007153,
+          "samples": 381,
+          "p95Ms": 71.625,
+          "p99Ms": 93.71499997377396,
+          "maxMs": 224.70999997854233,
+          "drawCalls": 72
+        },
+        {
+          "quality": "media",
+          "transitionMs": 1707.7250000238419,
+          "samples": 61,
+          "p95Ms": 51.32499998807907,
+          "p99Ms": 64.66500002145767,
+          "maxMs": 64.66500002145767,
+          "drawCalls": 76
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 1187.0099999904633,
+          "samples": 42,
+          "p95Ms": 58.969999969005585,
+          "p99Ms": 61.985000014305115,
+          "maxMs": 61.985000014305115,
+          "drawCalls": 72
+        }
+      ]
+    },
+    {
+      "name": "A2",
+      "source": "quality-menu-protocol-A2.json",
+      "readyMs": 32622.235000014305,
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.34992499999669,
+        "travelFrame": 240,
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "rows": [
+        {
+          "quality": "baja",
+          "transitionMs": 6735.254999995232,
+          "samples": 12,
+          "p95Ms": 6327.25,
+          "p99Ms": 6327.25,
+          "maxMs": 6327.25,
+          "drawCalls": 77
+        },
+        {
+          "quality": "media",
+          "transitionMs": 654.2800000309944,
+          "samples": 12,
+          "p95Ms": 102.01999998092651,
+          "p99Ms": 102.01999998092651,
+          "maxMs": 102.01999998092651,
+          "drawCalls": 85
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 742.3499999642372,
+          "samples": 18,
+          "p95Ms": 75.8299999833107,
+          "p99Ms": 75.8299999833107,
+          "maxMs": 75.8299999833107,
+          "drawCalls": 23
+        }
+      ]
+    },
+    {
+      "name": "B2",
+      "source": "quality-menu-protocol-B2.json",
+      "readyMs": 29203.240000009537,
+      "active": {
+        "initialElapsed": 119.99999999999746,
+        "elapsed": 127.3500249999963,
+        "travelFrame": 240,
+        "created": 15,
+        "stream": {
+          "created": 40,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "rows": [
+        {
+          "quality": "baja",
+          "transitionMs": 15391.7650000453,
+          "samples": 394,
+          "p95Ms": 75.90500003099442,
+          "p99Ms": 100.26999998092651,
+          "maxMs": 133.04000002145767,
+          "drawCalls": 72
+        },
+        {
+          "quality": "media",
+          "transitionMs": 1595.9549999833107,
+          "samples": 55,
+          "p95Ms": 57.77499997615814,
+          "p99Ms": 89.49000000953674,
+          "maxMs": 89.49000000953674,
+          "drawCalls": 76
+        },
+        {
+          "quality": "baja",
+          "transitionMs": 1189.050000011921,
+          "samples": 41,
+          "p95Ms": 64.25499999523163,
+          "p99Ms": 72.9200000166893,
+          "maxMs": 72.9200000166893,
+          "drawCalls": 72
+        }
+      ]
+    }
+  ]
+}

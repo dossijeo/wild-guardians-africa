@@ -1,0 +1,42 @@
+import {GpuTimer} from '/tests/browser/gpu-timer.js';
+import {SubsystemPassTimer as RenderPassTimer} from '/tools/experiments/qa-subsystem-pass-timer-20261023.js';
+import {RenderCpuCalls} from '/tests/browser/render-cpu-calls.js';
+export async function measureActivePasses(w,{mode,samples=60,warmup=60,drawCensus=false}){
+ const r=w.renderer,gl=r.getContext(),original=w.render,frames=[];
+ const gpu=mode==='frame'?new GpuTimer(gl):null,passes=mode==='passes'?new RenderPassTimer(w):null,cpu=mode==='cpu'?new RenderCpuCalls(w):null;
+ const snapshot=()=>({elapsed:w.state.elapsed,time:w.state.time,workers:w.state.workers.map(a=>({id:a.id,x:a.x,z:a.z,task:a.task})),pauses:[...w.state.pauses]});
+ const before=snapshot();let index=0,last=null;
+ const cache=mode==='bake'?w.mangroveMaterialCache:null,bakeTimer=cache?new GpuTimer(gl):null,bakeSamples=[],originalUpdate=cache?.update;
+ if(cache)cache.update=function(){const recording=index>=warmup&&index<warmup+samples,published=cache.queue.stats.published;if(recording)bakeTimer.begin(index-warmup);const start=performance.now();try{return originalUpdate();}finally{if(recording){bakeTimer.end();bakeSamples.push({frame:index-warmup,cpuMs:performance.now()-start,published:cache.queue.stats.published-published});}}};
+ const preparation=[],restorePreparation=[];
+ if(mode==='preparation'){
+  const prior=globalThis.qaPreparationCall;globalThis.qaPreparationCall=(label,fn,args)=>{const start=performance.now();try{return fn(...args);}finally{if(index>=warmup&&index<warmup+samples)preparation.push({frame:index-warmup,label,start,ms:performance.now()-start});}};restorePreparation.push(()=>{if(prior)globalThis.qaPreparationCall=prior;else delete globalThis.qaPreparationCall;});
+  for(const [object,key,label]of [[w.spatialSession?.core,'selectChunk','core.selectChunk'],[w.spatialSession?.core,'addChunk','core.addChunk'],[w.spatialSession?.core,'chunkPayload','core.chunkPayload'],[w.chunkStream,'build','chunkStream.build'],[w.chunkStream,'receive','chunkStream.receive'],[w,'installChunk','installChunk'],[w,'terrain','terrain'],[w,'buildPropSlot','buildPropSlot'],[w.biomeGround,'attach','biomeGround.attach'],[w.mudPatches,'chunk','mudPatches.chunk'],[w,'removeInstalledChunk','removeChunk'],[w.groundDetails,'chunk','groundDetails.chunk'],[w.groundDetails,'flush','groundDetails.flush'],[w.horizon,'update','horizon.update']]){
+   if(!object||typeof object[key]!=='function')continue;const fn=object[key];
+   object[key]=function(...args){const start=performance.now();try{return fn.apply(this,args);}finally{const ms=performance.now()-start;if(index>=warmup&&index<warmup+samples)preparation.push({frame:index-warmup,label,start,ms});}};
+   restorePreparation.push(()=>object[key]=fn);
+  }
+ }
+ // Optional draw census is diagnostic only: never use its CPU timings as a benchmark.
+ const census=mode==='census'||drawCensus,direct=r.renderBufferDirect;let draws=null;
+ if(census)r.renderBufferDirect=function(camera,scene,geometry,material,object,group){
+  const before={calls:r.info.render.calls,triangles:r.info.render.triangles},target=r.getRenderTarget();
+  const result=direct.apply(this,arguments);
+  if(draws){const path=[];for(let o=object;o;o=o.parent)path.push(o.name||o.type);
+   draws.push({path:path.reverse().join('/'),object:object.id,geometry:geometry.id,material:material.name||material.type,target:target?`${target.width}x${target.height}`:'screen',calls:r.info.render.calls-before.calls,triangles:r.info.render.triangles-before.triangles,count:object.count??null,range:[geometry.drawRange.start,Number.isFinite(geometry.drawRange.count)?geometry.drawRange.count:null],group:group?[group.start,group.count]:null});}
+  return result;
+ };
+
+ try{
+ await new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(Error('Active pass timeout')),90000);
+ w.render=function(...args){const now=performance.now(),interval=last===null?null:now-last;last=now;const recording=index>=warmup,auto=r.info.autoReset;r.info.autoReset=false;r.info.reset();
+ draws=census&&recording?[]:null;
+ if(recording){gpu?.begin(index-warmup);passes?.start(index-warmup);cpu?.begin();}const start=performance.now();
+ try{return original.apply(this,args);}catch(e){clearTimeout(timeout);reject(e);throw e;}finally{
+ const cpuMs=performance.now()-start;let calls=null;if(recording){gpu?.end();passes?.stop();calls=cpu?.end();frames.push({frame:index-warmup,...(census?{draws:draws.slice()}:{}),cpuMs,intervalMs:interval,calls:r.info.render.calls,triangles:r.info.render.triangles,camera:w.camera.position.toArray(),coverage:{near:w.groundDetails.near,far:w.groundDetails.far},materialCache:w.mangroveMaterialCache?{...w.mangroveMaterialCache.queue.stats,entries:w.mangroveMaterialCache.queue.entries.size,added:w.mangroveMaterialCache.stats.added,removed:w.mangroveMaterialCache.stats.removed}:null,cpuCalls:calls,shadow:{...w.releaseNativeShadow.cache.stats}});}draws=null;r.info.autoReset=auto;
+ if(++index===warmup+samples){w.render=original;clearTimeout(timeout);resolve();}}
+ };});
+ for(let i=0;i<150&&(gpu?.pending.length||passes?.timer.pending.length||bakeTimer?.pending.length);i++){await new Promise(resolve=>setTimeout(resolve,8));gpu?.poll();passes?.poll();bakeTimer?.poll();}
+ const ext=gl.getExtension('WEBGL_debug_renderer_info');return {mode,frames,preparation,bake:cache?{samples:bakeSamples,gpu:bakeTimer.report()}:null,before,after:snapshot(),gpu:gpu?.report()??null,passes:passes?.report()??null,glError:gl.getError(),memory:{...r.info.memory},coverage:w.groundDetails.audit(),device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)};
+ }finally{for(const restore of restorePreparation)restore();if(cache)cache.update=originalUpdate;bakeTimer?.dispose();r.renderBufferDirect=direct;w.render=original;cpu?.dispose();passes?.dispose();gpu?.dispose();}
+}

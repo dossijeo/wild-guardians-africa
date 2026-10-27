@@ -1,0 +1,62 @@
+{
+  "seed": 712,
+  "tileSpacing": 0.5,
+  "nearTrianglesPerSquareUnit": 128.0,
+  "farTrianglesPerSquareUnit": 32.0,
+  "modules": {
+    "near": {
+      "leaves": 8,
+      "triangles": 32,
+      "vertices": 40,
+      "min": [
+        -0.21120454370975494,
+        0.014999999664723873,
+        -0.37967449426651
+      ],
+      "max": [
+        0.4653378129005432,
+        0.08946889638900757,
+        0.4524737298488617
+      ]
+    },
+    "far": {
+      "leaves": 4,
+      "triangles": 8,
+      "vertices": 16,
+      "min": [
+        -0.21120454370975494,
+        0.014999999664723873,
+        -0.05050089955329895
+      ],
+      "max": [
+        0.36141809821128845,
+        0.05181068927049637,
+        0.4524737298488617
+      ]
+    }
+  },
+  "note": "Nominal spacing budget, not measured filled surface. No game integration or performance claim.",
+  "periodicProjectedCoverage": [
+    {
+      "spacing": 0.5,
+      "trianglesPerSquareUnit": 128.0,
+      "projectedCoverageFraction": 0.4025336371527778
+    },
+    {
+      "spacing": 0.4,
+      "trianglesPerSquareUnit": 199.99999999999997,
+      "projectedCoverageFraction": 0.5272352430555556
+    },
+    {
+      "spacing": 0.35,
+      "trianglesPerSquareUnit": 261.22448979591843,
+      "projectedCoverageFraction": 0.6408420138888888
+    },
+    {
+      "spacing": 0.3,
+      "trianglesPerSquareUnit": 355.55555555555554,
+      "projectedCoverageFraction": 0.7676866319444444
+    }
+  ],
+  "coverageLimit": "Fixed identical orientation repeated periodically, orthographic ground projection, 192x192 sampling; not coverage after random rotations, slopes or masks."
+}

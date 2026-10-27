@@ -1,0 +1,101 @@
+{
+  "scope": "Historical pre-expansion full-suite results plus current complete-catalogue directed verification. Campaign simulations were stopped by explicit user instruction.",
+  "baseCommit": "ada86732c",
+  "featureCommitBeforeEvidence": "ee083fc90ad1028194ab6efa4030a447dfeb0990",
+  "fullInitial": {
+    "tests": 4115,
+    "pass": 4111,
+    "fail": 4,
+    "skipped": 0,
+    "failedTests": [
+      "Sabana/Mapungubwe/712/olderFemale: sunflower farm sustains paid work, real deliveries and raids through night 100",
+      "Sabana/Mapungubwe/712/olderFemale: mixed eight-crop farm sustains paid work, real deliveries and raids through night 100",
+      "complete catalogue audit reproduces from current source and exact original bytes",
+      "assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance"
+    ]
+  },
+  "originalBaseActiveFarm": {
+    "tests": 2,
+    "pass": 0,
+    "fail": 2,
+    "skipped": 0,
+    "failedTests": [
+      "Sabana/Mapungubwe/712/olderFemale: sunflower farm sustains paid work, real deliveries and raids through night 100",
+      "Sabana/Mapungubwe/712/olderFemale: mixed eight-crop farm sustains paid work, real deliveries and raids through night 100"
+    ]
+  },
+  "directedFinal": {
+    "tests": 67,
+    "pass": 67,
+    "fail": 0,
+    "skipped": 0,
+    "failedTests": []
+  },
+  "economyMagicReplay": {
+    "tests": 48,
+    "pass": 48,
+    "fail": 0,
+    "skipped": 0,
+    "failedTests": []
+  },
+  "followup": "Audio catalogue source inventory regenerated and all catalogue tests pass in directedFinal.",
+  "harvestIntegration": {
+    "tests": 8,
+    "passed": 8,
+    "scope": "Real paid-worker task/harvest/crate/delivery pathways with controlled mature postgame crops; baseline/loss/disabled and ripe/carrying reload checkpoints. Not a campaign balance or survival result. Includes policy changes immediately before the authoritative harvest frame."
+  },
+  "planningBoundary": "Microevent RNG changes, a real ledger reward and a reserved crop deduction leave the existing planning-worker key and payload unchanged.",
+  "fullFinal": {
+    "tests": 4138,
+    "pass": 4136,
+    "fail": 2,
+    "skipped": 0,
+    "durationMs": 893265.008,
+    "runtimeCommit": "ada819da6",
+    "failedTests": [
+      "Sabana/Mapungubwe/712/olderFemale: sunflower farm sustains paid work, real deliveries and raids through night 100",
+      "Sabana/Mapungubwe/712/olderFemale: mixed eight-crop farm sustains paid work, real deliveries and raids through night 100"
+    ],
+    "note": "Later planning-worker boundary assertion independently passes in the 67-test directed group; runtime unchanged."
+  },
+  "catalogueDirectedFinal": {
+    "tests": 70,
+    "pass": 70,
+    "fail": 0,
+    "skipped": 0,
+    "actualMouseCompletedTypes": 40,
+    "allFortyTouchPresetRouting": "pass; automated, not a physical device session",
+    "sourceHashes": {
+      "src/app/main.js": "048a910a7100662a86a1fa83a8d801c14407210e4c23d267219273fefce41432",
+      "src/microevents/definitions.js": "4bc7bf0938baaf7c67da6458979fca41d3106f52fd6fe9bd4c00ff660591cef6",
+      "src/microevents/controller.js": "a597fbc56981cc4f93edfe9bf6e3b2aa69feddacaa38939f83fecb82dc4af01c",
+      "src/microevents/director.js": "8bc4db9326cbd4ff0509af2b7c7a050b620ad4d451121799a32652adaf64aa99",
+      "src/microevents/particles.js": "67d78b0a6acead0315f53e81452c89db832952b7715878d96bc5aa82a3982132",
+      "src/microevents/overlay.js": "7e5ebb07e411044c101119d020d869589a5b9891442afe287dd54d63700b4e35",
+      "src/microevents/economy.js": "5e1805c91225937262fa3c601a6a8635cdd6ebd8771bded8f09307f2405591db",
+      "public/content/microevents/atlas.webp": "1c66e73c090c9b0e83d54fbe72befdc89affb6db09c7ae11e3b1add85a8920ea"
+    }
+  },
+  "worldBillboardsDirected": {
+    "tests": 79,
+    "pass": 79,
+    "fail": 0,
+    "actualMouseCompletedTypes": 40,
+    "touchCoverage": "All forty use actual world projection, controller ownership and real particle presets; automated, not physical device",
+    "sourceHashes": {
+      "src/microevents/definitions.js": "4bc7bf0938baaf7c67da6458979fca41d3106f52fd6fe9bd4c00ff660591cef6",
+      "src/microevents/director.js": "8bc4db9326cbd4ff0509af2b7c7a050b620ad4d451121799a32652adaf64aa99",
+      "src/microevents/particles.js": "67d78b0a6acead0315f53e81452c89db832952b7715878d96bc5aa82a3982132",
+      "src/microevents/pointer-trace.js": "521af2860466e20113c9c1fb38efa5ffdbab13577a404d3f6bde27081cb9876a",
+      "src/microevents/space.js": "bb859a2e102cf4d0fc6decc7310b4f32f40f435c3d82aeb7dc4fc4501fe45ea3",
+      "src/microevents/billboards.js": "99c527f360bd23a06cc872f734b8b095dd8bf08bbb2d1dc6c24e9b593f05b806",
+      "src/microevents/controller.js": "87e85ce879e185fff77287dab69f184f70951c3c19d0ea278db1f736851a836d",
+      "src/microevents/economy.js": "5e1805c91225937262fa3c601a6a8635cdd6ebd8771bded8f09307f2405591db",
+      "src/rendering/scene.js": "c9c1f366765c39362dbb714bd2a84558999dc820a897ea2217f2b8ccfa5a710b",
+      "src/app/main.js": "c662d763ae0209d9519e2601d6390cc3d64b5d8286e427734dad64816a42b825",
+      "public/content/microevents/atlas.webp": "ea6393fe5b4a79f3026273e705f551182404fbe801145a3502a2c1bdc84b9ab4",
+      "assets-source/microevents/lowpoly-models.js": "eb01ae12566896531045d1bea0f6277302d8cd9e0af00fd95f777d42ad28959b",
+      "assets-source/microevents/lowpoly-atlas.png": "1662ab690d2734a1c70fa4b668fb7276ceb6d55e9c63198505013e31d70e7408"
+    }
+  }
+}

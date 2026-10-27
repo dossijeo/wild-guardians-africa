@@ -1,0 +1,208 @@
+{
+  "scope": "Sampled inclusive CPU stacks, not GPU execution or per-spike attribution; categories overlap.",
+  "profileWallMs": 131685.741,
+  "selectedInclusive": [
+    [
+      "render | http://127.0.0.1:5220/src/rendering/scene.js:853",
+      60789.13800000036
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/far-vegetation.js:79",
+      11084.607000000033
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:99",
+      10937.146000000028
+    ],
+    [
+      "updateMatrixWorld | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:8325",
+      10552.59500000001
+    ],
+    [
+      "render | http://127.0.0.1:5220/src/rendering/asset-shadows.js:41",
+      9994.221999999972
+    ],
+    [
+      "render | http://127.0.0.1:5220/src/rendering/native-shadow.js:39",
+      9625.140999999978
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/asset-groups.js:173",
+      6155.284000000007
+    ],
+    [
+      "shadowSnapshot | http://127.0.0.1:5220/src/rendering/shadow-cache.js:5",
+      5254.652999999983
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/native-tree-standby.js:94",
+      4582.782000000003
+    ],
+    [
+      "updateAssetLods | http://127.0.0.1:5220/src/rendering/asset-lod.js:37",
+      3462.7270000000053
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/native-far-layer.js:38",
+      3251.454999999997
+    ],
+    [
+      "prepare | http://127.0.0.1:5220/src/rendering/asset-groups.js:89",
+      2429.4409999999966
+    ],
+    [
+      "update | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:34057",
+      1559.1109999999985
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/native-far-coverage.js:8",
+      1321.8210000000001
+    ],
+    [
+      "prepare | http://127.0.0.1:5220/src/rendering/smooth-far-transitions.js:46",
+      1318.1439999999989
+    ],
+    [
+      "update | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:31469",
+      1072.8489999999997
+    ],
+    [
+      "render | http://127.0.0.1:5220/src/rendering/sky.js:37",
+      652.8379999999999
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/ui/guardian.js:88",
+      549.8610000000003
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/tutorial/controller.js:51",
+      490.47200000000026
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/native-tree-coverage.js:6",
+      457.65499999999975
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/crop-batch.js:283",
+      411.4099999999997
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/audio/music-window-transport.js:96",
+      408.10399999999987
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/native-prepared-tree-coverage.js:6",
+      395.8979999999996
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/buildings.js:117",
+      375.6809999999999
+    ],
+    [
+      "advanceReal | http://127.0.0.1:5220/src/simulation/game.js:1617",
+      362.00900000000007
+    ],
+    [
+      "prepare | http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:62",
+      299.93499999999995
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/building-effects.js:49",
+      265.18000000000006
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/ui/game-juice.js:43",
+      240.19600000000008
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/ui/guardian-native.js:146",
+      235.5290000000001
+    ],
+    [
+      "render | http://127.0.0.1:5220/src/rendering/buildings.js:147",
+      208.87400000000005
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/work-vfx.js:46",
+      206.28300000000002
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/ui/screen-overlays.js:11",
+      142.57999999999998
+    ],
+    [
+      "updateMatrixWorld | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:12239",
+      133.59200000000004
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/material-registry.js:50",
+      99.56399999999995
+    ],
+    [
+      "render | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:33871",
+      86.206
+    ]
+  ],
+  "matrixTraversalAncestors": [
+    [
+      "withRenderOrigin | http://127.0.0.1:5220/src/rendering/render-origin.js:19 <- drawWorldFrame | http://127.0.0.1:5220/src/rendering/scene.js:856 <-  | http://127.0.0.1:5220/src/rendering/scene.js:855",
+      5341.826000000008
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/asset-groups.js:173 <- renderFrameUpdates | http://127.0.0.1:5220/src/rendering/scene.js:838 <- render | http://127.0.0.1:5220/src/rendering/scene.js:853",
+      2352.429999999996
+    ],
+    [
+      "WebGLRenderer.render | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40506 <-  | http://127.0.0.1:5220/src/rendering/scene.js:856 <- withRenderOrigin | http://127.0.0.1:5220/src/rendering/render-origin.js:19",
+      2091.535999999999
+    ],
+    [
+      "WebGLRenderer.render | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40506 <- withGpuRootIsolation | http://127.0.0.1:5220/tools/experiments/isolated-gpu-root.js:3 <- compileDrawAndFence | http://127.0.0.1:5220/tools/experiments/prepare-native-far-gpu.js:69",
+      633.1
+    ],
+    [
+      "update | http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:99 <- update | http://127.0.0.1:5220/src/rendering/far-vegetation.js:79 <- renderFrameUpdates | http://127.0.0.1:5220/src/rendering/scene.js:838",
+      95.54500000000002
+    ],
+    [
+      "frozenEntries | http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:77 <-  | http://127.0.0.1:5220/tools/experiments/attach-native-far-world.js:89 <- (root) | :0",
+      88.29400000000001
+    ],
+    [
+      "render | http://127.0.0.1:5220/src/rendering/asset-shadows.js:41 <- WebGLRenderer.render | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40506 <-  | http://127.0.0.1:5220/src/rendering/scene.js:856",
+      28.238999999999997
+    ],
+    [
+      "WebGLRenderer.render | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40506 <- render | http://127.0.0.1:5220/src/rendering/sky.js:37 <-  | http://127.0.0.1:5220/src/rendering/scene.js:856",
+      21.398
+    ],
+    [
+      " | :3 <- (root) | :0",
+      3.8869999999999996
+    ],
+    [
+      "(root) | :0",
+      3.255
+    ],
+    [
+      "render | http://127.0.0.1:5220/src/rendering/sky.js:37 <-  | http://127.0.0.1:5220/src/rendering/scene.js:856 <- withRenderOrigin | http://127.0.0.1:5220/src/rendering/render-origin.js:19",
+      3.237
+    ],
+    [
+      "update | http://127.0.0.1:5220/src/rendering/far-vegetation.js:79 <- renderFrameUpdates | http://127.0.0.1:5220/src/rendering/scene.js:838 <- render | http://127.0.0.1:5220/src/rendering/scene.js:853",
+      1.846
+    ],
+    [
+      "WebGLRenderer.render | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:40506 <- render | http://127.0.0.1:5220/src/rendering/buildings.js:147 <-  | http://127.0.0.1:5220/src/rendering/scene.js:856",
+      1.781
+    ],
+    [
+      "updateMatrices | http://127.0.0.1:5220/node_modules/.vite-pthreads/deps/chunk-SCGUQBHX.js?v=b4877b06:24083 <- update | http://127.0.0.1:5220/src/rendering/asset-groups.js:173 <- renderFrameUpdates | http://127.0.0.1:5220/src/rendering/scene.js:838",
+      1.633
+    ],
+    [
+      "drawWorldFrame | http://127.0.0.1:5220/src/rendering/scene.js:856 <-  | http://127.0.0.1:5220/src/rendering/scene.js:855 <- draw | http://127.0.0.1:5220/src/ui/game-juice.js:62",
+      1.632
+    ]
+  ]
+}

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
-import {rational,numberOf} from '../src/simulation/money.js';
+import {rational,numberOf,add} from '../src/simulation/money.js';
 import {isMature} from '../src/simulation/crops.js';
 import {applyEvent} from '../src/simulation/events.js';
 import {spawnRaid} from '../src/simulation/raids.js';
@@ -16,7 +16,7 @@ const nav={placement:()=>({valid:true,suppress:[]}),wallPlacement:()=>({valid:tr
   setState:()=>{},walkable:()=>true,terrainValid:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function tickUntil(s,predicate,limit=400){
   let time=0;while(!predicate()&&time<limit&&!s.result&&!s.pauses.length){Game.tick(s,.05,nav);time+=.05;}
-  assert.ok(predicate(),`Not reached at day ${s.day}, time ${s.time}, after ${time}s`);
+  assert.ok(predicate(),`Not reached at day ${s.day}, time ${s.time}, after ${time}s; nights=${s.completedNights}, raid=${!!s.raid}, result=${s.result}, pauses=${s.pauses.join(',')}`);
 }
 function carrying({late=false,bonus=false}={}){
   const s=Game.newGame({seed:712,slotId:'crate-recovery'});Game.resume(s,'intro');s.ledger.balance=rational(10000);
@@ -34,7 +34,8 @@ function carrying({late=false,bonus=false}={}){
 }
 test('QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value',()=>{
   const {s,worker,crate,cash}=carrying({late:true,bonus:true}),point={x:worker.x,z:worker.z};
-  assert.deepEqual(crate.value,rational(726,25));assert.equal(crate.profile,'olderMale');
+  const baseValue=rational(363,25),committedPower=rational(132,13);
+  assert.deepEqual(crate.value,baseValue);assert.deepEqual(crate.multiplyPower.amount,committedPower);assert.equal(crate.profile,'olderMale');
   spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);
   assert.equal(worker.crateId,null);assert.equal(crate.carrierId,null);assert.equal(crate.x,point.x);assert.equal(crate.z,point.z);
   assert.equal(worker.status,'fleeing');assert.equal(numberOf(s.ledger.balance),cash);
@@ -43,23 +44,23 @@ test('QA-066/067/069/071: natural raid drops cargo, never targets it, and a diff
     assert.equal(numberOf(s.ledger.balance),cash);assert.equal(crate.x,point.x);assert.equal(crate.z,point.z);assert.equal(crate.delivered,false);
   }
   assert.equal(s.raid,null);
+  // This test already exercised its explicit physical raid. Do not spawn a
+  // second independently planned night horde while auditing cargo recovery.
+  s.nightPlan.done=true;
   assert.ok(s.time>=250);assert.ok(s.events.some(e=>e.type==='StructureHit'));assert.equal(s.structures[0].status,'intact');
   assert.equal(s.tasks.filter(t=>t.kind==='crate'&&t.targetId===crate.id).length,1);
-  let loaded=deserialize(serialize(s));assert.deepEqual(loaded.crates[0].value,rational(726,25));
+  let loaded=deserialize(serialize(s));assert.deepEqual(loaded.crates[0].value,baseValue);assert.deepEqual(loaded.crates[0].multiplyPower.amount,committedPower);
   // Entry now starts at the actual active border; the raid can end after dusk.
   // Advance to the next dawn rather than assuming an end before time 300.
-  loaded.eventPlan=null;
-  // This fixture tests cargo recovery after the completed raid. A new
-  // pressure-driven night raid would make its outcome depend on military balance.
-  loaded.nightPlan={at:Infinity,done:true,group:[]};
-  tickUntil(loaded,()=>loaded.day===22,600);assert.equal(loaded.day,22);
+  loaded.eventPlan=null;tickUntil(loaded,()=>loaded.day===22,600);assert.equal(loaded.day,22);
   Game.hire(loaded,'next-hire',{olderFemale:1});loaded.dayPlan.done=true;
   assert.equal(loaded.plants.filter(p=>p.alive).length,0);assert.equal(loaded.workers.length,1);assert.equal(loaded.workers[0].centerId,loaded.structures[0].id);
-  const paid=numberOf(loaded.ledger.balance);tickUntil(loaded,()=>loaded.workers[0].status==='carrying',60);
-  assert.equal(loaded.crates[0].profile,'olderMale');assert.deepEqual(loaded.crates[0].value,rational(726,25));assert.equal(numberOf(loaded.ledger.balance),paid);
+  const paid=numberOf(loaded.ledger.balance),paidBalance=structuredClone(loaded.ledger.balance);tickUntil(loaded,()=>loaded.workers[0].status==='carrying',60);
+  assert.equal(loaded.crates[0].profile,'olderMale');assert.deepEqual(loaded.crates[0].value,baseValue);assert.deepEqual(loaded.crates[0].multiplyPower.amount,committedPower);assert.equal(numberOf(loaded.ledger.balance),paid);
   assert.equal(loaded.spells.length,0);loaded=deserialize(serialize(loaded));tickUntil(loaded,()=>loaded.crates[0].delivered,30);
-  assert.equal(numberOf(loaded.ledger.balance),paid+30);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
-  Game.rebuildTasks(loaded);Game.tick(loaded,5,nav);assert.equal(numberOf(loaded.ledger.balance),paid+30);
+  assert.deepEqual(loaded.crates[0].multiplyIncome,rational(10));assert.deepEqual(loaded.ledger.balance,add(paidBalance,rational(25)));
+  assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
+  Game.rebuildTasks(loaded);Game.tick(loaded,5,nav);assert.deepEqual(loaded.ledger.balance,add(paidBalance,rational(25)));
   assert.equal(loaded.plants.length,1);assert.equal(loaded.plants[0].alive,false);
 });
 test('QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built',()=>{

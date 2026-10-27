@@ -1,0 +1,215 @@
+{
+  "rows": [
+    {
+      "dir": "1-baseline",
+      "source": "tools/experiments/smooth-sort-original.js",
+      "sort": {
+        "calls": 14126,
+        "repacked": 4176,
+        "bytes": 223344520
+      },
+      "repackFraction": 0.2956250884893105,
+      "bytesPerPrepare": 15810.882061446977,
+      "cpu": {
+        "n": 1455,
+        "p50": 7.960000038146973,
+        "p95": 15.90499997138977,
+        "p99": 20.414999961853027,
+        "max": 30.200000047683716
+      },
+      "presentation": {
+        "n": 1454,
+        "p50": 33.125,
+        "p95": 49.929999999993015,
+        "p99": 66.54000000000815,
+        "max": 83.30499999999302
+      },
+      "gpu": {
+        "n": 1455,
+        "p50": 22.45375,
+        "p95": 30.538905,
+        "p99": 36.714739,
+        "max": 55.168645
+      },
+      "ready": {
+        "start": 159801.52499997616,
+        "end": 161093.26999998093,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 31.32865500003323,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "uniqueChunks": 40,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      }
+    },
+    {
+      "dir": "2-candidate",
+      "source": "tools/experiments/smooth-sort-orientation.js",
+      "sort": {
+        "calls": 14685,
+        "repacked": 1225,
+        "bytes": 65563240
+      },
+      "repackFraction": 0.08341845420497106,
+      "bytesPerPrepare": 4464.640108954715,
+      "cpu": {
+        "n": 1402,
+        "p50": 8.360000014305115,
+        "p95": 16.080000042915344,
+        "p99": 21.769999980926514,
+        "max": 30.164999961853027
+      },
+      "presentation": {
+        "n": 1400,
+        "p50": 33.14499999998952,
+        "p95": 49.97500000000582,
+        "p99": 66.61000000001513,
+        "max": 99.88500000000931
+      },
+      "gpu": {
+        "n": 1402,
+        "p50": 22.651406,
+        "p95": 32.855415,
+        "p99": 37.117864,
+        "max": 44.515677
+      },
+      "ready": {
+        "start": 126141.51999998093,
+        "end": 127402.75999999046,
+        "stableFrames": 60,
+        "keys": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        },
+        "pending": false,
+        "camera": [
+          105.5,
+          10.319999933242798,
+          4
+        ],
+        "target": [
+          100.5,
+          3.319999933242798,
+          -6
+        ],
+        "elapsed": 31.268409999952215,
+        "quality": "media",
+        "scope": "Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows."
+      },
+      "uniqueChunks": 40,
+      "hardware": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardwareConcurrency": 16,
+        "devicePixelRatio": 1,
+        "canvas": [
+          1280,
+          720
+        ],
+        "crossOriginIsolated": true
+      }
+    }
+  ],
+  "limits": [
+    "Single A/B is exposure evidence, not performance acceptance.",
+    "Sort counters include initialization and warmup, not only the timed traversal. Bytes represent rewritten CPU attributes marked dirty, not measured driver uploads.",
+    "Dynamic actor states and cadence differ; previous original/original runs varied substantially.",
+    "GPU query duration can include bubbles/driver scheduling.",
+    "Screenshots occur after measurement, not pixel-equivalence proof."
+  ]
+}

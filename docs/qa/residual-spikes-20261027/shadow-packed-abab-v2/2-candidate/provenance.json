@@ -1,0 +1,35 @@
+{
+  "candidate": true,
+  "order": 2,
+  "commit": "5b1259f5873a80d097b76dc7aa99408d752cf311",
+  "shadowSources": {
+    "shadow-cache.js": "9a773a4d4755b3a4dd2b9e42fd3cac64fca619257bc364dda8fa6608c4ee2755",
+    "native-shadow.js": "6a541d4aff13f51d8401fabd32f21871b7de09787914ab411bb5326a1e5f84df"
+  },
+  "wasmSha256": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+  "harnessSha256": "bd0fd6952880747d08eb5ae9c607c4e569e71d06fb8030e3b402dae9dfea2ef9",
+  "fixtureSha256": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+  "conditions": {
+    "WG_SHADOW_ABAB_OUT": "docs/qa/residual-spikes-20261027/shadow-packed-abab-v2",
+    "WG_BEAST_QA_OUT": "docs/qa/residual-spikes-20261027/shadow-packed-abab-v2/2-candidate",
+    "WG_QA_URL": "http://127.0.0.1:5220",
+    "WG_MAGIC_FIXTURE": "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json",
+    "WG_MAGIC_PROFILE": "1",
+    "WG_MAGIC_CPU_SAMPLING": "0",
+    "WG_MAGIC_VIDEO": "0",
+    "WG_MAGIC_GPU": "1",
+    "WG_MAGIC_PHASES": "1",
+    "WG_MAGIC_CASTS": "2",
+    "WG_MAGIC_NO_CAST": "1",
+    "WG_MAGIC_STREAM": "1",
+    "WG_MAGIC_STREAM_DISTANCE": "144",
+    "WG_MAGIC_STREAM_SECONDS": "40",
+    "WG_SPATIAL_RUNTIME_DIR": ".codex-tmp/release-lazy-fixed",
+    "WG_SHADOW_SOURCE_DIR": ""
+  },
+  "limits": [
+    "Instrumented GPU queries and phase clocks; no CPU sampling or video.",
+    "Same seed, profile and camera sequence; simulation is active and asynchronous residency can differ.",
+    "Shared host; no claim of exclusive hardware use."
+  ]
+}

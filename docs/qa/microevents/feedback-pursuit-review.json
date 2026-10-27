@@ -1,0 +1,57 @@
+{
+  "status": "ready-for-review",
+  "scope": "Latest requested fast creature pursuit and audiovisual feedback; retains forty world-event catalogue. No campaign simulation or balance edits.",
+  "tests": {
+    "passed": 84,
+    "failed": 0,
+    "command": "node --test tests/microevent-feedback.test.js tests/microevent-billboards.test.js tests/microevents.test.js tests/microevent-harvest.test.js tests/save-game.test.js tests/sfx-catalog-audit.test.js tests/i18n.test.js"
+  },
+  "build": {
+    "passed": true,
+    "seconds": 11.01,
+    "packagePassed": true,
+    "files": 713,
+    "bytes": 445511415
+  },
+  "browser": {
+    "fixture": "rocks",
+    "type": "real 3D farm DEV fixture, paid starting entities, core clock frozen, forced effects cosmetic",
+    "receipt": "pursuit-real-ui.json",
+    "successfulOwnedHolds": [
+      "birds",
+      "beetle",
+      "locusts",
+      "insects",
+      "fireflies"
+    ],
+    "probesRetained": [
+      "butterfly moved before contact",
+      "spirit occluded at probe"
+    ],
+    "shaderErrors": [],
+    "captures": [
+      "birds-fast-flight-a.jpg",
+      "birds-fast-flight-b.jpg",
+      "birds-contact-vfx.jpg",
+      "seeds-contact-vfx.jpg"
+    ]
+  },
+  "audio": {
+    "bank": "existing Wild Guardians v12",
+    "newExternalAssets": 0,
+    "originalBytesPreserved": 126,
+    "connectedIds": 101,
+    "playbackAuditionClaim": false,
+    "missingCues": "../../MICROEVENT-FEEDBACK.md"
+  },
+  "performance": "particle-feedback-cpu.json",
+  "priorEvidenceScope": "billboard-catalogue-real-ui.json contains all forty completions before this flight and feedback refinement; prior GPU browser measurements remain historical with their original source hashes.",
+  "sourceSha256": {
+    "src/microevents/definitions.js": "522bd4575c6dda5a678ab4e8fe90bc629ce913defd015b5e423032efa89630b1",
+    "src/microevents/feedback.js": "be6041bc86d7f12288ec5e574e1146981e9da691a85138588e88bc1ad4f6eb4c",
+    "src/microevents/particles.js": "fdb0236d830985b11bddd6e0940a4581bbd2935188724df2af2cb5f3b005b7d2",
+    "src/microevents/billboards.js": "08e1a56aa6941f13e2f04ffce23e06a4ca15d5ed27a6570c268313dba80356d5",
+    "src/microevents/controller.js": "fe6d05c9d6e83b08917c0e33b335ab915cbbe8e262ffd00f4c511ee8e8298e5f",
+    "src/microevents/space.js": "bb859a2e102cf4d0fc6decc7310b4f32f40f435c3d82aeb7dc4fc4501fe45ea3"
+  }
+}

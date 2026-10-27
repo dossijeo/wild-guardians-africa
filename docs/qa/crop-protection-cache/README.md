@@ -1,0 +1,24 @@
+# Native crop-protection cache by crop and profile
+
+Profiling Volcanes/712 nights 19–22 after the localized repair-overlay change found 783 crop-protection publications taking 9.35 s: 707 were crop-only changes (8.70 s), 479 of those involved a new crop, and only 76 followed topology/general changes. Each publication still queries the native grouping for all five animal profiles. Before this change, every crop addition/removal rebuilt groups and discarded their entire protection cache, then repeated the physical enclosure probes for unchanged crops.
+
+Wild Engine now retains each crop's physical enclosure verdict by crop ID, navigation profile, collision radius and native topology revision. A changed or removed crop loses its entry; session reset clears the table; topology and sector-residency revisions make old entries unusable. The group itself is still rebuilt and its verdict is combined from its current members, so changing group membership does not reuse a stale group verdict. `unprotected` dominates `unknown`, and `unknown` never becomes `protected` merely because a result was cached. JavaScript still receives the same event notifications and decides what to build or repair.
+
+## Evidence
+
+The frozen Volcanes day-19 state contains 108 living crops in 20 protected groups. A synthetic unchanged-crop delta forces each group rebuild to isolate the native classification cost; this is a microbenchmark, not a legal campaign action. With the same JS source and identical state, the first query was about 0.55–0.59 s for both binaries. Repeated rebuilds in A/B/B/A were typically 7–10 ms on the previous WASM and 0.3–0.5 ms with per-crop reuse. The 16 MiB committed linear memory size did not grow in either arm; that measurement does not count exact C++ heap use. The candidate WASM is 524,572 bytes, versus 520,654 bytes before (+3,918 bytes).
+
+The baseline C++/WASM is `d7a811fb15b97668a07bd05c5501e6956d12269d439188a2991234d8bc1ae8aa`; the candidate is `6feeea330cf5c8d0e338503e85abbb007d6803cd1727c0b425623956234ec551`. Both campaigns use JS source SHA-256 `1ed97bd8d8722b42abed07b70767e112df287c102c892c136d2e2fac78111067`, seed 712, the same topological defense policy and native intents. The Volcanes baseline is the [previous 22-night report](../volcanes-repair-local-overlay/candidate-22.json); the new [candidate report](volcanes-candidate-22.json) contains all daily state hashes. The Sabana [baseline](sabana-baseline-14.json) and [candidate](sabana-candidate-14.json) were run consecutively on this host.
+
+| Campaign | `Game.tick` before → after | Bot decisions before → after | Total elapsed before → after | Serialized states |
+| --- | ---: | ---: | ---: | --- |
+| Volcanes/712, 22 nights | 67.73 → 53.74 s (−20.7%) | 32.36 → 9.59 s (−70.4%) | 109.54 → 72.56 s (−33.8%) | 22/22 equal |
+| Sabana/712, 14 nights | 32.91 → 25.13 s (−23.6%) | 15.81 → 4.23 s (−73.3%) | 54.76 → 35.34 s (−35.5%) | 14/14 equal |
+
+Both candidate campaigns verified raid evidence. Crop counts, money and destroyed-crop counts also match each day. A further [30-night Volcanes candidate](volcanes-candidate-30.json) matches all 30 serialized state hashes in the [archived 30-night run](../volcanes-repair-batch/batch-30.json), with verified raids and 158 living crops / 1,003 coins at night 30. That older run used a WASM from before the separate repair-overlay optimization, so it is a correctness reference only, not a clean speed comparator. The 22-night Volcanes baseline was also measured in a prior run on the same host, so its wall-time comparison is less tightly paired than Sabana; exact state hashes and the repeated frozen microbenchmark provide independent checks. These are CPU/headless simulation results, not browser FPS measurements.
+
+## Reproduction and limits
+
+Build with `bash tools/build-spatial-savanna-wasm.sh` under Emscripten 3.1.5. For a separately compiled candidate, set `WILD_ENGINE_SPATIAL_SERVICES_WASM` to its path, then run `node tools/experiments/benchmark-crop-protection-group.mjs tests/fixtures/volcanes712-day19-repair-before-arrival.json.gz 8`. For integrated runs use `node tools/experiments/compare-repair-preview-campaign.mjs batch OUTPUT.json 22 712 volcanes` or `... 14 712 sabana`, with that variable set for the candidate and unset for the shipped baseline.
+
+The native crop-group tests exercise crop removal, restoration, a paid enclosure, a real breach, unknown sectors and center-adjacent attack sites. The incremental verdicts are also compared with a fresh native session after crop removal. The cache has one entry per currently indexed crop and at most six profile slots; hash-table capacity may retain prior allocation until session reset. A topology change may still require a full physical reclassification, and the bot still receives one publication per relevant event; this experiment does not claim to eliminate those legitimate updates.

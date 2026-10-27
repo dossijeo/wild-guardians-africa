@@ -47,6 +47,45 @@ test('travel and forced rebuild discard obsolete responses and regenerate the cu
  const oldEpoch=f.messages.at(-1);f.plan([[8,0,0]],true);f.reply(oldEpoch);assert.equal(f.installed.length,0);assert.equal(f.messages.at(-1).epoch,1);f.reply();assert.equal(f.installed.length,1);assert.equal(f.stream.stats.discarded,2);assert.deepEqual(await f.stream.whenIdle(),{cancelled:false});f.stream.dispose();
 });
 
+test('invalidating a loaded chunk refreshes it without counting stale data as ready',async()=>{
+ const f=fixture();f.plan([[0,0,0]]);f.reply();assert.equal(f.installed.length,1);
+ f.stream.invalidate(['0,0']);assert.equal(f.stream.summary().stale,1);
+ assert.equal(f.messages.length,2);
+ let ready=false;const pending=f.stream.whenReady(1).then(()=>ready=true);
+ await Promise.resolve();assert.equal(ready,false);
+ f.reply();await pending;
+ assert.equal(f.installed.length,2);assert.equal(f.stream.summary().stale,0);
+ assert.equal(f.stream.freshLoaded(),1);f.stream.dispose();
+});
+
+test('a newer invalidation rejects an in-flight stale refresh',async()=>{
+ const f=fixture();f.plan([[0,0,0]]);f.reply();
+ f.stream.invalidate(['0,0']);const obsolete=f.messages.at(-1);
+ f.stream.invalidate(['0,0']);f.reply(obsolete);
+ assert.equal(f.installed.length,1);
+ assert.equal(f.messages.at(-1).epoch,f.stream.epoch);
+ f.reply();assert.equal(f.installed.length,2);
+ assert.equal(f.stream.summary().stale,0);f.stream.dispose();
+});
+
+test('invalidation leaves offscreen work alone and discards an in-flight changed chunk',()=>{
+ const f=fixture();f.plan([[0,0,0]]);f.reply();f.plan([[1,0,0]]);
+ const pending=f.messages.at(-1),epoch=f.stream.epoch;
+ f.stream.invalidate(['0,0']);
+ assert.equal(f.stream.epoch,epoch);
+ assert.equal(f.stream.busy.id,pending.id);
+ f.reply();assert.equal(f.installed.length,2);
+ f.plan([[0,0,0]]);assert.equal(f.messages.at(-1).cx,0);f.reply();
+ assert.equal(f.installed.length,3);
+ f.plan([[2,0,0]]);const obsolete=f.messages.at(-1);
+ f.stream.invalidate(['2,0']);f.reply(obsolete);
+ assert.equal(f.installed.length,3);
+ assert.equal(f.messages.at(-1).cx,2);
+ assert.notEqual(f.messages.at(-1).epoch,obsolete.epoch);
+ f.reply();assert.equal(f.installed.length,4);
+ f.stream.dispose();
+});
+
 test('worker failure preserves pending work in asynchronous local mode and dispose cancels it',async()=>{
  const f=fixture();f.plan([[0,0,0],[1,0,1]]);f.worker.onerror(new Error('fixture worker crash'));assert.equal(f.worker.terminated,true);assert.equal(f.stream.summary().worker,false);assert.equal(f.stream.stats.fallbacks,1);assert.equal(f.installed.length,0);
  const idle=f.stream.whenIdle();f.scheduled.shift()();assert.equal(f.installed[0].local,true);f.scheduled.shift()();assert.deepEqual(await idle,{cancelled:false});assert.equal(f.installed.length,2);
@@ -62,7 +101,7 @@ test('generation and installation failures settle waiters and coordinate mismatc
 test('scene installs transferred data without regenerating terrain or navigation population on the main thread',()=>{
  const pack=JSON.parse(readFileSync('public/content/biome-grand_river.json','utf8')),config={seed:'712',biome:'grand_river',relief:1,density:1,river:true,n:1,layers:Array(6).fill(true)},data=buildNativeChunk(config,pack.profile,0,0),suppressed=new Set([data.instances.flat()[0].id]);
  const g=new THREE.BoxGeometry(2,3,2);g.computeBoundingBox();const material=new THREE.MeshStandardMaterial(),prototypes=Array.from({length:20},()=>[0,1,2].map(()=>new THREE.Mesh(g,material)));
- const world={buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:new TerrainField(config),suppressed,chunk(){throw new Error('Main generation must not run');}},pack,prototypes,quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'gran-rio'}};
+ const world={prepareTerrainSteps:WorldScene.prototype.prepareTerrainSteps,disposePreparedTerrain:WorldScene.prototype.disposePreparedTerrain,toon:{globalVisualLighting:false},buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:new TerrainField(config),suppressed,chunk(){throw new Error('Main generation must not run');}},pack,prototypes,quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'gran-rio'}};
  const group=WorldScene.prototype.terrain.call(world,0,0,data),ground=world.terrainMeshes[0];assert.equal(ground.geometry.attributes.position.data.array,data.terrain);
  assert.deepEqual(group.userData.contactInstances,data.instances.map(list=>list.filter(p=>!suppressed.has(p.id))));
  const water=group.children.find(m=>m.userData.nativeFluid==='chunk');if(data.water.length)assert.equal(water.geometry.attributes.position.array,data.water);
@@ -74,4 +113,25 @@ test('initial readiness follows the native nine-chunk threshold while the outer 
  const f=fixture();f.plan(Array.from({length:12},(_,i)=>[i,0,i]));const ready=f.stream.whenReady();let done=false;ready.then(()=>done=true);
  for(let i=0;i<8;i++)f.reply();await Promise.resolve();assert.equal(done,false);f.reply();assert.deepEqual(await ready,{cancelled:false});assert.equal(f.loaded.size,9);assert.equal(f.stream.busy.cx,9);assert.equal(f.stream.queue.length,2);
  f.stream.dispose();const smaller=fixture();smaller.plan([[0,0,0],[1,0,1]]);const short=smaller.stream.whenReady();smaller.reply();smaller.reply();assert.deepEqual(await short,{cancelled:false});smaller.stream.dispose();
+});
+
+
+test('late asynchronous prepared graphics are disposed after stream teardown',async()=>{
+ let complete;const discarded=[],installed=[];
+ const stream=new NativeChunkStream({}, {},{loaded:()=>new Map(),onData:data=>installed.push(data),workerFactory:()=>null,
+  buildAsync:()=>new Promise(resolve=>{complete=resolve;}),discardData:data=>discarded.push(data)});
+ stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));await Promise.resolve();
+ stream.dispose();const data={cx:0,cz:0,preparedGroup:{}};complete(data);
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(installed,[]);assert.deepEqual(discarded,[data]);
+});
+
+test('cancelled async request is retried when its demand returns before completion',async()=>{
+ const loaded=new Map(),errors=[];let complete,calls=0;
+ const stream=new NativeChunkStream({}, {},{loaded:()=>loaded,onData:data=>loaded.set('0,0',data),onError:e=>errors.push(e),workerFactory:()=>null,
+  buildAsync:()=>{calls++;return calls===1?new Promise(resolve=>{complete=resolve;}):Promise.resolve({cx:0,cz:0});}});
+ const jobs=new Map([['0,0',{cx:0,cz:0,score:0}]]);
+ stream.plan(jobs);await Promise.resolve();stream.plan(new Map());stream.plan(jobs);
+ complete(null);await stream.whenIdle();
+ assert.equal(calls,2);assert.equal(loaded.size,1);assert.deepEqual(errors,[]);assert.equal(stream.stats.discarded,1);stream.dispose();
 });

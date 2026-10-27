@@ -1,0 +1,179 @@
+{
+  "source": {
+    "commit": "ff6535ad5650cf8442262486fc24a1dd93d8e9da",
+    "cppSha256": "34c9614564b88a42ef4b5506696c964ea7f9792366e3ffd0b95e2841a3636881",
+    "wasmSha256": "d9d16b81301074d92620f549125784a7ad3121063ad98b8c08f359dffa3dc987",
+    "runnerSha256": "63bbc7e46ceed31ef5bf0bd4950e861e6e90fc37c032ac22b3f524c88583e5e7"
+  },
+  "description": "Constructed native worker workloads; no virtual-player campaign or balance claim",
+  "rows": [
+    {
+      "biome": "gran-canon",
+      "seed": 123,
+      "day": 6,
+      "crops": 40,
+      "workers": 3,
+      "elapsed": 120,
+      "ticks": 480,
+      "loopMs": 231.17589999999996,
+      "tickMsTotal": 230.52050000000122,
+      "firstTickMs": 97.12570000000005,
+      "tickMsP95": 0.45640000000003056,
+      "tickMsMax": 97.12570000000005,
+      "tickMsMean": 0.4802510416666692,
+      "workerDistance": [
+        {
+          "id": "worker-84",
+          "distance": 69.56092635053622,
+          "status": "acting"
+        },
+        {
+          "id": "worker-86",
+          "distance": 64.12534492363868,
+          "status": "walking"
+        },
+        {
+          "id": "worker-88",
+          "distance": 64.25171267059189,
+          "status": "walking"
+        }
+      ],
+      "events": {
+        "WaterSatisfied": 17,
+        "CropPicked": 0,
+        "CrateDelivered": 0,
+        "ActorMobileCollisionRecovery": 0
+      },
+      "tasks": 24,
+      "peakTasks": 40,
+      "loadedChunks": 9,
+      "peakLoadedChunks": 9,
+      "heapDeltaBytes": 2813032,
+      "result": null,
+      "pauses": [],
+      "topologyRevision": 2,
+      "native": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 9,
+        "residentPropRecords": 83,
+        "residentVisiblePropRecords": 628,
+        "loadedSectors": 144,
+        "sectorSlots": 144,
+        "sectorUpdates": 196,
+        "haloProps": 4
+      }
+    },
+    {
+      "biome": "gran-canon",
+      "seed": 123,
+      "day": 50,
+      "crops": 150,
+      "workers": 3,
+      "elapsed": 120,
+      "ticks": 480,
+      "loopMs": 259.41709999999966,
+      "tickMsTotal": 258.8907000000013,
+      "firstTickMs": 81.70820000000003,
+      "tickMsP95": 0.7018000000002758,
+      "tickMsMax": 81.70820000000003,
+      "tickMsMean": 0.5393556250000027,
+      "workerDistance": [
+        {
+          "id": "worker-304",
+          "distance": 69.56092635053622,
+          "status": "acting"
+        },
+        {
+          "id": "worker-306",
+          "distance": 64.12534492363868,
+          "status": "walking"
+        },
+        {
+          "id": "worker-308",
+          "distance": 64.25171267059189,
+          "status": "walking"
+        }
+      ],
+      "events": {
+        "WaterSatisfied": 17,
+        "CropPicked": 0,
+        "CrateDelivered": 0,
+        "ActorMobileCollisionRecovery": 0
+      },
+      "tasks": 134,
+      "peakTasks": 150,
+      "loadedChunks": 9,
+      "peakLoadedChunks": 9,
+      "heapDeltaBytes": 5169856,
+      "result": null,
+      "pauses": [],
+      "topologyRevision": 2,
+      "native": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 9,
+        "residentPropRecords": 83,
+        "residentVisiblePropRecords": 628,
+        "loadedSectors": 144,
+        "sectorSlots": 144,
+        "sectorUpdates": 196,
+        "haloProps": 4
+      }
+    },
+    {
+      "biome": "gran-canon",
+      "seed": 123,
+      "day": 100,
+      "crops": 300,
+      "workers": 3,
+      "elapsed": 120,
+      "ticks": 480,
+      "loopMs": 229.65270000000055,
+      "tickMsTotal": 229.318200000017,
+      "firstTickMs": 85.0001000000002,
+      "tickMsP95": 0.41200000000026193,
+      "tickMsMax": 85.0001000000002,
+      "tickMsMean": 0.4777462500000354,
+      "workerDistance": [
+        {
+          "id": "worker-604",
+          "distance": 69.56092635053622,
+          "status": "acting"
+        },
+        {
+          "id": "worker-606",
+          "distance": 64.12534492363868,
+          "status": "walking"
+        },
+        {
+          "id": "worker-608",
+          "distance": 64.25171267059189,
+          "status": "walking"
+        }
+      ],
+      "events": {
+        "WaterSatisfied": 17,
+        "CropPicked": 0,
+        "CrateDelivered": 0,
+        "ActorMobileCollisionRecovery": 0
+      },
+      "tasks": 284,
+      "peakTasks": 300,
+      "loadedChunks": 9,
+      "peakLoadedChunks": 9,
+      "heapDeltaBytes": -2572872,
+      "result": null,
+      "pauses": [],
+      "topologyRevision": 15,
+      "native": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 9,
+        "residentPropRecords": 83,
+        "residentVisiblePropRecords": 615,
+        "loadedSectors": 144,
+        "sectorSlots": 144,
+        "sectorUpdates": 221,
+        "haloProps": 4
+      }
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "sha256": "f41ef94b997fb6c18757058906d281d0c33632e99fd81880a9eb6871b25bff57",
+  "scope": "Single instrumented active quality-cycle diagnostic, not ABAB. CPU is main RAF callback; GPU wraps World.render and includes pipeline bubbles. Transition completion waits include concurrent streaming.",
+  "active": {
+    "travelWallMs": 10412.920000076294,
+    "settledWallMs": 12357.634999990463,
+    "postTravelWaitMs": 1944.7149999141693,
+    "timingScope": "Wall time includes existing quality correctness diagnostics; no GPU/CPU attribution. Same 240-frame travel protocol.",
+    "initialElapsed": 4.900764999942772,
+    "elapsed": 17.28903999994258,
+    "travelFrame": 240,
+    "advancingFrames": 240,
+    "pausedFrames": 0,
+    "pauseReasons": {},
+    "created": 15,
+    "stream": {
+      "created": 40,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    }
+  },
+  "cpu": {
+    "count": 310,
+    "p50": 14.620000004768372,
+    "p95": 23.444999933242798,
+    "p99": 35.12999999523163,
+    "max": 52.4300000667572
+  },
+  "presentation": {
+    "count": 309,
+    "p50": 33.3350000000064,
+    "p95": 83.11999999999534,
+    "p99": 99.77500000000873,
+    "max": 116.57499999999709
+  },
+  "gpu": {
+    "count": 105,
+    "p50": 30.106405,
+    "p95": 42.476509,
+    "p99": 43.905885,
+    "max": 44.923697
+  },
+  "rows": [
+    {
+      "quality": "baja",
+      "settingMs": 4.580000042915344,
+      "transitionMs": 548.1549999713898,
+      "completionPhases": {
+        "settleFramesMs": 469.960000038147,
+        "explicitRenderCpuMs": 10.480000019073486,
+        "chunkWaitMs": 0.04499995708465576,
+        "programWaitMs": 0,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      },
+      "diagnosticMs": 62.57000005245209
+    },
+    {
+      "quality": "media",
+      "settingMs": 2.5649999380111694,
+      "transitionMs": 11173.735000014305,
+      "completionPhases": {
+        "settleFramesMs": 438.125,
+        "explicitRenderCpuMs": 11.690000057220459,
+        "chunkWaitMs": 10697.840000033379,
+        "programWaitMs": 0.004999995231628418,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      },
+      "diagnosticMs": 22.2150000333786
+    },
+    {
+      "quality": "baja",
+      "settingMs": 2.034999966621399,
+      "transitionMs": 331.61500000953674,
+      "completionPhases": {
+        "settleFramesMs": 315.9850000143051,
+        "explicitRenderCpuMs": 4.615000009536743,
+        "chunkWaitMs": 0.019999980926513672,
+        "programWaitMs": 0.004999995231628418,
+        "scope": "Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation."
+      },
+      "diagnosticMs": 8.75
+    }
+  ],
+  "consoleMessages": 28,
+  "messagePrefixes": [
+    "THREE.WebGLProgram"
+  ],
+  "worstLongFrames": [
+    {
+      "duration": 111.28999996185303,
+      "blocking": 17.2,
+      "scripts": [
+        {
+          "duration": 46.27499997615814,
+          "source": "http://127.0.0.1:5220/tools/experiments/far-scene-loader.js",
+          "function": "",
+          "invoker": "Worker.onmessage"
+        },
+        {
+          "duration": 18.375,
+          "source": "http://127.0.0.1:5220/src/app/main.js",
+          "function": "frame",
+          "invoker": "FrameRequestCallback"
+        }
+      ]
+    },
+    {
+      "duration": 106.73499989509583,
+      "blocking": 43.765,
+      "scripts": [
+        {
+          "duration": 16.289999961853027,
+          "source": "http://127.0.0.1:5220/src/app/main.js",
+          "function": "frame",
+          "invoker": "FrameRequestCallback"
+        },
+        {
+          "duration": 76.95999991893768,
+          "source": "",
+          "function": "",
+          "invoker": "FrameRequestCallback"
+        }
+      ]
+    },
+    {
+      "duration": 106.24000000953674,
+      "blocking": 0,
+      "scripts": [
+        {
+          "duration": 27.945000052452087,
+          "source": "http://127.0.0.1:5220/src/app/main.js",
+          "function": "frame",
+          "invoker": "FrameRequestCallback"
+        }
+      ]
+    }
+  ],
+  "next": "Attribute synchronous far-region construction/attachment and distinguish QA diagnostics from production work. Shader compiler warnings remain recorded; no clean-console claim."
+}

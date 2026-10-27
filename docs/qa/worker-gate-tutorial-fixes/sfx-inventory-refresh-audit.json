@@ -1,0 +1,20 @@
+{
+  "priorHead": "c6db2c0924a89c9b14fb1d92afd8bc070b350ce4",
+  "failedRun": 38146708472,
+  "ciTests": {
+    "passed": 3980,
+    "failed": 2,
+    "skipped": 1
+  },
+  "cause": "Generated SFX inventory retained old source line references and hashes after the navigation fix",
+  "semanticCatalogueUnchanged": true,
+  "total": 126,
+  "assigned": 100,
+  "unassigned": 26,
+  "changedSourceHashes": [
+    "src/app/main.js",
+    "src/simulation/game.js",
+    "src/tutorial/controller.js"
+  ],
+  "scope": "Comparison strips only line references and source hashes. All other inventory fields, actions, IDs, classifications and exact audio hashes remain identical."
+}

@@ -1,0 +1,3862 @@
+{
+  "limits": [
+    "Temporal overlap is association, not causal attribution.",
+    "RAF timestamp intervals are not guaranteed physical presentation intervals.",
+    "GPU elapsed queries may include bubbles; matched by render invocation, not display completion.",
+    "Nested CPU spans overlap and must not be summed. Uninstrumented browser/driver work is not free time."
+  ],
+  "reports": [
+    {
+      "dir": "1-baseline",
+      "count": 27,
+      "withRenderOver33ms": 0,
+      "withMeasuredUnitOver16ms": 0,
+      "withAssociatedGpuOver50ms": 10,
+      "slow": [
+        {
+          "start": 120579.79,
+          "end": 120696.04,
+          "intervalMs": 116.25,
+          "renderCpuMaxMs": 22.794999957084656,
+          "associatedGpuMaxMs": 60.340051,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 62.89999997615814,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 31.615000009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 106.86000001430511,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.579999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 120696.04,
+          "end": 120845.705,
+          "intervalMs": 149.66500000000815,
+          "renderCpuMaxMs": 15.925000071525574,
+          "associatedGpuMaxMs": 50.152395,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 106.86000001430511,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.579999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 152.04999995231628,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.22000002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 121211.635,
+          "end": 121328.04,
+          "intervalMs": 116.40499999999884,
+          "renderCpuMaxMs": 10.739999890327454,
+          "associatedGpuMaxMs": 54.725364,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 124.92999994754791,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.59499990940094,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 121544.09,
+          "end": 121693.885,
+          "intervalMs": 149.79499999999825,
+          "renderCpuMaxMs": 10.860000014305115,
+          "associatedGpuMaxMs": 37.355937,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 59.264999985694885,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.764999985694885,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 157.70500004291534,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.5,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 122043.01,
+          "end": 122209.345,
+          "intervalMs": 166.3350000000064,
+          "renderCpuMaxMs": 20.99500000476837,
+          "associatedGpuMaxMs": 73.133645,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 90.51499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.050000071525574,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 177.86000001430511,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 30.235000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 122774.785,
+          "end": 122891.075,
+          "intervalMs": 116.2899999999936,
+          "renderCpuMaxMs": 15.800000071525574,
+          "associatedGpuMaxMs": 43.93953,
+          "synchronousSpanMaxMs": 1.7599999904632568,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 5,-1:mud-geometry",
+              "start": 122789,
+              "duration": 1.7599999904632568,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 63.9099999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.509999990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 141.8949999809265,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.115000009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 123206.975,
+          "end": 123323.385,
+          "intervalMs": 116.40999999998894,
+          "renderCpuMaxMs": 11.97000002861023,
+          "associatedGpuMaxMs": 37.502968,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 126.25,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 24.240000009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 123589.53,
+          "end": 123705.825,
+          "intervalMs": 116.29499999999825,
+          "renderCpuMaxMs": 26.235000014305115,
+          "associatedGpuMaxMs": 47.961822,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 66.03500008583069,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 27.954999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 97.47500002384186,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.12999999523163,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 123905.385,
+          "end": 124038.4,
+          "intervalMs": 133.01499999999942,
+          "renderCpuMaxMs": 15.524999976158142,
+          "associatedGpuMaxMs": 48.582291,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 144.79999995231628,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.199999928474426,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 124038.4,
+          "end": 124172.04,
+          "intervalMs": 133.63999999999942,
+          "renderCpuMaxMs": 21.0349999666214,
+          "associatedGpuMaxMs": 37.994009,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 144.79999995231628,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.199999928474426,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 133.24500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 33.799999952316284,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 125385.295,
+          "end": 125518.44,
+          "intervalMs": 133.14500000000407,
+          "renderCpuMaxMs": 21.294999957084656,
+          "associatedGpuMaxMs": 51.773904,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 60.5200001001358,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.02999997138977,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 121.19000005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.225000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 140367.635,
+          "end": 140500.56,
+          "intervalMs": 132.92499999998836,
+          "renderCpuMaxMs": 14.860000014305115,
+          "associatedGpuMaxMs": 39.008592,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 55.62000000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.085000038146973,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 119.0349999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.434999942779541,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 140750.125,
+          "end": 140866.55,
+          "intervalMs": 116.42499999998836,
+          "renderCpuMaxMs": 16.0900000333786,
+          "associatedGpuMaxMs": 24.093385,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 66.5200001001358,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26.674999952316284,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 90.52499997615814,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.379999995231628,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 143676.62,
+          "end": 143826.36,
+          "intervalMs": 149.7399999999907,
+          "renderCpuMaxMs": 18.43499994277954,
+          "associatedGpuMaxMs": 20.570519,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 58.05999994277954,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.235000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 158.51499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.549999952316284,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 144574.79,
+          "end": 144691.11,
+          "intervalMs": 116.31999999997788,
+          "renderCpuMaxMs": 12.725000023841858,
+          "associatedGpuMaxMs": 26.793853,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 53.389999985694885,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.019999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 108.10000002384186,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 11.225000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 144907.135,
+          "end": 145023.64,
+          "intervalMs": 116.50500000000466,
+          "renderCpuMaxMs": 15.214999914169312,
+          "associatedGpuMaxMs": 44.58802,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 117.07000005245209,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 24.730000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 145938.19,
+          "end": 146054.495,
+          "intervalMs": 116.30499999999302,
+          "renderCpuMaxMs": 8.105000019073486,
+          "associatedGpuMaxMs": 76.268436,
+          "synchronousSpanMaxMs": 3.490000009536743,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,0:ground",
+              "start": 145948.63499999046,
+              "duration": 3.490000009536743,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 149.81499993801117,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.319999933242798,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 146220.825,
+          "end": 146353.825,
+          "intervalMs": 133,
+          "renderCpuMaxMs": 14.34499990940094,
+          "associatedGpuMaxMs": 28.574635,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 113.40000009536743,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.579999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 146503.61,
+          "end": 146653.24,
+          "intervalMs": 149.63000000000466,
+          "renderCpuMaxMs": 9,
+          "associatedGpuMaxMs": 33.182655,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 152.2300000190735,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.81500005722046,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 146886.025,
+          "end": 147002.575,
+          "intervalMs": 116.55000000001746,
+          "renderCpuMaxMs": 7.694999933242798,
+          "associatedGpuMaxMs": 79.771562,
+          "synchronousSpanMaxMs": 8.664999961853027,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,0:bank",
+              "start": 146883.95500004292,
+              "duration": 8.664999961853027,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 91.75,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.6599999666214,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 128.99500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.644999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 149563.22,
+          "end": 149696.15,
+          "intervalMs": 132.92999999999302,
+          "renderCpuMaxMs": 16.99500000476837,
+          "associatedGpuMaxMs": 37.00328,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 57.894999980926514,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.205000042915344,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 117.53500008583069,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.884999990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 150361.3,
+          "end": 150477.855,
+          "intervalMs": 116.55500000002212,
+          "renderCpuMaxMs": 16.050000071525574,
+          "associatedGpuMaxMs": 58.793228,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 127.70500004291534,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.454999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 150494.61,
+          "end": 150693.845,
+          "intervalMs": 199.23500000001513,
+          "renderCpuMaxMs": 16.3400000333786,
+          "associatedGpuMaxMs": 68.940832,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 127.70500004291534,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.454999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 206.3949999809265,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.479999899864197,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 150976.64,
+          "end": 151092.925,
+          "intervalMs": 116.28499999997439,
+          "renderCpuMaxMs": 15.34500002861023,
+          "associatedGpuMaxMs": 74.960832,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 59.27500009536743,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.784999966621399,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 110.32499992847443,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 8.955000042915344,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 151458.805,
+          "end": 151592.01,
+          "intervalMs": 133.2050000000163,
+          "renderCpuMaxMs": 16.320000052452087,
+          "associatedGpuMaxMs": 39.04328,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 97.94500005245209,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.430000066757202,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 113.96499991416931,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.90500009059906,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 151791.42,
+          "end": 151907.8,
+          "intervalMs": 116.37999999997555,
+          "renderCpuMaxMs": 12.52999997138977,
+          "associatedGpuMaxMs": 30.808905,
+          "synchronousSpanMaxMs": 3.240000009536743,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,-2:ground",
+              "start": 151805.8600000143,
+              "duration": 3.240000009536743,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 119.62000000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.475000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 154967.435,
+          "end": 155100.435,
+          "intervalMs": 133,
+          "renderCpuMaxMs": 30.804999947547913,
+          "associatedGpuMaxMs": 20.008697,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 65.5550000667572,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 33.97499990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 123.81500005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.59500002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "2-candidate",
+      "count": 37,
+      "withRenderOver33ms": 0,
+      "withMeasuredUnitOver16ms": 0,
+      "withAssociatedGpuOver50ms": 13,
+      "slow": [
+        {
+          "start": 94741.555,
+          "end": 94857.845,
+          "intervalMs": 116.29000000000815,
+          "renderCpuMaxMs": 9.5,
+          "associatedGpuMaxMs": 21.997082,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 112.8950001001358,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.329999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 97318.94,
+          "end": 97451.86,
+          "intervalMs": 132.91999999999825,
+          "renderCpuMaxMs": 19.15000009536743,
+          "associatedGpuMaxMs": 51.625364,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 71.8050000667572,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.664999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 140.75,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.325000047683716,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 97734.67,
+          "end": 97868.75,
+          "intervalMs": 134.08000000000175,
+          "renderCpuMaxMs": 8.740000009536743,
+          "associatedGpuMaxMs": 36.76854,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 165,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 30.480000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 98200.215,
+          "end": 98316.615,
+          "intervalMs": 116.40000000000873,
+          "renderCpuMaxMs": 14.134999990463257,
+          "associatedGpuMaxMs": 45.86927,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 147.36500000953674,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 34.77999997138977,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 98449.59,
+          "end": 98582.61,
+          "intervalMs": 133.02000000000407,
+          "renderCpuMaxMs": 16.9099999666214,
+          "associatedGpuMaxMs": 42.766249,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 136.6949999332428,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26.480000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 98748.98,
+          "end": 98881.91,
+          "intervalMs": 132.93000000000757,
+          "renderCpuMaxMs": 15.519999980926514,
+          "associatedGpuMaxMs": 38.560208,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 55.924999952316284,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.104999899864197,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 148.5899999141693,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 35.455000042915344,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 98965.14,
+          "end": 99114.96,
+          "intervalMs": 149.82000000000698,
+          "renderCpuMaxMs": 18.4099999666214,
+          "associatedGpuMaxMs": 62.371873,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 78.2150000333786,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 27.1599999666214,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 154.32499992847443,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 30.210000038146973,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 99364.215,
+          "end": 99497.23,
+          "intervalMs": 133.01499999999942,
+          "renderCpuMaxMs": 17.7150000333786,
+          "associatedGpuMaxMs": 46.618853,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 56.549999952316284,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.235000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 117.68499994277954,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.024999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 100178.97,
+          "end": 100311.96,
+          "intervalMs": 132.99000000000524,
+          "renderCpuMaxMs": 14.960000038146973,
+          "associatedGpuMaxMs": 52.659791,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 50.49500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.44000005722046,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 117.55499994754791,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 11.914999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 100960.905,
+          "end": 101076.935,
+          "intervalMs": 116.02999999999884,
+          "renderCpuMaxMs": 15.195000052452087,
+          "associatedGpuMaxMs": 56.364322,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 72.75999999046326,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.825000047683716,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 122.86000001430511,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.37999999523163,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 101791.985,
+          "end": 101908.37,
+          "intervalMs": 116.38499999999476,
+          "renderCpuMaxMs": 14.534999966621399,
+          "associatedGpuMaxMs": 50.036145,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 53.3050000667572,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.575000047683716,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 128.69000005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.879999995231628,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 102257.51,
+          "end": 102373.99,
+          "intervalMs": 116.48000000001048,
+          "renderCpuMaxMs": 13.940000057220459,
+          "associatedGpuMaxMs": 28.782499,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 122.38499999046326,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.889999985694885,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 102839.46,
+          "end": 102939.67,
+          "intervalMs": 100.20999999999185,
+          "renderCpuMaxMs": 9.834999918937683,
+          "associatedGpuMaxMs": 50.71479,
+          "synchronousSpanMaxMs": 1.3450000286102295,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 6,2:mud-geometry",
+              "start": 102864.49500000477,
+              "duration": 1.3450000286102295,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 103.49500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26.570000052452087,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 103488.685,
+          "end": 103604.425,
+          "intervalMs": 115.74000000000524,
+          "renderCpuMaxMs": 25.09500002861023,
+          "associatedGpuMaxMs": 43.957602,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 64.80499994754791,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 31.21499991416931,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 113.84500002861023,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.274999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 103637.675,
+          "end": 103754.995,
+          "intervalMs": 117.31999999999243,
+          "renderCpuMaxMs": 13.740000009536743,
+          "associatedGpuMaxMs": 49.314009,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 116.98000001907349,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.25499999523163,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 104735.405,
+          "end": 104851.535,
+          "intervalMs": 116.13000000000466,
+          "renderCpuMaxMs": 12.365000009536743,
+          "associatedGpuMaxMs": 34.020156,
+          "synchronousSpanMaxMs": 2.365000009536743,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 7,-1:mud-geometry",
+              "start": 104750.69499993324,
+              "duration": 2.365000009536743,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 104.6599999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.865000009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 104885.115,
+          "end": 105001.3,
+          "intervalMs": 116.18499999999767,
+          "renderCpuMaxMs": 16.524999976158142,
+          "associatedGpuMaxMs": 38.624322,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 111.99000000953674,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 9.554999947547913,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 105067.75,
+          "end": 105200.775,
+          "intervalMs": 133.02499999999418,
+          "renderCpuMaxMs": 8.495000004768372,
+          "associatedGpuMaxMs": 29.786145,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 129.34500002861023,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.414999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 105433.725,
+          "end": 105566.635,
+          "intervalMs": 132.90999999998894,
+          "renderCpuMaxMs": 20.37999999523163,
+          "associatedGpuMaxMs": 56.017134,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 78.69000005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.894999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 130.71999990940094,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.649999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 106165.345,
+          "end": 106281.68,
+          "intervalMs": 116.33499999999185,
+          "renderCpuMaxMs": 11.975000023841858,
+          "associatedGpuMaxMs": 33.664321,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 107.88999998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.739999890327454,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 108642.855,
+          "end": 108809.19,
+          "intervalMs": 166.3350000000064,
+          "renderCpuMaxMs": 9.360000014305115,
+          "associatedGpuMaxMs": 57.838957,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 170.82500004768372,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.00499999523163,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 111486.375,
+          "end": 111602.675,
+          "intervalMs": 116.30000000000291,
+          "renderCpuMaxMs": 8.275000095367432,
+          "associatedGpuMaxMs": 29.969166,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 127.24000000953674,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 11.949999928474426,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 121130.91,
+          "end": 121263.945,
+          "intervalMs": 133.0350000000035,
+          "renderCpuMaxMs": 8.71999990940094,
+          "associatedGpuMaxMs": 56.644374,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 154.68500006198883,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 32.43499994277954,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 122345.25,
+          "end": 122461.19,
+          "intervalMs": 115.94000000000233,
+          "renderCpuMaxMs": 8.714999914169312,
+          "associatedGpuMaxMs": 78.309322,
+          "synchronousSpanMaxMs": 8.705000042915344,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,0:bank",
+              "start": 122357.68999993801,
+              "duration": 8.705000042915344,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            },
+            {
+              "label": "scheduler-unit:terrain 2,-1:mud-geometry",
+              "start": 122355.51999998093,
+              "duration": 1.524999976158142,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 55.33500003814697,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.83999991416931,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 122.94500005245209,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.105000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 122527.775,
+          "end": 122660.67,
+          "intervalMs": 132.89500000000407,
+          "renderCpuMaxMs": 13.674999952316284,
+          "associatedGpuMaxMs": 32.422239,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 58.574999928474426,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.669999957084656,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 134.6800000667572,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.230000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                },
+                {
+                  "duration": 5.195000052452087,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/tools/experiments/wait-gpu-frame.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 122893.565,
+          "end": 123009.955,
+          "intervalMs": 116.38999999999942,
+          "renderCpuMaxMs": 11.860000014305115,
+          "associatedGpuMaxMs": 39.951145,
+          "synchronousSpanMaxMs": 1.0950000286102295,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,0:water-bed",
+              "start": 122917.79499995708,
+              "duration": 1.0950000286102295,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 50.94000005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.570000052452087,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 119.1049998998642,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.600000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 123542.105,
+          "end": 123675.12,
+          "intervalMs": 133.01499999999942,
+          "renderCpuMaxMs": 14.855000019073486,
+          "associatedGpuMaxMs": 22.794322,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 50.44000005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.09500002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 136.88999998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.539999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 124456.68,
+          "end": 124639.44,
+          "intervalMs": 182.7600000000093,
+          "renderCpuMaxMs": 11.444999933242798,
+          "associatedGpuMaxMs": 21.364895,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 211.12000000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 27.44000005722046,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 126202.62,
+          "end": 126319.04,
+          "intervalMs": 116.41999999999825,
+          "renderCpuMaxMs": 16.354999899864197,
+          "associatedGpuMaxMs": 41.112082,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 103.85000002384186,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.550000071525574,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 111.53999996185303,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.019999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 126751.29,
+          "end": 126901.05,
+          "intervalMs": 149.7600000000093,
+          "renderCpuMaxMs": 11.639999985694885,
+          "associatedGpuMaxMs": 54.526822,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 161.24500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 33.46000003814697,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 127000.78,
+          "end": 127117.08,
+          "intervalMs": 116.30000000000291,
+          "renderCpuMaxMs": 15.009999990463257,
+          "associatedGpuMaxMs": 39.759583,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 63.52499997615814,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.414999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 117.08500003814697,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.930000066757202,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 127183.6,
+          "end": 127300.01,
+          "intervalMs": 116.40999999998894,
+          "renderCpuMaxMs": 13.934999942779541,
+          "associatedGpuMaxMs": 36.097343,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 131.72500002384186,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 33.91000008583069,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 129345.37,
+          "end": 129478.3,
+          "intervalMs": 132.93000000000757,
+          "renderCpuMaxMs": 10.695000052452087,
+          "associatedGpuMaxMs": 39.710988,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 61.25,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.139999985694885,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 132.16499996185303,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.97000002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 130010.82,
+          "end": 130126.83,
+          "intervalMs": 116.00999999999476,
+          "renderCpuMaxMs": 9.634999990463257,
+          "associatedGpuMaxMs": 27.490728,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 118.31499993801117,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 24.12000000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 130575.975,
+          "end": 130708.91,
+          "intervalMs": 132.93499999999767,
+          "renderCpuMaxMs": 16.274999976158142,
+          "associatedGpuMaxMs": 52.630311,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 127.94999992847443,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.325000047683716,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 130742.235,
+          "end": 130875.115,
+          "intervalMs": 132.88000000000466,
+          "renderCpuMaxMs": 11.600000023841858,
+          "associatedGpuMaxMs": 52.693229,
+          "synchronousSpanMaxMs": 1.0149999856948853,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 1,0:water-bed",
+              "start": 130748.17499995232,
+              "duration": 1.0149999856948853,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 132.01499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.115000009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 132770.8,
+          "end": 132870.81,
+          "intervalMs": 100.01000000000931,
+          "renderCpuMaxMs": 18.875,
+          "associatedGpuMaxMs": 17.978697,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 99.65500009059906,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.485000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "3-baseline",
+      "count": 35,
+      "withRenderOver33ms": 0,
+      "withMeasuredUnitOver16ms": 0,
+      "withAssociatedGpuOver50ms": 10,
+      "slow": [
+        {
+          "start": 132132.58,
+          "end": 132234.26,
+          "intervalMs": 101.68000000002212,
+          "renderCpuMaxMs": 6.110000014305115,
+          "associatedGpuMaxMs": 27.65505,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 113.2849999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.944999933242798,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 132914.065,
+          "end": 133046.92,
+          "intervalMs": 132.85500000001048,
+          "renderCpuMaxMs": 12.84499990940094,
+          "associatedGpuMaxMs": 20.520468,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 151.37999999523163,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.980000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 134028.08,
+          "end": 134144.415,
+          "intervalMs": 116.33500000002095,
+          "renderCpuMaxMs": 8.320000052452087,
+          "associatedGpuMaxMs": 42.116354,
+          "synchronousSpanMaxMs": 3.340000033378601,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 5,1:ground",
+              "start": 134041.87000000477,
+              "duration": 3.340000033378601,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 50.36500000953674,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.40499997138977,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 122.40000009536743,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.65500009059906,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 135292.73,
+          "end": 135424.81,
+          "intervalMs": 132.0799999999872,
+          "renderCpuMaxMs": 23.100000023841858,
+          "associatedGpuMaxMs": 40.073385,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 88.33000004291534,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.360000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 122.12000000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.99500000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 135740.745,
+          "end": 135873.92,
+          "intervalMs": 133.17500000001746,
+          "renderCpuMaxMs": 14.34499990940094,
+          "associatedGpuMaxMs": 87.083592,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 60.894999980926514,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.705000042915344,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 137.80999994277954,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.115000009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 135956.92,
+          "end": 136090.085,
+          "intervalMs": 133.16499999997905,
+          "renderCpuMaxMs": 20.014999985694885,
+          "associatedGpuMaxMs": 65.409582,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 84.48000001907349,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.31499993801117,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 126.83999991416931,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.1599999666214,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 136356.195,
+          "end": 136489.05,
+          "intervalMs": 132.85499999998137,
+          "renderCpuMaxMs": 18.52999997138977,
+          "associatedGpuMaxMs": 53.522499,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 68.36000001430511,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.34500002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 142.12999999523163,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 27.28000009059906,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 136805,
+          "end": 136954.705,
+          "intervalMs": 149.7049999999872,
+          "renderCpuMaxMs": 16.12000000476837,
+          "associatedGpuMaxMs": 38.236561,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 62.5349999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.7849999666214,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 194.15499997138977,
+              "blockingDuration": 12.1,
+              "scripts": [
+                {
+                  "duration": 54.27500009536743,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 137270.595,
+          "end": 137386.97,
+          "intervalMs": 116.375,
+          "renderCpuMaxMs": 21.730000019073486,
+          "associatedGpuMaxMs": 71.576197,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 61.2849999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 30.769999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 116.50499999523163,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 31.68999993801117,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 137702.885,
+          "end": 137835.93,
+          "intervalMs": 133.0449999999837,
+          "renderCpuMaxMs": 25.80999994277954,
+          "associatedGpuMaxMs": 50.951613,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 86.22000002861023,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 42.855000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 106.71000003814697,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.784999966621399,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 139266.01,
+          "end": 139382.645,
+          "intervalMs": 116.63499999998021,
+          "renderCpuMaxMs": 15.329999923706055,
+          "associatedGpuMaxMs": 73.20953,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 76.81500005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.875,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 145.1050000190735,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.144999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 139881.365,
+          "end": 140030.905,
+          "intervalMs": 149.54000000000815,
+          "renderCpuMaxMs": 22.96499991416931,
+          "associatedGpuMaxMs": 41.159686,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 65.76999998092651,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.66000008583069,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 141.7700001001358,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.605000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 141610.69,
+          "end": 141727.06,
+          "intervalMs": 116.36999999999534,
+          "renderCpuMaxMs": 13.125,
+          "associatedGpuMaxMs": 40.765832,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 61.3199999332428,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.954999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 122.05499994754791,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.99500000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 141843.515,
+          "end": 141959.81,
+          "intervalMs": 116.2949999999837,
+          "renderCpuMaxMs": 15.995000004768372,
+          "associatedGpuMaxMs": 41.137394,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 71.09999990463257,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.62000000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 121.80499994754791,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.34499990940094,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 142242.605,
+          "end": 142342.685,
+          "intervalMs": 100.0799999999872,
+          "renderCpuMaxMs": 14.975000023841858,
+          "associatedGpuMaxMs": 52.092811,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 60.7849999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.019999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 105.37000000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.769999980926514,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 143157.055,
+          "end": 143273.66,
+          "intervalMs": 116.60500000001048,
+          "renderCpuMaxMs": 14.77999997138977,
+          "associatedGpuMaxMs": 43.558541,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 58.50499999523163,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.625,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 121.94999992847443,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26.514999985694885,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 148045.91,
+          "end": 148162.72,
+          "intervalMs": 116.80999999999767,
+          "renderCpuMaxMs": 15.789999961853027,
+          "associatedGpuMaxMs": 22.71427,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 123.01499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.2849999666214,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 150008,
+          "end": 150124.505,
+          "intervalMs": 116.50500000000466,
+          "renderCpuMaxMs": 6.259999990463257,
+          "associatedGpuMaxMs": 35.580311,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 112.92500007152557,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 10.504999995231628,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 155728.32,
+          "end": 155844.605,
+          "intervalMs": 116.28500000000349,
+          "renderCpuMaxMs": 6.295000076293945,
+          "associatedGpuMaxMs": 28.620624,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 123.56000006198883,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.554999947547913,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 157490.86,
+          "end": 157624.11,
+          "intervalMs": 133.25,
+          "renderCpuMaxMs": 10.230000019073486,
+          "associatedGpuMaxMs": 36.861457,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 133.91500008106232,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 11.509999990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 158604.995,
+          "end": 158721.305,
+          "intervalMs": 116.30999999999767,
+          "renderCpuMaxMs": 6.860000014305115,
+          "associatedGpuMaxMs": 54.031092,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 123.98499989509583,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.359999895095825,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 159502.86,
+          "end": 159619.33,
+          "intervalMs": 116.47000000000116,
+          "renderCpuMaxMs": 11.034999966621399,
+          "associatedGpuMaxMs": 50.878281,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 120.68500006198883,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.215000033378601,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 160018.35,
+          "end": 160168.055,
+          "intervalMs": 149.7049999999872,
+          "renderCpuMaxMs": 10.340000033378601,
+          "associatedGpuMaxMs": 19.476926,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 144.83500003814697,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.734999895095825,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 160500.655,
+          "end": 160617.02,
+          "intervalMs": 116.36499999999069,
+          "renderCpuMaxMs": 8.40500009059906,
+          "associatedGpuMaxMs": 35.904635,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 73.80000007152557,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 41.175000071525574,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 124.53000009059906,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.139999985694885,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 160899.705,
+          "end": 161016.305,
+          "intervalMs": 116.60000000000582,
+          "renderCpuMaxMs": 8.725000023841858,
+          "associatedGpuMaxMs": 24.7638,
+          "synchronousSpanMaxMs": 4.289999961853027,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,-1:ground",
+              "start": 160921.32000005245,
+              "duration": 4.289999961853027,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 123.09500002861023,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 24.304999947547913,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 161664.81,
+          "end": 161780.97,
+          "intervalMs": 116.16000000000349,
+          "renderCpuMaxMs": 18.179999947547913,
+          "associatedGpuMaxMs": 49.313124,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 125.1599999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26.59499990940094,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 164574.54,
+          "end": 164691.09,
+          "intervalMs": 116.54999999998836,
+          "renderCpuMaxMs": 16.444999933242798,
+          "associatedGpuMaxMs": 36.872707,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 68.69999992847443,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 116.52499997615814,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.5,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 164757.59,
+          "end": 164874.04,
+          "intervalMs": 116.45000000001164,
+          "renderCpuMaxMs": 12.934999942779541,
+          "associatedGpuMaxMs": 37.277655,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 50.02999997138977,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.044999957084656,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 114.23000001907349,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.15499997138977,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 167135.445,
+          "end": 167251.75,
+          "intervalMs": 116.30499999999302,
+          "renderCpuMaxMs": 8.050000071525574,
+          "associatedGpuMaxMs": 47.245676,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 50.39999997615814,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 11.125,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 131.2150000333786,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.40500009059906,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 167551.105,
+          "end": 167684.295,
+          "intervalMs": 133.19000000000233,
+          "renderCpuMaxMs": 17.139999985694885,
+          "associatedGpuMaxMs": 48.16604,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 58.38499999046326,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.930000066757202,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 131.73499989509583,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.994999885559082,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 167867.12,
+          "end": 167983.4,
+          "intervalMs": 116.27999999999884,
+          "renderCpuMaxMs": 14.520000100135803,
+          "associatedGpuMaxMs": 54.046822,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 63.50999999046326,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.024999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 125.77500009536743,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.225000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 168698.495,
+          "end": 168814.89,
+          "intervalMs": 116.39500000001863,
+          "renderCpuMaxMs": 8.200000047683716,
+          "associatedGpuMaxMs": 26.517551,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 129.86500000953674,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.164999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 169463.46,
+          "end": 169579.865,
+          "intervalMs": 116.40499999999884,
+          "renderCpuMaxMs": 16.985000014305115,
+          "associatedGpuMaxMs": 35.250363,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 122.49500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.875,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 169862.57,
+          "end": 169978.825,
+          "intervalMs": 116.25500000000466,
+          "renderCpuMaxMs": 20.319999933242798,
+          "associatedGpuMaxMs": 47.063332,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 67.82500004768372,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.824999928474426,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 123.43499994277954,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 32.21999990940094,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 170195.04,
+          "end": 170311.375,
+          "intervalMs": 116.33499999999185,
+          "renderCpuMaxMs": 10.084999918937683,
+          "associatedGpuMaxMs": 32.470312,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 145.54499995708466,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 32.480000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "4-candidate",
+      "count": 33,
+      "withRenderOver33ms": 0,
+      "withMeasuredUnitOver16ms": 0,
+      "withAssociatedGpuOver50ms": 6,
+      "slow": [
+        {
+          "start": 123484.63,
+          "end": 123601.035,
+          "intervalMs": 116.40499999999884,
+          "renderCpuMaxMs": 13.495000004768372,
+          "associatedGpuMaxMs": 34.472395,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 54.545000076293945,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.40499997138977,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 115.92000007629395,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.34500002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 123850.44,
+          "end": 123983.37,
+          "intervalMs": 132.92999999999302,
+          "renderCpuMaxMs": 24.2150000333786,
+          "associatedGpuMaxMs": 56.716145,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 76.81000006198883,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.549999952316284,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 114.52999997138977,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.325000047683716,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 124000.155,
+          "end": 124116.46,
+          "intervalMs": 116.30500000000757,
+          "renderCpuMaxMs": 14.389999985694885,
+          "associatedGpuMaxMs": 82.051197,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 114.52999997138977,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.325000047683716,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 119.9099999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.37000000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 124349.165,
+          "end": 124498.965,
+          "intervalMs": 149.8000000000029,
+          "renderCpuMaxMs": 10.735000014305115,
+          "associatedGpuMaxMs": 36.414999,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 151.02499997615814,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 15.509999990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 125014.365,
+          "end": 125130.835,
+          "intervalMs": 116.47000000000116,
+          "renderCpuMaxMs": 9.625,
+          "associatedGpuMaxMs": 48.798176,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 130.1599999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 28.804999947547913,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 125197.4,
+          "end": 125330.345,
+          "intervalMs": 132.94500000000698,
+          "renderCpuMaxMs": 18.149999976158142,
+          "associatedGpuMaxMs": 45.598853,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 73.13499999046326,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.69000005722046,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 116.56500005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.149999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 125563.125,
+          "end": 125696.1,
+          "intervalMs": 132.97500000000582,
+          "renderCpuMaxMs": 19.399999976158142,
+          "associatedGpuMaxMs": 56.381926,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 57.9650000333786,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.774999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 139.75499999523163,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 125696.1,
+          "end": 125812.495,
+          "intervalMs": 116.39499999998952,
+          "renderCpuMaxMs": 24.575000047683716,
+          "associatedGpuMaxMs": 48.417707,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 139.75499999523163,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 26,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 107.54999995231628,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.070000052452087,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 126062.02,
+          "end": 126211.625,
+          "intervalMs": 149.60499999999593,
+          "renderCpuMaxMs": 14.875,
+          "associatedGpuMaxMs": 55.25927,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 52.06499993801117,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 20.485000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 154,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 29.049999952316284,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 126494.275,
+          "end": 126627.325,
+          "intervalMs": 133.0500000000029,
+          "renderCpuMaxMs": 20.65500009059906,
+          "associatedGpuMaxMs": 43.207811,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 91.83999991416931,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.90500009059906,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 134.06000006198883,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.914999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 127525.24,
+          "end": 127658.26,
+          "intervalMs": 133.01999999998952,
+          "renderCpuMaxMs": 13.350000023841858,
+          "associatedGpuMaxMs": 74.142759,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 89.53999996185303,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.225000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 142.52999997138977,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.069999933242798,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 127724.86,
+          "end": 127874.535,
+          "intervalMs": 149.6750000000029,
+          "renderCpuMaxMs": 10.535000085830688,
+          "associatedGpuMaxMs": 42.74552,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 162.0349999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.210000038146973,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 127957.68,
+          "end": 128073.98,
+          "intervalMs": 116.30000000000291,
+          "renderCpuMaxMs": 20.40499997138977,
+          "associatedGpuMaxMs": 37.793593,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 58.41500008106232,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 22.899999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 117.75,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.09500002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 129005.15,
+          "end": 129138.19,
+          "intervalMs": 133.04000000000815,
+          "renderCpuMaxMs": 6.7850000858306885,
+          "associatedGpuMaxMs": 28.403436,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 147.35000002384186,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.43499994277954,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 129470.875,
+          "end": 129587.215,
+          "intervalMs": 116.33999999999651,
+          "renderCpuMaxMs": 13.484999895095825,
+          "associatedGpuMaxMs": 32.852447,
+          "synchronousSpanMaxMs": 2.440000057220459,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 6,1:mud-geometry",
+              "start": 129490.27499997616,
+              "duration": 2.440000057220459,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 133.4099999666214,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 25.34500002861023,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 130402.1,
+          "end": 130502.515,
+          "intervalMs": 100.4149999999936,
+          "renderCpuMaxMs": 12.5,
+          "associatedGpuMaxMs": 37.186613,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 66.0550000667572,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 13.829999923706055,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 113.3400000333786,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 17.175000071525574,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 130751.31,
+          "end": 130884.185,
+          "intervalMs": 132.875,
+          "renderCpuMaxMs": 16.835000038146973,
+          "associatedGpuMaxMs": 40.418489,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 122.4650000333786,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 16.320000052452087,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 131150.36,
+          "end": 131266.75,
+          "intervalMs": 116.39000000001397,
+          "renderCpuMaxMs": 12.870000004768372,
+          "associatedGpuMaxMs": 42.484426,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 118.01999998092651,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.930000066757202,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 131399.875,
+          "end": 131549.825,
+          "intervalMs": 149.95000000001164,
+          "renderCpuMaxMs": 14.215000033378601,
+          "associatedGpuMaxMs": 35.952915,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 155.80999994277954,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.600000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 131965.125,
+          "end": 132081.5,
+          "intervalMs": 116.375,
+          "renderCpuMaxMs": 14.539999961853027,
+          "associatedGpuMaxMs": 28.424531,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 63.32000005245209,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.054999947547913,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 130.51499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.975000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 132430.675,
+          "end": 132563.7,
+          "intervalMs": 133.02500000002328,
+          "renderCpuMaxMs": 7.319999933242798,
+          "associatedGpuMaxMs": 33.119166,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 52.75999999046326,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 8.759999990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 138.6050000190735,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.735000014305115,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 133993.77,
+          "end": 134110.295,
+          "intervalMs": 116.52500000002328,
+          "renderCpuMaxMs": 11.024999976158142,
+          "associatedGpuMaxMs": 30.019843,
+          "synchronousSpanMaxMs": 3.3049999475479126,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 7,-2:ground",
+              "start": 134005.875,
+              "duration": 3.3049999475479126,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 50.69000005722046,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.850000023841858,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 128.08000004291534,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.524999976158142,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 138649.825,
+          "end": 138799.355,
+          "intervalMs": 149.52999999999884,
+          "renderCpuMaxMs": 8.919999957084656,
+          "associatedGpuMaxMs": 39.305833,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 152.51499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 11.815000057220459,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 139830.4,
+          "end": 139930.995,
+          "intervalMs": 100.59500000000116,
+          "renderCpuMaxMs": 9.490000009536743,
+          "associatedGpuMaxMs": 25.471457,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 102.74000000953674,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 12.15499997138977,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 148610.37,
+          "end": 148726.575,
+          "intervalMs": 116.2050000000163,
+          "renderCpuMaxMs": 15.715000033378601,
+          "associatedGpuMaxMs": 52.234635,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 116.60999989509583,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.230000019073486,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 149192.16,
+          "end": 149308.585,
+          "intervalMs": 116.42499999998836,
+          "renderCpuMaxMs": 17.549999952316284,
+          "associatedGpuMaxMs": 38.63052,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 55.17999994754791,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.925000071525574,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 130.27500009536743,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 19.49500000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 149541.33,
+          "end": 149657.785,
+          "intervalMs": 116.4550000000163,
+          "renderCpuMaxMs": 16.84500002861023,
+          "associatedGpuMaxMs": 24.707708,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 54.99500000476837,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.03500008583069,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 116.54499995708466,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 29.69000005722046,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 153482.345,
+          "end": 153598.67,
+          "intervalMs": 116.32500000001164,
+          "renderCpuMaxMs": 12.149999976158142,
+          "associatedGpuMaxMs": 40.149998,
+          "synchronousSpanMaxMs": 3.25,
+          "largestSpans": [
+            {
+              "label": "scheduler-unit:terrain 2,2:mud-geometry",
+              "start": 153500.92499995232,
+              "duration": 3.25,
+              "scope": "Synchronous call wall time; nested spans overlap."
+            }
+          ],
+          "loaf": [
+            {
+              "duration": 120.07500004768372,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.914999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 153997.825,
+          "end": 154147.43,
+          "intervalMs": 149.60499999998137,
+          "renderCpuMaxMs": 13.544999957084656,
+          "associatedGpuMaxMs": 43.014739,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 67.56499993801117,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.414999961853027,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 155.8400000333786,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 24.670000076293945,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 154363.635,
+          "end": 154480.035,
+          "intervalMs": 116.39999999999418,
+          "renderCpuMaxMs": 10.56000006198883,
+          "associatedGpuMaxMs": 36.892134,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 142.32500004768372,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 32.02499997615814,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 156525.365,
+          "end": 156658.605,
+          "intervalMs": 133.2400000000198,
+          "renderCpuMaxMs": 9.31000006198883,
+          "associatedGpuMaxMs": 26.401822,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 139.27999997138977,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 18.134999990463257,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 157157.215,
+          "end": 157273.745,
+          "intervalMs": 116.52999999999884,
+          "renderCpuMaxMs": 13.069999933242798,
+          "associatedGpuMaxMs": 40.007551,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 88.78000009059906,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 14.424999952316284,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            },
+            {
+              "duration": 130.27999997138977,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 23.24500000476837,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "start": 157755.95,
+          "end": 157888.995,
+          "intervalMs": 133.0449999999837,
+          "renderCpuMaxMs": 13.269999980926514,
+          "associatedGpuMaxMs": 34.449426,
+          "synchronousSpanMaxMs": 0,
+          "largestSpans": [],
+          "loaf": [
+            {
+              "duration": 138.51499998569489,
+              "blockingDuration": 0,
+              "scripts": [
+                {
+                  "duration": 21.165000081062317,
+                  "invoker": "FrameRequestCallback",
+                  "source": "http://127.0.0.1:5220/src/app/main.js"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

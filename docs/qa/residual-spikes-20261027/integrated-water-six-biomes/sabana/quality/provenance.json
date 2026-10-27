@@ -1,0 +1,27 @@
+{
+  "mode": "quality",
+  "biome": "sabana",
+  "commit": "51dcf8af253cbde4efe2b1ecf7f9165e168bbadb",
+  "sources": {
+    "tools/experiments/.chunk-water-runtime-generated.mjs": "758813e9f8f652135df977b8a911b152bbfa79ccb7fcd24b2acd5f794569e3e9",
+    "tools/experiments/chunk-water-scene-patch.mjs": "abfb4bc608ef46ecf27741f28d554fe584400d1268bf7c3b218fbe100cd36840",
+    "tools/experiments/chunk-water-bed-candidate.js": "3cc7c7568693a065d11d514a1b64802ccdea23936876eaed4229303fdd8ae886",
+    "src/rendering/scene.js": "7168f1e6e0909b832331b424b93f79d239b51947023604106703b8c70caa0cfd",
+    "src/rendering/natural-water-edges.js": "8f98af92b145c65e35104734776db46452cd0978a4feae8ef09c36d2fd0b7b73",
+    "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b"
+  },
+  "conditions": {
+    "WG_THREAD_PORT": "5220",
+    "WG_THREAD_BIOME": "sabana",
+    "WG_THREAD_QUALITY": "media",
+    "WG_PRODUCTION_VISUALS": "1",
+    "WG_THREAD_DEFAULT_STREAMING": "1",
+    "WG_THREAD_MAIN_PHASES": "1",
+    "WG_THREAD_REPORT": "docs/qa/residual-spikes-20261027/integrated-water-six-biomes/sabana/quality/report.json",
+    "WG_THREAD_ACTIVE": "1",
+    "WG_THREAD_QUALITY_CYCLE": "1",
+    "WG_THREAD_QUALITY_ACTIVE": "1",
+    "WG_THREAD_QUALITY_MENU_PROTOCOL": "1"
+  },
+  "scope": "Functional diagnostic using existing historical populated biome fixture. Not art or performance acceptance; context case pauses simulation for state equality."
+}

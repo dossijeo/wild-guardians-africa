@@ -1,0 +1,646 @@
+{
+  "study": "Frozen main b2497b0695218652672c805c40971ea830686e3a versus experimental inhabited biome; identical saved state and explicit cameras; no timing claim.",
+  "fixture": {
+    "path": "docs/qa/global-visual-lab/gran-canon-populated-native-camera-20261022/native-fixture.json",
+    "living": 12,
+    "workers": 2,
+    "scope": "Current Wild Engine opening; 12 paid millet crops and two paid workers; 120 seconds ordinary simulation. Tutorial skipped for directed QA. No money, growth, RNG or terrain overrides."
+  },
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "elevated",
+    "reverse"
+  ],
+  "note": "Loaded paid first-day campaign fixture, paused for visual time variants; seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "backend": "main",
+      "query": "",
+      "biome": "gran-canon",
+      "quality": "media",
+      "variant": "warmup",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            16.91928654060472,
+            194.00891007139165
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 138,
+            "textures": 77
+          },
+          "calls": 32,
+          "triangles": 260889
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            23.424986839294434,
+            177.77639363219248
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 132,
+            "textures": 77
+          },
+          "calls": 17,
+          "triangles": 176778
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.089127540588375,
+            20.236745834350586,
+            131.13570122764628
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 141,
+            "textures": 72
+          },
+          "calls": 34,
+          "triangles": 245992
+        }
+      ],
+      "errors": []
+    },
+    {
+      "backend": "main",
+      "query": "",
+      "biome": "gran-canon",
+      "quality": "media",
+      "variant": "warmup",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            16.91928654060472,
+            194.00891007139165
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 146,
+            "textures": 72
+          },
+          "calls": 32,
+          "triangles": 260889
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            23.424986839294434,
+            177.77639363219248
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 140,
+            "textures": 72
+          },
+          "calls": 17,
+          "triangles": 176778
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.089127540588375,
+            20.236745834350586,
+            131.13570122764628
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 141,
+            "textures": 72
+          },
+          "calls": 34,
+          "triangles": 245992
+        }
+      ],
+      "errors": []
+    },
+    {
+      "backend": "main",
+      "query": "",
+      "biome": "gran-canon",
+      "quality": "media",
+      "variant": "native",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            16.91928654060472,
+            194.00891007139165
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 146,
+            "textures": 72
+          },
+          "calls": 32,
+          "triangles": 260889
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            23.424986839294434,
+            177.77639363219248
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 140,
+            "textures": 72
+          },
+          "calls": 17,
+          "triangles": 176778
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.089127540588375,
+            20.236745834350586,
+            131.13570122764628
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 141,
+            "textures": 72
+          },
+          "calls": 34,
+          "triangles": 245992
+        }
+      ],
+      "errors": []
+    },
+    {
+      "backend": "main",
+      "query": "",
+      "biome": "gran-canon",
+      "quality": "media",
+      "variant": "native",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            16.91928654060472,
+            194.00891007139165
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 146,
+            "textures": 72
+          },
+          "calls": 32,
+          "triangles": 260889
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.08912754058838,
+            23.424986839294434,
+            177.77639363219248
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 140,
+            "textures": 72
+          },
+          "calls": 17,
+          "triangles": 176778
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            -48,
+            144
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": -18.800402760747815,
+              "z": 169.28032883533044
+            },
+            {
+              "id": "worker-30",
+              "x": -20.481975921047226,
+              "z": 170.35150092241767
+            }
+          ],
+          "camera": [
+            -25.089127540588375,
+            20.236745834350586,
+            131.13570122764628
+          ],
+          "target": [
+            -25.08912754058838,
+            3.9678425121307375,
+            162.57230564951897
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 141,
+            "textures": 72
+          },
+          "calls": 34,
+          "triangles": 245992
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

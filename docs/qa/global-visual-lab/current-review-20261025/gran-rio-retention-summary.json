@@ -1,0 +1,151 @@
+{
+  "scope": "Interleaved active simulation, 180 authored camera frames plus settling. Wall-clock world evolution and settling sample counts vary; GPU queries include pipeline bubbles. Not exact workload parity.",
+  "runs": [
+    {
+      "run": "a1",
+      "source": "gran-rio-retention-a1.json",
+      "created": 10,
+      "frames": {
+        "count": 180,
+        "mean": 40.83183333333335,
+        "p95": 83.23999999999796,
+        "max": 133.36000000000058
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 29.728889721311482,
+        "p95": 41.359322,
+        "max": 57.974634
+      },
+      "draw": {
+        "count": 181,
+        "mean": 11.178563530932474,
+        "p95": 16.1599999666214,
+        "max": 129.40499997138977
+      },
+      "elapsed": 127.2179499999965,
+      "retention": null,
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": false
+      },
+      "readyMs": 24739.56000006199
+    },
+    {
+      "run": "b1",
+      "source": "gran-rio-retention-b1.json",
+      "created": 10,
+      "frames": {
+        "count": 182,
+        "mean": 42.027884615384636,
+        "p95": 82.6449999999968,
+        "max": 133.02500000000146
+      },
+      "gpu": {
+        "count": 61,
+        "mean": 30.22619937704918,
+        "p95": 43.068072,
+        "max": 49.718853
+      },
+      "draw": {
+        "count": 183,
+        "mean": 9.582349719896994,
+        "p95": 15.40499997138977,
+        "max": 19.615000009536743
+      },
+      "elapsed": 127.61602999999633,
+      "retention": {
+        "retained": 75,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": true
+      },
+      "readyMs": 25303.570000052452
+    },
+    {
+      "run": "a2",
+      "source": "gran-rio-retention-a2.json",
+      "created": 10,
+      "frames": {
+        "count": 184,
+        "mean": 41.119510869565204,
+        "p95": 83.02999999999884,
+        "max": 149.625
+      },
+      "gpu": {
+        "count": 62,
+        "mean": 28.774922500000006,
+        "p95": 35.315937,
+        "max": 41.744999
+      },
+      "draw": {
+        "count": 185,
+        "mean": 11.417756758509455,
+        "p95": 16.93500006198883,
+        "max": 140.33500003814697
+      },
+      "elapsed": 127.4507199999964,
+      "retention": null,
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": false
+      },
+      "readyMs": 24732.605000019073
+    },
+    {
+      "run": "b2",
+      "source": "gran-rio-retention-b2.json",
+      "created": 10,
+      "frames": {
+        "count": 198,
+        "mean": 39.30371212121213,
+        "p95": 83.02999999999884,
+        "max": 99.69999999999709
+      },
+      "gpu": {
+        "count": 67,
+        "mean": 28.08016602985074,
+        "p95": 34.810207,
+        "max": 40.131353
+      },
+      "draw": {
+        "count": 199,
+        "mean": 8.812839192361688,
+        "p95": 13.730000019073486,
+        "max": 17.0900000333786
+      },
+      "elapsed": 127.79875499999638,
+      "retention": {
+        "retained": 75,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "options": {
+        "waterBed": false,
+        "waterShore": false,
+        "batchEviction": false,
+        "warmObstruction": false,
+        "retainPrograms": true
+      },
+      "readyMs": 24943.054999947548
+    }
+  ]
+}

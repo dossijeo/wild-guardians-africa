@@ -1,0 +1,214 @@
+{
+  "invariant": {
+    "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1&qualityAttribution=1",
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "runtime": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+    "qualityCase": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+  },
+  "rows": [
+    {
+      "order": 1,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 28,
+      "cpu": {
+        "n": 319,
+        "p50": 14.909999966621399,
+        "p95": 25.399999976158142,
+        "p99": 32.77999997138977,
+        "max": 56.56000006198883
+      },
+      "gpu": {
+        "n": 107,
+        "p50": 31.912707,
+        "p95": 71.445779,
+        "p99": 76.78177,
+        "max": 80.865937
+      },
+      "callbackCadence": {
+        "n": 318,
+        "p50": 66.43999999998778,
+        "p95": 116.34999999999127,
+        "p99": 149.6999999999971,
+        "max": 216.19500000000698
+      },
+      "transitionIntervals": {
+        "n": 308,
+        "p50": 61.56500005722046,
+        "p95": 111.76999998092651,
+        "p99": 143.875,
+        "max": 222.41499996185303
+      },
+      "maxBlockingLoaf": 39.33,
+      "slowGL": [],
+      "travelMs": 15975.465000033379,
+      "settledMs": 20662.110000014305,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    },
+    {
+      "order": 2,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 28,
+      "cpu": {
+        "n": 266,
+        "p50": 14.490000009536743,
+        "p95": 26.669999957084656,
+        "p99": 35.84500002861023,
+        "max": 52.9650000333786
+      },
+      "gpu": {
+        "n": 89,
+        "p50": 25.853332,
+        "p95": 50.783332,
+        "p99": 76.179791,
+        "max": 81.656874
+      },
+      "callbackCadence": {
+        "n": 265,
+        "p50": 33.30999999999767,
+        "p95": 99.80999999999767,
+        "p99": 133.04499999999825,
+        "max": 166.29000000000087
+      },
+      "transitionIntervals": {
+        "n": 257,
+        "p50": 37.75,
+        "p95": 89.38999998569489,
+        "p99": 132.70500004291534,
+        "max": 166.99500000476837
+      },
+      "maxBlockingLoaf": 28.3,
+      "slowGL": [],
+      "travelMs": 10817.52999997139,
+      "settledMs": 11536.659999966621,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    },
+    {
+      "order": 3,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 28,
+      "cpu": {
+        "n": 283,
+        "p50": 15.914999961853027,
+        "p95": 26.205000042915344,
+        "p99": 38.77499997615814,
+        "max": 62.985000014305115
+      },
+      "gpu": {
+        "n": 95,
+        "p50": 23.26776,
+        "p95": 68.607187,
+        "p99": 78.291301,
+        "max": 85.193801
+      },
+      "callbackCadence": {
+        "n": 282,
+        "p50": 49.955000000001746,
+        "p95": 116.45500000000175,
+        "p99": 149.5749999999971,
+        "max": 199.5699999999997
+      },
+      "transitionIntervals": {
+        "n": 275,
+        "p50": 53.9300000667572,
+        "p95": 122.34499990940094,
+        "p99": 154.34500002861023,
+        "max": 214.97000002861023
+      },
+      "maxBlockingLoaf": 42.73,
+      "slowGL": [],
+      "travelMs": 15071.899999976158,
+      "settledMs": 17191.110000014305,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    },
+    {
+      "order": 4,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 28,
+      "cpu": {
+        "n": 254,
+        "p50": 13.105000019073486,
+        "p95": 22.264999985694885,
+        "p99": 27.975000023841858,
+        "max": 47.579999923706055
+      },
+      "gpu": {
+        "n": 85,
+        "p50": 26.043436,
+        "p95": 35.389113,
+        "p99": 43.775884,
+        "max": 44.425103
+      },
+      "callbackCadence": {
+        "n": 253,
+        "p50": 33.26000000000204,
+        "p95": 66.52500000000146,
+        "p99": 83.19499999999971,
+        "max": 116.41500000000087
+      },
+      "transitionIntervals": {
+        "n": 72,
+        "p50": 36.74500000476837,
+        "p95": 61.299999952316284,
+        "p99": 80.86500000953674,
+        "max": 86.13999998569489
+      },
+      "maxBlockingLoaf": 17.19,
+      "slowGL": [],
+      "travelMs": 8794.314999938011,
+      "settledMs": 9141.05999994278,
+      "created": 15,
+      "programCounts": [
+        93,
+        93,
+        93
+      ]
+    }
+  ],
+  "limits": [
+    "Two repetitions per treatment; attribution instrumentation adds overhead. Not final acceptance.",
+    "One historical populated biome save only; no full-game or six-biome completion claim.",
+    "Existing X4000 compiler warnings preserved, not a clean-console claim.",
+    "GPU query durations include bubbles. CPU and callback cadence are separate.",
+    "Callback timestamp deltas cover main callbacks; transitionIntervals cover only transition windows.",
+    "240-frame travel has variable wall duration. Streaming arrivals may vary; compare useful work and total settled time."
+  ]
+}

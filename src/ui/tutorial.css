@@ -9,8 +9,13 @@
 /* Reserve the whole landscape action column, including its hover/focus margin. */
 #stage:not(.portrait) #guardian-root .bubble{right:max(22px,calc(var(--hud-actions-safe-right,0px) + var(--safe-right)))}
 
-/* Stack above the spirit so short portrait screens retain every HUD action. */
-#stage.portrait #guardian-root .bubble{left:max(12px,var(--safe-left));right:calc(var(--action-w) + 28px + var(--safe-right));bottom:calc(var(--avatar) + 12px + var(--safe-bottom));padding-top:34px;max-height:calc(100dvh - var(--header) - var(--avatar) - 36px - var(--safe-bottom))}
+/* Keep the spirit above the text. Intrinsic bubble height also handles translated
+   copy; no frame polling or fixed text-height estimate is needed. Reserve the
+   canvas overflow below the avatar and leave the action column accessible. */
+#stage.portrait #guardian-root{display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;box-sizing:border-box;padding-bottom:calc(12px + var(--safe-bottom))}
+#stage.portrait #guardian-root .avatar-shell{position:relative;left:max(12px,var(--safe-left));bottom:auto;flex-shrink:0;margin-bottom:calc(var(--avatar) * .22 + 8px)}
+#stage.portrait #guardian-root .bubble{position:relative;left:auto;right:auto;bottom:auto;flex-shrink:0;box-sizing:border-box;margin-left:max(12px,var(--safe-left));width:calc(100% - max(12px,var(--safe-left)) - var(--action-w) - 28px - var(--safe-right));padding-top:34px;max-height:calc(100dvh - var(--header) - var(--avatar) * 1.44 - 48px - var(--safe-bottom))}
+#stage.portrait #guardian-root .bubble:before{display:none}
 
 .tutorial-hud-hand{position:fixed;z-index:19;pointer-events:none;object-fit:contain;transform-origin:98.2% 25%;transform:translate(var(--hand-pivot-x),var(--hand-pivot-y));filter:drop-shadow(0 2px 2px #20362933);animation:tutorial-hud-point 1.6s ease-in-out infinite}
 .tutorial-hud-hand[hidden]{display:none}

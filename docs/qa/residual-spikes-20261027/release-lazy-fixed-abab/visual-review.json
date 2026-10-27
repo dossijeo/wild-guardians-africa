@@ -1,0 +1,16 @@
+{
+  "inspected": [
+    "3-baseline/shield-1.png",
+    "4-candidate/shield-1.png"
+  ],
+  "scope": "Manual review of paired second-sweep capture, corrected candidate",
+  "observations": [
+    "Both show game clock14:54, matching fern coverage, roots, rocks, ground patches, HUD and shadows.",
+    "No obvious missing geometry, stale ground coloration or density reduction in these captures.",
+    "Minor leaf differences can arise from wind/timing; this is not pixel-exact deterministic verification."
+  ],
+  "limits": [
+    "Close vegetation-heavy view only; does not cover all biomes, distant horizon, nighttime or all streaming positions.",
+    "Native exact-buffer tests provide additional data-equivalence evidence, not a replacement for broader visual acceptance."
+  ]
+}

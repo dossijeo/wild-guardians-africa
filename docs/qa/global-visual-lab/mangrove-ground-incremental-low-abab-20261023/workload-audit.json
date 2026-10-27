@@ -1,0 +1,54 @@
+{
+  "passed": false,
+  "phasePassed": {
+    "day": true,
+    "night": false
+  },
+  "issues": [
+    {
+      "phase": "night",
+      "mode": "frame",
+      "run": 1,
+      "frame": 19,
+      "delta": [
+        -1,
+        -708
+      ]
+    }
+  ],
+  "windows": {
+    "day/frame": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        68,
+        0,
+        68
+      ]
+    },
+    "day/cadence": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        80,
+        0,
+        71
+      ]
+    },
+    "night/frame": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        68,
+        0,
+        68
+      ]
+    },
+    "night/cadence": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        71,
+        0,
+        71
+      ]
+    }
+  },
+  "limitation": "Count audit permits one additional two-triangle bake quad; not an individual asset census."
+}

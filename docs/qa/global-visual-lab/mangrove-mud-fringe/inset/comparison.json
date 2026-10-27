@@ -1,0 +1,65 @@
+{
+  "note": "Prior global recipe versus three candidates; matched geometry in all biomes. Static comparison, not performance.",
+  "pairs": [
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "near",
+      "calls": 64,
+      "triangles": 733296,
+      "mae": 1.0422178819444445,
+      "changedPixels": 41233
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "closer",
+      "calls": 64,
+      "triangles": 743211,
+      "mae": 1.1225520833333333,
+      "changedPixels": 45369
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "day",
+      "view": "oblique",
+      "calls": 68,
+      "triangles": 824804,
+      "mae": 1.0549381510416667,
+      "changedPixels": 45331
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "near",
+      "calls": 64,
+      "triangles": 733296,
+      "mae": 0.996416015625,
+      "changedPixels": 40776
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "closer",
+      "calls": 64,
+      "triangles": 743211,
+      "mae": 1.0575083188657408,
+      "changedPixels": 44793
+    },
+    {
+      "quality": "media",
+      "biome": "manglares",
+      "phase": "night",
+      "view": "oblique",
+      "calls": 68,
+      "triangles": 824804,
+      "mae": 0.9430320457175926,
+      "changedPixels": 44549
+    }
+  ]
+}

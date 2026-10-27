@@ -1,0 +1,610 @@
+# Wild Engine: persistent intent lifecycle (experimental)
+
+This branch starts from `main` after PRs #49 and #50. PR #51 remains a separate draft about crop-group protection notifications. This work does not merge into `main`.
+
+## Authority audit
+
+| Responsibility | State on `main` | Intended authority |
+| --- | --- | --- |
+| Worker task order and nearest eligible worker | `src/simulation/tasks.js::reserveTasks` in live gameplay; native global task batch in `spatial-intent-state.cpp` is experimental | Native global planner after differential validation |
+| Native worker/target/task read model | `spatial-intent-state.cpp`, fed by `spatial-intent-bridge.js` in campaign spatial advice and tests | Wild Engine projection of confirmed JS entities |
+| Worker route and movement | JS stores path arrays and walks them; native task proposals copy transient route points | Native route handle; JS retains continuous movement |
+| Animal target and approach | `src/simulation/raids.js::targetFor` and `reachableApproach` | Native selection and reservation, after separate military policy parity work |
+| Spatial advice for virtual player | Native services are used in `tools/native-campaign-runner.mjs` | Wild Engine spatial services |
+| Crop group protection notifications | PR #51 draft; not in this branch's `main` base | Shared native event projection when integrated |
+
+The event-gated planner in `spatial-intent-bridge.js` now has an **opt-in** `Game.tick` path when the caller attaches `nav.intentTaskPlanner`. Ordinary gameplay still uses JavaScript `reserveTasks`; neither the app nor the campaign runner attaches the experimental gate by default. `spatial-action-planner.cpp` is a shadow comparison API, not the live planner. This does not establish full-game polling elimination.
+
+The existing `Game.observeGameEvents` observer supplies committed `CropDestroyed`, `CropPicked`, `WallRemoved`, `StructureRuined`, `PlacementCommitted`, `WallChainBuilt` and `RepairApplied` facts. It does **not** publish each task enqueue, assignment, release or completion. This branch adds an internal `observeTaskChanges` feed at the task mutation sites and routes task-array replacements through `replaceTasks`. The experimental planner can subscribe, queue confirmed deltas, and project them in one batch at an action boundary without a tick scan. Worker status, task and roster transitions also publish snapshots for the native read model. Idle worker positions that changed while waiting are projected only when another event requires an actual planning batch. This is still an experimental projection, not a live handoff; worker movement and task execution remain authoritative in JavaScript. Animal attack completion is delayed until the clip's damage frame in `raids.js`; tactical invalidations must be applied after that transition, not in the middle of a committed strike.
+
+The experimental gate can also subscribe to committed game events. It queues relevant crop and structure changes, projects them at the next deterministic event boundary, and reconciles topology after confirmed wall, gate or ruin changes. A confirmed crop destruction invalidates its pinned native route in the focused test. In the opt-in tick path, native task proposals are preflighted and committed as whole batches before publication to JS tasks and workers. The observer attachment and session reset remain the caller's responsibility.
+The opt-in movement path now treats native-assigned routes as externally planned. A navigation revision wakes a single native route validation at the event boundary; `walkTo` cannot rebuild that worker's route through `nav.workerPath` or `nav.path`. A test changes the graph beside an already walking worker, forbids the legacy planner, and verifies that the same worker intention progresses without another actor-planning request. The global task queue may still wake for a relevant world event.
+If physical movement exceptionally loses a route, it raises one explicit native reroute request after projecting the worker's current position. Wild Engine keeps the assigned task and target, replaces its handle when it finds a path, and leaves a blocked or unknown result pending. The opt-in movement branch no longer releases a valid task solely because its cached path disappeared. This is a narrow recovery event; the native animal planner and routine return/retreat routes are still outstanding.
+The same projection tracks the physical crate created by a harvest, its position when dropped, and its removal on confirmed delivery. `CropPicked` now carries the crate ID as presentation-independent event metadata; this does not change harvest value or payment.
+
+## Implemented first stage
+
+- A committed native global task assignment now creates a persistent per-worker intention and pins its route in a session-scoped slot/generation handle.
+- Native inverse indices map targets and tasks to affected workers. A confirmed removal or deactivation invalidates only those intentions, releases their routes, and emits a deterministic change row.
+- At a topology event, Wild Engine validates pinned worker paths against its updated static collision map. Routes that remain physically clear retain the same handle and issue no planning notification. An invalid path releases its handle while retaining the original task and target; a dedicated event-boundary call replans that target from the projected current worker position. `unknown` and `blocked` remain separate states.
+- Explicit action-start and finish transitions are available. Normal reads of an active intention do not invoke pathfinding.
+- Session reset invalidates old handles. The bridge exposes change draining and bounded point access without reconstructing all routes on each ordinary tick.
+- After a saved state is projected into a new native session, assigned worker tasks reconstruct their logical target and reservation. Walking workers obtain new route handles from their restored positions; workers already performing an action retain `ACTION_ACTIVE` without replaying its route. A controlled save/load test checks the old handle is rejected, the new route is physically valid, and an in-progress watering action finishes once before any subsequent task assignment.
+- The bridge has an event-boundary entry point that applies confirmed entity deltas, reconciles a topology event and reroutes affected same-task intentions. Native metrics count actual candidate evaluations by actor, not every idle worker present during a batch.
+- An experimental batch commit adapter preflights each native task proposal against the current JavaScript task, worker and target facts, including positions, then checks the native revision-bound commit before publishing all JS leases. It copies route points once when an action starts. A duplicate worker, stale target or stale native proposal cannot partially assign the JS queue. Live crop lookup uses the existing `activeCrops` index, so historical destroyed plants do not enter the action-boundary scan. The opt-in `Game.tick` branch calls this adapter only when confirmed events or a bounded recovery retry require planning.
+- The experimental event boundary reconciles native intention changes into an already assigned JavaScript worker: a moved crate replaces the route for the same task; a pending route parks the worker while retaining its reservation; a destroyed crop or delivered crate releases the worker and removes the obsolete task. A controlled fixture exercises the moved-crate reroute without a second global task-selection pass and both target-loss releases. An opt-in tick fixture now verifies one native assignment, movement without another global plan, and crop-destruction release on the next event boundary.
+- The no-change reconciliation path exits before enumerating workers, tasks, crops, crates or raid actors. A regression test supplies accessors that throw if any of those collections are read on an ordinary tick after native changes have been drained. This removes a farm-size-dependent JS scan from the opt-in per-tick adapter; it does not by itself make all task and raid processing event-driven.
+
+The topology hook still scans pinned worker paths when the global graph revision changes. It avoids needless reroutes, but is not yet a sector/portal inverse dependency index. It selects the worker profile before checking static clearance. There is now an **opt-in transitional animal intention registry**: after the existing JS raid selector confirms a target and reservation, the native index can pin its travel route and reject an incompatible second crop or wall lease. A committed attack releases that travel handle but retains the original target until the logical damage frame. Target destruction during the clip marks tactical reconsideration pending; it never moves the hit or refunds its budget. `raids.js` reports selection, approach replacement, attack start, hit completion, and pre-commit cancellation to this registry when `nav.intentTaskPlanner` is attached. The normal game does not attach that planner. A controlled native test covers lease conflicts and committed-strike deferral; a real raid fixture with an observing adapter checks one native completion per committed clip. Another Sabana fixture adds a wall across an active animal route: the native reroute keeps the crop lease, an obstructed approach waits without repeated plans, and removal of that barrier wakes exactly one new route plan.
+
+This registry **does not yet own complete animal selection**. `raids.js::targetFor`, `reachableApproach`, the JS reservation table, and ordinary retreat planning remain authoritative for cases outside the native crop path. Native topology reconciliation checks a pinned route under its own species profile, retaining its handle when a distant wall leaves it clear. If the route becomes invalid, Wild Engine retains the same target and lease and tries a new native route from the animal's current position at the event boundary. A route to the old interaction point that remains unresolved is reported as `unknown` and waits for a relevant topology or sector event; it is not certified as a blocked target or retried on every travel tick. The native test inserts a wall on a live hyena route and confirms the target, lease and route replacement. A destroyed target releases its JS lease at that boundary. Alternative interaction points for a blocked old approach still need coverage. This is a stage toward the requested native policy, not a finished event-driven animal planner. Likewise, the worker path remains opt-in, and automatic end-to-end event dispatch is not the default game path. The caller must still attach and dispose observers and configure the native session. Restored worker intentions have controlled fixture coverage, not campaign-wide equivalence. These are acceptance gaps, not validated features.
+The next opt-in stage now selects an **accessible unshielded crop** inside Wild Engine. It reuses the incremental crop groups, classifies their species-specific interaction points by native region only when topology changes, checks region connectivity once before detailed routes, then creates the crop lease and session route handle in one call. The JS raid controller preflights dynamic approach spacing and keeps movement and damage unchanged. Sabana day 6 reaches a crop with one native planning request throughout travel; a closed-wall fixture receives no false native crop route and still attacks a real wall through the established selector. Shielded raids, the five introductory nights, uncertain sectors, structure selection and retreat still use the JavaScript policy. The native crop path is available only under the opt-in planner, so this is not yet the final single-authority attack architecture.
+The experimental breach hook records crop groups proven inaccessible when an animal commits to a wall. A native inverse index maps those groups to dependent wall attackers, so a confirmed `StructureRuined` or `WallRemoved` event checks only candidate intentions against the updated graph. If one group becomes accessible, a traveling attacker releases its wall lease at the event boundary and the selector may choose a crop. An attacker already executing a strike keeps its original target and logical damage frame, then reconsiders after the clip. A ruined wall invalidates an uncommitted native attack lease but does not invalidate a worker repair intention. A focused Sabana fixture opens a physical enclosure while two animals hold different wall targets, verifies that an attacker of an intact wall switches to a crop, and checks reservation uniqueness and removal of inverse dependencies after release. A separate Desert fixture covers ruined-target invalidation and committed-strike deferral. The fixture opens several wall modules to guarantee a passable breach; a minimal single-module breach, targeted sector-level dependency indices, and sustained campaign speedup remain unvalidated.
+For the opt-in animal path, continuous movement now follows the native-pinned route without invoking legacy route planning on ordinary ticks. A confirmed topology revision updates the JS movement copy only after native route reconciliation; an invalidated route is replaced or parked at that event boundary. Repeated strikes from an unchanged interaction position reuse an empty movement path as a new action, rather than searching for the same route again. The closed-enclosure fixture records zero legacy `routeRefresh` calls while its wall target is active. Dynamic occupation of the final attack point is still checked when the animal arrives, without initiating a detailed search every travel tick. If an exceptional physical failure drops a pinned path without a corresponding topology event, the raid releases its lease and enters the existing waiting queue. It wakes on a relevant event or an eight-second bounded recovery retry; a focused test confirms that ordinary intervening ticks do not repeat target selection.
+An opt-in native reset now rebuilds an animal attack already committed in the serialized JS state without replaying its travel route or consuming a hit. It also restores uncommitted travel routes. If a saved route is absent or physically stale, Wild Engine restores the target and lease, then computes a fresh path from the restored position; an unresolved path remains pending without polling. The Sabana fixture serializes an in-progress attack, creates a second Wild Engine session from the saved state, and advances both sessions for fifteen deterministic ticks. Their complete JS snapshots remain identical throughout, including the committed damage frame. Another Sabana fixture saves a pending travel intention and verifies its target, reservation and native route after loading. This is controlled cross-session coverage, not a claim of raid equivalence across all biomes and campaign phases.
+
+For interactive QA on a fresh Sabana game, the development build can be opened with `?qa-spatial-world&qa-native-intents`. The spatial-world startup attaches the native task gate only after the world has loaded and removes its observers before world disposal. `wildGuardiansSpatialQa().nativeIntent` reports global native planning calls and requests per worker in the last simulated minute. The flag is deliberately unavailable in distribution builds and does not yet cover restored saves or other biomes.
+
+## Reproduce the current focused checks
+
+With Emscripten configured, run `bash tools/build-spatial-savanna-wasm.sh`, then set `WILD_ENGINE_NATIVE_ROUTE_WASM=src/world/wild-engine/spatial-savanna.wasm` and execute:
+
+```sh
+node --test tests/spatial-native-intent-index.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-intent-differential.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-raid.test.js tests/raid-native-intent-lifecycle.test.js
+```
+
+The focused checks cover global FIFO assignment, event-driven target invalidation, unaffected worker preservation, topology changes that preserve physically clear routes and their handles, stale route handles, save-style reset, and no replan on ordinary intent reads. One real Desert watering assignment is committed into the JavaScript worker state, serialized/restored, then moved through the continuous controller along native-static-clear segments to a valid watering point without another path request. A second controlled test drives the opt-in `Game.tick` path and observes no global replanning during ten movement ticks; destruction of the target releases the task at the following event boundary. A real Sabana raid using the opt-in native observer now advances through `Game.tick`, completes its hits, and confirms exactly one native intent finish for each committed attack clip. These prove controlled paths only; they do not establish campaign equivalence, other work kinds, or sustained performance. The normalized Desert queue probe checks assignment identity; the native route-query count may now differ because a circuitous service point can trigger bounded alternatives.
+
+The day-6 Sabana crop-path comparison runs a cloned control with the JS selector and an opt-in native session from the same raid state. With two crops of different value, both choose `plant-4` and reach the first committed strike at simulated time 22.0; the native actor makes one crop-plan request during that travel. An initial native interaction point delayed that strike by 4.6 simulated seconds, so the native planner now tries the actor-facing point for the selected crop before its cached region point. A separate walled enclosure receives no native crop route and the real animal hits a wall. These are controlled fixture observations, not a sustained campaign speedup claim. The native crop route remains opt-in while shielded targets, introductory quotas, wall selection, sector uncertainty and long-campaign costs are validated.
+
+## Continuous-campaign differential (Sabana/712)
+
+`node tools/experiments/run-native-intent-campaign.mjs 7 sabana 712 good <output.json> intent` runs the opt-in native worker and animal intention bridge in one continuous Wild Engine session. Use `control` for the same bot and world without the opt-in planner. The runner rejects synthetic raid reloads and concurrent spatial-advice mirrors. The evidence archive `campaign-differential-traces.zip` contains 33 entries: complete JSON reports, one stopped-run summary and its original NDJSON trace. They retain money, living crops, deliveries, pending tasks, worker status, planning calls and per-day timings. These are real campaign outcomes, not a claim of strategy equivalence. The intermediate reports record the baseline commit while the experimental route edits were uncommitted; the final source is preserved by this branch commit and its WASM binary.
+
+| Seven-night run | Living crops | Money | Day-7 deliveries | Pending tasks | Native task batches |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Control (`campaign-7-sabana-712-control.json`) | 119 | 750 | — | — | — |
+| Initial opt-in (`campaign-7-sabana-712.json`) | 81 | 542 | — | — | 1,550 |
+| Revised native service points and connectors (`campaign-7-sabana-712-intent-shortest-anchors.json`) | 79 | 633 | 76 | 55 | 1,658 |
+| One-corner native route (`campaign-7-sabana-712-intent-one-corner.json`) | 105 | 865 | 90 | 94 | 1,972 |
+| Repeated control, same final WASM (`campaign-7-sabana-712-control-one-corner.json`) | 119 | 750 | 101 | 81 | — |
+| Native breach route and event gate (`campaign-7-sabana-712-native-breach.json`) | 123 | 769 | 118 | 80 | 2,036 |
+
+The initial native trace accepted a 55.2 m watering route to a crop only 10.1 m away. Native service-point selection now probes other sides only when its first valid route is clearly circuitous; the world-route connector similarly examines alternative grid anchors only for a long detour. A frozen Desert task still yielded 38.4 m where the JavaScript route used 15.0 m. A bounded one-corner shortcut within Wild Engine, validating both continuous segments against the native static collision predicate, reduced that route to 14.6 m. The frozen queue kept the same 15 worker/task assignments. On the two-night Sabana pilot, the final variant delivered 78 boxes and ended with 502 coins, versus 73 and 446 for control.
+
+The seven-night final variant earned more money than the repeated control (865 versus 750 coins), but kept fewer crops alive (105 versus 119) and ended with a larger pending queue (94 versus 81). Its accumulated `Game.tick` time was **71.4 s versus 59.3 s**; full runner time was **124.6 s versus 112.5 s**. Different routes and throughput change the simulation workload, so this is a full-campaign comparison rather than an isolated algorithm timing. The opt-in planner has not met the sustained performance criterion and must not become the default yet. No economy, damage or virtual-player policy parameters were changed for this comparison.
+
+The opt-in campaign runner also confirmed that an idle event boundary with no eligible workers or queued tasks does not invoke a native task-selection batch. A focused regression test verifies this wakeup behavior. The day-two count fell from 851 batches before this gate to 414 after it with the same 70 living crops and 390 coins in that paired short run; timing is noisy and should not be read as a speedup estimate.
+
+A two-night timing probe of the final one-corner binary observed 470 distinct worker assignments and 511 native planning batches. Those batches examined 513 eligible worker/task candidates and issued 570 route queries, close to one per completed assignment; they did not enumerate every crop per worker per tick. `planIfNeeded` was entered 1,344 times at relevant event boundaries, including cheap no-op wakes, rather than at every one of roughly 12,000 worker-update ticks. Its accumulated time was 1.379 s of 2.650 s in `Game.tick`. Empty intention reconciliation was called 14,308 times but cost only 35 ms in aggregate. This isolates the remaining worker-side cost in actual per-action global task planning, not the no-change poll gate. An experimental early exit after every eligible worker had a proposal gave 1.374 s of planning time versus 1.379 s, identical campaign outcomes and 511 batches; it was discarded. The original timing and query-count reports are retained in the evidence archive.
+
+The per-tick raid reservation reconciliation previously rebuilt its target-ID map from the full historical crop array whenever the farm gained a plant. It now uses the existing live-crop index, so old harvested or destroyed plants are absent from this raid read model. A regression test appends a new crop after indexing a dead historical entry whose ID cannot be read; reconciliation succeeds while preserving active leases. Reconciliation now runs on initial raid observation, a confirmed target or structure event, a navigation revision, a new raid, or a legacy reservation version. Ordinary unchanged movement ticks retain the existing claim map. A directed test checks both the no-change case and immediate release after `CropDestroyed`; the save/reload and committed-strike tests continue to pass. This is independent of the opt-in native selector and does not change target eligibility or military rules.
+
+The raid contention check now also uses the live-crop index. When native crop selection returns `unknown`, the opt-in selector returns a pending result instead of falling through to the older per-crop approach search. The existing waiting state retries at its bounded interval or on a navigation revision; `unknown` is never certified as `blocked`. A deterministic unit test checks that an unresolved native result does not call the old selector. The paired seven-night Sabana/712 reports (`live-reservations` before this change and `unknown-waits` after it) both completed: living crops changed **105 → 103**, money **865 → 847**, and accumulated `Game.tick` time **72.5 s → 72.0 s**. This single seed does not establish a sustained speedup; it records the behavioral difference and confirms no stuck raid in this run. The opt-in path remains experimental.
+
+A targeted closed-enclosure regression exposed an internal inconsistency: the native crop planner found a two-point physical route after a confirmed breach, but route registration rejected its long segment with a predicate intended only for connectors under 1.5 m. Registration now uses the route planner's own bounded continuous sweep, and the crop planner successfully selects the newly accessible target at that event boundary. The transitional JavaScript fallback for this breach case has been removed. Ordinary `unknown` waits remain pending. The worker loop checks a JavaScript event/topology gate before draining native intention changes; unchanged walking ticks make no WASM change-list query. Native changes produced directly by action or attack transitions set an explicit pending flag so this gate cannot hide them. Controlled regressions assert both no-change movement and immediate breach reassignment.
+
+The crop planner probes the preferred fractional approach through the native physical route planner after group-level access is proved, without first rejecting it by its rounded grid cell. `.github/workflows/native-intent-prototype.yml` builds the source with a pinned Emscripten image and runs the native raid and intention fixtures; [run 38782238704](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38782238704) passed. Its WASM artifact (SHA-256 `4c2cd2834aff4bb689f798fa92b3876b8802f04facef6bfd5a3d687ffb622cac`) now replaces the branch's bundled experimental WASM. The same 12/12 focused tests passed locally with that artifact before replacement. This is not a default-game activation.
+
+The two-night Sabana/712 smoke run after this gate completed with 65 living crops, 522 coins and 524 native planning batches; accumulated `Game.tick` was 3.26 s. It is archived as `campaign-2-sabana-712-event-gate.json`. This run checks stability and records workload; there is no matched control at this exact revision, so it is not evidence of a net speedup.
+
+The seven-night run with the corrected WASM and no breach fallback completed with **123 live crops, 769 coins, 118 day-7 deliveries and 80 pending tasks**. Accumulated `Game.tick` was **83.1 s** and full runner time **142.6 s**. Compared with the prior opt-in `unknown-waits` run (103 crops, 847 coins, 86 deliveries, 94 tasks, 72.0 s `Game.tick`), workload and outcomes changed substantially. The improved crop survival and delivery count do not justify claiming a speedup; this single seed remains slower than the repeated control, and the planner remains opt-in.
+
+The same opt-in version completed **14 nights** with 114 living crops, 889 coins, 77 pending tasks, 210.4 s accumulated `Game.tick` and 359.1 s total runner time. A matched control with the same WASM and seed completed eight nights; through day 8 it accumulated 77.8 s `Game.tick`, versus 102.9 s for the opt-in run. Their day-8 farms already differed (86 versus 116 living crops). The control then spent several minutes of CPU in day 9 without yielding a completed-day report and was stopped from its own runner session for disproportionate computational cost. Its eight completed rows, partial original log, source commit, WASM hash and stop reason are archived. **There is no completed 14-night control** and no valid claim that the opt-in planner is faster overall. The day-9 control spike warrants focused profiling before extending either architecture to 30 nights.
+
+The topology reconciler contained another source of unnecessary replanning: it checked complete active-route segments with `spatial_local_clear`, a predicate limited to short connectors, even though the route planner had already certified longer shortcuts using bounded continuous sweeps. An unrelated wall could therefore invalidate a physically clear pinned route and trigger another native search. The reconciler now uses the route planner's continuous segment check. A real Desert fixture finds a long, physically clear animal route and confirms the old WASM invalidates it after a remote wall; the rebuilt WASM retains its route handle, while a wall placed on an active path still invalidates and reroutes it. [Native-intent CI run 38786314281](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38786314281) passed 13 focused tests; the local playable suite passed 190/190. The bundled experimental WASM has SHA-256 `9a2c915fadd32a31e6ca79a00dcd2eb9762aab43b5a086599e5772747b261e60`. A two-night Sabana/712 smoke run with this binary completed with 65 crops, 522 coins, 524 native batches and 3.42 s accumulated `Game.tick`; its raw report is retained in the archive. That short run establishes stable behavior but does not measure the benefit of the route fix, because those early nights lack the relevant wall changes. Sustained campaign speedup remains unproven.
+
+A seven-night repeat with that binary and the same Sabana/712 policy completed with 119 living crops, 829 coins, 118 day-7 deliveries, 2,036 native task batches, 61 animal plans, 2,672 task-route queries, 77.4 s accumulated `Game.tick` and 135.5 s total runner time. The prior binary had 123 crops, 769 coins, the same day-7 delivery count and task-batch count, 2,659 task-route queries, 83.1 s `Game.tick` and 142.6 s total. The farms diverged from day 4 (94 versus 93 living crops), so this is evidence of a stable seven-night run and changed workload, **not** an isolated speedup estimate. Both raw reports remain in the archive.
+
+HP-only repairs of an intact wall previously entered the same native topology-reconciliation path as reconstruction. The confirmed `RepairApplied` event now wakes physical reconciliation only when its `previousStatus` was not `intact` (including old events that lack this metadata, conservatively). A focused test verifies that an intact-wall repair leaves the graph revision and route-reconciliation call count unchanged, whereas ruin and reconstruction still trigger reconciliation. Structure damage and economic repair facts remain projected to the native entity index.
+
+The next sustained Sabana/712 run with these fixes **ended in a real defeat after 13 completed nights**. Day 14 ended with zero living crops, 60 coins, and no income; the completed rows show 98 living crops on day 9, 54 on day 10, 26 on day 11, two on day 12, and none on day 13. It consumed 188.6 s in `Game.tick` and 320.5 s overall before the defeat. The older experimental run completed 14 nights with 114 crops and 889 coins, but routes, crop exposure and military outcomes diverged; the shorter, defeated campaign cannot establish a faster algorithm. Its original per-day report, including this negative outcome, is archived as `campaign-14-sabana-712-long-route-reconcile-defeat.json`. No balance parameter or bot policy was changed to produce this result. The decline warrants a physical raid audit before interpreting it as a balance defect or extending the campaign.
+
+The run's raw `nativeInvalidations` field counts normal intention releases as well as actual invalidations: the C++ counter increments in `releaseIntent` on task completion. It must not be treated as a topology metric. Subsequent reports name it `nativeLifecycleInvalidations` and separately count calls to native topology reconciliation and the number of routes that those calls actually invalidate.
+
+A deterministic replay of that 14-day attempt recorded the simulator's existing raid receipts without changing strategy or combat. Its completed-day rows match the earlier defeat exactly for living crops, coins, planting, deliveries, destroyed crops, worker planning batches and animal plans. The raid observer reported `verified` coverage with no missing-event issues or abandoned exits. On nights 6–12 the animals used all their recorded hit budgets; agricultural destruction rose from 23/141 exposed crops on night 6 to 51/149 on night 9 and 48/50 on night 12. Night 13 had 29 crops destroyed, 16 center hits and two wall hits; night 14 destroyed the last 11 exposed crops, with six center hits and one wall hit. The runner had spent 360 coins on walls on day 10, but these receipts alone do not certify a closed enclosure. There is no evidence in this report of fabricated damage or a stuck raid; it also does not prove every movement trajectory physically valid. The raid audit, raw per-day trace and source/WASM hashes are archived. The separate topology counters recorded 47 native reconciliation calls and 34 invalidated active routes by the end. Calls are not unique world events, because a confirmed event can be observed through both the world-event and navigation-revision boundaries.
+
+A selector profile of the identical seven-night Sabana/712 run exposed the next integration boundary. It recorded 58 target selections: nine introductory or otherwise unsupported selections used the established JavaScript selector; 49 queried native crop planning and all 49 returned a candidate. Eighteen of those native candidates failed the final JavaScript check: 17 because another animal had reserved an overlapping approach point and one because a moving body occupied it. All 18 then fell back to individual JavaScript crop selection and succeeded. The replay's economic and crop rows matched the uninstrumented run exactly. These are dynamic reservation facts that the native crop planner does not yet receive; the next native step should consider active approach leases while selecting alternative crop sites, retaining physical validation and deterministic priority. The raw selection counters and source hashes are archived, including the negative fallback counts.
+
+An initial native approach-site lease implementation completed the same seven-night seed using the candidate WASM from CI run 38791732538. The 17 JavaScript rejections for overlapping reservations fell to zero; four candidates were still rejected by the live mobile-occupancy check. Four native crop queries reported unresolved results after available sites were occupied. This prompted a separate `occupied` outcome in the subsequent source revision, so lack of a free dynamic lease cannot be confused with missing topology or a physically blocked region. The first candidate ended with 123 live crops and 815 coins, versus 119 and 829 in the earlier selector profile; the trajectories differ and these results are not a speed comparison. Total runner times were 139.6 s and 135.4 s, respectively. The new trace and exact binary hash are archived.
+
+The follow-up `occupied` revision passed native CI run 38792688845 and web validation. A second seven-night replay completed with the same final crop and coin counts, zero reservation-overlap rejections, four live-body occupancy rejections, and four remaining native `unknown` results. Thus the new outcome is defined and tested but did not reclassify those four cases; they still require investigation before claiming all inconclusive queries are explained. Total runtime was 139.3 s. The exact replay, source commit and WASM hash are preserved in the trace archive.
+
+A bounded diagnostic replay traced those four `unknown` results to two selection moments repeated on the next tick. Each examined 16 candidate sites without making any route query or registration attempt: `lastRouteCount` and `lastRegisterResult` remained at their untouched sentinel values. The candidate-budget branch was setting `unknown` even though every site had been skipped due to an existing approach lease. The source now reports dynamic `occupied` when that budget expires before any route attempt; native CI and a final replay are still required for this specific correction. The diagnostic trace is archived.
+
+The corrected budget branch passed native CI run 38793905362. Its seven-night replay returned 42 native crop plans as `found`, four as `occupied`, and zero as `unknown` in Sabana/712. It again finished with 123 crops and 815 coins; the four mobile-occupancy rejections and corresponding JavaScript fallbacks remain, so migration of dynamic actor occupancy is unfinished. Total runner time was 136.9 s versus 139.3 s in the preceding run, an uncontrolled timing difference rather than a proven optimization. The report and binary/source hashes are archived.
+
+The native planner now receives a transient batch of mobile blocker discs only at the attack planning boundary. It tests candidate interaction points before route generation, while JavaScript retains its final movement-time collision check. Native CI run 38795093887 and the directed mobile-blocker regression passed. The seven-night Sabana/712 replay produced 42 native `found` plans, eight `occupied`, zero final JavaScript approach rejections, and no legacy fallback after a native result. Introductory/shield-unsupported cases still use JavaScript (16 selections). The run finished with 122 crops and 825 coins in 138.2 s, compared with 123/815 in 136.9 s before blocker batching. Different decisions and runtime noise prevent claiming a speed improvement; the change removes a demonstrated fallback path. The report and exact source/WASM hashes are archived.
+
+Gran Cañón/123 completed seven nights on the same WASM, with 50 native crop plans found and six occupied, but one found plan was rejected by JavaScript as an ineligible crop. The event observer had queued a confirmed crop destruction earlier in the same tick while native planning still saw its old target. Flushing confirmed world events at the next attack-planning boundary fixes that stale-index window without tick polling. A directed native regression confirms the target count updates immediately before selection. The repeated seven-night run completed with 51 found, 11 occupied, zero ineligible rejections and no legacy fallback after a native result; final crops and coins changed from 35/452 to 36/437. Total runtimes were 178.5 s and 183.2 s, so there is no speed claim. Both original and corrected traces, source hashes and WASM hash are archived.
+
+## Verified remaining routes at topology boundaries
+
+A frozen Desert route reproduced a conservative but redundant invalidation in the prior WASM (CI 38797615720): after an animal had passed a point on a six-metre route, placing a wall at that passed point left the route from its current position to the target `found`, yet `nav_intent_reconcile_topology()` invalidated the pinned route and `nav_intent_replan_attack_route()` had to calculate another. The old result was `remainingStatus=found`, `invalidated=1`, `replan=1`; this was an extra calculation, not proof of an illegal move.
+
+At a confirmed topology boundary, the event-driven bridge now sends each moving unit's remaining JS path to Wild Engine. The native engine advances the cursor only if that path exactly matches a suffix of its pinned route; it then checks current physical clearance and every remaining segment. A mismatched suffix forces safe invalidation. No progress is published during ordinary movement ticks. The regression covers a wall behind the actor, a wall ahead and an altered JS path. [Native CI 38799294071](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38799294071) passed, as did all 15 directed native tests locally with its exact WASM artifact; [web validation 38799294067](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38799294067) passed. Windows CI remained in progress when this report was written.
+
+A continuous Sabana/712 `good` campaign with source `c1165ef7`, WASM SHA-256 `356c30a930acb44e695ecce769584c1c73b34db7036733668bed929960be4b3e`, and the opt-in planner completed **14 nights** without a technical stop. It ended with 135 living crops and 854 coins; the raid observer reported `verified` event coverage. It took 388.0 s overall, including 229.6 s in `Game.tick` and 96.7 s in virtual-player decisions. Across 49 topology-reconciliation calls, 53 active routes were invalidated. Those counts do **not** show an overall speedup: a previous 14-night version completed in 359.1 s and 210.4 s of `Game.tick`, but had a different farm and finished with 114 crops/889 coins. Another earlier version lost all crops after 13 completed nights. The policies, attack outcomes and workloads differ; none is an AB performance control for this route change. No prices, damage or strategy genes were adjusted.
+
+A separate seven-night replay on the same code and WASM, Sabana/712 `good`, matched the first seven rows of the 14-night campaign exactly for living crops, money, staffing, planting, deliveries, destruction, pending tasks, worker states and positions, task kinds, and daily finance. It completed all seven nights with 124 living crops and 815 coins. Its source commit `1257b027` differs from the 14-night run only by documentation and evidence; the native binary SHA-256 is unchanged. The full replay and field-by-field comparison are archived. This establishes determinism for the measured seven-night prefix under the same engine and seed, not for later nights, save/load boundaries, other biomes or a physically audited route corpus.
+
+The next integration check found that `Game.tick` advanced the raid before delivering restored or event-invalidated native routes to JavaScript. The event gate now reconciles pending native intentions before raid movement, then again after the raid for changes caused by its hits. A directed test enforces this ordering; all 16 focused raid and native-intent tests passed with the same WASM binary. A seven-night Sabana/712 pilot completed with verified raid-event coverage and no technical stop. It finished with 115 crops and 724 coins, compared with 124 crops and 815 coins in the previous ordering. In particular the first introductory raid destroyed two crops instead of zero; its two crop contacts consumed exactly its two-hit budget. The changed campaign workload accumulated 85.3 s of `Game.tick`, versus 77.8 s previously, so it is **not** evidence of a speedup. The result is a functional timing change that increases real attack losses in this seed; it needs broader physical and balance review before enabling the planner by default. The original and changed reports are both retained.
+
+Gran Cañón/123 `good` then completed seven nights on the same source and WASM: 31 living crops, 426 coins, 108.0 s accumulated `Game.tick` and 151.2 s elapsed runner time. The raid observer verified all seven incursions with no reported issue; all 23 animals retired after exhausting their hit budgets. The first five presentation nights caused 2, 3, 4, 4 and 5 crop losses; nights six and seven caused 21 and 32. This is a physically observed, economically severe trajectory, not a navigation failure or a balance acceptance result. An older source ended day seven with 36 crops and 437 coins, but its routes and raid timing differed. The full reports and source hashes are archived. An initial invocation used the invalid identifier `gran_canon` and stopped before simulation; that negative result is retained separately from the valid `gran-canon` run.
+
+To validate save/load with the changed raid order, a fresh Sabana/712 active-raid snapshot was captured from source `23379d07` and WASM SHA-256 `356c30a930acb44e695ecce769584c1c73b34db7036733668bed929960be4b3e`. It is stored as `tests/fixtures/sabana712-d1-native-active-raid.json.gz`: the day-one warthog already has a crop target, exclusive reservation and 29-point route. A native integration test deserializes this save, reconstructs the route and lease, runs five actual `Game.tick` intervals and checks that the animal advances 1.9 metres, keeps its target, reservation and attack budget, and remains serializable. The nine bridge tests passed locally with the exact WASM artifact. This covers an active travelling animal; simultaneous animal reservations and changed topology after restore remain separate acceptance cases.
+
+A second day-one Sabana/712 capture from source `1459870d` freezes the same warthog during committed attack `attack-662`, before its damage frame. The paired uninterrupted reference was captured four one-second ticks later, immediately after the hit. Restoring the first save reconstructs one `ACTION_ACTIVE` native intention; four actual ticks produce exactly one `AnimalLogicalHit`, reduce the budget from two hits to one and match the reference's confirmed game state, event order, ledger and RNG. The only serialized differences before normalization were `pathVersion` and `mobileRecoveryVersion`, which identify the new navigation session. Both 14 KB compressed snapshots are regression fixtures. All ten bridge tests passed locally with the exact WASM artifact. Simultaneous reservations and topology changes during a committed clip still need directed cases.
+
+A current-source Sabana/712 night-six capture from source `2ff9709a` is stored as `tests/fixtures/sabana712-d6-native-multi-reservation.json.gz` (549 KB JSON, 51 KB gzip). At day-six time 430 it has 117 living crops, 623 historical plant records and eight warthogs with distinct crop targets, exclusive leases and active paths. The native save/load regression reconstructs all eight route handles without a stale-route rejection, then runs five actual 0.1-second ticks. Every animal retains its original target, lease and hit budget, and at least one advances physically. The bridge suite uses WASM SHA-256 `356c30a930acb44e695ecce769584c1c73b34db7036733668bed929960be4b3e`.
+
+An uninterrupted Sabana/712 campaign was replayed to the same day-six instant after the event-lookup-only source change 92226e0d, using the same WASM. Its serialized starting state matched the frozen save byte for byte (548,420 UTF-8 bytes; 548,406 characters). Both runs then advanced the raid without bot actions in 588 simulated 0.1-second ticks. They ended with all 24 logical hits applied once, one `RaidEnded`, and **identical full serialized game state**, including RNG, event order, ledger, tasks and unit positions. The uninterrupted final state is preserved as `tests/fixtures/sabana712-d6-native-multi-reservation-after-raid.json.gz` and checked exactly in the native integration test. This proves the frozen raid's save/load equivalence; it does not establish equivalence for later bot decisions, changed topology during that raid or other seeds and biomes.
+
+Using the same restored night-six state, a second directed test inserts a native physical barrier on one long route and reconciles the topology revision. At least one pinned route invalidates, while all eight crop targets, exclusive reservations and unspent hit budgets remain intact; the 12 bridge tests passed. This checks the native route-invalidating boundary after load. The barrier is inserted into the experimental spatial core, not purchased through the game's wall-building command, so the test does not certify construction cost, gate placement or full world-event delivery.
+
+Building or removing a wall during the night is rejected by the game's `permission` rule, so an in-raid wall purchase would be an invalid test of confirmed topology events. The closed-enclosure regression instead now saves while two animals target walls, restores a separate native session, then applies the same confirmed `StructureRuined` breach events to both sessions. At the next game tick, both reconsider the opened crop access with identical targets, leases, hit budgets, event order, RNG and confirmed world state. The comparison excludes `pathVersion`, `mobileRecoveryVersion` and `raidWait.epoch`, which encode session-local navigation revisions. This fixture creates the ruin events explicitly to isolate the event boundary; it does not claim that the walls were destroyed by actual animal damage in this case.
+
+A complementary native raid test builds a legal closed thorn-wall enclosure during the day, starts two warthogs at night, and saves once both have wall targets. The walls begin near their collapse threshold as a controlled fixture condition; no attack-damage or wall-cost rule is changed. The test lets normal animal strikes apply `StructureHit`, advances the actual collapse timer to `StructureRuined`, and compares the continued and restored sessions after eight further movement ticks. Confirmed damage, ruin events, RNG, targets, reservations and the rest of the serialized game state match after excluding the same session-local navigation revisions. This tests a real damage-driven topology transition after loading, while the preceding test isolates tactical reconsideration when a multi-module gap is opened.
+
+The first continuous post-raid-order Sabana/712 attempt reached eight completed nights, then hit the runner's technical stop on night nine because its raid remained active for more than 2,400 simulated seconds. The repeated run reproduced the same day-nine state; both original reports are retained in `campaign-differential-traces.zip`, and the full stopped state is `tests/fixtures/sabana712-d9-native-stalled-raid.json.gz`. Twelve animals had retired or left; four remained, including two retreaters and a walking crop attacker in a mobile-body jam. Their next movement segments were statically clear, but the collision recovery required the final destination to be free of mobile bodies before allowing temporary phasing. A directed regression fails under that condition and passes when animals may phase through mobile bodies after the existing stall threshold, while each actual movement step still checks native static clearance. The raid controller independently checks approach occupancy before committing an attack. Restoring the stopped snapshot with this change ends its raid in 235 more 0.1-second ticks, without an emergency disappearance. Another saved crop route in this snapshot fails native restoration and needs separate physical-route analysis if it persists in the continuous run.
+
+The continuous rerun with mobile-body phasing completed 14 nights in 351.61 wall-clock seconds and passed the raid evidence observer without a technical stop; night nine exhausted the attack budget normally. This is **not** accepted balance evidence yet. Nights 10, 12 and 14 each ended with zero hits although their raids spawned 16, 17 and 17 animals and still had 53, 53 and 55 unused strikes. The native crop planner returned 208, 221 and 221 additional `unknown` results respectively, with no individual crop route query. The animals retired after their bounded wait. The cause of those inconclusive connectivity results remains under investigation. The successful run and these negative findings are retained in `campaign-differential-traces.zip`; no 30-night campaign should be interpreted as valid until the no-hit anomaly is explained.
+
+A frozen night-ten snapshot now isolates the cause. For the first warthog, all 919 sampled connections to 93 crops with interaction sites return native connectivity reason 7, a certified sealed target. The remaining crop, `plant-9636` at (78, 0), has no valid interaction site among the native planner's twelve local samples. Consequently, `nav_intent_plan_attack_crop` returned `unknown` for the whole selection, and the JavaScript caller suppressed the existing enclosure/perimeter selector. Loading 9, 25 or 49 chunks produced the same result; this is not a missing-sector problem. With the perimeter selector restricted to structures on this native-unknown path, the same snapshot selects reachable wall `structure-9100` without a single individual crop approach attempt. The frozen fixture and directed regression preserve that behavior. This remains a transitional barrier-selection path; native ownership of animal target selection is not yet complete. A new continuous campaign is required before accepting the correction as physically effective and fast enough.
+
+That continuous Sabana/712 rerun completed 14 nights in 356.83 wall-clock seconds, versus 351.61 seconds for the previous run; the work differs after night nine, so this is not an isolated speed comparison. The raid observer reported `verified`, no coverage loss and no issues. Nights 10, 12 and 14 now record respectively 36, 27 and 16 wall hits, 16, 31 and 40 crops destroyed, and every animal retired for an exhausted attack budget. The no-hit anomaly is resolved for these three frozen nights. The final state has 29 living crops and 466 coins; this says nothing about 100-night survivability or balance quality. The exact full report, source file hashes and WASM SHA-256 are archived as `campaign-14-wall-unknown-recovery.json` in `campaign-differential-traces.zip`. The next sustained 30-night attempt must be evaluated separately, including any legitimate defeat.
+
+The first requested 30-night attempt continued until `defeat` on day 18, after 17 completed nights, rather than stopping at a financial warning. Day 18 ended with zero live crops and 80 coins; its observed raid spent 31 hits on walls, three on centers, and destroyed five crops. The raid evidence was `verified` with no coverage loss or issues. The report is archived as `campaign-30-wall-unknown-recovery.json`. A paired reproduction matched all 18 daily rows in day, living crops, money, staffing, planting, deliveries, destruction, finance and result. It recorded the terminal notice: `Cayó el último centro; faltan monedas para que otro nazca.` The final state had no operational center, and the last ruined structure was the initial center `structure-2`. The `GameOver` was emitted at time 482.1, before dawn, under the existing rule requiring 800 liquid coins to replace the last center. This is a rule-triggered defeat, not a technical crash or 30-night completion. The rule deliberately uses liquid money, not hypothetical proceeds from selling walls; after review, the player chose to keep that behavior because a theoretical liquidation opportunity could present an unclear continuation with no obvious recovery action. The additional salvage-value replay was stopped without modifying gameplay rules.
+
+A second sustained run on Gran Cañón/123 with the same `good`/legacy-defense policy completed 14 nights in 205.49 s and ended at the dawn of day 15 with 15 coins, zero living crops and one operational center. The observer verified raid coverage with no issue or technical stop. The real pressure nights destroyed 21, 32 and 42 crops on days six, seven and eight; day nine destroyed the remaining 30 and left 165 coins. From day ten onward the bot planted zero seeds and paid one 30-coin wage daily until the 35-coin empty-farm dawn requirement failed. This is a **virtual-player policy deadlock**: the legacy defense policy starts reserving 500 coins for an unbuilt perimeter on day ten, and `plant()` requires the full defense reserve before buying even a five-coin seed. With 165 coins and no harvest income, the bot could never reach its own reserve. The native planner performed no new task-route queries after day nine because no new crops or tasks existed. The run is not evidence that Wild Engine could not navigate, nor that an economically recoverable human player must lose; it is negative campaign evidence for this frozen policy. Its full report is archived as `campaign-14-canyon123-wall-unknown-recovery.json`. The QA runner now records its effective policy, defense report and plot-search report in future results, so subsequent failures can be attributed more precisely. No gameplay or policy parameters were changed.
+
+## Shared spatial advice and protection events
+
+The campaign runner previously rejected native intentions plus spatial advice because two `createSpatialIntentBridge()` instances would both reset the same WASM state. They now share one event-fed planner and one native entity index. A one-night Sabana/712 smoke run used native planting advice and persistent worker task intentions in the same session, with verified raid coverage. A two-night run using the expanding paid-wall policy built seven real wall modules for 70 coins and completed without a technical stop. This is an integration check, not evidence for long-campaign balance or speed.
+
+Wild Engine's native group/protection verdict now has an optional event subscriber. It reports a transition for an existing crop group after confirmed crop, wall or sector events, without querying during normal movement ticks. A certified change from `protected` to `unprotected` wakes the expanding defense policy for its next decision boundary; `unknown` does not certify a breach. The paid-ring regression confirms one notification after a real wall removal and none for HP loss without a topology change. The subscriber skips crop-only protection queries while no group was previously protected. In paired two-night runs with identical final serialized-state SHA-256, measured event-sync cost fell from 1,378.9 ms to 47.4 ms; total runner time fell from 8.36 s to 5.89 s, but these single runs do not establish a general speedup. Both reports and the preceding one-night smoke report are archived in `campaign-differential-traces.zip`. Native crop-group, combined-intent/advice and defense-wakeup tests pass locally with the same WASM. The native-intent CI workflow now runs the crop-group and combined-mode regressions against its compiled binary.
+
+The subscription is a narrow physical signal, not a complete event-driven economic policy. The experimental bot still makes its spending decisions in JavaScript and the legacy defense policy still has the documented savings deadlock. No game balance values or production movement rules changed here.
+
+A sustained Sabana/712 `good` run with **native intentions, shared spatial advice, and the expanding paid-wall policy enabled together** completed all 14 requested nights on source `69301aa4` and WASM SHA-256 `356c30a930acb44e695ecce769584c1c73b34db7036733668bed929960be4b3e`. It took 275.07 s elapsed, including 216.01 s in `Game.tick` and 37.58 s in bot decisions. Decision cost spiked to 9.83 s on day three and 21.16 s on day ten, so the combined mode is functional but not yet a demonstrated sustained speed improvement. The raid observer verified all 14 incursions with zero reported issues. At the day-15 dawn boundary the farm had 14 living crops, 246 coins and one operational center; no defeat or 100-night balance conclusion follows from this short run.
+
+The native protection subscriber recorded 31 transitions: 9 `unprotected→protected`, 2 certified `protected→unprotected`, 13 `unknown→unprotected`, and 7 `unprotected→unknown`. Only the two certified losses woke the defense policy. The bot spent 860 real coins on walls over the campaign, but its report still contains 77 budget deferrals and 24 decisions with no new legal pieces; wall spending alone must not be presented as a certified closed enclosure. This run preserves the policy's actual choices and losses. Its full daily, raid, finance, defense and timing report is archived as `campaign-14-combined-expanding.json` in `campaign-differential-traces.zip`.
+
+An opt-in decision profiler was added to the native campaign runner without changing the default policy. A paired ten-night Sabana/712 replay with profiling produced **identical serialized-state hashes on all ten daily boundaries** versus the first ten nights of the run above. On day three, `previewWallChain` consumed 9.22 s of the 9.61 s decision time; on day ten it consumed 19.27 s of 20.82 s. Native planting-site advice consumed only 35 ms and 76 ms on those days. The repeated wall-chain preview is therefore the measured bot-decision bottleneck in these two peaks, while route planning remains a separate `Game.tick` cost. Profiling overhead and different process conditions mean the two wall-clock totals are not a performance comparison. The exact phase counts, timings and hashes are archived as `campaign-10-combined-profile.json` in the same zip. The next defense-policy change should stop rebuilding equivalent speculative perimeters during periodic decisions and should buy a certified complete enclosure only when the funds and topology permit it; this run alone does not validate such a change.
+
+A first isolated complete-enclosure policy was tested and **discarded**, with its original result retained under `negative-certified-defense/` in the trace archive. It used the existing native crop-group and physical preview service, retained a quote until income or topology events, and would buy only a fully certified group. On Sabana/712 it completed two nights in 25.14 s, but its one day-two plan consumed 19.10 s and returned `unknown`; no wall was purchased. Tracing showed three different margins each produced `unknown` after the native topology preview. The initial version repeatedly re-evaluated new crop groups and was cooperatively stopped; a corrected wait state eliminated those repeated evaluations but still left the expensive, inconclusive first certification. Neither is suitable to replace the current policy. The archive includes the exact prototype patch, its new policy module and the completed two-night report; the branch's active code remains on the established policy. Before retrying, the enclosure service must identify why the preview is inconclusive and request only the missing spatial information or return a bounded unresolved result **before** expensive wall quotations. A successful isolated certification must precede a paid campaign comparison.
+
+The frozen day-two diagnostic now identifies one specific false-`unknown` cause. The largest group has 68 crops and a 350-coin thorn-wall quote with 36 expected modules: 35 placeable and one blocked by a physical obstacle. Nine relevant chunks are resident. In the speculative preview, the old classifier returned `unknown` for warthog, hyena, buffalo and rhino, but `protected` for lion. The 10, 8, 10 and 13 unresolved crops respectively cluster beside the work center. Their floor/ceil grid connectors fail static clearance; their twelve ordinary animal interaction sites include valid, sealed positions. This is a mismatch between protection classification and the attack-site geometry, not evidence of missing sectors. The exact diagnostic program and its JSON output are retained under `negative-certified-defense/` in the trace archive; the restored game fixture is `tests/fixtures/sabana712-d2-enclosure-connectors.json.gz`.
+
+The targeted native classifier correction checks those interaction sites only when a crop has no valid floor/ceil connector. Its new-WASM crop-group suite passes locally (6/6) and in CI. On the same frozen state, the old WASM returned `unknown` after three margins in 19.42 s; the new WASM returned a `ready` plan after the first margin in 6.27 s. Both quotes cost 350 coins and left the serialized game unchanged. The source harness, result JSON and exact WASM hashes are archived under `enclosure-classifier/`. These are single-process diagnostic measurements, not a sustained speed claim. A directed paid-command fixture then credited 1,000 coins, purchased the 35 legal modules for exactly 350, and confirmed all five native profiles still classified the group as protected. The paid regression passes locally and is included in CI. This explicit fixture credit is not campaign income; a real bot-policy campaign comparison is still needed before adopting a complete-enclosure policy.
+
+That campaign comparison was performed and **rejected the first complete-enclosure bot policy**. Both Sabana/712 `good` runs used the same WASM SHA-256 `c59a7f16bcf473f47977628ca74fbebad7fee0b61d808a2a2dc93a7ea41c1549`, unchanged game rules and continuous native intentions. The opt-in certified policy initially built two complete paid crop-group rings on day three (18 modules for 180 coins and 15 for 150), but its 14-night request ended in a real last-center defeat after only nine completed nights, with four crops and 170 coins at the terminal day-ten event. It spent 670 coins on walls and 127.73 s in bot decisions before defeat. The established expanding policy completed all 14 requested nights, with 14 crops, 246 coins, one operational center, 860 wall coins and 40.07 s in bot decisions. Both raid observers reported verified coverage. The certified policy's day-three wall bill was 330 coins versus 150 for the control; by day six it had 47 living crops versus 96. Its history shows 17 expensive plan evaluations, several `unknown` results, and small crop-group rings that did not prevent the center loss. These observations show a worse spending/coverage trajectory, although this report does not isolate the contribution of each individual wall or prove that one purchase caused the defeat. The four-night smoke result, both full reports, side-by-side daily comparison, trial policy source and an uncommitted event-trigger follow-up patch are retained in `negative-certified-defense/`. The trial was removed from the active runner. A future policy needs a stable farm-and-center protection objective, worker-access checks and fewer topology previews before another adoption attempt; the native crop classifier fix remains.
+
+The current corrected-WASM Sabana/712 expanding-policy request for 30 nights then continued past the matched 14-night prefix. **All 14 daily serialized-state hashes matched** the prior paired control. It ended in a real economic defeat at the day-18 dawn after 17 completed nights: zero living crops and one operational center remained, but the game reported insufficient funds for another jornada. Day 17 closed with 31 coins. The raid observer verified every covered incursion with zero issues and no technical stop. This is a different terminal cause from the earlier 30-night run on older source, where the last center fell; the original older report remains archived. The new run took 292.09 s and is preserved as `campaign-30-expanding-current.json` with daily finance, defense, source and WASM hashes. It demonstrates a stable terminal path through this scenario, not 30-night survival or acceptance of campaign balance.
+
+Planner telemetry now reports session totals and the peak rolling-minute count per actor alongside the existing current-minute counts. A report captured after work has stopped can legitimately show zero current-minute worker requests despite earlier planning; the cumulative and peak fields preserve that evidence without changing the planner or simulation. The directed event-bridge test confirms one worker request remains in the cumulative count after its rolling window expires, while 100 ordinary ticks produce no additional planning batch. These counters reset when a native session is rebuilt and must not be interpreted as lifetime counts across save/load.
+
+The transient native attack-site batch now includes the **future approach positions reserved by other active animals**, as well as their current physical bodies. Previously, an animal still travelling toward its leased point could be far away, so Wild Engine could select that same point and JavaScript would reject the proposal after route planning. A Sabana fixture reproduces this precise conflict: the new planner selects another physically available approach; removing the batch addition makes the regression fail. The full native raid test file passes 10/10 on the frozen candidate WASM. This avoids one avoidable JavaScript rejection/fallback class; it is not yet a sustained-campaign performance claim or a complete native reservation handoff.
+
+A seven-night Sabana/712 functional replay on source `7f1a9319` and WASM SHA-256 `c59a7f16bcf473f47977628ca74fbebad7fee0b61d808a2a2dc93a7ea41c1549` completed with verified raid coverage, zero observer issues, 119 living crops, 642 coins and no game-over result. No native crop proposal was rejected by the JavaScript approach check in this run. It took 102.08 s and used 78 native animal planning requests; the new cumulative telemetry records 1,786 worker candidate evaluations across the session. The full daily report is archived as `campaign-7-reserved-sites.json` in `campaign-differential-traces.zip`. This verifies integration through the first two real-pressure nights, but seven nights cannot establish sustained performance or economic balance, and the changed attack-site choice may legitimately change later campaign trajectories.
+
+The next native reservation fix projects other active animals' **crop target leases** into the same attack-planning request. A committed strike can finish and release its native intention while JavaScript still owns the crop reservation until the next action transition; without this transient projection, another native plan could offer that crop and be rejected by JavaScript. The directed Sabana test supplies a JS-only lease and verifies that Wild Engine does not offer its crop. CI run `38825471671` compiled the new WASM and passed the complete native-intent fixture set; local raid tests passed 10/10 with WASM SHA-256 `2d4d5031487245a2930a630f2a3b200d48cb389722435ef78033861c007c51ba`.
+
+A sustained 14-night Sabana/712 replay on source `2e03bc7d` and that WASM completed with verified raid coverage, zero issues and no game-over result. All **14 daily serialized-state hashes matched** the earlier combined native-intent/spatial-advice/expanding-policy control. Both ended with 14 living crops and 246 coins. The new run took 275.16 s versus 275.07 s for the earlier run; this single pair supports no performance claim. No native crop plan was rejected by JavaScript in the new run. The full report, including daily timing and 1,736 animal-planning requests, is archived as `campaign-14-transient-leases.json` in `campaign-differential-traces.zip`. The unchanged trajectory shows this fix is non-disruptive on the chosen scenario; the isolated lease test exercises the conflict directly.
+
+The full daily report, exact hashes and an initial failed invocation are preserved in `campaign-differential-traces.zip`. The failed invocation supplied the test-specific WASM environment variable to a runner that reads `WILD_ENGINE_SPATIAL_SERVICES_WASM`; it stopped before simulation. It is not a campaign defeat or a navigation failure. The successful invocation used the exact CI artifact. Longer multi-biome campaigns and physically audited routes remain acceptance work for this experimental PR.
+
+## Opt-in native retreat route stage
+
+At the confirmed transition to `retreating`, the opt-in planner now asks Wild
+Engine for a physical route to that animal's existing exit. A successful
+route is pinned by a session-scoped handle without acquiring any crop or wall
+lease. Ordinary movement ticks consume the route without replanning.
+Topology reconciliation retains a still-valid route or requests one
+replacement from the animal's current position. An unresolved or physically
+invalid native route hands control to the existing bounded exit recovery; it
+does not change movement speed, hit budget, damage or exit position.
+
+A saved retreat route is restored from its remaining points only after the
+native static collision checks accept every segment. The new session creates
+a fresh handle; stale handles remain invalid. A directed test saves during a
+real retreat and compares its final serialized state with a continuous run
+under the same source and seed. The historical whole-raid fixture is no
+longer required to reproduce the prior navigator's exact terminal snapshot:
+route differences are allowed, while its eight distinct reservations, 24
+unique committed hits and physical raid completion remain checked. The
+focused native suite passed locally (60/60) with the compiled WASM SHA-256
+`da81cbf89e937dc947aaf646235a593840e4807342aa655a57f397047a00cf15`;
+the web build passed. The earlier CI failure on source `54c7ecc2` is retained
+as a negative result: its only failing test was that historical exact-state
+assertion. This is an opt-in retreat stage, not complete native ownership of
+animal target selection, worker return routes or every emergency exit path.
+
+A continuous Sabana/712 `good` technical pilot on source `762f8da3` and that
+same WASM completed seven nights in 101.66 s. The raid observer verified all
+seven incursions with no issues or coverage loss; the final state had 121
+living crops, 642 coins and no game-over result. The exact daily hashes,
+native planning counters, finance and raid receipts are preserved in
+`sabana7-native-retreat.json.gz`. This verifies the first two pressure nights
+and exit completion in a real campaign, but does not establish sustained
+14-night performance or a balance conclusion.
+
+The same source, WASM and configuration completed a continuous 14-night
+Sabana/712 run in 338.98 s. Its first seven daily state hashes match the
+seven-night pilot. All 14 raid receipts were verified without observer issues
+or lost coverage; all animals retired after exhausting their attack budgets.
+At day-15 dawn the game had one operational center, 84 living crops and 684
+coins, with no game-over result. The 14 raids destroyed 116 crops in total,
+including 33 on night 14. This is technical survival through the sample, not
+evidence that the economic or military balance is acceptable or that the
+native route stage improves sustained runtime against a matched control.
+The complete daily report and hashes are preserved in
+`sabana14-native-retreat.json.gz` (source `762f8da3`, WASM SHA-256
+`da81cbf89e937dc947aaf646235a593840e4807342aa655a57f397047a00cf15`).
+
+Gran Cañón/123 was replayed twice for seven nights under the same opt-in
+configuration on source `8eefdcaa` and the same WASM. Every corresponding
+daily serialized-state hash, terminal record and full raid observer report
+matched exactly. The runs took 149.89 s and 149.37 s. Both ended at day-eight
+dawn with one operational center, 44 living crops, 330 coins and no game-over
+result. All seven incursions were verified with no observer issues or lost
+coverage; 47 crops were destroyed across them. Every recorded animal
+retirement was due to exhausted attack budget. Both complete reports are
+preserved as `canyon7-native-retreat.json.gz` and
+`canyon7-native-retreat-repeat.json.gz`. This is a deterministic early-campaign
+check in difficult terrain, not a proof that unknown-connectivity cases or
+longer Canyon campaigns are resolved.
+
+A continuous 14-night request from the same Gran Cañón/123 configuration
+matched the seven-night prefix and then reached an actual economic defeat at
+day-14 dawn, after 13 completed nights (217.97 s). The terminal state had 32
+coins, no living crops and one operational center. With no surviving crop or
+undelivered crate, `dawnMinimum` is 35 coins; hypothetical resale of walls is
+not part of the defeat rule. The observer verified all 13 raids with zero
+issues or coverage loss. The raids destroyed 123 crops in total; the recorded
+retirement reasons were exhausted hit budget and no reachable unleased
+target. The complete report is `canyon14-native-retreat.json.gz` (source
+`82ab62c7`, same WASM SHA-256). This validates the native-retreat integration
+through a genuine terminal transition in this scenario, not balance or
+general long-campaign acceptance.
+
+A directed retreat-topology regression now creates a physical route, places
+a confirmed wall on one of its waypoints, and checks that Wild Engine
+invalidates the old route handle and marks the same retreat intention as
+needing a new route without acquiring an attack lease. Removing the wall
+allows a fresh native route and a distinct handle. All four native animal
+intention tests pass locally against the pinned candidate WASM.
+
+## Opt-in native worker home route stage
+
+The experimental planner now pins a task-free native route from a worker's
+confirmed flight or return transition to that worker's existing village
+entry. Movement retains the route without requesting another native plan.
+Confirmed topology changes validate the remaining route; an affected route
+is replaced from the worker's live position. `blocked`, `unknown`, or an
+unavailable native intention hands control to the existing bounded JavaScript
+return recovery, without changing speed, collisions, gates, staffing or
+contract rules. Saved remaining routes are validated against native static
+collisions before a new session-scoped handle is issued.
+
+CI run `38842499135` built and passed the candidate WASM (SHA-256
+`ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`).
+The focused native suite passed locally with 63 tests. A later directed
+save/load fixture also passed: a worker continuing a native home route after
+restoration reached the same serialized state as uninterrupted movement, with
+no additional native plan. The ordinary return-route and actor-motion tests
+passed 33/33; the web build passed with the bundled candidate.
+A directed native test also builds a wall on a restored home-route endpoint,
+confirms that its old handle becomes invalid, removes the wall and obtains a
+new physical route. A planner-level test now covers the event boundary too:
+the wall invalidates the worker's active home route, the blocked replacement
+hands off to bounded JavaScript recovery, and removing the wall permits a new
+native plan. All three focused home-route tests pass with the pinned WASM.
+
+Two continuous Sabana/712 seven-night technical pilots using the new binary
+matched every daily hash, terminal state and raid receipt. The instrumented
+run (source `d406b9e8`) took 104.45 s, completed all seven raids with verified
+coverage and no observer issues, and ended with 118 living crops, 642 coins
+and one operational center. It made 103 native home-route requests; all 103
+found routes, none used the fallback, and no route was restored because the
+pilot did not reload. The first run took 102.52 s. Compared with the previous
+native-retreat-only pilot, the first six daily hashes matched; night seven
+diverged to 118 rather than 121 crops. This is a legitimate navigation
+trajectory difference, not evidence of a balance or speed improvement.
+The full instrumented report is archived as `sabana7-native-home.json.gz`.
+
+A Gran Cañón/123 seven-night pilot on the same WASM and source completed in
+151.67 s. All seven daily hashes matched the earlier native-retreat-only
+Canyon run. The seven raid receipts were verified with no issues or lost
+coverage; the terminal state had 44 living crops, 330 coins and one
+operational center. Wild Engine found all 85 requested worker-home routes,
+with zero JavaScript fallbacks in this sample. The complete report is
+`canyon7-native-home.json.gz`. This covers a difficult early terrain case,
+but does not certify every Canyon access or longer campaigns.
+
+The sustained Sabana/712 pilot on source `d406b9e8` completed all 14
+requested nights in 323.13 s with 51 living crops, 567 coins, one operational
+center and no game-over result. Its first seven daily state hashes match the
+instrumented seven-night pilot. All 14 raid receipts had verified coverage,
+no observer issues and no lost coverage. It requested 249 native worker-home
+routes; all 249 were found, with no JavaScript fallback or restore in this
+continuous run. The full report, including exact source and binary hashes,
+daily state hashes and timings, is `sabana14-native-home.json.gz`. This is
+evidence of sustained technical progress, not a controlled speed comparison
+or a balance acceptance result.
+
+A follow-up 30-night request on source `3d0f60f1` matched all 14 daily
+serialized-state hashes in that pilot, then reached a **real GameOver at the
+day-20 dawn after 19 completed nights**. The last center remained operational,
+but no crops remained and the balance was 32 coins; the game reported that
+the village could not afford another day. Crops fell from 59 on day 15 to
+16 on day 16 and zero after day 17. All 19 raid receipts were verified with
+zero observer issues or lost coverage. Native home routing found 291 of 307
+requests; 16 took the bounded JavaScript fallback, first appearing during
+day 17 after wall construction. A subsequent exact-hash diagnostic replay
+classified all 16 as `blocked`. Frozen-state tests found that old ruined
+walls regained collision after the new construction and isolated workers
+without an automatic gate; see `worker-repair-access-audit.md`. The branch
+now has a directed repair-time gate proposal and a frozen-state transaction
+test. Subsequent Sabana/712 and Gran Cañón/123 sustained replays found all
+288 and 107 native worker-home routes respectively, with zero fallback;
+both ended in genuine economic defeats after 19 and 13 completed nights.
+Their exact reports and the remaining repair-planning cost are documented
+in `worker-repair-access-audit.md`. The old physical access defect limits
+interpretation of the original campaign's balance.
+The complete negative run is preserved as
+`sabana30-native-home-defeat.json.gz`. Neither wall-sale proceeds nor an
+economic warning was used to stop the run; this was the game's actual loss
+rule. It is not a 30-night completion or evidence of acceptable balance.
+
+This is an opt-in stage. It does not yet establish long-campaign stability,
+full native ownership of worker tasks or animal target policy, or successful
+native home routes in every biome. The bounded JavaScript recovery remains
+necessary for unresolved or exceptional return paths.
+
+## Next integration gates
+
+A first continuous Manglares/712 `good` run with the opt-in native intentions,
+shared spatial advice and expanding paid-wall policy completed all 14 requested
+nights on source `ff4bc4db` and WASM SHA-256
+`ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`.
+The unabridged report is `manglares14-intent-expanding.json.gz`; it records the
+exact parameters, source hashes, daily states, raid receipts and timings. All
+14 raids were verified with no observer issues. All 203 native worker-home
+requests found routes without a JavaScript fallback. At the day-15 dawn the
+farm had 80 living crops, 573 coins and one operational center; this is a
+14-night technical completion, not evidence of 100-night balance. The run
+took 388.67 seconds, including 307.87 seconds in `Game.tick` and 52.67
+seconds in bot decisions. The day-13 raid destroyed 63 crops without a
+technical stop. Native animal crop planning still reported 751 blocked and
+71 occupied proposals, while the transitional raid selector recorded 452
+unsupported and 751 blocked legacy fallbacks. Therefore this run supports
+multi-biome stability of the opt-in path, but does not establish complete
+native ownership of animal decisions or a sustained speedup over a matched
+control. There was no A/B control run for Manglares in this experiment.
+
+A subsequent matched-control request has now completed the same 14 nights with
+the same source, WASM, seed, biome, strategy, spatial advice and expanding
+defense policy, but without native intentions. Its full original report is
+`manglares14-control-expanding.json.gz`. The control took 304.61 seconds
+(235.68 seconds `Game.tick`, 44.05 seconds bot decisions), versus 388.67
+seconds (307.87 and 52.67) for the first native-intent run. Both raid
+observers verified 14 incursions. Their serialized states first differed on
+day one; the control ended with 115 living crops and 759 coins, while native
+intent ended with 80 crops and 573 coins. These are **different physical
+campaigns**, so their timing delta is not an isolated planner benchmark.
+
+The first divergence exposed an actual integration defect, not merely a
+different route. The paired one-night snapshots and full original reports
+are retained in `manglares1-shield-diagnosis.zip`. Both variants cast a
+20-second Shield at the same crop when the first warthog approached. On the
+native path, adding the shield invalidated the pinned route to the crop.
+`updateRaid` returned early on `attackRoutePending` before it could switch
+the animal to the valid shield-border approach. The animal stood still until
+the shield expired, then destroyed two crops at elapsed seconds 432 and 437.
+The control used the shield border and spent both hits against it at seconds
+409 and 414. The raid controller now checks for a changed shield approach
+before parking a pending route. A one-night Manglares regression verifies
+that the native animal attacks the active shield and destroys no crops; the
+other native raid and shield suites pass. A new sustained native campaign is
+recorded in `manglares14-intent-shield-fix.json.gz`. It completed all 14
+nights, with 14 verified raids, zero observer issues and all 271 worker-home
+routes found natively. Its first five raids spent all their hits on the
+active shield (2, 3, 4, 4 and 5 contacts) and destroyed no crops, removing
+the reproduced premature-expiry defect. At day 15 it had 120 living crops,
+812 coins and one operational center. This is comparable to, but not
+identical with, the control's 115 crops and 759 coins. The fixed run took
+402.52 seconds (300.60 seconds `Game.tick`, 75.57 seconds bot decisions),
+while the control took 304.61 seconds (235.68 and 44.05). The campaigns
+still diverge in their task assignments, farms and later raids, so the
+timing difference cannot be assigned wholly to the native planner; it is
+also **not evidence of a sustained speed improvement**. Exact daily hashes,
+timings, raid receipts, parameters and source-file hashes are in the three
+retained reports. The fixed run used the unchanged WASM SHA-256 above and
+`raids.js` SHA-256
+`d0c9a0cf942cd7baef75053ba96a83a772c652e1c4a78d122765037ad432aced`.
+
+The same corrected native-intent configuration was then requested for **30
+continuous Manglares/712 nights** on source `37828632`, with the same WASM and
+simulation-file hashes. It completed all 30 nights without a technical stop
+or game defeat. The first 14 daily serialized-state hashes match the
+preceding 14-night corrected run exactly. All 30 raids were verified with no
+observer issue or lost coverage; all 563 native worker-home requests found
+routes, with zero JavaScript fallback. The day-31 dawn had one operational
+center, 17 living crops and 513 coins. The severe late agricultural losses
+are real game outcomes, not synthetic stops or proof of acceptable balance.
+The run took 1,277.56 seconds, including 1,088.43 seconds in `Game.tick` and
+116.09 seconds in bot decisions. `Game.tick` reached 98.16 seconds on day 20
+and 112.32 seconds on day 23, then dropped below 47 seconds on days 24–30;
+this is not a monotonic slowdown, but those spikes require targeted profiling
+before claiming sustained performance is satisfactory. The complete daily
+metrics, raid receipts, source hashes and negative observations are retained
+in `manglares30-intent-shield-fix.json.gz`. This one seed and biome does not
+establish 60/100-night stability or physical correctness in every scenario.
+
+The JS/native task handoff now rejects two additional stale targets at the
+last pre-commit boundary: a crate marked delivered and a structure already
+fully repaired. A frozen Desert fixture produces valid native proposals,
+changes each target without publishing an event, and verifies that neither
+the JS task nor worker nor a native route acquires a lease. The delivered-crate
+case fails against the prior guard and passes with the new one. All 15 focused
+native-intent bridge tests and the web build pass. This protects an exceptional
+stale-proposal boundary; it does not by itself complete the atomic handoff
+across every worker action.
+The same fixture also mutates and synchronizes a confirmed wall after a valid
+native proposal. The native graph revision rejects the entire stale batch;
+neither side acquires a worker/task lease. This covers a real topology change
+between planning and commit, without weakening the physical route check.
+
+1. Confirmed task and worker changes already reach the opt-in planner through simulation observers, and unchanged movement ticks do not request another task plan. Complete the atomic native-proposal/JavaScript-reservation handoff and differential checks for the remaining worker policy tie-breaks; retire the transitional JavaScript decisions only after those checks pass.
+2. Track sector/portal dependencies so a local topology change invalidates only routes and tactical decisions that can be affected. Defer changes to attacks whose damage frame is already committed.
+3. Move animal target, reservation and retreat planning to the same native authority with differential policy tests; retire the replaced JavaScript selector.
+4. Verify save/load, speculative previews, sector residency, prolonged campaign determinism and physical validity. Benchmark planning calls per actor/minute, navigation time and `Game.tick` before declaring the polling removed.
+
+An HP-only `StructureHit` now updates the native damage index without waking
+route reconciliation. The event bridge compares native intention-change counts
+before and after applying the damage: a hit that crosses into the collapsing
+state still wakes the consumer and releases an uncommitted wall attack. Focused
+tests cover both boundaries and the one-night shared-index integration test
+passes. This removes a redundant event response; no campaign-wide speedup is
+claimed from this isolated change.
+
+The opt-in native wall selector has a paired seven-night Manglares/712 check
+on source `c5a21ff5` and WASM SHA-256
+`d757c2197f98fded1cb42b7759154f1bd95a532504da9539c2e8ade17a9f47b6`.
+The two runs use the same strategy, spatial advice, expanding defense policy
+and input hashes; only `nativeWallPlans` differs. Their day-1 through day-5
+serialized hashes match. On days 6–7, the native-wall variant obtained 19
+native wall proposals from 19 blocked crop proposals and made no blocked
+legacy fallback. The other variant made 68 blocked fallbacks to JavaScript.
+Both completed seven nights with verified raid evidence and no observer issue.
+The native-wall run ended with 128 live crops and 708 coins; the comparison
+ended with 131 crops and 663 coins. One extra crop was destroyed in the
+native-wall run on day 6. Total times were 128.44 and 127.71 seconds, but
+the campaigns diverged on day 6, so this does not isolate speed. The complete
+reports are `manglares7-native-wall-recheck.json.gz` and
+`manglares7-legacy-wall-recheck.json.gz`. A longer campaign and more biomes
+are still required before enabling native wall selection by default.
+
+The same native-wall candidate then completed **14 continuous Manglares/712
+nights** on the same WASM and game-policy files. All 14 raid observers were
+verified, with no loss of coverage or technical stop. The day-15 dawn had
+133 living crops, 726 coins and one operational center. The 14-night run took
+432.92 seconds; day-13 `Game.tick` reached 56.99 seconds, so sustained
+performance is not yet established. Of 377 blocked native crop proposals,
+228 native wall proposals found a route and 149 reported `occupied`. The
+transitional selector still made 149 blocked fallbacks. This identifies
+dynamic wall-site contention as the next integration boundary; returning
+`occupied` must not be treated as a permanently blocked enclosure, and the
+JavaScript fallback cannot yet be removed. The complete per-night hashes,
+finance, physical raid evidence and selector counters are retained in
+`manglares14-native-wall-recheck.json.gz`. There is no matched 14-night
+control on this exact source, so no campaign speed comparison is claimed.
+
+The frozen day-11 occupied-wall regression and the rejected, slower native
+alternative-site prototype are documented in `native-wall-occupied-fallback.md`.
+The existing fallback remains a correctness requirement until a native wall
+site planner passes both physical and sustained-campaign checks. A separate
+reservation regression verifies that destroying a crop after an attack
+animation begins releases its lease, preserves another animal's lease and
+records exactly one miss at the committed damage frame. The focused suite
+passes 14/14 and `test:playable` passes 192/192 locally. Reservation
+reconciliation has since moved to confirmed target and structure events,
+navigation revisions, new raids and save migration. Unchanged raid ticks no
+longer rebuild the lease map; a directed event test, 193 playable tests and
+12 native raid tests pass. Native animal target selection and the remaining
+legacy fallbacks are still separate acceptance gaps, so this does not claim
+complete replacement of the JavaScript planner.
+
+The crop-protection observer now follows surviving crop membership when the
+native group ID changes. A paid, physically closed ring with two adjacent
+crops reproduced a lost notification: destroying the lowest-ID crop and
+opening a wall breach in the same event batch changed the group's ID, so an
+ID-only comparison emitted nothing. The observer now compares the old and
+new groups through surviving crop IDs and reports the certified
+`protected` to `unprotected` transition once. The regression failed before
+the fix and passed afterward; the native suite passed 74/74, playable tests
+196/196, and the web build passed. This fixes event delivery, not the
+remaining periodic decisions of the defense policy.
+
+The same observer also reports a newly planted, physically unprotected crop
+group once, with `previous: null`. Crop additions now request a native
+protection snapshot even when no older group was protected; ordinary crop
+removals still avoid that query in that case. The experimental defense policy
+wakes on this new-group event as well as on a certified breach. Its broader
+periodic expansion logic remains to be replaced, so this is a targeted
+event-delivery improvement rather than a fully event-driven economic policy.
+
+The experimental native-intent campaign now runs its expanding defense
+policy with an event gate. It evaluates the existing paid repair/build
+decisions initially and then only after a confirmed income, crop, wall,
+structure-damage or repair event, or a native crop-protection notification.
+Elapsed simulation time alone does not request another perimeter preview.
+The legacy comparison mode retains its 30-second interval. This change
+also quotes the full incremental wall stroke before spending: an
+unaffordable enclosure remains a savings target, and smaller deliveries do
+not repeatedly quote the same geometry. It does not yet replace the
+JavaScript rectangle with a native certified enclosure plan; physical
+protection must still be verified separately from purchasing a stroke.
+
+Profiling a three-night Sabana/712 run exposed a cost in this transitional
+policy: three full `quoteWallChain` calls consumed about 14.5 seconds of
+defense decision time. The policy now uses the price of the missing stroke
+slots as a conservative savings threshold and defers the full geometry and
+door quote until it can afford that threshold. Obstacles may make the final
+quote cheaper, so this can save more than strictly necessary; it avoids
+repeating an expensive speculative quote on every small income event.
+In the native-intent campaign, the event-driven defense target is included
+in the bot's cash reserve before it plants again. Otherwise the bot kept
+buying seeds with the same surplus and never accumulated enough for a
+complete stroke. This is a deliberate economic-policy change in the
+experimental virtual player; prices and game rules remain unchanged.
+The first five-night probe revealed a degenerate interaction: reserving the
+entire stroke before replacing harvested plants left zero living crops on
+day 2 while wages continued. The runner now gives replacement planting up
+to the current staff's ordinary crop workload priority over discretionary
+wall savings. Above that workload, it still reserves the defensive target.
+This is a spending priority, not a plant-count cap; further expansion remains
+legal whenever the other reserves are funded.
+The paired runs, failed intermediate variants and seven-night follow-up are
+recorded in `event-driven-defense-qa.md` with their raw JSON reports.
+
+A later 14-night Sabana/712 comparison found that the experimental defense
+policy quoted the same affordable wall stroke twice. Reusing the first
+prepared physical quote preserved all 14 daily state hashes and reduced
+accumulated bot decision time from 60.61 to 44.55 seconds in the paired runs.
+The exact configuration, reports, per-night data and limitations are in
+[`single-quote-campaign.md`](single-quote-campaign.md). This policy-only
+change remains on the native-intent branch; it does not advance PR #54 or
+enable the opt-in planner by default.
+
+A subsequent 14-night Manglares/712 run on the same code completed with all
+raids verified and no technical stop, but exposed a 147.53-second cost for
+two necessary wall quotes on day ten and a separate 108-second `Game.tick`
+day twelve. The full report and the limits of this single-run evidence are
+in [`manglares14-event-defense.md`](manglares14-event-defense.md). These
+costs are unresolved acceptance gaps for the opt-in planner.
+
+The current-source CPU reproduction matched the first ten Manglares daily
+state hashes and located 96.3% of the sampled day-ten wall-quote stack
+under restoration of suppressed natural props. The code currently refreshes
+all resident chunks on each such restore. See
+[`manglares-day10-quote-profile.md`](manglares-day10-quote-profile.md) for
+the raw profile, attribution and differential checks required before a
+localized C++ update can replace that global rebuild.
+
+The [reservation reconciliation regression](reservation-reconciliation-regression.md)
+records a legacy direct-mutation failure found while auditing the stacked
+branches, its targeted fix, and the remaining full-suite triage boundary.
+The [full-suite baseline comparison](full-suite-baseline-triage.md) checks
+the other 31 failure names and their causes against current `main`.
+
+The [full-roster crop service-site differential](unknown-crop-service-sites.md)
+records a real Gran Cañón task assignment missed when one inconclusive
+interaction point suppressed the remaining bounded alternatives. It includes
+the failing old-WASM replay, passing corrected-WASM replay and ABBA timings.
+
+The [deferred wall and worker-flight integration](deferred-wall-and-flight-integration.md)
+records a matched ten-night wall-quote comparison, the frozen fractional
+flight-route defect, its physical recovery test and a completed fourteen-night
+Manglares replay.

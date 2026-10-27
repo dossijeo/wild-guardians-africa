@@ -1,0 +1,619 @@
+{
+  "message": "Quality cycle exceeded 120s host watchdog",
+  "diagnostic": null,
+  "qualityStatuses": [
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 173,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 498,
+        "workMs": 400.05500054359436,
+        "coordinationMs": 59.580000042915344,
+        "maxUnitMs": 10.245000004768372,
+        "overruns": 100,
+        "deadlineLoans": 96,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.2699999999968,
+        "p95": 66.55999999999767,
+        "p99": 99.875,
+        "cpu95": 11.914999961853027,
+        "jitter": 33.29000000000087,
+        "budgetMs": 0.1790500068664552,
+        "pending": 2,
+        "oldestMs": 879.464999973774
+      },
+      "jobs": [
+        {
+          "age": 879.5149999856949,
+          "cost": 8.5450000166893,
+          "deadline": 52349.33499997854
+        },
+        {
+          "age": 875.9800000190735,
+          "cost": 8.5450000166893,
+          "deadline": 52352.89499998093
+        }
+      ],
+      "pauses": [
+        "tutorial-action"
+      ],
+      "stream": {
+        "created": 26,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 12,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 69.8499995470047,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 16.689999999995052,
+        "p95": 33.37000000000262,
+        "p99": 33.45999999999913,
+        "cpu95": 7.2200000286102295,
+        "jitter": 16.680000000007567,
+        "budgetMs": 3.5770949706451542,
+        "pending": 2,
+        "oldestMs": 9506.969999969006
+      },
+      "jobs": [
+        {
+          "age": 9507.004999995232,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 8574.855000019073,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [
+        "tutorial-action"
+      ],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 78.69999819993973,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 16.745000000009895,
+        "p95": 33.395000000004075,
+        "p99": 33.504999999990105,
+        "cpu95": 7.434999942779541,
+        "jitter": 16.64999999999418,
+        "budgetMs": 3.5386427488261605,
+        "pending": 2,
+        "oldestMs": 19509.834999978542
+      },
+      "jobs": [
+        {
+          "age": 19509.8599999547,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 18577.695000052452,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [
+        "tutorial-action"
+      ],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 87.14499717950821,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.10500000001048,
+        "p95": 33.54999999998836,
+        "p99": 66.51000000000931,
+        "cpu95": 7.0299999713897705,
+        "jitter": 0.4449999999778811,
+        "budgetMs": 1.8912023197929344,
+        "pending": 2,
+        "oldestMs": 29517.53499996662
+      },
+      "jobs": [
+        {
+          "age": 29517.555000007153,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 28585.3900000453,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 94.1249971985817,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.19999999999709,
+        "p95": 33.38000000000466,
+        "p99": 33.520000000004075,
+        "cpu95": 6.705000042915344,
+        "jitter": 0.180000000007567,
+        "budgetMs": 3.9079937629241472,
+        "pending": 2,
+        "oldestMs": 39523.25999999046
+      },
+      "jobs": [
+        {
+          "age": 39523.27999997139,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 38591.11500000954,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 101.19999814033508,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.095000000001164,
+        "p95": 33.38500000000931,
+        "p99": 33.5399999999936,
+        "cpu95": 6.39000004529953,
+        "jitter": 0.2900000000081491,
+        "budgetMs": 3.9928528849898193,
+        "pending": 2,
+        "oldestMs": 49536.94499999285
+      },
+      "jobs": [
+        {
+          "age": 49536.964999973774,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 48604.80500000715,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 108.18499833345413,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.195000000006985,
+        "p95": 33.40999999998894,
+        "p99": 49.82499999999709,
+        "cpu95": 7.245000004768372,
+        "jitter": 0.21499999998195563,
+        "budgetMs": 2.4772258495258472,
+        "pending": 2,
+        "oldestMs": 59540.75
+      },
+      "jobs": [
+        {
+          "age": 59540.78999996185,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 58608.63500005007,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 115.34499883651733,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.14999999999418,
+        "p95": 33.46499999999651,
+        "p99": 33.57499999999709,
+        "cpu95": 7.310000002384186,
+        "jitter": 0.3150000000023283,
+        "budgetMs": 3.3330878109943365,
+        "pending": 2,
+        "oldestMs": 69549.99500000477
+      },
+      "jobs": [
+        {
+          "age": 69550.06000000238,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 68617.91000002623,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 122.3999987244606,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.254999999990105,
+        "p95": 49.98999999999069,
+        "p99": 50.60000000000582,
+        "cpu95": 7.914999961853027,
+        "jitter": 16.735000000000582,
+        "budgetMs": 2.192838833004076,
+        "pending": 2,
+        "oldestMs": 79566.219999969
+      },
+      "jobs": [
+        {
+          "age": 79566.24500000477,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 78634.08000004292,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 128.95499855279922,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.17499999998836,
+        "p95": 49.845000000001164,
+        "p99": 50.060000000026776,
+        "cpu95": 7.379999995231628,
+        "jitter": 16.670000000012806,
+        "budgetMs": 2.338104494327879,
+        "pending": 2,
+        "oldestMs": 89574.69999998808
+      },
+      "jobs": [
+        {
+          "age": 89574.74500000477,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 88642.60000002384,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "phase": {
+        "quality": "media",
+        "step": "activate"
+      },
+      "scheduler": {
+        "completed": 177,
+        "cancelled": 2,
+        "failed": 0,
+        "units": 551,
+        "workMs": 459.50000059604645,
+        "coordinationMs": 135.9949996471405,
+        "maxUnitMs": 14.009999990463257,
+        "overruns": 115,
+        "deadlineLoans": 110,
+        "continuationMs": 24.234999775886536,
+        "continuationTurns": 1047,
+        "median": 33.14000000001397,
+        "p95": 33.375,
+        "p99": 33.50500000000466,
+        "cpu95": 7.25,
+        "jitter": 0.23499999998603016,
+        "budgetMs": 3.689333267007729,
+        "pending": 2,
+        "oldestMs": 99579.11500000954
+      },
+      "jobs": [
+        {
+          "age": 99579.16499996185,
+          "cost": 14.004999995231628,
+          "deadline": 53735.50499999523
+        },
+        {
+          "age": 98647.04500001669,
+          "cost": 14.004999995231628,
+          "deadline": 54667.674999952316
+        }
+      ],
+      "pauses": [],
+      "stream": {
+        "created": 30,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 8,
+        "busy": true,
+        "preparing": 2,
+        "stale": 0,
+        "epoch": 0
+      }
+    }
+  ],
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

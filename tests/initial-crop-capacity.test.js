@@ -15,3 +15,18 @@ test('first real scene sync keeps an appropriately prepared dense batch instead 
  const world={state:s,cropModels:[],cropBatch:batch,controls:{target:new Vector3(10,0,20)},objects:new Map([['v',new Group()]]),scene:new Scene(),mixers:new Map(),nav:{field:{surface:()=>0}},pack:{profile:{bg:'#aaaaaa'}},renderer:{setClearColor(){}},destructionPass:{},sun:new DirectionalLight(),ambient:{},prepareUpcomingAnimalRigs(){}};
  WorldScene.prototype.sync.call(world,0);assert.equal(world.cropBatch,batch);assert.equal(batch.capacity,2048);assert.equal(updated.length,1257);assert.ok(updated.every(p=>p.alive&&Math.hypot(p.x-10,p.z-20)<140));
 });
+
+test('repeated scene sync does not inspect historical crops or delivered crates',async()=>{
+ const {WorldScene}=await import('../src/rendering/scene.js'),{Scene,Group,DirectionalLight,Vector3}=await import('three');
+ let cropReads=0,crateReads=0;
+ const plants=Array.from({length:20000},(_,i)=>({id:`old-plant-${i}`,get alive(){cropReads++;return false;}}));
+ const crates=Array.from({length:20000},(_,i)=>({id:`old-crate-${i}`,get delivered(){crateReads++;return true;}}));
+ plants.push({id:'live',x:10,z:20,alive:true});
+ const s={plants,crates,structures:[],workers:[],spells:[],raid:null,elapsed:0,time:0,villages:[{id:'v',x:10,z:20}]};
+ const batch={capacity:128,update(rows){assert.deepEqual(rows,[plants.at(-1)]);}};
+ const world={state:s,cropModels:[],cropBatch:batch,controls:{target:new Vector3(10,0,20)},objects:new Map([['v',new Group()]]),scene:new Scene(),mixers:new Map(),nav:{field:{surface:()=>0}},pack:{profile:{bg:'#aaaaaa'}},renderer:{setClearColor(){}},destructionPass:{},sun:new DirectionalLight(),ambient:{},prepareUpcomingAnimalRigs(){}};
+ WorldScene.prototype.sync.call(world,0);assert.equal(cropReads,20000);assert.equal(crateReads,20000);
+ cropReads=0;crateReads=0;
+ for(let i=0;i<3;i++)WorldScene.prototype.sync.call(world,0);
+ assert.equal(cropReads,0);assert.equal(crateReads,0);
+});

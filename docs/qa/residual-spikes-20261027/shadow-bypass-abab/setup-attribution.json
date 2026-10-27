@@ -1,0 +1,93 @@
+{
+  "scope": "Additional attribution only. Original complete-run results remain authoritative and unfiltered. Setup includes an abrupt QA camera relocation before the first sweep. Post-start includes both sweeps and intervening simulation, not exclusively camera motion.",
+  "rows": [
+    {
+      "run": "1-baseline",
+      "cutoff": 97507.33999991417,
+      "all": {
+        "count": 6288,
+        "p95": 15.15499997138977,
+        "p99": 21.110000014305115,
+        "max": 55.81000006198883
+      },
+      "setupBeforeFirstSweep": {
+        "count": 56,
+        "p95": 25.584999918937683,
+        "p99": 55.81000006198883,
+        "max": 55.81000006198883
+      },
+      "fromFirstSweep": {
+        "count": 6232,
+        "p95": 15.09500002861023,
+        "p99": 20.539999961853027,
+        "max": 32.94500005245209
+      }
+    },
+    {
+      "run": "2-candidate",
+      "cutoff": 76720.08000004292,
+      "all": {
+        "count": 6271,
+        "p95": 14.27999997138977,
+        "p99": 21.355000019073486,
+        "max": 76.6949999332428
+      },
+      "setupBeforeFirstSweep": {
+        "count": 47,
+        "p95": 27.919999957084656,
+        "p99": 76.6949999332428,
+        "max": 76.6949999332428
+      },
+      "fromFirstSweep": {
+        "count": 6224,
+        "p95": 14.25,
+        "p99": 21.204999923706055,
+        "max": 35.05499994754791
+      }
+    },
+    {
+      "run": "3-baseline",
+      "cutoff": 86652.5,
+      "all": {
+        "count": 6257,
+        "p95": 15.215000033378601,
+        "p99": 20.875,
+        "max": 73.95999991893768
+      },
+      "setupBeforeFirstSweep": {
+        "count": 52,
+        "p95": 17.634999990463257,
+        "p99": 73.95999991893768,
+        "max": 73.95999991893768
+      },
+      "fromFirstSweep": {
+        "count": 6205,
+        "p95": 15.175000071525574,
+        "p99": 20.83999991416931,
+        "max": 31.519999980926514
+      }
+    },
+    {
+      "run": "4-candidate",
+      "cutoff": 76595.57500004768,
+      "all": {
+        "count": 6283,
+        "p95": 12.975000023841858,
+        "p99": 18.44000005722046,
+        "max": 56.74000000953674
+      },
+      "setupBeforeFirstSweep": {
+        "count": 54,
+        "p95": 21.12000000476837,
+        "p99": 56.74000000953674,
+        "max": 56.74000000953674
+      },
+      "fromFirstSweep": {
+        "count": 6229,
+        "p95": 12.90499997138977,
+        "p99": 17.9099999666214,
+        "max": 30.50499999523163
+      }
+    }
+  ]
+}

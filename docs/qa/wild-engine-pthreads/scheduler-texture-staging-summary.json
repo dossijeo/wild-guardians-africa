@@ -1,0 +1,704 @@
+{
+  "scope": "Private texture transfer feasibility, not production A/B or GPU timings. Same real renderer/context, RGBA8, real lion images, no visible replacements. Cold/warm drift, diagnostic readbacks and retained validation arrays influence observations.",
+  "runs": [
+    {
+      "file": "scheduler-texture-stripes-probe.json",
+      "textures": [
+        {
+          "slot": "map",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.3149999976158142,
+          "cloneElapsedMs": 0.375,
+          "workerConversionMs": 29.349999964237213,
+          "conversionElapsedMs": 55.87999999523163,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 104.77499997615814
+              },
+              "sumInvocationMs": 105.2849999666214,
+              "preparationElapsedMs": 155.1799999475479,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.25
+              },
+              "sumInvocationMs": 3.6100001335144043,
+              "preparationElapsedMs": 1449.5149999856949,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 18.694999992847443
+              },
+              "sumInvocationMs": 18.759999990463257,
+              "preparationElapsedMs": 24.444999992847443,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.14000004529953003
+              },
+              "sumInvocationMs": 3.1000000834465027,
+              "preparationElapsedMs": 1738.8349999785423,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "slot": "normalMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.04000002145767212,
+          "cloneElapsedMs": 0.05500000715255737,
+          "workerConversionMs": 21.6700000166893,
+          "conversionElapsedMs": 27.944999992847443,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 115.93000000715256
+              },
+              "sumInvocationMs": 116.0450000166893,
+              "preparationElapsedMs": 134.1599999666214,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.15500003099441528
+              },
+              "sumInvocationMs": 3.1649999618530273,
+              "preparationElapsedMs": 2568.0550000071526,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 18.67500001192093
+              },
+              "sumInvocationMs": 18.714999973773956,
+              "preparationElapsedMs": 31.2849999666214,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.12000000476837158
+              },
+              "sumInvocationMs": 2.9799997806549072,
+              "preparationElapsedMs": 1904.5,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "slot": "roughnessMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.04499995708465576,
+          "cloneElapsedMs": 0.06499999761581421,
+          "workerConversionMs": 17.685000002384186,
+          "conversionElapsedMs": 25.509999990463257,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 22.115000009536743
+              },
+              "sumInvocationMs": 22.195000052452087,
+              "preparationElapsedMs": 38.97500002384186,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.15000003576278687
+              },
+              "sumInvocationMs": 3.0249999165534973,
+              "preparationElapsedMs": 1619.1100000143051,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 19.069999992847443
+              },
+              "sumInvocationMs": 19.10500007867813,
+              "preparationElapsedMs": 31.955000042915344,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.16500002145767212
+              },
+              "sumInvocationMs": 3.0399999618530273,
+              "preparationElapsedMs": 1642.4950000047684,
+              "readbackMs": null,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "scheduler-texture-pixels-control.json",
+      "textures": [
+        {
+          "slot": "map",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.2900000214576721,
+          "cloneElapsedMs": 0.3100000023841858,
+          "workerConversionMs": 83.39500004053116,
+          "conversionElapsedMs": 117.81000000238419,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 174.25499999523163
+              },
+              "sumInvocationMs": 174.64999997615814,
+              "preparationElapsedMs": 286.00999999046326,
+              "readbackMs": 424.5450000166893,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 11.334999978542328
+              },
+              "sumInvocationMs": 11.479999959468842,
+              "preparationElapsedMs": 28.605000019073486,
+              "readbackMs": 315.14500004053116,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.15500003099441528
+              },
+              "sumInvocationMs": 3.315000057220459,
+              "preparationElapsedMs": 2565.814999997616,
+              "readbackMs": 603.6350000500679,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 15.119999945163727
+              },
+              "sumInvocationMs": 15.164999961853027,
+              "preparationElapsedMs": 31.4650000333786,
+              "readbackMs": 363.8600000143051,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 9.915000021457672
+              },
+              "sumInvocationMs": 9.964999973773956,
+              "preparationElapsedMs": 27.7049999833107,
+              "readbackMs": 383.46499997377396,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.19499999284744263
+              },
+              "sumInvocationMs": 3.284999966621399,
+              "preparationElapsedMs": 2938.824999988079,
+              "readbackMs": 620.4399999976158,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "slot": "normalMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.030000030994415283,
+          "cloneElapsedMs": 0.04500001668930054,
+          "workerConversionMs": 14.875,
+          "conversionElapsedMs": 19.814999997615814,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 15.014999985694885
+              },
+              "sumInvocationMs": 15.105000078678131,
+              "preparationElapsedMs": 31.01500004529953,
+              "readbackMs": 432.7099999785423,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 9.6700000166893
+              },
+              "sumInvocationMs": 9.724999964237213,
+              "preparationElapsedMs": 22.149999976158142,
+              "readbackMs": 368.80000001192093,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.12000000476837158
+              },
+              "sumInvocationMs": 2.9200000166893005,
+              "preparationElapsedMs": 2341.185000002384,
+              "readbackMs": 566.2900000214577,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 20.769999980926514
+              },
+              "sumInvocationMs": 20.83999991416931,
+              "preparationElapsedMs": 30.19999998807907,
+              "readbackMs": 320.3949999809265,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 13.875
+              },
+              "sumInvocationMs": 13.955000042915344,
+              "preparationElapsedMs": 24.875,
+              "readbackMs": 353.92500001192093,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.12000000476837158
+              },
+              "sumInvocationMs": 2.880000114440918,
+              "preparationElapsedMs": 2793.589999973774,
+              "readbackMs": 649.3999999761581,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "slot": "roughnessMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.050000011920928955,
+          "cloneElapsedMs": 0.07499998807907104,
+          "workerConversionMs": 14.77999997138977,
+          "conversionElapsedMs": 19.430000007152557,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 13.905000030994415
+              },
+              "sumInvocationMs": 14.000000059604645,
+              "preparationElapsedMs": 22.689999997615814,
+              "readbackMs": 422.24000000953674,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 14.490000009536743
+              },
+              "sumInvocationMs": 14.620000004768372,
+              "preparationElapsedMs": 21.634999990463257,
+              "readbackMs": 357.08999997377396,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.27000004053115845
+              },
+              "sumInvocationMs": 3.2900001406669617,
+              "preparationElapsedMs": 2899.449999988079,
+              "readbackMs": 622.9900000095367,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 20.18499994277954
+              },
+              "sumInvocationMs": 20.254999935626984,
+              "preparationElapsedMs": 35.8299999833107,
+              "readbackMs": 418.19999998807907,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 13.8299999833107
+              },
+              "sumInvocationMs": 13.894999980926514,
+              "preparationElapsedMs": 20.55000001192093,
+              "readbackMs": 386.06999999284744,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.20000004768371582
+              },
+              "sumInvocationMs": 3.0900001525878906,
+              "preparationElapsedMs": 2907.75,
+              "readbackMs": 605.1449999809265,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "scheduler-texture-admitted-stripes.json",
+      "textures": [
+        {
+          "slot": "map",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.2749999761581421,
+          "cloneElapsedMs": 0.28999996185302734,
+          "workerConversionMs": 31.22000002861023,
+          "conversionElapsedMs": 47.485000014305115,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 178.2849999666214
+              },
+              "sumInvocationMs": 178.8049999475479,
+              "preparationElapsedMs": 246.5700000524521,
+              "readbackMs": 475.7649999856949,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 12.340000033378601
+              },
+              "sumInvocationMs": 12.40499997138977,
+              "preparationElapsedMs": 29.0450000166893,
+              "readbackMs": 298.625,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "scheduled-stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 18.445000052452087
+              },
+              "sumInvocationMs": 20.28000020980835,
+              "preparationElapsedMs": 2299.314999997616,
+              "readbackMs": 488.52499997615814,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 21.524999976158142
+              },
+              "sumInvocationMs": 21.584999918937683,
+              "preparationElapsedMs": 40.839999973773956,
+              "readbackMs": 348.72500002384186,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 9.75
+              },
+              "sumInvocationMs": 9.790000021457672,
+              "preparationElapsedMs": 19.44999998807907,
+              "readbackMs": 338.67500001192093,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "scheduled-stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.09500002861022949
+              },
+              "sumInvocationMs": 2.1250000596046448,
+              "preparationElapsedMs": 268.375,
+              "readbackMs": 489.1500000357628,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "slot": "normalMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.039999961853027344,
+          "cloneElapsedMs": 0.05500000715255737,
+          "workerConversionMs": 22.939999997615814,
+          "conversionElapsedMs": 34.77999997138977,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 21.4650000333786
+              },
+              "sumInvocationMs": 21.555000007152557,
+              "preparationElapsedMs": 37.25499999523163,
+              "readbackMs": 639.6799999475479,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 12.509999990463257
+              },
+              "sumInvocationMs": 12.629999995231628,
+              "preparationElapsedMs": 25.90499997138977,
+              "readbackMs": 401.3899999856949,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "scheduled-stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.19999998807907104
+              },
+              "sumInvocationMs": 2.6850000619888306,
+              "preparationElapsedMs": 377.3149999976158,
+              "readbackMs": 709.9200000166893,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 18.689999997615814
+              },
+              "sumInvocationMs": 18.75,
+              "preparationElapsedMs": 35.05000001192093,
+              "readbackMs": 368.9850000143051,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 9.465000033378601
+              },
+              "sumInvocationMs": 9.540000021457672,
+              "preparationElapsedMs": 20.00499999523163,
+              "readbackMs": 395.88499999046326,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "scheduled-stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.09000003337860107
+              },
+              "sumInvocationMs": 1.980000078678131,
+              "preparationElapsedMs": 47.52499997615814,
+              "readbackMs": 502.6950000524521,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "slot": "roughnessMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.039999961853027344,
+          "cloneElapsedMs": 0.0549999475479126,
+          "workerConversionMs": 15.824999988079071,
+          "conversionElapsedMs": 23.2150000333786,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 16.944999992847443
+              },
+              "sumInvocationMs": 17.019999980926514,
+              "preparationElapsedMs": 32.764999985694885,
+              "readbackMs": 511.11500000953674,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 12.799999952316284
+              },
+              "sumInvocationMs": 12.864999890327454,
+              "preparationElapsedMs": 25.944999992847443,
+              "readbackMs": 412.9850000143051,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "scheduled-stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.09500002861022949
+              },
+              "sumInvocationMs": 2.3100001215934753,
+              "preparationElapsedMs": 46.5,
+              "readbackMs": 649.0349999666214,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "bitmap",
+              "maxInvocation": {
+                "label": "upload",
+                "ms": 20.259999990463257
+              },
+              "sumInvocationMs": 20.344999969005585,
+              "preparationElapsedMs": 29.219999969005585,
+              "readbackMs": 340.3799999952316,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "pixels",
+              "maxInvocation": {
+                "label": "upload-pixels",
+                "ms": 11.034999966621399
+              },
+              "sumInvocationMs": 11.10999995470047,
+              "preparationElapsedMs": 18.67500001192093,
+              "readbackMs": 341.99000000953674,
+              "changedBytesAllMips": 0,
+              "errors": []
+            },
+            {
+              "mode": "scheduled-stripes",
+              "maxInvocation": {
+                "label": "stripe",
+                "ms": 0.09000003337860107
+              },
+              "sumInvocationMs": 1.904999852180481,
+              "preparationElapsedMs": 41.2049999833107,
+              "readbackMs": 558.7400000095367,
+              "changedBytesAllMips": 0,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

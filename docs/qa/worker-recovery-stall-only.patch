@@ -1,0 +1,12 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -913,7 +913,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
+     z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
+   if(((w.dynamicStallSeconds??0)>=3||
+-    s.elapsed-w.mobileProgressAt>=12)&&
++    !worker&&s.elapsed-w.mobileProgressAt>=12)&&
+     (w.mobileRecoveryAttempts??0)<2&&probe){
+     const blockers=actorBlockers(s,w,worker);
+     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):

@@ -18,14 +18,14 @@ function farm(){
 test('Growth and Multiply select one living crop each and retain separate VFX in the same plot',()=>{
   const s=farm(),[a,b]=s.plants;
   waterPlant(a);waterPlant(b);
-  Game.cast(s,'grow','growth',a.x+.2,a.z,nav);
+  Game.cast(s,'grow','growth',a.x,a.z,nav,{targetId:a.id});
   Game.cast(s,'multiply','multiply',b.x,b.z,nav);
-  assert.deepEqual(s.spells.map(spell=>spell.targetId),[a.id,b.id]);
+  assert.deepEqual(s.spells.map(spell=>spell.targetPlantId),[a.id,b.id]);
   assert.deepEqual(s.spells.map(spell=>[spell.x,spell.z]),[[a.x,a.z],[b.x,b.z]]);
   assert.equal(a.multiplyHarvest,undefined);assert.equal(b.multiplyHarvest,true);
   assert.equal(agricultureVfxPlans(s).length,2);
   Game.tick(s,1,nav);
-  assert.ok(Math.abs(a.growth-1.5)<1e-8);assert.ok(Math.abs(b.growth-1)<1e-8);
+  assert.ok(Math.abs(a.growth-19/13)<1e-8);assert.ok(Math.abs(b.growth-1)<1e-8);
   assert.equal(Game.spellAt(s,'growth',b),undefined);
   assert.equal(Game.spellAt(s,'multiply',a),undefined);
 });
@@ -37,7 +37,7 @@ test('A dead crop and its replacement never inherit a single-target spell after 
   const replacement=s.plants.at(-1);waterPlant(replacement);
   assert.equal(Game.spellAt(s,'growth',replacement),undefined);
   s.cooldowns.growth=0;const before=serialize(s);
-  assert.throws(()=>Game.cast(s,'stale','growth',a.x,a.z,nav,{targetId:a.id}),/ya no está disponible/);
+  assert.throws(()=>Game.cast(s,'stale','growth',a.x,a.z,nav,{targetId:a.id}),/Selecciona una planta/);
   assert.equal(serialize(s),before);
   Game.tick(s,1,nav);assert.ok(Math.abs(replacement.growth-1)<1e-8);
 });
@@ -46,8 +46,8 @@ test('Empty ground cannot receive agricultural magic and rejected commands leave
   const s=farm(),before=serialize(s);
   for(const kind of ['growth','multiply']){
     const draft=Game.previewSpell(s,kind,40,40,nav);
-    assert.equal(draft.valid,false);assert.match(draft.reason,/cultivo vivo/);
-    assert.throws(()=>Game.cast(s,`empty-${kind}`,kind,40,40,nav),/cultivo vivo/);
+    assert.equal(draft.valid,false);assert.match(draft.reason,/Selecciona una planta/);
+    assert.throws(()=>Game.cast(s,`empty-${kind}`,kind,40,40,nav),/Selecciona una planta/);
   }
   assert.equal(serialize(s),before);
 });

@@ -1,0 +1,12 @@
+import sharp from 'sharp';
+import {writeFileSync,mkdirSync,readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {SPRITE_SLOTS} from '../assets-source/microevents/lowpoly-models.js';
+const source='assets-source/microevents/lowpoly-atlas.png',metadata=await sharp(source).metadata();
+if(metadata.width!==512||metadata.height!==512||!metadata.hasAlpha)throw Error('Render the 512×512 transparent atlas using tools/microevent-sprite-authoring.html first');
+mkdirSync('public/content/microevents',{recursive:true});
+await sharp(source).webp({lossless:true}).toFile('public/content/microevents/atlas.webp');
+const fps={bird:9,butterfly:7,locust:12,flame:11,lightning:10},manifest={width:512,height:512,cell:64,source:{kind:'original-low-poly-3d-render',file:source,sha256:createHash('sha256').update(readFileSync(source)).digest('hex')}};
+for(const [id,index,frames] of SPRITE_SLOTS)manifest[id]={x:index%8*64,y:Math.floor(index/8)*64,frames,fps:fps[id]??0};
+writeFileSync('public/content/microevents/atlas.json',JSON.stringify(manifest,null,2)+'\n');
+console.log('Compressed original low-poly 3D renders; no runtime authoring dependency.');

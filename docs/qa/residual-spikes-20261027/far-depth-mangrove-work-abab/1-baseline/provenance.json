@@ -1,0 +1,20 @@
+{
+  "commit": "621dac361cb64fe3c75ce5d176d3aa62a0284f97",
+  "harnessSha256": "9385d5debbc36b1fbc6e82b7c66ee4ec0bd7934ef5285c361caa7e7a80cc1f94",
+  "qualityCaseSha256": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a",
+  "runtimeSha256": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+  "conditions": {
+    "WG_THREAD_PORT": "5220",
+    "WG_THREAD_BIOME": "manglares",
+    "WG_THREAD_QUALITY": "media",
+    "WG_PRODUCTION_VISUALS": "1",
+    "WG_THREAD_ACTIVE": "1",
+    "WG_THREAD_DEFAULT_STREAMING": "1",
+    "WG_THREAD_QUALITY_CYCLE": "1",
+    "WG_THREAD_QUALITY_ACTIVE": "1",
+    "WG_THREAD_QUALITY_MENU_PROTOCOL": "1",
+    "WG_THREAD_QUALITY_EXECUTION": "1",
+    "WG_THREAD_REPORT": "docs/qa/residual-spikes-20261027/far-depth-mangrove-work-abab/1-baseline/report.json"
+  },
+  "scope": "Diagnostic with normal camera protection. Remove QA getError and extra render; no screenshot settling. Existing API calls timed without extra GL status queries. Main phase/GPU/LoAF attribution adds overhead; not AB acceptance."
+}

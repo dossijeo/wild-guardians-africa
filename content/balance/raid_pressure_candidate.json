@@ -1,5 +1,7 @@
 {
-  "version": 1,
+  "version": 3,
+  "population": {"base": 4, "span": 30, "pressurePower": 0.5, "introStartAtNight6": 8, "introRisePerNight": 2},
+  "hitPressureSteps": 4,
   "status": "pure-unintegrated-candidate",
   "pressure": {
     "dayWeight": 0.45,
@@ -46,7 +48,7 @@
     "peripheralWeight": 0.5
   },
   "q": {
-    "meanMultiplier": 1,
+    "meanMultiplier": 1.5,
     "unit": "reference agricultural HP points",
     "round": "floor half-point",
     "selection": "adjust composition before RNG; full native-range hit rolls",

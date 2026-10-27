@@ -1,0 +1,125 @@
+{
+  "status": "STRICT AUDIT FAILED: repeated profiles differ in resident texture counts. Timing summaries descriptive only; no final performance recommendation.",
+  "rows": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "gpuMean": 17.120779088888888,
+      "gpuP95": 19.776822,
+      "cpuMean": 6.084444444709354,
+      "cpuP95": 8,
+      "memory": {
+        "geometries": 152,
+        "textures": 95
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 64,
+      "triangles": 534500
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "gpuMean": 19.472044733333334,
+      "gpuP95": 24.488905,
+      "cpuMean": 5.383333330684238,
+      "cpuP95": 7.399999976158142,
+      "memory": {
+        "geometries": 152,
+        "textures": 95
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 64,
+      "triangles": 534500
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "gpuMean": 15.020581944444444,
+      "gpuP95": 16.910051,
+      "cpuMean": 4.671111112833023,
+      "cpuP95": 6.300000011920929,
+      "memory": {
+        "geometries": 124,
+        "textures": 93
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 60,
+      "triangles": 482801
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "gpuMean": 16.486768133333335,
+      "gpuP95": 18.374635,
+      "cpuMean": 4.336666664150026,
+      "cpuP95": 5.5,
+      "memory": {
+        "geometries": 124,
+        "textures": 93
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 60,
+      "triangles": 482801
+    },
+    {
+      "quality": "media",
+      "phase": "day",
+      "gpuMean": 15.577980511111111,
+      "gpuP95": 17.27828,
+      "cpuMean": 4.849999998675452,
+      "cpuP95": 6.200000047683716,
+      "memory": {
+        "geometries": 152,
+        "textures": 93
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 64,
+      "triangles": 534500
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "gpuMean": 18.176331233333332,
+      "gpuP95": 20.386978,
+      "cpuMean": 5.031111110581292,
+      "cpuP95": 6.300000011920929,
+      "memory": {
+        "geometries": 152,
+        "textures": 93
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 64,
+      "triangles": 534500
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "gpuMean": 13.71031318888889,
+      "gpuP95": 15.045312,
+      "cpuMean": 5.326666669050852,
+      "cpuP95": 6.600000023841858,
+      "memory": {
+        "geometries": 124,
+        "textures": 92
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 60,
+      "triangles": 482801
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "gpuMean": 16.610585277777776,
+      "gpuP95": 18.72578,
+      "cpuMean": 4.241111108991835,
+      "cpuP95": 5.5,
+      "memory": {
+        "geometries": 124,
+        "textures": 92
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "calls": 60,
+      "triangles": 482801
+    }
+  ]
+}

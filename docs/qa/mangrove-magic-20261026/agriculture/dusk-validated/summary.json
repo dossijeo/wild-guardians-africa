@@ -1,0 +1,192 @@
+{
+  "ok": true,
+  "errors": [],
+  "night": {
+    "time": 308.42882499998325,
+    "night": 1,
+    "effects": 4,
+    "slots": 4
+  },
+  "casts": [
+    {
+      "kind": "growth",
+      "accepted": true,
+      "commandMs": 1.9550000429153442,
+      "lightSlots": {
+        "night": 0,
+        "sources": 0,
+        "slots": [
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "multiply",
+      "accepted": true,
+      "commandMs": 0.815000057220459,
+      "lightSlots": {
+        "night": 0,
+        "sources": 0,
+        "slots": [
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "growth",
+      "accepted": true,
+      "commandMs": 0.36500000953674316,
+      "lightSlots": {
+        "night": 0,
+        "sources": 0,
+        "slots": [
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "multiply",
+      "accepted": true,
+      "commandMs": 0.2950000762939453,
+      "lightSlots": {
+        "night": 1,
+        "sources": 0,
+        "slots": [
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "intensity": 0,
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "frames": 532,
+  "p50": 16.67500000000291,
+  "p95": 33.37000000000262,
+  "p99": 49.81499999999505,
+  "max": 116.5399999999936,
+  "programQueries": 0,
+  "programWaitMs": 0,
+  "scope": "Real renderer, legal agricultural commands before dusk, surviving effects at night; rAF intervals, not GPU timing. No UI targeting and no world-light saturation."
+}

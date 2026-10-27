@@ -1,0 +1,2837 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+  "result": {
+    "farDraws": null,
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 1176.4300000071526,
+      "bindings": {
+        "initialized": 59,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 59,
+        "released": 59,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": null,
+      "longFrames": null,
+      "frames": null,
+      "readyMs": 33194.375,
+      "phases": []
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 12.740000009536743,
+      "maxTaskMs": 7.805000007152557,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "textureStaging": {
+      "scope": "Diagnostic private RGBA8 textures on actual renderer context. ABAB invocation timings include state reset; explicit frame waits/readbacks, not whole-game or GPU benchmark. No texture replacement. Pixel conversion and every generated mip compared. Does not validate sRGB sampling, context loss, production memory lifecycle or scheduler throughput.",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:5190/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "slot": "map",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.2900000214576721,
+          "cloneElapsedMs": 0.3100000023841858,
+          "conversionElapsedMs": 117.81000000238419,
+          "workerConversionMs": 83.39500004053116,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.3050000071525574
+                },
+                {
+                  "label": "upload",
+                  "ms": 174.25499999523163
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.0899999737739563
+                }
+              ],
+              "preparationElapsedMs": 286.00999999046326,
+              "readbackMs": 424.5450000166893,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "pixels",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "upload-pixels",
+                  "ms": 11.334999978542328
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.0899999737739563
+                }
+              ],
+              "preparationElapsedMs": 28.605000019073486,
+              "readbackMs": 315.14500004053116,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "stripes",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.15500003099441528
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.13499999046325684
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09999996423721313
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.1549999713897705
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10999995470046997
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.04499995708465576
+                }
+              ],
+              "preparationElapsedMs": 2565.814999997616,
+              "readbackMs": 603.6350000500679,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.025000035762786865
+                },
+                {
+                  "label": "upload",
+                  "ms": 15.119999945163727
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.019999980926513672
+                }
+              ],
+              "preparationElapsedMs": 31.4650000333786,
+              "readbackMs": 363.8600000143051,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "pixels",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.039999961853027344
+                },
+                {
+                  "label": "upload-pixels",
+                  "ms": 9.915000021457672
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.009999990463256836
+                }
+              ],
+              "preparationElapsedMs": 27.7049999833107,
+              "readbackMs": 383.46499997377396,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "stripes",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.034999966621398926
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.19499999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.18000000715255737
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10000002384185791
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09999996423721313
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.13499999046325684
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09999996423721313
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09999996423721313
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.13999998569488525
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.025000035762786865
+                }
+              ],
+              "preparationElapsedMs": 2938.824999988079,
+              "readbackMs": 620.4399999976158,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5190/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "slot": "normalMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.030000030994415283,
+          "cloneElapsedMs": 0.04500001668930054,
+          "conversionElapsedMs": 19.814999997615814,
+          "workerConversionMs": 14.875,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "upload",
+                  "ms": 15.014999985694885
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.01500004529953003
+                }
+              ],
+              "preparationElapsedMs": 31.01500004529953,
+              "readbackMs": 432.7099999785423,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "pixels",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.039999961853027344
+                },
+                {
+                  "label": "upload-pixels",
+                  "ms": 9.6700000166893
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.014999985694885254
+                }
+              ],
+              "preparationElapsedMs": 22.149999976158142,
+              "readbackMs": 368.80000001192093,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "stripes",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.0350000262260437
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10000002384185791
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10000002384185791
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0700000524520874
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.05500000715255737
+                }
+              ],
+              "preparationElapsedMs": 2341.185000002384,
+              "readbackMs": 566.2900000214577,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.04999995231628418
+                },
+                {
+                  "label": "upload",
+                  "ms": 20.769999980926514
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.019999980926513672
+                }
+              ],
+              "preparationElapsedMs": 30.19999998807907,
+              "readbackMs": 320.3949999809265,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "pixels",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.05500000715255737
+                },
+                {
+                  "label": "upload-pixels",
+                  "ms": 13.875
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.025000035762786865
+                }
+              ],
+              "preparationElapsedMs": 24.875,
+              "readbackMs": 353.92500001192093,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "stripes",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.04000002145767212
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10000002384185791
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09999996423721313
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.029999971389770508
+                }
+              ],
+              "preparationElapsedMs": 2793.589999973774,
+              "readbackMs": 649.3999999761581,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5190/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "slot": "roughnessMap",
+          "width": 2048,
+          "height": 2048,
+          "cloneSubmitMs": 0.050000011920928955,
+          "cloneElapsedMs": 0.07499998807907104,
+          "conversionElapsedMs": 19.430000007152557,
+          "workerConversionMs": 14.77999997138977,
+          "pixelBytes": 16777216,
+          "trials": [
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "upload",
+                  "ms": 13.905000030994415
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.009999990463256836
+                }
+              ],
+              "preparationElapsedMs": 22.689999997615814,
+              "readbackMs": 422.24000000953674,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "pixels",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "upload-pixels",
+                  "ms": 14.490000009536743
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.0350000262260437
+                }
+              ],
+              "preparationElapsedMs": 21.634999990463257,
+              "readbackMs": 357.08999997377396,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "stripes",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10000002384185791
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.16999995708465576
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10000002384185791
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.1600000262260437
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.27000004053115845
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.13499999046325684
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07499998807907104
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09999996423721313
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.02499997615814209
+                }
+              ],
+              "preparationElapsedMs": 2899.449999988079,
+              "readbackMs": 622.9900000095367,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "bitmap",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.04499995708465576
+                },
+                {
+                  "label": "upload",
+                  "ms": 20.18499994277954
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.025000035762786865
+                }
+              ],
+              "preparationElapsedMs": 35.8299999833107,
+              "readbackMs": 418.19999998807907,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "pixels",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.04500001668930054
+                },
+                {
+                  "label": "upload-pixels",
+                  "ms": 13.8299999833107
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.019999980926513672
+                }
+              ],
+              "preparationElapsedMs": 20.55000001192093,
+              "readbackMs": 386.06999999284744,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            },
+            {
+              "mode": "stripes",
+              "calls": [
+                {
+                  "label": "allocate",
+                  "ms": 0.050000011920928955
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.20000004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.12000000476837158
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10499995946884155
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08000004291534424
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09500002861022949
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09499996900558472
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07500004768371582
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.14499998092651367
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11000001430511475
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.09000003337860107
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.10500001907348633
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06000000238418579
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.11500000953674316
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06999999284744263
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.06499999761581421
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08499997854232788
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.07999998331069946
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.08500003814697266
+                },
+                {
+                  "label": "stripe",
+                  "ms": 0.0899999737739563
+                },
+                {
+                  "label": "mipmaps",
+                  "ms": 0.06000000238418579
+                }
+              ],
+              "preparationElapsedMs": 2907.75,
+              "readbackMs": 605.1449999809265,
+              "errors": [],
+              "differences": [
+                {
+                  "level": 0,
+                  "bytes": 16777216,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 1,
+                  "bytes": 4194304,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 2,
+                  "bytes": 1048576,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 3,
+                  "bytes": 262144,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 4,
+                  "bytes": 65536,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 5,
+                  "bytes": 16384,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 6,
+                  "bytes": 4096,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 7,
+                  "bytes": 1024,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 8,
+                  "bytes": 256,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 9,
+                  "bytes": 64,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 10,
+                  "bytes": 16,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                },
+                {
+                  "level": 11,
+                  "bytes": 4,
+                  "changed": 0,
+                  "max": 0,
+                  "mean": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "mudWorker": null,
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792866062642",
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 918,
+      "workMs": 306.22999995946884,
+      "coordinationMs": 30.9950013756752,
+      "maxUnitMs": 8.9549999833107,
+      "overruns": 17,
+      "deadlineLoans": 12,
+      "oversizeRecoveries": 0,
+      "continuationMs": 93.81999975442886,
+      "continuationTurns": 973,
+      "median": 99.71499999999651,
+      "p95": 349.1299999999901,
+      "p99": 349.1299999999901,
+      "cpu95": 5.9549999833106995,
+      "jitter": 249.4149999999936,
+      "budgetMs": 2.1249970278101156,
+      "pending": 0,
+      "waiting": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

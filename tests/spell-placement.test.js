@@ -22,21 +22,16 @@ for(const kind of ['shield','growth','multiply'])test(`${kind}: tapping elevated
   assert.equal(s.spells.length,1);assert.equal(Game.spellAt(s,kind,p),s.spells[0]);
   assert.deepEqual([s.spells[0].x,s.spells[0].z],[p.x,p.z]);
   assert.equal(s.events.filter(e=>e.type==='SpellActivated').length,1);
-  assert.ok(s.cooldowns[kind]>0);if(kind==='multiply')assert.equal(p.multiplyHarvest,true);
+  assert.equal(s.cooldowns[kind],kind==='shield'?90:0);if(kind==='multiply')assert.equal(p.multiplyHarvest,true);
   const saved=serialize(s);assert.equal(castPickedSpell(s,'tap',kind,{entityId:p.id,point:null},nav),false);assert.equal(serialize(s),saved);
 });
-test('shield can target free terrain or a structure, while agricultural magic needs a living crop',()=>{
-  for(const point of [{x:40,z:50},null]){
-    const s=ready(),center=s.structures[0];castPickedSpell(s,'tap','shield',{entityId:center.id,point},nav);
-    assert.deepEqual([s.spells[0].x,s.spells[0].z],point?[40,50]:[center.x,center.z]);
+test('agricultural powers require a live plant hit, while Shield keeps free placement',()=>{
+ for(const kind of ['growth','multiply']){
+  const s=ready();for(const hit of [{entityId:null,point:{x:17,z:8}},{entityId:s.structures[0].id,point:{x:17,z:8}}]){
+   const before=serialize(s);assert.equal(castPickedSpell(s,'empty',kind,hit,nav),false);assert.equal(serialize(s),before);
   }
-  const s=ready(),before=serialize(s);
-  assert.throws(()=>castPickedSpell(s,'empty','growth',{entityId:s.structures[0].id,point:{x:40,z:50}},nav),/cultivo vivo/);
-  assert.equal(serialize(s),before);
-});
-test('dead crops do not capture placement, empty sky does nothing, and invalid spells keep their rejection',()=>{
-  const s=ready(),p=s.plants[0];p.alive=false;p.harvestRequested=false;
-  const before=serialize(s);assert.equal(castPickedSpell(s,'sky','growth',{entityId:null,point:null},nav),false);assert.equal(serialize(s),before);
-  assert.throws(()=>castPickedSpell(s,'ground','growth',{entityId:p.id,point:{x:40,z:50}},nav),/cultivo vivo/);
-  assert.equal(serialize(s),before);
+  s.plants[0].alive=false;assert.equal(castPickedSpell(s,'dead',kind,{entityId:s.plants[0].id,point:{x:40,z:50}},nav),false);
+ }
+ const s=ready();castPickedSpell(s,'shield','shield',{entityId:null,point:{x:40,z:50}},nav);
+ assert.deepEqual([s.spells[0].x,s.spells[0].z],[40,50]);
 });

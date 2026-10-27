@@ -1,0 +1,74 @@
+{
+  "passed": false,
+  "phasePassed": {
+    "day": false,
+    "night": false
+  },
+  "issues": [
+    {
+      "phase": "day",
+      "mode": "frame",
+      "run": 3,
+      "frame": 19,
+      "delta": [
+        -1,
+        -708
+      ]
+    },
+    {
+      "phase": "night",
+      "mode": "frame",
+      "run": 1,
+      "frame": 19,
+      "delta": [
+        -1,
+        -708
+      ]
+    },
+    {
+      "phase": "night",
+      "mode": "frame",
+      "run": 2,
+      "frame": 19,
+      "delta": [
+        -1,
+        -708
+      ]
+    }
+  ],
+  "windows": {
+    "day/frame": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        0,
+        0,
+        0
+      ]
+    },
+    "day/cadence": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        0,
+        0,
+        0
+      ]
+    },
+    "night/frame": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        0,
+        0,
+        0
+      ]
+    },
+    "night/cadence": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "limitation": "Count audit permits differences of one two-triangle bake quad when comparing cache variants; not an individual asset census."
+}

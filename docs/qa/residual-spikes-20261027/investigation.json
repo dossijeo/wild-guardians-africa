@@ -1,0 +1,77 @@
+{
+  "status": "diagnosis; no runtime optimization applied",
+  "baseline": "baseline-control/summary.json",
+  "cpu": "baseline-control/cpu-attribution.json",
+  "observations": [
+    {
+      "finding": "Rendering coordinate recentering performs forced scene matrix traversals before and after drawing, while Three.js and asset grouping also traverse matrices.",
+      "source": "src/rendering/render-origin.js:19",
+      "evidence": "matrixTraversalAncestors: 5341.826 sampled ms under withRenderOrigin, 2352.430 under asset grouping, 2091.536 under renderer across 131685.741 ms profile.",
+      "next": "Measure per-frame costs and count objects/traversals; investigate eliminating genuinely redundant traversals while retaining global matrices for picking, navigation, effects, skinning and shadow passes."
+    },
+    {
+      "finding": "Shadow snapshot consumes 5254.653 sampled inclusive ms; copies active instance attributes every frame to detect unversioned changes.",
+      "source": "src/rendering/shadow-cache.js:5",
+      "next": "Measure per-frame snapshot sizes, changes and hits. Do not replace actual value checking with versions until producer invalidation correctness is proven."
+    },
+    {
+      "finding": "No late program-info-log calls in this control; frame intervals still reach 149.55 ms.",
+      "next": "Add synchronized CPU phase and asynchronous GPU measurements in the existing application frame loop. Do not equate RAF intervals or WebGL call durations with GPU execution."
+    }
+  ],
+  "limits": [
+    "One diagnostic run with CPU profiler and video. No performance improvement claim.",
+    "Sampled inclusive categories overlap; do not sum them.",
+    "Current profile has no explicit clock correlation for per-spike sampled stack attribution.",
+    "Other host worktrees may contend for hardware; require controlled ABAB before adopting changes."
+  ],
+  "nextPhaseRequires": "Complete validated PR216 merge first; keep current candidate unchanged.",
+  "phaseDiagnosis": {
+    "report": "phase-control/summary.json",
+    "scope": "CPU stage attribution; GPU invalid for this run due to impossible timer duration. No performance comparison.",
+    "findings": [
+      "Frame268: 46.69ms synchronous World.render, 20.435ms stage0 (camera/chunk sync), 9ms far vegetation, 11.63ms draw.",
+      "Frame4660: 40.935ms synchronous World.render, 20.675ms stage0, 7.99ms far vegetation, 7.205ms draw.",
+      "Initial frame2 includes instrumentation/startup effects; 68ms is preserved but is not treated as steady-state streaming evidence."
+    ],
+    "next": "Subdivide syncChunks (planning/install/removal) and far vegetation updates using targeted diagnostic clocks before selecting a production change.",
+    "phaseMapping": {
+      "0": "resize/camera/origin/syncChunks",
+      "1": "asset LOD and scene sync",
+      "2": "obstruction",
+      "3": "far vegetation",
+      "4": "asset groups",
+      "5": "hands and effects",
+      "6": "world origin uniform",
+      "7": "material cache resources",
+      "8": "generator completion",
+      "draw": "render-origin window, effects, sky, scene, shadows, smoke"
+    }
+  },
+  "subsystemDiagnosis": {
+    "report": "subsystem-control/summary.json",
+    "scope": "Instrumented real-game CPU attribution; conditional subsystem samples >=1ms. No optimization or ABAB claim.",
+    "finding": "Spatial release dominates the selected chunk-sync spikes. Contacts are not the primary cost in this capture.",
+    "examples": [
+      {
+        "frame": 1207,
+        "worldRenderMs": 41.21,
+        "syncChunksMs": 20.25,
+        "spatialReleaseMs": 18.85
+      },
+      {
+        "frame": 5867,
+        "worldRenderMs": 38.105,
+        "syncChunksMs": 21.36,
+        "spatialReleaseMs": 20.01
+      }
+    ],
+    "contactsMaxMs": 1.97,
+    "next": "Attribute native spatial_remove_chunks between per-profile sector removal/border refresh and possible populateChunk of selected fallback. Preserve immediate residency/navigation correctness; do not simply defer authoritative removal.",
+    "sources": [
+      "src/world/wild-engine/spatial-chunk-retention.js:18",
+      "src/world/wild-engine/spatial-world.js:135",
+      "src/world/wild-engine/spatial-savanna.cpp:1563"
+    ]
+  }
+}

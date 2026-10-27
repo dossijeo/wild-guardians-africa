@@ -1,0 +1,7 @@
+import {readFile,writeFile} from 'node:fs/promises';
+const root='docs/qa/global-visual-lab/ground-shadow-fill';
+const {records}=JSON.parse(await readFile(`${root}/paired-fill.json`));
+let text='# Relleno: repetición dentro de la misma página\n\nABBA BAAB por fase, cuatro muestras de 180 frames por variante; se alternan los programas originales/candidatos sin recargar assets. No se usa un shader candidato desactivado como sustituto de la referencia.\n\n| Caso | Fase | GPU base → candidata (ms) | Delta | CPU base → candidata (ms) |\n|---|---|---:|---:|---:|\n';
+for(const c of [1,6,21])for(const phase of ['day','night']){const avg=(variant,key)=>{const rs=records.filter(r=>r.sceneCase===c&&r.phase===phase&&r.variant===variant);return rs.reduce((n,r)=>n+r.report[key].mean,0)/rs.length};const a=avg(0,'gpuElapsedMs'),b=avg(1,'gpuElapsedMs');text+=`| ${c} | ${phase} | ${a.toFixed(3)} → ${b.toFixed(3)} | ${(b-a).toFixed(3)} | ${avg(0,'cpuSubmissionMs').toFixed(3)} → ${avg(1,'cpuSubmissionMs').toFixed(3)} |\n`;}
+text+='\nConservar ambas rondas: la primera tiene una repetición lenta en Sabana y esta repetición no elimina la variabilidad del equipo. Valores negativos no prueban aceleración. Los informes incluyen GPU, dispositivo, estado de simulación, caché y errores. El 404 de la primera carga de Sabana no incluye URL en este log; no se atribuye sin evidencia a un recurso concreto.\n';
+await writeFile(`${root}/PAIRED.md`,text);console.log(text);

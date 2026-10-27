@@ -1,0 +1,29 @@
+{
+  "early": 89,
+  "late": 1,
+  "results": [
+    {
+      "draw": {
+        "object": "native-obstruction-blend",
+        "parents": [
+          "native_merged_assets",
+          ""
+        ],
+        "type": "Mesh",
+        "material": "MeshStandardMaterial",
+        "source": "",
+        "side": 0
+      },
+      "ms": 168.42499995231628,
+      "exactPrior": 0,
+      "closestMissing": [
+        "#define OPAQUE",
+        "      if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}"
+      ],
+      "closestAdded": [
+        "      if(vNativeVisibility<.002)discard;",
+        "        diffuseColor.a*=clamp(vNativeVisibility,0.,1.);"
+      ]
+    }
+  ]
+}

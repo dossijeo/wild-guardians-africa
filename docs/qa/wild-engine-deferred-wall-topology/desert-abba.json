@@ -1,0 +1,234 @@
+{
+  "kind": "ABBA",
+  "scenario": "Desert/983 day 15; 42 active workers",
+  "baselineRef": "ca212cd964cef246bcd81f485c8a25a6a2e2a6e4",
+  "stateHash": "1019a25ce3922a3af5c2020e724e35240a159486281cd8a19ce27470fced4356",
+  "sourceSha256": {
+    "baseline": "72b1a16ed6947407d61dcfa911820adadc3511cbd579a6b41c54e611fcf7e75b",
+    "candidate": "c13bca7063161b661cc5361f539e54f0581006f6edcbc1a2fd24d81ce1f751b8"
+  },
+  "wasmSha256": {
+    "baseline": "7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095",
+    "candidate": "40651bd23c30879601c1f410159b3341d6937f701faf1c5e916414ae440616f6"
+  },
+  "stroke": [
+    [
+      66,
+      -7.18
+    ],
+    [
+      66,
+      -18
+    ]
+  ],
+  "rows": [
+    {
+      "arm": "baseline",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        53.69250000000011,
+        49.02890000000002,
+        46.8291999999999,
+        51.040500000000065
+      ],
+      "medianMs": 49.02890000000002,
+      "p95Ms": 53.69250000000011,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 24,
+        "overlay": 0,
+        "barriers": 48,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 3.543100000001914,
+        "preview": 171.14019999999937,
+        "overlay": 0,
+        "barriers": 85.47080000000074,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 96,
+      "build": {
+        "ms": 2.7410999999999603,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        39.1561999999999,
+        35.240400000000136,
+        37.70349999999962,
+        32.95589999999993
+      ],
+      "medianMs": 35.240400000000136,
+      "p95Ms": 39.1561999999999,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 20,
+        "overlay": 8,
+        "barriers": 40,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 4.319099999998343,
+        "preview": 119.86409999999978,
+        "overlay": 0.018299999999726424,
+        "barriers": 72.99249999999938,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 80,
+      "build": {
+        "ms": 2.578599999999824,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        39.59259999999995,
+        31.766200000000026,
+        36.50630000000001,
+        39.56869999999981
+      ],
+      "medianMs": 36.50630000000001,
+      "p95Ms": 39.59259999999995,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 20,
+        "overlay": 8,
+        "barriers": 40,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 3.871199999996861,
+        "preview": 120.34639999999945,
+        "overlay": 0.02260000000023865,
+        "barriers": 75.85420000000249,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 80,
+      "build": {
+        "ms": 2.1944000000003143,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "baseline",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        48.39349999999922,
+        43.52210000000014,
+        56.832400000000234,
+        59.52220000000034
+      ],
+      "medianMs": 48.39349999999922,
+      "p95Ms": 59.52220000000034,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 24,
+        "overlay": 0,
+        "barriers": 48,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 3.8278000000073007,
+        "preview": 181.52639999999974,
+        "overlay": 0,
+        "barriers": 104.3755000000001,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 96,
+      "build": {
+        "ms": 3.0825000000004366,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    }
+  ]
+}

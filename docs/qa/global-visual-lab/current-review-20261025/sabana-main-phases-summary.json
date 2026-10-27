@@ -1,0 +1,152 @@
+{
+  "scope": "Single diagnostic. Main frame callback excludes scheduler endFrame asynchronous work; LoAF attribution is not complete CPU profiling. GPU query intervals include pipeline bubbles.",
+  "frames": {
+    "count": 180,
+    "mean": 109.28569444444442,
+    "p95": 182.9250000000029,
+    "max": 266.2549999999974
+  },
+  "mainFrameMaxMs": 44.89999997615814,
+  "phases": {
+    "before-simulation": {
+      "meanMs": 0.21060773088128526,
+      "maxMs": 0.6800000667572021
+    },
+    "simulation": {
+      "meanMs": 0.40035911884097103,
+      "maxMs": 6.134999990463257
+    },
+    "effects": {
+      "meanMs": 0.024447512231479035,
+      "maxMs": 0.4799998998641968
+    },
+    "render": {
+      "meanMs": 12.61328729213272,
+      "maxMs": 42.68499994277954
+    },
+    "audio": {
+      "meanMs": 0.17676796109636844,
+      "maxMs": 1.0149999856948853
+    },
+    "interface": {
+      "meanMs": 0.6983977859191473,
+      "maxMs": 6.174999952316284
+    },
+    "tail": {
+      "meanMs": 0.007292819286578268,
+      "maxMs": 0.05500006675720215
+    }
+  },
+  "largestLongFrames": [
+    {
+      "name": "long-animation-frame",
+      "entryType": "long-animation-frame",
+      "startTime": 53808.00999999046,
+      "duration": 259.4950000047684,
+      "navigationId": 7241,
+      "paintTime": 54067.50499999523,
+      "presentationTime": 54387.52499997616,
+      "renderStart": 54052.125,
+      "styleAndLayoutStart": 54066.949999928474,
+      "firstUIEventTimestamp": 0,
+      "blockingDuration": 0,
+      "scripts": [
+        {
+          "name": "script",
+          "entryType": "script",
+          "startTime": 54052.174999952316,
+          "duration": 14.509999990463257,
+          "navigationId": 7241,
+          "invoker": "FrameRequestCallback",
+          "invokerType": "user-callback",
+          "windowAttribution": "self",
+          "executionStart": 54052.174999952316,
+          "forcedStyleAndLayoutDuration": 0.2,
+          "pauseDuration": 0,
+          "sourceURL": "http://127.0.0.1:5190/src/app/main.js?t=1792886519821",
+          "sourceFunctionName": "frame",
+          "sourceCharPosition": 68264
+        }
+      ]
+    },
+    {
+      "name": "long-animation-frame",
+      "entryType": "long-animation-frame",
+      "startTime": 53531.37000000477,
+      "duration": 255.84999990463257,
+      "navigationId": 7241,
+      "paintTime": 53787.2199999094,
+      "presentationTime": 54237.73000001907,
+      "renderStart": 53766.049999952316,
+      "styleAndLayoutStart": 53786.68499994278,
+      "firstUIEventTimestamp": 0,
+      "blockingDuration": 0,
+      "scripts": [
+        {
+          "name": "script",
+          "entryType": "script",
+          "startTime": 53766.110000014305,
+          "duration": 19.204999923706055,
+          "navigationId": 7241,
+          "invoker": "FrameRequestCallback",
+          "invokerType": "user-callback",
+          "windowAttribution": "self",
+          "executionStart": 53766.110000014305,
+          "forcedStyleAndLayoutDuration": 0.17,
+          "pauseDuration": 0,
+          "sourceURL": "http://127.0.0.1:5190/src/app/main.js?t=1792886519821",
+          "sourceFunctionName": "frame",
+          "sourceCharPosition": 68264
+        }
+      ]
+    },
+    {
+      "name": "long-animation-frame",
+      "entryType": "long-animation-frame",
+      "startTime": 63553.80999994278,
+      "duration": 241.10000002384186,
+      "navigationId": 7241,
+      "paintTime": 63794.90999996662,
+      "presentationTime": 64297.89999997616,
+      "renderStart": 63782.75999999046,
+      "styleAndLayoutStart": 63794.39999997616,
+      "firstUIEventTimestamp": 0,
+      "blockingDuration": 0,
+      "scripts": [
+        {
+          "name": "script",
+          "entryType": "script",
+          "startTime": 63782.80999994278,
+          "duration": 11.540000081062317,
+          "navigationId": 7241,
+          "invoker": "FrameRequestCallback",
+          "invokerType": "user-callback",
+          "windowAttribution": "self",
+          "executionStart": 63782.80999994278,
+          "forcedStyleAndLayoutDuration": 0.235,
+          "pauseDuration": 0,
+          "sourceURL": "http://127.0.0.1:5190/src/app/main.js?t=1792886519821",
+          "sourceFunctionName": "frame",
+          "sourceCharPosition": 68264
+        }
+      ]
+    }
+  ],
+  "gpu": {
+    "supported": true,
+    "sampleEvery": 3,
+    "submitted": 61,
+    "skipped": 0,
+    "disjoint": false,
+    "summary": {
+      "count": 61,
+      "mean": 79.93641106557378,
+      "p95": 146.801508,
+      "max": 202.518853
+    }
+  },
+  "slowGl": [],
+  "created": 10,
+  "farSettled": true,
+  "errors": []
+}

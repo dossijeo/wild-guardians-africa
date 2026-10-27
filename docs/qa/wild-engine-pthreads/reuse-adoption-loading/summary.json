@@ -1,0 +1,611 @@
+{
+  "scope": "Serial A/B/A/B Chrome launches on the same host, Mangroves low quality. A is the previous adopted water-only configuration; B selects current defaults without streaming QA parameters. Timing runs from menu action to world readiness before loading-overlay removal; includes presentation and I/O and is not CPU-only or a guaranteed cold-cache measurement.",
+  "rows": [
+    {
+      "label": "a1",
+      "adopted": false,
+      "readyMs": 27053.21500003338,
+      "obstructionMs": 0,
+      "programRetention": null,
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 0.9649999737739563
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 2.099999964237213
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 372.0149999856949
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 227.80000001192093
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 1.4150000214576721
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.125
+        },
+        {
+          "label": "load-village-models",
+          "ms": 98.22499996423721
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.4800000190734863
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 476.0799999833107
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.1449999809265137
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.125
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.20999997854232788
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 164.36000001430511
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 15.389999985694885
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 7.165000021457672
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 1.4350000023841858
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 562.6350000500679
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 1.3700000047683716
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 168.94999998807907
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 17.735000014305115
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.14500004053115845
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 75.58499997854233
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 522.3850000500679
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 34.72999995946884
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3153.474999964237
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1746.5900000333786
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 65.78000003099442
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 682.2900000214577
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 345.97999995946884
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 92.9099999666214
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 6663.604999959469
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 10.860000014305115
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 6462.419999957085
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 14.39000004529953
+        }
+      ],
+      "report": "docs/qa/wild-engine-pthreads/reuse-adoption-loading/a1.json"
+    },
+    {
+      "label": "b1",
+      "adopted": true,
+      "readyMs": 27553.530000030994,
+      "obstructionMs": 130.77999997138977,
+      "programRetention": {
+        "retained": 74,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 1.1100000143051147
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.75
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 384.6200000047684
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 191.6050000190735
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 3.0049999952316284
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.15999996662139893
+        },
+        {
+          "label": "load-village-models",
+          "ms": 125.59499996900558
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 3.0699999928474426
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 452.60000002384186
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.199999988079071
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.125
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.17499995231628418
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 139.85000002384186
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 14.935000002384186
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 8.915000021457672
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 2.6049999594688416
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 492.67500001192093
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 3.225000023841858
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 149.97500002384186
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 29.314999997615814
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.1350000500679016
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 51.419999957084656
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 513.6949999928474
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 23.7150000333786
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 2934.4549999833107
+        },
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 130.77999997138977
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1728.1850000023842
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 122.56000000238419
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 700.375
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 351.4549999833107
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 80.83499997854233
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 6612.310000002384
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 12.7049999833107
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 7095.145000040531
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 14.7049999833107
+        }
+      ],
+      "report": "docs/qa/wild-engine-pthreads/reuse-adoption-loading/b1.json"
+    },
+    {
+      "label": "a2",
+      "adopted": false,
+      "readyMs": 27561.759999990463,
+      "obstructionMs": 0,
+      "programRetention": null,
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 0.8849999904632568
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.0649999976158142
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 374.6350000500679
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 213.47000002861023
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 10.01500004529953
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.16499996185302734
+        },
+        {
+          "label": "load-village-models",
+          "ms": 119.05499994754791
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.8600000143051147
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 461.38499999046326
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 0.9850000143051147
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.08000004291534424
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.16500002145767212
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 160.32499998807907
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 15.730000019073486
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 14.674999952316284
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 3.990000009536743
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 571.5450000166893
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 6.134999990463257
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 156.13999998569489
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 17.62999999523163
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.1600000262260437
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 63.02499997615814
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 502.0999999642372
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 31.150000035762787
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 2915.6449999809265
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1809.324999988079
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 72.83999997377396
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 674.3349999785423
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 375.34500002861023
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 94.87000000476837
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 6499.3949999809265
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 4.040000021457672
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 7067.044999957085
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 16.415000021457672
+        }
+      ],
+      "report": "docs/qa/wild-engine-pthreads/reuse-adoption-loading/a2.json"
+    },
+    {
+      "label": "b2",
+      "adopted": true,
+      "readyMs": 27304.67500001192,
+      "obstructionMs": 138.62999999523163,
+      "programRetention": {
+        "retained": 74,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 0.7549999952316284
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.1600000262260437
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 375.4699999690056
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 225.42499995231628
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 6.865000009536743
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.15999996662139893
+        },
+        {
+          "label": "load-village-models",
+          "ms": 132.27499997615814
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 2.574999988079071
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 508.3700000047684
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.1800000071525574
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.125
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.1899999976158142
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 137.80000001192093
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 12.594999969005585
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 9.899999976158142
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 1.2699999809265137
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 510.3700000047684
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 1.0400000214576721
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 138.96000003814697
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 15.655000030994415
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.23500001430511475
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 107.23000001907349
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 505.1449999809265
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 24.039999961853027
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3003.875
+        },
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 138.62999999523163
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1921.2999999523163
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 105.15500003099442
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 668.2799999713898
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 356.3700000047684
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 91.4549999833107
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 6841.115000009537
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 11.905000030994415
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 6711.024999976158
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 14.585000038146973
+        }
+      ],
+      "report": "docs/qa/wild-engine-pthreads/reuse-adoption-loading/b2.json"
+    }
+  ]
+}

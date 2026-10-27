@@ -1,0 +1,3 @@
+import sharp from 'sharp';import {writeFile} from 'node:fs/promises';
+const root='docs/qa/global-visual-lab/volcanic-charcoal',rows=[];
+for(const view of ['game','low'])for(const phase of ['day','night']){const a=await sharp(`${root}/volcano-volcanic-charcoal-${view}-${phase}.png`).removeAlpha().raw().toBuffer(),b=await sharp(`${root}/integrated/volcano-global-lighting-${view}-${phase}.png`).removeAlpha().raw().toBuffer();let n=0;for(let i=0;i<a.length;i+=3)if(Math.max(...[0,1,2].map(k=>Math.abs(a[i+k]-b[i+k])))>3)n++;rows.push({view,phase,changedOver3Percent:n/(a.length/3)*100})}await writeFile(root+'/integrated/comparison.json',JSON.stringify(rows,null,2)+'\n');console.log(rows);

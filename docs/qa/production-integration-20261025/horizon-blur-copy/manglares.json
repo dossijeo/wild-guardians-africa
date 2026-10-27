@@ -1,0 +1,384 @@
+{
+  "depthMode": "copy",
+  "scope": "QA-only depth-aware horizon blur. Existing color pipeline copied unchanged; extra native depth pass + 9-tap screen filter. Sky has empty depth and is excluded, including neighbor taps. No performance claim yet.",
+  "records": [
+    {
+      "phase": "day",
+      "view": "game",
+      "mode": "off",
+      "file": "manglares-game-day-off.png",
+      "metrics": {
+        "camera": [
+          114,
+          20.219999933242796,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 84,
+        "triangles": 363173,
+        "blur": {
+          "frames": 0,
+          "textureBytes": 0
+        },
+        "glError": 0
+      },
+      "errors": []
+    },
+    {
+      "phase": "day",
+      "view": "game",
+      "mode": "blur",
+      "file": "manglares-game-day-blur.png",
+      "metrics": {
+        "camera": [
+          114,
+          20.219999933242796,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 72,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "day",
+      "view": "game",
+      "mode": "mask",
+      "file": "manglares-game-day-mask.png",
+      "metrics": {
+        "camera": [
+          114,
+          20.219999933242796,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 142,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "day",
+      "view": "horizon",
+      "mode": "off",
+      "file": "manglares-horizon-day-off.png",
+      "metrics": {
+        "camera": [
+          114,
+          8.219999933242798,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 88,
+        "triangles": 425058,
+        "blur": {
+          "frames": 143,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "day",
+      "view": "horizon",
+      "mode": "blur",
+      "file": "manglares-horizon-day-blur.png",
+      "metrics": {
+        "camera": [
+          114,
+          8.219999933242798,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 220,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "day",
+      "view": "horizon",
+      "mode": "mask",
+      "file": "manglares-horizon-day-mask.png",
+      "metrics": {
+        "camera": [
+          114,
+          8.219999933242798,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 288,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "night",
+      "view": "game",
+      "mode": "off",
+      "file": "manglares-game-night-off.png",
+      "metrics": {
+        "camera": [
+          114,
+          20.219999933242796,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 84,
+        "triangles": 365461,
+        "blur": {
+          "frames": 289,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "night",
+      "view": "game",
+      "mode": "blur",
+      "file": "manglares-game-night-blur.png",
+      "metrics": {
+        "camera": [
+          114,
+          20.219999933242796,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 361,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "night",
+      "view": "game",
+      "mode": "mask",
+      "file": "manglares-game-night-mask.png",
+      "metrics": {
+        "camera": [
+          114,
+          20.219999933242796,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 427,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "night",
+      "view": "horizon",
+      "mode": "off",
+      "file": "manglares-horizon-night-off.png",
+      "metrics": {
+        "camera": [
+          114,
+          8.219999933242798,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 88,
+        "triangles": 425058,
+        "blur": {
+          "frames": 428,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "night",
+      "view": "horizon",
+      "mode": "blur",
+      "file": "manglares-horizon-night-blur.png",
+      "metrics": {
+        "camera": [
+          114,
+          8.219999933242798,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 497,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    },
+    {
+      "phase": "night",
+      "view": "horizon",
+      "mode": "mask",
+      "file": "manglares-horizon-night-mask.png",
+      "metrics": {
+        "camera": [
+          114,
+          8.219999933242798,
+          10
+        ],
+        "target": [
+          92,
+          4.219999933242798,
+          -8
+        ],
+        "calls": 1,
+        "triangles": 2,
+        "blur": {
+          "frames": 568,
+          "textureBytes": 3686400,
+          "skyAudit": {
+            "skyPixels": 129620,
+            "changed": 0,
+            "maxDelta": 0,
+            "scope": "Same-frame raw RGB readback of empty-depth pixels before/after the filter; auditing excluded from benchmarks"
+          }
+        },
+        "glError": 1282
+      },
+      "errors": []
+    }
+  ]
+}
