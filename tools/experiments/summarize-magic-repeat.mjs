@@ -9,6 +9,10 @@ const summary={biome:report.biome??report.before?.state?.biome,reservationVersio
  frameIntervals:stats(frames.map(f=>f.ms)),programWaits:{count:waits.length,totalMs:waits.reduce((s,w)=>s+w.ms,0),maxMs:Math.max(0,...waits.map(w=>w.ms))},
  casts:report.casts?.map(({streaming,...c})=>({...c,...(streaming?{streaming:{samples:streaming.samples.length,initialChunks:streaming.samples[0]?.keys.length,finalChunks:streaming.samples.at(-1)?.keys.length,uniqueChunks:new Set(streaming.samples.flatMap(s=>s.keys)).size}}:{}),activationFrames:stats(frames.filter(f=>f.t>=c.start&&f.t-f.ms<=c.start+2000).map(f=>f.ms)),programWaits:waits.filter(w=>w.start>=c.start&&w.start<=c.start+2000).map(w=>({start:w.start,ms:w.ms,draw:w.draw}))})),
  limitations:['Single instrumented renderer run; not ABAB or isolated GPU timing.','Activation window includes intervals overlapping first two seconds after command.',control?'No spells cast; matched simulation spacing, no pointer targeting test.':'Commands invoke legal Game.cast; no pointer targeting test.']};
+if(['draws','hits','untracked'].every(k=>Number.isFinite(report.shadowCacheBefore?.[k])&&Number.isFinite(report.shadowCacheAfter?.[k]))){
+ const delta=Object.fromEntries(['draws','hits','untracked'].map(k=>[k,report.shadowCacheAfter[k]-report.shadowCacheBefore[k]]));
+ summary.shadowCache={...delta,hitFraction:delta.draws+delta.hits?delta.hits/(delta.draws+delta.hits):null,scope:'Counter differences across recorded run, not CPU or GPU timings. Untracked attempts overlap draws; do not add them to total attempts.'};
+}
 if(report.residual){
  const {gpu,cpu,hardware,cpuScope}=report.residual;
  summary.residual={hardware,cpuScope,cpuWorldRenderMs:stats(cpu.map(s=>s.ms)),gpuWorldRenderMs:stats(gpu.samples.map(s=>s.ms)),gpuStatus:{supported:gpu.supported,reason:gpu.reason,disjointEvents:gpu.disjointEvents,discarded:gpu.discarded,overflowSkipped:gpu.overflowSkipped,foreignQuerySkipped:gpu.foreignQuerySkipped,pendingBeforeDispose:gpu.pendingBeforeDispose,unresolvedAtDispose:gpu.unresolvedAtDispose},gpuScope:gpu.scope};
