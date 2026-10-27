@@ -13,6 +13,15 @@ await MeshoptDecoder.ready;
 const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),a=await loader.parseAsync(geometryOnly(fs.readFileSync(source)),''),b=await loader.parseAsync(geometryOnly(fs.readFileSync(edited)),''),am=new AnimationMixer(a.scene),bm=new AnimationMixer(b.scene),bones=[];
 a.scene.traverse(o=>{if(o.isBone){const copy=b.scene.getObjectByName(o.name);if(!copy?.isBone)throw Error('Missing bone '+o.name);bones.push([o,copy]);}});
 const report={source,edited,bones:bones.length,samples:0,maxPosition:0,maxAngle:0,clips:[]},ap=new Vector3(),bp=new Vector3(),aq=new Quaternion(),bq=new Quaternion();
+// Preserve the active model's lower-body geometry and named bone weights.
+// This catches regressions to the separately repaired feet when editing a face.
+if(process.argv.includes('--hyena-body')){
+ const grid=new Map(),cell=1e-4;let checked=0,maxPosition=0,maxWeight=0;
+ const visit=(root,fn)=>{root.updateMatrixWorld(true);root.traverse(mesh=>{if(!mesh.isSkinnedMesh||!mesh.name.startsWith('Mesh_0'))return;mesh.skeleton.update();for(let i=0;i<mesh.geometry.attributes.position.count;i++){const p=mesh.getVertexPosition(i,new Vector3()).applyMatrix4(mesh.matrixWorld);if(p.y>=1.1)continue;const weights={};for(let k=0;k<4;k++){const w=mesh.geometry.attributes.skinWeight.getComponent(i,k),name=mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(i,k)].name;weights[name]=(weights[name]??0)+w;}if((weights.Neck??0)>.999999)continue;fn(p,weights);}});};
+ visit(a.scene,(p,weights)=>{const key=[p.x,p.y,p.z].map(v=>Math.floor(v/cell)).join(',');if(!grid.has(key))grid.set(key,[]);grid.get(key).push({p,weights});});
+ visit(b.scene,(p,weights)=>{const xyz=[p.x,p.y,p.z].map(v=>Math.floor(v/cell));let match=null,distance=Infinity;for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++)for(const item of grid.get([xyz[0]+x,xyz[1]+y,xyz[2]+z].join(','))??[]){const d=p.distanceTo(item.p);if(d<distance){match=item;distance=d;}}assert.ok(match&&distance<1e-5,'Lower-body geometry changed '+p.toArray());maxPosition=Math.max(maxPosition,distance);for(const name of new Set([...Object.keys(weights),...Object.keys(match.weights)]))maxWeight=Math.max(maxWeight,Math.abs((weights[name]??0)-(match.weights[name]??0)));checked++;});
+ assert.ok(checked>1000);assert.ok(maxWeight<1e-4,'Lower-body weights changed '+maxWeight);report.lowerBody={vertices:checked,maxPosition,maxWeight,scope:'World Y below 1.1m excluding intentionally restored rigid Neck collar components; source skin positions and named weights'};
+}
 // Hyena-specific regression gate: lower and upper muzzle must stay together
 // under native head motion. Bone-track parity alone cannot detect bad skinning.
 const muzzle=[];const checkMuzzle=process.argv.includes('--hyena-muzzle');

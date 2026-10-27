@@ -5342,7 +5342,7 @@
         "retargeting": {
           "revision": 3,
           "donor": "Meshy_AI_Boar_Warchief_All_Animations.glb",
-          "target": "Sunhorn Chieftain / Búfalo",
+          "target": "Sunhorn Chieftain / BÃºfalo",
           "nativeUnchanged": [
             "Running"
           ],
@@ -5354,14 +5354,14 @@
             "Weapon_Combo_2"
           ],
           "method": "Bone coordinate frames calibrated from 20 paired native Running samples. Target non-root offsets preserved. Uniform calibrated hip translation scale plus offset.",
-          "calibrationMaxAngularErrorDegrees": 0.00004594703627151031,
+          "calibrationMaxAngularErrorDegrees": 4.594703627151031e-05,
           "hipTranslationScale": 0.9450193288186202,
           "hipTranslationOffset": [
             -0.02122471998153538,
             0.32154751611465915,
             0.06885118603628344
           ],
-          "hipCalibrationMaxError": 1.2708420271678733e-7,
+          "hipCalibrationMaxError": 1.2708420271678733e-07,
           "preserved": [
             "mesh",
             "skin weights",
@@ -5454,50 +5454,92 @@
       }
     },
     {
-      "url": "/assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "url": "/assets/239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
       "animations": [
         {
-          "name": "Walking",
-          "channels": 56
+          "name": "Running",
+          "channels": 63
         },
         {
-          "name": "Running",
-          "channels": 56
+          "name": "Walking",
+          "channels": 63
         },
         {
           "name": "Charged_Upward_Slash",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Right_Hand_Sword_Slash",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Weapon_Combo",
-          "channels": 56
+          "channels": 63
         },
         {
           "name": "Weapon_Combo_2",
-          "channels": 56
+          "channels": 63
         }
       ],
-      "nodes": 30,
+      "nodes": 23,
       "meshes": 1,
       "extras": {
-        "sourceModel": "Meshy_AI_Sunfang_Hyena_Totem_Running.glb",
-        "retargeting": {
-          "native": [
-            "Running"
+        "replacement": {
+          "repair": "tools/prepare_hyena.py",
+          "report": "docs/qa/hyena-replacement/repair.json",
+          "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+          "headPosture": {
+            "tool": "tools/experiments/lift-beast-head.mjs",
+            "headDegrees": 8,
+            "neckDegrees": 5.333333333333333,
+            "sourceSha256": "48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0",
+            "minimumFootprintRadius": 1.11
+          },
+          "footWeights": {
+            "tool": "tools/experiments/repair-beast-foot-weights.mjs",
+            "sourceSha256": "f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420",
+            "changedVertices": 542,
+            "rigidBelowAnkle": -0.015,
+            "authoredAboveAnkle": 0.06
+          }
+        }
+      },
+      "geometrySource": "Wild Guardians New/animales/hiena.glb",
+      "replacement": {
+        "repair": "tools/prepare_hyena.py",
+        "report": "docs/qa/hyena-replacement/repair.json",
+        "animationSourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+        "headPosture": {
+          "tool": "tools/experiments/lift-beast-head.mjs",
+          "headDegrees": 8,
+          "neckDegrees": 5.333333333333333,
+          "sourceSha256": "48f0d965b9e2f135be694163201d3a459da74ca0679d70a884ccdf1116b6fbf0",
+          "minimumFootprintRadius": 1.11
+        },
+        "footWeights": {
+          "tool": "tools/experiments/repair-beast-foot-weights.mjs",
+          "sourceSha256": "f2743cfe1e89505f2e92d9bec3bb5822b1f2f49bb7aed3abab7d05da168ba420",
+          "changedVertices": 542,
+          "rigidBelowAnkle": -0.015,
+          "authoredAboveAnkle": 0.06
+        },
+        "facial": {
+          "source": "content/source/actors/hyena/expressive-candidate.blend",
+          "geometryAudit": "docs/guardian/phase2/face-authoring/hyena-active-body-parity.json",
+          "tool": "tools/guardian/repair_hyena_face_weights.py",
+          "morphs": [
+            "mouthOpen",
+            "blinkL",
+            "blinkR"
           ],
-          "transferred": [
-            "Walking",
-            "Charged_Upward_Slash",
-            "Right_Hand_Sword_Slash",
-            "Weapon_Combo",
-            "Weapon_Combo_2"
+          "correctiveLidLevels": [
+            0.25,
+            0.5,
+            0.75,
+            1
           ],
-          "donor": "Meshy_AI_Boar_Warchief_All_Animations.glb"
+          "sourceSha256": "239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40"
         }
       }
     },
@@ -5590,7 +5632,7 @@
             0.018878459930419922,
             0.17361696064472198
           ],
-          "maxCalibrationErrorDegrees": 0.00004315175430305765,
+          "maxCalibrationErrorDegrees": 4.315175430305765e-05,
           "nativeRunningUnchanged": true
         }
       }
@@ -5642,14 +5684,14 @@
             "Weapon_Combo_2"
           ],
           "method": "Bone coordinate frames calibrated from shared native Running samples. Target non-root offsets preserved. Uniform calibrated hip translation scale plus offset.",
-          "calibrationMaxAngularErrorDegrees": 0.00006560479907325776,
+          "calibrationMaxAngularErrorDegrees": 6.560479907325776e-05,
           "hipTranslationScale": 1.1918714694874435,
           "hipTranslationOffset": [
             -0.02209374597743787,
             0.6356294465972712,
             -0.23360160293564705
           ],
-          "hipCalibrationMaxError": 2.0989912052904458e-7,
+          "hipCalibrationMaxError": 2.0989912052904458e-07,
           "preserved": [
             "mesh",
             "skin weights",

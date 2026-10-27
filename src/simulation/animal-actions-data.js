@@ -80,36 +80,36 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "hyena": {
-      "url": "/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+      "url": "/assets/239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
-      "sha256": "e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472",
+      "sha256": "239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40",
       "presentation": {
         "scale": 1,
-        "bindHeight": 2.0300002154199173,
+        "bindHeight": 2.0300010112604725,
         "bindMin": [
-          -1.2021073945661818,
-          -1.318950898209484e-7,
-          -0.36858223122881306
+          -1.2021075528769787,
+          -5.537150740506572e-7,
+          -0.3685824868747339
         ],
         "bindMax": [
-          1.1779367417041668,
-          2.0300000835248273,
-          0.7620203071764773
+          1.1779369367786692,
+          2.0300004575453983,
+          0.7620200739697435
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2/script-1.js",
         "sourceScriptSha256": "24b60f541191b52c03d6325f92624578aec63158315787605e710cc99a885057",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 15612,
-          "bindRadius": 0.7620323682554265,
+          "bodyVertices": 17954,
+          "bindRadius": 0.7620321351658541,
           "clips": {
-            "Running": {
-              "samples": 65,
-              "radius": 1.0106999510079384
-            },
             "Walking": {
               "samples": 65,
-              "radius": 1.0405336784735186
+              "radius": 1.0405334078183572
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 1.0106997246393068
             }
           },
           "clearance": 0.05,
@@ -118,23 +118,8 @@ export const ANIMAL_ACTIONS = {
         }
       },
       "clips": {
-        "Running": {
-          "duration": 0.6666666455566883,
-          "start": 0.0416666679084301,
-          "loop": true
-        },
-        "Walking": {
-          "duration": 1.041666705161333,
-          "start": 0.0416666679084301,
-          "loop": true
-        },
-        "Charged_Upward_Slash": {
-          "duration": 3.20833333209157,
-          "start": 0.0416666679084301,
-          "loop": false
-        },
-        "Right_Hand_Sword_Slash": {
-          "duration": 1.541666705161333,
+        "Weapon_Combo_2": {
+          "duration": 4.541666824370623,
           "start": 0.0416666679084301,
           "loop": false
         },
@@ -143,10 +128,25 @@ export const ANIMAL_ACTIONS = {
           "start": 0.0416666679084301,
           "loop": false
         },
-        "Weapon_Combo_2": {
-          "duration": 4.541666824370623,
+        "Right_Hand_Sword_Slash": {
+          "duration": 1.541666705161333,
           "start": 0.0416666679084301,
           "loop": false
+        },
+        "Charged_Upward_Slash": {
+          "duration": 3.20833333209157,
+          "start": 0.0416666679084301,
+          "loop": false
+        },
+        "Walking": {
+          "duration": 1.041666705161333,
+          "start": 0.0416666679084301,
+          "loop": true
+        },
+        "Running": {
+          "duration": 0.6666666455566883,
+          "start": 0.0416666679084301,
+          "loop": true
         }
       }
     },
