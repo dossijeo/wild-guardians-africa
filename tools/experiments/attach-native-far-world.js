@@ -1,3 +1,4 @@
+import {LogicalTreeRegionIndex} from './logical-tree-region-index.js';
 import {FarSceneStream} from './far-scene-stream.js';
 import {loadingAwaitWitness} from '../../src/rendering/loading-sync-witness.js';
 import {treeTransitionRange,validateTreeTransitionPolicy} from './tree-transition-range.js';
@@ -66,12 +67,12 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  // change on the next camera update, before a first standby upload completes.
  const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision+':'+world.chunkRevision;},has(id,suppressed){return standbyAvailable(id,suppressed);}};
  let referencesRevision=-1;const nativeReferences=new Map();
- let logicalPlan=null;
+ let logicalPlan=null,logicalIndex=null;
  function scheduleLogicalPreload(currentSignature){
   if(!logicalStandbyPreload||!layer.current||isCancelled()||nativeFarGpuContextLost(world.renderer))return;
   const bounds=logicalPreloadMargin===null?null:world.nearBounds,preloadBounds=adoptedLogicalPreloadBounds(bounds,logicalPreloadMargin);if(preloadBounds===undefined)return;const camera=world.camera.position,x=Math.round(camera.x/8),y=Math.round(camera.y/8),z=Math.round(camera.z/8),suppressed=world.nav.suppressed;
   if(logicalPlan?.x===x&&logicalPlan.y===y&&logicalPlan.z===z&&logicalPlan.region===layer.revision&&logicalPlan.chunk===world.chunkRevision&&logicalPlan.quality===world.quality&&logicalPlan.signature===currentSignature&&logicalPlan.suppressed===suppressed&&(bounds===null||logicalPlan.minX===bounds[0]&&logicalPlan.minZ===bounds[1]&&logicalPlan.maxX===bounds[2]&&logicalPlan.maxZ===bounds[3]))return;
-  logicalPlan={x,y,z,...(bounds?{minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]}:{}),region:layer.revision,chunk:world.chunkRevision,quality:world.quality,signature:currentSignature,suppressed};const entries=logicalNativeStandbyEntries(layer.current.trees,{metadata,camera,quality:world.quality,range:angularLod?fadeEnd:maxTransitionEnd+24,physicalIds:angularLod?new Set(nativeReferences.keys()):physicalIds,suppressed,maxTrees:standby.maxTrees,levels:world.prototypes[slot].length,preloadBounds,angularLod,previousLevels:angularLod?standby.active?.entries:null,preloadHeightPolicy:logicalSizePreload?transitionHeight:null});
+  logicalPlan={x,y,z,...(bounds?{minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]}:{}),region:layer.revision,chunk:world.chunkRevision,quality:world.quality,signature:currentSignature,suppressed};if(logicalIndex?.trees!==layer.current.trees)logicalIndex=new LogicalTreeRegionIndex(layer.current.trees);const entries=logicalNativeStandbyEntries(layer.current.trees,{spatialIndex:logicalIndex,metadata,camera,quality:world.quality,range:angularLod?fadeEnd:maxTransitionEnd+24,physicalIds:angularLod?new Set(nativeReferences.keys()):physicalIds,suppressed,maxTrees:standby.maxTrees,levels:world.prototypes[slot].length,preloadBounds,angularLod,previousLevels:angularLod?standby.active?.entries:null,preloadHeightPolicy:logicalSizePreload?transitionHeight:null});
   stats.logicalPreloads++;stats.logicalPreloadEntries=entries.length;if(entries.length)standby.request(entries,camera);
  }
  function frozenEntries(snapshot){const rows=[],matrix=new Matrix4();for(const [,record] of snapshot.entries){record.group.updateMatrixWorld(true);for(const [i,index] of record.batch.orders[record.level].entries()){const tree=record.batch.instances[index];if(!record.ids.has(tree.id))continue;matrix.fromArray(record.mesh.instanceMatrix.array,i*16).premultiply(record.group.matrixWorld);rows.push({id:tree.id,key:standbyTreeKey(tree),x:tree.x,z:tree.z,sy:tree.sy,level:record.level,matrix:matrix.toArray()});}}return rows;}
@@ -108,7 +109,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
   if(this.enabled){layer.update(world.chunks,world.camera,joint,true,dt,world.renderOrigin,world.nav.suppressed,prepared);if(layer.current)standby.update(world.camera.position,layer.current.treeById,id=>layer.current.prototype.treeState(id),id=>prepared.has(id)||!standbyAvailable(id,world.nav.suppressed),world.nav.suppressed,id=>{const ref=nativeReferences.get(id);return ref?.batch.fade?.attribute.getX(ref.index)??1;},frustum);}
   else layer.fade.update(world.chunks,world.camera,()=>null,'disabled');
   if(standby.active)standby.active.root.visible=this.enabled;stats.standby=standby.stats;
- },dispose(){if(closed)return;closed=true;standby.dispose();nativeReferences.clear();layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(ownsWorld)releaseNativeFarGpuCache(world.renderer);if(world.farVegetation===adapter)world.farVegetation=null;}};
+ },dispose(){if(closed)return;closed=true;logicalIndex=null;standby.dispose();nativeReferences.clear();layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(ownsWorld)releaseNativeFarGpuCache(world.renderer);if(world.farVegetation===adapter)world.farVegetation=null;}};
  if(ownsWorld)world.farVegetation=adapter;
  await region(tracker.center);
  if(isCancelled()){adapter.dispose();throw Error('Far world attachment cancelled');}
