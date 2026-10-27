@@ -1,0 +1,76 @@
+[
+  {
+    "directory": "public/wild-engine",
+    "outcome": {
+      "ready": true,
+      "workers": 1
+    },
+    "events": [
+      {
+        "type": "debug",
+        "text": "[vite] connecting..."
+      },
+      {
+        "type": "debug",
+        "text": "[vite] connected."
+      },
+      {
+        "load": "spatial-threaded.mjs"
+      },
+      {
+        "load": "spatial-threaded.mjs"
+      },
+      {
+        "load": "spatial-threaded.wasm"
+      },
+      {
+        "worker": "http://127.0.0.1:5220/wild-engine/spatial-threaded.mjs"
+      },
+      {
+        "type": "log",
+        "text": "dependencies 1"
+      },
+      {
+        "type": "log",
+        "text": "dependencies 0"
+      }
+    ]
+  },
+  {
+    "directory": ".codex-tmp/release-border-candidate",
+    "outcome": {
+      "ready": true,
+      "workers": 1
+    },
+    "events": [
+      {
+        "type": "debug",
+        "text": "[vite] connecting..."
+      },
+      {
+        "type": "debug",
+        "text": "[vite] connected."
+      },
+      {
+        "load": "spatial-threaded.mjs"
+      },
+      {
+        "load": "spatial-threaded.mjs"
+      },
+      {
+        "load": "spatial-threaded.wasm"
+      },
+      {
+        "worker": "http://127.0.0.1:5220/wild-engine/spatial-threaded.mjs"
+      },
+      {
+        "type": "log",
+        "text": "dependencies 1"
+      },
+      {
+        "type": "log",
+        "text": "dependencies 0"
+      }
+    ]
+  }
+]

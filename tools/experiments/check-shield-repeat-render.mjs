@@ -11,6 +11,9 @@ if(process.env.WG_WATER_CANDIDATE==='1')assert.equal(JSON.parse(fixture.snapshot
 const recordVideo=process.env.WG_MAGIC_VIDEO!=='0',cpuSampling=process.env.WG_MAGIC_CPU_SAMPLING!=='0';
 const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,...(recordVideo?{recordVideo:{dir:out+'/raw',size:viewport}}:{})}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:"Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid"};
+report.consoleErrors=[];report.failedRequests=[];
+page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text());});
+context.on('requestfailed',r=>report.failedRequests.push({url:r.url(),failure:r.failure()}));
 report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_GPU==='1'};
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
@@ -20,7 +23,7 @@ try {
   await context.route(/\/wild-engine\/spatial-threaded\.(mjs|wasm)(?:\?.*)?$/,async route=>{
    const name=new URL(route.request().url()).pathname.split('/').at(-1);
    report.runtimeOverride.loads[name]=(report.runtimeOverride.loads[name]??0)+1;
-   await route.fulfill({status:200,contentType:name.endsWith('.wasm')?'application/wasm':'application/javascript',body:await readFile(process.env.WG_SPATIAL_RUNTIME_DIR+'/'+name)});
+   const response=await route.fetch();await route.fulfill({response,contentType:name.endsWith('.wasm')?'application/wasm':'application/javascript',body:await readFile(process.env.WG_SPATIAL_RUNTIME_DIR+'/'+name)});
   });
  }
  if(process.env.WG_WATER_CANDIDATE==='1')await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch(),source=await response.text();if(!source.includes('groundColorStep:4'))throw Error('Missing water sample profile');await route.fulfill({response,body:source.replace('groundColorStep:4','groundColorStep:2')});});
