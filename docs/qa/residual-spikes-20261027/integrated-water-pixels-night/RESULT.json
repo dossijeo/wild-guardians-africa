@@ -1,0 +1,29 @@
+{
+  "sha256": "99bb1764bae81233236070ac8b89d1e5c28f3ad7921ccbfd49c26f910648ef82",
+  "waterPixels": {
+    "key": "2,0",
+    "pixels": 921600,
+    "repeat": {
+      "changedChannels": 0,
+      "maxDelta": 0
+    },
+    "comparison": {
+      "changedChannels": 0,
+      "maxDelta": 0
+    },
+    "visibilityWitness": {
+      "changedChannels": 122943,
+      "maxDelta": 82
+    },
+    "scope": "Same frozen renderer scene, camera and uniforms; only uploaded bed bytes change. Main color rendering, not postprocess or performance acceptance."
+  },
+  "changedBedBytes": 0,
+  "night": true,
+  "errors": [],
+  "cancellation": {
+    "disposed": 1,
+    "waterDisposed": 1,
+    "materialDisposed": 1
+  },
+  "limitations": "Paused post-stream image test of the main color render. No performance claim; not active-night simulation or all-biome pixel coverage."
+}

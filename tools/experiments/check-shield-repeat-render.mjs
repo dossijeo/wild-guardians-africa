@@ -188,7 +188,7 @@ try {
   if(process.env.WG_MAGIC_CAPTURE_AFTER_STREAM==='1'){result.captureStart=await page.evaluate(()=>performance.now());await page.screenshot({path:out+'/shield-'+i+'.png'});result.captureEnd=await page.evaluate(()=>performance.now());}
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));
  }
- if(process.env.WG_LIVE_WATER_VISUAL==='1'){report.waterVisual=await page.evaluate(async night=>{const {inspectLiveWaterBed}=await import('/tools/experiments/qa-live-chunk-water-bed.js');return inspectLiveWaterBed(qaMagicWorld,{night});},process.env.WG_LIVE_WATER_NIGHT==='1');assert(report.waterVisual.resident);await page.screenshot({path:out+'/water-bank.png'});}
+ if(process.env.WG_LIVE_WATER_VISUAL==='1'){report.waterVisual=await page.evaluate(async night=>{const {inspectLiveWaterBed}=await import('/tools/experiments/qa-live-chunk-water-bed.js');return inspectLiveWaterBed(qaMagicWorld,{night});},process.env.WG_LIVE_WATER_NIGHT==='1');assert(report.waterVisual.resident);await page.screenshot({path:out+'/water-bank.png'});if(process.env.WG_LIVE_WATER_PIXELS==='1')report.waterPixels=await page.evaluate(async key=>{const {verifyChunkWaterBedPixels}=await import('/tools/experiments/verify-chunk-water-bed-pixels.js');return verifyChunkWaterBedPixels(qaMagicWorld,key);},report.waterVisual.key);}
  if(process.env.WG_FIXED_SCENE==='1')report.fixedScene=await page.evaluate(async()=>{const {fixedSceneWindows}=await import('/tools/experiments/qa-fixed-scene-windows.js');return fixedSceneWindows(qaMagicWorld);});
  report.after=await inspect();
  if(report.runtimeOverride)assert(report.runtimeOverride.loads['spatial-threaded.wasm']>0,'Candidate shared runtime WASM was not loaded');
