@@ -1,7 +1,7 @@
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from '../../src/world/wild-engine/spatial-movement-profiles.js';
-const module=new WebAssembly.Module(readFileSync('.codex-tmp/spatial-release-profile.wasm'));
+const module=new WebAssembly.Module(readFileSync(process.argv[2]??'.codex-tmp/spatial-release-profile.wasm'));
 const phases=['populate','raster','commitSectors','neighborBorders','addTotal','setup','latticeAndRegistration','colors','waterLevels','groundMask','waterMesh','propsAndRegistration','sectorOverlayFill','sectorGraphCommit'];
 const rows=[];
 for(const selectedRemoved of [false,true,false,true]){
@@ -16,6 +16,6 @@ for(const selectedRemoved of [false,true,false,true]){
  if(removed!==5||w.spatial_chunk_count()!==20)throw Error('Residency mismatch');
  rows.push({selectedRemoved,selected,removed,cpuMs,phases:Object.fromEntries(phases.map((k,i)=>[k,w.spatial_profile_ms(i)]))});
 }
-const out='docs/qa/residual-spikes-20261027/native-release-profile';mkdirSync(out,{recursive:true});
+const out=process.argv[3]??'docs/qa/residual-spikes-20261027/native-release-profile';mkdirSync(out,{recursive:true});
 const report={scope:'Isolated Node WASM diagnosis, seed712 estuary,25chunks,six profiles, same five removals; alternating whether selected chunk is removed. No renderer, workers, dynamic world or gameplay frametime; not an optimization comparison.',rows};
 writeFileSync(out+'/report.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

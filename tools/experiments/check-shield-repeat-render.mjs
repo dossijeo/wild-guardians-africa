@@ -15,6 +15,14 @@ report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_SPATIAL_RUNTIME_DIR){
+  report.runtimeOverride={directory:process.env.WG_SPATIAL_RUNTIME_DIR,loads:{}};
+  await context.route(/\/wild-engine\/spatial-threaded\.(mjs|wasm)(?:\?.*)?$/,async route=>{
+   const name=new URL(route.request().url()).pathname.split('/').at(-1);
+   report.runtimeOverride.loads[name]=(report.runtimeOverride.loads[name]??0)+1;
+   await route.fulfill({status:200,contentType:name.endsWith('.wasm')?'application/wasm':'application/javascript',body:await readFile(process.env.WG_SPATIAL_RUNTIME_DIR+'/'+name)});
+  });
+ }
  if(process.env.WG_WATER_CANDIDATE==='1')await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch(),source=await response.text();if(!source.includes('groundColorStep:4'))throw Error('Missing water sample profile');await route.fulfill({response,body:source.replace('groundColorStep:4','groundColorStep:2')});});
 
  if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new')});});
@@ -77,6 +85,7 @@ try {
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));
  }
  report.after=await inspect();
+ if(report.runtimeOverride)assert(report.runtimeOverride.loads['spatial-threaded.wasm']>0,'Candidate shared runtime WASM was not loaded');
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}

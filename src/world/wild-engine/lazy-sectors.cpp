@@ -325,6 +325,14 @@ int lazy_init(int size){
 uint8_t* lazy_pass_ptr(){return stagedPass.data();}
 uint8_t* lazy_steps_ptr(){return stagedSteps.data();}
 uint8_t* lazy_inbound_ptr(){return stagedInbound.data();}
+// Internal spatial-authority helper: reuse the current overlay when only a
+// residency boundary changes. No graph mutation until lazy_commit_sector.
+int lazy_stage_sector(int sx,int sz){
+  const Sector* current=get(sx,sz);
+  if(!current)return 0;
+  stagedPass=current->pass;stagedSteps=current->steps;stagedInbound=current->inbound;
+  return 1;
+}
 int lazy_commit_sector(int sx,int sz){
   if(!sectorSize)return -1;
   auto [it,inserted]=sectors->try_emplace(key(sx,sz));

@@ -41,6 +41,7 @@ int lazy_select_context(int profile);
 uint8_t* lazy_pass_ptr();
 uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
+int lazy_stage_sector(int sx,int sz);
 int lazy_commit_sector(int sx,int sz);
 int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
@@ -888,6 +889,30 @@ void refreshSector(int sx,int sz){
   lazy_commit_sector(sx,sz);
   SPATIAL_TOCK(13,sectorGraphStarted);
 }
+// Removing a neighboring chunk cannot change the resident sector's cells or
+// interior edges. Only edges facing the removed residency need resampling.
+void refreshSectorResidencyEdges(int sx,int sz,uint8_t directions){
+  if(!lazy_stage_sector(sx,sz)){refreshSector(sx,sz);return;}
+  SPATIAL_TICK(sectorFillStarted);
+  auto* pass=lazy_pass_ptr();auto* steps=lazy_steps_ptr();auto* inbound=lazy_inbound_ptr();
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(int d=0;d<4;d++)if(directions&(1<<d))for(int k=0;k<sector;k++){
+    const int lx=d==0?sector-1:d==1?0:k,lz=d==2?sector-1:d==3?0:k;
+    const int i=lz*sector+lx,x=sx*sector+lx,z=sz*sector+lz,nx=x+dx[d],nz=z+dz[d];
+    steps[i]&=uint8_t(~(1<<d));inbound[i]&=uint8_t(~(1<<d));
+    if(!pass[i])continue;
+    if(!rasterAt(nx,nz)){
+      const ChunkRaster* chunk=rasterAt(x,z);const int at=rasterIndex(*chunk,x,z);
+      if((chunk->steps[at]&(1<<d))&&wallEdgeClear(x,z,nx,nz))steps[i]|=1<<d;
+      if((chunk->inbound[at]&(1<<d))&&wallEdgeClear(nx,nz,x,z))inbound[i]|=1<<d;
+    }else{
+      if(edge(x,z,nx,nz))steps[i]|=1<<d;
+      if(edge(nx,nz,x,z))inbound[i]|=1<<d;
+    }
+  }
+  SPATIAL_TOCK(12,sectorFillStarted);SPATIAL_TICK(sectorGraphStarted);
+  lazy_commit_sector(sx,sz);SPATIAL_TOCK(13,sectorGraphStarted);
+}
 template<class F> void forEachRectSector(int minX,int minZ,int maxX,int maxZ,F visit){
   if(!navReady)return;
   for(int cz=floorDiv(minZ+24,side);cz<=floorDiv(maxZ+24,side);cz++)
@@ -1584,7 +1609,8 @@ int spatial_remove_chunks(int count){
       const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
       for(int z=0;z<4;z++)for(int x=0;x<4;x++)lazy_remove_sector(firstX+x,firstZ+z);
     }
-    std::unordered_set<uint64_t> refreshed;
+    std::unordered_map<uint64_t,uint8_t> refreshed;
+    std::vector<uint64_t> refreshOrder;
     constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
     for(const auto& [cx,cz]:removed)for(int d=0;d<4;d++){
       const int nx=cx+dx[d],nz=cz+dz[d];
@@ -1592,9 +1618,13 @@ int spatial_remove_chunks(int count){
       const int x0=(nx*side-24)/sector,z0=(nz*side-24)/sector;
       for(int i=0;i<4;i++){
         const int x=x0+(d==0?0:d==1?3:i),z=z0+(d==2?0:d==3?3:i);
-        if(refreshed.insert(chunkKey(x,z)).second)refreshSector(x,z);
+        const auto key=chunkKey(x,z);
+        auto [it,inserted]=refreshed.try_emplace(key,0);
+        if(inserted)refreshOrder.push_back(key);
+        it->second|=1<<(d^1);
       }
     }
+    for(const auto key:refreshOrder)refreshSectorResidencyEdges(int(int32_t(key>>32)),int(int32_t(key)),refreshed.at(key));
   }
   selectProfile(previous);
   if(std::find(removed.begin(),removed.end(),std::pair<int,int>{chunkX,chunkZ})!=removed.end()){
