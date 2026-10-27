@@ -1,8 +1,9 @@
+import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
 import {readFile,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import {chromium} from 'playwright';
-const root=resolve(process.env.WG_PACKAGE_UI_ROOT??'dist'),prefix='/nested/itch/game/',requests=[],errors=[],workers=[],closedWorkers=[];
+const root=resolve(process.env.WG_PACKAGE_UI_ROOT??'dist'),prefix='/nested/itch/game/',requests=[],errors=[],workers=[],closedWorkers=[],runtimeOverrides={};
 const isolation=process.env.WG_PACKAGE_UI_ISOLATION!=='0';
 const types={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.json':'application/json','.css':'text/css','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.glb':'model/gltf-binary','.ogg':'audio/ogg','.opus':'audio/ogg','.mp3':'audio/mpeg','.woff2':'font/woff2'};
 const server=createServer(async(req,res)=>{
@@ -12,7 +13,10 @@ const server=createServer(async(req,res)=>{
   if(!url.pathname.startsWith(prefix))throw Error('Outside package prefix');
   const path=resolve(root,decodeURIComponent(url.pathname.slice(prefix.length))||'index.html');
   if(!path.startsWith(root+sep))throw Error('Outside package');
-  const bytes=await readFile(path);
+  const runtimeName=url.pathname.split('/').at(-1);
+  const override=process.env.WG_PACKAGE_UI_RUNTIME_DIR&&url.pathname.startsWith(prefix+'wild-engine/')&&['spatial-threaded.mjs','spatial-threaded.wasm'].includes(runtimeName);
+  const bytes=await readFile(override?resolve(process.env.WG_PACKAGE_UI_RUNTIME_DIR,runtimeName):path);
+  if(override)runtimeOverrides[runtimeName]={sha256:createHash('sha256').update(bytes).digest('hex'),loads:(runtimeOverrides[runtimeName]?.loads??0)+1};
   res.writeHead(200,{'Content-Type':types[extname(path)]??'application/octet-stream',...(isolation?{'Cross-Origin-Opener-Policy':'same-origin','Cross-Origin-Embedder-Policy':'require-corp'}:{})});res.end(bytes);
  }catch(error){requests.push({url:url.pathname,status:404,message:error.message});res.writeHead(404);res.end('Not found');}
 });
@@ -183,4 +187,4 @@ try{
  }
  console.log(JSON.stringify(result));
 }catch(e){result.loadingTrace=await page.evaluate(()=>globalThis.__wildGuardiansNativeLoadingSnapshot?.()).catch(()=>null);result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}
-finally{await writeFile(report,JSON.stringify({diagnostics:{loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await page.context().close();if(page.video())await page.video().saveAs(report.replace(/\.json$/,'.webm'));await browser.close();await new Promise(resolve=>server.close(resolve));}
+finally{await writeFile(report,JSON.stringify({diagnostics:{runtimeOverrideDirectory:process.env.WG_PACKAGE_UI_RUNTIME_DIR??null,runtimeOverrides,loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await page.context().close();if(page.video())await page.video().saveAs(report.replace(/\.json$/,'.webm'));await browser.close();await new Promise(resolve=>server.close(resolve));}
