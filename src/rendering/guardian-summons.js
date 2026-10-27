@@ -1,0 +1,85 @@
+import * as THREE from 'three';
+import {clone} from 'three/addons/utils/SkeletonUtils.js';
+import {GuardianFace} from '../ui/guardian-face.js';
+import {guardianPlacement} from './guardian-placement.js';
+import {vfxEnvironment} from './vfx-native.js';
+import {CameraBuildingRegistry} from './camera-building-registry.js';
+import {wallCollisionBounds} from '../world/wall-collision-frame.js';
+import {guardianMaterial} from './guardian-material.js';
+const COLORS={growth:0xa8ed8b,multiply:0xe5b4ff,shield:0x8be8ec,attack:0xffcf79};
+const CLIPS={growth:'Spell_Grow',multiply:'Spell_Multiply',shield:'Spell_Shield',attack:'Spell_Attack'};
+const ease=t=>{t=THREE.MathUtils.clamp(t,0,1);return t*t*(3-2*t);};
+export class GuardianSummons{
+ constructor(world){this.world=world;this.slots=[];this.anchor=world.state.events.at(-1);this.vector=new THREE.Vector3();this.direction=new THREE.Vector3();this.up=new THREE.Vector3(0,1,0);this.forward=new THREE.Vector3(0,0,1);this.aim=new THREE.Vector3();this.axis=new THREE.Vector3();this.q=new THREE.Quaternion();this.identity=new THREE.Quaternion();this.beamMatrix=new THREE.Matrix4();this.beamScale=new THREE.Vector3();this.stats={active:0,animationMs:0,vfxMs:0,reused:0};this.ready=this.load();}
+ async load(){
+  const gltf=await this.world.assets.model('content/guardian/guardian.glb');if(this.disposed)return;
+  this.beamGeometry=new THREE.CylinderGeometry(1,1,1,8,1,true);this.ringGeometry=new THREE.TorusGeometry(1,.045,5,32);this.coreGeometry=new THREE.IcosahedronGeometry(1,1);
+  // A single ancestral spirit: subsequent casts replace its presentation,
+  // never its authoritative gameplay result and never create a second actor.
+  for(let i=0;i<1;i++){
+   const group=new THREE.Group(),model=clone(gltf.scene),materials=[];group.add(model);model.scale.setScalar(2.4);group.visible=false;
+   model.traverse(o=>{if(o.isMesh){o.material=(Array.isArray(o.material)?o.material:[o.material]).map(m=>{const copy=guardianMaterial(m,this.world.toon);materials.push(copy);return copy;});if(o.material.length===1)o.material=o.material[0];o.castShadow=false;o.frustumCulled=false;}});this.world.scene.add(group);
+   const mixer=new THREE.AnimationMixer(model),actions=new Map(gltf.animations.map(c=>[c.name,mixer.clipAction(c)]));for(const a of actions.values())a.play();
+   const material=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false});
+   const beam=new THREE.InstancedMesh(this.beamGeometry,material,2),impact=new THREE.Mesh(this.ringGeometry,material),core=new THREE.Mesh(this.coreGeometry,material);for(const m of [beam,impact,core]){m.visible=false;m.frustumCulled=false;this.world.scene.add(m);}
+   const aura=this.world.vfxLibrary.create('repel',this.world.destructionPass,{density:.35,softParticles:false});aura.visible=false;aura.sprites.material.forceSinglePass=true;aura.ribbons.material.forceSinglePass=true;this.world.scene.add(aura);
+   const eyes=['L','R'].map(side=>model.getObjectByName('Eye'+side)??model.getObjectByName('Eye.'+side)).filter(Boolean).map(bone=>({bone,rest:bone.quaternion.clone()}));
+   this.slots.push({group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
+  }
+ }
+ plan(entityId,point){const w=this.world,target=w.state.raid?.animals.find(a=>a.id===entityId)??w.state.plants.find(p=>p.id===entityId&&p.alive)??point??w.state.structures.find(s=>s.id===entityId);if(!target)return null;
+  // Reuse native building volumes: never raycast every skinned triangle for
+  // each of the placement candidates. This work runs only on an accepted cast.
+  this.occluders??=new CameraBuildingRegistry({centerMargin:0,villageMargin:0});
+  this.occluders.sync(w.objects,[...w.state.villages,...w.state.structures.filter(s=>s.kind==='center')]);
+  const index=this.occluders.index;
+  for(const id of this.extraOccluders??[])index.delete(id);this.extraOccluders=[];
+  const add=(id,min,max)=>{index.set(id,{min,max});this.extraOccluders.push(id);};
+  for(const wall of w.state.structures)if(wall.kind==='wall'&&wall.status==='intact'&&Math.hypot(wall.x-target.x,wall.z-target.z)<15){const b=wallCollisionBounds(wall,0),y=w.nav.field.surface(wall.x,wall.z);add('wall:'+wall.id,[b[0],y,b[1]],[b[2],y+2.5,b[3]]);}
+  for(const p of w.nav.propsAt?.(target.x,target.z,12)??[])if(p.slot<4){const r=p.radius??1.5,y=w.nav.field.surface(p.x,p.z);add('tree:'+p.id+':'+p.x+':'+p.z,[p.x-r,y,p.z-r],[p.x+r,y+Math.max(4,r*3),p.z+r]);}
+  const eye=w.camera.position.toArray();
+  return guardianPlacement({target,camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z])});
+ }
+ start(event){if(!this.slots.length)return;const w=this.world,s=this.slots[0];if(s.event)this.stats.reused++;this.hide(s);
+  s.lastAge=0;s.event=event;s.at=w.state.elapsed;s.origin=event.presentation?.origin??this.plan(event.targetId,{x:event.x,z:event.z});if(!s.origin){s.event=null;return;}
+  const contact=event.presentation?.contact??{x:event.x,y:w.nav.field.surface(event.x,event.z)+.5,z:event.z};s.target=new THREE.Vector3(contact.x,contact.y,contact.z);
+  s.group.position.set(s.origin.x,s.origin.y,s.origin.z);s.group.rotation.y=Math.atan2(contact.x-s.origin.x,contact.z-s.origin.z);s.group.visible=true;s.material.color.setHex(COLORS[event.kind]);s.aura.position.copy(s.group.position);s.aura.position.y-=.8;s.aura.scale.setScalar(.65);s.aura.seek(0);s.aura.visible=true;w.onGuardianPresence?.('spirit_appear',s.origin);s.aura.environment=vfxEnvironment(w.state.time>=300?1:0);
+ }
+ update(){const w=this.world,state=w.state;if(!this.slots.length)return;if(state.result){this.clear();return;}
+  const events=state.events,index=this.anchor?events.lastIndexOf(this.anchor):-1;
+  for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}this.anchor=events.at(-1);
+  let anim=0,vfx=0,active=0;
+  for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;if(age>2.2){w.onGuardianPresence?.('spirit_disappear',s.origin);this.hide(s);continue;}active++;
+   const started=performance.now(),kind=s.event.kind,opacity=ease(age/.12)*(1-ease((age-1.5)/.7));s.group.visible=true;
+   for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.25*(1-opacity);}
+   const clip=CLIPS[kind],selected=s.actions.has(clip)?clip:kind==='attack'?'Cast':'Invoke';
+   for(const [name,a] of s.actions){a.enabled=['Float','Mantle_Spell',selected].includes(name);a.weight=1;a.time=name===selected?Math.min(a.getClip().duration,(kind==='attack'?.25+age/1.3*.75:age/1.5)*a.getClip().duration):state.elapsed%a.getClip().duration;}
+   s.mixer.update(0);const narration=w.guardianNarration?.();if(s.faceRecord!==narration?.record?.id){s.faceRecord=narration?.record?.id;s.face.setRecord(narration?.record);}s.face.update(narration?.audio??null,state.elapsed,{expression:{name:kind==='attack'?'focus':kind==='growth'?'joy':'surprise',value:.25*opacity}});s.group.updateMatrixWorld(true);
+   const reachWeight=ease(age/.1)*(1-ease((age-.8)/.7));
+   for(const bone of s.forearms)this.aimJoint(bone,s.target,.5*reachWeight);
+   for(const bone of s.hands)this.aimJoint(bone,s.target,1.1*reachWeight);
+   s.group.updateMatrixWorld(true);
+   for(const {bone,rest} of s.eyes){bone.quaternion.copy(rest);bone.parent.worldToLocal(this.aim.copy(s.target));this.aim.sub(bone.position).applyQuaternion(this.q.copy(rest).invert()).normalize();this.aim.set(THREE.MathUtils.clamp(this.aim.x,-.13,.13),1,THREE.MathUtils.clamp(this.aim.z,-.12,.12)).normalize();bone.quaternion.multiply(this.q.setFromUnitVectors(this.up,this.aim));}
+   anim+=performance.now()-started;
+   const visual=performance.now();s.aura.advance(Math.max(0,age-(s.lastAge??0)));s.lastAge=age;
+   // Instant discharge represents the authoritative immediate hit. No delayed damage timers.
+   const release=kind==='attack'?Math.max(0,1-age/.32):Math.sin(Math.PI*Math.min(1,age/1.25));
+   s.material.opacity=release*.7;const beam=s.beam;beam.visible=release>.01;s.impact.visible=release>.01;s.core.visible=release>.01;
+   if(beam.visible){beam.position.set(0,0,0);beam.count=kind==='attack'?1:2;for(let i=0;i<beam.count;i++){const hand=kind==='attack'?s.hand:s.hands[i];hand?.getWorldPosition(this.vector);if(!hand)this.vector.copy(s.group.position);this.direction.copy(s.target).sub(this.vector);const length=this.direction.length();this.vector.addScaledVector(this.direction,.5);this.q.setFromUnitVectors(this.up,this.direction.normalize());this.beamScale.set(kind==='attack'?.075:.028,length,kind==='attack'?.075:.028);beam.setMatrixAt(i,this.beamMatrix.compose(this.vector,this.q,this.beamScale));}beam.instanceMatrix.needsUpdate=true;s.core.position.copy(s.target);s.core.scale.setScalar(.12+.16*release);s.impact.position.copy(s.target);s.impact.quaternion.setFromUnitVectors(this.forward,this.direction);s.impact.scale.setScalar(.15+age*(kind==='attack'?2:1));}
+   vfx+=performance.now()-visual;
+  }
+  Object.assign(this.stats,{active,animationMs:anim,vfxMs:vfx});
+ }
+ aimJoint(bone,target,limit){
+  if(limit<=0)return;
+  bone.parent.worldToLocal(this.aim.copy(target));this.aim.sub(bone.position).normalize();this.axis.copy(this.up).applyQuaternion(bone.quaternion);
+  this.q.setFromUnitVectors(this.axis,this.aim);const angle=this.q.angleTo(this.identity);if(angle>limit)this.q.slerp(this.identity,1-limit/angle);
+  bone.quaternion.premultiply(this.q);bone.updateWorldMatrix(false,true);
+ }
+ prepare(camera){const started=performance.now();let depth=false;for(const s of this.slots)if(s.event){depth=s.aura.prepare(camera,this.world.scene)||depth;for(const light of s.aura.localLights)light.visible=false;}this.stats.vfxMs+=performance.now()-started;return depth;}
+ beginPrewarm(){for(const s of this.slots){s.group.visible=true;s.group.position.copy(this.world.controls.target);for(const m of s.materials)m.opacity=1;for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.time=0;}s.mixer.update(0);for(const m of [s.beam,s.impact,s.core]){m.visible=true;m.position.copy(s.group.position);m.frustumCulled=false;}s.material.opacity=.5;s.aura.position.copy(s.group.position);s.aura.visible=true;s.aura.seek(.5);s.aura.prepare(this.world.camera,this.world.scene);for(const light of s.aura.localLights)light.visible=false;}}
+ endPrewarm(){this.clear();}
+ hide(s){s.event=null;s.lastAge=0;s.aura.clear();for(const o of [s.group,s.aura,s.beam,s.impact,s.core])o.visible=false;}
+ clear(){for(const s of this.slots)this.hide(s);Object.assign(this.stats,{active:0,animationMs:0,vfxMs:0});}
+ dispose(){this.disposed=true;for(const s of this.slots){s.mixer.stopAllAction();s.mixer.uncacheRoot(s.model);s.model.traverse(o=>o.skeleton?.dispose());for(const m of s.materials)m.dispose();s.face.dispose();s.aura.dispose();s.beam.dispose();s.material.dispose();for(const o of [s.group,s.aura,s.beam,s.impact,s.core])this.world.scene.remove(o);}this.beamGeometry?.dispose();this.ringGeometry?.dispose();this.coreGeometry?.dispose();this.slots.length=0;}
+}

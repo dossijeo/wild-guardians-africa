@@ -83,7 +83,7 @@ function prepareLoadingScene(){
  if(preparedLoading)return preparedLoading;progressQa?.lifecycle('app-preloading-created');
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
- try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
+ try{owner=new WorldScene(canvas,onPick);owner.guardianNarration=()=>guardian?.key?{audio:guardian.voice?.audio,record:guardian.voiceRecord}:null;owner.onGuardianPresence=(id,p)=>{const requested=audio.context?.currentTime??0;audio.sound(id,{bus:'world',family:'guardian-presence',emitter:'guardian-world',gain:.45/(1+(Math.hypot(p.x-owner.controls.target.x,p.z-owner.controls.target.z)/24)**2),isCurrent:()=>!owner.disposed&&owner===world&&!state?.pauses?.length&&(audio.context?.currentTime??0)-requested<.4}).catch(()=>{});};if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
  diorama=new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
  preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
@@ -219,13 +219,13 @@ function guidedHudAction(action,open){
   open();
   if(surfaces.active==='panel')uiAudio.guidedTouch(action,{guided});
 }
-function onPick({entityId,point}) {
+function onPick({entityId,point,hitPoint}) {
   if(!state||screen!=='game')return;
   safe(()=>{
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
-      if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav))save();return;
+      if(castPickedSpell(state,commandId(),tool.spell,{entityId,point,hitPoint,origin:()=>world.guardianSummons?.plan(entityId,point)},nav))save();return;
     }
     if(pickedPlant&&tool?.kind!=='spell'&&tool?.kind!=='plant'){cancelTool();closeSurface();selection=null;return;}
     const pickedCenter=state.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));
@@ -492,7 +492,7 @@ function frame(now) {
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
+    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0);guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }

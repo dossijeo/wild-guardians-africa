@@ -65,6 +65,10 @@ export class NativeGuardian {
     if(immediate){this.lifecycle.close();this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.lastStamp=null;this.present('hidden');}
     else this.lifecycle.finish();
   }
+  setWorldPresence(active){
+    // Keep narration and its controls alive; the spirit has one visible body.
+    this.root.querySelector('.avatar-shell').style.visibility=active?'hidden':'';
+  }
   present(phase){try{this.onPresentation(phase);}catch{}}
   resize(){if(this.mesh){this.mesh.resize();this.draw(0);}}
   update(){
