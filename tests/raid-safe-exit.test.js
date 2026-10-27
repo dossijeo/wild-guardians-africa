@@ -17,9 +17,9 @@ function enterFirstNight(s,nav){
 // A new platform connects different land than the archived island regression.
 // Exercise actual entry, collision-safe movement, reload, hits and departure
 // without assuming that the seed still has an unreachable center.
-for(const culture of Game.CULTURES)test(`Manglares/${culture}: new lab platform supports a complete first-night raid and saved navigation`,()=>{
- let {s,nav}=createOpeningWorld({biome:'manglares',culture,seed:712});
- assert.equal(s.terrainVersion,'4.1.10.3');assert.ok(s.villages[0].terrainSite);
+for(const terrainVersion of [undefined,'legacy'])for(const culture of Game.CULTURES)test(`Manglares/${culture}/${terrainVersion??'current'}: walkable water supports a complete first-night raid and saved navigation`,()=>{
+ let {s,nav}=createOpeningWorld({biome:'manglares',culture,seed:712,terrainVersion});
+ if(!terrainVersion){assert.equal(s.terrainVersion,'4.1.10.3');assert.ok(s.villages[0].terrainSite);}
  enterFirstNight(s,nav);
  assert.ok(s.raid);const born=s.raid.animals[0],exit={...born.exit};let last={x:born.x,z:born.z},departed=null;
  s=deserialize(serialize(s));nav.setState(s);assert.deepEqual(s.raid.animals[0].exit,exit);
@@ -29,25 +29,6 @@ for(const culture of Game.CULTURES)test(`Manglares/${culture}: new lab platform 
    last={x:animal.x,z:animal.z};if(animal.status==='gone')departed={...last};
  }
  assert.equal(s.result,null);assert.equal(s.raid,null);assert.ok(departed);assert.ok(Math.hypot(departed.x-exit.x,departed.z-exit.z)<.25);
- assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
-});
-
-for(const culture of Game.CULTURES)test(`Manglares/${culture}: legacy map guaranteed first-night animal spawns, reloads and physically exits when the island has no reachable target`,()=>{
- let {s,nav}=createOpeningWorld({biome:'manglares',culture,seed:712,terrainVersion:'legacy'});
- enterFirstNight(s,nav);
- assert.ok(s.raid);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);assert.equal(s.raid.animals.length,1);
- const animal=s.raid.animals[0];assert.equal(animal.species,'warthog');assert.equal(reachableApproach(animal,s.structures[0],nav),null);
- assert.ok(nav.walkable(animal.x,animal.z,animal.radius,null,false));assert.ok(nav.segmentClear(animal,animal.exit,animal.radius,null,false));
- const born={x:animal.x,z:animal.z},exit={...animal.exit},hits=animal.hitsRemaining,centerHp=s.structures[0].hp;
- s=deserialize(serialize(s));nav.setState(s);assert.deepEqual(s.raid.animals[0].exit,exit);
- let moved=false,departed=null;
- for(let elapsed=0;s.raid&&elapsed<10;elapsed+=.05){
-  const a=s.raid.animals[0],before={x:a.x,z:a.z};Game.tick(s,.05,nav);
-  assert.ok(nav.segmentClear(before,a,a.radius,null,false));assert.equal(a.hitsRemaining,hits);
-  moved||=Math.hypot(a.x-born.x,a.z-born.z)>.1;if(a.status==='gone')departed={x:a.x,z:a.z};
- }
- assert.equal(s.raid,null);assert.ok(moved);assert.ok(Math.hypot(departed.x-exit.x,departed.z-exit.z)<.25);
- assert.equal(s.structures[0].hp,centerHp);assert.equal(s.events.filter(e=>e.type==='StructureHit').length,0);
  assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
 });
 
@@ -64,6 +45,32 @@ test('entry searches the full active edge when only a distant corner admits the 
 test('a blocked entry-to-exit corridor cancels the entire group without allocating animals',()=>{
  const {s,nav}=clearWorld(),id=s.nextId;nav.segmentClear=()=>false;
  spawnRaid(s,{group:['warthog','buffalo']},nav);assert.equal(s.raid,null);assert.equal(s.nextId,id);
+});
+
+test('an unreachable target causes a physical retreat after reload without consuming hits',()=>{
+ const {s,nav}=clearWorld();
+ // An explicit unreachable target keeps this lifecycle regression independent
+ // of whether a particular biome's water happens to block movement.
+ nav.path=(start,end)=>Math.hypot(end.x,end.z)<20?null:[{x:end.x,z:end.z}];
+ spawnRaid(s,{group:['warthog']},nav);
+ assert(s.raid);const born=s.raid.animals[0],exit={...born.exit};
+ assert.equal(reachableApproach(born,s.structures[0],nav),null);
+ const hits=born.hitsRemaining,hp=s.structures[0].hp;
+ const loaded=deserialize(serialize(s));nav.setState(loaded);
+ let departed=null,moved=false;
+ for(let elapsed=0;loaded.raid&&elapsed<10;elapsed+=.05){
+  const animal=loaded.raid.animals[0],before={x:animal.x,z:animal.z};
+  Game.tick(loaded,.05,nav);
+  assert(nav.segmentClear(before,animal,animal.radius,null,false));
+  assert.equal(animal.hitsRemaining,hits);
+  moved||=Math.hypot(animal.x-born.x,animal.z-born.z)>.1;
+  if(animal.status==='gone')departed={x:animal.x,z:animal.z};
+ }
+ assert.equal(loaded.raid,null);assert(moved);assert(departed);
+ assert(Math.hypot(departed.x-exit.x,departed.z-exit.z)<.25);
+ assert.equal(loaded.structures[0].hp,hp);
+ assert.equal(loaded.events.filter(e=>e.type==='StructureHit').length,0);
+ assert.equal(loaded.events.filter(e=>e.type==='RaidEnded').length,1);
 });
 
 test('native reverse approach search preserves endpoints and swept collision on a real detour',()=>{
