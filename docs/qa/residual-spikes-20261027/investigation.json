@@ -1,0 +1,29 @@
+{
+  "status": "diagnosis; no runtime optimization applied",
+  "baseline": "baseline-control/summary.json",
+  "cpu": "baseline-control/cpu-attribution.json",
+  "observations": [
+    {
+      "finding": "Rendering coordinate recentering performs forced scene matrix traversals before and after drawing, while Three.js and asset grouping also traverse matrices.",
+      "source": "src/rendering/render-origin.js:19",
+      "evidence": "matrixTraversalAncestors: 5341.826 sampled ms under withRenderOrigin, 2352.430 under asset grouping, 2091.536 under renderer across 131685.741 ms profile.",
+      "next": "Measure per-frame costs and count objects/traversals; investigate eliminating genuinely redundant traversals while retaining global matrices for picking, navigation, effects, skinning and shadow passes."
+    },
+    {
+      "finding": "Shadow snapshot consumes 5254.653 sampled inclusive ms; copies active instance attributes every frame to detect unversioned changes.",
+      "source": "src/rendering/shadow-cache.js:5",
+      "next": "Measure per-frame snapshot sizes, changes and hits. Do not replace actual value checking with versions until producer invalidation correctness is proven."
+    },
+    {
+      "finding": "No late program-info-log calls in this control; frame intervals still reach 149.55 ms.",
+      "next": "Add synchronized CPU phase and asynchronous GPU measurements in the existing application frame loop. Do not equate RAF intervals or WebGL call durations with GPU execution."
+    }
+  ],
+  "limits": [
+    "One diagnostic run with CPU profiler and video. No performance improvement claim.",
+    "Sampled inclusive categories overlap; do not sum them.",
+    "Current profile has no explicit clock correlation for per-spike sampled stack attribution.",
+    "Other host worktrees may contend for hardware; require controlled ABAB before adopting changes."
+  ],
+  "nextPhaseRequires": "Complete validated PR216 merge first; keep current candidate unchanged."
+}

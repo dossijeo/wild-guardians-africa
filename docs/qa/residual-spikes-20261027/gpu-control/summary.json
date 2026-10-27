@@ -1,0 +1,132 @@
+{
+  "biome": "manglares",
+  "reservationVersion": 2,
+  "simulationElapsed": {
+    "before": 2.0621549999999846,
+    "after": 133.37751499999897
+  },
+  "runtimeProfile": {
+    "visualSearch": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&workerResidency=actors&groundResidentMask=1&mangroveFerns=holly&groundCache=fixed512&farWaterSurface=1&farAngularLod=1&qa-visibility=",
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "regionalWater": 1
+  },
+  "ok": true,
+  "scope": "Streaming control without casting; active agricultural simulation, no UI targeting or raid",
+  "errors": [],
+  "frameIntervals": {
+    "samples": 6183,
+    "p50": 16.664999999979045,
+    "p95": 33.41000000000349,
+    "p99": 50.03499999998894,
+    "max": 116.23500000000058
+  },
+  "programWaits": {
+    "count": 0,
+    "totalMs": 0,
+    "maxMs": 0
+  },
+  "casts": [
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 77490.78499996662,
+      "commandMs": 0,
+      "simulationStart": 3.243124999999983,
+      "after": {
+        "elapsed": 5.471194999999965,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 24,
+        "finalChunks": 12,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 90,
+        "p50": 16.654999999998836,
+        "p95": 49.86999999999534,
+        "p99": 50.01499999999942,
+        "max": 50.01499999999942
+      },
+      "programWaits": []
+    },
+    {
+      "kind": "control-no-cast",
+      "accepted": false,
+      "start": 167487.16499996185,
+      "commandMs": 0,
+      "simulationStart": 93.2531850000006,
+      "after": {
+        "elapsed": 95.44802000000053,
+        "cooldown": 0,
+        "spells": []
+      },
+      "streaming": {
+        "samples": 400,
+        "initialChunks": 25,
+        "finalChunks": 13,
+        "uniqueChunks": 40
+      },
+      "activationFrames": {
+        "samples": 103,
+        "p50": 16.64999999999418,
+        "p95": 33.25500000000466,
+        "p99": 49.79999999998836,
+        "max": 49.86500000001979
+      },
+      "programWaits": []
+    }
+  ],
+  "limitations": [
+    "Single instrumented renderer run; not ABAB or isolated GPU timing.",
+    "Activation window includes intervals overlapping first two seconds after command.",
+    "No spells cast; matched simulation spacing, no pointer targeting test.",
+    "CPU World.render includes GPU-query bookkeeping; simulation/UI outside this call are excluded. GPU queries do not include asynchronous preparation outside the envelope."
+  ],
+  "residual": {
+    "hardware": {
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "hardwareConcurrency": 16,
+      "devicePixelRatio": 1,
+      "canvas": [
+        1280,
+        720
+      ],
+      "crossOriginIsolated": true
+    },
+    "cpuScope": "World.render synchronous wall time including timer polling and submission; excludes simulation/UI and asynchronous preparation outside this call.",
+    "cpuWorldRenderMs": {
+      "samples": 6211,
+      "p50": 7.40500009059906,
+      "p95": 14.490000009536743,
+      "p99": 20.47000002861023,
+      "max": 71.125
+    },
+    "gpuWorldRenderMs": {
+      "samples": 6209,
+      "p50": 16.121249,
+      "p95": 25.370832,
+      "p99": 28.405988,
+      "max": 40.777187
+    },
+    "gpuStatus": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "pendingBeforeDispose": 2,
+      "unresolvedAtDispose": 2
+    },
+    "gpuScope": "GPU elapsed query over synchronous presentation commands including subdraws; excludes async uploads/preparation outside the envelope. Polling overhead means RAF is diagnostic, not an uninstrumented performance comparison. lastRender is renderer.info after the call; autoReset may restrict it to the final subpass, not the entire query."
+  }
+}

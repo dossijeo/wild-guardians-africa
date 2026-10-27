@@ -8,8 +8,10 @@ await mkdir(out,{recursive:true});
 const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
 const fixture=JSON.parse(await readFile(process.env.WG_MAGIC_FIXTURE??'docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
 if(process.env.WG_WATER_CANDIDATE==='1')assert.equal(JSON.parse(fixture.snapshot).biome,'manglares','Regional-water candidate requires a Manglares fixture');
-const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,recordVideo:{dir:out+'/raw',size:viewport}}),page=await context.newPage(),errors=[];
+const recordVideo=process.env.WG_MAGIC_VIDEO!=='0',cpuSampling=process.env.WG_MAGIC_CPU_SAMPLING!=='0';
+const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,...(recordVideo?{recordVideo:{dir:out+'/raw',size:viewport}}:{})}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:"Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid"};
+report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_GPU==='1'};
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
@@ -30,9 +32,18 @@ try {
  await page.waitForTimeout(2200);report.before=await inspect();report.biome=report.before.state?.biome;assert.equal(report.biome,JSON.parse(fixture.snapshot).biome);if(process.env.WG_EXPECT_BIOME)assert.equal(report.biome,process.env.WG_EXPECT_BIOME);if(process.env.WG_MAGIC_PROFILE==='1')report.runtimeProfile=await page.evaluate(()=>({visualSearch:qaMagicWorld.visualSearch,streamingOptions:qaMagicWorld.streamingOptions,regionalWater:qaMagicWorld.scene.getObjectsByProperty('isMesh',true).filter(m=>m.userData.regionalWaterSurface).length}));
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
  if(process.env.WG_MAGIC_PROFILE==='1'){
-  profiler=await context.newCDPSession(page);await profiler.send('Profiler.enable');await profiler.send('Profiler.start');
+  profiler=await context.newCDPSession(page);if(cpuSampling){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
   await page.evaluate(()=>{const renderer=qaMagicWorld.renderer,draw=renderer.renderBufferDirect;renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){globalThis.qaMagicDraw={object:object.name,parents:[object.parent?.name,object.parent?.parent?.name],type:object.type,material:material.type,source:object.material?.name,side:material.side};try{return draw.call(this,camera,scene,geometry,material,object,group);}finally{globalThis.qaMagicDraw=null;}};globalThis.qaMagicFrames=[];globalThis.qaMagicLongTasks=[];let last=null;globalThis.qaMagicRecording=true;const frame=t=>{if(!qaMagicRecording)return;if(last!==null)qaMagicFrames.push({t,ms:t-last});last=t;requestAnimationFrame(frame);};requestAnimationFrame(frame);new PerformanceObserver(list=>{for(const e of list.getEntries())qaMagicLongTasks.push({start:e.startTime,ms:e.duration});}).observe({type:'longtask',buffered:false});});
  }
+ if(process.env.WG_MAGIC_GPU==='1')await page.evaluate(async()=>{
+  const {LoadingGpuQa}=await import('/src/app/loading-gpu-qa.js');
+  const w=qaMagicWorld,original=w.render,gpu=new LoadingGpuQa(w.renderer),cpu=[];
+  const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
+  globalThis.qaResidualHardware={renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),hardwareConcurrency:navigator.hardwareConcurrency,devicePixelRatio,canvas:[gl.drawingBufferWidth,gl.drawingBufferHeight],crossOriginIsolated};
+  const wrapped=function(...args){const at=performance.now();try{return gpu.measure('world-render',()=>original.apply(this,args));}finally{cpu.push({frame:gpu.index-1,at,ms:performance.now()-at});}};
+  w.render=wrapped;
+  globalThis.qaResidualFinish=()=>{if(w.render===wrapped)w.render=original;return {gpu:gpu.close(),cpu,hardware:qaResidualHardware,cpuScope:'World.render synchronous wall time including timer polling and submission; excludes simulation/UI and asynchronous preparation outside this call.'};};
+ });
  await page.evaluate(async()=>{globalThis.qaGame=await import('/src/simulation/game.js');});
  await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(1000);
@@ -59,4 +70,4 @@ try {
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}

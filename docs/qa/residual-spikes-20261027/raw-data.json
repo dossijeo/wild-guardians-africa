@@ -1,0 +1,36 @@
+{
+  "format": "gzip; decompress before passing raid-ui.json to summarize-magic-repeat.mjs",
+  "archive": [
+    {
+      "file": "baseline-control/magic.cpuprofile.gz",
+      "uncompressedBytes": 1470805,
+      "compressedBytes": 273807,
+      "sha256": "9af1f5eba58e3176aa14d81cf1f899024c0e7535989d54e546adfc7cb06ef5e6"
+    },
+    {
+      "file": "baseline-control/raid-ui.json.gz",
+      "uncompressedBytes": 869981,
+      "compressedBytes": 71793,
+      "sha256": "fbd8ca8cc1c4aa44ef83c6db04247d04a628386c7794fe315df1ab6b4896796b"
+    },
+    {
+      "file": "baseline-control/program-history.json.gz",
+      "uncompressedBytes": 4727553,
+      "compressedBytes": 866522,
+      "sha256": "aea70f92a42fc4f3699fd429c8f35b766c0a1fd084efb0643e72572e77bec054"
+    },
+    {
+      "file": "gpu-control/raid-ui.json.gz",
+      "uncompressedBytes": 4049867,
+      "compressedBytes": 280449,
+      "sha256": "f3c42de81a45b204953c0b58aa55c7e617dc7963cc38d4632cdfdebc3d74f163"
+    },
+    {
+      "file": "gpu-control/program-history.json.gz",
+      "uncompressedBytes": 4727614,
+      "compressedBytes": 866462,
+      "sha256": "db81d99a46854df0b21b13162269d50ac2f38e693e9b19908063a1ba90d83ba2"
+    }
+  ],
+  "excluded": "Local diagnostic videos and screenshots are retained locally; no new artwork or performance candidate is asserted by these measurements."
+}
