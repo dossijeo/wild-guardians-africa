@@ -3,6 +3,11 @@ import {installStreamGpuTimer} from './spatial-stream-gpu-timer.js';
 export async function observeQualityExecution(world,run){
  const frames=[],phases=[],longFrames=[],previousFrame=globalThis.qaMainFrame,previousPhase=globalThis.qaMainPhase;
  const farOperations=[],restore=[];
+ if(world.biomeGround){
+  const owner=world.biomeGround,original=owner.uniforms;
+  const wrapped=function(...args){const at=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-at;if(ms>=1&&farOperations.length<10000)farOperations.push({label:'groundUniforms',mapped:args[3]?.mapped!==false,cx:args[0],cz:args[1],at,ms});}};
+  owner.uniforms=wrapped;restore.push(()=>{if(owner.uniforms===wrapped)owner.uniforms=original;});
+ }
  for(const [slot,adapter] of (world.farVegetation?.adapters??[]).entries()){
   for(const [owner,key] of [[adapter.layer,'selectTrees'],[adapter.layer,'create'],[adapter.layer,'attachData'],[adapter.layer,'prepare'],[adapter.layer.transitions,'bind']]){
    const original=owner[key];if(typeof original!=='function')continue;
