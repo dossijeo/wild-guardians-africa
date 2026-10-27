@@ -1,3 +1,4 @@
+import {patchFarWaterPredicate} from './far-water-predicate-patch.mjs';
 import {patchIncrementalFarWater} from './incremental-far-water-patch.mjs';
 import {patchPackedContacts} from './packed-ground-contact-patch.mjs';
 import {patchCoveragePrefix} from './coverage-prefix-upload-patch.mjs';
@@ -36,6 +37,12 @@ try {
    await route.fulfill({response,body:regionalTailProbe((name==='native-far-ground.js'||name==='native-far-ground-seam.js')?await response.text():await readFile(path,'utf8'),name)});
   });
  }
+ if(process.env.WG_FAR_WATER_PREDICATE==='1')await context.route(/\/tools\/experiments\/native-far-ground\.js(?:\?.*)?$/,async route=>{
+  const response=await route.fetch();let body=await response.text();
+  if(process.env.WG_REGIONAL_TAIL_PROBE==='1')body=regionalTailProbe(body,'native-far-ground.js');
+  body=patchFarWaterPredicate(body);report.farWaterPredicateLoads=(report.farWaterPredicateLoads??0)+1;
+  await route.fulfill({response,body});
+ });
  if(process.env.WG_INCREMENTAL_FAR_WATER==='1')await context.route(/\/tools\/experiments\/(?:native-far-layer|attach-native-far-world)\.js(?:\?.*)?$/,async route=>{
   const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
   let body=patchIncrementalFarWater(await response.text(),name);
@@ -207,6 +214,7 @@ try {
  }
  if(process.env.WG_LIVE_WATER_VISUAL==='1'){report.waterVisual=await page.evaluate(async night=>{const {inspectLiveWaterBed}=await import('/tools/experiments/qa-live-chunk-water-bed.js');return inspectLiveWaterBed(qaMagicWorld,{night});},process.env.WG_LIVE_WATER_NIGHT==='1');assert(report.waterVisual.resident);await page.screenshot({path:out+'/water-bank.png'});if(process.env.WG_LIVE_WATER_PIXELS==='1')report.waterPixels=await page.evaluate(async key=>{const {verifyChunkWaterBedPixels}=await import('/tools/experiments/verify-chunk-water-bed-pixels.js');return verifyChunkWaterBedPixels(qaMagicWorld,key);},report.waterVisual.key);}
  if(process.env.WG_FIXED_SCENE==='1')report.fixedScene=await page.evaluate(async()=>{const {fixedSceneWindows}=await import('/tools/experiments/qa-fixed-scene-windows.js');return fixedSceneWindows(qaMagicWorld);});
+ if(process.env.WG_VERIFY_FAR_WATER==='1')report.farWaterEquivalence=await page.evaluate(async()=>{const {verifyFarWaterPredicate}=await import('/tools/experiments/verify-far-water-predicate.js');return verifyFarWaterPredicate(qaMagicWorld);});
  report.after=await inspect();
  if(report.runtimeOverride)assert(report.runtimeOverride.loads['spatial-threaded.wasm']>0,'Candidate shared runtime WASM was not loaded');
  if(process.env.WG_CHUNK_WATER_BED==='1'){report.chunkWaterBed=await page.evaluate(()=>globalThis.qaChunkWaterBed??null);assert(report.chunkWaterBed?.calls>0,'Chunk water candidate not exercised');}
