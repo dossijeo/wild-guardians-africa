@@ -4,7 +4,8 @@ import {createHash} from 'node:crypto';
 const root=process.argv[2]??'docs/qa/residual-spikes-20261027/depth-matrix-reuse-abab',biome=process.argv[3]??'manglares';
 const files=['tools/experiments/reuse-depth-scene-matrices.js','tools/experiments/check-spatial-thread-game.mjs','src/rendering/buildings.js','src/rendering/scene.js','src/rendering/vfx.js','tools/experiments/native-far-ground-seam.js','tools/experiments/native-far-ground.js','tools/experiments/check-volcano-quality-no-sync.mjs','tools/experiments/quality-execution-attribution.js'];
 const hashes=Object.fromEntries(files.map(p=>[p,createHash('sha256').update(fs.readFileSync(p)).digest('hex')]));
-for(const [i,candidate] of [false,true,false,true].entries()){
+const reverse=process.argv[4]==='BABA';
+for(const [i,candidate] of (reverse?[true,false,true,false]:[false,true,false,true]).entries()){
  const out=root+'/'+(i+1)+'-'+(candidate?'candidate':'baseline');fs.mkdirSync(out,{recursive:true});
  fs.writeFileSync(out+'/treatment.json',JSON.stringify({candidate,biome,commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sources:hashes},null,2));
  console.log('Starting '+out);
