@@ -61,7 +61,7 @@ export class BeastCombatPhysics{
   }catch(error){solver.remove(animal.id);if(!this.entries.size){solver.dispose();this.solver=null;this.environment=null;}throw error;}
  }
  step(state,dt){
-  const started=performance.now();this.stats.solverMs=this.stats.solverSteps=this.stats.bindingMs=this.stats.recoverySetupMs=this.stats.creationMs=0;
+  const started=performance.now();this.stats.recoveryFollowMs=0;this.stats.solverMs=this.stats.solverSteps=this.stats.bindingMs=this.stats.recoverySetupMs=this.stats.creationMs=0;
   for(const id of this.seen.keys())if(!state.raid?.animals.some(a=>a.id===id))this.seen.delete(id);
   for(const animal of state.raid?.animals??[]){
    if(animal.magicDown&&!this.entries.has(animal.id)&&!this.baked?.has(animal.id))delete animal.magicDown;
@@ -69,9 +69,17 @@ export class BeastCombatPhysics{
   }
   // All live actors advance once on the same clock and exchange contact forces.
   if(this.solver?.actors.size){
-   let firstHit=Infinity;for(const e of this.entries.values())if(!e.recovery)firstHit=Math.min(firstHit,e.hitAt);
+   let firstHit=Infinity;for(const e of this.entries.values())firstHit=Math.min(firstHit,e.hitAt);
    this.accumulator+=Math.min(dt,Math.max(0,state.elapsed-firstHit));
-   while(this.accumulator>=1/60){this.solver.step();this.stats.solverMs+=this.solver.stats.stepMs;this.stats.solverSteps++;this.accumulator-=1/60;}
+   const followStarted=performance.now();
+   for(const e of this.entries.values())if(e.recovery){e.kinematicStart.set(e.actor.pose);e.recovery.age=0;e.recovery.apply(Math.min(e.recovery.duration,e.recoveryAge+dt));e.binding.physicalSnapshot(e.kinematicPose);e.recovery.restore();}
+   this.stats.recoveryFollowMs+=performance.now()-followStarted;
+   while(this.accumulator>=1/60){
+    const followStep=performance.now(),weight=dt>0?Math.max(0,Math.min(1,(dt-this.accumulator+1/60)/dt)):1;
+    for(const [id,e] of this.entries)if(e.recovery)this.solver.follow(id,e.kinematicPose,e.kinematicStart,weight);
+    this.stats.recoveryFollowMs+=performance.now()-followStep;
+    this.solver.step();this.stats.solverMs+=this.solver.stats.stepMs;this.stats.solverSteps++;this.accumulator-=1/60;
+   }
   }
   for(const [id,e] of this.entries){
    if(!state.raid?.animals.includes(e.animal)||e.animal.status==='gone'||state.result){this.release(id);continue;}
@@ -83,11 +91,11 @@ export class BeastCombatPhysics{
    if(e.actor.age>5||e.settledAt!==null&&e.actor.age-e.settledAt>.3){
     const recoveryStarted=performance.now();
     e.binding.restore();e.root.position.set(a.x,this.world.nav.field.surface(a.x,a.z),a.z);e.root.updateMatrixWorld(true);e.data.key=null;applyAnimalPose(e.data,a,state.elapsed);
-    e.recovery=new BeastRecovery(e.binding,e.actor.pose,{surface:(x,z)=>this.world.nav.field.surface(x,z)});e.recoveryAge=0;e.solver.remove(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
+    e.recovery=new BeastRecovery(e.binding,e.actor.pose,{surface:(x,z)=>this.world.nav.field.surface(x,z)});e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;
-  this.stats.active=this.entries.size;this.stats.physicsMs=performance.now()-started;this.stats.maxStepMs=Math.max(this.stats.maxStepMs,this.stats.physicsMs);
+  this.stats.kinematic=0;for(const e of this.entries.values())if(e.recovery)this.stats.kinematic++;this.stats.active=this.entries.size;this.stats.physicsMs=performance.now()-started;this.stats.maxStepMs=Math.max(this.stats.maxStepMs,this.stats.physicsMs);
  }
  before(id){this.baked?.before(id);const e=this.entries.get(id);if(e?.recovery)e.recovery.restore();else e?.binding.restore();}
  render(id){this.baked?.render(id);const e=this.entries.get(id);if(!e)return;if(e.recovery){const start=performance.now();e.recovery.age=0;e.recovery.apply(e.recoveryAge);this.stats.recoveryMs+=performance.now()-start;}else e.binding.apply(e.actor.pose);}

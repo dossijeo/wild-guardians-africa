@@ -54,6 +54,17 @@ export class BeastRagdollBinding{
   for(const [geometry,indices] of selected)colliderSamples.set(geometry,[...indices]);
   return fits;
  }
+ physicalSnapshot(out){
+  // Invert the original binding offset, preserving collider roll as well as
+  // the segment direction. Re-fitting from endpoints would discard that roll.
+  for(let i=0;i<this.entries.length;i++){
+   const e=this.entries[i],j=i*7;
+   e.bone.getWorldQuaternion(this.q).normalize();this.parentQ.copy(e.offset).invert();this.q.multiply(this.parentQ).normalize();
+   e.bone.getWorldPosition(this.v);this.hip.set(0,e.length/2,0).applyQuaternion(this.q).add(this.v);
+   this.hip.toArray(out,j);this.q.toArray(out,j+3);
+  }
+  return out;
+ }
  apply(snapshot,weight=1){
   if(snapshot.length!==this.entries.length*7)throw Error('Invalid ragdoll snapshot');
   for(const e of this.entries){e.animatedQ.copy(e.bone.quaternion);e.animatedP.copy(e.bone.position);}this.applied=true;

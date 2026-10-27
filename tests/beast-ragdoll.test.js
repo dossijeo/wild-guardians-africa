@@ -112,3 +112,18 @@ test('separate animals exchange contacts in a shared world without self collisio
  assert.ok(contacts>0,'animals never collided');assert.ok(maxSpeed<15,'explosive animal contact');assert.ok(actors[0].pose[0]<actors[1].pose[0],'animals passed through each other');
  const oldGroup=actors[0].group;solver.remove('animal-0');const replacement=solver.add('replacement',{pose:pose('hyena')});assert.equal(replacement.group,oldGroup);assert.equal(solver.world.bodies.len(),28);solver.dispose();
 });
+
+
+test('recovery colliders follow the bone pose with roll and remain contactable',()=>{
+ const s=new BeastRagdollSolver(R);s.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
+ const model=beastSkin('hyena'),binding=new BeastRagdollBinding(model),actor=s.add('recovering',{pose:binding.capture(),colliders:binding.colliders(),direction:{x:1,y:0,z:0}});
+ for(let i=0;i<180;i++)s.step();binding.apply(actor.pose);
+ const snapshot=new Float32Array(98);binding.physicalSnapshot(snapshot);
+ for(let i=0;i<14;i++){const q1=new THREE.Quaternion().fromArray(snapshot,i*7+3).normalize(),q2=new THREE.Quaternion().fromArray(actor.pose,i*7+3).normalize();assert.ok(q1.angleTo(q2)<1e-5,'collider roll changed');}
+ s.makeKinematic('recovering');assert.equal(actor.joints.length,0);assert.equal(s.world.bodies.len(),14);
+ const otherModel=beastSkin('hyena');otherModel.position.x=actor.pose[0]-2;otherModel.updateMatrixWorld(true);const otherBinding=new BeastRagdollBinding(otherModel),other=s.add('incoming',{pose:otherBinding.capture(),colliders:otherBinding.colliders(),direction:{x:1,y:0,z:0}});
+ const recoveryHandles=new Set(actor.parts.map(p=>p.body.collider(0).handle));let contacts=0,maxSpeed=0;
+ for(let i=0;i<180;i++){s.follow('recovering',snapshot);s.step();for(const p of other.parts){s.world.contactPairsWith(p.body.collider(0),c=>{if(recoveryHandles.has(c.handle))contacts++;});const v=p.body.linvel();maxSpeed=Math.max(maxSpeed,Math.hypot(v.x,v.y,v.z));}}
+ assert.ok(contacts>0);assert.ok(maxSpeed<15);assert.ok(other.pose.every(Number.isFinite));for(let i=0;i<98;i++)assert.ok(Math.abs(actor.pose[i]-snapshot[i])<1e-5);
+ s.remove('recovering');assert.equal(s.world.bodies.len(),14);s.dispose();
+});

@@ -29,6 +29,7 @@ export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
   this.R=R;this.capacity=capacity;this.stepSize=step;this.world=new R.World(vector(0,-9.81,0));this.world.timestep=step;this.world.numSolverIterations=solverIterations;this.actors=new Map();this.obstacles=[];
+  this.targetPosition=vector();this.targetRotation={x:0,y:0,z:0,w:1};
   this.stats={active:0,stepMs:0,steps:0,rejected:0};
  }
  // Each scene supplies a local terrain patch and conservative solid volumes.
@@ -75,10 +76,35 @@ export class BeastRagdollSolver{
   for(const {body} of a.parts){body.setLinvel(vector(direction.x/horizontal*speed+Math.max(-1,Math.min(1,velocity.x))*.3,up,direction.z/horizontal*speed+Math.max(-1,Math.min(1,velocity.z))*.3),true);}
   a.parts[0].body.applyTorqueImpulse(vector(direction.z*3*power,0,-direction.x*3*power),true);a.quiet=0;a.settled=false;
  }
+ makeKinematic(id){
+  const a=this.actors.get(id);if(!a||a.kinematic)return;
+  for(const joint of a.joints)this.world.removeImpulseJoint(joint,true);a.joints.length=0;
+  for(const {body} of a.parts){body.setBodyType(this.R.RigidBodyType.KinematicPositionBased,true);body.setLinvel(vector(),true);body.setAngvel(vector(),true);}
+  a.kinematic=true;
+ }
+ follow(id,pose,from=null,weight=1){
+  const a=this.actors.get(id);if(!a?.kinematic)throw Error('Actor is not kinematic');
+  if(pose.length!==98||!pose.every(Number.isFinite)||!Number.isFinite(weight)||from&&(from.length!==98||!from.every(Number.isFinite)))throw Error('Invalid kinematic pose');
+  for(let j=3;j<98;j+=7)if(Math.hypot(pose[j],pose[j+1],pose[j+2],pose[j+3])<1e-6||from&&Math.hypot(from[j],from[j+1],from[j+2],from[j+3])<1e-6)throw Error('Invalid kinematic rotation');
+  weight=Math.max(0,Math.min(1,weight));
+  for(let i=0;i<a.parts.length;i++){
+   const j=i*7,b=a.parts[i].body,p=this.targetPosition,q=this.targetRotation;
+   p.x=pose[j];p.y=pose[j+1];p.z=pose[j+2];q.x=pose[j+3];q.y=pose[j+4];q.z=pose[j+5];q.w=pose[j+6];
+   if(from){
+    p.x=from[j]+(p.x-from[j])*weight;p.y=from[j+1]+(p.y-from[j+1])*weight;p.z=from[j+2]+(p.z-from[j+2])*weight;
+    // Short-arc normalized interpolation across a single game tick, not a full clip.
+    const sign=q.x*from[j+3]+q.y*from[j+4]+q.z*from[j+5]+q.w*from[j+6]<0?-1:1;
+    q.x=from[j+3]*(1-weight)+q.x*weight*sign;q.y=from[j+4]*(1-weight)+q.y*weight*sign;q.z=from[j+5]*(1-weight)+q.z*weight*sign;q.w=from[j+6]*(1-weight)+q.w*weight*sign;
+   }
+   const norm=Math.hypot(q.x,q.y,q.z,q.w);q.x/=norm;q.y/=norm;q.z/=norm;q.w/=norm;
+   b.setNextKinematicTranslation(p);b.setNextKinematicRotation(q);
+  }
+ }
  step(){
   if(!this.actors.size){this.stats.stepMs=0;return;}
   const t=performance.now();this.world.step();this.stats.steps++;
   for(const a of this.actors.values()){
+   if(a.kinematic){this.snapshot(a);continue;}
    a.age+=this.stepSize;let speed=0;
    for(const {body} of a.parts){const v=body.linvel(),w=body.angvel();speed=Math.max(speed,length(v)+length(w)*.12);}
    a.quiet=speed<RAGDOLL_CONFIG.settleSpeed?a.quiet+this.stepSize:0;a.settled=a.age>.6&&a.quiet>RAGDOLL_CONFIG.settleSeconds;this.snapshot(a);

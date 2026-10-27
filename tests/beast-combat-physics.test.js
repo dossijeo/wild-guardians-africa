@@ -54,7 +54,7 @@ test('hits throughout get-up preserve the visible pose and reuse the collision w
   for(let i=0;i<360&&!entry.recovery;i++){
    state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
   }
-  assert.ok(entry.recovery,'never entered get-up');entry.recoveryAge=age;manager.render(animal.id);
+  assert.ok(entry.recovery,'never entered get-up');assert.equal(entry.actor.kinematic,true);assert.equal(entry.solver.world.bodies.len(),14);entry.recoveryAge=age;manager.render(animal.id);
   const before=entry.binding.entries.map(e=>({p:e.bone.getWorldPosition(new Vector3()),q:e.bone.getWorldQuaternion(new Quaternion())}));
   const logical={x:animal.x,z:animal.z},world=entry.solver.world;
   state.elapsed+=.01;animal.magicImpact.at=state.elapsed;manager.step(state,0);manager.render(animal.id);
@@ -113,4 +113,17 @@ test('baked repeat hits preserve the contact pose during falling and recovery',(
   for(let i=0;i<600;i++){f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);baked.render(f.animal.id);}
   assert.equal(baked.entries.size,0);assert.equal(f.animal.magicDown,undefined);baked.dispose();f.manager.dispose();
  }
+});
+
+
+test('opposing impacts recover with retained colliders and bounded contact velocities',()=>{
+ const f=fixture(),other=fixture();other.manager.dispose();other.animal.id='incoming';other.animal.x+=3;other.root.position.x+=3;other.root.updateMatrixWorld(true);other.animal.magicImpact.direction={x:-1,y:0,z:0};f.animal.magicImpact.direction={x:1,y:0,z:0};
+ f.state.raid.animals.push(other.animal);f.world.objects.set('incoming',other.root);f.world.mixers.set('incoming',other.world.mixers.get('beast'));
+ let recoveryWithBodies=false,maxSpeed=0;
+ for(let i=0;i<600;i++){
+  f.state.elapsed+=1/60;f.manager.step(f.state,1/60);
+  for(const e of f.manager.entries.values()){if(e.recovery){assert.equal(e.actor.kinematic,true);assert.equal(e.actor.parts.length,14);recoveryWithBodies=true;}else for(const p of e.actor.parts){const v=p.body.linvel();maxSpeed=Math.max(maxSpeed,Math.hypot(v.x,v.y,v.z));}}
+  for(const a of f.state.raid.animals){f.manager.before(a.id);const root=f.world.objects.get(a.id);root.position.set(a.x,0,a.z);root.updateMatrixWorld(true);f.manager.render(a.id);}
+ }
+ assert.ok(recoveryWithBodies);assert.ok(maxSpeed<15,'recovery launched a neighbour: '+maxSpeed);assert.equal(f.manager.solver,null);assert.ok(f.state.raid.animals.every(a=>!a.magicDown));f.manager.dispose();
 });
