@@ -12,11 +12,12 @@ const fixtureId=process.env.WG_BEAST_FIXTURE_ID??species;
 const fixture=JSON.parse(await readFile(process.env.WG_MAGIC_FIXTURE??'docs/qa/mangrove-magic-20261026/agriculture/fixture.json','utf8'));
 if(process.env.WG_WATER_CANDIDATE==='1')assert.equal(JSON.parse(fixture.snapshot).biome,'manglares','Regional-water candidate requires a Manglares fixture');
 const recordVideo=process.env.WG_MAGIC_VIDEO!=='0',cpuSampling=process.env.WG_MAGIC_CPU_SAMPLING!=='0';
-const browser=await chromium.launch({channel:'chrome',headless:true}),context=await browser.newContext({viewport,...(recordVideo?{recordVideo:{dir:out+'/raw',size:viewport}}:{})}),page=await context.newPage(),errors=[];
+const browser=await chromium.launch({channel:'chrome',headless:process.env.WG_QA_HEADED!=='1'}),context=await browser.newContext({viewport,...(recordVideo?{recordVideo:{dir:out+'/raw',size:viewport}}:{})}),page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(String(e)));let report={species,fixtureId,group:fixture.group??[species],viewport,scope:"Repeated legal shield commands in agricultural fixture; real cooldown and simulation, no UI targeting or raid"};
 report.consoleErrors=[];report.failedRequests=[];
 page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text());});
 context.on('requestfailed',r=>report.failedRequests.push({url:r.url(),failure:r.failure()}));
+report.browserMode={headed:process.env.WG_QA_HEADED==='1'};
 report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_GPU==='1'};
 let profiler,finishPresentationTrace;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
@@ -162,6 +163,7 @@ try {
   return {start,end:performance.now(),stableFrames:stable,...snapshot,scope:'Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows.'};
  });
  if(process.env.WG_PRESENTATION_TRACE==='1')finishPresentationTrace=await startPresentationTrace(browser,page,out);
+ report.browserMode.visibility=await page.evaluate(()=>({state:document.visibilityState,width:innerWidth,height:innerHeight,dpr:devicePixelRatio}));
  report.casts=[];
  for(let i=0;i<Number(process.env.WG_MAGIC_CASTS??3);i++){
   await page.waitForFunction(()=>qaMagicWorld.state.cooldowns.shield<=0&&!qaMagicWorld.state.spells.some(s=>s.kind==='shield'),null,{timeout:240000});
