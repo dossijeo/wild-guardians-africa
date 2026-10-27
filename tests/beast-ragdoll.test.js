@@ -15,14 +15,14 @@ function rig(species){
  for(let i=0;i<nodes.length;i++)for(const j of g.nodes[i].children??[])nodes[i].add(nodes[j]);for(const i of g.scenes[g.scene??0].nodes)nodes[i].updateMatrixWorld(true);
  const root=new THREE.Group();for(const i of g.scenes[g.scene??0].nodes)root.add(nodes[i]);root.position.y=.15;root.updateMatrixWorld(true);return root;
 }
-function pose(species){const p={};rig(species).traverse(o=>{if(o.isBone)p[o.name.replace('mixamorig:','')]=o.getWorldPosition(new THREE.Vector3());});return p;}
+function pose(species){return new BeastRagdollBinding(rig(species)).capture();}
 test('actual five rigs fall with finite articulated bodies, bounded launch and ground contacts',()=>{
  const distances=[];
  for(const [species,mass] of [['hyena',.7],['warthog',1],['lion',1.5],['buffalo',3],['rhino',5]]){
-  const s=new BeastRagdollSolver(R);s.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});const p=pose(species),a=s.add(species,{pose:p,mass,direction:{x:1,y:-.2,z:.2}}),start=a.pose[0];
+  const s=new BeastRagdollSolver(R);s.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});const binding=new BeastRagdollBinding(beastSkin(species)),p=binding.capture(),a=s.add(species,{pose:p,colliders:binding.colliders(),mass,direction:{x:1,y:-.2,z:.2}}),start=a.pose[0];
   let maxSpeed=0,settled=false;
   for(let i=0;i<360;i++){s.step();assert.ok(a.pose.every(Number.isFinite));for(const {body} of a.parts){const v=body.linvel();maxSpeed=Math.max(maxSpeed,Math.hypot(v.x,v.y,v.z));assert.ok(body.translation().y>-.05,'body center beneath ground');}settled||=a.settled;}
-  assert.ok(maxSpeed<15,'explosive solver');assert.ok(settled,species+' never settled');
+  assert.ok(maxSpeed<15,species+' explosive solver '+maxSpeed);assert.ok(settled,species+' never settled');
   const distance=a.pose[0]-start;assert.ok(distance>.15&&distance<4,species+' launch '+distance);distances.push(distance);
   for(const joint of a.joints){const b1=joint.body1(),b2=joint.body2(),v1=new THREE.Vector3().copy(joint.anchor1()).applyQuaternion(b1.rotation()).add(b1.translation()),v2=new THREE.Vector3().copy(joint.anchor2()).applyQuaternion(b2.rotation()).add(b2.translation());assert.ok(v1.distanceTo(v2)<.06,'stretched articulation');}
   s.remove(species);assert.equal(s.world.bodies.len(),0);assert.equal(s.world.impulseJoints.len(),0);s.dispose();
@@ -40,9 +40,9 @@ test('invalid pose is rejected transactionally before allocating physics',()=>{c
 test('physical pose binding preserves the captured pose and authored bone lengths',()=>{
  for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
   const model=rig(species);model.traverse(o=>o.name=o.name.replace(':',''));model.rotation.y=.7;model.position.x=120;model.position.z=-40;
-  const binding=new BeastRagdollBinding(model),p=binding.capture(),before=binding.entries.map(e=>({q:e.bone.getWorldQuaternion(new THREE.Quaternion()),position:e.bone.position.clone()}));
+  const binding=new BeastRagdollBinding(model),p=binding.capture(),before=binding.entries.map(e=>({q:e.bone.getWorldQuaternion(new THREE.Quaternion()).normalize(),position:e.bone.position.clone()}));
   const s=new BeastRagdollSolver(R),a=s.add(species,{pose:p});binding.apply(a.pose);
-  for(let i=0;i<before.length;i++){assert.ok(before[i].q.angleTo(binding.entries[i].bone.getWorldQuaternion(new THREE.Quaternion()))<1e-5);assert.ok(before[i].position.distanceTo(binding.entries[i].bone.position)<1e-5);}
+  for(let i=0;i<before.length;i++){assert.ok(before[i].q.angleTo(binding.entries[i].bone.getWorldQuaternion(new THREE.Quaternion()).normalize())<1e-5);assert.ok(before[i].position.distanceTo(binding.entries[i].bone.position)<1e-5);}
   for(let i=0;i<20;i++)s.step();binding.apply(a.pose);
   for(let i=1;i<before.length;i++)assert.ok(before[i].position.distanceTo(binding.entries[i].bone.position)<1e-8,'bone length changed');s.dispose();
  }
@@ -64,7 +64,7 @@ test('get-up starts at the physical pose, retains displaced root and releases co
  for(const species of ['hyena','warthog','lion','buffalo','rhino']){
   const model=beastSkin(species);model.position.y=.15;const b=new BeastRagdollBinding(model),p=b.capture(),s=new BeastRagdollSolver(R);s.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});const a=s.add(species,{pose:p,colliders:b.colliders()});for(let i=0;i<480;i++)s.step();b.apply(a.pose);
   const fallen=b.entries[0].bone.getWorldPosition(new THREE.Vector3());b.restore();const standing=b.entries[0].bone.getWorldPosition(new THREE.Vector3());model.position.x+=fallen.x-standing.x;model.position.z+=fallen.z-standing.z;model.updateMatrixWorld(true);
-  const root=model.position.clone(),r=new BeastRecovery(b,a.pose,{surface:()=>0});r.apply(0);assert.ok(fallen.distanceTo(b.entries[0].bone.getWorldPosition(new THREE.Vector3()))<.03,'start pose jumps');let maxStep=0,maxPenetration=0;const point=new THREE.Vector3();const last=b.entries[0].bone.getWorldPosition(new THREE.Vector3());
+  const root=model.position.clone(),r=new BeastRecovery(b,a.pose,{surface:()=>0});r.apply(0);assert.ok(fallen.distanceTo(b.entries[0].bone.getWorldPosition(new THREE.Vector3()))<.03,species+' start pose jumps '+fallen.distanceTo(b.entries[0].bone.getWorldPosition(new THREE.Vector3())));let maxStep=0,maxPenetration=0;const point=new THREE.Vector3();const last=b.entries[0].bone.getWorldPosition(new THREE.Vector3());
   for(let i=0;i<100;i++){r.restore();r.apply(1/60);const hip=b.entries[0].bone.getWorldPosition(new THREE.Vector3());maxStep=Math.max(maxStep,hip.distanceTo(last));last.copy(hip);assert.ok(Number.isFinite(hip.y));assert.deepEqual(model.position.toArray(),root.toArray());if(i%10===0)model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let j=0;j<mesh.geometry.attributes.position.count;j+=3){mesh.getVertexPosition(j,point).applyMatrix4(mesh.matrixWorld);maxPenetration=Math.max(maxPenetration,-point.y);}});}
   assert.ok(r.done);assert.ok(maxStep<.08,species+' recovery step '+maxStep);console.log('get-up',species,{maxStep,maxPenetration,lift:r.lift});assert.ok(maxPenetration<.04,species+' recovery penetrates '+maxPenetration);r.restore();s.dispose();
  }

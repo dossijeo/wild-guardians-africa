@@ -42,7 +42,7 @@ export class BeastRecovery{
   const model=this.binding.model;model.updateMatrixWorld(true);
   const contactWeight=smooth((t-.2)/.22)*(1-smooth((t-.85)/.15));for(const leg of this.legs)this.legIK(leg,contactWeight);
   model.updateMatrixWorld(true);let penetration=0;
-  if(this.surface)for(const {mesh,index} of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);penetration=Math.max(penetration,this.surface(this.v.x,this.v.z)+.02-this.v.y);}
+  if(this.surface)for(const {mesh,index} of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);penetration=Math.max(penetration,this.surface(this.v.x,this.v.z)+.01-this.v.y);}
   // Contact correction is vertical and never modifies horizontal navigation.
   this.lift=penetration;const hip=this.entries[0].bone;hip.getWorldPosition(this.v);this.v.y+=penetration;hip.position.copy(hip.parent.worldToLocal(this.v));model.updateMatrixWorld(true);this.done=this.age>=this.duration;
   return this.done;

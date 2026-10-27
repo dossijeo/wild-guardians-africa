@@ -27,7 +27,7 @@ const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x
 export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step}={}){
-  this.R=R;this.capacity=capacity;this.stepSize=step;this.world=new R.World(vector(0,-9.81,0));this.world.timestep=step;this.world.numSolverIterations=8;this.actors=new Map();this.obstacles=[];
+  this.R=R;this.capacity=capacity;this.stepSize=step;this.world=new R.World(vector(0,-9.81,0));this.world.timestep=step;this.world.numSolverIterations=12;this.actors=new Map();this.obstacles=[];
   this.stats={active:0,stepMs:0,steps:0,rejected:0};
  }
  // Each scene supplies a local terrain patch and conservative solid volumes.
@@ -40,18 +40,19 @@ export class BeastRagdollSolver{
   for(const [a,b] of RAGDOLL_LINKS)for(const name of [a,b]){const p=pose[name];if(!p||![p.x,p.y,p.z].every(Number.isFinite))throw Error('Invalid ragdoll joint '+name);}
   for(const [a,b] of RAGDOLL_LINKS)if(length(sub(pose[b],pose[a]))<1e-5)throw Error('Degenerate ragdoll '+a);
   if(!(scale>0&&mass>0&&Number.isFinite(scale+mass+intensity+heading))||![direction.x,direction.y,direction.z,velocity.x,velocity.y,velocity.z].every(Number.isFinite))throw Error('Invalid ragdoll impulse');
+  if(pose.parents&&(!Array.isArray(pose.parents)||pose.parents.length!==RAGDOLL_LINKS.length||pose.parents.some((p,i)=>!Number.isInteger(p)||p< -1||p>=i||(i>0&&p<0))))throw Error('Invalid ragdoll hierarchy');
   if(colliders)for(const fit of colliders)if(fit&&(!(fit.radius>0)||!(fit.halfHeight>=0)||![fit.radius,fit.halfHeight,fit.offset?.x,fit.offset?.y,fit.offset?.z].every(Number.isFinite)||(fit.hull&&(!Array.isArray(fit.hull)||fit.hull.length<12||fit.hull.length>288||fit.hull.length%3||!fit.hull.every(Number.isFinite)))))throw Error('Invalid ragdoll collider');
   if(this.actors.has(id))this.remove(id);
   const actor={parts:[],joints:[],age:0,quiet:0,settled:false,pose:new Float32Array(RAGDOLL_LINKS.length*7)};
   this.actors.set(id,actor);
   try{
    for(let i=0;i<RAGDOLL_LINKS.length;i++){
-    const [a,b,parent,r,axis,lo,hi]=RAGDOLL_LINKS[i],start=pose[a],end=pose[b],delta=sub(end,start),len=length(delta),q=fromY(delta),center=vector((start.x+end.x)/2,(start.y+end.y)/2,(start.z+end.z)/2);
-    const fit=colliders?.[i],radius=fit?.radius??(i===3?r*scale:Math.min(r*scale,len*.45)),body=this.world.createRigidBody(this.R.RigidBodyDesc.dynamic().setTranslation(center.x,center.y,center.z).setRotation(q).setLinearDamping(.2).setAngularDamping(1.2).setCcdEnabled(true));
+    const [a,b,defaultParent,r,axis,lo,hi]=RAGDOLL_LINKS[i],parent=pose.parents?.[i]??defaultParent,start=pose[a],end=pose[b],delta=sub(end,start),len=length(delta),q=fromY(delta),center=vector((start.x+end.x)/2,(start.y+end.y)/2,(start.z+end.z)/2);
+    const fit=colliders?.[i],radius=fit?.radius??(i===3?r*scale:Math.min(r*scale,len*.45)),body=this.world.createRigidBody(this.R.RigidBodyDesc.dynamic().setTranslation(center.x,center.y,center.z).setRotation(q).setLinearDamping(.2).setAngularDamping(2.5).setCcdEnabled(true));
     actor.parts.push({body,center,rotation:q,length:len,radius});
     const offset=fit?.offset??vector();
     const shape=(fit?.hull?this.R.ColliderDesc.convexHull(new Float32Array(fit.hull)):null)??this.R.ColliderDesc.capsule(fit?.halfHeight??Math.max(.005,len/2-radius),radius).setTranslation(offset.x,offset.y,offset.z);
-    this.world.createCollider(shape.setContactSkin(.025).setMass((i<2?8:2)*mass).setFriction(.8).setRestitution(.02).setCollisionGroups(0x00020001),body);
+    this.world.createCollider(shape.setContactSkin(.05).setMass((i<2?8:2)*mass).setFriction(.8).setRestitution(.02).setCollisionGroups(0x00020001),body);
     if(parent>=0){
      const p=actor.parts[parent],a1=rotate(sub(start,p.center),inverse(p.rotation)),a2=rotate(sub(start,center),inverse(q));
      const yaw={x:0,y:Math.sin(heading/2),z:0,w:Math.cos(heading/2)},frame=multiply(yaw,FRAMES[axis]),f1=multiply(inverse(p.rotation),frame),f2=multiply(inverse(q),frame);

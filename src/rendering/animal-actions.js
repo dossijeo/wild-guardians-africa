@@ -46,7 +46,12 @@ export function animalGroundSamples(model){
   model.traverse(mesh=>{
     if(!mesh.isSkinnedMesh)return;
     const positions=mesh.geometry.getAttribute('position');
-    for(let i=0;i<positions.count;i+=2)if(positions.getY(i)<.45)samples.push({mesh,index:i});
+    const indices=mesh.geometry.getAttribute('skinIndex'),weights=mesh.geometry.getAttribute('skinWeight');
+    for(let i=0;i<positions.count;i+=2)if(positions.getY(i)<.45){
+      let flexible=false;
+      for(let j=0;j<4;j++)if(weights.getComponent(i,j)>.01&&/^(Tail_|ClothRear_)/.test(mesh.skeleton.bones[indices.getComponent(i,j)].name)){flexible=true;break;}
+      if(!flexible)samples.push({mesh,index:i});
+    }
   });
   return samples;
 }
