@@ -20,7 +20,10 @@ const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();re
 try {
  if(process.env.WG_SHADOW_SOURCE_DIR)await context.route(/\/src\/rendering\/(shadow-cache|native-shadow)\.js(?:\?.*)?$/,async route=>{
   const response=await route.fetch(),name=new URL(route.request().url()).pathname.split('/').at(-1);
-  await route.fulfill({response,body:await readFile(process.env.WG_SHADOW_SOURCE_DIR+'/'+name)});
+  const transformed=await response.text();let body=await readFile(process.env.WG_SHADOW_SOURCE_DIR+'/'+name,'utf8');
+  const threeImport=transformed.match(/import \* as THREE from [^;]+;/)?.[0];
+  assert(threeImport,'Missing Vite Three import');body=body.replace(/import \* as THREE from [^;]+;/,threeImport);
+  await route.fulfill({response,body});
  });
  if(process.env.WG_SPATIAL_RUNTIME_DIR){
   report.runtimeOverride={directory:process.env.WG_SPATIAL_RUNTIME_DIR,loads:{}};
