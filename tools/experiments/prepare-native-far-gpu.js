@@ -1,3 +1,4 @@
+import {prepareNativeFarDepth} from './prepare-native-far-depth.js';
 import {initializeValidatedProgramBindings} from '../../src/rendering/program-bindings.js';
 import {compileLoadingPrograms} from '../../src/rendering/loading-programs.js';
 import {withScreenTarget} from '../../src/rendering/screen-target.js';
@@ -37,7 +38,7 @@ function rememberTexture(entry,texture){
 
 // Prepare the current root using the normal output/shader recipe. Callers bind
 // the completed fence to their exact packing and renderable generation.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame,timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false,ownedCompilation=false,ownedWaits=false,cooperative=false,zeroVertices=false,measureDraw=null,onPrepare=null}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame,timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false,ownedCompilation=false,ownedWaits=false,cooperative=false,zeroVertices=false,measureDraw=null,onPrepare=null,depthWorld=null}={}){
  const beginSpan=()=>onPrepare?performance.now():null;
  const endSpan=(label,start)=>{if(start===null)return;const end=performance.now();try{onPrepare({label:'far-gpu:'+label,start,end,duration:end-start,scope:label==='draw'||label==='validated-bindings'?'Synchronous draw submission CPU wall time, not GPU time.':'Awaited phase wall time; includes overlapped work, not exclusive CPU/GPU time.'});}catch{}};
  if(typeof isolateRoot!=='boolean')throw Error('Invalid isolated GPU preparation option');
@@ -67,6 +68,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   }
   endSpan('texture-uploads',textureStart);check();
   const compileDrawAndFence=async()=>{check();
+  if(depthWorld){await prepareNativeFarDepth(depthWorld,root,()=>{check();return false;});check();}
   // Explicit QA gate: preserve the original recipe until native cancellation,
   // visual and traveling checks validate the owned readiness poll.
   const compileStart=beginSpan();
