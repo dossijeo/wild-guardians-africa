@@ -1,0 +1,2749 @@
+{
+  "scope": "Existing instrumented candidate runs, top ten CPU frames per run. Main phase at is the end timestamp. Far operations only include selected methods >=1ms; union avoids nested double counting. Uncovered render time is unclassified, not evidence of GPU or driver cost. No new benchmark or performance claim.",
+  "rows": [
+    {
+      "source": "docs/qa/residual-spikes-20261027/seam-reuse-abab/2-candidate/report.json.gz",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "worst": [
+        {
+          "frame": {
+            "timestamp": 64484.6,
+            "ms": 52.9650000333786,
+            "lateness": 0.2750000000014552,
+            "quality": "baja",
+            "simulationElapsed": 125.65761500005368,
+            "drawCalls": 73,
+            "triangles": 321802,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 64484.6,
+              "label": "before-simulation",
+              "ms": 0.1499999761581421,
+              "at": 64485.02499997616,
+              "lateness": 0.2750000000014552
+            },
+            {
+              "timestamp": 64484.6,
+              "label": "simulation",
+              "ms": 0.26499998569488525,
+              "at": 64485.28999996185,
+              "lateness": 0.2750000000014552
+            },
+            {
+              "timestamp": 64484.6,
+              "label": "effects",
+              "ms": 0.04499995708465576,
+              "at": 64485.33499991894,
+              "lateness": 0.2750000000014552
+            },
+            {
+              "timestamp": 64484.6,
+              "label": "render",
+              "ms": 52.06000006198883,
+              "at": 64537.39499998093,
+              "lateness": 0.2750000000014552
+            },
+            {
+              "timestamp": 64484.6,
+              "label": "audio",
+              "ms": 0.2250000238418579,
+              "at": 64537.62000000477,
+              "lateness": 0.2750000000014552
+            },
+            {
+              "timestamp": 64484.6,
+              "label": "interface",
+              "ms": 0.19999992847442627,
+              "at": 64537.81999993324,
+              "lateness": 0.2750000000014552
+            },
+            {
+              "timestamp": 64484.6,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 64537.824999928474,
+              "lateness": 0.2750000000014552
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 52.06000006198883
+        },
+        {
+          "frame": {
+            "timestamp": 67111.98,
+            "ms": 50.625,
+            "lateness": 8.919999976162217,
+            "quality": "baja",
+            "simulationElapsed": 128.03732000005326,
+            "drawCalls": 72,
+            "triangles": 377456,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 67111.98,
+              "label": "before-simulation",
+              "ms": 0.14499998092651367,
+              "at": 67121.04499995708,
+              "lateness": 8.919999976162217
+            },
+            {
+              "timestamp": 67111.98,
+              "label": "simulation",
+              "ms": 0.1950000524520874,
+              "at": 67121.24000000954,
+              "lateness": 8.919999976162217
+            },
+            {
+              "timestamp": 67111.98,
+              "label": "effects",
+              "ms": 0.029999971389770508,
+              "at": 67121.26999998093,
+              "lateness": 8.919999976162217
+            },
+            {
+              "timestamp": 67111.98,
+              "label": "render",
+              "ms": 49.27499997615814,
+              "at": 67170.54499995708,
+              "lateness": 8.919999976162217
+            },
+            {
+              "timestamp": 67111.98,
+              "label": "audio",
+              "ms": 0.19000005722045898,
+              "at": 67170.7350000143,
+              "lateness": 8.919999976162217
+            },
+            {
+              "timestamp": 67111.98,
+              "label": "interface",
+              "ms": 0.7749999761581421,
+              "at": 67171.50999999046,
+              "lateness": 8.919999976162217
+            },
+            {
+              "timestamp": 67111.98,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 67171.51999998093,
+              "lateness": 8.919999976162217
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 49.27499997615814
+        },
+        {
+          "frame": {
+            "timestamp": 65349.37,
+            "ms": 42.78999996185303,
+            "lateness": 5.220000033375982,
+            "quality": "media",
+            "simulationElapsed": 126.42320000005355,
+            "drawCalls": 77,
+            "triangles": 432234,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 65349.37,
+              "label": "before-simulation",
+              "ms": 0.18499994277954102,
+              "at": 65354.77499997616,
+              "lateness": 5.220000033375982
+            },
+            {
+              "timestamp": 65349.37,
+              "label": "simulation",
+              "ms": 0.17499995231628418,
+              "at": 65354.949999928474,
+              "lateness": 5.220000033375982
+            },
+            {
+              "timestamp": 65349.37,
+              "label": "effects",
+              "ms": 0.020000100135803223,
+              "at": 65354.97000002861,
+              "lateness": 5.220000033375982
+            },
+            {
+              "timestamp": 65349.37,
+              "label": "render",
+              "ms": 40.64999997615814,
+              "at": 65395.62000000477,
+              "lateness": 5.220000033375982
+            },
+            {
+              "timestamp": 65349.37,
+              "label": "audio",
+              "ms": 0.23500001430511475,
+              "at": 65395.85500001907,
+              "lateness": 5.220000033375982
+            },
+            {
+              "timestamp": 65349.37,
+              "label": "interface",
+              "ms": 1.5099999904632568,
+              "at": 65397.36500000954,
+              "lateness": 5.220000033375982
+            },
+            {
+              "timestamp": 65349.37,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 65397.37999999523,
+              "lateness": 5.220000033375982
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 40.64999997615814
+        },
+        {
+          "frame": {
+            "timestamp": 66929.025,
+            "ms": 35.84500002861023,
+            "lateness": 11.659999942785362,
+            "quality": "baja",
+            "simulationElapsed": 127.87078000005327,
+            "drawCalls": 75,
+            "triangles": 389599,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 66929.025,
+              "label": "before-simulation",
+              "ms": 0.16000008583068848,
+              "at": 66940.84500002861,
+              "lateness": 11.659999942785362
+            },
+            {
+              "timestamp": 66929.025,
+              "label": "simulation",
+              "ms": 0.309999942779541,
+              "at": 66941.15499997139,
+              "lateness": 11.659999942785362
+            },
+            {
+              "timestamp": 66929.025,
+              "label": "effects",
+              "ms": 0.014999985694885254,
+              "at": 66941.16999995708,
+              "lateness": 11.659999942785362
+            },
+            {
+              "timestamp": 66929.025,
+              "label": "render",
+              "ms": 28.9099999666214,
+              "at": 66970.0799999237,
+              "lateness": 11.659999942785362
+            },
+            {
+              "timestamp": 66929.025,
+              "label": "audio",
+              "ms": 0.33500003814697266,
+              "at": 66970.41499996185,
+              "lateness": 11.659999942785362
+            },
+            {
+              "timestamp": 66929.025,
+              "label": "interface",
+              "ms": 6.0950000286102295,
+              "at": 66976.50999999046,
+              "lateness": 11.659999942785362
+            },
+            {
+              "timestamp": 66929.025,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 66976.52499997616,
+              "lateness": 11.659999942785362
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 28.9099999666214
+        },
+        {
+          "frame": {
+            "timestamp": 75792.36,
+            "ms": 34.53999996185303,
+            "lateness": 7.620000019072904,
+            "quality": "media",
+            "simulationElapsed": 136.61839000005628,
+            "drawCalls": 72,
+            "triangles": 405314,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 40
+          },
+          "phases": [
+            {
+              "timestamp": 75792.36,
+              "label": "before-simulation",
+              "ms": 0.22999989986419678,
+              "at": 75800.20999991894,
+              "lateness": 7.620000019072904
+            },
+            {
+              "timestamp": 75792.36,
+              "label": "simulation",
+              "ms": 0.1650000810623169,
+              "at": 75800.375,
+              "lateness": 7.620000019072904
+            },
+            {
+              "timestamp": 75792.36,
+              "label": "effects",
+              "ms": 0.029999971389770508,
+              "at": 75800.40499997139,
+              "lateness": 7.620000019072904
+            },
+            {
+              "timestamp": 75792.36,
+              "label": "render",
+              "ms": 33.394999980926514,
+              "at": 75833.79999995232,
+              "lateness": 7.620000019072904
+            },
+            {
+              "timestamp": 75792.36,
+              "label": "audio",
+              "ms": 0.2200000286102295,
+              "at": 75834.01999998093,
+              "lateness": 7.620000019072904
+            },
+            {
+              "timestamp": 75792.36,
+              "label": "interface",
+              "ms": 0.4950000047683716,
+              "at": 75834.5149999857,
+              "lateness": 7.620000019072904
+            },
+            {
+              "timestamp": 75792.36,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 75834.51999998093,
+              "lateness": 7.620000019072904
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 33.394999980926514
+        },
+        {
+          "frame": {
+            "timestamp": 66247.225,
+            "ms": 33.49500000476837,
+            "lateness": 13.859999918931862,
+            "quality": "baja",
+            "simulationElapsed": 127.2550800000534,
+            "drawCalls": 77,
+            "triangles": 390164,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 66247.225,
+              "label": "before-simulation",
+              "ms": 0.1700000762939453,
+              "at": 66261.25499999523,
+              "lateness": 13.859999918931862
+            },
+            {
+              "timestamp": 66247.225,
+              "label": "simulation",
+              "ms": 0.12000000476837158,
+              "at": 66261.375,
+              "lateness": 13.859999918931862
+            },
+            {
+              "timestamp": 66247.225,
+              "label": "effects",
+              "ms": 0.019999980926513672,
+              "at": 66261.39499998093,
+              "lateness": 13.859999918931862
+            },
+            {
+              "timestamp": 66247.225,
+              "label": "render",
+              "ms": 32.769999980926514,
+              "at": 66294.16499996185,
+              "lateness": 13.859999918931862
+            },
+            {
+              "timestamp": 66247.225,
+              "label": "audio",
+              "ms": 0.23000001907348633,
+              "at": 66294.39499998093,
+              "lateness": 13.859999918931862
+            },
+            {
+              "timestamp": 66247.225,
+              "label": "interface",
+              "ms": 0.16999995708465576,
+              "at": 66294.56499993801,
+              "lateness": 13.859999918931862
+            },
+            {
+              "timestamp": 66247.225,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 66294.57499992847,
+              "lateness": 13.859999918931862
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 32.769999980926514
+        },
+        {
+          "frame": {
+            "timestamp": 67328.085,
+            "ms": 30.15000009536743,
+            "lateness": 7.489999928468023,
+            "quality": "baja",
+            "simulationElapsed": 128.22039000005336,
+            "drawCalls": 74,
+            "triangles": 376539,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 67328.085,
+              "label": "before-simulation",
+              "ms": 0.1650000810623169,
+              "at": 67335.74000000954,
+              "lateness": 7.489999928468023
+            },
+            {
+              "timestamp": 67328.085,
+              "label": "simulation",
+              "ms": 0.34499990940093994,
+              "at": 67336.08499991894,
+              "lateness": 7.489999928468023
+            },
+            {
+              "timestamp": 67328.085,
+              "label": "effects",
+              "ms": 0.03500008583068848,
+              "at": 67336.12000000477,
+              "lateness": 7.489999928468023
+            },
+            {
+              "timestamp": 67328.085,
+              "label": "render",
+              "ms": 27.669999957084656,
+              "at": 67363.78999996185,
+              "lateness": 7.489999928468023
+            },
+            {
+              "timestamp": 67328.085,
+              "label": "audio",
+              "ms": 0.28999996185302734,
+              "at": 67364.0799999237,
+              "lateness": 7.489999928468023
+            },
+            {
+              "timestamp": 67328.085,
+              "label": "interface",
+              "ms": 1.6299999952316284,
+              "at": 67365.70999991894,
+              "lateness": 7.489999928468023
+            },
+            {
+              "timestamp": 67328.085,
+              "label": "tail",
+              "ms": 0.015000104904174805,
+              "at": 67365.72500002384,
+              "lateness": 7.489999928468023
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 27.669999957084656
+        },
+        {
+          "frame": {
+            "timestamp": 66346.985,
+            "ms": 29.164999961853027,
+            "lateness": 6.355000033378019,
+            "quality": "baja",
+            "simulationElapsed": 127.35484000005337,
+            "drawCalls": 71,
+            "triangles": 391409,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 66346.985,
+              "label": "before-simulation",
+              "ms": 0.1799999475479126,
+              "at": 66353.51999998093,
+              "lateness": 6.355000033378019
+            },
+            {
+              "timestamp": 66346.985,
+              "label": "simulation",
+              "ms": 1.0750000476837158,
+              "at": 66354.59500002861,
+              "lateness": 6.355000033378019
+            },
+            {
+              "timestamp": 66346.985,
+              "label": "effects",
+              "ms": 0.5549999475479126,
+              "at": 66355.14999997616,
+              "lateness": 6.355000033378019
+            },
+            {
+              "timestamp": 66346.985,
+              "label": "render",
+              "ms": 13.97000002861023,
+              "at": 66369.12000000477,
+              "lateness": 6.355000033378019
+            },
+            {
+              "timestamp": 66346.985,
+              "label": "audio",
+              "ms": 0.4700000286102295,
+              "at": 66369.59000003338,
+              "lateness": 6.355000033378019
+            },
+            {
+              "timestamp": 66346.985,
+              "label": "interface",
+              "ms": 12.884999990463257,
+              "at": 66382.47500002384,
+              "lateness": 6.355000033378019
+            },
+            {
+              "timestamp": 66346.985,
+              "label": "tail",
+              "ms": 0.02499997615814209,
+              "at": 66382.5,
+              "lateness": 6.355000033378019
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 13.97000002861023
+        },
+        {
+          "frame": {
+            "timestamp": 67195.05,
+            "ms": 28.174999952316284,
+            "lateness": 9.974999976155232,
+            "quality": "baja",
+            "simulationElapsed": 128.1203900000533,
+            "drawCalls": 72,
+            "triangles": 383986,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 67195.05,
+              "label": "before-simulation",
+              "ms": 0.15999996662139893,
+              "at": 67205.18499994278,
+              "lateness": 9.974999976155232
+            },
+            {
+              "timestamp": 67195.05,
+              "label": "simulation",
+              "ms": 0.43000006675720215,
+              "at": 67205.61500000954,
+              "lateness": 9.974999976155232
+            },
+            {
+              "timestamp": 67195.05,
+              "label": "effects",
+              "ms": 0.029999971389770508,
+              "at": 67205.64499998093,
+              "lateness": 9.974999976155232
+            },
+            {
+              "timestamp": 67195.05,
+              "label": "render",
+              "ms": 26.264999985694885,
+              "at": 67231.90999996662,
+              "lateness": 9.974999976155232
+            },
+            {
+              "timestamp": 67195.05,
+              "label": "audio",
+              "ms": 0.2799999713897705,
+              "at": 67232.18999993801,
+              "lateness": 9.974999976155232
+            },
+            {
+              "timestamp": 67195.05,
+              "label": "interface",
+              "ms": 0.9900000095367432,
+              "at": 67233.17999994755,
+              "lateness": 9.974999976155232
+            },
+            {
+              "timestamp": 67195.05,
+              "label": "tail",
+              "ms": 0.019999980926513672,
+              "at": 67233.19999992847,
+              "lateness": 9.974999976155232
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 26.264999985694885
+        },
+        {
+          "frame": {
+            "timestamp": 70836.685,
+            "ms": 27.75,
+            "lateness": 0.6800000095390715,
+            "quality": "baja",
+            "simulationElapsed": 131.6627150000548,
+            "drawCalls": 68,
+            "triangles": 290191,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 70836.685,
+              "label": "before-simulation",
+              "ms": 0.14499998092651367,
+              "at": 70837.50999999046,
+              "lateness": 0.6800000095390715
+            },
+            {
+              "timestamp": 70836.685,
+              "label": "simulation",
+              "ms": 0.14499998092651367,
+              "at": 70837.65499997139,
+              "lateness": 0.6800000095390715
+            },
+            {
+              "timestamp": 70836.685,
+              "label": "effects",
+              "ms": 0.019999980926513672,
+              "at": 70837.67499995232,
+              "lateness": 0.6800000095390715
+            },
+            {
+              "timestamp": 70836.685,
+              "label": "render",
+              "ms": 25.980000019073486,
+              "at": 70863.65499997139,
+              "lateness": 0.6800000095390715
+            },
+            {
+              "timestamp": 70836.685,
+              "label": "audio",
+              "ms": 0.3700000047683716,
+              "at": 70864.02499997616,
+              "lateness": 0.6800000095390715
+            },
+            {
+              "timestamp": 70836.685,
+              "label": "interface",
+              "ms": 1.0549999475479126,
+              "at": 70865.0799999237,
+              "lateness": 0.6800000095390715
+            },
+            {
+              "timestamp": 70836.685,
+              "label": "tail",
+              "ms": 0.03000009059906006,
+              "at": 70865.1100000143,
+              "lateness": 0.6800000095390715
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 25.980000019073486
+        }
+      ]
+    },
+    {
+      "source": "docs/qa/residual-spikes-20261027/seam-reuse-abab/4-candidate/report.json.gz",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "worst": [
+        {
+          "frame": {
+            "timestamp": 44560.79,
+            "ms": 47.579999923706055,
+            "lateness": 5.839999995230755,
+            "quality": "baja",
+            "simulationElapsed": 123.8094349999874,
+            "drawCalls": 71,
+            "triangles": 310698,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 44560.79,
+              "label": "before-simulation",
+              "ms": 0.125,
+              "at": 44566.75499999523,
+              "lateness": 5.839999995230755
+            },
+            {
+              "timestamp": 44560.79,
+              "label": "simulation",
+              "ms": 0.25,
+              "at": 44567.00499999523,
+              "lateness": 5.839999995230755
+            },
+            {
+              "timestamp": 44560.79,
+              "label": "effects",
+              "ms": 0.019999980926513672,
+              "at": 44567.02499997616,
+              "lateness": 5.839999995230755
+            },
+            {
+              "timestamp": 44560.79,
+              "label": "render",
+              "ms": 46.81499993801117,
+              "at": 44613.83999991417,
+              "lateness": 5.839999995230755
+            },
+            {
+              "timestamp": 44560.79,
+              "label": "audio",
+              "ms": 0.21000003814697266,
+              "at": 44614.049999952316,
+              "lateness": 5.839999995230755
+            },
+            {
+              "timestamp": 44560.79,
+              "label": "interface",
+              "ms": 0.13999998569488525,
+              "at": 44614.18999993801,
+              "lateness": 5.839999995230755
+            },
+            {
+              "timestamp": 44560.79,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 44614.199999928474,
+              "lateness": 5.839999995230755
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 46.81499993801117
+        },
+        {
+          "frame": {
+            "timestamp": 45059.595,
+            "ms": 40.66499996185303,
+            "lateness": 10.699999957083492,
+            "quality": "media",
+            "simulationElapsed": 124.30823999998734,
+            "drawCalls": 80,
+            "triangles": 426516,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 45059.595,
+              "label": "before-simulation",
+              "ms": 0.12999999523162842,
+              "at": 45070.424999952316,
+              "lateness": 10.699999957083492
+            },
+            {
+              "timestamp": 45059.595,
+              "label": "simulation",
+              "ms": 0.20000004768371582,
+              "at": 45070.625,
+              "lateness": 10.699999957083492
+            },
+            {
+              "timestamp": 45059.595,
+              "label": "effects",
+              "ms": 0.04499995708465576,
+              "at": 45070.669999957085,
+              "lateness": 10.699999957083492
+            },
+            {
+              "timestamp": 45059.595,
+              "label": "render",
+              "ms": 39.87999999523163,
+              "at": 45110.549999952316,
+              "lateness": 10.699999957083492
+            },
+            {
+              "timestamp": 45059.595,
+              "label": "audio",
+              "ms": 0.18000006675720215,
+              "at": 45110.73000001907,
+              "lateness": 10.699999957083492
+            },
+            {
+              "timestamp": 45059.595,
+              "label": "interface",
+              "ms": 0.21999990940093994,
+              "at": 45110.949999928474,
+              "lateness": 10.699999957083492
+            },
+            {
+              "timestamp": 45059.595,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 45110.95999991894,
+              "lateness": 10.699999957083492
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 39.87999999523163
+        },
+        {
+          "frame": {
+            "timestamp": 47337.835,
+            "ms": 38.22000002861023,
+            "lateness": 14.92499999046413,
+            "quality": "media",
+            "simulationElapsed": 126.58647999998702,
+            "drawCalls": 72,
+            "triangles": 504212,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 30
+          },
+          "phases": [
+            {
+              "timestamp": 47337.835,
+              "label": "before-simulation",
+              "ms": 0.2849999666213989,
+              "at": 47353.044999957085,
+              "lateness": 14.92499999046413
+            },
+            {
+              "timestamp": 47337.835,
+              "label": "simulation",
+              "ms": 0.18500006198883057,
+              "at": 47353.23000001907,
+              "lateness": 14.92499999046413
+            },
+            {
+              "timestamp": 47337.835,
+              "label": "effects",
+              "ms": 0.04499995708465576,
+              "at": 47353.27499997616,
+              "lateness": 14.92499999046413
+            },
+            {
+              "timestamp": 47337.835,
+              "label": "render",
+              "ms": 36.7849999666214,
+              "at": 47390.05999994278,
+              "lateness": 14.92499999046413
+            },
+            {
+              "timestamp": 47337.835,
+              "label": "audio",
+              "ms": 0.16000008583068848,
+              "at": 47390.22000002861,
+              "lateness": 14.92499999046413
+            },
+            {
+              "timestamp": 47337.835,
+              "label": "interface",
+              "ms": 0.75,
+              "at": 47390.97000002861,
+              "lateness": 14.92499999046413
+            },
+            {
+              "timestamp": 47337.835,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 47390.98000001907,
+              "lateness": 14.92499999046413
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 36.7849999666214
+        },
+        {
+          "frame": {
+            "timestamp": 46024.205,
+            "ms": 27.975000023841858,
+            "lateness": 12.11999992847268,
+            "quality": "baja",
+            "simulationElapsed": 125.27284999998719,
+            "drawCalls": 76,
+            "triangles": 374854,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 46024.205,
+              "label": "before-simulation",
+              "ms": 0.2900000810623169,
+              "at": 46036.61500000954,
+              "lateness": 12.11999992847268
+            },
+            {
+              "timestamp": 46024.205,
+              "label": "simulation",
+              "ms": 0.23000001907348633,
+              "at": 46036.84500002861,
+              "lateness": 12.11999992847268
+            },
+            {
+              "timestamp": 46024.205,
+              "label": "effects",
+              "ms": 0.029999971389770508,
+              "at": 46036.875,
+              "lateness": 12.11999992847268
+            },
+            {
+              "timestamp": 46024.205,
+              "label": "render",
+              "ms": 26.789999961853027,
+              "at": 46063.66499996185,
+              "lateness": 12.11999992847268
+            },
+            {
+              "timestamp": 46024.205,
+              "label": "audio",
+              "ms": 0.19000005722045898,
+              "at": 46063.85500001907,
+              "lateness": 12.11999992847268
+            },
+            {
+              "timestamp": 46024.205,
+              "label": "interface",
+              "ms": 0.434999942779541,
+              "at": 46064.28999996185,
+              "lateness": 12.11999992847268
+            },
+            {
+              "timestamp": 46024.205,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 46064.294999957085,
+              "lateness": 12.11999992847268
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 26.789999961853027
+        },
+        {
+          "frame": {
+            "timestamp": 44926.505,
+            "ms": 26.365000009536743,
+            "lateness": 12.779999966624018,
+            "quality": "baja",
+            "simulationElapsed": 124.17514999998735,
+            "drawCalls": 81,
+            "triangles": 343924,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 44926.505,
+              "label": "before-simulation",
+              "ms": 0.31000006198883057,
+              "at": 44939.59500002861,
+              "lateness": 12.779999966624018
+            },
+            {
+              "timestamp": 44926.505,
+              "label": "simulation",
+              "ms": 0.25999999046325684,
+              "at": 44939.85500001907,
+              "lateness": 12.779999966624018
+            },
+            {
+              "timestamp": 44926.505,
+              "label": "effects",
+              "ms": 0.039999961853027344,
+              "at": 44939.89499998093,
+              "lateness": 12.779999966624018
+            },
+            {
+              "timestamp": 44926.505,
+              "label": "render",
+              "ms": 24.74500000476837,
+              "at": 44964.639999985695,
+              "lateness": 12.779999966624018
+            },
+            {
+              "timestamp": 44926.505,
+              "label": "audio",
+              "ms": 0.2799999713897705,
+              "at": 44964.919999957085,
+              "lateness": 12.779999966624018
+            },
+            {
+              "timestamp": 44926.505,
+              "label": "interface",
+              "ms": 0.7150000333786011,
+              "at": 44965.63499999046,
+              "lateness": 12.779999966624018
+            },
+            {
+              "timestamp": 44926.505,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 44965.64999997616,
+              "lateness": 12.779999966624018
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.74500000476837
+        },
+        {
+          "frame": {
+            "timestamp": 45658.3,
+            "ms": 25.860000014305115,
+            "lateness": 4.839999985691975,
+            "quality": "baja",
+            "simulationElapsed": 124.90694499998725,
+            "drawCalls": 80,
+            "triangles": 383292,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 45658.3,
+              "label": "before-simulation",
+              "ms": 0.23000001907348633,
+              "at": 45663.37000000477,
+              "lateness": 4.839999985691975
+            },
+            {
+              "timestamp": 45658.3,
+              "label": "simulation",
+              "ms": 0.2250000238418579,
+              "at": 45663.59500002861,
+              "lateness": 4.839999985691975
+            },
+            {
+              "timestamp": 45658.3,
+              "label": "effects",
+              "ms": 0.04999995231628418,
+              "at": 45663.64499998093,
+              "lateness": 4.839999985691975
+            },
+            {
+              "timestamp": 45658.3,
+              "label": "render",
+              "ms": 25.06499993801117,
+              "at": 45688.70999991894,
+              "lateness": 4.839999985691975
+            },
+            {
+              "timestamp": 45658.3,
+              "label": "audio",
+              "ms": 0.15000009536743164,
+              "at": 45688.860000014305,
+              "lateness": 4.839999985691975
+            },
+            {
+              "timestamp": 45658.3,
+              "label": "interface",
+              "ms": 0.13499999046325684,
+              "at": 45688.99500000477,
+              "lateness": 4.839999985691975
+            },
+            {
+              "timestamp": 45658.3,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 45689,
+              "lateness": 4.839999985691975
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 25.06499993801117
+        },
+        {
+          "frame": {
+            "timestamp": 52958.035,
+            "ms": 25.445000052452087,
+            "lateness": 12.48999997615465,
+            "quality": "baja",
+            "simulationElapsed": 132.19026499998833,
+            "drawCalls": 78,
+            "triangles": 291484,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 36
+          },
+          "phases": [
+            {
+              "timestamp": 52958.035,
+              "label": "before-simulation",
+              "ms": 0.2250000238418579,
+              "at": 52970.75,
+              "lateness": 12.48999997615465
+            },
+            {
+              "timestamp": 52958.035,
+              "label": "simulation",
+              "ms": 0.125,
+              "at": 52970.875,
+              "lateness": 12.48999997615465
+            },
+            {
+              "timestamp": 52958.035,
+              "label": "effects",
+              "ms": 0.014999985694885254,
+              "at": 52970.889999985695,
+              "lateness": 12.48999997615465
+            },
+            {
+              "timestamp": 52958.035,
+              "label": "render",
+              "ms": 24.144999980926514,
+              "at": 52995.03499996662,
+              "lateness": 12.48999997615465
+            },
+            {
+              "timestamp": 52958.035,
+              "label": "audio",
+              "ms": 0.31000006198883057,
+              "at": 52995.34500002861,
+              "lateness": 12.48999997615465
+            },
+            {
+              "timestamp": 52958.035,
+              "label": "interface",
+              "ms": 0.6049998998641968,
+              "at": 52995.949999928474,
+              "lateness": 12.48999997615465
+            },
+            {
+              "timestamp": 52958.035,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 52995.96499991417,
+              "lateness": 12.48999997615465
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.144999980926514
+        },
+        {
+          "frame": {
+            "timestamp": 51910.45,
+            "ms": 25.105000019073486,
+            "lateness": 2.579999971392681,
+            "quality": "baja",
+            "simulationElapsed": 131.142679999988,
+            "drawCalls": 78,
+            "triangles": 286328,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 32
+          },
+          "phases": [
+            {
+              "timestamp": 51910.45,
+              "label": "before-simulation",
+              "ms": 0.16499996185302734,
+              "at": 51913.19499993324,
+              "lateness": 2.579999971392681
+            },
+            {
+              "timestamp": 51910.45,
+              "label": "simulation",
+              "ms": 0.20500004291534424,
+              "at": 51913.39999997616,
+              "lateness": 2.579999971392681
+            },
+            {
+              "timestamp": 51910.45,
+              "label": "effects",
+              "ms": 0.02499997615814209,
+              "at": 51913.424999952316,
+              "lateness": 2.579999971392681
+            },
+            {
+              "timestamp": 51910.45,
+              "label": "render",
+              "ms": 24.139999985694885,
+              "at": 51937.56499993801,
+              "lateness": 2.579999971392681
+            },
+            {
+              "timestamp": 51910.45,
+              "label": "audio",
+              "ms": 0.13499999046325684,
+              "at": 51937.699999928474,
+              "lateness": 2.579999971392681
+            },
+            {
+              "timestamp": 51910.45,
+              "label": "interface",
+              "ms": 0.4200000762939453,
+              "at": 51938.12000000477,
+              "lateness": 2.579999971392681
+            },
+            {
+              "timestamp": 51910.45,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 51938.13499999046,
+              "lateness": 2.579999971392681
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.139999985694885
+        },
+        {
+          "frame": {
+            "timestamp": 51960.42,
+            "ms": 24.899999976158142,
+            "lateness": 14.055000023843604,
+            "quality": "baja",
+            "simulationElapsed": 131.192649999988,
+            "drawCalls": 75,
+            "triangles": 281612,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 32
+          },
+          "phases": [
+            {
+              "timestamp": 51960.42,
+              "label": "before-simulation",
+              "ms": 0.09999990463256836,
+              "at": 51974.574999928474,
+              "lateness": 14.055000023843604
+            },
+            {
+              "timestamp": 51960.42,
+              "label": "simulation",
+              "ms": 0.10500001907348633,
+              "at": 51974.67999994755,
+              "lateness": 14.055000023843604
+            },
+            {
+              "timestamp": 51960.42,
+              "label": "effects",
+              "ms": 0.014999985694885254,
+              "at": 51974.69499993324,
+              "lateness": 14.055000023843604
+            },
+            {
+              "timestamp": 51960.42,
+              "label": "render",
+              "ms": 23.615000009536743,
+              "at": 51998.30999994278,
+              "lateness": 14.055000023843604
+            },
+            {
+              "timestamp": 51960.42,
+              "label": "audio",
+              "ms": 0.3700000047683716,
+              "at": 51998.67999994755,
+              "lateness": 14.055000023843604
+            },
+            {
+              "timestamp": 51960.42,
+              "label": "interface",
+              "ms": 0.6850000619888306,
+              "at": 51999.36500000954,
+              "lateness": 14.055000023843604
+            },
+            {
+              "timestamp": 51960.42,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 51999.37000000477,
+              "lateness": 14.055000023843604
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 23.615000009536743
+        },
+        {
+          "frame": {
+            "timestamp": 45225.85,
+            "ms": 24.5349999666214,
+            "lateness": 7.549999976159597,
+            "quality": "media",
+            "simulationElapsed": 124.4744949999873,
+            "drawCalls": 81,
+            "triangles": 443626,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 45225.85,
+              "label": "before-simulation",
+              "ms": 0.18499994277954102,
+              "at": 45233.58499991894,
+              "lateness": 7.549999976159597
+            },
+            {
+              "timestamp": 45225.85,
+              "label": "simulation",
+              "ms": 0.25,
+              "at": 45233.83499991894,
+              "lateness": 7.549999976159597
+            },
+            {
+              "timestamp": 45225.85,
+              "label": "effects",
+              "ms": 0.03000009059906006,
+              "at": 45233.86500000954,
+              "lateness": 7.549999976159597
+            },
+            {
+              "timestamp": 45225.85,
+              "label": "render",
+              "ms": 23.735000014305115,
+              "at": 45257.60000002384,
+              "lateness": 7.549999976159597
+            },
+            {
+              "timestamp": 45225.85,
+              "label": "audio",
+              "ms": 0.25,
+              "at": 45257.85000002384,
+              "lateness": 7.549999976159597
+            },
+            {
+              "timestamp": 45225.85,
+              "label": "interface",
+              "ms": 0.07499992847442627,
+              "at": 45257.924999952316,
+              "lateness": 7.549999976159597
+            },
+            {
+              "timestamp": 45225.85,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 45257.93499994278,
+              "lateness": 7.549999976159597
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 23.735000014305115
+        }
+      ]
+    },
+    {
+      "source": "docs/qa/residual-spikes-20261027/seam-reuse-volcano-abab/2-candidate/report.json.gz",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "worst": [
+        {
+          "frame": {
+            "timestamp": 34364.765,
+            "ms": 62.455000042915344,
+            "lateness": 5.7399999952322105,
+            "quality": "baja",
+            "simulationElapsed": 123.84196999999692,
+            "drawCalls": 86,
+            "triangles": 312081,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 34364.765,
+              "label": "before-simulation",
+              "ms": 0.16499996185302734,
+              "at": 34370.669999957085,
+              "lateness": 5.7399999952322105
+            },
+            {
+              "timestamp": 34364.765,
+              "label": "simulation",
+              "ms": 0.48500001430511475,
+              "at": 34371.15499997139,
+              "lateness": 5.7399999952322105
+            },
+            {
+              "timestamp": 34364.765,
+              "label": "effects",
+              "ms": 0.05500006675720215,
+              "at": 34371.21000003815,
+              "lateness": 5.7399999952322105
+            },
+            {
+              "timestamp": 34364.765,
+              "label": "render",
+              "ms": 60.84999990463257,
+              "at": 34432.05999994278,
+              "lateness": 5.7399999952322105
+            },
+            {
+              "timestamp": 34364.765,
+              "label": "audio",
+              "ms": 0.315000057220459,
+              "at": 34432.375,
+              "lateness": 5.7399999952322105
+            },
+            {
+              "timestamp": 34364.765,
+              "label": "interface",
+              "ms": 0.5749999284744263,
+              "at": 34432.949999928474,
+              "lateness": 5.7399999952322105
+            },
+            {
+              "timestamp": 34364.765,
+              "label": "tail",
+              "ms": 0.010000109672546387,
+              "at": 34432.96000003815,
+              "lateness": 5.7399999952322105
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 60.84999990463257
+        },
+        {
+          "frame": {
+            "timestamp": 36759.42,
+            "ms": 56.019999980926514,
+            "lateness": 14.325000004770118,
+            "quality": "baja",
+            "simulationElapsed": 126.23662499999674,
+            "drawCalls": 76,
+            "triangles": 271635,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 27
+          },
+          "phases": [
+            {
+              "timestamp": 36759.42,
+              "label": "before-simulation",
+              "ms": 0.125,
+              "at": 36773.87000000477,
+              "lateness": 14.325000004770118
+            },
+            {
+              "timestamp": 36759.42,
+              "label": "simulation",
+              "ms": 0.12000000476837158,
+              "at": 36773.99000000954,
+              "lateness": 14.325000004770118
+            },
+            {
+              "timestamp": 36759.42,
+              "label": "effects",
+              "ms": 0.019999980926513672,
+              "at": 36774.00999999046,
+              "lateness": 14.325000004770118
+            },
+            {
+              "timestamp": 36759.42,
+              "label": "render",
+              "ms": 55.1599999666214,
+              "at": 36829.169999957085,
+              "lateness": 14.325000004770118
+            },
+            {
+              "timestamp": 36759.42,
+              "label": "audio",
+              "ms": 0.1549999713897705,
+              "at": 36829.324999928474,
+              "lateness": 14.325000004770118
+            },
+            {
+              "timestamp": 36759.42,
+              "label": "interface",
+              "ms": 0.43000006675720215,
+              "at": 36829.75499999523,
+              "lateness": 14.325000004770118
+            },
+            {
+              "timestamp": 36759.42,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 36829.75999999046,
+              "lateness": 14.325000004770118
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 55.1599999666214
+        },
+        {
+          "frame": {
+            "timestamp": 38787.97,
+            "ms": 45.17999994754791,
+            "lateness": 8.67499998092535,
+            "quality": "baja",
+            "simulationElapsed": 128.26517499999665,
+            "drawCalls": 71,
+            "triangles": 230272,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 35
+          },
+          "phases": [
+            {
+              "timestamp": 38787.97,
+              "label": "before-simulation",
+              "ms": 1.9149999618530273,
+              "at": 38798.55999994278,
+              "lateness": 8.67499998092535
+            },
+            {
+              "timestamp": 38787.97,
+              "label": "simulation",
+              "ms": 0.1650000810623169,
+              "at": 38798.72500002384,
+              "lateness": 8.67499998092535
+            },
+            {
+              "timestamp": 38787.97,
+              "label": "effects",
+              "ms": 0.019999980926513672,
+              "at": 38798.74500000477,
+              "lateness": 8.67499998092535
+            },
+            {
+              "timestamp": 38787.97,
+              "label": "render",
+              "ms": 41.95999991893768,
+              "at": 38840.704999923706,
+              "lateness": 8.67499998092535
+            },
+            {
+              "timestamp": 38787.97,
+              "label": "audio",
+              "ms": 0.18000006675720215,
+              "at": 38840.88499999046,
+              "lateness": 8.67499998092535
+            },
+            {
+              "timestamp": 38787.97,
+              "label": "interface",
+              "ms": 0.9149999618530273,
+              "at": 38841.799999952316,
+              "lateness": 8.67499998092535
+            },
+            {
+              "timestamp": 38787.97,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 38841.81499993801,
+              "lateness": 8.67499998092535
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 41.95999991893768
+        },
+        {
+          "frame": {
+            "timestamp": 33483.48,
+            "ms": 39.2849999666214,
+            "lateness": 4.019999999996799,
+            "quality": "media",
+            "simulationElapsed": 122.96068499999704,
+            "drawCalls": 88,
+            "triangles": 329232,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33483.48,
+              "label": "before-simulation",
+              "ms": 0.2849999666213989,
+              "at": 33487.78499996662,
+              "lateness": 4.019999999996799
+            },
+            {
+              "timestamp": 33483.48,
+              "label": "simulation",
+              "ms": 0.2799999713897705,
+              "at": 33488.06499993801,
+              "lateness": 4.019999999996799
+            },
+            {
+              "timestamp": 33483.48,
+              "label": "effects",
+              "ms": 0.03000009059906006,
+              "at": 33488.09500002861,
+              "lateness": 4.019999999996799
+            },
+            {
+              "timestamp": 33483.48,
+              "label": "render",
+              "ms": 37.61500000953674,
+              "at": 33525.71000003815,
+              "lateness": 4.019999999996799
+            },
+            {
+              "timestamp": 33483.48,
+              "label": "audio",
+              "ms": 0.25999999046325684,
+              "at": 33525.97000002861,
+              "lateness": 4.019999999996799
+            },
+            {
+              "timestamp": 33483.48,
+              "label": "interface",
+              "ms": 0.7999999523162842,
+              "at": 33526.76999998093,
+              "lateness": 4.019999999996799
+            },
+            {
+              "timestamp": 33483.48,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33526.77999997139,
+              "lateness": 4.019999999996799
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 37.61500000953674
+        },
+        {
+          "frame": {
+            "timestamp": 33550.06,
+            "ms": 29.52999997138977,
+            "lateness": 14.160000028612558,
+            "quality": "media",
+            "simulationElapsed": 123.02726499999703,
+            "drawCalls": 89,
+            "triangles": 338529,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33550.06,
+              "label": "before-simulation",
+              "ms": 0.16499996185302734,
+              "at": 33564.38499999046,
+              "lateness": 14.160000028612558
+            },
+            {
+              "timestamp": 33550.06,
+              "label": "simulation",
+              "ms": 0.38499999046325684,
+              "at": 33564.76999998093,
+              "lateness": 14.160000028612558
+            },
+            {
+              "timestamp": 33550.06,
+              "label": "effects",
+              "ms": 0.034999966621398926,
+              "at": 33564.80499994755,
+              "lateness": 14.160000028612558
+            },
+            {
+              "timestamp": 33550.06,
+              "label": "render",
+              "ms": 28.165000081062317,
+              "at": 33592.97000002861,
+              "lateness": 14.160000028612558
+            },
+            {
+              "timestamp": 33550.06,
+              "label": "audio",
+              "ms": 0.18999993801116943,
+              "at": 33593.15999996662,
+              "lateness": 14.160000028612558
+            },
+            {
+              "timestamp": 33550.06,
+              "label": "interface",
+              "ms": 0.5750000476837158,
+              "at": 33593.735000014305,
+              "lateness": 14.160000028612558
+            },
+            {
+              "timestamp": 33550.06,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33593.74500000477,
+              "lateness": 14.160000028612558
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 28.165000081062317
+        },
+        {
+          "frame": {
+            "timestamp": 36909.075,
+            "ms": 26.610000014305115,
+            "lateness": 3.979999947550823,
+            "quality": "baja",
+            "simulationElapsed": 126.38627999999672,
+            "drawCalls": 80,
+            "triangles": 282120,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 28
+          },
+          "phases": [
+            {
+              "timestamp": 36909.075,
+              "label": "before-simulation",
+              "ms": 0.13499999046325684,
+              "at": 36913.18999993801,
+              "lateness": 3.979999947550823
+            },
+            {
+              "timestamp": 36909.075,
+              "label": "simulation",
+              "ms": 0.13999998569488525,
+              "at": 36913.329999923706,
+              "lateness": 3.979999947550823
+            },
+            {
+              "timestamp": 36909.075,
+              "label": "effects",
+              "ms": 0.015000104904174805,
+              "at": 36913.34500002861,
+              "lateness": 3.979999947550823
+            },
+            {
+              "timestamp": 36909.075,
+              "label": "render",
+              "ms": 25.125,
+              "at": 36938.47000002861,
+              "lateness": 3.979999947550823
+            },
+            {
+              "timestamp": 36909.075,
+              "label": "audio",
+              "ms": 0.19999992847442627,
+              "at": 36938.669999957085,
+              "lateness": 3.979999947550823
+            },
+            {
+              "timestamp": 36909.075,
+              "label": "interface",
+              "ms": 0.9800000190734863,
+              "at": 36939.64999997616,
+              "lateness": 3.979999947550823
+            },
+            {
+              "timestamp": 36909.075,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 36939.66499996185,
+              "lateness": 3.979999947550823
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 25.125
+        },
+        {
+          "frame": {
+            "timestamp": 33982.3,
+            "ms": 25.945000052452087,
+            "lateness": 5.249999952313374,
+            "quality": "baja",
+            "simulationElapsed": 123.45950499999698,
+            "drawCalls": 86,
+            "triangles": 318067,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33982.3,
+              "label": "before-simulation",
+              "ms": 0.16000008583068848,
+              "at": 33987.71000003815,
+              "lateness": 5.249999952313374
+            },
+            {
+              "timestamp": 33982.3,
+              "label": "simulation",
+              "ms": 0.26499998569488525,
+              "at": 33987.97500002384,
+              "lateness": 5.249999952313374
+            },
+            {
+              "timestamp": 33982.3,
+              "label": "effects",
+              "ms": 0.029999971389770508,
+              "at": 33988.00499999523,
+              "lateness": 5.249999952313374
+            },
+            {
+              "timestamp": 33982.3,
+              "label": "render",
+              "ms": 24.549999952316284,
+              "at": 34012.55499994755,
+              "lateness": 5.249999952313374
+            },
+            {
+              "timestamp": 33982.3,
+              "label": "audio",
+              "ms": 0.20000004768371582,
+              "at": 34012.75499999523,
+              "lateness": 5.249999952313374
+            },
+            {
+              "timestamp": 33982.3,
+              "label": "interface",
+              "ms": 0.7250000238418579,
+              "at": 34013.48000001907,
+              "lateness": 5.249999952313374
+            },
+            {
+              "timestamp": 33982.3,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 34013.49500000477,
+              "lateness": 5.249999952313374
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.549999952316284
+        },
+        {
+          "frame": {
+            "timestamp": 34331.605,
+            "ms": 24.12000000476837,
+            "lateness": 1.9699999284712248,
+            "quality": "baja",
+            "simulationElapsed": 123.80880999999692,
+            "drawCalls": 91,
+            "triangles": 322853,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 34331.605,
+              "label": "before-simulation",
+              "ms": 0.21500003337860107,
+              "at": 34333.78999996185,
+              "lateness": 1.9699999284712248
+            },
+            {
+              "timestamp": 34331.605,
+              "label": "simulation",
+              "ms": 0.440000057220459,
+              "at": 34334.23000001907,
+              "lateness": 1.9699999284712248
+            },
+            {
+              "timestamp": 34331.605,
+              "label": "effects",
+              "ms": 0.0549999475479126,
+              "at": 34334.28499996662,
+              "lateness": 1.9699999284712248
+            },
+            {
+              "timestamp": 34331.605,
+              "label": "render",
+              "ms": 22.485000014305115,
+              "at": 34356.76999998093,
+              "lateness": 1.9699999284712248
+            },
+            {
+              "timestamp": 34331.605,
+              "label": "audio",
+              "ms": 0.23000001907348633,
+              "at": 34357,
+              "lateness": 1.9699999284712248
+            },
+            {
+              "timestamp": 34331.605,
+              "label": "interface",
+              "ms": 0.684999942779541,
+              "at": 34357.68499994278,
+              "lateness": 1.9699999284712248
+            },
+            {
+              "timestamp": 34331.605,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 34357.69499993324,
+              "lateness": 1.9699999284712248
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 22.485000014305115
+        },
+        {
+          "frame": {
+            "timestamp": 33666.385,
+            "ms": 23.25,
+            "lateness": 4.789999952314247,
+            "quality": "media",
+            "simulationElapsed": 123.14358999999702,
+            "drawCalls": 87,
+            "triangles": 340515,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33666.385,
+              "label": "before-simulation",
+              "ms": 0.1650000810623169,
+              "at": 33671.34000003338,
+              "lateness": 4.789999952314247
+            },
+            {
+              "timestamp": 33666.385,
+              "label": "simulation",
+              "ms": 0.31999993324279785,
+              "at": 33671.65999996662,
+              "lateness": 4.789999952314247
+            },
+            {
+              "timestamp": 33666.385,
+              "label": "effects",
+              "ms": 0.05500006675720215,
+              "at": 33671.71500003338,
+              "lateness": 4.789999952314247
+            },
+            {
+              "timestamp": 33666.385,
+              "label": "render",
+              "ms": 21.99500000476837,
+              "at": 33693.71000003815,
+              "lateness": 4.789999952314247
+            },
+            {
+              "timestamp": 33666.385,
+              "label": "audio",
+              "ms": 0.17499995231628418,
+              "at": 33693.88499999046,
+              "lateness": 4.789999952314247
+            },
+            {
+              "timestamp": 33666.385,
+              "label": "interface",
+              "ms": 0.5249999761581421,
+              "at": 33694.40999996662,
+              "lateness": 4.789999952314247
+            },
+            {
+              "timestamp": 33666.385,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33694.419999957085,
+              "lateness": 4.789999952314247
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 21.99500000476837
+        },
+        {
+          "frame": {
+            "timestamp": 33782.775,
+            "ms": 23.009999990463257,
+            "lateness": 3.73999998569343,
+            "quality": "media",
+            "simulationElapsed": 123.259979999997,
+            "drawCalls": 86,
+            "triangles": 341786,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33782.775,
+              "label": "before-simulation",
+              "ms": 0.23500001430511475,
+              "at": 33786.75,
+              "lateness": 3.73999998569343
+            },
+            {
+              "timestamp": 33782.775,
+              "label": "simulation",
+              "ms": 0.2749999761581421,
+              "at": 33787.02499997616,
+              "lateness": 3.73999998569343
+            },
+            {
+              "timestamp": 33782.775,
+              "label": "effects",
+              "ms": 0.02499997615814209,
+              "at": 33787.049999952316,
+              "lateness": 3.73999998569343
+            },
+            {
+              "timestamp": 33782.775,
+              "label": "render",
+              "ms": 21.855000019073486,
+              "at": 33808.90499997139,
+              "lateness": 3.73999998569343
+            },
+            {
+              "timestamp": 33782.775,
+              "label": "audio",
+              "ms": 0.20000004768371582,
+              "at": 33809.10500001907,
+              "lateness": 3.73999998569343
+            },
+            {
+              "timestamp": 33782.775,
+              "label": "interface",
+              "ms": 0.4099999666213989,
+              "at": 33809.514999985695,
+              "lateness": 3.73999998569343
+            },
+            {
+              "timestamp": 33782.775,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33809.52499997616,
+              "lateness": 3.73999998569343
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 21.855000019073486
+        }
+      ]
+    },
+    {
+      "source": "docs/qa/residual-spikes-20261027/seam-reuse-volcano-abab/4-candidate/report.json.gz",
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "worst": [
+        {
+          "frame": {
+            "timestamp": 36789.38,
+            "ms": 62.38499999046326,
+            "lateness": 2.55500006199145,
+            "quality": "baja",
+            "simulationElapsed": 126.09622499992997,
+            "drawCalls": 73,
+            "triangles": 262631,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 28
+          },
+          "phases": [
+            {
+              "timestamp": 36789.38,
+              "label": "before-simulation",
+              "ms": 0.19999992847442627,
+              "at": 36792.13499999046,
+              "lateness": 2.55500006199145
+            },
+            {
+              "timestamp": 36789.38,
+              "label": "simulation",
+              "ms": 0.16000008583068848,
+              "at": 36792.295000076294,
+              "lateness": 2.55500006199145
+            },
+            {
+              "timestamp": 36789.38,
+              "label": "effects",
+              "ms": 0.02499997615814209,
+              "at": 36792.32000005245,
+              "lateness": 2.55500006199145
+            },
+            {
+              "timestamp": 36789.38,
+              "label": "render",
+              "ms": 61.18499994277954,
+              "at": 36853.50499999523,
+              "lateness": 2.55500006199145
+            },
+            {
+              "timestamp": 36789.38,
+              "label": "audio",
+              "ms": 0.21000003814697266,
+              "at": 36853.71500003338,
+              "lateness": 2.55500006199145
+            },
+            {
+              "timestamp": 36789.38,
+              "label": "interface",
+              "ms": 0.5950000286102295,
+              "at": 36854.31000006199,
+              "lateness": 2.55500006199145
+            },
+            {
+              "timestamp": 36789.38,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 36854.31500005722,
+              "lateness": 2.55500006199145
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 61.18499994277954
+        },
+        {
+          "frame": {
+            "timestamp": 34211.845,
+            "ms": 50.699999928474426,
+            "lateness": 14.210000066756038,
+            "quality": "baja",
+            "simulationElapsed": 123.51868999993025,
+            "drawCalls": 85,
+            "triangles": 315913,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 34211.845,
+              "label": "before-simulation",
+              "ms": 0.16499996185302734,
+              "at": 34226.22000002861,
+              "lateness": 14.210000066756038
+            },
+            {
+              "timestamp": 34211.845,
+              "label": "simulation",
+              "ms": 0.21000003814697266,
+              "at": 34226.43000006676,
+              "lateness": 14.210000066756038
+            },
+            {
+              "timestamp": 34211.845,
+              "label": "effects",
+              "ms": 0.034999966621398926,
+              "at": 34226.46500003338,
+              "lateness": 14.210000066756038
+            },
+            {
+              "timestamp": 34211.845,
+              "label": "render",
+              "ms": 49.575000047683716,
+              "at": 34276.04000008106,
+              "lateness": 14.210000066756038
+            },
+            {
+              "timestamp": 34211.845,
+              "label": "audio",
+              "ms": 0.19499993324279785,
+              "at": 34276.235000014305,
+              "lateness": 14.210000066756038
+            },
+            {
+              "timestamp": 34211.845,
+              "label": "interface",
+              "ms": 0.5099999904632568,
+              "at": 34276.74500000477,
+              "lateness": 14.210000066756038
+            },
+            {
+              "timestamp": 34211.845,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 34276.75499999523,
+              "lateness": 14.210000066756038
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 49.575000047683716
+        },
+        {
+          "frame": {
+            "timestamp": 38917.72,
+            "ms": 34.980000019073486,
+            "lateness": 10.980000047682552,
+            "quality": "baja",
+            "simulationElapsed": 128.22456499992975,
+            "drawCalls": 71,
+            "triangles": 230272,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 32
+          },
+          "phases": [
+            {
+              "timestamp": 38917.72,
+              "label": "before-simulation",
+              "ms": 0.18499994277954102,
+              "at": 38928.88499999046,
+              "lateness": 10.980000047682552
+            },
+            {
+              "timestamp": 38917.72,
+              "label": "simulation",
+              "ms": 0.20000004768371582,
+              "at": 38929.08500003815,
+              "lateness": 10.980000047682552
+            },
+            {
+              "timestamp": 38917.72,
+              "label": "effects",
+              "ms": 0.034999966621398926,
+              "at": 38929.12000000477,
+              "lateness": 10.980000047682552
+            },
+            {
+              "timestamp": 38917.72,
+              "label": "render",
+              "ms": 33.85000002384186,
+              "at": 38962.97000002861,
+              "lateness": 10.980000047682552
+            },
+            {
+              "timestamp": 38917.72,
+              "label": "audio",
+              "ms": 0.14499998092651367,
+              "at": 38963.11500000954,
+              "lateness": 10.980000047682552
+            },
+            {
+              "timestamp": 38917.72,
+              "label": "interface",
+              "ms": 0.5500000715255737,
+              "at": 38963.66500008106,
+              "lateness": 10.980000047682552
+            },
+            {
+              "timestamp": 38917.72,
+              "label": "tail",
+              "ms": 0.004999995231628418,
+              "at": 38963.670000076294,
+              "lateness": 10.980000047682552
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 33.85000002384186
+        },
+        {
+          "frame": {
+            "timestamp": 33895.925,
+            "ms": 29.444999933242798,
+            "lateness": 0.3900000572175486,
+            "quality": "baja",
+            "simulationElapsed": 123.20276999993027,
+            "drawCalls": 86,
+            "triangles": 317789,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33895.925,
+              "label": "before-simulation",
+              "ms": 0.16499996185302734,
+              "at": 33896.48000001907,
+              "lateness": 0.3900000572175486
+            },
+            {
+              "timestamp": 33895.925,
+              "label": "simulation",
+              "ms": 0.2849999666213989,
+              "at": 33896.764999985695,
+              "lateness": 0.3900000572175486
+            },
+            {
+              "timestamp": 33895.925,
+              "label": "effects",
+              "ms": 0.0700000524520874,
+              "at": 33896.83500003815,
+              "lateness": 0.3900000572175486
+            },
+            {
+              "timestamp": 33895.925,
+              "label": "render",
+              "ms": 27.350000023841858,
+              "at": 33924.18500006199,
+              "lateness": 0.3900000572175486
+            },
+            {
+              "timestamp": 33895.925,
+              "label": "audio",
+              "ms": 0.32499992847442627,
+              "at": 33924.50999999046,
+              "lateness": 0.3900000572175486
+            },
+            {
+              "timestamp": 33895.925,
+              "label": "interface",
+              "ms": 1.2350000143051147,
+              "at": 33925.74500000477,
+              "lateness": 0.3900000572175486
+            },
+            {
+              "timestamp": 33895.925,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 33925.75999999046,
+              "lateness": 0.3900000572175486
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 27.350000023841858
+        },
+        {
+          "frame": {
+            "timestamp": 33047.825,
+            "ms": 27.56500005722046,
+            "lateness": 2.1650000095396535,
+            "quality": "baja",
+            "simulationElapsed": 122.3546699999304,
+            "drawCalls": 83,
+            "triangles": 282139,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33047.825,
+              "label": "before-simulation",
+              "ms": 0.14499998092651367,
+              "at": 33050.13499999046,
+              "lateness": 2.1650000095396535
+            },
+            {
+              "timestamp": 33047.825,
+              "label": "simulation",
+              "ms": 0.4200000762939453,
+              "at": 33050.55500006676,
+              "lateness": 2.1650000095396535
+            },
+            {
+              "timestamp": 33047.825,
+              "label": "effects",
+              "ms": 0.06499993801116943,
+              "at": 33050.62000000477,
+              "lateness": 2.1650000095396535
+            },
+            {
+              "timestamp": 33047.825,
+              "label": "render",
+              "ms": 25.960000038146973,
+              "at": 33076.580000042915,
+              "lateness": 2.1650000095396535
+            },
+            {
+              "timestamp": 33047.825,
+              "label": "audio",
+              "ms": 0.18999993801116943,
+              "at": 33076.76999998093,
+              "lateness": 2.1650000095396535
+            },
+            {
+              "timestamp": 33047.825,
+              "label": "interface",
+              "ms": 0.75,
+              "at": 33077.51999998093,
+              "lateness": 2.1650000095396535
+            },
+            {
+              "timestamp": 33047.825,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33077.52999997139,
+              "lateness": 2.1650000095396535
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 25.960000038146973
+        },
+        {
+          "frame": {
+            "timestamp": 36589.725,
+            "ms": 26.09499990940094,
+            "lateness": 11.685000085832144,
+            "quality": "baja",
+            "simulationElapsed": 125.89656999993001,
+            "drawCalls": 76,
+            "triangles": 277539,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 28
+          },
+          "phases": [
+            {
+              "timestamp": 36589.725,
+              "label": "before-simulation",
+              "ms": 0.2349998950958252,
+              "at": 36601.64499998093,
+              "lateness": 11.685000085832144
+            },
+            {
+              "timestamp": 36589.725,
+              "label": "simulation",
+              "ms": 0.18500006198883057,
+              "at": 36601.830000042915,
+              "lateness": 11.685000085832144
+            },
+            {
+              "timestamp": 36589.725,
+              "label": "effects",
+              "ms": 0.034999966621398926,
+              "at": 36601.86500000954,
+              "lateness": 11.685000085832144
+            },
+            {
+              "timestamp": 36589.725,
+              "label": "render",
+              "ms": 24.735000014305115,
+              "at": 36626.60000002384,
+              "lateness": 11.685000085832144
+            },
+            {
+              "timestamp": 36589.725,
+              "label": "audio",
+              "ms": 0.24000000953674316,
+              "at": 36626.84000003338,
+              "lateness": 11.685000085832144
+            },
+            {
+              "timestamp": 36589.725,
+              "label": "interface",
+              "ms": 0.6499999761581421,
+              "at": 36627.49000000954,
+              "lateness": 11.685000085832144
+            },
+            {
+              "timestamp": 36589.725,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 36627.5,
+              "lateness": 11.685000085832144
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.735000014305115
+        },
+        {
+          "frame": {
+            "timestamp": 33413.65,
+            "ms": 26.024999976158142,
+            "lateness": 4.760000085829233,
+            "quality": "media",
+            "simulationElapsed": 122.72049499993034,
+            "drawCalls": 90,
+            "triangles": 332016,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33413.65,
+              "label": "before-simulation",
+              "ms": 0.14499998092651367,
+              "at": 33418.55500006676,
+              "lateness": 4.760000085829233
+            },
+            {
+              "timestamp": 33413.65,
+              "label": "simulation",
+              "ms": 0.2549999952316284,
+              "at": 33418.81000006199,
+              "lateness": 4.760000085829233
+            },
+            {
+              "timestamp": 33413.65,
+              "label": "effects",
+              "ms": 0.019999980926513672,
+              "at": 33418.830000042915,
+              "lateness": 4.760000085829233
+            },
+            {
+              "timestamp": 33413.65,
+              "label": "render",
+              "ms": 24.634999990463257,
+              "at": 33443.46500003338,
+              "lateness": 4.760000085829233
+            },
+            {
+              "timestamp": 33413.65,
+              "label": "audio",
+              "ms": 0.23000001907348633,
+              "at": 33443.69500005245,
+              "lateness": 4.760000085829233
+            },
+            {
+              "timestamp": 33413.65,
+              "label": "interface",
+              "ms": 0.7300000190734863,
+              "at": 33444.425000071526,
+              "lateness": 4.760000085829233
+            },
+            {
+              "timestamp": 33413.65,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33444.43500006199,
+              "lateness": 4.760000085829233
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.634999990463257
+        },
+        {
+          "frame": {
+            "timestamp": 36922.31,
+            "ms": 25.420000076293945,
+            "lateness": 2.9300000095390715,
+            "quality": "baja",
+            "simulationElapsed": 126.22915499992996,
+            "drawCalls": 78,
+            "triangles": 279930,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 28
+          },
+          "phases": [
+            {
+              "timestamp": 36922.31,
+              "label": "before-simulation",
+              "ms": 0.1549999713897705,
+              "at": 36925.39499998093,
+              "lateness": 2.9300000095390715
+            },
+            {
+              "timestamp": 36922.31,
+              "label": "simulation",
+              "ms": 0.23000001907348633,
+              "at": 36925.625,
+              "lateness": 2.9300000095390715
+            },
+            {
+              "timestamp": 36922.31,
+              "label": "effects",
+              "ms": 0.02499997615814209,
+              "at": 36925.64999997616,
+              "lateness": 2.9300000095390715
+            },
+            {
+              "timestamp": 36922.31,
+              "label": "render",
+              "ms": 24.0900000333786,
+              "at": 36949.74000000954,
+              "lateness": 2.9300000095390715
+            },
+            {
+              "timestamp": 36922.31,
+              "label": "audio",
+              "ms": 0.26999998092651367,
+              "at": 36950.00999999046,
+              "lateness": 2.9300000095390715
+            },
+            {
+              "timestamp": 36922.31,
+              "label": "interface",
+              "ms": 0.6399999856948853,
+              "at": 36950.64999997616,
+              "lateness": 2.9300000095390715
+            },
+            {
+              "timestamp": 36922.31,
+              "label": "tail",
+              "ms": 0.010000109672546387,
+              "at": 36950.66000008583,
+              "lateness": 2.9300000095390715
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 24.0900000333786
+        },
+        {
+          "frame": {
+            "timestamp": 37071.995,
+            "ms": 25.049999952316284,
+            "lateness": 8.425000076291326,
+            "quality": "baja",
+            "simulationElapsed": 126.37883999992995,
+            "drawCalls": 77,
+            "triangles": 277361,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 28
+          },
+          "phases": [
+            {
+              "timestamp": 37071.995,
+              "label": "before-simulation",
+              "ms": 0.13499999046325684,
+              "at": 37080.55500006676,
+              "lateness": 8.425000076291326
+            },
+            {
+              "timestamp": 37071.995,
+              "label": "simulation",
+              "ms": 0.16999995708465576,
+              "at": 37080.72500002384,
+              "lateness": 8.425000076291326
+            },
+            {
+              "timestamp": 37071.995,
+              "label": "effects",
+              "ms": 0.029999971389770508,
+              "at": 37080.75499999523,
+              "lateness": 8.425000076291326
+            },
+            {
+              "timestamp": 37071.995,
+              "label": "render",
+              "ms": 22.865000009536743,
+              "at": 37103.62000000477,
+              "lateness": 8.425000076291326
+            },
+            {
+              "timestamp": 37071.995,
+              "label": "audio",
+              "ms": 0.21000003814697266,
+              "at": 37103.830000042915,
+              "lateness": 8.425000076291326
+            },
+            {
+              "timestamp": 37071.995,
+              "label": "interface",
+              "ms": 1.6200000047683716,
+              "at": 37105.450000047684,
+              "lateness": 8.425000076291326
+            },
+            {
+              "timestamp": 37071.995,
+              "label": "tail",
+              "ms": 0.014999985694885254,
+              "at": 37105.46500003338,
+              "lateness": 8.425000076291326
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 22.865000009536743
+        },
+        {
+          "frame": {
+            "timestamp": 33081.11,
+            "ms": 24.649999976158142,
+            "lateness": 5.120000019072904,
+            "quality": "baja",
+            "simulationElapsed": 122.3879549999304,
+            "drawCalls": 83,
+            "triangles": 282636,
+            "points": 0,
+            "lines": 0,
+            "createdChunks": 25
+          },
+          "phases": [
+            {
+              "timestamp": 33081.11,
+              "label": "before-simulation",
+              "ms": 0.14499998092651367,
+              "at": 33086.375,
+              "lateness": 5.120000019072904
+            },
+            {
+              "timestamp": 33081.11,
+              "label": "simulation",
+              "ms": 0.21500003337860107,
+              "at": 33086.59000003338,
+              "lateness": 5.120000019072904
+            },
+            {
+              "timestamp": 33081.11,
+              "label": "effects",
+              "ms": 0.02499997615814209,
+              "at": 33086.61500000954,
+              "lateness": 5.120000019072904
+            },
+            {
+              "timestamp": 33081.11,
+              "label": "render",
+              "ms": 23.164999961853027,
+              "at": 33109.77999997139,
+              "lateness": 5.120000019072904
+            },
+            {
+              "timestamp": 33081.11,
+              "label": "audio",
+              "ms": 0.4200000762939453,
+              "at": 33110.200000047684,
+              "lateness": 5.120000019072904
+            },
+            {
+              "timestamp": 33081.11,
+              "label": "interface",
+              "ms": 0.6599999666213989,
+              "at": 33110.860000014305,
+              "lateness": 5.120000019072904
+            },
+            {
+              "timestamp": 33081.11,
+              "label": "tail",
+              "ms": 0.009999990463256836,
+              "at": 33110.87000000477,
+              "lateness": 5.120000019072904
+            }
+          ],
+          "operations": [],
+          "recordedOperationUnionMs": 0,
+          "renderOutsideRecordedOperationsMs": 23.164999961853027
+        }
+      ]
+    }
+  ]
+}
