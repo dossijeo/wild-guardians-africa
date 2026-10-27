@@ -27,3 +27,5 @@ Current coverage audit (2026-10-27):
 Update after integration: PR219 merged as 7d699c5b2; Windows exit/restart passed. Legal shield command streaming validation completed (final-seam-magic), but its captures do not show the shield and do not constitute visual shield acceptance. Night baseline and enabled diagnostic each passed after two earlier enabled timeouts; cause remains unresolved. See MERGE-219.md.
 
 Latest closure: offscreen-only soft-depth admission is not adopted after two ABAB sequences; see soft-depth-visibility-abab-repeat/DECISION.md. Five remaining night biome harnesses passed after merge, with inspected medium captures; Gran Canyon distant straight terrain boundary persists. These tests do not prove global fluency or resolve earlier intermittent night settling failures.
+
+Matrix reuse closure: paired depth/color reuse not adopted. Continuous40-second scenario exercised zero reuses, with unmatched initial residency; no benefit claim. See matrix-reuse-continuous/DECISION.md. Visible shield gap now covered by shield-visible-final (legal cast, fixed camera, inspected dome); UI pointer targeting remains separate.
