@@ -105,6 +105,12 @@ try {
  if(process.env.WG_DEPTH_MATRIX_REUSE==='1')await page.evaluate(async()=>{const {installDepthSceneMatrixReuse}=await import('/tools/experiments/reuse-depth-scene-matrices.js');globalThis.qaMatrixReuseFinish=installDepthSceneMatrixReuse(qaMagicWorld);});
  await page.evaluate(()=>{const w=qaMagicWorld,p=w.state.plants[1],y=w.nav.field.surface(p.x,p.z);w.cinematic=true;w.controls.target.set(p.x,y,p.z);w.camera.position.set(p.x+5,y+7,p.z+10);w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld(true);});
  await page.waitForTimeout(1000);
+ if(process.env.WG_MAGIC_WARMUP_ELAPSED){
+  const target=Number(process.env.WG_MAGIC_WARMUP_ELAPSED);assert(Number.isFinite(target)&&target>0);
+  report.warmup={target,before:await page.evaluate(()=>({elapsed:qaMagicWorld.state.elapsed,at:performance.now()}))};
+  await page.waitForFunction(target=>qaMagicWorld.state.elapsed>=target,target,{timeout:120000});
+  report.warmup.after=await page.evaluate(()=>({elapsed:qaMagicWorld.state.elapsed,at:performance.now()}));
+ }
  if(process.env.WG_MAGIC_SETTLE==='1')report.readiness=await page.evaluate(async()=>{
   const w=qaMagicWorld,start=performance.now(),deadline=start+60000;let stable=0,last='',snapshot;
   while(stable<60){
@@ -133,8 +139,9 @@ try {
   assert(result.accepted||process.env.WG_MAGIC_NO_CAST==='1');report.casts.push(result);await page.waitForTimeout(2200);
   result.after=await page.evaluate(()=>({elapsed:qaMagicWorld.state.elapsed,cooldown:qaMagicWorld.state.cooldowns.shield,spells:qaMagicWorld.state.spells.map(s=>({kind:s.kind,remaining:s.remaining}))}));
   assert(process.env.WG_MAGIC_NO_CAST==='1'||result.after.spells.some(s=>s.kind==='shield'&&s.remaining>0));
-  await page.screenshot({path:out+'/shield-'+i+'.png'});
+  if(process.env.WG_MAGIC_CAPTURE_AFTER_STREAM!=='1')await page.screenshot({path:out+'/shield-'+i+'.png'});
   if(process.env.WG_MAGIC_STREAM==='1'){await page.waitForFunction(()=>qaStreamTimer===null,null,{timeout:60000});result.streaming=await page.evaluate(()=>({samples:qaStreamSamples,spatial:globalThis.wildGuardiansSpatialQa?.()}));assert(new Set(result.streaming.samples.flatMap(s=>s.keys)).size>result.streaming.samples[0].keys.length,'Camera must introduce new chunks');}
+  if(process.env.WG_MAGIC_CAPTURE_AFTER_STREAM==='1'){result.captureStart=await page.evaluate(()=>performance.now());await page.screenshot({path:out+'/shield-'+i+'.png'});result.captureEnd=await page.evaluate(()=>performance.now());}
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));
  }
  report.after=await inspect();
