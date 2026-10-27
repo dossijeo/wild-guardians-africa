@@ -6,7 +6,7 @@ import bpy,bmesh,math
 from mathutils import Vector
 from pathlib import Path
 
-def apply_muzzle_patch(mesh, image_path):
+def apply_muzzle_patch(mesh, image_path, bilateral=False):
     world=mesh.matrix_world.copy(); original_uv=mesh.data.uv_layers[0].name
     original_uv_values=[tuple(loop.uv) for loop in mesh.data.uv_layers[0].data]
     # Original source uses a separate right canine; do not recolor its ivory.
@@ -36,11 +36,14 @@ def apply_muzzle_patch(mesh, image_path):
     attr=mesh.data.color_attributes.get('MuzzleRepairMask') or mesh.data.color_attributes.new(name='MuzzleRepairMask',type='FLOAT_COLOR',domain='CORNER')
     # Adding a color attribute can invalidate the previous RNA UV-layer handle.
     uv=mesh.data.uv_layers["MuzzleRepairProjection"]
+    dental=mesh.data.attributes.get("rigidDentalIsland")
+    dental_loops={i for face in mesh.data.polygons if dental and dental.data[face.index].value>0 for i in face.loop_indices}
     affected=set()
     for loop in mesh.data.loops:
         p=world@mesh.data.vertices[loop.vertex_index].co;u=(p.y+.835)/.55;v=(p.z-1.195)/.55
         uv.data[loop.index].uv=(u,v)
-        value=1. if p.x>.065 and tuple(round(c,5) for c in p) in body_positions else 0
+        on_side=abs(p.x)>.065 if bilateral else p.x>.065
+        value=1. if on_side and loop.index not in dental_loops and tuple(round(c,5) for c in p) in body_positions else 0
         attr.data[loop.index].color=(value,value,value,1)
         if value>0 and mask(u*1024,(1-v)*1024)>0:affected.add(loop.vertex_index)
     assert original_uv_values==[tuple(loop.uv) for loop in mesh.data.uv_layers[original_uv].data], "Source UVs changed during patch projection"
@@ -72,4 +75,4 @@ def apply_muzzle_patch(mesh, image_path):
         ramp=nodes.new('ShaderNodeMapRange');ramp.interpolation_type='SMOOTHERSTEP';ramp.clamp=True;links.new(distance,ramp.inputs['Value']);ramp.inputs['From Min'].default_value=-10;ramp.inputs['From Max'].default_value=6
         factor=math_node('MULTIPLY',weight.outputs['Fac'],ramp.outputs[0])
         mix=nodes.new('ShaderNodeMixRGB');mix.blend_type='MIX';links.new(factor,mix.inputs[0]);links.new(source,mix.inputs[1]);links.new(texture.outputs['Color'],mix.inputs[2]);links.new(mix.outputs[0],bs.inputs['Base Color'])
-    return {'affectedVertices':len(affected),'side':'right','runtimeReady':False,'requires':'original UV bake and both-side jaw validation'}
+    return {'affectedVertices':len(affected),'side':'both' if bilateral else 'right','runtimeReady':False,'requires':'original UV bake and both-side jaw validation'}

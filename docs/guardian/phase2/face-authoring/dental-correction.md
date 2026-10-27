@@ -1,17 +1,19 @@
-# Dental anatomy correction — not approved for runtime
+# Dental correction and hollow oral cavity â€” authoring candidate
 
-User review correctly identified the previous horizontal cut as a chin cut. `actor_mouth.split_lip_seam` now fails explicitly instead of regenerating that rejected mouth. Production manifests still reference the unmodified visual-lab animal assets.
+The previous chin cut and black entrance-spanning lining were rejected after user review. Production assets have not been replaced by these experiments.
 
-Inspection of the original welded analysis mesh found a 37-vertex dental cavity boundary rising toward the corners. The diagnostic magenta contours show that boundary; they are not invented lip landmarks. Subsequent harmonic-only experiments stretched teeth attached to the main surface. Color-only face separation also failed and was rejected.
+The current authoring script follows the curved dental region. Topology analysis found three dental islands (57, 90 and 91 vertices): the lower tooth row and both canines. Two were connected to skin at articulation vertices. `actor_dentition.py` separates their original faces without replacing the teeth or using color/proximity guesses. All three follow the jaw together. At full opening the numerical rigid-transform error is zero; linear morph interpolation contracts edges by up to 1.28% at half opening. This is explicitly measured, not claimed perfectly rigid at intermediate weights.
 
-The current prototype follows the curved dental region, moves the separate canine with the jaw, and adds an oral lining. Its right-side texture no longer exposes the painted canine behind the moving geometric tooth. The patch is projected locally; actual canine geometry is excluded. Original UV coordinates are asserted unchanged. An RNA UV-layer handle invalidation discovered during authoring was corrected by reacquiring the layer after adding color attributes.
+The old lining and front cut-edge bridges have been removed. The new interior has a recessed palate, oral floor, rounded tongue volume, throat and curved buccal walls running backwards into the head. There is no sheet spanning the frontal entrance. Iteration rejected overly deep surfaces protruding below the jaw, upright tongue geometry, front-facing cheek curtains and a visible palate rim. Current full/half frontal renders and full profiles show the revised depth and tongue. Profile corner closure and animated transitions still need final acceptance; these captures are authoring evidence, not in-game validation.
 
-Reproduce the current **unapproved** Blender source from repository root:
+Both muzzle sides use the localized generated fur repair. The patch excludes all three dental islands and preserves the original UV coordinates. It remains a projected Blender shader and must be baked into the original atlas before GLB export. The generated patch provenance is recorded beside the PNG in `content/source/actors/hyena/`; no external asset library was added.
+
+Reproduce from the worktree root:
 
 ```powershell
-& $blender -b --python tools/guardian/prototype_hyena_dental_jaw.py -- --input public/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb --output C:/tmp/guardian-faces/hyena-dental-lined.blend --patch content/source/actors/hyena/muzzle-fur-repair.png
+& $blender -b --python tools/guardian/prototype_hyena_dental_jaw.py -- --input public/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb --output C:/tmp/guardian-faces/hyena-hollow-mouth-v17.blend --patch content/source/actors/hyena/muzzle-fur-repair.png
+& $blender -b --python tools/guardian/inspect_actor_face.py -- --input C:/tmp/guardian-faces/hyena-hollow-mouth-v17.blend --output C:/tmp/guardian-faces/hollow-v17-full --expression mouthOpen --amount 1 --mouth-closeup --samples 8
+& $blender -b --python tools/guardian/audit_actor_dentition.py -- --input C:/tmp/guardian-faces/hyena-hollow-mouth-v17.blend --output C:/tmp/guardian-faces/hyena-v17-dentition-audit.json
 ```
 
-The new source preserves the native clip data but has not repeated the pose-equivalence audit after this topology change. It must not be exported to production before finishing both-side anatomy, corners/front lip strips, partial and closed poses, original-atlas texture bake, blink combination, GLB playback and in-game checks. The current images are diagnostic progress, not acceptance evidence for the full facial requirement.
-
-The generated patch and full prompt/provenance are in `content/source/actors/hyena/`. No external asset library was imported.
+Use `--amount 0` and `--amount 0.5` for closed and partial inspection. The inspector renders front, quarter and both profiles. The editable local source is preserved at the path above; the committed scripts reproduce it. Blink combination, atlas baking, current-asset GLB playback, native-clip validation and game/performance tests remain pending. Historical export results in `status.json` refer to the rejected chin-cut candidate and are not validation of this source.
