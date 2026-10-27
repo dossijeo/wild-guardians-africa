@@ -39,20 +39,25 @@ atlas=bpy.data.images.load(atlasPath);atlas.pack();mesh.data.materials[0]=origin
 for rig in scene.objects:
  if rig.type=='ARMATURE':rig.data.pose_position='POSE'
 lidMaterial=bpy.data.materials.new('Original fur eyelid atlas');lidMaterial.use_nodes=True;node=lidMaterial.node_tree.nodes.new('ShaderNodeTexImage');node.image=atlas;bs=lidMaterial.node_tree.nodes.get('Principled BSDF');lidMaterial.node_tree.links.new(node.outputs['Color'],bs.inputs['Base Color']);bs.inputs['Roughness'].default_value=.85
-verts=[];closed=[];tex=[];faces=[];sides=[]
+verts=[];closed=[];tex=[];faces=[];sides=[];columns=33;rows=13
 for side,eye in zip(['L','R'],profile['eyes']):
  cx,cy,cz=eye;start=len(verts)
- for row in range(6):
-  t=row/5
-  for col in range(25):
-   u=col/24*2-1;x=cx+u*.065;arch=math.sqrt(max(0,1-u*u));top=cz+.035*arch;bottom=cz-.035*arch
-   initial,unused=surface(x,top);initial.y-=.002
-   final,unused=surface(x,top+(bottom-top)*t);final.y-=.009*arch
+ for row in range(rows):
+  t=row/(rows-1)
+  for col in range(columns):
+   u=(col/(columns-1)*2-1)*.995;x=cx+u*.070;arch=math.sqrt(max(0,1-u*u))
+   top=cz+.052*arch;bottom=cz-.052*arch
+   # A continuous eye envelope stays behind the brow instead of sampling
+   # discontinuous brow/eyeball depths into a folded sheet.
+   initial=Vector((x,-.552,top-.0005*t))
+   z=top+(bottom-top)*t
+   radial=max(0,1-u*u-((z-cz)/.052)**2)
+   final=Vector((x,-.552-.057*math.sqrt(radial),z))
    coord=Vector(((x+.35)/.7,(cz+.10+.025*t-1.27)/.7,0))
    verts.append(tuple(inv@initial));closed.append(tuple(inv@final));tex.append((coord.x,coord.y));sides.append(side)
- for row in range(5):
-  for col in range(24):
-   i=start+row*25+col;faces.append((i,i+1,i+26,i+25))
+ for row in range(rows-1):
+  for col in range(columns-1):
+   i=start+row*columns+col;faces.append((i,i+columns,i+columns+1,i+1))
 data=bpy.data.meshes.new('Expressive fur lids');data.from_pydata(verts,[],faces);data.update();lids=bpy.data.objects.new('FacialLids',data);bpy.context.collection.objects.link(lids);lids.matrix_world=world.copy()
 data.materials.append(lidMaterial);layer=data.uv_layers.new(name='UVMap')
 for poly in data.polygons:

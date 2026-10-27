@@ -110,5 +110,15 @@
     "scope": "Morph geometry only; not native animated clip validation"
   },
   "collarRepair": "hyena-collar-restored.collar.json",
-  "currentNativeClipAudit": "hyena-collar-native-clips.json"
+  "currentNativeClipAudit": "hyena-collar-native-clips.json",
+  "eyelidExperiment": {
+    "candidate": "C:/tmp/guardian-faces/hyena-lids-v4.blend",
+    "method": "Continuous eye envelope instead of discontinuous brow/eye ray depths; nonzero base strip; reversed winding; 33 by 13 grid per eye",
+    "observed": "Full close visually improved in Three.js; half close intersects eye and leaves it mostly open. Reimported Blender shading differs from source/runtime. Not accepted.",
+    "next": "Evaluate intermediate corrective shapes following the eye envelope, then validate all weights and both profiles",
+    "evidence": [
+      "lids-v4-runtime-closed.png",
+      "lids-v4-runtime-half.png"
+    ]
+  }
 }
