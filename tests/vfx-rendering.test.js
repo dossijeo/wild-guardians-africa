@@ -76,3 +76,15 @@ test('Two native local lights retain source positions/colors on world materials 
   assert.equal(fx.localLights.length,2);for(let i=0;i<2;i++){const light=fx.localLights[i];assert.deepEqual(light.position.toArray(),native.positions[i]);assert.deepEqual(light.color.toArray(),native.colors[i]);assert.equal(light.castShadow,false);assert.equal(light.intensity,4/2.2);assert.equal(light.visible,true);}
   fx.clear();assert.ok(fx.localLights.every(l=>!l.visible));const hidden=library.create('spirit',pipeline,{layers:{lights:false}});hidden.seek(2);hidden.prepare(camera);assert.ok(hidden.localLights.every(l=>!l.visible));library.dispose();pipeline.dispose();
 });
+
+test('Repeated particle packing reuses its upload buffer without stale active rows',()=>{
+ const {library,pipeline,camera}=setup(),fx=library.create('repel',pipeline),target=fx.spriteBuffer.array,cam={eye:[4,3,8],forward:[0,0,-1]};
+ for(const time of [.1,.8,1.4,2.2,3.5,0]){
+  fx.seek(time);const sprites=fx.native.sprites(),expected=packVfxSprites(sprites.slice(),library.rects,cam),actual=packVfxSprites(sprites.slice(),library.rects,cam,target);
+  assert.equal(actual.data,target);assert.equal(actual.count,expected.count);assert.deepEqual(actual.data.slice(0,actual.count*25),expected.data.slice(0,expected.count*25));
+  fx.prepare(camera);assert.equal(fx.spriteBuffer.array,target);assert.deepEqual(fx.spriteBuffer.updateRanges,fx.sprites.geometry.instanceCount?[{start:0,count:fx.sprites.geometry.instanceCount*25}]:[]);
+ }
+ assert.equal(packVfxSprites([],library.rects,cam,target).count,0);
+ assert.throws(()=>packVfxSprites([],library.rects,cam,new Float32Array(1)),RangeError);
+ library.dispose();pipeline.dispose();
+});

@@ -76,8 +76,10 @@ combat = "function blessingLeafOrigin(a){const p=[Math.cos(a)*.55,.1,Math.sin(a)
 rects = section('const spriteRects={};', 'const MAX_SPRITES=')
 rects = 'export function createVfxAtlasRects(ASSETS,width,height){const atlasImage={width,height};'+rects+'return spriteRects;}\n'
 pack = section('function paintSprites(', 'gl.useProgram(spriteP.p);')
-pack = pack.replace('function paintSprites(list,env,cam)', 'export function packVfxSprites(list,spriteRects,cam)')
-pack = pack.replace('if(!list.length)return;', 'const spriteData=new Float32Array(MAX_SPRITES*25);if(!list.length)return {count:0,data:spriteData};')
+pack = pack.replace('function paintSprites(list,env,cam)', 'export function packVfxSprites(list,spriteRects,cam,spriteData=new Float32Array(MAX_SPRITES*25))')
+pack = pack.replace('if(!list.length)return;', 'if(spriteData.length<MAX_SPRITES*25)throw new RangeError("VFX sprite buffer too small");if(!list.length)return {count:0,data:spriteData};')
+pack = pack.replace('V.dot(V.sub(b.p,cam.eye),cam.forward)-V.dot(V.sub(a.p,cam.eye),cam.forward)', '((b.p[0]-cam.eye[0])*cam.forward[0]+(b.p[1]-cam.eye[1])*cam.forward[1]+(b.p[2]-cam.eye[2])*cam.forward[2])-((a.p[0]-cam.eye[0])*cam.forward[0]+(a.p[1]-cam.eye[1])*cam.forward[1]+(a.p[2]-cam.eye[2])*cam.forward[2])')
+pack = pack.replace('spriteData.set([f%1,s.orient||0,s.emit||0,s.soft||0],o+18);spriteData.set(s.dir||[0,1,0],o+22);', 'spriteData[o+18]=f%1;spriteData[o+19]=s.orient||0;spriteData[o+20]=s.emit||0;spriteData[o+21]=s.soft||0;spriteData[o+22]=s.dir?s.dir[0]:0;spriteData[o+23]=s.dir?s.dir[1]:1;spriteData[o+24]=s.dir?s.dir[2]:0;')
 pack += 'return {count,data:spriteData};}\n'
 
 module = '// Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.\n'+helpers+shaders+shapes+style+rects+'export const MAX_SPRITES=760,MAX_FX_VERTS=48000;\n'+pack
