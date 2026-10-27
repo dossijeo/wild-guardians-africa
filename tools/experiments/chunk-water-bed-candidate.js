@@ -1,7 +1,8 @@
-import {prepareNaturalWaterBed} from '../../src/rendering/natural-water-edges.js';
-// QA candidate: keep the geometry private and retain the original sampling order.
-export function* prepareChunkWaterBed(world,geometry,cx,cz,{now=()=>performance.now(),sliceMs=.75}={}){
+import {prepareNaturalWaterBedIncremental} from '../../src/rendering/natural-water-edges.js';
+// QA counters only; use the same coalescing implementation as asset water.
+export function* prepareChunkWaterBed(world,geometry,cx,cz,options={}){
  const stats=globalThis.qaChunkWaterBed??={calls:0,yields:0};stats.calls++;
- const steps=prepareNaturalWaterBed(world,geometry,cx,cz);let start=now();
- try{for(;;){const step=steps.next();if(step.done)return step.value;if(now()-start>=sliceMs){stats.yields++;yield 'water-bed';start=now();}}}finally{steps.return();}
+ const steps=prepareNaturalWaterBedIncremental(world,geometry,cx,cz,options);
+ try{for(;;){const step=steps.next();if(step.done)return step.value;stats.yields++;yield 'water-bed';}}
+ finally{steps.return();}
 }

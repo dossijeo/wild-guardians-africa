@@ -80,12 +80,18 @@ float qaShoreNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix
  geometry.userData.naturalWaterBed={nx,nz,bytes:bytes.byteLength,minX,minZ,width,height,lo,span};
 }
 
-export function* prepareNaturalAssetWaterBed(world,cx,cz,{now=()=>performance.now(),sliceMs=.75}={}){
- const proxy=new THREE.BufferGeometry();proxy.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-24,24,0,24],3));
- const steps=prepareNaturalWaterBed(world,proxy,cx,cz);
- // Coalesce cheap sample blocks; the global scheduler still owns the frame budget.
+// Geometry is borrowed. The caller retains ownership until atomic publication or disposal.
+// Coalesce sample blocks, while the global scheduler owns the frame budget. A block
+// (including initial edge setup) is atomic, so sliceMs is a target, not a hard limit.
+export function* prepareNaturalWaterBedIncremental(world,geometry,cx,cz,{now=()=>performance.now(),sliceMs=.75}={}){
+ const steps=prepareNaturalWaterBed(world,geometry,cx,cz);
  try{let start=now();for(;;){const step=steps.next();if(step.done)return step.value;if(now()-start>=sliceMs){yield;start=now();}}}
- finally{steps.return();proxy.dispose();}
+ finally{steps.return();}
+}
+export function* prepareNaturalAssetWaterBed(world,cx,cz,options={}){
+ const proxy=new THREE.BufferGeometry();proxy.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-24,24,0,24],3));
+ try{return yield* prepareNaturalWaterBedIncremental(world,proxy,cx,cz,options);}
+ finally{proxy.dispose();}
 }
 export function prepareNaturalAssetWater(world,mesh,cx,cz,preparedBed=null){
  const proxy=new THREE.BufferGeometry();proxy.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-24,24,0,24],3));
