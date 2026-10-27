@@ -28,6 +28,14 @@ try {
  }
  if(process.env.WG_WATER_CANDIDATE==='1')await page.route('**/src/rendering/far-vegetation-profile.js*',async route=>{const response=await route.fetch(),source=await response.text();if(!source.includes('groundColorStep:4'))throw Error('Missing water sample profile');await route.fulfill({response,body:source.replace('groundColorStep:4','groundColorStep:2')});});
 
+ if(process.env.WG_MAGIC_FAR_PHASES==='1')await page.route('**/tools/experiments/attach-native-far-world.js*',async route=>{
+  const response=await route.fetch();let source=await response.text();
+  for(const [call,label] of [['schedulePreparation();','schedule-preparation'],['scheduleLogicalPreload(currentSignature);','schedule-logical-preload']]){
+   assert.equal(source.split(call).length,2,'Expected unique diagnostic call '+call);
+   source=source.replace(call,`(globalThis.qaFarCpuSpan?globalThis.qaFarCpuSpan('${label}',()=>${call.slice(0,-1)}):${call.slice(0,-1)});`);
+  }
+  await route.fulfill({response,body:source});
+ });
  if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new')});});
  if(process.env.WG_MAGIC_PROFILE==='1')await page.addInitScript(()=>{
   const sources=new WeakMap(),attached=new WeakMap();globalThis.qaMagicPrograms=[];globalThis.qaMagicProgramHistory=[];

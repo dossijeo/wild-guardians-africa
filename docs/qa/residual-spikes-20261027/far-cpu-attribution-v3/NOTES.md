@@ -1,0 +1,4 @@
+# Scheduling and transition coverage attribution
+Single corrected-candidate diagnostic, not ABAB. schedule-preparation22.33ms total,max0.075ms; schedule-logical-preload440.25ms total,max4.535ms per species. Transition setCoverage764.39ms total,max4.495ms; suppressions8.84ms total,max0.075ms. Complete far update P955.40ms,P999.85ms,max20.695ms. Timings are nested and instrumented.
+
+Next hypothesis: joint coverage revision includes world.chunkRevision and layer revision, possibly triggering full per-tree GPU-readiness checks even if effective coverage is unchanged; must prove semantic equivalence before removing any invalidation. Logical standby requests synchronously build/pack banks before the first await and may coincide across species; evaluate existing scheduler integration without delaying needed representation or losing GPU readiness guarantees. No new optimization adopted.
