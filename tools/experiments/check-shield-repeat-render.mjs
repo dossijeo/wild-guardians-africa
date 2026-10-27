@@ -1,3 +1,4 @@
+import {patchCoveragePrefix} from './coverage-prefix-upload-patch.mjs';
 import {startPresentationTrace} from './qa-presentation-trace.mjs';
 import {patchChunkWaterScene} from './chunk-water-scene-patch.mjs';
 import {regionalTailProbe} from './regional-tail-probe-source.mjs';
@@ -33,6 +34,7 @@ try {
    await route.fulfill({response,body:regionalTailProbe((name==='native-far-ground.js'||name==='native-far-ground-seam.js')?await response.text():await readFile(path,'utf8'),name)});
   });
  }
+ if(process.env.WG_COVERAGE_PREFIX==='1')await context.route(/\/src\/rendering\/continuous-grass\.js(?:\?.*)?$/,async route=>{const response=await route.fetch();await route.fulfill({response,body:patchCoveragePrefix(await response.text())});});
  if(process.env.WG_SMOOTH_SORT_SOURCE){
   report.smoothSortSource=process.env.WG_SMOOTH_SORT_SOURCE;
   await context.route(/\/src\/rendering\/smooth-far-transitions\.js(?:\?.*)?$/,async route=>{
