@@ -1,0 +1,324 @@
+{
+  "invariant": {
+    "url": "http://127.0.0.1:5220/?qualityRequireActive=1&qualityMenuProtocol=1&qualityActive=1&qualityAttribution=1",
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "runtime": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+    "qualityCase": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a"
+  },
+  "rows": [
+    {
+      "order": 1,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 261,
+        "p50": 12.165000081062317,
+        "p95": 18.1599999666214,
+        "p99": 43.49500000476837,
+        "max": 118.5200001001358
+      },
+      "gpu": {
+        "n": 87,
+        "p50": 17.537604,
+        "p95": 22.917342,
+        "p99": 24.533801,
+        "max": 24.557864
+      },
+      "callbackCadence": {
+        "n": 260,
+        "p50": 16.915000000000873,
+        "p95": 49.794999999998254,
+        "p99": 66.41500000000087,
+        "max": 133.07500000000437
+      },
+      "transitionIntervals": {
+        "n": 71,
+        "p50": 24.52999997138977,
+        "p95": 52.8199999332428,
+        "p99": 62.93500006198883,
+        "max": 84.05999994277954
+      },
+      "maxBlockingLoaf": 74.335,
+      "slowGL": [
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 42.07000005245209,
+          "at": 53498.47500002384,
+          "stack": null,
+          "program": {
+            "id": 90,
+            "cacheKey": "26,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 20.62000000476837,
+          "at": 53540.25999999046,
+          "stack": null,
+          "program": {
+            "id": 94,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,far-ground-native-water-mask-v1:resident-mask-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 14.230000019073486,
+          "at": 53557.574999928474,
+          "stack": null,
+          "program": {
+            "id": 95,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 28.350000023841858,
+          "at": 53633.63499999046,
+          "stack": null,
+          "program": {
+            "id": 96,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        }
+      ],
+      "travelMs": 6325.034999966621,
+      "settledMs": 6858.725000023842,
+      "created": 15,
+      "programCounts": [
+        82,
+        82,
+        81
+      ]
+    },
+    {
+      "order": 2,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 242,
+        "p50": 13.509999990463257,
+        "p95": 21.355000019073486,
+        "p99": 39.2849999666214,
+        "max": 62.455000042915344
+      },
+      "gpu": {
+        "n": 81,
+        "p50": 19.753697,
+        "p95": 27.262291,
+        "p99": 30.738801,
+        "max": 40.673748
+      },
+      "callbackCadence": {
+        "n": 241,
+        "p50": 33.03499999999622,
+        "p95": 49.93499999999767,
+        "p99": 66.57999999999447,
+        "max": 83.16999999999825
+      },
+      "transitionIntervals": {
+        "n": 175,
+        "p50": 27.494999885559082,
+        "p95": 54.13499999046326,
+        "p99": 77.3199999332428,
+        "max": 85.00999999046326
+      },
+      "maxBlockingLoaf": 22.97,
+      "slowGL": [],
+      "travelMs": 6717.450000047684,
+      "settledMs": 6729.900000095367,
+      "created": 15,
+      "programCounts": [
+        82,
+        82,
+        72
+      ]
+    },
+    {
+      "order": 3,
+      "candidate": false,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 241,
+        "p50": 14.199999928474426,
+        "p95": 22.539999961853027,
+        "p99": 52.855000019073486,
+        "max": 147.3400000333786
+      },
+      "gpu": {
+        "n": 81,
+        "p50": 20.462083,
+        "p95": 30.081455,
+        "p99": 33.380415,
+        "max": 33.385676
+      },
+      "callbackCadence": {
+        "n": 240,
+        "p50": 33.150000000001455,
+        "p95": 50.17500000000291,
+        "p99": 99.55000000000291,
+        "max": 149.5199999999968
+      },
+      "transitionIntervals": {
+        "n": 84,
+        "p50": 30.75,
+        "p95": 58.15000009536743,
+        "p99": 106.63499999046326,
+        "max": 114.32000005245209
+      },
+      "maxBlockingLoaf": 99.965,
+      "slowGL": [
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 81.31000006198883,
+          "at": 34745.67999994755,
+          "stack": null,
+          "program": {
+            "id": 90,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 66.92999994754791,
+          "at": 37708.70999991894,
+          "stack": null,
+          "program": {
+            "id": 91,
+            "cacheKey": "26,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 86.64999997615814,
+          "at": 38264.18499994278,
+          "stack": null,
+          "program": {
+            "id": 94,
+            "cacheKey": "24,25,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,131075,srgb,onBeforeCompile() {\n  }|smooth-far-opaque-v1"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 18.365000009536743,
+          "at": 38288.05999994278,
+          "stack": null,
+          "program": {
+            "id": 95,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,far-ground-native-water-mask-v1:resident-mask-v2"
+          }
+        },
+        {
+          "kind": "gl",
+          "name": "getProgramInfoLog",
+          "quality": "baja",
+          "ms": 16.669999957084656,
+          "at": 38308.17999994755,
+          "stack": null,
+          "program": {
+            "id": 96,
+            "cacheKey": "basic,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,4,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,133123,srgb,far-ground-native-water-mask-v1:resident-mask-v2:seam-v2"
+          }
+        }
+      ],
+      "travelMs": 7207.914999961853,
+      "settledMs": 7218.634999990463,
+      "created": 15,
+      "programCounts": [
+        82,
+        82,
+        82
+      ]
+    },
+    {
+      "order": 4,
+      "candidate": true,
+      "sources": {
+        "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+        "tools/experiments/native-far-ground.js": "1a8940178ee62b2fc5c20741ce53e9d8a6899579043bc82e68b4c6fede3ce3f3",
+        "tools/experiments/check-volcano-quality-no-sync.mjs": "5cac67bb982a041a5d6393c2e8f50b97a047515711e32bd9b1631d4721f53aec",
+        "tools/experiments/quality-execution-attribution.js": "112fb37e363915df6b44b458cad1480bf35d131e2a209d79e03daca425d32723"
+      },
+      "warnings": 24,
+      "cpu": {
+        "n": 253,
+        "p50": 13.47000002861023,
+        "p95": 22.4099999666214,
+        "p99": 29.444999933242798,
+        "max": 62.38499999046326
+      },
+      "gpu": {
+        "n": 85,
+        "p50": 19.405988,
+        "p95": 28.153333,
+        "p99": 37.583644,
+        "max": 40.439113
+      },
+      "callbackCadence": {
+        "n": 252,
+        "p50": 33.125,
+        "p95": 49.93499999999767,
+        "p99": 66.69000000000233,
+        "max": 83.18500000000495
+      },
+      "transitionIntervals": {
+        "n": 252,
+        "p50": 27.024999976158142,
+        "p95": 52.875,
+        "p99": 69.125,
+        "max": 80.60000002384186
+      },
+      "maxBlockingLoaf": 19.14,
+      "slowGL": [],
+      "travelMs": 6906.2699999809265,
+      "settledMs": 7127.435000061989,
+      "created": 15,
+      "programCounts": [
+        82,
+        82,
+        72
+      ]
+    }
+  ],
+  "limits": [
+    "Two repetitions per treatment; attribution instrumentation adds overhead. Not final acceptance.",
+    "One historical populated biome save only; no full-game or six-biome completion claim.",
+    "Existing X4000 compiler warnings preserved, not a clean-console claim.",
+    "GPU query durations include bubbles. CPU and callback cadence are separate.",
+    "Callback timestamp deltas cover main callbacks; transitionIntervals cover only transition windows.",
+    "240-frame travel has variable wall duration. Streaming arrivals may vary; compare useful work and total settled time."
+  ]
+}

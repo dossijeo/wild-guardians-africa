@@ -1,0 +1,20 @@
+{
+  "commit": "7ed574937a281b4eaa2e1c54b1391834a5c4c404",
+  "harnessSha256": "0fe2b1eee667eb4254ed772f794e2cc59bc30e14d5cd02f5acec6f2353284753",
+  "qualityCaseSha256": "debf6e2e5508bcc1a7ee335f7422e79080b1ce1eefbaf337e5d3c8ba8bf0a96a",
+  "runtimeSha256": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b",
+  "conditions": {
+    "WG_THREAD_PORT": "5220",
+    "WG_THREAD_BIOME": "volcanes",
+    "WG_THREAD_QUALITY": "media",
+    "WG_PRODUCTION_VISUALS": "1",
+    "WG_THREAD_ACTIVE": "1",
+    "WG_THREAD_DEFAULT_STREAMING": "1",
+    "WG_THREAD_QUALITY_CYCLE": "1",
+    "WG_THREAD_QUALITY_ACTIVE": "1",
+    "WG_THREAD_QUALITY_MENU_PROTOCOL": "1",
+    "WG_THREAD_QUALITY_EXECUTION": "1",
+    "WG_THREAD_REPORT": "docs/qa/residual-spikes-20261027/seam-reuse-volcano-abab/2-candidate/report.json"
+  },
+  "scope": "Diagnostic with normal camera protection. Remove QA getError and extra render; no screenshot settling. Existing API calls timed without extra GL status queries. Main phase/GPU/LoAF attribution adds overhead; not AB acceptance."
+}
