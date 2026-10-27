@@ -115,6 +115,23 @@ try{
    const saved=menu.locator('[data-production-save]').first();
    await saved.waitFor({state:'visible',timeout:60000});
    result.savedSlot=await saved.getAttribute('data-production-save');
+   // Keep the exact saved world alongside captures so visual findings can be
+   // reproduced instead of comparing two different randomly seeded games.
+   const savedSnapshot=await page.evaluate(slotId=>new Promise((resolve,reject)=>{
+    const request=indexedDB.open('wild-guardians-saves',1);
+    request.onerror=()=>reject(request.error);
+    request.onsuccess=()=>{
+     const db=request.result,tx=db.transaction('slots','readonly');
+     const read=tx.objectStore('slots').get(slotId);let record;
+     read.onsuccess=()=>{record=read.result;};
+     tx.oncomplete=()=>{db.close();record?.primary?resolve(record.primary):reject(Error('Saved QA slot missing'));};
+     tx.onabort=()=>{db.close();reject(tx.error);};
+    };
+   }),result.savedSlot);
+   const fixturePath=report.replace(/\.json$/,'-fixture.json');
+   await writeFile(fixturePath,JSON.stringify({slotId:result.savedSlot,snapshot:savedSnapshot,
+    scope:'Exact normal-menu save before reload; companion to package flow captures.'}));
+   result.reproductionFixture=fixturePath;
    await saved.click();
    await page.waitForSelector('#stage[aria-busy="true"]',{timeout:60000});
    await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
