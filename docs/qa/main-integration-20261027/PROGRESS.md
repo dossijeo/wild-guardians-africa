@@ -24,3 +24,9 @@ Estas tareas de menú/overlays se ejecutan después del merge, no son requisitos
 Push1e48e3f13 confirmado en origin; PR216 creada en borrador. Suite completa82846 continúa; primer fallo confirmado asset-surface.test.js presupone tres texturas únicas. Nuevos árboles usan textureSets. Prueba actualizada para verificar solicitudes exactas, compartición dentro de cada set y separación entre sets;3tests del archivo pasan. No se modifica producción para acomodar el test.
 
 Paquete funcional30337 termina sin errores/404: biblioteca cuatro labs, entrada real durante carga, nueva partida Manglares, guardar/salir/continuar, HUD recuperado y workers pthread desde ruta anidada. Inspección visual de carga confirma diseño nuevo. Captura final tras recarga muestra franjas de agua cruzando árboles lejanos: NO dar por válida aún la imagen. Nueva corrida captura inmediatamente y tras30s para distinguir preparación pendiente de artefacto persistente. No medir rendimiento mientras suite completa comparteCPU.
+
+## Suite completa: fallos conservados y primeros ajustes
+
+Proceso82846 terminó exit1:4997tests,4916pass,19fail,62skipped,560.327s. full-suite-failures.json conserva ubicación/detalle. No declarar verde ni mergear todavía. Tres fallos resueltos por contratos de test: atlas múltiples (commit145de98), occupied ahora distingue waitReason contention, y doble de VfxLibrary carecía de enableStableWorldLights. Siete tests de intención/carga pasan tras estos últimos ajustes, sin cambiar producción.
+
+Pendientes de atribuir: contactos/bounds nuevos, hashes/recetas de atlas/hulls, cinco casos legacy de salida Manglares, tres casos de navegación/murallas y catálogoSFX. No actualizar hashes ni expectativas de rutas a ciegas. Proceso89322 de recarga/asentado sigue activo y ya produjo captura inicial; no reiniciado.

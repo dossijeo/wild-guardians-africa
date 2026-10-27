@@ -8,6 +8,7 @@ const classes={
 export async function load(url,context,next){
  let source;const path=new URL(url).pathname;
  for(const [suffix,names] of Object.entries(classes))if(path.endsWith(suffix))source=names.map(name=>`export class ${name}{constructor(){this.tile={};this.ready=Promise.resolve();}async load(){}whenReady(){return Promise.resolve();}}`).join(String.fromCharCode(10));
+ if(path.endsWith('/src/rendering/vfx.js'))source='export class VfxLibrary{enableStableWorldLights(world){if(!world)throw Error("Missing world for stable lights");}}';
  if(path.endsWith('/src/rendering/assets.js'))source='export class Assets{};export const bytes=async()=>new Uint8Array();export const json=(path)=>Promise.resolve(globalThis.__worldLoadCpu.json(path));';
  if(path.endsWith('/src/rendering/crop-batch.js'))source='export const createCropBatch=()=>({dispose(){}});export const createCropBatchAsync=async()=>createCropBatch();';
  if(path.endsWith('/src/rendering/crop-library.js'))source='export const loadCropBridges=async()=>({});';
