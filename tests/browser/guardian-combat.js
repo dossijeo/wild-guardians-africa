@@ -65,6 +65,8 @@ try{
  }
  const recoveryView=document.createElement('button');recoveryView.textContent='Vista lateral de recuperación';document.querySelector('header').insertBefore(recoveryView,$('status'));
  recoveryView.onclick=()=>{const y=nav.field.surface(site.x,site.z);world.controls.target.set(site.x+1,y+.9,site.z);world.camera.position.set(site.x+1,y+2.1,site.z+7);world.controls.update();};
+ const supportView=document.createElement('button');supportView.textContent='Detalle de apoyos';document.querySelector('header').insertBefore(supportView,$('status'));
+ supportView.onclick=()=>{const y=nav.field.surface(site.x+2,site.z-1);world.controls.target.set(site.x+2,y+.8,site.z-1);world.camera.position.set(site.x+2,y+1.5,site.z+3);world.controls.update();};
  const recordCycle=document.createElement('button');recordCycle.textContent='Grabar ciclo seleccionado';recordCycle.id='recordCycle';document.querySelector('header').insertBefore(recordCycle,$('status'));
  recordCycle.onclick=async()=>{
   if(recording||measuring||physicsTrial)return;
