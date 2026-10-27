@@ -39,3 +39,18 @@ test('a replacement summon preserves the old projectile and contact without reta
  world.state.elapsed=1.6;summons.update();assert.equal(pool.stats.active,0);assert.ok(pool.draws.every(m=>!m.visible));assert.equal(slot.event,growth);
  world.state.elapsed=.5;summons.update();assert.equal(slot.event,null);summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+
+test('removing an Attack target before contact cancels the active summon without a ghost impact',async()=>{
+ for(const removal of ['missing','gone']){
+  const animal={id:'target',status:'walking'};
+  const world={state:{events:[],elapsed:1,time:400,raid:{animals:[animal]}},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+  const summons=new GuardianSummons(world);await summons.ready;
+  world.state.events.push({type:'SpellActivated',kind:'attack',targetId:animal.id,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});
+  summons.update();world.state.elapsed=1.2;summons.update();assert.equal(summons.slots[0].beam.visible,true);
+  if(removal==='missing')world.state.raid=null;else animal.status='gone';
+  world.state.elapsed=1.21;summons.update();assert.equal(summons.stats.active,0,removal);
+  assert.ok([summons.slots[0].group,summons.slots[0].beam,summons.slots[0].impact,summons.slots[0].core,summons.slots[0].aura,summons.slots[0].vortex].every(o=>!o.visible));
+  world.state.elapsed=1.3;summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.stats.retainedAttacks,0);summons.dispose();assert.equal(world.scene.children.length,0);
+ }
+});

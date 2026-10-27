@@ -63,7 +63,11 @@ export class GuardianSummons{
   const events=state.events,index=this.anchor?events.lastIndexOf(this.anchor):-1;
   for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}this.anchor=events.at(-1);
   let anim=0,vfx=0,active=0;
-  for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;if(age>2.2){w.onGuardianPresence?.('spirit_disappear',s.origin);this.hide(s);continue;}active++;
+  for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;
+   // Match retained projectiles: cancel vanished targets before contact, but
+   // let a completed impact fade even when that hit removed its victim.
+   if(s.event.kind==='attack'&&age<ATTACK_TIMING.impact&&!this.liveAttackTarget(s.event.targetId)){this.hide(s);continue;}
+   if(age>2.2){w.onGuardianPresence?.('spirit_disappear',s.origin);this.hide(s);continue;}active++;
    const started=performance.now(),kind=s.event.kind,opacity=ease((age-(kind==='attack'?0:.06))/(kind==='attack'?.1:.18))*(1-ease((age-1.8)/.4));s.group.visible=true;
    for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.65*Math.exp(-(((age-(kind==='attack'?ATTACK_TIMING.impact:.48))/.14)**2));m.uniforms.uReveal.value=ease((age-(kind==='attack'?.02:.16))/(kind==='attack'?.12:.4))*1.12;m.uniforms.uDissolve.value=ease((age-1.5)/.7)*1.05;m.uniforms.uBottom.value=s.origin.y+s.bottom;m.uniforms.uHeight.value=s.height;}
    const clip=CLIPS[kind],selected=s.actions.has(clip)?clip:kind==='attack'?'Cast':'Invoke';
