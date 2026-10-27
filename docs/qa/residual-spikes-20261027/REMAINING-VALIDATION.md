@@ -12,3 +12,5 @@ The current goal covers integration and residual full-game fluency, not simply a
 - Preserve seven preexisting dirty files; stage only owned changes. Do not merge experimental candidates solely because unit tests pass.
 
 After closing the current candidate, prioritize final-state coverage and remaining confirmed large contributors rather than an indefinite series of small isolated tweaks.
+
+Latest experiments: automatic far-root depth preparation disconnected after two Manglares ABAB sequences worsened completion latency. Authored impostor depth prototype remains isolated and is not adopted: readbacks matched but ABAB showed no end-to-end gain. See respective DECISION.md files. Repeated far-ground seam-v2 waits remain to attribute by program lifetime; overall goal is incomplete.
