@@ -13,4 +13,13 @@ The current goal covers integration and residual full-game fluency, not simply a
 
 After closing the current candidate, prioritize final-state coverage and remaining confirmed large contributors rather than an indefinite series of small isolated tweaks.
 
-Latest experiments: automatic far-root depth preparation disconnected after two Manglares ABAB sequences worsened completion latency. Authored impostor depth prototype remains isolated and is not adopted: readbacks matched but ABAB showed no end-to-end gain. See respective DECISION.md files. Repeated far-ground seam-v2 waits remain to attribute by program lifetime; overall goal is incomplete.
+Latest experiments: automatic far-root depth preparation disconnected after two Manglares ABAB sequences worsened completion latency. Authored impostor depth prototype remains isolated and is not adopted: readbacks matched but ABAB showed no end-to-end gain. See respective DECISION.md files. Seam material reuse passed controlled Manglares/Volcanes comparisons, six-biome camera/quality checks, context/exit lifecycle, build/package/syntax and local full/native tests. PR219 at689340487 awaits final Windows CI; Linux passed. Subsequent regional-depth experiments are QA-only and rejected after inconsistent ABAB; current production runtime is unchanged from the PR head. Overall goal remains incomplete.
+
+Current coverage audit (2026-10-27):
+- Six-biome historical populated day/quality/streaming fixtures: verified in seam-reuse-six-biomes. Not current-layout artistic acceptance or night performance.
+- Controlled seam ABAB: Manglares and Volcanes only; other biome runs are correctness checks, not performance comparisons.
+- Night regional depth readbacks: static correctness of a rejected prototype only; do not count as full night game validation.
+- Legal shield commands with moving camera and active simulation: final-seam-magic running; inspect terminal result before claiming.
+- Native/JS simulation tests and resource owner tests passed; browser context recovery and world exit verified for seam reuse. Long endurance leak freedom not proven.
+- Linux package CI passed for PR head; Windows startup and visibility checks passed, menu exit/restart still running.
+- Remaining fluency attribution: footstep soft-depth pass contributes CPU peaks. Neither scissor nor cropped-camera prototype demonstrated consistent overall gain; preserve original effects. Program creation was intermittent and not reproduced in depth-program-lifetime, so no retention rewrite justified yet.
