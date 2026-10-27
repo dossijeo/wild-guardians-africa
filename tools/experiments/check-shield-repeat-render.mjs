@@ -1,3 +1,4 @@
+import {patchChunkWaterScene} from './chunk-water-scene-patch.mjs';
 import {regionalTailProbe} from './regional-tail-probe-source.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
@@ -74,9 +75,13 @@ try {
  });
  if(process.env.WG_MAGIC_PROFILE==='1')await page.route('**/src/rendering/scene.js*',async route=>{
   const response=await route.fetch();let source=(await response.text()).replace('this.raycaster=new','globalThis.qaMagicWorld=this;this.raycaster=new');
+  // Explicit QA control restores the synchronous fallback; unset uses production.
+  if(process.env.WG_CHUNK_WATER_BED==='0'){
+   const gate='if(asynchronous&&!bed){const bedSteps=prepareNaturalWaterBedIncremental';
+   assert.equal(source.split(gate).length,2);source=source.replace(gate,'if(false&&asynchronous&&!bed){const bedSteps=prepareNaturalWaterBedIncremental');
+  }
   if(process.env.WG_CHUNK_WATER_BED==='1'){
-   const anchor='if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);';assert(source.includes(anchor));
-   source="import {prepareChunkWaterBed} from '/tools/experiments/chunk-water-bed-candidate.js';\n"+source.replace(anchor,"if(waterMaterial!==this.fluidMaterial){let bed=payload?.waterBed;if(asynchronous&&!bed){yield 'water-bed';bed=yield* prepareChunkWaterBed(this,waterGeometry,cx,cz);yield 'water-edges';}prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,bed);}");
+   source=patchChunkWaterScene(source);
   }
   await route.fulfill({response,body:source});
  });
