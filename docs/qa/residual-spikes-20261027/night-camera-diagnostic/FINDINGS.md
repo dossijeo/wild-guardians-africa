@@ -1,0 +1,3 @@
+# Intermittent night settling
+
+Initial night matrix and phase-monitored rerun failed the unchanged30-second screenshot settling condition. Queues made progress; the final monitored snapshot had scheduler pending0 and stream queued0/busyfalse. The expanded diagnostic then passed all three quality captures with120 stable frames,240 advancing travel frames,0 paused,21 new chunks,0 final queued/failed work, and no far preparation errors. No production change or timeout extension. Thus a permanent deadlock is not supported; cause of timing variability remains unresolved. Baseline with seam reuse disabled is next, to check the PR change independently.
