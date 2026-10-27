@@ -252,3 +252,20 @@ in frame and recovery-phase timing, rather than inferring contact from logs.
 The different frame times between recordings are not a paired performance
 comparison and are not attributed to this change.
 
+## Lateral contact diagnostic: support still fails
+
+The fixture now provides a stable lateral recovery view and records phase,
+recovery age, wrist world position, target distance and ground gap at 100ms
+intervals during the explicit diagnostic run. `lateral-contact-diagnostic.json`
+shows wrist gaps around 0.61–0.84m during the central brace: the support targets
+are not reached. Functional tests alone did not detect this artistic/mechanical
+failure. The candidate support change must not be described as grounded hands.
+
+A separate rest-pose probe at recovery fraction .42 found 0.3365m whole-body
+contact lift, driven by a Tail_05-weighted vertex. Hips local height before
+correction is 0.5097m; after lift it is 0.8462m. Arm lengths are only about
+0.56m, leaving wrists around 0.70m above ground. Fix requires a reachable brace
+posture and secondary-tail ground clearance instead of allowing tail contact
+to elevate the whole actor. Do not remove tail samples and silently permit
+terrain penetration. The lateral frame sheet records the current failure.
+
