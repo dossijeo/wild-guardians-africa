@@ -6,7 +6,7 @@ export async function observeQualityExecution(world,run){
  const farOperations=[],restore=[];
  let depthRegions=null;if(new URLSearchParams(globalThis.location?.search??'').has('softDepthRegion')){const {installSoftDepthRegion}=await import('./soft-depth-region.js');const finish=installSoftDepthRegion(world,{cropCamera:new URLSearchParams(globalThis.location.search).get('softDepthRegion')==='2'});restore.push(()=>{depthRegions=finish();});}
 
- const renderStages=[],depthRequests=[];let renderStagesDropped=0;
+ const renderStages=[],depthRequests=[],depthPrograms=[];let renderStagesDropped=0;
  if(new URLSearchParams(globalThis.location?.search??'').get('qualityRenderStages')==='1'){
   const record=span=>{if(span.duration<1)return;if(renderStages.length<20000)renderStages.push(span);else renderStagesDropped++;};
   const previous=world.onLoadingSpan;
@@ -17,6 +17,9 @@ export async function observeQualityExecution(world,run){
    const prepare=function(...args){const result=originalPrepare.apply(this,args);if(result&&depthRequests.length<20000)depthRequests.push({slot,at:performance.now(),effects:owner.effects?.size});return result;};
    owner.prepare=prepare;restore.push(()=>{if(owner.prepare===prepare)owner.prepare=originalPrepare;});
   }
+  const depthOwner=world.destructionPass,originalDepth=depthOwner.captureDepth;
+  const capture=function(...args){const before=world.renderer.info.programs.map(p=>({id:p.id,key:p.cacheKey,usedTimes:p.usedTimes})),ids=new Set(before.map(p=>p.id)),at=performance.now();try{return originalDepth.apply(this,args);}finally{const after=world.renderer.info.programs.filter(p=>!ids.has(p.id)).map(p=>({id:p.id,key:p.cacheKey,usedTimes:p.usedTimes}));if(after.length)depthPrograms.push({at,before,created:after,retention:{...world.programLease?.stats}});}};
+  depthOwner.captureDepth=capture;restore.push(()=>{if(depthOwner.captureDepth===capture)depthOwner.captureDepth=originalDepth;});
   const original=world.renderer.render;
   const wrapped=function(scene,camera){const start=performance.now();try{return original.call(this,scene,camera);}finally{const end=performance.now();record({label:scene===world.scene?'three-world-render':'three-aux-render',target:this.getRenderTarget()?.texture?.uuid??null,override:scene.overrideMaterial?.type??null,start,end,duration:end-start});}};
   world.renderer.render=wrapped;restore.push(()=>{if(world.renderer.render===wrapped)world.renderer.render=original;});
@@ -44,5 +47,5 @@ export async function observeQualityExecution(world,run){
  try{result=await run();}
  finally{for(const fn of restore.reverse())fn();gpu.stop();globalThis.qaMainFrame=previousFrame;globalThis.qaMainPhase=previousPhase;if(observer){longFrames.push(...observer.takeRecords().map(e=>e.toJSON()));observer.disconnect();}if(!result)await gpu.finish();}
  const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
- return {...result,execution:{depthRegions,renderStages,renderStagesDropped,depthRequests,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
+ return {...result,execution:{depthRegions,renderStages,renderStagesDropped,depthRequests,depthPrograms,frames,phases,longFrames,farOperations,farOperationScope:'Synchronous invocation spans >=1ms; prepare measures only its synchronous prefix, not asynchronous completion. Nested spans must not be summed.',longFramesSupported:supported,gpu:await gpu.finish(),hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,scope:'QA existing main callback CPU phases; GPU timer wraps WorldScene.render commands, includes pipeline bubbles. RAF/LoAF durations are not exclusive GPU work.'}};
 }
