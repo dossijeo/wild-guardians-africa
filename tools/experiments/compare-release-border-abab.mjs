@@ -41,6 +41,11 @@ if(mode==='far-water'){
  assert.notEqual(rows[0].provenance.groundSha256,rows[1].provenance.groundSha256,'Identical treatments');
  for(const row of rows)assert.equal(row.provenance.groundSha256,rows[row.candidate?1:0].provenance.groundSha256,'Treatment drift');
 }
+if(mode==='far-water')for(const row of rows){
+ const directory=`${root}/${row.order}-${row.candidate?'candidate':'baseline'}`,r=read(directory+'/raid-ui.json');
+ const start=r.casts[0].start,cpu=r.residual.cpu.filter(f=>f.at>=start);
+ row.continuousAfterFirstSweep={scope:'Supplementary attribution only; full-run metrics above retain initial camera reposition.',cpu:stats(cpu.map(f=>f.ms)),over33:cpu.filter(f=>f.ms>33.333).length};
+}
 const result={mode,rows,limits:['Two runs per configuration are evidence for this scene only; no automatic acceptance threshold.','Simulation and asynchronous residency remain active; chunk arrival timings can differ.','Release spans record calls >=1ms only. Their counts and percentiles are conditional, not all releases.','World.render CPU excludes simulation/UI outside that call; presentation intervals include all frame delays.','GPU sanity is a rejection check, not independent proof of timer accuracy.','Inspect captures and concurrency validation before adopting.']};
 writeFileSync(root+'/comparison.json',JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(rows.map(({provenance,hardware,gpuSanity,...row})=>row),null,2));

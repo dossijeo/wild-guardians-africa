@@ -1,0 +1,27 @@
+diff --git a/tests/native-far-ground.test.js b/tests/native-far-ground.test.js
+index 5ca29c398..55fbe3b75 100644
+--- a/tests/native-far-ground.test.js
++++ b/tests/native-far-ground.test.js
+@@ -26,6 +26,7 @@ test('simplified distant ground retains relief, clipping, phase and ownership wi
+ test('opt-in native water mask keeps native ground recipe and independent fragment water coverage',()=>{
+  const candidate={impostors:new THREE.Mesh(),dispose(){}},night={value:0},origin={value:new THREE.Vector2(48,96)},world={nearBounds:[0,0,96,192],toon:{uniforms:{uWorldOrigin:origin,uNight:night},environmentUniforms:{}},biomeGround:{attach(material){material.userData.biomeGround={uGroundMapped:{value:1},uGroundMicro:{value:1},uGroundRelief:{value:1}};}}};
+  const data={positions:new Float32Array([0,4,0,16,8,0,0,9,16]),colors:new Float32Array(9).fill(.5),indices:new Uint32Array([0,2,1]),colorMap:{width:2,height:2,bounds:{minX:0,minZ:0,maxX:16,maxZ:16},data:new Uint8Array([80,80,80,0,80,80,80,255,80,80,80,0,80,80,80,255]),waterColor:[.2,.4,.6]}};
++ world.nav={field:{waterInfo(){throw Error('Texture-masked ground must not query per-vertex water');}}};
+  attachNativeFarGround(candidate,data,world,{nativeWaterMask:true});const mesh=candidate.impostors.children[0],map=candidate.farGroundTextures[0];
+  assert.equal(mesh.material.map,null);assert.equal(mesh.geometry.attributes.position.array,data.positions);assert.equal(mesh.geometry.attributes.color.array,data.colors);assert.deepEqual([...mesh.geometry.attributes.aFarWater.array],[0,0,0]);assert.deepEqual([...mesh.geometry.attributes.uv.array],[.25,.25,.75,.25,.25,.75]);
+  const shader={uniforms:{},vertexShader:'void main() {\n#include <worldpos_vertex>\n}',fragmentShader:'void main() {\n#include <clipping_planes_fragment>\n#include <opaque_fragment>\n}'};mesh.material.onBeforeCompile(shader,{});
+diff --git a/tools/experiments/native-far-ground.js b/tools/experiments/native-far-ground.js
+index 838ae8987..5a980c15d 100644
+--- a/tools/experiments/native-far-ground.js
++++ b/tools/experiments/native-far-ground.js
+@@ -34,7 +34,9 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
+  let farToon=null;
+  if(mapped){
+   geometry.computeVertexNormals();
+-  const water=data.water??new Float32Array(data.positions.length/3);if(!data.water&&world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;geometry.setAttribute('aFarWater',new THREE.BufferAttribute(water,1));
++  // The native mask path samples fragment coverage from the worker's texture.
++  // Its vertex water attribute is unused; do not resample the world per vertex.
++  const water=data.water??new Float32Array(data.positions.length/3);if(!nativeWaterMask&&!data.water&&world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;geometry.setAttribute('aFarWater',new THREE.BufferAttribute(water,1));
+   world.biomeGround.attach(material,0,0,null,{mapped:false});const u=material.userData.biomeGround;u.uGroundMapped.value=0;u.uGroundMicro.value=0;u.uGroundRelief.value=0;
+   farToon=new AfricanToon({visualSearch:world.visualSearch});Object.assign(farToon.uniforms,world.toon.uniforms,{uFineNoise:{value:0},uGroundDetail:{value:0}});farToon.environmentUniforms=world.toon.environmentUniforms;farToon.material(material);
+  }
