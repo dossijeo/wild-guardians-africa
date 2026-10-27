@@ -19,7 +19,7 @@ function contactIndices(geometry){
 export class BeastRecovery{
  static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh.geometry))samples.push({mesh,index});});return samples;}
  static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh.geometry);});}
- constructor(binding,snapshot,{surface,duration=1.65,fallenWorldPose=null}={}){
+ constructor(binding,snapshot,{surface,duration=1.9,fallenWorldPose=null}={}){
   this.binding=binding;this.surface=surface;this.duration=duration;this.age=0;this.done=false;this.lift=0;this.v=new Vector3();
   this.entries=binding.entries.map(e=>({bone:e.bone,standingQ:e.bone.quaternion.clone(),standingP:e.bone.position.clone(),fallenQ:new Quaternion(),fallenP:new Vector3(),crouchQ:e.bone.quaternion.clone(),crouchP:e.bone.position.clone()}));
   if(fallenWorldPose){
@@ -29,7 +29,7 @@ export class BeastRecovery{
   }else binding.apply(snapshot);
   for(const e of this.entries){e.fallenQ.copy(e.bone.quaternion);e.fallenP.copy(e.bone.position);}
   if(fallenWorldPose){for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}binding.model.updateMatrixWorld(true);}else binding.restore();
-  const hips=this.entries[0],height=Math.max(.4,hips.standingP.y);hips.crouchP.y-=height*.38;
+  const hips=this.entries[0],height=Math.max(.4,hips.standingP.y);hips.crouchP.y-=height*.48;
   for(const e of this.entries){const n=e.bone.name;
    if(/UpLeg$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,-.55));
    else if(/(?:Left|Right)Leg$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,1.05));
@@ -41,6 +41,14 @@ export class BeastRecovery{
   // bone plus uniform coverage, including sparse toes, tusks and fingers.
   this.legs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot'),target=foot.getWorldPosition(new Vector3());return {upper,knee,foot,target,length1:upper.getWorldPosition(new Vector3()).distanceTo(knee.getWorldPosition(new Vector3())),length2:knee.getWorldPosition(new Vector3()).distanceTo(target)};});
   const footClearance=Math.min(...this.legs.map(l=>l.target.y-(surface?.(l.target.x,l.target.z)??0)));for(const l of this.legs)l.target.y=(surface?.(l.target.x,l.target.z)??0)+Math.max(.05,footClearance);
+  const facing=binding.model.getWorldQuaternion(new Quaternion()),forward=new Vector3(0,0,1).applyQuaternion(facing),sideways=new Vector3(1,0,0).applyQuaternion(facing);
+  this.arms=['Left','Right'].flatMap((side,i)=>{
+   const upper=binding.bones.get(side+'Arm'),knee=binding.bones.get(side+'ForeArm'),foot=binding.bones.get(side+'Hand');if(!upper||!knee||!foot)return [];
+   const shoulder=upper.getWorldPosition(new Vector3()),elbow=knee.getWorldPosition(new Vector3()),hand=foot.getWorldPosition(new Vector3()),length1=shoulder.distanceTo(elbow),length2=elbow.distanceTo(hand),sign=i===0?1:-1;
+   const target=this.legs[i].target.clone().addScaledVector(forward,(length1+length2)*.45).addScaledVector(sideways,sign*(length1+length2)*.12);
+   target.y=(surface?.(target.x,target.z)??0)+.07;
+   return [{upper,knee,foot,target,length1,length2,pole:new Vector3(sign,0,-.3).normalize()}];
+  });
   this.ik={p:new Vector3(),k:new Vector3(),f:new Vector3(),direction:new Vector3(),pole:new Vector3(),desired:new Vector3(),current:new Vector3(),q:new Quaternion(),parent:new Quaternion(),local:new Quaternion()};
   this.samples=BeastRecovery.contactSamples(binding.model);
  }
@@ -49,6 +57,7 @@ export class BeastRecovery{
   for(const e of this.entries){if(t<.42){e.bone.quaternion.slerpQuaternions(e.fallenQ,e.crouchQ,brace);e.bone.position.lerpVectors(e.fallenP,e.crouchP,brace);}else{e.bone.quaternion.slerpQuaternions(e.crouchQ,e.standingQ,rise);e.bone.position.lerpVectors(e.crouchP,e.standingP,rise);}}
   const model=this.binding.model;model.updateMatrixWorld(true);
   const contactWeight=smooth((t-.2)/.22)*(1-smooth((t-.85)/.15));for(const leg of this.legs)this.legIK(leg,contactWeight);
+  const handWeight=smooth((t-.08)/.3)*(1-smooth((t-.48)/.3));for(const arm of this.arms)this.legIK(arm,handWeight);
   model.updateMatrixWorld(true);let penetration=0;
   if(this.surface)for(const {mesh,index} of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);penetration=Math.max(penetration,this.surface(this.v.x,this.v.z)+.01-this.v.y);}
   // Contact correction is vertical and never modifies horizontal navigation.
@@ -57,7 +66,7 @@ export class BeastRecovery{
  }
  legIK(leg,weight){
   if(weight<=0)return;const a=this.ik;leg.upper.getWorldPosition(a.p);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);a.direction.copy(leg.target).sub(a.p);const distance=Math.max(Math.abs(leg.length1-leg.length2)+.001,Math.min(leg.length1+leg.length2-.001,a.direction.length()));a.direction.normalize();
-  a.pole.set(0,0,1).applyQuaternion(this.binding.model.getWorldQuaternion(a.parent));a.pole.addScaledVector(a.direction,-a.pole.dot(a.direction)).normalize();
+  if(leg.pole)a.pole.copy(leg.pole);else a.pole.set(0,0,1);a.pole.applyQuaternion(this.binding.model.getWorldQuaternion(a.parent));a.pole.addScaledVector(a.direction,-a.pole.dot(a.direction)).normalize();
   const along=(leg.length1*leg.length1+distance*distance-leg.length2*leg.length2)/(2*distance),height=Math.sqrt(Math.max(0,leg.length1*leg.length1-along*along));a.desired.copy(a.p).addScaledVector(a.direction,along).addScaledVector(a.pole,height);
   this.aimBone(leg.upper,a.k,a.desired,weight);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);this.aimBone(leg.knee,a.f,leg.target,weight);
  }

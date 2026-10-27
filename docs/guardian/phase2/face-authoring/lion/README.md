@@ -231,3 +231,24 @@ The rise still looks too rigid, with limited visible arm/leg support. This is
 an outstanding artistic issue in `BeastRecovery`, not accepted get-up quality.
 Audio is included in the recording but has not been listened to for mix review.
 
+## Supported recovery iteration
+
+`BeastRecovery` now blends the hands toward ground supports during the brace
+stage, releases them during the rise, deepens the intermediate crouch and
+extends the default recovery from 1.65 to 1.9 seconds. The same bounded
+two-segment IK is used for arms and legs; no per-frame allocations or extra
+rigid bodies are introduced by the support chains. This affects all species
+and physical/baked recovery, so broader visual checks remain necessary.
+
+All 12 ragdoll tests and 19 expression/combat/baked tests pass. The get-up
+test now runs for the configured duration rather than a fixed 100 frames;
+its unchanged continuity/penetration assertions pass for all five rigs.
+`combat-supported-recovery.mp4` and `supported-recovery-cycle.json` record
+another completed cycle with zero final physical bodies/errors. The reviewed
+frame sheet covers 4.5–7.25 seconds of this recording. Different fall direction
+and camera framing obscure hand contact, so the visual improvement is **not
+yet accepted**. Next review needs a consistent side view with the full animal
+in frame and recovery-phase timing, rather than inferring contact from logs.
+The different frame times between recordings are not a paired performance
+comparison and are not attributed to this change.
+
