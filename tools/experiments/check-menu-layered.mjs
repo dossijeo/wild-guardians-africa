@@ -1,6 +1,6 @@
 import {chromium} from 'playwright';
 import {mkdir,writeFile} from 'node:fs/promises';
-const out='docs/qa/production-integration-20261025/menu-validation';await mkdir(out,{recursive:true});
+const out=process.argv[2]??'docs/qa/production-integration-20261025/menu-validation';await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});const reports=[];
 try{for(const [name,width,height] of [['wide',1280,720],['portrait',390,844],['ultrawide',1920,810]]){
  const context=await browser.newContext({viewport:{width,height},recordVideo:{dir:out,size:{width:1280,height:720}}});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push({message:m.text(),location:m.location()});});
