@@ -1,0 +1,5 @@
+# Night coverage after PR219 merge
+
+Sabana, Gran Rio and Desierto completed the active quality/camera harness with 120 stable capture frames for each low/medium/low stage. Compiler X4000 warnings remain; see raw reports. This is functional diagnostic coverage, not an ABAB performance claim. Sabana medium screenshot personally inspected: populated terrain, buildings, vegetation, active raid and tutorial rendered. Other screenshots still require visual review. Volcanes and Gran Canyon remain running/pending at this checkpoint.
+
+Next attribution hypothesis: VfxEffect.prepare returns a soft-depth request for any nonempty sprite buffer, without testing visibility in that return predicate; sprite meshes disable Three frustum culling. Measure fully offscreen-only requests before implementing any exclusion. Do not repeat rejected regional cropping/scissor experiments: this hypothesis concerns avoiding an entirely unnecessary depth pass, not narrowing an existing pass. Conservative bounds, near-plane cases, all six VFX producers and destruction smoke must be accounted for. No runtime change made.
