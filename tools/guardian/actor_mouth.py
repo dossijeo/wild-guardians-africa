@@ -4,6 +4,7 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 def split_lip_seam(mesh,z=1.385):
+ raise RuntimeError("Rejected chin cut: trace original teeth and lip corners before authoring a replacement seam.")
  bm=bmesh.new();bm.from_mesh(mesh.data);world=mesh.matrix_world.copy();inv=world.inverted()
  for v in bm.verts:v.co=world@v.co
  tree=BVHTree.FromBMesh(bm)

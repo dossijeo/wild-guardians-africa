@@ -1,14 +1,16 @@
 {
-  "status": "in-progress-not-runtime",
+  "status": "in-progress-dental-contour-not-runtime",
   "actor": "hyena",
   "sourceBranch": "codex/global-visual-lab",
-  "editableLocalSource": "C:/tmp/guardian-faces/hyena-expression.blend",
+  "editableLocalSource": "C:/tmp/guardian-faces/hyena-dental-lined.blend",
   "reproduce": [
     "tools/guardian/build_actor_face.py",
     "tools/guardian/inspect_actor_face.py",
-    "tools/guardian/actor_mouth.py"
+    "tools/guardian/actor_mouth.py",
+    "tools/guardian/prototype_hyena_dental_jaw.py",
+    "tools/guardian/hyena_muzzle_patch.py"
   ],
-  "iterations": 11,
+  "iterations": 15,
   "viewsPerIteration": [
     "front",
     "quarter",
@@ -20,9 +22,12 @@
     "v3 eyelid width/center mismatch",
     "v5 continuous lip skin elongated nose",
     "v7-v8 cavity edge did not match actual skin delta",
-    "v10 mouth bag protruded below cheek"
+    "v10 mouth bag protruded below cheek",
+    "v6-v11: horizontal seam cuts the chin below the original dental/lip boundary; rejected after user review",
+    "dental-v1/v2 harmonic weights stretch attached teeth and muzzle",
+    "dental-v3 color-based face isolation creates jagged holes"
   ],
-  "current": "Localized lip seam split, mouth interior follows actual lower-lip morph deltas; closed mouth bag reduced after rejecting protruding variant. Neutral, open and closed-eye renders inspected front/quarter/side. Still not approved for runtime.",
+  "current": "Experimental curved dental contour replaces rejected chin seam. Right muzzle painted canine repaired with localized projected fur. Closed oral lining added, but corner shape, front lip strips, left canine and partial poses remain unapproved. No production model replacement.",
   "remaining": [
     "Review mouth corner silhouette and partial opening in motion; refine eyelid edges",
     "Validate blink at 0/0.5/1 in animation and all views",
@@ -52,6 +57,39 @@
       "Three.js visual playback",
       "runtime compression",
       "GPU cost"
+    ]
+  },
+  "acceptanceCriteria": [
+    "Trace original upper/lower dental boundary and both lip corners on unmodified source geometry before authoring",
+    "Preserve chin as part of lower jaw; attach lower teeth to jaw motion and preserve upper teeth",
+    "Inspect closed, partial and full opening from front, both sides and three-quarter views",
+    "Reject any second opening below the original mouth or exposed background through corners"
+  ],
+  "anatomyDiagnostic": {
+    "source": "unmodified visual-lab hyena",
+    "method": "highlight existing boundary edges on temporary welded analysis mesh; source mesh remains unchanged",
+    "reference": "Original teeth and lip corners, not a horizontal chin plane",
+    "finding": "Existing cavity boundary follows dental line, rising toward the corners; investigate deformation using this original opening before adding any seam",
+    "evidence": [
+      "original-dental-boundary-side.png",
+      "original-dental-boundary-quarter.png",
+      "original-dental-boundary-front.png",
+      "original-dental-boundary-other-side.png"
+    ],
+    "notValidated": "Replacement jaw deformation has not yet been authored or accepted"
+  },
+  "textureRepair": {
+    "method": "built-in image_gen localized repair projected only onto right body skin; original ivory canine excluded",
+    "asset": "content/source/actors/hyena/muzzle-fur-repair.png",
+    "evidence": [
+      "muzzle-before-hidden-canine.png",
+      "muzzle-after-hidden-canine.png"
+    ],
+    "runtimeReady": false,
+    "remaining": [
+      "left side calibration",
+      "bake into original UV atlas",
+      "neutral/partial/open all-view validation"
     ]
   }
 }
