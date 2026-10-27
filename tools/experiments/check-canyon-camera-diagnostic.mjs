@@ -1,0 +1,9 @@
+import fs from 'node:fs';
+import {spawnSync} from 'node:child_process';
+const out=process.argv[2]??'docs/qa/residual-spikes-20261027/canyon-camera-diagnostic';fs.mkdirSync(out,{recursive:true});
+const source=fs.readFileSync('tools/experiments/check-spatial-thread-game.mjs','utf8');
+const anchor=' await page.goto(gameUrl.href);';if(source.split(anchor).length!==2)throw Error('Harness anchor drift');
+const injection=` await page.route('**/tools/experiments/spatial-thread-game-quality-case.js*',async route=>{const response=await route.fetch();let body=await response.text();const anchor='rows.at(-1).capture={stableFrames:stable,';if(body.split(anchor).length!==2)throw Error('Capture anchor drift');body=body.replace(anchor,'rows.at(-1).capture={camera:w.camera.position.toArray(),target:w.controls.target.toArray(),groundAtEye:w.nav.field.surface(w.camera.position.x,w.camera.position.z),groundAtTarget:w.nav.field.surface(w.controls.target.x,w.controls.target.z),stableFrames:stable,');await route.fulfill({response,body});});\n`;
+const temp='tools/experiments/.canyon-camera-diagnostic-generated.mjs';fs.writeFileSync(temp,source.replace(anchor,injection+anchor));
+const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.startsWith('WG_')));Object.assign(env,{WG_THREAD_PORT:'5220',WG_THREAD_BIOME:'gran-canon',WG_THREAD_QUALITY:'media',WG_PRODUCTION_VISUALS:'1',WG_THREAD_ACTIVE:'1',WG_THREAD_DEFAULT_STREAMING:'1',WG_THREAD_QUALITY_CYCLE:'1',WG_THREAD_QUALITY_ACTIVE:'1',WG_THREAD_QUALITY_MENU_PROTOCOL:'1',WG_THREAD_QUALITY_CAPTURE:'1',WG_THREAD_REPORT:out+'/report.json'});
+try{const r=spawnSync(process.execPath,[temp],{env,encoding:'utf8',maxBuffer:16*1024*1024});fs.writeFileSync(out+'/execution.log',(r.stdout??'')+(r.stderr??''));if(r.status!==0)throw Error('Diagnostic failed '+r.status);console.log('Diagnostic complete');}finally{fs.unlinkSync(temp);}

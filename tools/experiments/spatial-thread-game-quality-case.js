@@ -42,7 +42,8 @@ export async function verifyGameQualityCycle(w){
  if(active){
   const url=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/simulation/game.js');if(!url)throw Error('Missing canonical game module');game=await import(url);game.resume(w.state,'menu');
   const eye=w.camera.position.clone(),target=w.controls.target.clone();
-  w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
+  // Preserve the production terrain-camera protection during scripted X/Z travel.
+  // Fixed eye height can otherwise put the QA camera below canyon plateaus.
   travelStartedAt=performance.now();const move=()=>{travelFrame++;if(w.state.elapsed>lastSimulationElapsed)advancingFrames++;lastSimulationElapsed=w.state.elapsed;if(w.state.pauses.length){pausedFrames++;for(const reason of w.state.pauses)pauseReasons[reason]=(pauseReasons[reason]??0)+1;}const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);else travelCompletedAt=performance.now();};travelHandle=requestAnimationFrame(move);
  }
  const estimateFault=new URLSearchParams(location.search).get('estimateOutlier')==='1',scheduler=w.frameScheduler,originalSubmit=scheduler?.submit;let forcedJobs=0;
