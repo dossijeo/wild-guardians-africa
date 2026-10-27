@@ -5,13 +5,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Group,AnimationClip,AnimationMixer,Vector3,Quaternion} from 'three';
 import {beastSkin} from './helpers/beast-skin.js';
+import {actorGeometry} from './helpers/actor-geometry.js';
 import {BeastCombatPhysics,beastPhysicsRuntime} from '../src/rendering/beast-combat-physics.js';
 import {updateRaid} from '../src/simulation/raids.js';
 const R=await beastPhysicsRuntime();
 const authoredClip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL('../content/source/animations/stand-up/hyena-candidate.json',import.meta.url))).clip);
-function fixture(){
- const model=beastSkin('hyena'),root=new Group();root.add(model);root.position.set(20,0,30);root.updateMatrixWorld(true);
- const animal={id:'beast',species:'hyena',x:20,z:30,status:'attacking',hitsRemaining:8,heading:0,radius:.7,attackRemaining:1,path:[{x:21,z:30}],magicImpact:{at:10,direction:{x:1,y:-.2,z:.2},intensity:1}};
+function fixture(species='hyena',model=beastSkin(species)){
+ const root=new Group();root.add(model);root.position.set(20,0,30);root.updateMatrixWorld(true);
+ const animal={id:'beast',species,x:20,z:30,status:'attacking',hitsRemaining:8,heading:0,radius:.7,attackRemaining:1,path:[{x:21,z:30}],magicImpact:{at:10,direction:{x:1,y:-.2,z:.2},intensity:1}};
  const state={elapsed:10,structures:[],plants:[],workers:[],raid:{animals:[animal],reservations:{}}};
  const data={model,mixer:new AnimationMixer(model),clips:[new AnimationClip('Walking',1,[])]};
  const world={state,nav:{field:{surface:()=>0}},objects:new Map([[animal.id,root]]),mixers:new Map([[animal.id,data]]),onError:error=>{throw error;}};
@@ -48,6 +49,12 @@ test('another hit cancels a physical roll without resetting the body or allocati
  let entry;for(let i=0;i<480;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);entry=manager.entries.get(animal.id);if(entry?.rolling&&entry.actor.roll.age>.2)break;}
  assert.ok(entry?.rolling);animal.magicDown.until=state.elapsed-.1;manager.step(state,0);assert.ok(animal.magicDown.until>state.elapsed,'physical ownership must extend the AI watchdog');const pose=Array.from(entry.actor.pose),world=entry.solver.world;animal.magicImpact.at=state.elapsed;manager.step(state,0);
  assert.equal(entry.actor.roll,null);assert.equal(entry.rolling,false);assert.equal(animal.magicDown.phase,'falling');assert.equal(entry.solver.world,world);assert.equal(world.bodies.len(),14);assert.deepEqual(Array.from(entry.actor.pose),pose);manager.dispose();assert.equal(animal.magicDown,undefined);
+});
+test('expressive lion rolls and plays its own retargeted get-up without a procedural substitution',async()=>{
+ const model=await actorGeometry(new URL('../content/source/actors/lion/expressive-candidate.glb',import.meta.url)),clip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL('../content/source/animations/stand-up/lion-candidate.json',import.meta.url))).clip);
+ const {animal,state,root,manager}=fixture('lion',model);manager.recoveryClips=new Map([['lion',clip]]);manager.step(state,.1);let recovering=false,rolling=false;
+ for(let i=0;i<840;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);const e=manager.entries.get(animal.id);rolling||=!!e?.rolling;if(e?.recovery){recovering=true;assert.equal(e.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));}}
+ assert.ok(rolling&&recovering);assert.equal(manager.stats.rollFailures,0);assert.equal(manager.entries.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
 });
 test('second hit reuses the airborne articulated body without resetting its pose',()=>{
  const {animal,state,manager}=fixture();manager.step(state,.1);

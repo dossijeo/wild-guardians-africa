@@ -23,12 +23,13 @@ for(const name of ['Hips','Spine','Head','LeftArm','RightArm','LeftUpLeg','Right
 const ratio=to.get('Hips').p.y/from.get('Hips').p.y;if(!(ratio>.1&&ratio<10))throw Error('Unsupported rig units '+ratio);
 const endpoints=new Map();for(const side of ['Left','Right'])for(const [a,b]of [['Shoulder','Arm'],['Arm','ForeArm'],['ForeArm','Hand'],['UpLeg','Leg'],['Leg','Foot']])endpoints.set(side+a,side+b);
 const mapped=[...to].filter(([name])=>from.has(name)),samples=BeastRecovery.contactSamples(target.scene),mixer=new AnimationMixer(source.scene),action=mixer.clipAction(clip).setLoop(LoopOnce,1);action.clampWhenFinished=true;action.play();
+const secondary=[...to].filter(([name])=>/^ClothRear_.*_0[1-3]$/.test(name)),animated=[...mapped,...secondary];
 // The donor's anatomical ankle bind axes do not describe a planted sole on
 // the repaired game rigs. Calibrate relative ankle motion from the authored
 // standing endpoint, retaining the target's own horizontal resting sole.
 mixer.setTime(clip.duration);source.scene.updateMatrixWorld(true);
 const ankleReference=new Map(['LeftFoot','RightFoot'].map(name=>[name,from.get(name).bone.getWorldQuaternion(new Quaternion()).normalize()]));
-const times=[],values=new Map(mapped.map(([name])=>[name,[]])),hipValues=[],ground=[];
+const times=[],values=new Map(animated.map(([name])=>[name,[]])),hipValues=[],ground=[];
 const limitingBones=[];
 const q=new Quaternion(),parentQ=new Quaternion(),delta=new Quaternion(),p=new Vector3(),desired=new Vector3(),posed=new Vector3(),v=new Vector3();
 const frames=Math.ceil(clip.duration*60);
@@ -36,6 +37,18 @@ function aim(bone,tip,targetPoint){
  const start=bone.getWorldPosition(new Vector3()),current=tip.getWorldPosition(new Vector3()).sub(start).normalize(),wanted=targetPoint.clone().sub(start).normalize();
  const rotation=new Quaternion().setFromUnitVectors(current,wanted).multiply(bone.getWorldQuaternion(new Quaternion()).normalize());
  bone.quaternion.copy(bone.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(rotation));bone.updateWorldMatrix(false,true);
+}
+function supportAppendages(){
+ for(const [name,item]of secondary){
+  const bone=item.bone,child=bone.children.find(b=>b.isBone),start=bone.getWorldPosition(new Vector3());
+  const end=child?child.getWorldPosition(new Vector3()):start.clone().add(start.clone().sub(bone.parent.getWorldPosition(new Vector3())));
+  const direction=end.clone().sub(start),length=direction.length();if(length<1e-5)continue;
+  const clearance=.045;if(end.y>=clearance)continue;
+  const vertical=Math.min(.98,Math.max(-.98,(clearance-start.y)/length)),horizontal=Math.hypot(direction.x,direction.z);
+  const wanted=new Vector3(horizontal>1e-6?direction.x/horizontal:1,0,horizontal>1e-6?direction.z/horizontal:0).multiplyScalar(Math.sqrt(1-vertical*vertical));wanted.y=vertical;
+  const rotation=new Quaternion().setFromUnitVectors(direction.normalize(),wanted).multiply(bone.getWorldQuaternion(new Quaternion()).normalize());
+  bone.quaternion.copy(bone.parent.getWorldQuaternion(new Quaternion()).normalize().invert().multiply(rotation));bone.updateWorldMatrix(false,true);
+ }
 }
 function supportHand(side){
  const upper=to.get(side+'Arm').bone,elbow=to.get(side+'ForeArm').bone,hand=to.get(side+'Hand').bone;
@@ -61,18 +74,18 @@ for(let frame=0;frame<=frames;frame++){
   item.bone.updateWorldMatrix(false,true);
  }
  const hip=to.get('Hips').bone;let bodyMinimum=Infinity;
- for(const {mesh,index}of samples){let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;const name=canonical(mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name);if(/Arm|Hand/.test(name))continue;mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);bodyMinimum=Math.min(bodyMinimum,v.y);}
+ for(const {mesh,index}of samples){let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;const name=canonical(mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name);if(/Arm|Hand|^Tail_|^ClothRear_/.test(name))continue;mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);bodyMinimum=Math.min(bodyMinimum,v.y);}
  hip.getWorldPosition(p);p.y-=bodyMinimum;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);
  // Longer target arms must bend at the elbow to support the character. Lifting
  // the pelvis to clear a hand would leave both feet visibly hovering.
- supportHand('Left');supportHand('Right');target.scene.updateMatrixWorld(true);
+ supportAppendages();supportHand('Left');supportHand('Right');target.scene.updateMatrixWorld(true);
  let minimum=Infinity,limiting='';for(const {mesh,index}of samples){mesh.getVertexPosition(index,v).applyMatrix4(mesh.matrixWorld);if(v.y<minimum){minimum=v.y;let best=0;for(let k=1;k<4;k++)if(mesh.geometry.attributes.skinWeight.getComponent(index,k)>mesh.geometry.attributes.skinWeight.getComponent(index,best))best=k;limiting=mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,best)].name;}}
  limitingBones.push(limiting);
  // Keep the complete skinned silhouette above the support plane, including
  // authored ornaments. Report correction; large corrections are not acceptance.
  hip.getWorldPosition(p);p.y-=minimum;hip.position.copy(hip.parent.worldToLocal(p));target.scene.updateMatrixWorld(true);ground.push(-minimum-bodyMinimum);
- for(const [name,item]of mapped)item.bone.quaternion.toArray(values.get(name),values.get(name).length);hip.position.toArray(hipValues,hipValues.length);
+ for(const [name,item]of animated)item.bone.quaternion.toArray(values.get(name),values.get(name).length);hip.position.toArray(hipValues,hipValues.length);
 }
-const tracks=mapped.map(([name,item])=>new QuaternionKeyframeTrack(item.bone.name+'.quaternion',times,values.get(name)));tracks.push(new VectorKeyframeTrack(to.get('Hips').bone.name+'.position',times,hipValues));
+const tracks=animated.map(([name,item])=>new QuaternionKeyframeTrack(item.bone.name+'.quaternion',times,values.get(name)));tracks.push(new VectorKeyframeTrack(to.get('Hips').bone.name+'.position',times,hipValues));
 const result={schema:'wg-retargeted-recovery/1',sourceSha256:crypto.createHash('sha256').update(sourceBytes).digest('hex'),targetSha256:crypto.createHash('sha256').update(targetBytes).digest('hex'),ratio,samples:times.length,mappedBones:mapped.map(([name])=>name),unmappedBones:[...to.keys()].filter(name=>!from.has(name)),groundCorrection:{min:Math.min(...ground),max:Math.max(...ground),values:ground,limitingBones},clip:AnimationClip.toJSON(new AnimationClip('Stand_Up1',clip.duration,tracks))};
 fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result)+'\n');console.log(JSON.stringify({output,bytes:fs.statSync(output).size,samples:result.samples,mapped:result.mappedBones.length,ratio,groundCorrection:{min:result.groundCorrection.min,max:result.groundCorrection.max}},null,2));

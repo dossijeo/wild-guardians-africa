@@ -1,3 +1,4 @@
+import {isTailContactVertex} from './beast-ground-contact.js';
 import {Vector3,Quaternion} from 'three';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 const X=new Vector3(1,0,0),Z=new Vector3(0,0,1);
@@ -17,7 +18,7 @@ function contactIndices(geometry){
 // logical root to the fallen pelvis; the world-space snapshot preserves the
 // visible pose during that reconciliation. No return to the pre-impact origin.
 export class BeastRecovery{
- static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh.geometry))samples.push({mesh,index});});return samples;}
+ static contactSamples(model){const samples=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(const index of contactIndices(mesh.geometry))if(!isTailContactVertex(mesh,index))samples.push({mesh,index});});return samples;}
  static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)contactIndices(mesh.geometry);});}
  constructor(binding,snapshot,{surface,duration=1.9,fallenWorldPose=null}={}){
   this.binding=binding;this.surface=surface;this.duration=duration;this.age=0;this.done=false;this.lift=0;this.v=new Vector3();
@@ -27,7 +28,7 @@ export class BeastRecovery{
    const parent=new Quaternion();
    for(let i=0;i<this.entries.length;i++){const bone=this.entries[i].bone,j=i*7;if(i===0)bone.position.copy(bone.parent.worldToLocal(this.v.fromArray(fallenWorldPose,j)));bone.parent.getWorldQuaternion(parent).normalize().invert();bone.quaternion.fromArray(fallenWorldPose,j+3).premultiply(parent).normalize();bone.updateWorldMatrix(false,true);}
   }else binding.apply(snapshot);
-  this.fallenSecondary=new Map();for(const [name,bone]of binding.bones)if(/^Tail_0[1-5]$/.test(name)||/^ClothRear_.*_01$/.test(name))this.fallenSecondary.set(bone,bone.getWorldQuaternion(new Quaternion()).normalize());
+  this.fallenSecondary=new Map();for(const [name,bone]of binding.bones)if(/^ClothRear_.*_01$/.test(name))this.fallenSecondary.set(bone,bone.getWorldQuaternion(new Quaternion()).normalize());
   this.fallenLegs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot');return {target:foot.getWorldPosition(new Vector3()),orientation:foot.getWorldQuaternion(new Quaternion()).normalize(),pole:knee.getWorldPosition(new Vector3()).sub(upper.getWorldPosition(new Vector3())).normalize()};});
   this.fallenArms=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'Arm'),knee=binding.bones.get(side+'ForeArm'),hand=binding.bones.get(side+'Hand');if(!upper||!knee||!hand)return null;return {target:hand.getWorldPosition(new Vector3()),orientation:hand.getWorldQuaternion(new Quaternion()).normalize(),pole:knee.getWorldPosition(new Vector3()).sub(upper.getWorldPosition(new Vector3())).normalize()};});
   for(const e of this.entries){e.fallenQ.copy(e.bone.quaternion);e.fallenP.copy(e.bone.position);}
@@ -40,14 +41,13 @@ export class BeastRecovery{
    else if(/ForeArm$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,-.65));
    else if(/(?:Left|Right)Arm$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(Z,n.includes('Left')?.3:-.3));
   }
-  // Fold trailing appendages away from the support plane instead of lifting
-  // the entire animal to accommodate a hanging tail or skirt.
+  // Fold rear cloth away from the support plane. Tails may cross the ground.
   this.secondary=[];
-  for(const [name,bone] of binding.bones)if(/^Tail_0[1-5]$/.test(name)||/^ClothRear_.*_01$/.test(name)){
+  for(const [name,bone] of binding.bones)if(/^ClothRear_.*_01$/.test(name)){
    const standingQ=bone.quaternion.clone(),parent=bone.parent.getWorldQuaternion(new Quaternion()),axis=X.clone().applyQuaternion(binding.model.getWorldQuaternion(new Quaternion()));
-   const tailIndex=name.startsWith('Tail_')?Number(name.slice(-2))-1:-1,angle=tailIndex>=0?[1.1,.25,.18,.1,.04][tailIndex]:-1.2;
+   const angle=-1.2;
    const crouchQ=parent.clone().invert().multiply(new Quaternion().setFromAxisAngle(axis,angle)).multiply(parent).multiply(standingQ);
-   this.secondary.push({bone,standingQ,crouchQ,delay:Math.max(0,tailIndex)*.025});
+   this.secondary.push({bone,standingQ,crouchQ,delay:0});
   }
   for(const e of this.entries){e.bone.position.copy(e.crouchP);e.bone.quaternion.copy(e.crouchQ);}for(const e of this.secondary)e.bone.quaternion.copy(e.crouchQ);binding.model.updateMatrixWorld(true);
   for(const e of this.secondary){e.fallenWorldQ=this.fallenSecondary.get(e.bone);e.crouchWorldQ=e.bone.getWorldQuaternion(new Quaternion()).normalize();}

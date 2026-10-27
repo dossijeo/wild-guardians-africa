@@ -25,7 +25,7 @@ function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
 export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5});
-export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,angleTolerance:.45,settleSeconds:.15,timeout:3});
+export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,angleTolerance:.45,settleSeconds:.15,timeout:3.5});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
@@ -103,12 +103,14 @@ export class BeastRagdollSolver{
    const inertia=body.effectiveAngularInertia(),dt=this.stepSize;
    // A broad convex torso has to tip over its contact edge. Inertia-only
    // velocity feedback cannot overcome gravity there; provide a bounded
-   // weight/lever-arm torque, fading near the desired orientation.
-   const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.supportTorque*Math.min(1,angle/.5)/sine:0;
+   // weight/lever-arm torque fading to zero within 0.1 radians of the target.
+   // Near the target, velocity feedback brakes the body without gravity-assist
+   // torque repeatedly driving it past the resting contact orientation.
+   const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.supportTorque*Math.min(1,Math.max(0,angle-RAGDOLL_ROLL.supportDeadAngle)/.5)/sine:0;
    body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support)*dt),true);
    if(i<2){rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
   }
-  roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
+  roll.speed=rootSpeed;roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
   roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=RAGDOLL_ROLL.timeout;roll.done||=roll.timedOut;
  }
  follow(id,pose,from=null,weight=1){

@@ -1,3 +1,4 @@
+import {isTailContactVertex} from './beast-ground-contact.js';
 import {Vector3,Quaternion,Bone} from 'three';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
 const colliderSamples=new WeakMap();
@@ -37,7 +38,7 @@ export class BeastRagdollBinding{
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
    const cached=colliderSamples.get(mesh.geometry);if(!cached)selected.set(mesh.geometry,new Set());
    const samples=cached??Array.from({length:Math.ceil(indices.count/2)},(_,i)=>i*2);
-   for(const i of samples){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
+   for(const i of samples){if(isTailContactVertex(mesh,i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
     // Skin once; adjacent head/neck supports share the same world-space point.
     const primary=mapping[indices.getComponent(i,best)];if(primary===undefined)continue;
     mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld);
