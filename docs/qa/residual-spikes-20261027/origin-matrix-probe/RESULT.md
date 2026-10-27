@@ -1,0 +1,11 @@
+# Origin matrix probe — real streaming evidence
+
+Current production renderer after PR221, hydraulic-v2-agriculture fixture, Manglares medium 1280x720, 30-second simulation warmup, stable 25-chunk preflight, 144-unit excursion over 40 seconds. No spell; no render suppression. Run completed with ok:true, zero page/console errors. Exact fixture/source SHA256s in provenance.json; raw report retained compressed.
+
+Probe spans installation through final capture, including preflight: 1,569 world draws, 689 with nonzero render origin; precisely those 689 had an explicit root synchronization before Three's world render. Root update counts: preDraw689 / renderer1569 / postDraw689 / outside573. Cumulative synchronous root durations: 292.265 / 545.250 / 289.190 / 209.575 ms respectively. Instrumentation overhead included; these are CPU call durations, not GPU or presentation metrics, and not an A/B improvement. About 0.42 ms per explicit pre-draw traversal is not evidence that large freezes will disappear.
+
+Zero stale pooled light positions observed in this no-spell fixture. Unit test deliberately moves a light between origin synchronization and render and verifies it is detected and that unmodified production synchronization fixes it; it also verifies failure restoration and zero-origin behavior. Actual spell-light, destruction and shadow scenarios still required before any suppression candidate can be accepted.
+
+Conclusion: unlike the previous depth-to-color reuse experiment, origin-to-render overlap has real applicability. Potential benefit is modest per-frame CPU throughput; it cannot be presented as the cause of large streaming stalls. Production remains unchanged. Keep targeted matrix consolidation separate from the higher-cost chunk-installation/renderer attribution work.
+
+Reproduce: check-shield-repeat-render.mjs with WG_ORIGIN_MATRIX_PROBE=1, WG_MAGIC_PROFILE=1, WG_MAGIC_CPU_SAMPLING=0, WG_MAGIC_VIDEO=0, WG_MAGIC_CASTS=1, WG_MAGIC_NO_CAST=1, WG_MAGIC_STREAM=1, WG_MAGIC_STREAM_DISTANCE=144, WG_MAGIC_STREAM_SECONDS=40, WG_MAGIC_SETTLE=1, WG_MAGIC_WARMUP_ELAPSED=30, WG_MAGIC_CAPTURE_AFTER_STREAM=1, WG_QA_URL=http://127.0.0.1:5220, WG_MAGIC_FIXTURE=docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json and a fresh WG_BEAST_QA_OUT directory.
