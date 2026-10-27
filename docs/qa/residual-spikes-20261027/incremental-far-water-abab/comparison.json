@@ -1,0 +1,1306 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "candidate": false,
+      "failedRequests": [
+        {
+          "url": "http://127.0.0.1:5220/assets/audio/419dd42ea4cf8a3aa5b8b5b62d8315a7ff49217b3061a61d071daf671fb78bf5.opus",
+          "failure": {
+            "errorText": "net::ERR_ABORTED"
+          }
+        }
+      ],
+      "window": {
+        "start": 133555.19500005245,
+        "end": 173555.19500005245
+      },
+      "incrementalWater": null,
+      "regionalAttachment": [
+        {
+          "label": "far-region-attach-ground",
+          "start": 143578.27500009537,
+          "end": 143578.2800000906,
+          "duration": 0.004999995231628418,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 143733.935000062,
+          "end": 143733.935000062,
+          "duration": 0,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 143798.560000062,
+          "end": 143798.56500005722,
+          "duration": 0.004999995231628418,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 145142.86500000954,
+          "end": 145168.2800000906,
+          "duration": 25.415000081062317,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        }
+      ],
+      "presentationIntervals": {
+        "count": 733,
+        "mean": 54.51372442019099,
+        "p50": 49.86500000001979,
+        "p95": 116.53500000000349,
+        "p99": 166.36999999999534,
+        "max": 216.12000000002445
+      },
+      "cpuRenderSubmission": {
+        "count": 734,
+        "mean": 13.031212534826523,
+        "p50": 11.789999961853027,
+        "p95": 23.93499994277954,
+        "p99": 31.94000005722046,
+        "max": 47.764999985694885
+      },
+      "mainFrameSync": {
+        "count": 734,
+        "mean": 14.075252044753093,
+        "p50": 13.054999947547913,
+        "p95": 24.985000014305115,
+        "p99": 32.830000042915344,
+        "max": 49.394999980926514
+      },
+      "gpuRender": {
+        "count": 734,
+        "mean": 33.586612803814724,
+        "p50": 30.781249,
+        "p95": 68.021978,
+        "p99": 91.271249,
+        "max": 112.156458
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04499995708465576,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 4.665000081062317,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 1.1450001001358032,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 0.9700000286102295,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1792064,
+          "getterWallMs": 9.320000052452087,
+          "observerWallMs": 0.2749999761581421
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.07500004768371582,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04999995231628418,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.05000007152557373,
+          "observerWallMs": 0
+        }
+      ],
+      "demands": 30,
+      "completed": 19,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 11,
+      "latency": {
+        "count": 19,
+        "mean": 5168.140526338628,
+        "p50": 4999.52999997139,
+        "p95": 9716.965000033379,
+        "p99": 9716.965000033379,
+        "max": 9716.965000033379
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 5676.320000052452
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 1668.6100000143051
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 1668.2250000238419
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 5674.820000052452
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 9716.965000033379
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 7671.139999985695
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 3131.1299999952316
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 3130.75
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 7581.420000076294
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 8670.810000061989
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 4999.52999997139
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 3128.0650000572205
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 2729.5950000286102
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 4085.350000023842
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 5041.550000071526
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 8675.159999966621
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 2860.9950000047684
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 4341.125
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 7743.110000014305
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 3
+    },
+    {
+      "run": 2,
+      "candidate": true,
+      "failedRequests": [],
+      "window": {
+        "start": 127064.38500010967,
+        "end": 167064.38500010967
+      },
+      "incrementalWater": [
+        {
+          "start": 57932.0300000906,
+          "vertices": 6136,
+          "units": 97,
+          "cpuMs": 35.30999994277954,
+          "maxUnitMs": 0.6749999523162842,
+          "completed": true,
+          "end": 58066.800000071526,
+          "wallMs": 134.7699999809265
+        },
+        {
+          "start": 138930.3600000143,
+          "vertices": 6114,
+          "units": 97,
+          "cpuMs": 17.83500027656555,
+          "maxUnitMs": 0.33000004291534424,
+          "completed": true,
+          "end": 140287.935000062,
+          "wallMs": 1357.5750000476837
+        }
+      ],
+      "regionalAttachment": [
+        {
+          "label": "far-region-attach-ground",
+          "start": 137206.45500004292,
+          "end": 137206.4700000286,
+          "duration": 0.014999985694885254,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 137335.85000002384,
+          "end": 137335.8600000143,
+          "duration": 0.009999990463256836,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 137405.98000001907,
+          "end": 137405.99500000477,
+          "duration": 0.014999985694885254,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 138930.28500008583,
+          "end": 140300.24000000954,
+          "duration": 1369.954999923706,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ],
+      "presentationIntervals": {
+        "count": 683,
+        "mean": 58.479948755490476,
+        "p50": 49.96999999997206,
+        "p95": 116.5,
+        "p99": 166.23000000001048,
+        "max": 199.55499999999302
+      },
+      "cpuRenderSubmission": {
+        "count": 684,
+        "mean": 12.643267540729534,
+        "p50": 11.764999985694885,
+        "p95": 20.799999952316284,
+        "p99": 26.014999985694885,
+        "max": 33.294999957084656
+      },
+      "mainFrameSync": {
+        "count": 684,
+        "mean": 13.755826025329835,
+        "p50": 13.284999966621399,
+        "p95": 21.570000052452087,
+        "p99": 26.43500006198883,
+        "max": 33.8199999332428
+      },
+      "gpuRender": {
+        "count": 684,
+        "mean": 35.251364423976604,
+        "p50": 34.900572,
+        "p95": 64.294739,
+        "p99": 76.010937,
+        "max": 104.343072
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.08000004291534424,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 3.6299999952316284,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 1.0149999856948853,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 1.1750000715255737,
+          "observerWallMs": 0.014999985694885254
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1792064,
+          "getterWallMs": 12.81000006198883,
+          "observerWallMs": 0.434999942779541
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04500007629394531,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.039999961853027344,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04499995708465576,
+          "observerWallMs": 0.004999995231628418
+        }
+      ],
+      "demands": 30,
+      "completed": 21,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 9,
+      "latency": {
+        "count": 21,
+        "mean": 5404.87428574335,
+        "p50": 5351.550000071526,
+        "p95": 10068.264999985695,
+        "p99": 11905.024999976158,
+        "max": 11905.024999976158
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 5351.550000071526
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 730.164999961853
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 729.3200000524521
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 5162.210000038147
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 11905.024999976158
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 8489.649999976158
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 2983.414999961853
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 2983.100000023842
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 7423.764999985695
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 10068.264999985695
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 5372.080000042915
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 4181.035000085831
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 3124.555000066757
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 4907.175000071526
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 5767.785000085831
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 8607.975000023842
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 3274.110000014305
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 4947.675000071526
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 6760.285000085831
+        },
+        {
+          "key": "1,-1",
+          "epoch": 0,
+          "ms": 5367.210000038147
+        },
+        {
+          "key": "1,0",
+          "epoch": 0,
+          "ms": 5366.009999990463
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 5
+    },
+    {
+      "run": 3,
+      "candidate": false,
+      "failedRequests": [],
+      "window": {
+        "start": 112398.52499997616,
+        "end": 152398.52499997616
+      },
+      "incrementalWater": null,
+      "regionalAttachment": [
+        {
+          "label": "far-region-attach-ground",
+          "start": 123623.22500002384,
+          "end": 123623.23000001907,
+          "duration": 0.004999995231628418,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 123677.10500001907,
+          "end": 123677.1100000143,
+          "duration": 0.004999995231628418,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 123820.81499993801,
+          "end": 123820.81499993801,
+          "duration": 0,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 125589.79499995708,
+          "end": 125623.22000002861,
+          "duration": 33.425000071525574,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        }
+      ],
+      "presentationIntervals": {
+        "count": 1412,
+        "mean": 28.28729461756373,
+        "p50": 33.0850000000064,
+        "p95": 49.98000000001048,
+        "p99": 66.58000000000175,
+        "max": 99.83499999999185
+      },
+      "cpuRenderSubmission": {
+        "count": 1414,
+        "mean": 10.995562232788416,
+        "p50": 9.495000004768372,
+        "p95": 21.460000038146973,
+        "p99": 27.21999990940094,
+        "max": 47.12000000476837
+      },
+      "mainFrameSync": {
+        "count": 1414,
+        "mean": 11.828928571020528,
+        "p50": 10.320000052452087,
+        "p95": 21.975000023841858,
+        "p99": 28.014999985694885,
+        "max": 47.68500006198883
+      },
+      "gpuRender": {
+        "count": 1414,
+        "mean": 23.08368389886845,
+        "p50": 21.779842,
+        "p95": 32.454634,
+        "p99": 39.526874,
+        "max": 53.217343
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04499995708465576,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 4.480000019073486,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 0.9900000095367432,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 1.0700000524520874,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1792064,
+          "getterWallMs": 13.870000004768372,
+          "observerWallMs": 0.5149999856948853
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.07499992847442627,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.06499993801116943,
+          "observerWallMs": 0.004999995231628418
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.039999961853027344,
+          "observerWallMs": 0.004999995231628418
+        }
+      ],
+      "demands": 30,
+      "completed": 23,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 7,
+      "latency": {
+        "count": 23,
+        "mean": 2769.719347793123,
+        "p50": 2368.1150000095367,
+        "p95": 6268.384999990463,
+        "p99": 6268.814999938011,
+        "max": 6268.814999938011
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 2368.1150000095367
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 704.0599999427795
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 475.61500000953674
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 2367.1699999570847
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 4201.689999938011
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 3716.704999923706
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 2829.429999947548
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 2738.939999938011
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 3567.1749999523163
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 4743.939999938011
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 1351.6849999427795
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 951.6899999380112
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 896.460000038147
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 1351.179999947548
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 1608.960000038147
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 6268.384999990463
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 2253.1599999666214
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 964.0899999141693
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 4192.360000014305
+        },
+        {
+          "key": "2,2",
+          "epoch": 0,
+          "ms": 6268.814999938011
+        },
+        {
+          "key": "1,-1",
+          "epoch": 0,
+          "ms": 2945.7050000429153
+        },
+        {
+          "key": "1,0",
+          "epoch": 0,
+          "ms": 1929.9099999666214
+        },
+        {
+          "key": "1,1",
+          "epoch": 0,
+          "ms": 5008.304999947548
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 4
+    },
+    {
+      "run": 4,
+      "candidate": true,
+      "failedRequests": [],
+      "window": {
+        "start": 89109.80499994755,
+        "end": 129109.80499994755
+      },
+      "incrementalWater": [
+        {
+          "start": 35180.609999895096,
+          "vertices": 6136,
+          "units": 97,
+          "cpuMs": 18.580000281333923,
+          "maxUnitMs": 0.6600000858306885,
+          "completed": true,
+          "end": 35208.609999895096,
+          "wallMs": 28
+        },
+        {
+          "start": 100811.47499990463,
+          "vertices": 6114,
+          "units": 97,
+          "cpuMs": 20.529999613761902,
+          "maxUnitMs": 0.3700000047683716,
+          "completed": true,
+          "end": 102793.3899999857,
+          "wallMs": 1981.9150000810623
+        }
+      ],
+      "regionalAttachment": [
+        {
+          "label": "far-region-attach-ground",
+          "start": 99063.67999994755,
+          "end": 99063.70999991894,
+          "duration": 0.029999971389770508,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 99094.25,
+          "end": 99094.2649999857,
+          "duration": 0.014999985694885254,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 99218.8599998951,
+          "end": 99218.86999988556,
+          "duration": 0.009999990463256836,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "far-region-attach-ground",
+          "start": 100811.44499993324,
+          "end": 102805.5799999237,
+          "duration": 1994.1349999904633,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ],
+      "presentationIntervals": {
+        "count": 721,
+        "mean": 55.35122746185853,
+        "p50": 49.89999999999418,
+        "p95": 116.43999999998778,
+        "p99": 166.3249999999971,
+        "max": 199.68499999999767
+      },
+      "cpuRenderSubmission": {
+        "count": 722,
+        "mean": 12.405844873503634,
+        "p50": 11.430000066757202,
+        "p95": 21.56000006198883,
+        "p99": 26.570000052452087,
+        "max": 32.105000019073486
+      },
+      "mainFrameSync": {
+        "count": 722,
+        "mean": 13.469127426187088,
+        "p50": 12.850000023841858,
+        "p95": 22.485000014305115,
+        "p99": 28.305000066757202,
+        "max": 32.764999985694885
+      },
+      "gpuRender": {
+        "count": 722,
+        "mean": 33.774828265927944,
+        "p50": 30.108176,
+        "p95": 67.624426,
+        "p99": 93.255259,
+        "max": 111.770468
+      },
+      "payloads": [
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.034999966621398926,
+          "observerWallMs": 0.010000109672546387
+        },
+        {
+          "trees": 474,
+          "groundBytes": 0,
+          "getterWallMs": 0.5749999284744263,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 2153,
+          "groundBytes": 0,
+          "getterWallMs": 4.294999957084656,
+          "observerWallMs": 0.014999985694885254
+        },
+        {
+          "trees": 542,
+          "groundBytes": 0,
+          "getterWallMs": 1.2000000476837158,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 5330,
+          "groundBytes": 1792064,
+          "getterWallMs": 14.5,
+          "observerWallMs": 0.3450000286102295
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.05500006675720215,
+          "observerWallMs": 0.009999990463256836
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.059999942779541016,
+          "observerWallMs": 0
+        },
+        {
+          "trees": 0,
+          "groundBytes": 0,
+          "getterWallMs": 0.04500007629394531,
+          "observerWallMs": 0.004999995231628418
+        }
+      ],
+      "demands": 30,
+      "completed": 20,
+      "cancelled": 0,
+      "pendingAtWindowEnd": 10,
+      "latency": {
+        "count": 20,
+        "mean": 4664.991249954701,
+        "p50": 4236.489999890327,
+        "p95": 8905.5,
+        "p99": 10529.554999947548,
+        "max": 10529.554999947548
+      },
+      "latencies": [
+        {
+          "key": "5,-2",
+          "epoch": 0,
+          "ms": 2165.3799999952316
+        },
+        {
+          "key": "5,-1",
+          "epoch": 0,
+          "ms": 556.5249999761581
+        },
+        {
+          "key": "5,0",
+          "epoch": 0,
+          "ms": 555.8700000047684
+        },
+        {
+          "key": "5,1",
+          "epoch": 0,
+          "ms": 2164.6599999666214
+        },
+        {
+          "key": "5,2",
+          "epoch": 0,
+          "ms": 3553.0199999809265
+        },
+        {
+          "key": "6,-2",
+          "epoch": 0,
+          "ms": 8501.774999976158
+        },
+        {
+          "key": "6,-1",
+          "epoch": 0,
+          "ms": 2714.234999895096
+        },
+        {
+          "key": "6,0",
+          "epoch": 0,
+          "ms": 2713.7149999141693
+        },
+        {
+          "key": "6,1",
+          "epoch": 0,
+          "ms": 7816.854999899864
+        },
+        {
+          "key": "6,2",
+          "epoch": 0,
+          "ms": 10529.554999947548
+        },
+        {
+          "key": "7,-2",
+          "epoch": 0,
+          "ms": 5683.539999961853
+        },
+        {
+          "key": "7,-1",
+          "epoch": 0,
+          "ms": 4650.639999985695
+        },
+        {
+          "key": "7,0",
+          "epoch": 0,
+          "ms": 4236.489999890327
+        },
+        {
+          "key": "7,1",
+          "epoch": 0,
+          "ms": 5183.349999904633
+        },
+        {
+          "key": "7,2",
+          "epoch": 0,
+          "ms": 5942.15499997139
+        },
+        {
+          "key": "2,-2",
+          "epoch": 0,
+          "ms": 6979.219999909401
+        },
+        {
+          "key": "2,-1",
+          "epoch": 0,
+          "ms": 2251.6549999713898
+        },
+        {
+          "key": "2,0",
+          "epoch": 0,
+          "ms": 3315.3949999809265
+        },
+        {
+          "key": "2,1",
+          "epoch": 0,
+          "ms": 4880.289999961853
+        },
+        {
+          "key": "2,2",
+          "epoch": 0,
+          "ms": 8905.5
+        }
+      ],
+      "streamFailures": 0,
+      "gpuUnresolved": 5
+    }
+  ],
+  "matched": [
+    {
+      "baseline": 1,
+      "candidate": 2,
+      "common": 19,
+      "earlier": 9,
+      "delta": {
+        "count": 19,
+        "mean": 240.7615789551484,
+        "p50": 372.5500000715256,
+        "p95": 2188.0599999427795,
+        "p99": 2188.0599999427795,
+        "max": 2188.0599999427795
+      },
+      "deltas": [
+        {
+          "key": "5,-2",
+          "deltaMs": -324.7699999809265
+        },
+        {
+          "key": "5,-1",
+          "deltaMs": -938.4450000524521
+        },
+        {
+          "key": "5,0",
+          "deltaMs": -938.9049999713898
+        },
+        {
+          "key": "5,1",
+          "deltaMs": -512.6100000143051
+        },
+        {
+          "key": "5,2",
+          "deltaMs": 2188.0599999427795
+        },
+        {
+          "key": "6,-2",
+          "deltaMs": 818.5099999904633
+        },
+        {
+          "key": "6,-1",
+          "deltaMs": -147.7150000333786
+        },
+        {
+          "key": "6,0",
+          "deltaMs": -147.64999997615814
+        },
+        {
+          "key": "6,1",
+          "deltaMs": -157.65500009059906
+        },
+        {
+          "key": "6,2",
+          "deltaMs": 1397.454999923706
+        },
+        {
+          "key": "7,-2",
+          "deltaMs": 372.5500000715256
+        },
+        {
+          "key": "7,-1",
+          "deltaMs": 1052.9700000286102
+        },
+        {
+          "key": "7,0",
+          "deltaMs": 394.960000038147
+        },
+        {
+          "key": "7,1",
+          "deltaMs": 821.8250000476837
+        },
+        {
+          "key": "7,2",
+          "deltaMs": 726.2350000143051
+        },
+        {
+          "key": "2,-2",
+          "deltaMs": -67.18499994277954
+        },
+        {
+          "key": "2,-1",
+          "deltaMs": 413.11500000953674
+        },
+        {
+          "key": "2,0",
+          "deltaMs": 606.5500000715256
+        },
+        {
+          "key": "2,1",
+          "deltaMs": -982.8249999284744
+        }
+      ]
+    },
+    {
+      "baseline": 3,
+      "candidate": 4,
+      "common": 20,
+      "earlier": 7,
+      "delta": {
+        "count": 20,
+        "mean": 1974.0099999904633,
+        "p50": 710.8349999189377,
+        "p95": 4785.070000052452,
+        "p99": 5785.615000009537,
+        "max": 5785.615000009537
+      },
+      "deltas": [
+        {
+          "key": "5,-2",
+          "deltaMs": -202.73500001430511
+        },
+        {
+          "key": "5,-1",
+          "deltaMs": -147.5349999666214
+        },
+        {
+          "key": "5,0",
+          "deltaMs": 80.25499999523163
+        },
+        {
+          "key": "5,1",
+          "deltaMs": -202.50999999046326
+        },
+        {
+          "key": "5,2",
+          "deltaMs": -648.6699999570847
+        },
+        {
+          "key": "6,-2",
+          "deltaMs": 4785.070000052452
+        },
+        {
+          "key": "6,-1",
+          "deltaMs": -115.19500005245209
+        },
+        {
+          "key": "6,0",
+          "deltaMs": -25.225000023841858
+        },
+        {
+          "key": "6,1",
+          "deltaMs": 4249.679999947548
+        },
+        {
+          "key": "6,2",
+          "deltaMs": 5785.615000009537
+        },
+        {
+          "key": "7,-2",
+          "deltaMs": 4331.8550000190735
+        },
+        {
+          "key": "7,-1",
+          "deltaMs": 3698.9500000476837
+        },
+        {
+          "key": "7,0",
+          "deltaMs": 3340.0299998521805
+        },
+        {
+          "key": "7,1",
+          "deltaMs": 3832.1699999570847
+        },
+        {
+          "key": "7,2",
+          "deltaMs": 4333.194999933243
+        },
+        {
+          "key": "2,-2",
+          "deltaMs": 710.8349999189377
+        },
+        {
+          "key": "2,-1",
+          "deltaMs": -1.5049999952316284
+        },
+        {
+          "key": "2,0",
+          "deltaMs": 2351.305000066757
+        },
+        {
+          "key": "2,1",
+          "deltaMs": 687.9299999475479
+        },
+        {
+          "key": "2,2",
+          "deltaMs": 2636.685000061989
+        }
+      ]
+    }
+  ],
+  "reference": {
+    "sources": {
+      "tools/experiments/prepare-far-water-incremental.js": "7b15ec3e165d2271f243be9ed52955b89821d94cfaf287305a6aa87bb4b92dc6",
+      "tools/experiments/incremental-far-water-patch.mjs": "b4dd188f7b9597c56dd4277eb20c1be317ef17715e817c0d2d91d2a87d2a7d55",
+      "tools/experiments/native-far-layer.js": "cea4d0f837e42a7d37b13e4f30cc22b2051ecbb7cbef3bf1fee6a579541418f7",
+      "tools/experiments/attach-native-far-world.js": "51e37fd758f42654e774b18898067b931ef3e30df1bf5ec05ab32c15a1ca886f",
+      "tools/experiments/native-far-ground.js": "1c3c8da0cd04e1c3edc31f8992233a8301993ef4837d2eaa2913949a6c1d8b67",
+      "src/app/global-frame-scheduler.js": "34a5ae5f0e4bd957f308e9c66a1dfa6baec8dad7818cbc0793b0f2fe7000c323",
+      "tools/experiments/check-shield-repeat-render.mjs": "b4f0361296d4266ec790a514417ed613dc81fc6f49af10431c3ac7b77a9e3009",
+      "tools/experiments/qa-chunk-delivery-probe.js": "4723f11be4505b3418a71cf8adc3da1b73d7223779096396ec46901c5b3c92fe",
+      "tools/experiments/regional-tail-probe-source.mjs": "43bf5172ed9784cb940dce8079408c703a018ad296e8b38722882aececa2e53c",
+      "tools/experiments/far-scene-worker.js": "6381c7ce38d14c3696320c82e671ef4a4e738e6face7290915d62802f10d765d",
+      "tools/experiments/far-scene-loader.js": "2b5745fc15fa8b44849358c4c7474401e42f16d58b809dae70a52859191aa30c",
+      "tools/experiments/far-scene-data.js": "9a132c221ee47e49f82bdbc01ac959b200fc1e0682588783dbf3573bb30be599",
+      "tools/experiments/far-ground-contacts.js": "bfc82185b18c4af95e8dcababc64fb51cec13576f7e13f624a5853b8d2b1d5ef",
+      "tools/experiments/far-ground-data.js": "fc7c8af24f78fe685d6d5e124150d637981e7fab9ac1ab8a41d592161d683fca",
+      "tools/experiments/native-far-ground-seam.js": "0c8a6c7c3482975f9be79ebe2f92ed72ecbb622d1e23b460fdb275394a2b7cfe",
+      "tools/experiments/far-ground-seam.js": "07f22c4bfa54f06a9aa2bac492224dd660c5ca3a1c7ab2c69fb08d9d7093c026",
+      "src/app/main.js": "b9f76b4d8bb159da25b294f11e6a2ee0957d363b4cdb9d696e2dab6d5bf9a861",
+      "src/rendering/scene.js": "7168f1e6e0909b832331b424b93f79d239b51947023604106703b8c70caa0cfd",
+      "docs/qa/mangrove-magic-20261026/hydraulic-v2-agriculture/fixture.json": "00423e99bc737099b85805f33e54f02852294b058e76e38914a47bf6e636000e",
+      "public/wild-engine/spatial-threaded.wasm": "fb0548162427d64a208340c5c4c092a945713e8d93fa677d84e8b999f85b203b"
+    },
+    "hardware": {
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "hardwareConcurrency": 16,
+      "devicePixelRatio": 1,
+      "canvas": [
+        1280,
+        720
+      ],
+      "crossOriginIsolated": true
+    },
+    "camera": [
+      105.5,
+      10.319999933242798,
+      4
+    ],
+    "target": [
+      100.5,
+      3.319999933242798,
+      -6
+    ],
+    "quality": "media",
+    "keys": [
+      "0,-1",
+      "0,-2",
+      "0,0",
+      "0,1",
+      "0,2",
+      "1,-1",
+      "1,-2",
+      "1,0",
+      "1,1",
+      "1,2",
+      "2,-1",
+      "2,-2",
+      "2,0",
+      "2,1",
+      "2,2",
+      "3,-1",
+      "3,-2",
+      "3,0",
+      "3,1",
+      "3,2",
+      "4,-1",
+      "4,-2",
+      "4,0",
+      "4,1",
+      "4,2"
+    ]
+  },
+  "cleanRequestGate": false,
+  "limitations": [
+    "Instrumented four-arm experiment; not proof across hardware or biomes.",
+    "Presentation intervals are RAF observations, not physical display latency.",
+    "CPU submission includes driver waits; GPU queries cover World.render, not all work in the browser.",
+    "Per-key completion comparison excludes keys not completed in both windows; pending and cancelled counts are retained.",
+    "Metadata observation and task tracing add overhead. No CPU/GPU memory measurement in this experiment."
+  ]
+}
