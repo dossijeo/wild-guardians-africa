@@ -134,9 +134,20 @@ test('recovery keeps planted soles aligned while the knees fold',()=>{
   const recovery=new BeastRecovery(binding,snapshot,{surface:()=>0});
   recovery.apply(recovery.duration*.42);
   for(const leg of recovery.legs){
-   const actual=leg.foot.getWorldQuaternion(new THREE.Quaternion());
+   const actual=leg.foot.getWorldQuaternion(new THREE.Quaternion()).normalize();
    assert.ok(actual.angleTo(leg.contactOrientation)<.00001,species+' sole rotates away from its support');
   }
   recovery.restore();
  }
+});
+test('lion brace reaches hand supports and restores secondary appendages',()=>{
+ const model=beastSkin('lion'),binding=new BeastRagdollBinding(model);binding.capture();
+ const snapshot=new Float32Array(98);binding.physicalSnapshot(snapshot);
+ const recovery=new BeastRecovery(binding,snapshot,{surface:()=>0});
+ recovery.apply(recovery.duration*.42);
+ for(const arm of recovery.arms)assert.ok(arm.foot.getWorldPosition(new THREE.Vector3()).distanceTo(arm.target)<.025,'hand floats above brace support');
+ assert.ok(recovery.secondary.length>0);
+ recovery.restore();
+ for(const e of recovery.secondary)assert.deepEqual(e.bone.quaternion.toArray(),e.standingQ.toArray());
+ for(const arm of recovery.arms)assert.deepEqual(arm.foot.quaternion.toArray(),arm.standingHandQ.toArray());
 });

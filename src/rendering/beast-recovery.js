@@ -29,32 +29,48 @@ export class BeastRecovery{
   }else binding.apply(snapshot);
   for(const e of this.entries){e.fallenQ.copy(e.bone.quaternion);e.fallenP.copy(e.bone.position);}
   if(fallenWorldPose){for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}binding.model.updateMatrixWorld(true);}else binding.restore();
-  const hips=this.entries[0],height=Math.max(.4,hips.standingP.y);hips.crouchP.y-=height*.48;
+  const hips=this.entries[0],height=Math.max(.4,hips.standingP.y);hips.crouchP.y-=height*.6;
   for(const e of this.entries){const n=e.bone.name;
    if(/UpLeg$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,-.55));
    else if(/(?:Left|Right)Leg$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,1.05));
-   else if(/Spine$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,.28));
+   else if(/Spine$/.test(n)){const parent=e.bone.parent.getWorldQuaternion(new Quaternion()),axis=X.clone().applyQuaternion(binding.model.getWorldQuaternion(new Quaternion()));e.crouchQ.copy(parent).invert().multiply(new Quaternion().setFromAxisAngle(axis,1.3)).multiply(parent).multiply(e.standingQ);}
    else if(/ForeArm$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(X,-.65));
    else if(/(?:Left|Right)Arm$/.test(n))e.crouchQ.multiply(new Quaternion().setFromAxisAngle(Z,n.includes('Left')?.3:-.3));
   }
+  // Fold trailing appendages away from the support plane instead of lifting
+  // the entire animal to accommodate a hanging tail or skirt.
+  this.secondary=[];
+  for(const [name,bone] of binding.bones)if(name==='Tail_01'||/^ClothRear_.*_01$/.test(name)){
+   const standingQ=bone.quaternion.clone(),parent=bone.parent.getWorldQuaternion(new Quaternion()),axis=X.clone().applyQuaternion(binding.model.getWorldQuaternion(new Quaternion()));
+   const crouchQ=parent.clone().invert().multiply(new Quaternion().setFromAxisAngle(axis,name==='Tail_01'?1.5:-1.2)).multiply(parent).multiply(standingQ);
+   this.secondary.push({bone,standingQ,crouchQ});
+  }
+  this.samples=BeastRecovery.contactSamples(binding.model);
   // Bounded skin samples during recovery only: cached extremes per influencing
   // bone plus uniform coverage, including sparse toes, tusks and fingers.
-  this.legs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot'),target=foot.getWorldPosition(new Vector3());return {upper,knee,foot,target,contactOrientation:foot.getWorldQuaternion(new Quaternion()),length1:upper.getWorldPosition(new Vector3()).distanceTo(knee.getWorldPosition(new Vector3())),length2:knee.getWorldPosition(new Vector3()).distanceTo(target)};});
+  this.legs=['Left','Right'].map(side=>{const upper=binding.bones.get(side+'UpLeg'),knee=binding.bones.get(side+'Leg'),foot=binding.bones.get(side+'Foot'),target=foot.getWorldPosition(new Vector3());return {upper,knee,foot,target,contactOrientation:foot.getWorldQuaternion(new Quaternion()).normalize(),length1:upper.getWorldPosition(new Vector3()).distanceTo(knee.getWorldPosition(new Vector3())),length2:knee.getWorldPosition(new Vector3()).distanceTo(target)};});
   const footClearance=Math.min(...this.legs.map(l=>l.target.y-(surface?.(l.target.x,l.target.z)??0)));for(const l of this.legs)l.target.y=(surface?.(l.target.x,l.target.z)??0)+Math.max(.05,footClearance);
   const facing=binding.model.getWorldQuaternion(new Quaternion()),forward=new Vector3(0,0,1).applyQuaternion(facing),sideways=new Vector3(1,0,0).applyQuaternion(facing);
   this.arms=['Left','Right'].flatMap((side,i)=>{
    const upper=binding.bones.get(side+'Arm'),knee=binding.bones.get(side+'ForeArm'),foot=binding.bones.get(side+'Hand');if(!upper||!knee||!foot)return [];
    const shoulder=upper.getWorldPosition(new Vector3()),elbow=knee.getWorldPosition(new Vector3()),hand=foot.getWorldPosition(new Vector3()),length1=shoulder.distanceTo(elbow),length2=elbow.distanceTo(hand),sign=i===0?1:-1;
    const target=this.legs[i].target.clone().addScaledVector(forward,(length1+length2)*.45).addScaledVector(sideways,sign*(length1+length2)*.12);
-   target.y=(surface?.(target.x,target.z)??0)+.07;
-   return [{upper,knee,foot,target,length1,length2,pole:new Vector3(sign,0,-.3).normalize()}];
+   let clearance=.07;
+   for(const {mesh,index} of this.samples){
+    const weights=mesh.geometry.attributes.skinWeight,indices=mesh.geometry.attributes.skinIndex;let dominant=0;for(let k=1;k<4;k++)if(weights.getComponent(index,k)>weights.getComponent(index,dominant))dominant=k;
+    let bone=mesh.skeleton.bones[indices.getComponent(index,dominant)];while(bone&&bone!==foot)bone=bone.parent;
+    if(bone===foot){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);clearance=Math.max(clearance,hand.y-this.v.y+.01);}
+   }
+   target.y=(surface?.(target.x,target.z)??0)+clearance;
+   return [{upper,knee,foot,target,standingHandQ:foot.quaternion.clone(),contactOrientation:foot.getWorldQuaternion(new Quaternion()).normalize(),length1,length2,pole:new Vector3(sign,0,-.3).normalize()}];
   });
-  this.ik={p:new Vector3(),k:new Vector3(),f:new Vector3(),direction:new Vector3(),pole:new Vector3(),desired:new Vector3(),current:new Vector3(),q:new Quaternion(),parent:new Quaternion(),local:new Quaternion()};
-  this.samples=BeastRecovery.contactSamples(binding.model);
+  this.ik={upperStart:new Quaternion(),kneeStart:new Quaternion(),p:new Vector3(),k:new Vector3(),f:new Vector3(),direction:new Vector3(),pole:new Vector3(),desired:new Vector3(),current:new Vector3(),q:new Quaternion(),parent:new Quaternion(),local:new Quaternion()};
  }
  apply(dt){
   this.age=Math.min(this.duration,this.age+Math.max(0,dt));const t=this.age/this.duration,brace=smooth(t/.42),rise=smooth((t-.42)/.58);
   for(const e of this.entries){if(t<.42){e.bone.quaternion.slerpQuaternions(e.fallenQ,e.crouchQ,brace);e.bone.position.lerpVectors(e.fallenP,e.crouchP,brace);}else{e.bone.quaternion.slerpQuaternions(e.crouchQ,e.standingQ,rise);e.bone.position.lerpVectors(e.crouchP,e.standingP,rise);}}
+  for(const arm of this.arms)arm.foot.quaternion.copy(arm.standingHandQ);
+  for(const e of this.secondary)e.bone.quaternion.slerpQuaternions(e.standingQ,e.crouchQ,brace*(1-rise));
   const model=this.binding.model;model.updateMatrixWorld(true);
   const contactWeight=smooth((t-.2)/.22)*(1-smooth((t-.85)/.15));for(const leg of this.legs)this.legIK(leg,contactWeight);
   const handWeight=smooth((t-.08)/.3)*(1-smooth((t-.48)/.3));for(const arm of this.arms)this.legIK(arm,handWeight);
@@ -65,15 +81,16 @@ export class BeastRecovery{
   return this.done;
  }
  legIK(leg,weight){
-  if(weight<=0)return;const a=this.ik;leg.upper.getWorldPosition(a.p);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);a.direction.copy(leg.target).sub(a.p);const distance=Math.max(Math.abs(leg.length1-leg.length2)+.001,Math.min(leg.length1+leg.length2-.001,a.direction.length()));a.direction.normalize();
+  if(weight<=0)return;const a=this.ik;a.upperStart.copy(leg.upper.quaternion);a.kneeStart.copy(leg.knee.quaternion);leg.upper.getWorldPosition(a.p);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);a.direction.copy(leg.target).sub(a.p);const distance=Math.max(Math.abs(leg.length1-leg.length2)+.001,Math.min(leg.length1+leg.length2-.001,a.direction.length()));a.direction.normalize();
   if(leg.pole)a.pole.copy(leg.pole);else a.pole.set(0,0,1);a.pole.applyQuaternion(this.binding.model.getWorldQuaternion(a.parent));a.pole.addScaledVector(a.direction,-a.pole.dot(a.direction)).normalize();
   const along=(leg.length1*leg.length1+distance*distance-leg.length2*leg.length2)/(2*distance),height=Math.sqrt(Math.max(0,leg.length1*leg.length1-along*along));a.desired.copy(a.p).addScaledVector(a.direction,along).addScaledVector(a.pole,height);
-  this.aimBone(leg.upper,a.k,a.desired,weight);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);this.aimBone(leg.knee,a.f,leg.target,weight);
+  this.aimBone(leg.upper,a.k,a.desired,1);leg.knee.getWorldPosition(a.k);leg.foot.getWorldPosition(a.f);this.aimBone(leg.knee,a.f,leg.target,1);
+  a.local.copy(leg.upper.quaternion);leg.upper.quaternion.slerpQuaternions(a.upperStart,a.local,weight);a.local.copy(leg.knee.quaternion);leg.knee.quaternion.slerpQuaternions(a.kneeStart,a.local,weight);leg.upper.updateWorldMatrix(false,true);
   // Keep the sole in its captured standing orientation while the leg folds.
   // Position-only IK otherwise points the toes through the ground, and the
   // whole-body contact correction lifts the pelvis to compensate.
   if(leg.contactOrientation){leg.foot.parent.getWorldQuaternion(a.parent).invert();a.local.copy(leg.contactOrientation).premultiply(a.parent);leg.foot.quaternion.slerp(a.local,weight);leg.foot.updateWorldMatrix(false,true);}
  }
  aimBone(bone,endpoint,target,weight){const a=this.ik;bone.getWorldPosition(a.p);a.current.copy(endpoint).sub(a.p).normalize();a.direction.copy(target).sub(a.p).normalize();a.q.setFromUnitVectors(a.current,a.direction);bone.getWorldQuaternion(a.local).premultiply(a.q);bone.parent.getWorldQuaternion(a.parent).invert();a.local.premultiply(a.parent);bone.quaternion.slerp(a.local,weight);bone.updateWorldMatrix(false,true);}
- restore(){for(const e of this.entries){e.bone.quaternion.copy(e.standingQ);e.bone.position.copy(e.standingP);}this.binding.model.updateMatrixWorld(true);}
+ restore(){for(const arm of this.arms)arm.foot.quaternion.copy(arm.standingHandQ);for(const e of this.secondary)e.bone.quaternion.copy(e.standingQ);for(const e of this.entries){e.bone.quaternion.copy(e.standingQ);e.bone.position.copy(e.standingP);}this.binding.model.updateMatrixWorld(true);}
 }
