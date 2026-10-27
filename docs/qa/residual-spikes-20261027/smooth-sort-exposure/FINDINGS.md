@@ -1,0 +1,9 @@
+# Decision: do not adopt on current evidence
+
+Real-game exposure succeeded in both variants, with no page/console errors, active simulation, 40 distinct chunks each and screenshots outside the measurement windows. Original/candidate counters across the whole run: 14126/14685 prepare calls; 4176/1225 repacks; 223344520/65563240 bytes rewritten. Repack fraction29.56%/8.34%, bytes per prepare15810.88/4464.64. This verifies redundant CPU work is removed; it does not measure bytes actually transferred by the driver. Counters include warmup and initialization.
+
+Timed 40-second CPU render P95:15.905/16.080ms; P99:20.415/21.770; max30.200/30.165. Presentation P95:49.930/49.975; P99:66.540/66.610; max83.305/99.885. Thus no complete-frame benefit is shown in this pair; do not claim regression causality either from one noisy A/B. Previous unchanged-runtime comparisons have demonstrated substantial variance. No production changes are adopted.
+
+This is an exposure/rejection screen, not completed A/B/A/B acceptance. Do not spend repeated trials trying to justify this small isolated saving without new evidence that sorting materially controls the problematic tails. Horizon-facing visual equivalence remains unverified; the end-of-traversal screenshot looks down at crops. The six passing ownership/differential-buffer tests are narrower evidence only. Preserve this negative result and return to attributing larger presentation spikes, including work outside World.render and driver/GPU scheduling.
+
+Reproduce with run-smooth-sort-exposure.mjs and compare-smooth-sort-exposure.mjs. Raw JSON/log evidence is committed as gzip; decompress to original filenames for the comparator. Sources, fixture and runtime hashes are in each provenance file. The normal game still imports the unchanged production smooth-far-transitions module.

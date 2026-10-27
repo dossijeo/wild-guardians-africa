@@ -18,6 +18,16 @@ report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_
 let profiler;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
+ if(process.env.WG_SMOOTH_SORT_SOURCE){
+  report.smoothSortSource=process.env.WG_SMOOTH_SORT_SOURCE;
+  await context.route(/\/src\/rendering\/smooth-far-transitions\.js(?:\?.*)?$/,async route=>{
+   const response=await route.fetch(),transformed=await response.text();
+   let body=await readFile(process.env.WG_SMOOTH_SORT_SOURCE,'utf8');
+   const threeImport=transformed.match(/import \* as THREE from [^;]+;/)?.[0];assert(threeImport);
+   body=body.replace(/import \* as THREE from [^;]+;/,threeImport).replace('../../src/rendering/clone-runtime-material.js','/src/rendering/clone-runtime-material.js');
+   await route.fulfill({response,body});
+  });
+ }
  if(process.env.WG_FAR_TRANSITION_SOURCE){
   report.farTransitionOverride={file:process.env.WG_FAR_TRANSITION_SOURCE,loads:0};
   await context.route(/\/tools\/experiments\/far-tree-transitions\.js(?:\?.*)?$/,async route=>{
@@ -149,4 +159,4 @@ try {
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{report.matrixReuse=await page.evaluate(()=>globalThis.qaMatrixReuseFinish?.()??null).catch(()=>null);await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);if(process.env.WG_MAGIC_FAR_PHASES==='1')report.farCpu=await page.evaluate(()=>globalThis.qaFarCpuFinish?.()??null);if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheAfter=await page.evaluate(()=>({...globalThis.qaMagicWorld?.releaseNativeShadow?.cache?.stats})).catch(()=>null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{report.smoothSort=await page.evaluate(()=>globalThis.qaSmoothSortStats??null).catch(()=>null);report.matrixReuse=await page.evaluate(()=>globalThis.qaMatrixReuseFinish?.()??null).catch(()=>null);await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);if(process.env.WG_MAGIC_FAR_PHASES==='1')report.farCpu=await page.evaluate(()=>globalThis.qaFarCpuFinish?.()??null);if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheAfter=await page.evaluate(()=>({...globalThis.qaMagicWorld?.releaseNativeShadow?.cache?.stats})).catch(()=>null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
