@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: batch removal matches full sequential boundary rebuild, biome 0
+ok 1 - batch removal matches full sequential boundary rebuild, biome 0
+  ---
+  duration_ms: 1658.6132
+  ...
+# Subtest: batch removal matches full sequential boundary rebuild, biome 1
+ok 2 - batch removal matches full sequential boundary rebuild, biome 1
+  ---
+  duration_ms: 1483.8708
+  ...
+# Subtest: batch removal matches full sequential boundary rebuild, biome 2
+ok 3 - batch removal matches full sequential boundary rebuild, biome 2
+  ---
+  duration_ms: 1678.7408
+  ...
+# Subtest: batch removal matches full sequential boundary rebuild, biome 3
+ok 4 - batch removal matches full sequential boundary rebuild, biome 3
+  ---
+  duration_ms: 1630.2267
+  ...
+# Subtest: batch removal matches full sequential boundary rebuild, biome 8
+ok 5 - batch removal matches full sequential boundary rebuild, biome 8
+  ---
+  duration_ms: 1620.3671
+  ...
+# Subtest: batch removal matches full sequential boundary rebuild, biome 5
+ok 6 - batch removal matches full sequential boundary rebuild, biome 5
+  ---
+  duration_ms: 1542.7592
+  ...
+# Subtest: prop removal before deferred payload read preserves replacement visuals
+ok 7 - prop removal before deferred payload read preserves replacement visuals
+  ---
+  duration_ms: 1067.8615
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10783.7014
