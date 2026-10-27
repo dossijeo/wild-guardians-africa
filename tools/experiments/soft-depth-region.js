@@ -1,4 +1,4 @@
-import {Vector2,Vector4} from 'three';
+import {Matrix4,Vector2,Vector4} from 'three';
 // QA prototype: conservative clip-space bounds of every soft-particle quad.
 // Return null for full-frame fallback, including near-plane intersections.
 export function softDepthRegion(world,width,height){
@@ -25,12 +25,17 @@ export function softDepthRegion(world,width,height){
  if(right<=left||top<=bottom)return null;
  return {x:left,y:bottom,width:right-left,height:top-bottom};
 }
-export function installSoftDepthRegion(world){
+export function depthRegionProjection(projection,region,width,height){
+ const sx=width/region.width,sy=height/region.height;
+ const tx=(width-2*region.x-region.width)/region.width,ty=(height-2*region.y-region.height)/region.height;
+ return new Matrix4().set(sx,0,0,tx,0,sy,0,ty,0,0,1,0,0,0,0,1).multiply(projection);
+}
+export function installSoftDepthRegion(world,{cropCamera=false}={}){
  const owner=world.destructionPass,original=owner.captureDepth,records=[];
- const wrapped=function(camera,scene){const target=this.smokeDepth,old=target.scissor.clone(),enabled=target.scissorTest;
+ const wrapped=function(camera,scene){const target=this.smokeDepth,old=target.scissor.clone(),enabled=target.scissorTest,viewport=target.viewport.clone(),projection=camera.projectionMatrix.clone(),inverse=camera.projectionMatrixInverse.clone();
   const size=this.renderer.getDrawingBufferSize(new Vector2());if(target.width!==size.x||target.height!==size.y)target.setSize(size.x,size.y);const region=softDepthRegion(world,size.x,size.y);records.push({at:performance.now(),region,width:target.width,height:target.height});
-  try{if(region){target.scissor.set(region.x,region.y,region.width,region.height);target.scissorTest=true;}return original.call(this,camera,scene);}
-  finally{target.scissor.copy(old);target.scissorTest=enabled;}
+  try{if(region){target.scissor.set(region.x,region.y,region.width,region.height);target.scissorTest=true;if(cropCamera){target.viewport.set(region.x,region.y,region.width,region.height);camera.projectionMatrix.copy(depthRegionProjection(projection,region,size.x,size.y));camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();}}return original.call(this,camera,scene);}
+  finally{target.scissor.copy(old);target.scissorTest=enabled;target.viewport.copy(viewport);camera.projectionMatrix.copy(projection);camera.projectionMatrixInverse.copy(inverse);}
  };
  owner.captureDepth=wrapped;return ()=>{if(owner.captureDepth===wrapped)owner.captureDepth=original;return records;};
 }
