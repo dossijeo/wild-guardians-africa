@@ -33,3 +33,12 @@ Candidato: [Rapier](https://rapier.rs/docs/user_guides/javascript/joints/), bind
 | 6 | 84 | 2,61 | 1,02 / 1,71 / 2,59 |
 
 Inicialización/importación: 101,73 ms. Módulo compat: 4.340.292 bytes, gzip 1.645.573 bytes (no tamaño final Vite). El pico frío requiere precalentamiento fuera de combate. Estas medidas Node sólo justifican investigar el candidato: no prueban coste de navegador, corrección anatómica ni calidad visual. El ensayo no tiene límites angulares, colisiones del escenario, transferencia a la malla ni recuperación. Ninguna de esas funciones se marca como completada.
+
+
+## Primera iteración de materialización
+
+Implementados en WorldScene: tres cintas helicoidales volumétricas y 96 motas, silueta con iluminación de contorno, revelado vertical de los materiales originales, borde emisivo, disolución granular ascendente y pulso secundario desfasado sobre los huesos de manto/adornos. El vórtice conserva geometría, materiales y uniforms entre invocaciones: dos draw calls, animación de vértices en GPU, sin asignaciones de partículas por frame ni luces nuevas. Se precalienta durante la carga y se limpia al sustituir/finalizar la única invocación.
+
+Validación gráfica real en la fixture WorldScene, Intel UHD, 1600×900: Grow de día a 0,24 / 0,60 / 1,80 s, limpieza después de 2,2 s, Attack nocturno sustituyendo la invocación anterior. Sin errores de shader/JavaScript, máximo un Guardián visible. Capturas: `phase2/cinematic-arrival-024.png`, `cinematic-materialized-060.png`, `cinematic-dissolve-180.png`, `cinematic-night.png`. Los fotogramas 0,60 y 1,80 preceden al último ajuste del sombreado de la silueta, que sólo afecta al tramo de llegada; el fotograma 0,24 y el nocturno se repitieron con dicho ajuste.
+
+Esto **no completa** la nueva entrega: Attack conserva por ahora el impacto inmediato anterior (se revisará junto con el derribo), faltan la envolvente corta de viento, el clímax por magia y las pruebas de rendimiento de estos nuevos efectos. La comparación de navegación de PHASE2 corresponde a la versión anterior al vórtice, no demuestra el coste del nuevo shader. No se ha integrado aún el ragdoll ni su recuperación.

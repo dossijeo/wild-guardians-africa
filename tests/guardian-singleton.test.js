@@ -12,6 +12,6 @@ test('consecutive spells reuse exactly one body and clear the previous presentat
   assert.equal(summons.slots[0],slot);assert.equal(summons.slots.filter(s=>s.group.visible).length,1);assert.equal(summons.stats.active,1);assert.equal(slot.event,event);assert.equal(slot.group.position.x,i+2);world.state.elapsed+=.1;
  }
  assert.equal(summons.stats.reused,19);assert.equal(slot.aura.clears,20);
- world.state.elapsed+=3;summons.update();assert.equal(summons.stats.active,0);assert.ok([slot.group,slot.aura,slot.beam,slot.core,slot.impact].every(o=>!o.visible));
+ world.state.elapsed+=3;summons.update();assert.equal(summons.stats.active,0);assert.ok([slot.group,slot.aura,slot.beam,slot.core,slot.impact,slot.vortex].every(o=>!o.visible));
  summons.dispose();assert.equal(world.scene.children.length,0);
 });
