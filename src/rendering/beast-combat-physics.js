@@ -1,3 +1,4 @@
+import {guardianImpactTime} from '../simulation/guardian-timing.js';
 import {Vector3,Box3} from 'three';
 import {BeastRagdollSolver} from '../simulation/beast-ragdoll.js';
 import {BeastRagdollBinding} from './beast-ragdoll-binding.js';
@@ -28,7 +29,7 @@ export class BeastCombatPhysics{
   const previous=this.entries.get(animal.id);
   if(previous&&!previous.recovery){
    previous.solver.impulse(animal.id,{direction:animal.magicImpact.direction,intensity:animal.magicImpact.intensity,mass:ATTACK.profiles[animal.species].mass});
-   previous.actor.age=0;previous.settledAt=null;animal.magicDown.since=w.state.elapsed;animal.magicDown.until=w.state.elapsed+9;return true;
+   previous.hitAt=animal.magicImpact.impactAt??-Infinity;previous.actor.age=0;previous.settledAt=null;animal.magicDown.since=w.state.elapsed;animal.magicDown.until=w.state.elapsed+9;return true;
   }
   if(previous?.recovery){
    // Sample get-up at simulation time, even when no frame was rendered between
@@ -39,7 +40,7 @@ export class BeastCombatPhysics{
     const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),colliders=binding.colliders();
     const hip=binding.entries[0].bone.getWorldPosition(this.v),offset={x:hip.x-animal.x,z:hip.z-animal.z};
     const actor=previous.solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:animal.magicImpact.direction,intensity:animal.magicImpact.intensity,heading:animal.heading??0});
-    Object.assign(previous,{binding,actor,offset,recovery:null,recoveryAge:0,accumulator:0,settledAt:null});
+    Object.assign(previous,{binding,actor,offset,recovery:null,recoveryAge:0,accumulator:0,hitAt:animal.magicImpact.impactAt??-Infinity,settledAt:null});
     animal.magicDown={phase:'falling',since:w.state.elapsed,until:w.state.elapsed+9};
     this.stats.startMs=performance.now()-started;return true;
    }finally{recovery.restore();}
@@ -59,7 +60,7 @@ export class BeastCombatPhysics{
    const hit=animal.magicImpact,actor=solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:hit.direction,intensity:hit.intensity,heading:animal.heading??0});
    const hip=binding.entries[0].bone.getWorldPosition(new Vector3()),offset={x:hip.x-animal.x,z:hip.z-animal.z};
    animal.magicDown={phase:'falling',since:w.state.elapsed,until:w.state.elapsed+9};animal.path=null;animal.attackRemaining=0;animal.hitApplied=true;if(animal.status==='attacking')animal.status='walking';
-   this.entries.set(animal.id,{animal,data,root,binding,solver,actor,offset,accumulator:0,settledAt:null,recovery:null});this.stats.startMs=performance.now()-started;return true;
+   this.entries.set(animal.id,{animal,data,root,binding,solver,actor,offset,accumulator:0,hitAt:animal.magicImpact.impactAt??-Infinity,settledAt:null,recovery:null});this.stats.startMs=performance.now()-started;return true;
   }catch(error){solver.dispose();throw error;}
  }
  step(state,dt){
@@ -67,13 +68,13 @@ export class BeastCombatPhysics{
   for(const id of this.seen.keys())if(!state.raid?.animals.some(a=>a.id===id))this.seen.delete(id);
   for(const animal of state.raid?.animals??[]){
    if(animal.magicDown&&!this.entries.has(animal.id))delete animal.magicDown;
-   const hit=animal.magicImpact;if(hit&&state.elapsed-hit.at<.5&&this.seen.get(animal.id)!==hit.at){if(!this.world.mixers.has(animal.id))continue;this.seen.set(animal.id,hit.at);try{this.start(animal);}catch(error){this.world.onError?.(error);}}
+   const hit=animal.magicImpact;if(hit&&state.elapsed>=guardianImpactTime(hit)&&state.elapsed-guardianImpactTime(hit)<.5&&this.seen.get(animal.id)!==hit.at){if(!this.world.mixers.has(animal.id))continue;this.seen.set(animal.id,hit.at);try{this.start(animal);}catch(error){this.world.onError?.(error);}}
   }
   for(const [id,e] of this.entries){
    if(!state.raid?.animals.includes(e.animal)||e.animal.status==='gone'||state.result){this.release(id);continue;}
    const a=e.animal;
    if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
-   e.accumulator+=dt;while(e.accumulator>=1/60){e.solver.step();e.accumulator-=1/60;}
+   e.accumulator+=Math.min(dt,Math.max(0,state.elapsed-e.hitAt));while(e.accumulator>=1/60){e.solver.step();e.accumulator-=1/60;}
    e.binding.restore();e.binding.apply(e.actor.pose);const hip=e.binding.entries[0].bone.getWorldPosition(this.v);a.x=hip.x-e.offset.x;a.z=hip.z-e.offset.z;
    if(e.actor.settled){e.settledAt??=e.actor.age;}else e.settledAt=null;
    if(e.actor.age>5||e.settledAt!==null&&e.actor.age-e.settledAt>.3){

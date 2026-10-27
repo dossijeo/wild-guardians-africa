@@ -1,3 +1,4 @@
+import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {attackTarget,applyGuardianAttack} from './guardian-combat.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
@@ -390,7 +391,7 @@ export function cast(s,id,kind,x,z,nav,{targetId=null,origin=null,contact=null}=
   if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
   for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
-    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,origin:impact.origin,contact:impact.point}});return;}
+    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x:plant?.x??x,z:plant?.z??z,radius,remaining:spec.duration_seconds};
     if(plant)area.targetId=plant.id;
     if(kind==='multiply')markMultiplyTargets(s,area);

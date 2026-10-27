@@ -33,7 +33,7 @@ export function updateWorkerEncounters(state,nav){
   const raid=state.raid;if(!raid)return;
   const previous=raid.encounterPositions??{},contacts=new Set(raid.encounterContacts??raid.encounters??[]),hits=new Set(raid.encounterHits??[]),active=new Set();
   for(const animal of raid.animals){
-    if(animal.magicDown||['gone','retreating'].includes(animal.status)||animal.hitsRemaining<=0)continue;
+    if(animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||['gone','retreating'].includes(animal.status)||animal.hitsRemaining<=0)continue;
     for(const worker of state.workers){
       if(worker.status==='home'||worker.incapacitated)continue;
       const pair=`${animal.id}:${worker.id}`,range=animal.radius+1.1;

@@ -15,3 +15,14 @@ test('consecutive spells reuse exactly one body and clear the previous presentat
  world.state.elapsed+=3;summons.update();assert.equal(summons.stats.active,0);assert.ok([slot.group,slot.aura,slot.beam,slot.core,slot.impact,slot.vortex].every(o=>!o.visible));
  summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+
+test('Attack charges at the hand, travels before contact, and starts its impact flash on the shared marker',async()=>{
+ const world={state:{events:[],elapsed:1,time:400},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ world.state.events.push({type:'SpellActivated',kind:'attack',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});
+ world.state.elapsed=1.1;summons.update();const slot=summons.slots[0];assert.equal(slot.at,1);assert.equal(slot.beam.visible,false);assert.equal(slot.impact.visible,false);assert.ok(slot.core.position.distanceTo(new THREE.Vector3(3,1,0))<.001);
+ world.state.elapsed=1.2;summons.update();assert.equal(slot.beam.visible,true);assert.equal(slot.impact.visible,false);assert.ok(Math.abs(slot.core.position.x-1.2)<.001);
+ world.state.elapsed=1.24;summons.update();assert.equal(slot.impact.visible,true);assert.ok(slot.core.position.distanceTo(new THREE.Vector3(0,1,0))<.001);
+ world.state.elapsed=1.6;summons.update();assert.equal(slot.beam.visible,false);assert.equal(slot.impact.visible,false);assert.equal(slot.core.visible,false);summons.dispose();
+});

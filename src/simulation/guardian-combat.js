@@ -1,3 +1,4 @@
+import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {BALANCE} from './balance.js';
 import {retreatAnimal} from './raids.js';
 import {emit} from './game.js';
@@ -11,10 +12,10 @@ export function applyGuardianAttack(state,animal,{origin,contact,ground=0}={}){
  const direction={x:dx/length,y:dy/length,z:dz/length};
  animal.magicHealth=Math.max(0,(animal.magicHealth??profile.resilience)-ATTACK.damage);
  animal.magicStunUntil=state.elapsed+profile.stun;
- animal.magicImpact={at:state.elapsed,point:{...at},direction,intensity:1,ground,health:animal.magicHealth,origin:{...from}};
+ animal.magicImpact={at:state.elapsed,impactAt:state.elapsed+GUARDIAN_ATTACK_TIMING.impact,point:{...at},direction,intensity:1,ground,health:animal.magicHealth,origin:{...from}};
  animal.hitApplied=true;animal.attackRemaining=0;animal.path=null;
  if(animal.status==='attacking')animal.status='walking';
- emit(state,'GuardianMagicHit',{targetId:animal.id,species:animal.species,damage:ATTACK.damage,health:animal.magicHealth,presentation:{x:at.x,y:at.y,z:at.z,elapsed:state.elapsed,direction,origin:{...from}}});
+ emit(state,'GuardianMagicHit',{targetId:animal.id,species:animal.species,damage:ATTACK.damage,health:animal.magicHealth,presentation:{x:at.x,y:at.y,z:at.z,elapsed:state.elapsed,cueAt:animal.magicImpact.impactAt,direction,origin:{...from}}});
  if(animal.magicHealth===0)retreatAnimal(state,animal,'magic-resilience-exhausted');
  return animal.magicImpact;
 }

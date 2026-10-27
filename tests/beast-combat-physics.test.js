@@ -36,6 +36,14 @@ test('second hit reuses the airborne articulated body without resetting its pose
  state.raid=null;manager.step(state,.1);assert.equal(manager.entries.size,0);assert.equal(manager.seen.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
 });
 
+test('physical launch waits for projectile contact and only advances the elapsed part of the hit tick',()=>{
+ const {animal,state,world,manager}=fixture();animal.magicImpact.impactAt=10.24;animal.magicStunUntil=11;state.workers.push({id:'w',x:20,z:30,status:'walking'});
+ state.elapsed=10.1;manager.step(state,.1);assert.equal(manager.entries.size,0);updateRaid(state,.1,world.nav);assert.equal(state.workers[0].hits,undefined);assert.equal(animal.hitsRemaining,8);
+ state.elapsed=10.2;manager.step(state,.1);assert.equal(manager.entries.size,0);
+ state.elapsed=10.3;manager.step(state,.1);const entry=manager.entries.get(animal.id);
+ assert.ok(entry);assert.ok(entry.actor.age>.049&&entry.actor.age<.061);manager.dispose();
+});
+
 test('hits throughout get-up preserve the visible pose and reuse the collision world',()=>{
  for(const age of [.15,.65,1.4]){
   const {animal,state,root,manager}=fixture();manager.step(state,.1);

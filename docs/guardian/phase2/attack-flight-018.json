@@ -1,0 +1,86 @@
+{
+  "ready": true,
+  "campaign": false,
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3050.779383999908,
+  "simulate": true,
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 90.22751192178919,
+        "y": 14.451665925470467,
+        "z": -3.00863938558993
+      },
+      "opacity": 1
+    }
+  ],
+  "attackVisual": [
+    {
+      "age": 0.1799999999998363,
+      "beam": true,
+      "impact": false,
+      "core": [
+        89.91180336812182,
+        14.005788010182156,
+        -4.432380019643755
+      ]
+    }
+  ],
+  "reused": 0,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    90,
+    -6
+  ],
+  "draws": 73,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3050.5993839999082,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3050.739383999908,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": true
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.10000002384185791,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0.10000002384185791
+  },
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 2.399999976158142,
+      "logic": 0.6000000238418579,
+      "render": 12.600000023841858,
+      "total": 15.600000023841858
+    }
+  ]
+}

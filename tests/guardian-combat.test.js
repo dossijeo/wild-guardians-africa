@@ -25,3 +25,10 @@ test('expired impact stops touching the skeleton and a new hit resumes from the 
  animal.magicImpact={...animal.magicImpact,at:6};captureAnimalImpact(data,animal,6);bone.rotation.y=1;applyAnimalImpact(data,animal,6);assert.ok(bone.quaternion.angleTo(walking)<1e-7);restoreAnimalImpact(data);assert.ok(Math.abs(bone.rotation.y-1)<1e-7);
  const loaded={model:new Group()};captureAnimalImpact(loaded,animal,20);applyAnimalImpact(loaded,animal,20);assert.equal(loaded.impactBones,undefined);
 });
+
+
+test('presentation marker survives saves while damage and interruption remain immediate',()=>{
+ const {s,a}=ready();fire(s);assert.equal(a.magicHealth,28);assert.ok(a.magicStunUntil>s.elapsed);assert.equal(impactResponse(a,s.elapsed+.18),null);assert.ok(impactResponse(a,s.elapsed+.3));
+ assert.ok(Math.abs(a.magicImpact.impactAt-s.elapsed-.24)<1e-9);assert.equal(deserialize(serialize(s)).raid.animals[0].magicImpact.impactAt,a.magicImpact.impactAt);
+ a.magicImpact.impactAt=s.elapsed+5;assert.throws(()=>serialize(s),/Impacto/);
+});

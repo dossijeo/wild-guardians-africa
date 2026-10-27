@@ -1,3 +1,4 @@
+import {GUARDIAN_ATTACK_TIMING as ATTACK_TIMING} from '../simulation/guardian-timing.js';
 import * as THREE from 'three';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {GuardianFace} from '../ui/guardian-face.js';
@@ -45,7 +46,7 @@ export class GuardianSummons{
   return guardianPlacement({target,camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z]),occupied:(x,y,z)=>!!index.sweep([x,y-.6,z],[x,y+.7,z],.6),cropHeight:p=>w.cropBatch.sample(p.species,p.growth).height});
  }
  start(event){if(!this.slots.length)return;const w=this.world,s=this.slots[0];if(s.event)this.stats.reused++;this.hide(s);
-  s.lastAge=0;s.event=event;s.at=w.state.elapsed;s.origin=event.presentation?.origin??this.plan(event.targetId,{x:event.x,z:event.z});if(!s.origin){s.event=null;return;}
+  s.lastAge=0;s.event=event;s.at=event.presentation?.elapsed??w.state.elapsed;s.origin=event.presentation?.origin??this.plan(event.targetId,{x:event.x,z:event.z});if(!s.origin){s.event=null;return;}
   const contact=event.presentation?.contact??{x:event.x,y:w.nav.field.surface(event.x,event.z)+.5,z:event.z};s.target=new THREE.Vector3(contact.x,contact.y,contact.z);
   s.group.position.set(s.origin.x,s.origin.y,s.origin.z);s.group.rotation.y=Math.atan2(contact.x-s.origin.x,contact.z-s.origin.z);s.group.visible=true;s.material.color.setHex(COLORS[event.kind]);s.aura.position.copy(s.group.position);s.aura.position.y-=.8;s.aura.scale.setScalar(.65);s.aura.seek(0);s.aura.visible=true;s.vortex.position.copy(s.group.position);s.vortex.update(0,COLORS[event.kind],s.height,s.bottom);w.onGuardianPresence?.('spirit_appear',s.origin);s.aura.environment=vfxEnvironment(w.state.time>=300?1:0);
  }
@@ -54,10 +55,10 @@ export class GuardianSummons{
   for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}this.anchor=events.at(-1);
   let anim=0,vfx=0,active=0;
   for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;if(age>2.2){w.onGuardianPresence?.('spirit_disappear',s.origin);this.hide(s);continue;}active++;
-   const started=performance.now(),kind=s.event.kind,opacity=ease((age-.06)/.18)*(1-ease((age-1.8)/.4));s.group.visible=true;
-   for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.65*Math.exp(-(((age-.48)/.14)**2));m.uniforms.uReveal.value=ease((age-.16)/.4)*1.12;m.uniforms.uDissolve.value=ease((age-1.5)/.7)*1.05;m.uniforms.uBottom.value=s.origin.y+s.bottom;m.uniforms.uHeight.value=s.height;}
+   const started=performance.now(),kind=s.event.kind,opacity=ease((age-(kind==='attack'?0:.06))/(kind==='attack'?.1:.18))*(1-ease((age-1.8)/.4));s.group.visible=true;
+   for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.65*Math.exp(-(((age-(kind==='attack'?ATTACK_TIMING.impact:.48))/.14)**2));m.uniforms.uReveal.value=ease((age-(kind==='attack'?.02:.16))/(kind==='attack'?.12:.4))*1.12;m.uniforms.uDissolve.value=ease((age-1.5)/.7)*1.05;m.uniforms.uBottom.value=s.origin.y+s.bottom;m.uniforms.uHeight.value=s.height;}
    const clip=CLIPS[kind],selected=s.actions.has(clip)?clip:kind==='attack'?'Cast':'Invoke';
-   for(const [name,a] of s.actions){a.enabled=['Float','Mantle_Spell',selected].includes(name);a.weight=1;a.time=name===selected?Math.min(a.getClip().duration,(kind==='attack'?.25+age/1.3*.75:age/1.5)*a.getClip().duration):state.elapsed%a.getClip().duration;}
+   for(const [name,a] of s.actions){a.enabled=['Float','Mantle_Spell',selected].includes(name);a.weight=1;a.time=name===selected?Math.min(a.getClip().duration,(kind==='attack'?(age<=ATTACK_TIMING.impact?.1+age/ATTACK_TIMING.impact*.5:.6+(age-ATTACK_TIMING.impact)/1.5*.4):age/1.5)*a.getClip().duration):state.elapsed%a.getClip().duration;}
    s.mixer.update(0);
    const gust=Math.sin(Math.PI*ease(age/.55))*Math.exp(-Math.max(0,age-.35)*3)+.3*Math.sin(Math.PI*ease((age-1.5)/.7));
    for(const {bone,phase} of s.wind){bone.rotation.x+=gust*.16*Math.sin(phase-age*7);bone.rotation.z+=gust*.12*Math.cos(phase-age*5);}
@@ -69,10 +70,25 @@ export class GuardianSummons{
    for(const {bone,rest} of s.eyes){bone.quaternion.copy(rest);bone.parent.worldToLocal(this.aim.copy(s.target));this.aim.sub(bone.position).applyQuaternion(this.q.copy(rest).invert()).normalize();this.aim.set(THREE.MathUtils.clamp(this.aim.x,-.13,.13),1,THREE.MathUtils.clamp(this.aim.z,-.12,.12)).normalize();bone.quaternion.multiply(this.q.setFromUnitVectors(this.up,this.aim));}
    anim+=performance.now()-started;
    const visual=performance.now();s.vortex.update(age,COLORS[kind],s.height,s.bottom);s.aura.advance(Math.max(0,age-(s.lastAge??0)));s.lastAge=age;
-   // Instant discharge represents the authoritative immediate hit. No delayed damage timers.
-   const release=kind==='attack'?Math.max(0,1-age/.32):Math.sin(Math.PI*Math.min(1,age/1.25));
-   s.material.opacity=release*.7;const beam=s.beam;beam.visible=release>.01;s.impact.visible=release>.01;s.core.visible=release>.01;
-   if(beam.visible){beam.position.set(0,0,0);beam.count=kind==='attack'?1:2;for(let i=0;i<beam.count;i++){const hand=kind==='attack'?s.hand:s.hands[i];hand?.getWorldPosition(this.vector);if(!hand)this.vector.copy(s.group.position);this.direction.copy(s.target).sub(this.vector);const length=this.direction.length();this.vector.addScaledVector(this.direction,.5);this.q.setFromUnitVectors(this.up,this.direction.normalize());this.beamScale.set(kind==='attack'?.075:.028,length,kind==='attack'?.075:.028);beam.setMatrixAt(i,this.beamMatrix.compose(this.vector,this.q,this.beamScale));}beam.instanceMatrix.needsUpdate=true;s.core.position.copy(s.target);s.core.scale.setScalar(.12+.16*release);s.impact.position.copy(s.target);s.impact.quaternion.setFromUnitVectors(this.forward,this.direction);s.impact.scale.setScalar(.15+age*(kind==='attack'?2:1));}
+   const attack=kind==='attack',impactAge=state.elapsed-(s.at+ATTACK_TIMING.impact);
+   const flight=THREE.MathUtils.clamp((age-ATTACK_TIMING.release)/(ATTACK_TIMING.impact-ATTACK_TIMING.release),0,1);
+   const release=attack?(age<ATTACK_TIMING.impact?ease(age/ATTACK_TIMING.release):Math.max(0,1-impactAge/ATTACK_TIMING.afterglow)):Math.sin(Math.PI*Math.min(1,age/1.25));
+   s.material.opacity=release*(attack?.9:.7);const beam=s.beam;
+   beam.visible=release>.01&&(!attack||age>=ATTACK_TIMING.release);
+   s.impact.visible=release>.01&&(!attack||impactAge>=0);s.core.visible=release>.01;
+   if(s.core.visible){
+    beam.position.set(0,0,0);beam.count=attack?1:2;
+    for(let i=0;i<beam.count;i++){
+     const hand=attack?s.hand:s.hands[i];hand?.getWorldPosition(this.vector);if(!hand)this.vector.copy(s.group.position);
+     this.direction.copy(s.target).sub(this.vector);const length=this.direction.length(),front=attack?flight:1;
+     const tail=attack?Math.max(0,front-.65,impactAge/ATTACK_TIMING.afterglow):0;
+     if(i===0)s.core.position.copy(this.vector).addScaledVector(this.direction,front);
+     this.vector.addScaledVector(this.direction,(front+tail)/2);this.q.setFromUnitVectors(this.up,this.direction.normalize());
+     this.beamScale.set(attack?.11:.028,Math.max(.001,length*(front-tail)),attack?.11:.028);beam.setMatrixAt(i,this.beamMatrix.compose(this.vector,this.q,this.beamScale));
+    }
+    beam.instanceMatrix.needsUpdate=true;s.core.scale.setScalar(attack?(impactAge<0?.1+.12*release:.16+.3*release):.12+.16*release);
+    s.impact.position.copy(s.target);s.impact.quaternion.setFromUnitVectors(this.forward,this.direction);s.impact.scale.setScalar(.15+(attack?Math.max(0,impactAge)*4:age));
+   }
    vfx+=performance.now()-visual;
   }
   Object.assign(this.stats,{active,animationMs:anim,vfxMs:vfx});
