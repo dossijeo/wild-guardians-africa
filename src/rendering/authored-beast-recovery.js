@@ -1,3 +1,4 @@
+import {RecoveryClothContacts} from './recovery-cloth-contacts.js';
 import {Vector3} from 'three';
 import {BeastRecovery} from './beast-recovery.js';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
@@ -8,7 +9,7 @@ export class AuthoredBeastRecovery{
  constructor(binding,snapshot,{clip,surface,entryDuration=.65,playDuration=3.1,exitDuration=.3}){
   this.binding=binding;this.surface=surface;this.age=0;this.entryDuration=entryDuration;this.playDuration=playDuration;this.exitDuration=exitDuration;this.duration=entryDuration+playDuration+exitDuration;this.clipDuration=clip.duration;this.arms=[];this.v=new Vector3();this.lift=0;
   this.entries=[];binding.model.traverse(bone=>{if(bone.isBone)this.entries.push({bone,standingP:bone.position.clone(),standingQ:bone.quaternion.clone()});});
-  this.samples=BeastRecovery.contactSamples(binding.model);
+  this.samples=BeastRecovery.contactSamples(binding.model);this.cloth=new RecoveryClothContacts(binding,this.samples);
   binding.apply(snapshot);for(const e of this.entries){e.fallenP=e.bone.position.clone();e.fallenQ=e.bone.quaternion.clone();}
   this.entryClearance=Infinity;if(surface)for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);this.entryClearance=Math.min(this.entryClearance,this.v.y-surface(this.v.x,this.v.z));}
   binding.restore();
@@ -23,6 +24,11 @@ export class AuthoredBeastRecovery{
   for(const e of this.entries){e.bone.position.lerp(e.fallenP,1-entry).lerp(e.standingP,exit);e.bone.quaternion.slerp(e.fallenQ,1-entry).slerp(e.standingQ,exit);}
   const model=this.binding.model;model.updateMatrixWorld(true);let clearance=Infinity,correction=0;
   if(this.surface&&this.age>0){
+   if(this.cloth.entries.length){
+    let bodyClearance=Infinity;for(const sample of this.samples){if(this.cloth.clothSamples.has(sample))continue;sample.mesh.getVertexPosition(sample.index,this.v).applyMatrix4(sample.mesh.matrixWorld);bodyClearance=Math.min(bodyClearance,this.v.y-this.surface(this.v.x,this.v.z));}
+    if(Number.isFinite(bodyClearance)){const base=(.01-bodyClearance)*entry*(1-exit);this.hip.getWorldPosition(this.v);this.v.y+=base;this.hip.position.copy(this.hip.parent.worldToLocal(this.v));model.updateMatrixWorld(true);}
+    this.cloth.resolve(this.surface,entry*(1-exit));
+   }
    for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);clearance=Math.min(clearance,this.v.y-this.surface(this.v.x,this.v.z));}
    // Interpolating two supported poses can lift their shared support away from
    // the ground. Correct both signs, retaining the exact physical entry pose

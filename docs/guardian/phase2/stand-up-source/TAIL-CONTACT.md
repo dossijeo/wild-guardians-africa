@@ -31,3 +31,13 @@ Added a regression assertion on real physical-to-authored hyena recoveries in th
 New real WorldScene recordings: `lion-floor-contact` and `hyena-floor-contact` (MP4, contact sheet PNG, visible diagnostic JSON). Both complete, with zero errors and successful physical rolls (lion 0.8833 s, hyena 0.85 s). Lion entry clearance decays from 0.051 m to 0.011 m; after the blend its maximum measured minimum clearance is 0.010000005 m. The signed correction includes downward movement (-0.0151 m in that run). Hyena final recovery foot samples are also at 0.01 m above navigation terrain.
 
 Visual review remains incomplete: close-camera framing crops the body during part of both sequences, and the apparent floating impression is not fully eliminated by these numerical contacts. Verify rendered terrain against the navigation height and inspect a complete body view. Mid-rise lion cloth support remains unresolved (positive corrections up to 0.2256 m in this run). Do not label either recording final art acceptance. Audio disabled; no performance comparison claimed.
+
+## Independent cloth support correction
+
+Confirmed existing terrain code: TerrainField.surface, native visual triangles and ragdoll ground tiles share the same one-metre lattice and diagonal. All three terrain-geometry tests (including raycast agreement across biomes/chunks) pass; no terrain architecture change was needed.
+
+Authored get-up now grounds non-cloth body supports first, then bends the existing rear-cloth chains against the terrain. Two bounded passes use cached skin samples and reusable vectors/quaternions; no new physical bodies. Bone translations/lengths and tail pose are untouched. Entry/exit blending fades the adjustment, and remaining cloth penetration still participates in final grounding. This is active only during authored recovery, not ordinary animation.
+
+A real compressed-lion regression verifies that penetrating cloth moves upward independently without translating hips or altering non-cloth rotations. Forty scoped animation/physics/expression tests pass, plus the three terrain tests.
+
+`lion-cloth-contact.mp4/png/json` captures the full-body WorldScene cycle. In sampled recovery ages 1.83–2.26 s the lowest support is Hips, then finger bones at 2.38–2.48 s; rear cloth no longer lifts the body in this interval. Foot clearance remains 0.13–0.17 m during this portion, so anatomical pose/hand support still needs refinement. The wider view avoids cropping but does not prove close-detail quality. Complete cycle and no runtime errors; no final art acceptance or comparative performance claim. Tail exemptions for unrigged species and baked-bank regeneration remain pending.
