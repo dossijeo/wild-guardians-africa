@@ -132,3 +132,22 @@ blender --background --python-exit-code 1 --python tools/guardian/prototype_lion
 blender --background --python-exit-code 1 --python tools/guardian/inspect_actor_face.py -- --input C:/tmp/guardian-faces/lion-jaw-v9.blend --output C:/tmp/guardian-faces/lion-jaw-v9-1 --center 0 -.23 1.55 --extent .24 --expression mouthOpen --amount 1 --samples 8
 blender --background --python-exit-code 1 --python tools/guardian/audit_lion_untouched_surface.py -- --source public/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb --candidate C:/tmp/guardian-faces/lion-jaw-v9.blend --output C:/tmp/guardian-faces/lion-v9-surface-audit.json --check
 ```
+# Eyelid authoring checkpoint (not accepted)
+
+`tools/guardian/add_lion_eyelids.py` authors independent left/right closure
+and 25/50/75% corrective poses on the v14 jaw/material source. The original
+body remains intact. Contours were traced against the original 768px front
+inspection at center `(0,-.18,1.67)`, extent `.26`, separately for each eye.
+The candidate adds 594 vertices / 512 quads and a packed 1024px frontal
+base-color projection, using existing fur imagery only.
+
+Two Blender iterations were rendered. Direct original-island UV sampling
+produced unrelated stripes; the continuous atlas removes that mapping issue.
+However, the v2 closed front and quarter images still show an angular surface
+and conspicuous shading bands. Ray-following the low-poly eye surface is not
+an acceptable final eyelid envelope. Next: smooth the envelope while checking
+occlusion, then inspect neutral, partial closure, full closure and animated
+head poses. These images are **failure evidence, not visual acceptance**.
+No blink GLB has been installed or tested in the game. The local editable
+checkpoint is `C:/tmp/guardian-faces/lion-lids-v2.blend`.
+
