@@ -1015,7 +1015,8 @@ void buildSelectedVisual(){
 }
 void ensureSelectedVisual(){if(selectedVisualPending)buildSelectedVisual();}
 void prepareSelectedChunk(int cx,int cz,bool visual){
-  selectedVisualPending=false;
+  // Spatial-only refreshes must not declare older visual arrays current.
+  selectedVisualPending=!visual;
   SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
   selectNearbySettlements(cx,cz);
