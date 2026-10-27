@@ -104,6 +104,16 @@ Se corrigió también el benchmark ordinario para que los comandos no fuercen un
 
 En las cuatro ventanas se mantienen 282 geometrías y 98 texturas; máximo un Guardián, sin errores registrados. Los comandos calientes tardan 0,8–2,2 ms sin render inmediato. La referencia ya es lenta y deriva durante la sesión; los picos siguen pendientes de investigación y la aceptación de rendimiento permanece abierta. Esta revisión pasa 86 pruebas dirigidas de Guardián, selección y VFX; se ejecutaron además 67 pruebas focalizadas del empaquetado y los efectos antes de la revisión final.
 
+## Comparación equilibrada y fin del trabajo de impacto
+
+`phase2-perf-campaign-abba.json` mide ocho bloques ABBA/BAAB con comandos idénticos cada 600 ms: 1,2 s de calentamiento y 4 s de muestras por bloque, sin render adicional ni consultas GPU. La pestaña permaneció visible (cero fotogramas ocultos), sin Blender, ffmpeg ni mantenimiento Git en ejecución. En esta sesión, la media aritmética de las cuatro medias por bloque fue 9,07 FPS de referencia y 8,88 con Guardián (−2,1 %). Esto reduce la confusión por deriva temporal; no demuestra fluidez absoluta ni navegación bajo carga. La referencia ya es lenta. Los p95 de las etapas sitúan la etapa conjunta de LOD y sincronización del mundo en 23,4–31,1 ms y el dibujo en 17,2–27,7 ms; animación del Guardián 0,3–0,4 ms y VFX 1,0–1,4 ms. No se suman percentiles como si fueran el mismo fotograma.
+
+El laboratorio registra las siete etapas de `renderFrameUpdates`, la terminación del iterador y el dibujo como nueve entradas en `stagesP95`. No modifica las responsabilidades del renderizador de producción. El siguiente diagnóstico de CPU debe separar cultivos, actores y resto de `sync`, en vez de atribuir toda esa etapa a las invocaciones.
+
+Se corrigió un coste independiente: después de un impacto, el controlador seguía copiando las rotaciones de todos los huesos cada fotograma aunque la reacción hubiese expirado. Ahora restaura la pose una vez y sólo copia/aplica huesos durante los 1,1 s activos. El caché del rig se conserva para reutilización. Cargar un impacto ya expirado no inicializa ese caché. La prueba comprueba cero copias de cuaterniones durante 100 actualizaciones posteriores y que un segundo golpe parte de la pose actual.
+
+Validación posterior: 87 pruebas dirigidas aprobadas; build aprobado. Prueba gráfica de rinoceronte a 0,12 s, recuperación a 2,4 s y segundo golpe: `phase2/impact-active.png`, `impact-recovered.png`, `impact-second-hit.png` y `impact-recovery-check.json`. Un solo Guardián, salud 168→140→112, sin errores. No se atribuye a esta corrección una mejora global de FPS: la medición ABBA es anterior a ella.
+
 ## Reproducción
 
 1. `npm run dev -- --port 5194` y abrir `/tests/browser/guardian-combat.html`.
