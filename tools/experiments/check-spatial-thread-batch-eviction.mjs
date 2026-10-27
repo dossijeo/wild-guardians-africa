@@ -46,6 +46,19 @@ for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-
   await wait(3);assert.equal(p.publish(id,2,0),-2,'Eviction must invalidate in-flight residency snapshot');p.release();
   id=p.start(2,0);await wait(3);assert.equal(p.metric(0),1);assert(p.publish(id,2,0)>0);p.release();a.addChunk(2,0);
   stages.push(compare('retry-after-eviction'));
+  // Capture authoritative save state before consuming the deferred visual payload.
+  assert.equal(a.removeChunk(2,0),1);assert.equal(b.removeChunks([[2,0]]),1);
+  const saved=a.snapshot();assert.deepEqual(b.snapshot(),saved,'Pending visuals must not alter serialized world');
+  for(const core of [a,b]){core.addSettlement(3,4,4,3);core.addBarrier(6,4,.5,3,0);}
+  assert.deepEqual(b.snapshot(),a.snapshot(),'World edits survive pending visuals');
+  stages.push(compare('edits-after-selected-eviction'));
+  for(const core of [a,b]){
+   core.restoreState(saved,0,0);
+   for(const profile of profiles)core.buildNavigationProfile(profile.index,profile.radius,profile.worker);
+   for(const [x,z] of coordinates)if(x||z)core.addChunk(x,z);
+  }
+  assert.deepEqual(b.snapshot(),a.snapshot(),'Save restoration remains exact');
+  stages.push(compare('save-restore-after-pending-visuals'));
   const rest=[...coordinates,[2,0]];let count=0;for(const [x,z] of rest)count+=a.removeChunk(x,z);
   assert.equal(b.removeChunks(rest),count);assert.equal(b.metrics().loadedChunks,0);assert.equal(b.metrics().loadedSectors,0);assert.equal(b.currentChunk(),null);
   assert.equal(b.removeChunks(rest),0);
