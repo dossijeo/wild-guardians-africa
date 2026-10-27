@@ -5,7 +5,6 @@ export class FarTreeTransitions {
  bind(sink,trees){
   this.sink=sink;this.ids=new Set(trees.map(t=>t.id));this.active.clear();
   for(const id of this.ids){const state=this.states.get(id)??{ready:0,target:0};this.states.set(id,state);sink.setTreeReadiness(id,state.ready);sink.setTreeEnabled(id,!this.suppressed.has(id));}
-  this.covered=new Set([...this.ids].filter(id=>{const state=this.states.get(id);return state.target||state.ready>0;}));
   this.revision=null;if(this.coverage)this.setCoverage(this.coverage,this.gpuReady);
  }
  setCoverage(coverage,gpuReady){
@@ -13,20 +12,9 @@ export class FarTreeTransitions {
   if(this.coverage===coverage&&this.revision===coverage.revision&&this.gpuReady===gpuReady)return false;
   this.coverage=coverage;this.revision=coverage.revision;this.gpuReady=gpuReady;
   for(const id of this.states.keys())if(!this.ids.has(id)&&(!gpuReady||!coverage.has(id)))this.states.delete(id);
-  // Optional conservative candidate enumeration limits work to possible hits
-  // plus previously ready targets, which must still be revoked immediately.
-  // Coverage.has remains authoritative; enumeration never supplies GPU proof.
-  let candidates=this.ids;
-  if(typeof coverage.candidateIds==='function'){
-   candidates=new Set(this.covered??[]);
-   if(gpuReady)for(const id of coverage.candidateIds())if(this.ids.has(id))candidates.add(id);
-  }
-  const covered=new Set();
-  for(const id of candidates){if(!this.ids.has(id))continue;const state=this.states.get(id);state.target=gpuReady&&coverage.has(id,this.suppressed)?1:0;
-   if(state.target)covered.add(id);
+  for(const id of this.ids){const state=this.states.get(id);state.target=gpuReady&&coverage.has(id,this.suppressed)?1:0;
    if(!state.target){state.ready=0;this.active.delete(id);this.sink.setTreeReadiness(id,0);}else if(state.ready<1)this.active.add(id);
   }
-  this.covered=covered;
   return true;
  }
  setSuppressions(suppressed){
@@ -38,5 +26,5 @@ export class FarTreeTransitions {
   for(const id of this.active){const state=this.states.get(id),next=Math.min(1,state.ready+dt/this.duration);if(next!==state.ready){state.ready=next;this.sink.setTreeReadiness(id,next);changed++;}if(next===1)this.active.delete(id);}
   return changed;
  }
- clear(){this.states.clear();this.ids.clear();this.active.clear();this.covered?.clear();this.suppressed.clear();this.coverage=null;this.sink=null;this.revision=null;this.gpuReady=false;}
+ clear(){this.states.clear();this.ids.clear();this.active.clear();this.suppressed.clear();this.coverage=null;this.sink=null;this.revision=null;this.gpuReady=false;}
 }

@@ -64,7 +64,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  const standbyAvailable=(id,suppressed)=>standbyCoverageReady(id,{coverage,standby,nativeTree:nativeReferences.get(id)?.tree,logicalTree:layer.current?.treeById.get(id),suppressed,nativeMissing:!physicalIds.has(id)||angularLod&&!coverage.has(id)});
  // Starting a fade also requires its owned backup fence: native packing may
  // change on the next camera update, before a first standby upload completes.
- const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision+':'+world.chunkRevision;},candidateIds(){return standby.active?.entries.keys()??[];},has(id,suppressed){return standbyAvailable(id,suppressed);}};
+ const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision+':'+world.chunkRevision;},has(id,suppressed){return standbyAvailable(id,suppressed);}};
  let referencesRevision=-1;const nativeReferences=new Map();
  let logicalPlan=null;
  function scheduleLogicalPreload(currentSignature){
