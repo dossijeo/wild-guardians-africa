@@ -1,3 +1,4 @@
+import {beastPhysicsRuntime} from '../../src/rendering/beast-combat-physics.js';
 import {BeastRecovery} from '../../src/rendering/beast-recovery.js';
 import {applyAnimalPose} from '../../src/rendering/animal-actions.js';
 import {Vector3} from 'three';
@@ -7,7 +8,7 @@ import {ATTACK} from '../../src/simulation/guardian-combat.js';
 // Graphical integration probe, deliberately separate from authoritative combat
 // until recovery and logical-position reconciliation have been validated.
 export async function ragdollTrial(world,animal){
- const {default:R}=await import('@dimforge/rapier3d-compat');await R.init();
+ const R=await beastPhysicsRuntime();
  const data=world.mixers.get(animal.id);if(!data)throw Error('Beast rig is still loading');
  animal.motionPhase=.35;data.key=null;applyAnimalPose(data,animal,world.state.elapsed);
  const binding=new BeastRagdollBinding(data.model),solver=new BeastRagdollSolver(R),vertices=[],indices=[],size=16;

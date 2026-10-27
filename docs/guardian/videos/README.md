@@ -17,3 +17,6 @@ ActualizaciÃ³n de flotaciÃ³n: ES/EN se han vuelto a grabar con el rig refinado. 
 - `guardian-combat-night.mp4`: Attack, Shield, hiena y rinoceronte, nuevos gestos de manos y huida.
 
 Capturas de WorldScene real en fixture controlada; las recargas se reinician sÃ³lo en el laboratorio. MÃ¡ximo un GuardiÃ¡n visible. Esta revisiÃ³n aÃ±ade brazos articulados, emisiÃ³n desde manos y respuesta amortiguada por masa. Los vÃ­deos de diÃ¡logo ES/EN anteriores corresponden a la revisiÃ³n previa del viento. El receptor admite tambiÃ©n combat-day.webm y combat-night.webm. VÃ©ase ../PHASE2.md para las pruebas y sus lÃ­mites.
+
+
+Actualización cinematográfica/ragdoll: `guardian-combat-night.mp4` se ha vuelto a grabar con Game.tick activo, vórtice/materialización y derribo articulado conectado al combate. Muestra hiena y rinoceronte, impactos consecutivos, recuperación y retirada; es una fixture de integración, no una incursión masiva. El vídeo diurno conserva la revisión anterior. Los límites pendientes están en `../CINEMATIC-RAGDOLL.md`; esta grabación no implica que la entrega completa esté validada.

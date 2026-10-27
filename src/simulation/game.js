@@ -670,7 +670,7 @@ function tickScoped(s,seconds,nav) {
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
     if(s.spells.length!==spellCount)nav.setState(s);
-    advanceGateLeaves(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    advanceGateLeaves(s,step);nav.beastPhysics?.step(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);

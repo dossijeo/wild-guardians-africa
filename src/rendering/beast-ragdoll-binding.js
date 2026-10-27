@@ -1,5 +1,6 @@
 import {Vector3,Quaternion} from 'three';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
+const colliderSamples=new WeakMap();
 
 // The physics snapshot is world-space. Only Hips translation is transferred;
 // other bone lengths remain authored, so solver tolerances cannot stretch skin.
@@ -17,20 +18,24 @@ export class BeastRagdollBinding{
  colliders(){
   const groups=this.entries.map(()=>[]),owners=new Map(this.entries.map((e,i)=>[e.bone,i]));
   const frames=this.entries.map(e=>{const a=e.bone.getWorldPosition(new Vector3()),b=e.tip.getWorldPosition(new Vector3());return {center:a.clone().add(b).multiplyScalar(.5),inverse:new Quaternion().setFromUnitVectors(this.y,b.sub(a).normalize()).invert()};});
-  const v=new Vector3();
+  const v=new Vector3(),selected=new Map();
   this.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
-   for(let i=0;i<indices.count;i+=2){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;const owner=mapping[indices.getComponent(i,best)];if(owner===undefined)continue;
-    const f=frames[owner];mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld).sub(f.center).applyQuaternion(f.inverse);groups[owner].push(v.clone());
+   const cached=colliderSamples.get(mesh.geometry);if(!cached)selected.set(mesh.geometry,new Set());
+   const samples=cached??Array.from({length:Math.ceil(indices.count/2)},(_,i)=>i*2);
+   for(const i of samples){let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;const owner=mapping[indices.getComponent(i,best)];if(owner===undefined)continue;
+    const f=frames[owner];mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld).sub(f.center).applyQuaternion(f.inverse);const point=v.clone();point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);
    }
   });
   const quantile=(values,p)=>{values.sort((a,b)=>a-b);return values[Math.floor((values.length-1)*p)];};
-  return groups.map((points,i)=>{if(points.length<8)return null;
+  const fits=groups.map((points,i)=>{if(points.length<8)return null;
    const x=quantile(points.map(p=>p.x),.5),z=quantile(points.map(p=>p.z),.5),lo=quantile(points.map(p=>p.y),.02),hi=quantile(points.map(p=>p.y),.98);
    const radius=Math.max(.05,quantile(points.map(p=>Math.hypot(p.x-x,p.z-z)),.96)+.025);
-   const hull=[];for(let k=0;k<96;k++){const dy=1-2*(k+.5)/96,r=Math.sqrt(1-dy*dy),theta=k*2.399963229728653,dx=Math.cos(theta)*r,dz=Math.sin(theta)*r;let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);}
+   const hull=[];for(let k=0;k<96;k++){const dy=1-2*(k+.5)/96,r=Math.sqrt(1-dy*dy),theta=k*2.399963229728653,dx=Math.cos(theta)*r,dz=Math.sin(theta)*r;let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
    return {hull,radius,halfHeight:Math.max(.005,(hi-lo)/2-radius),offset:{x,y:(lo+hi)/2,z},samples:points.length};
   });
+  for(const [geometry,indices] of selected)colliderSamples.set(geometry,[...indices]);
+  return fits;
  }
  apply(snapshot,weight=1){
   if(snapshot.length!==this.entries.length*7)throw Error('Invalid ragdoll snapshot');

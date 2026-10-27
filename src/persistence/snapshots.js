@@ -33,6 +33,7 @@ export function validateSnapshot(state) {
   if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
   const ids=new Set();
   for(const animal of state.raid?.animals??[]){
+    if(animal.magicDown!==undefined){const d=animal.magicDown;if(!d||!['falling','recovering'].includes(d.phase)||![d.since,d.until].every(Number.isFinite)||d.since<0||d.since>state.elapsed||d.until<d.since||d.until-d.since>12)throw new Error('Derribo mágico inválido');}
     if(animal.magicHealth!==undefined&&(!Number.isFinite(animal.magicHealth)||animal.magicHealth<0||animal.magicHealth>1000))throw new Error('Resistencia mágica inválida');
     if(animal.magicStunUntil!==undefined&&(!Number.isFinite(animal.magicStunUntil)||animal.magicStunUntil<0))throw new Error('Interrupción mágica inválida');
     if(animal.magicImpact!==undefined){const h=animal.magicImpact;if(!h||!Number.isFinite(h.at)||h.at<0||h.at>state.elapsed||(h.ground!==undefined&&!Number.isFinite(h.ground))||(h.intensity!==undefined&&(!Number.isFinite(h.intensity)||h.intensity<0||h.intensity>2))||![h.point,h.direction,h.origin].every(p=>p&&[p.x,p.y,p.z].every(Number.isFinite)))throw new Error('Impacto mágico inválido');}

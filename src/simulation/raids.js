@@ -257,6 +257,7 @@ export function updateRaid(s,dt,nav) {
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
+    if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
     if((a.magicStunUntil??0)>s.elapsed)continue;
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
