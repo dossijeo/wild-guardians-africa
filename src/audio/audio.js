@@ -204,9 +204,9 @@ export class AudioSystem {
       // Consume its ID normally so history changes cannot replay it later.
       if(event.type==='HarvestRequested'&&event.automatic===true)continue;
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
-      const id=event.type==='GuardianMagicHit'&&ANIMAL_SOUND_ROUTES[event.species]?event.species+'_hurt':event.type==='AnimalRetreating'&&event.reason==='magic-resilience-exhausted'?ANIMAL_SOUND_ROUTES[event.species]?.retreat:event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
+      const id=event.type==='GuardianMagicHit'&&ANIMAL_SOUND_ROUTES[event.species]?event.species+'_hurt':event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
       const requested=this.context?.currentTime??0,generation=this.generation;
-      const magicOptions=event.type==='GuardianMagicHit'||event.type==='AnimalRetreating'&&event.reason==='magic-resilience-exhausted'?{family:event.type==='GuardianMagicHit'?'animal-hurt':'animal-retreat',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length}:{};
+      const magicOptions=event.type==='GuardianMagicHit'?{family:'animal-hurt',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length}:{};
       const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
       if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
       if(event.type==='GuardianMagicHit'){

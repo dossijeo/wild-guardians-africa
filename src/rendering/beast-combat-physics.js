@@ -30,7 +30,20 @@ export class BeastCombatPhysics{
    previous.solver.impulse(animal.id,{direction:animal.magicImpact.direction,intensity:animal.magicImpact.intensity,mass:ATTACK.profiles[animal.species].mass});
    previous.actor.age=0;previous.settledAt=null;animal.magicDown.since=w.state.elapsed;animal.magicDown.until=w.state.elapsed+9;return true;
   }
-  if(previous)this.release(animal.id);
+  if(previous?.recovery){
+   // Sample get-up at simulation time, even when no frame was rendered between
+   // two ticks. Capture before restoring the authored pose: otherwise a hit
+   // during get-up visibly snaps the animal upright before launching it again.
+   const recovery=previous.recovery;recovery.age=0;recovery.apply(previous.recoveryAge);
+   try{
+    const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),colliders=binding.colliders();
+    const hip=binding.entries[0].bone.getWorldPosition(this.v),offset={x:hip.x-animal.x,z:hip.z-animal.z};
+    const actor=previous.solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:animal.magicImpact.direction,intensity:animal.magicImpact.intensity,heading:animal.heading??0});
+    Object.assign(previous,{binding,actor,offset,recovery:null,recoveryAge:0,accumulator:0,settledAt:null});
+    animal.magicDown={phase:'falling',since:w.state.elapsed,until:w.state.elapsed+9};
+    this.stats.startMs=performance.now()-started;return true;
+   }finally{recovery.restore();}
+  }
   if(this.entries.size>=3){this.stats.rejected++;return false;}
   root.updateMatrixWorld(true);const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),colliders=binding.colliders(),solver=new BeastRagdollSolver(this.R,{capacity:1});
   try{

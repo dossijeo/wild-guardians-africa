@@ -1,0 +1,71 @@
+{
+  "ready": true,
+  "campaign": false,
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3051.939122000004,
+  "simulate": true,
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 89.32171560184935,
+        "y": 14.289924592359819,
+        "z": -5.164484329029541
+      },
+      "opacity": 0.25925925925845084
+    }
+  ],
+  "reused": 0,
+  "health": 0,
+  "animalState": "retreating",
+  "animalPosition": [
+    89.15033249218743,
+    -8.377486324412452
+  ],
+  "draws": 74,
+  "audioVoices": 0,
+  "combatPhysics": {
+    "active": 1,
+    "physicsMs": 0.6000000238418579,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 7.899999976158142,
+    "maxStepMs": 19.300000071525574
+  },
+  "down": {
+    "phase": "falling",
+    "since": 3051.919122000004,
+    "until": 3060.919122000004
+  },
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 1.7000000476837158,
+      "logic": 0.7999999523162842,
+      "render": 19.399999976158142,
+      "total": 21.899999976158142
+    },
+    {
+      "kind": "attack",
+      "plan": 1.100000023841858,
+      "logic": 0.5,
+      "render": 7.699999928474426,
+      "total": 9.299999952316284
+    }
+  ]
+}

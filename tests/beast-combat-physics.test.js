@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Group,AnimationClip,AnimationMixer} from 'three';
+import {Group,AnimationClip,AnimationMixer,Vector3,Quaternion} from 'three';
 import {beastSkin} from './helpers/beast-skin.js';
 import {BeastCombatPhysics,beastPhysicsRuntime} from '../src/rendering/beast-combat-physics.js';
 import {updateRaid} from '../src/simulation/raids.js';
@@ -34,4 +34,26 @@ test('second hit reuses the airborne articulated body without resetting its pose
  state.elapsed+=.1;animal.magicImpact.at=state.elapsed;manager.step(state,0);
  assert.equal(manager.entries.get(animal.id),entry);assert.deepEqual(Array.from(entry.actor.pose),before);assert.equal(entry.solver.world.bodies.len(),14);
  state.raid=null;manager.step(state,.1);assert.equal(manager.entries.size,0);assert.equal(manager.seen.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
+});
+
+test('hits throughout get-up preserve the visible pose and reuse the collision world',()=>{
+ for(const age of [.15,.65,1.4]){
+  const {animal,state,root,manager}=fixture();manager.step(state,.1);
+  let entry=manager.entries.get(animal.id);
+  for(let i=0;i<360&&!entry.recovery;i++){
+   state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);
+  }
+  assert.ok(entry.recovery,'never entered get-up');entry.recoveryAge=age;manager.render(animal.id);
+  const before=entry.binding.entries.map(e=>({p:e.bone.getWorldPosition(new Vector3()),q:e.bone.getWorldQuaternion(new Quaternion())}));
+  const logical={x:animal.x,z:animal.z},world=entry.solver.world;
+  state.elapsed+=.01;animal.magicImpact.at=state.elapsed;manager.step(state,0);manager.render(animal.id);
+  entry=manager.entries.get(animal.id);assert.equal(entry.solver.world,world);assert.equal(world.bodies.len(),14);assert.equal(entry.recovery,null);assert.equal(animal.magicDown.phase,'falling');
+  assert.ok(Math.hypot(animal.x-logical.x,animal.z-logical.z)<.0001);
+  for(let i=0;i<before.length;i++){
+   assert.ok(before[i].p.distanceTo(entry.binding.entries[i].bone.getWorldPosition(new Vector3()))<.0001,'bone position popped at get-up '+age);
+   assert.ok(before[i].q.angleTo(entry.binding.entries[i].bone.getWorldQuaternion(new Quaternion()))<.001,'bone orientation popped at get-up '+age);
+  }
+  for(let i=0;i<500;i++){state.elapsed+=1/60;manager.step(state,1/60);manager.before(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);manager.render(animal.id);}
+  assert.equal(manager.entries.size,0);assert.equal(animal.magicDown,undefined);manager.dispose();
+ }
 });
