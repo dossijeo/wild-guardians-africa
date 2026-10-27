@@ -20,6 +20,17 @@ For the actual WorldScene/Game.tick/Attack path, open
 fixture's lion asset and selects lion in the species control. `?face=1`
 continues to select the hyena candidate; the production catalogue is unchanged.
 
+To record one selected species/direction cycle without overwriting historical
+day/night videos, start a separate receiver:
+
+```powershell
+python tools/guardian/receive_video.py --port 5198 --output C:/tmp/guardian-combat-recording
+```
+
+In the fixture select the species/direction, enable sound if desired, then
+press **Grabar ciclo seleccionado**. The receiver writes `combat-cycle.webm`.
+Copy it to a descriptive evidence filename before recording another cycle.
+
 Re-export with the saved 96Hz/NLA timeline intact:
 
 ```powershell

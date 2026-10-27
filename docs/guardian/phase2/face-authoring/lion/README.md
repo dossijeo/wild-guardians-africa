@@ -214,3 +214,20 @@ final state were visually inspected, but the whole fall/recovery was not
 captured and reviewed frame by frame. Full animation quality, obstacles,
 concurrency, directional variants and paired feature-cost testing remain open.
 
+## Recorded cycle review
+
+`combat-cycle-video.mp4` contains a subsequent continuous cycle, with its
+matching diagnostics in `combat-recorded-cycle.json`. The QA recorder now
+supports the currently selected species and direction without replacing the
+historical day/night videos. The MP4 is a 30fps delivery conversion; duplicated
+video frames do not indicate 30fps game rendering. Recording metrics are not
+comparable to the unrecorded run.
+
+Review used a one-second contact sheet across the sequence and a four-samples-
+per-second sheet around recovery (`recovery-reviewed.png`). The animal falls,
+rests and returns to its attack behavior. No detached accessory was confirmed:
+the suspicious mound is already present before the animal is created.
+The rise still looks too rigid, with limited visible arm/leg support. This is
+an outstanding artistic issue in `BeastRecovery`, not accepted get-up quality.
+Audio is included in the recording but has not been listened to for mix review.
+

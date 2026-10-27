@@ -59,6 +59,23 @@ try{
    report={scope:'Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.',requestedImpacts:count,headOn,rejectedPhysics:world.beastPhysics.stats.rejected-rejectedBefore,completedSimulation:state.elapsed-start>=8,species:$('species').value,direction:$('direction').value,wallMs:performance.now()-wallStart,simulationSeconds:state.elapsed-start,frames:rows.length,hiddenFrames:rows.filter(r=>r.hidden).length,metrics,peakActive:Math.max(...rows.map(r=>r.physicsActive)),peakBaked:Math.max(...rows.map(r=>r.bakedActive??0)),finalDownCount:state.raid?.animals.filter(a=>a.magicDown).length??0,finalDown:state.raid?.animals[0]?.magicDown??null,memory:{...world.renderer.info.memory},heap:performance.memory?.usedJSHeapSize,errors:[...errors]};
   }catch(e){fail(e);}finally{measuring=false;paused=true;}
  }
+ const recordCycle=document.createElement('button');recordCycle.textContent='Grabar ciclo seleccionado';recordCycle.id='recordCycle';document.querySelector('header').insertBefore(recordCycle,$('status'));
+ recordCycle.onclick=async()=>{
+  if(recording||measuring||physicsTrial)return;
+  recording=true;const stream=$('world').captureStream(30),chunks=[];
+  let destination=null,rec=null;
+  try{
+   if(audio.context){destination=audio.context.createMediaStreamDestination();audio.sfxGain.connect(destination);for(const track of destination.stream.getAudioTracks())stream.addTrack(track);}
+   rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8,opus',videoBitsPerSecond:5000000});
+   rec.ondataavailable=e=>chunks.push(e.data);const done=new Promise(resolve=>rec.onstop=resolve);
+   $('recordStatus').textContent='Grabando ciclo '+$('species').value;rec.start();
+   await measurePhysics(1);rec.stop();await done;
+   const response=await fetch('http://127.0.0.1:5198/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});
+   if(!response.ok)throw Error('No se pudo guardar el ciclo');
+   $('recordStatus').textContent='Ciclo guardado: '+$('species').value;
+  }catch(e){fail(e);$('recordStatus').textContent='Grabación del ciclo fallida';}
+  finally{if(rec?.state==='recording')rec.stop();if(destination)audio.sfxGain.disconnect(destination);for(const track of stream.getTracks())track.stop();recording=false;}
+ };
  $('benchCollision').onclick=()=>measurePhysics(2,true);$('benchPhysics').onclick=()=>measurePhysics(1);$('benchPhysicsMany').onclick=()=>measurePhysics(4);
  $('benchStress').onclick=async()=>{if(measuring)return;measuring=true;simulate=false;paused=false;report=[];commandCosts.length=0;let timer;try{$('stress').click();await sleep(4000);for(const mode of ['raid-baseline','raid-guardian','raid-reference','raid-guardian-repeat']){showSummons=!mode.includes('reference');world.guardianSummons.clear();await sleep(2500);samples.length=0;if(mode!=='raid-baseline')timer=setInterval(()=>{const animals=state.raid.animals;const a=animals.shift();animals.push(a);a.magicHealth=1000;a.status='walking';cast('attack');},600);await sleep(8000);clearInterval(timer);const rows=samples.slice(),q=(key,p)=>rows.map(r=>r[key]).sort((a,b)=>a-b)[Math.min(rows.length-1,Math.floor(rows.length*p))];report.push({mode,actors:state.raid.animals.length,frames:rows.length,frameMedian:q('dt',.5),frameP95:q('dt',.95),frameP99:q('dt',.99),frameMax:q('dt',1),averageFps:1000/(rows.reduce((s,r)=>s+r.dt,0)/rows.length),renderP95:q('renderMs',.95),animationP95:q('animationMs',.95),vfxP95:q('vfxMs',.95),drawP95:q('draws',.95),memory:{...world.renderer.info.memory},heap:performance.memory?.usedJSHeapSize});}}catch(e){fail(e);}finally{clearInterval(timer);showSummons=true;measuring=false;}};
  $('benchGpu').onclick=async()=>{if(measuring)return;measuring=true;simulate=false;paused=false;report=[];let timer;try{$('stress').click();await sleep(4000);for(const mode of ['reference','body','effects','all','reference','all']){showSummons=mode!=='reference';diagnostic=mode;world.guardianSummons.clear();await sleep(2000);samples.length=0;timer=setInterval(()=>{const animals=state.raid.animals,a=animals.shift();animals.push(a);a.magicHealth=1000;a.status='walking';cast('attack');},600);await sleep(5000);clearInterval(timer);const rows=samples.slice(),q=(key,p)=>rows.map(r=>r[key]).sort((a,b)=>a-b)[Math.min(rows.length-1,Math.floor(rows.length*p))];report.push({mode,frames:rows.length,frameP95:q('dt',.95),frameP99:q('dt',.99),averageFps:1000/(rows.reduce((s,r)=>s+r.dt,0)/rows.length),renderP95:q('renderMs',.95),drawP95:q('draws',.95)});}}catch(e){fail(e);}finally{clearInterval(timer);diagnostic='all';showSummons=true;measuring=false;}};
