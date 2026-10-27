@@ -1,4 +1,4 @@
-import {RAGDOLL_CONFIG} from '../src/simulation/beast-ragdoll.js';
+import {RAGDOLL_CONFIG,RAGDOLL_ROLL} from '../src/simulation/beast-ragdoll.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -6,10 +6,10 @@ import {createHash} from 'node:crypto';
 import {BakedRagdollClip} from '../src/simulation/baked-ragdoll-clip.js';
 const root=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',root))),bytes=fs.readFileSync(new URL('falls.bin',root)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
 test('all five current species have finite settled clips tied to exact source assets',()=>{
- assert.deepEqual(meta.config,{...RAGDOLL_CONFIG,solverIterations:24});assert.equal(meta.contactMaskSha256,createHash('sha256').update(fs.readFileSync(new URL('../src/rendering/actor-contact-masks.js',import.meta.url))).digest('hex'));
+ assert.deepEqual(meta.config,{...RAGDOLL_CONFIG,solverIterations:24});assert.deepEqual(meta.rollConfig,{...RAGDOLL_ROLL,timeout:7});assert.equal(meta.contactMaskSha256,createHash('sha256').update(fs.readFileSync(new URL('../src/rendering/actor-contact-masks.js',import.meta.url))).digest('hex'));
  assert.equal(meta.clips.length,40);assert.equal(createHash('sha256').update(bytes).digest('hex'),meta.sha256);
  for(const species of new Set(meta.clips.map(c=>c.species)))assert.deepEqual(meta.clips.filter(c=>c.species===species).map(c=>c.direction),['front','side','back','left','down','downBack','downSide','downLeft']);
- for(const clip of meta.clips){const source=fs.readFileSync(new URL("../public"+clip.source,import.meta.url));assert.equal(createHash("sha256").update(source).digest("hex"),clip.sourceSha256);assert.equal(clip.settled,true);const instance=new BakedRagdollClip(clip,buffer);assert.ok(instance.values.every(Number.isFinite));assert.ok(instance.duration>1&&instance.duration<8);}
+ for(const clip of meta.clips){const source=fs.readFileSync(new URL("../public"+clip.source,import.meta.url));assert.equal(createHash("sha256").update(source).digest("hex"),clip.sourceSha256);assert.equal(clip.recoveryCandidateSha256,createHash('sha256').update(fs.readFileSync(new URL('../content/source/animations/stand-up/'+clip.species+'-candidate.json',import.meta.url))).digest('hex'));assert.equal(clip.settled,true);assert.ok(clip.rollStart>0&&clip.rollStart<clip.duration);assert.ok(Number.isFinite(clip.recoveryYaw));const instance=new BakedRagdollClip(clip,buffer);assert.ok(instance.values.every(Number.isFinite));assert.ok(instance.duration>1&&instance.duration<15);}
 });
 test('playback follows time at low FPS, clamps endpoints and maintains unit quaternions',()=>{
  for(const metadata of meta.clips){const clip=new BakedRagdollClip(metadata,buffer),out=new Float32Array(98),other=new Float32Array(98);

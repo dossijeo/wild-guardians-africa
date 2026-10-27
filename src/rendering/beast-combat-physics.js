@@ -26,7 +26,7 @@ export class BeastCombatPhysics{
    try{solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});solver.add('warm',{pose,colliders,scale:rig.model.scale.x});for(let i=0;i<120;i++){solver.step();if(i%8===7)await new Promise(resolve=>setTimeout(resolve,0));}}finally{solver.dispose();}
    await new Promise(resolve=>setTimeout(resolve,0));
   }
-  const [clips,recoveries]=await Promise.all([loadBakedFalls(),loadRecoveryClips()]),manager=new BeastCombatPhysics(world,R);manager.recoveryClips=recoveries;manager.baked=new BakedBeastFallbacks(world,clips);return manager;
+  const [clips,recoveries]=await Promise.all([loadBakedFalls(),loadRecoveryClips()]),manager=new BeastCombatPhysics(world,R);manager.recoveryClips=recoveries;manager.baked=new BakedBeastFallbacks(world,clips,recoveries);return manager;
  }
  start(animal){
   const started=performance.now();const w=this.world,data=w.mixers.get(animal.id),root=w.objects.get(animal.id);if(!data||!root)return false;

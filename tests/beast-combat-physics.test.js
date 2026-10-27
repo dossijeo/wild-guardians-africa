@@ -126,10 +126,10 @@ test('fourth impact plays a baked fall, suspends AI, recovers and clears without
 
 test('baked repeat hits preserve the contact pose during falling and recovery',()=>{
  const base=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',base))),bytes=fs.readFileSync(new URL('falls.bin',base)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
- for(const recovering of [false,true]){
-  const f=fixture(),baked=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])));
+ for(const recoveries of [new Map(),new Map([['hyena',authoredClip]])])for(const recovering of [false,true]){
+  const f=fixture(),baked=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])),recoveries);
   baked.start(f.animal);
-  for(let i=0;i<(recovering?400:35);i++){
+  for(let i=0;i<(recovering?700:35);i++){
    f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);baked.render(f.animal.id);
    if(recovering&&baked.entries.get(f.animal.id)?.recoveryAge>.4)break;
   }
@@ -138,7 +138,7 @@ test('baked repeat hits preserve the contact pose during falling and recovery',(
   f.animal.magicImpact={at:f.state.elapsed,impactAt:f.state.elapsed,direction:{x:-1,y:-.2,z:0},intensity:1};baked.start(f.animal);baked.step(f.state,0);baked.render(f.animal.id);e=baked.entries.get(f.animal.id);
   assert.ok(Math.hypot(f.animal.x-logical.x,f.animal.z-logical.z)<1e-5);
   for(let i=0;i<pose.length;i++){assert.ok(pose[i].p.distanceTo(e.binding.entries[i].bone.getWorldPosition(new Vector3()))<1e-5,'repeat position');assert.ok(pose[i].q.angleTo(e.binding.entries[i].bone.getWorldQuaternion(new Quaternion()).normalize())<1e-5,'repeat orientation');}
-  for(let i=0;i<600;i++){f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);baked.render(f.animal.id);}
+  for(let i=0;i<1000;i++){f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.updateMatrixWorld(true);baked.render(f.animal.id);}
   assert.equal(baked.entries.size,0);assert.equal(f.animal.magicDown,undefined);baked.dispose();f.manager.dispose();
  }
 });
@@ -154,4 +154,16 @@ test('opposing impacts recover with retained colliders and bounded contact veloc
   for(const a of f.state.raid.animals){f.manager.before(a.id);const root=f.world.objects.get(a.id);root.position.set(a.x,0,a.z);root.updateMatrixWorld(true);f.manager.render(a.id);}
  }
  assert.ok(recoveryWithBodies);assert.ok(maxSpeed<15,'recovery launched a neighbour: '+maxSpeed);assert.equal(f.manager.solver,null);assert.ok(f.state.raid.animals.every(a=>!a.magicDown));f.manager.dispose();
+});
+
+for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${species} baked overflow rolls then uses authored recovery and releases AI`,()=>{
+ const base=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',base))),bytes=fs.readFileSync(new URL('falls.bin',base)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+ const clip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL(`../content/source/animations/stand-up/${species}-candidate.json`,import.meta.url))).clip),f=fixture(species),baked=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])),new Map([[species,clip]]));
+ assert.ok(baked.start(f.animal));let rolling=false,recovering=false,maxHipStep=0,previous=null;
+ for(let i=0;i<1200;i++){
+  f.state.elapsed+=1/60;baked.step(f.state,1/60);baked.before(f.animal.id);f.root.position.set(f.animal.x,0,f.animal.z);f.root.rotation.y=f.animal.heading;f.root.updateMatrixWorld(true);baked.render(f.animal.id);
+  const entry=baked.entries.get(f.animal.id);rolling||=f.animal.magicDown?.phase==='rolling';
+  if(entry?.recovery){recovering=true;assert.equal(entry.recovery.constructor.name,'AuthoredBeastRecovery');assert.ok(f.animal.magicDown.until>f.state.elapsed);const p=entry.binding.bones.get('Hips').getWorldPosition(new Vector3());if(previous)maxHipStep=Math.max(maxHipStep,p.distanceTo(previous));previous=p;}
+ }
+ assert.ok(rolling&&recovering);assert.ok(maxHipStep<.15,`Recovery jump ${maxHipStep}`);assert.equal(f.animal.magicDown,undefined);assert.equal(baked.entries.size,0);assert.equal(f.animal.destinationId,null);baked.dispose();f.manager.dispose();
 });

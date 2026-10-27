@@ -84,13 +84,14 @@ export class BeastRagdollSolver{
   for(const {body} of a.parts){body.setBodyType(this.R.RigidBodyType.KinematicPositionBased,true);body.setLinvel(vector(),true);body.setAngvel(vector(),true);}
   a.kinematic=true;
  }
- rollTo(id,target){
+ rollTo(id,target,{timeout=RAGDOLL_ROLL.timeout}={}){
+  if(!Number.isFinite(timeout)||timeout<=0||timeout>10)throw Error('Invalid roll timeout');
   const a=this.actors.get(id);if(!a||a.kinematic)throw Error('Roll requires a dynamic actor');
   if(!target||![target.x,target.y,target.z,target.w].every(Number.isFinite)||Math.abs(Math.hypot(target.x,target.y,target.z,target.w)-1)>.01)throw Error('Invalid roll target');
   // Rotate the complete fallen configuration towards the authored supine hip
   // frame. Relative limb poses and all existing joint constraints are retained.
   const delta=multiply(target,inverse(a.parts[0].body.rotation()));
-  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity};a.settled=false;
+  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,timeout};a.settled=false;
  }
  driveRoll(a){
   const roll=a.roll;if(!roll||roll.done)return;roll.age+=this.stepSize;
@@ -111,7 +112,7 @@ export class BeastRagdollSolver{
    if(i<2){rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
   }
   roll.speed=rootSpeed;roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
-  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=RAGDOLL_ROLL.timeout;roll.done||=roll.timedOut;
+  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=roll.timeout;roll.done||=roll.timedOut;
  }
  follow(id,pose,from=null,weight=1){
   const a=this.actors.get(id);if(!a?.kinematic)throw Error('Actor is not kinematic');
