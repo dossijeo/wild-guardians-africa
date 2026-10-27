@@ -1,3 +1,4 @@
+import {startPresentationTrace} from './qa-presentation-trace.mjs';
 import {patchChunkWaterScene} from './chunk-water-scene-patch.mjs';
 import {regionalTailProbe} from './regional-tail-probe-source.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
@@ -17,7 +18,7 @@ report.consoleErrors=[];report.failedRequests=[];
 page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text());});
 context.on('requestfailed',r=>report.failedRequests.push({url:r.url(),failure:r.failure()}));
 report.instrumentation={recordVideo,cpuSampling,gpuQueries:process.env.WG_MAGIC_GPU==='1'};
-let profiler;
+let profiler,finishPresentationTrace;
 const inspect=async()=>page.evaluate(()=>{const q=wildGuardiansVisibilityQa();return {...q,state:q.snapshot?JSON.parse(q.snapshot):null,snapshot:undefined};});
 try {
  if(process.env.WG_REGIONAL_TAIL_PROBE==='1'){
@@ -160,6 +161,7 @@ try {
   }
   return {start,end:performance.now(),stableFrames:stable,...snapshot,scope:'Stable residency/empty preparation queues, not identical dynamic simulation state. Preflight time excluded from measurement windows.'};
  });
+ if(process.env.WG_PRESENTATION_TRACE==='1')finishPresentationTrace=await startPresentationTrace(browser,page,out);
  report.casts=[];
  for(let i=0;i<Number(process.env.WG_MAGIC_CASTS??3);i++){
   await page.waitForFunction(()=>qaMagicWorld.state.cooldowns.shield<=0&&!qaMagicWorld.state.spells.some(s=>s.kind==='shield'),null,{timeout:240000});
@@ -177,6 +179,7 @@ try {
   assert(process.env.WG_MAGIC_NO_CAST==='1'||result.after.spells.some(s=>s.kind==='shield'&&s.remaining>0));
   if(process.env.WG_MAGIC_CAPTURE_AFTER_STREAM!=='1')await page.screenshot({path:out+'/shield-'+i+'.png'});
   if(process.env.WG_MAGIC_STREAM==='1'){await page.waitForFunction(()=>qaStreamTimer===null,null,{timeout:60000});result.streaming=await page.evaluate(()=>({samples:qaStreamSamples,spatial:globalThis.wildGuardiansSpatialQa?.()}));assert(new Set(result.streaming.samples.flatMap(s=>s.keys)).size>result.streaming.samples[0].keys.length,'Camera must introduce new chunks');}
+  if(finishPresentationTrace){report.presentationTrace=await finishPresentationTrace();finishPresentationTrace=null;}
   if(process.env.WG_MAGIC_CAPTURE_AFTER_STREAM==='1'){result.captureStart=await page.evaluate(()=>performance.now());await page.screenshot({path:out+'/shield-'+i+'.png'});result.captureEnd=await page.evaluate(()=>performance.now());}
   await writeFile(out+'/progress.json',JSON.stringify(report.casts,null,2));
  }
@@ -187,4 +190,4 @@ try {
  report.ok=true;assert.deepEqual(errors,[]);
 
 }catch(e){report.ok=false;report.failure=String(e);report.last=await inspect().catch(()=>null);await page.screenshot({path:out+'/raid-ui-failure.png'}).catch(()=>{});process.exitCode=1;}
-finally{report.chunkDelivery=await page.evaluate(()=>globalThis.qaChunkDeliveryFinish?.()??null).catch(()=>null);report.regionalTail=await page.evaluate(()=>({rows:globalThis.qaTailRows??[],dropped:globalThis.qaTailDropped??0})).catch(()=>null);report.wholeFrame=await page.evaluate(()=>globalThis.qaWholeFrameFinish?.()??null).catch(()=>null);report.smoothSort=await page.evaluate(()=>globalThis.qaSmoothSortStats??null).catch(()=>null);report.matrixReuse=await page.evaluate(()=>globalThis.qaMatrixReuseFinish?.()??null).catch(()=>null);await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);if(process.env.WG_MAGIC_FAR_PHASES==='1')report.farCpu=await page.evaluate(()=>globalThis.qaFarCpuFinish?.()??null);if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheAfter=await page.evaluate(()=>({...globalThis.qaMagicWorld?.releaseNativeShadow?.cache?.stats})).catch(()=>null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
+finally{if(finishPresentationTrace)report.presentationTrace=await finishPresentationTrace();report.chunkDelivery=await page.evaluate(()=>globalThis.qaChunkDeliveryFinish?.()??null).catch(()=>null);report.regionalTail=await page.evaluate(()=>({rows:globalThis.qaTailRows??[],dropped:globalThis.qaTailDropped??0})).catch(()=>null);report.wholeFrame=await page.evaluate(()=>globalThis.qaWholeFrameFinish?.()??null).catch(()=>null);report.smoothSort=await page.evaluate(()=>globalThis.qaSmoothSortStats??null).catch(()=>null);report.matrixReuse=await page.evaluate(()=>globalThis.qaMatrixReuseFinish?.()??null).catch(()=>null);await page.evaluate(()=>{if(globalThis.qaStreamTimer)clearInterval(qaStreamTimer);}).catch(()=>{});if(profiler){if(cpuSampling){const {profile}=await profiler.send('Profiler.stop');await writeFile(out+'/magic.cpuprofile',JSON.stringify(profile));}report.timing=await page.evaluate(()=>{qaMagicRecording=false;return {frames:qaMagicFrames,longTasks:qaMagicLongTasks};});await writeFile(out+'/program-waits.json',JSON.stringify(await page.evaluate(()=>qaMagicPrograms)));await writeFile(out+'/program-history.json',JSON.stringify(await page.evaluate(()=>qaMagicProgramHistory)));}if(process.env.WG_MAGIC_GPU==='1')report.residual=await page.evaluate(()=>globalThis.qaResidualFinish?.()??null);if(process.env.WG_MAGIC_FAR_PHASES==='1')report.farCpu=await page.evaluate(()=>globalThis.qaFarCpuFinish?.()??null);if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheAfter=await page.evaluate(()=>({...globalThis.qaMagicWorld?.releaseNativeShadow?.cache?.stats})).catch(()=>null);report.errors=errors;await writeFile(out+'/raid-ui.json',JSON.stringify(report,null,2));await context.close();if(recordVideo)await page.video().saveAs(out+'/raid-ui.webm');await browser.close();console.log(JSON.stringify({species,ok:report.ok,failure:report.failure}));}
