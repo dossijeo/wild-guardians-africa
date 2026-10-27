@@ -57,6 +57,10 @@ try {
  await page.waitForFunction(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',null,{timeout:180000});
  await page.waitForTimeout(2200);report.before=await inspect();report.biome=report.before.state?.biome;assert.equal(report.biome,JSON.parse(fixture.snapshot).biome);if(process.env.WG_EXPECT_BIOME)assert.equal(report.biome,process.env.WG_EXPECT_BIOME);if(process.env.WG_MAGIC_PROFILE==='1')report.runtimeProfile=await page.evaluate(()=>({visualSearch:qaMagicWorld.visualSearch,streamingOptions:qaMagicWorld.streamingOptions,regionalWater:qaMagicWorld.scene.getObjectsByProperty('isMesh',true).filter(m=>m.userData.regionalWaterSurface).length}));
  if(await page.locator('.tutorial-close:visible').count())await page.locator('.tutorial-close:visible').first().click();
+ if(['0','1'].includes(process.env.WG_MAGIC_SHADOW_CACHE)){
+  report.shadowCacheEnabled=process.env.WG_MAGIC_SHADOW_CACHE==='1';
+  await page.evaluate(enabled=>{qaMagicWorld.releaseNativeShadow.cache.enabled=enabled;},report.shadowCacheEnabled);
+ }
  if(process.env.WG_MAGIC_PROFILE==='1')report.shadowCacheBefore=await page.evaluate(()=>({...qaMagicWorld.releaseNativeShadow?.cache?.stats}));
  if(process.env.WG_MAGIC_PROFILE==='1'){
   profiler=await context.newCDPSession(page);if(cpuSampling){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
