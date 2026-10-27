@@ -18,3 +18,9 @@ Pendiente: pruebas conjuntas, comprobación de distribución ejecutándose, PR/f
 - Aparcado por petición explícita: LOD de trabajadores y bestias. No generar ni sustituir versiones low-poly automáticamente; fuera de la cola activa.
 
 Estas tareas de menú/overlays se ejecutan después del merge, no son requisitos previos que deban retrasarlo. La suite completa de integración sigue en proceso82846; no hay resultado terminal todavía.
+
+## PR216 y validación conjunta
+
+Push1e48e3f13 confirmado en origin; PR216 creada en borrador. Suite completa82846 continúa; primer fallo confirmado asset-surface.test.js presupone tres texturas únicas. Nuevos árboles usan textureSets. Prueba actualizada para verificar solicitudes exactas, compartición dentro de cada set y separación entre sets;3tests del archivo pasan. No se modifica producción para acomodar el test.
+
+Paquete funcional30337 termina sin errores/404: biblioteca cuatro labs, entrada real durante carga, nueva partida Manglares, guardar/salir/continuar, HUD recuperado y workers pthread desde ruta anidada. Inspección visual de carga confirma diseño nuevo. Captura final tras recarga muestra franjas de agua cruzando árboles lejanos: NO dar por válida aún la imagen. Nueva corrida captura inmediatamente y tras30s para distinguir preparación pendiente de artefacto persistente. No medir rendimiento mientras suite completa comparteCPU.

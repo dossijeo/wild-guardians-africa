@@ -158,6 +158,12 @@ try{
  }
  if(errors.length||requests.length)throw Error('Package run reported errors or missing resources: '+JSON.stringify({errors,requests}));
  await page.screenshot({path:report.replace(/\.json$/,'.png')});
+ if(process.env.WG_PACKAGE_UI_SETTLE==='1'){
+  await page.waitForTimeout(30000);
+  await page.screenshot({path:report.replace(/\.json$/,'-settled.png')});
+  result.settled={waitMs:30000,stageBusy:await page.locator('#stage').getAttribute('aria-busy')};
+  if(errors.length||requests.length)throw Error('Errors during settled observation: '+JSON.stringify({errors,requests}));
+ }
  console.log(JSON.stringify(result));
 }catch(e){result.loadingTrace=await page.evaluate(()=>globalThis.__wildGuardiansNativeLoadingSnapshot?.()).catch(()=>null);result.failure=String(e);process.exitCode=1;console.error(e);await page.screenshot({path:report.replace(/\.json$/,'-failure.png')}).catch(()=>{});}
 finally{await writeFile(report,JSON.stringify({diagnostics:{loadingTrace:process.env.WG_PACKAGE_UI_TRACE==='1',softwareRequested:process.env.WG_PACKAGE_UI_SOFTWARE==='1',initialQuality:process.env.WG_PACKAGE_UI_QUALITY??null},scope:process.env.WG_PACKAGE_UI_FIXTURE?'Built package at nested path; imported saved-world fixture via legacy storage and selected through normal menu. No route interception or source injection.':'Built package at nested path, no URL flags, route interception or source injection.',result,errors,requests,workers,closedWorkers},null,2)+'\n');await page.context().close();if(page.video())await page.video().saveAs(report.replace(/\.json$/,'.webm'));await browser.close();await new Promise(resolve=>server.close(resolve));}
