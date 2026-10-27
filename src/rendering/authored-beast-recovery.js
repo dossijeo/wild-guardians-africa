@@ -36,15 +36,16 @@ export class AuthoredBeastRecovery{
    this.hip.getWorldQuaternion(this.worldRotation).normalize();this.hip.parent.getWorldQuaternion(this.parentRotation).normalize().invert();
    this.hip.quaternion.copy(this.parentRotation.multiply(this.slopeRotation).multiply(this.worldRotation));model.updateMatrixWorld(true);
   }
-  this.horizontalCorrection.set(0,0,0);if(this.age>0&&!this.surface&&this.solidContacts)this.horizontalCorrection.copy(this.solidContacts.resolve());
+  this.horizontalCorrection.set(0,0,0);if(this.age>0&&!this.surface&&this.solidContacts)this.horizontalCorrection.copy(this.solidContacts.resolve(this.surface));
   if(this.surface&&this.age>0){
    if(this.cloth.entries.length){
     let bodyClearance=Infinity;for(const sample of this.samples){if(this.cloth.clothSamples.has(sample))continue;sample.mesh.getVertexPosition(sample.index,this.v).applyMatrix4(sample.mesh.matrixWorld);bodyClearance=Math.min(bodyClearance,this.v.y-this.surface(this.v.x,this.v.z));}
     if(Number.isFinite(bodyClearance)){const base=(.01-bodyClearance)*entry*(1-exit);this.hip.getWorldPosition(this.v);this.v.y+=base;this.hip.position.copy(this.hip.parent.worldToLocal(this.v));model.updateMatrixWorld(true);}
     this.cloth.resolve(this.surface,entry*(1-exit));
    }
-   if(this.solidContacts)this.horizontalCorrection.copy(this.solidContacts.resolve());
-   for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);clearance=Math.min(clearance,this.v.y-this.surface(this.v.x,this.v.z));}
+   if(this.solidContacts)this.horizontalCorrection.copy(this.solidContacts.resolve(this.surface));
+   if(this.solidContacts&&this.horizontalCorrection.lengthSq()===0&&Number.isFinite(this.solidContacts.minimumClearance))clearance=this.solidContacts.minimumClearance;
+   else for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);clearance=Math.min(clearance,this.v.y-this.surface(this.v.x,this.v.z));}
    // Interpolating two supported poses can lift their shared support away from
    // the ground. Correct both signs, retaining the exact physical entry pose
    // and smoothly settling its original clearance onto the authored floor.

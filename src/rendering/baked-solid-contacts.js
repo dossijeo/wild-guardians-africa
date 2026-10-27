@@ -6,12 +6,12 @@ import {visitBeastSolids} from './beast-physics-environment.js';
 // Keep the entry side of each obstacle: never eject through a thin wall.
 export class BakedSolidContacts{
  constructor(binding,boxes){
-  this.binding=binding;this.boxes=boxes;this.samples=BeastRecovery.contactSamples(binding.model);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();
+  this.binding=binding;this.boxes=boxes;this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();
  }
  static forAnimal(world,animal,binding){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes);}
- resolve(){
-  this.shift.set(0,0,0);if(!this.boxes.length)return this.shift;
-  this.bounds.makeEmpty();for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);}
+ resolve(surface=null){
+  this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length)return this.shift;
+  this.bounds.makeEmpty();let offset=0;for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);if(surface){this.positions[offset++]=this.point.x;this.positions[offset++]=this.point.y;this.positions[offset++]=this.point.z;}}
   // Include the contact skin in broad-phase overlap, not just separation.
   // Sparse support samples can miss small features between extrema.
   this.bounds.expandByScalar(.015);
@@ -26,6 +26,7 @@ export class BakedSolidContacts{
    b.translate(this.point);this.shift.add(this.point);
   }
   if(this.shift.lengthSq()){const hip=this.binding.bones.get('Hips');hip.getWorldPosition(this.point).add(this.shift);hip.position.copy(hip.parent.worldToLocal(this.point));this.binding.model.updateMatrixWorld(true);}
+  else if(surface)for(let i=0;i<offset;i+=3)this.minimumClearance=Math.min(this.minimumClearance,this.positions[i+1]-surface(this.positions[i],this.positions[i+2]));
   return this.shift;
  }
 }

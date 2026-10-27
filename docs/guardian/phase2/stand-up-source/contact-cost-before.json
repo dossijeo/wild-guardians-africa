@@ -1,0 +1,157 @@
+{
+  "scope": "Node CPU microbenchmark, actual production GLTFs, deterministic recovery poses, warmup and ABBA order. Not browser FPS/GPU or a gameplay benchmark.",
+  "node": "v20.11.0",
+  "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+  "rows": [
+    {
+      "species": "hyena",
+      "mode": "baseline",
+      "samples": 1251,
+      "iterations": 960,
+      "medianMs": 0.2376000000000431,
+      "p95Ms": 0.4270000000000209,
+      "p99Ms": 0.5874999999999773,
+      "maxMs": 0.9397999999999911
+    },
+    {
+      "species": "hyena",
+      "mode": "far",
+      "samples": 1251,
+      "iterations": 480,
+      "medianMs": 0.47489999999993415,
+      "p95Ms": 0.7748000000000275,
+      "p99Ms": 0.9773000000000138,
+      "maxMs": 1.4054000000000997
+    },
+    {
+      "species": "hyena",
+      "mode": "near",
+      "samples": 1251,
+      "iterations": 480,
+      "medianMs": 0.4799000000000433,
+      "p95Ms": 0.7596000000000913,
+      "p99Ms": 0.9870999999998276,
+      "maxMs": 1.4981000000000222
+    },
+    {
+      "species": "lion",
+      "mode": "baseline",
+      "samples": 1126,
+      "iterations": 960,
+      "medianMs": 0.7213000000001557,
+      "p95Ms": 1.2765999999996893,
+      "p99Ms": 1.7805999999995947,
+      "maxMs": 3.585900000000038
+    },
+    {
+      "species": "lion",
+      "mode": "far",
+      "samples": 1126,
+      "iterations": 480,
+      "medianMs": 1.0229999999996835,
+      "p95Ms": 1.6131999999997788,
+      "p99Ms": 1.9027999999998428,
+      "maxMs": 5.462799999999788
+    },
+    {
+      "species": "lion",
+      "mode": "near",
+      "samples": 1126,
+      "iterations": 480,
+      "medianMs": 0.8695999999999913,
+      "p95Ms": 1.8131000000003041,
+      "p99Ms": 2.021900000000187,
+      "maxMs": 2.2669999999998254
+    },
+    {
+      "species": "warthog",
+      "mode": "baseline",
+      "samples": 576,
+      "iterations": 960,
+      "medianMs": 0.11409999999978027,
+      "p95Ms": 0.22749999999996362,
+      "p99Ms": 0.28389999999990323,
+      "maxMs": 0.6896999999999025
+    },
+    {
+      "species": "warthog",
+      "mode": "far",
+      "samples": 576,
+      "iterations": 480,
+      "medianMs": 0.21789999999964493,
+      "p95Ms": 0.3456000000005588,
+      "p99Ms": 0.48440000000027794,
+      "maxMs": 0.7399999999997817
+    },
+    {
+      "species": "warthog",
+      "mode": "near",
+      "samples": 576,
+      "iterations": 480,
+      "medianMs": 0.21600000000034925,
+      "p95Ms": 0.30649999999968713,
+      "p99Ms": 0.36850000000049477,
+      "maxMs": 0.6584999999995489
+    },
+    {
+      "species": "buffalo",
+      "mode": "baseline",
+      "samples": 904,
+      "iterations": 960,
+      "medianMs": 0.2452000000002954,
+      "p95Ms": 0.5459000000000742,
+      "p99Ms": 0.768699999999626,
+      "maxMs": 0.9945999999999913
+    },
+    {
+      "species": "buffalo",
+      "mode": "far",
+      "samples": 904,
+      "iterations": 480,
+      "medianMs": 0.6134000000001834,
+      "p95Ms": 1.0207000000000335,
+      "p99Ms": 1.3105999999997948,
+      "maxMs": 1.9799000000002707
+    },
+    {
+      "species": "buffalo",
+      "mode": "near",
+      "samples": 904,
+      "iterations": 480,
+      "medianMs": 0.426499999999578,
+      "p95Ms": 0.9908000000004904,
+      "p99Ms": 1.2609000000002197,
+      "maxMs": 1.4638000000004467
+    },
+    {
+      "species": "rhino",
+      "mode": "baseline",
+      "samples": 1146,
+      "iterations": 960,
+      "medianMs": 0.8175000000001091,
+      "p95Ms": 1.565099999999802,
+      "p99Ms": 1.960399999999936,
+      "maxMs": 2.2462000000014086
+    },
+    {
+      "species": "rhino",
+      "mode": "far",
+      "samples": 1146,
+      "iterations": 480,
+      "medianMs": 0.995600000000195,
+      "p95Ms": 2.0781999999999243,
+      "p99Ms": 2.4390999999995984,
+      "maxMs": 2.647800000000643
+    },
+    {
+      "species": "rhino",
+      "mode": "near",
+      "samples": 1146,
+      "iterations": 480,
+      "medianMs": 0.9906000000000859,
+      "p95Ms": 1.9302000000006956,
+      "p99Ms": 2.1494000000002416,
+      "maxMs": 2.9861999999993714
+    }
+  ]
+}

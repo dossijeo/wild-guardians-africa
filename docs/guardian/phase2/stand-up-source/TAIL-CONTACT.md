@@ -165,3 +165,13 @@ New full-skin tests for hyena/lion cover a wall and an open two-wall corner thro
 Twenty-six focused terrain/solid/ownership tests pass. `lion-solid-getup-runtime.mp4/png/json` captures four production-lion impacts, peak three physical plus one baked, all recovering with zero final downed actors and no errors. Contact sheet inspected. This demonstrates runtime integration, not exhaustive close visual collision acceptance or proof of contact with every nearby obstacle.
 
 Remaining limits: closed corridors/contradictory constraints, obstacle appearance during an active cycle, live collision between baked animals, close joint/timing review and comparable feature CPU/GPU measurements. The new margin is conservative and may produce extra clearance around limbs. No general obstacle-completion claim.
+
+## Scoped contact CPU measurement and reuse
+
+Added `tools/guardian/benchmark_recovery_contacts.mjs`: actual production meshes, deterministic get-up poses, per-mode warmup, ABBA ordering, baseline/no-solid versus far-box and near-box modes. It reports median/p95/p99/max CPU time and sample counts for every species. This is a Node microbenchmark, not browser frame time, GPU cost or gameplay performance; external machine load can affect tails.
+
+Baseline implementation at 5d64265f6 repeated sampled skinning for envelope and terrain checks even when no horizontal collision correction occurred. BakedSolidContacts now retains world sample positions in one preallocated Float64Array and computes terrain clearance from those positions only when its resolved shift is zero. Authored and baked playback reuse that clearance within the same pose evaluation. If collision moves the body, terrain is sampled again from the moved geometry. Empty-solid and nonfinite/unavailable-clearance cases retain the old calculation. No cache survives a pose evaluation as valid data; the array storage alone is reused.
+
+`contact-cost-before.json` and `contact-cost-after.json` preserve all measurements. Far-box median ms: hyena 0.475→0.304, lion 1.023→0.683, warthog 0.218→0.195, buffalo 0.613→0.293, rhino 0.996→0.684. Far-box p95 ranges from 0.333 to 1.377 ms after the change. Near-contact cost is not claimed improved; it still requires resampling. An initial version duplicated terrain queries in collision cases and was replaced with cached positions before this final measurement. Storage cost is 24 bytes per sampled vertex per active contact instance (e.g. hyena 30,024 bytes).
+
+Twenty-eight focused contact/terrain/ownership tests pass after the final change. No new graphical acceptance or whole-game fluency claim. Browser paired performance under representative incursions, close art review and previously documented obstacle limitations remain open.
