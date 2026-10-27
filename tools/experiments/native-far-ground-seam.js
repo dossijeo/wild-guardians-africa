@@ -5,14 +5,16 @@ import {farGroundColorUvs} from './far-ground-color-map.js';
 // Private opt-in owner. Updates compare a discrete rectangle; terrain sampling
 // happens only in a cancellable worker. Previously prepared geometry is kept
 // until the replacement is complete, with borrowed map/material inputs.
-export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,configureGeometry=null,prepare=null,cancelled=()=>false,streamFactory=()=>new FarGroundSeamStream()}={}){
+export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,reuseMaterial=false,configureGeometry=null,prepare=null,cancelled=()=>false,streamFactory=()=>new FarGroundSeamStream()}={}){
  if(!ground.colorMap||typeof createMaterial!=='function')throw Error('Mapped ground required for seam');
+ if(typeof reuseMaterial!=='boolean')throw Error('Invalid seam material reuse');
+ let sharedMaterial=null;
  const emptyPromise=Promise.resolve(null),sourceSeed=world.nav.config.seed,sourceBiome=world.nav.config.biome;
  let closed=false,generation=0,current=null,requestedBounds=null,requestedRevision=null,pending=null,stream=streamFactory(),lost=world.renderer.getContext().isContextLost(),preparedPromise=emptyPromise;
  const stats={requests:0,adopted:0,stale:0,vertices:0,bytes:0,buildMs:0,errors:[]};candidate.groundSeamStats=stats;
  const sourceConfig=JSON.stringify(world.nav.config);
  const canvas=world.renderer.domElement;
- const release=mesh=>{if(!mesh)return;mesh.removeFromParent();mesh.geometry.dispose();mesh.material.dispose();};
+ const release=mesh=>{if(!mesh)return;mesh.removeFromParent();mesh.geometry.dispose();if(!reuseMaterial)mesh.material.dispose();};
  const onLost=()=>{lost=true;generation++;stream.dispose();pending=null;requestedBounds=null;};
  const onRestored=()=>{lost=false;if(!closed)stream=streamFactory();};
  canvas.addEventListener('webglcontextlost',onLost);canvas.addEventListener('webglcontextrestored',onRestored);
@@ -29,7 +31,7 @@ export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,co
    const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||(world.spatialSession?.horizonSource.revision()??0)!==revision||world.nearBounds.join(':')!==boundsKey||JSON.stringify(world.nav.config)!==sourceConfig;
    if(!result||stale()){stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
    const data=result.data,geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,ground.colorMap),2));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
-   let material;try{configureGeometry?.(geometry);material=createMaterial();}catch(error){geometry.dispose();throw error;}
+   let material;try{configureGeometry?.(geometry);material=reuseMaterial?(sharedMaterial??=createMaterial()):createMaterial();}catch(error){geometry.dispose();throw error;}
    const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.farGroundSeam=true;mesh.userData.materialRegistryExcluded=true;
    try{if(prepare)await prepare(mesh,stale);}catch(error){release(mesh);if(stale()){stats.stale++;return null;}throw error;}
    if(stale()){release(mesh);stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
@@ -38,5 +40,5 @@ export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,co
   }).catch(error=>{if(closed||epoch!==generation)return null;requestedBounds=null;stats.errors.push(String(error));throw error;}).finally(()=>{if(epoch===generation)pending=null;});
   return pending;
  }
- return {update,stats,dispose(){if(closed)return;closed=true;generation++;canvas.removeEventListener('webglcontextlost',onLost);canvas.removeEventListener('webglcontextrestored',onRestored);stream.dispose();release(current);current=null;pending=null;preparedPromise=emptyPromise;}};
+ return {update,stats,dispose(){if(closed)return;closed=true;generation++;canvas.removeEventListener('webglcontextlost',onLost);canvas.removeEventListener('webglcontextrestored',onRestored);stream.dispose();release(current);sharedMaterial?.dispose();sharedMaterial=null;current=null;pending=null;preparedPromise=emptyPromise;}};
 }
