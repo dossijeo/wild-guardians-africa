@@ -1,0 +1,274 @@
+[
+  {
+    "dir": "1-baseline",
+    "rows": [
+      {
+        "label": "far-region-attach-ground",
+        "count": 4,
+        "max": 24.794999957084656,
+        "total": 24.80999994277954
+      },
+      {
+        "label": "scheduler-unit:terrain :water-edges",
+        "count": 1,
+        "max": 24.49500000476837,
+        "total": 24.49500000476837
+      },
+      {
+        "label": "scheduler-unit:terrain :bank",
+        "count": 2,
+        "max": 15.379999995231628,
+        "total": 24.044999957084656
+      },
+      {
+        "label": "worker-receiver",
+        "count": 8,
+        "max": 10.52999997138977,
+        "total": 15.03000009059906
+      },
+      {
+        "label": "worker-event-data",
+        "count": 8,
+        "max": 10.46999990940094,
+        "total": 14.534999966621399
+      },
+      {
+        "label": "scheduler-unit:terrain :ground",
+        "count": 21,
+        "max": 4.804999947547913,
+        "total": 74.27499997615814
+      },
+      {
+        "label": "scheduler-unit:terrain :mud-geometry",
+        "count": 21,
+        "max": 3.959999918937683,
+        "total": 50.55499994754791
+      },
+      {
+        "label": "far-region-create",
+        "count": 4,
+        "max": 3.8399999141693115,
+        "total": 9.069999933242798
+      },
+      {
+        "label": "far-select-anchor",
+        "count": 1,
+        "max": 1.3050000667572021,
+        "total": 1.3050000667572021
+      },
+      {
+        "label": "worker-terminate",
+        "count": 8,
+        "max": 0.039999961853027344,
+        "total": 0.2049999237060547
+      }
+    ]
+  },
+  {
+    "dir": "2-candidate",
+    "rows": [
+      {
+        "label": "far-region-attach-ground",
+        "count": 4,
+        "max": 26.59500002861023,
+        "total": 26.610000014305115
+      },
+      {
+        "label": "scheduler-unit:terrain :bank",
+        "count": 2,
+        "max": 14.019999980926514,
+        "total": 22.725000023841858
+      },
+      {
+        "label": "worker-receiver",
+        "count": 8,
+        "max": 10.235000014305115,
+        "total": 14.855000019073486
+      },
+      {
+        "label": "worker-event-data",
+        "count": 8,
+        "max": 10.180000066757202,
+        "total": 14.120000123977661
+      },
+      {
+        "label": "scheduler-unit:terrain :water-bed",
+        "count": 19,
+        "max": 6.375,
+        "total": 32.15499997138977
+      },
+      {
+        "label": "scheduler-unit:terrain :ground",
+        "count": 23,
+        "max": 5.289999961853027,
+        "total": 88.03499984741211
+      },
+      {
+        "label": "scheduler-unit:terrain :mud-geometry",
+        "count": 23,
+        "max": 4.379999995231628,
+        "total": 55.94000017642975
+      },
+      {
+        "label": "far-region-create",
+        "count": 4,
+        "max": 2.465000033378601,
+        "total": 6.654999852180481
+      },
+      {
+        "label": "worker-terminate",
+        "count": 8,
+        "max": 0.02499997615814209,
+        "total": 0.16499996185302734
+      }
+    ]
+  },
+  {
+    "dir": "3-baseline",
+    "rows": [
+      {
+        "label": "scheduler-unit:terrain :water-edges",
+        "count": 1,
+        "max": 25.759999990463257,
+        "total": 25.759999990463257
+      },
+      {
+        "label": "far-region-attach-ground",
+        "count": 4,
+        "max": 24.37000000476837,
+        "total": 24.394999980926514
+      },
+      {
+        "label": "scheduler-unit:terrain :bank",
+        "count": 2,
+        "max": 21.045000076293945,
+        "total": 32.450000047683716
+      },
+      {
+        "label": "worker-receiver",
+        "count": 9,
+        "max": 10.399999976158142,
+        "total": 16.924999952316284
+      },
+      {
+        "label": "worker-event-data",
+        "count": 9,
+        "max": 10.334999918937683,
+        "total": 16.365000009536743
+      },
+      {
+        "label": "scheduler-unit:terrain :mud-geometry",
+        "count": 20,
+        "max": 7.235000014305115,
+        "total": 44.8299994468689
+      },
+      {
+        "label": "scheduler-unit:terrain :ground",
+        "count": 20,
+        "max": 5.519999980926514,
+        "total": 78.26999998092651
+      },
+      {
+        "label": "far-region-create",
+        "count": 4,
+        "max": 3.575000047683716,
+        "total": 8.800000071525574
+      },
+      {
+        "label": "far-select-anchor",
+        "count": 1,
+        "max": 1.3350000381469727,
+        "total": 1.3350000381469727
+      },
+      {
+        "label": "scheduler-unit:terrain :prop-slots-8",
+        "count": 1,
+        "max": 1.3199999332427979,
+        "total": 1.3199999332427979
+      },
+      {
+        "label": "worker-terminate",
+        "count": 9,
+        "max": 0.03000009059906006,
+        "total": 0.21500027179718018
+      }
+    ]
+  },
+  {
+    "dir": "4-candidate",
+    "rows": [
+      {
+        "label": "far-region-attach-ground",
+        "count": 4,
+        "max": 22.850000023841858,
+        "total": 22.855000019073486
+      },
+      {
+        "label": "worker-receiver",
+        "count": 9,
+        "max": 12.075000047683716,
+        "total": 16.31000006198883
+      },
+      {
+        "label": "worker-event-data",
+        "count": 9,
+        "max": 12.019999980926514,
+        "total": 15.845000147819519
+      },
+      {
+        "label": "scheduler-unit:terrain :bank",
+        "count": 2,
+        "max": 10.960000038146973,
+        "total": 20.09500002861023
+      },
+      {
+        "label": "scheduler-unit:terrain :ground",
+        "count": 23,
+        "max": 6.590000033378601,
+        "total": 90.1949999332428
+      },
+      {
+        "label": "scheduler-unit:terrain :water-bed",
+        "count": 20,
+        "max": 6.235000014305115,
+        "total": 32.53000009059906
+      },
+      {
+        "label": "scheduler-unit:terrain :mud-geometry",
+        "count": 23,
+        "max": 5.070000052452087,
+        "total": 58.860000014305115
+      },
+      {
+        "label": "far-region-create",
+        "count": 4,
+        "max": 3.0299999713897705,
+        "total": 7.810000061988831
+      },
+      {
+        "label": "scheduler-unit:terrain :prop-slots-8",
+        "count": 1,
+        "max": 1.6449999809265137,
+        "total": 1.6449999809265137
+      },
+      {
+        "label": "scheduler-unit:terrain :water-geometry",
+        "count": 2,
+        "max": 1.625,
+        "total": 2.809999942779541
+      },
+      {
+        "label": "scheduler-unit:terrain :prop-slots-4",
+        "count": 2,
+        "max": 1.3799999952316284,
+        "total": 2.465000033378601
+      },
+      {
+        "label": "worker-terminate",
+        "count": 9,
+        "max": 0.02499997615814209,
+        "total": 0.14499986171722412
+      }
+    ]
+  }
+]
