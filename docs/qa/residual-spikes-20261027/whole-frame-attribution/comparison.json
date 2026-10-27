@@ -1,0 +1,665 @@
+{
+  "window": {
+    "start": 135870.4850000143,
+    "end": 175870.4850000143
+  },
+  "metrics": {
+    "mainSyncMs": {
+      "n": 1402,
+      "p50": 8.764999985694885,
+      "p95": 17.40499997138977,
+      "p99": 25.230000019073486,
+      "max": 33.52499997615814
+    },
+    "mandatoryMs": {
+      "n": 1402,
+      "p50": 8.634999990463257,
+      "p95": 17.25499999523163,
+      "p99": 24.914999961853027,
+      "max": 33.514999985694885
+    },
+    "schedulerSyncPrefixMs": {
+      "n": 1402,
+      "p50": 0.014999985694885254,
+      "p95": 0.36500000953674316,
+      "p99": 4.010000109672546,
+      "max": 23.34500002861023
+    },
+    "renderMs": {
+      "n": 1402,
+      "p50": 8.170000076293945,
+      "p95": 16.610000014305115,
+      "p99": 24.050000071525574,
+      "max": 32.989999890327454
+    },
+    "otherSyncMs": {
+      "n": 1402,
+      "p50": 0.41499996185302734,
+      "p95": 0.8550000190734863,
+      "p99": 1.1850000619888306,
+      "max": 2.0950000286102295
+    },
+    "rafLatenessMs": {
+      "n": 1402,
+      "p50": 7.159999995230464,
+      "p95": 15.069999995233957,
+      "p99": 16.099999990459764,
+      "max": 16.919999995239777
+    }
+  },
+  "slowest": [
+    {
+      "timestamp": 144584.015,
+      "start": 144587.62999999523,
+      "beforeEnd": 144621.14499998093,
+      "end": 144621.1549999714,
+      "mainSyncMs": 33.52499997615814,
+      "mandatoryMs": 33.514999985694885,
+      "schedulerSyncPrefixMs": 0.009999990463256836,
+      "renderMs": 32.989999890327454,
+      "otherSyncMs": 0.5250000953674316,
+      "draws": 1,
+      "rafLatenessMs": 3.6149999952176586
+    },
+    {
+      "timestamp": 165203.41,
+      "start": 165216.22499990463,
+      "beforeEnd": 165223.3899999857,
+      "end": 165246.7350000143,
+      "mainSyncMs": 30.510000109672546,
+      "mandatoryMs": 7.165000081062317,
+      "schedulerSyncPrefixMs": 23.34500002861023,
+      "renderMs": 6.519999980926514,
+      "otherSyncMs": 0.6450001001358032,
+      "draws": 1,
+      "rafLatenessMs": 12.814999904629076
+    },
+    {
+      "timestamp": 137184.39,
+      "start": 137184.78999996185,
+      "beforeEnd": 137213.08499991894,
+      "end": 137213.0949999094,
+      "mainSyncMs": 28.304999947547913,
+      "mandatoryMs": 28.294999957084656,
+      "schedulerSyncPrefixMs": 0.009999990463256836,
+      "renderMs": 27.264999985694885,
+      "otherSyncMs": 1.0299999713897705,
+      "draws": 1,
+      "rafLatenessMs": 0.3999999618390575
+    },
+    {
+      "timestamp": 141391.38,
+      "start": 141401.06999993324,
+      "beforeEnd": 141429.10500001907,
+      "end": 141429.13499999046,
+      "mainSyncMs": 28.06500005722046,
+      "mandatoryMs": 28.03500008583069,
+      "schedulerSyncPrefixMs": 0.029999971389770508,
+      "renderMs": 26.93499994277954,
+      "otherSyncMs": 1.1000001430511475,
+      "draws": 1,
+      "rafLatenessMs": 9.689999933238141
+    },
+    {
+      "timestamp": 141657.425,
+      "start": 141670.84999990463,
+      "beforeEnd": 141698.66499996185,
+      "end": 141698.67499995232,
+      "mainSyncMs": 27.825000047683716,
+      "mandatoryMs": 27.81500005722046,
+      "schedulerSyncPrefixMs": 0.009999990463256836,
+      "renderMs": 27.269999980926514,
+      "otherSyncMs": 0.5450000762939453,
+      "draws": 1,
+      "rafLatenessMs": 13.42499990464421
+    },
+    {
+      "timestamp": 159566.31,
+      "start": 159579.35500001907,
+      "beforeEnd": 159606.66499996185,
+      "end": 159606.689999938,
+      "mainSyncMs": 27.334999918937683,
+      "mandatoryMs": 27.30999994277954,
+      "schedulerSyncPrefixMs": 0.02499997615814209,
+      "renderMs": 26.0349999666214,
+      "otherSyncMs": 1.274999976158142,
+      "draws": 1,
+      "rafLatenessMs": 13.045000019075815
+    },
+    {
+      "timestamp": 139928.2,
+      "start": 139929.15999996662,
+      "beforeEnd": 139956.07499992847,
+      "end": 139956.1100000143,
+      "mainSyncMs": 26.950000047683716,
+      "mandatoryMs": 26.914999961853027,
+      "schedulerSyncPrefixMs": 0.03500008583068848,
+      "renderMs": 25.90499997138977,
+      "otherSyncMs": 1.0099999904632568,
+      "draws": 1,
+      "rafLatenessMs": 0.9599999666097574
+    },
+    {
+      "timestamp": 145964.21,
+      "start": 145972.58499991894,
+      "beforeEnd": 145999.4549999237,
+      "end": 145999.51999998093,
+      "mainSyncMs": 26.93500006198883,
+      "mandatoryMs": 26.87000000476837,
+      "schedulerSyncPrefixMs": 0.06500005722045898,
+      "renderMs": 26.299999952316284,
+      "otherSyncMs": 0.5700000524520874,
+      "draws": 1,
+      "rafLatenessMs": 8.374999918945832
+    },
+    {
+      "timestamp": 160414.365,
+      "start": 160427.73000001907,
+      "beforeEnd": 160453.9850000143,
+      "end": 160454.04999995232,
+      "mainSyncMs": 26.319999933242798,
+      "mandatoryMs": 26.25499999523163,
+      "schedulerSyncPrefixMs": 0.06499993801116943,
+      "renderMs": 25.30999994277954,
+      "otherSyncMs": 0.9450000524520874,
+      "draws": 1,
+      "rafLatenessMs": 13.3650000190828
+    },
+    {
+      "timestamp": 141258.385,
+      "start": 141275.30499994755,
+      "beforeEnd": 141301.5799999237,
+      "end": 141301.58999991417,
+      "mainSyncMs": 26.2849999666214,
+      "mandatoryMs": 26.274999976158142,
+      "schedulerSyncPrefixMs": 0.009999990463256836,
+      "renderMs": 25.56500005722046,
+      "otherSyncMs": 0.7099999189376831,
+      "draws": 1,
+      "rafLatenessMs": 16.9199999475386
+    },
+    {
+      "timestamp": 174681.63,
+      "start": 174686.939999938,
+      "beforeEnd": 174712.65999996662,
+      "end": 174712.69999992847,
+      "mainSyncMs": 25.759999990463257,
+      "mandatoryMs": 25.72000002861023,
+      "schedulerSyncPrefixMs": 0.039999961853027344,
+      "renderMs": 25.139999985694885,
+      "otherSyncMs": 0.5800000429153442,
+      "draws": 1,
+      "rafLatenessMs": 5.309999938006513
+    },
+    {
+      "timestamp": 141175.22,
+      "start": 141185.66499996185,
+      "beforeEnd": 141211.39999997616,
+      "end": 141211.41499996185,
+      "mainSyncMs": 25.75,
+      "mandatoryMs": 25.735000014305115,
+      "schedulerSyncPrefixMs": 0.014999985694885254,
+      "renderMs": 25.049999952316284,
+      "otherSyncMs": 0.6850000619888306,
+      "draws": 1,
+      "rafLatenessMs": 10.444999961851863
+    },
+    {
+      "timestamp": 144401.08,
+      "start": 144407.05499994755,
+      "beforeEnd": 144432.63499999046,
+      "end": 144432.68499994278,
+      "mainSyncMs": 25.62999999523163,
+      "mandatoryMs": 25.580000042915344,
+      "schedulerSyncPrefixMs": 0.04999995231628418,
+      "renderMs": 24.81000006198883,
+      "otherSyncMs": 0.7699999809265137,
+      "draws": 1,
+      "rafLatenessMs": 5.974999947560718
+    },
+    {
+      "timestamp": 147593.78,
+      "start": 147602.93499994278,
+      "beforeEnd": 147628.45999991894,
+      "end": 147628.52499997616,
+      "mainSyncMs": 25.5900000333786,
+      "mandatoryMs": 25.524999976158142,
+      "schedulerSyncPrefixMs": 0.06500005722045898,
+      "renderMs": 24.34500002861023,
+      "otherSyncMs": 1.1799999475479126,
+      "draws": 1,
+      "rafLatenessMs": 9.154999942780705
+    },
+    {
+      "timestamp": 137799.65,
+      "start": 137808.57499992847,
+      "beforeEnd": 137833.74000000954,
+      "end": 137833.80499994755,
+      "mainSyncMs": 25.230000019073486,
+      "mandatoryMs": 25.165000081062317,
+      "schedulerSyncPrefixMs": 0.06499993801116943,
+      "renderMs": 24.764999985694885,
+      "otherSyncMs": 0.40000009536743164,
+      "draws": 1,
+      "rafLatenessMs": 8.924999928480247
+    },
+    {
+      "timestamp": 143569.685,
+      "start": 143578.50499999523,
+      "beforeEnd": 143603.41999995708,
+      "end": 143603.44499993324,
+      "mainSyncMs": 24.93999993801117,
+      "mandatoryMs": 24.914999961853027,
+      "schedulerSyncPrefixMs": 0.02499997615814209,
+      "renderMs": 24.050000071525574,
+      "otherSyncMs": 0.8649998903274536,
+      "draws": 1,
+      "rafLatenessMs": 8.819999995233957
+    },
+    {
+      "timestamp": 145465.345,
+      "start": 145472.93499994278,
+      "beforeEnd": 145497.5149999857,
+      "end": 145497.52499997616,
+      "mainSyncMs": 24.5900000333786,
+      "mandatoryMs": 24.580000042915344,
+      "schedulerSyncPrefixMs": 0.009999990463256836,
+      "renderMs": 23.889999985694885,
+      "otherSyncMs": 0.690000057220459,
+      "draws": 1,
+      "rafLatenessMs": 7.589999942778377
+    },
+    {
+      "timestamp": 144168.345,
+      "start": 144182.27499997616,
+      "beforeEnd": 144206.25,
+      "end": 144206.29999995232,
+      "mainSyncMs": 24.024999976158142,
+      "mandatoryMs": 23.975000023841858,
+      "schedulerSyncPrefixMs": 0.04999995231628418,
+      "renderMs": 23.365000009536743,
+      "otherSyncMs": 0.6100000143051147,
+      "draws": 1,
+      "rafLatenessMs": 13.929999976156978
+    },
+    {
+      "timestamp": 147111.705,
+      "start": 147126.04499995708,
+      "beforeEnd": 147150.02499997616,
+      "end": 147150.04999995232,
+      "mainSyncMs": 24.00499999523163,
+      "mandatoryMs": 23.980000019073486,
+      "schedulerSyncPrefixMs": 0.02499997615814209,
+      "renderMs": 23.115000009536743,
+      "otherSyncMs": 0.8650000095367432,
+      "draws": 1,
+      "rafLatenessMs": 14.339999957097461
+    },
+    {
+      "timestamp": 146180.465,
+      "start": 146187.83499991894,
+      "beforeEnd": 146211.54999995232,
+      "end": 146211.55999994278,
+      "mainSyncMs": 23.725000023841858,
+      "mandatoryMs": 23.7150000333786,
+      "schedulerSyncPrefixMs": 0.009999990463256836,
+      "renderMs": 23.18999993801117,
+      "otherSyncMs": 0.5250000953674316,
+      "draws": 1,
+      "rafLatenessMs": 7.369999918941176
+    }
+  ],
+  "longAnimationFrames": {
+    "supported": true,
+    "count": 123,
+    "duration": {
+      "n": 123,
+      "p50": 59.924999952316284,
+      "p95": 88.41999995708466,
+      "p99": 108.61000001430511,
+      "max": 109.55499994754791
+    },
+    "blocking": {
+      "n": 123,
+      "p50": 0,
+      "p95": 0,
+      "p99": 1.075,
+      "max": 21.325
+    },
+    "scripts": [
+      {
+        "key": "http://127.0.0.1:5220/src/app/main.js|frame|FrameRequestCallback",
+        "count": 123,
+        "duration": 2459.350000143051,
+        "max": 50.625,
+        "forcedStyleAndLayoutDuration": 25.504999999999992
+      },
+      {
+        "key": "http://127.0.0.1:5220/tools/experiments/far-scene-loader.js||Worker.onmessage",
+        "count": 1,
+        "duration": 42.12000000476837,
+        "max": 42.12000000476837,
+        "forcedStyleAndLayoutDuration": 0
+      }
+    ],
+    "slowest": [
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 141125.75499999523,
+        "duration": 109.55499994754791,
+        "navigationId": 694,
+        "paintTime": 141235.30999994278,
+        "presentationTime": 141341.49500000477,
+        "renderStart": 141185.375,
+        "styleAndLayoutStart": 141235.0799999237,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0.325,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 141185.625,
+            "duration": 45.59499990940094,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 141185.625,
+            "forcedStyleAndLayoutDuration": 0.245,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 139860.125,
+        "duration": 108.61000001430511,
+        "navigationId": 694,
+        "paintTime": 139968.7350000143,
+        "presentationTime": 140094.37000000477,
+        "renderStart": 139929.00499999523,
+        "styleAndLayoutStart": 139968.15999996662,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 139929.12999999523,
+            "duration": 34.730000019073486,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 139929.12999999523,
+            "forcedStyleAndLayoutDuration": 0.17,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 169744.67499995232,
+        "duration": 106.23000001907349,
+        "navigationId": 694,
+        "paintTime": 169850.9049999714,
+        "presentationTime": 169925.92499995232,
+        "renderStart": 169820.83999991417,
+        "styleAndLayoutStart": 169850.75999999046,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 169821.05499994755,
+            "duration": 27.93500006198883,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 169821.05499994755,
+            "forcedStyleAndLayoutDuration": 0.155,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 140926.939999938,
+        "duration": 96.46000003814697,
+        "navigationId": 694,
+        "paintTime": 141023.39999997616,
+        "presentationTime": 141191.8600000143,
+        "renderStart": 141004.75,
+        "styleAndLayoutStart": 141023.2649999857,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 141004.79499995708,
+            "duration": 15.870000004768372,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 141004.79499995708,
+            "forcedStyleAndLayoutDuration": 0.175,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 140174.62000000477,
+        "duration": 92.89499998092651,
+        "navigationId": 694,
+        "paintTime": 140267.5149999857,
+        "presentationTime": 140343.7649999857,
+        "renderStart": 140248.83499991894,
+        "styleAndLayoutStart": 140267.4049999714,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 140249.13499999046,
+            "duration": 18.044999957084656,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 140249.13499999046,
+            "forcedStyleAndLayoutDuration": 0.125,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 139147.12999999523,
+        "duration": 91.25499999523163,
+        "navigationId": 694,
+        "paintTime": 139238.38499999046,
+        "presentationTime": 139329.44499993324,
+        "renderStart": 139218.50499999523,
+        "styleAndLayoutStart": 139237.81999993324,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 139218.55499994755,
+            "duration": 15.120000004768372,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 139218.55499994755,
+            "forcedStyleAndLayoutDuration": 0.17,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 170366.00499999523,
+        "duration": 88.41999995708466,
+        "navigationId": 694,
+        "paintTime": 170454.42499995232,
+        "presentationTime": 170524.50499999523,
+        "renderStart": 170438.88499999046,
+        "styleAndLayoutStart": 170453.939999938,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 170438.93499994278,
+            "duration": 10.695000052452087,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 170438.93499994278,
+            "forcedStyleAndLayoutDuration": 0.15,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 158274.30499994755,
+        "duration": 87.35500001907349,
+        "navigationId": 694,
+        "paintTime": 158361.65999996662,
+        "presentationTime": 158452.34999990463,
+        "renderStart": 158350.58499991894,
+        "styleAndLayoutStart": 158361.52499997616,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 158350.814999938,
+            "duration": 10.649999976158142,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 158350.814999938,
+            "forcedStyleAndLayoutDuration": 0.165,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 145867.5799999237,
+        "duration": 87.16500008106232,
+        "navigationId": 694,
+        "paintTime": 145954.74500000477,
+        "presentationTime": 146063.94499993324,
+        "renderStart": 145926.564999938,
+        "styleAndLayoutStart": 145954.60500001907,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 145926.64999997616,
+            "duration": 23.68499994277954,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 145926.64999997616,
+            "forcedStyleAndLayoutDuration": 0.245,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      },
+      {
+        "name": "long-animation-frame",
+        "entryType": "long-animation-frame",
+        "startTime": 142071.2649999857,
+        "duration": 85.80999994277954,
+        "navigationId": 694,
+        "paintTime": 142157.07499992847,
+        "presentationTime": 142256.02499997616,
+        "renderStart": 142130.42999994755,
+        "styleAndLayoutStart": 142156.91499996185,
+        "firstUIEventTimestamp": 0,
+        "blockingDuration": 0,
+        "scripts": [
+          {
+            "name": "script",
+            "entryType": "script",
+            "startTime": 142130.49000000954,
+            "duration": 20.299999952316284,
+            "navigationId": 694,
+            "invoker": "FrameRequestCallback",
+            "invokerType": "user-callback",
+            "windowAttribution": "self",
+            "executionStart": 142130.49000000954,
+            "forcedStyleAndLayoutDuration": 0.18,
+            "pauseDuration": 0,
+            "sourceURL": "http://127.0.0.1:5220/src/app/main.js",
+            "sourceFunctionName": "frame",
+            "sourceCharPosition": 69326
+          }
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "Diagnostic only, no code treatment.",
+    "endFrame is async: wrapper records only its synchronous prefix; microtask continuations are outside mainSyncMs.",
+    "RAF lateness is elapsed scheduling delay, not measured CPU work or available slack.",
+    "Long Animation Frames report slow browser frames only; do not subtract script durations to claim GPU time.",
+    "World.render time includes synchronous submission and timer polling; it is not exclusive GPU execution."
+  ]
+}
