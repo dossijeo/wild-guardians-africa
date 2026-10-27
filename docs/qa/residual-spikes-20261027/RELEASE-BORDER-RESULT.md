@@ -26,3 +26,8 @@ Visual scope: first paired capture inspected; approved fern coverage and nearby 
 Next: record native removal calls with whether the selected chunk is included. The existing code regenerates another resident chunk's visual payload when removing the selected chunk. Isolated native timings implicated this cost, but the real-game23.5ms release has not yet been attributed. A new diagnostic run records this distinction; it must not be mixed into the completed ABAB sequence.
 
 Reproduction: build candidate as recorded in release-border-candidate.json; run tools/experiments/run-release-border-abab.mjs with a fresh WG_RELEASE_ABAB_OUT, then compare-release-border-abab.mjs on that directory. The completed sequence used the harness SHA in each provenance record; later attribution instrumentation is a distinct harness revision.
+
+## Selected chunk attribution
+The separate real-game run completed without errors. Three native batch removals including the selected chunk took13.28,18.00,19.60ms; four not including it took1.50–2.26ms. See selected-release-attribution/native-removal-summary.json. This supports targeting fallback preparation, without claiming all duration is exclusively procedural computation.
+
+Design constraint: current selection includes lattice, ponds, props, solid props, buckets and nearby settlements, not just visual arrays. A safe change cannot simply skip populateChunk and leave stale selected state. Public payload getters and currentChunk counts must retain their contract. Consider deferring only visual composition while restoring resident spatial data, with exact payload equivalence tests and no added per-chunk visual cache. No such implementation is yet adopted.

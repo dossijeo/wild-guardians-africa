@@ -1,0 +1,155 @@
+{
+  "scope": "Single real-game diagnostic with candidate runtime. No causal performance claim or ABAB.",
+  "selected": {
+    "calls": 3,
+    "totalMs": 50.875,
+    "medianMs": 18,
+    "maxMs": 19.59500002861023,
+    "records": [
+      {
+        "frame": 1,
+        "label": "native:removeChunks",
+        "at": 78323.21500003338,
+        "ms": 19.59500002861023,
+        "selectedRequested": true,
+        "requested": 5,
+        "removed": 5,
+        "selectedBefore": {
+          "cx": 0,
+          "cz": 3,
+          "count": 313
+        },
+        "selectedAfter": {
+          "cx": 0,
+          "cz": 2,
+          "count": 298
+        }
+      },
+      {
+        "frame": 114,
+        "label": "native:removeChunks",
+        "at": 80705.56500005722,
+        "ms": 13.27999997138977,
+        "selectedRequested": true,
+        "requested": 5,
+        "removed": 5,
+        "selectedBefore": {
+          "cx": 0,
+          "cz": -2,
+          "count": 251
+        },
+        "selectedAfter": {
+          "cx": 4,
+          "cz": -2,
+          "count": 352
+        }
+      },
+      {
+        "frame": 1179,
+        "label": "native:removeChunks",
+        "at": 108320.4850000143,
+        "ms": 18,
+        "selectedRequested": true,
+        "requested": 5,
+        "removed": 5,
+        "selectedBefore": {
+          "cx": 7,
+          "cz": 2,
+          "count": 318
+        },
+        "selectedAfter": {
+          "cx": 6,
+          "cz": 2,
+          "count": 223
+        }
+      }
+    ]
+  },
+  "notSelected": {
+    "calls": 4,
+    "totalMs": 7.564999938011169,
+    "medianMs": 2.2549999952316284,
+    "maxMs": 2.2649999856948853,
+    "records": [
+      {
+        "frame": 260,
+        "label": "native:removeChunks",
+        "at": 85205.43000006676,
+        "ms": 1.5399999618530273,
+        "selectedRequested": false,
+        "requested": 4,
+        "removed": 4,
+        "selectedBefore": {
+          "cx": 5,
+          "cz": 2,
+          "count": 272
+        },
+        "selectedAfter": {
+          "cx": 5,
+          "cz": 2,
+          "count": 272
+        }
+      },
+      {
+        "frame": 431,
+        "label": "native:removeChunks",
+        "at": 90594.25,
+        "ms": 2.2549999952316284,
+        "selectedRequested": false,
+        "requested": 4,
+        "removed": 4,
+        "selectedBefore": {
+          "cx": 6,
+          "cz": 2,
+          "count": 223
+        },
+        "selectedAfter": {
+          "cx": 6,
+          "cz": 2,
+          "count": 223
+        }
+      },
+      {
+        "frame": 1388,
+        "label": "native:removeChunks",
+        "at": 113707.3900001049,
+        "ms": 1.5049999952316284,
+        "selectedRequested": false,
+        "requested": 5,
+        "removed": 5,
+        "selectedBefore": {
+          "cx": 2,
+          "cz": 1,
+          "count": 263
+        },
+        "selectedAfter": {
+          "cx": 2,
+          "cz": 1,
+          "count": 263
+        }
+      },
+      {
+        "frame": 1561,
+        "label": "native:removeChunks",
+        "at": 118196.82500004768,
+        "ms": 2.2649999856948853,
+        "selectedRequested": false,
+        "requested": 5,
+        "removed": 5,
+        "selectedBefore": {
+          "cx": 2,
+          "cz": -2,
+          "count": 361
+        },
+        "selectedAfter": {
+          "cx": 2,
+          "cz": -2,
+          "count": 361
+        }
+      }
+    ]
+  },
+  "errors": [],
+  "consoleErrors": [],
+  "failedRequests": []
+}
