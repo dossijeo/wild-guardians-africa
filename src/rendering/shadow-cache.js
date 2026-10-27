@@ -2,16 +2,7 @@ import * as THREE from 'three';
 
 // Compare actual depth inputs, not frame counters or color material versions.
 // Unknown depth shaders/callbacks deliberately fall back to drawing every frame.
-class ShadowAttributeValues {
-  constructor(length) { this.values = new Float64Array(length); }
-}
-function sameSnapshotValue(a, b) {
-  if (Object.is(a, b)) return true;
-  if (!(a instanceof ShadowAttributeValues) || !(b instanceof ShadowAttributeValues) || a.values.length !== b.values.length) return false;
-  for (let i = 0; i < a.values.length; i++) if (!Object.is(a.values[i], b.values[i])) return false;
-  return true;
-}
-export function shadowSnapshot(renderer, light, scene, camera, previous = null) {
+export function shadowSnapshot(renderer, light, scene, camera) {
   if (!scene || !camera || renderer.shadowMap.type === THREE.VSMShadowMap) return null;
   const values = [], put = value => values.push(value);
   const numbers = array => { put(array.length); for (const value of array) put(value); };
@@ -40,20 +31,8 @@ export function shadowSnapshot(renderer, light, scene, camera, previous = null) 
       // affect the depth map; version changes alone are not deformation.
       const active = Math.min(attribute.count, Math.ceil(count / (data.meshPerAttribute || 1)));
       put(active);
-      const length = active * attribute.itemSize, stride = data.stride || attribute.itemSize, offset = attribute.offset || 0;
-      const old = previous?.[values.length];
-      let unchanged = old instanceof ShadowAttributeValues && old.values.length === length;
-      // Inspect actual values even when version was not incremented. Reuse an
-      // immutable block only after exact comparison; never mutate a committed snapshot.
-      if (unchanged) for (let i = 0; i < active && unchanged; i++) for (let j = 0; j < attribute.itemSize; j++) {
-        if (!Object.is(old.values[i * attribute.itemSize + j], data.array[i * stride + offset + j])) { unchanged = false; break; }
-      }
-      if (unchanged) put(old);
-      else {
-        const block = new ShadowAttributeValues(length);
-        for (let i = 0; i < active; i++) for (let j = 0; j < attribute.itemSize; j++) block.values[i * attribute.itemSize + j] = data.array[i * stride + offset + j];
-        put(block);
-      }
+      for (let i = 0; i < active; i++) for (let j = 0; j < attribute.itemSize; j++)
+        put(data.array[i * (data.stride || attribute.itemSize) + (attribute.offset || 0) + j]);
     } else put(data.version);
   }
   function material(material) {
@@ -122,7 +101,7 @@ export class ShadowCache {
   invalidate() { this.snapshot = null; }
   matches(next, forced = false) {
     if (!next) { this.stats.untracked++; return false; }
-    return this.enabled && !forced && this.snapshot && next.length === this.snapshot.length && next.every((value, i) => sameSnapshotValue(value, this.snapshot[i]));
+    return this.enabled && !forced && this.snapshot && next.length === this.snapshot.length && next.every((value, i) => Object.is(value, this.snapshot[i]));
   }
   commit(snapshot) { this.snapshot = snapshot; this.stats.draws++; }
 }

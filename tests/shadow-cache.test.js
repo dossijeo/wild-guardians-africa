@@ -141,7 +141,7 @@ test('declared camera-dependent custom depth inputs remain tracked when the view
   f.draw();assert.equal(f.draws,2);f.close();depth.dispose();
 });
 
-test('packed snapshots remain immutable and preserve exact values without version changes',()=>{
+test('snapshots remain immutable and preserve exact values without version changes',()=>{
   const f=fixture(),cache=new ShadowCache();f.scene.updateMatrixWorld(true);f.camera.updateMatrixWorld(true);
   const capture=previous=>shadowSnapshot(f.renderer,f.light,f.scene,f.camera,previous);
   const original=capture();cache.commit(original);assert.ok(cache.matches(capture(original)));
