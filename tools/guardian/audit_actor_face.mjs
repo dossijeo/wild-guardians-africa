@@ -36,10 +36,32 @@ if(checkMuzzle){
  });assert.ok(muzzle.length>30,'Muzzle selection changed; re-inspect coordinate calibration');
  report.muzzle={vertices:muzzle.length,maxHeadRelativeError:0,scope:'neutral core muzzle skin through all native clips'};
 }
+// Compare preserved buffalo beard vertices, not just bone trajectories.
+const beard=[];
+if(process.argv.includes('--buffalo-beard')){
+ const sourceMesh=a.scene.getObjectByName('Mesh_0'),editedMesh=b.scene.getObjectByName('Mesh_0');
+ assert.ok(sourceMesh?.isSkinnedMesh&&editedMesh?.isSkinnedMesh);
+ a.scene.updateMatrixWorld(true);b.scene.updateMatrixWorld(true);sourceMesh.skeleton.update();editedMesh.skeleton.update();
+ const grid=new Map(),key=p=>p.toArray().map(v=>Math.round(v*1e5)).join(',');
+ for(let i=0;i<sourceMesh.geometry.attributes.position.count;i++){
+  const p=sourceMesh.getVertexPosition(i,new Vector3()).applyMatrix4(sourceMesh.matrixWorld);
+  if(Math.abs(p.x)>.14||p.y<1.50||p.y>1.665||p.z<.36)continue;
+  grid.set(key(p),i);
+ }
+ for(let i=0;i<editedMesh.geometry.attributes.position.count;i++){
+  const p=editedMesh.getVertexPosition(i,new Vector3()).applyMatrix4(editedMesh.matrixWorld),sourceIndex=grid.get(key(p));
+  if(sourceIndex!==undefined)beard.push({sourceMesh,editedMesh,sourceIndex,editedIndex:i});
+ }
+ assert.ok(beard.length>100,'Too few preserved beard vertices');
+ report.beard={vertices:beard.length,maxError:0,scope:'Neutral retained beard vertices, world Y 1.50..1.665, Z > .36, abs X < .14; six source clips'};
+}
 for(const clip of a.animations){
  const other=b.animations.find(c=>c.name===clip.name);if(!other)throw Error('Missing clip '+clip.name);if(Math.abs(clip.duration-other.duration)>1e-6)throw Error('Duration changed');
  am.stopAllAction();bm.stopAllAction();const aa=am.clipAction(clip).reset().setLoop(LoopOnce,1),ba=bm.clipAction(other).reset().setLoop(LoopOnce,1);aa.clampWhenFinished=ba.clampWhenFinished=true;aa.play();ba.play();
- for(let i=0;i<=40;i++){const time=clip.duration*i/40;am.setTime(time);bm.setTime(time);a.scene.updateMatrixWorld(true);b.scene.updateMatrixWorld(true);for(const [x,y] of bones){const positionError=x.getWorldPosition(ap).distanceTo(y.getWorldPosition(bp)),angleError=x.getWorldQuaternion(aq).normalize().angleTo(y.getWorldQuaternion(bq).normalize());if(positionError>report.maxPosition){report.maxPosition=positionError;report.worstPosition={bone:x.name,clip:clip.name,time,source:ap.toArray(),edited:bp.toArray()};}if(angleError>report.maxAngle){report.maxAngle=angleError;report.worstAngle={bone:x.name,clip:clip.name,time};}}if(checkMuzzle){const head=b.scene.getObjectByName('Head');for(const item of muzzle){item.mesh.skeleton.update();const actual=item.mesh.getVertexPosition(item.index,new Vector3()).applyMatrix4(item.mesh.matrixWorld),expected=item.local.clone().applyMatrix4(head.matrixWorld);const error=actual.distanceTo(expected);if(error>report.muzzle.maxHeadRelativeError){report.muzzle.maxHeadRelativeError=error;report.muzzle.worst={mesh:item.mesh.name,index:item.index,rest:item.rest,weights:[0,1,2,3].map(k=>[item.mesh.skeleton.bones[item.mesh.geometry.attributes.skinIndex.getComponent(item.index,k)].name,item.mesh.geometry.attributes.skinWeight.getComponent(item.index,k)]),clip:clip.name,time,expected:expected.toArray(),actual:actual.toArray()};}}}report.samples++;}
+ for(let i=0;i<=40;i++){const time=clip.duration*i/40;am.setTime(time);bm.setTime(time);a.scene.updateMatrixWorld(true);b.scene.updateMatrixWorld(true);for(const [x,y] of bones){const positionError=x.getWorldPosition(ap).distanceTo(y.getWorldPosition(bp)),angleError=x.getWorldQuaternion(aq).normalize().angleTo(y.getWorldQuaternion(bq).normalize());if(positionError>report.maxPosition){report.maxPosition=positionError;report.worstPosition={bone:x.name,clip:clip.name,time,source:ap.toArray(),edited:bp.toArray()};}if(angleError>report.maxAngle){report.maxAngle=angleError;report.worstAngle={bone:x.name,clip:clip.name,time};}}if(checkMuzzle){const head=b.scene.getObjectByName('Head');for(const item of muzzle){item.mesh.skeleton.update();const actual=item.mesh.getVertexPosition(item.index,new Vector3()).applyMatrix4(item.mesh.matrixWorld),expected=item.local.clone().applyMatrix4(head.matrixWorld);const error=actual.distanceTo(expected);if(error>report.muzzle.maxHeadRelativeError){report.muzzle.maxHeadRelativeError=error;report.muzzle.worst={mesh:item.mesh.name,index:item.index,rest:item.rest,weights:[0,1,2,3].map(k=>[item.mesh.skeleton.bones[item.mesh.geometry.attributes.skinIndex.getComponent(item.index,k)].name,item.mesh.geometry.attributes.skinWeight.getComponent(item.index,k)]),clip:clip.name,time,expected:expected.toArray(),actual:actual.toArray()};}}}for(const item of beard){item.sourceMesh.skeleton.update();item.editedMesh.skeleton.update();
+ const x=item.sourceMesh.getVertexPosition(item.sourceIndex,ap).applyMatrix4(item.sourceMesh.matrixWorld),y=item.editedMesh.getVertexPosition(item.editedIndex,bp).applyMatrix4(item.editedMesh.matrixWorld),error=x.distanceTo(y);
+ if(error>report.beard.maxError){report.beard.maxError=error;report.beard.worst={clip:clip.name,time,sourceIndex:item.sourceIndex,editedIndex:item.editedIndex};}
+ }report.samples++;}
  report.clips.push(clip.name);
 }
 if(checkMuzzle)report.muzzle.pass=report.muzzle.maxHeadRelativeError<1e-5;
@@ -63,4 +85,5 @@ if(process.argv.includes('--exact-geometry')){
  }
  report.exactGeometry={meshes:sourceMeshes.length,attributes,pass:true};
 }
-report.pass=report.maxPosition<.001&&report.maxAngle<.002&&(!checkMuzzle||report.muzzle.pass);fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(report);if(!report.pass)process.exitCode=1;
+if(report.beard)report.beard.pass=report.beard.maxError<1e-4;
+report.pass=(!report.beard||report.beard.pass)&&report.maxPosition<.001&&report.maxAngle<.002&&(!checkMuzzle||report.muzzle.pass);fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(report);if(!report.pass)process.exitCode=1;
