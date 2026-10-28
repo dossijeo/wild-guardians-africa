@@ -27,6 +27,7 @@ function faceView(x,z){
  controls.target.copy(target);camera.position.copy(target).add(offset);controls.update();
 }
 $('otherSide').onclick=()=>faceView(-1,0);$('quarter').onclick=()=>faceView(.7,.8);$('body').onclick=()=>{controls.target.set(0,.9,0);camera.position.set(2,1.8,4);controls.update();};
+for(const [label,x,z] of [['Cuerpo frontal',0,4],['Cuerpo lateral',4,0],['Cuerpo posterior',0,-4]]){const button=document.createElement('button');button.textContent=label;button.onclick=()=>{controls.target.set(0,.95,0);camera.position.set(x,1.1,z);controls.update();};$('body').after(button);}
 $('side').onclick=()=>faceView(1,0);$('front').onclick=()=>faceView(0,1);faceView(0,1);
 $('candidateLabel').textContent=buffalo?(params.has('original')?'BÚFALO ORIGINAL: comparación del rig; sin expresiones nuevas.':'BÚFALO: boca, interior y párpados integrados en la rama; revisión en curso.'):warthog?'JABALÍ: candidato facial local; revisar sus canales cargados. No integrado en el catálogo.':lion?'LEÓN: candidato de mandíbula, interior oral y párpados. Integrado en la rama; revisión visual en curso.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';
 $('clip').onchange=()=>{mixer.stopAllAction();action=null;const clip=gltf.animations.find(c=>c.name===$('clip').value);$('clipTime').value=0;$('clipTime').max=clip?.duration??0;if(clip)action=mixer.clipAction(clip).reset().play();};
