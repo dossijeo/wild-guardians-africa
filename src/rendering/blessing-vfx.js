@@ -9,17 +9,17 @@ export class BlessingVfx {
     this.clock={value:state.elapsed};this.sources=new Map();this.expiring=new Set();this.damageAt=new Map();this.effects=new Map();this.origin={x:0,z:0};this.dirty=true;
     for(const target of [...state.plants,...state.structures])if(target.blessing)this.sources.set(target.id,{target,born:target.blessing.at,dead:-1});
     this.geometry=new THREE.BufferGeometry();
-    this.material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,toneMapped:false,
+    this.material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,toneMapped:false,blending:THREE.AdditiveBlending,
       uniforms:{uClock:this.clock,uMotion:{value:motion?1:0}},
-      vertexShader:`attribute vec4 aSource;uniform float uClock,uMotion;varying float vSparkAlpha;
-        void main(){float phase=fract(uClock*.15+aSource.x*.381966);float angle=aSource.x*2.39996;
-          vec3 p=position+vec3(cos(angle+phase*2.)*.18*uMotion,.15+phase*.95*uMotion,sin(angle+phase*2.)*.18*uMotion);
+      vertexShader:`attribute vec4 aSource;uniform float uClock,uMotion;varying float vSparkAlpha,vAura;
+        void main(){float phase=fract(uClock*.10+aSource.x*.381966);float angle=aSource.x*2.39996;vAura=aSource.w;
+          vec3 p=position+vec3(cos(angle+phase*2.)*.46*uMotion,.12+phase*max(.6,aSource.y*1.4)*uMotion,sin(angle+phase*2.)*.46*uMotion)*(1.-vAura);
           float lost=aSource.z<0.?1.:1.-smoothstep(0.,.65,uClock-aSource.z);
-          vSparkAlpha=sin(phase*3.14159)*.40*lost;
-          vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;gl_PointSize=clamp(38./max(.1,-mv.z),1.2,3.5);
+          vSparkAlpha=mix(sin(phase*3.14159)*.95,.16,vAura)*lost;
+          vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;gl_PointSize=mix(clamp(95./max(.1,-mv.z),2.,11.),clamp(850.*aSource.y/max(.1,-mv.z),6.,160.),vAura);
         }`,
-      fragmentShader:`varying float vSparkAlpha;void main(){float a=1.-smoothstep(.05,.5,length(gl_PointCoord-.5));
-        gl_FragColor=vec4(.35,.9,.72,a*vSparkAlpha);
+      fragmentShader:`varying float vSparkAlpha,vAura;void main(){float r=length(gl_PointCoord-.5)*2.;float core=exp(-r*r*28.),a=exp(-r*r*5.)*(1.-smoothstep(.7,1.,r));
+        gl_FragColor=vec4(mix(vec3(.18,.95,.75)+vec3(.75)*core,vec3(.02,1.,.70),vAura),a*vSparkAlpha);
         #include <colorspace_fragment>
       }`});
     this.points=new THREE.Points(this.geometry,this.material);this.points.name='awakening-sparks';this.points.raycast=()=>{};scene.add(this.points);
@@ -46,13 +46,14 @@ export class BlessingVfx {
     for(const id of this.expiring){const source=this.sources.get(id);if(!source||state.elapsed-source.dead>=.65){this.expiring.delete(id);this.sources.delete(id);this.dirty=true;}}
     if(origin.x!==this.origin.x||origin.z!==this.origin.z){this.origin={x:origin.x,z:origin.z};this.dirty=true;}
     if(this.dirty){
-      const positions=[],data=[];
-      for(const {target,born,dead} of this.sources.values())for(let i=0;i<3;i++){
-        positions.push(target.x-origin.x,this.surface(target.x,target.z)+Math.min(1.2,this.height(target)*.35),target.z-origin.z);
-        data.push((Number(target.id.replace(/\D/g,''))||0)*3+i,born,dead,0);
+      const positions=[],data=[];let maximumHeight=.2;
+      for(const {target,dead} of this.sources.values())for(let i=0;i<(target.species?19:16);i++){
+        const aura=i>=16,height=Math.max(.2,this.height(target));maximumHeight=Math.max(maximumHeight,height);
+        positions.push(target.x-origin.x,this.surface(target.x,target.z)+height*(aura?.22+(i-16)*.28:.22),target.z-origin.z);
+        data.push((Number(target.id.replace(/\D/g,''))||0)*19+i,height,dead,aura?1:0);
       }
       this.geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
-      this.geometry.setAttribute('aSource',new THREE.Float32BufferAttribute(data,4));this.geometry.computeBoundingSphere();
+      this.geometry.setAttribute('aSource',new THREE.Float32BufferAttribute(data,4));this.geometry.computeBoundingSphere();if(this.geometry.boundingSphere)this.geometry.boundingSphere.radius+=Math.max(2,maximumHeight*1.4+.6);
       this.points.visible=positions.length>0;this.points.position.set(origin.x,0,origin.z);this.dirty=false;
       this.stats.uploads++;this.stats.sources=this.sources.size;this.stats.particles=positions.length/3;
     }

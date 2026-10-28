@@ -1,5 +1,7 @@
 # Despertares: registro de implementación y validación
 
+**Estado actual:** revisión visual según los cinco nuevos mockups del usuario. Ver [comparativa lado a lado](comparison-final/index.html) e [informe de la revisión](visual-mockup-review.md). Campañas detenidas por esta prioridad. Las secciones siguientes conservan el historial; el perfil antiguo no describe el nuevo resplandor.
+
 ## Procedencia y preparación
 
 - Petición: `Texto pegado.txt`, adjunto del usuario; referencia conceptual: `despertares.zip`.

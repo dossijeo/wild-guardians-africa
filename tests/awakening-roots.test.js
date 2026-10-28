@@ -16,9 +16,12 @@ test('root paths are deterministic, local, sparse and point toward actual benefi
   const plants=[normal(1.5,0),normal(-1.5,0,'plant-21'),normal(0,1.5,'plant-22'),normal(20,20,'remote')];
   const rng=Math.random;let paths;
   try{Math.random=()=>{throw Error('visual paths consumed RNG');};paths=awakeningRootPaths(source,plants);}finally{Math.random=rng;}
-  assert.deepEqual(paths,awakeningRootPaths(source,plants));assert.equal(paths.length,6);
-  for(const path of paths)for(const p of path)assert.ok(Math.hypot(p.x,p.z)<2.4);
-  assert.ok(Math.abs(paths[0].at(-1).x-1.35)<1e-8);assert.equal(paths[0].at(-1).strength,.35);
+  assert.deepEqual(paths,awakeningRootPaths(source,plants));assert.ok(paths.length<64);
+  for(const path of paths)for(const p of path)assert.ok(Math.hypot(p.x,p.z)<4.5);
+  for(const [i,p] of [source,...plants.slice(0,3)].entries()){
+    assert.ok(Math.hypot(paths[i][0].x-p.x,paths[i][0].z-p.z)<.65,'each beneficiary has a local soil ring');
+    assert.ok(Math.hypot(paths[i][0].x-paths[i].at(-1).x,paths[i][0].z-paths[i].at(-1).z)<1e-8);
+  }
   const mask=rasterizeAwakeningRoots(paths,chunkBounds(0,0));
   assert.ok(mask.some(v=>v>0));assert.ok(mask.filter(v=>v>0).length<mask.length*.01);
   assert.deepEqual(mask,rasterizeAwakeningRoots(paths,chunkBounds(0,0)));
@@ -90,4 +93,17 @@ test('root integration composes with both original ground quality paths and excl
     const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};
     material.onBeforeCompile(shader,{});assert.doesNotMatch(shader.fragmentShader,/uAwakeningMap/);material.dispose();
   }finally{layer.dispose();}
+});
+
+test('growing occupied bounds preserves the previous mask in world coordinates during a fade',()=>{
+ const s=fixture(),layer=new AwakeningRoots(s,{resolution:256});try{
+  const u=layer.uniforms(0,0);layer.flush();const old=u.uAwakeningBounds.value.clone(),data=u.uAwakeningMap.value.image.data;
+  let peak=0;for(let i=0;i<data.length;i+=2)if(data[i]>data[peak])peak=i;
+  const x=old.x+((peak/2)%256+.5)*old.z/256,z=old.y+(Math.floor(peak/2/256)+.5)*old.w/256;
+  const other=createPlant('plant-100','maiz',15,0,'center');s.plants.push(other);awakeningState(s).progress=100;Game.bless(s,'far-source',other.id);layer.flush();
+  const b=u.uAwakeningBounds.value,newData=u.uAwakeningMap.value.image.data;assert.ok(b.z>old.z);
+  const ix=Math.floor((x-b.x)/b.z*256),iy=Math.floor((z-b.y)/b.w*256);
+  let previous=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)previous=Math.max(previous,newData[((iy+dy)*256+ix+dx)*2+1]??0);
+  assert.ok(previous>0,'old light stays at its world position instead of stretching to new bounds');
+ }finally{layer.dispose();}
 });

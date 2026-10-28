@@ -1,0 +1,47 @@
+{
+  "reason": "User requested visual mockup matching before continuing simulations. Running campaign processes stopped; partial checkpoint files retained unchanged. No native defeat inferred from interruption. Defense and recovery arms have not started.",
+  "campaigns": [
+    {
+      "file": "agriculture-sabana-712.json",
+      "checkpointStatus": "running",
+      "completedNights": 45,
+      "result": null,
+      "currentStatus": "stopped-at-user-request"
+    },
+    {
+      "file": "baseline-desierto-983.json",
+      "checkpointStatus": "complete",
+      "completedNights": 46,
+      "result": "defeat",
+      "currentStatus": "complete"
+    },
+    {
+      "file": "baseline-sabana-712.json",
+      "checkpointStatus": "complete",
+      "completedNights": 47,
+      "result": "defeat",
+      "currentStatus": "complete"
+    },
+    {
+      "file": "competent-desierto-983.json",
+      "checkpointStatus": "running",
+      "completedNights": 53,
+      "result": null,
+      "currentStatus": "stopped-at-user-request"
+    },
+    {
+      "file": "competent-sabana-712.json",
+      "checkpointStatus": "complete",
+      "completedNights": 100,
+      "result": "victory",
+      "currentStatus": "complete"
+    },
+    {
+      "file": "poor-sabana-712.json",
+      "checkpointStatus": "complete",
+      "completedNights": 46,
+      "result": "defeat",
+      "currentStatus": "complete"
+    }
+  ]
+}

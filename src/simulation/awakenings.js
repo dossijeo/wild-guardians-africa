@@ -37,7 +37,9 @@ export function recordAwakeningEvent(s,event){
   if(type==='CrateDelivered'&&!r.deliveryIds.includes(event.targetId)){
     r.deliveryIds.push(event.targetId);
     const crate=s.crates.find(c=>c.id===event.targetId),entry=s.ledger.entries[`deliver:${event.targetId}`];
-    if(crate&&entry){r.delivered+=numberOf(entry);r.seedBasis+=cropSpec(crate.species).plant_cost;}
+    // Earlier valid snapshots can contain carried crates without species.
+    // Their settled income is real; an unknown historic seed cost is not invented.
+    if(crate&&entry){r.delivered+=numberOf(entry);if(crate.species)r.seedBasis+=cropSpec(crate.species).plant_cost;}
   }
   if(type==='CropDestroyed'&&!r.lossIds.includes(event.targetId)){
     r.lossIds.push(event.targetId);r.losses++;r.cropValueLost+=p?cropSpec(p.species).base_harvest_value:0;

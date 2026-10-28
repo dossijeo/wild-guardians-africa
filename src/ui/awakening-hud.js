@@ -14,14 +14,14 @@ export function awakeningHudState(state,{selecting=false,blocked=false}={}){
 export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w}={}){
   const {w,h,header,reserve,portrait,short}=dims;
   if(portrait){
-    const gap=short?3:4,diameter=clamp(w*.18,56,72),available=h-header-reserve-10;
-    const aw=Math.max(44,Math.min(dims.aw,(available-diameter-4*gap)/4*.715));
-    const ah=aw/.715,total=4*ah+4*gap+diameter,top=header+Math.max(5,(h-reserve-header-total)/2);
-    return {portrait:true,right:12+(aw-diameter)/2,top:top+4*ah+4*gap,width:diameter,height:diameter,
+    const gap=short?3:4,available=h-header-reserve-10,diameter=Math.min(clamp(w*.27,78,112),(available-4*44/.715-4*gap)/1.25),height=diameter*1.25;
+    const aw=Math.max(44,Math.min(dims.aw,(available-height-4*gap)/4*.715));
+    const ah=aw/.715,total=4*ah+4*gap+height,top=header+Math.max(5,(h-reserve-header-total)/2);
+    return {portrait:true,right:Math.max(6,12+(aw-diameter)/2),top:top+4*ah+4*gap,width:diameter,height,
       actions:{top,width:aw,gap},noticeOffset:0};
   }
   const left=statsRight+16,available=menuLeft-12-left;
-  if(available>=128)return {portrait:false,left,top:short?9:18,width:Math.min(320,available),height:short?45:54,noticeOffset:0};
+  if(available>=128)return {portrait:false,left,top:short?7:8,width:Math.min(520,available),height:short?54:92,noticeOffset:0};
   return {portrait:false,left:12,top:header+8,width:Math.min(240,w-dims.aw-36),height:48,noticeOffset:58};
 }
 export class AwakeningHud {
@@ -31,6 +31,7 @@ export class AwakeningHud {
       <button type="button" id="awakeningButton" disabled><svg class="awakening-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45"/><circle class="awakening-ring-value" cx="50" cy="50" r="45"/></svg>
       <img class="awakening-icon" alt="" aria-hidden="true"><span class="awakening-caption">Despertar</span><span class="awakening-short-caption" aria-hidden="true">Despertar</span><span class="awakening-bar" aria-hidden="true"><i></i></span><span class="awakening-value" aria-hidden="true">0 / 100</span></button>`;
     this.button=this.element.querySelector('button');this.button.onclick=onActivate;
+    for(const [name,key] of [['corner-left','frame_tl'],['corner-right','frame_tr']])this.element.style.setProperty('--awakening-'+name,`url("${assetUrl(ASSETS[key].src)}")`);
     this.element.querySelector('img').src=assetUrl(ASSETS.magic_icon.src);stage.querySelector('#hud').append(this.element);
   }
   render(state,options={}){

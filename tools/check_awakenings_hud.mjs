@@ -6,6 +6,7 @@ const {chromium}=await import(pathToFileURL(process.env.WG_QA_PLAYWRIGHT_MODULE)
 const out=process.argv[2]??'docs/qa/despertares/hud',base=process.env.WG_QA_URL??'http://127.0.0.1:5201';
 await mkdir(out,{recursive:true});const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720},locale:'es-ES'}),errors=[],records=[];
+page.setDefaultNavigationTimeout(120000);
 page.on('pageerror',error=>errors.push(String(error)));page.on('console',message=>{if(message.type()==='error')errors.push(message.text()+' '+JSON.stringify(message.location()));});
 const receipt=()=>({scope:'Real application, Wild Engine and native HUD. Prescribed paid crop/wall layout, mature crops and QA-prefilled charges; pointer/keyboard interactions use the actual live handlers. Desktop viewport checks do not certify mobile GPU performance.',records,errors});
 try{
@@ -87,6 +88,7 @@ try{
   const wall=await project('wall');await page.mouse.click(wall.x,wall.y);await page.waitForSelector('[data-placement-confirm]:enabled');
   await page.locator('[data-placement-confirm]').click();await selecting(false);
   await page.waitForFunction(()=>globalThis.wildGuardiansSpatialQa().state.awakenings.total===2);
+  await page.setViewportSize({width:1280,height:592});await charge(78);await shot('landscape-blessed-matched');
   for(const [name,width,height] of [['portrait',390,844],['compact-landscape',844,390],['small-portrait',360,640]]){
     await page.setViewportSize({width,height});await page.evaluate(()=>{const {state:s,world:w}=globalThis.wildGuardiansSpatialQa();w.focus({...s.plants[0],distance:14});});
     await charge(78);await shot(name+'-recharging');await charge(100);await shot(name+'-ready');

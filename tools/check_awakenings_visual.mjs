@@ -32,7 +32,7 @@ try{
     globalThis.__wildSpellFrameManual=true;s.pauses=[];s.time=120;s.tutorial.step='done';
     console.log('AWAKENING_QA fixture-commands');
     if(!s.structures.some(p=>p.kind==='center'))G.placeStructure(s,'qa-center',s.villages[0].center,w.nav);
-    const center=s.structures[0],offsets=[[0,0],[1.5,0],[-1.5,0],[0,1.5],[0,-1.5],[1.5,1.5],[-1.5,-1.5]];let chosen;
+    const center=s.structures[0],offsets=[[0,0],[1.5,0],[-1.5,0],[0,1.5],[0,-1.5],[1.4,1.4],[-1.4,-1.4]];let chosen;
     for(let z=-6;z<=6&&!chosen;z+=1.5)for(let x=4.5;x<=15&&!chosen;x+=1.5){
       const points=offsets.map(([dx,dz])=>({x:center.x+x+dx,z:center.z+z+dz}));
       if(points.every(p=>w.nav.placement(p.x,p.z,.4).valid))chosen=points;
@@ -55,11 +55,16 @@ try{
       renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)};
   }));
   const style=await page.addStyleTag({content:'#hud,#narrator,#context,#notices,#panel,#toolbar,#modal,#placementBanner{visibility:hidden!important}'});
+  if(process.argv.includes('--variants-only')){
+    const matrix=await (await import('./check_awakening_variants.mjs')).checkAwakeningVariants(page,out);
+    if(errors.length)throw Error(JSON.stringify(errors));
+    await writeFile(`${out}/success.json`,JSON.stringify({...matrix,errors},null,2)+'\n');
+  }else{
   const capture=async(name,time)=>{
     const stats=await phase(name+'-render',page.evaluate(time=>{
       const {world:w,state:s}=globalThis.wildGuardiansSpatialQa();s.time=time;w.render(0);
       return {time,elapsed:s.elapsed,quality:w.quality,camera:w.camera.position.toArray(),target:w.controls.target.toArray(),
-        roots:{...w.awakeningRoots.stats,tiles:w.awakeningRoots.tiles.size},calls:w.renderer.info.render.calls,
+        glow:w.awakeningGlow?.stats,roots:{...w.awakeningRoots.stats,tiles:w.awakeningRoots.tiles.size},calls:w.renderer.info.render.calls,
         triangles:w.renderer.info.render.triangles,textures:w.renderer.info.memory.textures};
     },time));
     await phase(name+'-capture',page.locator('canvas#world').screenshot({path:`${out}/${name}.png`,timeout:45000}));captures.push({name,...stats});
@@ -73,6 +78,9 @@ try{
   await capture('awakening',120);
   await page.evaluate(()=>{globalThis.wildGuardiansSpatialQa().state.elapsed+=5;});
   await capture('one-source-day',120);await capture('one-source-night',420);
+  const glowCheck=await page.evaluate(()=>{const {world:w}=globalThis.wildGuardiansSpatialQa(),g=w.awakeningGlow,buf=new Uint8Array(g.b.width*g.b.height*4);w.renderer.readRenderTargetPixels(g.b,0,0,g.b.width,g.b.height,buf);return {frames:g.stats.frames,lit:buf.filter((v,i)=>i%4===1&&v>10).length};});
+  if(!glowCheck.frames||!glowCheck.lit)throw Error('Selective glow produced no light');
+  console.log('AWAKENING_QA glow-readback '+JSON.stringify(glowCheck));
   await phase('source-damage',page.evaluate(async()=>{
     const {state:s,world:w}=globalThis.wildGuardiansSpatialQa(),{applyCropImpact}=await import('/src/simulation/crop-impact-health.js'),{emit}=await import('/src/simulation/game.js');
     const p=s.plants[0],hit=applyCropImpact(s,p,1);emit(s,'CropHit',{targetId:p.id,...hit});w.render(0);s.elapsed+=.2;
@@ -125,5 +133,6 @@ try{
   if(errors.length)throw Error(JSON.stringify(errors));
   await writeFile(`${out}/captures.json`,JSON.stringify({scope:'Real app launched from its menu on Wild Engine. Prescribed QA crop layout, mature growth, fixed clock, prefilled charge and paused simulation; no generated concept images. Not campaign/balance or mobile validation.',setup,captures,errors},null,2)+'\n');
   console.log(JSON.stringify({out,captures:captures.length,errors,setup}));
+  }
 }catch(error){await writeFile(`${out}/failure.json`,JSON.stringify({message:error.message,stack:error.stack,errors,captures},null,2)+'\n');throw error;}
 finally{await browser.close();}

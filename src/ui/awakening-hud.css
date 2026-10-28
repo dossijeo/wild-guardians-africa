@@ -24,3 +24,29 @@
 #stage.portrait.awakening-selecting #placementBanner [data-placement-copy]{flex-basis:100%}
 #stage.portrait.awakening-selecting #placementBanner button{flex:1}
 @media(prefers-reduced-motion:reduce){#awakeningHud.is-ready #awakeningButton{animation:none}.awakening-bar i,.awakening-ring-value{transition:none}}
+/* Botanical gold framing reuses the game's original illustrated panel corners. */
+#awakeningButton{border:3px solid #d9a23b;border-radius:30px;background:linear-gradient(#68412a,#342021 48%,#4a242f);box-shadow:inset 0 2px 2px #ffe7a1,inset 0 -3px 3px #a95618,0 0 0 2px #5b321b,0 3px 4px #241526;overflow:visible}
+#awakeningHud:not(.is-medallion)::before,#awakeningHud:not(.is-medallion)::after{content:'';position:absolute;top:-7px;width:66px;height:70px;background:var(--awakening-corner-left) center/100% 100% no-repeat;pointer-events:none;z-index:2}
+#awakeningHud:not(.is-medallion)::before{left:-10px}#awakeningHud:not(.is-medallion)::after{right:-9px;background-image:var(--awakening-corner-right)}
+.awakening-icon{width:78px;height:74px;left:-6px;z-index:3;filter:drop-shadow(0 0 5px #c143ff)}
+.awakening-caption{left:75px;right:30px;top:3px;font-size:clamp(12px,1.65vw,22px);line-height:24px;color:#fff5d8;text-shadow:0 2px 2px #261627}
+.awakening-caption::before,.awakening-caption::after{content:'◆';color:#f4a744;font-size:.65em;padding:0 15px;text-shadow:0 0 5px #f8b4ff}
+.awakening-bar{left:76px;right:23px;bottom:10px;height:27px;border:2px solid #e5b55d;box-shadow:0 0 0 2px #592d61,inset 0 2px 7px #03000e,0 0 7px #b93cff;border-radius:20px;background:#140b25}
+.awakening-bar i{background:linear-gradient(#f8bdff 0%,#c05cf5 26%,#a128df 55%,#6d0ea6 90%);box-shadow:inset 0 2px 2px #fff7ff,inset 0 -3px 4px #cd77ff;border-radius:15px}
+.awakening-value{left:76px;right:23px;bottom:11px;height:27px;line-height:27px;font-size:20px;color:#fff4d8;text-shadow:0 2px 2px #26102e}
+#awakeningHud.is-ready #awakeningButton{box-shadow:inset 0 0 8px #dc8fff,0 0 0 2px #794223,0 0 15px #cf66ff99}
+#awakeningHud.is-medallion #awakeningButton{border:0;border-radius:0;background:none;box-shadow:none}
+#awakeningHud.is-medallion #awakeningButton::before{content:'';position:absolute;left:4%;right:4%;top:3%;height:72%;border-radius:50%;background:radial-gradient(circle at 45% 35%,#8449d9,#351647 70%);border:3px solid #d5a346;box-shadow:inset 0 0 8px #eaa4ff,0 0 0 2px #3a334a,0 0 10px #87dfff}
+#awakeningHud.is-medallion .awakening-ring{inset:0 auto auto 0;height:80%;width:100%;stroke-width:6;filter:drop-shadow(0 0 3px #67e8ff)}
+#awakeningHud.is-medallion .awakening-ring-value{stroke:#f7b4ff}
+#awakeningHud.is-medallion .awakening-icon{width:86%;height:57%;left:7%;top:38%;filter:drop-shadow(0 0 4px #be62ff)}
+#awakeningHud.is-medallion .awakening-value{left:12%;right:12%;bottom:22%;height:20%;line-height:1.45;font-size:clamp(11px,3.3vw,17px);border:2px solid #b78536;border-radius:11px;background:linear-gradient(#68442b,#362428);box-shadow:0 2px 2px #261b23;z-index:4}
+#awakeningHud.is-medallion .awakening-short-caption{left:-3%;right:-3%;bottom:1%;height:23%;line-height:1.45;font-size:clamp(12px,3.6vw,19px);border:2px solid #ffd65e;border-radius:18px;background:linear-gradient(#b84dde,#6d208d);color:#fff0b9;text-shadow:0 2px 1px #442434;box-shadow:inset 0 1px 2px #fff2c2,0 0 5px #eaaa29,0 0 10px #b337ff;z-index:5}
+#awakeningHud.is-medallion.is-ready #awakeningButton{box-shadow:none}
+@media(max-height:500px) and (orientation:landscape){.awakening-icon{width:55px;height:54px}.awakening-caption{left:52px;top:0;font-size:13px;line-height:18px}.awakening-caption::before,.awakening-caption::after{padding:0 4px}.awakening-bar{left:53px;bottom:6px;height:21px;right:12px}.awakening-value{left:53px;right:12px;bottom:6px;height:23px;line-height:23px;font-size:15px}#awakeningHud:not(.is-medallion)::before,#awakeningHud:not(.is-medallion)::after{width:46px;height:50px}}
+
+#awakeningHud:not(.is-medallion) .awakening-icon{width:104px;height:96px;left:-15px}
+#awakeningHud:not(.is-medallion) .awakening-caption{top:1px;left:91px;right:35px;border:2px solid #a96b2e;border-radius:50% 50% 16px 16px;background:linear-gradient(#845334,#3b241f);box-shadow:inset 0 2px 2px #f2b65c,0 2px 2px #2c1820;line-height:30px}
+#awakeningHud:not(.is-medallion) .awakening-bar{left:89px;height:29px;bottom:13px}
+#awakeningHud:not(.is-medallion) .awakening-value{left:89px;height:29px;line-height:29px;bottom:14px}
+@media(max-height:500px) and (orientation:landscape){#awakeningHud:not(.is-medallion) .awakening-icon{width:62px;height:58px;left:-5px}#awakeningHud:not(.is-medallion) .awakening-caption{left:55px;right:15px;line-height:18px;border-width:1px}#awakeningHud:not(.is-medallion) .awakening-bar,#awakeningHud:not(.is-medallion) .awakening-value{left:57px;height:21px;line-height:21px;bottom:6px}}

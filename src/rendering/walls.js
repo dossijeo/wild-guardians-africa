@@ -54,6 +54,7 @@ export class NativeWall extends THREE.Group {
         const geometry=new THREE.BufferGeometry();
         geometry.setAttribute('position',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('normal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('uv',new THREE.BufferAttribute(bridge.uv,2));
         const material=prototype.material.clone();material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;material.userData.blessingObject=this.blessingUniform;
+        geometry.computeBoundingBox();const bounds=geometry.boundingBox;material.userData.blessingWallBounds={value:new THREE.Vector4(bounds.min.x,bounds.min.y,Math.max(.01,bounds.max.x-bounds.min.x),Math.max(.01,bounds.max.y-bounds.min.y))};
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge});
       }
     }
