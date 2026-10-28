@@ -88,8 +88,8 @@ export function evaluateAwakeningDay(s,{emit=()=>{},notice=()=>{}}={}){
   a.history.push(summary);a.lastEvaluatedDay=s.day;
   a.streak=scores.positive>=18?a.streak+1:0;
   emit('AwakeningDayEvaluated',{summary});
-  if(before<100&&a.progress===100){emit('AwakeningReady');notice('La tierra está preparada: tienes un Despertar disponible.');}
-  else if(summary.delta>=1||scores.penalty){notice(`Despertar ${summary.delta>=0?'+':''}${summary.delta.toFixed(1)} · Agricultura ${scores.agriculture.toFixed(1)}, economía ${scores.economy.toFixed(1)}, defensa ${scores.defense.toFixed(1)}, acontecimientos ${scores.events.toFixed(1)}${scores.penalty?`, penalización −${scores.penalty}`:''}.`);}
+  if(before<100&&a.progress===100){emit('AwakeningReady');notice('La tierra está preparada: tienes un Despertar disponible.',{category:'awakening-ready'});}
+  else if(summary.delta>=1||scores.penalty||a.streak===3){notice(`${a.streak===3?'Racha de tres buenas jornadas. ':''}Despertar ${summary.delta>=0?'+':''}${summary.delta.toFixed(1)} · Agricultura ${scores.agriculture.toFixed(1)}, economía ${scores.economy.toFixed(1)}, defensa ${scores.defense.toFixed(1)}, acontecimientos ${scores.events.toFixed(1)}${scores.penalty?`, penalización −${scores.penalty}`:''}.`,{category:'awakening-day'});}
   return summary;
 }
 export function startAwakeningDay(s){const a=awakeningState(s);a.current=dailyRecord(s);}

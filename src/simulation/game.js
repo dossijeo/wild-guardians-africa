@@ -90,20 +90,25 @@ export function emit(s,type,detail={}) {
   for(const callback of eventObservers.get(s)??[])callback(event);
   if(wallLoss){
     emit(s,'BlessingDestroyed',wallLoss);
-    notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId);
+    notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId,{category:'awakening-lost',location:wallLoss.presentation});
   }
   if(type==='CropHit'&&event.blessingDestroyed){
     emit(s,'BlessingDestroyed',event.blessingDestroyed);
-    notice(s,'Una fuente mágica ha sido destruida. Sus cultivos pierden la influencia.',event.targetId);
+    notice(s,'Una fuente mágica ha sido destruida. Sus cultivos pierden la influencia.',event.targetId,{category:'awakening-lost',location:event.blessingDestroyed.presentation});
   }else if((type==='CropHit'&&!event.destroyed)||type==='StructureHit'){
     const target=type==='CropHit'?s.plants.find(p=>p.id===event.targetId):s.structures.find(p=>p.id===event.targetId&&p.status==='intact');
     if(target?.blessing&&target.blessing.threatDay!==s.day){
       target.blessing.threatDay=s.day;emit(s,'BlessingThreatened',{targetId:target.id,presentation:{x:target.x,z:target.z}});
-      notice(s,target.species?'Una fuente mágica está bajo ataque. ¡Protégela!':'Una muralla mágica está bajo ataque. ¡Protégela!',target.id);
+      notice(s,target.species?'Una fuente mágica está bajo ataque. ¡Protégela!':'Una muralla mágica está bajo ataque. ¡Protégela!',target.id,{category:'awakening-threat',location:target});
     }
   }
 }
-export function notice(s,text,target=null) {s.messages.push({id:`message-${s.sequence++}`,text,target});if(s.messages.length>8)s.messages.shift();}
+export function notice(s,text,target=null,metadata=null) {
+  s.messages.push({id:`message-${s.sequence++}`,text,target,
+    ...(metadata?.category?{category:metadata.category}:{}),
+    ...(metadata?.location?{location:{x:metadata.location.x,z:metadata.location.z}}:{})});
+  if(s.messages.length>8)s.messages.shift();
+}
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const profile=w=>PROFILES.find(p=>p.id===w.profile);
 const nearest=(list,point)=>[...list].sort((a,b)=>dist(a,point)-dist(b,point)||a.id.localeCompare(b.id))[0];
@@ -563,7 +568,7 @@ export function removeWall(s,id,targetId,nav) {
     replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
     const refund=wallRefund(target);transact(s.ledger,id,refund);
     const blessingLoss=loseBlessing(s,target,{removed:true});
-    if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId);}
+    if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId,{category:'awakening-lost',location:blessingLoss.presentation});}
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
     emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
   });
@@ -622,7 +627,7 @@ export function bless(s,id,targetId){
     a.total++;a.progress=0;invalidateBlessingInfluence(s);
     emit(s,'BlessingApplied',{targetId,kind:target.species?'plant':target.kind,blessing,
       presentation:{x:target.x,z:target.z,elapsed:s.elapsed}});
-    notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId);
+    notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId,{category:'awakening-applied',location:target});
   });
 }
 function addHiredWorker(s,profileId,centerId,usedPeople){
@@ -1567,7 +1572,7 @@ function updateWorkers(s,dt,nav) {
   reserveAvailableTasks(s,nav);
 }
 function closeNight(s) {
-  if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:text=>notice(s,text)});
+  if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:(text,metadata)=>notice(s,text,null,metadata)});
   s.completedNights++;s.time=0;s.day++;
   if(s.awakenings?.enabled!==false)startAwakeningDay(s);
   retireFarmHistory(s);

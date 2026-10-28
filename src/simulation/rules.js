@@ -19,7 +19,7 @@ export function permission(state,action) {
   const peaceful=state.time<300 && !state.raid;
   if(action==='camera')return true;
   if(!hasCenter) return action==='center' && peaceful;
-  if(action==='shield')return true;
+  if(action==='shield'||action==='awakening')return true;
   if(!peaceful)return false;
   if(action==='village')return state.postgame;
   return true;

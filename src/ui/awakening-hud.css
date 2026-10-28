@@ -1,0 +1,26 @@
+#awakeningHud{position:absolute;pointer-events:auto;z-index:11;color:#fff0ce;--awakening-progress:0;--awakening-arc:282.7433;filter:drop-shadow(0 3px 4px #38281c70)}
+#awakeningButton{position:relative;width:100%;height:100%;border:2px solid #b99750;border-radius:22px;background:linear-gradient(#5d4030,#2f2426);box-shadow:inset 0 1px 2px #e4c77b80,0 1px 2px #2b201d;overflow:hidden;color:inherit;text-shadow:0 1px 2px #1d1428;cursor:pointer;padding:0;touch-action:manipulation}
+#awakeningButton:disabled{opacity:1;cursor:default;color:#e3d3b5}
+#awakeningButton:focus-visible{outline:3px solid #fff1b7;outline-offset:4px}
+.awakening-icon{position:absolute;width:46px;height:46px;object-fit:contain;left:2px;top:50%;transform:translateY(-50%);pointer-events:none}
+.awakening-caption{position:absolute;left:49px;right:8px;top:4px;font-weight:800;font-size:clamp(10px,1.3vw,15px);white-space:nowrap;text-align:center}
+.awakening-bar{position:absolute;left:52px;right:11px;bottom:8px;height:15px;border:1px solid #c9ad7180;border-radius:10px;background:#181128;overflow:hidden}
+.awakening-bar i{display:block;height:100%;width:100%;transform:scaleX(var(--awakening-progress));transform-origin:left;background:linear-gradient(#dcc1f6,#9b66cd 50%,#71419e);transition:transform .8s ease}
+.awakening-value{position:absolute;left:52px;right:11px;bottom:7px;height:17px;line-height:17px;font-size:11px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+.awakening-ring,.awakening-short-caption{display:none}.awakening-accessible-meter{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+#awakeningHud.is-ready #awakeningButton{border-color:#ead48a;box-shadow:inset 0 0 8px #d2a8ff55,0 0 10px #b68bd755;animation:awakening-ready 3s ease-in-out infinite}
+#awakeningHud.is-selecting #awakeningButton{outline:2px solid #b3e9c6;outline-offset:2px}
+#awakeningHud.is-medallion #awakeningButton{border-radius:50%;border-color:#b99750;overflow:visible;background:radial-gradient(circle at 45% 35%,#70448b,#33252e 70%)}
+#awakeningHud.is-medallion .awakening-ring{display:block;position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);fill:none;stroke:#23172e;stroke-width:6}
+#awakeningHud.is-medallion .awakening-ring-value{stroke:#cda6ed;stroke-linecap:round;stroke-dasharray:282.7433;stroke-dashoffset:var(--awakening-arc);transition:stroke-dashoffset .8s ease}
+#awakeningHud.is-medallion .awakening-icon{width:65%;height:50%;left:17.5%;top:32%;}
+#awakeningHud.is-medallion .awakening-short-caption{display:block;position:absolute;left:4px;right:4px;bottom:17px;line-height:9px;font-size:9px;font-weight:800;text-align:center}
+#awakeningHud.is-medallion .awakening-caption,#awakeningHud.is-medallion .awakening-bar{display:none}
+#awakeningHud.is-medallion .awakening-value{left:0;right:0;bottom:5px;font-size:10px;line-height:12px;height:12px}
+@keyframes awakening-ready{50%{filter:brightness(1.13)}}
+#stage.awakening-selecting #placementBanner button{min-height:44px;min-width:72px}
+#stage.awakening-selecting:not(.portrait) #placementBanner{left:calc((100% - var(--hud-actions-safe-right, 0px))/2);max-width:min(640px,calc(100% - var(--action-w) - 48px))}
+#stage.portrait.awakening-selecting #placementBanner{left:12px;right:calc(var(--action-w) + 26px);transform:none;max-width:none;flex-wrap:wrap;gap:6px}
+#stage.portrait.awakening-selecting #placementBanner [data-placement-copy]{flex-basis:100%}
+#stage.portrait.awakening-selecting #placementBanner button{flex:1}
+@media(prefers-reduced-motion:reduce){#awakeningHud.is-ready #awakeningButton{animation:none}.awakening-bar i,.awakening-ring-value{transition:none}}

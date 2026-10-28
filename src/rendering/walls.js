@@ -24,7 +24,7 @@ export class NativeWall extends THREE.Group {
     this.update(entity,undefined,elapsed);
   }
   update(entity,seconds,elapsed){
-    this.blessingUniform.value.set(entity.blessing?1:0,entity.blessing?.at??0,entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?1:0);
+    this.blessingUniform.value.set(entity.blessing?1:0,entity.blessing?.at??0,entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?(this.awakeningSelected?2:1):0);
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;

@@ -2,6 +2,14 @@ import {RAID_NOTICE_TEXT} from '../simulation/raid-notice.js';
 
 export function eventCardSpec(message){
   const text=message.text;
+  const awakening={
+    'awakening-ready':{title:'Despertar disponible',urgent:false},
+    'awakening-day':{title:'La tierra despierta',urgent:false},
+    'awakening-applied':{title:'Bendición permanente',urgent:false},
+    'awakening-threat':{title:'Magia bajo amenaza',urgent:true},
+    'awakening-lost':{title:'Bendición perdida',urgent:true}
+  }[message.category];
+  if(awakening)return {asset:'magic_icon',icon:11,...awakening};
   if(text===RAID_NOTICE_TEXT)return {icon:2,title:'Incursión',urgent:true};
   if(text.startsWith('La reparación'))return {icon:8,title:'Reparación cancelada',urgent:true};
   if(/^(Cayó|El sol vuelve|Faltan recursos)/.test(text))return {icon:5,title:'El poblado necesita ayuda',urgent:true};
@@ -20,7 +28,7 @@ export class EventCards {
       if(!card){
         const spec=eventCardSpec(message);card=document.createElement('div');card.className='notice-card'+(spec.urgent?' urgent':'');
         const visit=document.createElement('button');visit.type='button';visit.dataset.notice=message.id;visit.className='notice-visit';
-        const image=document.createElement('img');image.src=this.assets['event'+spec.icon].src;image.alt='';image.setAttribute('aria-hidden','true');
+        const image=document.createElement('img');image.src=this.assets[spec.asset??'event'+spec.icon].src;image.alt='';image.setAttribute('aria-hidden','true');
         const copy=document.createElement('span'),title=document.createElement('strong'),detail=document.createElement('small');title.textContent=spec.title;detail.textContent=message.text;copy.append(title,detail);visit.append(image,copy);
         const close=document.createElement('button');close.type='button';close.dataset.dismissNotice=message.id;close.className='dismiss';close.setAttribute('aria-label','Cerrar');close.textContent='×';
         const life=document.createElement('i');life.className='life';life.setAttribute('aria-hidden','true');card.append(visit,close,life);this.container.append(card);this.cards.set(message.id,card);

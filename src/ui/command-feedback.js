@@ -5,7 +5,7 @@ function setText(node,text){
 
 // Use the original HUD's placement banner or the active panel, never the
 // Spirit's reserved strip. This reports a rejected command without executing it.
-export function renderCommandFeedback(document,{label='',message='',onCancel,onDismiss}){
+export function renderCommandFeedback(document,{label='',message='',onCancel,onDismiss,confirmation=null}){
   const banner=document.querySelector('#placementBanner');if(!banner)return;
   const modal=document.querySelector('#modal [role="dialog"]');
   const panel=modal?.querySelector('.panel-body')??modal??document.querySelector('#panel .panel-body')??document.querySelector('#context .panel-body');
@@ -29,4 +29,9 @@ export function renderCommandFeedback(document,{label='',message='',onCancel,onD
   if(message){if(!feedback){feedback=document.createElement('span');feedback.className='command-feedback';feedback.setAttribute('role','alert');copy.append(feedback);}setText(feedback,message);}
   else feedback?.remove();
   const button=banner.querySelector('[data-placement-cancel]');setText(button,label?'Cancelar':'Cerrar');button.onclick=label?onCancel:onDismiss;
+  let confirm=banner.querySelector('[data-placement-confirm]');
+  if(confirmation){
+    if(!confirm){confirm=document.createElement('button');confirm.type='button';confirm.dataset.placementConfirm='';banner.insertBefore(confirm,button);}
+    setText(confirm,confirmation.label);confirm.disabled=!!confirmation.disabled;confirm.onclick=confirmation.onConfirm;
+  }else confirm?.remove();
 }

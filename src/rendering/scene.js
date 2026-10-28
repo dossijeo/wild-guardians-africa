@@ -738,7 +738,7 @@ export class WorldScene {
     this.groundDetails?.flush(this.nav.field,s);
     this.awakeningRoots?.flush();
     this.toon.blessingClock.value=s.elapsed;
-    if(this.blessingVfx){this.blessingVfx.selecting=!!this.awakeningSelecting;this.blessingVfx.update(s,this.renderOrigin);}
+    if(this.blessingVfx){this.blessingVfx.selecting=!!this.awakeningSelecting;this.blessingVfx.selectedTargetId=this.awakeningTargetId;this.blessingVfx.update(s,this.renderOrigin);}
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
@@ -766,7 +766,7 @@ export class WorldScene {
       mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+('hitsRemaining' in e?0:.025),e.z);
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
       if('value' in e)mesh.visible=!e.carrierId;
-      if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.blessingDamageAt=this.blessingVfx?.damageAt.get(e.id);mesh.awakeningSelecting=this.awakeningSelecting;mesh.update(e,dt,s.elapsed);}
+      if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.blessingDamageAt=this.blessingVfx?.damageAt.get(e.id);mesh.awakeningSelecting=this.awakeningSelecting;mesh.awakeningSelected=this.awakeningTargetId===e.id;mesh.update(e,dt,s.elapsed);}
       else if(e.kind==='center')mesh.update(e,s.elapsed);
       if(e.kind==='wall'||e.kind==='center'){
         const key=[mesh.stageKey,mesh.gateOpen,mesh.visual,mesh.damage,mesh.position.x,mesh.position.y,mesh.position.z,mesh.rotation.y].join('|');

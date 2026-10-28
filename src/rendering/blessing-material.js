@@ -17,14 +17,14 @@ export function patchBlessingMaterial(shader,material,clock){
       float awakeningBurst=1.-smoothstep(0.,2.8,awakeningAge);
       float awakeningPulse=pow(max(0.,sin(uBlessingClock*.65)),12.);
       float awakeningWound=1.-smoothstep(0.,.45,max(0.,uBlessingClock-blessingInfo.z));
-      float organicMask=${instanced?'smoothstep(.008,.10,diffuseColor.g-diffuseColor.r*.70)':'(.25+3.*pow(.5+.5*sin(vToonWorld.y*11.+sin(vToonWorld.x*2.7+vToonWorld.z*1.9)*1.4),24.))'};
+      float organicMask=${instanced?'smoothstep(.008,.10,diffuseColor.g-diffuseColor.r*.70)':'(.25+1.25*pow(1.-smoothstep(.01,.055,abs(materialNoise(worldPatternPosition(vToonWorld)*3.)-.5)),3.))'};
       ${instanced?'organicMask*=.3+.7*smoothstep(.25,.85,abs(normalize(normal).z));':''}
       outgoingLight+=vec3(.025,.38,.27)*organicMask*(.18+.20*awakeningPulse+1.25*awakeningBurst);
       outgoingLight+=vec3(.42,.10,.025)*awakeningWound;
     }
     if(blessingInfo.w>.5){
       float eligibleRim=1.-abs(dot(normalize(normal),normalize(vViewPosition)));
-      outgoingLight+=vec3(.12,.22,.07)*smoothstep(.35,.9,eligibleRim);
+      outgoingLight+=vec3(.12,.22,.07)*smoothstep(.35,.9,eligibleRim)*(blessingInfo.w>1.5?1.8:1.);
     }
     #include <opaque_fragment>`);
 }

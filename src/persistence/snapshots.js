@@ -18,6 +18,7 @@ export function validateSnapshot(state) {
   if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   validateMicroState(state);
   validateAwakenings(state);
+  for(const message of state.messages??[])if(message.location!==undefined&&(!Number.isFinite(message.location?.x)||!Number.isFinite(message.location?.z)))throw Error('Ubicación de aviso inválida');
   validateBlessings(state);
   validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
