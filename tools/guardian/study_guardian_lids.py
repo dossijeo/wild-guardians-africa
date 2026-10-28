@@ -40,6 +40,17 @@ for side,(upper,lower) in contours.items():
   for r in [.25,.4,.6,.75]:
    z=top*(1-r)+bottom*r;X=x-cx;Z=z-cz;samples.append([1,X,Z,X*X,X*Z,Z*Z]);values.append(depth(x,z))
  fits[side]=(cx,cz,np.linalg.lstsq(samples,values,rcond=None)[0])
+ # Smooth attachment offset sampled separately for each upper rim.
+ attachmentX=[];attachmentY=[]
+ for col in range(65):
+  px=upper[0][0]+(upper[-1][0]-upper[0][0])*col/64
+  x=cx+((px-320)*.25/640-cx)*1.045
+  edge=.28+(320-interp(upper,px))*.25/640+.0045
+  X=x-cx;Z=edge-cz;fit=fits[side][2]
+  original=float(np.dot(fit,[1,X,Z,X*X,X*Z,Z*Z]))-.002
+  attachmentX.append(col/64*2-1);attachmentY.append(max(-.010,min(.010,depth(x,edge)+.001-original)))
+ attachment=np.polynomial.polynomial.polyfit(attachmentX,attachmentY,2)
+ print('Rim attachment',side,attachment.tolist())
  def position(px,r,part,closed):
   cx,cz,fit=fits[side]
   x=(px-320)*.25/640;x=cx+(x-cx)*1.045;top=.28+(320-interp(upper,px))*.25/640+.0045;bottom=.28+(320-interp(lower,px))*.25/640-.0035;seam=top*.45+bottom*.55
@@ -47,7 +58,9 @@ for side,(upper,lower) in contours.items():
   z=edge*(1-r*closed)+target*r*closed
   cx,cz,fit=fits[side];X=x-cx;Z=z-cz;Y=float(np.dot(fit,[1,X,Z,X*X,X*Z,Z*Z]))
   # Smooth convex fit avoids the original rim's abrupt depth steps.
-  return unpose @ Vector((x,Y-.002-(.00025*r**8 if part=='upper' else 0),z))
+  t=(px-upper[0][0])/(upper[-1][0]-upper[0][0])*2-1
+  anchor=float(np.polynomial.polynomial.polyval(t,attachment))*(1-t*t)**2*(1-r)**3 if part=='upper' else 0
+  return unpose @ Vector((x,Y-.002+anchor-(.00025*r**8 if part=='upper' else 0),z))
  for part in ['upper','lower']:
   base=len(verts)
   for row in range(rows):

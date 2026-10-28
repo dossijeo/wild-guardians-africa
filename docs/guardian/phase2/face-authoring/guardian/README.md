@@ -38,3 +38,10 @@ Actual browser profile checks are recorded in v10-profile-closed.png, v10-opposi
 ## v11 rejected: raw surface-ray attachment
 
 Tested a fixed-edge correction from the convex fit to the original mask ray intersection, clamped to 15 mm and decayed by (1-r)^3 toward the moving edge. At the edge, the lid was placed 1 mm ahead of the sampled mask. This reduced the dark upper separation on the opposite profile (v11-opposite-closed.png), but introduced visible jagged intersections along the other lower rim and a crease near the upper lid (v11-rejected-profile.png). Both were inspected in the actual browser renderer. The raw sampled surface is discontinuous near this carved rim; directly fitting every column is not acceptable. Reverted the generator and candidate assets to v10. Next use a smooth, independently fitted attachment curve per eye/upper/lower edge, retaining a clearance bound, rather than unconstrained column-wise samples. Production remains unchanged.
+
+
+## v13: smooth upper attachment, preserved corners
+
+Fitted a quadratic to 65 clamped upper-rim offsets per eye, leaving lower geometry unchanged. A first smooth trial (v12) protruded near the left corner. The retained v13 tapers that offset by (1-t*t)^2 across the lid and (1-r)^3 toward its moving edge. Actual browser inspection of both closed profiles and the opposite half closure shows no v11 jagged lower intersections or v12 corner flap. The opposite upper join is reduced; the other eye still has a conspicuous dark outer rim. Retained as the isolated candidate, not production. Painted-surface detail and the remaining join still need visual work.
+
+v13-profile.png, v13-opposite.png and v13-half.png capture the inspected states. v13-runtime.json records all runtime assertions passing, including intermediate blink weights and ES/EN playback clock checks. Median CPU update .24 ms, p95 .42 ms in this isolated viewer; not a before/after game performance claim. Python compile and whitespace checks pass.
