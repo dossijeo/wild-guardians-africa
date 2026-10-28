@@ -50,11 +50,26 @@ for lower in (False,True):
    face(ids,(.20,.045,.055) if lower else (.13,.023,.03),(0,0,1 if lower else -1))
  grids.append(grid)
 upper,lower=grids
-# Recessed buccal walls along the posterior lateral lip, not across the entrance.
-for col in range(len(chain)-1):
- middle=(chain[col]+chain[col+1])*.5
- if middle.y>-.70 and abs(middle.x)>.085:
-  face([upper[1][col],upper[1][col+1],lower[1][col+1],lower[1][col]],(.16,.027,.038),(-1 if middle.x>0 else 1,0,0))
+# Curved buccal surfaces: the leading edge recedes between the jaws,
+# so no straight vertical plate cuts across the visible cavity.
+for side in (-1,1):
+ contour=sorted([v for v in chain if v.x*side>.07],key=lambda v:v.y)
+ def at_y(y):
+  for left,right in zip(contour,contour[1:]):
+   if left.y<=y<=right.y:return left.lerp(right,(y-left.y)/max(1e-8,right.y-left.y))
+  return min(contour,key=lambda v:abs(v.y-y)).copy()
+ cheek=[]
+ for row in range(13):
+  t=row/12;line=[]
+  front=-.74+.055*math.sin(math.pi*t)
+  for col in range(9):
+   d=col/8;y=front+(-.49-front)*d;anchor=at_y(y)
+   v=anchor.copy();v.x-=side*(.012+.008*math.sin(math.pi*t));v.z+=.001*(1-2*t)
+   line.append(vertex(v,anchor,jaw(anchor)*t))
+  cheek.append(line)
+ for row in range(12):
+  for col in range(8):face([cheek[row][col],cheek[row][col+1],cheek[row+1][col+1],cheek[row+1][col]],(.16,.027,.038),(-side,0,0))
+
 for col in range(len(chain)-1):face([upper[-1][col],upper[-1][col+1],lower[-1][col+1],lower[-1][col]],(.085,.012,.02))
 # Side walls are at the commissures; the front aperture remains open.
 for col in (0,len(chain)-1):
