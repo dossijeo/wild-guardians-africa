@@ -1,5 +1,11 @@
 # Active facial coverage
 
+## Queued review after older Amara (user request, 2026-10-28)
+
+After completing olderFemale (Amara mayor), review and improve the Guardian's eyelids to the quality achieved on the other characters. This is pending work, not an accepted result. Inspect the existing geometry before deciding the correction; retain the wooden mask's identity and avoid human-skin eyelids.
+
+Acceptance checks: neutral silhouette; full closure without exposed eye slivers; partial closure without folds or intersections; smooth reopening; front, three-quarter and side views; simultaneous gaze, dialogue visemes and natural blinking. Verify the exported GLB in the actual tutorial and spell appearances, at gameplay distance and close range. Capture before/after evidence and check compatibility with existing facial controls and animation cost. Complete Amara's remaining seam and animated validation work first, preserving skin wrinkles.
+
 Run `node tools/guardian/audit_face_coverage.mjs docs/guardian/phase2/face-authoring/coverage.json --require-all` from the repository root. The strict check intentionally exits nonzero while any active animal/worker lacks a required POSITION morph channel. It resolves the runtime catalog, fingerprints the exact GLBs and records candidate files separately, including whether their bytes match the active model.
 
 Current catalog audit: all five beasts, youngMale and youngFemale have blinkL, blinkR and mouthOpen. olderMale and olderFemale still lack these channels in their active assets. The strict audit exits 2 because those two profiles are incomplete. Candidate discovery includes all four worker profiles, independently of whether their files are installed. Availability does not certify anatomical or visual quality.
