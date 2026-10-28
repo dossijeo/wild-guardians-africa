@@ -71,3 +71,9 @@ Two new combined-box tests and all 26 existing combat/static-solid tests pass. T
 ### Static-wall crossing regression
 
 A new deterministic case demonstrated that the combined endpoint search could choose a clear destination on the far side of a thin static wall. The test failed before the change. Candidate translations now sweep the actor AABB against previously clear static obstacles; moving peers remain separable and an existing static overlap may escape. The three offset tests plus the buffalo/rhino baked-wall tests pass (5/5). This is a geometric regression test, not a new visual scenario approval. A blocked search retains the earlier unresolved-contact behavior; it does not authorize crossing a static barrier.
+
+## Separation continuity
+
+The optional diagnostic now records visible hip positions. `peer-continuity-status.json` and its summary exposed a 2.862 m reversal over 0.116 s when a baked correction disappeared during rolling. The contact offset is now retained across subsequent fall samples and after peers leave. It is reset exactly at the fall-to-get-up handoff, where the corrected fallen pose and logical root already include that displacement, avoiding double application. Recovery commits its remaining offset through the existing reconciliation.
+
+`peer-held-offset-status.json`: completed four-actor run, zero errors/final down actors and zero baked vertices detected inside physical colliders. Maximum sampled hip step is 0.470 m over 0.183 s during the launch; maximum among the displayed recovery outliers is 0.410 m over 0.150 s. This removes the large observed reversal in this run but does not certify frame-by-frame smoothness, all crowd layouts or timing-independent equality. All 22 combat physics tests passed. A new continuous visual capture remains pending.

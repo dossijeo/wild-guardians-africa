@@ -7,7 +7,7 @@ import {visitBeastSolids} from './beast-physics-environment.js';
 // Keep the entry side of each obstacle: never eject through a thin wall.
 export class BakedSolidContacts{
  constructor(binding,boxes,peers=null){
-  this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();
+  this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();this.peerOffset=new Vector3();
  }
  static forAnimal(world,animal,binding,{peers=false}={}){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes,peers?()=>{const manager=world.nav.beastPhysics,entries=[...(manager?.entries.values()??[])];for(const e of manager?.baked?.entries.values()??[]){if(e.animal.id===animal.id)break;entries.push(e);}return entries;}:null);}
  refreshPeers(){
@@ -30,11 +30,12 @@ export class BakedSolidContacts{
  }
  resolve(surface=null){
   if(this.peers)this.refreshPeers();
-  this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length&&!this.peerBoxes.length)return this.shift;
+  this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length&&!this.peerBoxes.length&&!this.peerOffset.lengthSq())return this.shift;
   this.bounds.makeEmpty();let offset=0;for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);if(surface){this.positions[offset++]=this.point.x;this.positions[offset++]=this.point.y;this.positions[offset++]=this.point.z;}}
   // Include the contact skin in broad-phase overlap, not just separation.
   // Sparse support samples can miss small features between extrema.
   this.bounds.expandByScalar(.015);
+  if(this.peers){this.bounds.translate(this.peerOffset);this.shift.copy(this.peerOffset);}
   const b=this.bounds,r=this.reference;
   for(let pass=0;pass<4;pass++)for(const solid of [...this.peerBoxes,...this.boxes]){
    if(solid.active?.()===false||!b.intersectsBox(solid))continue;
@@ -51,6 +52,7 @@ export class BakedSolidContacts{
    const correction=clearBoxOffset(b,[...this.peerBoxes,...this.boxes],this.shift,.015,this.boxes);
    if(correction){b.translate(correction);this.unresolved=0;}
   }
+  if(this.peers)this.peerOffset.copy(this.shift);
   if(this.shift.lengthSq()){const hip=this.binding.bones.get('Hips');hip.getWorldPosition(this.point).add(this.shift);hip.position.copy(hip.parent.worldToLocal(this.point));this.binding.model.updateMatrixWorld(true);}
   else if(surface)for(let i=0;i<offset;i+=3)this.minimumClearance=Math.min(this.minimumClearance,this.positions[i+1]-surface(this.positions[i],this.positions[i+2]));
   return this.shift;

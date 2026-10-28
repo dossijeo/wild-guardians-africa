@@ -51,3 +51,11 @@ export function sampleRecoverySkinBounds(manager){
  }
  return pairs;
 }
+
+export function sampleRecoveryPositions(manager){
+ return [...manager.entries.values(),...(manager.baked?.entries.values()??[])].map(e=>({
+  id:e.animal.id,mode:e.actor?'physical':'baked',phase:e.animal.magicDown?.phase,
+  hip:e.binding.bones.get('Hips').getWorldPosition(new Vector3()).toArray(),
+  correction:e.fall?.solidContacts?.shift.toArray()??null,
+ }));
+}

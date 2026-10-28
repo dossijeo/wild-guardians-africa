@@ -28,7 +28,7 @@ export class BakedBeastFallbacks {
   if(done){
    const clip=this.recoveryClips.get(a.species),authored=clip&&Number.isFinite(e.fall.clip.metadata.recoveryYaw);
    if(authored)e.binding.physicalSnapshot(e.snapshot);else e.fall.snapshot(e.snapshot);
-   e.fall.restore();e.root.position.set(a.x,this.world.nav.field.surface(a.x,a.z),a.z);
+   e.fall.restore();e.fall.solidContacts?.peerOffset?.set(0,0,0);e.root.position.set(a.x,this.world.nav.field.surface(a.x,a.z),a.z);
    if(authored){const yaw=e.fall.clip.metadata.recoveryYaw;a.heading=(a.heading??0)+yaw;e.root.rotation.y+=yaw;}
    e.root.updateMatrixWorld(true);e.data.key=null;applyAnimalPose(e.data,a,state.elapsed);
    const options={surface:(x,z)=>this.world.nav.field.surface(x,z),solidContacts:e.fall.solidContacts};
