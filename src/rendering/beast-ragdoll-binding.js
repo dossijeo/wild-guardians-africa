@@ -7,7 +7,11 @@ const supportDirections=Array.from({length:96},(_,k)=>{const y=1-2*(k+.5)/96,r=M
 // The physics snapshot is world-space. Only Hips translation is transferred;
 // other bone lengths remain authored, so solver tolerances cannot stretch skin.
 export class BeastRagdollBinding{
- constructor(model){
+ constructor(model,{species=model.userData.beastSpecies}={}){
+  // Calibrated on the repaired hyena: alternate-vertex sampling changes its
+  // support hull after disconnected debris is removed. Other rigs retain
+  // their validated sampling. Only the first fit scans the full geometry.
+  this.sampleStride=species==='hyena'?1:2;
   this.model=model;this.bones=new Map();model.traverse(o=>{if(o.isBone)this.bones.set(o.name.replace(/^mixamorig[:_]?/,''),o);});
   // Replacement rigs omit toe markers and name the head tip Head_top.
   // Virtual endpoints define collision frames only; no skin weights or clips change.
@@ -36,8 +40,8 @@ export class BeastRagdollBinding{
   const v=new Vector3(),selected=new Map();
   this.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
-   const cached=colliderSamples.get(mesh.geometry);if(!cached)selected.set(mesh.geometry,new Set());
-   const samples=cached??Array.from({length:Math.ceil(indices.count/2)},(_,i)=>i*2);
+   const cached=colliderSamples.get(mesh.geometry)?.get(this.sampleStride);if(!cached)selected.set(mesh.geometry,new Set());
+   const samples=cached??Array.from({length:Math.ceil(indices.count/this.sampleStride)},(_,i)=>i*this.sampleStride);
    for(const i of samples){if(isTailContactVertex(mesh,i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
     // Skin once; adjacent head/neck supports share the same world-space point.
     const primary=mapping[indices.getComponent(i,best)];if(primary===undefined)continue;
@@ -54,7 +58,7 @@ export class BeastRagdollBinding{
    const hull=[];for(const {x:dx,y:dy,z:dz} of supportDirections){let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
    return {hull,radius,halfHeight:Math.max(.005,(hi-lo)/2-radius),offset:{x,y:(lo+hi)/2,z},samples:points.length};
   });
-  for(const [geometry,indices] of selected)colliderSamples.set(geometry,[...indices]);
+  for(const [geometry,indices] of selected){let cache=colliderSamples.get(geometry);if(!cache)colliderSamples.set(geometry,cache=new Map());cache.set(this.sampleStride,[...indices]);}
   return fits;
  }
  physicalSnapshot(out){

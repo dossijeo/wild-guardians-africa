@@ -15,7 +15,7 @@ const chunks=[],clips=[];let offset=0;
 const position=new Vector3(),rotation=new Quaternion();
 function boneFrame(binding,physical){binding.apply(physical);const values=[];for(const entry of binding.entries){entry.bone.getWorldPosition(position);entry.bone.getWorldQuaternion(rotation).normalize();values.push(position.x,position.y,position.z,rotation.x,rotation.y,rotation.z,rotation.w);}binding.restore();return values;}
 for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
- const model=await actorGeometry('public'+ANIMAL_ACTIONS.animals[species].url),binding=new BeastRagdollBinding(model),pose=binding.capture(),colliders=binding.colliders();
+ const model=await actorGeometry('public'+ANIMAL_ACTIONS.animals[species].url),binding=new BeastRagdollBinding(model,{species}),pose=binding.capture(),colliders=binding.colliders();
  const recoveryData=JSON.parse(fs.readFileSync('content/source/animations/stand-up/'+species+'-candidate.json')),recoveryClip=AnimationClip.parse(recoveryData.clip);
  const source=fs.readFileSync('public'+ANIMAL_ACTIONS.animals[species].url),sourceSha256=createHash('sha256').update(source).digest('hex');
  for(const [directionName,direction] of [['front',{x:0,y:0,z:1}],['side',{x:1,y:0,z:0}],['back',{x:0,y:0,z:-1}],['left',{x:-1,y:0,z:0}],['down',{x:0,y:-.8,z:1}],['downBack',{x:0,y:-.8,z:-1}],['downSide',{x:1,y:-.8,z:0}],['downLeft',{x:-1,y:-.8,z:0}]]){

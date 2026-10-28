@@ -80,9 +80,9 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "hyena": {
-      "url": "/assets/239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40.glb",
+      "url": "/assets/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
-      "sha256": "239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40",
+      "sha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
       "presentation": {
         "scale": 1,
         "bindHeight": 2.0300010112604725,
@@ -100,7 +100,7 @@ export const ANIMAL_ACTIONS = {
         "sourceScriptSha256": "24b60f541191b52c03d6325f92624578aec63158315787605e710cc99a885057",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 17954,
+          "bodyVertices": 17594,
           "bindRadius": 0.7620321351658541,
           "clips": {
             "Walking": {

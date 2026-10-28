@@ -5250,6 +5250,15 @@
       "origins": [
         "content/source/actors/buffalo/expressive-candidate.blend"
       ]
+    },
+    {
+      "url": "/assets/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb",
+      "bytes": 16409688,
+      "sha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
+      "mime": "application/octet-stream",
+      "origins": [
+        "content/source/actors/hyena/expressive-candidate.blend"
+      ]
     }
   ],
   "models": [
@@ -5580,7 +5589,7 @@
       }
     },
     {
-      "url": "/assets/239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40.glb",
+      "url": "/assets/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
       "animations": [
         {
@@ -5608,8 +5617,8 @@
           "channels": 63
         }
       ],
-      "nodes": 23,
-      "meshes": 1,
+      "nodes": 25,
+      "meshes": 3,
       "extras": {
         "replacement": {
           "repair": "tools/prepare_hyena.py",
@@ -5667,6 +5676,11 @@
           ],
           "sourceSha256": "239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40"
         }
+      },
+      "debrisRepair": {
+        "removedVertices": 173,
+        "tool": "tools/guardian/remove_hyena_floating_debris.py",
+        "report": "docs/guardian/phase2/face-authoring/hyena-floating-piece/repaired-animation-audit.json"
       }
     },
     {

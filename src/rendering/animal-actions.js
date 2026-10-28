@@ -3,6 +3,7 @@ import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
 export function prepareAnimalModel(model,species){
+  model.userData.beastSpecies=species;
   model.scale.setScalar(ANIMAL_ACTIONS.animals[species].presentation.scale);
   model.position.y=0;
   model.traverse(mesh=>{

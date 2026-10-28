@@ -646,8 +646,8 @@ export const FOOTSTEPS = {
       }
     },
     "hyena": {
-      "url": "/assets/239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40.glb",
-      "sha256": "239008582b983e71b2439e2a0587e96a28a5c2016f64ba07a05d89dd42d90f40",
+      "url": "/assets/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb",
+      "sha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
