@@ -13,3 +13,11 @@ Added a closer camera and canvas recording to the probe. Corrected the fixture d
 ## Low lateral view and independent mesh support scan
 
 Recorded hyena-side.mp4 and hyena-support-status.json. The diagnostic scans every rendered skinned vertex except tail-classified vertices during recovery, against the actual terrain surface, instead of only reusing the recovery support samples. Minimum gaps in 39 sampled recovery frames range from 0.00486 to 0.05052 m, predominantly 0.01 m; the largest values occur at transition entry. The lower-angle contact sheet does not show sustained large hovering in this case. This sampling adds significant QA-only CPU work and is not a performance measurement. It does not prove every frame, planted-foot alignment, all species, terrain or obstacle contacts. The 1 Hz sheet is a sparse review; the video contains the full recorded cycle.
+
+## Lion lateral and rhino elevated contact
+
+Ran the same production-catalog probe after selecting lion/Lateral and rhino/Elevado. Both report second=true, entered=true, finished=true, errors empty, zero remaining physical bodies and at most one Guardian. Saved status, silent canvas MP4 and 1 Hz contact sheets for each.
+
+Independent recovery vertex minimum-ground-gap ranges: lion 0.00470–0.04855 m; rhino -0.00132–0.04012 m. Small entry-transition gaps and slight penetration remain; these are sampled minima, not all-foot contact guarantees. Reviewed knockdowns and return upright. Lion drifts toward the image edge, limiting fine pose inspection. Elevated test deliberately overrides the summon origin to generate a downward impulse; the Guardian can leave this low camera framing, so this does not validate production summon placement. The cumulative rollFailures counter remains 1 from the earlier hyena run and does not increase in either run. The earlier hyena run used the bounded fallback once; do not describe all tested recoveries as successful physical supine alignment.
+
+No audio or performance acceptance follows from these captures. Obstacles, dense raids, additional species/directions and every-frame visual quality remain outside these two cases.
