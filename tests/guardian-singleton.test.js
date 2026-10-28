@@ -77,3 +77,15 @@ test('tutorial guide yields to a spell and resumes the same body without retaine
  summons.setGuide(guide);summons.update();world.state.result={won:true};summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.guide,null);
  summons.dispose();assert.equal(world.scene.children.length,0);model.children[0].geometry.dispose();model.children[0].material.dispose();
 });
+
+
+test('Multiply branches from both hands around the crop and reuses the draw for Grow',async()=>{
+ const model=new THREE.Group();for(const [name,x] of [['HandL',-.3],['HandR',.3]]){const hand=new THREE.Bone();hand.name=name;hand.position.set(x,1,0);model.add(hand);}
+ const world={state:{events:[],elapsed:1,time:150},scene:new THREE.Scene(),assets:{model:async()=>({scene:model,animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ const event={type:'SpellActivated',kind:'multiply',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}};world.state.events.push(event);summons.update();world.state.elapsed=1.5;summons.update();
+ const slot=summons.slots[0],beam=slot.beam,matrix=new THREE.Matrix4(),trunks=[],ends=new Set();assert.equal(beam.count,8);
+ for(let i=0;i<8;i++){beam.getMatrixAt(i,matrix);const start=new THREE.Vector3(0,-.5,0).applyMatrix4(matrix),end=new THREE.Vector3(0,.5,0).applyMatrix4(matrix);if(i<2){assert.ok(start.distanceTo(slot.hands[i].getWorldPosition(new THREE.Vector3()))<1e-5,JSON.stringify({i,start:start.toArray(),hand:slot.hands[i].getWorldPosition(new THREE.Vector3()).toArray(),matrix:matrix.elements,at:slot.at}));trunks.push(end);}else{assert.ok(start.distanceTo(trunks[Math.floor((i-2)/3)])<1e-5);assert.ok(Math.abs(end.distanceTo(slot.target)-.65)<1e-5);ends.add(end.toArray().map(v=>v.toFixed(3)).join(','));}}
+ assert.equal(ends.size,6);assert.ok(slot.core.position.distanceTo(slot.target)<1e-6);
+ world.state.events.push({...event,kind:'growth',presentation:{...event.presentation,elapsed:1.5}});world.state.elapsed=1.8;summons.update();assert.equal(slot.beam,beam);assert.equal(beam.count,2);summons.dispose();assert.equal(world.scene.children.length,0);
+});

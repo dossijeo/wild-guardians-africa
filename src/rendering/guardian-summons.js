@@ -30,7 +30,7 @@ export class GuardianSummons{
    const wind=[];model.traverse(bone=>{if(bone.isBone&&/^(Mantle|Feather|Wood)/.test(bone.name))wind.push({bone,phase:wind.length*.71});});
    const mixer=new THREE.AnimationMixer(model),actions=new Map(gltf.animations.map(c=>[c.name,mixer.clipAction(c)]));for(const a of actions.values())a.play();
    const material=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false});
-   const beam=new THREE.InstancedMesh(this.beamGeometry,material,2),impact=new THREE.Mesh(this.ringGeometry,material),core=new THREE.Mesh(this.coreGeometry,material);for(const m of [beam,impact,core]){m.visible=false;m.frustumCulled=false;this.world.scene.add(m);}
+   const beam=new THREE.InstancedMesh(this.beamGeometry,material,8),impact=new THREE.Mesh(this.ringGeometry,material),core=new THREE.Mesh(this.coreGeometry,material);for(const m of [beam,impact,core]){m.visible=false;m.frustumCulled=false;this.world.scene.add(m);}
    const aura=this.world.vfxLibrary.create('repel',this.world.destructionPass,{density:.35,softParticles:false});aura.visible=false;aura.sprites.material.forceSinglePass=true;aura.ribbons.material.forceSinglePass=true;this.world.scene.add(aura);
    const eyes=['L','R'].map(side=>model.getObjectByName('Eye'+side)??model.getObjectByName('Eye.'+side)).filter(Boolean).map(bone=>({bone,rest:bone.quaternion.clone()}));
    this.slots.push({vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
@@ -115,15 +115,22 @@ export class GuardianSummons{
    beam.visible=release>.01&&(!attack||age>=ATTACK_TIMING.release);
    s.impact.visible=release>.01&&(!attack||impactAge>=0);s.core.visible=release>.01;
    if(s.core.visible){
-    beam.position.set(0,0,0);beam.count=attack?1:2;
+    const branching=kind==='multiply';beam.position.set(0,0,0);beam.count=attack?1:branching?8:2;
     for(let i=0;i<beam.count;i++){
-     const hand=attack?s.hand:s.hands[i];hand?.getWorldPosition(this.vector);if(!hand)this.vector.copy(s.group.position);
-     this.direction.copy(s.target).sub(this.vector);const length=this.direction.length(),front=attack?flight:1;
+     const hand=attack?s.hand:s.hands[branching&&i>=2?Math.floor((i-2)/3):i];hand?.getWorldPosition(this.vector);if(!hand)this.vector.copy(s.group.position);
+     if(branching){
+      // Two hand-fed trunks divide into six rays around the crop. All eight
+      // segments share one instanced draw and the existing material/geometry.
+      this.aim.copy(s.target).lerp(this.vector,.35);this.aim.y+=.25;
+      if(i>=2){this.vector.copy(this.aim);const angle=(i-2)*Math.PI/3+age*.5,radius=.65*ease(age/.35);this.aim.copy(s.target);this.aim.x+=Math.cos(angle)*radius;this.aim.z+=Math.sin(angle)*radius;}
+      this.direction.copy(this.aim).sub(this.vector);
+     }else this.direction.copy(s.target).sub(this.vector);const length=this.direction.length(),front=attack?flight:1;
      const tail=attack?Math.max(0,front-.65,impactAge/ATTACK_TIMING.afterglow):0;
      if(i===0)s.core.position.copy(this.vector).addScaledVector(this.direction,front);
      this.vector.addScaledVector(this.direction,(front+tail)/2);this.q.setFromUnitVectors(this.up,this.direction.normalize());
      this.beamScale.set(attack?.11:.028,Math.max(.001,length*(front-tail)),attack?.11:.028);beam.setMatrixAt(i,this.beamMatrix.compose(this.vector,this.q,this.beamScale));
     }
+    if(branching){s.core.position.copy(s.target);this.direction.copy(s.target).sub(s.group.position).normalize();}
     beam.instanceMatrix.needsUpdate=true;s.core.scale.setScalar(attack?(impactAge<0?.1+.12*release:.16+.3*release):.12+.16*release);
     s.impact.position.copy(s.target);s.impact.quaternion.setFromUnitVectors(this.forward,this.direction);s.impact.scale.setScalar(.15+(attack?Math.max(0,impactAge)*4:age));
    }
