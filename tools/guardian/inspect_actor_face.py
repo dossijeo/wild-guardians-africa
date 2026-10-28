@@ -13,6 +13,7 @@ if a.recompute_normals or a.weld_diagnostic:
     bm=bmesh.new();bm.from_mesh(obj.data);bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=.000001);bm.to_mesh(obj.data);bm.free()
    obj.data.normals_split_custom_set([(0,0,0)]*len(obj.data.loops))
    for polygon in obj.data.polygons:polygon.use_smooth=True
+   for edge in obj.data.edges:edge.use_edge_sharp=False
 requested={name for name in a.expression.split(',') if name}
 available={key.name for o in bpy.context.scene.objects if o.type=='MESH' and o.data.shape_keys for key in o.data.shape_keys.key_blocks if key.name!='Basis'}
 if requested-available:
