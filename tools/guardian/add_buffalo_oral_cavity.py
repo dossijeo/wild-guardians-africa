@@ -35,7 +35,7 @@ for lower in (False,True):
  for row in range(9):
   d=row/8;line=[]
   for anchor in chain:
-   v=anchor.lerp(rear,d*.85)
+   v=anchor.lerp(rear,.025+d*.825)
    v.z+=(-1 if lower else 1)*(.001+.015*math.sin(math.pi*d))
    line.append(vertex(v,anchor,jaw(anchor)*(1-d*.7) if lower else 0))
   grid.append(line)

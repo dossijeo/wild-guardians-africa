@@ -47,3 +47,11 @@ The front and side full-opening renders in `jaw-v1` were visually inspected. The
 Executed Blender renders cover neutral, 50% and full mouth opening from four views. Inspected front and side at full opening show a volumetric interior and no former white profile rim; the half-opening front retains depth. The neutral front reveals an overly exposed reddish line under the muzzle. This is an unresolved quality defect: recess the oral boundary and repeat closure checks before installing. Animated skinning, both-profile intermediate clearance and runtime expression coupling remain unverified.
 
 The six original clips again pass the 246-pose channel audit with zero positional error and 7.30e-8 rad maximum angular error. The candidate is `C:/tmp/guardian-faces/buffalo-oral-v1.blend`; the reproducible authoring script, geometry report and rendered evidence are committed. No production buffalo asset was replaced.
+
+## Oral cavity v2 and first Three.js pose check
+
+Inset the cavity boundary 2.5% toward its recessed rear, removing the exposed red line in the inspected neutral frontal Blender render. The fully open side retains the interior without the previous white rim. Neutral/open four-view render sets and the unchanged six-clip channel audit are retained.
+
+In the actual Three.js expression fixture, Running at 0.35 s with mouth 0.85 and both eyes closed binds both Mesh_0 and BuffaloOralAnatomy, plus eight eyelid corrective channels. The runtime reports three draws and no errors. Frontal and lateral screenshots are in `runtime-oral-v2`. The original eye-only frame cropped the mouth behind controls; the buffalo fixture now frames the complete face.
+
+Visual limitation discovered: the oral floor appears too uniformly pink/flat under the runtime hemisphere and directional lighting, unlike the shaded Blender render. This is not accepted final material quality. Investigate interior normals, tissue shading and recessed ambient occlusion without covering the aperture. Animated attachment is sampled in only this single Running pose; attack, neutral running and full clip traversal still require validation. Active asset catalog remains unchanged.
