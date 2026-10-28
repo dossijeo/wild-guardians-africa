@@ -282,11 +282,21 @@ for side in contours:
                         point=sum((v*w for v,w in zip(pts,weights)),Vector())
                         hit,_,_,_=tree.ray_cast(point-direction*extent*4,direction)
                         if hit is None:continue
-                        deficit=(point-hit).dot(direction)+.0012
+                        deficit=(point-hit).dot(direction)+profile.get('triangleClearance',.0012)
                         if deficit>0:
                             for i in triangle:shifts[i]=max(shifts.get(i,0),deficit)
             if not shifts:break
             for i,shift in shifts.items():key.data[i].co=inv@(world@key.data[i].co-direction*shift)
+# Tuck only the reviewed skin perimeter under the original face. Apply after
+# eyeball clearance so the safety pass cannot lift the attachment seam again.
+if profile.get('perimeterInset'):
+    for key in obj.data.shape_keys.key_blocks:
+        for i,(side,x,top,bottom,t) in enumerate(metadata):
+            u=(i%columns)/(columns-1)
+            edge=min(t,1-t)
+            fade=max(0,1-edge/profile.get('perimeterBlend',.08))
+            fade=fade*fade*(3-2*fade)
+            key.data[i].co=inv@(world@key.data[i].co+direction*profile['perimeterInset']*fade)
 bpy.ops.wm.save_as_mainfile(filepath=str(Path(a.output).resolve()),compress=True)
 if a.export_glb:
     bpy.ops.export_scene.gltf(filepath=str(Path(a.output).with_suffix('.glb').resolve()),
