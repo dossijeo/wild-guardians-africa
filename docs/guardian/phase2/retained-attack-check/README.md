@@ -17,3 +17,11 @@ Repeated from a fresh fixture with Game.tick enabled and audio unlocked. Attack 
 Rotated the camera and resumed continuous simulation. At 3048.42505, simulation-finished.json records the hyena attacking again, no magicDown, zero physics worlds/bodies, zero retained effects and no visible Guardian. Maximum visible Guardian count stayed one. No roll timeout or runtime errors were reported. This proves return to behavior and resource cleanup in this case. The complete fall/get-up motion was not captured frame by frame, so animation quality is not newly certified by the end-state check. No performance comparison is inferred from these isolated timing samples.
 
 The fixture now has an accessible, reversible hide-controls button outside the panel. It hides only QA UI; simulation and rendering continue. Both hide and show were checked in the browser, and JavaScript syntax/diff checks passed.
+
+## Continuous hyena cycle recording
+
+hyena-cycle.mp4 records a separate uninterrupted Attack cycle (not the Attack-to-Shield interruption), using the installed hyena and the fixture's lateral recovery view. Source WebM duration 12.668060 s, 4,206,496 bytes; transcoded to H.264/AAC for review. The canvas recording excludes QA controls. hyena-cycle-status.json preserves the complete visible report, including preceding audio trace entries from this same fixture session; only report.recoveryTrace and the last command describe this recorded cycle.
+
+The report completed 12.02991 simulated seconds, 271 sampled frames, zero hidden frames, peak one physical ragdoll, zero final downed animals and no errors. Across 38 recovery support samples, minimum surface separation ranged from 0.0100 to 0.03137 m. These are sampled supporting vertices, not exhaustive collision guarantees.
+
+Inspected the full sequence as half-second frames (hyena-cycle-review.jpg) and quarter-second frames around the roll/get-up transition. The cycle contains airborne impact, ground settling, roll, authored recovery and resumed locomotion. The actor is too small in this framing to approve neck/limb deformation detail or subtle foot sliding. A closer inspection remains required. This recording also does not replace the outstanding interrupted-cycle video or a paired performance benchmark. The status counters do not by themselves certify artistic quality.
