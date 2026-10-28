@@ -23,3 +23,9 @@ The run completes 12.121 simulated seconds through falling, rolling, recovering 
 ### Rhino get-up detail
 
 `rhino-getup-detail.png` samples seconds 5–10 at 3 Hz. The crop improves leg/body readability but clips the actor at its right edge in some frames. Across 36 recovery samples, minimum sampled non-tail support is 0.0100–0.04685 m. At recovery age 0.083 s the forearm is the lowest sample while feet are still raised; by 0.532 s a foot is the support limiter. Later support transfers between feet and a hand. The reviewed samples do not show a gross root-height jump on returning upright. This is evidence for this one wall-side cycle, not a general all-vertex collision or slope certification.
+
+## Four-impact lifecycle run and framing defect
+
+`four-impact-status.json` reports 16.019 simulated seconds, four targets, peak three physical ragdolls and one baked fallback, one physical-budget rejection, zero final down actors/bodies/errors, zero hidden frames and maxVisibleGuardians=1. All four resume walking/attacking.
+
+`four-impact.mp4` and its one-second sheet expose a QA camera defect: the non-wall trial inherited the previous low wall camera, leaving actors small/occluded. This recording is lifecycle evidence only, not visual acceptance of all four reactions. The fixture now restores its standard camera for non-wall physics trials. A new visual run is required after that fix. Capture is silent and contains diagnostic support sampling; no performance conclusion is drawn.
