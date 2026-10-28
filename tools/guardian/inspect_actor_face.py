@@ -2,7 +2,7 @@
 import bpy,sys,json,math,argparse,bmesh
 from pathlib import Path
 from mathutils import Vector
-p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);p.add_argument('--lower-views',action='store_true');p.add_argument('--clay',action='store_true');p.add_argument('--albedo',action='store_true');p.add_argument('--weld-diagnostic',action='store_true',help='Diagnostic only: merge coincident mesh vertices before smooth normal recompute');p.add_argument('--matte-diagnostic',action='store_true',help='Diagnostic only: uniform nonmetal roughness, retaining normal and color');p.add_argument('--recompute-normals',action='store_true',help='Diagnostic only: discard imported custom normals');p.add_argument('--without-normal-map',action='store_true',help='Diagnostic render only; retains albedo and roughness');a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);p.add_argument('--lower-views',action='store_true');p.add_argument('--clay',action='store_true');p.add_argument('--albedo',action='store_true');p.add_argument('--weld-diagnostic',action='store_true',help='Diagnostic only: merge coincident mesh vertices before smooth normal recompute');p.add_argument('--invert-normal-y',action='store_true',help='Diagnostic only: compare normal-map green-channel convention');p.add_argument('--matte-diagnostic',action='store_true',help='Diagnostic only: uniform nonmetal roughness, retaining normal and color');p.add_argument('--recompute-normals',action='store_true',help='Diagnostic only: discard imported custom normals');p.add_argument('--without-normal-map',action='store_true',help='Diagnostic render only; retains albedo and roughness');a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=a.input)
 else:bpy.ops.import_scene.gltf(filepath=a.input)
@@ -42,6 +42,15 @@ for pos,power,size in [((3,-4,5),700,4),((-4,-1,3),450,3),((0,4,4),550,3)]:
 bpy.ops.object.camera_add();cam=bpy.context.object;scene.camera=cam;cam.data.type='ORTHO';cam.data.ortho_scale=extent
 directions=[('front',(0,-1,.05)),('quarter',(1,-1,.08)),('side',(1,0,.05)),('other-side',(-1,0,.05))]
 if a.lower_views:directions.extend([('lower-front',(0,-1,-.5)),('lower-quarter',(1,-1,-.5)),('lower-side',(1,0,-.5))])
+if a.invert_normal_y:
+ for material in bpy.data.materials:
+  if not material.use_nodes:continue
+  for node in list(material.node_tree.nodes):
+   if node.type=='NORMAL_MAP' and node.inputs['Color'].links:
+    socket=node.inputs['Color'].links[0].from_socket
+    mul=material.node_tree.nodes.new('ShaderNodeVectorMath');mul.operation='MULTIPLY';mul.inputs[1].default_value=(1,-1,1)
+    add=material.node_tree.nodes.new('ShaderNodeVectorMath');add.operation='ADD';add.inputs[1].default_value=(0,1,0)
+    material.node_tree.links.new(socket,mul.inputs[0]);material.node_tree.links.new(mul.outputs[0],add.inputs[0]);material.node_tree.links.new(add.outputs[0],node.inputs['Color'])
 if a.matte_diagnostic:
  for material in bpy.data.materials:
   if not material.use_nodes:continue
@@ -74,5 +83,5 @@ if a.albedo:
   links.new(emission.outputs[0],output.inputs['Surface'])
 for name,direction in directions:
  cam.location=center+Vector(direction).normalized()*extent*4;cam.rotation_euler=(center-cam.location).to_track_quat('-Z','Y').to_euler();scene.render.filepath=str(out/(name+'.png'));bpy.ops.render.render(write_still=True)
-(out/'inspection.json').write_text(json.dumps({'input':a.input,'expression':a.expression,'amount':a.amount,'meshes':info,'center':list(center),'extent':extent,'directions':dict(directions),'clay':a.clay,'albedo':a.albedo,'withoutNormalMap':a.without_normal_map,'recomputeNormals':a.recompute_normals,'weldDiagnostic':a.weld_diagnostic,'matteDiagnostic':a.matte_diagnostic},indent=2))
+(out/'inspection.json').write_text(json.dumps({'input':a.input,'expression':a.expression,'amount':a.amount,'meshes':info,'center':list(center),'extent':extent,'directions':dict(directions),'clay':a.clay,'albedo':a.albedo,'withoutNormalMap':a.without_normal_map,'recomputeNormals':a.recompute_normals,'weldDiagnostic':a.weld_diagnostic,'matteDiagnostic':a.matte_diagnostic,'invertNormalY':a.invert_normal_y},indent=2))
 
