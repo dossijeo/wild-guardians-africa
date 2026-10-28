@@ -23,3 +23,11 @@ The standalone verifier reads the compressor sidecar, validates both hashes, and
 ## Limits
 
 These sampled poses do not prove every animation frame, tooth attachment or collision. Four draw calls in this isolated fixture are not a game performance benchmark. Full gameplay Attack, ragdoll and recovery with this candidate, as well as broader closed-mouth moving-pose inspection, remain required before promotion.
+
+## First real combat cycle
+
+`combat-cycle.mp4` and `combat-cycle.json` record a daytime run of `guardian-combat.html?face=warthog&recoveryDay=1`. The explicit QA override loads the compressed candidate through WorldScene; the production catalog is unchanged. The fixture now supports an explicit warthog override and rejects unknown species instead of silently selecting hyena.
+
+Game.tick, Attack, Rapier and the existing stand-up controller ran together. The trace contains falling, rolling, recovering and walking; final down count is zero, peak physical ragdolls one, peak visible Guardians one, and fixture errors empty. Eleven expression bindings loaded. The recorded sequence and its one-second contact sheet were inspected: the animal falls, rolls, rises and resumes walking without a visibly stuck pose.
+
+This medium-distance shot does not resolve lip, tusk or eyelid clearance during the impact. It also does not cover night, repeated impacts, walls, every camera angle or the baked overflow path. Sound was not enabled for this recording. The report retains measured timings, but this single run is not an A/B performance comparison. Promotion still requires close facial inspection during real events and the remaining integration checks.
