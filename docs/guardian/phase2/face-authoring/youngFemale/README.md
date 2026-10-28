@@ -53,3 +53,7 @@ Added --albedo to inspect_actor_face.py to separate base-color features from lig
 Two local trials were evaluated: depth fairing in an elliptical left-cheek region (maximum displacement 0.00532 m, same displacement on every morph) and fitted analytic normals with unchanged coordinates. Neither produced a clear enough visual benefit to accept. The current mouth-candidate assets remain unchanged. smooth_amara_cheek.py is retained as a diagnostic experiment only, not an accepted generation stage. Captures: cheek-albedo-diagnostic.png, cheek-fairing-rejected.png and cheek-normals-trial.png.
 
 Next investigation should compare evaluated normals and material channels at the visible edge before any additional deformation. Do not claim the cheek crease has been corrected from these trials.
+
+## Gameplay integration review
+
+Installed the UV-repaired mouth candidate in the branch catalog as 382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c.glb (16,406,252 source bytes; 8,015,856 runtime bytes). Earlier candidate-only statements describe the preceding stages. Twelve actions and watering emitter checks pass. The recovery trajectory is unchanged; three obsolete container tracks were removed because the new hierarchy has no such wrapper. Recovery tests now require every target to resolve. Geometry/animation compression verification passed; the facial cheek limitation remains open. Browser worker fixture shows the installed face reacting during Fall and the recovery pose, but this is not a new full WorldScene acceptance run.

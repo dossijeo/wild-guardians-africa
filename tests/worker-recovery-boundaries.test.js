@@ -13,6 +13,7 @@ for(const [profile,library] of Object.entries(libraries))test(profile+': recover
  const g=await new GLTFLoader().parseAsync(rigForSampling(fs.readFileSync('public'+library.url)),'');
  const mixer=new AnimationMixer(g.scene),clip=clips.get(profile),spec=metadata.profiles[profile];
  assert.equal(spec.targetSha256,library.sha256);
+ for(const track of clip.tracks)assert.ok(g.scene.getObjectByName(track.name.slice(0,track.name.lastIndexOf('.'))),'Unbound recovery track '+track.name);
  const bones=[];g.scene.traverse(n=>{if(n.isBone)bones.push(n);});
  function pose(c,t){mixer.stopAllAction();const action=mixer.clipAction(c).reset().setLoop(LoopOnce,1).play();action.paused=true;action.clampWhenFinished=true;action.time=t;mixer.update(0);g.scene.updateMatrixWorld(true);return bones.map(n=>({p:n.getWorldPosition(new Vector3()),q:n.getWorldQuaternion(new Quaternion()).normalize()}));}
  function compare(a,b,offset=new Vector3()){for(let i=0;i<a.length;i++){assert.ok(a[i].p.distanceTo(b[i].p.clone().add(offset))<2e-5,bones[i].name+' position');assert.ok(a[i].q.angleTo(b[i].q)<2e-5,bones[i].name+' rotation');}}

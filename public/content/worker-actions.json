@@ -344,9 +344,9 @@
   },
   "youngFemale": {
     "profile": "youngFemale",
-    "url": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
-    "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
-    "bytes": 19143664,
+    "url": "/assets/382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c.glb",
+    "sha256": "382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c",
+    "bytes": 16406252,
     "source": "Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5.html",
     "sourceSha256": "f83317d8da9c6b41fdba2375887a4cc0920d17cea51959d8611edff17191e7ab",
     "exporterScripts": [
@@ -451,6 +451,16 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+        "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+        "bytes": 19143664
+      },
+      "pipeline": "docs/guardian/phase2/face-authoring/youngFemale/README.md",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   }
 }
