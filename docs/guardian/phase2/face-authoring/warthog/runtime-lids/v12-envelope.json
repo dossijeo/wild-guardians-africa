@@ -1,0 +1,23 @@
+{
+  "input": "C:/tmp/guardian-faces/warthog-lids-v12.glb",
+  "scope": "rest-space vertices, triangle centroids and edge midpoints against source eye sphere; not a visual or skinning test",
+  "eyes": [
+    {
+      "side": "L",
+      "minimumClearanceMeters": 0.0010055731100760829,
+      "worstBlink": 0.88,
+      "triangles": 1920,
+      "steps": 101,
+      "pass": true
+    },
+    {
+      "side": "R",
+      "minimumClearanceMeters": 0.0010103497358735225,
+      "worstBlink": 0.88,
+      "triangles": 1920,
+      "steps": 101,
+      "pass": true
+    }
+  ],
+  "pass": true
+}

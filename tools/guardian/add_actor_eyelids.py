@@ -135,6 +135,10 @@ def envelope(side,x,y):
 verts=[]; faces=[]; tex=[]; metadata=[]; columns=profile.get('columns',65); rows=profile.get('rows',17)
 def spherical_lid(side,column,row,amount):
     c,r=eye_spheres[side];phi=column*math.tau
+    # Linear GLB morph interpolation follows chords, not the sphere. Bound
+    # the sagitta between quarter-step correctives at each latitude so even
+    # their midpoint stays outside the native eye (no runtime correction).
+    r/=math.cos(row*(math.pi-.052)/8)
     # A small hidden cap at rest keeps triangles non-degenerate and gives
     # exported morph normals a valid basis instead of a collapsed point.
     theta=.001+row*(.05+amount*(math.pi-.052))
