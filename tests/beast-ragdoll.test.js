@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import * as THREE from 'three';
 import {BeastRagdollBinding} from '../src/rendering/beast-ragdoll-binding.js';
 import R from '@dimforge/rapier3d-compat';
-import {BeastRagdollSolver} from '../src/simulation/beast-ragdoll.js';
+import {BeastRagdollSolver,RAGDOLL_ROLL} from '../src/simulation/beast-ragdoll.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 await R.init();
 function rig(species){
@@ -175,5 +175,24 @@ test('fitted species contact a solid wall without crossing or explosive velociti
   assert.ok(maxSpeed<15,species+' explosive wall contact '+maxSpeed);
   console.log('fitted wall contact',{species,contacts,maxSpeed,maxCenter,wallFace});
   solver.remove(species);assert.equal(solver.world.bodies.len(),0);solver.dispose();
+ }
+});
+
+// Isolate the deadline policy from incidental contacts in changing art assets.
+test('roll grace requires a recovering neighbour contact and remains bounded',()=>{
+ for(const contact of [false,true]){
+  const solver=new BeastRagdollSolver(R),a=solver.add('rolling',{pose:pose('hyena')});
+  const neighbour=solver.add('recovering',{pose:pose('hyena')});solver.makeKinematic('recovering');
+  const collider=neighbour.parts[0].body.collider(0);
+  solver.world.contactPairsWith=(_body,visit)=>{if(contact)visit(collider);};
+  const target=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),Math.PI).multiply(new THREE.Quaternion().copy(a.parts[0].body.rotation())).normalize();
+  solver.rollTo('rolling',target,{timeout:.2});
+  // No physics integration: hold the blocked pose while exercising deadline logic.
+  for(let i=0;i<240&&!a.roll.done;i++)solver.driveRoll(a);
+  assert.equal(a.roll.timedOut,true);assert.equal(a.roll.done,true);
+  if(contact)assert.ok(Math.abs(a.roll.contactDelay-RAGDOLL_ROLL.recoveryContactGrace)<1e-8);
+  else assert.equal(a.roll.contactDelay,0);
+  assert.ok(a.roll.age<=.2+RAGDOLL_ROLL.recoveryContactGrace+solver.stepSize);
+  solver.dispose();
  }
 });
