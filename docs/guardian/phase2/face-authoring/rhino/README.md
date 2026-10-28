@@ -27,3 +27,9 @@ V1 original animation audit: 76 bones, six clips, 246 samples, zero position del
 ## Curved cheek refinement
 
 V3 replaces the straight cheek edge with a tessellated surface, but its forward-bowed edge looked like an extra tongue in the inspected quarter view; rejected. V4 reverses that curvature, recessing the middle of the edge while retaining upper/lower attachments. Full and half-open quarter views were inspected and show a continuous curved interior rather than the vertical plate. The front entrance remains open; full lateral closure, lip thickness, native-pose deformation and in-game shading still require acceptance. V4 is the current working oral candidate, not an installed asset. Its .blend/.glb are in C:/tmp/guardian-faces/rhino-oral-v4.
+
+## Lip thickness and eye framing
+
+V5 adds separate upper/lower rolled rims connecting the exact authored seam to the recessed mucosa (three strips per lip). The quarter view was inspected; the opening remains unobstructed. Native-channel audit again passes for 76 bones and 246 sampled poses. This is not yet visual acceptance in movement.
+
+`eye-calibration/front.png` reveals that a frontal eyelid profile would mostly sample the overhanging brows rather than the laterally facing eyes. Do not reuse buffalo frontal contours. Next use independent side-view camera calibration for each eye, with local surface skinning and texture projection; extend the reusable eyelid authoring tool to support those camera frames. Current working mouth source: C:/tmp/guardian-faces/rhino-oral-v5.blend/.glb.

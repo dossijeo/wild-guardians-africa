@@ -50,6 +50,21 @@ for lower in (False,True):
    face(ids,(.20,.045,.055) if lower else (.13,.023,.03),(0,0,1 if lower else -1))
  grids.append(grid)
 upper,lower=grids
+# Rolled lip rims bridge the authored exterior seam to the recessed mucosa.
+# The opening stays empty; upper and lower rims never span across each other.
+for is_lower,inside in ((False,upper),(True,lower)):
+ rim=[]
+ for row in range(4):
+  t=row/3;line=[]
+  for anchor in chain:
+   v=anchor.lerp(rear,.025*t)
+   v.z+=(-1 if is_lower else 1)*(.001*t+.0025*math.sin(math.pi*t))
+   line.append(vertex(v,anchor,jaw(anchor) if is_lower else 0))
+  rim.append(line)
+ for row in range(3):
+  for col in range(len(chain)-1):
+   face([rim[row][col],rim[row][col+1],rim[row+1][col+1],rim[row+1][col]],(.12,.075,.065),(0,0,1 if is_lower else -1))
+
 # Curved buccal surfaces: the leading edge recedes between the jaws,
 # so no straight vertical plate cuts across the visible cavity.
 for side in (-1,1):
