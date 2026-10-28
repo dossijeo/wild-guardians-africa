@@ -127,3 +127,10 @@ Added explicit olderMale original/wideFrameTrial fixture routes. Inspected actua
 ## Rig-deformation exclusion
 
 Rendered the current editable candidate with all armature modifiers disabled in an isolated copy. The neutral cheek/nose cuts remain visible (no-skin-diagnostic-front.png). This does not support changing skin weights or bind matrices as the repair for these static marks. It does not validate animated weight quality. Added --without-skinning to inspect_actor_face.py for reproducible render-only diagnosis; the flag is recorded in inspection.json and never changes the source file. This particular image was generated from the isolated no-skin Blend before adding the equivalent flag. The prior unlit albedo render remains smooth across these regions, directing further work to surface/normal continuity rather than repainting base color or altering the rig.
+
+
+## Subdivision and normal-map isolation
+
+Rendered a welded, recomputed-normal, level-two subdivision reference from the original GLB. With the original normal map, angular cheek/nose cuts remain; without that map the same subdivided surface is continuous, but intended skin relief disappears. This paired test isolates a substantial contribution from the mapped normals; it does not prove the unmodified low-poly geometry is sufficient. Whole-body subdivision is diagnostic only, never a production optimization.
+
+Two further isolated trials on the expressive candidate were rejected: subtracting triangle-local median tangent-normal bias makes visible triangle boundaries worse; fading the mapped normal to neutral within cheek/nose masks, with render-only welded/recomputed normals, improves the nose and some cheek areas but retains cuts near the moustache and removes desired relief. No source/candidate/catalog replacement. Frontal evidence and reproduction scripts are in surface-isolation; these scripts require the repository working directory. No runtime acceptance is claimed for these rejected trials.
