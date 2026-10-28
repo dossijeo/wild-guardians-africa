@@ -9,3 +9,10 @@ Observed: peak three physical ragdolls plus one baked fallback; one Guardian max
 Physics mean 3.189 ms / p95 8.235 ms / maximum 32.370 ms; creation maximum 22.825 ms. Frame median is not recorded in this report: mean 47.061 ms, p95 66.455 ms, maximum 83.230 ms. Video capture and an unpaired single run prevent attributing total frame cost to this feature. Scope of follow-up: identify the failed actor and its ground/obstacle contacts, then correct the physical roll or recovery transition and repeat. General pre-existing engine performance remains outside this task.
 
 This recording has no audio track: the fixture had reloaded after the audio-priority edit and sound was not re-enabled. The prior night-audio recording remains the audio evidence.
+
+
+## Targeted repeat and rejected torque experiment
+
+`repeat-before.json` reproduces two physical roll timeouts. At simulation 6.470 s, qa-beast-1 uses procedural BeastRecovery after error 0.5381 rad; qa-beast-0 remains rolling at error 0.4630, qa-beast-2 uses AuthoredBeastRecovery, and qa-beast-3 uses the baked authored path. Thus fallback is not merely an aggregate counter ambiguity.
+
+Experiment: increased the bounded gravity-support torque multiplier from 1.8 to 2.4, leaving speed, maximum acceleration, orientation tolerance and timeout unchanged. All 35 automated physics tests passed, but the graphical four-impact repeat still produced two roll failures (last error 0.45484 rad, speed 0.57522). See `torque-2.4.json`. **Rejected and reverted**: stronger assistance alone does not establish a fix. The branch retains 1.8. The target orientation/ground and joint contacts require further diagnosis; no root cause is asserted yet.
