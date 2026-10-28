@@ -9,3 +9,10 @@ v2 (study_guardian_lids.py) preserves the original painted turquoise material, a
 Next: calibrate each eye contour independently against the existing mask, fit the shell to the actual globe/rim rather than a generic ellipse, and add an integrated upper/lower closure seam. Full/partial closure, reopening and extreme eye orientations must pass both profile and frontal runtime views before export. The current study is a Blender geometry experiment, not a gameplay validation. Preserve the wood identity, decorations and eye control hierarchy.
 
 Reproduce current v2: Blender --background --python-exit-code 1 --python tools/guardian/study_guardian_lids.py -- --output test-results/guardian-lids-v2. The script writes only an isolated Blend and renders. Its saved Blend mutes NLA tracks for inspection and must not replace production wholesale.
+
+
+## Independent contour calibration (v5, still rejected)
+
+Traced each eye independently from the 640px orthographic neutral reference and ray-projected the lid to the original mask/globe. v3/v4 revealed a reference-space error: muting NLA does not clear the saved head pose. The reference image includes a small Head transform. v5 projects through that transform and converts the authored vertices back into head rest space. This substantially aligns the closed shells with the actual openings instead of shifting them toward the nose.
+
+The 33x7 surface still leaves corner openings and uneven folds where ray projection samples the carved rim. Full closure is closer, but **not accepted**; partial interpolation also needs proper surface-conforming corrective shapes rather than a straight interpolation through the globe. Next rebuild the shell with independent upper/lower contours, denser rows and explicit rim attachment, maintaining the production blink channel interface. Production assets remain unchanged. Current script reproduces v5; previous v2 command above identifies its historical revision.

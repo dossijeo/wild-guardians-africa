@@ -6,12 +6,31 @@ root=Path(__file__).resolve().parents[2];bpy.ops.wm.open_mainfile(filepath=str(r
 o=bpy.data.objects['GuardianFace'];mesh=o.data;keys=mesh.shape_keys.key_blocks
 slot=next(i for i,m in enumerate(mesh.materials) if m.name=='Painted wooden eyelids')
 ids=sorted({v for f in mesh.polygons if f.material_index==slot for v in f.vertices});assert len(ids)==462,len(ids)
-for side,cx,cz,subset in [('L',-.067,.27,ids[:231]),('R',.052,.286,ids[231:])]:
+from mathutils import Vector
+from mathutils.bvhtree import BVHTree
+body=bpy.data.objects['Guardian'];rig=bpy.data.objects['GuardianRig'];head=rig.pose.bones['Head'];pose=head.matrix @ head.bone.matrix_local.inverted();unpose=pose.inverted()
+tree=BVHTree.FromPolygons([pose @ v.co for v in body.data.vertices],[list(f.vertices) for f in body.data.polygons])
+# Independently traced opening boundaries in the saved 640px orthographic reference.
+contours={
+ 'L':([(25,370),(48,325),(92,295),(130,289),(172,313),(200,359),(218,397)],[(25,370),(65,394),(110,405),(165,410),(218,397)]),
+ 'R':([(365,371),(369,308),(390,271),(428,249),(459,253),(489,268),(522,292)],[(365,371),(401,366),(442,352),(477,335),(508,312),(522,292)])}
+def interp(points,x):
+ for (a,b),(c,d) in zip(points,points[1:]):
+  if a<=x<=c:return b+(d-b)*(x-a)/(c-a)
+ return points[-1][1]
+def depth(x,z):
+ hit,normal,index,d=tree.ray_cast(Vector((x,-1,z)),Vector((0,1,0)))
+ if hit is None:raise ValueError(('Missing mask surface',x,z))
+ return hit.y-.003
+for side,subset in [('L',ids[:231]),('R',ids[231:])]:
+ upper,lower=contours[side]
  for j,idx in enumerate(subset):
-  row,col=divmod(j,33);r=row/6;u=-1+col/16;arc=math.sqrt(max(0,1-u*u));x=cx+.042*u
-  top=cz-.006+.034*arc+.14*(x-cx);bottom=cz-.006-.028*arc+.14*(x-cx)
-  k=keys['blink_'+side].data[idx];k.co.z=top*(1-r)+bottom*r
-  k.co.y=keys['Basis'].data[idx].co.y*(1-r)+(-.121+.007*u*u)*r-.010*arc*math.sin(math.pi*r)
+  row,col=divmod(j,33);r=row/6;px=upper[0][0]+(upper[-1][0]-upper[0][0])*col/32
+  x=(px-320)*.25/640;top=.28+(320-interp(upper,px))*.25/640+.001;bottom=.28+(320-interp(lower,px))*.25/640-.001
+  z=top-.00015*r;y=depth(x,z)
+  for key in keys:key.data[idx].co=unpose @ Vector((x,y,z))
+  z=top*(1-r)+bottom*r
+  keys['blink_'+side].data[idx].co=unpose @ Vector((x,depth(x,z),z))
 # The prior body blink excavates the eye surround; preserve the carved rim.
 for body in [x for x in bpy.data.objects if x.type=='MESH' and x!=o and x.data.shape_keys]:
  for key in body.data.shape_keys.key_blocks:
@@ -33,3 +52,4 @@ for value in [0,.5,1]:
    for key in obj.data.shape_keys.key_blocks:
     if key.name.startswith('blink_'):key.value=value
  scene.render.filepath=str(out/f'blink-{value}.png');bpy.ops.render.render(write_still=True)
+
