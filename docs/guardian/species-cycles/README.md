@@ -17,3 +17,10 @@ The contact sheets extracted from the videos were inspected for the visible sequ
 These are three single-impact scenarios on the same terrain patch, not proof of every direction, slope, wall collision, species balance or simultaneous heavy-animal interaction. Their CPU measurements are unpaired diagnostic captures; no FPS improvement or complete performance acceptance is inferred. The controller's global maxStepMs is cumulative across runs, so the table uses each report's own physicsTotal measurements.
 
 Reproduce with the species selector and Grabar ciclo seleccionado in `/tests/browser/guardian-combat.html`; enable audio first. Use Vista lateral de recuperaciÃ³n before the rhino run. The localhost video receiver runs on port 5198. Reset cooldowns and legacy navigation belong to the QA fixture, not normal player controls.
+
+
+## Additional solid-wall regression
+
+The fitted colliders of all five catalog species were launched toward a solid box wall for 360 fixed physics steps. Each species produced wall contacts; every body center stayed on the launch side of the wall. Peak linear speeds ranged from 3.94 to 5.39 m/s, below the existing instability bound. Removal released all rigid bodies. The combined combat/physics suite passed 37 tests with no skips or TODOs.
+
+This replaces no visual gate: body-center containment does not prove zero skin penetration, and this test does not execute recovery alongside the wall. Graphical wall/building/slope and recovery validation remains outstanding.

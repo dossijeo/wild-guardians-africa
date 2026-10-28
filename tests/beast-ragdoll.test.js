@@ -152,3 +152,28 @@ test('lion brace reaches hand supports and restores secondary appendages',()=>{
  for(const e of recovery.secondary)assert.deepEqual(e.bone.quaternion.toArray(),e.standingQ.toArray());
  for(const arm of recovery.arms)assert.deepEqual(arm.foot.quaternion.toArray(),arm.standingHandQ.toArray());
 });
+
+
+test('fitted species contact a solid wall without crossing or explosive velocities',()=>{
+ for(const [species,mass] of [['hyena',.7],['warthog',1],['lion',1.5],['buffalo',3],['rhino',5]]){
+  const model=beastSkin(species),binding=new BeastRagdollBinding(model),solver=new BeastRagdollSolver(R);
+  const bounds=new THREE.Box3().setFromObject(model),wallFace=bounds.max.x+.2;
+  solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});
+  const wall=solver.box({x:wallFace+.2,y:3,z:0},{x:.2,y:3,z:10});
+  const actor=solver.add(species,{pose:binding.capture(),colliders:binding.colliders(),mass,direction:{x:1,y:0,z:0}});
+  let contacts=0,maxSpeed=0,maxCenter=-Infinity;
+  for(let frame=0;frame<360;frame++){
+   solver.step();assert.ok(actor.pose.every(Number.isFinite),species+' nonfinite pose');
+   for(const {body} of actor.parts){
+    solver.world.contactPairsWith(body.collider(0),c=>{if(c.handle===wall.handle)contacts++;});
+    const v=body.linvel();maxSpeed=Math.max(maxSpeed,Math.hypot(v.x,v.y,v.z));
+    maxCenter=Math.max(maxCenter,body.translation().x);
+   }
+  }
+  assert.ok(contacts>0,species+' never reached wall');
+  assert.ok(maxCenter<wallFace+.03,species+' body crossed wall '+maxCenter+' / '+wallFace);
+  assert.ok(maxSpeed<15,species+' explosive wall contact '+maxSpeed);
+  console.log('fitted wall contact',{species,contacts,maxSpeed,maxCenter,wallFace});
+  solver.remove(species);assert.equal(solver.world.bodies.len(),0);solver.dispose();
+ }
+});
