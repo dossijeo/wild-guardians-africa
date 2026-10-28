@@ -1,3 +1,4 @@
+import {isTailContactVertex} from '../../src/rendering/beast-ground-contact.js';
 import {updateWorkerEncounters} from '../../src/simulation/encounters.js';
 import {ragdollTrial} from './guardian-ragdoll-trial.js';
 import {AnimationClip,Vector3} from 'three';
@@ -139,13 +140,15 @@ try{
    beast();const a=state.raid.animals[0];a.hitsRemaining=20;a.magicHealth=200;
    const deadline=performance.now()+60000;while(!world.mixers.get(a.id)&&performance.now()<deadline)await sleep(100);
    if(!world.mixers.get(a.id))throw Error('Beast rig did not load');
-   const y=nav.field.surface(a.x,a.z);world.cinematic=true;world.controls.target.set(a.x,y+.6,a.z-1);world.camera.position.set(a.x+5,y+3.5,a.z+5);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();
+   const y=nav.field.surface(a.x,a.z);world.cinematic=true;world.controls.target.set(a.x,y+.6,a.z-1);world.camera.position.set(a.x+6,y+1.1,a.z+3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();
    capture=$('world').captureStream(30);recorder=new MediaRecorder(capture,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:5000000});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};done=new Promise(resolve=>recorder.onstop=resolve);recorder.start();
    simulate=true;paused=false;state.time=400;cast('attack');
-   const rows=[];let second=false,entered=false;
+   const rows=[],supportPoint=new Vector3();let second=false,entered=false;
    while(performance.now()<deadline){
     await sleep(100);const e=world.beastPhysics.entries.get(a.id),phase=a.magicDown?.phase??null;
-    rows.push({time:state.elapsed,x:a.x,z:a.z,phase,recoveryAge:e?.recoveryAge??null,active:world.beastPhysics.entries.size,guardians:world.guardianSummons.slots.filter(s=>s.group.visible).length,maxGuardians:maxVisibleGuardians});
+    let support=null;
+    if(e?.recovery){let minimum=Infinity,count=0,limiter=null;e.data.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let index=0;index<mesh.geometry.attributes.position.count;index++){if(isTailContactVertex(mesh,index))continue;mesh.getVertexPosition(index,supportPoint).applyMatrix4(mesh.matrixWorld);const gap=supportPoint.y-nav.field.surface(supportPoint.x,supportPoint.z);if(gap<minimum){minimum=gap;limiter=mesh.name;}count++;}});support={minimum,count,limiter};}
+    rows.push({support,time:state.elapsed,x:a.x,z:a.z,phase,recoveryAge:e?.recoveryAge??null,active:world.beastPhysics.entries.size,guardians:world.guardianSummons.slots.filter(s=>s.group.visible).length,maxGuardians:maxVisibleGuardians});
     if(e?.recovery&&!second&&e.recoveryAge>.6){cast('attack');second=true;}
     if(second&&phase==='falling')entered=true;
     if(entered&&!a.magicDown&&!world.beastPhysics.entries.has(a.id))break;
