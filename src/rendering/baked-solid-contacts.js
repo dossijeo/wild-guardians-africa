@@ -1,3 +1,4 @@
+import {SkinContactBounds} from './skin-contact-bounds.js';
 import {clearBoxOffset} from './clear-box-offset.js';
 import {Box3,Vector3} from 'three';
 import {BeastRecovery} from './beast-recovery.js';
@@ -7,7 +8,7 @@ import {visitBeastSolids} from './beast-physics-environment.js';
 // Keep the entry side of each obstacle: never eject through a thin wall.
 export class BakedSolidContacts{
  constructor(binding,boxes,peers=null){
-  this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();this.peerOffset=new Vector3();
+  this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();this.peerOffset=new Vector3();this.solidBounds=boxes.length?new SkinContactBounds(binding.model):null;
  }
  static forAnimal(world,animal,binding,{peers=false}={}){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes,peers?()=>{const manager=world.nav.beastPhysics,entries=[...(manager?.entries.values()??[])];for(const e of manager?.baked?.entries.values()??[]){if(e.animal.id===animal.id)break;entries.push(e);}return entries;}:null);}
  refreshPeers(){
@@ -32,6 +33,7 @@ export class BakedSolidContacts{
   if(this.peers)this.refreshPeers();
   this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length&&!this.peerBoxes.length&&!this.peerOffset.lengthSq())return this.shift;
   this.bounds.makeEmpty();let offset=0;for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);if(surface){this.positions[offset++]=this.point.x;this.positions[offset++]=this.point.y;this.positions[offset++]=this.point.z;}}
+  this.solidBounds?.expand(this.bounds);
   // Include the contact skin in broad-phase overlap, not just separation.
   // Sparse support samples can miss small features between extrema.
   this.bounds.expandByScalar(.015);
