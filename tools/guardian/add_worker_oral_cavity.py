@@ -40,61 +40,36 @@ def lip_height(y):
  l,r=profile[j-1],profile[j]
  return l[1]+(r[1]-l[1])*(y-l[0])/(r[0]-l[0])
 front_y=min(v.y for v in chain);back_y=max(v.y for v in chain)
-rear=Vector((0,-.165,lip_height(0)));grids=[]
-for lower in (False,True):
- grid=[]
- for row in range(9):
-  d=row/8;line=[]
-  for anchor in chain:
-   v=anchor.lerp(rear,.025+d*.825)
-   v.z+=(-1 if lower else 1)*(.001+.012*math.sin(math.pi*d))
-   line.append(vertex(v,anchor,jaw(anchor)*(1-d*.7) if lower else 0))
-  grid.append(line)
- for row in range(8):
-  for col in range(len(chain)-1):
-   ids=[grid[row][col],grid[row][col+1],grid[row+1][col+1],grid[row+1][col]]
-   face(ids,(.20,.045,.055) if lower else (.13,.023,.03),(0,0,1 if lower else -1))
- grids.append(grid)
-upper,lower=grids
-# Rolled lip rims bridge the authored exterior seam to the recessed mucosa.
-# The opening stays empty; upper and lower rims never span across each other.
-for is_lower,inside in ((False,upper),(True,lower)):
- rim=[]
- for row in range(4):
-  t=row/3;line=[]
-  for anchor in chain:
-   v=anchor.lerp(rear,.012+.013*t)
-   v.z+=(-1 if is_lower else 1)*(.001*t+.0006*math.sin(math.pi*t))
-   line.append(vertex(v,anchor,jaw(anchor) if is_lower else 0))
-  rim.append(line)
- for row in range(3):
-  for col in range(len(chain)-1):
-   face([rim[row][col],rim[row][col+1],rim[row+1][col+1],rim[row+1][col]],(.12,.075,.065),(0,0,1 if is_lower else -1))
-
-# Curved buccal surfaces: the leading edge recedes between the jaws,
-# so no straight vertical plate cuts across the visible cavity.
-for side in (-1,1):
- contour=sorted([v for v in chain if v.x*side>.015],key=lambda v:v.y)
- def at_y(y):
-  for left,right in zip(contour,contour[1:]):
-   if left.y<=y<=right.y:return left.lerp(right,(y-left.y)/max(1e-8,right.y-left.y))
-  return min(contour,key=lambda v:abs(v.y-y)).copy()
- cheek=[]
- for row in range(13):
-  t=row/12;line=[]
-  front=front_y+.005+.012*math.sin(math.pi*t)
-  for col in range(9):
-   d=col/8;y=front+(back_y-front)*d;anchor=at_y(y)
-   v=anchor.copy();v.x-=side*(.002+.003*math.sin(math.pi*t));v.z+=.001*(1-2*t)
-   line.append(vertex(v,anchor,jaw(anchor)*t))
-  cheek.append(line)
- for row in range(12):
-  for col in range(8):face([cheek[row][col],cheek[row][col+1],cheek[row+1][col+1],cheek[row+1][col]],(.16,.027,.038),(-side,0,0))
-
-for col in range(len(chain)-1):face([upper[-1][col],upper[-1][col+1],lower[-1][col+1],lower[-1][col]],(.085,.012,.02))
-# Side walls are at the commissures; the front aperture remains open.
-for col in (0,len(chain)-1):
- for row in range(8):face([upper[row][col],upper[row+1][col],lower[row+1][col],lower[row][col]],(.16,.027,.038))
+rear=Vector((0,-.155,lip_height(0)))
+# A single closed perimeter swept into the head. Only its front is open;
+# palate, floor and commissures share vertices, so no separate cheek curtains.
+perimeter=[(v,False) for v in chain]+[(v,True) for v in reversed(chain)]
+shell=[]
+for row in range(13):
+ d=row/12;ring=[]
+ for anchor,is_lower in perimeter:
+  v=anchor.copy()
+  v.x*=1-.62*d
+  v.y=anchor.y+(rear.y-anchor.y)*d+.001
+  v.z=anchor.z*(1-d)+rear.z*d+(-1 if is_lower else 1)*(.0003+.016*math.sin(math.pi*d*.5))
+  ring.append(vertex(v,anchor,jaw(anchor)*(1-.8*d) if is_lower else 0))
+ shell.append(ring)
+for row in range(12):
+ for col in range(len(perimeter)):
+  nxt=(col+1)%len(perimeter)
+  ids=[shell[row][col],shell[row][nxt],shell[row+1][nxt],shell[row+1][col]]
+  center=sum((world@verts[i] for i in ids),Vector())/4
+  inward=Vector((0,center.y,lip_height(0)))-center
+  face(ids,(.16,.027,.038),inward)
+face(shell[-1],(.085,.012,.02),(0,-1,0))
+# Verify the cavity has precisely its intended front opening, no side holes.
+from collections import Counter
+shell_edges=Counter(tuple(sorted((a,b))) for f in faces for a,b in zip(f,f[1:]+f[:1]))
+expected_front={tuple(sorted((shell[0][i],shell[0][(i+1)%len(perimeter)]))) for i in range(len(perimeter))}
+actual_boundary={e for e,n in shell_edges.items() if n==1}
+assert actual_boundary==expected_front,'Unexpected opening in oral shell'
+assert all(n<=2 for n in shell_edges.values()),'Non-manifold oral shell edge'
+shell_audit={'boundaryEdges':len(actual_boundary),'frontEdges':len(expected_front),'unexpectedBoundaryEdges':0,'nonManifoldEdges':0}
 # Rounded, recessed tongue follows the lower jaw, never a sheet across the opening.
 rings=[]
 for row in range(13):
@@ -158,4 +133,4 @@ bpy.ops.export_scene.gltf(filepath=str(out.with_suffix('.glb')),export_format='G
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from restore_source_animations import restore
 restore(a.source_glb,out.with_suffix('.glb'))
-out.with_suffix('.json').write_text(json.dumps({'status':'oral candidate, requires visual validation; not installed','vertices':len(verts),'faces':len(faces),'lipVertices':len(chain),'binding':'barycentric source lip weights, four normalized influences','aperture':'open front; recessed palate, floor, tongue, rear and commissure walls'},indent=2),encoding='utf-8')
+out.with_suffix('.json').write_text(json.dumps({'status':'oral candidate, requires visual validation; not installed','shellTopology':shell_audit,'vertices':len(verts),'faces':len(faces),'lipVertices':len(chain),'binding':'barycentric source lip weights, four normalized influences','aperture':'open front; recessed palate, floor, tongue, rear and commissure walls'},indent=2),encoding='utf-8')
