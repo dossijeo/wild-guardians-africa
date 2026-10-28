@@ -33,7 +33,15 @@ export class GuardianFace {
   try{let data=this.cache.get(record.id);if(!data){data=await this.fetchJson(this.resolve(`content/guardian/lipsync/${record.id}.json`));if(data.id!==record.id||data.audio!==record.path)throw Error('Lip sync/audio mismatch');this.cache.set(record.id,data);}if(ticket===this.ticket)this.data=data;}
   catch(error){if(ticket===this.ticket)this.error=error;}
  }
- set(name,value){for(const mesh of this.meshes){const i=mesh.morphTargetDictionary[name];if(i!==undefined)mesh.morphTargetInfluences[i]=clamp(value,0,1);}}
+ set(name,value){
+  const amount=clamp(value,0,1);
+  for(const mesh of this.meshes){
+   const dictionary=mesh.morphTargetDictionary;
+   if((name==='blink_L'||name==='blink_R')&&[25,50,75].every(step=>dictionary[name+'_'+step]!==undefined)&&dictionary[name]!==undefined){
+    for(const step of [25,50,75,100])mesh.morphTargetInfluences[dictionary[name+(step===100?'':'_'+step)]]=Math.max(0,1-Math.abs(amount-step/100)*4);
+   }else{const i=dictionary[name];if(i!==undefined)mesh.morphTargetInfluences[i]=amount;}
+  }
+ }
  reset(){for(const mesh of this.meshes)mesh.morphTargetInfluences.fill(0);}
  update(audio,time,{viseme=null,blink=null,expression=null,reduced=false}={}){
   const talking=audio&&!audio.ended&&Number.isFinite(audio.currentTime)&&this.data;

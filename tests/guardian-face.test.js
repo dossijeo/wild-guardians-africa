@@ -25,3 +25,16 @@ test('all 54 real recordings have bounded Rhubarb cues and matching source ident
  for(const record of records){const data=JSON.parse(fs.readFileSync(`public/content/guardian/lipsync/${record.id}.json`));assert.equal(data.audio,record.path);assert.equal(data.sourceSha256,record.sha256);assert.equal(data.recognizer,record.language==='es'?'phonetic':'pocketSphinx');let end=0;for(const c of data.mouthCues){assert.ok(VISEMES.includes(c.value));assert.ok(c.start>=end-.011);assert.ok(c.end>=c.start);assert.ok(c.end<=data.duration+.03);end=c.end;}assert.ok(Math.abs(end-data.duration)<.04);}
 });
 test('blink closes fully and returns to rest',()=>{assert.equal(blinkAt(3.1),1);assert.equal(blinkAt(0),0);assert.ok(blinkAt(3.05)>0&&blinkAt(3.05)<1);});
+
+test('curved blink samples interpolate neighboring poses without doubling closure',()=>{
+ const curved={morphTargetDictionary:{blink_L:0,blink_L_25:1,blink_L_50:2,blink_L_75:3},morphTargetInfluences:[0,0,0,0]};
+ const legacy={morphTargetDictionary:{blink_L:0},morphTargetInfluences:[0]};
+ const face=new GuardianFace({traverse:fn=>[curved,legacy].forEach(fn)});
+ for(const amount of [0,.125,.25,.375,.5,.625,.75,.875,1,.5,0]){
+  face.set('blink_L',amount);
+  const weights=curved.morphTargetInfluences;
+  assert.ok(Math.abs(weights[0]+weights[1]*.25+weights[2]*.5+weights[3]*.75-amount)<1e-9);
+  assert.ok(weights.reduce((sum,w)=>sum+w,0)<=1);
+  assert.equal(legacy.morphTargetInfluences[0],amount);
+ }
+});

@@ -1,7 +1,7 @@
 """Remove Blender's constant full-rig channels so animation layers stay independent."""
 import json,pathlib,struct
 ROOT=pathlib.Path(__file__).resolve().parents[2]
-p=ROOT/'public/content/guardian/guardian.glb';data=p.read_bytes();size=struct.unpack_from('<I',data,12)[0];doc=json.loads(data[20:20+size]);binary=bytearray(data[20+size:])
+p=pathlib.Path(globals().get('guardian_glb',ROOT/'public/content/guardian/guardian.glb'));data=p.read_bytes();size=struct.unpack_from('<I',data,12)[0];doc=json.loads(data[20:20+size]);binary=bytearray(data[20+size:])
 for anim in doc.get('animations',[]):
  channels=[]
  for c in anim['channels']:
@@ -32,4 +32,4 @@ import runpy
 runpy.run_path(str(ROOT/'tools/guardian/batch_face.py'))['optimize'](p)
 packed=p.read_bytes();doc=json.loads(packed[20:20+struct.unpack_from('<I',packed,12)[0]])
 report={'bytes':p.stat().st_size,'bones':len(doc['skins'][0]['joints']),'animations':{a['name']:len(a['channels']) for a in doc['animations']},'primitives':sum(len(m['primitives']) for m in doc['meshes']),'sourceBytes':(ROOT/'art/guardian/original.glb').stat().st_size}
-(ROOT/'docs/guardian/model-metrics.json').write_text(json.dumps(report,indent=2)+'\n');print(report)
+pathlib.Path(globals().get('guardian_metrics',ROOT/'docs/guardian/model-metrics.json')).write_text(json.dumps(report,indent=2)+'\n');print(report)

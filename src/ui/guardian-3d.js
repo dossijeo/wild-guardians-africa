@@ -5,7 +5,8 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {GuardianFace} from './guardian-face.js';
 import {assetUrl} from '../rendering/asset-url.js';
 export class Guardian3D {
- constructor(canvas){
+ constructor(canvas,{modelUrl='content/guardian/guardian.glb'}={}){
+  this.modelUrl=modelUrl;
   this.canvas=canvas;this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-.56,.56,.56,-.56,.01,10);this.camera.position.set(0,0,2);this.camera.lookAt(0,0,0);
   this.scene.add(new THREE.HemisphereLight(0xfff4dc,0x786b60,2.2));
@@ -14,7 +15,7 @@ export class Guardian3D {
   this.eyeTargets={};this.target=new THREE.Vector3(0,.27,2);this.gazeOffset=new THREE.Vector3();this.temp=new THREE.Vector3();this.q=new THREE.Quaternion();this.yAxis=new THREE.Vector3(0,1,0);this.manual={};this.record=null;this.ready=this.load();
  }
  async load(){
-  const gltf=await new GLTFLoader().loadAsync(assetUrl('content/guardian/guardian.glb'));
+  const gltf=await new GLTFLoader().loadAsync(assetUrl(this.modelUrl));
   if(this.disposed){this.release(gltf.scene);return;}
   this.model=gltf.scene;this.scene.add(this.model);this.mixer=new THREE.AnimationMixer(this.model);this.actions=new Map(gltf.animations.map(clip=>[clip.name,this.mixer.clipAction(clip)]));
   for(const a of this.actions.values())a.play();
