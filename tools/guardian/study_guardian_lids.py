@@ -2,7 +2,7 @@
 import bpy,math,argparse,sys
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--output',required=True);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
-root=Path(__file__).resolve().parents[2];bpy.ops.wm.open_mainfile(filepath=str(root/'art/guardian/guardian.blend'))
+root=Path(__file__).resolve().parents[2];bpy.ops.wm.open_mainfile(filepath=str(root/'content/source/guardian/rig-before-eyelids.blend'))
 o=bpy.data.objects['GuardianFace'];mesh=o.data;keys=mesh.shape_keys.key_blocks
 slot=next(i for i,m in enumerate(mesh.materials) if m.name=='Painted wooden eyelids')
 ids=sorted({v for f in mesh.polygons if f.material_index==slot for v in f.vertices});assert len(ids)==462,len(ids)

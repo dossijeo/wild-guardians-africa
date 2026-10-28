@@ -1,3 +1,7 @@
+# Installed status
+
+The v14 curved eyelids are now installed in `art/guardian/guardian.blend` and `public/content/guardian/guardian.glb`. Earlier candidate-only statements below describe their historical revisions. The pre-edit rig is retained at `content/source/guardian/rig-before-eyelids.blend`; the generator now reads that immutable base.
+
 # Guardian eyelid review — work in progress
 
 Installed close-up review confirms a flat turquoise curtain with a straight lower edge. The generation source is face_geometry.py: two 33x7 surfaces (462 vertices), collapsed vertically at rest; the full blink extends every column to the same lower height. The body blink also retracts the eye region by up to 45 mm, including parts of the surrounding carved rim.
@@ -68,3 +72,12 @@ All 493 accessor checks pass. Node hierarchy/transforms, indices, positions, nor
 Rendered the same candidate with the original body base color and normal links disconnected and a uniform rough gray body material (v14-untextured-diagnostic.png). Much of the apparent dark border disappears: it belongs to the original mask finish rather than an open eye slit. One upper carved recess retains a narrow shadow. This supports preserving the original painted outline rather than extending the lid blindly over it. Diagnostic changes were render-only; the candidate retains its original body materials.
 
 Added `?guardianLids` to guardian-combat.html. This redirects only the Guardian asset request through the existing model loader to the isolated candidate, without modifying production assets. Actually loaded in WorldScene, stepped through Grow by day, rotated the camera, then spawned a beast and stepped through Attack at night. v14-world-grow.png and v14-world-attack.png capture those states; v14-world-status.json records no errors and at most one visible Guardian. This is a controlled fixture with paused presentation stepping, not a complete live-raid or tutorial validation. No audio listening or new performance conclusion is claimed. Next validate full tutorial presentation and package the accepted source/runtime pair with a reproducible retained base.
+
+
+## Installed tutorial validation
+
+The production paths now contain the reviewed v14 source and runtime pair, byte-identical to the candidate. `tutorial-hud-hand.html` loads the production model through NativeGuardian: inspected pointing at Construir and returning beside the bubble (installed-tutorial-point.png / installed-tutorial-rest.png). The portrait iframe at 390x844 places the resting Guardian above the bubble (installed-tutorial-portrait.png). Vortex remains visible, no legacy hands, and the fixture reports no errors. This validates these presentation states, not an end-to-end fresh tutorial playthrough or its entire speech content.
+
+GLTF validation: zero errors, three non-root skinned mesh warnings (hierarchy intentionally retained), plus unused-attribute/material and buffer target hints. Six facial controller tests and 21 model/native/singleton tests pass. Production model metrics updated: 3,529,736 bytes, four primitives, 37 bones, 13 clips. The extra primitive and file-size increase versus the old model are real costs; a paired game benchmark remains pending. Do not present isolated viewer timing as proof of no performance regression.
+
+Rebuild the lid revision with Blender headless using `tools/guardian/study_guardian_lids.py -- --output <directory>`; it reads the retained pre-eyelid rig and produces guardian-lids.blend/glb without overwriting production. Install only reviewed output. `build.py` remains the original full-model construction stage and by itself does not reproduce this later lid revision.
