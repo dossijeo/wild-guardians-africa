@@ -3,9 +3,11 @@ import bpy,sys,argparse,json
 from pathlib import Path
 p=argparse.ArgumentParser()
 for n in ('input','output','source-glb'):p.add_argument('--'+n,required=True)
+p.add_argument('--mesh',default='Mesh0')
+p.add_argument('--bounds',type=float,nargs=6,help='Optional world-space xmin ymin zmin xmax ymax zmax')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);bpy.ops.wm.open_mainfile(filepath=str(Path(a.input).resolve()))
-body=bpy.data.objects['Mesh0'];head=next(g.index for g in body.vertex_groups if g.name.replace('mixamorig:','').replace('mixamorig','')=='Head')
-material=body.data.materials[0].copy();material.name='Kofi head continuous skin shading'
+body=bpy.data.objects[a.mesh];head=next(g.index for g in body.vertex_groups if g.name.replace('mixamorig:','').replace('mixamorig','')=='Head')
+material=body.data.materials[0].copy();material.name='Worker face continuous skin shading'
 bs=next(n for n in material.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
 for channel in ('Normal','Roughness','Metallic'):
  for link in list(bs.inputs[channel].links):material.node_tree.links.remove(link)
@@ -13,7 +15,9 @@ bs.inputs['Roughness'].default_value=.82;bs.inputs['Metallic'].default_value=0
 slot=len(body.data.materials);body.data.materials.append(material);changed=[]
 for f in body.data.polygons:
  weights=[sum(g.weight for g in body.data.vertices[i].groups if g.group==head) for i in f.vertices]
- if min((body.matrix_world@body.data.vertices[i].co).z for i in f.vertices)>1.10 and sum(weights)/len(weights)>.65:
+ points=[body.matrix_world@body.data.vertices[i].co for i in f.vertices]
+ selected=all(all(a.bounds[k]<=v[k]<=a.bounds[k+3] for k in range(3)) for v in points) if a.bounds else min(v.z for v in points)>1.10
+ if selected and sum(weights)/len(weights)>.65:
   f.material_index=slot;changed.append(f.index)
 # Smooth split normals across UV-duplicate vertices without welding geometry.
 from mathutils import Vector
