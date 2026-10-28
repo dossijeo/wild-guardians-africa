@@ -28,7 +28,12 @@ pivot=Vector(report['pivot']);rot=Matrix.Rotation(report['angle'],3,'X')
 verts=[];opened=[];anchors=[];faces=[];colors=[]
 def vertex(v,anchor,amount):
  verts.append(inv@v);opened.append(inv@v.lerp(pivot+rot@(v-pivot),amount));anchors.append(anchor.copy());return len(verts)-1
-def face(ids,color):faces.append(ids);colors.append((*color,1))
+def face(ids,color,direction=None):
+ if direction is not None:
+  points=[world@verts[i] for i in ids]
+  normal=(points[1]-points[0]).cross(points[2]-points[0])
+  if normal.dot(Vector(direction))<0:ids=ids[::-1]
+ faces.append(ids);colors.append((*color,1))
 rear=Vector((.008,-.325,1.678));grids=[]
 for lower in (False,True):
  grid=[]
@@ -42,7 +47,7 @@ for lower in (False,True):
  for row in range(8):
   for col in range(len(chain)-1):
    ids=[grid[row][col],grid[row][col+1],grid[row+1][col+1],grid[row+1][col]]
-   face(ids if lower else ids[::-1],(.20,.045,.055) if lower else (.13,.023,.03))
+   face(ids,(.20,.045,.055) if lower else (.13,.023,.03),(0,0,1 if lower else -1))
  grids.append(grid)
 upper,lower=grids
 for col in range(len(chain)-1):face([upper[-1][col],upper[-1][col+1],lower[-1][col+1],lower[-1][col]],(.085,.012,.02))
@@ -59,8 +64,8 @@ for row in range(13):
   ring.append(vertex(v,anchor,jaw(Vector((v.x,v.y,1.67)))))
  rings.append(ring)
 for row in range(12):
- for col in range(16):face([rings[row][col],rings[row][(col+1)%16],rings[row+1][(col+1)%16],rings[row+1][col]],(.32,.075,.085))
-face(rings[0][::-1],(.3,.06,.075));face(rings[-1],(.22,.035,.045))
+ for col in range(16):face([rings[row][col],rings[row+1][col],rings[row+1][(col+1)%16],rings[row][(col+1)%16]],(.32,.075,.085))
+face(rings[0],(.3,.06,.075),(0,-1,0));face(rings[-1],(.22,.035,.045),(0,1,0))
 data=bpy.data.meshes.new('BuffaloOralAnatomy');data.from_pydata(verts,[],faces);data.update()
 obj=bpy.data.objects.new('BuffaloOralAnatomy',data);bpy.context.collection.objects.link(obj);obj.parent=body.parent;obj.matrix_world=world
 for mod in body.modifiers:
@@ -81,7 +86,14 @@ for dest,v in zip(morph.data,opened):dest.co=v
 color=data.color_attributes.new(name='OralColor',type='FLOAT_COLOR',domain='CORNER')
 for poly,c in zip(data.polygons,colors):
  poly.use_smooth=True
- for i in poly.loop_indices:color.data[i].color=c
+ for i in poly.loop_indices:
+  point=world@data.vertices[data.loops[i].vertex_index].co
+  # Authored cavity shading: deeper tissue receives less indirect light.
+  # This preserves volume in the inexpensive, shadow-free strategic renderer.
+  front=max(0,min(1,(-point.y-.335)/.13))
+  shade=.10+.42*front*front
+  if c[0]>.25:shade*=1.15+.20*max(-1,min(1,(point.z-1.666)/.006))
+  color.data[i].color=(*[v*shade for v in c[:3]],c[3])
 mat=bpy.data.materials.new('Buffalo oral tissue');mat.use_nodes=True
 bs=mat.node_tree.nodes.get('Principled BSDF');bs.inputs['Roughness'].default_value=.75
 node=mat.node_tree.nodes.new('ShaderNodeVertexColor');node.layer_name='OralColor';mat.node_tree.links.new(node.outputs['Color'],bs.inputs['Base Color']);data.materials.append(mat)
