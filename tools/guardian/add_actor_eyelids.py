@@ -15,6 +15,7 @@ p.add_argument('--input',required=True)
 p.add_argument('--profile',required=True)
 p.add_argument('--output',required=True)
 p.add_argument('--export-glb',action='store_true')
+p.add_argument('--replace-existing',action='store_true',help='Replace only the named generated lid object in the output copy')
 p.add_argument('--source-glb',help='Original animation channels when editing a Blend source')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 profile=json.loads(Path(a.profile).read_text(encoding='utf-8'))
@@ -25,7 +26,9 @@ else:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(Path(a.input).resolve()))
 lid_name=profile.get('lidObject','ActorFacialLids')
-assert not bpy.data.objects.get(lid_name)
+existing=bpy.data.objects.get(lid_name)
+if existing and a.replace_existing:bpy.data.objects.remove(existing,do_unlink=True)
+else:assert existing is None,'Use --replace-existing for an existing generated lid'
 mesh=bpy.data.objects[profile.get('mesh','Mesh_0')]
 world=mesh.matrix_world.copy(); inv=world.inverted()
 mesh.data.calc_loop_triangles(); tris=list(mesh.data.loop_triangles)
@@ -38,13 +41,17 @@ rotation=(center-camera).to_track_quat('-Z','Y')
 direction=rotation@Vector((0,0,-1))
 # Project base color into one continuous atlas: interpolating the original
 # island UVs across newly authored polygons produces unrelated texture stripes.
-original=mesh.data.materials[0]; bake=original.copy()
-nodes=bake.node_tree.nodes; links=bake.node_tree.links
-bs=next(n for n in nodes if n.type=='BSDF_PRINCIPLED')
-output=next(n for n in nodes if n.type=='OUTPUT_MATERIAL')
-emission=nodes.new('ShaderNodeEmission')
-links.new(bs.inputs['Base Color'].links[0].from_socket,emission.inputs['Color'])
-links.new(emission.outputs[0],output.inputs['Surface']);mesh.data.materials[0]=bake
+original=mesh.data.materials[0]; originals=list(mesh.data.materials)
+# Facial shading repairs can introduce a second material slot. Bake every slot
+# as unlit base color, otherwise the face becomes black in a lightless atlas.
+for slot,source in enumerate(originals):
+    bake=source.copy();nodes=bake.node_tree.nodes;links=bake.node_tree.links
+    bs=next(n for n in nodes if n.type=='BSDF_PRINCIPLED')
+    output=next(n for n in nodes if n.type=='OUTPUT_MATERIAL')
+    emission=nodes.new('ShaderNodeEmission')
+    if bs.inputs['Base Color'].links:links.new(bs.inputs['Base Color'].links[0].from_socket,emission.inputs['Color'])
+    else:emission.inputs['Color'].default_value=bs.inputs['Base Color'].default_value
+    links.new(emission.outputs[0],output.inputs['Surface']);mesh.data.materials[slot]=bake
 rigs=[o for o in bpy.context.scene.objects if o.type=='ARMATURE']
 for rig in rigs:rig.data.pose_position='REST'
 scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=1
@@ -55,7 +62,8 @@ cam.rotation_euler=rotation.to_euler();cam.data.type='ORTHO';cam.data.ortho_scal
 atlas_path=str(Path(a.output).with_suffix('.atlas.png'))
 scene.render.filepath=atlas_path;bpy.ops.render.render(write_still=True)
 atlas=bpy.data.images.load(atlas_path);atlas.pack()
-mesh.data.materials[0]=original;bpy.data.objects.remove(cam,do_unlink=True)
+for slot,source in enumerate(originals):mesh.data.materials[slot]=source
+bpy.data.objects.remove(cam,do_unlink=True)
 for rig in rigs:rig.data.pose_position='POSE'
 def sample(x,y):
     origin=camera+rotation@Vector(((x+.5)/768*extent-extent/2,extent/2-(y+.5)/768*extent,0))

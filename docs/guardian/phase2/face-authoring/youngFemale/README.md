@@ -29,3 +29,11 @@ A separate mouth-candidate.blend/.glb now contains mouthOpen and an oral shell w
 Oral topology audit reports only its intended front boundary and no additional shell boundary/nonmanifold edges. Animation comparison preserves all 28 bones and twelve native clips over 492 sampled poses (position error zero, maximum angular error 5.96e-8 radians). This does not prove skin deformation quality or correct interior visibility from every angle.
 
 Three.js preview is available at tests/browser/actor-expression.html?actor=youngFemale. Manual combined pain expression drives mouthOpen and both eyelids. Browser evidence exposes unacceptable closed-lid relief/faceting; cheek creases also remain. Side-view aperture sightlines, neutral/half-open mouth and animated facial behavior still need review. The active worker catalog remains unchanged. Do not count this candidate as an accepted expressive worker.
+
+## Eyelid v5 smoothing
+
+A clay render isolated the closed-lid faceting to geometry rather than skin color. The v5 envelope uses full fitted clearance, a broader smooth-envelope blend (power 0.45), and a reduced crease bulge (0.0003). Closed and half-closed Blender views and actual Three.js views show substantially smoother lids. The mouth candidate now contains v5 lids; eyelid-profile-v5.json reproduces them using --replace-existing on the previous mouth candidate. The earlier v4 profile is retained as historical input.
+
+Regeneration also exposed a pipeline bug: only material slot 0 was baked to the unlit skin atlas, so repaired faces in slot 1 rendered black. add_actor_eyelids now bakes all source material slots and restores each original slot afterward. v5b is the corrected atlas result; the black preliminary output is rejected.
+
+The updated GLB preserves twelve clips and 28 bones over 492 samples. Browser screenshots document full and half closure. Residual defects remain: cheek creases, a small colored triangular patch in the exposed eye white, and the upper lid boundary still needs closer neutral/animated inspection. This remains a candidate, not installed or fully visually accepted.
