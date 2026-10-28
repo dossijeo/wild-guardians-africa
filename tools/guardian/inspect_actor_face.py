@@ -6,6 +6,10 @@ p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argume
 bpy.ops.wm.read_factory_settings(use_empty=True)
 if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=a.input)
 else:bpy.ops.import_scene.gltf(filepath=a.input)
+requested={name for name in a.expression.split(',') if name}
+available={key.name for o in bpy.context.scene.objects if o.type=='MESH' and o.data.shape_keys for key in o.data.shape_keys.key_blocks if key.name!='Basis'}
+if requested-available:
+ raise ValueError('Unknown inspection morphs: '+', '.join(sorted(requested-available))+'; available: '+', '.join(sorted(available)))
 for o in bpy.context.scene.objects:
  if o.type=='MESH' and o.data.shape_keys:
   for key in o.data.shape_keys.key_blocks:key.value=a.amount if key.name in a.expression.split(',') else 0

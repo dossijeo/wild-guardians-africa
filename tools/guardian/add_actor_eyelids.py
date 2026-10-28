@@ -203,8 +203,10 @@ if profile.get('closureCrease'):
         atlas_pixels=np.array(atlas.pixels[:]).reshape(atlas.size[1],atlas.size[0],4)
         def skin_color(x,y):
             px=int((x+.5)/768*atlas.size[0]);py=int((1-(y+.5)/768)*atlas.size[1])
-            px=max(2,min(atlas.size[0]-3,px));py=max(2,min(atlas.size[1]-3,py))
-            rgb=np.median(atlas_pixels[py-2:py+3,px-2:px+3,:3],axis=(0,1))
+            radius=int(profile.get('skinSampleRadius',2))
+            assert 1<=radius<=32,'Skin sample radius must stay local'
+            px=max(radius,min(atlas.size[0]-radius-1,px));py=max(radius,min(atlas.size[1]-radius-1,py))
+            rgb=np.median(atlas_pixels[py-radius:py+radius+1,px-radius:px+radius+1,:3],axis=(0,1))
             return np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
     for poly in data.polygons:
         for loop in poly.loop_indices:
