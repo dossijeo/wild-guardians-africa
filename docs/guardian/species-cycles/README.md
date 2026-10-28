@@ -24,3 +24,8 @@ Reproduce with the species selector and Grabar ciclo seleccionado in `/tests/bro
 The fitted colliders of all five catalog species were launched toward a solid box wall for 360 fixed physics steps. Each species produced wall contacts; every body center stayed on the launch side of the wall. Peak linear speeds ranged from 3.94 to 5.39 m/s, below the existing instability bound. Removal released all rigid bodies. The combined combat/physics suite passed 37 tests with no skips or TODOs.
 
 This replaces no visual gate: body-center containment does not prove zero skin penetration, and this test does not execute recovery alongside the wall. Graphical wall/building/slope and recovery validation remains outstanding.
+
+
+## Destroyed structures during active physics
+
+The physics manager now prunes destroyed or removed structure colliders before advancing its active solver. Previously these solids remained until encounter admission/removal refreshed the environment, potentially leaving an invisible wall after another animal destroyed it. Ground and surviving collider handles are retained. The regression covers destruction, removal, repeat pruning, numeric structure IDs and re-admission of a repaired wall; 24 environment/combat tests passed. This is automated evidence; the mid-fall destruction scenario has not yet been visually exercised.

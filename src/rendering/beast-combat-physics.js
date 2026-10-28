@@ -73,6 +73,7 @@ export class BeastCombatPhysics{
   }
   // All live actors advance once on the same clock and exchange contact forces.
   if(this.solver?.actors.size){
+   this.environment?.pruneDestroyed();
    let firstHit=Infinity;for(const e of this.entries.values())firstHit=Math.min(firstHit,e.hitAt);
    this.accumulator+=Math.min(dt,Math.max(0,state.elapsed-firstHit));
    const followStarted=performance.now();

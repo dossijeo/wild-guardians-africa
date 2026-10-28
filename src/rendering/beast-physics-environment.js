@@ -5,6 +5,18 @@ import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 // admission/removal, not every frame; overlapping actors never duplicate ground.
 export class BeastPhysicsEnvironment {
  constructor(world,solver){this.world=world;this.solver=solver;this.colliders=new Map();}
+ // Structures can be destroyed by other animals during a fall. Remove only
+ // obsolete solids; terrain and surviving collider handles remain untouched.
+ pruneDestroyed(){
+  for(const [key,collider] of this.colliders){
+   if(!key.startsWith('structure:'))continue;
+   const id=key.slice(10);let intact=false;
+   for(const structure of this.world.state.structures)if(String(structure.id)===id&&structure.status==='intact'){intact=true;break;}
+   if(intact)continue;
+   if(collider){this.solver.world.removeCollider(collider,true);const i=this.solver.obstacles.indexOf(collider);if(i>=0)this.solver.obstacles.splice(i,1);}
+   this.colliders.delete(key);
+  }
+ }
  sync(animals){
   const wanted=new Set(),w=this.world,s=this.solver;
   const keep=(key,create)=>{wanted.add(key);if(!this.colliders.has(key))this.colliders.set(key,create());};
