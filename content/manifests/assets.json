@@ -5223,6 +5223,15 @@
       "origins": [
         "Wild Guardians New/animales/rinoceronte.glb#repaired-retargeted"
       ]
+    },
+    {
+      "url": "/assets/12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55.glb",
+      "bytes": 17383464,
+      "sha256": "12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55",
+      "mime": "application/octet-stream",
+      "origins": [
+        "content/source/actors/lion/expressive-candidate.blend"
+      ]
     }
   ],
   "models": [
@@ -5680,23 +5689,11 @@
       }
     },
     {
-      "url": "/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
+      "url": "/assets/12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55.glb",
       "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
       "animations": [
         {
-          "name": "Running",
-          "channels": 234
-        },
-        {
-          "name": "Walking",
-          "channels": 234
-        },
-        {
-          "name": "Charged_Upward_Slash",
-          "channels": 234
-        },
-        {
-          "name": "Right_Hand_Sword_Slash",
+          "name": "Weapon_Combo_2",
           "channels": 234
         },
         {
@@ -5704,12 +5701,24 @@
           "channels": 234
         },
         {
-          "name": "Weapon_Combo_2",
+          "name": "Right_Hand_Sword_Slash",
+          "channels": 234
+        },
+        {
+          "name": "Charged_Upward_Slash",
+          "channels": 234
+        },
+        {
+          "name": "Walking",
+          "channels": 234
+        },
+        {
+          "name": "Running",
           "channels": 234
         }
       ],
-      "nodes": 81,
-      "meshes": 2,
+      "nodes": 83,
+      "meshes": 4,
       "extras": {
         "replacement": {
           "repair": "tools/prepare_lion.py",
@@ -5750,6 +5759,11 @@
           "rigidBelowAnkle": -0.015,
           "authoredAboveAnkle": 0.06
         }
+      },
+      "facialEdit": {
+        "sourceSha256": "539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968",
+        "editable": "content/source/actors/lion/expressive-candidate.blend",
+        "report": "docs/guardian/phase2/face-authoring/lion/installed-audit.json"
       }
     },
     {

@@ -2154,6 +2154,83 @@
         "newErrors": []
       },
       "errors": []
+    },
+    {
+      "source": "assets/12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55.glb",
+      "geometryBytes": 2615448,
+      "geometryMaxError": 0,
+      "animationMaxError": 0,
+      "images": [
+        {
+          "index": 0,
+          "beforeBytes": 5279934,
+          "afterBytes": 3639526,
+          "before": [
+            2048,
+            2048
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": true,
+          "role": "normal",
+          "alphaQuality": 100,
+          "rmse": 0,
+          "psnr": null,
+          "maxChannelError": 0
+        },
+        {
+          "index": 1,
+          "beforeBytes": 7394744,
+          "afterBytes": 1203836,
+          "before": [
+            2048,
+            2048
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100,
+          "rmse": 3.501824119334855,
+          "psnr": 37.24491701542401,
+          "maxChannelError": 63
+        },
+        {
+          "index": 2,
+          "beforeBytes": 1746716,
+          "afterBytes": 138002,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": true,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100,
+          "rmse": 5.421709715919235,
+          "psnr": 33.44807838307169,
+          "maxChannelError": 137
+        }
+      ],
+      "validation": {
+        "originalErrors": 0,
+        "decodedErrors": 0,
+        "newErrors": []
+      },
+      "errors": []
     }
   ]
 }

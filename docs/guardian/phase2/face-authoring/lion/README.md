@@ -1,3 +1,5 @@
+> Actualización: el candidato v15 está integrado en el catálogo de esta rama. Evidencia actual en `docs/guardian/lion-installed/README.md`. Los estados «no instalado» siguientes son históricos. La revisión visual ampliada sigue abierta.
+
 # León: calibración anatómica y candidato mandibular
 
 Estado: **en elaboración; no instalado en el juego**. Fuente activa conservada:
