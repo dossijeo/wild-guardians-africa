@@ -16,3 +16,12 @@ This recording has no audio track: the fixture had reloaded after the audio-prio
 `repeat-before.json` reproduces two physical roll timeouts. At simulation 6.470 s, qa-beast-1 uses procedural BeastRecovery after error 0.5381 rad; qa-beast-0 remains rolling at error 0.4630, qa-beast-2 uses AuthoredBeastRecovery, and qa-beast-3 uses the baked authored path. Thus fallback is not merely an aggregate counter ambiguity.
 
 Experiment: increased the bounded gravity-support torque multiplier from 1.8 to 2.4, leaving speed, maximum acceleration, orientation tolerance and timeout unchanged. All 35 automated physics tests passed, but the graphical four-impact repeat still produced two roll failures (last error 0.45484 rad, speed 0.57522). See `torque-2.4.json`. **Rejected and reverted**: stronger assistance alone does not establish a fix. The branch retains 1.8. The target orientation/ground and joint contacts require further diagnosis; no root cause is asserted yet.
+
+
+## Separate hip and torso diagnostics
+
+`roll-body-diagnostics.json` reproduces two roll timeouts. One actor reaches hip error 0.3305 rad while its torso remains at 0.7372 rad. This is evidence of a torso alignment problem, not proof of its cause. The trace now exposes both angles and copies them per sample.
+
+An experiment targeting every body at the authored supine pose was rejected: the graphical run still timed out (last error 3.1263 rad), and the automated suite regressed to 34/35 passing. `rejected-authored-pose.json` preserves that negative result. All physical behavior changes from this experiment were reverted; only diagnostics remain. The simultaneous physical-roll defect is unresolved.
+
+The two captured diagnostic runs predate copying the angle array per sample: their `errors` arrays retain the final angles for each actor, so they must not be read as time series. The scalar error and age remain per-sample. The final timeout angles quoted above remain valid. After reverting the experiment, all 35 physics/combat tests passed.

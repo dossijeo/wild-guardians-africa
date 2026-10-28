@@ -91,7 +91,7 @@ export class BeastRagdollSolver{
   // Rotate the complete fallen configuration towards the authored supine hip
   // frame. Relative limb poses and all existing joint constraints are retained.
   const delta=multiply(target,inverse(a.parts[0].body.rotation()));
-  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,timeout};a.settled=false;
+  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],timeout};a.settled=false;
  }
  driveRoll(a){
   const roll=a.roll;if(!roll||roll.done)return;roll.age+=this.stepSize;
@@ -109,7 +109,7 @@ export class BeastRagdollSolver{
    // torque repeatedly driving it past the resting contact orientation.
    const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.supportTorque*Math.min(1,Math.max(0,angle-RAGDOLL_ROLL.supportDeadAngle)/.5)/sine:0;
    body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support)*dt),true);
-   if(i<2){rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
+   if(i<2){roll.errors[i]=angle;rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
   }
   roll.speed=rootSpeed;roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
   roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=roll.timeout;roll.done||=roll.timedOut;
