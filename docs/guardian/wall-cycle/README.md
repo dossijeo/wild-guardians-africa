@@ -7,3 +7,10 @@ Executed with the catalog hyena: 38 sampled structure contact pairs, phases fall
 The initial attempted measurement was invalid: a fixture edit landed in the stress handler instead of the measurement setup, so it ran the ordinary open-ground cycle. That edit was corrected before this recorded run; no evidence from the invalid run is used here.
 
 This is runtime lifecycle/contact evidence with sampled screenshots, not a complete visual collision approval. No recording of the full fall was captured in this run. Skin penetration, recovery displacement near corners, other species, slopes and destruction during the fall remain to be visually inspected. The fixture uses legacyNavigation, not a full campaign acceptance run. Syntax and whitespace checks passed.
+
+
+## Recorded cycle
+
+`Grabar caida contra muralla` records the same controlled scenario through the existing local video receiver. `hyena-wall.mp4` contains the full canvas sequence, without audio. `recorded-run.json` is its separate runtime report: 12.023 simulation seconds, 244 measured frames, zero hidden frames/errors, 33 sampled structure contacts, maximum one Guardian, zero final down actors/bodies. The roll completed in 0.900 s without timeout. Physics manager CPU p95 was 4.145 ms in this recording; this is not a paired performance comparison.
+
+Inspected `sequence.jpg` at 1 frame/s and `recovery-detail.jpg` at 3 frames/s over the get-up interval. The animal falls on the approach side, rolls supine, gets up and resumes attacking the intact wall. No gross passage through the wall is visible in these samples. Frames between samples were not individually inspected. Small skin penetrations and the precise support/contact impression remain outside this camera/sample coverage; this is not approval of all obstacles, species or angles. The video is retained for continuous playback review.
