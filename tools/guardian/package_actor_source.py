@@ -15,9 +15,19 @@ for image in bpy.data.images:
     if image.type!='IMAGE' or image.size[0]==0:continue
     before=list(image.size);factor=min(1,a.max_texture/max(before))
     if factor<1:image.scale(max(1,round(before[0]*factor)),max(1,round(before[1]*factor)))
-    image.pack()
+    # Repacking an unchanged embedded image with an empty filepath can discard
+    # its payload in Blender. Keep the existing packed bytes unless resized.
+    if factor<1 or not image.packed_file:image.pack()
     report['textures'].append({'name':image.name,'before':before,'after':list(image.size)})
 target.parent.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(target),compress=True)
 report['bytes']=target.stat().st_size
+# Verify persistence, not just the still-cached image buffers in this session.
+bpy.ops.wm.open_mainfile(filepath=str(target))
+report['reopenedImages']=[]
+for row in report['textures']:
+    image=bpy.data.images.get(row['name'])
+    assert image and list(image.size)==row['after'] and image.packed_file, 'Missing packed image after reopen: '+row['name']
+    assert len(image.pixels)>0, 'Unreadable packed pixels: '+row['name']
+    report['reopenedImages'].append({'name':image.name,'size':list(image.size),'packed':True})
 target.with_suffix('.package.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
