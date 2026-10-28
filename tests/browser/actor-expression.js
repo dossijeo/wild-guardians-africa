@@ -5,11 +5,11 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {ActorExpression} from '../../src/rendering/actor-expression.js';
 const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(1);document.body.prepend(renderer.domElement);
 const scene=new T.Scene();scene.background=new T.Color('#343d39');scene.add(new T.HemisphereLight(0xffffff,0x635748,2));for(const [x,y,z,p] of [[3,5,4,2],[-3,2,2,1]]){const light=new T.DirectionalLight(0xffffff,p);light.position.set(x,y,z);scene.add(light);}
-const params=new URLSearchParams(location.search),lion=params.get('actor')==='lion';
-const faceTarget=new T.Vector3(0,lion?1.57:1.5,lion?.20:.48),faceDistance=lion?.65:1.35;
+const params=new URLSearchParams(location.search),lion=params.get('actor')==='lion',warthog=params.get('actor')==='warthog';
+const faceTarget=new T.Vector3(0,warthog?1.85:lion?1.57:1.5,warthog?.4:lion?.20:.48),faceDistance=warthog?1.25:lion?.65:1.35;
 const camera=new T.PerspectiveCamera(32,innerWidth/innerHeight,.01,50);camera.position.set(0,1.52,1.85);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,.48);controls.update();
 const $=id=>document.getElementById(id),errors=[];let elapsed=20,previous=performance.now(),paused=false,automatic=false,action=null,actor={id:'qa-face',status:'walking'},frame=0;
-const asset=lion?(params.has('uncompressed')?'/test-results/lion-face-candidate.glb':'/content/source/actors/lion/expressive-candidate.glb'):params.has('uncompressed')?'/test-results/hyena-face-candidate.glb':'/content/source/actors/hyena/expressive-candidate.glb';
+const asset=warthog?'/test-results/warthog-face-candidate.glb':lion?(params.has('uncompressed')?'/test-results/lion-face-candidate.glb':'/content/source/actors/lion/expressive-candidate.glb'):params.has('uncompressed')?'/test-results/hyena-face-candidate.glb':'/content/source/actors/hyena/expressive-candidate.glb';
 const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(asset);scene.add(gltf.scene);const expression=new ActorExpression(gltf.scene,actor.id),mixer=new T.AnimationMixer(gltf.scene);
 gltf.scene.updateMatrixWorld(true);const head=gltf.scene.getObjectByName('Head'),headAnchor=head?head.worldToLocal(faceTarget.clone()):null,headPoint=new T.Vector3(),cameraShift=new T.Vector3();let followFace=false;
 $('follow').onclick=()=>followFace=!followFace;
@@ -22,7 +22,7 @@ $('neutral').onclick=()=>set(0,0,0);$('pain').onclick=()=>set(1,1,.85);$('half')
 function faceView(x,z){controls.target.copy(faceTarget);camera.position.copy(faceTarget).add(new T.Vector3(x*faceDistance,.02,z*faceDistance));controls.update();}
 $('otherSide').onclick=()=>faceView(-1,0);$('quarter').onclick=()=>faceView(.7,.8);$('body').onclick=()=>{controls.target.set(0,.9,0);camera.position.set(2,1.8,4);controls.update();};
 $('side').onclick=()=>faceView(1,0);$('front').onclick=()=>faceView(0,1);faceView(0,1);
-$('candidateLabel').textContent=lion?'LEÓN: candidato de mandíbula, interior oral y párpados. Integrado en la rama; revisión visual en curso.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';
+$('candidateLabel').textContent=warthog?'JABALÍ: candidato de párpados; boca pendiente. No integrado en el catálogo.':lion?'LEÓN: candidato de mandíbula, interior oral y párpados. Integrado en la rama; revisión visual en curso.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';
 $('clip').onchange=()=>{mixer.stopAllAction();action=null;const clip=gltf.animations.find(c=>c.name===$('clip').value);$('clipTime').value=0;$('clipTime').max=clip?.duration??0;if(clip)action=mixer.clipAction(clip).reset().play();};
 $('auto').onclick=()=>{automatic=true;actor.status='walking';};$('attack').onclick=()=>{automatic=true;actor.status='attacking';actor.attackDuration=2;actor.attackRemaining=2;};$('hit').onclick=()=>{automatic=true;actor.status='walking';actor.magicImpact={at:elapsed,impactAt:elapsed+.24};};$('pause').onclick=()=>paused=!paused;
 addEventListener('error',e=>errors.push(e.message));
