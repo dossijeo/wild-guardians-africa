@@ -1,3 +1,4 @@
+import {advanceWorkerRecovery} from './worker-recovery.js';
 import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
 import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {attackTarget,applyGuardianAttack} from './guardian-combat.js';
@@ -1390,7 +1391,7 @@ function updateWorkers(s,dt,nav) {
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
   for(const w of s.workers) {
     try {
-      if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
+      if(advanceWorkerRecovery(w,dt,nav))continue;
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};

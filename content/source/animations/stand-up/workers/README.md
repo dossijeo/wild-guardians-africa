@@ -19,3 +19,11 @@ IMPORTANT: final horizontal logical-root reconciliation is still pending; these 
 The last 0.25 s now blend to native Idle at time zero, translated by finalOffset. Metadata records this displacement for future simulation reconciliation. Four tests in worker-recovery-boundaries.test.js load actual rigs and compare all bone world positions/quaternions against native Fall at the start and translated Idle at the end (2e-5 tolerance). All pass. This checks endpoints, not collisions or continuous visual quality.
 
 pack_worker_recovery.mjs writes a 1,987,128-byte shared-float bank using the existing recovery decoder schema, plus content/manifests/worker-recovery.json with duration, target hash and finalOffset. No runtime fetch or simulation integration yet. Must use those offsets with collision-aware logical reconciliation; do not merely play the clip and snap back to the old position.
+
+## Runtime lifecycle integration (graphical acceptance pending)
+
+Worker recovery is now loaded by WorldScene and selected by workerPose after fallRemaining. advanceWorkerRecovery suspends movement through the rise, retains downHeading, plans the final offset using walkable plus swept workerMotionClear, and commits position once. Blocked offsets are reduced and the rendered carrier compensates progressively. Second-hit incapacitation no longer cancels an existing fall/recovery. Three state tests cover incapacitation, blocked displacement and serialization determinism; 37 existing expression/action/encounter/boundary tests pass.
+
+Not yet visually accepted in a real raid; slopes, dynamic obstacles changing during the 3.2-second recovery, native planner interactions and the final transition to running require review. The current offset plan is sampled at recovery start, so a newly placed obstacle during recovery is not yet rechecked.
+
+User-reported original Fall neck/chest distortion is an explicit remaining correction. Baseline Kofi at 3.3 s inspected; initial angle audit against bind pose: Neck 6/10/14/17/21 degrees and Head 31/17/17/34/24 degrees at 1.5/2/2.5/3/3.5 s. These values alone do not establish a cause. Inspect side chest/neck geometry and skin weights before applying arbitrary joint clamps. Any change to Fall endpoint must regenerate transition bank and rerun boundary tests.

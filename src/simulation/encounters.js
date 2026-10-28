@@ -52,12 +52,13 @@ export function updateWorkerEncounters(state,nav){
       hits.add(pair);
       const presentation={elapsed:state.elapsed,x:worker.x,z:worker.z};
       let pushed=0;
-      if(collision){
+      if(collision&&!worker.fallRemaining&&!worker.recovery){
         const [min,max]=B.raids.worker_collision_knockback_m;
         pushed=pushWorker(animal,worker,min+nextRandom(state)*(max-min),nav);
       }
       if(worker.hits>=2){
-        worker.incapacitated=true;worker.status='incapacitated';worker.fallRemaining=0;
+        worker.incapacitated=true;worker.status='incapacitated';
+        if(!worker.fallRemaining&&!worker.recovery){worker.fallRemaining=L.sources.find(s=>s.profile===worker.profile).fallSeconds;worker.downHeading=worker.heading??0;}
         notifyWorkerPlanningChange(state,worker);
         const person=state.people.find(p=>p.id===worker.personId);if(person)person.recoveryUntil=state.day+1;
         emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});

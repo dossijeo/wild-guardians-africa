@@ -1,3 +1,4 @@
+import {WORKER_RECOVERY} from '../simulation/worker-recovery.js';
 import {sampleFixedPose} from './fixed-pose.js';
 import {syncWorkerToolVisibility} from './worker-tool-visibility.js';
 import {PROFILES} from '../simulation/workforce.js';
@@ -15,6 +16,13 @@ export function applyWorkerPose(data,worker,task,elapsed,library,cullHiddenTools
   const restart=data.name!==pose.name;
   if(restart){data.action?.stop();data.action=data.mixer.clipAction(clip);data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();data.action.paused=true;data.action.clampWhenFinished=true;data.name=pose.name;}
   sampleFixedPose(data,pose.time,restart);
+  if(worker.recovery){
+    const r=worker.recovery,spec=WORKER_RECOVERY[worker.profile],t=Math.min(1,r.elapsed/r.duration),mix=t*t*(3-2*t);
+    const carrier=data.model.getObjectByName('Quata_Character');
+    // Resample before a positional correction; paused frames must not accumulate it.
+    sampleFixedPose(data,pose.time,true);
+    carrier.position.x-=spec.finalOffset[0]*(1-r.fraction)*mix;carrier.position.z-=spec.finalOffset[2]*(1-r.fraction)*mix;
+  }
   syncWorkerToolVisibility(data,cullHiddenTools);
   return pose;
 }
@@ -25,7 +33,8 @@ export function workerPose(worker,task,elapsed,library) {
     name={rest:'Idle',watch:'Alert',walk:'Walk_Skip'}[worker.idleState.mode]??'Idle';
     time=worker.idleState.mode==='walk'?(worker.walkPhase??0):worker.idleState.elapsed;
   }
-  if(worker.fallRemaining>0&&!worker.incapacitated){name='Fall';time=Math.max(0,library.actions.Fall.duration-worker.fallRemaining);}
+  if(worker.recovery){name='Worker_GetUp';time=worker.recovery.elapsed;}
+  else if(worker.fallRemaining>0){name='Fall';time=Math.max(0,library.actions.Fall.duration-worker.fallRemaining);}
   else if(worker.status==='fleeing'||worker.incapacitated&&worker.status!=='home'){name=worker.running===false?'Idle':'Run';time=name==='Run'?(worker.runPhase??elapsed*(worker.incapacitated?.35:1)):elapsed;}
   else if(worker.status==='carrying'){name='Carry_Crate';time=worker.carryPhase??elapsed;}
   else if(['walking','arriving','returning'].includes(worker.status)){
@@ -41,7 +50,7 @@ export function workerPose(worker,task,elapsed,library) {
       time=Math.max(0,logicalDuration-worker.actionRemaining*speed)*library.actions[name].duration/logicalDuration;
     }
   }
-  if(worker.gateWaiting&&!worker.incapacitated&&!worker.fallRemaining){name=worker.status==='carrying'?'Carry_Crate':'Idle';time=worker.status==='carrying'?(worker.carryPhase??0):elapsed;}
-  const spec=library.actions[name];
+  if(worker.gateWaiting&&!worker.incapacitated&&!worker.fallRemaining&&!worker.recovery){name=worker.status==='carrying'?'Carry_Crate':'Idle';time=worker.status==='carrying'?(worker.carryPhase??0):elapsed;}
+  const spec=name==='Worker_GetUp'?{duration:WORKER_RECOVERY[worker.profile].duration,loop:false}:library.actions[name];
   return {name,time:spec.loop?time%spec.duration:Math.min(time,spec.duration),loop:spec.loop};
 }

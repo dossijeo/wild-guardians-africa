@@ -7,7 +7,7 @@ function blink(time,phase,period){const t=((time+phase)%period+period)%period;re
 export function expressionTargets(entity,kind,elapsed,phase,out){
  const period=3.4+phase*2;out[0]=blink(elapsed,phase*period,period);out[1]=blink(elapsed,phase*period-.012,period);out[2]=0;
  if(kind==='worker'){
-  const hurt=entity.fallRemaining>0;
+  const hurt=entity.fallRemaining>0||entity.recovery?.elapsed<.4;
   if(hurt){out[0]=out[1]=.95;out[2]=.72;}
   else if(entity.status==='fleeing')out[2]=.48+.12*Math.sin(elapsed*6+phase*4);
   return out;
