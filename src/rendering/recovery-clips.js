@@ -14,7 +14,7 @@ export function decodeRecoveryClips(manifest,bytes){
  }
  return result;
 }
-export async function loadRecoveryClips(){
- const base='/content/guardian/recovery/';const [meta,data]=await Promise.all([fetch(base+'recovery.json'),fetch(base+'recovery.bin')]);
+export async function loadRecoveryClips(base='/content/guardian/recovery/'){
+ const [meta,data]=await Promise.all([fetch(base+'recovery.json'),fetch(base+'recovery.bin')]);
  if(!meta.ok||!data.ok)throw Error('Recovery bank unavailable');return decodeRecoveryClips(await meta.json(),await data.arrayBuffer());
 }
