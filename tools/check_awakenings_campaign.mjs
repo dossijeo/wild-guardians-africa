@@ -13,7 +13,7 @@ import {serialize} from '../src/persistence/snapshots.js';
 import {permission} from '../src/simulation/rules.js';
 
 const [arm='competent',daysArg='100',biome='sabana',seedArg='712',culture='mapungubwe',outArg=`docs/qa/despertares/campaigns/${arm}-${biome}-${seedArg}.json`]=process.argv.slice(2);
-if(!['baseline','competent','poor','agriculture','defense','recovery'].includes(arm))throw Error('Unknown arm');
+if(!['baseline','competent','poor','agriculture','defense','recovery','recovery-adaptive'].includes(arm))throw Error('Unknown arm');
 const days=Number(daysArg),seed=Number(seedArg),out=resolve(outArg),started=performance.now();
 mkdirSync(dirname(out),{recursive:true});
 const provenance={startedAt:new Date().toISOString(),head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
@@ -33,7 +33,12 @@ const snapshot=()=>({money:numberOf(state.ledger.balance),living:state.plants.fi
 function chooseBlessing(s){
   const plants=s.plants.filter(p=>p.alive&&!p.blessing),walls=s.structures.filter(p=>p.kind==='wall'&&p.status==='intact'&&p.hp>0&&!p.blessing);
   const recent=s.awakenings.history.slice(-3).reduce((n,h)=>n+h.facts.losses,0);
-  const defensive=arm==='defense'||arm==='recovery'||arm==='competent'&&recent>3;
+  // The paired recovery policies are identical until the prescribed loss.
+  // Afterwards the adaptive policy rebuilds a crop source when none survives,
+  // then uses the same recent-loss rule as the competent policy.
+  const needsCropSource=arm==='recovery-adaptive'&&removed&&!s.plants.some(p=>p.alive&&p.blessing);
+  const defensive=arm==='defense'||arm==='recovery'||arm==='recovery-adaptive'&&!removed||
+    (arm==='competent'||arm==='recovery-adaptive'&&removed)&&recent>3&&!needsCropSource;
   if(defensive&&walls.length){
     walls.sort((a,b)=>(b.maxHp-b.hp)-(a.maxHp-a.hp)||a.id.localeCompare(b.id));
     decisions.defense++;return walls[0];
@@ -71,7 +76,7 @@ try{
   },entryDriverFactory:nav=>({async advancePresentation(){if(nav.raidEntryFailure)throw Error(JSON.stringify(nav.raidEntryFailure));},async waitForEntry(){if(nav.raidEntryFailure)throw Error(JSON.stringify(nav.raidEntryFailure));},report(){return {mode:'continuous-native-entry'};},async dispose(){}}),
   onTick(s,nav,{dt}){
     state=s;nav.serviceRaidConnectivityDemand?.();workerSeconds+=s.workers.filter(w=>w.status!=='gone').length*dt;
-    if(arm==='recovery'&&!removed&&s.awakenings?.total>=2&&s.time<290&&permission(s,'build')){
+    if((arm==='recovery'||arm==='recovery-adaptive')&&!removed&&s.awakenings?.total>=2&&s.time<290&&permission(s,'build')){
       const wall=s.structures.find(p=>p.kind==='wall'&&p.blessing&&p.status==='intact');
       if(wall){G.removeWall(s,`awakening-policy-remove-${seq++}`,wall.id,nav);removed=true;}
     }
@@ -88,7 +93,8 @@ try{
  state=result.state;writeFileSync(out.replace(/\.json$/,'.state.json'),serialize(state));
  const {state:omitState,nav:omitNav,daily:omitDaily,...report}=result;
  flush('complete',{campaign:report,averageEarned:state.awakenings?.history.reduce((n,h)=>n+h.earned,0)/(state.awakenings?.history.length||1)||0,
-  recoveryScenario:arm==='recovery'?'Prescribed ordinary removal of one blessed wall after two earned charges, then continue earning/reinvesting. Other losses are native animal contacts.':null});
+  recoveryScenario:arm==='recovery'||arm==='recovery-adaptive'?
+    `Prescribed ordinary removal of one blessed wall after two earned charges, then continue earning/reinvesting. Other losses are native animal contacts. ${arm==='recovery-adaptive'?'Adaptive policy restores a crop source when absent and otherwise follows recent-loss defense decisions.':'Fixed policy prefers walls.'}`:null});
 }catch(error){
  if(state)writeFileSync(out.replace(/\.json$/,'.state.json'),serialize(state));
  flush('failed',{error:error.stack,partial:error.nativeCampaignPartial?{...error.nativeCampaignPartial,state:undefined}:null});console.error(error.stack);process.exitCode=1;
