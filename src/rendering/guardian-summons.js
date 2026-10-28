@@ -3,6 +3,7 @@ import {GUARDIAN_ATTACK_TIMING as ATTACK_TIMING} from '../simulation/guardian-ti
 import * as THREE from 'three';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {GuardianFace} from '../ui/guardian-face.js';
+import {guardianPropBounds} from './guardian-prop-bounds.js';
 import {guardianPlacement} from './guardian-placement.js';
 import {vfxEnvironment} from './vfx-native.js';
 import {CameraBuildingRegistry} from './camera-building-registry.js';
@@ -43,9 +44,9 @@ export class GuardianSummons{
   for(const id of this.extraOccluders??[])index.delete(id);this.extraOccluders=[];
   const add=(id,min,max)=>{index.set(id,{min,max});this.extraOccluders.push(id);};
   for(const wall of w.state.structures)if(wall.kind==='wall'&&wall.status==='intact'&&Math.hypot(wall.x-target.x,wall.z-target.z)<15){const b=wallCollisionBounds(wall,0),y=w.nav.field.surface(wall.x,wall.z);add('wall:'+wall.id,[b[0],y,b[1]],[b[2],y+2.5,b[3]]);}
-  for(const p of w.nav.propsAt?.(target.x,target.z,12)??[])if(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18){const r=p.radius??1.5,y=w.nav.field.surface(p.x,p.z);add('tree:'+p.id+':'+p.x+':'+p.z,[p.x-r,y,p.z-r],[p.x+r,y+(p.slot<4?Math.max(4,r*3):Math.max(2,r*2)),p.z+r]);}
+  for(const p of w.nav.propsAt?.(target.x,target.z,12)??[]){const bounds=guardianPropBounds(p,w.pack?.assets[p.slot],w.nav.field.surface(p.x,p.z));if(bounds)add('prop:'+p.id+':'+p.x+':'+p.z,bounds.min,bounds.max);}
   const eye=w.camera.position.toArray();
-  return guardianPlacement({target,camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z]),occupied:(x,y,z)=>!!index.sweep([x,y-.6,z],[x,y+.7,z],.6),cropHeight:p=>w.cropBatch.sample(p.species,p.growth).height});
+  return guardianPlacement({target,camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z]),occupied:(x,y,z)=>!!index.sweep([x,y-1,z],[x,y+1.2,z],.45),cropHeight:p=>w.cropBatch.sample(p.species,p.growth).height});
  }
  start(event){if(!this.slots.length)return;const w=this.world,s=this.slots[0];if(s.event)this.stats.reused++;
   if(s.event?.kind==='attack'&&w.state.elapsed<s.at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow){

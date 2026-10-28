@@ -16,3 +16,15 @@ test('crowded footprints choose an elevated body inside the camera and above cro
  assert.ok(p.x>=0);assert.ok(p.y-1.2>=2.5);assert.ok(p.y<6.7);
  const head=new Vector3(p.x,p.y+1.3,p.z).project(args.camera);assert.ok(Math.abs(head.y)<.88);
 });
+
+// Foliage may be walkable while intersecting or hiding the lower mantle.
+test('walkable vegetation still excludes the full body of a normal summon',()=>{
+ const args=setup(),first=guardianPlacement(args);
+ const next=guardianPlacement({...args,occupied:(x,y,z)=>Math.hypot(x-first.x,z-first.z)<.2});
+ assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);assert.equal(next.y,1.7);
+});
+test('visibility checks the lower mantle even when the face remains visible',()=>{
+ const args=setup(),first=guardianPlacement(args);let checks=0;
+ const next=guardianPlacement({...args,occluded:(x,y,z)=>{checks++;return y<1.2&&Math.hypot(x-first.x,z-first.z)<.2;}});
+ assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);assert.equal(checks,48);
+});
