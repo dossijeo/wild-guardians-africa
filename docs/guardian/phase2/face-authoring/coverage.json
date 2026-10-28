@@ -45,15 +45,21 @@
       "id": "buffalo",
       "kind": "animal",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
-      "file": "public\\assets\\0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
-      "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
-      "bytes": 74439416,
-      "channels": [],
-      "missing": [
+      "file": "public\\assets\\fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb.glb",
+      "sha256": "fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb",
+      "bytes": 77229256,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     },
     {
       "id": "lion",
@@ -191,6 +197,25 @@
       "file": "content/source/actors/warthog/expressive-candidate.glb",
       "sha256": "ff33abeb0006b0ddad1f3f758843e91f6145379fd5f4b90ee5d8fa8aab2e4c6d",
       "bytes": 4698684,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
+        "mouthOpen"
+      ],
+      "missing": []
+    },
+    {
+      "id": "buffalo",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/buffalo/expressive-candidate.glb",
+      "sha256": "0acd3ccf3f8cb431bc8c6a1a9458855c05ee9abfae3a48ba69de37e12b04db44",
+      "bytes": 5955948,
       "channels": [
         "blinkL",
         "blinkL25",

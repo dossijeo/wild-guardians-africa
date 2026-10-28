@@ -13,7 +13,7 @@ function inspect(file){
  return {file,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,channels:[...channels].sort(),missing:required.filter(name=>!channels.has(name))};
 }
 const report={scope:'Active catalog facial-channel availability only. Does not prove nonzero deformation, visual quality or behavior.',actors:actors.map(({id,kind,descriptor})=>{if(!descriptor)throw Error('Missing catalog actor '+id);return {id,kind,source:descriptor.source,...inspect(path.join('public',descriptor.url.replace(/^\//,'')))};}),candidates:[]};
-for(const id of ['hyena','lion','warthog']){const file=`content/source/actors/${id}/expressive-candidate.glb`;if(fs.existsSync(file)){const candidate=inspect(file);report.candidates.push({id,matchesActiveBytes:report.actors.some(a=>a.id===id&&a.sha256===candidate.sha256),...candidate});}}
+for(const id of ['hyena','lion','warthog','buffalo']){const file=`content/source/actors/${id}/expressive-candidate.glb`;if(fs.existsSync(file)){const candidate=inspect(file);report.candidates.push({id,matchesActiveBytes:report.actors.some(a=>a.id===id&&a.sha256===candidate.sha256),...candidate});}}
 report.complete=report.actors.every(a=>!a.missing.length);
 const output=process.argv[2];if(!output)throw Error('Usage: node tools/guardian/audit_face_coverage.mjs report.json [--require-all]');fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({complete:report.complete,ready:report.actors.filter(a=>!a.missing.length).map(a=>a.id),missing:report.actors.filter(a=>a.missing.length).map(a=>a.id)}));

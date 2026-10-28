@@ -81,3 +81,11 @@ A subsequent paused impact at 0.26 s was inspected frontally and in profile unde
 `combat-night-v4` retains a complete real Attack/recovery trace with no final down actors or errors, plus a frontal 0.26 s impact inspection under night lighting. Audio was disabled. Mouth and closed eyes remain legible in this sampled view; this is not broad nighttime or audio validation.
 
 The editable source is now packed at `content/source/actors/buffalo/expressive-candidate.blend` (14,992,262 bytes), with texture resizing explicitly recorded. The runtime candidate is 5,955,948 bytes, compressed from 77,229,256. The web verifier confirms 3,904,958 geometry/animation bytes exact after decoding, minimum image PSNR 40.13 dB, and zero validator errors. Browser fixtures now reference this portable compressed candidate. These runtime captures preceded the switch, so the compressed browser load is still pending. Production catalog installation remains pending.
+
+## Installed branch catalog validation
+
+Installed oral v4 as source fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb, retaining the original asset. Updated only the buffalo entries in the source/runtime catalogs, regenerated action/footstep calibrations, compressed/verified its web copy, and rebuilt the 40 physical fallback clips for the current rigs. The compressed expression fixture exposes ten working bindings with no errors.
+
+The no-override combat fixture (`?recoveryDay=1`, buffalo selected) completed the full real Attack cycle with faceCandidate=false, ten expression bindings, no final down actors and no errors. `installed/cycle.json` and `recovered.png` record this installed path. Earlier starts were reset by Vite reloads during generated-file updates and are not counted as completed tests.
+
+62 focused actor/action/ragdoll/footstep tests pass. Asset verification passes 25 sources, 515 resources and 126 exact SFX matches. Morph coverage now includes warthog, hyena, buffalo and lion; rhino and four workers remain incomplete. These results do not close the broader visual/performance matrix.

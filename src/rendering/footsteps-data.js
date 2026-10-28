@@ -728,8 +728,8 @@ export const FOOTSTEPS = {
       }
     },
     "buffalo": {
-      "url": "/assets/0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
-      "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
+      "url": "/assets/fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb.glb",
+      "sha256": "fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
