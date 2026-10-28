@@ -25,3 +25,5 @@ Experiment: increased the bounded gravity-support torque multiplier from 1.8 to 
 An experiment targeting every body at the authored supine pose was rejected: the graphical run still timed out (last error 3.1263 rad), and the automated suite regressed to 34/35 passing. `rejected-authored-pose.json` preserves that negative result. All physical behavior changes from this experiment were reverted; only diagnostics remain. The simultaneous physical-roll defect is unresolved.
 
 The two captured diagnostic runs predate copying the angle array per sample: their `errors` arrays retain the final angles for each actor, so they must not be read as time series. The scalar error and age remain per-sample. The final timeout angles quoted above remain valid. After reverting the experiment, all 35 physics/combat tests passed.
+
+See ../roll-compensation/README.md for a subsequent bounded compensation improvement: two graphical four-impact runs have no roll failures, but a new directional variable-rate reproducer remains TODO. This does not close all recovery failures.

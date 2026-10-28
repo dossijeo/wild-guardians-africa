@@ -181,3 +181,21 @@ test('physical and baked recovery commit a resolved horizontal offset exactly on
   owner.step(f.state,0);assert.ok(Math.abs(f.animal.x-x-.2)<1e-6);assert.ok(Math.abs(f.animal.z-z+.1)<1e-6);owner.dispose();if(owner!==f.manager)f.manager.dispose();
  }
 });
+
+
+test('three runtime hyenas finish articulated rolls and authored recovery on the shared variable-rate clock',{todo:'Known directional roll timeout; retained as an executing reproducer, not a passed recovery gate'},async()=>{
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url));
+ const {animal,state,root,world,manager}=fixture('hyena',model);
+ manager.recoveryClips=new Map([['hyena',authoredClip]]);
+ for(let i=1;i<3;i++){
+  const skin=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url)),node=new Group();node.add(skin);node.position.set(20+i*4,0,30);node.updateMatrixWorld(true);
+  const other={...animal,id:'beast-'+i,x:20+i*4,magicImpact:{at:10,direction:i===1?{x:0,y:-.5,z:1}:{x:-1,y:0,z:.3},intensity:1}};
+  state.raid.animals.push(other);world.objects.set(other.id,node);world.mixers.set(other.id,{model:skin,mixer:new AnimationMixer(skin),clips:[new AnimationClip('Walking',1,[])]});
+ }
+ const recovered=new Set();let peak=0;
+ for(let i=0;i<600;i++){
+  const dt=[1/30,1/60,1/20][i%3];state.elapsed+=dt;manager.step(state,dt);peak=Math.max(peak,manager.entries.size);
+  for(const a of state.raid.animals){const node=world.objects.get(a.id);manager.before(a.id);node.position.set(a.x,0,a.z);node.updateMatrixWorld(true);manager.render(a.id);const e=manager.entries.get(a.id);if(e?.recovery){assert.equal(e.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));recovered.add(a.id);}if(e?.actor.roll)assert.ok(e.actor.pose.every(Number.isFinite));}
+ }
+ assert.equal(peak,3);assert.equal(recovered.size,3);assert.equal(manager.stats.rollFailures,0);assert.equal(manager.entries.size,0);assert.equal(manager.solver,null);assert.ok(state.raid.animals.every(a=>!a.magicDown));manager.dispose();
+});

@@ -25,7 +25,7 @@ function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
 export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5,forearmDamping:4});
-export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,angleTolerance:.45,settleSeconds:.15,timeout:3.5});
+export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,integralGain:3,integralLimit:.6,integralAngle:.9,integralSpeed:.8,angleTolerance:.45,settleSeconds:.15,timeout:3.5});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
@@ -91,7 +91,7 @@ export class BeastRagdollSolver{
   // Rotate the complete fallen configuration towards the authored supine hip
   // frame. Relative limb poses and all existing joint constraints are retained.
   const delta=multiply(target,inverse(a.parts[0].body.rotation()));
-  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],timeout};a.settled=false;
+  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],integrals:a.parts.map(()=>vector()),timeout};a.settled=false;
  }
  driveRoll(a){
   const roll=a.roll;if(!roll||roll.done)return;roll.age+=this.stepSize;
@@ -102,13 +102,21 @@ export class BeastRagdollSolver{
    let x=(q.x*factor-w.x)*RAGDOLL_ROLL.response,y=(q.y*factor-w.y)*RAGDOLL_ROLL.response,z=(q.z*factor-w.z)*RAGDOLL_ROLL.response;
    const clamp=Math.min(1,RAGDOLL_ROLL.maxAcceleration/(Math.hypot(x,y,z)||1));x*=clamp;y*=clamp;z*=clamp;
    const inertia=body.effectiveAngularInertia(),dt=this.stepSize;
+   const integral=roll.integrals[i];
+   // Integrate only near rest: bounded compensation for gravity/contact bias,
+   // without accumulating launch errors or relaxing the completion criterion.
+   if(angle<RAGDOLL_ROLL.integralAngle&&length(w)<RAGDOLL_ROLL.integralSpeed&&sine>1e-8){
+    const gain=sign*angle*dt/sine;integral.x+=q.x*gain;integral.y+=q.y*gain;integral.z+=q.z*gain;
+    const limit=Math.min(1,RAGDOLL_ROLL.integralLimit/(length(integral)||1));integral.x*=limit;integral.y*=limit;integral.z*=limit;
+   }
+   const bias=body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.integralGain;
    // A broad convex torso has to tip over its contact edge. Inertia-only
    // velocity feedback cannot overcome gravity there; provide a bounded
    // weight/lever-arm torque fading to zero within 0.1 radians of the target.
    // Near the target, velocity feedback brakes the body without gravity-assist
    // torque repeatedly driving it past the resting contact orientation.
    const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.supportTorque*Math.min(1,Math.max(0,angle-RAGDOLL_ROLL.supportDeadAngle)/.5)/sine:0;
-   body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support)*dt),true);
+   body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support+integral.x*bias)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support+integral.y*bias)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support+integral.z*bias)*dt),true);
    if(i<2){roll.errors[i]=angle;rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
   }
   roll.speed=rootSpeed;roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
