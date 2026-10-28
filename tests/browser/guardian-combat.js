@@ -8,6 +8,7 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {GuardianGpuPairs} from './guardian-gpu-pairs.js';
 import * as Game from '../../src/simulation/game.js';
 import {Navigation} from '../../src/world/navigation.js';
+import {wallCollisionFrame} from '../../src/world/wall-collision-frame.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
@@ -103,17 +104,19 @@ try{
  $('workerGround').onclick=()=>{
   const w=state.workers[0],rig=w&&world.mixers.get(w.id);if(!rig)return;
   rig.model.updateMatrixWorld(true);const v=new Vector3();let minimum=Infinity,footMinimum=Infinity,limiter=null,count=0;
+  const wallProjection=state.structures.filter(s=>s.kind==='wall'&&!s.gate&&s.status==='intact').map(s=>({id:s.id,frame:wallCollisionFrame(s),insideVertices:0,maxDepth:0,bones:{}}));
   rig.model.traverse(mesh=>{if(!mesh.isSkinnedMesh||!mesh.visible||mesh.scale.lengthSq()<1e-12)return;
    const {position,skinIndex,skinWeight}=mesh.geometry.attributes;
    for(let i=0;i<position.count;i++){
     mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld);const gap=v.y-nav.field.surface(v.x,v.z);
     let k=0;for(let j=1;j<4;j++)if(skinWeight.getComponent(i,j)>skinWeight.getComponent(i,k))k=j;
     const bone=mesh.skeleton.bones[skinIndex.getComponent(i,k)].name;
+    for(const wall of wallProjection){const f=wall.frame,dx=v.x-f.x,dz=v.z-f.z,x=dx*f.c-dz*f.s,z=dx*f.s+dz*f.c,depth=Math.min(f.width-Math.abs(x),f.depth-Math.abs(z));if(depth>0){wall.insideVertices++;wall.maxDepth=Math.max(wall.maxDepth,depth);wall.bones[bone]=(wall.bones[bone]??0)+1;}}
     if(gap<minimum){minimum=gap;limiter={mesh:mesh.name,bone,index:i};}
     if(/Foot|Toe/.test(bone))footMinimum=Math.min(footMinimum,gap);count++;
    }
   });
-  workerGround={profile:w.profile,elapsed:state.elapsed,phase:w.recovery?'recovery':w.fallRemaining>0?'fall':w.status,minimum,footMinimum,limiter,count};
+  workerGround={profile:w.profile,elapsed:state.elapsed,phase:w.recovery?'recovery':w.fallRemaining>0?'fall':w.status,minimum,footMinimum,limiter,count,wallProjection:wallProjection.map(({frame,...data})=>data),wallProjectionScope:'Horizontal navigation rectangles only; no wall height or triangle-contact test'};
  };
  const workerBackView=document.createElement('button');workerBackView.textContent='Otro lado del trabajador';workerTrial.append(workerBackView);workerBackView.onclick=()=>{const w=state.workers[0];if(!w)return;const y=nav.field.surface(w.x,w.z);world.cinematic=true;world.controls.target.set(w.x,y+.65,w.z);world.camera.position.set(w.x-3,y+2,w.z-3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();};
  $('workerView').onclick=()=>{document.querySelector('header').style.maxHeight='130px';document.querySelector('header').style.overflow='auto';const w=state.workers[0];if(!w)return;const y=nav.field.surface(w.x,w.z);world.cinematic=true;world.controls.target.set(w.x,y+.65,w.z);world.camera.position.set(w.x+3,y+2,w.z+3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();};
