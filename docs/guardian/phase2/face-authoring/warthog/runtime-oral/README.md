@@ -41,3 +41,11 @@ This medium-distance shot does not resolve lip, tusk or eyelid clearance during 
 The candidate is now saved under `content/source/actors/warthog`, including a packed editable Blender source and the verified compressed GLB. Both fixtures reference that package instead of the scratch file. The production catalog remains unchanged.
 
 `combat-impact-profile` records the side inspection attempt; the strategic camera minimum distance limited facial detail. `combat-impact-close` records a rejected close-view framing attempt: projection zoom enlarged the actor but the head is clipped above the viewport. Neither is accepted as proof of detailed mouth clearance. The new QA profile controls need their framing corrected before that remaining inspection can be counted.
+
+## Corrected close inspection
+
+The camera constraint also resets target height to terrain height; increasing zoom could not fix that. The fixture's facial inspection now uses WorldScene's existing cinematic camera mode, directly aims at the head and reduces the toolbar height. Returning through the regular camera controls disables that mode. No production camera code changed.
+
+`combat-close-corrected` and `combat-other-profile-corrected` show the same actual impact at age 0.26 s from two sides. The three-quarter shot resolves the open oral pocket and its reddish interior behind the lower tusks, both closed eyelids, and the snout without a stretched chin or collar. The opposite profile shows the large tusk attachment intact; the tusk itself obscures much of the pocket. These samples show no obvious detachment or neck stretching. They are sampled visual acceptance of this impact pose, not proof across all motions.
+
+`packaged-animation-audit.json` compares the saved compressed candidate to the original: 21 bones, seven clips and 287 sampled poses; maximum position difference zero, maximum angular difference 6.664e-8 rad.
