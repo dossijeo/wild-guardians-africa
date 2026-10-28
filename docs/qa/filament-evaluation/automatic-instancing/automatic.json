@@ -1,0 +1,551 @@
+{
+  "mode": "automatic",
+  "elapsedMs": 2272,
+  "ready": false,
+  "failed": true,
+  "errors": [
+    "TypeError: Required member is undefined.\n    at GPUDevice.createBindGroup (<anonymous>:18:25)\n    at _wgpuDeviceCreateBindGroup (http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js:1:191542)\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[3660]:0x251a98\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4077]:0x26a665\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4072]:0x26a534\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[1010]:0x840ed\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[637]:0x3e133\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2478]:0x1ef43f\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2477]:0x1d9067\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4806]:0x2b5356"
+  ],
+  "diagnostics": {
+    "calls": 70,
+    "failed": [
+      {
+        "descriptor": {
+          "label": "<undefined>",
+          "layout": {
+            "type": "GPUBindGroupLayout",
+            "label": "layout_perRenderable_3"
+          },
+          "entries": [
+            {
+              "binding": 0,
+              "resource": {
+                "buffer": {
+                  "type": "GPUBuffer",
+                  "label": "buffer_object",
+                  "size": 171008,
+                  "usage": 72
+                },
+                "offset": 0,
+                "size": 16384
+              }
+            },
+            {
+              "binding": 2,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 4,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 6,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 7,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 8,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 9,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 10,
+              "resource": "<undefined>"
+            },
+            {
+              "binding": 11,
+              "resource": "<undefined>"
+            }
+          ]
+        },
+        "error": "TypeError: Failed to execute 'createBindGroup' on 'GPUDevice': Failed to read the 'entries' property from 'GPUBindGroupDescriptor': Failed to read the 'resource' property from 'GPUBindGroupEntry': Required member is undefined.",
+        "stack": "TypeError: Required member is undefined.\n    at GPUDevice.createBindGroup (<anonymous>:18:25)\n    at _wgpuDeviceCreateBindGroup (http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js:1:191542)\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[3660]:0x251a98\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4077]:0x26a665\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4072]:0x26a534\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[1010]:0x840ed\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[637]:0x3e133\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2478]:0x1ef43f\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2477]:0x1d9067\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4806]:0x2b5356"
+      }
+    ],
+    "last": [
+      {
+        "label": "render_pass_mipmap_generation_texture_bind_group",
+        "layout": {
+          "type": "GPUBindGroupLayout",
+          "label": "render_pass_mipmap_generation_texture_bind_group_layout"
+        },
+        "entries": [
+          {
+            "binding": 0,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "previous_mip_level_sampler"
+            }
+          },
+          {
+            "binding": 1,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "previous_mip_level_texture_view"
+            }
+          }
+        ]
+      },
+      {
+        "label": "<undefined>",
+        "layout": {
+          "type": "GPUBindGroupLayout",
+          "label": "layout_depthVariant_2"
+        },
+        "entries": [
+          {
+            "binding": 0,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 2048,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 2048
+            }
+          }
+        ]
+      },
+      {
+        "label": "<undefined>",
+        "layout": {
+          "type": "GPUBindGroupLayout",
+          "label": "layout_base_lit_opaque_perMat_21"
+        },
+        "entries": [
+          {
+            "binding": 0,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 16384,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 592
+            }
+          },
+          {
+            "binding": 2,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 3,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 4,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 5,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 6,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 7,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 8,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 9,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 10,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 11,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 12,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 13,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 14,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 15,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 16,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 17,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          }
+        ]
+      },
+      {
+        "label": "<undefined>",
+        "layout": {
+          "type": "GPUBindGroupLayout",
+          "label": "layout_perRenderable_3"
+        },
+        "entries": [
+          {
+            "binding": 0,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 222720,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 16384
+            }
+          },
+          {
+            "binding": 2,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 16384,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 16384
+            }
+          },
+          {
+            "binding": 4,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 16384,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 4096
+            }
+          },
+          {
+            "binding": 6,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_array_user_texture_view"
+            }
+          },
+          {
+            "binding": 7,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 8,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_array_user_texture_view"
+            }
+          },
+          {
+            "binding": 9,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 10,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 11,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          }
+        ]
+      },
+      {
+        "label": "<undefined>",
+        "layout": {
+          "type": "GPUBindGroupLayout",
+          "label": "layout_base_lit_opaque_perMat_21"
+        },
+        "entries": [
+          {
+            "binding": 0,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 16384,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 592
+            }
+          },
+          {
+            "binding": 2,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 3,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 4,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 5,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 6,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 7,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 8,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 9,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 10,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 11,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 12,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 13,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 14,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 15,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          },
+          {
+            "binding": 16,
+            "resource": {
+              "type": "GPUTextureView",
+              "label": "a_2D_user_texture_view"
+            }
+          },
+          {
+            "binding": 17,
+            "resource": {
+              "type": "GPUSampler",
+              "label": "TODO"
+            }
+          }
+        ]
+      },
+      {
+        "label": "<undefined>",
+        "layout": {
+          "type": "GPUBindGroupLayout",
+          "label": "layout_perRenderable_3"
+        },
+        "entries": [
+          {
+            "binding": 0,
+            "resource": {
+              "buffer": {
+                "type": "GPUBuffer",
+                "label": "buffer_object",
+                "size": 171008,
+                "usage": 72
+              },
+              "offset": 0,
+              "size": 16384
+            }
+          },
+          {
+            "binding": 2,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 4,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 6,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 7,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 8,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 9,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 10,
+            "resource": "<undefined>"
+          },
+          {
+            "binding": 11,
+            "resource": "<undefined>"
+          }
+        ]
+      }
+    ]
+  },
+  "identity": {
+    "vendor": "intel",
+    "architecture": "gen-12lp",
+    "isFallbackAdapter": false,
+    "features": [
+      "float32-blendable",
+      "depth32float-stencil8",
+      "rg11b10ufloat-renderable",
+      "depth-clip-control",
+      "texture-compression-bc",
+      "timestamp-query",
+      "core-features-and-limits",
+      "float32-filterable"
+    ],
+    "automaticInstancing": true
+  },
+  "messages": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "The powerPreference option is currently ignored when calling requestAdapter() on Windows. See https://crbug.com/369219127"
+  ]
+}

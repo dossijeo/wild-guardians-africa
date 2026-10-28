@@ -1,0 +1,17 @@
+import {readFile,mkdir,writeFile,copyFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const folder = new URL('./',import.meta.url);
+const lock=JSON.parse(await readFile(new URL('dependency.json',folder),'utf8'));
+const response=await fetch(lock.url);
+if(!response.ok) throw Error(`Download HTTP ${response.status}`);
+const bytes=Buffer.from(await response.arrayBuffer());
+if(createHash('sha256').update(bytes).digest('hex')!==lock.sha256) throw Error('Filament archive SHA256 mismatch');
+const vendor=new URL('vendor/',folder);
+await mkdir(vendor,{recursive:true});
+const archive=new URL('filament.tgz',vendor);
+await writeFile(archive,bytes);
+const {fileURLToPath}=await import('node:url');
+execFileSync('tar',['-xzf',fileURLToPath(archive),'-C',fileURLToPath(vendor)]);
+for(const name of ['grass','grass-instanced'])await copyFile(new URL(`materials/${name}.filamat`,folder),new URL(`${name}.filamat`,vendor));
+console.log(`Verified official Filament ${lock.version} (${lock.commit})`);
