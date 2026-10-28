@@ -1,9 +1,9 @@
 {
   "youngMale": {
     "profile": "youngMale",
-    "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
-    "sha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
-    "bytes": 27893128,
+    "url": "/assets/d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2.glb",
+    "sha256": "d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2",
+    "bytes": 28812068,
     "source": "Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7.html",
     "sourceSha256": "e30e53a58102844218edf689eb80b5521f9b7a28d2949a9cab29768d8cb8d3c1",
     "exporterScripts": [
@@ -108,7 +108,17 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+        "sha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+        "bytes": 27893128
+      },
+      "pipeline": "tools/guardian/merge_worker_facial_library.py",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   },
   "olderMale": {
     "profile": "olderMale",
