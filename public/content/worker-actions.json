@@ -233,9 +233,9 @@
   },
   "olderFemale": {
     "profile": "olderFemale",
-    "url": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
-    "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
-    "bytes": 19341308,
+    "url": "/assets/a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c.glb",
+    "sha256": "a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c",
+    "bytes": 20543048,
     "source": "Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5.html",
     "sourceSha256": "f23fe56e8c13205922bb0a2f54470eb161f727d306fd08aed42445f624d6292a",
     "exporterScripts": [
@@ -340,7 +340,17 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+        "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+        "bytes": 19341308
+      },
+      "pipeline": "tools/guardian/matte_worker_body.py",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   },
   "youngFemale": {
     "profile": "youngFemale",
