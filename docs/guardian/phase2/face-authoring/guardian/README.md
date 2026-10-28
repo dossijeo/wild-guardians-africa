@@ -54,3 +54,10 @@ Replaced the uniform fine sinusoidal striping with three mild, irregular spatial
 An attempted exact non-color accessor comparison against v13 failed on a Mesh_0 accessor during fresh Blender export. Do not claim bit-exact geometry/animation parity for this revision from that attempt; exported attribute differences require quantified investigation before installation. The generator edit itself only changes vertex colors.
 
 Follow-up localized the first mismatch to TANGENT (positions, normals and UVs compared exactly before it): four of 47,852 tangent components differ, maximum 0.0001000166. This small export difference does not prove full parity for the remaining unchecked accessors. The fresh browser suite passed (v14-runtime.json).
+
+
+### Completed v13-to-v14 export comparison
+
+`python tools/guardian/verify_color_revision.py test-results/guardian-lids-v13/guardian-lids.glb content/source/guardian/eyelids-candidate.glb --report docs/guardian/phase2/face-authoring/guardian/v14-geometry-parity.json`
+
+All 493 accessor checks pass. Node hierarchy/transforms, indices, positions, normals, UVs, joints, weights, morphs, inverse bind matrices and animation sampler times/values compare exactly. Only the previously identified base-mesh tangent difference needs the explicit 0.00011 tolerance. One color attribute changed as intended. A negative-control run with a deliberately corrupted position (+1 mm) was rejected. This completes the previously interrupted comparison; material/image contents and visual quality remain outside its scope. SHA256 identities bind the report to the compared exports. The v13 baseline is the output of the preceding generator revision (ed72eba8a); regenerate it from that version when reproducing the comparison.
