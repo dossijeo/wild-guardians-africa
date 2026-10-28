@@ -27,6 +27,7 @@ export async function profileAwakeningRenderer(page,out){
       const {state:s,world:w}=globalThis.wildGuardiansSpatialQa(),G=await import('/src/simulation/game.js'),{awakeningState}=await import('/src/simulation/awakenings.js'),{loseBlessing}=await import('/src/simulation/blessings.js');
       s.time=time;
       for(const target of [...s.plants,...s.structures])if(target.blessing){const loss=loseBlessing(s,target);G.emit(s,'BlessingRemoved',loss);}
+      s.elapsed+=1;w.render(0); // Let outgoing effects retire before reusing fixture IDs.
       s.pauses=[];for(const [i,target] of s.plants.filter(p=>p.alive).slice(0,count).entries()){awakeningState(s).progress=100;G.bless(s,`profile-${time}-${count}-${i}-${s.elapsed}`,target.id);}
       s.pauses=['qa-profile'];s.elapsed+=10;
       const rebuildBefore={...w.awakeningRoots.stats},began=performance.now();w.render(0);const changeFrameMs=performance.now()-began;
@@ -45,8 +46,10 @@ export async function profileAwakeningRenderer(page,out){
       for(const q of pending)gl.deleteQuery(q);
       const stats=a=>{const v=a.slice().sort((a,b)=>a-b);return v.length?{n:v.length,median:v[Math.floor(v.length/2)],p95:v[Math.floor((v.length-1)*.95)]}:null;};
       return {time,count,cpuMs:stats(cpu),gpuMs:stats(gpu),gpuSupported:!!ext,changeFrameMs,rebuildBefore,rebuildAfter,idleEnd:{...w.awakeningRoots.stats},
-        calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,memory:{...w.renderer.info.memory},pointsDraws:w.blessingVfx?.group?.children?.length??null};
-    },{time,count});records.push(record);
+        calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,memory:{...w.renderer.info.memory},sparks:{...w.blessingVfx.stats}};
+    },{time,count});
+    if(record.sparks.sources!==count)throw Error('Source observer mismatch: reload a fresh Vite process after edits; dynamic imports must share the application module instance');
+    records.push(record);
     await writeFile(`${out}/performance.json`,JSON.stringify({fixture,records,scope:'Instrumented real desktop Chrome render, RAF paced, 25 warmup and 80 measured frames/arm. GPU elapsed queries when supported; total render cost, not isolated shader time. Cold event frame includes CPU masks/uploads. Desktop only.'},null,2)+'\n');
   }
   console.log('AWAKENING_QA clip');

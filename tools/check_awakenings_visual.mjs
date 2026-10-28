@@ -12,6 +12,7 @@ async function phase(name,pending,ms=120000){
 }
 const browser=await phase('launch',chromium.launch({channel:'chrome',headless:true,timeout:60000}));
 const page=await browser.newPage({viewport:{width:1280,height:800},deviceScaleFactor:1}),errors=[],captures=[];
+page.setDefaultNavigationTimeout(120000);
 console.log('AWAKENING_QA page-created');
 page.on('pageerror',error=>errors.push(String(error)));
 page.on('console',message=>{if(message.type()==='error')errors.push(message.text()+' '+JSON.stringify(message.location()));if(message.text().startsWith('AWAKENING_QA '))console.log(message.text());});
