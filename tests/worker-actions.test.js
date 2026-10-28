@@ -46,6 +46,18 @@ for(const [profile,library] of Object.entries(libraries))test(`${profile}: Three
   assert.ok(gltf.scene.getObjectByName('Prop_WateringCan').scale.length()<.001);
   assert.equal(gltf.scene.getObjectByName('Prop_FruitCrate').visible,true);
   assert.equal(gltf.scene.getObjectByName('Prop_WateringCan').visible,false);
+  const exiting={profile,status:'fleeing',runPhase:.4,recoveryExitRemaining:.24};
+  applyWorkerPose(data,exiting,null,0,library);
+  assert.equal(data.action.getEffectiveWeight(),0);
+  assert.equal(data.recoveryBlendAction.getEffectiveWeight(),1);
+  exiting.recoveryExitRemaining=.12;applyWorkerPose(data,exiting,null,0,library);
+  assert.equal(data.action.getEffectiveWeight(),.5);
+  assert.equal(data.recoveryBlendAction.getEffectiveWeight(),.5);
+  exiting.recoveryExitRemaining=0;applyWorkerPose(data,exiting,null,0,library);
+  assert.equal(data.action.getEffectiveWeight(),1);
+  assert.equal(data.recoveryBlendAction.isScheduled(),false);
+  applyWorkerPose(data,{profile,status:'idle'},null,0,library);
+  assert.equal(data.action.getEffectiveWeight(),1,'Idle must not retain blend weight');
   const crate=nativeCrate(gltf),box=new THREE.Box3().setFromObject(crate),size=box.getSize(new THREE.Vector3());
   assert.ok(size.x>.2&&size.y>.1&&size.z>.2,'Dropped crate must preserve full native geometry');
   assert.ok(Math.abs(box.min.y)<1e-5,'Dropped crate rests on the terrain');

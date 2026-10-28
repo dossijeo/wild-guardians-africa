@@ -16,3 +16,13 @@ test('saved recovery resumes deterministically with heading and remaining time',
  const a=worker();advanceWorkerRecovery(a,1.8,nav);const b=JSON.parse(JSON.stringify(a));advanceWorkerRecovery(a,3,nav);advanceWorkerRecovery(b,3,nav);assert.deepEqual(a,b);
  assert.ok(Math.abs(a.x-10-WORKER_RECOVERY.youngMale.finalOffset[2])<1e-10);
 });
+
+test('recovery exit blends without delaying navigation and survives save',()=>{
+ const w=worker();advanceWorkerRecovery(w,5,nav);
+ assert.equal(w.recoveryExitRemaining,.24);
+ const saved=JSON.parse(JSON.stringify(w));
+ assert.equal(advanceWorkerRecovery(w,.06,nav),false);
+ advanceWorkerRecovery(saved,.06,nav);assert.deepEqual(saved,w);
+ assert.ok(Math.abs(w.recoveryExitRemaining-.18)<1e-10);
+ advanceWorkerRecovery(w,1,nav);assert.equal(w.recoveryExitRemaining,0);
+});

@@ -1,4 +1,4 @@
-import {WORKER_RECOVERY} from '../simulation/worker-recovery.js';
+import {WORKER_RECOVERY,RECOVERY_EXIT_SECONDS} from '../simulation/worker-recovery.js';
 import {sampleFixedPose} from './fixed-pose.js';
 import {syncWorkerToolVisibility} from './worker-tool-visibility.js';
 import {PROFILES} from '../simulation/workforce.js';
@@ -15,7 +15,20 @@ export function applyWorkerPose(data,worker,task,elapsed,library,cullHiddenTools
   if(!clip)throw new Error(`Falta la acción original ${pose.name} de ${worker.profile}`);
   const restart=data.name!==pose.name;
   if(restart){data.action?.stop();data.action=data.mixer.clipAction(clip);data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();data.action.paused=true;data.action.clampWhenFinished=true;data.name=pose.name;}
-  sampleFixedPose(data,pose.time,restart);
+  // GetUp ends at Idle(0). Blend from that exact pose while navigation resumes.
+  const exit=Math.min(1,Math.max(0,(worker.recoveryExitRemaining??0)/RECOVERY_EXIT_SECONDS));
+  const blending=exit>0&&!worker.recovery&&!worker.fallRemaining&&pose.name!=='Idle';
+  if(blending){
+    const idle=data.clips.find(c=>c.name==='Idle');
+    data.recoveryBlendAction??=data.mixer.clipAction(idle);
+    data.recoveryBlendAction.play();data.recoveryBlendAction.paused=true;data.recoveryBlendAction.time=0;
+    const weight=exit*exit*(3-2*exit);
+    data.recoveryBlendAction.setEffectiveWeight(weight);data.action.setEffectiveWeight(1-weight);
+  }else{
+    if(data.recoveryBlendAction&&data.recoveryBlendAction!==data.action)data.recoveryBlendAction.stop();
+    data.action.setEffectiveWeight(1);
+  }
+  sampleFixedPose(data,pose.time,restart||blending);
   if(worker.recovery){
     const r=worker.recovery,spec=WORKER_RECOVERY[worker.profile],t=Math.min(1,r.elapsed/r.duration),mix=t*t*(3-2*t);
     const carrier=data.model.getObjectByName('Quata_Character');

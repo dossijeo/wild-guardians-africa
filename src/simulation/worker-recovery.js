@@ -1,10 +1,15 @@
 import bank from '../../content/manifests/worker-recovery.json' with {type:'json'};
 export const WORKER_RECOVERY=bank.profiles;
+export const RECOVERY_EXIT_SECONDS=.24;
 // Advance a downed worker before navigation or work can move it. Plain state
 // fields survive saves; no render clock, callbacks or physics objects are stored.
 export function advanceWorkerRecovery(worker,dt,nav){
  if(!(dt>=0&&Number.isFinite(dt)))throw Error('Invalid worker recovery step');
+ if(worker.recoveryExitRemaining>0){
+  worker.recoveryExitRemaining=Math.max(0,worker.recoveryExitRemaining-dt);
+ }
  if(worker.fallRemaining>0){
+  delete worker.recoveryExitRemaining;
   const spent=Math.min(dt,worker.fallRemaining);worker.fallRemaining-=spent;dt-=spent;
   worker.downHeading??=worker.heading??0;
   if(worker.fallRemaining>0)return true;
@@ -24,7 +29,7 @@ export function advanceWorkerRecovery(worker,dt,nav){
  recovery.elapsed=Math.min(recovery.duration,recovery.elapsed+dt);
  if(recovery.elapsed>=recovery.duration){
   worker.x+=recovery.dx;worker.z+=recovery.dz;worker.heading=recovery.heading;
-  worker.path=null;worker.pathVersion=-1;delete worker.recovery;delete worker.downHeading;
+  worker.path=null;worker.pathVersion=-1;worker.recoveryExitRemaining=RECOVERY_EXIT_SECONDS;delete worker.recovery;delete worker.downHeading;
  }
  return true;
 }
