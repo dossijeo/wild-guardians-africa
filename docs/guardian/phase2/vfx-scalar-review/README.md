@@ -95,3 +95,9 @@ A new catalog-hyena regression in baked-solid-contacts.test.js verifies that pee
 The largest sampled baked hip step is 0.586 m over 0.133 s, decomposed into 0.246 m horizontal and -0.531 m vertical during recovery. It is not the earlier 2.86 m horizontal reversal, but the vertical transition still needs close visual review. Do not treat the containment result as artistic acceptance.
 
 Reproduce summaries with `python tools/guardian/analyze_peer_trial.py INPUT --output OUTPUT`. The script preserves limitations and separates horizontal/vertical motion; diagnostics remain unsuitable for performance comparison.
+
+### Close baked-rhino entry capture
+
+The QA-only bakedClose=1 option frames the first overflow actor once without changing the game camera. `rhino-close.webm/status.json` and the 17–21 s detail sheet document the trial. Other rhinos occlude the subject, so this close shot does not certify the transition. New optional fields record recoveryAge, lift and entryClearance.
+
+During the final roll, baked ground lift rises from 0.410 to 1.237 m while the retained horizontal separation reaches approximately (-2.589,-0.858) m. Entry clearance is 0.01 m. Over recovery ages 0–0.65 s the hip moves from y=14.390 to y=13.340. This narrows investigation to final baked pose/ground-support correction and its entry blend; it does not yet identify a proven root cause or justify simply slowing the clip. The issue remains open.
