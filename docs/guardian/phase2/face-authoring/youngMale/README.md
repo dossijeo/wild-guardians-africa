@@ -29,3 +29,9 @@ Reduced triangle clearance to 0.3 mm for Kofi only and recessed the upper/lower 
 ## Boundary skin color v10
 
 Kofi now optionally uses vertex colors interpolated from the unlit atlas immediately above/below each reviewed contour, with a 5x5 median to suppress isolated texels. V9 incorrectly treated PNG pixel values as linear and looked pale; rejected. V10 explicitly converts sRGB to linear before writing COLOR_0. Reimported exported GLB renders inspected: closed front and half closure front/side. Color integration is visibly improved over the forehead patch; half closure retains a clean visible eye without the earlier inner-corner sliver. A thin upper contour and some surface faceting remain visible at close range. Next inspect neutral and native animation in Three.js before proceeding to the mouth. No worker asset installed; no claim of complete visual acceptance.
+
+## Three.js v10 and mouth close-up calibration
+
+Loaded v10 through the actual actor-expression controller: eight eyelid bindings, two draw calls, no reported errors. Inspected neutral front, closed eyes with Running at 0.4 s, and half closure side at 0.6 s (clip duration 0.7083 s). Eyelid coverage/attachment holds in these sampled poses; a thin upper boundary remains visible. Screenshots/status in runtime-v10. This is not a continuous all-clip validation or mouth functionality.
+
+Rendered the preserved original with a 0.38-unit mouth frame and inspected front, quarter and side. New mouth-closeup-landmarks.json raycasts eight points on the actual dark lip seam and commissure; center z=1.22258, commissures about z=1.243-1.244. Side/front mid-lip picks differ by about 4 mm in height and must be reconciled before incision; do not average blindly or extend the cut into the chin. Original patchy cheek/nose texture is visible in these untouched source renders and is not caused by facial edits. No mouth cut yet.
