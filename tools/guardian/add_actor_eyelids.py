@@ -61,7 +61,7 @@ scene.render.resolution_x=1024;scene.render.resolution_y=1024;scene.render.resol
 scene.view_settings.view_transform='Standard';scene.render.film_transparent=True
 bpy.ops.object.camera_add(location=camera);cam=bpy.context.object
 cam.rotation_euler=rotation.to_euler();cam.data.type='ORTHO';cam.data.ortho_scale=extent;scene.camera=cam
-atlas_path=str(Path(a.output).with_suffix('.atlas.png'))
+atlas_path=str(Path(a.output).with_suffix('.atlas.png').resolve())
 scene.render.filepath=atlas_path;bpy.ops.render.render(write_still=True)
 atlas=bpy.data.images.load(atlas_path);atlas.pack()
 for slot,source in enumerate(originals):mesh.data.materials[slot]=source
@@ -209,6 +209,9 @@ if profile.get('closureCrease'):
             assert 1<=radius<=32,'Skin sample radius must stay local'
             px=max(radius,min(atlas.size[0]-radius-1,px));py=max(radius,min(atlas.size[1]-radius-1,py))
             rgb=np.median(atlas_pixels[py-radius:py+radius+1,px-radius:px+radius+1,:3],axis=(0,1))
+            if profile.get('neutralSkinFallback') and max(rgb)-min(rgb)<.08 and max(rgb)>.25:
+                sx,sy=profile['neutralSkinFallback'];ax=int((sx+.5)/768*atlas.size[0]);ay=int((1-(sy+.5)/768)*atlas.size[1])
+                rgb=np.median(atlas_pixels[ay-radius:ay+radius+1,ax-radius:ax+radius+1,:3],axis=(0,1))
             return np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
     for poly in data.polygons:
         for loop in poly.loop_indices:
@@ -216,7 +219,10 @@ if profile.get('closureCrease'):
             u=(index%columns)/(columns-1)
             line=.78+.08*math.cos((u-.5)*math.pi*2)
             shade=1-.52*math.exp(-((t-line)/.036)**2)*math.sin(math.pi*u)**.4
-            skin=skin_color(x,top-profile.get('skinSampleTopOffset',2))*(1-t)+skin_color(x,bottom+profile.get('skinSampleBottomOffset',2))*t if profile.get('boundarySkinColor') else np.ones(3)
+            color_x=x
+            if side in profile.get('skinColorXBounds',{}):
+                lo,hi=profile['skinColorXBounds'][side];color_x=max(lo,min(hi,x))
+            skin=skin_color(color_x,top-profile.get('skinSampleTopOffset',2))*(1-t)+skin_color(color_x,bottom+profile.get('skinSampleBottomOffset',2))*t if profile.get('boundarySkinColor') else np.ones(3)
             colors.data[loop].color=(*[float(c)*shade for c in skin],1)
     tint=material.node_tree.nodes.new('ShaderNodeVertexColor');tint.layer_name='ClosureFold'
     fold=material.node_tree.nodes.new('ShaderNodeMixRGB');fold.blend_type='MULTIPLY';fold.inputs[0].default_value=1
@@ -373,6 +379,15 @@ if profile.get('rimDepth'):
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True);rim.select_set(True);bpy.context.view_layer.objects.active=obj
     bpy.ops.object.join()
+if profile.get('neutralSkinFallback'):
+    sx,sy=profile['neutralSkinFallback'];fallback=skin_color(sx,sy)
+    assert fallback[0]>fallback[1]*1.3,'Reviewed skin fallback must not sample eye white'
+    repaired=0
+    for color in obj.data.color_attributes.active_color.data:
+        rgb=list(color.color[:3])
+        if max(rgb)-min(rgb)<.05 and max(rgb)>.1:
+            color.color=(*[float(c) for c in fallback],color.color[3]);repaired+=1
+    print('LID_NEUTRAL_REPAIR',repaired,list(fallback))
 bpy.ops.wm.save_as_mainfile(filepath=str(Path(a.output).resolve()),compress=True)
 if a.export_glb:
     bpy.ops.export_scene.gltf(filepath=str(Path(a.output).with_suffix('.glb').resolve()),
