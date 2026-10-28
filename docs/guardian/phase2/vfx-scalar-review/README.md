@@ -139,3 +139,7 @@ Contact index lists are now cached by geometry and skeleton ancestry, with inval
 ### Runtime wall recording after prewarm
 
 buffalo-cache-wall.webm/status.json records the actual day WorldScene wall trial: completedSimulation true, finalDownCount 0, errors empty. Sampled one-second frames reviewed in buffalo-cache-wall.png show launch, downed pose and return to standing. The animal is too dark/small for fine joint/contact acceptance. This single-actor run uses physical ragdoll, not baked overflow, so it is NOT validation of the full-skin baked wall correction. A closer baked-specific graphical trial remains required.
+
+### Baked-specific wall concurrency fixture
+
+Added optional bakedWall query mode to the diagnostic page: three separated animals consume the physical slots before the original wall-side animal is hit, forcing one genuine baked fallback. Camera follows its pelvis only in this QA mode; production camera unchanged. Recorded buffalo-baked-wall (initial fixed view, partly occluded) and buffalo-baked-follow (revised following view). Both report four impacts, peak 3 physical / 1 baked, completed simulation, errors empty. Reviewed sampled sheets: downed pose and recovery are visible, but dark dorsal shading and foreground clipping/other animals still prevent fine visual acceptance. These limitations must be corrected before calling the scene approved. The reports are diagnostic, not performance comparisons; one-second sheets cannot prove continuous contact separation.
