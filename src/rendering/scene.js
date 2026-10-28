@@ -1,3 +1,4 @@
+import {prepareWorkerClips} from './worker-clips.js';
 import {loadRecoveryClips} from './recovery-clips.js';
 import {applyActorExpression} from './actor-expression.js';
 import {BeastCombatPhysics} from './beast-combat-physics.js';
@@ -685,7 +686,7 @@ export class WorldScene {
           // Geometry/materials are borrowed; only this rig's skeleton and mixer
           // belong to the adoption. Native poses and skin bounds stay unchanged.
           if(type==='animal')prepareAnimalModel(model,entity.species);
-          if(!prepared){rig.clips=type==='animal'?prepareAnimalClips(gltf.animations):[...gltf.animations,this.workerRecoveries.get(entity.profile)];rig.groundSamples=type==='animal'?animalGroundSamples(model):null;}
+          if(!prepared){rig.clips=type==='animal'?prepareAnimalClips(gltf.animations):[...prepareWorkerClips(gltf.animations),this.workerRecoveries.get(entity.profile)];rig.groundSamples=type==='animal'?animalGroundSamples(model):null;}
           root.add(model);this.mixers.set(entity.id,rig);adopted=true;
           this.updateActor(entity,0,type);root.updateMatrixWorld(true);
           model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});

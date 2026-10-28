@@ -27,3 +27,9 @@ Worker recovery is now loaded by WorldScene and selected by workerPose after fal
 Not yet visually accepted in a real raid; slopes, dynamic obstacles changing during the 3.2-second recovery, native planner interactions and the final transition to running require review. The current offset plan is sampled at recovery start, so a newly placed obstacle during recovery is not yet rechecked.
 
 User-reported original Fall neck/chest distortion is an explicit remaining correction. Baseline Kofi at 3.3 s inspected; initial angle audit against bind pose: Neck 6/10/14/17/21 degrees and Head 31/17/17/34/24 degrees at 1.5/2/2.5/3/3.5 s. These values alone do not establish a cause. Inspect side chest/neck geometry and skin weights before applying arbitrary joint clamps. Any change to Fall endpoint must regenerate transition bank and rerun boundary tests.
+
+## Late fall cervical settling
+
+worker-clips.js now prepares a cached clone of Fall, preserving all other clips and original assets. After 2 s, Head/Neck/Spine/Spine1 rotations settle smoothly from the existing 2 s pose to the exact original final key. This removes the late reversal visible in the cervical chain while keeping the recovery boundary. Four tests verify unchanged source arrays, untouched initial impact/other tracks/endpoints, and monotonic angular convergence. Recovery boundary tests still pass.
+
+Close Kofi inspection at 2.5 and 3 s shows reduced late neck change. Saved before/after 3 s views are available. This is not yet full visual acceptance: inspect continuous motion, all other profiles, and residual chest/shoulder skinning volume. Original scale and translation tracks in the neck/spine remain constant; no stretch key was found. The preview now disables skinned-mesh frustum culling only in this diagnostic page so close views do not hide a deformed actor behind its stale preview bounds.
