@@ -5,15 +5,21 @@
       "id": "warthog",
       "kind": "animal",
       "source": "Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2.html#model-data",
-      "file": "public\\assets\\6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
-      "sha256": "6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275",
-      "bytes": 72742004,
-      "channels": [],
-      "missing": [
+      "file": "public\\assets\\53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89.glb",
+      "sha256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
+      "bytes": 75278672,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     },
     {
       "id": "hyena",
@@ -166,6 +172,25 @@
       "file": "content/source/actors/lion/expressive-candidate.glb",
       "sha256": "91991d0f63c688bfd52268228ed2ceb581bea115936e963f524c129186ae0b48",
       "bytes": 7347720,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
+        "mouthOpen"
+      ],
+      "missing": []
+    },
+    {
+      "id": "warthog",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/warthog/expressive-candidate.glb",
+      "sha256": "ff33abeb0006b0ddad1f3f758843e91f6145379fd5f4b90ee5d8fa8aab2e4c6d",
+      "bytes": 4698684,
       "channels": [
         "blinkL",
         "blinkL25",
