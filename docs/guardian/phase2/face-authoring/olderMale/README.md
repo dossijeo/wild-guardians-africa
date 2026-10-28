@@ -156,3 +156,12 @@ Exported isolated test-results/olderMale-cheek-frame.glb, restored the original 
 Promoted the cheek-frame revision to the portable expressive-candidate Blend/GLB after packing and reopening all images. Previous v7 input remains in Git at 92c160f4f; the trial authoring scripts require that input revision rather than recursively applying to the new output. Exact Blender signatures match all 28 meshes for vertex positions, polygon indices, skin groups/weights, UV coordinates and every shape-key position. Original twelve clips pass byte/sample parity after restoration.
 
 Ran actual WorldScene/Game.tick with the cheekFrameTrial asset override; recorded 9.719762 wall-clock seconds, 9.080205 simulation seconds. Cycle ends fleeing, no fall/recovery/exit remaining, errors empty, ten facial bindings. Inspected the contact sheet showing descent, supine/roll, rise and flight. Audio sources report played; video includes audio but no perceptual audio acceptance is claimed. This night view is too dark/distant to certify subtle animated cheek shading. Closer moving-pose daylight acceptance and production catalog installation remain pending. Source package reopening succeeds; candidate-files.json has new hashes. The old v7 receipts bind the previous files and remain historical evidence.
+
+
+### Registered cheek repair and recovery compatibility
+
+Reviewed six seconds of Run/flee portrait footage (moving-face.mp4 and contact sheet), plus daylight WorldScene close-up (world-day-face.png). Cheek/nose continuity is improved with forehead and outer-eye wrinkles visible. Local cheek/nose normal detail is attenuated; this is not a claim that every original wrinkle texel remains unchanged. Registered SHA 928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222 (18,120,144 bytes). Strict facial coverage now passes all nine profiles.
+
+Registration exposed an obsolete root-object recovery binding. Regenerated only olderMale transition using build_worker_recovery_transition.mjs olderMale and repacked the shared recovery resource. All four worker recovery boundary tests pass, including exact Fall and translated Idle pose joins. Earlier night footage predates this regeneration; it is not evidence of this exact recovery resource.
+
+Production-catalog WorldScene load (no candidate override) succeeds with ten facial bindings and no errors: installed-status.json and installed-day-face.png. Regenerated watering emitter samples against the new catalog hash. All 24 focused native-action, watering, tool-visibility and recovery-boundary tests pass.

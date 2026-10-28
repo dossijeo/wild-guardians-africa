@@ -122,9 +122,9 @@
   },
   "olderMale": {
     "profile": "olderMale",
-    "url": "/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
-    "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
-    "bytes": 20235172,
+    "url": "/assets/928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222.glb",
+    "sha256": "928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222",
+    "bytes": 18120144,
     "source": "Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5.html",
     "sourceSha256": "916b259f311cd35b48419c8669d6d4083f06288d43e768783e2d755726633815",
     "exporterScripts": [
@@ -229,7 +229,17 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+        "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+        "bytes": 20235172
+      },
+      "pipeline": "docs/guardian/phase2/face-authoring/olderMale/README.md",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   },
   "olderFemale": {
     "profile": "olderFemale",

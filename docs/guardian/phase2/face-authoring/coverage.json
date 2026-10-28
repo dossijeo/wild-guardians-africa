@@ -105,15 +105,21 @@
       "id": "olderMale",
       "kind": "worker",
       "source": "Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5.html",
-      "file": "public\\assets\\e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
-      "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
-      "bytes": 20235172,
-      "channels": [],
-      "missing": [
+      "file": "public\\assets\\928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222.glb",
+      "sha256": "928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222",
+      "bytes": 18120144,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     },
     {
       "id": "olderFemale",
@@ -274,10 +280,10 @@
     },
     {
       "id": "olderMale",
-      "matchesActiveBytes": false,
+      "matchesActiveBytes": true,
       "file": "content/source/actors/olderMale/expressive-candidate.glb",
-      "sha256": "dbf1731f7e47c5f902ca28e65937626c60de41d12972a05d50b44f81c4557c56",
-      "bytes": 20535748,
+      "sha256": "928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222",
+      "bytes": 18120144,
       "channels": [
         "blinkL",
         "blinkL25",
@@ -350,5 +356,5 @@
       ]
     }
   ],
-  "complete": false
+  "complete": true
 }

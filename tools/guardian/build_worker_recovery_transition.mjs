@@ -7,6 +7,7 @@ import {BeastRecovery} from '../../src/rendering/beast-recovery.js';
 const records=JSON.parse(fs.readFileSync('public/content/worker-actions.json'));
 const blendSeconds=.4,riseSeconds=2.8,duration=blendSeconds+riseSeconds;
 for(const [profile,record] of Object.entries(records)){
+ if(process.argv[2] && profile!==process.argv[2])continue;
  const gltf=await new GLTFLoader().parseAsync(rigForSampling(fs.readFileSync('public'+record.url)),'');
  const root=gltf.scene,hip=root.getObjectByName('mixamorigHips'),carrier=root.getObjectByName('Quata_Character');
  if(!hip||!carrier)throw Error('Missing worker root '+profile);
