@@ -35,3 +35,9 @@ The run completes 12.121 simulated seconds through falling, rolling, recovering 
 `four-impact-framed.mp4`, its contact sheet and separate status JSON repeat the four-hyena trial after the camera fix. All four actors now remain within the strategic view through falling, rolling, recovery and resumed activity. The trace independently records those phases for each actor, peak 3 physical + 1 baked, final down count/bodies 0, maxVisibleGuardians 1, hidden frames 0 and errors [].
 
 Reviewed 1 Hz frames show visibly distinct falls and staggered recovery; neighboring silhouettes overlap during part of the get-up sequence. This view establishes that the lifecycle remains visible but does not measure inter-animal mesh penetration during authored recovery. That contact quality remains open. The recording is silent, uses QA cooldown resets and diagnostic sampling, and is not a comparative performance run.
+
+## Pair-contact diagnostic
+
+The four-impact fixture now samples Rapier contactCollider distances between different physical actors when at least one is recovering. This is QA-only pairwise work at approximately 10 Hz. `peer-contact-status.json` contains 95 pair samples, all with no negative contact distance, zero runtime errors and a completed cycle. Thus this run does not demonstrate physical-collider penetration between the three Rapier actors.
+
+The fourth baked actor has no Rapier colliders and is excluded. Skin can also extend beyond simplified colliders. This result neither approves skin-to-skin contact nor resolves the baked/physical interaction. The measured camera overlap alone does not justify adding root displacement. Production physics has not been altered based on this diagnostic.
