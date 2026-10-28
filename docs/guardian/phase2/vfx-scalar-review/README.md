@@ -159,3 +159,9 @@ buffalo-albedo-isolation.png and buffalo-sheen-trial.png are actual browser scre
 ### Fixed-pose dorsal comparison: sheen rejected for adoption
 
 Added QA-only fixed dorsal camera and direct current/legacy/sheen plus day/night controls; this avoids comparing moving poses or changing the camera between shader variants. Reviewed buffalo-fixed-day-current, buffalo-fixed-day-sheen and buffalo-fixed-night-sheen at close range. Proposed sheen exposes broad triangular facets across the mane; it is REJECTED for default adoption. It remains an explicit diagnostic mode only. Current/default shader is unchanged. Saved night-current baseline as well. Investigate the surface-normal field separately from dark albedo before altering materials; do not call this a successful fur fix. Production camera/controls are unchanged.
+
+### Surface normal isolation succeeds on the diagnostic copy
+
+Added reversible normal-map scale and cloned-geometry smooth-normal study controls. With map disabled, dorsal facets remain; area-weighted normals shared across coincident positions remove the broad facets. Re-enabling the original normal map retains the smoother appearance. Reviewed buffalo-smooth-no-map.png and buffalo-smooth-original-map.png in actual browser; body silhouette/texture remain. This identifies a viable direction, not a production asset acceptance: whole-body smoothing is a diagnostic and sharp authored details/face/morph shading still need review before localized source authoring.
+
+The regression verifies index/position/UV/skin and all morph attribute arrays unchanged, only normal attribute changed, and exact original geometry restored. Runtime catalog/source Blend remain unchanged. The sheen remains opt-in. Next transfer a suitably bounded normal correction to editable source and review neutral/animated/front/side views before registration.

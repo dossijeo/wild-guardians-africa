@@ -1,3 +1,4 @@
+import {studySmoothBodyNormals} from './beast-normal-study.js';
 import {sampleRecoveryPeerContacts,sampleRecoverySkinBounds,sampleRecoveryPositions} from './guardian-peer-contacts.js';
 import {isTailContactVertex} from '../../src/rendering/beast-ground-contact.js';
 import {updateWorkerEncounters} from '../../src/simulation/encounters.js';
@@ -128,7 +129,9 @@ try{
  const clawView=document.createElement('button');clawView.textContent='Perfil de zarpazo';document.querySelector('header').insertBefore(clawView,$('status'));clawView.onclick=()=>{const a=state.raid?.animals[0],head=a&&world.mixers.get(a.id)?.model.getObjectByName('Head');if(!head)return;head.getWorldPosition(world.controls.target);world.controls.target.y+=.6;world.camera.position.set(world.controls.target.x+7,world.controls.target.y+1.5,world.controls.target.z);world.controls.update();};
  for(const [label,action]of [
   ['Lomo fijo',()=>{const a=state.raid?.animals[0],rig=a&&world.mixers.get(a.id),spine=rig?.model.getObjectByName('Spine');if(!spine)return;paused=true;world.cinematic=true;world.camera.zoom=1;world.camera.updateProjectionMatrix();spine.getWorldPosition(world.controls.target);const heading=(a.heading??0)+Math.PI;world.camera.position.set(world.controls.target.x+Math.sin(heading)*3,world.controls.target.y+.6,world.controls.target.z+Math.cos(heading)*3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();}],
-  ['Pelaje actual',()=>world.toon.beastUniforms.uBeastStyle.value=1],
+  ['Relieve desactivado',()=>{const a=state.raid?.animals[0];world.mixers.get(a?.id)?.model.traverse(o=>{if(o.isMesh)for(const m of Array.isArray(o.material)?o.material:[o.material])if(m.normalScale){m.userData.qaNormalScale??=m.normalScale.clone();m.normalScale.set(0,0);}});}],
+  ['Relieve original',()=>{const a=state.raid?.animals[0];world.mixers.get(a?.id)?.model.traverse(o=>{if(o.isMesh)for(const m of Array.isArray(o.material)?o.material:[o.material])if(m.userData.qaNormalScale)m.normalScale.copy(m.userData.qaNormalScale);});}],  ['Normales suaves (ensayo)',()=>{const a=state.raid?.animals[0],model=world.mixers.get(a?.id)?.model;if(model)studySmoothBodyNormals(model);}],
+  ['Normales originales',()=>{const a=state.raid?.animals[0],model=world.mixers.get(a?.id)?.model;if(model)studySmoothBodyNormals(model,true);}],  ['Pelaje actual',()=>world.toon.beastUniforms.uBeastStyle.value=1],
   ['Pelaje anterior',()=>world.toon.beastUniforms.uBeastStyle.value=0],
   ['Pelaje reflejo tenue',()=>world.toon.beastUniforms.uBeastStyle.value=5],
   ['Luz de estudio día',()=>state.time=150],['Luz de estudio noche',()=>state.time=400]
