@@ -12,3 +12,23 @@ test('continuous wind and float loops have matching endpoints and bounded speed 
   for(const c of a.channels){const s=a.samplers[c.sampler],t=values(s.input).flat(),v=values(s.output),last=v.length-1;assert.ok(Math.abs(t[last]-12)<.001);for(let k=0;k<v[0].length;k++){assert.ok(Math.abs(v[0][k]-v[last][k])<1e-5,a.name+' loop position');const start=(v[1][k]-v[0][k])/(t[1]-t[0]),end=(v[last][k]-v[last-1][k])/(t[last]-t[last-1]);assert.ok(Math.abs(start-end)<.03,a.name+' loop velocity');}}
  }
 });
+
+
+test('exported wind preserves broad hems, pinned shoulders and independent ornaments',()=>{
+ const binaryStart=28+bytes.readUInt32LE(12);
+ function rotations(index){const a=gltf.accessors[index],v=gltf.bufferViews[a.bufferView];assert.equal(a.type,'VEC4');assert.equal(a.componentType,5126);const start=binaryStart+(v.byteOffset??0)+(a.byteOffset??0);return Array.from({length:a.count},(_,j)=>Array.from({length:4},(_,k)=>bytes.readFloatLE(start+j*(v.byteStride??16)+k*4))).filter((_,i)=>i%6===0);}
+ function sweep(q){let maximum=0;for(const a of q)for(const b of q){const dot=Math.abs(a.reduce((sum,x,i)=>sum+x*b[i],0))/(Math.hypot(...a)*Math.hypot(...b));maximum=Math.max(maximum,2*Math.acos(Math.min(1,dot))*180/Math.PI);}return maximum;}
+ const required=gltf.nodes.filter(n=>/^(Mantle|Feather|Wood)\./.test(n.name??'')).map(n=>n.name);
+ const spans=new Map();
+ for(const name of ['Mantle_Breeze','Mantle_Spell']){
+  const clip=gltf.animations.find(a=>a.name===name);assert.ok(clip,name+' missing');const channels=new Map();
+  for(const c of clip.channels)if(c.target.path==='rotation')channels.set(gltf.nodes[c.target.node].name,sweep(rotations(clip.samplers[c.sampler].output)));
+  for(const bone of required){const degrees=channels.get(bone);assert.ok(Number.isFinite(degrees),name+' lacks '+bone);
+   if(/^Mantle.*\.0$/.test(bone))assert.ok(degrees<10,name+' shoulder no longer pinned');
+   else if(/^Mantle.*\.2$/.test(bone))assert.ok(degrees>55&&degrees<125,name+' hem sweep '+degrees);
+   else if(/^(Feather|Wood)/.test(bone))assert.ok(degrees>25&&degrees<100,name+' ornament sweep '+degrees);
+  }
+  spans.set(name,channels);
+ }
+ for(const bone of required.filter(n=>/^(Feather|Wood)|^Mantle.*\.2$/.test(n)))assert.ok(spans.get('Mantle_Spell').get(bone)>spans.get('Mantle_Breeze').get(bone)*1.15,'spell wind lost emphasis on '+bone);
+});

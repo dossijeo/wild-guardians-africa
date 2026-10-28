@@ -24,3 +24,10 @@ La comprobación geométrica muestrea reposo y Attack en Blender. En reposo, el 
 GLB: 2.765.144 bytes, sin aumento frente al modelo agrupado anterior. No se atribuye una mejora de rendimiento a esta edición. La fase 2 y la aceptación visual definitiva siguen abiertas.
 
 También se ejecutó `WorldScene` con seis lanzamientos Grow/Multiply, cambios de cámara/zoom y órdenes próximas. `world-day.json` registra cero errores y máximo de un Guardián; `world-day.mp4` y su hoja de contacto conservan la evidencia. La distancia estratégica y los anillos luminosos limitan la lectura fina de los pliegues; no sustituyen la revisión cercana. Se aprecia ocultación parcial por vegetación en una aparición y debe incluirse en la siguiente revisión de posicionamiento.
+
+
+## Control de amplitud del GLB exportado
+
+La comprobación de regresión mide la distancia angular máxima entre cuaterniones locales del clip, muestreando uno de cada seis fotogramas. En el archivo actual, los extremos del manto recorren 75–77 grados en Breeze y 101–104 en Spell; las plumas 49–56 y 68–75; la madera 43 y 58–59. Los anclajes superiores permanecen por debajo de 4 grados.
+
+La prueba comprueba que cada hueso secundario conserva un canal de rotación, que el bajo mantiene más de 55 grados de recorrido, que los anclajes permanecen por debajo de 10 y que Spell conserva mayor amplitud que Breeze. Son márgenes de regresión de esta dirección artística, no medidas de calidad física. Once pruebas de modelo e invocaciones pasan. No se modificaron modelos, animaciones ni parámetros durante esta revisión. El recorrido del clip completo tampoco garantiza que cada invocación de 2,2 segundos muestre todos sus extremos; sigue siendo necesaria la inspección visual en la cámara de juego.
