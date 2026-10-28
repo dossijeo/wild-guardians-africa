@@ -186,6 +186,20 @@ tone=material.node_tree.nodes.new('ShaderNodeMixRGB');tone.blend_type='MULTIPLY'
 tone.inputs[0].default_value=1;tone.inputs[2].default_value=(*([profile.get('tone',1)]*3),1)
 material.node_tree.links.new(color.outputs['Color'],tone.inputs[1])
 material.node_tree.links.new(tone.outputs[0],bs.inputs['Base Color'])
+if profile.get('closureCrease'):
+    # A shallow skin fold with a narrow shaded closure line, opt-in for workers.
+    colors=data.color_attributes.new(name='ClosureFold',type='FLOAT_COLOR',domain='CORNER')
+    for poly in data.polygons:
+        for loop in poly.loop_indices:
+            index=data.loops[loop].vertex_index;side,x,top,bottom,t=metadata[index]
+            u=(index%columns)/(columns-1)
+            line=.78+.08*math.cos((u-.5)*math.pi*2)
+            shade=1-.52*math.exp(-((t-line)/.036)**2)*math.sin(math.pi*u)**.4
+            colors.data[loop].color=(shade,shade,shade,1)
+    tint=material.node_tree.nodes.new('ShaderNodeVertexColor');tint.layer_name='ClosureFold'
+    fold=material.node_tree.nodes.new('ShaderNodeMixRGB');fold.blend_type='MULTIPLY';fold.inputs[0].default_value=1
+    material.node_tree.links.new(tone.outputs[0],fold.inputs[1]);material.node_tree.links.new(tint.outputs['Color'],fold.inputs[2])
+    material.node_tree.links.new(fold.outputs[0],bs.inputs['Base Color'])
 data.materials.append(material)
 layer=data.uv_layers.new(name='UVMap')
 for face in data.polygons:
@@ -249,6 +263,10 @@ for side in contours:
             if which==side:
                 column=(i%columns)/(columns-1)
                 point=spherical_lid(side,column,t,amount) if side in eye_spheres else envelope(side,x,top+(bottom-top)*t*amount)
+                if profile.get('closureCrease'):
+                    line=.78+.08*math.cos((column-.5)*math.pi*2)
+                    bulge=.003*math.sin(math.pi*column)*math.sin(math.pi*t)*(1-.8*math.exp(-((t-line)/.055)**2))
+                    point-=direction*bulge*amount
                 key.data[i].co=inv@point
         # Vertex clearance alone misses narrow eyeball facets between grid
         # vertices. Check triangle interiors before export and move only their
