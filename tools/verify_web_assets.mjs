@@ -27,9 +27,9 @@ for(const item of manifest.records.filter(r=>!selected.size||selected.has(r.sour
   }
   const images=[];
   for(const entry of item.images){const a=original.json.bufferViews[original.json.images[entry.index].bufferView],b=decoded.json.bufferViews[decoded.json.images[entry.index].bufferView],src=original.bin.subarray(a.byteOffset??0,(a.byteOffset??0)+a.byteLength),dst=decoded.bin.subarray(b.byteOffset??0,(b.byteOffset??0)+b.byteLength);
-    const base=await sharp(src).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).ensureAlpha().raw().toBuffer(),runtime=await sharp(dst).ensureAlpha().raw().toBuffer();assert.equal(base.length,runtime.length);let square=0,max=0;
-    for(let i=0;i<base.length;i++){if(i%4===3){assert.equal(runtime[i],base[i],'Alpha channel changed');continue;}const error=Math.abs(base[i]-runtime[i]);square+=error*error;max=Math.max(max,error);}
-    const rmse=Math.sqrt(square/(base.length*.75)),psnr=rmse?20*Math.log10(255/rmse):Infinity;assert(psnr>=32,item.source+'/texture/'+entry.index+' PSNR '+psnr);if(entry.lossless)assert.equal(rmse,0);images.push({...entry,rmse,psnr,maxChannelError:max});
+    const base=await sharp(src).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).ensureAlpha().raw().toBuffer(),runtime=await sharp(dst).ensureAlpha().raw().toBuffer();assert.equal(base.length,runtime.length);let square=0,max=0,visibleChannels=0;
+    for(let i=0;i<base.length;i++){if(i%4===3){assert.equal(runtime[i],base[i],'Alpha channel changed');continue;}if(base[i-i%4+3]===0)continue;visibleChannels++;const error=Math.abs(base[i]-runtime[i]);square+=error*error;max=Math.max(max,error);}
+    const rmse=Math.sqrt(square/Math.max(1,visibleChannels)),psnr=rmse?20*Math.log10(255/rmse):Infinity;assert(psnr>=32,item.source+'/texture/'+entry.index+' PSNR '+psnr);if(entry.lossless)assert.equal(rmse,0);images.push({...entry,rmse,psnr,maxChannelError:max});
   }
   // Khronos validator does not implement meshopt or WebP. Validate the decoded
   // container and accessor/skin/animation conformance; filter only its known

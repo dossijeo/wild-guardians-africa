@@ -15,6 +15,7 @@ const selected=new Set(candidate?[]:process.argv.slice(2));
 if([...selected].some(file=>!/^([a-f0-9]{64})\.glb$/.test(file)))throw Error('Pass only source GLB filenames for incremental compression');
 const records=candidate?[]:selected.size?JSON.parse(await readFile(new URL('content/manifests/web-assets.json',root),'utf8')).records.filter(r=>!selected.has(r.source.split('/').at(-1))):[];
 const approved=JSON.parse(await readFile(new URL('content/manifests/embedded-color-recipes.json',root),'utf8')),used=new Set();
+const losslessImages=new Set(JSON.parse(await readFile(new URL('content/manifests/lossless-embedded-images.json',root),'utf8')).images.map(image=>image.sha256));
 const candidateSource=candidate?await readFile(resolve(process.argv[3])):null;
 const files=candidate?[hash(candidateSource)+'.glb']:(await readdir(new URL('public/assets/',root))).filter(f=>f.endsWith('.glb')&&(!selected.size||selected.has(f))).sort();
 if(selected.size&&files.length!==selected.size)throw Error('Selected source GLB missing');
@@ -24,12 +25,12 @@ for(const file of files){
   for(const [i,image] of (json.images??[]).entries()){
     if(image.bufferView===undefined)throw Error('External image in '+file);
     const v=views[image.bufferView],source=bin.subarray(v.byteOffset??0,(v.byteOffset??0)+v.byteLength),info=await sharp(source).metadata();
-    const textureIds=new Set((json.textures??[]).flatMap((t,id)=>t.source===i?[id]:[])),color=(json.materials??[]).some(m=>textureIds.has(m.pbrMetallicRoughness?.baseColorTexture?.index)||textureIds.has(m.emissiveTexture?.index)),normal=(json.materials??[]).some(m=>textureIds.has(m.normalTexture?.index)),quality=color?90:95;
+    const textureIds=new Set((json.textures??[]).flatMap((t,id)=>t.source===i?[id]:[])),color=(json.materials??[]).some(m=>textureIds.has(m.pbrMetallicRoughness?.baseColorTexture?.index)||textureIds.has(m.emissiveTexture?.index)),normal=(json.materials??[]).some(m=>textureIds.has(m.normalTexture?.index)),quality=color?90:95,lossless=normal||losslessImages.has(hash(source));
     // High-quality WebP with lossless alpha; higher quality for normal/ORM maps.
     // A 2048 limit bounds web texture allocations; no upscaling.
-    const output=await sharp(source).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).webp({quality,lossless:normal,alphaQuality:100,effort:6}).toBuffer(),after=await sharp(output).metadata();
+    const output=await sharp(source).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).webp({quality,lossless,alphaQuality:100,effort:6}).toBuffer(),after=await sharp(output).metadata();
     const offset=append(output);v.buffer=0;v.byteOffset=offset;v.byteLength=output.length;image.mimeType='image/webp';
-    images.push({index:i,beforeBytes:source.length,afterBytes:output.length,before:[info.width,info.height],after:[after.width,after.height],alpha:info.hasAlpha,quality,lossless:normal,role:normal?'normal':color?'color':'data',alphaQuality:100});
+    images.push({index:i,beforeBytes:source.length,afterBytes:output.length,before:[info.width,info.height],after:[after.width,after.height],alpha:info.hasAlpha,quality,lossless,role:normal?'normal':color?'color':'data',alphaQuality:100});
   }
   const imageViews=new Set((json.images??[]).map(im=>im.bufferView));let compressedViews=0;
   for(const [i,v] of views.entries()){
