@@ -135,3 +135,7 @@ A packed attribute-array experiment was also measured (packed-skin-cpu.json) and
 ### Prewarm and reuse contact indices
 
 Contact index lists are now cached by geometry and skeleton ancestry, with invalidation for replaced/updated position, skin, morph and tail-mask attributes. BeastCombatPhysics.create prepares the lists alongside existing recovery warmup before input-triggered hits. Controllers retain their own mutable matrices. Tests cover reuse and invalidation; six bounds/cache tests pass and the 22 focused combat lifecycle tests pass. This removes repeated string/dedup work for shared immutable geometry; actual scene cloning/cache reuse and cold loading cost still require runtime measurement.
+
+### Runtime wall recording after prewarm
+
+buffalo-cache-wall.webm/status.json records the actual day WorldScene wall trial: completedSimulation true, finalDownCount 0, errors empty. Sampled one-second frames reviewed in buffalo-cache-wall.png show launch, downed pose and return to standing. The animal is too dark/small for fine joint/contact acceptance. This single-actor run uses physical ragdoll, not baked overflow, so it is NOT validation of the full-skin baked wall correction. A closer baked-specific graphical trial remains required.
