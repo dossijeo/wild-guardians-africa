@@ -137,3 +137,8 @@ Two further isolated trials on the expressive candidate were rejected: subtracti
 
 
 Triangle continuity experiment: solved 986 shared-edge normal constraints over 679 lower-face triangles, then applied masked world-normal offsets to 44,274 normal texels. Frontal render still has cuts beside the moustache; rejected, no asset replacement. Script and evidence in surface-isolation. The method is not an accepted wrinkle-preserving repair.
+
+
+## UV coverage and guard-band diagnostic
+
+Rendered the correction mask as red/green albedo. The selected cheek/nose regions align with the face, but thin uncovered lines appear on UV boundaries. Tested four-texel padding (11,932 texels) into unoccupied UV space only, rasterizing all mesh UV triangles to avoid overwriting other occupied islands. Neutralizing the local normal map with this padding reduces fine boundary lines, while larger angular cheek folds remain. Repeating the prior frequency correction with padding still leaves strong cheek cuts. Both remain rejected: the neutralized variant removes too much local relief; the frequency variant does not fix the main artifact. Whole-mesh render-only weld/recomputed normals were enabled for both comparisons. No candidate, source or catalog replacement. Scripts and front renders under surface-isolation; these are diagnostic experiments, not accepted repairs.
