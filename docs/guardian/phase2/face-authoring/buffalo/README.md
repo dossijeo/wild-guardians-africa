@@ -39,3 +39,11 @@ V3 removed the curled fold in the inspected side view, but missed a small interi
 The front and side full-opening renders in `jaw-v1` were visually inspected. The opening follows the lower muzzle boundary and the necklace shows no obvious drag in these static views. However, the side view exposes a bright inner edge, and no palate, floor, tongue or recessed oral walls have yet been authored. The dark front opening is not evidence of a completed interior. Do not install this candidate or treat the renders as a passed mouth validation.
 
 `jaw-v1-animation-audit.json` verifies 61 bones across six clips and 246 poses: zero positional difference and maximum angular difference 7.30e-8 radians. This verifies the original animation trajectories only, not deformed-surface clearance. Next: model the actual recessed interior, correct the exposed rim, inspect neutral/intermediate/full opening from both profiles, and test the inherited skinning in running and attack poses.
+
+## Oral cavity v1 — not installed
+
+`add_buffalo_oral_cavity.py` orders the 55 incision landmarks as one open contour and builds a recessed palate, lower floor, rear wall, commissure walls and rounded tongue. It leaves the front aperture open. The 1,198 new vertices / 1,128 faces use one tissue material and barycentrically interpolated source lip weights (four normalized influences), rather than rigid Head binding. The lower surfaces share the jaw rotation with depth taper.
+
+Executed Blender renders cover neutral, 50% and full mouth opening from four views. Inspected front and side at full opening show a volumetric interior and no former white profile rim; the half-opening front retains depth. The neutral front reveals an overly exposed reddish line under the muzzle. This is an unresolved quality defect: recess the oral boundary and repeat closure checks before installing. Animated skinning, both-profile intermediate clearance and runtime expression coupling remain unverified.
+
+The six original clips again pass the 246-pose channel audit with zero positional error and 7.30e-8 rad maximum angular error. The candidate is `C:/tmp/guardian-faces/buffalo-oral-v1.blend`; the reproducible authoring script, geometry report and rendered evidence are committed. No production buffalo asset was replaced.
