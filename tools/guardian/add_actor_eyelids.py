@@ -159,6 +159,12 @@ def envelope(side,x,y):
     if depth>0:result-=direction*depth
     return result
 verts=[]; faces=[]; tex=[]; metadata=[]; columns=profile.get('columns',65); rows=profile.get('rows',17)
+if profile.get('sphericalClosureFold'):
+    assert .3<=profile.get('sphericalFoldLatitude',.54)<=.8
+    assert 0<=profile.get('sphericalFoldCurve',.01)<=.05
+    assert .005<=profile.get('sphericalFoldWidth',.014)<=.06
+    assert 0<=profile.get('sphericalFoldShade',.42)<=.65
+
 def spherical_lid(side,column,row,amount):
     c,r=eye_spheres[side];phi=column*math.tau
     # Linear GLB morph interpolation follows chords, not the sphere. Bound
@@ -168,6 +174,10 @@ def spherical_lid(side,column,row,amount):
     # A small hidden cap at rest keeps triangles non-degenerate and gives
     # exported morph normals a valid basis instead of a collapsed point.
     theta=.001+row*(.05+amount*(math.pi-.052))
+    if profile.get('sphericalClosureFold'):
+        # Raised fold shoulders keep the cap outside the eye at every corrective.
+        line=profile.get('sphericalFoldLatitude',.54)+profile.get('sphericalFoldCurve',.01)*math.cos(phi)
+        r+=.0015*amount*math.exp(-((row-line)/.055)**2)*(1-math.exp(-((row-line)/.018)**2))
     return c+Vector((r*math.sin(theta)*math.cos(phi),r*math.sin(theta)*math.sin(phi),r*math.cos(theta)))
 for side,points in contours.items():
     start=len(verts)
@@ -223,6 +233,9 @@ if profile.get('closureCrease'):
             u=(index%columns)/(columns-1)
             line=.78+.08*math.cos((u-.5)*math.pi*2)
             shade=1-.52*math.exp(-((t-line)/.036)**2)*math.sin(math.pi*u)**.4
+            if side in eye_spheres and profile.get('sphericalClosureFold'):
+                line=profile.get('sphericalFoldLatitude',.54)+profile.get('sphericalFoldCurve',.01)*math.cos(u*math.tau)
+                shade=1-profile.get('sphericalFoldShade',.42)*math.exp(-((t-line)/profile.get('sphericalFoldWidth',.014))**2)
             color_x=x
             if side in profile.get('skinColorXBounds',{}):
                 lo,hi=profile['skinColorXBounds'][side];color_x=max(lo,min(hi,x))
