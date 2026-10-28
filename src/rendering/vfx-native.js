@@ -134,7 +134,7 @@ function spriteInstances(){const out=[];for(const p of parts){const t=p.age/p.li
  return out.filter(p=>settings.layers.textures&&(settings.layers.dust||!DUST_TEXTURES.has(p.tex)));
 }
 let fxVertices=[];
-function fxTri(a,b,c,col,alpha,kind=0,normals=null){if(alpha<.003)return;const n=normals||[V.norm(V.cross(V.sub(b,a),V.sub(c,a)))];for(const [i,p]of[a,b,c].entries())fxVertices.push(...p,...(n[i]||n[0]),...col,alpha,kind);}
+function fxTri(a,b,c,col,alpha,kind=0,normals=null){if(alpha<.003)return;const n=normals||[V.norm(V.cross(V.sub(b,a),V.sub(c,a)))];for(let i=0;i<3;i++){const p=i===0?a:i===1?b:c,normal=n[i]||n[0];fxVertices.push(p[0],p[1],p[2],normal[0],normal[1],normal[2],col[0],col[1],col[2],alpha,kind);}}
 function fxQuad(a,b,c,d,col,alpha,kind=0){fxTri(a,b,c,col,alpha,kind);fxTri(a,c,d,col,alpha,kind);}
 function fxBand(p,r0,r1,a0,a1,c,alpha,U=[1,0,0],W=[0,0,1],steps=56,kind=0){if(r1<=r0||alpha<.003)return;const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};for(let i=0;i<steps;i++){const a=mix(a0,a1,i/steps),b=mix(a0,a1,(i+1)/steps);fxQuad(at(r0,a),at(r1,a),at(r1,b),at(r0,b),c,alpha,kind);}}
 function fxLine(a,b,w,c,alpha,normal=[0,1,0]){const side=V.scale(V.norm(V.cross(V.sub(b,a),normal)),w*.5);fxQuad(V.add(a,side),V.sub(a,side),V.sub(b,side),V.add(b,side),c,alpha);}

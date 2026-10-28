@@ -71,6 +71,8 @@ for original in ["'#a7d5a4'","'#d3dda2'","'#9fb765'"]:
     combat = combat.replace(original,"(agricultureMode==='multiply'?'#eac98d':"+original+")")
 combat = combat.replace('V.scale([.16,.43,.13],vis*.65)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.16,.43,.13],vis*.65)")
 combat = combat.replace('V.scale([.11,.3,.2],vis*.45)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.11,.3,.2],vis*.45)")
+# Avoid per-vertex iterator/spread temporary arrays without changing float output.
+geometry = geometry.replace('for(const [i,p]of[a,b,c].entries())fxVertices.push(...p,...(n[i]||n[0]),...col,alpha,kind);', 'for(let i=0;i<3;i++){const p=i===0?a:i===1?b:c,normal=n[i]||n[0];fxVertices.push(p[0],p[1],p[2],normal[0],normal[1],normal[2],col[0],col[1],col[2],alpha,kind);}')
 geometry = geometry.replace('const at=(r,a)=>V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));',"const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};")
 geometry = geometry.replace('return[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)]',"const q=[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)];if(agricultureMode&&surface)q[1]+=floorAt(q);return q")
 combat = combat.replace("solid('leaf',[Math.cos(a)*.55,.1,Math.sin(a)*.55]","solid('leaf',blessingLeafOrigin(a)")

@@ -7,3 +7,9 @@ See comparison.json for values. Guardian animation P95 .285 ms, VFX P95 1.675 ms
 ## Component timing
 
 Added vfxUpdateMs, vfxPrepareMs and auraAdvanceMs counters to GuardianSummons and corresponding P95 fields to the moving QA report. A fresh 400-frame Guardian run (components.json) measures update .030 ms, prepare 1.685 ms and aura advance .015 ms at P95, errors empty. Prepare includes packing sprites, rigid/streamed geometry, buffers and camera uniforms, so this identifies the expensive stage, not yet the exact subroutine. No optimization or speedup is claimed. Ten singleton/retained-projectile tests pass after instrumentation.
+
+## Scalar ribbon packing
+
+Replaced the per-triangle vertex array/entries iterator and spread packing with a three-iteration scalar write in the generated VFX geometry path; updated the source generator and generated-module hash. No tessellation, opacity, timing, shaders or vertex values changed. All nine VFX tests pass, including exact original-source parity for 18 compositions at ten sample times (geometry, particles, tools, lights and packed sprites).
+
+Fresh moving-scene run scalar-pack.json completes 400 frames without errors and with the same final outcome as components.json. Preparation P95 observed 1.125 ms versus 1.685 ms before. This is a single sequential comparison (about 33% lower observed stage time), not proof of an overall FPS gain or stable hardware-wide improvement; balanced repetitions and visual runtime review remain necessary.
