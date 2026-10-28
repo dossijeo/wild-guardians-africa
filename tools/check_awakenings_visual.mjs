@@ -119,6 +119,7 @@ try{
     s.pauses=[];awakeningState(s).progress=100;bless(s,'qa-wall-bless',globalThis.awakeningQaWall);s.pauses=['qa-visual'];w.render(0);s.elapsed+=5;
   }));
   await capture('wall-blessed-day',120);await capture('wall-blessed-night',420);
+  if(process.argv.includes('--profile'))await (await import('./awakening-render-profile.mjs')).profileAwakeningRenderer(page,out);
   await style.evaluate(element=>element.remove());
   if(errors.length)throw Error(JSON.stringify(errors));
   await writeFile(`${out}/captures.json`,JSON.stringify({scope:'Real app launched from its menu on Wild Engine. Prescribed QA crop layout, mature growth, fixed clock, prefilled charge and paused simulation; no generated concept images. Not campaign/balance or mobile validation.',setup,captures,errors},null,2)+'\n');

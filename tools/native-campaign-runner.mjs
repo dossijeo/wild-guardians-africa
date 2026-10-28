@@ -53,9 +53,10 @@ export function syncNativeCampaignRaidView(state,nav,previousCenter){
  }
  return context;
 }
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,wallSpendingEnabled=true,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,defenseEventDriven=nativeIntents,nativeWallPlans=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,wallSpendingEnabled=true,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,defenseEventDriven=nativeIntents,nativeWallPlans=false,spellPolicy='all',preferredPlantSite=null,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
+ if(!['all','none','agriculture','defense'].includes(spellPolicy))throw Error('Unknown spell policy');
  const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy);defend=policy.defend&&wallSpendingEnabled;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
@@ -170,14 +171,14 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   // the surplus without imposing a maximum farm size.
   const defenseSavings=living<staff*plantsPerWorker?0:defense?.reserve(s)??0;
   if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+defenseSavings+savingsReserve(1)+cropSpec(species).plant_cost)return false;
-  const p=choosePlot();if(!p)return false;
+  const p=preferredPlantSite?.(s,nav)??choosePlot();if(!p)return false;
   let planted=false;
   try{planted=Game.plant(s,command('plant'),species,p.x,p.z,nav);}
   finally{if(p.reservationId)advice.releasePlantingSite(p.reservationId,{committed:planted});}
   if(!planted)return false;
   syncAdvice();plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
- const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
+ const canCast=(kind,p)=>(spellPolicy==='all'||spellPolicy===(kind==='shield'?'defense':'agriculture'))&&permission(s,kind)&&s.cooldowns[kind]===0&&
   !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
  const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
@@ -229,7 +230,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    reserve:labourReserve()+maintenanceReserve(),centerReserve:labourReserve()}));
   syncAdvice();
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
-  const live=s.plants.filter(p=>p.alive);
+  const live=s.plants.filter(p=>p.alive&&!p.blessing);
   for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
    const eligible=live.filter(p=>kind==='multiply'?!p.multiplyHarvest:!isMature(p)&&p.water.every(w=>w.status!=='due'));
    const point=bestMagicPoint(kind,eligible);if(point&&cast(kind,point))actions++;
