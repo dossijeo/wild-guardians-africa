@@ -15,7 +15,7 @@ const COLORS={growth:0xa8ed8b,multiply:0xe5b4ff,shield:0x8be8ec,attack:0xffcf79}
 const CLIPS={growth:'Spell_Grow',multiply:'Spell_Multiply',shield:'Spell_Shield',attack:'Spell_Attack'};
 const ease=t=>{t=THREE.MathUtils.clamp(t,0,1);return t*t*(3-2*t);};
 export class GuardianSummons{
- constructor(world){this.world=world;this.slots=[];this.anchor=world.state.events.at(-1);this.presentationState=world.state;this.lastElapsed=world.state.elapsed;this.vector=new THREE.Vector3();this.direction=new THREE.Vector3();this.up=new THREE.Vector3(0,1,0);this.forward=new THREE.Vector3(0,0,1);this.aim=new THREE.Vector3();this.axis=new THREE.Vector3();this.q=new THREE.Quaternion();this.identity=new THREE.Quaternion();this.beamMatrix=new THREE.Matrix4();this.beamScale=new THREE.Vector3();this.stats={active:0,animationMs:0,vfxMs:0,reused:0};this.liveAttackTarget=id=>!id||this.world.state.raid?.animals.some(a=>a.id===id&&a.status!=='gone');this.ready=this.load();}
+ constructor(world){this.world=world;this.slots=[];this.anchor=world.state.events.at(-1);this.presentationState=world.state;this.lastElapsed=world.state.elapsed;this.vector=new THREE.Vector3();this.direction=new THREE.Vector3();this.up=new THREE.Vector3(0,1,0);this.forward=new THREE.Vector3(0,0,1);this.aim=new THREE.Vector3();this.axis=new THREE.Vector3();this.q=new THREE.Quaternion();this.identity=new THREE.Quaternion();this.beamMatrix=new THREE.Matrix4();this.beamScale=new THREE.Vector3();this.stats={active:0,animationMs:0,vfxMs:0,vfxUpdateMs:0,vfxPrepareMs:0,auraAdvanceMs:0,reused:0};this.liveAttackTarget=id=>!id||this.world.state.raid?.animals.some(a=>a.id===id&&a.status!=='gone');this.ready=this.load();}
  async load(){
   const gltf=await this.world.assets.model('content/guardian/guardian.glb');if(this.disposed)return;
   this.beamGeometry=new THREE.CylinderGeometry(1,1,1,8,1,true);this.ringGeometry=new THREE.TorusGeometry(1,.045,5,32);this.coreGeometry=new THREE.IcosahedronGeometry(1,1);
@@ -103,7 +103,7 @@ export class GuardianSummons{
   const events=state.events,index=this.anchor?events.lastIndexOf(this.anchor):-1;
   for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}this.anchor=events.at(-1);
   const guideStart=performance.now(),guideActive=this.updateGuide();
-  let anim=performance.now()-guideStart,vfx=0,active=guideActive?1:0;
+  let anim=performance.now()-guideStart,vfx=0,auraAdvanceMs=0,active=guideActive?1:0;
   for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;
    // Match retained projectiles: cancel vanished targets before contact, but
    // let a completed impact fade even when that hit removed its victim.
@@ -123,7 +123,7 @@ export class GuardianSummons{
    s.group.updateMatrixWorld(true);
    for(const {bone,rest} of s.eyes){bone.quaternion.copy(rest);bone.parent.worldToLocal(this.aim.copy(s.target));this.aim.sub(bone.position).applyQuaternion(this.q.copy(rest).invert()).normalize();this.aim.set(THREE.MathUtils.clamp(this.aim.x,-.13,.13),1,THREE.MathUtils.clamp(this.aim.z,-.12,.12)).normalize();bone.quaternion.multiply(this.q.setFromUnitVectors(this.up,this.aim));}
    anim+=performance.now()-started;
-   const visual=performance.now();s.vortex.update(age,COLORS[kind],s.height,s.bottom);s.aura.advance(Math.max(0,age-(s.lastAge??0)));s.lastAge=age;
+   const visual=performance.now();s.vortex.update(age,COLORS[kind],s.height,s.bottom);const auraStarted=performance.now();s.aura.advance(Math.max(0,age-(s.lastAge??0)));auraAdvanceMs+=performance.now()-auraStarted;s.lastAge=age;
    const attack=kind==='attack',impactAge=state.elapsed-(s.at+ATTACK_TIMING.impact);
    const flight=THREE.MathUtils.clamp((age-ATTACK_TIMING.release)/(ATTACK_TIMING.impact-ATTACK_TIMING.release),0,1);
    const release=attack?(age<ATTACK_TIMING.impact?ease(age/ATTACK_TIMING.release):Math.max(0,1-impactAge/ATTACK_TIMING.afterglow)):Math.sin(Math.PI*Math.min(1,age/1.25));
@@ -154,7 +154,7 @@ export class GuardianSummons{
   }
   if(!active&&this.guide){const started=performance.now();active=this.updateGuide()?1:0;anim+=performance.now()-started;}
   const echoStarted=performance.now();this.attackEchoes.update(state.elapsed,this.liveAttackTarget);vfx+=performance.now()-echoStarted;
-  Object.assign(this.stats,{active,retainedAttacks:this.attackEchoes.stats.active,animationMs:anim,vfxMs:vfx});
+  Object.assign(this.stats,{active,retainedAttacks:this.attackEchoes.stats.active,animationMs:anim,vfxMs:vfx,vfxUpdateMs:vfx,vfxPrepareMs:0,auraAdvanceMs});
  }
  aimJoint(bone,target,limit){
   if(limit<=0)return;
@@ -162,10 +162,10 @@ export class GuardianSummons{
   this.q.setFromUnitVectors(this.axis,this.aim);const angle=this.q.angleTo(this.identity);if(angle>limit)this.q.slerp(this.identity,1-limit/angle);
   bone.quaternion.premultiply(this.q);bone.updateWorldMatrix(false,true);
  }
- prepare(camera){const started=performance.now();let depth=false;for(const s of this.slots)if(s.event){depth=s.aura.prepare(camera,this.world.scene)||depth;for(const light of s.aura.localLights)light.visible=false;}this.stats.vfxMs+=performance.now()-started;return depth;}
+ prepare(camera){const started=performance.now();let depth=false;for(const s of this.slots)if(s.event){depth=s.aura.prepare(camera,this.world.scene)||depth;for(const light of s.aura.localLights)light.visible=false;}this.stats.vfxPrepareMs=performance.now()-started;this.stats.vfxMs+=this.stats.vfxPrepareMs;return depth;}
  beginPrewarm(){this.plan(null,this.world.controls.target);this.attackEchoes.retain(this.world.state.elapsed-ATTACK_TIMING.impact,this.world.controls.target,this.vector.copy(this.world.controls.target).add(this.up));this.attackEchoes.update(this.world.state.elapsed);for(const s of this.slots){s.group.visible=true;s.group.position.copy(this.world.controls.target);for(const m of s.materials)m.opacity=1;for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.time=0;}s.mixer.update(0);for(const m of [s.beam,s.impact,s.core]){m.visible=true;m.position.copy(s.group.position);m.frustumCulled=false;}s.vortex.position.copy(s.group.position);s.vortex.update(.3,0xa8ed8b,s.height,s.bottom);s.material.opacity=.5;s.aura.position.copy(s.group.position);s.aura.visible=true;s.aura.seek(.5);s.aura.prepare(this.world.camera,this.world.scene);for(const light of s.aura.localLights)light.visible=false;}}
  endPrewarm(){this.clear();}
  hide(s){s.event=null;s.lastAge=0;s.aura.clear();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])o.visible=false;}
- clear(){this.guiding=false;this.guide=null;this.guideKey=null;this.guideOrigin=null;this.attackEchoes?.clear();for(const s of this.slots)this.hide(s);Object.assign(this.stats,{active:0,retainedAttacks:0,animationMs:0,vfxMs:0});}
+ clear(){this.guiding=false;this.guide=null;this.guideKey=null;this.guideOrigin=null;this.attackEchoes?.clear();for(const s of this.slots)this.hide(s);Object.assign(this.stats,{active:0,retainedAttacks:0,animationMs:0,vfxMs:0,vfxUpdateMs:0,vfxPrepareMs:0,auraAdvanceMs:0});}
  dispose(){this.disposed=true;this.attackEchoes?.dispose();for(const s of this.slots){s.mixer.stopAllAction();s.mixer.uncacheRoot(s.model);s.model.traverse(o=>o.skeleton?.dispose());for(const m of s.materials)m.dispose();s.face.dispose();s.vortex.dispose();s.aura.dispose();s.beam.dispose();s.material.dispose();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])this.world.scene.remove(o);}this.beamGeometry?.dispose();this.ringGeometry?.dispose();this.coreGeometry?.dispose();this.slots.length=0;}
 }
