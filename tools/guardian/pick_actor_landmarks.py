@@ -41,6 +41,7 @@ center = Vector(inspection['center'])
 extent = inspection['extent']
 directions = {'front': (0, -1, .05), 'quarter': (1, -1, .08),
               'side': (1, 0, .05), 'other-side': (-1, 0, .05)}
+directions.update(inspection.get('directions', {}))
 result = {'source': str(source), 'sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
           'inspection': inspection, 'landmarks': []}
 for request in requests:
