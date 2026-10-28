@@ -11,7 +11,7 @@ const camera=new T.PerspectiveCamera(32,innerWidth/innerHeight,.01,50);camera.po
 const $=id=>document.getElementById(id),errors=[];let elapsed=20,previous=performance.now(),paused=false,automatic=false,action=null,actor={id:'qa-face',status:'walking'},frame=0;
 const asset=warthog?'/test-results/warthog-face-candidate.glb':lion?(params.has('uncompressed')?'/test-results/lion-face-candidate.glb':'/content/source/actors/lion/expressive-candidate.glb'):params.has('uncompressed')?'/test-results/hyena-face-candidate.glb':'/content/source/actors/hyena/expressive-candidate.glb';
 const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(asset);scene.add(gltf.scene);const expression=new ActorExpression(gltf.scene,actor.id),mixer=new T.AnimationMixer(gltf.scene);
-gltf.scene.updateMatrixWorld(true);const head=gltf.scene.getObjectByName('Head'),headAnchor=head?head.worldToLocal(faceTarget.clone()):null,headPoint=new T.Vector3(),cameraShift=new T.Vector3();let followFace=false;
+gltf.scene.updateMatrixWorld(true);const head=gltf.scene.getObjectByName('Head'),headAnchor=head?head.worldToLocal(faceTarget.clone()):null,headPoint=new T.Vector3(),cameraShift=new T.Vector3(),headRotation=new T.Quaternion(),restHeadInverse=head?head.getWorldQuaternion(new T.Quaternion()).invert():new T.Quaternion();let followFace=false;
 $('follow').onclick=()=>followFace=!followFace;
 $('clipTime').oninput=()=>{paused=true;if(action)mixer.setTime(Number($('clipTime').value));};
 for(const clip of gltf.animations){const option=document.createElement('option');option.value=option.textContent=clip.name;$('clip').append(option);}
@@ -19,7 +19,13 @@ const manual=()=>{automatic=false;expression.setValues(Number($('left').value),N
 for(const id of ['left','right','mouth'])$(id).oninput=manual;
 function set(l,r,m){$('left').value=l;$('right').value=r;$('mouth').value=m;manual();}
 $('neutral').onclick=()=>set(0,0,0);$('pain').onclick=()=>set(1,1,.85);$('half').onclick=()=>set(.5,.5,0);
-function faceView(x,z){controls.target.copy(faceTarget);camera.position.copy(faceTarget).add(new T.Vector3(x*faceDistance,.02,z*faceDistance));controls.update();}
+function faceView(x,z){
+ gltf.scene.updateMatrixWorld(true);
+ const target=head?head.localToWorld(headAnchor.clone()):faceTarget;
+ const offset=new T.Vector3(x*faceDistance,.02,z*faceDistance);
+ if(head)offset.applyQuaternion(restHeadInverse).applyQuaternion(head.getWorldQuaternion(headRotation));
+ controls.target.copy(target);camera.position.copy(target).add(offset);controls.update();
+}
 $('otherSide').onclick=()=>faceView(-1,0);$('quarter').onclick=()=>faceView(.7,.8);$('body').onclick=()=>{controls.target.set(0,.9,0);camera.position.set(2,1.8,4);controls.update();};
 $('side').onclick=()=>faceView(1,0);$('front').onclick=()=>faceView(0,1);faceView(0,1);
 $('candidateLabel').textContent=warthog?'JABALÍ: candidato facial local; revisar sus canales cargados. No integrado en el catálogo.':lion?'LEÓN: candidato de mandíbula, interior oral y párpados. Integrado en la rama; revisión visual en curso.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';

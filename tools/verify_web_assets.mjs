@@ -6,14 +6,16 @@ import validator from 'gltf-validator';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {readGlb} from './glb-container.mjs';
 import {decodeWebGlb} from '../public/runtime/glb-legacy.js';
-const root=new URL('../',import.meta.url),hash=bytes=>createHash('sha256').update(bytes).digest('hex'),manifest=JSON.parse(await readFile(new URL('content/manifests/web-assets.json',root),'utf8')),report=[];
+const candidate=process.argv[2]==='--candidate';
+if(candidate&&process.argv.length!==5)throw Error('Use --candidate source.glb compressed.glb');
+const root=new URL('../',import.meta.url),hash=bytes=>createHash('sha256').update(bytes).digest('hex'),manifest=JSON.parse(await readFile(candidate?process.argv[4]+'.compression.json':new URL('content/manifests/web-assets.json',root),'utf8')),report=[];
 await MeshoptDecoder.ready;
 assert.equal(hash(await readFile(new URL('public/runtime/meshopt_decoder.module.js',root))),hash(await readFile(new URL('node_modules/three/examples/jsm/libs/meshopt_decoder.module.js',root))),'Vendored decoder must match pinned Three.js');
-const files=(await readdir(new URL('public/assets/',root))).filter(f=>f.endsWith('.glb')).sort();assert.deepEqual(manifest.records.map(r=>r.source.split('/').pop()).sort(),files);
-const selected=new Set(process.argv.slice(2));if([...selected].some(f=>!files.includes(f)))throw Error('Selected GLB absent');
+const files=(await readdir(new URL('public/assets/',root))).filter(f=>f.endsWith('.glb')).sort();if(!candidate)assert.deepEqual(manifest.records.map(r=>r.source.split('/').pop()).sort(),files);
+const selected=new Set(candidate?[]:process.argv.slice(2));if([...selected].some(f=>!files.includes(f)))throw Error('Selected GLB absent');
 if(selected.size){const previous=JSON.parse(await readFile(new URL('content/manifests/web-assets-verification.json',root),'utf8'));report.push(...previous.records.filter(r=>!selected.has(r.source.split('/').pop())));}
 for(const item of manifest.records.filter(r=>!selected.size||selected.has(r.source.split('/').pop()))){
-  const before=await readFile(new URL('public/'+item.source,root)),after=await readFile(new URL('public/'+item.runtime,root));assert.equal(hash(before),item.sourceSha256);assert.equal(hash(after),item.runtimeSha256);assert(after.length<before.length,item.source);
+  const before=await readFile(candidate?process.argv[3]:new URL('public/'+item.source,root)),after=await readFile(candidate?process.argv[4]:new URL('public/'+item.runtime,root));assert.equal(hash(before),item.sourceSha256);assert.equal(hash(after),item.runtimeSha256);assert(after.length<before.length,item.source);
   const original=readGlb(before),packed=readGlb(after),decodedBuffer=await decodeWebGlb(after.buffer.slice(after.byteOffset,after.byteOffset+after.byteLength)),decoded=readGlb(decodedBuffer);
   assert(packed.json.extensionsRequired.includes('EXT_meshopt_compression'));if(original.json.images?.length)assert(packed.json.extensionsRequired.includes('EXT_texture_webp'));assert.equal(packed.json.buffers[1].extensions.EXT_meshopt_compression.fallback,true);
   for(const bv of packed.json.bufferViews){const e=bv.extensions?.EXT_meshopt_compression;if(!e)continue;assert.equal(e.count*e.byteStride,bv.byteLength);assert(e.byteStride>0&&e.byteStride<=256);assert((e.byteOffset??0)+e.byteLength<=packed.bin.length);assert.equal(e.filter,'NONE');assert.equal(e.buffer,0);assert.equal(bv.buffer,1);if(e.mode==='ATTRIBUTES')assert.equal(e.byteStride%4,0);else assert([2,4].includes(e.byteStride));if(bv.byteStride)assert.equal(e.byteStride,bv.byteStride);}
@@ -35,6 +37,6 @@ for(const item of manifest.records.filter(r=>!selected.size||selected.has(r.sour
   const baseline=await validator.validateBytes(new Uint8Array(before),{maxIssues:10000}),check=await validator.validateBytes(new Uint8Array(decodedBuffer),{maxIssues:10000}),originalErrors=baseline.issues.messages.filter(m=>m.severity===0),errors=check.issues.messages.filter(m=>m.severity===0),fingerprint=m=>JSON.stringify([m.code,m.pointer,m.message]),newErrors=errors.filter(m=>!originalErrors.some(n=>fingerprint(m)===fingerprint(n)));report.push({source:item.source,geometryBytes,geometryMaxError:0,animationMaxError:0,images,validation:{originalErrors:originalErrors.length,decodedErrors:errors.length,newErrors},errors:newErrors});
   console.log(item.source.slice(7,19),'bytes exact',geometryBytes,'PSNR min',Math.min(...images.map(i=>i.psnr)).toFixed(2),'validator errors',errors.length);
 }
-await writeFile(new URL('content/manifests/web-assets-verification.json',root),JSON.stringify({records:report},null,2)+'\n');
+await writeFile(candidate?process.argv[4]+'.verification.json':new URL('content/manifests/web-assets-verification.json',root),JSON.stringify({records:report},null,2)+'\n');
 assert(report.every(r=>r.errors.length===0),'Khronos conformance errors; see web-assets-verification.json');
 console.log('PASS: all GLBs, byte-exact geometry/animation, textures/alpha, local decoder and conformance');

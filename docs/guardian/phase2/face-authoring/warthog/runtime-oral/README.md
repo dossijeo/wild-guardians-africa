@@ -1,0 +1,25 @@
+# Warthog oral candidate: Three.js validation
+
+The v5 oral candidate remains outside the active actor catalog. These are actual browser captures from `tests/browser/actor-expression.html?actor=warthog&view=mouth`, with the candidate copied to the ignored `test-results/warthog-face-candidate.glb`.
+
+- `running-pain`: Running at 0.35 s, both eyelids closed and mouth 0.85.
+- `attack-side`: Charged_Upward_Slash at 1.2 s, both eyelids closed and mouth 0.85. The opposite anatomical profile follows the posed head; the raised arm still partly occludes the face.
+- `compressed-partial`: compressed v5, rest pose, eyelids and mouth 0.65, three-quarter view. The cavity, tongue and lower tusks remain visible; no obvious snout or collar stretching in this sample.
+- `compressed-walking-neutral`: compressed v5, Walking at 0.55 s, all facial morphs zero, opposite profile. No protruding tongue is visible; the native tusk base and angular lip remain visible. This is one sampled moving pose, not a full-cycle clearance check.
+
+The fixture's profile buttons now derive their target and orientation from the current head pose. Previously, an animated head rotation could show the mane instead of the requested facial profile. This change only affects the inspection camera.
+
+## Compression
+
+The project compressor reduced 75,278,672 bytes to 4,698,684 bytes. Run:
+
+```sh
+node tools/compress_web_assets.mjs --candidate source.glb packed.glb
+node tools/verify_web_assets.mjs --candidate source.glb packed.glb
+```
+
+The standalone verifier reads the compressor sidecar, validates both hashes, and leaves the production manifests untouched. Attached reports verify 1,822,842 geometry/animation bytes exactly, texture checks, the local decoder, and zero decoded glTF conformance errors. The compressed model loaded in Three.js with seven clips, eleven facial bindings, four draw calls and no fixture errors.
+
+## Limits
+
+These sampled poses do not prove every animation frame, tooth attachment or collision. Four draw calls in this isolated fixture are not a game performance benchmark. Full gameplay Attack, ragdoll and recovery with this candidate, as well as broader closed-mouth moving-pose inspection, remain required before promotion.
