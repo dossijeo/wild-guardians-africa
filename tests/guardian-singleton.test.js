@@ -54,3 +54,26 @@ test('removing an Attack target before contact cancels the active summon without
   world.state.elapsed=1.3;summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.stats.retainedAttacks,0);summons.dispose();assert.equal(world.scene.children.length,0);
  }
 });
+
+
+test('tutorial guide yields to a spell and resumes the same body without retained spell tint or effects',async()=>{
+ const model=new THREE.Group();model.add(new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial()));
+ const world={state:{events:[],elapsed:1,time:150},camera:new THREE.PerspectiveCamera(),scene:new THREE.Scene(),toon:{uniforms:{uLightDir:{value:new THREE.Vector3(0,1,0)},uNight:{value:0}}},assets:{model:async()=>({scene:model,animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ world.camera.position.set(0,10,10);
+ const summons=new GuardianSummons(world);await summons.ready;let plans=0;
+ summons.plan=()=>{plans++;return {x:2,y:2,z:0};};
+ const guide={target:'center-site',position:[0,0,0]};summons.setGuide(guide);summons.update();
+ const slot=summons.slots[0];assert.equal(summons.stats.active,1);assert.equal(summons.guiding,true);assert.equal(slot.model.scale.x,4.08);
+ summons.setGuide({...guide,position:[0,0,0]});summons.update();assert.equal(plans,1,'stable hints reuse their placement');
+ const event={type:'SpellActivated',kind:'multiply',x:3,z:0,presentation:{origin:{x:5,y:2,z:0},contact:{x:3,y:1,z:0},elapsed:1}};
+ world.state.events.push(event);world.state.elapsed=1.3;summons.update();
+ assert.equal(slot.event,event);assert.equal(summons.guiding,false);assert.equal(summons.stats.active,1);assert.equal(slot.model.scale.x,2.4);
+ assert.equal(slot.materials[0].uniforms.uSpiritTint.value.getHex(),0xe5b4ff);
+ world.state.elapsed=3.3;summons.update();
+ assert.equal(summons.slots[0],slot);assert.equal(slot.event,null);assert.equal(summons.guiding,true);assert.equal(summons.stats.active,1,'no empty frame at handoff');assert.equal(slot.group.visible,true);
+ assert.equal(slot.materials[0].uniforms.uSpiritTint.value.getHex(),0xffffff);
+ assert.ok([slot.aura,slot.beam,slot.core,slot.impact,slot.vortex].every(o=>!o.visible));
+ summons.setGuide(null);summons.update();assert.equal(summons.stats.active,0);assert.equal(slot.group.visible,false);
+ summons.setGuide(guide);summons.update();world.state.result={won:true};summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.guide,null);
+ summons.dispose();assert.equal(world.scene.children.length,0);model.children[0].geometry.dispose();model.children[0].material.dispose();
+});

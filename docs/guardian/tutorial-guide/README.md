@@ -20,3 +20,7 @@ Evidence: `game-hud.png`, `game-world.png`, `game-center-placed.png`, and the th
 ## Limits of this validation
 
 The captures do not prove every language, mobile viewport, camera orientation or guide-to-spell interruption combination. The final narration-preservation adjustment was compiled but audio continuity through panel changes has not been separately recorded. The gesture uses the existing arm/forearm/hand bones, without a separately articulated pointing finger. This report does not claim completion of the broader animal-expression/ragdoll project or resolution of baseline engine performance.
+
+## Guide / spell handoff regression
+
+An automated scene-level test exercises guidance, a Multiply cast, immediate return to guidance, hint removal and game completion. It verifies reuse of the same body, active-count continuity, removal of spell VFX, scale restoration and neutral material tint. This caught and fixed a retained purple tint after Multiply. All five singleton/consecutive-projectile tests pass. This is an automated lifecycle check, not additional visual footage or audio-continuity evidence.

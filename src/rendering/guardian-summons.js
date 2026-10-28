@@ -64,7 +64,7 @@ export class GuardianSummons{
   this.guiding=true;this.guideTime+=dt;
   s.group.position.lerp(this.vector.set(origin.x,origin.y,origin.z),1-Math.exp(-dt*4));
   s.model.scale.setScalar(2.4*1.7);s.group.rotation.y=Math.atan2(w.camera.position.x-s.group.position.x,w.camera.position.z-s.group.position.z);s.group.visible=true;
-  for(const m of s.materials){m.opacity=1;m.uniforms.opacity.value=1;m.uniforms.uSpiritGlow.value=.08;m.uniforms.uReveal.value=1.12;m.uniforms.uDissolve.value=0;m.uniforms.uBottom.value=s.group.position.y+s.bottom*1.7;m.uniforms.uHeight.value=s.height*1.7;}
+  for(const m of s.materials){m.opacity=1;m.uniforms.opacity.value=1;m.uniforms.uSpiritTint.value.setHex(0xffffff);m.uniforms.uSpiritGlow.value=.08;m.uniforms.uReveal.value=1.12;m.uniforms.uDissolve.value=0;m.uniforms.uBottom.value=s.group.position.y+s.bottom*1.7;m.uniforms.uHeight.value=s.height*1.7;}
   for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=this.guideTime%a.getClip().duration;}s.mixer.update(0);
   const narration=w.guardianNarration?.();if(s.faceRecord!==narration?.record?.id){s.faceRecord=narration?.record?.id;s.face.setRecord(narration?.record);}s.face.update(narration?.audio??null,this.guideTime,{});
   s.group.updateMatrixWorld(true);pointGuardian(s.model,this.vector.set(...p),ease(this.guideTime/.6));
