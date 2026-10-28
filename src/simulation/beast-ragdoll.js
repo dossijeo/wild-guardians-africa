@@ -25,11 +25,11 @@ function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
 export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5,forearmDamping:4});
-export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,integralGain:3,integralLimit:.6,integralAngle:.9,integralSpeed:.8,angleTolerance:.45,settleSeconds:.15,timeout:3.5});
+export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,integralGain:3,integralLimit:.6,integralAngle:.9,integralSpeed:.8,angleTolerance:.45,settleSeconds:.15,timeout:3.5,recoveryContactGrace:2.5});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
-  this.R=R;this.capacity=capacity;this.stepSize=step;this.world=new R.World(vector(0,-9.81,0));this.world.timestep=step;this.world.numSolverIterations=solverIterations;this.actors=new Map();this.obstacles=[];
+  this.R=R;this.capacity=capacity;this.stepSize=step;this.world=new R.World(vector(0,-9.81,0));this.world.timestep=step;this.world.numSolverIterations=solverIterations;this.actors=new Map();this.obstacles=[];this.recoveryColliders=new Set();
   this.targetPosition=vector();this.targetRotation={x:0,y:0,z:0,w:1};
   this.stats={active:0,stepMs:0,steps:0,rejected:0};
  }
@@ -81,7 +81,7 @@ export class BeastRagdollSolver{
  makeKinematic(id){
   const a=this.actors.get(id);if(!a||a.kinematic)return;
   for(const joint of a.joints)this.world.removeImpulseJoint(joint,true);a.joints.length=0;
-  for(const {body} of a.parts){body.setBodyType(this.R.RigidBodyType.KinematicPositionBased,true);body.setLinvel(vector(),true);body.setAngvel(vector(),true);}
+  for(const {body} of a.parts){this.recoveryColliders.add(body.collider(0).handle);body.setBodyType(this.R.RigidBodyType.KinematicPositionBased,true);body.setLinvel(vector(),true);body.setAngvel(vector(),true);}
   a.kinematic=true;
  }
  rollTo(id,target,{timeout=RAGDOLL_ROLL.timeout}={}){
@@ -91,7 +91,7 @@ export class BeastRagdollSolver{
   // Rotate the complete fallen configuration towards the authored supine hip
   // frame. Relative limb poses and all existing joint constraints are retained.
   const delta=multiply(target,inverse(a.parts[0].body.rotation()));
-  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],integrals:a.parts.map(()=>vector()),timeout};a.settled=false;
+  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],contactDelay:0,integrals:a.parts.map(()=>vector()),timeout};a.settled=false;
  }
  driveRoll(a){
   const roll=a.roll;if(!roll||roll.done)return;roll.age+=this.stepSize;
@@ -119,8 +119,14 @@ export class BeastRagdollSolver{
    body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support+integral.x*bias)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support+integral.y*bias)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support+integral.z*bias)*dt),true);
    if(i<2){roll.errors[i]=angle;rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
   }
+  // A neighbouring get-up is kinematic and may temporarily block the roll.
+  // Count only actual contacts near the deadline, with a strict total grace.
+  if(roll.age>=roll.timeout-.1&&roll.contactDelay<RAGDOLL_ROLL.recoveryContactGrace&&this.recoveryColliders.size){
+   let blocked=false;for(const {body} of a.parts){this.world.contactPairsWith(body.collider(0),c=>{if(this.recoveryColliders.has(c.handle))blocked=true;});if(blocked)break;}
+   if(blocked)roll.contactDelay=Math.min(RAGDOLL_ROLL.recoveryContactGrace,roll.contactDelay+this.stepSize);
+  }
   roll.speed=rootSpeed;roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
-  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=roll.timeout;roll.done||=roll.timedOut;
+  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=roll.timeout+roll.contactDelay;roll.done||=roll.timedOut;
  }
  follow(id,pose,from=null,weight=1){
   const a=this.actors.get(id);if(!a?.kinematic)throw Error('Actor is not kinematic');
@@ -152,6 +158,6 @@ export class BeastRagdollSolver{
   this.stats.stepMs=performance.now()-t;
  }
  snapshot(a){for(let i=0;i<a.parts.length;i++){const p=a.parts[i].body.translation(),q=a.parts[i].body.rotation(),j=i*7;a.pose[j]=p.x;a.pose[j+1]=p.y;a.pose[j+2]=p.z;a.pose[j+3]=q.x;a.pose[j+4]=q.y;a.pose[j+5]=q.z;a.pose[j+6]=q.w;}return a.pose;}
- remove(id){const a=this.actors.get(id);if(!a)return;for(const {body} of a.parts)this.world.removeRigidBody(body);this.actors.delete(id);this.stats.active=this.actors.size;}
- dispose(){this.world.free();this.actors.clear();this.obstacles.length=0;this.stats.active=0;}
+ remove(id){const a=this.actors.get(id);if(!a)return;for(const {body} of a.parts){this.recoveryColliders.delete(body.collider(0).handle);this.world.removeRigidBody(body);}this.actors.delete(id);this.stats.active=this.actors.size;}
+ dispose(){this.world.free();this.recoveryColliders.clear();this.actors.clear();this.obstacles.length=0;this.stats.active=0;}
 }

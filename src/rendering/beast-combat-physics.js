@@ -109,7 +109,7 @@ export class BeastCombatPhysics{
      if(Math.hypot(fallenAxis.x,fallenAxis.z)>.25&&Math.hypot(targetAxis.x,targetAxis.z)>.25){const yaw=Math.atan2(fallenAxis.x,fallenAxis.z)-Math.atan2(targetAxis.x,targetAxis.z);a.heading=(a.heading??0)+yaw;e.root.rotation.y+=yaw;e.root.updateMatrixWorld(true);orientation.premultiply(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),yaw));}
      e.solver.rollTo(id,orientation);e.rolling=true;a.magicDown.phase='rolling';continue;
     }
-    const rollFailed=e.rolling&&e.actor.roll.timedOut;this.stats.rollFailures=(this.stats.rollFailures??0)+(rollFailed?1:0);this.stats.lastRoll=e.actor.roll?{seconds:e.actor.roll.age,error:e.actor.roll.error,speed:e.actor.roll.speed,timedOut:rollFailed}:null;
+    const rollFailed=e.rolling&&e.actor.roll.timedOut;this.stats.rollFailures=(this.stats.rollFailures??0)+(rollFailed?1:0);this.stats.lastRoll=e.actor.roll?{seconds:e.actor.roll.age,contactDelay:e.actor.roll.contactDelay,error:e.actor.roll.error,speed:e.actor.roll.speed,timedOut:rollFailed}:null;
     e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip,solidContacts:BakedSolidContacts.forAnimal(this.world,a,e.binding)}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }

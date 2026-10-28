@@ -22,3 +22,8 @@ These measurements are diagnostic and not paired performance comparisons. Frame-
 The new test `three runtime hyenas finish articulated rolls and authored recovery on the shared variable-rate clock` still fails for one directional configuration (roll error approximately 0.489 rad at timeout). It executes with an explicit TODO annotation; it is not counted as a passed gate. The latest run is **35 passed, 1 TODO**, not 36 passed. The original 35 physics/combat tests remain passing.
 
 Rejected experiments this turn: targeting the initial pose (34/35), driving only hips/torso (30/35), stronger integral gain 6 (34/36), gain 4 (35/36), increased damping (35/36), and applying the integral only to hips/torso (35/36). A small settling grace also failed and was removed. None of those changes are shipped. The remaining directional timeout needs further investigation rather than accepting a larger angle or hiding the fallback.
+
+
+## Subsequent correction
+
+The executing TODO above is now resolved by bounded grace for contact with neighbouring kinematic get-ups; see ../recovery-contacts/README.md. The suite now has 36 passed and zero TODO. The previous results remain historical evidence, not the current status.

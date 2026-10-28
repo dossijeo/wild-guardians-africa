@@ -183,7 +183,7 @@ test('physical and baked recovery commit a resolved horizontal offset exactly on
 });
 
 
-test('three runtime hyenas finish articulated rolls and authored recovery on the shared variable-rate clock',{todo:'Known directional roll timeout; retained as an executing reproducer, not a passed recovery gate'},async()=>{
+test('three runtime hyenas finish articulated rolls and authored recovery on the shared variable-rate clock',async()=>{
  const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url));
  const {animal,state,root,world,manager}=fixture('hyena',model);
  manager.recoveryClips=new Map([['hyena',authoredClip]]);
@@ -192,10 +192,10 @@ test('three runtime hyenas finish articulated rolls and authored recovery on the
   const other={...animal,id:'beast-'+i,x:20+i*4,magicImpact:{at:10,direction:i===1?{x:0,y:-.5,z:1}:{x:-1,y:0,z:.3},intensity:1}};
   state.raid.animals.push(other);world.objects.set(other.id,node);world.mixers.set(other.id,{model:skin,mixer:new AnimationMixer(skin),clips:[new AnimationClip('Walking',1,[])]});
  }
- const recovered=new Set();let peak=0;
+ const recovered=new Set();let peak=0,maxContactDelay=0;
  for(let i=0;i<600;i++){
   const dt=[1/30,1/60,1/20][i%3];state.elapsed+=dt;manager.step(state,dt);peak=Math.max(peak,manager.entries.size);
-  for(const a of state.raid.animals){const node=world.objects.get(a.id);manager.before(a.id);node.position.set(a.x,0,a.z);node.updateMatrixWorld(true);manager.render(a.id);const e=manager.entries.get(a.id);if(e?.recovery){assert.equal(e.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));recovered.add(a.id);}if(e?.actor.roll)assert.ok(e.actor.pose.every(Number.isFinite));}
+  for(const a of state.raid.animals){const node=world.objects.get(a.id);manager.before(a.id);node.position.set(a.x,0,a.z);node.updateMatrixWorld(true);manager.render(a.id);const e=manager.entries.get(a.id);if(e?.recovery){assert.equal(e.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));recovered.add(a.id);}if(e?.actor.roll){assert.ok(e.actor.pose.every(Number.isFinite));maxContactDelay=Math.max(maxContactDelay,e.actor.roll.contactDelay);assert.ok(e.actor.roll.contactDelay<=2.5);assert.ok(e.actor.roll.age<=6.05);}}
  }
- assert.equal(peak,3);assert.equal(recovered.size,3);assert.equal(manager.stats.rollFailures,0);assert.equal(manager.entries.size,0);assert.equal(manager.solver,null);assert.ok(state.raid.animals.every(a=>!a.magicDown));manager.dispose();
+ assert.equal(peak,3);assert.ok(maxContactDelay>0,'fixture must exercise contact delay');assert.equal(recovered.size,3);assert.equal(manager.stats.rollFailures,0);assert.equal(manager.entries.size,0);assert.equal(manager.solver,null);assert.ok(state.raid.animals.every(a=>!a.magicDown));manager.dispose();
 });
