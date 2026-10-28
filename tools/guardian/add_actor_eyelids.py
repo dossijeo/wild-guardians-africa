@@ -26,7 +26,7 @@ else:
     bpy.ops.import_scene.gltf(filepath=str(Path(a.input).resolve()))
 lid_name=profile.get('lidObject','ActorFacialLids')
 assert not bpy.data.objects.get(lid_name)
-mesh=bpy.data.objects['Mesh_0']
+mesh=bpy.data.objects[profile.get('mesh','Mesh_0')]
 world=mesh.matrix_world.copy(); inv=world.inverted()
 mesh.data.calc_loop_triangles(); tris=list(mesh.data.loop_triangles)
 tree=BVHTree.FromPolygons([world@v.co for v in mesh.data.vertices],
