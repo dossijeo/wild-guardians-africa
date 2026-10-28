@@ -15,6 +15,7 @@ p.add_argument('--input',required=True)
 p.add_argument('--profile',required=True)
 p.add_argument('--output',required=True)
 p.add_argument('--export-glb',action='store_true')
+p.add_argument('--source-glb',help='Original animation channels when editing a Blend source')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 profile=json.loads(Path(a.profile).read_text(encoding='utf-8'))
 if a.input.endswith('.glb') and profile.get('sourceSha256'):
@@ -23,7 +24,8 @@ if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=str(Path(a.input
 else:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(Path(a.input).resolve()))
-assert not bpy.data.objects.get('ActorFacialLids')
+lid_name=profile.get('lidObject','ActorFacialLids')
+assert not bpy.data.objects.get(lid_name)
 mesh=bpy.data.objects['Mesh_0']
 world=mesh.matrix_world.copy(); inv=world.inverted()
 mesh.data.calc_loop_triangles(); tris=list(mesh.data.loop_triangles)
@@ -31,7 +33,7 @@ tree=BVHTree.FromPolygons([world@v.co for v in mesh.data.vertices],
     [list(t.vertices) for t in tris],all_triangles=True)
 uv=mesh.data.uv_layers.active.data
 center=Vector(profile['center']);extent=profile['extent']
-camera=center+Vector((0,-1,.05)).normalized()*extent*4
+camera=center+Vector(profile.get('cameraDirection',(0,-1,.05))).normalized()*extent*4
 rotation=(center-camera).to_track_quat('-Z','Y')
 direction=rotation@Vector((0,0,-1))
 # Project base color into one continuous atlas: interpolating the original
@@ -171,7 +173,7 @@ for side,points in contours.items():
             i=start+row*columns+col
             faces.append((i,i+columns,i+columns+1,i+1))
 data=bpy.data.meshes.new('Actor eyelid surfaces');data.from_pydata(verts,[],faces);data.update()
-obj=bpy.data.objects.new('ActorFacialLids',data);bpy.context.collection.objects.link(obj)
+obj=bpy.data.objects.new(lid_name,data);bpy.context.collection.objects.link(obj)
 obj.matrix_world=world
 material=mesh.data.materials[0].copy();material.name='Actor eyelid original fur'
 bs=next(n for n in material.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
@@ -273,10 +275,10 @@ if a.export_glb:
         export_nla_strips=True,export_force_sampling=True,export_frame_range=False,
         export_yup=True,export_skins=True,export_all_influences=False,export_extras=True)
     # Geometry editing must not resample or shift the original animation clocks.
-    if Path(a.input).suffix.lower()=='.glb':
+    if a.source_glb or Path(a.input).suffix.lower()=='.glb':
         sys.path.insert(0,str(Path(__file__).resolve().parent))
         from restore_source_animations import restore
-        restore(a.input,Path(a.output).with_suffix('.glb'))
+        restore(a.source_glb or a.input,Path(a.output).with_suffix('.glb'))
 Path(a.output).with_suffix('.json').write_text(json.dumps({'status':'unvalidated eyelid candidate',
     'profile':profile,'contours':contours,'vertices':len(verts),'faces':len(faces),
     'eyeSpheres':{side:{'center':list(c),'radius':r} for side,(c,r) in eye_spheres.items()},

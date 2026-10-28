@@ -33,3 +33,9 @@ V3 replaces the straight cheek edge with a tessellated surface, but its forward-
 V5 adds separate upper/lower rolled rims connecting the exact authored seam to the recessed mucosa (three strips per lip). The quarter view was inspected; the opening remains unobstructed. Native-channel audit again passes for 76 bones and 246 sampled poses. This is not yet visual acceptance in movement.
 
 `eye-calibration/front.png` reveals that a frontal eyelid profile would mostly sample the overhanging brows rather than the laterally facing eyes. Do not reuse buffalo frontal contours. Next use independent side-view camera calibration for each eye, with local surface skinning and texture projection; extend the reusable eyelid authoring tool to support those camera frames. Current working mouth source: C:/tmp/guardian-faces/rhino-oral-v5.blend/.glb.
+
+## Independent lateral lids
+
+The reusable eyelid authoring tool now accepts cameraDirection and lidObject; defaults preserve existing actor profiles. Rhino profiles use opposite side cameras, separate source-texture atlases and local barycentric skinning. Both fully closed side renders were inspected. Eight progressive blink morphs exist across the two lid meshes. Partial closure, neutral visibility and moving skin still require validation. The right closed lid looks somewhat raised and its texture softer than surrounding skin; assess at game scale and refine if needed.
+
+Editing from a Blend file resampled the original rear-cloth tracks (initial audit failed). Restoring the source channels fixes the audit: 76 bones, six clips, 246 poses, zero position delta. The tool now offers --source-glb for this case. Use the original e77e4a48... source for both eyelid passes. Current candidate: C:/tmp/guardian-faces/rhino-lids-v1.blend and .glb; still uninstalled.
