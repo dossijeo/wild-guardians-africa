@@ -210,7 +210,7 @@ export class AudioSystem {
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
       const id=event.type==='GuardianMagicHit'&&ANIMAL_SOUND_ROUTES[event.species]?event.species+'_hurt':event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
       const requested=this.context?.currentTime??0,generation=this.generation;
-      const magicOptions=event.type==='GuardianMagicHit'?{family:'animal-hurt',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length}:{};
+      const magicOptions=event.type==='GuardianMagicHit'?{family:'animal-hurt',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length&&(!state||this.magicCues.state===state&&!state.result&&(!Number.isFinite(event.presentation?.cueAt)||state.elapsed>=event.presentation.cueAt)&&state.raid?.animals.some(a=>a.id===event.targetId&&a.status!=='gone'))}:{};
       const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
       if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
       if(event.type==='GuardianMagicHit'){
