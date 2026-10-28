@@ -1,0 +1,1317 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        1.2180570032718704e-60
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3031.8818550000283,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 0,
+  "animalState": "retreating",
+  "animalPosition": [
+    89.88019305553205,
+    -8.938134704251537
+  ],
+  "draws": 54,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3021.298140000015,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3021.398020000015,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3021.4980200000155,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3021.4980200000155,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3023.4621450000186,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3025.5090450000216,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3025.6089100000218,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3025.708845000022,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3025.708845000022,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3027.7055250000244,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 4.600000023841858,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 11.120000004768372,
+    "maxStepMs": 17.420000076293945,
+    "solverMs": 0.4200000762939453,
+    "solverSteps": 3,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "hyena",
+      "captureMs": 0.8250000476837158,
+      "colliderFitMs": 8.495000004768372,
+      "environmentMs": 4.164999961853027,
+      "bodiesMs": 2.3600000143051147
+    },
+    "recoveryFollowMs": 2.024999976158142,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 0.49999999999999994,
+      "contactDelay": 0,
+      "error": 0.23165073976505957,
+      "speed": 0.5626735623318535,
+      "timedOut": false
+    }
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 89.88019305553205,
+      "z": -8.938134704251537
+    }
+  ],
+  "errors": [],
+  "report": {
+    "kind": "attack-during-getup",
+    "species": "hyena",
+    "second": true,
+    "entered": true,
+    "finished": true,
+    "rows": [
+      {
+        "time": 3021.348140000015,
+        "x": 90,
+        "z": -6,
+        "phase": null,
+        "recoveryAge": null,
+        "active": 0,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.4480200000153,
+        "x": 90,
+        "z": -6,
+        "phase": null,
+        "recoveryAge": null,
+        "active": 0,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.4980200000155,
+        "x": 90.00000362428408,
+        "z": -6.000000000259553,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.598020000016,
+        "x": 90.01346847606474,
+        "z": -6.217902751917742,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.697695000016,
+        "x": 89.99050568664887,
+        "z": -6.4311690410355045,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.7642500000165,
+        "x": 89.99017179867592,
+        "z": -6.558791639860096,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.8142500000167,
+        "x": 89.98964604470571,
+        "z": -6.653262738537406,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.8975600000167,
+        "x": 89.99339012989786,
+        "z": -6.810368579324243,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3021.980700000017,
+        "x": 89.99357265701644,
+        "z": -6.966413182769808,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.080510000017,
+        "x": 90.0061638220961,
+        "z": -7.116009918866277,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.1804050000173,
+        "x": 90.02281963310196,
+        "z": -7.2698033569646805,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.280245000017,
+        "x": 90.04413761937333,
+        "z": -7.395237490725584,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.3801850000173,
+        "x": 90.06541132042562,
+        "z": -7.54006925801398,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.4801600000173,
+        "x": 90.06601065445948,
+        "z": -7.680891518656578,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.6130400000175,
+        "x": 90.02246739016701,
+        "z": -7.806742346909185,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.6630400000176,
+        "x": 90.01375787287034,
+        "z": -7.842173882063741,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.763040000018,
+        "x": 89.99694526235781,
+        "z": -7.891670246135077,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.8628250000183,
+        "x": 89.98463312705012,
+        "z": -7.917814677326338,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3022.9626150000186,
+        "x": 89.9820562907313,
+        "z": -7.913027201455561,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.0625950000185,
+        "x": 89.97880006340434,
+        "z": -7.8983895029248465,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.1625150000186,
+        "x": 89.97715907649032,
+        "z": -7.887155157509743,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.2624200000187,
+        "x": 89.97694414977697,
+        "z": -7.88534193693092,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.3622450000184,
+        "x": 89.97808941255607,
+        "z": -7.891935733252461,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.4621450000186,
+        "x": 89.9796332913621,
+        "z": -7.901819250781831,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.561985000019,
+        "x": 89.98085565923553,
+        "z": -7.907428025733776,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.661920000019,
+        "x": 89.98040074151612,
+        "z": -7.905442495914043,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.711860000019,
+        "x": 89.97977964127288,
+        "z": -7.902298369064501,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.811835000019,
+        "x": 89.97857403042944,
+        "z": -7.895426302347238,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3023.9115850000194,
+        "x": 89.97802981643937,
+        "z": -7.891778607568004,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.06130000002,
+        "x": 89.96197620109034,
+        "z": -7.884176223473137,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.16120500002,
+        "x": 89.9370867955041,
+        "z": -7.910624493578878,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.26100500002,
+        "x": 89.90227667881162,
+        "z": -7.943844061909391,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.36090500002,
+        "x": 89.87337413300614,
+        "z": -7.969818237810311,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.46067000002,
+        "x": 89.85361135596403,
+        "z": -7.992513223510773,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.5606700000203,
+        "x": 89.83535852067908,
+        "z": -8.005489062500477,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.66040000002,
+        "x": 89.8284521789855,
+        "z": -8.014605834774606,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.7602500000203,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.8600500000202,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.09980000000000291,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3024.9599850000204,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.1997350000000006,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.0598650000206,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.29961499999999797,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.1596400000208,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.39938999999999214,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.259515000021,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.49926499999999213,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.309375000021,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.5491249999999928,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.4592250000214,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.6989749999999914,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.559045000022,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.7987949999999912,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.6089100000218,
+        "x": 89.82705693713864,
+        "z": -8.020332303365576,
+        "phase": "recovering",
+        "recoveryAge": 0.8486599999999891,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.708845000022,
+        "x": 89.82705992827171,
+        "z": -8.020331917385802,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.808635000022,
+        "x": 89.82432805581398,
+        "z": -8.223254073041918,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.8586350000223,
+        "x": 89.82763378081265,
+        "z": -8.329515821214219,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3025.9917250000226,
+        "x": 89.83153048934734,
+        "z": -8.603618718977476,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.041725000023,
+        "x": 89.83047794008135,
+        "z": -8.689089029850708,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.158090000023,
+        "x": 89.80437408877289,
+        "z": -8.84487068335903,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.258015000023,
+        "x": 89.74413942377343,
+        "z": -8.891344777020391,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.3577300000234,
+        "x": 89.68594748965464,
+        "z": -8.916046071618728,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.4576050000237,
+        "x": 89.63911716985083,
+        "z": -8.92521477952083,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.5574950000237,
+        "x": 89.6164108376715,
+        "z": -8.925620300915709,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.657270000024,
+        "x": 89.61494088932592,
+        "z": -8.925520551103636,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.757155000024,
+        "x": 89.61948369273715,
+        "z": -8.923702299871843,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.8569650000236,
+        "x": 89.62590406064302,
+        "z": -8.922082421238182,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3026.906965000024,
+        "x": 89.62882361398202,
+        "z": -8.921648934426097,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.056690000024,
+        "x": 89.63346661729143,
+        "z": -8.921183806664867,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.156350000024,
+        "x": 89.63255056846,
+        "z": -8.92125940024324,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.256325000024,
+        "x": 89.62956451708652,
+        "z": -8.921574844928676,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.356065000024,
+        "x": 89.65374441000696,
+        "z": -8.917231807998691,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.4560650000244,
+        "x": 89.68557394334854,
+        "z": -8.888005214674841,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.555765000024,
+        "x": 89.7353104637833,
+        "z": -8.860771227152688,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.6556250000244,
+        "x": 89.73493978657882,
+        "z": -8.850370834376992,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.7555250000246,
+        "x": 89.72192327010303,
+        "z": -8.846183747349736,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.8553050000246,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.049950000000004366,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3027.9551200000246,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.1497650000000067,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.054975000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.24962000000000262,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.154720000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.3493650000000052,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.2546200000247,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.44926500000000663,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.354475000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.5491200000000098,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.454170000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.6488150000000095,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.554110000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.7487550000000046,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.653820000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.8484650000000038,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.753095000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 0.9477400000000054,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.852815000025,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.0474600000000065,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3028.9027850000252,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.0974300000000077,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.0026450000255,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.1972900000000084,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.1024350000257,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.2970800000000093,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.202370000026,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.397015000000007,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.302260000026,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.4969050000000064,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.402035000026,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.5966800000000079,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.502005000026,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.696650000000009,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.601785000026,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.796430000000008,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.7015900000265,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.8962350000000083,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.8014000000267,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 1.996045000000006,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.884695000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.079340000000004,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3029.984600000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.179245000000003,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.084315000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.278959999999999,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.184295000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.378939999999995,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.2840100000267,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.478654999999999,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.383980000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.5786249999999997,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.4838200000268,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.678464999999996,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.583820000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.7784649999999957,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.683580000027,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.878224999999998,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.7835650000275,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 2.978209999999998,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.8834250000277,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.0780699999999985,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3030.983220000028,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.1778649999999966,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.083025000028,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.2776699999999965,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.182855000028,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.377499999999991,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.2827600000282,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.47740499999999,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.3825700000284,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.577214999999995,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.4825300000284,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.677174999999994,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.5822950000284,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.776939999999993,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.6822750000283,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.876919999999989,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.7820650000285,
+        "x": 89.71199668658345,
+        "z": -8.851282325576564,
+        "phase": "recovering",
+        "recoveryAge": 3.9767099999999895,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "time": 3031.8818550000283,
+        "x": 89.88019305553205,
+        "z": -8.938134704251537,
+        "phase": null,
+        "recoveryAge": null,
+        "active": 0,
+        "guardians": 0,
+        "maxGuardians": 1
+      }
+    ],
+    "errors": [],
+    "scope": "Actual cast and Game.tick; fixture resets cooldown and increases durability to isolate repeated contact."
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 90.26028459775668,
+        "y": 14.459729656735506,
+        "z": -3.0113126747398544
+      },
+      "plan": 3.259999990463257,
+      "logic": 1.6950000524520874,
+      "render": 0.02499997615814209,
+      "total": 4.985000014305115
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 89.82705693713864,
+        "z": -8.020332303365576
+      },
+      "origin": {
+        "x": 89.87008777520322,
+        "y": 14.367103082479531,
+        "z": -5.020640928077868
+      },
+      "plan": 2.225000023841858,
+      "logic": 0.8000000715255737,
+      "render": 0.019999980926513672,
+      "total": 3.0500000715255737
+    }
+  ]
+}
