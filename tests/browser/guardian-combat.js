@@ -54,6 +54,33 @@ try{
   updateWorkerEncounters(state,nav);nav.setState(state);world.render(0);
   $('freeze').textContent='Reanudar';
  }catch(e){fail(e);}};
+ const workerRecord=document.createElement('button');workerRecord.id='recordWorker';workerRecord.textContent='Grabar ciclo trabajador';workerTrial.append(workerRecord);
+ workerRecord.onclick=async()=>{
+  if(recording||measuring)return;
+  recording=true;let rec,stream,destination;
+  try{
+   $('workerHit').click();$('workerView').click();
+   const w=state.workers[0],deadline=performance.now()+90000,rows=[];
+   while(!world.mixers.get(w.id)&&performance.now()<deadline)await sleep(100);
+   if(!world.mixers.get(w.id))throw Error('Worker rig did not load');
+   stream=$('world').captureStream(30);
+   if(audio.context){destination=audio.context.createMediaStreamDestination();audio.sfxGain.connect(destination);for(const track of destination.stream.getAudioTracks())stream.addTrack(track);}
+   rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8,opus',videoBitsPerSecond:5000000});
+   const chunks=[];rec.ondataavailable=e=>chunks.push(e.data);const done=new Promise(resolve=>rec.onstop=resolve);
+   const start=state.elapsed;rec.start();paused=false;$('freeze').textContent='Congelar';$('recordStatus').textContent='Grabando trabajador '+w.profile;
+   while(state.elapsed-start<9&&performance.now()<deadline){
+    await sleep(100);const rig=world.mixers.get(w.id);
+    rows.push({time:state.elapsed-start,x:w.x,z:w.z,fall:w.fallRemaining??0,recovery:w.recovery?.elapsed??null,exit:w.recoveryExitRemaining??0,status:w.status,weights:rig?.expression?Array.from(rig.expression.weights):null});
+   }
+   paused=true;$('freeze').textContent='Reanudar';rec.stop();await done;
+   if(state.elapsed-start<9)throw Error('Worker cycle timed out before nine simulated seconds');
+   report={kind:'worker-cycle',profile:w.profile,clock:'Game.tick',rows,errors:[...errors],finished:!w.fallRemaining&&!w.recovery};
+   const response=await fetch('http://127.0.0.1:5199/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});
+   if(!response.ok)throw Error('Could not save worker recording');
+   $('recordStatus').textContent='Ciclo trabajador guardado: '+w.profile;
+  }catch(e){fail(e);$('recordStatus').textContent='Grabacion trabajador fallida';}
+  finally{paused=true;if(rec?.state==='recording')rec.stop();if(destination)audio.sfxGain.disconnect(destination);for(const track of stream?.getTracks()??[])track.stop();recording=false;}
+ };
  let workerGround=null;
  $('workerGround').onclick=()=>{
   const w=state.workers[0],rig=w&&world.mixers.get(w.id);if(!rig)return;
