@@ -62,6 +62,16 @@ try{
   updateWorkerEncounters(state,nav);nav.setState(state);world.render(0);
   $('freeze').textContent='Reanudar';
  }catch(e){fail(e);}};
+ const recoveryWall=document.createElement('button');recoveryWall.textContent='Muralla durante recuperaci\u00f3n';workerTrial.append(recoveryWall);
+ recoveryWall.onclick=()=>{try{
+  const w=state.workers[0],r=w?.recovery;if(!paused||!r)throw Error('Pause a worker during recovery first');
+  const length=Math.hypot(r.dx,r.dz);if(length<.1)throw Error('Recovery has no free displacement to obstruct');
+  const time=state.time,raid=state.raid;state.time=150;state.raid=null;
+  try{
+   if(!Game.placeStructure(state,'qa-recovery-wall-'+serial++,{kind:'wall',material:'zarzas',x:w.x+r.dx+r.dx/length*.15,z:w.z+r.dz+r.dz/length*.15,yaw:Math.atan2(r.dx,r.dz)},nav))throw Error('Recovery wall placement rejected');
+  }finally{state.time=time;state.raid=raid;nav.setState(state);}
+  world.render(0);
+ }catch(e){fail(e);}};
  const workerRecord=document.createElement('button');workerRecord.id='recordWorker';workerRecord.textContent='Grabar ciclo trabajador';workerTrial.append(workerRecord);
  workerRecord.onclick=async()=>{
   if(recording||measuring)return;
@@ -105,6 +115,7 @@ try{
   });
   workerGround={profile:w.profile,elapsed:state.elapsed,phase:w.recovery?'recovery':w.fallRemaining>0?'fall':w.status,minimum,footMinimum,limiter,count};
  };
+ const workerBackView=document.createElement('button');workerBackView.textContent='Otro lado del trabajador';workerTrial.append(workerBackView);workerBackView.onclick=()=>{const w=state.workers[0];if(!w)return;const y=nav.field.surface(w.x,w.z);world.cinematic=true;world.controls.target.set(w.x,y+.65,w.z);world.camera.position.set(w.x-3,y+2,w.z-3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();};
  $('workerView').onclick=()=>{document.querySelector('header').style.maxHeight='130px';document.querySelector('header').style.overflow='auto';const w=state.workers[0];if(!w)return;const y=nav.field.surface(w.x,w.z);world.cinematic=true;world.controls.target.set(w.x,y+.65,w.z);world.camera.position.set(w.x+3,y+2,w.z+3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();};
 
  const clawView=document.createElement('button');clawView.textContent='Perfil de zarpazo';document.querySelector('header').insertBefore(clawView,$('status'));clawView.onclick=()=>{const a=state.raid?.animals[0],head=a&&world.mixers.get(a.id)?.model.getObjectByName('Head');if(!head)return;head.getWorldPosition(world.controls.target);world.controls.target.y+=.6;world.camera.position.set(world.controls.target.x+7,world.controls.target.y+1.5,world.controls.target.z);world.controls.update();};
