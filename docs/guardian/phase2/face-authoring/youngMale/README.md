@@ -17,3 +17,7 @@ Fixture actor-expression acepta actor=youngMale, localiza mixamorigHead y usa el
 ## Corrección del color exportado v5
 
 Inspección binaria v4: COLOR_0 era blanco uniforme (255), mientras COLOR_1 tenía el pliegue (31877–65535). Se establece ClosureFold como color activo y se exporta ACTIVE, sin canales auxiliares, solo para perfiles closureCrease. El exportador verifica ahora que COLOR_0 conserve variación suficiente; ejecutado con éxito en youngMale-lids-v5-checked.glb. Captura Three.js runtime-v5/closed.png confirma el resultado. La forma todavía necesita revisión de volumen y movimiento, no está instalada.
+
+## Lid envelope v6: not accepted
+
+The quadratic envelope previously shifted globally by 6.145 mm (left) and 4.634 mm (right), then added up to 3 mm of crease bulge. New optional profile controls reduce the shift to 25% and bulge to 1 mm for Kofi only; other actor defaults remain unchanged. Rebuilt GLB and inspected full-closure front/side Cycles renders in lids-v6. Eye coverage is retained in these two views, but the border remains visibly raised and the broad skin patch is still artificial. This is NOT an approved or installed worker asset. Next refine the perimeter attachment and texture transition, then inspect partial closure and animated skinning. Do not claim the reduced offset alone resolves visual integration.

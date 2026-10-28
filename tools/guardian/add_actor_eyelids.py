@@ -123,7 +123,7 @@ for side,points in contours.items():
     # Shift the smooth surface toward the camera enough to clear every sampled
     # source triangle. Do not follow individual eye facets into the lid.
     clearance=float(max(0,np.max(matrix@coefficients-depths)))
-    coefficients[0]-=clearance
+    coefficients[0]-=clearance*profile.get('envelopeClearanceScale',1.0)
     envelopes[side]=(coefficients,clearance)
 def envelope(side,x,y):
     origin=camera+rotation@Vector(((x+.5)/768*extent-extent/2,extent/2-(y+.5)/768*extent,0))
@@ -266,7 +266,7 @@ for side in contours:
                 point=spherical_lid(side,column,t,amount) if side in eye_spheres else envelope(side,x,top+(bottom-top)*t*amount)
                 if profile.get('closureCrease'):
                     line=.78+.08*math.cos((column-.5)*math.pi*2)
-                    bulge=.003*math.sin(math.pi*column)*math.sin(math.pi*t)*(1-.8*math.exp(-((t-line)/.055)**2))
+                    bulge=profile.get('creaseBulge',.003)*math.sin(math.pi*column)*math.sin(math.pi*t)*(1-.8*math.exp(-((t-line)/.055)**2))
                     point-=direction*bulge*amount
                 key.data[i].co=inv@point
         # Vertex clearance alone misses narrow eyeball facets between grid
