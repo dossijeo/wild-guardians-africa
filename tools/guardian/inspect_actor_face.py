@@ -2,7 +2,7 @@
 import bpy,sys,json,math,argparse
 from pathlib import Path
 from mathutils import Vector
-p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);p.add_argument('--lower-views',action='store_true');p.add_argument('--clay',action='store_true');a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);p.add_argument('--lower-views',action='store_true');p.add_argument('--clay',action='store_true');p.add_argument('--albedo',action='store_true');a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=a.input)
 else:bpy.ops.import_scene.gltf(filepath=a.input)
@@ -35,7 +35,18 @@ if a.clay:
  for obj in scene.objects:
   if obj.type=='MESH':
    for i in range(len(obj.data.materials)):obj.data.materials[i]=material
+if a.albedo:
+ for material in bpy.data.materials:
+  if not material.use_nodes:continue
+  nodes=material.node_tree.nodes;links=material.node_tree.links
+  bs=next((n for n in nodes if n.type=='BSDF_PRINCIPLED'),None)
+  output=next((n for n in nodes if n.type=='OUTPUT_MATERIAL'),None)
+  if bs is None or output is None:continue
+  emission=nodes.new('ShaderNodeEmission')
+  if bs.inputs['Base Color'].links:links.new(bs.inputs['Base Color'].links[0].from_socket,emission.inputs['Color'])
+  else:emission.inputs['Color'].default_value=bs.inputs['Base Color'].default_value
+  links.new(emission.outputs[0],output.inputs['Surface'])
 for name,direction in directions:
  cam.location=center+Vector(direction).normalized()*extent*4;cam.rotation_euler=(center-cam.location).to_track_quat('-Z','Y').to_euler();scene.render.filepath=str(out/(name+'.png'));bpy.ops.render.render(write_still=True)
-(out/'inspection.json').write_text(json.dumps({'input':a.input,'expression':a.expression,'amount':a.amount,'meshes':info,'center':list(center),'extent':extent,'directions':dict(directions),'clay':a.clay},indent=2))
+(out/'inspection.json').write_text(json.dumps({'input':a.input,'expression':a.expression,'amount':a.amount,'meshes':info,'center':list(center),'extent':extent,'directions':dict(directions),'clay':a.clay,'albedo':a.albedo},indent=2))
 

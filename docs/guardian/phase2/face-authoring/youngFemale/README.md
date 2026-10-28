@@ -45,3 +45,11 @@ Neutral reference raycasts identified two source defects: a colored triangle in 
 Blender and Three.js neutral views confirm removal of the conspicuous colored patches. Evidence: defect-landmarks.json, uv-repair.json, uv-repair-front.png, uv-browser-neutral.png. All twelve animations/28 bones retain parity across 492 samples. A small residual edge near the iris remains worth inspecting close up.
 
 A separate trial recomputing whole-face normals did not remove the cheek crease and introduced angular chin shading, so that result was rejected. The committed candidate contains only the localized UV fix on top of the v5 eyelids/mouth. Cheek geometry and final continuous expression validation remain pending; active gameplay catalog unchanged.
+
+## Cheek isolation experiments (not applied)
+
+Added --albedo to inspect_actor_face.py to separate base-color features from lighting/normal defects. The unlit front retains subtle painted smile creases, while the stronger lit cheek line is much less apparent. This does not justify repainting or removing the anatomical smile contour.
+
+Two local trials were evaluated: depth fairing in an elliptical left-cheek region (maximum displacement 0.00532 m, same displacement on every morph) and fitted analytic normals with unchanged coordinates. Neither produced a clear enough visual benefit to accept. The current mouth-candidate assets remain unchanged. smooth_amara_cheek.py is retained as a diagnostic experiment only, not an accepted generation stage. Captures: cheek-albedo-diagnostic.png, cheek-fairing-rejected.png and cheek-normals-trial.png.
+
+Next investigation should compare evaluated normals and material channels at the visible edge before any additional deformation. Do not claim the cheek crease has been corrected from these trials.
