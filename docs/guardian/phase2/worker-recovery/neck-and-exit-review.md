@@ -29,3 +29,11 @@ All-profile state completion is now observed. Continuous visual acceptance, more
 ## Installed Amara recheck
 
 Rechecked all four profiles at 3.1 seconds in the browser worker fixture, with the production clip preparation and current catalog. Captures: *-fall-3p1.png. The smoothed cervical settle remains active. Kofi was also inspected at 2.5 seconds and Amara during recovery at cycle 4.6 seconds. Angular shirt-collar folds remain visible in intermediate poses; do not claim these mesh folds are repaired. Thirty action, expression, settle and recovery-boundary tests pass. The boundary test additionally rejects missing animation targets. This review does not replace the pending continuous full-scene matrix.
+
+## Stationary recovery exit
+
+The previous exit blend skipped Idle destinations. A worker stopped after GetUp could jump directly from Idle(0) to the global idle phase. The renderer now uses a distinct cached Idle action for the starting pose even when the destination is Idle, with the existing 0.24-second blend. The cloned source clip is shared through a WeakMap, not cloned per worker or frame. Four real-rig regressions fail against the previous implementation and pass with this change, covering start/end pose equality, intermediate blend, paused resampling, action reuse and interruption by another fall. The focused action/state/boundary/idle-exit suite passes 28 tests.
+
+Added a stationary cycle to the browser fixture and sampled all four at 6.74, 6.86 and 7.02 seconds (idle-exit-start/middle/end.png). This exposed a fixture placement bug: authored root tracks reset two models to the origin, overlapping the lineup. A separate parent Group now holds fixture placement. Production placement was not changed. These are graphical sampled-pose checks, not a continuous full-game scenario.
+
+Dynamic obstacle limitation remains: recovery displacement is validated at entry only. A structure or gate changing during recovery is not yet revalidated, and no claim of safety for that case is made. A future fix must preserve the current rendered root position while replanning, rather than abruptly changing the existing fraction.

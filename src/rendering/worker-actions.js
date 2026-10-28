@@ -3,6 +3,12 @@ import {sampleFixedPose} from './fixed-pose.js';
 import {syncWorkerToolVisibility} from './worker-tool-visibility.js';
 import {PROFILES} from '../simulation/workforce.js';
 import {LoopRepeat,LoopOnce,Box3,Vector3} from 'three';
+const recoveryIdleClips=new WeakMap();
+function recoveryIdleClip(idle){
+  let clip=recoveryIdleClips.get(idle);
+  if(!clip){clip=idle.clone();recoveryIdleClips.set(idle,clip);}
+  return clip;
+}
 export function nativeCrate(gltf){
   const original=gltf.scene.getObjectByName('Prop_FruitCrate');
   if(!original)throw new Error('Falta la caja original de transporte');
@@ -17,10 +23,11 @@ export function applyWorkerPose(data,worker,task,elapsed,library,cullHiddenTools
   if(restart){data.action?.stop();data.action=data.mixer.clipAction(clip);data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();data.action.paused=true;data.action.clampWhenFinished=true;data.name=pose.name;}
   // GetUp ends at Idle(0). Blend from that exact pose while navigation resumes.
   const exit=Math.min(1,Math.max(0,(worker.recoveryExitRemaining??0)/RECOVERY_EXIT_SECONDS));
-  const blending=exit>0&&!worker.recovery&&!worker.fallRemaining&&pose.name!=='Idle';
+  const blending=exit>0&&!worker.recovery&&!worker.fallRemaining;
   if(blending){
     const idle=data.clips.find(c=>c.name==='Idle');
-    data.recoveryBlendAction??=data.mixer.clipAction(idle);
+    // A distinct cached action is required when the destination is Idle itself.
+    data.recoveryBlendAction??=data.mixer.clipAction(recoveryIdleClip(idle));
     data.recoveryBlendAction.play();data.recoveryBlendAction.paused=true;data.recoveryBlendAction.time=0;
     const weight=exit*exit*(3-2*exit);
     data.recoveryBlendAction.setEffectiveWeight(weight);data.action.setEffectiveWeight(1-weight);

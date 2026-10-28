@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Acciones nativas de trabajadores</title><style>
 body{margin:0;background:#eee7d6;font:16px system-ui;color:#292d24}header{padding:12px;background:#fff9ed;position:absolute;z-index:1;left:0;right:0}canvas{display:block;width:100vw;height:100vh}button,select{font:inherit;margin:4px;padding:6px}#status{display:block;font-size:13px}
 </style><header>Prueba visual de los cuatro GLB exportados y el controlador de producción.
-<label>Acción <select id="action"><option value="idle">Reposo</option><option value="ambient">Espera autónoma · reposo/vigilancia/paseo</option><option value="walking">Caminar · 0,72 m/s</option><option value="running">Carrera laboral · 1,6 m/s</option><option value="initial">Siembra + primer riego</option><option value="water">Regar</option><option value="harvest">Cosechar</option><option value="carrying">Transportar caja</option><option value="fleeing">Huir</option><option value="slow-flight">Retirada ralentizada</option><option value="cycle">Golpe + levantarse + huida</option><option value="transition">Transición de caída (candidato)</option><option value="recovery">Levantarse (candidato)</option><option value="fall">Caída</option></select></label><button id="pause">Pausar</button><span id="status">Cargando geometría, texturas y rigs originales…</span></header><canvas id="view" aria-label="Cuatro trabajadores con acciones originales, de izquierda a derecha: hombre mayor, mujer mayor, hombre joven y mujer joven"></canvas>
+<label>Acción <select id="action"><option value="idle">Reposo</option><option value="ambient">Espera autónoma · reposo/vigilancia/paseo</option><option value="walking">Caminar · 0,72 m/s</option><option value="running">Carrera laboral · 1,6 m/s</option><option value="initial">Siembra + primer riego</option><option value="water">Regar</option><option value="harvest">Cosechar</option><option value="carrying">Transportar caja</option><option value="fleeing">Huir</option><option value="slow-flight">Retirada ralentizada</option><option value="stationary-cycle">Golpe + levantarse + reposo</option><option value="cycle">Golpe + levantarse + huida</option><option value="transition">Transición de caída (candidato)</option><option value="recovery">Levantarse (candidato)</option><option value="fall">Caída</option></select></label><button id="pause">Pausar</button><span id="status">Cargando geometría, texturas y rigs originales…</span></header><canvas id="view" aria-label="Cuatro trabajadores con acciones originales, de izquierda a derecha: hombre mayor, mujer mayor, hombre joven y mujer joven"></canvas>
 <script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -23,11 +23,11 @@ const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandard
 const assets=new Assets(),libraries=await json('/content/worker-actions.json'),actors=[];
 const packedRecoveries=await loadRecoveryClips('/content/guardian/worker-recovery/');
 for(const [i,profile] of PROFILES.entries()){
- const gltf=await assets.model(libraries[profile.id].url),model=clone(gltf.scene);model.position.x=(i-1.5)*2;model.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;if(o.isSkinnedMesh)o.frustumCulled=false;});scene.add(model);
+ const gltf=await assets.model(libraries[profile.id].url),model=clone(gltf.scene);model.position.x=(i-1.5)*2;model.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;if(o.isSkinnedMesh)o.frustumCulled=false;});const placement=new THREE.Group();placement.add(model);model.position.set(0,0,0);scene.add(placement);
  const recoveryData=await json('/content/source/animations/stand-up/workers/'+profile.id+'-candidate.json');
  const recovery=THREE.AnimationClip.parse(recoveryData.clip);
  const transition=packedRecoveries.get(profile.id);
- actors.push({profile,model,mixer:new THREE.AnimationMixer(model),clips:[...prepareWorkerClips(gltf.animations),recovery,transition],recovery,transition,name:null});
+ actors.push({profile,model,placement,mixer:new THREE.AnimationMixer(model),clips:[...prepareWorkerClips(gltf.animations),recovery,transition],recovery,transition,name:null});
 }
 const review=document.createElement('span');review.innerHTML='<label> Tiempo <input id="reviewTime" type="number" min="0" max="60" step="0.02" value="0"></label><button id="focusKofi">Rostro de Kofi</button><button id="blinkKofi">Cierre de parpadeo Kofi</button>';document.querySelector('header').append(review);
 function seek(value){elapsed=value;paused=true;document.querySelector('#pause').textContent='Continuar';document.querySelector('#reviewTime').value=value;}
@@ -45,18 +45,18 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(!paused)e
   const moving=['walking','running','fleeing','slow-flight','carrying'].includes(action),run=['running','fleeing','slow-flight'].includes(action);
   const phase=elapsed*(action==='slow-flight'?.35:1),angle=phase*(run?L.runMetresPerSecond:L.walkMetresPerSecond)/.68;
   worker.runPhase=phase;worker.walkPhase=phase;worker.carryPhase=phase;
-  actor.model.position.set((PROFILES.indexOf(actor.profile)-1.5)*2+(moving?.68*Math.sin(angle):0),0,moving?.68*Math.cos(angle):0);
-  actor.model.rotation.y=moving?angle+Math.PI/2:0;
-  if(action==='cycle'){
-   worker={id:actor.profile.id,profile:actor.profile.id,x:(PROFILES.indexOf(actor.profile)-1.5)*2,z:0,heading:0,status:'fleeing',hits:1,fallRemaining:libraries[actor.profile.id].actions.Fall.duration};
-   let remaining=elapsed;while(remaining>1e-8){const step=Math.min(1/60,remaining);if(!advanceWorkerRecovery(worker,step,{walkable:()=>true,workerMotionClear:()=>true})){worker.z+=step*.72;worker.runPhase=(worker.runPhase??0)+step;}remaining-=step;}
-   actor.model.position.set(worker.x,0,worker.z);actor.model.rotation.y=worker.downHeading??worker.heading;
+  actor.placement.position.set((PROFILES.indexOf(actor.profile)-1.5)*2+(moving?.68*Math.sin(angle):0),0,moving?.68*Math.cos(angle):0);
+  actor.placement.rotation.y=moving?angle+Math.PI/2:0;
+  if(action==='cycle'||action==='stationary-cycle'){
+   worker={id:actor.profile.id,profile:actor.profile.id,x:(PROFILES.indexOf(actor.profile)-1.5)*2,z:0,heading:0,status:'fleeing',running:action==='cycle',hits:1,fallRemaining:libraries[actor.profile.id].actions.Fall.duration};
+   let remaining=elapsed;while(remaining>1e-8){const step=Math.min(1/60,remaining);if(!advanceWorkerRecovery(worker,step,{walkable:()=>true,workerMotionClear:()=>true})){if(worker.running)worker.z+=step*.72;worker.runPhase=(worker.runPhase??0)+step;}remaining-=step;}
+   actor.placement.position.set(worker.x,0,worker.z);actor.placement.rotation.y=worker.downHeading??worker.heading;
    applyWorkerPose(actor,worker,null,elapsed,libraries[actor.profile.id]);
   }else if(action==='ambient'){
     const anchor={id:'anchor-'+actor.profile.id,x:(PROFILES.indexOf(actor.profile)-1.5)*2,z:0};
     actor.ambientWorker??={id:actor.profile.id,personId:actor.profile.id,profile:actor.profile.id,status:'idle',x:anchor.x,z:anchor.z,runRemaining:80};
     if(!paused)updateIdle(actor.ambientWorker,anchor,dt,ambientNav,712);
-    actor.model.position.set(actor.ambientWorker.x,0,actor.ambientWorker.z);actor.model.rotation.y=actor.ambientWorker.heading??0;
+    actor.placement.position.set(actor.ambientWorker.x,0,actor.ambientWorker.z);actor.placement.rotation.y=actor.ambientWorker.heading??0;
     applyWorkerPose(actor,actor.ambientWorker,null,elapsed,libraries[actor.profile.id]);
   }else if(action==='recovery'||action==='transition'){
    const selected=action==='transition'?actor.transition:actor.recovery;
