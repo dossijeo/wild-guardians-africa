@@ -1,3 +1,4 @@
+import {pointGuardian} from '../rendering/guardian-pointing.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {GuardianFace} from './guardian-face.js';
@@ -39,6 +40,7 @@ export class Guardian3D {
   const pause=speaking?this.face.data?.pauses?.findIndex(p=>clock>=p.start&&clock<=p.end):-1;
   this.gazeOffset.set(!reduced&&pause>=0?(pause%2?-.16:.16):0,0,0);
   this.model.updateMatrixWorld(true);
+  if(this.pointTarget)pointGuardian(this.model,this.pointTarget,.9);
   for(const {bone,side,rest} of this.eyes){
    bone.quaternion.copy(rest);bone.parent.updateWorldMatrix(true,false);this.temp.copy(this.eyeTargets[side]??this.target);if(!this.eyeTargets[side])this.temp.add(this.gazeOffset);bone.parent.worldToLocal(this.temp);this.temp.sub(bone.position).applyQuaternion(this.q.copy(rest).invert()).normalize();
    // Local Y is the forward direction of the authored eye bone.

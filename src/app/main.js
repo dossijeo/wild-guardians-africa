@@ -25,7 +25,7 @@ import {tutorialMessageShownToday,recordTutorialMessageToday} from '../tutorial/
 import {NoticeLifetime,tutorialCoversNotice} from './notices.js';
 const noticeLifetime=new NoticeLifetime();
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
-import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
+import {TutorialHudGuide,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {castPickedSpell} from './spell-placement.js';
@@ -284,7 +284,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
   } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
 function guidedHudAction(action,open){
-  const guided=!!hudHand&&!hudHand.image.hidden&&hudHand.selector===`[data-menu="${action}"]`;
+  const guided=!!hudHand&&hudHand.visible&&hudHand.selector===`[data-menu="${action}"]`;
   open();
   if(surfaces.active==='panel')uiAudio.guidedTouch(action,{guided});
 }
@@ -306,7 +306,7 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
     if(tool&&point) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
-      const guided=guidedPlacementKind(tool,world.hands);let committed=false;
+      const guided=guidedPlacementKind(tool,world.hands,world.guardianSummons?.guiding?world.guardianSummons.guide:null);let committed=false;
       if(tool.kind==='center'||tool.kind==='wall')committed=Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
       else if(tool.kind==='plant')committed=plantNearTouch(state,commandId(),tool.species,point,nav);
       if(committed===false)return;
@@ -354,7 +354,7 @@ function openSurface(kind,key=kind){
   if(!surfaces.open(kind,{mandatory:kind==='hiring',force:kind==='result'}))return false;
   dialogVoice.stop();
   const beforePause=state.pauses.slice();
-  setTutorialInteraction(false);guardian?.hide({immediate:true,interrupt:true});
+  setTutorialInteraction(false);if(!(kind==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(state.tutorial.reading)))guardian?.hide({immediate:true,interrupt:true});
   if(kind!=='context'){selection=null;document.querySelector('#context').replaceChildren();}
   if(kind!=='panel')document.querySelector('#panel').replaceChildren();
   if(kind!=='modal'&&kind!=='hiring'&&kind!=='result')document.querySelector('#modal').replaceChildren();
@@ -394,7 +394,7 @@ function updateUI(force=false) {
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
-  if(guidanceQa){const stats=document.querySelector('#stats');stats.setAttribute('data-no-i18n','');stats.hidden=true;stats.textContent=JSON.stringify({step:state.tutorial.step,reading:state.tutorial.reading,guides:state.tutorial.guideAfterAuto,pauses:state.pauses,tool:tool?.kind,worldTool:world.tutorialToolKind,handsEnabled:world.tutorialHandsEnabled,worldHand:{visible:world.hands?.mesh.visible,textures:world.hands?.textures.size,...world.hands?.hints.getState()},hudHand:{hidden:hudHand?.image.hidden,loaded:hudHand?.image.complete&&hudHand.image.naturalWidth>0,selector:hudHand?.selector},voice:guardian?.voice?.status,camera:world.camera.position.toArray(),day:state.day,time:state.time,money:numberOf(state.ledger.balance),crates:state.crates.map(c=>({id:c.id,sourcePlantId:c.sourcePlantId,carrierId:c.carrierId,delivered:c.delivered,x:c.x,z:c.z})),raid:state.raid?{id:state.raid.id,animals:state.raid.animals.map(a=>({id:a.id,species:a.species,status:a.status,x:a.x,z:a.z}))}:null,plants:state.plants.map(p=>({id:p.id,growth:p.growth,water:p.water,alive:p.alive})),workers:state.workers.map(w=>({id:w.id,status:w.status,taskId:w.taskId,x:w.x,z:w.z}))});}
+  if(guidanceQa){const stats=document.querySelector('#stats');stats.setAttribute('data-no-i18n','');stats.hidden=true;stats.textContent=JSON.stringify({step:state.tutorial.step,reading:state.tutorial.reading,guides:state.tutorial.guideAfterAuto,pauses:state.pauses,tool:tool?.kind,worldTool:world.tutorialToolKind,handsEnabled:world.tutorialHandsEnabled,worldHand:{visible:world.hands?.mesh.visible,textures:world.hands?.textures.size,...world.hands?.hints.getState()},hudHand:{hidden:!hudHand?.visible,loaded:!!guardian?.mesh?.model,selector:hudHand?.selector},voice:guardian?.voice?.status,camera:world.camera.position.toArray(),day:state.day,time:state.time,money:numberOf(state.ledger.balance),crates:state.crates.map(c=>({id:c.id,sourcePlantId:c.sourcePlantId,carrierId:c.carrierId,delivered:c.delivered,x:c.x,z:c.z})),raid:state.raid?{id:state.raid.id,animals:state.raid.animals.map(a=>({id:a.id,species:a.species,status:a.status,x:a.x,z:a.z}))}:null,plants:state.plants.map(p=>({id:p.id,growth:p.growth,water:p.water,alive:p.alive})),workers:state.workers.map(w=>({id:w.id,status:w.status,taskId:w.taskId,x:w.x,z:w.z}))});}
   const stage=document.querySelector('#stage'),size=`${stage.clientWidth}:${stage.clientHeight}`;
   if(size!==hudSize){hudSize=size;const dims=layoutHud(stage);if(frameImages&&document.querySelector('#hiring-dialog'))framePaint(document.querySelector('#modal'),dims,frameImages);}
   document.querySelector('#clockValue').textContent=Game.clockLabel(state);
@@ -470,11 +470,13 @@ function setTutorialInteraction(blocking){
 const budgetWarningVisible=()=>performance.now()<budgetWarningUntil&&(!tutorialMessageShownToday(state,'budget.reserve')||guardian?.key?.startsWith('budget.reserve:'))||guardian?.key?.startsWith('budget.reserve:')&&guardian.voice?.active;
 function refreshTutorialGuidance(){
   const warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
-  const guideAllowed=!surfaces.active&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
-  hudHand??=new TutorialHudHand(document.querySelector('#stage'));hudHand.show(guideAllowed?tutorialHudHandTarget(state,message,tool?.kind,tool?.spell):null);
+  const guidePanel=surfaces.active==='panel'&&['basic.center','basic.plant'].includes(state.tutorial.reading);
+  const guideAllowed=(!surfaces.active||guidePanel)&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
+  hudHand??=new TutorialHudGuide(document.querySelector('#stage'));hudHand.show(guideAllowed?(guidePanel?(state.tutorial.reading==='basic.center'?'#native-center':'[data-crop]'):tutorialHudHandTarget(state,message,tool?.kind,tool?.spell)):null);
   const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
-  syncTutorialActionPause(state,{hudTarget:!hudHand.image.hidden,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
+  guardian?.setGuide(hudHand.rect);
+  syncTutorialActionPause(state,{hudTarget:hudHand.visible,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
 }
 function ensureGuardianView() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase),new SpiritVoice({url:assetUrl,volume:()=>settings.sfx}));
@@ -482,7 +484,7 @@ function ensureGuardianView() {
 }
 function narrator() {
   ensureGuardianView();
-  tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
+  tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active&&!(surfaces.active==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(state.tutorial.reading))?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
   recordTutorialMessageToday(state,message.id);

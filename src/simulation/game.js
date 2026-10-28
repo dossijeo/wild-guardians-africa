@@ -1,3 +1,4 @@
+import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
 import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {attackTarget,applyGuardianAttack} from './guardian-combat.js';
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
@@ -112,6 +113,7 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
       cultures.set(culture,{candidate,footprint,check});
     }
     const {candidate,footprint,check}=cultures.get(culture);
+    if(!firstCenterWithinVillage(s,candidate)){failure='Construye el primer centro cerca del poblado';continue;}
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
     const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
     const inspect=routes=>{

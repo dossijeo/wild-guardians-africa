@@ -1,0 +1,161 @@
+{
+  "hiringRoutes": null,
+  "loading": [
+    {
+      "stamp": 1275.5099999904633,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 92700.11500000954,
+      "cover": true,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 93125.00999999046,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 117150.58500003815,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    }
+  ],
+  "campaignEvents": [
+    {
+      "day": 1,
+      "time": 0.2829449999999924,
+      "elapsed": 0.2829449999999924,
+      "id": "event-1",
+      "type": "TutorialMessageStarted",
+      "messageId": "basic.introduction"
+    },
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "id": "event-2",
+      "type": "TutorialMessageStarted",
+      "messageId": "basic.center"
+    }
+  ],
+  "campaignPhases": [
+    {
+      "day": 1,
+      "time": 0,
+      "elapsed": 0,
+      "completedNights": 0,
+      "result": null,
+      "raid": null,
+      "pauses": [],
+      "structures": [],
+      "notices": []
+    },
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "completedNights": 0,
+      "result": null,
+      "raid": null,
+      "pauses": [
+        "tutorial-action"
+      ],
+      "structures": [],
+      "notices": []
+    }
+  ],
+  "raid": null,
+  "raidView": {
+    "eye": {
+      "x": 99.70247532024266,
+      "z": 30.57367599590944
+    },
+    "target": {
+      "x": 83,
+      "z": 0
+    }
+  },
+  "completedNights": 0,
+  "result": null,
+  "nightPlan": null,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "day": 1,
+  "time": 14.384269999999967,
+  "elapsed": 14.384269999999967,
+  "balance": {
+    "n": "1500",
+    "d": "1"
+  },
+  "pauses": [
+    "tutorial-action"
+  ],
+  "tutorial": {
+    "step": "center",
+    "seen": [
+      "basic.introduction",
+      "basic.center"
+    ],
+    "pending": [],
+    "guideAfterAuto": [
+      "basic.center"
+    ],
+    "reading": null,
+    "basicSkipped": false,
+    "shownToday": {
+      "day": 1,
+      "ids": [
+        "basic.introduction",
+        "basic.center"
+      ]
+    },
+    "dismissed": [
+      "basic.introduction:",
+      "basic.center:"
+    ]
+  },
+  "hands": {
+    "hudVisible": false,
+    "worldVisible": false,
+    "toolKind": "center",
+    "worldTarget": {
+      "kind": "point",
+      "target": "center-site",
+      "minimumScreenHeight": 40,
+      "position": [
+        83,
+        8.748464012145996,
+        0
+      ]
+    },
+    "worldScreen": {
+      "x": 640,
+      "y": 364,
+      "depth": 0.9951444301279799,
+      "inFrustum": true
+    }
+  },
+  "structures": [],
+  "proposedCenter": {
+    "kind": "center",
+    "x": 83,
+    "z": 0,
+    "culture": "suajili",
+    "screen": {
+      "x": 640,
+      "y": 364,
+      "depth": 0.9951444301279799,
+      "inFrustum": true
+    }
+  },
+  "plantSpots": [],
+  "plants": [],
+  "workers": [],
+  "delivered": 0
+}

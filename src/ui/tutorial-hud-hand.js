@@ -1,6 +1,4 @@
 import {agriculturalGuidePlant} from '../tutorial/agricultural-guide.js';
-import {HAND_ASSETS,HAND_INFO} from '../rendering/hands-native.js';
-import {assetUrl} from '../rendering/asset-url.js';
 
 export function tutorialHudHandTarget(state,message,toolKind=null,toolSpell=null){
   if(state.day!==1||state.result||state.tutorial.basicSkipped||state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
@@ -13,23 +11,10 @@ export function tutorialHudHandTarget(state,message,toolKind=null,toolSpell=null
   return `[data-menu="${step==='center'?'build':'grow'}"]`;
 }
 
-export class TutorialHudHand{
-  constructor(stage){
-    this.stage=stage;this.image=document.createElement('img');this.image.className='tutorial-hud-hand';this.image.src=assetUrl(HAND_ASSETS.point);this.image.alt='';this.image.setAttribute('aria-hidden','true');this.image.hidden=true;
-    const info=HAND_INFO.point;this.image.style.setProperty('--hand-pivot-x',-info.pivot[0]*100+'%');this.image.style.setProperty('--hand-pivot-y',-info.pivot[1]*100+'%');this.image.width=116;
-    stage.append(this.image);this.observer=new ResizeObserver(()=>this.place());this.observer.observe(stage);
-  }
-  show(selector){this.selector=selector;this.place();}
-  place(){
-    const target=this.selector&&this.stage.querySelector(this.selector),rect=target?.getBoundingClientRect();
-    this.image.hidden=!rect||!rect.width||!rect.height||target.disabled||document.hidden;
-    if(this.image.hidden)return;
-    // Point into the icon from the world side. A downward hand sat on the
-    // preceding HUD action and visually became part of its wooden frame.
-    const x=rect.left+rect.width*.12,y=rect.top+rect.height*.5;
-    const position=x+'px:'+y+'px';
-    if(position===this.position)return;this.position=position;
-    this.image.style.left=x+'px';this.image.style.top=y+'px';
-  }
-  dispose(){this.observer.disconnect();this.image.remove();}
+// Target discovery only: the 3D Guardian owns all visible guidance.
+export class TutorialHudGuide{
+ constructor(stage){this.stage=stage;this.visible=false;}
+ show(selector){this.selector=selector;this.place();}
+ place(){const target=this.selector&&this.stage.querySelector(this.selector),rect=target?.getBoundingClientRect();this.visible=!!rect?.width&&!!rect?.height&&!target.disabled&&!document.hidden;this.rect=this.visible?rect:null;}
+ dispose(){}
 }

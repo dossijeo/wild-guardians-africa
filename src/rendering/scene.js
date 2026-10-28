@@ -842,9 +842,9 @@ export class WorldScene {
     return config;
   }
   updateHands(dt){
-    if(!this.hands)return;
     const config=this.tutorialGuideTarget();focusNewTutorialPlacement(this,config);
-    this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera,this.renderer.domElement.clientHeight);
+    this.guardianSummons?.setGuide(config);
+    this.hands?.show(null,[]);
   }
   *renderFrameUpdates(dt) {
     if(this.beastPhysics)this.beastPhysics.stats.recoveryMs=0;

@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
 import './guardian-native.css';
 import './guardian-3d.css';
@@ -70,27 +71,40 @@ export class NativeGuardian {
     if(immediate){this.lifecycle.close();this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.lastStamp=null;this.present('hidden');}
     else this.lifecycle.finish();
   }
+  setGuide(rect){
+    this.guideRect=rect;this.root.classList.toggle('guiding',!!rect);
+    if(!rect){this.mesh&&(this.mesh.pointTarget=null);this.guidePosition=null;}
+  }
+  moveGuide(dt){
+    if(!this.guideRect||!this.mesh)return;
+    const r=this.guideRect,shell=this.root.querySelector('.avatar-shell'),w=shell.offsetWidth,h=shell.offsetHeight;
+    const x=Math.max(4,Math.min(innerWidth-w-4,r.left-w+16)),y=Math.max(4,Math.min(innerHeight-h-4,r.top+r.height*.5-h*.48));
+    this.guidePosition??={x:4,y:innerHeight-h-4};const p=this.guidePosition,t=this.reduced?1:1-Math.exp(-Math.max(dt,.001)*5);
+    p.x+=(x-p.x)*t;p.y+=(y-p.y)*t;shell.style.setProperty('--guide-x',p.x+'px');shell.style.setProperty('--guide-y',p.y+'px');
+    const c=this.mesh.camera,tx=((r.left+r.width*.5-p.x)/w*2-1),ty=1-(r.top+r.height*.5-p.y)/h*2;
+    this.mesh.pointTarget??=new THREE.Vector3();this.mesh.pointTarget.set(tx,ty,0).unproject(c);this.mesh.pointTarget.z=0;
+  }
   setWorldPresence(active){
     // Keep narration and its controls alive; the spirit has one visible body.
-    this.root.querySelector('.avatar-shell').style.visibility=active?'hidden':'';
+    this.worldPresence=active;this.root.querySelector('.avatar-shell').style.visibility=active?'hidden':'';
   }
   present(phase){try{this.onPresentation(phase);}catch{}}
   resize(){if(this.mesh){this.mesh.resize();this.draw(0);}}
   update(){
-    if(this.disposed||document.hidden||this.root.classList.contains('closed')){this.lastStamp=null;return;}
+    if(this.disposed||document.hidden||this.root.classList.contains('closed')&&!this.guideRect){this.lastStamp=null;return;}
     const stamp=performance.now(),elapsed=this.lastStamp===null?0:Math.max(0,(stamp-this.lastStamp)/1000);this.lastStamp=stamp;
     this.time+=elapsed;this.age+=elapsed;
     if(this.voice?.duration)this.duration=this.voice.duration;
     if(this.closeAfter&&(!this.voice||this.voice.status==='fallback')&&this.age>=this.duration+.9)this.hide();
     this.lifecycle.advance(elapsed,this.duration);
     this.root.classList.toggle('leaving',this.lifecycle.phase==='outro');
-    if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.lastStamp=null;this.present('closed');return;}
-    this.draw(Math.min(elapsed,.065));
+    if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.present('closed');if(!this.guideRect){this.lastStamp=null;return;}}
+    this.moveGuide(elapsed);this.draw(Math.min(elapsed,.065));
   }
   draw(dt){
     if(!this.mesh)return;
     const sample=this.lifecycle.sample(this.gesture??'idle',this.duration??7),gesture=sample.state;
-    this.mesh.draw({time:this.time,audio:this.voice?.audio,gesture:this.gesture??gesture,reduced:this.reduced});
+    if(!this.worldPresence)this.mesh.draw({time:this.time,audio:this.voice?.audio,gesture:this.gesture??gesture,reduced:this.reduced});
     this.present(document.hidden?'hidden':this.lifecycle.phase);
     this.root.dataset.phase=gesture;
     this.root.dataset.lifecycle=this.lifecycle.phase;

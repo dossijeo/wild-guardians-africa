@@ -1,7 +1,7 @@
 import {Vector3} from 'three';
 // Bounded work per accepted command. No navigation or camera movement is requested.
-export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,cropHeight=()=>2.2}){
- const blockedAt=(x,y,z)=>[y-.9,y,y+1.1].reduce((count,height)=>count+Number(occluded(x,height,z)),0);
+export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,cropHeight=()=>2.2}){
+ const blockedAt=(x,y,z)=>[y-.9*bodyScale,y,y+1.1*bodyScale].reduce((count,height)=>count+Number(occluded(x,height,z)),0);
  const radius=target.radius??.7,base=Math.atan2(camera.position.x-target.x,camera.position.z-target.z),v=new Vector3(),candidates=[];
  // Cull distant entries once per command, rather than scanning the whole farm
  // for each of the sixteen candidate footprints.
@@ -13,11 +13,11 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  for(const distance of [radius+2.1,radius+3.4])for(const offset of [-.9,.9,-1.5,1.5,-.4,.4,2,-2]){
   const a=base+offset,x=target.x+Math.sin(a)*distance,z=target.z+Math.cos(a)*distance,y=nav.actorSurface?.(x,z)??nav.field.surface(x,z);
   if(!Number.isFinite(y))continue;
-  const clear=nav.walkable(x,z,.8,null,false)&&!occupied?.(x,y+1.7,z)&&!workers.some(w=>Math.hypot(x-w.x,z-w.z)<1.1)&&!(state.raid?.animals??[]).some(a=>a.status!=='gone'&&Math.hypot(x-a.x,z-a.z)<.8+a.radius)&&!crops.some(p=>Math.hypot(x-p.x,z-p.z)<1);
-  v.set(x,y+1.7,z).project(camera);
+  const clear=nav.placement(x,z,.8*bodyScale).valid&&!occupied?.(x,y+1.7*bodyScale,z)&&!workers.some(w=>Math.hypot(x-w.x,z-w.z)<1.1)&&!(state.raid?.animals??[]).some(a=>a.status!=='gone'&&Math.hypot(x-a.x,z-a.z)<.8+a.radius)&&!crops.some(p=>Math.hypot(x-p.x,z-p.z)<1);
+  v.set(x,y+1.7*bodyScale,z).project(camera);
   const screen=Math.hypot(v.x-sx,v.y-sy),out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
-  const blocked=blockedAt(x,y+1.7,z),score=(clear?0:1000)+out*100+Math.abs(y-floor)*3+blocked*12+Math.abs(screen-.19)*8+distance*.12;
-  candidates.push({x,y:y+1.7,z,score,clear,distance});
+  const blocked=blockedAt(x,y+1.7*bodyScale,z),score=(clear?0:1000)+out*100+Math.abs(y-floor)*3+blocked*12+Math.abs(screen-.19)*8+distance*.12;
+  candidates.push({x,y:y+1.7*bodyScale,z,score,clear,distance});
  }
  candidates.sort((a,b)=>a.score-b.score);const best=candidates.find(p=>p.clear)??candidates[0];
  if(!best)return {x:target.x+2,y:floor+5,z:target.z};
@@ -26,14 +26,14 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
   // blind five-metre lift that can put the spirit outside the camera.
   const aerial=[];
   for(const p of candidates){
-   let ceiling=p.y-1.7;
+   let ceiling=p.y-1.7*bodyScale;
    for(const crop of crops)if(Math.hypot(p.x-crop.x,p.z-crop.z)<1.2)ceiling=Math.max(ceiling,(nav.field.surface(crop.x,crop.z))+cropHeight(crop));
    for(const worker of workers)if(Math.hypot(p.x-worker.x,p.z-worker.z)<1.3)ceiling=Math.max(ceiling,nav.field.surface(worker.x,worker.z)+2);
    for(const animal of state.raid?.animals??[])if(animal.status!=='gone'&&Math.hypot(p.x-animal.x,p.z-animal.z)<1+animal.radius)ceiling=Math.max(ceiling,nav.field.surface(animal.x,animal.z)+3.5);
    for(const lift of [1.6,2.5,3.5,5]){
-    const y=p.y+lift;if(y-1.2<ceiling||occupied(p.x,y,p.z))continue;
+    const y=p.y+lift;if(y-1.2*bodyScale<ceiling||occupied(p.x,y,p.z))continue;
     v.set(p.x,y,p.z).project(camera);const screen=Math.hypot(v.x-sx,v.y-sy);let out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
-    v.set(p.x,y+1.3,p.z).project(camera);out+=Math.max(0,Math.abs(v.y)-.88);
+    v.set(p.x,y+1.3*bodyScale,p.z).project(camera);out+=Math.max(0,Math.abs(v.y)-.88);
     const score=out*100+blockedAt(p.x,y,p.z)*12+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
     aerial.push({x:p.x,y,z:p.z,score});
    }
