@@ -16,7 +16,7 @@ p.add_argument('--profile',required=True)
 p.add_argument('--output',required=True)
 p.add_argument('--export-glb',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
-profile=json.loads(Path(a.profile).read_text())
+profile=json.loads(Path(a.profile).read_text(encoding='utf-8'))
 if a.input.endswith('.glb') and profile.get('sourceSha256'):
     assert hashlib.sha256(Path(a.input).read_bytes()).hexdigest()==profile['sourceSha256'], 'Profile belongs to another source topology'
 if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=str(Path(a.input).resolve()))
@@ -95,6 +95,16 @@ if profile.get('eyeCenters'):
         if (center_eye-Vector(expected)).length>.03:raise ValueError('Eye component calibration mismatch')
         eye_spheres[side]=(center_eye,radius)
     bm.free()
+# Connected eye meshes cannot be isolated by welded component. Fit only
+# explicitly reviewed visible eye samples, never the surrounding brow.
+for side,pixels in profile.get('eyeSurfaceSamples',{}).items():
+    points=[sample(x,y)[0] for x,y in pixels]
+    data=np.array([list(v) for v in points]);matrix=np.column_stack((2*data,np.ones(len(data))))
+    fit=np.linalg.lstsq(matrix,np.sum(data*data,axis=1),rcond=None)[0]
+    center_eye=Vector(fit[:3]);radius=max((v-center_eye).length for v in points)+.0015
+    if not .005<radius<.08:raise ValueError('Sampled eye sphere radius outside facial bounds')
+    eye_spheres[side]=(center_eye,radius)
+
 def features(points,x,y):
     u=(x-(points[0][0]+points[-1][0])*.5)/max(1,(points[-1][0]-points[0][0])*.5)
     v=(y-sum(p[1]+p[2] for p in points)/(2*len(points)))/max(1,max(p[2]-p[1] for p in points))
@@ -210,7 +220,7 @@ surface_bindings=[]
 if profile.get('surfaceSkinning'):
     for group in mesh.vertex_groups:obj.vertex_groups.new(name=group.name)
     for i,(side,x,top,bottom,t) in enumerate(metadata):
-        point=envelope(side,x,top+(bottom-top)*t)
+        point=spherical_lid(side,(i%columns)/(columns-1),t,1) if side in eye_spheres else envelope(side,x,top+(bottom-top)*t)
         hit,_,index,_=tree.find_nearest(point)
         if hit is None:raise ValueError('Cannot bind eyelid to source surface')
         triangle=tris[index]
@@ -268,7 +278,7 @@ if a.export_glb:
         from restore_source_animations import restore
         restore(a.input,Path(a.output).with_suffix('.glb'))
 Path(a.output).with_suffix('.json').write_text(json.dumps({'status':'unvalidated eyelid candidate',
-    'contours':contours,'vertices':len(verts),'faces':len(faces),
+    'profile':profile,'contours':contours,'vertices':len(verts),'faces':len(faces),
     'eyeSpheres':{side:{'center':list(c),'radius':r} for side,(c,r) in eye_spheres.items()},
     'eyeSkinning':skin_changes,'surfaceBindings':surface_bindings,
     'envelopeClearance':{side:value[1] for side,value in envelopes.items()}},indent=2),encoding='utf-8')
