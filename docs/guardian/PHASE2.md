@@ -135,3 +135,8 @@ La petición posterior amplía esta fase con invocaciones cinematográficas y ra
 5. Las pruebas y muestras de las 54 voces ES/EN siguen en `/tests/browser/guardian-3d.html`. Sus vídeos anteriores documentan la fase de diálogo; no se han vuelto a grabar las 54 locuciones con esta revisión corporal.
 
 Pendientes de aceptación: rendimiento sostenido de incursiones completas, revisión auditiva subjetiva y matriz visual exhaustiva en todos los biomas/cultivos y situaciones de oclusión. El código y las evidencias se publican para revisión sin ocultar estos límites.
+
+
+## Current component profile
+
+See `gpu-current/README.md` for five interleaved frozen-frame GPU runs of the current Guardian. Paired GPU medians add 0.351-1.028 ms; animation and VFX update costs are separately recorded. These are component measurements, not moving-raid FPS or a full performance acceptance.
