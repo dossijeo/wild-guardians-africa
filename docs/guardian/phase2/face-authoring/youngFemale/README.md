@@ -37,3 +37,11 @@ A clay render isolated the closed-lid faceting to geometry rather than skin colo
 Regeneration also exposed a pipeline bug: only material slot 0 was baked to the unlit skin atlas, so repaired faces in slot 1 rendered black. add_actor_eyelids now bakes all source material slots and restores each original slot afterward. v5b is the corrected atlas result; the black preliminary output is rejected.
 
 The updated GLB preserves twelve clips and 28 bones over 492 samples. Browser screenshots document full and half closure. Residual defects remain: cheek creases, a small colored triangular patch in the exposed eye white, and the upper lid boundary still needs closer neutral/animated inspection. This remains a candidate, not installed or fully visually accepted.
+
+## Local UV repair
+
+Neutral reference raycasts identified two source defects: a colored triangle in the eye white and a green patch above the brow. Both are already visible in original/front.png. In the editable candidate these map to polygons 12586 and 16118; their UVs occupy unrelated low-V islands. repair_amara_uv_patches.py reconstructs each triangle's UVs by extrapolating the most similarly oriented edge-adjacent main-island triangle. The source hash and original UV location are guarded. Geometry, skin weights, morph coordinates and texture pixels are untouched.
+
+Blender and Three.js neutral views confirm removal of the conspicuous colored patches. Evidence: defect-landmarks.json, uv-repair.json, uv-repair-front.png, uv-browser-neutral.png. All twelve animations/28 bones retain parity across 492 samples. A small residual edge near the iris remains worth inspecting close up.
+
+A separate trial recomputing whole-face normals did not remove the cheek crease and introduced angular chin shading, so that result was rejected. The committed candidate contains only the localized UV fix on top of the v5 eyelids/mouth. Cheek geometry and final continuous expression validation remain pending; active gameplay catalog unchanged.
