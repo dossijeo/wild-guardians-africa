@@ -1,0 +1,365 @@
+TAP version 13
+# (node:7448) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+ok 1 - all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+  ---
+  duration_ms: 11.9603
+  ...
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 2 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 4.9828
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 3 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 1.2746
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 4 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.7105
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 5 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.5535
+  ...
+# (node:32612) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 6 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 286.27
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 7 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 1.4227
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 8 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 10.2112
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 9 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 6.9125
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 10 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.8218
+  ...
+# Subtest: batched Growth preserves exact accounting at observation boundaries and entitlement caps
+ok 11 - batched Growth preserves exact accounting at observation boundaries and entitlement caps
+  ---
+  duration_ms: 11.7141
+  ...
+# Subtest: new task observers see flushed Growth consumption
+ok 12 - new task observers see flushed Growth consumption
+  ---
+  duration_ms: 1.5671
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 13 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 1.1315
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 14 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 36.1714
+  ...
+# Subtest: one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+ok 15 - one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+  ---
+  duration_ms: 0.8048
+  ...
+# Subtest: fractional Growth preserves agricultural event water penalties at the next real checkpoint
+ok 16 - fractional Growth preserves agricultural event water penalties at the next real checkpoint
+  ---
+  duration_ms: 0.8028
+  ...
+# Subtest: expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+ok 17 - expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+  ---
+  duration_ms: 1.3095
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 18 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 112.9455
+  ...
+# (node:34296) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: root paths are deterministic, local, sparse and point toward actual beneficiaries
+ok 19 - root paths are deterministic, local, sparse and point toward actual beneficiaries
+  ---
+  duration_ms: 45.5411
+  ...
+# Subtest: paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+ok 20 - paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+  ---
+  duration_ms: 11.8121
+  ...
+# Subtest: masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+ok 21 - masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+  ---
+  duration_ms: 17.9403
+  ...
+# Subtest: terrain quality replacement retains uniforms until the last material owner is disposed
+ok 22 - terrain quality replacement retains uniforms until the last material owner is disposed
+  ---
+  duration_ms: 2.5491
+  ...
+# Subtest: root mask bounds participate in the same relative-origin window as the real terrain
+ok 23 - root mask bounds participate in the same relative-origin window as the real terrain
+  ---
+  duration_ms: 2.3212
+  ...
+# Subtest: root integration composes with both original ground quality paths and excludes ordinary objects
+ok 24 - root integration composes with both original ground quality paths and excludes ordinary objects
+  ---
+  duration_ms: 5.0086
+  ...
+# (node:8852) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Wild Engine worker leases release a blessed target and deliver a real neighboring crop with a single bonus
+ok 25 - Wild Engine worker leases release a blessed target and deliver a real neighboring crop with a single bonus
+  ---
+  duration_ms: 1165.4146
+  ...
+# (node:40824) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Wild Engine contact preserves target selection and applies own/adjacent wall protection to the actual attack
+ok 26 - real Wild Engine contact preserves target selection and applies own/adjacent wall protection to the actual attack
+  ---
+  duration_ms: 9278.1096
+  ...
+# (node:23400) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+ok 27 - resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+  ---
+  duration_ms: 55.8548
+  ...
+# Subtest: source damage is localized, destruction fades sparks and restored sources do not replay transformations
+ok 28 - source damage is localized, destruction fades sparks and restored sources do not replay transformations
+  ---
+  duration_ms: 5.2638
+  ...
+# Subtest: object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+ok 29 - object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+  ---
+  duration_ms: 5.0198
+  ...
+# Subtest: cancelled crop preparation frees partially built objects while its frame is suspended
+ok 30 - cancelled crop preparation frees partially built objects while its frame is suspended
+  ---
+  duration_ms: 20.704
+  ...
+# Subtest: crop preparation deadline releases a partial batch with no arriving frame
+ok 31 - crop preparation deadline releases a partial batch with no arriving frame
+  ---
+  duration_ms: 2.5333
+  ...
+# Subtest: completed cooperative preparation retains all maize stages and bridges
+ok 32 - completed cooperative preparation retains all maize stages and bridges
+  ---
+  duration_ms: 11.7404
+  ...
+# Subtest: crop attribution separates construction CPU from frame waits without changing geometry or swallowing cancellation
+ok 33 - crop attribution separates construction CPU from frame waits without changing geometry or swallowing cancellation
+  ---
+  duration_ms: 5.0399
+  ...
+# Subtest: cached per-entity growth recipes retain all Float32 buffers through paused cohorts and live changes
+ok 34 - cached per-entity growth recipes retain all Float32 buffers through paused cohorts and live changes
+  ---
+  duration_ms: 186.1483
+  ...
+# Subtest: retiring a crop batch releases InstancedMesh buffers for every stage and bridge
+ok 35 - retiring a crop batch releases InstancedMesh buffers for every stage and bridge
+  ---
+  duration_ms: 35.4802
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 36 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 19.3695
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 37 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 16.0197
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 38 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 13.3328
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 39 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 11.1417
+  ...
+# Subtest: immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling
+ok 40 - immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling
+  ---
+  duration_ms: 14.5586
+  ...
+# Subtest: unkeyed ground remains dynamic, including after leaving keyed terrain
+ok 41 - unkeyed ground remains dynamic, including after leaving keyed terrain
+  ---
+  duration_ms: 9.8168
+  ...
+# Subtest: cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs
+ok 42 - cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs
+  ---
+  duration_ms: 34.6557
+  ...
+# (node:47388) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: ground surface, Fresnel and BRDF preserve the supplied shader recipes
+ok 43 - ground surface, Fresnel and BRDF preserve the supplied shader recipes
+  ---
+  duration_ms: 2.12
+  ...
+# Subtest: both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+ok 44 - both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+  ---
+  duration_ms: 4.9522
+  ...
+# (node:47784) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+ok 45 - paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+  ---
+  duration_ms: 10.7329
+  ...
+# Subtest: entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+ok 46 - entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+  ---
+  duration_ms: 4.2984
+  ...
+# Subtest: explicit refresh handles material arrays, replacement and late metadata without stale references
+ok 47 - explicit refresh handles material arrays, replacement and late metadata without stale references
+  ---
+  duration_ms: 2.445
+  ...
+# Subtest: resident and unchanged-region horizon quality replacements are registered immediately
+ok 48 - resident and unchanged-region horizon quality replacements are registered immediately
+  ---
+  duration_ms: 350.5504
+  ...
+# Subtest: QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+ok 49 - QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+  ---
+  duration_ms: 1.1742
+  ...
+# Subtest: temporary excluded pass roots never register nested materials or leave event listeners
+ok 50 - temporary excluded pass roots never register nested materials or leave event listeners
+  ---
+  duration_ms: 0.6933
+  ...
+# Subtest: origin bounds retain shared hidden materials without walking the scene graph
+ok 51 - origin bounds retain shared hidden materials without walking the scene graph
+  ---
+  duration_ms: 6.829
+  ...
+# Subtest: streaming, replacement, reparenting and changed uniform objects follow the live registry
+ok 52 - streaming, replacement, reparenting and changed uniform objects follow the live registry
+  ---
+  duration_ms: 2.7132
+  ...
+# Subtest: live bound identities are offset once and restored after a failing recentered draw
+ok 53 - live bound identities are offset once and restored after a failing recentered draw
+  ---
+  duration_ms: 3.7712
+  ...
+# (node:36080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+ok 54 - all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+  ---
+  duration_ms: 9.7764
+  ...
+# Subtest: shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+ok 55 - shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+  ---
+  duration_ms: 3.5334
+  ...
+# Subtest: global bounds are collected once without moving instances or changing material identities
+ok 56 - global bounds are collected once without moving instances or changing material identities
+  ---
+  duration_ms: 3.3438
+  ...
+# Subtest: local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+ok 57 - local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+  ---
+  duration_ms: 1.2211
+  ...
+# Subtest: PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+ok 58 - PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+  ---
+  duration_ms: 4.5064
+  ...
+# (node:45396) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 59 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 2.0825
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 60 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 17.9449
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 61 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 895.2554
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 62 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 217.2979
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 63 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 18.1386
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 64 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 41.8165
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 65 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 1513.5383
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+ok 66 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 3179.0523
+  ...
+# Subtest: paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+ok 67 - paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+  ---
+  duration_ms: 11105.4121
+  ...
+1..67
+# tests 67
+# suites 0
+# pass 67
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19465.6911

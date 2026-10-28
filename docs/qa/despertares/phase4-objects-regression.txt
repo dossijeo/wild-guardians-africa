@@ -1,0 +1,161 @@
+TAP version 13
+# (node:20096) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+ok 1 - all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+  ---
+  duration_ms: 11.399
+  ...
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 2 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 4.3515
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 3 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 1.5966
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 4 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 3.0365
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 5 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.5795
+  ...
+# (node:39068) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: root paths are deterministic, local, sparse and point toward actual beneficiaries
+ok 6 - root paths are deterministic, local, sparse and point toward actual beneficiaries
+  ---
+  duration_ms: 41.4014
+  ...
+# Subtest: paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+ok 7 - paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+  ---
+  duration_ms: 3.3808
+  ...
+# Subtest: masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+ok 8 - masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+  ---
+  duration_ms: 11.9287
+  ...
+# Subtest: terrain quality replacement retains uniforms until the last material owner is disposed
+ok 9 - terrain quality replacement retains uniforms until the last material owner is disposed
+  ---
+  duration_ms: 1.5929
+  ...
+# Subtest: root mask bounds participate in the same relative-origin window as the real terrain
+ok 10 - root mask bounds participate in the same relative-origin window as the real terrain
+  ---
+  duration_ms: 1.9153
+  ...
+# Subtest: root integration composes with both original ground quality paths and excludes ordinary objects
+ok 11 - root integration composes with both original ground quality paths and excludes ordinary objects
+  ---
+  duration_ms: 2.6463
+  ...
+# Subtest: cached per-entity growth recipes retain all Float32 buffers through paused cohorts and live changes
+ok 12 - cached per-entity growth recipes retain all Float32 buffers through paused cohorts and live changes
+  ---
+  duration_ms: 117.4416
+  ...
+# Subtest: retiring a crop batch releases InstancedMesh buffers for every stage and bridge
+ok 13 - retiring a crop batch releases InstancedMesh buffers for every stage and bridge
+  ---
+  duration_ms: 24.4515
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 14 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 15.4476
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 15 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 15.2438
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 16 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 13.4324
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 17 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 15.8882
+  ...
+# Subtest: immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling
+ok 18 - immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling
+  ---
+  duration_ms: 14.6637
+  ...
+# Subtest: unkeyed ground remains dynamic, including after leaving keyed terrain
+ok 19 - unkeyed ground remains dynamic, including after leaving keyed terrain
+  ---
+  duration_ms: 11.7256
+  ...
+# Subtest: cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs
+ok 20 - cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs
+  ---
+  duration_ms: 30.7589
+  ...
+# (node:47860) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 21 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 6.6371
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 22 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 5.7258
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 23 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 647.0696
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 24 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 168.27
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 25 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 11.5866
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 26 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 22.2851
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 27 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 771.152
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+ok 28 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 1599.0302
+  ...
+# Subtest: paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+ok 29 - paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+  ---
+  duration_ms: 6470.6011
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10233.9656

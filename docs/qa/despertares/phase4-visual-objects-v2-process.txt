@@ -1,0 +1,23 @@
+AWAKENING_QA launch
+AWAKENING_QA page-created
+AWAKENING_QA menu-navigation
+AWAKENING_QA menu-start
+AWAKENING_QA native-loading
+AWAKENING_QA native-fixture
+AWAKENING_QA fixture-commands
+AWAKENING_QA fixture-chunks
+AWAKENING_QA fixture-render
+AWAKENING_QA normal-day-render
+AWAKENING_QA normal-day-capture
+AWAKENING_QA one-source-day-render
+AWAKENING_QA one-source-day-capture
+AWAKENING_QA one-source-night-render
+AWAKENING_QA one-source-night-capture
+node:internal/process/esm_loader:34
+      internalBinding('errors').triggerUncaughtException(
+                                ^
+
+Error: ["Failed to load resource: the server responded with a status of 404 (Not Found) {\"url\":\"http://127.0.0.1:5201/favicon.ico\",\"line\":0,\"column\":0,\"lineNumber\":0,\"columnNumber\":0}","Failed to load resource: the server responded with a status of 404 (Not Found) {\"url\":\"http://127.0.0.1:5201/favicon.ico\",\"line\":0,\"column\":0,\"lineNumber\":0,\"columnNumber\":0}"]
+    at file:///C:/Users/PC/.codex/worktrees/despertares-magia/wild-guardians-africa/tools/check_awakenings_visual.mjs:72:26
+
+Node.js v20.11.0

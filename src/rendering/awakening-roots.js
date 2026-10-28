@@ -88,7 +88,7 @@ export function patchAwakeningRoots(shader,uniforms){
         vec2 roots=texture2D(uAwakeningMap,rootUV).rg;
         float rootMask=mix(roots.g,roots.r,smoothstep(0.,${FADE},uAwakeningClock-uAwakeningChangeAt));
         float rootPulse=.92+.08*sin(uAwakeningClock*.72+rootUV.x*12.+rootUV.y*9.);
-        outgoingLight+=vec3(.035,.30,.21)*rootMask*rootPulse*(.65+.65*uNight);
+        outgoingLight+=vec3(.035,.45,.30)*rootMask*rootPulse*(.65+.65*uNight);
       }
     }
     #include <opaque_fragment>`);

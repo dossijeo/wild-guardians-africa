@@ -1,0 +1,18 @@
+AWAKENING_QA launch
+AWAKENING_QA page-created
+AWAKENING_QA menu-navigation
+AWAKENING_QA menu-start
+AWAKENING_QA native-loading
+AWAKENING_QA native-fixture
+AWAKENING_QA fixture-commands
+AWAKENING_QA fixture-chunks
+node:internal/process/esm_loader:34
+      internalBinding('errors').triggerUncaughtException(
+                                ^
+
+Error: QA deadline in native-fixture; this is a harness limit, not a native game verdict
+    at Timeout.<anonymous> (file:///C:/Users/PC/.codex/worktrees/despertares-magia/wild-guardians-africa/tools/check_awakenings_visual.mjs:10:95)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)
+
+Node.js v20.11.0

@@ -18,12 +18,13 @@ export function wallBridge(source,destination=null){
 
 export class NativeWall extends THREE.Group {
   constructor(prototypes,entity,elapsed){
-    super();this.prototypes=prototypes;this.entityId=entity.id;this.parts=[];
+    super();this.prototypes=prototypes;this.entityId=entity.id;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
     this.userData.entityId=entity.id;this.userData.nativeWall=true;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;this.scale.setScalar(scale);
     this.update(entity,undefined,elapsed);
   }
   update(entity,seconds,elapsed){
+    this.blessingUniform.value.set(entity.blessing?1:0,entity.blessing?.at??0,entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?1:0);
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -52,7 +53,7 @@ export class NativeWall extends THREE.Group {
         if(stage.key.endsWith('_puerta')&&nativeGateLeaves[entity.material])bridge=splitGateBridge(bridge,nativeGateLeaves[entity.material]);
         const geometry=new THREE.BufferGeometry();
         geometry.setAttribute('position',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('normal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('uv',new THREE.BufferAttribute(bridge.uv,2));
-        const material=prototype.material.clone();material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
+        const material=prototype.material.clone();material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;material.userData.blessingObject=this.blessingUniform;
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge});
       }
     }

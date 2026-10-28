@@ -1,0 +1,59 @@
+TAP version 13
+# (node:21144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: root paths are deterministic, local, sparse and point toward actual beneficiaries
+ok 1 - root paths are deterministic, local, sparse and point toward actual beneficiaries
+  ---
+  duration_ms: 45.5752
+  ...
+# Subtest: paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+ok 2 - paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+  ---
+  duration_ms: 8.4608
+  ...
+# Subtest: masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+ok 3 - masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+  ---
+  duration_ms: 15.9452
+  ...
+# Subtest: terrain quality replacement retains uniforms until the last material owner is disposed
+ok 4 - terrain quality replacement retains uniforms until the last material owner is disposed
+  ---
+  duration_ms: 3.1526
+  ...
+# Subtest: root mask bounds participate in the same relative-origin window as the real terrain
+ok 5 - root mask bounds participate in the same relative-origin window as the real terrain
+  ---
+  duration_ms: 2.4341
+  ...
+# Subtest: root integration composes with both original ground quality paths and excludes ordinary objects
+ok 6 - root integration composes with both original ground quality paths and excludes ordinary objects
+  ---
+  duration_ms: 6.3791
+  ...
+# (node:46396) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+ok 7 - resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+  ---
+  duration_ms: 40.0199
+  ...
+# Subtest: source damage is localized, destruction fades sparks and restored sources do not replay transformations
+ok 8 - source damage is localized, destruction fades sparks and restored sources do not replay transformations
+  ---
+  duration_ms: 2.9523
+  ...
+# Subtest: object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+ok 9 - object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+  ---
+  duration_ms: 7.53
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 500.7108
