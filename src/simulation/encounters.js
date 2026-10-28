@@ -64,6 +64,8 @@ export function updateWorkerEncounters(state,nav){
         emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }else{
         worker.fallRemaining=L.sources.find(s=>s.profile===worker.profile).fallSeconds;
+        worker.downHeading=worker.heading??0;
+        notifyWorkerPlanningChange(state,worker);
         emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }
       if(distance(animal,worker)>=range)active.delete(pair);

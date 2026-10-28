@@ -1376,7 +1376,7 @@ function updateWorkers(s,dt,nav) {
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
   if(!s.raid&&s.time<300)for(const w of s.workers){
-    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
+    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||w.recovery||contractExpired(w,s)||s.time>=profile(w).end)continue;
     if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
     if(!nativeTasks)w.status='idle';
     newArrivals.push(w);
@@ -1391,7 +1391,10 @@ function updateWorkers(s,dt,nav) {
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
   for(const w of s.workers) {
     try {
-      if(advanceWorkerRecovery(w,dt,nav))continue;
+      if(advanceWorkerRecovery(w,dt,nav)){
+        if(!w.fallRemaining&&!w.recovery)notifyWorkerPlanningChange(s,w);
+        continue;
+      }
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
