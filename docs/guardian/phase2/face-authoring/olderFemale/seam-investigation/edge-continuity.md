@@ -1,0 +1,7 @@
+# Facial UV seam edge diagnosis
+
+Run `node tools/guardian/audit_worker_seam_edges.mjs ORIGINAL.glb REPAIRED.glb` with the original olderFemale hash and the output of experiment_worker_normal_seams.mjs. The first input defines the shared edge set, excluding source geometric normal discontinuities over 0.5 radians; subsequent inputs use exactly that set. Compare identical geometry/UV topology, not the incised expressive mesh.
+
+The recorded edge-continuity.json compares 203 shared facial seam edges, sampling both sides at endpoints and at 25%, 50%, 75% along each edge. For interior samples, the original normal-map angular mismatch has median 16.36 degrees and p95 32.85 degrees; repaired median is 3.76 and p95 27.36. Endpoint frame correction helps substantially but leaves a long tail of interior discontinuities. This supports investigating edge-interior continuity instead of increasing vertex correction indiscriminately.
+
+The calculation interpolates UVs and tangent frames and bilinearly samples the embedded normal map at its base level. It is a diagnostic approximation: it excludes mipmapping, derivatives, lighting and animation. It writes no model or image data. The remaining raking-light artifacts are still not accepted, and the surface candidate remains uninstalled. Preserving image bytes alone does not prove wrinkle appearance; eventual correction must also be inspected under studio and both raking lights.
