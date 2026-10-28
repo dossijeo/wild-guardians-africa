@@ -113,7 +113,9 @@ for side,pixels in profile.get('eyeSurfaceSamples',{}).items():
     points=[sample(x,y)[0] for x,y in pixels]
     data=np.array([list(v) for v in points]);matrix=np.column_stack((2*data,np.ones(len(data))))
     fit=np.linalg.lstsq(matrix,np.sum(data*data,axis=1),rcond=None)[0]
-    center_eye=Vector(fit[:3]);radius=max((v-center_eye).length for v in points)+.0015
+    center_eye=Vector(fit[:3]);clearance=profile.get('eyeSurfaceClearance',.0015)
+    if not 0<=clearance<=.005:raise ValueError('Invalid sampled-eye clearance')
+    radius=max((v-center_eye).length for v in points)+clearance
     radius_min,radius_max=profile.get('eyeRadiusBounds',[.005,.08])
     if not 0<radius_min<radius_max<=.12:raise ValueError('Invalid reviewed eye radius bounds')
     if not radius_min<radius<radius_max:raise ValueError(f'Sampled eye sphere radius outside facial bounds: {side} radius={radius:.6f}, center={tuple(center_eye)}')

@@ -14,3 +14,14 @@ Reproduce using Blender headless: tools/guardian/add_actor_eyelids.py --input <a
 Calibrated nine visible eye samples on each side and used the existing spherical lid path instead of the nearly planar envelope. The default 80 mm maximum rejected the left fit at 82.05 mm; this actor explicitly allows 90 mm while the shared default stays unchanged. The authoring tool now reports rejected radius/center and validates profile bounds. v3-authoring-report.json records both fitted spheres.
 
 Reviewed v3 full closure in front and side renders: the wide lateral white strip is eliminated and the cap is curved. A small white point remains near one upper edge in front, and a natural closure crease still needs work. This is progress, not visual acceptance. Neutral/intermediate poses, mouth, animation parity and runtime validation remain outstanding. The unregistered generated Blend/GLB are test-results/olderMale-lids-v3.blend/glb; reproduce using eyelid-profile-v3.json. No active assets were replaced.
+
+
+## v4 closure and skin diagnosis
+
+The sampled-sphere clearance is now explicitly configurable per reviewed profile, default unchanged at 1.5 mm and bounded to 0–5 mm. OlderMale v4 uses 3 mm. Inspected full frontal closure: the former upper white point is no longer apparent. Half closure reviewed frontally and laterally; the cap follows the eye. Runtime, neutral and animation validation remain pending.
+
+Mouth pixel landmarks were projected to the original source as initial calibration only. A larger close-up shows the seam needs a more precise trace before incision; do not treat these coarse landmarks as final.
+
+User-reported cheek/nose seams: normal-disabled and unlit-albedo renders distinguish causes. Removing the normal map loses forehead/corner wrinkles and lip relief, so it is rejected. Unlit albedo has no corresponding angular cheek/nose patches. Added optional source SHA and local bounds profile to the existing surface-frame correction experiment (legacy defaults unchanged). The olderMale trial modifies 102 duplicate-position groups, 4,142 binary bytes, exclusively NORMAL/TANGENT. Original images, geometry and animation bytes remain unchanged under the existing write whitelist. The Blender front comparison reduces the nose patches while wrinkles remain, but angular lower-cheek patches persist. This is not a finished repair and has not been installed or runtime-validated. Next investigate continuity along seam edges and geometric shading, preserving the original detail maps.
+
+After the older male worker is finished, record the requested tutorial from the opening through the first work-center location indication, with real speech, new Guardian eyelids, vortex and HUD/world pointing; publish the video to the same branch and provide its link.
