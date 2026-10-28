@@ -171,6 +171,8 @@ from arm_weights import relax_shoulders
 relax_shoulders(body)
 from spell_actions import create_spells
 create_spells(rig)
+from wind_actions import create_wind
+create_wind(rig)
 for track in rig.animation_data.nla_tracks:track.mute=track.name not in ['Idle','Mantle_Breeze','Float']
 proxy.hide_render=True;proxy.hide_set(True);wind.hide_set(True)
 scene.frame_set(1);activate(body);rig.select_set(True);face.select_set(True)
