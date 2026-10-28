@@ -14,7 +14,7 @@ import {castPickedSpell} from '../../src/app/spell-placement.js';
 import {AudioSystem} from '../../src/audio/audio.js';
 const campaign=new URLSearchParams(location.search).has('campaign');
 const faceSpecies=new URLSearchParams(location.search).get('face');
-const faceCandidates={hyena:{source:'hiena',url:'/content/source/actors/hyena/expressive-candidate.glb'},lion:{source:'leon',url:'/content/source/actors/lion/expressive-candidate.glb'},warthog:{source:'facoquero',url:'/content/source/actors/warthog/expressive-candidate.glb'}};
+const faceCandidates={buffalo:{source:'bufalo',url:'/test-results/buffalo-face-candidate.glb'},hyena:{source:'hiena',url:'/content/source/actors/hyena/expressive-candidate.glb'},lion:{source:'leon',url:'/content/source/actors/lion/expressive-candidate.glb'},warthog:{source:'facoquero',url:'/content/source/actors/warthog/expressive-candidate.glb'}};
 if(faceSpecies&&!faceCandidates[faceSpecies])throw Error('Unsupported facial candidate: '+faceSpecies);
 const trialSeconds=12;
 const $=id=>document.getElementById(id),errors=[];let world,state,nav,site,paused=new URLSearchParams(location.search).has('navigation'),serial=0,angle=.7,zoom=10,report=null;const commandCosts=[];let maxVisibleGuardians=0;
