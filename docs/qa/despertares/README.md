@@ -1,6 +1,6 @@
 # Despertares: registro de implementación y validación
 
-**Estado actual:** revisión visual según los cinco nuevos mockups y comprobación de las 70 variantes. Ver [comparativa lado a lado](comparison-final/index.html), [informe visual](visual-mockup-review.md) y [balance en curso](balance-review.md). Se han retomado las campañas pendientes y la suite completa. Las secciones siguientes conservan el historial; el perfil antiguo no describe el nuevo resplandor.
+**Entrega vigente:** [informe completo](delivery-report.md), [comparativa lado a lado](comparison-final/index.html), [informe visual](visual-mockup-review.md) y [ocho campañas comparativas](balance-review.md). Se comprobaron 70 variantes y la suite completa terminó con 5035 aprobadas, cero fallos y 62 omitidas. Las secciones siguientes conservan el historial; el perfil antiguo no describe el nuevo resplandor.
 
 ## Procedencia y preparación
 

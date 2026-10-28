@@ -81,8 +81,8 @@ try{
     }
   },onDay(row){
     const a=state.awakenings,h=a?.history.find(h=>h.day===row.day);
-    daily.push({...row,finance:{...row.finance,entries:undefined},awakening:h??null,...snapshot()});
-    if([10,20,30,50,75,100].includes(row.day))checkpoints.push({night:row.day,...snapshot()});
+    daily.push({...row,cropsDestroyed:row.destroyed,finance:{...row.finance,entries:undefined},awakening:h??null,...snapshot()});
+    if([10,20,30,50,75,100].includes(row.day)&&state.completedNights>=row.day)checkpoints.push({night:row.day,...snapshot()});
     console.log(JSON.stringify({arm,day:row.day,money:row.money,blessings:a?.total??0,wallSeconds:Math.round((performance.now()-started)/1000)}));flush('running');
   }});
  state=result.state;writeFileSync(out.replace(/\.json$/,'.state.json'),serialize(state));
