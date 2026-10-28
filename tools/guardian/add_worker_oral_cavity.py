@@ -9,8 +9,8 @@ p=argparse.ArgumentParser()
 for n in ('input','seam','source-glb','output'):p.add_argument('--'+n,required=True)
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 bpy.ops.wm.open_mainfile(filepath=str(Path(a.input).resolve()))
-body=bpy.data.objects['Mesh0'];world=body.matrix_world.copy();inv=world.inverted()
 report=json.loads(Path(a.seam).read_text(encoding='utf-8'))
+body=bpy.data.objects[report.get('mesh','Mesh0')];world=body.matrix_world.copy();inv=world.inverted()
 def key(v):return tuple(round(x,6) for x in v)
 adj={}
 for edge in report['seam']:
@@ -23,7 +23,8 @@ while current is not None:
 assert len(chain)==len(adj)
 def smooth(l,r,x):
  t=max(0,min(1,(x-l)/(r-l)));return t*t*(3-2*t)
-def jaw(v):return smooth(1.13,1.19,v.z)*(1-smooth(-.23,-.185,v.y))*(1-smooth(.06,.095,abs(v.x)))
+weights=report.get('weights',{'z':[1.13,1.19],'y':[-.23,-.185],'x':[.06,.095]})
+def jaw(v):return smooth(*weights['z'],v.z)*(1-smooth(*weights['y'],v.y))*(1-smooth(*weights['x'],abs(v.x)))
 pivot=Vector(report['pivot']);rot=Matrix.Rotation(report['angle'],3,'X')
 verts=[];opened=[];anchors=[];faces=[];colors=[]
 def vertex(v,anchor,amount):
@@ -40,7 +41,7 @@ def lip_height(y):
  l,r=profile[j-1],profile[j]
  return l[1]+(r[1]-l[1])*(y-l[0])/(r[0]-l[0])
 front_y=min(v.y for v in chain);back_y=max(v.y for v in chain)
-rear=Vector((0,-.155,lip_height(0)))
+rear=Vector((0,report.get('oralRearY',-.155),lip_height(0)))
 # A single closed perimeter swept into the head. Only its front is open;
 # palate, floor and commissures share vertices, so no separate cheek curtains.
 perimeter=[(v,False) for v in chain]+[(v,True) for v in reversed(chain)]
@@ -73,7 +74,7 @@ shell_audit={'boundaryEdges':len(actual_boundary),'frontEdges':len(expected_fron
 # Rounded, recessed tongue follows the lower jaw, never a sheet across the opening.
 rings=[]
 for row in range(13):
- t=row/12;y=front_y+.022+(-.18-front_y-.022)*t;width=.035*math.sin(math.pi*(.06+.88*t));ring=[]
+ t=row/12;y=front_y+.022+(rear.y-.025-front_y-.022)*t;width=.035*math.sin(math.pi*(.06+.88*t));ring=[]
  for col in range(16):
   angle=math.tau*col/16;v=Vector((width*math.cos(angle),y,lip_height(0)-.005+.005*math.sin(angle)))
   anchor=min(chain,key=lambda q:(q-v).length_squared)
@@ -121,7 +122,7 @@ for poly,c in zip(data.polygons,colors):
   point=world@data.vertices[data.loops[i].vertex_index].co
   # Authored cavity shading: deeper tissue receives less indirect light.
   # This preserves volume in the inexpensive, shadow-free strategic renderer.
-  front=max(0,min(1,(-point.y-.165)/.09))
+  front=max(0,min(1,(rear.y-.01-point.y)/max(.01,rear.y-front_y)))
   shade=.10+.42*front*front
   if c[0]>.25:shade*=1.15+.20*max(-1,min(1,(point.z-lip_height(0)+.005)/.005))
   color.data[i].color=(*[v*(.8 if c[0]>.5 else shade) for v in c[:3]],c[3])
