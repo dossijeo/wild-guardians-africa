@@ -13,3 +13,9 @@ build_worker_recovery_transition.mjs generates *-transition.json: 0.4-second ble
 Initial implementation incorrectly aliased the target quaternion in slerpQuaternions, preserving the fallen rotation while raising the hip. Visual inspection rejected it; using target.slerp(fallen,1-mix) fixes the alias and reduces the previously excessive ground adjustment. Revised seated pose at 1.6 s is saved in transition-seated.png. The preview offers Transición de caída (candidato).
 
 IMPORTANT: final horizontal logical-root reconciliation is still pending; these clips deliberately retain displacement instead of sliding the actor back. Do not install without reconciling the final position, blending into locomotion, and suspending worker logic during the whole sequence. Ground checks use sampled skin vertices, not exhaustive terrain collision. AI/state changes are not yet implemented.
+
+## Packed bank and exit boundary
+
+The last 0.25 s now blend to native Idle at time zero, translated by finalOffset. Metadata records this displacement for future simulation reconciliation. Four tests in worker-recovery-boundaries.test.js load actual rigs and compare all bone world positions/quaternions against native Fall at the start and translated Idle at the end (2e-5 tolerance). All pass. This checks endpoints, not collisions or continuous visual quality.
+
+pack_worker_recovery.mjs writes a 1,987,128-byte shared-float bank using the existing recovery decoder schema, plus content/manifests/worker-recovery.json with duration, target hash and finalOffset. No runtime fetch or simulation integration yet. Must use those offsets with collision-aware logical reconciliation; do not merely play the clip and snap back to the old position.
