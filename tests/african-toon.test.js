@@ -58,3 +58,13 @@ test('very low ground receives authentic toon bands without Three lighting or sh
  assert.ok(shader.fragmentShader.includes('toonRamp4(nl*visibility,4.)'));assert.ok(shader.vertexShader.includes('normalMatrix*normal'));
  assert.ok(!shader.fragmentShader.includes('roughnessFactor'));assert.ok(!shader.fragmentShader.includes('getShadowMask()'));
 });
+
+test('matte worker body has an isolated shader without changing maps or tool materials',()=>{
+ const toon=new AfricanToon(),body=new THREE.MeshStandardMaterial(),tool=new THREE.MeshStandardMaterial();
+ body.userData.matteWorkerBody=true;const normal=new THREE.Texture();body.normalMap=normal;
+ const shaders=[body,tool].map(material=>{toon.material(material);const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});return shader;});
+ assert.notEqual(body.customProgramCacheKey(),tool.customProgramCacheKey());
+ assert.match(shaders[0].fragmentShader,/rough\*\.40\)\*\.04/);
+ assert.doesNotMatch(shaders[1].fragmentShader,/rough\*\.40\)\*\.04/);
+ assert.equal(body.normalMap,normal);
+});

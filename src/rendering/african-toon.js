@@ -43,6 +43,7 @@ const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnos
 const warthogToon=diagnosticToon
  .replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.12;')
  .replace('vec3 toon=albedo*base*(.76+.24*fill);','vec3 toon=albedo*(base+vec3(.060,.072,.090)*uNight)*(.76+.24*fill);');
+const matteWorkerToon=diagnosticToon.replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.04;');
 const beastToon=beastLightingFunctions(diagnosticToon),warthogBeastToon=beastLightingFunctions(warthogToon);
 // Experimental village-only relief: retain the authored palette and broad toon
 // bands while allowing the existing tangent-space atlas to affect fine light.
@@ -75,7 +76,7 @@ export class AfricanToon {
     const {endpointFunctions,atmosphereCacheKey}=this.environmentRecipe;
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
-    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,warthog=material.userData.warthogSurface===true,cache=()=>baseCache()+(beast?'|beast-contrast-v1'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':'');
+    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,warthog=material.userData.warthogSurface===true,matteWorker=material.userData.matteWorkerBody===true,cache=()=>baseCache()+(beast?'|beast-contrast-v1'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':matteWorker?'|worker-matte-v1':'');
     material.onBeforeCompile=(shader,renderer)=>{
       if(beast)Object.assign(shader.uniforms,this.beastUniforms);
       original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);if(material.userData.biomeGround)Object.assign(shader.uniforms,material.userData.biomeGround);if(material.userData.artBounds){Object.assign(shader.uniforms,this.artUniforms);const b=material.userData.artBounds;shader.uniforms.uArtLocalMin={value:b.min};shader.uniforms.uArtLocalSize={value:b.size};shader.uniforms.uArtCrown={value:b.crown};shader.uniforms.uArtVolcanicGlow=material.userData.nativeVolcanicGlow??this.artUniforms.uArtVolcanicGlow;}if(material.userData.toonGround)Object.assign(shader.uniforms,this.contactUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.artSurface??material.userData.nativeSurface?.type??1};
@@ -97,7 +98,7 @@ export class AfricanToon {
         #endif
         vCanopyNormal=normalize(inverseTransformDirection(normalMatrix*artEnvelope,viewMatrix));`:''}
         ${material.isMeshBasicMaterial?'vToonLowNormal=inverseTransformDirection(normalMatrix*normal,viewMatrix);':''}`);
-      shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail,uFineNoise,uEnvEndpoints;uniform vec3 uLightDir;\n'+(beast?warthog?warthogBeastToon:beastToon:warthog?warthogToon:diagnosticToon)+'\n'+shader.fragmentShader;
+      shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail,uFineNoise,uEnvEndpoints;uniform vec3 uLightDir;\n'+(beast?warthog?warthogBeastToon:beastToon:warthog?warthogToon:matteWorker?matteWorkerToon:diagnosticToon)+'\n'+shader.fragmentShader;
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
       shader.fragmentShader=shader.fragmentShader.replace('void main() {',endpointFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+diagnosticGroundNoise(groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')):'')+'\n'+(material.userData.biomeGround?groundMaterialFunctions+(material.userData.biomeGround.uGroundLayered?.value?savannaLayerFunctions:''):'')+'\n'+(material.userData.artBounds?'uniform vec3 uArtSun,uArtShade,uArtFoliage;uniform vec4 uArtParams,uArtShape;uniform float uArtHighlight,uArtVolcanicGlow;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n'+(material.userData.visualLabNormalDetail?normalDetailLightingFunctions:artLightingFunctions):'')+'\n'+(material.userData.nativeSurface?diagnosticVolcanic:'')+'\nvoid main() {');
