@@ -181,7 +181,7 @@ export class AudioSystem {
     }
   }
   async sound(id,options={}) {
-    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:soundPriority(id),family:options.family??id});return null;
+    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:options.priority??soundPriority(id),family:options.family??id});return null;
   }
   async ambientSound(id,options={}){
     if(this.context?.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;
