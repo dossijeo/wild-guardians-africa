@@ -1,3 +1,4 @@
+import {SkinContactBounds} from './skin-contact-bounds.js';
 import {BakedSolidContacts} from './baked-solid-contacts.js';
 import {loadRecoveryClips} from './recovery-clips.js';
 import {BakedBeastFallbacks,loadBakedFalls} from './baked-beast-fallbacks.js';
@@ -22,7 +23,7 @@ export class BeastCombatPhysics{
   // Compile the articulated/contact path and select skin support vertices during
   // loading, before an input-triggered hit can pay the cold WASM cost.
   for(const rig of await world.animalPreload?.spares()??[]){
-   BeastRecovery.prewarm(rig.model);
+   BeastRecovery.prewarm(rig.model);SkinContactBounds.prewarm(rig.model);
    const binding=new BeastRagdollBinding(rig.model),pose=binding.capture(),colliders=binding.colliders(),solver=new BeastRagdollSolver(R);
    try{solver.box({x:0,y:-.1,z:0},{x:20,y:.1,z:20});solver.add('warm',{pose,colliders,scale:rig.model.scale.x});for(let i=0;i<120;i++){solver.step();if(i%8===7)await new Promise(resolve=>setTimeout(resolve,0));}}finally{solver.dispose();}
    await new Promise(resolve=>setTimeout(resolve,0));

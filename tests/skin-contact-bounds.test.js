@@ -15,3 +15,13 @@ for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${specie
   assert.ok(actual.min.distanceTo(expected.min)<1e-6);assert.ok(actual.max.distanceTo(expected.max)<1e-6);
  }
 });
+
+test('contact indices reuse immutable geometry and invalidate changed deformation inputs',async()=>{
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url));
+ SkinContactBounds.prewarm(model);const first=new SkinContactBounds(model),second=new SkinContactBounds(model);
+ for(let i=0;i<first.meshes.length;i++)assert.equal(first.meshes[i].indices,second.meshes[i].indices);
+ const mesh=first.meshes[0].mesh;mesh.geometry.attributes.position.needsUpdate=true;
+ const changed=new SkinContactBounds(model);assert.notEqual(first.meshes[0].indices,changed.meshes[0].indices);
+ const before=changed.meshes[0].indices,oldName=mesh.skeleton.bones[0].name;mesh.skeleton.bones[0].name='tail';
+ const renamed=new SkinContactBounds(model);assert.notEqual(before,renamed.meshes[0].indices);mesh.skeleton.bones[0].name=oldName;
+});
