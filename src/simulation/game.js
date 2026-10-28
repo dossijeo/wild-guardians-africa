@@ -1,4 +1,5 @@
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
+import {recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {animalNativeExitBridgePending} from './animal-native-exit-bridge.js';
@@ -78,6 +79,7 @@ export function observeGameEvents(s,callback){
 }
 export function emit(s,type,detail={}) {
   const event={id:`event-${s.sequence++}`,type,...detail};
+  if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
   for(const callback of eventObservers.get(s)??[])callback(event);
 }
@@ -1509,7 +1511,9 @@ function updateWorkers(s,dt,nav) {
   reserveAvailableTasks(s,nav);
 }
 function closeNight(s) {
+  if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:text=>notice(s,text)});
   s.completedNights++;s.time=0;s.day++;
+  if(s.awakenings?.enabled!==false)startAwakeningDay(s);
   retireFarmHistory(s);
   s.tutorial.shownToday={day:s.day,ids:[]};
   const previousWorkers=s.workers;
@@ -1591,7 +1595,8 @@ export function tick(s,seconds,nav) {
       const enqueueCrop=taskEnqueuer(s,flushGrowth);
       try{for(const p of activeCrops(s.plants)) {
         if(!p.alive)continue;
-        const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
+          const before=isMature(p),previousGrowth=p.growth,growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
+          if(!before&&s.awakenings?.enabled!==false)recordAgriculturalCare(s,p,step,Math.min(step,Math.max(0,p.growth-previousGrowth)));
         if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;growthStep?.consume(growthSpell,extra);}
         if(!before&&isMature(p)){flushGrowth();emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
         if(!p.harvestRequested&&isMature(p)){flushGrowth();queueMatureHarvest(s,p,enqueueCrop);}

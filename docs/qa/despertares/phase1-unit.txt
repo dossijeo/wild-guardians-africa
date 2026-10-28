@@ -1,0 +1,57 @@
+TAP version 13
+# (node:33672) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: score rewards outcomes proportionally, never absolute farm size or spell casts
+ok 1 - score rewards outcomes proportionally, never absolute farm size or spell casts
+  ---
+  duration_ms: 1.9752
+  ...
+# Subtest: productive investment days score without requiring increasing sales
+ok 2 - productive investment days score without requiring increasing sales
+  ---
+  duration_ms: 0.1392
+  ...
+# Subtest: diminishing returns use live blessing count; losses are not multiplied or penalized twice
+ok 3 - diminishing returns use live blessing count; losses are not multiplied or penalized twice
+  ---
+  duration_ms: 0.1575
+  ...
+# Subtest: legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+ok 4 - legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+  ---
+  duration_ms: 2.6794
+  ...
+# Subtest: banked charges do not overflow and survive bad management until explicitly spent
+ok 5 - banked charges do not overflow and survive bad management until explicitly spent
+  ---
+  duration_ms: 0.263
+  ...
+# Subtest: delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+ok 6 - delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+  ---
+  duration_ms: 0.3503
+  ...
+# Subtest: invalid persisted progress is rejected
+ok 7 - invalid persisted progress is rejected
+  ---
+  duration_ms: 0.7255
+  ...
+# Subtest: real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+ok 8 - real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+  ---
+  duration_ms: 5.9169
+  ...
+# Subtest: 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+ok 9 - 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+  ---
+  duration_ms: 0.2795
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 188.0023

@@ -1,4 +1,5 @@
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
+import {validateAwakenings} from '../simulation/awakenings.js';
 import {validateMicroState} from '../microevents/economy.js';
 import {validRaidContention} from './raid-contention-snapshot.js';
 import {validatePressureSnapshot} from './raid-pressure-snapshot.js';
@@ -15,6 +16,7 @@ export function validateSnapshot(state) {
   if(state.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   validateMicroState(state);
+  validateAwakenings(state);
   validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
   if(state.cinematicSeenAct!==undefined&&(!Number.isSafeInteger(state.cinematicSeenAct)||state.cinematicSeenAct<0||state.cinematicSeenAct>10||state.cinematicSeenAct>Math.floor((state.completedNights??0)/10)))throw new Error('Progreso de cinemáticas inválido');

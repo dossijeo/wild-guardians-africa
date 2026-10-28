@@ -1,4 +1,5 @@
 import {rational,transact,numberOf} from '../simulation/money.js';
+import {recordAwakeningOpportunity} from '../simulation/awakenings.js';
 import {cropSpec} from '../simulation/rules.js';
 import {EVENTS,MICROEVENT_CONFIG as C,eligibleAnchor} from './definitions.js';
 
@@ -26,6 +27,7 @@ export function settleEvent(s,ticket,outcome,{enabled=true,losses=true}={}){
   m.ticket=null;
   const def=EVENTS[current.type],target=def.anchor==='wood'?s.structures.find(p=>p.id===current.targetId):s.plants.find(p=>p.id===current.targetId&&p.alive);
   if(!enabled||!eligibleAnchor(def,target)||current.day!==s.day||s.pauses.length||s.result||!['completed','ignored'].includes(outcome))return {applied:true,delta:0};
+  if(s.awakenings?.enabled!==false)recordAwakeningOpportunity(s,current.id,outcome);
   if(outcome==='completed'&&def.success==='coin'){
     const cap=Math.min(C.positiveDailyCoins,Math.floor(m.previousIncome*C.positiveDailyFraction));
     if(m.rewards<cap&&transact(s.ledger,current.id,rational(1))){m.rewards++;return {applied:true,delta:1};}
