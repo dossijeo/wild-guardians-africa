@@ -67,3 +67,7 @@ The diagnostic replay (`peer-unresolved-status.json`) found every penetrating sa
 `peer-clear-status.json` and `peer-clear.webm` record the next four-hyena run: no baked vertices detected inside physical colliders, completed recovery, zero runtime errors and no final down actors. The 2 Hz contact sheet shows the group falling and resuming activity. This is one variable-rate run, not proof of every contact or smooth per-frame displacement. Crowded corners, displacement continuity, performance and additional species remain to be validated.
 
 Two new combined-box tests and all 26 existing combat/static-solid tests pass. The earlier peer-box patch remains rejected historical evidence; the applied version adds the combined clearance search.
+
+### Static-wall crossing regression
+
+A new deterministic case demonstrated that the combined endpoint search could choose a clear destination on the far side of a thin static wall. The test failed before the change. Candidate translations now sweep the actor AABB against previously clear static obstacles; moving peers remain separable and an existing static overlap may escape. The three offset tests plus the buffalo/rhino baked-wall tests pass (5/5). This is a geometric regression test, not a new visual scenario approval. A blocked search retains the earlier unresolved-contact behavior; it does not authorize crossing a static barrier.

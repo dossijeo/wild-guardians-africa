@@ -48,7 +48,7 @@ export class BakedSolidContacts{
   this.unresolved=0;for(const solid of [...this.peerBoxes,...this.boxes])if(solid.active?.()!==false&&b.intersectsBox(solid))this.unresolved++;
   if(this.unresolved&&this.peerBoxes.length){
    b.translate(this.point.copy(this.shift).negate());
-   const correction=clearBoxOffset(b,[...this.peerBoxes,...this.boxes],this.shift);
+   const correction=clearBoxOffset(b,[...this.peerBoxes,...this.boxes],this.shift,.015,this.boxes);
    if(correction){b.translate(correction);this.unresolved=0;}
   }
   if(this.shift.lengthSq()){const hip=this.binding.bones.get('Hips');hip.getWorldPosition(this.point).add(this.shift);hip.position.copy(hip.parent.worldToLocal(this.point));this.binding.model.updateMatrixWorld(true);}
