@@ -1,0 +1,155 @@
+TAP version 13
+# (node:25300) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+ok 1 - all beasts receive isolated material lighting while global and non-beast shaders remain unchanged
+  ---
+  duration_ms: 14.1663
+  ...
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 2 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 5.3926
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 3 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 1.4539
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 4 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 2.2559
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 5 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.645
+  ...
+# (node:19616) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: root paths are deterministic, local, sparse and point toward actual beneficiaries
+ok 6 - root paths are deterministic, local, sparse and point toward actual beneficiaries
+  ---
+  duration_ms: 48.2399
+  ...
+# Subtest: paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+ok 7 - paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+  ---
+  duration_ms: 11.6007
+  ...
+# Subtest: masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+ok 8 - masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+  ---
+  duration_ms: 18.3739
+  ...
+# Subtest: terrain quality replacement retains uniforms until the last material owner is disposed
+ok 9 - terrain quality replacement retains uniforms until the last material owner is disposed
+  ---
+  duration_ms: 3.1733
+  ...
+# Subtest: root mask bounds participate in the same relative-origin window as the real terrain
+ok 10 - root mask bounds participate in the same relative-origin window as the real terrain
+  ---
+  duration_ms: 2.9643
+  ...
+# Subtest: root integration composes with both original ground quality paths and excludes ordinary objects
+ok 11 - root integration composes with both original ground quality paths and excludes ordinary objects
+  ---
+  duration_ms: 5.5265
+  ...
+# (node:47400) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: ground surface, Fresnel and BRDF preserve the supplied shader recipes
+ok 12 - ground surface, Fresnel and BRDF preserve the supplied shader recipes
+  ---
+  duration_ms: 4.2776
+  ...
+# Subtest: both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+ok 13 - both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+  ---
+  duration_ms: 6.7701
+  ...
+# (node:43660) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+ok 14 - paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+  ---
+  duration_ms: 12.8426
+  ...
+# Subtest: entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+ok 15 - entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+  ---
+  duration_ms: 3.8628
+  ...
+# Subtest: explicit refresh handles material arrays, replacement and late metadata without stale references
+ok 16 - explicit refresh handles material arrays, replacement and late metadata without stale references
+  ---
+  duration_ms: 1.8935
+  ...
+# Subtest: resident and unchanged-region horizon quality replacements are registered immediately
+ok 17 - resident and unchanged-region horizon quality replacements are registered immediately
+  ---
+  duration_ms: 360.499
+  ...
+# Subtest: QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+ok 18 - QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+  ---
+  duration_ms: 1.0939
+  ...
+# Subtest: temporary excluded pass roots never register nested materials or leave event listeners
+ok 19 - temporary excluded pass roots never register nested materials or leave event listeners
+  ---
+  duration_ms: 1.1347
+  ...
+# Subtest: origin bounds retain shared hidden materials without walking the scene graph
+ok 20 - origin bounds retain shared hidden materials without walking the scene graph
+  ---
+  duration_ms: 8.6355
+  ...
+# Subtest: streaming, replacement, reparenting and changed uniform objects follow the live registry
+ok 21 - streaming, replacement, reparenting and changed uniform objects follow the live registry
+  ---
+  duration_ms: 5.5376
+  ...
+# Subtest: live bound identities are offset once and restored after a failing recentered draw
+ok 22 - live bound identities are offset once and restored after a failing recentered draw
+  ---
+  duration_ms: 4.4663
+  ...
+# (node:32848) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+ok 23 - all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+  ---
+  duration_ms: 12.0536
+  ...
+# Subtest: shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+ok 24 - shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+  ---
+  duration_ms: 2.4651
+  ...
+# Subtest: global bounds are collected once without moving instances or changing material identities
+ok 25 - global bounds are collected once without moving instances or changing material identities
+  ---
+  duration_ms: 3.5274
+  ...
+# Subtest: local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+ok 26 - local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+  ---
+  duration_ms: 1.4113
+  ...
+# Subtest: PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+ok 27 - PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+  ---
+  duration_ms: 3.632
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 940.4796
