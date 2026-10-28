@@ -9,3 +9,11 @@ At Attack age 0.14 s, one Guardian remained, Shield was materializing and the re
 At 0.62 s, cleared.json records no retained attack or retained draws, while Shield and the single Guardian continue. Maximum visible Guardian count stayed one. No additional runtime error occurred beyond the rejected Grow attempt. This verifies the presentation lifecycle only; the fixture was not running animal navigation or physical ragdoll.
 
 The focused singleton, retained-energy and lifecycle suite passed 14/14 tests. Remaining evidence needed includes unobscured contact footage and the same interruption sequence during actual simulation, with sound and camera movement.
+
+## Follow-up with simulation enabled
+
+Repeated from a fresh fixture with Game.tick enabled and audio unlocked. Attack at 3019.71366, Shield 0.02 s later, contact inspected at Attack age 0.26 s. simulation-contact.json shows one Guardian, retained contact geometry, one active ragdoll with 14 bodies, no errors, and successful hurt/impact audio dispatch. simulation-contact.png was inspected with the new hide-controls toggle: the impact is visible beside the hyena while the single Guardian materializes at Shield's location. Audio dispatch is evidence of playback scheduling, not a listening assessment of the mix.
+
+Rotated the camera and resumed continuous simulation. At 3048.42505, simulation-finished.json records the hyena attacking again, no magicDown, zero physics worlds/bodies, zero retained effects and no visible Guardian. Maximum visible Guardian count stayed one. No roll timeout or runtime errors were reported. This proves return to behavior and resource cleanup in this case. The complete fall/get-up motion was not captured frame by frame, so animation quality is not newly certified by the end-state check. No performance comparison is inferred from these isolated timing samples.
+
+The fixture now has an accessible, reversible hide-controls button outside the panel. It hides only QA UI; simulation and rendering continue. Both hide and show were checked in the browser, and JavaScript syntax/diff checks passed.
