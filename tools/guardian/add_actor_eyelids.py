@@ -137,7 +137,7 @@ def envelope(side,x,y):
     points=contours[side];top,bottom=bounds(points,x)
     u=(x-points[0][0])/(points[-1][0]-points[0][0])
     v=max(0,min(1,(y-top)/max(.01,bottom-top)))
-    blend=max(0,math.sin(math.pi*u)*math.sin(math.pi*v))**.35
+    blend=max(0,math.sin(math.pi*u)*math.sin(math.pi*v))**profile.get('envelopeBlendPower',.35)
     actual=sample(x,y)[0]-direction*profile.get('edgeClearance',.001)
     result=actual.lerp(smooth,blend)
     # Interpolation must never put the lid behind the sampled eyeball.

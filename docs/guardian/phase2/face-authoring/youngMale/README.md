@@ -9,3 +9,7 @@ La herramienta permite ahora seleccionar Mesh0 mediante el perfil, manteniendo M
 ## Párpados v3
 
 Se añade closureCrease opcional: relieve de hasta 3 mm y línea suave de cierre mediante color de vértices multiplicado por el atlas; no afecta a perfiles anteriores. Revisión frontal completa y media apertura: el cierre se reconoce mejor, no se ve blanco al cerrar, pero el borde superior sigue pareciendo superpuesto y requiere integración. La media apertura cubre la pupila sin sustituirla. No instalado, no aceptación final. Fuente C:/tmp/guardian-faces/youngMale-lids-v3.blend. Pendiente comprobar que el material compuesto exporta el color esperado en Three.js y suavizar la unión a la piel.
+
+## Validación Three.js v4
+
+Fixture actor-expression acepta actor=youngMale, localiza mixamorigHead y usa el controlador worker (huida/golpe). Capturas runtime-v4: cierre y apertura parcial reales. Se elimina la franja negra superior llevando el contorno a piel y ajustando la mezcla de superficie. Queda aspecto abultado en el cierre; pendiente afinar. El exportador advierte que ClosureFold no se exporta: el pliegue visible en navegador es geométrico, no prueba la conservación del sombreado por vértices. Corregir material antes de aceptar. Fuente provisional youngMale-lids-v4.blend; no instalado.
