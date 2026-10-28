@@ -189,6 +189,7 @@ material.node_tree.links.new(tone.outputs[0],bs.inputs['Base Color'])
 if profile.get('closureCrease'):
     # A shallow skin fold with a narrow shaded closure line, opt-in for workers.
     colors=data.color_attributes.new(name='ClosureFold',type='FLOAT_COLOR',domain='CORNER')
+    data.color_attributes.active_color=colors
     for poly in data.polygons:
         for loop in poly.loop_indices:
             index=data.loops[loop].vertex_index;side,x,top,bottom,t=metadata[index]
@@ -289,6 +290,7 @@ for side in contours:
 bpy.ops.wm.save_as_mainfile(filepath=str(Path(a.output).resolve()),compress=True)
 if a.export_glb:
     bpy.ops.export_scene.gltf(filepath=str(Path(a.output).with_suffix('.glb').resolve()),
+        **({'export_vertex_color':'ACTIVE','export_all_vertex_colors':False} if profile.get('closureCrease') else {}),
         export_format='GLB',export_animations=True,export_animation_mode='NLA_TRACKS',
         export_nla_strips=True,export_force_sampling=True,export_frame_range=False,
         export_yup=True,export_skins=True,export_all_influences=False,export_extras=True)
@@ -297,6 +299,22 @@ if a.export_glb:
         sys.path.insert(0,str(Path(__file__).resolve().parent))
         from restore_source_animations import restore
         restore(a.source_glb or a.input,Path(a.output).with_suffix('.glb'))
+if a.export_glb and profile.get('closureCrease'):
+    # Three.js uses COLOR_0 for material vertex colors, not auxiliary COLOR_1.
+    import struct
+    raw=Path(a.output).with_suffix('.glb').read_bytes();size=struct.unpack_from('<I',raw,12)[0]
+    exported=json.loads(raw[20:20+size]);binary=28+size
+    node=next(n for n in exported['nodes'] if n.get('name')==lid_name)
+    primitive=exported['meshes'][node['mesh']]['primitives'][0]
+    accessor=exported['accessors'][primitive['attributes']['COLOR_0']]
+    view=exported['bufferViews'][accessor['bufferView']]
+    fmt={5121:'B',5123:'H',5126:'f'}[accessor['componentType']]
+    width={'VEC3':3,'VEC4':4}[accessor['type']];unit=struct.calcsize(fmt)
+    values=[]
+    for index in range(accessor['count']):
+        offset=binary+view.get('byteOffset',0)+accessor.get('byteOffset',0)+index*view.get('byteStride',width*unit)
+        values.extend(struct.unpack_from('<'+fmt*width,raw,offset)[:3])
+    assert min(values)<max(values)*.8,'Closure fold must survive in primary vertex colors'
 Path(a.output).with_suffix('.json').write_text(json.dumps({'status':'unvalidated eyelid candidate',
     'profile':profile,'contours':contours,'vertices':len(verts),'faces':len(faces),
     'eyeSpheres':{side:{'center':list(c),'radius':r} for side,(c,r) in eye_spheres.items()},

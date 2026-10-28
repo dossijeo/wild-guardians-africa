@@ -13,3 +13,7 @@ Se añade closureCrease opcional: relieve de hasta 3 mm y línea suave de cierre
 ## Validación Three.js v4
 
 Fixture actor-expression acepta actor=youngMale, localiza mixamorigHead y usa el controlador worker (huida/golpe). Capturas runtime-v4: cierre y apertura parcial reales. Se elimina la franja negra superior llevando el contorno a piel y ajustando la mezcla de superficie. Queda aspecto abultado en el cierre; pendiente afinar. El exportador emite un aviso sobre el color activo, pero inspeccionar el GLB confirma COLOR_0 y COLOR_1 en los párpados. El aviso no demuestra pérdida de ClosureFold; falta verificar los valores y qué canal consume Three.js antes de atribuir diferencias al sombreado. Fuente provisional youngMale-lids-v4.blend; no instalado.
+
+## Corrección del color exportado v5
+
+Inspección binaria v4: COLOR_0 era blanco uniforme (255), mientras COLOR_1 tenía el pliegue (31877–65535). Se establece ClosureFold como color activo y se exporta ACTIVE, sin canales auxiliares, solo para perfiles closureCrease. El exportador verifica ahora que COLOR_0 conserve variación suficiente; ejecutado con éxito en youngMale-lids-v5-checked.glb. Captura Three.js runtime-v5/closed.png confirma el resultado. La forma todavía necesita revisión de volumen y movimiento, no está instalada.
