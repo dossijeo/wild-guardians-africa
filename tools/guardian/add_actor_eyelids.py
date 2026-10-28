@@ -186,7 +186,7 @@ head=next(g.name for g in mesh.vertex_groups if g.name.replace('mixamorig:','')=
 # with a 20px transition; do not touch back-of-head or overlapping mane sheets.
 head_index=mesh.vertex_groups[head].index; skin_changes=[]
 inverse_camera=rotation.inverted()
-for vertex in mesh.data.vertices:
+for vertex in ([] if profile.get('surfaceSkinning') else mesh.data.vertices):
     point=world@vertex.co;view=inverse_camera@(point-camera)
     px=(view.x/extent+.5)*768-.5;py=(.5-view.y/extent)*768-.5
     weight=0
@@ -206,7 +206,27 @@ for vertex in mesh.data.vertices:
     for index,w in values.items():
         if w>1e-7:mesh.vertex_groups[index].add([vertex.index],w,'REPLACE')
     skin_changes.append({'vertex':vertex.index,'position':list(point),'blend':weight})
-obj.vertex_groups.new(name=head).add(list(range(len(verts))),1,'REPLACE')
+surface_bindings=[]
+if profile.get('surfaceSkinning'):
+    for group in mesh.vertex_groups:obj.vertex_groups.new(name=group.name)
+    for i,(side,x,top,bottom,t) in enumerate(metadata):
+        point=envelope(side,x,top+(bottom-top)*t)
+        hit,_,index,_=tree.find_nearest(point)
+        if hit is None:raise ValueError('Cannot bind eyelid to source surface')
+        triangle=tris[index]
+        bary=barycentric_transform(hit,*[world@mesh.data.vertices[v].co for v in triangle.vertices],
+            Vector((1,0,0)),Vector((0,1,0)),Vector((0,0,1)))
+        weights={}
+        for vertex,factor in zip(triangle.vertices,bary):
+            for group in mesh.data.vertices[vertex].groups:
+                weights[group.group]=weights.get(group.group,0)+max(0,factor)*group.weight
+        strongest=sorted(weights.items(),key=lambda pair:pair[1],reverse=True)[:4]
+        total=sum(w for _,w in strongest)
+        if total<=0:raise ValueError('Source surface has no skin weights')
+        for group,w in strongest:obj.vertex_groups[group].add([i],w/total,'REPLACE')
+        surface_bindings.append({'vertex':i,'triangle':index,'distance':(point-hit).length})
+else:
+    obj.vertex_groups.new(name=head).add(list(range(len(verts))),1,'REPLACE')
 for mod in mesh.modifiers:
     if mod.type=='ARMATURE':obj.modifiers.new('Face skeleton','ARMATURE').object=mod.object
 obj.shape_key_add(name='Basis')
@@ -250,5 +270,5 @@ if a.export_glb:
 Path(a.output).with_suffix('.json').write_text(json.dumps({'status':'unvalidated eyelid candidate',
     'contours':contours,'vertices':len(verts),'faces':len(faces),
     'eyeSpheres':{side:{'center':list(c),'radius':r} for side,(c,r) in eye_spheres.items()},
-    'eyeSkinning':skin_changes,
+    'eyeSkinning':skin_changes,'surfaceBindings':surface_bindings,
     'envelopeClearance':{side:value[1] for side,value in envelopes.items()}},indent=2),encoding='utf-8')
