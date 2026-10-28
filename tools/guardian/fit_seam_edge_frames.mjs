@@ -2,9 +2,9 @@ import {Vector3,Quaternion} from 'three';
 
 // Offline bounded relaxation of tangent frames. Images and mesh topology stay
 // untouched. This cannot reproduce arbitrary per-pixel edge discrepancies.
-export function fitSeamEdgeFrames({indices,pos,norm,tang,uv,normalSample,referenceNormals,iterations=16}){
+export function fitSeamEdgeFrames({indices,pos,norm,tang,uv,normalSample,referenceNormals,iterations=16,bounds=[-.215,1.08,.08,.215,1.55,Infinity]}){
  const key=i=>pos.get(i).map(v=>Math.round(v*1e6)).join(',');
- const face=i=>{const [x,y,z]=pos.get(i);return Math.abs(x)<.215&&y>1.08&&y<1.55&&z>.08;};
+ const face=i=>pos.get(i).every((v,k)=>v>bounds[k]&&v<bounds[k+3]);
  const map=new Map();
  for(let i=0;i<indices.length;i+=3)for(let k=0;k<3;k++){
   let a=indices[i+k],b=indices[i+(k+1)%3];if(!face(a)||!face(b))continue;
