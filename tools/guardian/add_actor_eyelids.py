@@ -204,7 +204,7 @@ if profile.get('closureCrease'):
             u=(index%columns)/(columns-1)
             line=.78+.08*math.cos((u-.5)*math.pi*2)
             shade=1-.52*math.exp(-((t-line)/.036)**2)*math.sin(math.pi*u)**.4
-            skin=skin_color(x,top-2)*(1-t)+skin_color(x,bottom+2)*t if profile.get('boundarySkinColor') else np.ones(3)
+            skin=skin_color(x,top-profile.get('skinSampleTopOffset',2))*(1-t)+skin_color(x,bottom+profile.get('skinSampleBottomOffset',2))*t if profile.get('boundarySkinColor') else np.ones(3)
             colors.data[loop].color=(*[float(c)*shade for c in skin],1)
     tint=material.node_tree.nodes.new('ShaderNodeVertexColor');tint.layer_name='ClosureFold'
     fold=material.node_tree.nodes.new('ShaderNodeMixRGB');fold.blend_type='MULTIPLY';fold.inputs[0].default_value=1

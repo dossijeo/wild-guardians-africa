@@ -16,7 +16,7 @@ for o in bpy.context.scene.objects:
 bpy.context.view_layer.update();points=[];info=[]
 for o in bpy.context.scene.objects:
  if o.type!='MESH':continue
- ids={v.index for v in o.vertex_groups if v.name.replace('mixamorig:','')=='Head'}
+ ids={v.index for v in o.vertex_groups if v.name.replace('mixamorig:','').replace('mixamorig','')=='Head'}
  selected=[v for v in o.data.vertices if sum(g.weight for g in v.groups if g.group in ids)>.7]
  points.extend(o.matrix_world@v.co for v in selected);info.append({'mesh':o.name,'vertices':len(o.data.vertices),'headVertices':len(selected)})
 if not points:points=[o.matrix_world@v.co for o in bpy.context.scene.objects if o.type=='MESH' for v in o.data.vertices]
