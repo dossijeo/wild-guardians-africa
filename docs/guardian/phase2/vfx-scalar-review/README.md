@@ -87,3 +87,11 @@ A new catalog-hyena regression in baked-solid-contacts.test.js verifies that pee
 ## Four-rhino coverage
 
 `rhino-group.webm` (25.253 s) repeats the four-impact UI recorder with the installed rhino profile, without peerContacts diagnostics. `rhino-group-status.json` reports completed simulation, peak 3 physical / 1 baked, finalDownCount 0 and errors []. The first 18 seconds and final six seconds are sampled at 2 Hz in separate contact sheets. The reviewed ending shows all four upright and resuming movement/attacks; several silhouettes overlap in perspective during the cycle. No mesh-containment or continuity measurement is inferred from this recording. It is a controlled QA scene with cooldown resets, not balance or performance acceptance.
+
+### Rhino containment and motion diagnostic
+
+`rhino-peer-status.json` and `rhino-peer-summary.json` contain a separate four-rhino run with peerContacts enabled. 157 sampled pairs, no physical/baked AABB candidates and no negative physical collider distance; completed cycle, zero errors/final down actors/bodies, maxVisibleGuardians 1. This supports separation for this run only.
+
+The largest sampled baked hip step is 0.586 m over 0.133 s, decomposed into 0.246 m horizontal and -0.531 m vertical during recovery. It is not the earlier 2.86 m horizontal reversal, but the vertical transition still needs close visual review. Do not treat the containment result as artistic acceptance.
+
+Reproduce summaries with `python tools/guardian/analyze_peer_trial.py INPUT --output OUTPUT`. The script preserves limitations and separates horizontal/vertical motion; diagnostics remain unsuitable for performance comparison.
