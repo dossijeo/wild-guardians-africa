@@ -29,6 +29,8 @@ lid_name=profile.get('lidObject','ActorFacialLids')
 existing=bpy.data.objects.get(lid_name)
 if existing and a.replace_existing:bpy.data.objects.remove(existing,do_unlink=True)
 else:assert existing is None,'Use --replace-existing for an existing generated lid'
+old_rim=bpy.data.objects.get(lid_name+'Rim')
+if old_rim and a.replace_existing:bpy.data.objects.remove(old_rim,do_unlink=True)
 mesh=bpy.data.objects[profile.get('mesh','Mesh_0')]
 world=mesh.matrix_world.copy(); inv=world.inverted()
 mesh.data.calc_loop_triangles(); tris=list(mesh.data.loop_triangles)
@@ -319,6 +321,58 @@ if profile.get('perimeterInset'):
             fade=max(0,1-edge/profile.get('perimeterBlend',.08))
             fade=fade*fade*(3-2*fade)
             key.data[i].co=inv@(world@key.data[i].co+direction*profile['perimeterInset']*fade)
+if profile.get('rimDepth'):
+    # Close the gap visible obliquely behind a zero-thickness eyelid sheet.
+    # Each corrective gets the same attached rim; the rear edge sits under
+    # the original socket rather than moving the eye or painting it over.
+    depth=float(profile['rimDepth'])
+    assert 0<depth<=.03,'Lid rim must stay local to the eye socket'
+    perimeter=[]
+    for side_index in range(len(contours)):
+        start=side_index*columns*rows
+        ring=[start+i for i in range(columns)]
+        ring += [start+r*columns+columns-1 for r in range(1,rows)]
+        ring += [start+(rows-1)*columns+c for c in range(columns-2,-1,-1)]
+        ring += [start+r*columns for r in range(rows-2,0,-1)]
+        perimeter.append(ring)
+    sources=[];rim_faces=[]
+    for ring in perimeter:
+        start=len(sources)
+        sources.extend((index,rear) for index in ring for rear in (False,True))
+        for i in range(len(ring)):
+            j=(i+1)%len(ring)
+            rim_faces.append((start+2*i,start+2*j,start+2*j+1,start+2*i+1))
+    def rim_coords(key):
+        return [key.data[index].co+(inv.to_3x3()@direction)*depth*rear for index,rear in sources]
+    rim_data=bpy.data.meshes.new('Attached eyelid rim')
+    rim_data.from_pydata(rim_coords(obj.data.shape_keys.key_blocks[0]),[],rim_faces)
+    rim_data.update();rim=bpy.data.objects.new(lid_name+'Rim',rim_data)
+    bpy.context.collection.objects.link(rim);rim.matrix_world=world
+    rim.data.materials.append(material)
+    for group in obj.vertex_groups:rim.vertex_groups.new(name=group.name)
+    for i,(index,rear) in enumerate(sources):
+        for group in obj.data.vertices[index].groups:
+            rim.vertex_groups[group.group].add([i],group.weight,'REPLACE')
+    for mod in obj.modifiers:
+        if mod.type=='ARMATURE':rim.modifiers.new('Face skeleton','ARMATURE').object=mod.object
+    for key in obj.data.shape_keys.key_blocks:
+        target=rim.shape_key_add(name=key.name)
+        for vertex,co in zip(target.data,rim_coords(key)):vertex.co=co
+    source_loops={loop.vertex_index:loop.index for loop in data.loops}
+    rim_uv=rim_data.uv_layers.new(name='UVMap')
+    if data.color_attributes.active_color:
+        rim_colors=rim_data.color_attributes.new(name='ClosureFold',type='FLOAT_COLOR',domain='CORNER')
+        rim_data.color_attributes.active_color=rim_colors
+    for loop in rim_data.loops:
+        source_index=sources[loop.vertex_index][0];source_loop=source_loops[source_index]
+        rim_uv.data[loop.index].uv=data.uv_layers.active.data[source_loop].uv
+        if data.color_attributes.active_color:
+            rim_colors.data[loop.index].color=data.color_attributes.active_color.data[source_loop].color
+    # Identical material, bind transform and corrective names: keep the rim in
+    # the same skinned primitive instead of adding a draw call per worker.
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True);rim.select_set(True);bpy.context.view_layer.objects.active=obj
+    bpy.ops.object.join()
 bpy.ops.wm.save_as_mainfile(filepath=str(Path(a.output).resolve()),compress=True)
 if a.export_glb:
     bpy.ops.export_scene.gltf(filepath=str(Path(a.output).with_suffix('.glb').resolve()),
@@ -348,7 +402,7 @@ if a.export_glb and profile.get('closureCrease'):
         values.extend(struct.unpack_from('<'+fmt*width,raw,offset)[:3])
     assert min(values)<max(values)*.8,'Closure fold must survive in primary vertex colors'
 Path(a.output).with_suffix('.json').write_text(json.dumps({'status':'unvalidated eyelid candidate',
-    'profile':profile,'contours':contours,'vertices':len(verts),'faces':len(faces),
+    'profile':profile,'contours':contours,'vertices':len(obj.data.vertices),'faces':len(obj.data.polygons),
     'eyeSpheres':{side:{'center':list(c),'radius':r} for side,(c,r) in eye_spheres.items()},
     'eyeSkinning':skin_changes,'surfaceBindings':surface_bindings,
     'envelopeClearance':{side:value[1] for side,value in envelopes.items()}},indent=2),encoding='utf-8')

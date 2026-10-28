@@ -85,23 +85,29 @@
       "id": "rhino",
       "kind": "animal",
       "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
-      "file": "public\\assets\\e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
-      "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff",
-      "bytes": 48413848,
-      "channels": [],
-      "missing": [
+      "file": "public\\assets\\34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4.glb",
+      "sha256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
+      "bytes": 52311464,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     },
     {
       "id": "olderMale",
       "kind": "worker",
-      "source": "Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5.html#model-data",
-      "file": "public\\assets\\b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
-      "sha256": "b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76",
-      "bytes": 18859292,
+      "source": "Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5.html",
+      "file": "public\\assets\\e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+      "bytes": 20235172,
       "channels": [],
       "missing": [
         "blinkL",
@@ -112,10 +118,10 @@
     {
       "id": "olderFemale",
       "kind": "worker",
-      "source": "Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5.html#model-data",
-      "file": "public\\assets\\9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
-      "sha256": "9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e",
-      "bytes": 17965476,
+      "source": "Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5.html",
+      "file": "public\\assets\\4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+      "bytes": 19341308,
       "channels": [],
       "missing": [
         "blinkL",
@@ -126,30 +132,42 @@
     {
       "id": "youngMale",
       "kind": "worker",
-      "source": "Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7.html#model-data",
-      "file": "public\\assets\\a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
-      "sha256": "a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c",
-      "bytes": 26517228,
-      "channels": [],
-      "missing": [
+      "source": "Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7.html",
+      "file": "public\\assets\\d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2.glb",
+      "sha256": "d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2",
+      "bytes": 28812068,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     },
     {
       "id": "youngFemale",
       "kind": "worker",
-      "source": "Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5.html#model-data",
-      "file": "public\\assets\\db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
-      "sha256": "db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd",
-      "bytes": 17767816,
-      "channels": [],
-      "missing": [
+      "source": "Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5.html",
+      "file": "public\\assets\\382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c.glb",
+      "sha256": "382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c",
+      "bytes": 16406252,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     }
   ],
   "candidates": [
@@ -228,6 +246,83 @@
         "mouthOpen"
       ],
       "missing": []
+    },
+    {
+      "id": "rhino",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/rhino/expressive-candidate.glb",
+      "sha256": "a29a48ca63b1c9d32efaf09a042db221125df1fdd6472284e888f2866cf5e7d5",
+      "bytes": 10278984,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
+        "mouthOpen"
+      ],
+      "missing": []
+    },
+    {
+      "id": "olderFemale",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/olderFemale/expressive-candidate.glb",
+      "sha256": "43709563f25707e5e22d244dc5cb40aa53f44bc686c714db519c327836e532c1",
+      "bytes": 20263360,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
+        "mouthOpen"
+      ],
+      "missing": []
+    },
+    {
+      "id": "youngMale",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/youngMale/expressive-candidate.glb",
+      "sha256": "95915997f5e77f747bc59bdca1bffc248fb754e9bc38349b17a99b4defdfcab5",
+      "bytes": 5309848,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
+        "mouthOpen"
+      ],
+      "missing": []
+    },
+    {
+      "id": "youngFemale",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/youngFemale/expressive-candidate.glb",
+      "sha256": "92cfe90e404a40ea52de5ba0304c6b7bc40ffd3be24daffd4c94e6a4081dd03d",
+      "bytes": 7947476,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75"
+      ],
+      "missing": [
+        "mouthOpen"
+      ]
     }
   ],
   "complete": false
