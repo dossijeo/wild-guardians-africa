@@ -6,6 +6,13 @@ export async function checkGuardian(actor,audio,voices,resolve){
  for(const v of VISEMES){actor.manual.viseme=v;actor.draw({time:1});assert('viseme '+v,read('viseme_'+v)===1);}
  actor.manual.viseme=null;
  for(const value of [.5,1]){actor.manual.blink=value;actor.draw({time:1});assert('blink '+value,read('blink_L')===value&&read('blink_R')===value);}
+ for(const value of [.25,.375,.5,.625,.75,1]){
+  actor.manual.blink=value;actor.draw({time:1});
+  for(const side of ['L','R'])for(const mesh of meshes.filter(m=>m.morphTargetDictionary['blink_'+side+'_50']!==undefined)){
+   const weights=[25,50,75,100].map(step=>mesh.morphTargetInfluences[mesh.morphTargetDictionary['blink_'+side+(step===100?'':'_'+step)]]);
+   assert('curved blink '+side+' '+value,Math.abs(weights.reduce((sum,w,i)=>sum+w*(i+1)/4,0)-value)<1e-7&&weights.reduce((sum,w)=>sum+w,0)<=1.000001);
+  }
+ }
  actor.manual.blink=0;
  const eyePos=[];for(const x of [-1,1]){actor.target.set(x,.3,1);actor.draw({time:1});eyePos.push(actor.eyes.map(e=>e.bone.quaternion.toArray()));}
  assert('two movable eyes',actor.eyes.length===2&&JSON.stringify(eyePos[0])!==JSON.stringify(eyePos[1]));actor.target.set(0,.27,2);

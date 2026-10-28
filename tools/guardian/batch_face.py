@@ -35,7 +35,7 @@ def optimize(path):
  for mesh in doc['meshes']:
   parts=[p for p in mesh['primitives'] if doc['materials'][p['material']].get('name') in FLAT]
   if not parts:continue
-  assert len(parts)==4,'Expected all four face materials'
+  assert {doc['materials'][p['material']]['name'] for p in parts} in [set(FLAT),set(FLAT)-{'Painted wooden eyelids'}],'Expected oral materials with optional legacy lids'
   first=parts[0];merged=copy.deepcopy(first);colors=[];indices=[];base=0
   for p in parts:
    assert p.get('mode',4)==4 and set(p['attributes'])==set(first['attributes'])
