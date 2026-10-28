@@ -1,5 +1,5 @@
 """Recessed rhino oral cavity following the reviewed lip incision."""
-import argparse,json,math,sys
+import argparse,bisect,json,math,sys
 from pathlib import Path
 import bpy
 from mathutils import Vector,Matrix
@@ -23,7 +23,7 @@ while current is not None:
 assert len(chain)==len(adj)
 def smooth(l,r,x):
  t=max(0,min(1,(x-l)/(r-l)));return t*t*(3-2*t)
-def jaw(v):return smooth(2.12,2.21,v.z)*(1-smooth(-.60,-.48,v.y))*(1-smooth(.16,.22,abs(v.x)))
+def jaw(v):return smooth(2.09,2.19,v.z)*(1-smooth(-.60,-.48,v.y))*(1-smooth(.16,.22,abs(v.x)))
 pivot=Vector(report['pivot']);rot=Matrix.Rotation(report['angle'],3,'X')
 verts=[];opened=[];anchors=[];faces=[];colors=[]
 def vertex(v,anchor,amount):
@@ -34,7 +34,13 @@ def face(ids,color,direction=None):
   normal=(points[1]-points[0]).cross(points[2]-points[0])
   if normal.dot(Vector(direction))<0:ids=ids[::-1]
  faces.append(ids);colors.append((*color,1))
-rear=Vector((0,-.46,2.325));grids=[]
+profile=report['profile']
+def lip_height(y):
+ j=max(1,min(len(profile)-1,bisect.bisect_right([p[0] for p in profile],y)))
+ l,r=profile[j-1],profile[j]
+ return l[1]+(r[1]-l[1])*(y-l[0])/(r[0]-l[0])
+front_y=min(v.y for v in chain);back_y=max(v.y for v in chain)
+rear=Vector((0,back_y,lip_height(back_y)));grids=[]
 for lower in (False,True):
  grid=[]
  for row in range(9):
@@ -68,7 +74,7 @@ for is_lower,inside in ((False,upper),(True,lower)):
 # Curved buccal surfaces: the leading edge recedes between the jaws,
 # so no straight vertical plate cuts across the visible cavity.
 for side in (-1,1):
- contour=sorted([v for v in chain if v.x*side>.07],key=lambda v:v.y)
+ contour=sorted([v for v in chain if v.x*side>.025],key=lambda v:v.y)
  def at_y(y):
   for left,right in zip(contour,contour[1:]):
    if left.y<=y<=right.y:return left.lerp(right,(y-left.y)/max(1e-8,right.y-left.y))
@@ -76,9 +82,9 @@ for side in (-1,1):
  cheek=[]
  for row in range(13):
   t=row/12;line=[]
-  front=-.74+.055*math.sin(math.pi*t)
+  front=front_y+.010+.018*math.sin(math.pi*t)
   for col in range(9):
-   d=col/8;y=front+(-.49-front)*d;anchor=at_y(y)
+   d=col/8;y=front+(back_y-front)*d;anchor=at_y(y)
    v=anchor.copy();v.x-=side*(.012+.008*math.sin(math.pi*t));v.z+=.001*(1-2*t)
    line.append(vertex(v,anchor,jaw(anchor)*t))
   cheek.append(line)
@@ -92,11 +98,11 @@ for col in (0,len(chain)-1):
 # Rounded, recessed tongue follows the lower jaw, never a sheet across the opening.
 rings=[]
 for row in range(13):
- t=row/12;y=-.72+.18*t;width=.075*math.sin(math.pi*(.06+.88*t));ring=[]
+ t=row/12;y=front_y+.07+(back_y-front_y-.10)*t;width=.055*math.sin(math.pi*(.06+.88*t));ring=[]
  for col in range(16):
-  angle=math.tau*col/16;v=Vector((width*math.cos(angle),y,2.298+.012*math.sin(angle)))
+  angle=math.tau*col/16;v=Vector((width*math.cos(angle),y,lip_height(y)-.008+.008*math.sin(angle)))
   anchor=min(chain,key=lambda q:(q-v).length_squared)
-  ring.append(vertex(v,anchor,jaw(Vector((v.x,v.y,2.30)))))
+  ring.append(vertex(v,anchor,jaw(anchor)))
  rings.append(ring)
 for row in range(12):
  for col in range(16):face([rings[row][col],rings[row+1][col],rings[row+1][(col+1)%16],rings[row][(col+1)%16]],(.32,.075,.085))
@@ -127,7 +133,7 @@ for poly,c in zip(data.polygons,colors):
   # This preserves volume in the inexpensive, shadow-free strategic renderer.
   front=max(0,min(1,(-point.y-.48)/.30))
   shade=.10+.42*front*front
-  if c[0]>.25:shade*=1.15+.20*max(-1,min(1,(point.z-2.298)/.012))
+  if c[0]>.25:shade*=1.15+.20*max(-1,min(1,(point.z-lip_height(point.y)+.008)/.008))
   color.data[i].color=(*[v*shade for v in c[:3]],c[3])
 mat=bpy.data.materials.new('Rhino oral tissue');mat.use_nodes=True
 bs=mat.node_tree.nodes.get('Principled BSDF');bs.inputs['Roughness'].default_value=.75

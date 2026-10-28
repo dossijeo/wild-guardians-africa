@@ -1,4 +1,4 @@
-"""Local rhino subnasal lip incision; diagnostic candidate, no oral interior yet."""
+"""Local rhino lower-muzzle lip incision; diagnostic candidate, no oral interior yet."""
 import argparse, bisect, hashlib, json, sys
 from pathlib import Path
 import bpy, bmesh
@@ -13,8 +13,12 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=str(Path(a.input).resolve()))
 mesh=bpy.data.objects['Mesh_0'];assert not mesh.data.shape_keys
 world=mesh.matrix_world.copy();inverse=world.inverted()
-# Calibrated below nostrils, above the chin silhouette; candidate must be inspected.
-profile=[(-.86,2.315),(-.75,2.315),(-.65,2.32),(-.56,2.32),(-.48,2.34)]
+# User-corrected lower muzzle reference, raycast onto the untouched source.
+# The old subnasal incision is rejected; never reuse its oral cavity.
+landmarks=json.loads(Path(a.landmarks).read_text(encoding='utf-8'))['landmarks']
+points=[r['position'] for r in landmarks if r['name'].startswith('red-reference-') and r.get('hit')]
+assert len(points)==4,'Expected four calibrated lower-mouth landmarks'
+profile=[(-.86,points[0][2])]+[(v[1],v[2]) for v in points]+[(-.48,points[-1][2])]
 
 def lip(y):
     j=max(1,min(len(profile)-1,bisect.bisect_right([p[0] for p in profile],y)))
@@ -40,18 +44,29 @@ lower=bm.faces.layers.int.new('lowerJaw')
 for f in bm.faces:f[lower]=int(sum(v.co.z-lip(v.co.y) for v in f.verts)<-1e-7)
 seam=[e for e in bm.edges if len(e.link_faces)==2 and all(local(v) for v in e.verts) and e.link_faces[0][lower]!=e.link_faces[1][lower]]
 assert seam,'No local mouth seam'
+# Round only the incision contour; preserve the surrounding authored surface.
+# Smooth before splitting so the neutral upper and lower lips still coincide.
+neighbors={}
+for edge in seam:
+    l,r=edge.verts;neighbors.setdefault(l,[]).append(r);neighbors.setdefault(r,[]).append(l)
+for _ in range(3):
+    moves={v:v.co.lerp((ns[0].co+ns[1].co)*.5,.35) for v,ns in neighbors.items() if len(ns)==2}
+    for v,co in moves.items():
+        delta=co-v.co
+        if delta.length>.004:delta*=.004/delta.length
+        v.co+=delta
 segments=[[list(v.co) for v in e.verts] for e in seam]
 bmesh.ops.split_edges(bm,edges=seam)
 bm.verts.ensure_lookup_table();bm.verts.index_update();weights=[]
 for v in bm.verts:
     point=v.co
     allowed=bool(v.link_faces) and all(f[lower] for f in v.link_faces)
-    weight=float(allowed)*smooth(2.12,2.21,point.z)*(1-smooth(-.60,-.48,point.y))*(1-smooth(.16,.22,abs(point.x)))
+    weight=float(allowed)*smooth(2.09,2.19,point.z)*(1-smooth(-.60,-.48,point.y))*(1-smooth(.16,.22,abs(point.x)))
     weights.append(weight);v.co=inverse@point
 corner_normals=[tuple(loop[normals].normalized()) for f in bm.faces for loop in f.loops]
 bm.to_mesh(mesh.data);bm.free();mesh.data.update();mesh.data.normals_split_custom_set(corner_normals)
 mesh.shape_key_add(name='Basis');key=mesh.shape_key_add(name='mouthOpen')
-pivot=Vector((0,-.48,2.34));rotation=Matrix.Rotation(.24,3,'X')
+pivot=Vector((0,-.48,profile[-1][1]));rotation=Matrix.Rotation(.24,3,'X')
 for v,dest in zip(mesh.data.vertices,key.data):
     point=world@v.co;dest.co=inverse@point.lerp(pivot+rotation@(point-pivot),weights[v.index])
 output=Path(a.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
