@@ -1,0 +1,85 @@
+{
+  "scope": "Node CPU microbenchmark of resolve only; no browser, rendering or FPS claim. ABBA order; first 30 frames discarded.",
+  "results": [
+    {
+      "species": "buffalo",
+      "mode": "sampled",
+      "sparseSamples": 1393,
+      "fullSamples": 0,
+      "frames": 150,
+      "meanMs": 0.5049813333333365,
+      "p95Ms": 0.8106999999999971,
+      "maxMs": 1.1154999999999973
+    },
+    {
+      "species": "buffalo",
+      "mode": "matrix",
+      "sparseSamples": 1393,
+      "fullSamples": 51598,
+      "frames": 150,
+      "meanMs": 5.971782666666668,
+      "p95Ms": 8.384399999999914,
+      "maxMs": 13.006599999999935
+    },
+    {
+      "species": "buffalo",
+      "mode": "matrix",
+      "sparseSamples": 1393,
+      "fullSamples": 51598,
+      "frames": 150,
+      "meanMs": 5.37432666666666,
+      "p95Ms": 8.092800000000352,
+      "maxMs": 15.813500000000204
+    },
+    {
+      "species": "buffalo",
+      "mode": "sampled",
+      "sparseSamples": 1393,
+      "fullSamples": 0,
+      "frames": 150,
+      "meanMs": 0.4517379999999927,
+      "p95Ms": 0.7779000000000451,
+      "maxMs": 1.1102000000000771
+    },
+    {
+      "species": "rhino",
+      "mode": "sampled",
+      "sparseSamples": 1830,
+      "fullSamples": 0,
+      "frames": 150,
+      "meanMs": 0.7627166666666381,
+      "p95Ms": 1.188499999999749,
+      "maxMs": 4.198899999999867
+    },
+    {
+      "species": "rhino",
+      "mode": "matrix",
+      "sparseSamples": 1830,
+      "fullSamples": 46518,
+      "frames": 150,
+      "meanMs": 5.1883493333333055,
+      "p95Ms": 7.764899999999216,
+      "maxMs": 28.207899999999427
+    },
+    {
+      "species": "rhino",
+      "mode": "matrix",
+      "sparseSamples": 1830,
+      "fullSamples": 46518,
+      "frames": 150,
+      "meanMs": 4.1301693333333125,
+      "p95Ms": 5.390699999999924,
+      "maxMs": 6.720900000000256
+    },
+    {
+      "species": "rhino",
+      "mode": "sampled",
+      "sparseSamples": 1830,
+      "fullSamples": 0,
+      "frames": 150,
+      "meanMs": 0.42190799999999096,
+      "p95Ms": 0.6613999999999578,
+      "maxMs": 0.8225999999995111
+    }
+  ]
+}

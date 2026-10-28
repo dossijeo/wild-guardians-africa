@@ -5,7 +5,10 @@ import {isTailContactVertex} from './beast-ground-contact.js';
 export class SkinContactBounds {
  constructor(model){
   this.matrix=new Matrix4();this.post=new Matrix4();this.point=new Vector3();this.meshes=[];
-  model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=[];for(let i=0;i<mesh.geometry.attributes.position.count;i++)if(!isTailContactVertex(mesh,i))indices.push(i);
+  model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=[],seen=new Set(),g=mesh.geometry.attributes,attributes=[g.position,g.skinIndex,g.skinWeight,...(mesh.geometry.morphAttributes.position??[])];
+   // UV/normal seams duplicate skin vertices. Only merge exact deformation
+   // inputs, including every position morph, so no shape coverage is lost.
+   for(let i=0;i<g.position.count;i++){if(isTailContactVertex(mesh,i))continue;let key='';for(const a of attributes)for(let k=0;k<a.itemSize;k++)key+=a.getComponent(i,k)+',';if(!seen.has(key)){seen.add(key);indices.push(i);}}
    this.meshes.push({mesh,indices,activeMorphs:[],matrices:new Float64Array(mesh.skeleton.bones.length*16)});
   });
  }
