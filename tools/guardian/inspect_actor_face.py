@@ -2,7 +2,7 @@
 import bpy,sys,json,math,argparse
 from pathlib import Path
 from mathutils import Vector
-p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output);out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--input',required=True);p.add_argument('--output',required=True);p.add_argument('--expression',default='');p.add_argument('--amount',type=float,default=1);p.add_argument('--mouth-closeup',action='store_true');p.add_argument('--center',type=float,nargs=3);p.add_argument('--extent',type=float);p.add_argument('--samples',type=int,default=20);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 if a.input.endswith('.blend'):bpy.ops.wm.open_mainfile(filepath=a.input)
 else:bpy.ops.import_scene.gltf(filepath=a.input)
