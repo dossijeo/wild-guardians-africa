@@ -1,3 +1,4 @@
+import {GuardianVortex} from '../rendering/guardian-vortex.js';
 import {pointGuardian} from '../rendering/guardian-pointing.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -9,6 +10,7 @@ export class Guardian3D {
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-.56,.56,.56,-.56,.01,10);this.camera.position.set(0,0,2);this.camera.lookAt(0,0,0);
   this.scene.add(new THREE.HemisphereLight(0xfff4dc,0x786b60,2.2));
   const key=new THREE.DirectionalLight(0xffecd9,3);key.position.set(-2,3,4);this.scene.add(key);const fill=new THREE.DirectionalLight(0xd9edff,1.5);fill.position.set(2,1,2);this.scene.add(fill);
+  this.vortex=new GuardianVortex();this.vortex.scale.setScalar(.32);this.scene.add(this.vortex);
   this.eyeTargets={};this.target=new THREE.Vector3(0,.27,2);this.gazeOffset=new THREE.Vector3();this.temp=new THREE.Vector3();this.q=new THREE.Quaternion();this.yAxis=new THREE.Vector3(0,1,0);this.manual={};this.record=null;this.ready=this.load();
  }
  async load(){
@@ -46,9 +48,10 @@ export class Guardian3D {
    // Local Y is the forward direction of the authored eye bone.
    this.temp.x=THREE.MathUtils.clamp(this.temp.x,-.13,.13);this.temp.z=THREE.MathUtils.clamp(this.temp.z,-.12,.12);this.temp.y=1;this.temp.normalize();this.q.setFromUnitVectors(this.yAxis,this.temp);bone.quaternion.multiply(this.q);
   }
+  this.vortex.update(reduced?0:time,0xb8edce,3,-1.5,true);
   this.updateMs=performance.now()-start;this.renderer.render(this.scene,this.camera);
  }
  get metrics(){const info=this.renderer.info;return {updateMs:this.updateMs,drawCalls:info.render.calls,triangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,bones:this.model?.getObjectByProperty('type','SkinnedMesh')?.skeleton.bones.length};}
  release(root){root.traverse(o=>{o.skeleton?.dispose();o.geometry?.dispose();for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){for(const v of Object.values(m))if(v?.isTexture)v.dispose();m.dispose();}});}
- dispose(){this.disposed=true;this.face?.dispose();this.mixer?.stopAllAction();if(this.model){this.mixer.uncacheRoot(this.model);this.release(this.model);}this.renderer.dispose();}
+ dispose(){this.disposed=true;this.face?.dispose();this.mixer?.stopAllAction();if(this.model){this.mixer.uncacheRoot(this.model);this.release(this.model);}this.vortex.dispose();this.renderer.dispose();}
 }

@@ -5,3 +5,5 @@
 #guardian-root.guardian-3d.guiding{visibility:visible}
 #guardian-root.guardian-3d.guiding .avatar-shell{left:var(--guide-x,4px);top:var(--guide-y,4px);bottom:auto;opacity:1;transform:none;transition:opacity .3s}
 #guardian-root.guardian-3d.guiding.closed .bubble{visibility:hidden}
+
+#stage #guardian-root.guardian-3d.floating-guide .avatar-shell{position:fixed;left:var(--guide-x,4px);top:var(--guide-y,4px);bottom:auto;margin:0;transform:none;transition:opacity .3s}

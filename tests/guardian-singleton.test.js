@@ -72,7 +72,7 @@ test('tutorial guide yields to a spell and resumes the same body without retaine
  world.state.elapsed=3.3;summons.update();
  assert.equal(summons.slots[0],slot);assert.equal(slot.event,null);assert.equal(summons.guiding,true);assert.equal(summons.stats.active,1,'no empty frame at handoff');assert.equal(slot.group.visible,true);
  assert.equal(slot.materials[0].uniforms.uSpiritTint.value.getHex(),0xffffff);
- assert.ok([slot.aura,slot.beam,slot.core,slot.impact,slot.vortex].every(o=>!o.visible));
+ assert.ok([slot.aura,slot.beam,slot.core,slot.impact].every(o=>!o.visible));assert.equal(slot.vortex.visible,true);
  summons.setGuide(null);summons.update();assert.equal(summons.stats.active,0);assert.equal(slot.group.visible,false);
  summons.setGuide(guide);summons.update();world.state.result={won:true};summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.guide,null);
  summons.dispose();assert.equal(world.scene.children.length,0);model.children[0].geometry.dispose();model.children[0].material.dispose();

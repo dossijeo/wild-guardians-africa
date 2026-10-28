@@ -73,18 +73,22 @@ export class NativeGuardian {
   }
   setGuide(rect){
     this.guideRect=rect;this.root.classList.toggle('guiding',!!rect);
-    if(!rect){this.mesh&&(this.mesh.pointTarget=null);this.guidePosition=null;}
+    if(!rect&&this.mesh)this.mesh.pointTarget=null;
   }
   moveGuide(dt){
-    if(!this.guideRect||!this.mesh)return;
+    if(!this.mesh)return;
     const r=this.guideRect,shell=this.root.querySelector('.avatar-shell'),w=shell.offsetWidth,h=shell.offsetHeight;
-    const x=Math.max(4,Math.min(innerWidth-w-4,r.left-w+16)),y=Math.max(4,Math.min(innerHeight-h-4,r.top+r.height*.5-h*.48));
-    this.guidePosition??={x:4,y:innerHeight-h-4};const p=this.guidePosition,t=this.reduced?1:1-Math.exp(-Math.max(dt,.001)*5);
+    const bubble=this.root.querySelector('.bubble').getBoundingClientRect(),portrait=this.root.closest('#stage')?.classList.contains('portrait')??innerHeight>innerWidth;
+    const x=Math.max(4,Math.min(innerWidth-w-4,r?r.left-w+16:portrait?bubble.left+(bubble.width-w)/2:bubble.left-w)),y=Math.max(4,Math.min(innerHeight-h-4,r?r.top+r.height*.5-h*.48:portrait?bubble.top-h-8:bubble.top+bubble.height*.5-h*.5));
+    this.root.classList.add('floating-guide');
+    this.guidePosition??={x,y};const p=this.guidePosition,t=this.reduced?1:1-Math.exp(-Math.max(dt,.001)*5);
     p.x+=(x-p.x)*t;p.y+=(y-p.y)*t;shell.style.setProperty('--guide-x',p.x+'px');shell.style.setProperty('--guide-y',p.y+'px');
+    if(!r){this.mesh.pointTarget=null;return;}
     const c=this.mesh.camera,tx=((r.left+r.width*.5-p.x)/w*2-1),ty=1-(r.top+r.height*.5-p.y)/h*2;
     this.mesh.pointTarget??=new THREE.Vector3();this.mesh.pointTarget.set(tx,ty,0).unproject(c);this.mesh.pointTarget.z=0;
   }
-  setWorldPresence(active){
+  setWorldPresence(active,screenPosition=null){
+    if(active&&screenPosition){const shell=this.root.querySelector('.avatar-shell');this.guidePosition={x:screenPosition.x-shell.offsetWidth/2,y:screenPosition.y-shell.offsetHeight/2};}
     // Keep narration and its controls alive; the spirit has one visible body.
     this.worldPresence=active;this.root.querySelector('.avatar-shell').style.visibility=active?'hidden':'';
   }

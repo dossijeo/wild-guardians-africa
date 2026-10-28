@@ -13,6 +13,6 @@ const errors=[],guide=new TutorialHudGuide(stage),guardian=new NativeGuardian(do
 await guardian.ready;guardian.show({key:'guide',text:'Elige Centro de trabajo. Puedes construirlo en cualquier lugar válido cerca del poblado.'});
 for(const name of ['build','grow'])document.querySelector('#'+name).onclick=()=>target=`[data-menu="${name}"]`;
 document.querySelector('#hide').onclick=()=>target=null;
-function frame(){layoutHud(stage);guide.show(target);guardian.setGuide(guide.rect);guardian.update();document.querySelector('#report').textContent=JSON.stringify({target,visible:guide.visible,errors,draws:guardian.mesh?.metrics.drawCalls,legacyHands:document.querySelectorAll('.tutorial-hud-hand').length});requestAnimationFrame(frame);}frame();
+function frame(){layoutHud(stage);guide.show(target);guardian.setGuide(guide.rect);guardian.update();document.querySelector('#report').textContent=JSON.stringify({target,visible:guide.visible,errors,draws:guardian.mesh?.metrics.drawCalls,position:guardian.guidePosition,legacyHands:document.querySelectorAll('.tutorial-hud-hand').length});requestAnimationFrame(frame);}frame();
 addEventListener('pagehide',()=>{guardian.dispose();guide.dispose();});
 </script></html>
