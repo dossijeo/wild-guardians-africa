@@ -1,5 +1,6 @@
 import {sampleFixedPose} from './fixed-pose.js';
 import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
+import {prepareWarthogHooves,plantWarthogHooves} from './warthog-hooves.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
 export function prepareAnimalModel(model,species){
@@ -12,6 +13,7 @@ export function prepareAnimalModel(model,species){
       if(species==='warthog')material.userData.warthogSurface=true;
     }
   });
+  if(species==='warthog')prepareWarthogHooves(model);
   return model;
 }
 
@@ -46,7 +48,7 @@ export function applyAnimalPose(data,animal,elapsed){
     data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();
     data.action.paused=true;data.action.clampWhenFinished=true;data.key=pose.key;data.name=pose.name;
   }
-  sampleFixedPose(data,pose.time,restart);groundAnimal(data);return pose;
+  const sampled=sampleFixedPose(data,pose.time,restart);if(sampled&&pose.name==='Walking')plantWarthogHooves(data.model);groundAnimal(data);return pose;
 }
 export function animalGroundSamples(model){
   const samples=[];

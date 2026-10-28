@@ -43,9 +43,14 @@ try{
  };
  const capture=()=>{world.render(0);return {biome,species,time:state.time,errors,model:library.url,clip:animal.status==='attacking'?animal.animation:(animal.status==='entering'?'Running':'Walking'),position:[point.x,nav.actorSurface(point.x,point.z),point.z],camera:world.camera.position.toArray(),target:world.controls.target.toArray(),glError:world.renderer.getContext().getError(),calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,png:world.renderer.domElement.toDataURL('image/png').split(',')[1]};};
  window.beastQA={world,state,animal,pose,setView,capture,ready:true};
- document.querySelector('#status').innerHTML=`${biome} · ${label} · noche <select id="clip">${Object.keys(library.clips).filter(n=>n!=='restpose').map(n=>`<option>${n}</option>`).join('')}</select><button id="front">Frente</button><button id="back">Melena</button><button id="light">Día / noche</button>`;
+ document.querySelector('#status').innerHTML=`${biome} · ${label} · noche <select id="clip">${Object.keys(library.clips).filter(n=>n!=='restpose').map(n=>`<option>${n}</option>`).join('')}</select><button id="front">Frente</button><button id="back">Melena</button><label>Fase <input id="footPhase" type="number" min="0" max="1" step="0.05" value="0.2"></label><button id="feetLeft">Cascos izquierda</button><button id="feetRight">Cascos derecha</button><button id="light">Día / noche</button><button id="walkPlay">Reproducir / pausar</button>`;
  document.querySelector('#clip').value='Walking';
  document.querySelector('#clip').onchange=e=>pose(e.target.value,.35);document.querySelector('#front').onclick=()=>setView();document.querySelector('#back').onclick=()=>setView('back');document.querySelector('#light').onclick=()=>{state.time=state.time===350?150:350;world.render(0)};
+ const feetView=side=>{const y=nav.actorSurface(point.x,point.z),angle=animal.heading+(side==='left'?Math.PI/2:-Math.PI/2);world.controls.target.set(point.x,y+.25,point.z);world.camera.position.set(point.x+Math.sin(angle)*2.4,y+.48,point.z+Math.cos(angle)*2.4);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();world.render(0);};
+ document.querySelector('#feetLeft').onclick=()=>feetView('left');document.querySelector('#feetRight').onclick=()=>feetView('right');document.querySelector('#footPhase').oninput=e=>pose(document.querySelector('#clip').value,Number(e.target.value));
+ let playing=false,last=0;const phaseInput=document.querySelector('#footPhase'),clipInput=document.querySelector('#clip');
+ document.querySelector('#walkPlay').onclick=()=>{playing=!playing;last=0;};
+ const animate=t=>{if(playing){if(last){const phase=(Number(phaseInput.value)+(t-last)/1000/library.clips[clipInput.value].duration)%1;phaseInput.value=phase;pose(clipInput.value,phase);}last=t;}requestAnimationFrame(animate);};requestAnimationFrame(animate);
  pose();
 }catch(e){window.beastQA={ready:false,error:e.stack,errors};document.querySelector('#status').textContent=e.stack;}
 </script></html>
