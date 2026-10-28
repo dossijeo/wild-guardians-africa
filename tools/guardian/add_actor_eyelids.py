@@ -114,7 +114,9 @@ for side,pixels in profile.get('eyeSurfaceSamples',{}).items():
     data=np.array([list(v) for v in points]);matrix=np.column_stack((2*data,np.ones(len(data))))
     fit=np.linalg.lstsq(matrix,np.sum(data*data,axis=1),rcond=None)[0]
     center_eye=Vector(fit[:3]);radius=max((v-center_eye).length for v in points)+.0015
-    if not .005<radius<.08:raise ValueError('Sampled eye sphere radius outside facial bounds')
+    radius_min,radius_max=profile.get('eyeRadiusBounds',[.005,.08])
+    if not 0<radius_min<radius_max<=.12:raise ValueError('Invalid reviewed eye radius bounds')
+    if not radius_min<radius<radius_max:raise ValueError(f'Sampled eye sphere radius outside facial bounds: {side} radius={radius:.6f}, center={tuple(center_eye)}')
     eye_spheres[side]=(center_eye,radius)
 
 def features(points,x,y):
