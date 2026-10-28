@@ -35,3 +35,9 @@ This medium-distance shot does not resolve lip, tusk or eyelid clearance during 
 ## Event-driven facial reaction
 
 `combat-impact-face` and `combat-pain-face` retain screenshots and state at spell ages 0.26 and 0.50 s. Game.tick was stepped through the actual Attack contact; facial values were not overridden. At contact both blink channels reached 1 and mouth reached 0.8205. At 0.50 s they relaxed to approximately 0.7944 / 0.7944 / 0.6847 while the animal was falling. The eyelids visibly cover the eyes and the tusks remain attached in these front views. The snout and beard obscure much of the mouth interior from this angle, so this proves the gameplay trigger and visible eye response, not full interior clearance. The fixture now exposes its paused state and labels the pause button, avoiding ambiguous toggles after a measured cycle auto-pauses.
+
+## Portable review package
+
+The candidate is now saved under `content/source/actors/warthog`, including a packed editable Blender source and the verified compressed GLB. Both fixtures reference that package instead of the scratch file. The production catalog remains unchanged.
+
+`combat-impact-profile` records the side inspection attempt; the strategic camera minimum distance limited facial detail. `combat-impact-close` records a rejected close-view framing attempt: projection zoom enlarged the actor but the head is clipped above the viewport. Neither is accepted as proof of detailed mouth clearance. The new QA profile controls need their framing corrected before that remaining inspection can be counted.
