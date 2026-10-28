@@ -29,3 +29,9 @@ The run completes 12.121 simulated seconds through falling, rolling, recovering 
 `four-impact-status.json` reports 16.019 simulated seconds, four targets, peak three physical ragdolls and one baked fallback, one physical-budget rejection, zero final down actors/bodies/errors, zero hidden frames and maxVisibleGuardians=1. All four resume walking/attacking.
 
 `four-impact.mp4` and its one-second sheet expose a QA camera defect: the non-wall trial inherited the previous low wall camera, leaving actors small/occluded. This recording is lifecycle evidence only, not visual acceptance of all four reactions. The fixture now restores its standard camera for non-wall physics trials. A new visual run is required after that fix. Capture is silent and contains diagnostic support sampling; no performance conclusion is drawn.
+
+### Repeated with reset camera
+
+`four-impact-framed.mp4`, its contact sheet and separate status JSON repeat the four-hyena trial after the camera fix. All four actors now remain within the strategic view through falling, rolling, recovery and resumed activity. The trace independently records those phases for each actor, peak 3 physical + 1 baked, final down count/bodies 0, maxVisibleGuardians 1, hidden frames 0 and errors [].
+
+Reviewed 1 Hz frames show visibly distinct falls and staggered recovery; neighboring silhouettes overlap during part of the get-up sequence. This view establishes that the lifecycle remains visible but does not measure inter-animal mesh penetration during authored recovery. That contact quality remains open. The recording is silent, uses QA cooldown resets and diagnostic sampling, and is not a comparative performance run.
