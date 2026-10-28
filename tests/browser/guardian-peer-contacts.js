@@ -1,3 +1,4 @@
+import {Box3,Vector3} from 'three';
 // Diagnostic only: pairwise articulated collider distances, sampled at 10 Hz.
 // Excludes baked actors (no Rapier colliders); never use this as skin clearance.
 export function sampleRecoveryPeerContacts(manager){
@@ -11,6 +12,29 @@ export function sampleRecoveryPeerContacts(manager){
    contacts++;if(contact.distance<minimum){minimum=contact.distance;parts=[ai,bi];}
   }
   pairs.push({a:a.animal.id,b:b.animal.id,recovering:[!!a.recovery,!!b.recovery],contacts,minimum,parts});
+ }
+ return pairs;
+}
+
+const meshCache=new WeakMap(),point=new Vector3();
+// All deformed mesh vertices, not just contact samples. A disjoint AABB proves
+// separation; an intersecting AABB is only a candidate, never a penetration.
+export function sampleRecoverySkinBounds(manager){
+ const entries=[...manager.entries.values(),...(manager.baked?.entries.values()??[])];
+ const bounds=entries.map(e=>{
+  let meshes=meshCache.get(e.data.model);
+  if(!meshes){meshes=[];e.data.model.traverse(o=>{if(o.isMesh&&o.geometry?.attributes.position)meshes.push(o);});meshCache.set(e.data.model,meshes);}
+  const box=new Box3();
+  for(const mesh of meshes)for(let i=0;i<mesh.geometry.attributes.position.count;i++){
+   mesh.getVertexPosition(i,point).applyMatrix4(mesh.matrixWorld);box.expandByPoint(point);
+  }
+  return box;
+ });
+ const pairs=[];
+ for(let i=0;i<entries.length;i++)for(let j=i+1;j<entries.length;j++){
+  const a=entries[i],b=entries[j];if(!a.recovery&&!b.recovery)continue;
+  const x=bounds[i],y=bounds[j],overlap=['x','y','z'].map(axis=>Math.min(x.max[axis],y.max[axis])-Math.max(x.min[axis],y.min[axis]));
+  pairs.push({a:a.animal.id,b:b.animal.id,modes:[a.actor?'physical':'baked',b.actor?'physical':'baked'],overlap,candidate:overlap.every(v=>v>0)});
  }
  return pairs;
 }

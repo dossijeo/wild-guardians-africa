@@ -41,3 +41,9 @@ Reviewed 1 Hz frames show visibly distinct falls and staggered recovery; neighbo
 The four-impact fixture now samples Rapier contactCollider distances between different physical actors when at least one is recovering. This is QA-only pairwise work at approximately 10 Hz. `peer-contact-status.json` contains 95 pair samples, all with no negative contact distance, zero runtime errors and a completed cycle. Thus this run does not demonstrate physical-collider penetration between the three Rapier actors.
 
 The fourth baked actor has no Rapier colliders and is excluded. Skin can also extend beyond simplified colliders. This result neither approves skin-to-skin contact nor resolves the baked/physical interaction. The measured camera overlap alone does not justify adding root displacement. Production physics has not been altered based on this diagnostic.
+
+### Include the baked actor: deformed mesh broad phase
+
+Optional `peerContacts=1` now enables both diagnostics; ordinary timing runs do not run these costly vertex queries. The mesh diagnostic computes world AABBs from every deformed vertex of active physical and baked actors. Disjoint boxes establish separation; intersecting boxes are candidates only. A focused test verifies translated physical/baked boxes and candidate classification.
+
+`peer-skin-status.json` records a completed four-impact run without errors: 150 pair samples, 27 intersecting-box candidates. Of 75 physical/baked pair samples, 19 are candidates. Therefore the prior Rapier-only result cannot dismiss the visible overlap. Triangle-level or contact-region inspection is needed before adding separation to recovery. No production displacement has been introduced from these conservative bounds.
