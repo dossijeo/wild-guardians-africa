@@ -15,3 +15,7 @@ Medición diagnóstica no comparativa: frametime p95 33.60 ms, p99 49.99 ms; fí
 ## Compresión del candidato
 
 52,311,464 → 10,278,984 bytes. Los dos atlas de párpados usan WebP lossless mediante hashes explícitos; el resto conserva la receta habitual. Se detectó que la verificación incluía RGB de texeles con alfa exactamente cero, que WebP puede descartar: ahora excluye únicamente esos canales invisibles del RMSE, verificando todos los valores alfa y todo RGB con alfa no nulo. El umbral PSNR permanece 32; mínimo visible obtenido 37.55 dB; atlas lossless sin error visible; 4,172,704 bytes geométricos/animaciones exactos y cero errores glTF. Pendiente comprobar en navegador esta versión comprimida antes de instalarla.
+
+## Candidato portable y GLB comprimido en navegador
+
+compressed-pain.png/json: GLB comprimido cargado en Three.js, 10 bindings de morph, 5 draw calls, ningún error; revisado perfil derecho con boca 0.85 y ojos cerrados. Fuente editable y GLB quedan en content/source/actors/rhino, y ambas herramientas QA apuntan ahora a ese archivo versionado, eliminando su dependencia del GLB temporal. El catálogo de producción sigue pendiente.
