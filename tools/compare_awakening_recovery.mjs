@@ -27,9 +27,10 @@ for(let i=0;i<paths.length;i+=2){
  const fixed=metrics(a.daily.filter(r=>r.day<=sharedNights));
  const adaptive=metrics(b.daily.filter(r=>r.day<=sharedNights));
  const after=(r,loss)=>loss?r.casts.filter(c=>c.day>loss.day||c.day===loss.day&&c.time>loss.time).map(({day,time,kind,targetId})=>({day,time,kind,targetId})):[];
+ const terminal=r=>{const d=r.daily.at(-1);return d?{day:d.day,money:d.money,living:d.living,sources:d.sources,walls:d.walls,centerHp:d.centerHp}:null;};
  comparisons.push({seed:a.seed,biome:a.biome,culture:a.culture,fixedFile:basename(paths[i]),adaptiveFile:basename(paths[i+1]),
-  fixed:{nights:a.completedNights,result:a.result,loss:aLoss??null,subsequentBlessings:after(a,aLoss),terminal:a.checkpoints.at(-1)??null},
-  adaptive:{nights:b.completedNights,result:b.result,loss:bLoss??null,subsequentBlessings:after(b,bLoss),terminal:b.checkpoints.at(-1)??null},
+  fixed:{nights:a.completedNights,result:a.result,loss:aLoss??null,subsequentBlessings:after(a,aLoss),terminal:terminal(a)},
+  adaptive:{nights:b.completedNights,result:b.result,loss:bLoss??null,subsequentBlessings:after(b,bLoss),terminal:terminal(b)},
   lossMatches,preLossNights,identicalBeforeLoss,sharedNights,fixedMetrics:fixed,adaptiveMetrics:adaptive,
   differences:Object.fromEntries(Object.keys(fixed).map(k=>[k,adaptive[k]-fixed[k]]))});
 }
