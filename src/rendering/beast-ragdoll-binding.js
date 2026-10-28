@@ -8,10 +8,10 @@ const supportDirections=Array.from({length:96},(_,k)=>{const y=1-2*(k+.5)/96,r=M
 // other bone lengths remain authored, so solver tolerances cannot stretch skin.
 export class BeastRagdollBinding{
  constructor(model,{species=model.userData.beastSpecies}={}){
-  // Calibrated on the repaired hyena: alternate-vertex sampling changes its
-  // support hull after disconnected debris is removed. Other rigs retain
+  // Calibrated on the repaired hyena and expressive rhino: alternate sampling changes
+  // support hull after local topology edits. Other rigs retain
   // their validated sampling. Only the first fit scans the full geometry.
-  this.sampleStride=species==='hyena'?1:2;
+  this.sampleStride=(species==='hyena'||species==='rhino')?1:2;
   this.model=model;this.bones=new Map();model.traverse(o=>{if(o.isBone)this.bones.set(o.name.replace(/^mixamorig[:_]?/,''),o);});
   // Replacement rigs omit toe markers and name the head tip Head_top.
   // Virtual endpoints define collision frames only; no skin weights or clips change.

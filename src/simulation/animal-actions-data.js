@@ -293,36 +293,36 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "rhino": {
-      "url": "/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+      "url": "/assets/34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4.glb",
       "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
-      "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff",
+      "sha256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
       "presentation": {
         "scale": 1,
-        "bindHeight": 3.00000135024716,
+        "bindHeight": 3.0000025356901903,
         "bindMin": [
-          -2.295239537827477,
-          -1.8238101559740477e-7,
-          -0.5876918471688918
+          -2.29523921656354,
+          -3.639892878493695e-7,
+          -0.5876916414896118
         ],
         "bindMax": [
-          2.2219789301413533,
-          3.0000011678661442,
-          1.0869482569990547
+          2.2219786890991853,
+          3.000002171700902,
+          1.086947537710439
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3/script-1.js",
         "sourceScriptSha256": "de7c89474ef48b3016d5e607974bb440d4b93c70aa620a53df517b5d01cd3f06",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand/Tail/ClothRear; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 27293,
-          "bindRadius": 1.0872783498970946,
+          "bodyVertices": 31345,
+          "bindRadius": 1.0872776294568394,
           "clips": {
             "Running": {
               "samples": 65,
-              "radius": 1.1840818199601346
+              "radius": 1.1840825419226133
             },
             "Walking": {
               "samples": 65,
-              "radius": 1.1782282277650158
+              "radius": 1.178228257231459
             }
           },
           "clearance": 0.05,

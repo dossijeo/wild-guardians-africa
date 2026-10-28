@@ -19,3 +19,7 @@ Medición diagnóstica no comparativa: frametime p95 33.60 ms, p99 49.99 ms; fí
 ## Candidato portable y GLB comprimido en navegador
 
 compressed-pain.png/json: GLB comprimido cargado en Three.js, 10 bindings de morph, 5 draw calls, ningún error; revisado perfil derecho con boca 0.85 y ojos cerrados. Fuente editable y GLB quedan en content/source/actors/rhino, y ambas herramientas QA apuntan ahora a ese archivo versionado, eliminando su dependencia del GLB temporal. El catálogo de producción sigue pendiente.
+
+## Integración de catálogo en curso
+
+Activo: assets/34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4.glb, original conservado. Datos de acciones y pasos regenerados. El horneado inicial falló en rhino/downBack; escanear todos los vértices al ajustar el casco convexo inicial resuelve las ocho direcciones. Caché de soportes conserva el coste posterior reducido. Los 40 clips horneados regenerados y 18 pruebas de ragdoll/clips pasan. La batería ampliada tenía dos fallos que requieren investigar: fixture de contacto de tres hienas y referencia de punta de cola del jabalí. No se declaran resueltos ni se atribuyen al rinoceronte. Pendiente prueba gráfica cargando el catálogo sin override tras este cambio de colisionador.

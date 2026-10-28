@@ -1,6 +1,6 @@
 # Rinoceronte expresivo: candidato corregido
 
-Todavía no instalado en el catálogo. Conserva el original e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb.
+Conectado al catálogo de la rama; validación final en curso. Conserva el original e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb.
 
 Fuente editable empaquetada con texturas limitadas a 2048; geometría intacta. El GLB se comprime directamente desde la exportación de máxima resolución y conserva exactamente geometría, morphs y canales de animación. Los atlas de párpados requieren WebP lossless.
 
