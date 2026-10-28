@@ -365,20 +365,31 @@ if profile.get('rimDepth'):
         target=rim.shape_key_add(name=key.name)
         for vertex,co in zip(target.data,rim_coords(key)):vertex.co=co
     source_loops={loop.vertex_index:loop.index for loop in data.loops}
+    source_uv={i:tuple(data.uv_layers.active.data[loop].uv) for i,loop in source_loops.items()}
+    source_color={i:tuple(data.color_attributes.active_color.data[loop].color) for i,loop in source_loops.items()} if data.color_attributes.active_color else {}
+    base_vertex_count=len(data.vertices)
     rim_uv=rim_data.uv_layers.new(name='UVMap')
     if data.color_attributes.active_color:
         rim_colors=rim_data.color_attributes.new(name='ClosureFold',type='FLOAT_COLOR',domain='CORNER')
         rim_data.color_attributes.active_color=rim_colors
     for loop in rim_data.loops:
         source_index=sources[loop.vertex_index][0];source_loop=source_loops[source_index]
-        rim_uv.data[loop.index].uv=data.uv_layers.active.data[source_loop].uv
+        rim_uv.data[loop.index].uv=source_uv[source_index]
         if data.color_attributes.active_color:
-            rim_colors.data[loop.index].color=data.color_attributes.active_color.data[source_loop].color
+            rim_colors.data[loop.index].color=source_color[source_index]
     # Identical material, bind transform and corrective names: keep the rim in
     # the same skinned primitive instead of adding a draw call per worker.
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True);rim.select_set(True);bpy.context.view_layer.objects.active=obj
     bpy.ops.object.join()
+    # Reapply immutable source values after joining custom-data layers.
+    # Avoid retaining RNA layer views across mesh data reallocation.
+    for loop in obj.data.loops:
+        if loop.vertex_index<base_vertex_count:continue
+        source_index=sources[loop.vertex_index-base_vertex_count][0]
+        obj.data.uv_layers.active.data[loop.index].uv=source_uv[source_index]
+        if source_color:obj.data.color_attributes.active_color.data[loop.index].color=source_color[source_index]
+
 if profile.get('neutralSkinFallback'):
     sx,sy=profile['neutralSkinFallback'];fallback=skin_color(sx,sy)
     assert fallback[0]>fallback[1]*1.3,'Reviewed skin fallback must not sample eye white'

@@ -1,5 +1,13 @@
 # Opposite-profile lid gap: rejected contour trials
 
+## v10 resolution: preserve rim attributes across the join
+
+The final fix snapshots source UV/color tuples before joining the rim and reapplies them to the joined rim loops by source vertex. This removes both the broad gray strip and the residual pink fleck without the v9 neutral-color fallback. Rebuilt with the unchanged v4 profile (18 mm rim, original contours); v9 fallback is not enabled. The formerly white rim was already present geometrically, so further geometric widening/depth changes were unnecessary.
+
+Updated committed expressive-candidate.blend and expressive-candidate.glb to this build; surface-candidate.glb adds the bounded edge-fit normal transfer. Catalog remains unchanged. Surface SHA256 is 50a80efe677d9dc7c633ff6047190c7b64e5b4d6ef2b97b0933c3483af0b1c7d. GLB validator reports zero errors, two existing non-root skinned-node warnings (validator-v10.json). The real-asset normal-frame transfer preservation test passes.
+
+Three.js inspected opposite-profile full blink/mouth 0.85 under left raking light (seam-investigation/lids-v10-profile.png) and other-profile half blink under right raking light. Both no longer show the erroneous rim strip. This does not certify all animated expressions or full gameplay; those checks remain before installation. Use actor=olderFemale&expressiveSeamTrial to inspect the committed surface candidate.
+
 ## Root cause found: generated rim color, not uncovered eye
 
 The geometric-gap interpretation below is superseded. A visible double-click pick in the fixture selected ActorFacialLids face 10616, vertices 6083/6087/6089, ahead of the underlying eye. Its COLOR_0 values were approximately (0.456, 0.449, 0.456), explaining the gray/white strip. See seam-investigation/white-rim-pick.json. The fixture now exposes these surface picks in its visible status for future diagnosis.
