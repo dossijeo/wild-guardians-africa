@@ -58,13 +58,23 @@ export class GuardianSummons{
   const key=config?JSON.stringify([config.target,config.position]):null;
   if(key===this.guideKey)return;this.guideKey=key;this.guide=config;this.guideOrigin=null;
  }
+ // Re-evaluate persistent world guidance after orbit/zoom or changed obstacles.
+ // Idle frames reuse the plan; camera motion is bounded to five plans per second.
+ refreshGuidePlacement(stamp){
+  const w=this.world,camera=w.camera,version=w.nav?.version;
+  const view=this.guidePlacementView??={position:new THREE.Vector3(),rotation:new THREE.Quaternion(),projection:new THREE.Matrix4(),stamp:-Infinity,version:null};
+  const changed=camera.position.distanceToSquared(view.position)>.75*.75||camera.quaternion.angleTo(view.rotation)>.087||!camera.projectionMatrix.equals(view.projection);
+  if(this.guideOrigin&&version===view.version&&(!changed||stamp-view.stamp<.2))return;
+  const p=this.guide.position;this.guideOrigin=this.plan(null,{x:p[0],z:p[2]},{bodyScale:1.7});
+  view.position.copy(camera.position);view.rotation.copy(camera.quaternion);view.projection.copy(camera.projectionMatrix);view.stamp=stamp;view.version=version;
+ }
  updateGuide(){
   const s=this.slots[0],w=this.world;
   if(!s||s.event)return false;
   if(!this.guide){if(this.guiding){s.group.visible=false;s.vortex.visible=false;}this.guiding=false;return false;}
-  const p=this.guide.position;
-  this.guideOrigin??=this.plan(null,{x:p[0],z:p[2]},{bodyScale:1.7});if(!this.guideOrigin)return false;
-  const origin=this.guideOrigin,stamp=performance.now()/1000,dt=Math.min(.05,Math.max(0,stamp-(this.guideStamp??stamp)));this.guideStamp=stamp;
+  const stamp=performance.now()/1000;
+  this.refreshGuidePlacement(stamp);if(!this.guideOrigin)return false;
+  const p=this.guide.position,origin=this.guideOrigin,dt=Math.min(.05,Math.max(0,stamp-(this.guideStamp??stamp)));this.guideStamp=stamp;
   if(!this.guiding){s.group.position.set(origin.x,origin.y+1.2,origin.z);this.guideTime=0;}
   this.guiding=true;this.guideTime+=dt;
   s.vortex.position.copy(s.group.position);s.vortex.update(this.guideTime,0xb8edce,s.height*1.7,s.bottom*1.7,true);

@@ -89,3 +89,19 @@ test('Multiply branches from both hands around the crop and reuses the draw for 
  assert.equal(ends.size,6);assert.ok(slot.core.position.distanceTo(slot.target)<1e-6);
  world.state.events.push({...event,kind:'growth',presentation:{...event.presentation,elapsed:1.5}});world.state.elapsed=1.8;summons.update();assert.equal(slot.beam,beam);assert.equal(beam.count,2);summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+test('persistent guide placement follows orbit/zoom and obstacle changes without idle replanning',()=>{
+ const camera=new THREE.PerspectiveCamera(45,1,.1,100);camera.position.set(0,10,10);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+ const nav={version:1};let plans=0;
+ const guide=Object.create(GuardianSummons.prototype);guide.world={camera,nav};guide.guide={position:[1,0,2]};
+ guide.plan=()=>({x:++plans,y:2,z:0});
+ guide.refreshGuidePlacement(0);assert.equal(plans,1);
+ for(let t=1;t<100;t++)guide.refreshGuidePlacement(t);assert.equal(plans,1,'stationary guide keeps its placement');
+ camera.position.x+=2;guide.refreshGuidePlacement(100);assert.equal(plans,2);
+ camera.position.x+=2;guide.refreshGuidePlacement(100.1);assert.equal(plans,2,'camera changes are rate limited');
+ guide.refreshGuidePlacement(100.3);assert.equal(plans,3);
+ camera.rotation.y+=.2;guide.refreshGuidePlacement(101);assert.equal(plans,4,'rotation without translation invalidates visibility');
+ camera.zoom=2;camera.updateProjectionMatrix();guide.refreshGuidePlacement(102);assert.equal(plans,5,'zoom invalidates framing');
+ nav.version++;guide.refreshGuidePlacement(102.01);assert.equal(plans,6,'new obstacle bypasses camera debounce');
+ guide.guideOrigin=null;guide.refreshGuidePlacement(102.02);assert.equal(plans,7,'new target plans immediately');
+});
