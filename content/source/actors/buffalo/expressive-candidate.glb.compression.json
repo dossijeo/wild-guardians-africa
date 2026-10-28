@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "codec": "EXT_meshopt_compression (v0, lossless, no reorder)",
+  "textures": "EXT_texture_webp (default color quality 90, ORM 95, normals lossless, alpha 100, max 2048; reviewed color overrides in embedded-color-recipes.json)",
+  "records": [
+    {
+      "source": "C:\\tmp\\guardian-faces\\buffalo-oral-v4.glb",
+      "runtime": "C:\\Users\\PC\\.codex\\worktrees\\guardian-animation\\wild-guardians-africa\\content\\source\\actors\\buffalo\\expressive-candidate.glb",
+      "sourceSha256": "fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb",
+      "runtimeSha256": "0acd3ccf3f8cb431bc8c6a1a9458855c05ee9abfae3a48ba69de37e12b04db44",
+      "beforeBytes": 77229256,
+      "afterBytes": 5955948,
+      "compressedViews": 2217,
+      "images": [
+        {
+          "index": 0,
+          "beforeBytes": 9799098,
+          "afterBytes": 2229510,
+          "before": [
+            4096,
+            4096
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": true,
+          "role": "normal",
+          "alphaQuality": 100
+        },
+        {
+          "index": 1,
+          "beforeBytes": 61317490,
+          "afterBytes": 662648,
+          "before": [
+            8192,
+            8192
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        },
+        {
+          "index": 2,
+          "beforeBytes": 1812010,
+          "afterBytes": 156308,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": true,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        }
+      ],
+      "geometryTolerance": 0,
+      "animationTolerance": 0
+    }
+  ]
+}
