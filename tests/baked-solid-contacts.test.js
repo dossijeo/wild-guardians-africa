@@ -17,3 +17,14 @@ for(const species of ['buffalo','rhino'])test(`${species} baked skin remains out
  const fall=new BakedBeastFall(binding,clip,{surface:()=>0,solidContacts:contacts,clipPosition:p=>{if(p.x+radius>=wall){p.x=last.x;p.z=last.z;}last.copy(p);}});fall.apply(0);assert.ok(fall.hip.distanceTo(start)<1e-6);
  const previous=fall.hip.clone();for(let time=.1;time<=clip.duration;time+=.1){fall.apply(time);assert.ok(fall.hip.distanceTo(previous)<.15,'Contact correction jumps');previous.copy(fall.hip);for(const mesh of meshes)for(let i=0;i<mesh.geometry.attributes.position.count;i++){if(isTailContactVertex(mesh,i))continue;mesh.getVertexPosition(i,p).applyMatrix4(mesh.matrixWorld);if(p.y>=0&&p.y<=2.5)assert.ok(p.x<=wall+.005,`Skin crossed wall ${p.x-wall}m`);}}
 });
+
+test('baked peer correction survives empty peer lists and repeated restored poses',async()=>{
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url));
+ const binding=new BeastRagdollBinding(model),hip=binding.bones.get('Hips'),local=hip.position.clone(),start=hip.getWorldPosition(new Vector3());
+ const contacts=new BakedSolidContacts(binding,[],()=>[]);contacts.peerOffset.set(.5,0,-.2);
+ for(let i=0;i<3;i++){
+  hip.position.copy(local);model.updateMatrixWorld(true);contacts.resolve(()=>0);
+  const expected=start.clone().add(new Vector3(.5,0,-.2));
+  assert.ok(hip.getWorldPosition(new Vector3()).distanceTo(expected)<1e-6,'Peer removal must not undo or accumulate the applied correction');
+ }
+});
