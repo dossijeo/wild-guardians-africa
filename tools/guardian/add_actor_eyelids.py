@@ -190,17 +190,29 @@ if profile.get('closureCrease'):
     # A shallow skin fold with a narrow shaded closure line, opt-in for workers.
     colors=data.color_attributes.new(name='ClosureFold',type='FLOAT_COLOR',domain='CORNER')
     data.color_attributes.active_color=colors
+    if profile.get('boundarySkinColor'):
+        # Convert the unlit PNG atlas from sRGB to linear vertex colors.
+        atlas_pixels=np.array(atlas.pixels[:]).reshape(atlas.size[1],atlas.size[0],4)
+        def skin_color(x,y):
+            px=int((x+.5)/768*atlas.size[0]);py=int((1-(y+.5)/768)*atlas.size[1])
+            px=max(2,min(atlas.size[0]-3,px));py=max(2,min(atlas.size[1]-3,py))
+            rgb=np.median(atlas_pixels[py-2:py+3,px-2:px+3,:3],axis=(0,1))
+            return np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
     for poly in data.polygons:
         for loop in poly.loop_indices:
             index=data.loops[loop].vertex_index;side,x,top,bottom,t=metadata[index]
             u=(index%columns)/(columns-1)
             line=.78+.08*math.cos((u-.5)*math.pi*2)
             shade=1-.52*math.exp(-((t-line)/.036)**2)*math.sin(math.pi*u)**.4
-            colors.data[loop].color=(shade,shade,shade,1)
+            skin=skin_color(x,top-2)*(1-t)+skin_color(x,bottom+2)*t if profile.get('boundarySkinColor') else np.ones(3)
+            colors.data[loop].color=(*[float(c)*shade for c in skin],1)
     tint=material.node_tree.nodes.new('ShaderNodeVertexColor');tint.layer_name='ClosureFold'
     fold=material.node_tree.nodes.new('ShaderNodeMixRGB');fold.blend_type='MULTIPLY';fold.inputs[0].default_value=1
     material.node_tree.links.new(tone.outputs[0],fold.inputs[1]);material.node_tree.links.new(tint.outputs['Color'],fold.inputs[2])
     material.node_tree.links.new(fold.outputs[0],bs.inputs['Base Color'])
+    if profile.get('boundarySkinColor'):
+        for link in list(bs.inputs['Base Color'].links):material.node_tree.links.remove(link)
+        material.node_tree.links.new(tint.outputs['Color'],bs.inputs['Base Color'])
 data.materials.append(material)
 layer=data.uv_layers.new(name='UVMap')
 for face in data.polygons:
