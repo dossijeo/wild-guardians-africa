@@ -171,6 +171,8 @@ from arm_weights import relax_shoulders
 relax_shoulders(body)
 from hem_weights import relax_hem
 relax_hem(body)
+from limb_ornaments import bind_limb_ornaments
+bind_limb_ornaments(body)
 from spell_actions import create_spells
 create_spells(rig)
 from wind_actions import create_wind
