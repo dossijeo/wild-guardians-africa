@@ -99,3 +99,9 @@ A 144-ray frontal sample of the current olderMale candidate finds one ray with m
 ## Local normal frequency trial (rejected)
 
 study_older_male_normal_frequency.py rasterizes a world-space cheek/nose mask into the existing UV atlas and attenuates only the broad tangent-normal XY component (two radius-12 box passes). Source SHA and 40,672 selected texels recorded in normal-frequency-trial.json. Unselected float pixel values compare equal; geometry and albedo untouched. Saved/reopened isolated Blend was rendered in front/quarter/side views; frontal render inspected. Angular nose/cheek transitions remain and some desired local relief is reduced. REJECTED; no candidate or runtime model replacement. This is not a wrinkle-preserving repair. The filter crosses UV-island boundaries while estimating the low-frequency field, another limitation; do not reuse it as a production fix.
+
+## v7 animation parity and partial lid coverage
+
+Reusable audit_animation_parity.mjs compares all source animation channels by target node name/path, interpolation and decoded strided float sample bytes. Current v7 candidate dbf1731f7e47c5f902ca28e65937626c60de41d12972a05d50b44f81c4557c56 passes all 12 clips / 114 channels each (animation-parity-v7.json). This does not establish skinning or visual recovery quality.
+
+Actual Three.js fixture: inspected independent L=.25/R=.75 with mouth=.5, then L=.4/R=.6 with mouth=.5 from front and side. Corrective weights interpolate .4/.6 between neighboring shapes; body and interior mouth weights agree; 3 draw calls, errors empty. Screenshots and visible DOM state in v7-coverage. No obvious eye penetration in these reviewed static poses. At .75 the visible eye is already covered; blink progression is not perceptually linear. These samples do not establish continuous all-angle coverage or automatic blink timing. Full v7 WorldScene recovery remains pending. Facial seams still prevent final visual acceptance; candidate unregistered.
