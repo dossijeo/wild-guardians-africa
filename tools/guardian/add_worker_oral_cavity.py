@@ -82,7 +82,7 @@ for side in (-1,1):
  cheek=[]
  for row in range(13):
   t=row/12;line=[]
-  front=front_y+.005+.008*math.sin(math.pi*t)
+  front=front_y+.005+.012*math.sin(math.pi*t)
   for col in range(9):
    d=col/8;y=front+(back_y-front)*d;anchor=at_y(y)
    v=anchor.copy();v.x-=side*(.002+.003*math.sin(math.pi*t));v.z+=.001*(1-2*t)
@@ -107,6 +107,20 @@ for row in range(13):
 for row in range(12):
  for col in range(16):face([rings[row][col],rings[row+1][col],rings[row+1][(col+1)%16],rings[row][(col+1)%16]],(.32,.075,.085))
 face(rings[0],(.3,.06,.075),(0,-1,0));face(rings[-1],(.22,.035,.045),(0,1,0))
+# Small curved dental rows recessed behind the lips. Closed neutral stays hidden.
+for is_lower in (False,True):
+ for tooth in range(6):
+  x=(tooth-2.5)*.012
+  anchor=min(chain,key=lambda q:abs(q.x-x))
+  y=anchor.y+.018;z=lip_height(x)+(-.004 if is_lower else .004)
+  ids=[]
+  for dz in (-.004,.004):
+   for dy in (-.003,.003):
+    for dx in (-.0055,.0055):
+     v=Vector((x+dx,y+dy,z+dz))
+     ids.append(vertex(v,anchor,jaw(anchor) if is_lower else 0))
+  for face_ids in ((0,1,3,2),(4,6,7,5),(0,4,5,1),(2,3,7,6),(0,2,6,4),(1,5,7,3)):
+   face([ids[i] for i in face_ids],(.62,.55,.43))
 data=bpy.data.meshes.new('WorkerOralAnatomy');data.from_pydata(verts,[],faces);data.update()
 obj=bpy.data.objects.new('WorkerOralAnatomy',data);bpy.context.collection.objects.link(obj);obj.parent=body.parent;obj.matrix_world=world
 for mod in body.modifiers:
@@ -135,7 +149,7 @@ for poly,c in zip(data.polygons,colors):
   front=max(0,min(1,(-point.y-.165)/.09))
   shade=.10+.42*front*front
   if c[0]>.25:shade*=1.15+.20*max(-1,min(1,(point.z-lip_height(0)+.005)/.005))
-  color.data[i].color=(*[v*shade for v in c[:3]],c[3])
+  color.data[i].color=(*[v*(.8 if c[0]>.5 else shade) for v in c[:3]],c[3])
 mat=bpy.data.materials.new('Worker oral tissue');mat.use_nodes=True
 bs=mat.node_tree.nodes.get('Principled BSDF');bs.inputs['Roughness'].default_value=.75
 node=mat.node_tree.nodes.new('ShaderNodeVertexColor');node.layer_name='OralColor';mat.node_tree.links.new(node.outputs['Color'],bs.inputs['Base Color']);data.materials.append(mat)
