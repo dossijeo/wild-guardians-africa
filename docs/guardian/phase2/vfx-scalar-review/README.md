@@ -101,3 +101,11 @@ Reproduce summaries with `python tools/guardian/analyze_peer_trial.py INPUT --ou
 The QA-only bakedClose=1 option frames the first overflow actor once without changing the game camera. `rhino-close.webm/status.json` and the 17–21 s detail sheet document the trial. Other rhinos occlude the subject, so this close shot does not certify the transition. New optional fields record recoveryAge, lift and entryClearance.
 
 During the final roll, baked ground lift rises from 0.410 to 1.237 m while the retained horizontal separation reaches approximately (-2.589,-0.858) m. Entry clearance is 0.01 m. Over recovery ages 0–0.65 s the hip moves from y=14.390 to y=13.340. This narrows investigation to final baked pose/ground-support correction and its entry blend; it does not yet identify a proven root cause or justify simply slowing the clip. The issue remains open.
+
+## Baked rotation alias correction
+
+Corrected quaternion interpolation in BakedBeastFall: using the destination as the second slerpQuaternions operand overwrote the baked target with the initial pose. The fallback previously followed the hip trajectory without reproducing articulated rotations. A new regression compares all fourteen bone world rotations against independently interpolated clip samples for all five species, including entry blend and final pose.
+
+The focused fall/combat run passed 26 tests and failed two existing wall-continuity tests; this is not an all-green acceptance. A separate 60 Hz full-skin wall diagnostic reveals buffalo penetration of 0.02205 m. Rhino passes skin separation at that cadence, with maximum hip step 0.07961 m. The old 0.1-second continuity threshold also fails after genuine articulation is restored. Do not simply weaken it: collision coverage and continuity remain open.
+
+Actual four-rhino runtime evidence: rhino-quaternion.webm, rhino-quaternion-status.json and sampled rhino-quaternion-entry.png. Reviewed the contact sheet: fallen poses are visible but foreground animals occlude parts of the sequence, so this does not certify all joints or recovery transitions. The recorded baked terminal ground lift is about 0.156 m instead of 1.237 m before this correction. This fixes a concrete playback defect; it does not establish complete visual acceptance or performance parity.

@@ -17,7 +17,9 @@ export class BakedBeastFall {
   for(let i=0;i<this.entries.length;i++){
    const e=this.entries[i],j=i*7;
    if(i===0){this.hip.fromArray(v,j).applyMatrix4(this.transform).lerp(this.initialHip,1-blend);this.clipPosition?.(this.hip,this.initialHip);e.bone.position.copy(e.bone.parent.worldToLocal(this.v.copy(this.hip)));}
-   this.q.fromArray(v,j+3).premultiply(this.worldRotation).normalize();this.q.slerpQuaternions(e.initialWorld,this.q,blend);
+   // Interpolate from the target: slerpQuaternions(initial, this.q, t) aliases
+   // its output with the second operand and overwrites the target rotation.
+   this.q.fromArray(v,j+3).premultiply(this.worldRotation).normalize();this.q.slerp(e.initialWorld,1-blend);
    e.bone.parent.getWorldQuaternion(this.parent).normalize().invert();e.bone.quaternion.copy(this.q.premultiply(this.parent));e.bone.updateWorldMatrix(false,true);
   }
   if(age>0)this.solidContacts?.resolve(this.surface);

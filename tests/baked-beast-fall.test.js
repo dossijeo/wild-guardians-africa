@@ -26,3 +26,19 @@ test('caller can constrain horizontal trajectory without cancelling articulated 
  const fall=new BakedBeastFall(binding,clip,{clipPosition:(hip,start)=>{hip.x=start.x;hip.z=start.z;}});
  fall.apply(1);assert.ok(Math.abs(fall.hip.x-fall.initialHip.x)<1e-6);assert.ok(Math.abs(fall.hip.z-fall.initialHip.z)<1e-6);fall.restore();
 });
+
+test('all baked species reproduce clip bone rotations after entry and halfway through blend',()=>{
+ for(const species of ['hyena','warthog','lion','buffalo','rhino']){
+  const model=beastSkin(species);model.rotation.y=.8;model.updateMatrixWorld(true);
+  const binding=new BeastRagdollBinding(model),clip=new BakedRagdollClip(meta.clips.find(c=>c.species===species&&c.direction==='side'),buffer),fall=new BakedBeastFall(binding,clip);
+  const values=new Float32Array(98),world=model.getWorldQuaternion(new Quaternion()).normalize();
+  for(const time of [.09,.5,clip.duration]){
+   clip.sample(time,values);fall.apply(time);const t=Math.min(1,time/.18),blend=t*t*(3-2*t);
+   for(let i=0;i<binding.entries.length;i++){
+    const target=new Quaternion().fromArray(values,i*7+3).premultiply(world).normalize();
+    const expected=fall.entries[i].initialWorld.clone().slerp(target,blend),actual=binding.entries[i].bone.getWorldQuaternion(new Quaternion()).normalize();
+    assert.ok(actual.angleTo(expected)<1e-5,`${species} bone ${i} at ${time}: rotation differs from baked clip`);
+   }
+  }
+ }
+});
