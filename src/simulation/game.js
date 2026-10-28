@@ -83,18 +83,23 @@ export function observeGameEvents(s,callback){
   return ()=>listeners.delete(callback);
 }
 export function emit(s,type,detail={}) {
+  const wallLoss=type==='StructureRuined'?loseBlessing(s,s.structures.find(p=>p.id===detail.targetId)??{}):null;
   const event={id:`event-${s.sequence++}`,type,...detail};
   if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
   for(const callback of eventObservers.get(s)??[])callback(event);
+  if(wallLoss){
+    emit(s,'BlessingDestroyed',wallLoss);
+    notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId);
+  }
   if(type==='CropHit'&&event.blessingDestroyed){
     emit(s,'BlessingDestroyed',event.blessingDestroyed);
     notice(s,'Una fuente mágica ha sido destruida. Sus cultivos pierden la influencia.',event.targetId);
-  }else if(type==='CropHit'&&!event.destroyed){
-    const plant=s.plants.find(p=>p.id===event.targetId);
-    if(plant?.blessing&&plant.blessing.threatDay!==s.day){
-      plant.blessing.threatDay=s.day;emit(s,'BlessingThreatened',{targetId:plant.id});
-      notice(s,'Una fuente mágica está bajo ataque. ¡Protégela!',plant.id);
+  }else if((type==='CropHit'&&!event.destroyed)||type==='StructureHit'){
+    const target=type==='CropHit'?s.plants.find(p=>p.id===event.targetId):s.structures.find(p=>p.id===event.targetId&&p.status==='intact');
+    if(target?.blessing&&target.blessing.threatDay!==s.day){
+      target.blessing.threatDay=s.day;emit(s,'BlessingThreatened',{targetId:target.id,presentation:{x:target.x,z:target.z}});
+      notice(s,target.species?'Una fuente mágica está bajo ataque. ¡Protégela!':'Una muralla mágica está bajo ataque. ¡Protégela!',target.id);
     }
   }
 }
@@ -557,6 +562,8 @@ export function removeWall(s,id,targetId,nav) {
     for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';notifyWorkerPlanningChange(s,worker);}
     replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
     const refund=wallRefund(target);transact(s.ledger,id,refund);
+    const blessingLoss=loseBlessing(s,target,{removed:true});
+    if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId);}
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
     emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
   });
@@ -644,7 +651,7 @@ export function hire(s,id,selection) {
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
   const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
   const living=activeCrops(s.plants);
-  const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
+  const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
   for(const w of s.workers)w.contractDay??=s.hiringPaidDay??s.day-1;
   const previousWorkers=s.workers;
@@ -697,7 +704,7 @@ export function recoverDisplacedWorkers(s) {
   }
   for(const village of s.villages){
     const centers=s.structures.filter(c=>operational(c)&&c.villageId===village.id)
-      .map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
+      .map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
     const pool=s.workers.filter(w=>w.villageId===village.id&&available(w)&&
       (w.displacedDay===s.day||!w.centerId&&w.status==='waiting'));
     if(!pool.length||!centers.length)continue;

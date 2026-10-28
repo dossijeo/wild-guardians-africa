@@ -1,0 +1,47 @@
+TAP version 13
+# (node:27476) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+ok 1 - all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+  ---
+  duration_ms: 75.3734
+  ...
+# Subtest: only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+ok 2 - only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+  ---
+  duration_ms: 21.0663
+  ...
+# Subtest: the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+ok 3 - the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+  ---
+  duration_ms: 4.7992
+  ...
+# Subtest: ordinary paid repair retains the blessing and never creates regeneration
+ok 4 - ordinary paid repair retains the blessing and never creates regeneration
+  ---
+  duration_ms: 192.6701
+  ...
+# Subtest: destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+ok 5 - destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+  ---
+  duration_ms: 62.9361
+  ...
+# Subtest: manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+ok 6 - manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+  ---
+  duration_ms: 6.0396
+  ...
+# Subtest: unblessed walls and centers retain their original damage model
+ok 7 - unblessed walls and centers retain their original damage model
+  ---
+  duration_ms: 2.1441
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1389.3428
