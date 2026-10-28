@@ -26,3 +26,27 @@ test('recovery exit blends without delaying navigation and survives save',()=>{
  assert.ok(Math.abs(w.recoveryExitRemaining-.18)<1e-10);
  advanceWorkerRecovery(w,1,nav);assert.equal(w.recoveryExitRemaining,0);
 });
+
+test('new obstacle during get-up holds attained displacement through save and completion',()=>{
+ const w=worker();advanceWorkerRecovery(w,1.8,nav);
+ const r=w.recovery,t=r.elapsed/r.duration,mix=t*t*(3-2*t);
+ const heldX=r.dx*mix,heldZ=r.dz*mix;
+ advanceWorkerRecovery(w,.1,{walkable:()=>false});
+ const t2=r.elapsed/r.duration,mix2=t2*t2*(3-2*t2);
+ assert.ok(Math.abs(r.dx*mix2-heldX)<1e-12);
+ assert.ok(Math.abs(r.dz*mix2-heldZ)<1e-12);
+ const saved=JSON.parse(JSON.stringify(w));
+ advanceWorkerRecovery(w,10,nav);advanceWorkerRecovery(saved,10,nav);
+ assert.deepEqual(w,saved);
+ assert.ok(Math.abs(w.x-10-heldX)<1e-12);
+ assert.ok(Math.abs(w.z-20-heldZ)<1e-12);
+ assert.equal(w.recovery,undefined);
+});
+
+test('a newly blocked swept segment is not bypassed by a large recovery step',()=>{
+ const w=worker();advanceWorkerRecovery(w,1.1,nav);
+ let checks=0;
+ advanceWorkerRecovery(w,10,{walkable:()=>true,workerMotionClear:()=>{checks++;return false;}});
+ assert.equal(checks,1);assert.ok(Math.abs(w.x-10)<Math.abs(WORKER_RECOVERY.youngMale.finalOffset[2]));
+ assert.equal(w.recovery,undefined);
+});
