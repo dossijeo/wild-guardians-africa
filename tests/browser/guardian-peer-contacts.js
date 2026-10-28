@@ -34,7 +34,20 @@ export function sampleRecoverySkinBounds(manager){
  for(let i=0;i<entries.length;i++)for(let j=i+1;j<entries.length;j++){
   const a=entries[i],b=entries[j];if(!a.recovery&&!b.recovery)continue;
   const x=bounds[i],y=bounds[j],overlap=['x','y','z'].map(axis=>Math.min(x.max[axis],y.max[axis])-Math.max(x.min[axis],y.min[axis]));
-  pairs.push({a:a.animal.id,b:b.animal.id,modes:[a.actor?'physical':'baked',b.actor?'physical':'baked'],overlap,candidate:overlap.every(v=>v>0)});
+  const pair={a:a.animal.id,b:b.animal.id,modes:[a.actor?'physical':'baked',b.actor?'physical':'baked'],overlap,candidate:overlap.every(v=>v>0)};
+  if(pair.candidate&&!!a.actor!==!!b.actor){
+   const physical=a.actor?a:b,baked=a.actor?b:a,box=a.actor?x:y;
+   let inside=0;const byPart={},examples=[];
+   for(const mesh of meshCache.get(baked.data.model))for(let k=0;k<mesh.geometry.attributes.position.count;k++){
+    mesh.getVertexPosition(k,point).applyMatrix4(mesh.matrixWorld);if(!box.containsPoint(point))continue;
+    for(let part=0;part<(physical.actor.parts?.length??0);part++)if(physical.actor.parts[part].body.collider(0).containsPoint(point)){
+     inside++;byPart[part]=(byPart[part]??0)+1;
+     if(examples.length<8)examples.push({mesh:mesh.name,index:k,part,position:point.toArray()});break;
+    }
+   }
+   pair.bakedVerticesInsidePhysical={inside,byPart,examples};
+  }
+  pairs.push(pair);
  }
  return pairs;
 }

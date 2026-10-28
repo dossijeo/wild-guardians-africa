@@ -47,3 +47,9 @@ The fourth baked actor has no Rapier colliders and is excluded. Skin can also ex
 Optional `peerContacts=1` now enables both diagnostics; ordinary timing runs do not run these costly vertex queries. The mesh diagnostic computes world AABBs from every deformed vertex of active physical and baked actors. Disjoint boxes establish separation; intersecting boxes are candidates only. A focused test verifies translated physical/baked boxes and candidate classification.
 
 `peer-skin-status.json` records a completed four-impact run without errors: 150 pair samples, 27 intersecting-box candidates. Of 75 physical/baked pair samples, 19 are candidates. Therefore the prior Rapier-only result cannot dismiss the visible overlap. Triangle-level or contact-region inspection is needed before adding separation to recovery. No production displacement has been introduced from these conservative bounds.
+
+### Confirmed baked-skin / physical-volume intersection
+
+`peer-volume-status.json` adds exact Rapier containsPoint queries for baked mesh vertices within candidate physical-actor AABBs. In this completed run, 22 candidate pair samples include 13 samples with baked vertices inside physical colliders, maximum 3463 vertex records in one sample (duplicates at UV/normal seams count separately). The worst pair is qa-beast-1 / qa-beast-3, collider parts 1–3. This establishes intersection with the simplified physical volume, not an exact triangle-to-triangle penetration depth.
+
+Two focused diagnostic tests pass, including real Rapier positive/negative containment. The result exposes an unresolved baked/physical separation defect; do not describe the four-actor visual acceptance as passed. The next production change must constrain the baked trajectory/recovery against moving peers while preserving smooth motion, static-solid clearance and logical-position reconciliation.
