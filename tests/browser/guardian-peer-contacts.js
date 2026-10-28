@@ -45,7 +45,7 @@ export function sampleRecoverySkinBounds(manager){
      if(examples.length<8)examples.push({mesh:mesh.name,index:k,part,position:point.toArray()});break;
     }
    }
-   pair.bakedVerticesInsidePhysical={inside,byPart,examples};
+   pair.bakedVerticesInsidePhysical={inside,byPart,examples,unresolved:baked.fall?.solidContacts?.unresolved??null};
   }
   pairs.push(pair);
  }

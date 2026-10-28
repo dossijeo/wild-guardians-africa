@@ -59,3 +59,11 @@ Two focused diagnostic tests pass, including real Rapier positive/negative conta
 Two production experiments extended BakedSolidContacts with moving peer boxes. First, sampled skin bounds reduced the observed maximum to 916 baked vertex records inside physical volumes, but five offending samples remained (`peer-separated-status.json`; `peer-separated.mp4` is this unaccepted diagnostic capture, not an approved result). Second, bounds derived directly from current convex/capsule colliders still produced a maximum of 2659 (`peer-collider-experiment-status.json`). Counts are from separate variable-rate runs and are not a controlled percentage-improvement comparison.
 
 Both completed without runtime errors or retained down actors. All 26 existing combat/static-solid tests passed, demonstrating that those tests do not cover the observed peer failure. The experimental production edits were restored; `peer-box-experiment.patch` preserves the rejected second variant for investigation only. It is not applied. The overlap defect remains in the branch and requires a different contact-resolution approach. No claim of visual smoothness is made for these experiments.
+
+## Combined obstacle resolution
+
+The diagnostic replay (`peer-unresolved-status.json`) found every penetrating sample still intersected an obstacle after four sequential box corrections. The new fallback computes a horizontal translation clear of all vertically overlapping peer/static boxes together when sequential correction fails. Dynamic peer envelopes come from current Rapier hull/capsule transforms; baked peers have deterministic priority. Static-only resolution retains its existing path.
+
+`peer-clear-status.json` and `peer-clear.webm` record the next four-hyena run: no baked vertices detected inside physical colliders, completed recovery, zero runtime errors and no final down actors. The 2 Hz contact sheet shows the group falling and resuming activity. This is one variable-rate run, not proof of every contact or smooth per-frame displacement. Crowded corners, displacement continuity, performance and additional species remain to be validated.
+
+Two new combined-box tests and all 26 existing combat/static-solid tests pass. The earlier peer-box patch remains rejected historical evidence; the applied version adds the combined clearance search.
