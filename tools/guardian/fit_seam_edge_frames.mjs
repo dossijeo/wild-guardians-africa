@@ -2,7 +2,7 @@ import {Vector3,Quaternion} from 'three';
 
 // Offline bounded relaxation of tangent frames. Images and mesh topology stay
 // untouched. This cannot reproduce arbitrary per-pixel edge discrepancies.
-export function fitSeamEdgeFrames({indices,pos,norm,tang,uv,normalSample,referenceNormals,iterations=16,bounds=[-.215,1.08,.08,.215,1.55,Infinity]}){
+export function fitSeamEdgeFrames({indices,pos,norm,tang,uv,normalSample,referenceNormals,iterations=16,maxBaseAngle=.5,bounds=[-.215,1.08,.08,.215,1.55,Infinity]}){
  const key=i=>pos.get(i).map(v=>Math.round(v*1e6)).join(',');
  const face=i=>pos.get(i).every((v,k)=>v>bounds[k]&&v<bounds[k+3]);
  const map=new Map();
@@ -11,7 +11,7 @@ export function fitSeamEdgeFrames({indices,pos,norm,tang,uv,normalSample,referen
   let ka=key(a),kb=key(b);if(ka>kb){[a,b]=[b,a];[ka,kb]=[kb,ka];}
   const id=ka+'|'+kb;if(!map.has(id))map.set(id,[]);map.get(id).push([a,b]);
  }
- const edges=[...map.values()].filter(c=>c.length===2&&c[0].some((i,k)=>uv.get(i).some((v,n)=>Math.abs(v-uv.get(c[1][k])[n])>1e-6))&&c[0].every((i,k)=>new Vector3(...referenceNormals[i]).angleTo(new Vector3(...referenceNormals[c[1][k]]))<.5));
+ const edges=[...map.values()].filter(c=>c.length===2&&c[0].some((i,k)=>uv.get(i).some((v,n)=>Math.abs(v-uv.get(c[1][k])[n])>1e-6))&&c[0].every((i,k)=>new Vector3(...referenceNormals[i]).angleTo(new Vector3(...referenceNormals[c[1][k]]))<maxBaseAngle));
  const vertices=new Set(edges.flat(2)),baseline=new Map([...vertices].map(i=>[i,{n:new Vector3(...norm.get(i)),t:tang.get(i)}]));
  function mapped([a,b],f){
   const N=new Vector3(...norm.get(a)).lerp(new Vector3(...norm.get(b)),f).normalize(),T=new Vector3(...tang.get(a).slice(0,3)).lerp(new Vector3(...tang.get(b).slice(0,3)),f).normalize();
