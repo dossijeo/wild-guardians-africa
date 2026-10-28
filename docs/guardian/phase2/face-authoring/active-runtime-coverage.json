@@ -119,15 +119,21 @@
       "id": "olderFemale",
       "kind": "worker",
       "source": "Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5.html",
-      "file": "public\\assets\\4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
-      "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
-      "bytes": 19341308,
-      "channels": [],
-      "missing": [
+      "file": "public\\assets\\a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c.glb",
+      "sha256": "a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c",
+      "bytes": 20543048,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     },
     {
       "id": "youngMale",
@@ -153,15 +159,21 @@
       "id": "youngFemale",
       "kind": "worker",
       "source": "Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5.html",
-      "file": "public\\assets\\0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
-      "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
-      "bytes": 19143664,
-      "channels": [],
-      "missing": [
+      "file": "public\\assets\\382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c.glb",
+      "sha256": "382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c",
+      "bytes": 16406252,
+      "channels": [
         "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
         "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
         "mouthOpen"
-      ]
+      ],
+      "missing": []
     }
   ],
   "candidates": [
@@ -261,6 +273,25 @@
       "missing": []
     },
     {
+      "id": "olderFemale",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/olderFemale/expressive-candidate.glb",
+      "sha256": "28781799b45f8f0e868d60fa7789646d5440238a06d58d1f339f45230280cef7",
+      "bytes": 20209652,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75",
+        "mouthOpen"
+      ],
+      "missing": []
+    },
+    {
       "id": "youngMale",
       "matchesActiveBytes": false,
       "file": "content/source/actors/youngMale/expressive-candidate.glb",
@@ -278,6 +309,26 @@
         "mouthOpen"
       ],
       "missing": []
+    },
+    {
+      "id": "youngFemale",
+      "matchesActiveBytes": false,
+      "file": "content/source/actors/youngFemale/expressive-candidate.glb",
+      "sha256": "92cfe90e404a40ea52de5ba0304c6b7bc40ffd3be24daffd4c94e6a4081dd03d",
+      "bytes": 7947476,
+      "channels": [
+        "blinkL",
+        "blinkL25",
+        "blinkL50",
+        "blinkL75",
+        "blinkR",
+        "blinkR25",
+        "blinkR50",
+        "blinkR75"
+      ],
+      "missing": [
+        "mouthOpen"
+      ]
     }
   ],
   "complete": false
