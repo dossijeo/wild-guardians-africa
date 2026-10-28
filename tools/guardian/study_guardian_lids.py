@@ -91,7 +91,9 @@ newmesh=bpy.data.meshes.new('Guardian eyelid curved shells');newmesh.from_pydata
 colors=newmesh.color_attributes.new(name='LidPaint',type='FLOAT_COLOR',domain='POINT')
 baseColor=tuple(material.node_tree.nodes.get('Principled BSDF').inputs['Base Color'].default_value)
 for i,(_,px,r,part) in enumerate(labels):
- shade=1-.28*max(0,(r-.88)/.12);grain=1+.025*math.sin(px*.81)
+ shade=1-.28*max(0,(r-.88)/.12)
+ # Irregular broad painted-wood grain, baked as vertex color (no new texture).
+ grain=1+.075*math.sin(px*.19+1.1*math.sin(r*4.2))+.035*math.sin(px*.47+r*2.3)+.025*math.sin(px*.073-r*5.1)
  colors.data[i].color=(*[v*shade*grain for v in baseColor[:3]],1)
 attribute=material.node_tree.nodes.new('ShaderNodeVertexColor');attribute.layer_name='LidPaint';material.node_tree.links.new(attribute.outputs['Color'],material.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
 for f in newmesh.polygons:f.use_smooth=True

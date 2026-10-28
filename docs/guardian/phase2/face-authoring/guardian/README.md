@@ -45,3 +45,12 @@ Tested a fixed-edge correction from the convex fit to the original mask ray inte
 Fitted a quadratic to 65 clamped upper-rim offsets per eye, leaving lower geometry unchanged. A first smooth trial (v12) protruded near the left corner. The retained v13 tapers that offset by (1-t*t)^2 across the lid and (1-r)^3 toward its moving edge. Actual browser inspection of both closed profiles and the opposite half closure shows no v11 jagged lower intersections or v12 corner flap. The opposite upper join is reduced; the other eye still has a conspicuous dark outer rim. Retained as the isolated candidate, not production. Painted-surface detail and the remaining join still need visual work.
 
 v13-profile.png, v13-opposite.png and v13-half.png capture the inspected states. v13-runtime.json records all runtime assertions passing, including intermediate blink weights and ES/EN playback clock checks. Median CPU update .24 ms, p95 .42 ms in this isolated viewer; not a before/after game performance claim. Python compile and whitespace checks pass.
+
+
+## v14: painted surface variation
+
+Replaced the uniform fine sinusoidal striping with three mild, irregular spatial color variations baked into existing vertex colors. No texture, material, primitive or runtime update was added. v14-front-closed.png is the actual browser close-up; closure is complete and the surface is less uniform, although the remaining dark rim is still visible. The candidate is still not installed. Size 3,529,736 bytes, four primitives and 37 bones.
+
+An attempted exact non-color accessor comparison against v13 failed on a Mesh_0 accessor during fresh Blender export. Do not claim bit-exact geometry/animation parity for this revision from that attempt; exported attribute differences require quantified investigation before installation. The generator edit itself only changes vertex colors.
+
+Follow-up localized the first mismatch to TANGENT (positions, normals and UVs compared exactly before it): four of 47,852 tangent components differ, maximum 0.0001000166. This small export difference does not prove full parity for the remaining unchecked accessors. The fresh browser suite passed (v14-runtime.json).
