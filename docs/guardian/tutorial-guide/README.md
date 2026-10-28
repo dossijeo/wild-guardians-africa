@@ -19,8 +19,14 @@ Evidence: `game-hud.png`, `game-world.png`, `game-center-placed.png`, and the th
 
 ## Limits of this validation
 
-The captures do not prove every language, mobile viewport, camera orientation or guide-to-spell interruption combination. The final narration-preservation adjustment was compiled but audio continuity through panel changes has not been separately recorded. The gesture uses the existing arm/forearm/hand bones, without a separately articulated pointing finger. This report does not claim completion of the broader animal-expression/ragdoll project or resolution of baseline engine performance.
+The captures do not prove every language, mobile viewport, camera orientation or guide-to-spell interruption combination. Spanish panel/world narration continuity is now supported by the runtime trace below; English and other panel transitions remain to be checked. The gesture uses the existing arm/forearm/hand bones, without a separately articulated pointing finger. This report does not claim completion of the broader animal-expression/ragdoll project or resolution of baseline engine performance.
 
 ## Guide / spell handoff regression
 
 An automated scene-level test exercises guidance, a Multiply cast, immediate return to guidance, hint removal and game completion. It verifies reuse of the same body, active-count continuity, removal of spell VFX, scale restoration and neutral material tint. This caught and fixed a retained purple tint after Multiply. All five singleton/consecutive-projectile tests pass. This is an automated lifecycle check, not additional visual footage or audio-continuity evidence.
+
+## Real application narration transition (Spanish)
+
+Opt-in `qa-voice=1` enables actual streamed audio at volume 0.65 in the isolated first-day fixture and records play/stop events with the media clock. In the observed run ES_02 played once and stopped at 18.380792 s after opening Construir. ES_03 played once, survived opening Cultivar and selecting millet, and stopped at 24.185792 s after the world guide had taken over. No intermediate stop or replay event occurred for either clip. The capture `voice-world.png` shows the remaining planting explanation with the world body and no portrait duplicate. `voice-during-world.json` retains the run, including one visible body, zero legacy hands and the UI/tool transition samples.
+
+Measurement caveat: the first instrumentation selected the most recently stopped voice instance as well as the most recently played one, so periodic samples can show idle when opening panels stops the separate dialog voice. The per-instance play/stop events still capture the Guardian's original media clock at completion. The fixture now tracks the most recently played instance for future samples. This run proves playback continuity, not subjective audio quality or English coverage.
