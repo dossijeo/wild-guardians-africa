@@ -113,3 +113,9 @@ Actual four-rhino runtime evidence: rhino-quaternion.webm, rhino-quaternion-stat
 ### Full-skin buffalo regression isolated
 
 Added tests/baked-wall-skin-regression.test.js to preserve the actual defect independently of the old coarse continuity assertion. It replays the real catalog buffalo side clip at 60 Hz through 2.02 seconds and checks every non-tail skin vertex. It currently fails at 2.0166667 s: Mesh_0 vertex 31409 enters the wall by 0.0220494 m despite a -0.1844032 m contact correction. That vertex is absent from the sparse contact samples. This confirms incomplete sampled-envelope coverage rather than merely a disputed displacement threshold. The test is intentionally red pending a collision-envelope correction; runtime performance of the eventual correction must also be measured.
+
+### Rejected exact-vertex scan (CPU budget)
+
+An experimental full non-tail vertex envelope passes the 60 Hz buffalo wall regression (plus all three rotation tests). It scans 51,598 buffalo / 46,518 rhino vertices each contact update. The ABBA Node microbenchmark in full-skin-cpu.json measures resolve alone: buffalo 11.63–11.95 ms mean versus 0.33–0.35 ms sampled; rhino 10.82–11.00 ms versus 0.47 ms. This overhead is unacceptable for the intended runtime. The production change was reverted, so the penetration regression remains open. This is neither a browser FPS comparison nor a completed fix.
+
+rejected-full-skin.patch preserves the experiment; apply only in an isolated checkout before running tools/guardian/benchmark-baked-contacts.mjs. The benchmark refuses to run without that experimental implementation. Next implementation must retain coverage without skinning tens of thousands of vertices on every active contact update (for example, conservative bounds derived from skin influences with exact refinement only where necessary). No performance acceptance is claimed.

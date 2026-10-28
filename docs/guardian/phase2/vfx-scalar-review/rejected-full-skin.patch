@@ -1,0 +1,31 @@
+diff --git a/src/rendering/baked-solid-contacts.js b/src/rendering/baked-solid-contacts.js
+index 4d8432689..3fd8fbc4a 100644
+--- a/src/rendering/baked-solid-contacts.js
++++ b/src/rendering/baked-solid-contacts.js
+@@ -1,13 +1,17 @@
++import {isTailContactVertex} from './beast-ground-contact.js';
+ import {clearBoxOffset} from './clear-box-offset.js';
+ import {Box3,Vector3} from 'three';
+ import {BeastRecovery} from './beast-recovery.js';
+ import {visitBeastSolids} from './beast-physics-environment.js';
+ 
+-// Conservative sampled skin envelope, translated away from nearby solid boxes.
++// Skin envelope translated away from nearby solid boxes.
+ // Keep the entry side of each obstacle: never eject through a thin wall.
+ export class BakedSolidContacts{
+  constructor(binding,boxes,peers=null){
+   this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();this.peerOffset=new Vector3();
++  // Static obstacles require full coverage: dominant-bone extrema omit vertices
++  // that become extreme only after blending multiple bone transforms.
++  this.solidSamples=[];if(boxes.length)binding.model.traverse(mesh=>{if(mesh.isSkinnedMesh)for(let index=0;index<mesh.geometry.attributes.position.count;index++)if(!isTailContactVertex(mesh,index))this.solidSamples.push({mesh,index});});
+  }
+  static forAnimal(world,animal,binding,{peers=false}={}){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes,peers?()=>{const manager=world.nav.beastPhysics,entries=[...(manager?.entries.values()??[])];for(const e of manager?.baked?.entries.values()??[]){if(e.animal.id===animal.id)break;entries.push(e);}return entries;}:null);}
+  refreshPeers(){
+@@ -32,6 +36,7 @@ export class BakedSolidContacts{
+   if(this.peers)this.refreshPeers();
+   this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length&&!this.peerBoxes.length&&!this.peerOffset.lengthSq())return this.shift;
+   this.bounds.makeEmpty();let offset=0;for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);if(surface){this.positions[offset++]=this.point.x;this.positions[offset++]=this.point.y;this.positions[offset++]=this.point.z;}}
++  for(const {mesh,index}of this.solidSamples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);}
+   // Include the contact skin in broad-phase overlap, not just separation.
+   // Sparse support samples can miss small features between extrema.
+   this.bounds.expandByScalar(.015);
