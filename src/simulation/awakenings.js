@@ -1,10 +1,8 @@
 import {cropSpec,operational} from './rules.js';
 import {numberOf} from './money.js';
 
-// Versioned gameplay recipe, independent of the daily spell entitlements.
-export const AWAKENINGS=Object.freeze({version:1,maximum:100,diminishing:.08,
-  radius:2.05,growth:.20,harvest:.20,overlapCap:.35,waterTolerance:.20,
-  plantHitPoints:2,wallReduction:.25,neighborReduction:.10});
+import {AWAKENINGS} from './awakening-config.js';
+export {AWAKENINGS} from './awakening-config.js';
 const clamp=(v,min=0,max=1)=>Math.max(min,Math.min(max,v));
 const round=v=>Math.round(v*1e6)/1e6;
 const live=e=>e.blessing&&(e.alive===true||e.kind==='wall'&&e.status==='intact'&&e.hp>0);

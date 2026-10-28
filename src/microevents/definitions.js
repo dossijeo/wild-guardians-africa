@@ -55,4 +55,4 @@ const eventDefinitions={
 export const EVENTS=Object.freeze(Object.fromEntries(Object.entries(eventDefinitions).map(([id,def])=>[id,{...def,sound:MICROEVENT_FEEDBACK[id].sound,feedback:MICROEVENT_FEEDBACK[id],primary:INTERACTIONS[id],interactions:INTERACTIONS[id].mode==='catch'?[...new Set(['tap',...def.interactions])]:INTERACTIONS[id].mode==='swirl'?['swipe','rub','hold']:def.interactions,tapStrength:INTERACTIONS[id].mode==='catch'?1:def.tapStrength}])));
 export function compatible(def,state){return (!def.day||state.time<300)&&(!def.night||state.time>=300)&&(!def.biomes||def.biomes.includes(state.biome));}
 
-export function eligibleAnchor(def,entity){return !!entity&&(def.anchor==='wood'?entity.kind==='wall'&&entity.material==='empalizada'&&entity.status==='intact'&&entity.hp>0:entity.alive===true);}
+export function eligibleAnchor(def,entity){return !!entity&&(def.anchor==='wood'?entity.kind==='wall'&&entity.material==='empalizada'&&entity.status==='intact'&&entity.hp>0:entity.alive===true&&!entity.blessing);}

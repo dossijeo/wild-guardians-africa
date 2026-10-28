@@ -1,5 +1,6 @@
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validateAwakenings} from '../simulation/awakenings.js';
+import {validateBlessings} from '../simulation/blessings.js';
 import {validateMicroState} from '../microevents/economy.js';
 import {validRaidContention} from './raid-contention-snapshot.js';
 import {validatePressureSnapshot} from './raid-pressure-snapshot.js';
@@ -17,6 +18,7 @@ export function validateSnapshot(state) {
   if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   validateMicroState(state);
   validateAwakenings(state);
+  validateBlessings(state);
   validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
   if(state.cinematicSeenAct!==undefined&&(!Number.isSafeInteger(state.cinematicSeenAct)||state.cinematicSeenAct<0||state.cinematicSeenAct>10||state.cinematicSeenAct>Math.floor((state.completedNights??0)/10)))throw new Error('Progreso de cinemáticas inválido');
@@ -75,7 +77,7 @@ export function validateSnapshot(state) {
   for(const a of state.spells)if(a.growthSecondsAdded!==undefined&&(a.kind!=='growth'||!Number.isFinite(a.growthSecondsAdded)||a.growthSecondsAdded<0||a.growthSecondsAdded>15+1e-6))throw new Error('Progreso mágico inválido');
   for(const p of state.plants){
     const hp=p.attackHitPoints??2;
-    if(![1,2].includes(hp)||p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*(hp===1?4:2))||p.attackHits<0||p.attackHits>hp||p.alive&&p.attackHits>=hp))throw new Error('Daño de cultivo inválido');
+    if(![1,2].includes(hp)||p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*(hp===1||p.blessing?4:2))||p.attackHits<0||p.attackHits>hp||p.alive&&p.attackHits>=hp))throw new Error('Daño de cultivo inválido');
   }
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');

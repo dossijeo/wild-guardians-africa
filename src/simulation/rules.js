@@ -43,7 +43,7 @@ export function compositions(budget,unlocked) {
 }
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
-  const resources=activeCrops(state.plants).some(p=>p.alive)||activeCrates(state.crates).length>0;
+  const resources=activeCrops(state.plants).some(p=>p.alive&&!p.blessing)||activeCrates(state.crates).length>0;
   return (center?0:B.work_center.cost)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }

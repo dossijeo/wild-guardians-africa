@@ -1,0 +1,82 @@
+TAP version 13
+# (node:4496) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every original crop can awaken without changing its identity or geometry, watering or harvest
+ok 1 - every original crop can awaken without changing its identity or geometry, watering or harvest
+  ---
+  duration_ms: 9.5857
+  ...
+# Subtest: invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+ok 2 - invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+  ---
+  duration_ms: 2.7041
+  ...
+# Subtest: transforming an assigned task releases its worker and source can never reenter a work queue
+ok 3 - transforming an assigned task releases its worker and source can never reenter a work queue
+  ---
+  duration_ms: 50.7453
+  ...
+# Subtest: one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+ok 4 - one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+  ---
+  duration_ms: 15.9162
+  ...
+# Subtest: passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+ok 5 - passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+  ---
+  duration_ms: 1.2012
+  ...
+# Subtest: active Grow entitlement consumption remains separate from passive growth
+ok 6 - active Grow entitlement consumption remains separate from passive growth
+  ---
+  duration_ms: 1.3529
+  ...
+# Subtest: harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+ok 7 - harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+  ---
+  duration_ms: 17.3493
+  ...
+# Subtest: passive harvest does not multiply worker, event or active Multiply awards
+ok 8 - passive harvest does not multiply worker, event or active Multiply awards
+  ---
+  duration_ms: 12.9408
+  ...
+# Subtest: sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+ok 9 - sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+  ---
+  duration_ms: 1.2392
+  ...
+# Subtest: fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+ok 10 - fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+  ---
+  duration_ms: 0.5713
+  ...
+# Subtest: real area resolver includes a blessed source and applies peripheral damage once per attack
+ok 11 - real area resolver includes a blessed source and applies peripheral damage once per attack
+  ---
+  duration_ms: 1.625
+  ...
+# Subtest: a permanent source alone cannot generate harvests or automatic income without workers
+ok 12 - a permanent source alone cannot generate harvests or automatic income without workers
+  ---
+  duration_ms: 26.6673
+  ...
+# Subtest: active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+ok 13 - active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+  ---
+  duration_ms: 1.49
+  ...
+# Subtest: malformed blessing provenance, censes and impossible source tasks cannot be saved
+ok 14 - malformed blessing provenance, censes and impossible source tasks cannot be saved
+  ---
+  duration_ms: 0.8194
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 359.996
