@@ -230,3 +230,10 @@ The regression failed before the fix (`missing observed at 1.24`) and passes aft
 Two explicit QA buttons now reproduce the delayed-observation case without an intermediate render: prepare Attack at age 0.12 s, then remove the raid target and advance presentation directly by 0.23 s. They do not change production controls or simulation rules.
 
 `removed-target-before.png` shows the Guardian/vortex and live hyena. `removed-target-after.png` shows the same native scene after cancellation, without a ghost flash. `removed-target-visual.json` records all six presentation objects hidden, active/pending counts zero, and no errors. Screenshots were inspected. This closes graphical coverage for this specific cancellation edge case; it uses a QA presentation clock and does not validate physical recovery or live gameplay removal causes. QA script syntax and whitespace checks pass.
+
+
+## Current diurnal spell sequence (0b5d04014)
+
+`day-sequence-current.mp4` is a 1600x900 H.264 recording (22.467 s, silent) from the native WorldScene fixture with Game.tick enabled. Six agricultural commands alternate Grow/Multiply, rotate and zoom the camera, then issue a rapid pair 0.3 s apart. The fixture waters initial crops and bypasses cooldown: this is not production player cadence or a campaign walkthrough. `day-sequence-current.json` contains initial/final crop state, commands and zero captured errors; maximum visible Guardians is one, final active and pending counts are zero.
+
+Inspected the one-frame-per-second sheet `day-sequence-current.jpg`: green and violet materializations are distinguishable, energy reaches crops, and the body disappears between separated commands and after the sequence. The close fixed camera clips part of a late burst appearance (approximately 13 s); the wider shot gives better composition. This is a remaining useful-camera/placement coverage issue, not a visibility pass. The sheet cannot certify continuous cloth quality or fine hand/cloth intersections. No audio stream was captured, so this does not validate the latest presence-audio fix perceptually.
