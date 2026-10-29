@@ -1,18 +1,27 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Guardián guía sobre HUD original</title>
 <link rel="stylesheet" href="../../src/ui/styles.css"><link rel="stylesheet" href="../../public/content/hud.css"><link rel="stylesheet" href="../../src/ui/tutorial.css">
-<style>#stage{background:linear-gradient(150deg,#75827b,#374c43)}#qa{position:absolute;top:12px;left:12px;z-index:25;background:#fff8e5;padding:10px;font:13px system-ui;color:#203629}#report{max-height:100px;overflow:auto}</style>
-<main id="stage"><aside id="events" hidden></aside><aside id="placementBanner" hidden></aside><div id="narrator"></div><aside id="qa"><strong>Guardián 3D · Guía del menú</strong><p>HUD y personaje de producción; sin modificar partidas.</p><button id="build">Señalar Construir</button><button id="grow">Señalar Cultivar</button><button id="hide">Retirar guía</button><pre id="report"></pre></aside></main>
+<link rel="stylesheet" href="../../src/ui/awakening-hud.css"><style>#stage{background:linear-gradient(150deg,#75827b,#374c43)}#qa{position:absolute;top:125px;left:12px;width:280px;z-index:25;background:#fff8e5;padding:10px;font:13px system-ui;color:#203629}#report{max-height:100px;overflow:auto;white-space:pre-wrap}</style>
+<main id="stage"><aside id="notices"></aside><aside id="events" hidden></aside><aside id="placementBanner" hidden></aside><div id="narrator"></div><aside id="qa"><strong>Guardián 3D · Guía del menú</strong><p>HUD y personaje de producción; sin modificar partidas.</p><button id="build">Señalar Construir</button><button id="grow">Señalar Cultivar</button><button id="awakening">Señalar Despertar</button><select id="language" aria-label="Idioma"><option value="es">Español</option><option value="en">English</option></select><button id="hide">Retirar guía</button><pre id="report"></pre></aside></main>
 <script type="module">
+import {setLanguage} from '../../public/i18n/runtime.js';
+import {SpiritVoice} from '../../src/audio/spirit-voice.js';
 import {hudMarkup,ASSETS,layoutHud} from '../../src/ui/native-hud.js';
-import {TutorialHudGuide} from '../../src/ui/tutorial-hud-hand.js';
+import {AwakeningHud} from '../../src/ui/awakening-hud.js';
+import {TUTORIAL_MESSAGES} from '../../src/tutorial/messages.js';
+import {TutorialHudGuide,tutorialHudHandTarget} from '../../src/ui/tutorial-hud-hand.js';
 import {NativeGuardian} from '../../src/ui/guardian.js';
 import {assetUrl} from '../../src/rendering/asset-url.js';
 const stage=document.querySelector('#stage');stage.insertAdjacentHTML('afterbegin',hudMarkup);
 for(const image of document.querySelectorAll('[data-sprite]'))image.src=assetUrl(ASSETS[image.dataset.sprite].src);
-const errors=[],guide=new TutorialHudGuide(stage),guardian=new NativeGuardian(document.querySelector('#narrator'),e=>errors.push(e.message));let target='[data-menu="build"]';
+setLanguage('es',{persist:false,broadcast:false});
+const voice=new SpiritVoice({url:path=>'/'+path});
+const errors=[],guide=new TutorialHudGuide(stage),guardian=new NativeGuardian(document.querySelector('#narrator'),e=>errors.push(e.message),()=>{},voice);let target='[data-menu="build"]';
+const state={day:4,time:150,pauses:[],tutorial:{basicSkipped:true,step:'done'},structures:[{kind:'center',status:'intact'}],awakenings:{progress:100,history:[]}};let selecting=false,awakeningLesson=false;const awakening=new AwakeningHud(stage,()=>selecting=!selecting);
 await guardian.ready;guardian.show({key:'guide',text:'Elige Centro de trabajo. Puedes construirlo en cualquier lugar válido cerca del poblado.'});
-for(const name of ['build','grow'])document.querySelector('#'+name).onclick=()=>target=`[data-menu="${name}"]`;
-document.querySelector('#hide').onclick=()=>target=null;
-function frame(){layoutHud(stage);guide.show(target);guardian.setGuide(guide.rect);guardian.update();document.querySelector('#report').textContent=JSON.stringify({target,visible:guide.visible,errors,draws:guardian.mesh?.metrics.drawCalls,position:guardian.guidePosition,legacyHands:document.querySelectorAll('.tutorial-hud-hand').length});requestAnimationFrame(frame);}frame();
-addEventListener('pagehide',()=>{guardian.dispose();guide.dispose();});
+for(const name of ['build','grow'])document.querySelector('#'+name).onclick=()=>{awakeningLesson=false;target=`[data-menu="${name}"]`;};
+document.querySelector('#awakening').onclick=()=>{awakeningLesson=true;selecting=false;guardian.show({key:'awakening',text:TUTORIAL_MESSAGES['magic.awakening'].text,gesture:'reveal'});};
+document.querySelector('#hide').onclick=()=>{awakeningLesson=false;target=null;};
+document.querySelector('#language').onchange=e=>{setLanguage(e.target.value,{persist:false,broadcast:false});if(awakeningLesson)document.querySelector('#awakening').click();};
+function frame(){awakening.render(state,{selecting});awakening.layout(layoutHud(stage));if(awakeningLesson)target=tutorialHudHandTarget(state,{id:'magic.awakening'},selecting?'awakening':null);guide.show(target);guardian.setGuide(guide.rect);guardian.update();document.querySelector('#report').textContent=JSON.stringify({target,selecting,audio:voice.status,audioTime:voice.audio?.currentTime,voice:guardian.voiceRecord?.id,faceError:guardian.mesh?.face.error,visible:guide.visible,errors,draws:guardian.mesh?.metrics.drawCalls,position:guardian.guidePosition,legacyHands:document.querySelectorAll('.tutorial-hud-hand').length});requestAnimationFrame(frame);}frame();
+addEventListener('pagehide',()=>{guardian.dispose();guide.dispose();awakening.dispose();voice.dispose();});
 </script></html>
