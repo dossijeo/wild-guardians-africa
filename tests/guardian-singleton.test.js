@@ -115,3 +115,11 @@ test('scene disposal before the model finishes loading cannot resurrect a Guardi
  assert.equal(summons.beamGeometry,undefined);assert.equal(summons.attackEchoes,undefined);
  summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+
+test('GPU prewarm does not query placement in unloaded terrain',()=>{
+ let retained=0,updated=0;
+ const receiver={world:{state:{elapsed:1},controls:{target:new THREE.Vector3(0,1,0)}},vector:new THREE.Vector3(),up:new THREE.Vector3(0,1,0),slots:[],plan(){throw Error('terrain not resident');},attackEchoes:{retain(){retained++;},update(){updated++;}}};
+ GuardianSummons.prototype.beginPrewarm.call(receiver);
+ assert.equal(retained,1);assert.equal(updated,1);
+});
