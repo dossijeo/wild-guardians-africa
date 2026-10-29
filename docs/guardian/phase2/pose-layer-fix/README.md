@@ -168,3 +168,11 @@ The close recorder now captures visible hip world position and recovery solid co
 `multiply-wind-wide`, `shield-wind-wide` and `attack-wind-wide` add age-zero recordings on the larger amplitudes from 667d14ea6. Each reports 24 bindings, zero preceding/new errors, and zero final visible/pending Guardians. Durations are 2.49439, 2.461675 and 2.49561 simulation seconds respectively, using Game.tick.
 
 The inspected 6 fps sheets cover daytime rear Multiply, nighttime left-side Shield and nighttime right-side Attack. The rear hem changes silhouette; no obvious mantle/arm penetration or detached Guardian ornaments is apparent in these samples. Shield retains its dome, and a moving lion crosses behind the spirit. Attack visibly begins at the hand, but its victim leaves the close frame; this capture does not validate the victim's full fall/recovery. These recordings provide specific views, not continuous-motion or all-angle acceptance. Audio was not unlocked in this session, so these are silent visual evidence.
+
+## Four active impact cycles after broad wind
+
+`four-impact-cost.json` is a native WorldScene/Game.tick run with four hyenas and sequential QA commands at 0, 0.69846, 1.34633 and 2.045005 simulation seconds. QA resets the normal Attack cooldown, so this is a concurrency stress fixture, not normal gameplay cadence. All four recover; peak articulated actors is three and peak baked fallback one; no errors or hidden frames; 16.065285 simulation seconds / 514 sampled frames.
+
+Frame time mean/p95/p99/max: 32.61/66.48/83.035/83.54 ms. Physics total p95 8.65 ms; solver p95 3.165 ms; recovery-follow p95 5.575 ms; visual recovery p95 4.395 ms. These inclusive/phase-dependent percentiles must not be added. Guardian animation p95 0.230 ms, VFX p95 0.750 ms. Draws p95 103; renderer memory reports 343 geometries/173 textures, JS heap 497,519,696 bytes (not total GPU memory).
+
+This is diagnostic evidence, not a paired before/after regression measurement. Source inspection identifies authored recovery sampling in both the physics follow path and visual render path; reusing an identical pose is a candidate optimization, requiring contact/world-transform validation before adoption. Baseline engine performance is not attributed to this feature. Audio was not unlocked and no video was recorded in this run.
