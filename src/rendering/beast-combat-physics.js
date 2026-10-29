@@ -1,3 +1,4 @@
+import {BeastRecoveryExit} from './beast-recovery-exit.js';
 import {SkinContactBounds} from './skin-contact-bounds.js';
 import {BakedSolidContacts} from './baked-solid-contacts.js';
 import {loadRecoveryClips} from './recovery-clips.js';
@@ -55,7 +56,7 @@ export class BeastCombatPhysics{
   }
   if(this.entries.size>=3){this.stats.rejected++;return this.baked?.start(animal)??false;}
   root.updateMatrixWorld(true);const binding=new BeastRagdollBinding(data.model),pose=binding.capture(),captured=performance.now(),colliders=binding.colliders(),fitted=performance.now(),solver=this.solver??=new BeastRagdollSolver(this.R);
-  this.environment??=new BeastPhysicsEnvironment(w,solver);
+  delete data.recoveryExit;this.environment??=new BeastPhysicsEnvironment(w,solver);
   try{
    this.environment.sync([...this.entries.values()].map(e=>e.animal).concat(animal));
    const environmentReady=performance.now(),hit=animal.magicImpact,actor=solver.add(animal.id,{pose,colliders,scale:data.model.scale.x,mass:ATTACK.profiles[animal.species].mass,direction:hit.direction,intensity:hit.intensity,heading:animal.heading??0});
@@ -94,7 +95,7 @@ export class BeastCombatPhysics{
    // Refresh the watchdog while this manager still owns the body, so raid AI
    // never resumes navigation or attacks underneath an active simulation.
    if(a.magicDown)a.magicDown.until=Math.max(a.magicDown.until,state.elapsed+.5);
-   if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.age=0;e.recovery.apply(e.recovery.duration);const shift=e.recovery.horizontalCorrection;if(shift){a.x+=shift.x;a.z+=shift.z;}e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
+   if(e.recovery){e.recoveryAge=Math.min(e.recovery.duration,e.recoveryAge+dt);if(e.recoveryAge>=e.recovery.duration){e.recovery.age=0;e.recovery.apply(e.recovery.duration);e.data.recoveryExit=new BeastRecoveryExit(e.data.model,state.elapsed);const shift=e.recovery.horizontalCorrection;if(shift){a.x+=shift.x;a.z+=shift.z;}e.recovery.restore();this.release(id);a.path=null;a.approach=null;a.destinationId=null;}continue;}
    const bindingStarted=performance.now();
    e.binding.restore();e.binding.apply(e.actor.pose);const hip=e.binding.entries[0].bone.getWorldPosition(this.v);a.x=hip.x-e.offset.x;a.z=hip.z-e.offset.z;this.stats.bindingMs+=performance.now()-bindingStarted;
    if(e.actor.settled){e.settledAt??=e.actor.age;}else e.settledAt=null;
@@ -118,8 +119,8 @@ export class BeastCombatPhysics{
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;
   this.stats.kinematic=0;for(const e of this.entries.values())if(e.recovery)this.stats.kinematic++;this.stats.active=this.entries.size;this.stats.physicsMs=performance.now()-started;this.stats.maxStepMs=Math.max(this.stats.maxStepMs,this.stats.physicsMs);
  }
- before(id){this.baked?.before(id);const e=this.entries.get(id);if(e?.recovery)e.recovery.restore();else e?.binding.restore();}
- render(id){this.baked?.render(id);const e=this.entries.get(id);if(!e)return;if(e.recovery){const start=performance.now();e.recovery.age=0;e.recovery.apply(e.recoveryAge);this.stats.recoveryMs+=performance.now()-start;}else e.binding.apply(e.actor.pose);}
+ before(id){this.world.mixers.get(id)?.recoveryExit?.restore();this.baked?.before(id);const e=this.entries.get(id);if(e?.recovery)e.recovery.restore();else e?.binding.restore();}
+ render(id){this.baked?.render(id);const e=this.entries.get(id);if(!e){const data=this.world.mixers.get(id);if(data?.recoveryExit&&data.recoveryExit.apply(this.world.state.elapsed))delete data.recoveryExit;return;}if(e.recovery){const start=performance.now();e.recovery.age=0;e.recovery.apply(e.recoveryAge);this.stats.recoveryMs+=performance.now()-start;}else e.binding.apply(e.actor.pose);}
  release(id){const e=this.entries.get(id);if(!e)return;e.recovery?.restore();e.binding.restore();e.solver.remove(id);delete e.animal.magicDown;this.entries.delete(id);if(!this.entries.size){this.solver.dispose();this.solver=null;this.environment=null;this.accumulator=0;}else this.environment.sync([...this.entries.values()].map(e=>e.animal));}
  dispose(){this.baked?.dispose();for(const id of this.entries.keys())this.release(id);if(this.world.nav.beastPhysics===this)delete this.world.nav.beastPhysics;this.seen.clear();}
 }
