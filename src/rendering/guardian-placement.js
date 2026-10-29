@@ -83,11 +83,19 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
     const y=p.y+lift;if(y-1.2*bodyScale<ceiling||occupied(p.x,y,p.z))continue;
     v.set(p.x,y,p.z).project(camera);const screen=Math.hypot(v.x-sx,v.y-sy);let out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
     v.set(p.x,y+1.3*bodyScale,p.z).project(camera);out+=Math.max(0,Math.abs(v.y)-.88);
-    const score=(out+framePenalty(p.x,y,p.z))*100+blockedAt(p.x,y,p.z)*12+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
-    aerial.push({x:p.x,y,z:p.z,score});
+    const score=(out+framePenalty(p.x,y,p.z))*100+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
+    aerial.push({x:p.x,y,z:p.z,score,order:aerial.length});
    }
   }
-  aerial.sort((a,b)=>a.score-b.score);if(aerial.length&&(!best.clear||aerial[0].score<best.score)){const p=aerial[0];return {x:p.x,y:p.y,z:p.z};}
+  // Visibility penalties are nonnegative: candidates whose lower bound
+  // exceeds the best complete score cannot win. Keep original tie ordering.
+  aerial.sort((a,b)=>a.score-b.score||a.order-b.order);let elevated=null;
+  for(const p of aerial){
+   if(p.score>(elevated?.score??(best.clear?best.score:Infinity)))break;
+   p.score+=blockedAt(p.x,p.y,p.z)*12;
+   if(!elevated||p.score<elevated.score||(p.score===elevated.score&&p.order<elevated.order))elevated=p;
+  }
+  if(elevated&&(!best.clear||elevated.score<best.score))return {x:elevated.x,y:elevated.y,z:elevated.z};
  }
  // Last resort when the supplied solid volumes leave no usable aerial space.
  return {x:best.x,y:best.y+(best.clear?0:5),z:best.z};
