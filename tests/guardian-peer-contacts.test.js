@@ -45,3 +45,10 @@ test('recovery telemetry reads active recovery correction rather than stale fall
  assert.deepEqual(sampleRecoveryPositions(manager)[0].correction,[.2,0,.4]);
  delete entry.recovery;assert.deepEqual(sampleRecoveryPositions(manager)[0].correction,[9,0,9]);
 });
+
+test('peer telemetry follows released actors through the native navigation pose',()=>{
+ const model=new Mesh();model.name='Hips';model.position.set(2,3,4);model.updateMatrixWorld(true);
+ const world={state:{raid:{animals:[{id:'released',status:'fleeing',x:2,z:4}]}},mixers:new Map([['released',{model}]])};
+ const rows=sampleRecoveryPositions({entries:new Map()},world);
+ assert.equal(rows.length,1);assert.equal(rows[0].mode,'navigation');assert.equal(rows[0].phase,'fleeing');assert.deepEqual(rows[0].hip,[2,3,4]);assert.deepEqual(rows[0].logical,[2,4]);
+});

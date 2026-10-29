@@ -36,3 +36,12 @@ mixed-rhino.json/webm: base hyena plus three rhinos, recoveryOverview=1, recover
 Extended step audit with phase-boundary records. Observed rolling-to-recovery hip steps: .00084 to .04223m at roughly 50ms. Largest within-recovery step .22279m / .049745s on baked rhino, with correctionDelta=0; a physical rhino reaches .21635m / .05s, also correctionDelta=0. These peaks belong to the sampled pose motion, not a changing horizontal separation offset. This does not prove the get-up timing is artistically optimal or every frame is continuous. Release-to-navigation is outside the manager-only trace.
 
 Validation after enabling ordered physical recovery: node --test tests/beast-combat-physics.test.js tests/authored-recovery-solids.test.js passes 24/24, including repeated-hit pose retention, shared physical ownership, baked overflow, navigation offset commit and hyena/lion wall/corner recovery. Mixed-size obstacle entrapment and broader graphical matrix remain pending.
+
+
+## Navigation release diagnostic
+
+Extended sampleRecoveryPositions to follow rendered Hips through world.mixers after the physics entry disappears, also recording logical x/z. This is QA-only; five peer/telemetry tests pass. navigation-release.json/webm repeats the mixed daylight cycle and ends with all four actors navigating, no errors. Reviewed navigation-release-window.jpg (video 7s onward, 2fps): all four return to upright locomotion.
+
+The newly visible recovering-to-walking boundaries have hip displacement .193918m/.03326s (rhino), .331914m/.05s (hyena), .119709m/.05s (baked rhino), .162642m/.05s (physical rhino). These are not automatically teleports: logical movement, pending horizontal correction commit, native animation phase, root heading and ground fitting all contribute. For the hyena, hip delta [-.2982,.0356,-.1412] vs logical delta [-.0682,-.1761] shows substantial pose/root-orientation change in addition to translation. A physical rhino releases with prior lift .38514m and hip delta y=-.1664m.
+
+Current authored recovery exits to its captured standing pose, while native animation and path heading resume immediately. This is the next concrete continuity concern; the broad overview contact sheet is insufficient to approve the exact release frames. A pose transition must preserve the world-space recovered pose while blending to current navigation and terrain support, including baked actors and interrupted transitions. No production transition change was made in this diagnostic revision.

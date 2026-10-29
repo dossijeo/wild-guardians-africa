@@ -54,11 +54,20 @@ export function sampleRecoverySkinBounds(manager,includeFalling=false,surfaceCro
  return pairs;
 }
 
-export function sampleRecoveryPositions(manager){
- return [...manager.entries.values(),...(manager.baked?.entries.values()??[])].map(e=>({
-  id:e.animal.id,mode:e.actor?'physical':'baked',phase:e.animal.magicDown?.phase,
+export function sampleRecoveryPositions(manager,world=null){
+ const active=[...manager.entries.values(),...(manager.baked?.entries.values()??[])].map(e=>({
+  id:e.animal.id,mode:e.actor?'physical':'baked',phase:e.animal.magicDown?.phase,logical:[e.animal.x,e.animal.z],
   hip:e.binding.bones.get('Hips').getWorldPosition(new Vector3()).toArray(),
   correction:e.recovery?.horizontalCorrection?.toArray()??e.fall?.solidContacts?.shift.toArray()??null,
   recoveryAge:e.recovery?e.recoveryAge:null,lift:e.recovery?.lift??e.fall?.lift??null,entryClearance:e.recovery?.entryClearance??null,
  }));
+ if(world){
+  const present=new Set(active.map(a=>a.id));
+  for(const animal of world.state.raid?.animals??[]){
+   if(present.has(animal.id))continue;
+   const hip=world.mixers.get(animal.id)?.model?.getObjectByName('Hips');
+   if(hip)active.push({id:animal.id,mode:'navigation',phase:animal.status,logical:[animal.x,animal.z],hip:hip.getWorldPosition(new Vector3()).toArray(),correction:null,recoveryAge:null,lift:null,entryClearance:null});
+  }
+ }
+ return active;
 }
