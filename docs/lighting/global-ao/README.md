@@ -105,3 +105,10 @@ Run `node tools/lighting/audit_ao_resources.mjs` to regenerate `resource-invento
 These totals are not GPU-memory measurements: render groups can clone buffers, and wall clipping expands/interpolates visibility into Float32 corner attributes. Nor do uniform-toggle comparisons measure the complete AO overhead: attributes remain resident and shaders retain their AO operations. Those toggles are valid for artistic comparisons only.
 
 For an incremental runtime comparison, load the same native scene in separate runs with `globalAO` absent and with `globalAO=1`. Keep seed, biome, culture, camera, quality, pixel ratio, clock and entity population fixed. Wait for model/tree preparation to finish in both runs and record their readiness; discard hidden-tab samples. Alternate run order, separate cold loading from warmed frame measurements, and retain raw frame samples. Report p50/p95/p99 frame time, CPU animation/VFX time where instrumented, draws, active effects/physics and allocation/residency evidence. Include idle, one cast and consecutive casts; do not attribute existing engine stalls to AO without a reproducible paired difference. No full-cost result is claimed yet.
+
+
+## Lion and buffalo day/night comparison
+
+`lion-{day,night}-model-{on,off}.png` and `buffalo-{day,night}-model-{on,off}.png` show frozen frontal views in the native mangrove/suajili WorldScene. The studio time buttons set time 150/400 without replacing the selected animal or changing the camera. Model AO is the only toggled shading contribution; crops also share that toggle. Browser errors were empty. Pixel differences are recorded in `lion-buffalo-ao-report.json`; they prove a visible shader contribution, not quality or performance acceptance.
+
+Lion markings and ornaments remain readable in these views. The buffalo crest and muzzle are very dark in both on/off images: simply reducing AO would not address the underlying appearance. Keep its material/lighting evaluation open, including strategic-distance views and other orientations. These static captures do not validate moving joints, facial animation or ragdoll transitions.
