@@ -3,11 +3,11 @@
 export function spellWindBinding(bone){
  const name=bone.name.replaceAll('.','');
  const mantle=/^Mantle([FB][LR])([012])$/.exec(name);
- if(mantle){const depth=Number(mantle[2]),panel=['FL','FR','BL','BR'].indexOf(mantle[1]);return {bone,kind:'cloth',amplitude:[.035,.16,.29][depth],phase:panel*.58-depth*.85,side:mantle[1].endsWith('L')?-1:1};}
+ if(mantle){const depth=Number(mantle[2]),panel=['FL','FR','BL','BR'].indexOf(mantle[1]);return {bone,kind:'cloth',amplitude:[.045,.24,.48][depth],phase:panel*.58-depth*.85,side:mantle[1].endsWith('L')?-1:1};}
  const feather=/^Feather(\d+)(Tip)?$/.exec(name);
- if(feather)return {bone,kind:'feather',amplitude:feather[2]?.24:.10,phase:Number(feather[1])*.67-(feather[2]?.65:0),side:1};
+ if(feather)return {bone,kind:'feather',amplitude:feather[2]?.32:.13,phase:Number(feather[1])*.67-(feather[2]?.65:0),side:1};
  const wood=/^Wood(\d+)$/.exec(name);
- if(wood)return {bone,kind:'wood',amplitude:.15,phase:Number(wood[1])*.83,side:1};
+ if(wood)return {bone,kind:'wood',amplitude:.22,phase:Number(wood[1])*.83,side:1};
  return null;
 }
 export function applySpellWind(bindings,age){
