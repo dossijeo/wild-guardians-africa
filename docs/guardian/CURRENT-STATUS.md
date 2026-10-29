@@ -1,4 +1,4 @@
-# Current delivery status (2026-10-28)
+# Current delivery status (2026-10-29)
 
 This is an index of current evidence, not acceptance of the entire phase. Earlier entries in PHASE2.md and CINEMATIC-RAGDOLL.md describe historical iterations; their pending lists must be read with the later evidence below.
 
@@ -14,3 +14,5 @@ This is an index of current evidence, not acceptance of the entire phase. Earlie
 | Performance | gpu-current: five interleaved frozen-frame component comparisons | moving-current: sequential moving-raid measurements and scalar packing comparison; incremental cost and frametime tails still unaccepted; unrelated baseline performance assigned to another agent |
 
 The current olderMale candidate hashes are in face-authoring/olderMale/candidate-files.json. Earlier v7 reports bind the previous revision; cheek-frame contains the current geometry/clip audits and world-cycle recording. The latest olderMale candidate is now runtime registered. The full objective remains active and no merge to main is authorized.
+
+Latest focused revisions: vfx-scalar-review now includes buffalo normal-only registration, baked wall-contact temporal refinement, recovery CPU attribution, corrected full-body/vortex summon framing after camera changes, and twelve-second close wind recordings. These supersede the corresponding older diagnostic observations without closing the remaining acceptance matrix. PR217 remains open; no merge performed.

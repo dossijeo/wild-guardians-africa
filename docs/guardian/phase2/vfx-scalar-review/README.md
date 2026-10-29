@@ -213,3 +213,12 @@ Day/night spell recordings using the production catalog exposed a cropped day ar
 Recordings labelled current predate these fixes; camera-fixed contains only the first fix; framing-fixed includes both. Day framing-fixed is 22.31 seconds, VP8 with no audio track (audio context reset between iterations); original day/night captures include their separately enabled audio session. No perceptual audio acceptance is claimed. Contact sheets inspect sampled stages, not every video frame. These controlled scenarios do not cover every terrain, camera, obstacle or wind/fabric condition.
 
 Final night repeat (spells-night-framing-fixed) includes VP8/Opus. Inspected 1 Hz contact sheet through 20 seconds: Attack hand beam, visible reaction, cyan Shield, camera orbit/zoom, repeated casts and disappearance. Day and night final statuses report errors=[], maxVisibleGuardians=1, active=0 and no retained attacks. Night remains dark and these sampled frames do not certify continuous cloth quality, exact impact synchrony or audio mix.
+
+
+## Close wind review
+
+Added a 12-second canvas recording control and an inspection-only vortex visibility toggle to guardian-3d.html. Uses the existing local receive_video.py endpoint /idle.webm; output must be copied before another recording overwrites it. Recorder stops its media tracks and releases the UI guard on success/failure. No production wind parameters or game vortex behavior changed.
+
+Recorded the installed GLB in actual Three.js: Idle + Float + Mantle_Breeze from three-quarter view with vortex, and Idle + Float + Mantle_Spell from side view with vortex hidden. Both videos are silent, twelve-second cycles. Reviewed 1 Hz contact sheets: broad hem deployment and independent ornament movement are visible, with the shoulder area attached. The side view makes the mantle range substantially easier to judge. No obvious stretched geometry in these sampled images; no claim of continuous collision or artistic acceptance from sparse samples. This studio fixture does not replace WorldScene validation.
+
+All five guardian-model tests pass, including exported loop endpoints/velocities, broad hem rotation, pinned shoulder range and separate secondary channels. Those bounds validate the animation data rather than perceived fabric realism. Browser script syntax check passes. Evidence: guardian-wind-close-idle and guardian-wind-close-spell videos/contact sheets; status JSON records the lateral spell setup.
