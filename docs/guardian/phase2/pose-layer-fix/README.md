@@ -13,3 +13,9 @@ The corrected runtime restores the mixer's clean pose before additive wind/aim/p
 ## Daytime companion
 
 `day.mp4` (22.422 seconds, 15,828,157 bytes) records the existing Grow/Multiply sequence with camera changes and closely spaced final casts. It uses the presentation-only fixture clock, not full Game.tick, so crop maturation is not validated here. `day-report.json` records zero errors, maximum one Guardian, and zero final active/visible/pending summons. `day-sheet.jpg` was inspected at two-second sampling; its final black cell is padding. This is strategic visual evidence, not a fine cloth-motion or performance approval. The current face/pose/lap-pose checks also pass (10 tests); their coverage does not replace perceptual review of speech.
+
+## Daytime simulation correction
+
+The recorder now uses Game.tick for both day and night and stores per-plant initial/final growth and watering states. An initial run with full ticking still showed no growth because the crops had never received their first watering; `day-unwatered-report.json` retains that result. The day fixture now explicitly prepares initial watering through the normal `waterPlant` function. Production rules are unchanged.
+
+`day-simulation.mp4` supersedes `day.mp4` for actual crop advancement. In `day-simulation-report.json`, plant-3 advances from 0 to 31.5575 growth seconds while reference plant-5 advances to 21.8809. Initial watering is recorded as manual for both. Sampled video frames visibly show crop growth and Guardian manifestations; there are no reported errors. This does not establish harvest/delivery completion, resource balance or performance: the fixture still resets cooldowns and prepares watering. Nineteen existing spell-preview, Multiply-persistence and crop-lifecycle tests pass. The close cloth-motion and wider AO review remain open.
