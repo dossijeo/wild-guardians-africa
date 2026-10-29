@@ -1,3 +1,4 @@
+import {GuardianLapPose} from './guardian-lap-pose.js';
 import {GuardianRitual} from './guardian-ritual.js';
 import {RITUAL,beginAwakening,revealAwakening} from './awakening-presentation.js';
 import {pointGuardian} from './guardian-pointing.js';
@@ -36,7 +37,7 @@ export class GuardianSummons{
    const aura=this.world.vfxLibrary.create('repel',this.world.destructionPass,{density:.35,softParticles:false});aura.visible=false;aura.sprites.material.forceSinglePass=true;aura.ribbons.material.forceSinglePass=true;this.world.scene.add(aura);
    const eyes=['L','R'].map(side=>model.getObjectByName('Eye'+side)??model.getObjectByName('Eye.'+side)).filter(Boolean).map(bone=>({bone,rest:bone.quaternion.clone()}));
    beam.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-   this.slots.push({vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
+   this.slots.push({lapPose:new GuardianLapPose(model,group),vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
   }
  }
  plan(entityId,point,{bodyScale=1,hoverAbove=false}={}){const w=this.world,target=w.state.raid?.animals.find(a=>a.id===entityId)??w.state.plants.find(p=>p.id===entityId&&p.alive)??w.state.structures.find(s=>s.id===entityId)??point;if(!target)return null;

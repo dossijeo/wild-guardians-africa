@@ -20,11 +20,7 @@ export class GuardianRitual {
   for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=age%a.getClip().duration;}s.mixer.update(0);
   s.face.update(null,age,{blink:concentration,expression:{name:'focus',value:concentration*.25}});
   s.group.updateMatrixWorld(true);
-  // Both upper arms follow lower targets; local-axis assumptions are avoided.
-  for(const side of ['L','R'])for(const [part,limit] of [['Arm',1.05],['Forearm',.8],['Hand',.55]]){
-   const bone=s.model.getObjectByName(part+side)??s.model.getObjectByName(part+'.'+side);if(!bone)continue;
-   bone.getWorldPosition(this.point);this.point.y-=3;owner.aimJoint(bone,this.point,limit*concentration);
-  }
+  s.lapPose.update(concentration);
   for(const {bone,phase} of s.wind){bone.rotation.z+=.08*concentration*Math.sin(age*5-phase);bone.rotation.x+=.1*concentration*Math.sin(age*4-phase);}
   s.group.updateMatrixWorld(true);
   const pulse=Math.exp(-(((age-RITUAL.pulse)/.13)**2));

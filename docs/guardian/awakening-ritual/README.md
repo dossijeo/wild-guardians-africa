@@ -11,3 +11,5 @@ Validation: 50 focused tests passed (placement, preview/cancel, idempotency, pre
 Runtime resources: one reusable 48-instance leaf mesh, one material, existing ring/vortex/actor. No per-cast geometry creation and no physics or recognition. This change has not undergone a broad performance benchmark or a complete campaign UI playthrough; the video is real-engine integration coverage, not a claim that every camera/terrain combination was tested. Tight views/occlusion can select a lateral fallback. Video has no audio track.
 
 Reproduce video: run python tools/guardian/receive_video.py --port 5204 --output docs/guardian/awakening-ritual, open tests/browser/guardian-combat.html on Vite 5194, select Grabar Despertar planta y muralla. The recording captures the WebGL canvas only.
+
+Hand-pose revision: two-bone reaches place both wrists ahead of the mantle at the lap, with wrist twist exposing the palms forward. Native limb lengths are preserved. The production-GLB test checks front placement, unchanged segment lengths and palm normals at four headings. Video and stills were regenerated and visually inspected after this adjustment.
