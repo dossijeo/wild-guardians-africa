@@ -72,7 +72,7 @@ test('expanded edge search frames the body and excludes distant crops and worker
  const args=setup();args.target.z=-12;let checks=0;
  args.nav.placement=()=>{checks++;return {valid:true};};
  const first=guardianPlacement(args);
- assert.equal(checks,26,'The edge case must exercise the ten extra candidates');
+ assert.equal(checks,34,'The edge case must exercise the eighteen extra candidates');
  assert.ok(Math.hypot(first.x,first.z-args.target.z)>4.4);
  const framed=p=>{
   for(const dx of [-1.4,1.4])for(const dy of [-1.2,1.4])for(const dz of [-1.4,1.4]){
@@ -87,7 +87,7 @@ test('expanded edge search frames the body and excludes distant crops and worker
   args.state.plants=kind==='crop'?[{x:first.x,z:first.z,alive:true}]:[];
   args.state.workers=kind==='worker'?[{x:first.x,z:first.z,status:'incapacitated'}]:[];
   checks=0;const next=guardianPlacement(args);
-  assert.equal(checks,26);assert.equal(next.y,1.7);
+  assert.equal(checks,34);assert.equal(next.y,1.7);
   assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>=(kind==='crop'?1:1.1));
   framed(next);
  }

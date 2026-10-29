@@ -54,7 +54,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  // Edge targets may leave no framed candidate on the nearby rings. Try a
  // bounded wider ring toward the camera before accepting a cropped body.
  if(!candidates.some(p=>p.clear&&framePenalty(p.x,p.y,p.z)===0&&blockedAt(p.x,p.y,p.z)===0)){
-  for(const distance of [radius+5,radius+6.6])for(const offset of [0,-.4,.4,-.9,.9])evaluate(distance,offset);
+  for(const distance of [radius+5,radius+6.6])for(const offset of [0,-.4,.4,-.9,.9,-1.5,1.5,-2,2])evaluate(distance,offset);
  }
  // Occlusion only adds a non-negative penalty. Once a candidate's lower
  // bound exceeds the best fully evaluated score, no remaining ray can win.
