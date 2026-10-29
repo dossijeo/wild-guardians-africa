@@ -1,12 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {Vector3} from 'three';
 import {actorGeometry} from './helpers/actor-geometry.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {preparePickBounds,updatePickBounds} from '../src/rendering/skin-pick-bounds.js';
 
-for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${species}: pick bounds contain posed skin and simultaneous facial morphs`,async()=>{
- const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals[species].url,import.meta.url)),meshes=[],p=new Vector3();
+const workers=JSON.parse(fs.readFileSync(new URL('../public/content/worker-actions.json',import.meta.url)));
+const actors={...Object.fromEntries(['hyena','lion','warthog','buffalo','rhino'].map(s=>[s,ANIMAL_ACTIONS.animals[s]])),...workers};
+for(const [species,descriptor] of Object.entries(actors))test(`${species}: pick bounds contain posed skin and simultaneous facial morphs`,async()=>{
+ const model=await actorGeometry(new URL('../public'+descriptor.url,import.meta.url)),meshes=[],p=new Vector3();
  model.traverse(mesh=>{if(mesh.isSkinnedMesh){const envelope=preparePickBounds(mesh);assert.ok(envelope);meshes.push({mesh,envelope});}});
  assert.ok(meshes.length);
  for(let pose=0;pose<4;pose++){
