@@ -18,7 +18,7 @@ export function sampleRecoveryPeerContacts(manager,includeFalling=false){
  return pairs;
 }
 
-const meshCache=new WeakMap(),point=new Vector3();
+const meshCache=new WeakMap(),releaseProbe=new WeakMap(),point=new Vector3();
 // All deformed mesh vertices, not just contact samples. A disjoint AABB proves
 // separation; an intersecting AABB is only a candidate, never a penetration.
 export function sampleRecoverySkinBounds(manager,includeFalling=false,surfaceCrossings=false){
@@ -68,10 +68,12 @@ export function sampleRecoveryPositions(manager,world=null){
    if(present.has(animal.id))continue;
    const rig=world.mixers.get(animal.id),hip=rig?.model?.getObjectByName('Hips');
    let exitSupport=null;
-   if(rig?.recoveryExit&&world.nav?.field?.surface){
+   if(rig?.recoveryExit)releaseProbe.set(rig,{at:rig.recoveryExit.at,until:rig.recoveryExit.at+rig.recoveryExit.duration+.5});
+   const probe=rig&&releaseProbe.get(rig);
+   if(probe&&world.state.elapsed<=probe.until&&world.nav?.field?.surface){
     let minimum=Infinity,count=0,limiter=null;
     rig.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let index=0;index<mesh.geometry.attributes.position.count;index++){if(isTailContactVertex(mesh,index))continue;mesh.getVertexPosition(index,point).applyMatrix4(mesh.matrixWorld);const gap=point.y-world.nav.field.surface(point.x,point.z);count++;if(gap<minimum){minimum=gap;limiter={mesh:mesh.name,index,position:point.toArray()};}}});
-    exitSupport={age:world.state.elapsed-rig.recoveryExit.at,minimum,count,limiter};
+    exitSupport={age:world.state.elapsed-probe.at,blending:!!rig.recoveryExit,minimum,count,limiter};
    }
    if(hip)active.push({id:animal.id,mode:'navigation',phase:animal.status,exitSupport,logical:[animal.x,animal.z],hip:hip.getWorldPosition(new Vector3()).toArray(),correction:null,recoveryAge:null,lift:null,entryClearance:null});
   }
