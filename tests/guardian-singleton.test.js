@@ -9,7 +9,7 @@ test('consecutive spells reuse exactly one body and clear the previous presentat
  for(let i=0;i<20;i++){
   const event={type:'SpellActivated',kind:i%2?'attack':'growth',x:i,z:0,presentation:{origin:{x:i+2,y:2,z:0},contact:{x:i,y:1,z:0},elapsed:world.state.elapsed}};
   world.state.events.push(event);summons.update();
-  assert.equal(summons.slots[0],slot);assert.equal(summons.slots.filter(s=>s.group.visible).length,1);assert.equal(summons.stats.active,1);assert.equal(slot.event,event);assert.equal(slot.group.position.x,i+2);world.state.elapsed+=.1;
+  assert.equal(summons.slots[0],slot);assert.equal(summons.slots.filter(s=>s.group.visible).length,1);assert.equal(summons.stats.active,1);assert.equal(slot.event,event);assert.equal(slot.group.position.x,i+2);world.state.elapsed+=.6;
  }
  assert.equal(summons.stats.reused,19);assert.equal(slot.aura.clears,20);
  world.state.elapsed+=3;summons.update();assert.equal(summons.stats.active,0);assert.ok([slot.group,slot.aura,slot.beam,slot.core,slot.impact,slot.vortex].every(o=>!o.visible));
@@ -28,18 +28,17 @@ test('Attack charges at the hand, travels before contact, and starts its impact 
 });
 
 
-test('a replacement summon preserves the old projectile and contact without retaining a second Guardian',async()=>{
+test('a replacement summon waits until the single Guardian finishes its hand-fired attack',async()=>{
  const world={state:{events:[],elapsed:1,time:400},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
  const summons=new GuardianSummons(world);await summons.ready;
  const attack={type:'SpellActivated',kind:'attack',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}};world.state.events.push(attack);summons.update();
  world.state.elapsed=1.1;const growth={type:'SpellActivated',kind:'growth',x:10,z:0,presentation:{origin:{x:12,y:1,z:0},contact:{x:10,y:1,z:0},elapsed:1.1}};world.state.events.push(growth);summons.update();
- const slot=summons.slots[0],pool=summons.attackEchoes;assert.equal(slot.event,growth);assert.equal(slot.group.position.x,12);assert.equal(summons.slots.filter(s=>s.group.visible).length,1);assert.equal(pool.stats.active,1);
- world.state.elapsed=1.2;summons.update();const matrix=new THREE.Matrix4(),point=new THREE.Vector3();pool.meshes.core.getMatrixAt(0,matrix);point.setFromMatrixPosition(matrix);assert.ok(Math.abs(point.x-1.2)<.001);assert.equal(pool.meshes.ring.count,0);
- world.state.elapsed=1.24;summons.update();assert.equal(pool.meshes.ring.count,1);pool.meshes.ring.getMatrixAt(0,matrix);point.setFromMatrixPosition(matrix);assert.ok(point.distanceTo(new THREE.Vector3(0,1,0))<.001);
- world.state.elapsed=1.6;summons.update();assert.equal(pool.stats.active,0);assert.ok(pool.draws.every(m=>!m.visible));assert.equal(slot.event,growth);
+ const slot=summons.slots[0];assert.equal(slot.event,attack);assert.equal(slot.group.position.x,3);assert.equal(summons.attackEchoes.stats.active,0);
+ world.state.elapsed=1.2;summons.update();assert.equal(slot.beam.visible,true);assert.equal(slot.group.position.x,3);
+ world.state.elapsed=1.24;summons.update();assert.equal(slot.impact.visible,true);assert.equal(slot.event,attack);
+ world.state.elapsed=1.6;summons.update();assert.equal(slot.event.kind,'growth');assert.equal(slot.at,1.6);assert.equal(slot.group.position.x,12);assert.equal(summons.attackEchoes.stats.active,0);assert.equal(summons.pending.length,0);
  world.state.elapsed=.5;summons.update();assert.equal(slot.event,null);summons.dispose();assert.equal(world.scene.children.length,0);
 });
-
 
 test('removing an Attack target before contact cancels the active summon without a ghost impact',async()=>{
  for(const removal of ['missing','gone']){
@@ -152,4 +151,20 @@ test('disposing an active summon clears diagnostics and releases owned resources
  assert.equal(world.scene.children.length,0);assert.equal(summons.stats.active,0);
  assert.equal(summons.stats.retainedAttacks,0);assert.equal(summons.guide,null);
  for(const count of disposed.values())assert.equal(count,1,'owned GPU resources are released once');
+});
+
+test('four queued presentations fire sequentially from the visible hand and clear on interruption',async()=>{
+ const world={state:{events:[],elapsed:1,time:150},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){this.clears=(this.clears??0)+1;},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+
+ const slot=summons.slots[0],hand=new THREE.Bone();hand.position.set(.4,.6,.2);slot.model.add(hand);slot.hand=hand;
+ for(let i=0;i<4;i++)world.state.events.push({type:'SpellActivated',kind:'attack',x:i,z:0,presentation:{origin:{x:i+3,y:1,z:0},contact:{x:i,y:1,z:0},elapsed:1}});
+ summons.update();assert.equal(summons.pending.length,3);
+ for(let i=0;i<4;i++){
+  world.state.elapsed=1+i*.6;summons.update();assert.equal(slot.event.x,i);
+  world.state.elapsed+=.18;summons.update();assert.equal(slot.beam.visible,true);assert.equal(slot.beam.count,1);assert.equal(summons.attackEchoes.stats.active,0);
+  const matrix=new THREE.Matrix4();slot.beam.getMatrixAt(0,matrix);
+  assert.ok(new THREE.Vector3(0,-.5,0).applyMatrix4(matrix).distanceTo(hand.getWorldPosition(new THREE.Vector3()))<1e-5);
+ }
+ summons.clear();assert.equal(summons.pending.length,0);assert.equal(slot.beam.visible,false);summons.dispose();
 });
