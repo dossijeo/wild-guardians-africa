@@ -1,3 +1,4 @@
+import {animalFootSamples} from './animal-terrain-support.js';
 import {sampleFixedPose} from './fixed-pose.js';
 import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
 import {prepareWarthogHooves,plantWarthogHooves} from './warthog-hooves.js';
@@ -15,6 +16,7 @@ export function prepareAnimalModel(model,species){
     }
   });
   if(species==='warthog')prepareWarthogHooves(model);
+  animalFootSamples(model); // Build contact indices during asset preparation, not its first visible frame.
   return model;
 }
 
