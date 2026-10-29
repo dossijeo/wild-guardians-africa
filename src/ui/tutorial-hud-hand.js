@@ -1,7 +1,10 @@
+import {awakeningHudState} from './awakening-hud.js';
 import {agriculturalGuidePlant} from '../tutorial/agricultural-guide.js';
 
 export function tutorialHudHandTarget(state,message,toolKind=null,toolSpell=null){
-  if(state.day!==1||state.result||state.tutorial.basicSkipped||state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
+  if(state.result||state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
+  if(message?.id==='magic.awakening')return toolKind!=='awakening'&&awakeningHudState(state).available?'#awakeningButton':null;
+  if(state.day!==1||state.tutorial.basicSkipped)return null;
   if(['magic.growth','magic.multiply'].includes(message?.id)){const kind=message.id.slice(6);return state.raid||!agriculturalGuidePlant(state,kind)||toolKind==='spell'&&toolSpell===kind?null:'[data-menu="magic"]';}
   const step=state.tutorial.step;
   message??=state.tutorial.guideAfterAuto?.includes('basic.'+step)?{id:'basic.'+step}:null;
