@@ -22,7 +22,7 @@ export const RETIRED_MENU_ASSETS=new Set([
  'assets/a1458a9c5a3eee9dc6a0dde33da7790a12ed8a6514039305ab0006cda5357d5d.webp',
  'assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png'
 ]);
-export const QA_ONLY_GROUND_FILES=['savanna-ph-compact.glb','savanna-ph-structured.glb','savanna-polyhaven-crossed.glb','savanna-polyhaven-dry-atlas.png','savanna-polyhaven-grass-card.png','grass-fine.glb','grass-fine-lite.glb','kenney-dry-grass.glb','grass-clumps.glb','grass-lod.glb'];
+export const QA_ONLY_GROUND_FILES=['grass-arched.glb','grass-broad.glb','grass-cushion.glb','grass-dense.glb','grass-island.glb','grass-mixed.glb','savanna-ph-compact.glb','savanna-ph-structured.glb','savanna-polyhaven-crossed.glb','savanna-polyhaven-dry-atlas.png','savanna-polyhaven-grass-card.png','grass-fine.glb','grass-fine-lite.glb','kenney-dry-grass.glb','grass-clumps.glb','grass-lod.glb'];
 export const QA_ONLY_VILLAGE_FILES=[
  'mapungubwe-shared-art.bin','mapungubwe-shared-art.webp',
  'mapungubwe-color-detail.webp','mapungubwe-normal-enhanced.webp',
@@ -34,6 +34,7 @@ export const QA_ONLY_VILLAGE_FILES=[
 // Assets referenced only by tools/experiments QA routes, never the shipped app.
 // Keep originals in public for reproducible development experiments.
 export const QA_ONLY_VISUAL_DIRECTORIES=[
+ 'mangrove-leaf-cover-20261021','mangrove-leaf-folded-20261022','mangrove-leaf-varied-20261021',
  'ground-fiber-bake','ground-pom','moss-composite','fern-composite-lod-20261023',
  'holly-fern-cards-20261023','mangrove-leaf-cards-20261023',
  'continuous-grass-cards','continuous-grass-flow',
@@ -42,7 +43,7 @@ export const QA_ONLY_VISUAL_DIRECTORIES=[
 export function publicText(text,path,manifest){
   if(path==='content/models.json'){
     const models=JSON.parse(text);
-    if(Array.isArray(models))text=JSON.stringify(models.filter(model=>!UNUSED_LAB_MODELS.has(model.url.replace(/^\//,''))));
+    if(Array.isArray(models))text=JSON.stringify(models.filter(model=>!UNUSED_LAB_MODELS.has(model.url.replace(/^\//,''))).map(model=>model.facialEdit?.editable?.startsWith('content/source/')?{...model,facialEdit:{...model.facialEdit,editable:'repository:'+model.facialEdit.editable}}:model));
   }
   for(const item of manifest.records)text=text.replaceAll('/'+item.source,'/'+item.runtime);
   if(path==='library.html')text=text.replace("const get=", "import {decodeWebGlb} from './runtime/glb-legacy.js';\nconst get=").replace('return response[type]();',"const result=await response[type]();return type==='arrayBuffer'&&url.endsWith('.glb')?decodeWebGlb(result):result;");
