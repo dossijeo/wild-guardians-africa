@@ -52,7 +52,7 @@ export class GuardianSummons{
   for(const wall of w.state.structures)if(wall.kind==='wall'&&wall.status==='intact'&&Math.hypot(wall.x-target.x,wall.z-target.z)<15){const b=wallCollisionBounds(wall,0),y=w.nav.field.surface(wall.x,wall.z);add('wall:'+wall.id,[b[0],y,b[1]],[b[2],y+2.5,b[3]]);}
   for(const p of w.nav.propsAt?.(target.x,target.z,12)??[]){const bounds=guardianPropBounds(p,w.pack?.assets[p.slot],w.nav.field.surface(p.x,p.z));if(bounds)add('prop:'+p.id+':'+p.x+':'+p.z,bounds.min,bounds.max);}
   const eye=w.camera.position.toArray();
-  return guardianPlacement({target,bodyScale,hoverAbove,camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z]),occupied:(x,y,z)=>!!index.sweep([x,y-bodyScale,z],[x,y+1.2*bodyScale,z],.45*bodyScale),cropHeight:p=>w.cropBatch.sample(p.species,p.growth).height});
+  return guardianPlacement({target,bodyScale,hoverAbove,camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z]),occupied:(x,y,z)=>!!index.sweep([x,y-bodyScale,z],[x,y+1.2*bodyScale,z],1.2*bodyScale),cropHeight:p=>w.cropBatch.sample(p.species,p.growth).height});
  }
  guideScreenPosition(){
   if(!this.guiding)return null;const s=this.slots[0];if(!s)return null;

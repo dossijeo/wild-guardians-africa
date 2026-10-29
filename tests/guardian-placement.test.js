@@ -123,3 +123,19 @@ test('occluded but walkable candidates still search elevated visible alternative
  const p=guardianPlacement({...args,occupied:()=>false,occluded:(x,y,z)=>y<4});
  assert.ok(p.y-.9>=4,`Mantle is still hidden at ${p.y}`);
 });
+
+
+test('world planner excludes a wall touching the mantle while the torso center is clear',async()=>{
+ const {GuardianSummons}=await import('../src/rendering/guardian-summons.js');
+ const {CameraVolumeIndex}=await import('../src/rendering/camera-volume-index.js');
+ const args=setup(),index=new CameraVolumeIndex(),world={...args,objects:new Map(),nav:{...args.nav,propsAt:()=>[]},cropBatch:{sample:()=>({height:1})}};
+ world.state={...args.state,villages:[],structures:[]};
+ const planner=Object.create(GuardianSummons.prototype);planner.world=world;planner.occluders={index,sync(){}};
+ const first=planner.plan(null,args.target);
+ // The obstacle misses the former 0.45 m torso capsule but intersects cloth.
+ index.set('test-wall',{min:[first.x+.75,0,first.z-.2],max:[first.x+1.05,4,first.z+.2]});
+ assert.equal(!!index.sweep([first.x,first.y-1,first.z],[first.x,first.y+1.2,first.z],.45),false);
+ const next=planner.plan(null,args.target);
+ assert.equal(!!index.sweep([next.x,next.y-1,next.z],[next.x,next.y+1.2,next.z],1.2),false,'chosen body envelope must clear the wall');
+ assert.ok(Math.hypot(first.x-next.x,first.y-next.y,first.z-next.z)>.1);
+});
