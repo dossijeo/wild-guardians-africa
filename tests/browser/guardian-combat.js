@@ -306,7 +306,8 @@ try{
    rec.ondataavailable=e=>chunks.push(e.data);const done=new Promise(resolve=>rec.onstop=resolve);
    $('recordStatus').textContent='Grabando ciclo '+$('species').value;rec.start();
    await measurePhysics(count,headOn,wallTrial);rec.stop();await done;
-   const response=await fetch('http://127.0.0.1:5198/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});
+   const port=Number(new URLSearchParams(location.search).get('recordPort')??5198);if(!Number.isInteger(port)||port<1024||port>65535)throw Error('Invalid local recording port');
+   const response=await fetch('http://127.0.0.1:'+port+'/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});
    if(!response.ok)throw Error('No se pudo guardar el ciclo');
    $('recordStatus').textContent='Ciclo guardado: '+$('species').value;
   }catch(e){fail(e);$('recordStatus').textContent='Grabación del ciclo fallida';}
