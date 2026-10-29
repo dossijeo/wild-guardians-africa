@@ -98,3 +98,10 @@ Next acceptance work should prioritize the current graphical queued-scene interr
 Other user follow-ups remain distinct and are not silently declared complete by a phase-2 check: continuous voiced tutorial capture, broad AO/lighting review, and the savanna HD texture task. For the latter, the exact current runtime tree GLBs have now been exported and linked to the user; no unapproved tree geometry or texture replacement was installed.
 
 Current integration receipt: [integration-checks-de169.json](phase2/integration-checks-de169.json). All **355 tests in 61 selected files** pass, zero failures/cancellations/skips, 80.31 seconds. The retired detached-echo test is explicitly recorded, not silently skipped; singleton behavior replaces that removed subsystem. This is not the whole repository suite or a graphical/performance pass. The last production build at the preceding target-removal fix passed; this review changes documentation only.
+
+
+### Queued presentation interruption — 2026-10-29
+
+Executed the browser fixture with native WorldScene: four immediate QA Attack commands (cooldown bypass), one visible Guardian and three pending summons at age 0.12 s. Both final game result and a one-second presentation-clock rollback clear the pending queue and hide body, aura, beam, impact, core and vortex. Both receipts report zero captured errors. Evidence: `phase2/pose-layer-fix/queued-lifecycle-result.json`, `queued-lifecycle-rollback.json` and associated PNGs.
+
+This closes those two presentation interruption cases only. It does not prove renderer disposal, production command cadence or scene replacement. The earlier shallow state-replacement experiment was invalid: native spatial movement requires its owning game state. That operation was removed from the fixture, not treated as a successful scene-replacement test.
