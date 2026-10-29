@@ -1,0 +1,209 @@
+{
+  "scope": "Prescribed loss, actual ordinary commands; comparisons include policy-induced subsequent raid and economic trajectories.",
+  "comparisons": [
+    {
+      "seed": 123,
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "fixedFile": "recovery-123.json.gz",
+      "adaptiveFile": "recovery-adaptive-123.json.gz",
+      "fixed": {
+        "nights": 51,
+        "result": "defeat",
+        "loss": {
+          "day": 13,
+          "time": 2.0000000000000004,
+          "type": "BlessingRemoved",
+          "targetId": "structure-2415"
+        },
+        "subsequentBlessings": [
+          {
+            "day": 19,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2409"
+          },
+          {
+            "day": 25,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2434"
+          },
+          {
+            "day": 31,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-32260"
+          },
+          {
+            "day": 37,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2407"
+          },
+          {
+            "day": 45,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2426"
+          }
+        ],
+        "terminal": {
+          "day": 51,
+          "money": 26,
+          "living": 0,
+          "sources": 5,
+          "walls": 83,
+          "centerHp": [
+            {
+              "id": "structure-2",
+              "hp": 338,
+              "status": "intact"
+            }
+          ]
+        }
+      },
+      "adaptive": {
+        "nights": 100,
+        "result": "victory",
+        "loss": {
+          "day": 13,
+          "time": 2.0000000000000004,
+          "type": "BlessingRemoved",
+          "targetId": "structure-2415"
+        },
+        "subsequentBlessings": [
+          {
+            "day": 19,
+            "time": 0.9999999999999999,
+            "kind": "plant",
+            "targetId": "plant-17398"
+          },
+          {
+            "day": 25,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-12906"
+          },
+          {
+            "day": 31,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2412"
+          },
+          {
+            "day": 37,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-37853"
+          },
+          {
+            "day": 43,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2412"
+          },
+          {
+            "day": 49,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2412"
+          },
+          {
+            "day": 55,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-48067"
+          },
+          {
+            "day": 61,
+            "time": 0.9999999999999999,
+            "kind": "plant",
+            "targetId": "plant-71812"
+          },
+          {
+            "day": 67,
+            "time": 0.9999999999999999,
+            "kind": "plant",
+            "targetId": "plant-77621"
+          },
+          {
+            "day": 73,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2427"
+          },
+          {
+            "day": 79,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-56073"
+          },
+          {
+            "day": 85,
+            "time": 0.9999999999999999,
+            "kind": "wall",
+            "targetId": "structure-2410"
+          },
+          {
+            "day": 92,
+            "time": 0.9999999999999999,
+            "kind": "plant",
+            "targetId": "plant-99423"
+          },
+          {
+            "day": 98,
+            "time": 0.9999999999999999,
+            "kind": "plant",
+            "targetId": "plant-101654"
+          }
+        ],
+        "terminal": {
+          "day": 100,
+          "money": 298,
+          "living": 10,
+          "sources": 2,
+          "walls": 85,
+          "centerHp": [
+            {
+              "id": "structure-2",
+              "hp": 600,
+              "status": "intact"
+            }
+          ]
+        }
+      },
+      "lossMatches": true,
+      "preLossNights": 12,
+      "identicalBeforeLoss": true,
+      "sharedNights": 51,
+      "fixedMetrics": {
+        "income": 57225,
+        "wages": 22888,
+        "seeds": 31158,
+        "walls": 1320,
+        "repairs": 2542,
+        "net": -674,
+        "delivered": 3905
+      },
+      "adaptiveMetrics": {
+        "income": 81283,
+        "wages": 31338,
+        "seeds": 43565,
+        "walls": 1850,
+        "repairs": 4327,
+        "net": 212,
+        "delivered": 4974
+      },
+      "differences": {
+        "income": 24058,
+        "wages": 8450,
+        "seeds": 12407,
+        "walls": 530,
+        "repairs": 1785,
+        "net": 886,
+        "delivered": 1069
+      }
+    }
+  ]
+}

@@ -27,13 +27,16 @@ Las 12 jornadas anteriores a la retirada presentan iguales saldos, contabilidad 
 | Control | 49 | Derrota | 29 | 0 | 0 |
 | Competente | 53 | Derrota | 33 | 0 | 3 |
 | Recuperación fija | 51 | Derrota | 26 | 0 | 5 |
+| Recuperación adaptativa | 100 | Victoria | 298 | 10 | 2 |
 | Agricultura | 56 | Derrota durante la jornada 57 | 158 | 0 | 0 |
 | Defensa | 54 | Derrota durante la jornada 55 | 125 | 1 | 3 |
 
-Durante las primeras 49 noches, la competente ingresó 48 757 monedas frente a 54 560 del control, pero su variación neta fue −447 frente a −671; perdió 784 cultivos frente a 627. Estas diferencias incluyen distintos gastos, decisiones y trayectorias de incursiones. La entrega pasiva en toda la campaña competente fue de 615 monedas. La recuperación adaptativa de esta misma semilla aún no ha terminado, por lo que no se concluye su comparación con la fija. [Métricas y gastos completos](campaigns-expanded-20261029/summary-123-progress.json).
+Durante las primeras 49 noches, la competente ingresó 48 757 monedas frente a 54 560 del control, pero su variación neta fue −447 frente a −671; perdió 784 cultivos frente a 627. Estas diferencias incluyen distintos gastos, decisiones y trayectorias de incursiones. La entrega pasiva en toda la campaña competente fue de 615 monedas. [Métricas y gastos completos](campaigns-expanded-20261029/summary-123-progress.json).
+
+La pareja de recuperación comparte las 12 jornadas anteriores a la pérdida y retira la misma muralla en el mismo instante. Durante las 51 noches comunes, la adaptativa ingresó 81 283 monedas frente a 57 225 de la fija y su neto fue +212 frente a −674. La adaptativa alcanzó 100 noches con una granja frágil y 1180 monedas de bonus agrícola cobradas. El resultado contrasta con la semilla 712, donde ambas políticas perdieron antes de la noche 50. Los ingresos incluyen reinversión y trayectorias de incursiones divergentes; no son la contribución causal aislada de cada bendición. [Comparación emparejada](campaigns-expanded-20261029/comparison-123.json).
 
 El control de la semilla 2026 ha terminado en derrota durante la jornada 58, tras superar 57 noches; su partida terminó sin cultivos y con 210 monedas. La campaña competente emparejada todavía sigue en ejecución, por lo que no se anticipa una comparación.
 
 ## En ejecución
 
-Semilla 123: recuperación adaptativa. Semilla 2026: competente. Los archivos parciales, si existen, describen progreso de procesos vivos, no resultados finales. No se cambian parámetros de juego por la evidencia de una sola partida.
+Semilla 2026: competente. Los archivos parciales, si existen, describen progreso de procesos vivos, no resultados finales. No se cambian parámetros de juego por la evidencia de una sola partida.
