@@ -105,3 +105,13 @@ test('persistent guide placement follows orbit/zoom and obstacle changes without
  nav.version++;guide.refreshGuidePlacement(102.01);assert.equal(plans,6,'new obstacle bypasses camera debounce');
  guide.guideOrigin=null;guide.refreshGuidePlacement(102.02);assert.equal(plans,7,'new target plans immediately');
 });
+
+test('scene disposal before the model finishes loading cannot resurrect a Guardian or allocate effects',async()=>{
+ let finishLoad,allocations=0;
+ const world={state:{events:[],elapsed:0},scene:new THREE.Scene(),assets:{model:()=>new Promise(resolve=>{finishLoad=resolve;})},vfxLibrary:{create:()=>{allocations++;throw Error('Effect allocated after disposal');}}};
+ const summons=new GuardianSummons(world);summons.dispose();
+ finishLoad({scene:new THREE.Group(),animations:[]});await summons.ready;
+ assert.equal(allocations,0);assert.equal(world.scene.children.length,0);assert.equal(summons.slots.length,0);
+ assert.equal(summons.beamGeometry,undefined);assert.equal(summons.attackEchoes,undefined);
+ summons.dispose();assert.equal(world.scene.children.length,0);
+});
