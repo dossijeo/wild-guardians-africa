@@ -28,3 +28,19 @@ test('lion walking shifts upper torso forward without moving feet, accumulating,
  }
 });
 
+import {balanceLionWalk,LION_WALK_LEAN} from '../src/rendering/lion-walk-posture.js';
+test('local walking correction matches world-space reference without full-rig matrix updates',async()=>{
+ const asset=await actorAsset(new URL('../public'+ANIMAL_ACTIONS.animals.lion.url,import.meta.url)),model=prepareAnimalModel(asset.scene,'lion'),root=new Group();root.add(model);
+ const d={model,mixer:new AnimationMixer(model),clips:prepareAnimalClips(asset.animations)},spine=model.getObjectByName('Spine1'),axis=new Vector3(),mq=new Quaternion(),pq=new Quaternion(),expected=new Quaternion(),rotation=new Quaternion();
+ for(let i=0;i<13;i++){
+  model.userData.beastSpecies='reference';root.rotation.set(.1,i*.4,-.07);applyAnimalPose(d,{species:'lion',status:'walking',motionPhase:i*.1},0);root.updateMatrixWorld(true);
+  model.getWorldQuaternion(mq);spine.parent.getWorldQuaternion(pq).invert();axis.set(1,0,0).applyQuaternion(mq).applyQuaternion(pq).normalize();expected.copy(spine.quaternion).premultiply(rotation.setFromAxisAngle(axis,LION_WALK_LEAN));
+  let updates=0;const update=model.updateMatrixWorld,worldUpdate=model.updateWorldMatrix;
+  model.updateMatrixWorld=function(...args){updates++;return update.apply(this,args);};model.updateWorldMatrix=function(...args){updates++;return worldUpdate.apply(this,args);};
+  model.userData.beastSpecies='lion';balanceLionWalk(model);
+  model.updateMatrixWorld=update;model.updateWorldMatrix=worldUpdate;
+  assert.ok(spine.quaternion.clone().normalize().angleTo(expected.clone().normalize())<1e-7,'Different corrected orientation '+spine.quaternion.clone().normalize().angleTo(expected.clone().normalize()));assert.equal(updates,0,'Correction traversed the full rig');
+ }
+});
+
+
