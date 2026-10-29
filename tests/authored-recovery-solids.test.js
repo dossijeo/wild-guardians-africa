@@ -6,9 +6,11 @@ import {actorGeometry} from './helpers/actor-geometry.js';
 import {BeastRagdollBinding} from '../src/rendering/beast-ragdoll-binding.js';
 import {AuthoredBeastRecovery} from '../src/rendering/authored-beast-recovery.js';
 import {BakedSolidContacts} from '../src/rendering/baked-solid-contacts.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {prepareAnimalModel} from '../src/rendering/animal-actions.js';
 import {isTailContactVertex} from '../src/rendering/beast-ground-contact.js';
-for(const species of ['hyena','lion'])test(`${species} get-up clears a wall and an open corner without stretching`,async()=>{
- const model=await actorGeometry(new URL(`../content/source/actors/${species}/expressive-candidate.glb`,import.meta.url)),binding=new BeastRagdollBinding(model),clip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL(`../content/source/animations/stand-up/${species}-candidate.json`,import.meta.url))).clip);
+for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${species} get-up clears a wall and an open corner without stretching`,async()=>{
+ const model=prepareAnimalModel(await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals[species].url,import.meta.url)),species),binding=new BeastRagdollBinding(model),clip=AnimationClip.parse(JSON.parse(fs.readFileSync(new URL(`../content/source/animations/stand-up/${species}-candidate.json`,import.meta.url))).clip);
  binding.capture();const snapshot=new Float32Array(98);binding.physicalSnapshot(snapshot);const meshes=[],lengths=[];model.traverse(o=>{if(o.isSkinnedMesh)meshes.push(o);if(o.isBone)lengths.push([o,o.position.length()]);});const p=new Vector3(),initial=new Box3();for(const mesh of meshes)for(let i=0;i<mesh.geometry.attributes.position.count;i++){if(isTailContactVertex(mesh,i))continue;mesh.getVertexPosition(i,p).applyMatrix4(mesh.matrixWorld);initial.expandByPoint(p);}
  const wall=new Box3(new Vector3(-10,0,initial.max.z+.05),new Vector3(10,3,initial.max.z+.35)),side=new Box3(new Vector3(initial.max.x+.05,0,-10),new Vector3(initial.max.x+.35,3,10));
  for(const boxes of [[wall],[wall,side]]){
