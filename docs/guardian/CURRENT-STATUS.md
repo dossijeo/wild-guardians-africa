@@ -33,3 +33,8 @@ Integration at 99533cb4a: origin/main remains fully incorporated (zero behind). 
 World Guardian presence/launch audio now uses two replaceable voice slots; day/night recordings admit all requested cues without increasing mixer budgets. A captured repeated-hit hyena roll failure was reproduced deterministically and corrected with Rapier internal terrain-edge handling. Heavy bodies receive only a bounded progress-dependent recovery grace. Tests cover all five shipped rigs and retain a failing negative control for the old unstable terrain. See phase2/roll-timeout and day-spells-audio-review.md.
 
 Actual corrected night run reports no roll failures; buffalo daytime automatic/lateral recordings also complete authored recovery and release physics. The latter inspected support samples and contact sheets are in phase2/roll-timeout/buffalo. These are scoped graphical checks, not acceptance of every terrain/contact combination or a performance benchmark. Full phase and continuous voiced tutorial recording remain incomplete.
+
+
+## Guardian presentation buffer optimization (362e7019f)
+
+Component isolation attributes the controlled static-scene regression to discharge rendering, not the body, aura or vortex. Marking the continuously rewritten beam matrices DynamicDrawUsage improves Guardian p95 from approximately 66.5 ms to 49.9 ms. Static reversal reproduces 66.5 ms; restored dynamic reproduces 49.9 ms. Evidence: phase2/performance-components. No visual content or baseline renderer changed. Moving-incursion comparison remains required; this supersedes the old static-fixture performance result only within its measured scope.

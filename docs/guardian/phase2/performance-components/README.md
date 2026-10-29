@@ -14,3 +14,10 @@ The main discharge uses an InstancedMesh whose matrices are rewritten every acti
 `dynamic-beam.json` repeats the original eight-block full-presentation comparison. All four Guardian blocks now have p95 49.895–49.990 ms (previously 66.535–66.710), average 28.20–28.71 FPS (previously 23.02–23.95). Same-run references are 28.83–29.45 FPS, p95 49.870–49.915. This supports retaining the buffer declaration, but does not identify the precise driver synchronization mechanism. Three retained-attack tests and production build pass with existing warnings.
 
 This is one before/after sequence on Intel UHD in a controlled presentation-only workload. Reverse-order/static control and moving-incursion comparisons remain necessary before broad performance acceptance. Baseline Wild Engine work remains outside this change. The new result supersedes the earlier conclusion that current presentation necessarily retains the 67 ms p95 in this fixture; the historical measurements above remain valid for their revisions.
+
+
+## Reverse control
+
+At 362e7019f, temporarily changed only the main beam instanceMatrix usage back to StaticDrawUsage, reloaded the same fixture and repeated all eight blocks. `reverse-static.json`: all four Guardian p95 values return to 66.49–66.555 ms, average 23.36–24.11 FPS; reference p95 remains 49.855–49.920 ms. Restored DynamicDrawUsage, verified zero source diff, reloaded and repeated. `restored-dynamic.json`: all four Guardian p95 values return to 49.900–49.910 ms, average 28.58–28.83 FPS. The source remains dynamic; the static control was never committed.
+
+This A/B reversal strengthens attribution to the instance buffer usage declaration in this hardware/workload; it does not prove a particular driver mechanism. Original and restored geometry/effects/draw counts are identical. The presentation-only regression is addressed in the repeated test, but moving navigation/physics workloads and other GPUs still need separate validation. The baseline renderer is unchanged.
