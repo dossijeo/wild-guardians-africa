@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><title>Guardian audio lifecycle</title>
+<style>body{font:16px system-ui;background:#172126;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Guardian audio lifecycle</h1><p>Uses the installed SFX bank and real Web Audio. Checks cancellation and resource ownership, not perceptual mixing.</p><button id="run">Run lifecycle checks</button><pre id="status">Ready</pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {playGuardianWorldCue} from '../../src/audio/guardian-presence.js';
+const button=document.querySelector('#run'),status=document.querySelector('#status');
+button.onclick=async()=>{
+ button.disabled=true;const audio=new AudioSystem({sfx:.3,music:0}),report={checks:[],errors:[]};
+ const check=(name,passed)=>{report.checks.push({name,passed});if(!passed)throw Error(name);};
+ try{
+  await audio.unlock();report.sampleRate=audio.context.sampleRate;
+  const cold=playGuardianWorldCue(audio,'spirit_appear');audio.stop();check('cancel cold request',await cold===null);
+  for(let i=0;i<3;i++){
+   const arrival=await playGuardianWorldCue(audio,'spirit_appear');check(`arrival ${i}`,!!arrival);
+   const launch=await playGuardianWorldCue(audio,'spirit_power_activate');check(`launch ${i}`,!!launch);
+   const outro=await playGuardianWorldCue(audio,'spirit_disappear');check(`dissolve ${i}`,!!outro);
+   check(`two live voices ${i}`,audio.voices.size===2&&audio.active.length===2);
+   check(`old arrival released ${i}`,!audio.voices.has(arrival));
+   audio.stop();check(`scene stop releases voices ${i}`,audio.voices.size===0&&audio.active.length===0);
+  }
+  report.contextBeforeDispose=audio.context.state;
+ }catch(e){report.errors.push(e.message);}finally{
+  audio.dispose();await audio.context?.close().catch(()=>{});report.contextAfterDispose=audio.context?.state;
+  report.passed=report.errors.length===0&&report.contextAfterDispose==='closed';status.textContent=JSON.stringify(report,null,2);button.disabled=false;
+ }
+};
+</script>
