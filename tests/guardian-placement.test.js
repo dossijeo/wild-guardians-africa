@@ -117,3 +117,9 @@ test('seedling ritual clears nearby wall tops even when the wall is behind the s
  args.state.structures[0].status='destroyed';
  assert.ok(Math.abs(guardianPlacement({...args,hoverAbove:true,cropHeight:()=>.15}).y-1.85)<1e-9);
 });
+
+test('occluded but walkable candidates still search elevated visible alternatives',()=>{
+ const args=setup();args.camera.position.set(18,16,22);args.camera.lookAt(0,3,0);args.camera.updateMatrixWorld(true);
+ const p=guardianPlacement({...args,occupied:()=>false,occluded:(x,y,z)=>y<4});
+ assert.ok(p.y-.9>=4,`Mantle is still hidden at ${p.y}`);
+});

@@ -53,7 +53,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  for(const distance of [radius+2.1,radius+3.4])for(const offset of [-.9,.9,-1.5,1.5,-.4,.4,2,-2])evaluate(distance,offset);
  // Edge targets may leave no framed candidate on the nearby rings. Try a
  // bounded wider ring toward the camera before accepting a cropped body.
- if(!candidates.some(p=>p.clear&&framePenalty(p.x,p.y,p.z)===0)){
+ if(!candidates.some(p=>p.clear&&framePenalty(p.x,p.y,p.z)===0&&blockedAt(p.x,p.y,p.z)===0)){
   for(const distance of [radius+5,radius+6.6])for(const offset of [0,-.4,.4,-.9,.9])evaluate(distance,offset);
  }
  // Occlusion only adds a non-negative penalty. Once a candidate's lower
@@ -66,7 +66,9 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
   if(!best||p.score<best.score||(p.score===best.score&&p.order<best.order))best=p;
  }
  if(!best)return {x:target.x+2,y:floor+5,z:target.z};
- if(!best.clear&&occupied){
+ // A free footprint may still be hidden behind a tall building.
+ // Search the same bounded elevated alternatives in that case too.
+ if(occupied&&(!best.clear||blockedAt(best.x,best.y,best.z)>0)){
   // Preserve the exhaustive ordering for aerial fallback ties.
   candidates.sort((a,b)=>a.score-b.score||a.order-b.order);
   // Evaluate the actual elevated body, not a ground candidate followed by a
@@ -85,7 +87,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
     aerial.push({x:p.x,y,z:p.z,score});
    }
   }
-  aerial.sort((a,b)=>a.score-b.score);if(aerial.length){const p=aerial[0];return {x:p.x,y:p.y,z:p.z};}
+  aerial.sort((a,b)=>a.score-b.score);if(aerial.length&&(!best.clear||aerial[0].score<best.score)){const p=aerial[0];return {x:p.x,y:p.y,z:p.z};}
  }
  // Last resort when the supplied solid volumes leave no usable aerial space.
  return {x:best.x,y:best.y+(best.clear?0:5),z:best.z};

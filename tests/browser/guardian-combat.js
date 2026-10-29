@@ -180,12 +180,13 @@ try{
   const ctx=sheet.getContext('2d'),rows=[];ctx.fillStyle='#111';ctx.fillRect(0,0,1200,680);
   for(let i=0;i<8;i++){
    state.time=i<4?150:400;angle=.7+(i%4)*Math.PI/2;zoom=i%2?22:10;site={x:plant.x,z:plant.z};world.cinematic=true;world.camera.zoom=1;world.camera.updateProjectionMatrix();const ground=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,ground+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,ground+zoom*.65,site.z+Math.cos(angle)*zoom);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.guardianSummons.clear();
+   const planned=world.guardianSummons.plan(plant.id,plant,{hoverAbove:true});
    world.guardianSummons.start({...event,kind:'awakening',x:plant.x,z:plant.z,presentation:{...event.presentation,elapsed:state.elapsed,origin:null}});
    advanceClock(.9);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const slot=world.guardianSummons.slots[0],visible=world.guardianSummons.slots.filter(s=>s.group.visible).length,origin={...slot.origin};
    ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340,300,169);ctx.fillStyle='white';ctx.font='14px sans-serif';ctx.fillText((i<4?'Day':'Night')+' angle '+(i%4)+' zoom '+zoom,(i%4)*300+6,Math.floor(i/4)*340+190);
    advanceClock(2.1);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const finalVisible=world.guardianSummons.slots.filter(s=>s.group.visible).length;
    ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340+201,300,130);
-   rows.push({day:i<4,angle,zoom,origin,visible,finalVisible});
+   rows.push({day:i<4,angle,zoom,planned,origin,visible,finalVisible});
   }
   const result={scope:'Presentation-only frozen clock, one committed plant beside a paid wall replayed across eight cameras; no AI, audio or frame-performance claim',rows,passed:rows.every(r=>r.visible===1&&r.finalVisible===0),errors:[...errors]};
   let output=$('ritualViewsReport');if(!output){output=document.createElement('pre');output.id='ritualViewsReport';document.querySelector('header').append(output);}output.textContent=JSON.stringify(result,null,2);sheet.title='Arrival at 0.9s and disappearance at 3s; click to close';sheet.onclick=()=>sheet.remove();document.body.append(sheet);
