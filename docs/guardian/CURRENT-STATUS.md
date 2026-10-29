@@ -4,12 +4,12 @@ This is an index of current evidence, not acceptance of the entire phase. Earlie
 
 | Area | Current evidence | Remaining acceptance |
 | --- | --- | --- |
-| Guardian dialogue, face and wind | Installed v14; face-authoring/guardian; wind-wide; 54 offline voice sequences | Full requested continuous tutorial video with audio; perceptual review of all voice sequences |
+| Guardian dialogue, face and wind | Eyelid revision plus broader mantle weights installed in 6954006a9; face-authoring/guardian; wind-wide/mantle-review; 54 offline voice sequences | Full requested continuous tutorial video with audio; perceptual review of all voice sequences; broader wind/artistic acceptance |
 | Tutorial guidance | tutorial-real: actual game intro, HUD/world pointing, alternative first-center placement and next lesson; guide-orbit: camera/zoom replan and Grow handoff | tutorial-portrait: 390x844 HUD pointing/rest checked; full real-game portrait/world paths, continuous transitions and English walkthrough remain |
 | Spell bodies and VFX | Single-instance controls and targeted tests; PHASE2, retained-attacks, multiply-branches, shield-night | vfx-scalar-review: new day/night four-spell videos, camera/zoom/consecutive casts; full occlusion/camera matrix and subjective audio review remain |
 | Beast impact and recovery | Five species installed; shared-ragdoll-world, species-cycles, wall-cycle, stand-up-source | repeated-getup: hyena/lion/rhino interruption runs recorded; vfx-scalar-review adds rhino wall recovery and four-hyena/rhino 3-physical/1-baked cycles; peer separation and retained offset fix tested on hyena; full terrain/obstacle/direction/concurrency matrix and changing obstacles remain |
 | Worker faces | Current strict catalog audit: 9/9 animal+worker profiles have blinkL/blinkR/mouthOpen | Remaining local facial seams in worker models; broader in-game visual acceptance |
-| Older male candidate | v7 twelve-clip exact parity, partial facial poses in Three.js, WorldScene fall/recovery/flee video, ten facial bindings | Local cheek repair registered after moving portrait and daylight WorldScene review; recovery rebound and all four boundary tests pass |
+| Older male installed repair | Cheek repair registered after moving portrait and daylight WorldScene review; recovery rebound and all four boundary tests pass; ten facial bindings | Broader facial/lighting acceptance; local normal detail is attenuated in the repaired cheek/nose mask |
 | Editable sources | All ten actor Blend files reopened with readable packed images | Persistence check does not certify artistic quality |
 | Performance | gpu-current: five interleaved frozen-frame component comparisons | moving-current: sequential moving-raid measurements and scalar packing comparison; incremental cost and frametime tails still unaccepted; unrelated baseline performance assigned to another agent |
 

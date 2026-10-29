@@ -4,7 +4,7 @@
 <script type="module">
 import {Guardian3D} from '../../src/ui/guardian-3d.js';import {VISEMES} from '../../src/ui/guardian-face.js';import {assetUrl} from '../../src/rendering/asset-url.js';
 import {checkGuardian} from './guardian-3d-checks.js';
-const $=id=>document.getElementById(id),actor=new Guardian3D($('avatar'),new URLSearchParams(location.search).has('mantleTrial')?{modelUrl:'/test-results/guardian-mantle-weights.glb'}:new URLSearchParams(location.search).has('lidsTrial')?{modelUrl:'/content/source/guardian/eyelids-candidate.glb'}:{}),audio=$('audio');window.guardianLab={actor,audio};
+const $=id=>document.getElementById(id),actor=new Guardian3D($('avatar'),new URLSearchParams(location.search).has('mantleBaseline')?{modelUrl:'/test-results/guardian-before-mantle.glb'}:new URLSearchParams(location.search).has('mantleTrial')?{modelUrl:'/test-results/guardian-mantle-weights.glb'}:new URLSearchParams(location.search).has('lidsTrial')?{modelUrl:'/content/source/guardian/eyelids-candidate.glb'}:{}),audio=$('audio');window.guardianLab={actor,audio};
 const voices=await fetch(assetUrl('content/guardian/voices.json')).then(r=>r.json());for(const v of voices)$('voice').add(new Option(v.id+' · '+v.text.slice(0,42),v.id));for(const v of VISEMES)$('viseme').add(new Option(v,v));
 await actor.ready;const updateVortex=actor.vortex.update.bind(actor.vortex);actor.vortex.update=(...args)=>{updateVortex(...args);if($('hideVortex').checked)actor.vortex.visible=false;};for(const name of actor.actions.keys())$('clip').add(new Option(name,name));
 async function selectVoice(){audio.pause();const v=voices.find(v=>$('voice').value===v.id);audio.src=assetUrl(v.audio);await actor.setRecord({id:v.id,path:v.audio});}
