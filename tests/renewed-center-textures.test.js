@@ -20,6 +20,12 @@ test('repacking an already-WebP center preserves texture references and normal c
    assert.equal(after.images[index].mimeType,'image/webp');
   }
   const manifest=JSON.parse(readFileSync(output+'.compression.json'));
-  assert.ok(manifest.records[0].images.some(image=>image.kind==='normal'||image.lossless===true),'normal images keep lossless classification');
+  const normalTexture=before.textures[before.materials[0].normalTexture.index];
+  const normalImage=normalTexture.source??normalTexture.extensions.EXT_texture_webp.source;
+  const encodedNormal=manifest.records[0].images.find(image=>image.index===normalImage);
+  assert.equal(encodedNormal.role,'normal');assert.equal(encodedNormal.lossless,true);
+  const colorTexture=before.textures[before.materials[0].pbrMetallicRoughness.baseColorTexture.index];
+  const colorImage=colorTexture.source??colorTexture.extensions.EXT_texture_webp.source;
+  assert.equal(manifest.records[0].images.find(image=>image.index===colorImage).role,'color');
  }finally{rmSync(dir,{recursive:true,force:true});}
 });

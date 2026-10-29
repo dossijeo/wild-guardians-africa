@@ -17,3 +17,11 @@ Scale was revised to fit all three former bounding dimensions uniformly, rather 
 New AO is installed in the existing culture atlas paths as achromatic 8-bit PNG, with geometry/output hashes. Its bake radius scales with uniform geometry scale, preserving the newly baked visibility. The legacy destruction extraction manifest remains immutable; current AO verification and baking now use the runtime catalogue.
 
 Suajili was loaded and inspected in the real WorldScene with spatial-WASM terrain and cinematicLight/AO/Contacts enabled, with no reported errors (suajili-native-ao.png). Full five-culture native-world day/night, repair and saved-layout compatibility visual validation remains pending. Earlier standalone collapse images used the prior height-only scale. AO remains behind the existing cinematicAO option; no new default-lighting change is implied.
+
+## Additional native visual inspection
+
+Etiope and Mapungubwe load without reported errors on spatial-WASM savanna using the installed runtime catalogue and cinematic AO/contact settings. Daytime screenshots show readable new textures and grounded silhouettes; Etiope also has a night screenshot. These are fixed-angle observations, not all-camera acceptance.
+
+Saheliana reveals black roof gaps while intact. The independent center-material-check.html viewer reproduces them with the installed GLB's MeshStandardMaterial, without native destruction or added AO (saheliana-source-roof-gap.png). This isolates the defect to supplied geometry/materials, not the destruction mask. Blender inspection finds most upward-facing roof area at Z 4.3–4.4 in the normalized candidate; a localized source repair and new AO bake are pending. Do not mark the Sahelian visual integration accepted. Musgum native inspection is still pending.
+
+The WebP regression now checks the exact normal texture image role/lossless flag and exact base-color image classification, rather than accepting any lossless image. It passes. PR description updated to reflect actual replacement of centers and retain open acceptance gaps.
