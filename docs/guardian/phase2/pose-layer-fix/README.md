@@ -206,3 +206,13 @@ The inspected sheet shows fall, roll, get-up and departure without losing the ta
 `grow-camera-near.png`, `grow-camera-far.png` and `grow-camera-change.json` inspect native daytime Grow beside the village at the same frozen simulation age. After an additional camera rotation and zoom change, the summon origin remains exactly (93.97682309293234, 9.325829696655273, -9.367604879266322), with one visible Guardian and no errors. The inspected images show hand-to-crop beams staying anchored in the world. Resuming Game.tick completes dissolution, leaving zero visible Guardians and no pending presentations.
 
 The close QA view partially clips the Guardian at the image edge; the farther view shows spirit and crop. This does not approve all-angle framing or continuous player-input responsiveness: the camera changes were made using QA controls at a fixed animation age, followed by resumed simulation. No production camera or positioning behavior was modified.
+
+## Current body/effects component comparison
+
+`components-current-panel.json` and `components-current-hidden.json` measure the same 20-animal native scene at 1600x900 on Intel UHD. Each run contains the balanced order reference/body/effects/all/all/effects/body/reference, with 1.2 s warm-up and 4 s sampling per block. Commands repeat every 600 ms with QA cooldown reset. No video capture, Blender render, build or test suite ran concurrently. Both runs report no errors or hidden browser frames.
+
+The first run had the diagnostic panel visible and frame p95 ranged about 99.8–133.2 ms. The second had it hidden; reference p95 was 66.485/49.995 ms and full Guardian p95 66.590/66.575 ms. The runs differ in HUD visibility and order in the session; this does not isolate a causal panel cost, establish a stable global FPS delta or identify the cause of pre-existing stalls.
+
+In the panel-hidden run, draw-call p95 is stable at reference 141, body 145, effects 148, all 152: +4 body and +7 effects. Full-Guardian animation CPU p95 is 0.190/0.215 ms; VFX CPU p95 0.355/0.395 ms. These measured CPU scopes and draw counts do not establish GPU cost or a total frame budget. Body-only and effects-only retain CPU updates while hiding the opposite rendered layer.
+
+The fixture uses the presentation-only clock, with 20 rendered animals but no live navigation or articulated physics. This is component isolation, not raid gameplay or ragdoll performance acceptance. No engine-performance change was made on the basis of these measurements; baseline engine investigation remains outside this task.
