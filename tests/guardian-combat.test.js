@@ -85,8 +85,8 @@ test('Guardian interruption cancels the native active strike and releases its ap
  const {applyGuardianAttack}=await import('../src/simulation/guardian-combat.js');
  for(const status of ['attacking','walking']){
   const {s,a}=ready();a.status=status;a.approach={x:17,z:8,id:'approach'};a.destinationId='approach';
-  let active=true,cancelled=0;
-  const nativeNav={...nav,intentTaskPlanner:{cancelAttackIntent(id){assert.equal(id,a.id);active=false;cancelled++;}}};
+  let active=true,cancelled=0,committed=status==='attacking';
+  const nativeNav={...nav,intentTaskPlanner:{finishAttackIntent(id){assert.equal(id,a.id);assert.equal(committed,true);committed=false;active=false;return 0;},cancelAttackIntent(id){assert.equal(id,a.id);cancelled++;if(committed)return false;active=false;return true;}}};
   applyGuardianAttack(s,a,{nav:nativeNav});
   assert.equal(active,false,'interrupted native strike must not survive into recovery');
   assert.equal(cancelled,1);assert.equal(a.targetId,null);assert.equal(a.reservation,null);

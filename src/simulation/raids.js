@@ -761,6 +761,9 @@ export function warmRaidApproaches(state,specs,entry,nav){
 // Interrupt both authoritative intent ownership and the JS approach reservation.
 // Recovery must select a fresh route from the displaced physical position.
 export function interruptAnimalAttack(s,a,nav) {
+ // Native cancellation deliberately refuses a committed strike. Finish its
+ // ownership first; damage is emitted by updateRaid, not by this operation.
+ if(a.status==='attacking')nav?.intentTaskPlanner?.finishAttackIntent(a.id);
  release(s,a,nav);a.destinationId=null;a.hitApplied=true;a.attackRemaining=0;
  if(a.status==='attacking')a.status='walking';
 }

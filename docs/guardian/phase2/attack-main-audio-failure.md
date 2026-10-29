@@ -11,3 +11,9 @@ Native source nav_intent_register_attack returns -4 when the prior actor intent 
 Guardian damage changed an attacking actor to walking without cancelling its native ActionActive intention. Added interruptAnimalAttack alongside the existing raid release helper; it cancels native ownership, releases the JS reservation/target/approach and clears the old destination before recovery. This applies to travelling targets too, since their old route starts before displacement. It preserves immediate damage/stun and existing retreat selection. No native invariant is relaxed.
 
 Regression test fails on the prior implementation (native active strike survives) and passes after the fix. Combined guardian-combat, raid-native-intent-lifecycle and beast-combat-physics tests: 42 passed, no skips, 16.44 s. The focused cancellation test uses a planner double; it is not a substitute for repeating the failed main-game/WASM recording, which remains pending.
+
+## Main-game retest of 5ea18eef8: still failed
+
+A fresh normal-HUD cast recorded 6,972,744 bytes, but stopped at 23:56 with `Native crop intention rejected: -2`, stack planAttackCrop -> targetFor -> updateRaid. Source inspection shows attack_cancel deliberately returns 0 for ActionActive; the first test double incorrectly accepted that cancellation. The initial fix was therefore insufficient.
+
+Updated interruption to call finishAttackIntent for an attacking actor before releasing its reservation. This existing native operation removes ActionActive ownership without applying damage (damage belongs to updateRaid). Updated the test double to preserve the native committed-action cancellation refusal. Twenty combat/lifecycle tests pass. This revised sequence still needs a fresh native/browser acceptance run; neither failed recording is a passing result. Production build passed before this final sequence adjustment (10.85 s).
