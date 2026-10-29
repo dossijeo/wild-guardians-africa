@@ -321,17 +321,20 @@ try{
  recordDetailButton.onclick=async()=>{
   if(recording||measuring)return;
   const slot=world.guardianSummons.slots.find(s=>s.event&&s.group.visible);if(!slot){$('recordStatus').textContent='Prepara un hechizo pausado antes de grabar su detalle';return;}
-  guardianDetailButton.onclick();const kind=slot.event.kind,startAge=state.elapsed-slot.at,start=state.elapsed,wasSimulating=simulate;
+  guardianDetailButton.onclick();const kind=slot.event.kind,targetId=slot.event.targetId,includeRecovery=includeTarget.checked&&kind==='attack',startAge=state.elapsed-slot.at,start=state.elapsed,wasSimulating=simulate;
+  const recoveryRows=[],victim=()=>state.raid?.animals.find(a=>a.id===targetId);let enteredDown=false;
+  const sampleRecovery=()=>{const a=victim(),rig=a&&world.mixers.get(a.id);enteredDown ||= !!a?.magicDown;recoveryRows.push({elapsed:state.elapsed-start,present:!!a,status:a?.status,down:!!a?.magicDown,recoveryExit:!!rig?.recoveryExit,x:a?.x,z:a?.z});};
   recording=true;const stream=$('world').captureStream(30),chunks=[];let rec,destination;
   try{
    if(audio.context){destination=audio.context.createMediaStreamDestination();audio.sfxGain.connect(destination);for(const track of destination.stream.getAudioTracks())stream.addTrack(track);}
    rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8,opus',videoBitsPerSecond:5000000});rec.ondataavailable=e=>chunks.push(e.data);const done=new Promise(r=>rec.onstop=r);
    rec.start();$('recordStatus').textContent='Grabando detalle…';simulate=true;paused=false;
-   const deadline=performance.now()+30000;while(slot.event&&performance.now()<deadline)await sleep(50);
+   const deadline=performance.now()+30000;while(slot.event&&performance.now()<deadline){if(includeRecovery)sampleRecovery();await sleep(50);}
    if(slot.event)throw Error('El hechizo no terminó dentro del límite de grabación');
+   if(includeRecovery){const recoveryDeadline=performance.now()+90000;while(victim()&&(victim().magicDown||world.mixers.get(targetId)?.recoveryExit)&&performance.now()<recoveryDeadline){sampleRecovery();await sleep(50);}sampleRecovery();if(victim()?.magicDown||world.mixers.get(targetId)?.recoveryExit)throw Error('La recuperacion no termino dentro de 90 s reales');await sleep(750);sampleRecovery();}
    await sleep(250);paused=true;rec.stop();await done;
    const response=await fetch('http://127.0.0.1:5199/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});if(!response.ok)throw Error('No se pudo guardar el detalle');
-   report={kind:'guardian-close-recording',spell:kind,startAge,simulationSeconds:state.elapsed-start,clockMode:'Game.tick',visible:world.guardianSummons.slots.filter(s=>s.group.visible).length,pending:world.guardianSummons.pending.length,errors:[...errors],includesTarget:includeTarget.checked,scope:includeTarget.checked?'Guardian and initial target bounds plus two-meter motion margin; static QA camera, not a full recovery or performance test.':'Close inspection camera; target can leave frame. Not a full recovery or performance test.'};$('recordStatus').textContent='Guardado detalle '+kind;
+   report={kind:'guardian-close-recording',spell:kind,startAge,simulationSeconds:state.elapsed-start,clockMode:'Game.tick',visible:world.guardianSummons.slots.filter(s=>s.group.visible).length,pending:world.guardianSummons.pending.length,errors:[...errors],includesTarget:includeTarget.checked,recovery:includeRecovery?{targetId,enteredDown,completed:enteredDown&&!!victim()&&!victim().magicDown&&!world.mixers.get(targetId)?.recoveryExit,rows:recoveryRows}:null,scope:includeTarget.checked?'Guardian and initial target bounds plus two-meter motion margin; static QA camera through target recovery when present. Not a performance test.':'Close inspection camera; target can leave frame. Not a full recovery or performance test.'};$('recordStatus').textContent='Guardado detalle '+kind;
   }catch(e){$('recordStatus').textContent='Falló la grabación de detalle';fail(e);}
   finally{paused=true;simulate=wasSimulating;$('freeze').textContent='Reanudar';if(rec?.state==='recording')rec.stop();if(destination)audio.sfxGain.disconnect(destination);for(const track of stream.getTracks())track.stop();recording=false;}
  };
