@@ -166,3 +166,10 @@ All nine worker/beast profiles now have at least one day/night AO comparison, bu
 `youngMale-motion.mp4` records the native Game.tick worker hit, fall, recovery and resumed flight with globalAO enabled. Report: 9.098 simulated seconds, finished=true, final fall=0/recovery=null, errors empty. Encoded video is 15.8 seconds, 2,070,497 bytes, silent 30 fps H.264; it includes capture/loading stalls and is not a frame-performance comparison. `youngMale-motion-report.json` contains state and facial-weight samples.
 
 The 1.5-second contact sheet was visually inspected through the fall, supine pose, rise and return to movement. No detached large AO patch was evident in those samples, but the nighttime camera is too distant/dark to certify fine facial or joint shading. Continuous close-up validation and the remaining profiles remain pending. The contact sheet final empty cell is padding beyond the video end.
+
+
+## Fresh-load idle performance harness
+
+The combat fixture now exposes `benchAOScene`: a fixed day/angle/zoom idle run with 5 seconds settling and 10 seconds raw frame samples, one run per page load. Compare separate loads with globalAO absent/present; model-uniform toggles cannot substitute for this. It records camera, population, framebuffer size, pixel ratio, actor/tree readiness, renderer memory, hidden frames and raw CPU/frame samples. It does not measure GPU time or shader memory, and requires matching metadata and alternating repetitions before attribution.
+
+`idle-ao-on-run1.json` is a diagnostic first run only: 147 frames, no hidden frames/errors, tree preparations all idle. Frame p50 66.53ms, p95 99.62ms; render CPU p95 12.97ms; 82 draws. Other QA tabs remained open, so browser/device contention is not excluded. No AO-off pair or repeated runs yet: these values do not prove AO overhead, a regression cause or satisfactory performance. Script syntax validation passes.
