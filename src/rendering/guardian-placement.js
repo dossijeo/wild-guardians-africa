@@ -80,7 +80,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
    for(const worker of workers)if(Math.hypot(p.x-worker.x,p.z-worker.z)<1.3)ceiling=Math.max(ceiling,nav.field.surface(worker.x,worker.z)+2);
    for(const animal of state.raid?.animals??[])if(animal.status!=='gone'&&Math.hypot(p.x-animal.x,p.z-animal.z)<1+animal.radius)ceiling=Math.max(ceiling,nav.field.surface(animal.x,animal.z)+3.5);
    for(const lift of [1.6,2.5,3.5,5]){
-    const y=p.y+lift;if(y-1.2*bodyScale<ceiling||occupied(p.x,y,p.z))continue;
+    const y=p.y+lift;if(y-1.2*bodyScale<ceiling)continue;
     v.set(p.x,y,p.z).project(camera);const screen=Math.hypot(v.x-sx,v.y-sy);let out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
     v.set(p.x,y+1.3*bodyScale,p.z).project(camera);out+=Math.max(0,Math.abs(v.y)-.88);
     const score=(out+framePenalty(p.x,y,p.z))*100+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
@@ -92,6 +92,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
   aerial.sort((a,b)=>a.score-b.score||a.order-b.order);let elevated=null;
   for(const p of aerial){
    if(p.score>(elevated?.score??(best.clear?best.score:Infinity)))break;
+   if(occupied(p.x,p.y,p.z))continue;
    p.score+=blockedAt(p.x,p.y,p.z)*12;
    if(!elevated||p.score<elevated.score||(p.score===elevated.score&&p.order<elevated.order))elevated=p;
   }

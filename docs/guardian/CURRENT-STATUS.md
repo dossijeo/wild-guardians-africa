@@ -68,3 +68,9 @@ Full phase acceptance remains open, particularly incremental performance, the re
 ## Component optimization checkpoint at 1ac423844
 
 [Ribbon upload reuse](phase2/ribbon-buffer-reuse.md) preserves all 18 effect geometries while avoiding temporary geometry storage and copying. [Peer collider caching](phase2/recovery-peer-cache.md) shares immutable shape data and retains live transforms. Both have sequential browser measurements supporting lower component cost; neither proves global FPS acceptance. The mixed real recovery run completes three physical plus one baked actor with one Guardian and no final down actors. Exact reports, tests and known diagnostic overhead are linked above. PR217 now includes these results and keeps its open acceptance list.
+
+## Main-game ritual and obstacle inspection
+
+Plant and wall confirmation/cancellation are exercised through the real main-game UI; plant confirmation autosave survives browser reload. See [wall flow](awakening-ritual/main-game-wall.md) and [plant reload](awakening-ritual/main-game-plant.md). A nearby-wall height adjustment and lateral/elevated fallback search improve the observed obstacle cases. [Full-resolution tower inspection](awakening-ritual/full-resolution-review.md) shows the Guardian clear of the roof at the sampled pose, while the target remains behind it in this fixed QA camera. This does not close the general camera/obstacle matrix.
+
+[Placement query pruning](awakening-ritual/occupancy-pruning.md) preserves 64 reference decisions with fewer visibility/occupancy queries. Warm browser timings remain variable; no global performance approval. Continuous voiced tutorial video, broad audio/artistic acceptance and the release size gate remain open.
