@@ -26,3 +26,10 @@ Integration at 99533cb4a: origin/main remains fully incorporated (zero behind). 
 ## Integration checkpoint at 3451a5fe8
 
 199 tests pass in 33 selected Guardian/beast/baked/authored-recovery/worker-recovery/spell-card test files, with no failures or skips. Production build succeeds in 8.54 seconds with existing warnings. Exact file list and scope: phase2/integration-checks-3451.json. Main-game Attack now has a continuous silent canvas recording through normal HUD controls, including fall and recovery; see phase2/attack-main-gameplay-recording.md. Full objective remains active: voiced tutorial recording, broader visual/audio matrix and added-cost performance acceptance are still incomplete.
+
+
+## Terrain recovery and audio checkpoint at 1990136cf
+
+World Guardian presence/launch audio now uses two replaceable voice slots; day/night recordings admit all requested cues without increasing mixer budgets. A captured repeated-hit hyena roll failure was reproduced deterministically and corrected with Rapier internal terrain-edge handling. Heavy bodies receive only a bounded progress-dependent recovery grace. Tests cover all five shipped rigs and retain a failing negative control for the old unstable terrain. See phase2/roll-timeout and day-spells-audio-review.md.
+
+Actual corrected night run reports no roll failures; buffalo daytime automatic/lateral recordings also complete authored recovery and release physics. The latter inspected support samples and contact sheets are in phase2/roll-timeout/buffalo. These are scoped graphical checks, not acceptance of every terrain/contact combination or a performance benchmark. Full phase and continuous voiced tutorial recording remain incomplete.
