@@ -30,3 +30,12 @@ Restored the same night-31 campaign snapshot in separate fresh loads, reference 
 Reference: 10.1413 FPS, p95 149.695 ms, p99 199.695 ms. Guardian: 10.2537 FPS, p95 149.700 ms, p99 183.030 ms. No hidden frames or runtime errors. Guardian animation p95 .190 ms, VFX p95 .560 ms, peak one physical ragdoll. These sequential runs show no observed p95 regression and preserve logic, but cannot establish an improvement or broad performance acceptance: baseline is slow, a single attack has limited frame coverage, and run order is not counterbalanced. Do not attribute the lower p99 to the optimization from this pair. Baseline optimization remains assigned elsewhere.
 
 Raw status/report files: moving-reference.json and moving-guardian.json. moving-comparison.json records exact outcome checks and memory, draws, physics and tail metrics. No image/visual acceptance is claimed from this timing run.
+
+
+## Sustained raid fixture
+
+The old saved state is at time=600 with two surviving animals carrying only one/three offensive hits; it cannot exercise repeated valid attacks. Added optional `freshRaid=1` to the campaign QA fixture: keep the restored farm, discard its old raid before world/native initialization, call the real planNight, and set the night clock to the newly planned arrival. This is an explicitly derived scenario, not an untouched save replay. Production rules, costs, cooldowns, health and hit budgets are unchanged. The measurement runs 1200 fixed .05 s frames (60 simulated seconds).
+
+First Guardian-enabled execution uses the planner's 16-beast first wave, 135 workers, 51 structures and 5362 plants. Five valid Attack commands occur at .55, 12.65, 24.75, 36.85 and 48.95 s. First target health falls 84→56→28→0, then targeting switches to a second beast. Zero runtime errors, zero roll failures, one visible Guardian maximum, peak one physical ragdoll and no active physics at end; no hidden frames. Receipt: fresh-raid-guardian.json.
+
+This run alone is not a performance comparison. Average 8.9347 FPS and p95 149.835 ms include the existing slow farm/native workload; no cause or optimization acceptance is inferred. A fresh reference run of this exact derived scenario, followed by outcome/command equality checks, remains required. This change only adds QA setup/measurement options and does not alter the game.
