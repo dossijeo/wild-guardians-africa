@@ -60,3 +60,7 @@ Latest recovery updates: world-space .3s release blending is installed; one real
 - Latest production release audit passes resource references and the file-count gate, but FAILS the 500 MB gate at 580,905,909 bytes. See [release audit](release-audit-20261029.md). Do not claim a passing release package or infer a cause without a comparable baseline.
 
 Full phase acceptance remains open, particularly incremental performance, the remaining visual/audio matrix and continuous voiced tutorial recording. No merge performed.
+
+## Integration checkpoint at bf16322b0
+
+345 tests in 60 selected Guardian, beast/worker recovery, Awakening and tutorial files pass, with no failures, cancellations or skips. Production build succeeds (535 modules, 10.86 seconds, existing warnings). [Exact file selection and receipt](phase2/integration-checks-bf163.json). This includes the final Awaken/Grow labels and ritual replacement fixture source; browser execution evidence remains separately scoped above. This is not full repository, visual, audio or performance acceptance.
