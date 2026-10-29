@@ -2,6 +2,8 @@
 
 La revisión se realizó después de completar las [campañas ampliadas](expanded-campaign-review.md). No cambia la obtención de energía, los beneficios, la economía, la IA, el combate ni los efectos del terreno.
 
+**Primera carga:** se añadió una explicación del guardián cuando el medidor alcanza 100 por primera vez. Describe la elección directa entre cultivo y muralla, advierte de que el cultivo bendecido deja de cosecharse y explica la confirmación y la cancelación. Se integra en la cola y en la memoria del tutorial existente, sin pausar ni consumir energía. Las pruebas dirigidas de tutorial, HUD y traducciones pasaron 56/56; la compilación pasó.
+
 ## Problemas y correcciones
 
 - En portrait, el espacio para el medallón reducía los cuatro botones nativos. Se conserva su escala original y se sitúa Despertar bajo ellos, en el espacio disponible junto al diálogo. En las capturas de referencia los botones pasan de 44 a 61,3 píxeles en 320 × 568, de 49,7 a 72,1 en 360 × 640 y de 80,3 a 93,6 en 390 × 844.

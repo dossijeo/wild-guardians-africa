@@ -1627,6 +1627,7 @@ export const messages = {
   "Desactivados": "Off",
   "Adaptativa": "Adaptive",
   "Despertar": "Awakening",
+  "Escucha: la tierra ha reunido su fuerza y un Despertar está listo. Pulsa Despertar y elige un cultivo o una muralla. El cultivo se convertirá en una fuente permanente para sus vecinos y ya no se cosechará; la muralla protegerá también sus tramos contiguos. Revisa la bendición antes de confirmarla. Si cancelas, conservarás la energía.": "Listen: the land has gathered its strength, and an Awakening is ready. Press Awaken and choose a crop or a wall. The crop will become a permanent source for its neighbours and can no longer be harvested; the wall will also protect its adjoining sections. Review the blessing before confirming it. If you cancel, you will keep the energy.",
   "Despertares": "Awakenings",
   "¡Despertar!": "Awaken!",
   "Cancelar selección de Despertar": "Cancel Awakening selection",
