@@ -131,3 +131,17 @@ test('VFX shadow cache tracks depth inputs without depending on the view camera'
  active.onBeforeShadow=()=>{};assert.equal(snapshot(),null,'unknown callbacks must still fail closed');
  library.dispose();pipeline.dispose();
 });
+
+
+test('ribbon upload reuses capacity and tracks the live prefix after growth and clearing',()=>{
+ const {library,pipeline,camera}=setup(),fx=library.create('repel',pipeline);
+ for(const time of [.8,1.5,2,3,0]){
+  fx.seek(time);const expected=fx.native.geometry(),old=fx.ribbonBuffer.array;
+  fx.prepare(camera);
+  if(old.length>=expected.length)assert.equal(fx.ribbonBuffer.array,old);
+  assert.deepEqual(fx.ribbonBuffer.array.slice(0,expected.length),expected);
+  assert.equal(fx.ribbons.geometry.drawRange.count,expected.length/11);
+  assert.deepEqual(fx.ribbonBuffer.updateRanges,expected.length?[{start:0,count:expected.length}]:[]);
+ }
+ fx.dispose();library.dispose();
+});

@@ -241,7 +241,7 @@ function rigidInstances(){const counts=Object.fromEntries(Object.keys(rigidGeo).
   step(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');if(dt)simulate(dt);},
   advance(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');for(let remaining=dt;remaining>1e-9;){const sub=Math.min(1/60,remaining);simulate(sub);remaining-=sub;}},
   seek(t){if(!Number.isFinite(t)||t<0)throw new Error('Tiempo VFX inválido');contacts.length=0;seekTo(t);},
-  sprites(){return spriteInstances();},rigidInstances,geometry(){composeGeometryFX();return new Float32Array(fxVertices.slice(0,MAX_FX_VERTS*11));},
+  sprites(){return spriteInstances();},rigidInstances,geometry(target=null){composeGeometryFX();const length=Math.min(fxVertices.length,MAX_FX_VERTS*11);if(!target||target.length<length)return new Float32Array(fxVertices.slice(0,length));if(length===fxVertices.length)target.set(fxVertices);else for(let i=0;i<length;i++)target[i]=fxVertices[i];return target.subarray(0,length);},
   clear(){parts.length=0;rigids.length=0;events.length=0;contacts.length=0;fxVertices.length=0;lightCol0=[0,0,0];lightCol1=[0,0,0];},
  };
 }

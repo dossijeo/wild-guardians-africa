@@ -111,3 +111,19 @@ test('Rig water sources replace only new droplet origins; seek replays sources a
   const before=fx.rigids.map(r=>({p:[...r.p],v:[...r.v],age:r.age}));calls.length=0;fx.seek(.54);assert.equal(calls.length,1);assert.equal(fx.rigids.length,before.length);for(let i=0;i<before.length;i++){const r=fx.rigids[i],b=before[i];assert.ok(Math.abs(r.age-b.age)<1e-12);for(let k=0;k<3;k++){assert.ok(Math.abs(r.p[k]-b.p[k])<1e-12);assert.ok(Math.abs(r.v[k]-b.v[k])<1e-12);}}
   const missing=createNativeVfx('water',rects,{waterSource:()=>null});missing.advance(2);assert.equal(missing.rigids.length,0);assert.equal(missing.parts.length,0);
 });
+
+
+test('reusable ribbon buffer matches independent geometry for every composition and retains unused tail',()=>{
+ const target=new Float32Array(MAX_FX_VERTS*11);
+ for(const {id} of vfxDefinitions){
+  const fx=createNativeVfx(id,rects);
+  for(const time of [0,.3,.8,1.3,2,3]){
+   fx.seek(time);const expected=fx.geometry();target.fill(-123);
+   const actual=fx.geometry(target);
+   assert.equal(actual.buffer,target.buffer,id+' must reuse capacity');
+   assert.deepEqual(actual,expected,id+' at '+time);
+   if(actual.length<target.length)assert.equal(target[actual.length],-123,'unused capacity remains untouched');
+   if(expected.length){const grown=fx.geometry(new Float32Array(0));assert.deepEqual(grown,expected,'undersized target grows safely');}
+  }
+ }
+});

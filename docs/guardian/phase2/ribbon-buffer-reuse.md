@@ -1,0 +1,7 @@
+# Reusing ribbon upload storage
+
+NativeVfx now supplies its existing Float32Array upload storage to geometry generation. When capacity fits, the generator writes directly into it, eliminating the intermediate sliced JS array, fresh Float32Array storage and final copy. Capacity growth retains the old allocating path; no geometry, density, timing or shader changed. The optional-buffer API preserves independent arrays for existing callers. The source generator and generated-module hash are updated together.
+
+Validation: exact geometry parity for all 18 compositions at six times, including undersized capacity and untouched unused tails; renderer upload tests cover growth, shrinking draw ranges and empty frames. Original Atelier parity tests still pass. A real day Grow frame was inspected in ribbon-buffer-reuse.png.
+
+The same eight-block ABBA/BAAB 20-animal fixture was rerun on Intel UHD: Guardian VFX CPU p95 is 0.805–0.950 ms across enabled blocks, versus 1.480–1.780 ms in the preceding session. Raw data: ribbon-buffer-reuse.json and frame-pairs-530499.json. These are sequential sessions with counterbalancing inside each, not a randomized code-reversal experiment. One enabled block now has frame p95 66.36 ms while the others remain near 50 ms. No overall FPS improvement or performance acceptance is claimed. The fixture uses presentation-only time; navigation, physics throughput, memory/GC and real raid responsiveness remain outside its scope.
