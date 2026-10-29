@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {BoxGeometry,Mesh,MeshBasicMaterial} from 'three';
-import {sampleRecoverySkinBounds} from './browser/guardian-peer-contacts.js';
+import {BoxGeometry,Mesh,MeshBasicMaterial,Vector3} from 'three';
+import {sampleRecoverySkinBounds,sampleRecoveryPositions} from './browser/guardian-peer-contacts.js';
 test('skin bounds include baked actors and distinguish separation from broad-phase candidates',()=>{
  const geometry=new BoxGeometry(2,2,2),material=new MeshBasicMaterial();
  const a=new Mesh(geometry,material),b=new Mesh(geometry,material);a.updateMatrixWorld(true);b.position.x=3;b.updateMatrixWorld(true);
@@ -37,4 +37,11 @@ test('recovery priority excludes self and reciprocal displacement across physica
  assert.deepEqual(recoveryPriorityPeers(manager,'a'),[]);
  manager.entries.set('a',a);
  assert.deepEqual(recoveryPriorityPeers(manager,'a'),[b]);
+});
+
+test('recovery telemetry reads active recovery correction rather than stale fall shift',()=>{
+ const model=new Mesh(),entry={animal:{id:'a',magicDown:{phase:'recovering'}},actor:{},binding:{bones:new Map([['Hips',model]])},recovery:{horizontalCorrection:new Vector3(.2,0,.4)},fall:{solidContacts:{shift:new Vector3(9,0,9)}}};
+ const manager={entries:new Map([['a',entry]])};
+ assert.deepEqual(sampleRecoveryPositions(manager)[0].correction,[.2,0,.4]);
+ delete entry.recovery;assert.deepEqual(sampleRecoveryPositions(manager)[0].correction,[9,0,9]);
 });

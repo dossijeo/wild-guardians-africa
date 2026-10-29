@@ -112,7 +112,7 @@ export class BeastCombatPhysics{
      e.solver.rollTo(id,orientation);e.rolling=true;a.magicDown.phase='rolling';continue;
     }
     const rollFailed=e.rolling&&e.actor.roll.timedOut;this.stats.rollFailures=(this.stats.rollFailures??0)+(rollFailed?1:0);this.stats.lastRoll=e.actor.roll?{seconds:e.actor.roll.age,contactDelay:e.actor.roll.contactDelay,error:e.actor.roll.error,speed:e.actor.roll.speed,timedOut:rollFailed}:null;
-    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip,solidContacts:BakedSolidContacts.forAnimal(this.world,a,e.binding)}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
+    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip,solidContacts:BakedSolidContacts.forAnimal(this.world,a,e.binding,{peers:true})}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;

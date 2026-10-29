@@ -58,7 +58,7 @@ export function sampleRecoveryPositions(manager){
  return [...manager.entries.values(),...(manager.baked?.entries.values()??[])].map(e=>({
   id:e.animal.id,mode:e.actor?'physical':'baked',phase:e.animal.magicDown?.phase,
   hip:e.binding.bones.get('Hips').getWorldPosition(new Vector3()).toArray(),
-  correction:e.fall?.solidContacts?.shift.toArray()??null,
+  correction:e.recovery?.horizontalCorrection?.toArray()??e.fall?.solidContacts?.shift.toArray()??null,
   recoveryAge:e.recovery?e.recoveryAge:null,lift:e.recovery?.lift??e.fall?.lift??null,entryClearance:e.recovery?.entryClearance??null,
  }));
 }
