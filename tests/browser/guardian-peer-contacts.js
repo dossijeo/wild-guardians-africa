@@ -1,10 +1,10 @@
 import {Box3,Vector3} from 'three';
 // Diagnostic only: pairwise articulated collider distances, sampled at 10 Hz.
 // Excludes baked actors (no Rapier colliders); never use this as skin clearance.
-export function sampleRecoveryPeerContacts(manager){
+export function sampleRecoveryPeerContacts(manager,includeFalling=false){
  const entries=[...manager.entries.values()],pairs=[];
  for(let i=0;i<entries.length;i++)for(let j=i+1;j<entries.length;j++){
-  const a=entries[i],b=entries[j];if(!a.recovery&&!b.recovery)continue;
+  const a=entries[i],b=entries[j];if(!includeFalling&&!a.recovery&&!b.recovery)continue;
   let minimum=0,contacts=0,parts=null;
   for(let ai=0;ai<a.actor.parts.length;ai++)for(let bi=0;bi<b.actor.parts.length;bi++){
    const contact=a.actor.parts[ai].body.collider(0).contactCollider(b.actor.parts[bi].body.collider(0),0);
@@ -19,7 +19,7 @@ export function sampleRecoveryPeerContacts(manager){
 const meshCache=new WeakMap(),point=new Vector3();
 // All deformed mesh vertices, not just contact samples. A disjoint AABB proves
 // separation; an intersecting AABB is only a candidate, never a penetration.
-export function sampleRecoverySkinBounds(manager){
+export function sampleRecoverySkinBounds(manager,includeFalling=false){
  const entries=[...manager.entries.values(),...(manager.baked?.entries.values()??[])];
  const bounds=entries.map(e=>{
   let meshes=meshCache.get(e.data.model);
@@ -32,7 +32,7 @@ export function sampleRecoverySkinBounds(manager){
  });
  const pairs=[];
  for(let i=0;i<entries.length;i++)for(let j=i+1;j<entries.length;j++){
-  const a=entries[i],b=entries[j];if(!a.recovery&&!b.recovery)continue;
+  const a=entries[i],b=entries[j];if(!includeFalling&&!a.recovery&&!b.recovery)continue;
   const x=bounds[i],y=bounds[j],overlap=['x','y','z'].map(axis=>Math.min(x.max[axis],y.max[axis])-Math.max(x.min[axis],y.min[axis]));
   const pair={a:a.animal.id,b:b.animal.id,modes:[a.actor?'physical':'baked',b.actor?'physical':'baked'],overlap,candidate:overlap.every(v=>v>0)};
   if(pair.candidate&&!!a.actor!==!!b.actor){
