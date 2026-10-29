@@ -221,7 +221,7 @@ export class AfricanToon {
 export function toonDestruction(fragment,visualSearch=globalThis.location?.search??''){
   const {endpointFunctions}=environmentRecipe(visualSearch);
   if(cinematicLightingEnabled(visualSearch)){
-    fragment=patchBuildingShadow(fragment).replace('vec3 ambient=mix(vec3(.28,.265,.20),vec3(.47,.56,.61),N.y*.5+.5);','vec3 ambient=mix(mix(uCinemaGround,vec3(.30,.39,.48),N.y*.5+.5),mix(vec3(.025,.045,.055),vec3(.075,.13,.18),N.y*.5+.5),uNight);')
+    fragment=patchBuildingShadow(fragment).replace('vec3 ambient=mix(vec3(.28,.265,.20),vec3(.47,.56,.61),N.y*.5+.5);','vec3 ambient=mix(mix(uCinemaGround,vec3(.30,.39,.48),N.y*.5+.5),mix(vec3(.04,.065,.08),vec3(.12,.20,.26),N.y*.5+.5),uNight);')
       .replace('vec3(1.90,1.59,1.11)*ndl*sh','mix(vec3(2.65,2.12,1.36),vec3(.36,.61,.92),uNight)*ndl*sh')
       .replace('vec3(.14,.20,.27)*max','mix(vec3(.055,.08,.10),vec3(.025,.055,.08),uNight)*max')
       // Candidate endpoints already include night attenuation; avoid applying
@@ -230,7 +230,7 @@ export function toonDestruction(fragment,visualSearch=globalThis.location?.searc
       .replace('ndl*sh*uWorldSun','ndl*sh*mix(uWorldSun,1.,uNight)');
     fragment=fragment.replace('vec3 color=base*(ambient+direct+rim)+spec+emit;',`
  float localAO=1.;
- if(uBuildingAOOn>.5&&uMode==0&&uInner<.5&&vUV.x>=0.&&vUV.y>=0.)localAO=mix(1.,texture(uBuildingAO,vUV).r,.72*(1.-smoothstep(.02,.30,uDamage)));
+ if(uBuildingAOOn>.5&&uMode==0&&uInner<.5&&vUV.x>=0.&&vUV.y>=0.)localAO=mix(1.,texture(uBuildingAO,vUV).r,mix(.72,.52,uNight)*(1.-smoothstep(.02,.30,uDamage)));
  vec3 color=base*((ambient+rim)*localAO+direct)+spec+emit;`);
     return fragment.replace('out vec4 fragColor;','uniform float uNight,uBuildingAOOn;uniform vec3 uCinemaGround;uniform sampler2D uBuildingAO;\nout vec4 fragColor;');
   }
