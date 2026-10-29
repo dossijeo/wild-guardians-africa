@@ -15,3 +15,11 @@ The completed full recovery trace was serialized into the visible status every 2
 ## Recovery component profile
 
 A fresh native mixed trial with profileRecovery=1 completes with zero down actors/errors. `component-profile.json` contains inclusive method measurements: pose 667 calls/2352.03ms total/p95 6.79ms; solids 985/2237.73ms/p95 3.84ms; exact skin bounds 985/1163.815ms/p95 1.97ms; peer refresh 985/126.385ms/p95 .265ms; cloth 466/150.565ms/p95 .53ms. These timings overlap and must not be summed. The full skin envelope within solid-contact resolution is a meaningful remaining target; peer refresh and cloth are much smaller in this trial. No sampling reduction or collision approximation was introduced, and no optimization gain is claimed. The next change should preserve the full-envelope result while reducing repeated skin work or safely rejecting distant solids.
+
+## Scalar exact-bounds accumulation
+
+SkinContactBounds now accumulates scalar minima/maxima and writes the Box3 endpoints once, instead of setting a Vector3 and expanding the box for every contact vertex. Every vertex, skin influence, active morph, input invalidation and initial caller bound is retained. Seven exact-bound tests pass against Three.js for five species plus changing inputs; build succeeds (537 modules,10.68s, existing warnings).
+
+An alternating Node comparison against fcd4ce78c on the installed rhino model (60 warmup rounds,200 timed rounds,5 expansions per sample) measured median .491ms before/.43596ms after; p95 .67594/.57522ms. Temporary comparison source/script removed after the run. This is a static component microbenchmark.
+
+Native repeat `scalar-bounds-profile.json` completes without errors/down actors. Skin p95 1.835ms versus1.970ms previously; calls1046 versus985, so total times are not equal-work comparisons. Pose/solid p95 do not clearly improve (6.95/3.86ms versus6.79/3.84ms). No whole-recovery or global FPS improvement is claimed; larger contact-path optimization remains needed.

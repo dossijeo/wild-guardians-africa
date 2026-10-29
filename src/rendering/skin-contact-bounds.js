@@ -1,4 +1,4 @@
-import {Matrix4,Vector3} from 'three';
+import {Matrix4} from 'three';
 import {skinContactIndices} from './skin-contact-indices.js';
 // The index list is versioned by skinContactIndices. Share decoded immutable
 // attributes across recovery instances; keep double precision for normalized weights.
@@ -20,12 +20,13 @@ function contactInputs(mesh,indices){
 export class SkinContactBounds {
  static prewarm(model){model.traverse(mesh=>{if(mesh.isSkinnedMesh)skinContactIndices(mesh);});}
  constructor(model){
-  this.matrix=new Matrix4();this.post=new Matrix4();this.point=new Vector3();this.meshes=[];
+  this.matrix=new Matrix4();this.post=new Matrix4();this.meshes=[];
   model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=skinContactIndices(mesh);
    const entry={mesh,indices,activeMorphs:[],matrices:new Float64Array(mesh.skeleton.bones.length*16)};refreshInputs(entry);this.meshes.push(entry);
   });
  }
  expand(bounds){
+  let minX=bounds.min.x,minY=bounds.min.y,minZ=bounds.min.z,maxX=bounds.max.x,maxY=bounds.max.y,maxZ=bounds.max.z;
   for(const entry of this.meshes){
    refreshInputs(entry);const {mesh,indices,inputs,matrices,activeMorphs}=entry;
    activeMorphs.length=0;const morphs=mesh.geometry.morphAttributes.position??[],influences=mesh.morphTargetInfluences??[];for(let m=0;m<morphs.length;m++)if(influences[m])activeMorphs.push(m);
@@ -41,9 +42,11 @@ export class SkinContactBounds {
      sy+=w*(matrices[o+1]*x+matrices[o+5]*y+matrices[o+9]*z+matrices[o+13]);
      sz+=w*(matrices[o+2]*x+matrices[o+6]*y+matrices[o+10]*z+matrices[o+14]);
     }
-    this.point.set(e[0]*sx+e[4]*sy+e[8]*sz+e[12],e[1]*sx+e[5]*sy+e[9]*sz+e[13],e[2]*sx+e[6]*sy+e[10]*sz+e[14]);bounds.expandByPoint(this.point);
+    const px=e[0]*sx+e[4]*sy+e[8]*sz+e[12],py=e[1]*sx+e[5]*sy+e[9]*sz+e[13],pz=e[2]*sx+e[6]*sy+e[10]*sz+e[14];
+    minX=Math.min(minX,px);minY=Math.min(minY,py);minZ=Math.min(minZ,pz);maxX=Math.max(maxX,px);maxY=Math.max(maxY,py);maxZ=Math.max(maxZ,pz);
    }
   }
+  bounds.min.set(minX,minY,minZ);bounds.max.set(maxX,maxY,maxZ);
   return bounds;
  }
 }
