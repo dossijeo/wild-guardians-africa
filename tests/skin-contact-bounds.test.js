@@ -19,9 +19,9 @@ for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${specie
 test('contact indices reuse immutable geometry and invalidate changed deformation inputs',async()=>{
  const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url));
  SkinContactBounds.prewarm(model);const first=new SkinContactBounds(model),second=new SkinContactBounds(model);
- for(let i=0;i<first.meshes.length;i++)assert.equal(first.meshes[i].indices,second.meshes[i].indices);
+ for(let i=0;i<first.meshes.length;i++){assert.equal(first.meshes[i].indices,second.meshes[i].indices);assert.equal(first.meshes[i].inputs,second.meshes[i].inputs);}
  const mesh=first.meshes[0].mesh;mesh.geometry.attributes.position.needsUpdate=true;
- const changed=new SkinContactBounds(model);assert.notEqual(first.meshes[0].indices,changed.meshes[0].indices);
+ const changed=new SkinContactBounds(model);assert.notEqual(first.meshes[0].indices,changed.meshes[0].indices);assert.notEqual(first.meshes[0].inputs,changed.meshes[0].inputs);
  const before=changed.meshes[0].indices,oldName=mesh.skeleton.bones[0].name;mesh.skeleton.bones[0].name='tail';
  const renamed=new SkinContactBounds(model);assert.notEqual(before,renamed.meshes[0].indices);mesh.skeleton.bones[0].name=oldName;
 });

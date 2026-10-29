@@ -1,0 +1,7 @@
+# Immutable skin input cache
+
+SkinContactBounds decodes rest positions, normalized skin weights (double precision) and joint matrix offsets once per versioned contact index list. A weak cache shares arrays between recovery instances using the same immutable geometry. Bone matrices, active morph influences and transformed vertices are still evaluated every call; no contact vertices are skipped. New instances after attribute-version changes receive new decoded inputs through the existing versioned index cache. As before, recovery instances are bound to the immutable installed geometry for their lifetime.
+
+Six tests pass: all five installed species match Three.js bounds within 1e-6 under model/bone transforms and active morphs, plus cache sharing and changed-attribute invalidation. The mixed hyena/three-lion real Game.tick trial completes with no errors and no remaining down actors. Skin bounds p95 observed 1.17 ms versus 1.50 ms in the previous peer-cache trial; solid resolution 3.135 versus 3.49 ms. Sequential trials have different frame counts and do not prove an overall FPS gain. Full performance acceptance remains open.
+
+Additional typed-array storage is 72 bytes per contact vertex: hyena 753264 bytes, lion 758736, warthog 789984, buffalo 836856, rhino 833328; 3,972,168 bytes total if all five geometries are cached. These are shared by compatible clones, not allocated per frame or per summon. This excludes JS object overhead and is not a total heap/leak measurement. Raw reports: skin-input-memory.json and skin-input-profile.json.
