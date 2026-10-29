@@ -1,0 +1,7 @@
+# Immutable ragdoll peer shapes
+
+The additional refreshPeers profile measured 789.875 ms total across 1071 calls (1.665 ms p95) in the mixed live recovery run. Ragdoll collider shapes are created once in beast-ragdoll.js and are never mutated. Repeated Rapier vertices/shape queries copied the same geometry during each neighbor check.
+
+BakedSolidContacts now shares immutable shape data through a WeakMap keyed by the actual collider object. Translation and rotation still come from Rapier on every update; every hull vertex is transformed and the same margins are retained. Released colliders are not retained by the cache; a new collider gets new shape data even if its numeric handle is recycled. No support samples or collision checks were removed.
+
+Six focused tests pass, including real Rapier hull transforms at five positions/rotations, sharing across two neighbors and collider replacement. The same four-impact mixed hyena/lion browser fixture completes after the change with zero errors and zero final down actors. Peer refresh measures 103.530 ms over 1160 calls, p95 .185 ms; solid resolution p95 3.49 ms versus 4.92 ms before. Counts and trajectories differ across real-time runs, so totals are not equal-work benchmarks. These sequential diagnostic measurements support a component improvement, not overall FPS or full performance acceptance. Skin and cloth costs remain. Raw before/after reports accompany this document.

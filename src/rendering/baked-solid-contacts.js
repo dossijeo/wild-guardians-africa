@@ -4,6 +4,10 @@ import {Box3,Vector3} from 'three';
 import {BeastRecovery} from './beast-recovery.js';
 import {visitBeastSolids} from './beast-physics-environment.js';
 
+// Ragdoll shapes are immutable until their collider is destroyed. Weak keys
+// share shape data across recovering neighbors without retaining released actors.
+const peerShapes=new WeakMap();
+
 // Conservative sampled skin envelope, translated away from nearby solid boxes.
 // Keep the entry side of each obstacle: never eject through a thin wall.
 export class BakedSolidContacts{
@@ -19,8 +23,9 @@ export class BakedSolidContacts{
    cached.box.makeEmpty();
    if(e.actor){for(const {body}of e.actor.parts){
     const collider=body.collider(0),position=collider.translation(),rotation=collider.rotation();this.partBox.makeEmpty();
-    if(collider.shapeType()===e.solver.R.ShapeType.ConvexPolyhedron){const vertices=collider.vertices();for(let i=0;i<vertices.length;i+=3){this.point.fromArray(vertices,i).applyQuaternion(rotation).add(position);this.partBox.expandByPoint(this.point);}}
-    else{const half=collider.halfHeight()??0,radius=collider.radius()??0;for(const sign of [-1,1]){this.point.set(0,sign*half,0).applyQuaternion(rotation).add(position);this.partBox.expandByPoint(this.point);}this.partBox.expandByScalar(radius);}
+    let shape=peerShapes.get(collider);if(!shape){shape=collider.shapeType()===e.solver.R.ShapeType.ConvexPolyhedron?{vertices:collider.vertices()}:{half:collider.halfHeight()??0,radius:collider.radius()??0};peerShapes.set(collider,shape);}
+    if(shape.vertices){const vertices=shape.vertices;for(let i=0;i<vertices.length;i+=3){this.point.fromArray(vertices,i).applyQuaternion(rotation).add(position);this.partBox.expandByPoint(this.point);}}
+    else{const {half,radius}=shape;for(const sign of [-1,1]){this.point.set(0,sign*half,0).applyQuaternion(rotation).add(position);this.partBox.expandByPoint(this.point);}this.partBox.expandByScalar(radius);}
     cached.box.union(this.partBox);
    }}else for(const {mesh,index}of cached.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);cached.box.expandByPoint(this.point);}
    // A small proactive margin prevents the baked path from entering a neighbor

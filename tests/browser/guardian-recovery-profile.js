@@ -6,7 +6,7 @@ import {RecoveryClothContacts} from '../../src/rendering/recovery-cloth-contacts
 // Opt-in QA only. Inclusive method timings overlap; never sum these rows.
 export function profileRecovery(){
  const rows={},restore=[];
- for(const [name,type,method] of [['pose',AuthoredBeastRecovery,'apply'],['solids',BakedSolidContacts,'resolve'],['skin',SkinContactBounds,'expand'],['cloth',RecoveryClothContacts,'resolve']]){
+ for(const [name,type,method] of [['pose',AuthoredBeastRecovery,'apply'],['solids',BakedSolidContacts,'resolve'],['peers',BakedSolidContacts,'refreshPeers'],['skin',SkinContactBounds,'expand'],['cloth',RecoveryClothContacts,'resolve']]){
   const original=type.prototype[method],values=[];let calls=0,total=0,max=0;
   const wrapped=function(...args){const start=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-start;calls++;total+=ms;max=Math.max(max,ms);if(values.length<10000)values.push(ms);}};
   type.prototype[method]=wrapped;restore.push(()=>{if(type.prototype[method]===wrapped)type.prototype[method]=original;});
