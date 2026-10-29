@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 // Bounded work per accepted command. No navigation or camera movement is requested.
-export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,cropHeight=()=>2.2}){
+export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,hoverAbove=false,cropHeight=()=>2.2}){
  // Commands can follow a camera turn before the renderer refreshes matrices.
  camera.updateWorldMatrix(true,false);
  // Sample the lateral silhouette too: a narrow clear ray through the center
@@ -29,6 +29,11 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  const workers=(state.workers??[]).filter(w=>w.status!=='gone'&&Math.abs(w.x-target.x)<workerRange&&Math.abs(w.z-target.z)<workerRange);
  const floor=nav.actorSurface?.(target.x,target.z)??nav.field.surface(target.x,target.z);
  v.set(target.x,floor+.7,target.z).project(camera);const sx=v.x,sy=v.y;
+ if(hoverAbove){
+  const height=target.species?cropHeight(target):target.kind==='wall'?2.5:1;
+  const y=floor+height+1.7*bodyScale;
+  if(!occupied?.(target.x,y,target.z)&&blockedAt(target.x,y,target.z)===0&&framePenalty(target.x,y,target.z)<.3)return {x:target.x,y,z:target.z,clear:true,score:0};
+ }
  const evaluate=(distance,offset)=>{
   const a=base+offset,x=target.x+Math.sin(a)*distance,z=target.z+Math.cos(a)*distance,y=nav.actorSurface?.(x,z)??nav.field.surface(x,z);
   if(!Number.isFinite(y))return;

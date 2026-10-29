@@ -1,3 +1,4 @@
+import {beginAwakening,awakeningVisible} from './awakening-presentation.js';
 import * as THREE from 'three';
 import {AWAKENINGS as A} from '../simulation/awakening-config.js';
 import {observeGameEvents} from '../simulation/game.js';
@@ -11,7 +12,7 @@ function texture(data,size){
 }
 export class AwakeningRoots {
   constructor(state,{resolution=1024}={}){
-    this.state=state;this.resolution=resolution;this.clock={value:state.elapsed};
+    this.pending=new Map();this.state=state;this.resolution=resolution;this.clock={value:state.elapsed};
     this.empty=texture(new Uint8Array(2),1);this.tiles=new Map();this.entries=new WeakMap();this.dirty=new Set();this.fading=new Set();
     this.sources=new Map([...state.plants,...state.structures].filter(p=>p.blessing&&(p.alive||p.kind==='wall'&&p.status==='intact')).map(p=>[p.id,p]));
     this.stats={builds:0,totalBuildMs:0,lastBuildMs:0,bytes:0};
@@ -20,9 +21,9 @@ export class AwakeningRoots {
   event(event){
     if(event.type==='BlessingApplied'){
       const source=this.state.plants.find(p=>p.id===event.targetId)??this.state.structures.find(p=>p.id===event.targetId);
-      if(source){this.sources.set(source.id,source);this.mark(source);}
+      if(source){beginAwakening(source,event.presentation?.elapsed??this.state.elapsed);this.pending.set(source.id,source);}
     }else if(['BlessingDestroyed','BlessingRemoved'].includes(event.type)){
-      const source=this.sources.get(event.targetId);
+      this.pending.delete(event.targetId);const source=this.sources.get(event.targetId);
       if(source){this.sources.delete(source.id);this.mark(source);}
     }else if(['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){
       const plant=this.state.plants.find(p=>p.id===event.targetId);
@@ -50,7 +51,7 @@ export class AwakeningRoots {
   }
   bounds(){return [...this.tiles.values()].map(tile=>tile.uniforms.uAwakeningBounds.value);}
   flush(){
-    this.clock.value=this.state.elapsed;
+    this.clock.value=this.state.elapsed;for(const [id,p] of this.pending)if(awakeningVisible(p,this.state.elapsed)){this.pending.delete(id);if(p.alive||p.kind==='wall'&&p.status==='intact'){this.sources.set(id,p);this.mark(p);}}
     for(const key of this.dirty){
       const tile=this.tiles.get(key);if(!tile)continue;
       const started=performance.now(),b=tile.bounds;
@@ -93,7 +94,7 @@ export class AwakeningRoots {
       this.fading.delete(tile);
     }
   }
-  dispose(){this.releaseEvents();for(const tile of this.tiles.values())tile.map?.dispose();this.empty.dispose();this.tiles.clear();this.dirty.clear();this.fading.clear();}
+  dispose(){this.releaseEvents();this.pending.clear();for(const tile of this.tiles.values())tile.map?.dispose();this.empty.dispose();this.tiles.clear();this.dirty.clear();this.fading.clear();}
 }
 export function patchAwakeningRoots(shader,uniforms){
   Object.assign(shader.uniforms,uniforms);

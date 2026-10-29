@@ -101,3 +101,9 @@ test('close perspective views never prefer a projected candidate behind the came
   assert.ok(-view.z>=args.camera.near&&-view.z<=args.camera.far,`Invisible body corner: ${view.toArray()}`);
  }
 });
+
+test('ritual prefers hovering above an unobstructed target and falls back when the aerial volume is blocked',()=>{
+ const args=setup();args.camera.position.set(12,14,16);args.camera.lookAt(0,2,0);args.camera.updateMatrixWorld(true);args.target.kind='wall';
+ const p=guardianPlacement({...args,hoverAbove:true});assert.equal(p.x,0);assert.equal(p.z,0);assert.equal(p.y,4.2);
+ const fallback=guardianPlacement({...args,hoverAbove:true,occupied:(x,y,z)=>Math.hypot(x,z)<1});assert.ok(Math.hypot(fallback.x,fallback.z)>1);
+});

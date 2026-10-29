@@ -1,3 +1,4 @@
+import {awakeningVisible,awakeningVisibleAt} from './awakening-presentation.js';
 import {loadingSyncWitness} from './loading-sync-witness.js';
 import {declareBlessingInstance} from './blessing-material.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
@@ -306,7 +307,7 @@ function writeInstance(modelIndex,plant,part){
      entry.y=ground(entity.x,entity.z);entry.x=entity.x;entry.z=entity.z;entry.hasHeight=true;
     }
     const p=renderPlant;p.x=entity.x;p.z=entity.z;p.rotation=entity.rotation;p.crop=entry.crop;p.growth=entity.growth/entry.duration;p.y=entry.y;p.seed=entry.seed;
-    p.blessed=entity.blessing?1:0;p.blessedAt=entity.blessing?.at??0;p.damageAt=entity.blessing?(presentation?.damageAt?.get(entity.id)??-1000):0;
+    p.blessed=awakeningVisible(entity,clock)?1:0;p.blessedAt=awakeningVisibleAt(entity);p.damageAt=entity.blessing?(presentation?.damageAt?.get(entity.id)??-1000):0;
     p.selectable=presentation?.selecting&&!entity.blessing?(presentation.selectedTargetId===entity.id?2:1):0;
     const cached=stageSamples[p.crop];
     const sample=cached?.growth===p.growth?cached.sample:stageSample(p.crop,p.growth);

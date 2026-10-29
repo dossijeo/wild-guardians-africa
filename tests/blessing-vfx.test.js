@@ -21,19 +21,19 @@ function fixture(){
   const vfx=new BlessingVfx(library,{},scene,()=>2,state,{height:()=>2});
   return {state,scene,vfx,created};
 }
-test('resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights',()=>{
+test('resting sparks wait for ritual pulse, then share one stable draw without duplicate transformation VFX',()=>{
   const {state,scene,vfx,created}=fixture();
   try{
     awakeningState(state).progress=100;Game.bless(state,'bless','plant-2');vfx.update(state);
-    assert.equal(created.length,1);assert.equal(created[0].id,'heal');assert.equal(created[0].options.worldLights,false);
+    assert.equal(created.length,0);assert.equal(vfx.stats.sources,0);state.elapsed=2.05;vfx.update(state);
     assert.equal(vfx.stats.sources,1);assert.equal(vfx.stats.particles,19);
     const position=vfx.geometry.attributes.position,version=position.version,before=JSON.stringify(state);
     for(let i=0;i<1000;i++)vfx.update(state);
-    assert.equal(vfx.stats.uploads,1);assert.strictEqual(vfx.geometry.attributes.position,position);assert.equal(position.version,version);
-    assert.equal(JSON.stringify(state),before);assert.equal(created.length,1);
-    state.elapsed=3;vfx.update(state);assert.equal(created[0].effect.disposed,true);assert.equal(vfx.effects.size,0);
+    assert.equal(vfx.stats.uploads,2);assert.strictEqual(vfx.geometry.attributes.position,position);assert.equal(position.version,version);
+    assert.equal(JSON.stringify(state),before);assert.equal(created.length,0);
+    state.elapsed=3;vfx.update(state);assert.equal(vfx.effects.size,0);
     assert.equal(scene.children.filter(o=>o.isPoints).length,1);
-    vfx.update(state,{x:48,z:-48});assert.equal(vfx.stats.uploads,2);
+    vfx.update(state,{x:48,z:-48});assert.equal(vfx.stats.uploads,3);
     assert.equal(vfx.points.position.x+vfx.geometry.attributes.position.getX(0),state.plants[0].x);
   }finally{vfx.dispose();}
   assert.equal(scene.children.length,0);
@@ -45,7 +45,7 @@ test('source damage is localized, destruction fades sparks and restored sources 
     const restored=new BlessingVfx({create(){throw Error('reload replayed a transformation');}},{},scene,()=>2,state);
     restored.update(state);restored.dispose();
     const plant=state.plants[0],first=applyCropImpact(state,plant,.5);Game.emit(state,'CropHit',{targetId:plant.id,...first});
-    assert.equal(vfx.damageAt.get(plant.id),5);assert.equal(created.length,1);
+    assert.equal(vfx.damageAt.get(plant.id),5);assert.equal(created.length,0);
     const last=applyCropImpact(state,plant,3);Game.emit(state,'CropHit',{targetId:plant.id,...last});
     vfx.update(state);assert.equal(vfx.stats.particles,19);assert.equal(vfx.geometry.attributes.aSource.getZ(0),5);
     state.elapsed=5.7;vfx.update(state);assert.equal(vfx.stats.particles,0);assert.equal(vfx.damageAt.size,0);

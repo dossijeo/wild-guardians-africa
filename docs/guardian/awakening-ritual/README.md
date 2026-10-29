@@ -1,0 +1,13 @@
+# Guardian Awakening ritual — 2026-10-29
+
+The existing single Guardian slot handles BlessingApplied as a 2.8-second ritual. It prefers a clear position above the target, falling back to the existing obstacle/framing-aware placement. No camera changes are made by production code.
+
+Concentration closes both curved eyelids and lowers upper arms, forearms and hands after the idle/float/mantle mixer. Forty-eight instanced leaves reuse native VFX leaf geometry and travel from the actual hands in descending helical paths. The existing vortex supplies ethereal particles; the existing ring supplies the final pulse at 2.05 s. Eyes and arms recover before the normal dissolve. No external assets or new runtime dependencies.
+
+Game.bless remains unchanged: validation, charge consumption and permanent blessing commit at confirmation. A WeakMap presentation deadline delays crop materials, wall materials, resting sparks and root-mask updates until the pulse. It is never serialized. Duplicate commands cannot restart it; save/reload immediately shows the committed blessing. Replacing the Guardian with another spell reveals the former target immediately. A destroyed target cancels its ritual. Cancellation before confirmation remains a read-only preview and consumes nothing.
+
+Validation: 50 focused tests passed (placement, preview/cancel, idempotency, pre-pulse save/reload, interrupted presentation, original plant/wall rules, roots and sparks). Production build passed. Real WorldScene/terrain/assets/game commands were exercised in the browser fixture, and combat-cycle.webm shows a plant and a wall. The fixture alone replenishes charge between the two demonstrations and moves the camera between shots; production economics and controls are unchanged. Browser status records no errors, at most one visible Guardian and none after completion. Reviewed extracted frames for pose, eyelids, leaf descent, pulse, roots and disappearance.
+
+Runtime resources: one reusable 48-instance leaf mesh, one material, existing ring/vortex/actor. No per-cast geometry creation and no physics or recognition. This change has not undergone a broad performance benchmark or a complete campaign UI playthrough; the video is real-engine integration coverage, not a claim that every camera/terrain combination was tested. Tight views/occlusion can select a lateral fallback. Video has no audio track.
+
+Reproduce video: run python tools/guardian/receive_video.py --port 5204 --output docs/guardian/awakening-ritual, open tests/browser/guardian-combat.html on Vite 5194, select Grabar Despertar planta y muralla. The recording captures the WebGL canvas only.
