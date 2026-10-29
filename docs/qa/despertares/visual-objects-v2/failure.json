@@ -1,0 +1,88 @@
+{
+  "message": "[\"Failed to load resource: the server responded with a status of 404 (Not Found) {\\\"url\\\":\\\"http://127.0.0.1:5201/favicon.ico\\\",\\\"line\\\":0,\\\"column\\\":0,\\\"lineNumber\\\":0,\\\"columnNumber\\\":0}\",\"Failed to load resource: the server responded with a status of 404 (Not Found) {\\\"url\\\":\\\"http://127.0.0.1:5201/favicon.ico\\\",\\\"line\\\":0,\\\"column\\\":0,\\\"lineNumber\\\":0,\\\"columnNumber\\\":0}\"]",
+  "stack": "Error: [\"Failed to load resource: the server responded with a status of 404 (Not Found) {\\\"url\\\":\\\"http://127.0.0.1:5201/favicon.ico\\\",\\\"line\\\":0,\\\"column\\\":0,\\\"lineNumber\\\":0,\\\"columnNumber\\\":0}\",\"Failed to load resource: the server responded with a status of 404 (Not Found) {\\\"url\\\":\\\"http://127.0.0.1:5201/favicon.ico\\\",\\\"line\\\":0,\\\"column\\\":0,\\\"lineNumber\\\":0,\\\"columnNumber\\\":0}\"]\n    at file:///C:/Users/PC/.codex/worktrees/despertares-magia/wild-guardians-africa/tools/check_awakenings_visual.mjs:72:26",
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found) {\"url\":\"http://127.0.0.1:5201/favicon.ico\",\"line\":0,\"column\":0,\"lineNumber\":0,\"columnNumber\":0}",
+    "Failed to load resource: the server responded with a status of 404 (Not Found) {\"url\":\"http://127.0.0.1:5201/favicon.ico\",\"line\":0,\"column\":0,\"lineNumber\":0,\"columnNumber\":0}"
+  ],
+  "captures": [
+    {
+      "name": "normal-day",
+      "time": 120,
+      "elapsed": 0.2754000000286068,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "roots": {
+        "builds": 0,
+        "totalBuildMs": 0,
+        "lastBuildMs": 0,
+        "bytes": 0,
+        "tiles": 25
+      },
+      "calls": 56,
+      "triangles": 478140,
+      "textures": 98
+    },
+    {
+      "name": "one-source-day",
+      "time": 120,
+      "elapsed": 5.275400000028607,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "roots": {
+        "builds": 1,
+        "totalBuildMs": 16.06500005722046,
+        "lastBuildMs": 16.06500005722046,
+        "bytes": 524288,
+        "tiles": 25
+      },
+      "calls": 57,
+      "triangles": 478140,
+      "textures": 99
+    },
+    {
+      "name": "one-source-night",
+      "time": 420,
+      "elapsed": 5.275400000028607,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "roots": {
+        "builds": 1,
+        "totalBuildMs": 16.06500005722046,
+        "lastBuildMs": 16.06500005722046,
+        "bytes": 524288,
+        "tiles": 25
+      },
+      "calls": 57,
+      "triangles": 478140,
+      "textures": 99
+    }
+  ]
+}

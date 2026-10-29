@@ -1,0 +1,44 @@
+# Simulaciones adicionales — resultados finales
+
+El informe anterior, [balance de ocho campañas](balance-review.md), identifica dos limitaciones: solo cubre dos combinaciones de bioma, cultura y semilla, y el escenario prescrito de recuperación sigue invirtiendo en murallas tras perder una bendición. Esta ampliación añade partidas nativas hasta 100 noches con nuevas semillas de sabana, políticas agrícolas y defensivas, y una política de recuperación adaptativa. Las derrotas terminan la partida por las reglas reales; no se simulan noches posteriores.
+
+Las dos políticas de recuperación bendicen murallas y ejecutan la misma retirada ordinaria tras dos cargas. Después, la fija sigue eligiendo murallas; la adaptativa trata de reponer una fuente agrícola cuando no hay ninguna y, si ya tiene una, decide según las pérdidas recientes. Ambas usan la misma economía, estrategia general de contratación/construcción, motor nativo y semillas. La retirada está prescrita; la elección posterior es una política programada, no una decisión humana autónoma.
+
+## Primer resultado completo: sabana, semilla 712
+
+| Indicador | Recuperación fija | Recuperación adaptativa |
+| --- | ---: | ---: |
+| Noches superadas | 47 | 45 |
+| Resultado | Derrota | Derrota |
+| Dinero final | 30 | 29 |
+| Cultivos productivos finales | 0 | 0 |
+| Fuentes finales | 4 | 2 |
+| Ingresos, primeras 45 noches | 33 316 | 33 151 |
+| Neto contable, primeras 45 noches | −526 | −671 |
+
+Las 12 jornadas anteriores a la retirada presentan iguales saldos, contabilidad y población de cultivos/fuentes; la misma muralla se retira en el mismo instante del día 13. La adaptativa repuso plantas en los días 19 y 24, pero ambas fueron destruidas. En esta ejecución no se observa una recuperación económica satisfactoria ni una mejora de supervivencia respecto a la política fija. El resultado de una semilla no prueba que la estrategia sea peor en todos los casos, y los efectos posteriores incluyen decisiones, posiciones e incursiones divergentes.
+
+[Comparación verificable](campaigns-expanded-20261029/comparison-712.json) y [registro completo](campaigns-expanded-20261029/recovery-adaptive-712.json.gz). El guardado terminal se conserva junto al registro en gzip, verificado sin pérdida. `tools/compare_awakening_recovery.mjs` comprueba la pérdida y los datos previos y compara únicamente noches completas comunes; el campo terminal se toma de la última jornada real y puede corresponder a una jornada incompleta.
+
+## Resultados completos parciales: sabana, semilla 123
+
+| Política | Noches superadas | Resultado | Dinero final | Cultivos productivos finales | Fuentes finales |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Control | 49 | Derrota | 29 | 0 | 0 |
+| Competente | 53 | Derrota | 33 | 0 | 3 |
+| Recuperación fija | 51 | Derrota | 26 | 0 | 5 |
+| Recuperación adaptativa | 100 | Victoria | 298 | 10 | 2 |
+| Agricultura | 56 | Derrota durante la jornada 57 | 158 | 0 | 0 |
+| Defensa | 54 | Derrota durante la jornada 55 | 125 | 1 | 3 |
+
+Durante las primeras 49 noches, la competente ingresó 48 757 monedas frente a 54 560 del control, pero su variación neta fue −447 frente a −671; perdió 784 cultivos frente a 627. Estas diferencias incluyen distintos gastos, decisiones y trayectorias de incursiones. La entrega pasiva en toda la campaña competente fue de 615 monedas. [Métricas y gastos completos](campaigns-expanded-20261029/summary-123-progress.json).
+
+La pareja de recuperación comparte las 12 jornadas anteriores a la pérdida y retira la misma muralla en el mismo instante. Durante las 51 noches comunes, la adaptativa ingresó 81 283 monedas frente a 57 225 de la fija y su neto fue +212 frente a −674. La adaptativa alcanzó 100 noches con una granja frágil y 1180 monedas de bonus agrícola cobradas. El resultado contrasta con la semilla 712, donde ambas políticas perdieron antes de la noche 50. Los ingresos incluyen reinversión y trayectorias de incursiones divergentes; no son la contribución causal aislada de cada bendición. [Comparación emparejada](campaigns-expanded-20261029/comparison-123.json).
+
+El control de la semilla 2026 terminó en derrota durante la jornada 58, tras superar 57 noches, sin cultivos y con 210 monedas. La competente alcanzó 100 noches con 52 cultivos, 462 monedas y dos fuentes, después de perder 14 bendiciones; entregó 3948 monedas de bonificación pasiva. Durante las primeras 57 noches, la competente tuvo un neto de +463 monedas frente a −520 del control y perdió 432 cultivos frente a 480. Estas diferencias incluyen políticas, crecimiento de la explotación e incursiones diferentes; no son una atribución causal aislada al bonus.
+
+## Conclusiones y alcance
+
+Las simulaciones previstas terminaron sin interrumpirse ni reiniciarse. [Resumen final reproducible](campaigns-expanded-20261029/summary-final.json): 15 campañas de sabana de las semillas 712, 123 y 2026, incluyendo las referencias previas y las nuevas ejecuciones. Los dos resultados emparejados de recuperación muestran desenlaces diferentes; no permiten afirmar que una política garantice la recuperación. La estrategia agrícola y la defensiva de la semilla 123 también acabaron en derrota, y las victorias de 100 noches presentan estados finales diversos. La experiencia divertida y el balance general requieren más semillas y jugadores humanos.
+
+Los diarios de las 15 campañas se han conciliado y los checkpoints se filtran a noches superadas. Los informes y estados terminales nuevos están conservados en gzip sin pérdida. La tabla del informe anterior conserva otras dos campañas del desierto. Se mantienen los parámetros del juego: los datos no justifican un ajuste general que garantice un desenlace concreto.

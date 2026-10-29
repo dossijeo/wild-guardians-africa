@@ -1,0 +1,688 @@
+{
+  "scope": "Real application, Wild Engine and native HUD. Prescribed paid crop/wall layout, mature crops and QA-prefilled charges; pointer/keyboard interactions use the actual live handlers. Desktop viewport checks do not certify mobile GPU performance.",
+  "records": [
+    {
+      "name": "landscape-recharging",
+      "viewport": {
+        "w": 1280,
+        "h": 720
+      },
+      "portrait": false,
+      "reserve": 120,
+      "awakening": {
+        "x": 584,
+        "y": 8,
+        "width": 520,
+        "height": 92,
+        "right": 1104,
+        "bottom": 100
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 184,
+        "height": 92.3125,
+        "right": 196,
+        "bottom": 102.3125
+      },
+      "money": {
+        "x": 211,
+        "y": 23,
+        "width": 173,
+        "height": 81.09375,
+        "right": 384,
+        "bottom": 104.09375
+      },
+      "days": {
+        "x": 395,
+        "y": 23,
+        "width": 173,
+        "height": 87.40625,
+        "right": 568,
+        "bottom": 110.40625
+      },
+      "menu": {
+        "x": 1197,
+        "y": 12,
+        "width": 66,
+        "height": 66,
+        "right": 1263,
+        "bottom": 78
+      },
+      "actions": {
+        "x": 1069.609375,
+        "y": 159.640625,
+        "width": 198.390625,
+        "height": 383.6875,
+        "right": 1268,
+        "bottom": 543.328125
+      },
+      "progress": 78,
+      "total": 0,
+      "selecting": false,
+      "disabled": true,
+      "caption": "Energía de Despertar: 78 de 100"
+    },
+    {
+      "name": "landscape-ready",
+      "viewport": {
+        "w": 1280,
+        "h": 720
+      },
+      "portrait": false,
+      "reserve": 120,
+      "awakening": {
+        "x": 584,
+        "y": 8,
+        "width": 520,
+        "height": 92,
+        "right": 1104,
+        "bottom": 100
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 184,
+        "height": 92.3125,
+        "right": 196,
+        "bottom": 102.3125
+      },
+      "money": {
+        "x": 211,
+        "y": 23,
+        "width": 173,
+        "height": 81.09375,
+        "right": 384,
+        "bottom": 104.09375
+      },
+      "days": {
+        "x": 395,
+        "y": 23,
+        "width": 173,
+        "height": 87.40625,
+        "right": 568,
+        "bottom": 110.40625
+      },
+      "menu": {
+        "x": 1197,
+        "y": 12,
+        "width": 66,
+        "height": 66,
+        "right": 1263,
+        "bottom": 78
+      },
+      "actions": {
+        "x": 1069.609375,
+        "y": 159.640625,
+        "width": 198.390625,
+        "height": 383.6875,
+        "right": 1268,
+        "bottom": 543.328125
+      },
+      "progress": 100,
+      "total": 0,
+      "selecting": false,
+      "disabled": false,
+      "caption": "Despertar disponible: bendecir una planta o muralla"
+    },
+    {
+      "name": "landscape-selection",
+      "viewport": {
+        "w": 1280,
+        "h": 720
+      },
+      "portrait": false,
+      "reserve": 120,
+      "awakening": {
+        "x": 584,
+        "y": 8,
+        "width": 520,
+        "height": 92,
+        "right": 1104,
+        "bottom": 100
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 184,
+        "height": 92.3125,
+        "right": 196,
+        "bottom": 102.3125
+      },
+      "money": {
+        "x": 211,
+        "y": 23,
+        "width": 173,
+        "height": 81.09375,
+        "right": 384,
+        "bottom": 104.09375
+      },
+      "days": {
+        "x": 395,
+        "y": 23,
+        "width": 173,
+        "height": 87.40625,
+        "right": 568,
+        "bottom": 110.40625
+      },
+      "menu": {
+        "x": 1197,
+        "y": 12,
+        "width": 66,
+        "height": 66,
+        "right": 1263,
+        "bottom": 78
+      },
+      "actions": {
+        "x": 1069.609375,
+        "y": 159.640625,
+        "width": 198.390625,
+        "height": 383.6875,
+        "right": 1268,
+        "bottom": 543.328125
+      },
+      "progress": 100,
+      "total": 0,
+      "selecting": true,
+      "disabled": false,
+      "caption": "Cancelar selección de Despertar"
+    },
+    {
+      "name": "landscape-blessed-matched",
+      "viewport": {
+        "w": 1280,
+        "h": 592
+      },
+      "portrait": false,
+      "reserve": 100.64,
+      "awakening": {
+        "x": 584,
+        "y": 8,
+        "width": 520,
+        "height": 92,
+        "right": 1104,
+        "bottom": 100
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 184,
+        "height": 92.3125,
+        "right": 196,
+        "bottom": 102.3125
+      },
+      "money": {
+        "x": 211,
+        "y": 23,
+        "width": 173,
+        "height": 81.09375,
+        "right": 384,
+        "bottom": 104.09375
+      },
+      "days": {
+        "x": 395,
+        "y": 23,
+        "width": 173,
+        "height": 87.40625,
+        "right": 568,
+        "bottom": 110.40625
+      },
+      "menu": {
+        "x": 1197,
+        "y": 12,
+        "width": 66,
+        "height": 66,
+        "right": 1263,
+        "bottom": 78
+      },
+      "actions": {
+        "x": 1072.515625,
+        "y": 108,
+        "width": 195.484375,
+        "height": 378.3125,
+        "right": 1268,
+        "bottom": 486.3125
+      },
+      "progress": 78,
+      "total": 2,
+      "selecting": false,
+      "disabled": true,
+      "caption": "Energía de Despertar: 78 de 100"
+    },
+    {
+      "name": "portrait-recharging",
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "portrait": true,
+      "reserve": 125,
+      "awakening": {
+        "x": 278.703125,
+        "y": 582.375,
+        "width": 105.296875,
+        "height": 131.625,
+        "right": 384,
+        "bottom": 714
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 132.59375,
+        "height": 66.53125,
+        "right": 144.59375,
+        "bottom": 76.53125
+      },
+      "money": {
+        "x": 149.59375,
+        "y": 8,
+        "width": 132.59375,
+        "height": 62.15625,
+        "right": 282.1875,
+        "bottom": 70.15625
+      },
+      "days": {
+        "x": 149.59375,
+        "y": 57,
+        "width": 132.59375,
+        "height": 67,
+        "right": 282.1875,
+        "bottom": 124
+      },
+      "menu": {
+        "x": 331,
+        "y": 12,
+        "width": 50,
+        "height": 50,
+        "right": 381,
+        "bottom": 62
+      },
+      "actions": {
+        "x": 297.6875,
+        "y": 117,
+        "width": 80.3125,
+        "height": 461.25,
+        "right": 378,
+        "bottom": 578.25
+      },
+      "progress": 78,
+      "total": 2,
+      "selecting": false,
+      "disabled": true,
+      "caption": "Energía de Despertar: 78 de 100"
+    },
+    {
+      "name": "portrait-ready",
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "portrait": true,
+      "reserve": 125,
+      "awakening": {
+        "x": 278.703125,
+        "y": 582.375,
+        "width": 105.296875,
+        "height": 131.625,
+        "right": 384,
+        "bottom": 714
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 132.59375,
+        "height": 66.53125,
+        "right": 144.59375,
+        "bottom": 76.53125
+      },
+      "money": {
+        "x": 149.59375,
+        "y": 8,
+        "width": 132.59375,
+        "height": 62.15625,
+        "right": 282.1875,
+        "bottom": 70.15625
+      },
+      "days": {
+        "x": 149.59375,
+        "y": 57,
+        "width": 132.59375,
+        "height": 67,
+        "right": 282.1875,
+        "bottom": 124
+      },
+      "menu": {
+        "x": 331,
+        "y": 12,
+        "width": 50,
+        "height": 50,
+        "right": 381,
+        "bottom": 62
+      },
+      "actions": {
+        "x": 297.6875,
+        "y": 117,
+        "width": 80.3125,
+        "height": 461.25,
+        "right": 378,
+        "bottom": 578.25
+      },
+      "progress": 100,
+      "total": 2,
+      "selecting": false,
+      "disabled": false,
+      "caption": "Despertar disponible: bendecir una planta o muralla"
+    },
+    {
+      "name": "compact-landscape-recharging",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "portrait": false,
+      "reserve": 62,
+      "awakening": {
+        "x": 442,
+        "y": 7,
+        "width": 331,
+        "height": 54,
+        "right": 773,
+        "bottom": 61
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 132,
+        "height": 66.21875,
+        "right": 144,
+        "bottom": 76.21875
+      },
+      "money": {
+        "x": 159,
+        "y": 13,
+        "width": 128,
+        "height": 60,
+        "right": 287,
+        "bottom": 73
+      },
+      "days": {
+        "x": 298,
+        "y": 13,
+        "width": 128,
+        "height": 64.671875,
+        "right": 426,
+        "bottom": 77.671875
+      },
+      "menu": {
+        "x": 785,
+        "y": 12,
+        "width": 49,
+        "height": 49,
+        "right": 834,
+        "bottom": 61
+      },
+      "actions": {
+        "x": 702.890625,
+        "y": 76,
+        "width": 129.109375,
+        "height": 246.9375,
+        "right": 832,
+        "bottom": 322.9375
+      },
+      "progress": 78,
+      "total": 2,
+      "selecting": false,
+      "disabled": true,
+      "caption": "Energía de Despertar: 78 de 100"
+    },
+    {
+      "name": "compact-landscape-ready",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "portrait": false,
+      "reserve": 62,
+      "awakening": {
+        "x": 442,
+        "y": 7,
+        "width": 331,
+        "height": 54,
+        "right": 773,
+        "bottom": 61
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 132,
+        "height": 66.21875,
+        "right": 144,
+        "bottom": 76.21875
+      },
+      "money": {
+        "x": 159,
+        "y": 13,
+        "width": 128,
+        "height": 60,
+        "right": 287,
+        "bottom": 73
+      },
+      "days": {
+        "x": 298,
+        "y": 13,
+        "width": 128,
+        "height": 64.671875,
+        "right": 426,
+        "bottom": 77.671875
+      },
+      "menu": {
+        "x": 785,
+        "y": 12,
+        "width": 49,
+        "height": 49,
+        "right": 834,
+        "bottom": 61
+      },
+      "actions": {
+        "x": 702.890625,
+        "y": 76,
+        "width": 129.109375,
+        "height": 246.9375,
+        "right": 832,
+        "bottom": 322.9375
+      },
+      "progress": 100,
+      "total": 2,
+      "selecting": false,
+      "disabled": false,
+      "caption": "Despertar disponible: bendecir una planta o muralla"
+    },
+    {
+      "name": "small-portrait-recharging",
+      "viewport": {
+        "w": 360,
+        "h": 640
+      },
+      "portrait": true,
+      "reserve": 102.4,
+      "awakening": {
+        "x": 256.8125,
+        "y": 411.09375,
+        "width": 97.1875,
+        "height": 121.5,
+        "right": 354,
+        "bottom": 532.59375
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 122.390625,
+        "height": 61.40625,
+        "right": 134.390625,
+        "bottom": 71.40625
+      },
+      "money": {
+        "x": 139.390625,
+        "y": 8,
+        "width": 122.390625,
+        "height": 57.375,
+        "right": 261.78125,
+        "bottom": 65.375
+      },
+      "days": {
+        "x": 139.390625,
+        "y": 57,
+        "width": 122.390625,
+        "height": 61.84375,
+        "right": 261.78125,
+        "bottom": 118.84375
+      },
+      "menu": {
+        "x": 301,
+        "y": 12,
+        "width": 50,
+        "height": 50,
+        "right": 351,
+        "bottom": 62
+      },
+      "actions": {
+        "x": 298.296875,
+        "y": 117,
+        "width": 49.703125,
+        "height": 290,
+        "right": 348,
+        "bottom": 407
+      },
+      "progress": 78,
+      "total": 2,
+      "selecting": false,
+      "disabled": true,
+      "caption": "Energía de Despertar: 78 de 100"
+    },
+    {
+      "name": "small-portrait-ready",
+      "viewport": {
+        "w": 360,
+        "h": 640
+      },
+      "portrait": true,
+      "reserve": 102.4,
+      "awakening": {
+        "x": 256.8125,
+        "y": 411.09375,
+        "width": 97.1875,
+        "height": 121.5,
+        "right": 354,
+        "bottom": 532.59375
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 122.390625,
+        "height": 61.40625,
+        "right": 134.390625,
+        "bottom": 71.40625
+      },
+      "money": {
+        "x": 139.390625,
+        "y": 8,
+        "width": 122.390625,
+        "height": 57.375,
+        "right": 261.78125,
+        "bottom": 65.375
+      },
+      "days": {
+        "x": 139.390625,
+        "y": 57,
+        "width": 122.390625,
+        "height": 61.84375,
+        "right": 261.78125,
+        "bottom": 118.84375
+      },
+      "menu": {
+        "x": 301,
+        "y": 12,
+        "width": 50,
+        "height": 50,
+        "right": 351,
+        "bottom": 62
+      },
+      "actions": {
+        "x": 298.296875,
+        "y": 117,
+        "width": 49.703125,
+        "height": 290,
+        "right": 348,
+        "bottom": 407
+      },
+      "progress": 100,
+      "total": 2,
+      "selecting": false,
+      "disabled": false,
+      "caption": "Despertar disponible: bendecir una planta o muralla"
+    },
+    {
+      "name": "portrait-selection",
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "portrait": true,
+      "reserve": 125,
+      "awakening": {
+        "x": 278.703125,
+        "y": 582.375,
+        "width": 105.296875,
+        "height": 131.625,
+        "right": 384,
+        "bottom": 714
+      },
+      "clock": {
+        "x": 12,
+        "y": 10,
+        "width": 132.59375,
+        "height": 66.53125,
+        "right": 144.59375,
+        "bottom": 76.53125
+      },
+      "money": {
+        "x": 149.59375,
+        "y": 8,
+        "width": 132.59375,
+        "height": 62.15625,
+        "right": 282.1875,
+        "bottom": 70.15625
+      },
+      "days": {
+        "x": 149.59375,
+        "y": 57,
+        "width": 132.59375,
+        "height": 67,
+        "right": 282.1875,
+        "bottom": 124
+      },
+      "menu": {
+        "x": 331,
+        "y": 12,
+        "width": 50,
+        "height": 50,
+        "right": 381,
+        "bottom": 62
+      },
+      "actions": {
+        "x": 297.6875,
+        "y": 117,
+        "width": 80.3125,
+        "height": 461.25,
+        "right": 378,
+        "bottom": 578.25
+      },
+      "progress": 100,
+      "total": 2,
+      "selecting": true,
+      "disabled": false,
+      "caption": "Cancelar selección de Despertar"
+    }
+  ],
+  "errors": []
+}

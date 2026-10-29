@@ -1,4 +1,5 @@
 import {loadingSyncWitness} from './loading-sync-witness.js';
+import {declareBlessingInstance} from './blessing-material.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 // CULT V4 authored FrontSide states/bridges; legacy V3 data remains readable.
 import * as THREE from 'three';
@@ -19,6 +20,7 @@ export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128,{s
  const stageSamples=Array(8),renderPlant={};
  // Consumed synchronously by writeValues; no per-plant upload tuple allocation.
  const instanceValues=[0,0,0,0];
+ const blessingValues=[0,0,0,0];
  // Presentation-only metadata; logical entities are never changed. Height caching
  // is opt-in for an immutable terrain identity, not arbitrary ground callbacks.
  let entitySamples=new WeakMap(),terrainIdentity=null;
@@ -41,6 +43,7 @@ const GROWTH_POSITION=`
  transformed.x+=breeze; transformed.z+=breeze*0.47;
 `;
 function patchGrowth(material,meta,depth=false){
+ if(!depth)material.userData.blessingInstance=true;
  if(depth)material.userData.worldDepthCompatible=true;
  if(depth)material.userData.nativeShadowInputs=()=>[.10,meta.height,uniforms.clock.value,uniforms.wind.value];
  material.onBeforeCompile=shader=>{
@@ -48,6 +51,7 @@ function patchGrowth(material,meta,depth=false){
   shader.vertexShader=GROWTH_DECL+'\n'+shader.vertexShader;
   shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+GROWTH_POSITION);
   if(!depth)shader.vertexShader=shader.vertexShader.replace('#include <beginnormal_vertex>',`#include <beginnormal_vertex>\nfloat nm=smoothstep(uGround,uGround+0.12,position.y);objectNormal=normalize(objectNormal/vec3(mix(1.0,iGrowth.y,nm),mix(1.0,iGrowth.x,nm),mix(1.0,iGrowth.y,nm)));`);
+  if(!depth)declareBlessingInstance(shader);
   material.userData.shader=shader;
  };
  material.customProgramCacheKey=()=>depth?'bioma-growth-depth-v3-opaque':'bioma-growth-pbr-v3-opaque';
@@ -59,11 +63,12 @@ function* prepareModels(gltf){
   if(!selected.has(meta.cropIndex))continue;
   const i=meta.cropIndex*5+meta.stage-1,geo=o.geometry.clone();
   geo.setAttribute('iGrowth',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute('iBlessing',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));
   const material=o.material.clone();material.metalness=0;material.roughness=.91;material.metalnessMap=null;material.roughnessMap=null;if(material.normalScale)material.normalScale.set(.48,.48);material.side=authoredSide;material.shadowSide=authoredSide;
   if(material.map)material.map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
   patchGrowth(material,meta);const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=o.name;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.count=0;mesh.castShadow=shadows;mesh.receiveShadow=shadows;mesh.frustumCulled=false;
   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:authoredSide});patchGrowth(depth,meta,true);mesh.customDepthMaterial=depth;
-  models[i]={mesh,meta,geo,material,growthAttr:geo.getAttribute('iGrowth')};scene.add(mesh);yield;
+  models[i]={mesh,meta,geo,material,growthAttr:geo.getAttribute('iGrowth'),blessingAttr:geo.getAttribute('iBlessing')};scene.add(mesh);yield;
  }
  if(models.filter(Boolean).length!==selected.size*5)throw new Error('Missing requested crop stages');
 }
@@ -140,6 +145,7 @@ vec3 bridgeNormal(vec3 p,vec3 n){
 }
 `;
 function patchBridge(material,a,b,depth=false){
+ if(!depth)material.userData.blessingInstance=true;
  if(depth)material.userData.worldDepthCompatible=true;
  if(depth)material.userData.nativeShadowInputs=()=>[a.height,b.height,a.foliageRadius,b.foliageRadius,uniforms.clock.value,uniforms.wind.value];
  material.onBeforeCompile=shader=>{
@@ -149,6 +155,7 @@ function patchBridge(material,a,b,depth=false){
   shader.vertexShader=BRIDGE_DECL+'\n'+shader.vertexShader;
   shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','vec3 transformed=bridgePosition(position);');
   if(!depth)shader.vertexShader=shader.vertexShader.replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nobjectNormal=bridgeNormal(position,objectNormal);');
+  if(!depth)declareBlessingInstance(shader);
   material.userData.shader=shader;
  };
  material.customProgramCacheKey=()=>depth?'bioma-local-bridge-depth-v3':'bioma-local-bridge-pbr-v3';
@@ -165,11 +172,11 @@ function* prepareBridges(data){
    if(!template||template.userData.a!==pair.a||template.userData.b!==pair.b)throw new Error('Falta el puente V4 horneado: '+index);
    const geo=template.geometry.clone();
    for(const [name,loaded]of [['aRoot','_aroot'],['aPeerRoot','_apeerroot'],['aSpin','_aspin'],['aPart','_apart']]){const source=geo.getAttribute(loaded);if(!source)throw new Error('Atributo V4 ausente: '+loaded);geo.setAttribute(name,source);geo.deleteAttribute(loaded);}
-   const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);geo.computeBoundingSphere();
+   const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);geo.setAttribute('iBlessing',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));geo.computeBoundingSphere();
    const material=A.material.clone();material.transparent=false;material.opacity=1;material.depthWrite=true;material.alphaTest=0;material.side=authoredSide;material.shadowSide=authoredSide;patchBridge(material,A.meta,B.meta);
    const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=template.name;mesh.count=0;mesh.visible=false;mesh.castShadow=shadows;mesh.receiveShadow=shadows;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
    const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:authoredSide});patchBridge(depth,A.meta,B.meta,true);mesh.customDepthMaterial=depth;
-   bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);yield;continue;
+   bridges[index]={mesh,geo,attr,blessingAttr:geo.getAttribute('iBlessing'),a:pair.a,b:pair.b};scene.add(mesh);yield;continue;
   }
   const total=A.geo.index.count+B.geo.index.count;
   const pos=new Float32Array(total*3),norm=new Float32Array(total*3),uv=new Float32Array(total*2);
@@ -210,13 +217,13 @@ function* prepareBridges(data){
   }
   const geo=new THREE.BufferGeometry();
   for(const [name,array,size] of [['position',pos,3],['normal',norm,3],['uv',uv,2],['aRoot',roots,3],['aPeerRoot',peers,3],['aSpin',spins,4],['aPart',parts,4]])geo.setAttribute(name,new THREE.BufferAttribute(array,size));
-  const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);
+  const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);geo.setAttribute('iBlessing',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));
   geo.computeBoundingSphere();
   const material=A.material.clone();material.transparent=false;material.opacity=1;material.depthWrite=true;material.alphaTest=0;patchBridge(material,A.meta,B.meta);
   const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=`puente_${A.meta.crop}_${A.meta.stage}_${B.meta.stage}`;
   mesh.count=0;mesh.visible=false;mesh.castShadow=shadows;mesh.receiveShadow=shadows;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:authoredSide});patchBridge(depth,A.meta,B.meta,true);mesh.customDepthMaterial=depth;
-  const index=A.meta.cropIndex*4+A.meta.stage-1;bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);yield;
+  const index=A.meta.cropIndex*4+A.meta.stage-1;bridges[index]={mesh,geo,attr,blessingAttr:geo.getAttribute('iBlessing'),a:pair.a,b:pair.b};scene.add(mesh);yield;
  }
 }
 function transitionWindow(crop,stage){
@@ -249,6 +256,11 @@ function writeBridge(index,plant,part){
  writePose(b,slot,plant);
  instanceValues[0]=part.t;instanceValues[1]=part.e;instanceValues[2]=plant.seed||0;instanceValues[3]=0;
  writeValues(b.attr,slot*4,instanceValues);
+ writeBlessing(b,slot,plant);
+}
+function writeBlessing(item,slot,plant){
+ blessingValues[0]=plant.blessed;blessingValues[1]=plant.blessedAt;blessingValues[2]=plant.damageAt;blessingValues[3]=plant.selectable;
+ writeValues(item.blessingAttr,slot*4,blessingValues);
 }
 
 function stageSample(crop,growth){
@@ -271,6 +283,7 @@ function writeInstance(modelIndex,plant,part){
  writePose(item,slot,plant);
  instanceValues[0]=part.sy;instanceValues[1]=part.sr;instanceValues[2]=part.open;instanceValues[3]=plant.seed||0;
  writeValues(item.growthAttr,slot*4,instanceValues);
+ writeBlessing(item,slot,plant);
 }
 
  let renderables=[];
@@ -280,7 +293,7 @@ function writeInstance(modelIndex,plant,part){
  return {
   capacity:MAX_PLANTS,
   preparation:prepare,
-  update(plants,clock,ground,origin=ZERO_ORIGIN,groundKey=null) {
+  update(plants,clock,ground,origin=ZERO_ORIGIN,groundKey=null,presentation=null) {
    if(groundKey!==terrainIdentity){entitySamples=new WeakMap();terrainIdentity=groundKey;}
    renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of renderables)model.mesh.position.set(origin.x,0,origin.z);
    uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);dirty.clear();
@@ -293,6 +306,8 @@ function writeInstance(modelIndex,plant,part){
      entry.y=ground(entity.x,entity.z);entry.x=entity.x;entry.z=entity.z;entry.hasHeight=true;
     }
     const p=renderPlant;p.x=entity.x;p.z=entity.z;p.rotation=entity.rotation;p.crop=entry.crop;p.growth=entity.growth/entry.duration;p.y=entry.y;p.seed=entry.seed;
+    p.blessed=entity.blessing?1:0;p.blessedAt=entity.blessing?.at??0;p.damageAt=entity.blessing?(presentation?.damageAt?.get(entity.id)??-1000):0;
+    p.selectable=presentation?.selecting&&!entity.blessing?(presentation.selectedTargetId===entity.id?2:1):0;
     const cached=stageSamples[p.crop];
     const sample=cached?.growth===p.growth?cached.sample:stageSample(p.crop,p.growth);
     if(cached?.growth!==p.growth)stageSamples[p.crop]={growth:p.growth,sample};

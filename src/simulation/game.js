@@ -1,4 +1,10 @@
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
+import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
+import {AWAKENINGS} from './awakening-config.js';
+import {blessingTarget,previewBlessing,loseBlessing} from './blessings.js';
+import {blessingInfluence,invalidateBlessingInfluence} from './blessing-influence.js';
+import {cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
+export {previewBlessing} from './blessings.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {animalNativeExitBridgePending} from './animal-native-exit-bridge.js';
@@ -77,11 +83,32 @@ export function observeGameEvents(s,callback){
   return ()=>listeners.delete(callback);
 }
 export function emit(s,type,detail={}) {
+  const wallLoss=type==='StructureRuined'?loseBlessing(s,s.structures.find(p=>p.id===detail.targetId)??{}):null;
   const event={id:`event-${s.sequence++}`,type,...detail};
+  if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
   for(const callback of eventObservers.get(s)??[])callback(event);
+  if(wallLoss){
+    emit(s,'BlessingDestroyed',wallLoss);
+    notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId,{category:'awakening-lost',location:wallLoss.presentation});
+  }
+  if(type==='CropHit'&&event.blessingDestroyed){
+    emit(s,'BlessingDestroyed',event.blessingDestroyed);
+    notice(s,'Una fuente mágica ha sido destruida. Sus cultivos pierden la influencia.',event.targetId,{category:'awakening-lost',location:event.blessingDestroyed.presentation});
+  }else if((type==='CropHit'&&!event.destroyed)||type==='StructureHit'){
+    const target=type==='CropHit'?s.plants.find(p=>p.id===event.targetId):s.structures.find(p=>p.id===event.targetId&&p.status==='intact');
+    if(target?.blessing&&target.blessing.threatDay!==s.day){
+      target.blessing.threatDay=s.day;emit(s,'BlessingThreatened',{targetId:target.id,presentation:{x:target.x,z:target.z}});
+      notice(s,target.species?'Una fuente mágica está bajo ataque. ¡Protégela!':'Una muralla mágica está bajo ataque. ¡Protégela!',target.id,{category:'awakening-threat',location:target});
+    }
+  }
 }
-export function notice(s,text,target=null) {s.messages.push({id:`message-${s.sequence++}`,text,target});if(s.messages.length>8)s.messages.shift();}
+export function notice(s,text,target=null,metadata=null) {
+  s.messages.push({id:`message-${s.sequence++}`,text,target,
+    ...(metadata?.category?{category:metadata.category}:{}),
+    ...(metadata?.location?{location:{x:metadata.location.x,z:metadata.location.z}}:{})});
+  if(s.messages.length>8)s.messages.shift();
+}
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const profile=w=>PROFILES.find(p=>p.id===w.profile);
 const nearest=(list,point)=>[...list].sort((a,b)=>dist(a,point)-dist(b,point)||a.id.localeCompare(b.id))[0];
@@ -540,6 +567,8 @@ export function removeWall(s,id,targetId,nav) {
     for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';notifyWorkerPlanningChange(s,worker);}
     replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
     const refund=wallRefund(target);transact(s.ledger,id,refund);
+    const blessingLoss=loseBlessing(s,target,{removed:true});
+    if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId,{category:'awakening-lost',location:blessingLoss.presentation});}
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
     emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
   });
@@ -572,6 +601,35 @@ export function harvest(s,id,plantId) {
     emit(s,'HarvestRequested',{targetId:p.id,count:group.length});
   });
 }
+export function bless(s,id,targetId){
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  return commit(s,id,'awakening',()=>{
+    const draft=previewBlessing(s,targetId);
+    if(!draft.valid)throw Error(draft.reason);
+    const a=awakeningState(s);
+    if(a.enabled===false||a.progress<AWAKENINGS.maximum)throw Error('El Despertar todavía está recargando.');
+    const target=blessingTarget(s,targetId),wound=target.species?cropImpactDamage(target)/CROP_HIT_POINTS:0;
+    const blessing={version:1,ordinal:a.total+1,day:s.day,at:s.elapsed};
+    // Validate every fallible domain condition before consuming the charge.
+    target.blessing=blessing;
+    if(target.species){
+      target.harvestRequested=false;target.multiplyHarvest=false;delete target.multiplyPower;
+      target.attackHitPoints=AWAKENINGS.plantHitPoints;
+      target.attackHits=wound*AWAKENINGS.plantHitPoints;
+      for(const worker of s.workers.filter(w=>s.tasks.some(t=>t.targetId===targetId&&t.id===w.taskId))){
+        releaseTask(s,worker);worker.path=null;worker.status='idle';notifyWorkerPlanningChange(s,worker);
+      }
+      replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));
+      for(const spell of s.spells.filter(a=>a.targetPlantId===targetId))emit(s,'AgriculturalSpellEnded',{
+        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0});
+      s.spells=s.spells.filter(a=>a.targetPlantId!==targetId);
+    }
+    a.total++;a.progress=0;invalidateBlessingInfluence(s);
+    emit(s,'BlessingApplied',{targetId,kind:target.species?'plant':target.kind,blessing,
+      presentation:{x:target.x,z:target.z,elapsed:s.elapsed}});
+    notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId,{category:'awakening-applied',location:target});
+  });
+}
 function addHiredWorker(s,profileId,centerId,usedPeople){
   const center=s.structures.find(c=>c.id===centerId),village=s.villages.find(v=>v.id===center?.villageId)??s.villages[0];
   let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
@@ -598,7 +656,7 @@ export function hire(s,id,selection) {
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
   const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
   const living=activeCrops(s.plants);
-  const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
+  const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
   for(const w of s.workers)w.contractDay??=s.hiringPaidDay??s.day-1;
   const previousWorkers=s.workers;
@@ -631,7 +689,7 @@ export function rebuildTasks(s) {
     if(previousTask!==w.taskId||previousStatus!==w.status)notifyWorkerPlanningChange(s,w);
   }
   for(const p of activeCrops(s.plants)) {
-    if(!p.alive)continue;
+    if(!p.alive||p.blessing)continue;
     if(!s.structures.some(c=>c.id===p.centerId&&operational(c)))continue;
     if(p.water[0].status==='due')enqueue(s,p.centerId,'initial',p.id);
     else if(p.water.some(w=>w.status==='due'))enqueue(s,p.centerId,'water',p.id);
@@ -651,7 +709,7 @@ export function recoverDisplacedWorkers(s) {
   }
   for(const village of s.villages){
     const centers=s.structures.filter(c=>operational(c)&&c.villageId===village.id)
-      .map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
+      .map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
     const pool=s.workers.filter(w=>w.villageId===village.id&&available(w)&&
       (w.displacedDay===s.day||!w.centerId&&w.status==='waiting'));
     if(!pool.length||!centers.length)continue;
@@ -706,7 +764,7 @@ export function spellAt(s,id,p) {
   return a?.remaining>0?a:index.areas.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);
 }
 function markMultiplyTargets(s,area){
-  for(const p of activeCrops(s.plants))if(p.alive&&(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
+  for(const p of activeCrops(s.plants))if(p.alive&&!p.blessing&&(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
   area.exposureApplied=true;
 }
 export function previewSpell(s,kind,x,z,nav,targetPlantId) {
@@ -720,6 +778,7 @@ function agriculturalTarget(s,kind,x,z,targetPlantId){
   if(kind==='shield')return null;
   const p=activeCrops(s.plants).find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
+  if(p.blessing)throw new Error('Esta planta ya es una fuente mágica permanente');
   if(kind==='growth'&&isMature(p))throw new Error('Esta planta ya está madura');
   return p;
 }
@@ -1171,17 +1230,21 @@ export function planRepairAccess(s,target,nav){
 function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
     if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);return;}
-    if(target.alive){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
+    if(target.alive&&!target.blessing){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
   } else if(t.kind==='harvest') {
     if(isMature(target)&&target.harvestRequested) {
       let value=rational(cropSpec(target.species).base_harvest_value);
       if(profile(w).male)value=multiply(value,6,5);
       if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
+      const influence=blessingInfluence(s,target),passive=influence.harvestPercent?
+        {blessingBonus:rational(Math.floor(cropSpec(target.species).base_harvest_value*influence.harvestPercent/100)),
+          blessingPercent:influence.harvestPercent,blessingSourceIds:[...influence.sourceIds]}:{};
+      if(passive.blessingBonus)value=add(value,passive.blessingBonus);
       if(s.microevents?.pendingLosses[target.id])value=harvestMicroLoss(s,target,value,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
-      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
+      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,...passive,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
@@ -1454,7 +1517,7 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
-      if(!target || ('alive' in target&&!target.alive)) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
+      if(!target || ('alive' in target&&(!target.alive||target.blessing))) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       if(w.status==='walking') {
         let destination=target;
         if(t.kind==='repair'){
@@ -1509,7 +1572,9 @@ function updateWorkers(s,dt,nav) {
   reserveAvailableTasks(s,nav);
 }
 function closeNight(s) {
+  if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:(text,metadata)=>notice(s,text,null,metadata)});
   s.completedNights++;s.time=0;s.day++;
+  if(s.awakenings?.enabled!==false)startAwakeningDay(s);
   retireFarmHistory(s);
   s.tutorial.shownToday={day:s.day,ids:[]};
   const previousWorkers=s.workers;
@@ -1590,8 +1655,9 @@ export function tick(s,seconds,nav) {
       const flushGrowth=()=>growthStep?.flush();
       const enqueueCrop=taskEnqueuer(s,flushGrowth);
       try{for(const p of activeCrops(s.plants)) {
-        if(!p.alive)continue;
-        const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
+        if(!p.alive||p.blessing)continue;
+          const before=isMature(p),previousGrowth=p.growth,growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell,blessingInfluence(s,p));
+          if(!before&&s.awakenings?.enabled!==false)recordAgriculturalCare(s,p,step,Math.min(step,Math.max(0,p.growth-previousGrowth)));
         if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;growthStep?.consume(growthSpell,extra);}
         if(!before&&isMature(p)){flushGrowth();emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
         if(!p.harvestRequested&&isMature(p)){flushGrowth();queueMatureHarvest(s,p,enqueueCrop);}

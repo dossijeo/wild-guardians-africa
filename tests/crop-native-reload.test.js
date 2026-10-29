@@ -76,7 +76,9 @@ test('QA-036: all 40 native originals and 32 opaque bridges preserve every index
    assert.equal(mesh.customDepthMaterial.side,THREE.FrontSide);
    for(const name of ['aRoot','aPeerRoot','aSpin','aPart'])assert.ok(mesh.geometry.getAttribute(name).array.every(Number.isFinite));
    const shader={uniforms:{},vertexShader:'#include <beginnormal_vertex>\n#include <begin_vertex>',fragmentShader:'void main() { gl_FragColor=vec4(1.); }'};
-   mesh.material.onBeforeCompile(shader);assert.equal(shader.fragmentShader,'void main() { gl_FragColor=vec4(1.); }');
+   mesh.material.onBeforeCompile(shader);
+   assert.ok(shader.fragmentShader.startsWith('varying vec4 vBlessingInfo;\n'));
+   assert.equal(shader.fragmentShader.replace('varying vec4 vBlessingInfo;\n',''),'void main() { gl_FragColor=vec4(1.); }');
    assert.ok(shader.vertexShader.includes('vec3 transformed=bridgePosition(position);'));
    assert.ok(mesh.customDepthMaterial.userData.worldDepthCompatible);
   }

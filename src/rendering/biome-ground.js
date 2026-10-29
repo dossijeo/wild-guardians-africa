@@ -18,7 +18,7 @@ import {chunkBounds} from './water-source.js';
 // Texture uploads in the lab are raw RGBA8. Color conversion happens once in
 // its lighting recipe; normal and packed AO/roughness/height remain raw too.
 export class BiomeGround {
-  constructor({visualSearch=globalThis.location?.search??''}={}){this.visualSearch=visualSearch;this.textures=[];this.layerTextures=[];this.masks=new Set();this.loading=new AbortController();this.disposed=false;}
+  constructor({visualSearch=globalThis.location?.search??'',awakeningRoots=null}={}){this.awakeningRoots=awakeningRoots;this.visualSearch=visualSearch;this.textures=[];this.layerTextures=[];this.masks=new Set();this.loading=new AbortController();this.disposed=false;}
   async load(assets,biome,profile,field,{settlementSource=null}={}){
     this.assertOpen();this.profile=profile;this.field=field;
     const tiles=await json('/content/ground-materials.json',{signal:this.loading.signal});
@@ -100,8 +100,9 @@ export class BiomeGround {
   }
   attach(material,cx,cz,bytes=null,options){
     const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.desertSand=this.desertSand;material.userData.riverSoil=this.riverSoil;material.userData.riverUnderlay=this.riverUnderlay;material.userData.mangroveSubstrate=this.mangroveSubstrate;material.userData.mangroveShore=this.mangroveShore;material.userData.mangroveMoss=this.mangroveMoss;material.userData.canyonSand=this.canyonSand;material.userData.canyonSandFull=this.canyonSandFull;material.userData.canyonSandSoft=this.canyonSandSoft;material.userData.groundBiome=this.field.c.biome;material.userData.volcanicAsh=this.volcanicAsh;material.userData.volcanicRock=this.volcanicRock;material.userData.volcanicDeposits=this.volcanicDeposits;
+    const awakening=this.awakeningRoots?.uniforms(cx,cz,options);if(awakening)Object.assign(uniforms,awakening);
     const mask=uniforms.uGroundMask.value;let owners=0;
-    material.userData.retainBiomeGround=next=>{owners++;next.addEventListener('dispose',()=>{
+    material.userData.retainBiomeGround=next=>{owners++;if(awakening)this.awakeningRoots.retain(awakening,next);next.addEventListener('dispose',()=>{
       if(--owners===0){if(mask!==this.unmappedMask&&this.masks.delete(mask))mask.dispose();const shore=uniforms.uWetBank?.value;if(shore&&this.masks.delete(shore))shore.dispose();}
     });};
     material.userData.retainBiomeGround(material);

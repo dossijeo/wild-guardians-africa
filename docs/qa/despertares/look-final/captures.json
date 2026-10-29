@@ -1,0 +1,474 @@
+{
+  "scope": "Real app launched from its menu on Wild Engine. Prescribed QA crop layout, mature growth, fixed clock, prefilled charge and paused simulation; no generated concept images. Not campaign/balance or mobile validation.",
+  "setup": {
+    "seed": "712",
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "fieldShared": true,
+    "nativeChunks": 25,
+    "plants": [
+      {
+        "id": "plant-3",
+        "species": "maiz",
+        "x": 87.5,
+        "z": -6
+      },
+      {
+        "id": "plant-5",
+        "species": "maiz",
+        "x": 89,
+        "z": -6
+      },
+      {
+        "id": "plant-7",
+        "species": "maiz",
+        "x": 86,
+        "z": -6
+      },
+      {
+        "id": "plant-9",
+        "species": "maiz",
+        "x": 87.5,
+        "z": -4.5
+      },
+      {
+        "id": "plant-11",
+        "species": "maiz",
+        "x": 87.5,
+        "z": -7.5
+      },
+      {
+        "id": "plant-13",
+        "species": "maiz",
+        "x": 88.9,
+        "z": -4.6
+      },
+      {
+        "id": "plant-15",
+        "species": "maiz",
+        "x": 86.1,
+        "z": -7.4
+      }
+    ],
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "captures": [
+    {
+      "name": "normal-day",
+      "time": 120,
+      "elapsed": 0.26316000003337825,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "roots": {
+        "builds": 0,
+        "totalBuildMs": 0,
+        "lastBuildMs": 0,
+        "bytes": 0,
+        "tiles": 25
+      },
+      "calls": 56,
+      "triangles": 478200,
+      "textures": 98
+    },
+    {
+      "name": "awakening",
+      "time": 120,
+      "elapsed": 1.0631600000333783,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 2,
+        "draws": 6
+      },
+      "roots": {
+        "builds": 1,
+        "totalBuildMs": 17,
+        "lastBuildMs": 17,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 63,
+      "triangles": 478754,
+      "textures": 102
+    },
+    {
+      "name": "one-source-day",
+      "time": 120,
+      "elapsed": 6.0631600000333785,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 3,
+        "draws": 9
+      },
+      "roots": {
+        "builds": 1,
+        "totalBuildMs": 17,
+        "lastBuildMs": 17,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 60,
+      "triangles": 478206,
+      "textures": 102
+    },
+    {
+      "name": "one-source-night",
+      "time": 420,
+      "elapsed": 6.0631600000333785,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 4,
+        "draws": 12
+      },
+      "roots": {
+        "builds": 1,
+        "totalBuildMs": 17,
+        "lastBuildMs": 17,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 60,
+      "triangles": 478206,
+      "textures": 102
+    },
+    {
+      "name": "source-damaged",
+      "time": 420,
+      "elapsed": 6.263160000033379,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 6,
+        "draws": 18
+      },
+      "roots": {
+        "builds": 1,
+        "totalBuildMs": 17,
+        "lastBuildMs": 17,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 60,
+      "triangles": 478206,
+      "textures": 102
+    },
+    {
+      "name": "source-destroying",
+      "time": 420,
+      "elapsed": 6.5631600000333785,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 8,
+        "draws": 24
+      },
+      "roots": {
+        "builds": 2,
+        "totalBuildMs": 32.99500000476837,
+        "lastBuildMs": 15.995000004768372,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 60,
+      "triangles": 472952,
+      "textures": 102
+    },
+    {
+      "name": "source-destroyed",
+      "time": 420,
+      "elapsed": 7.5631600000333785,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 8,
+        "draws": 24
+      },
+      "roots": {
+        "builds": 2,
+        "totalBuildMs": 32.99500000476837,
+        "lastBuildMs": 15.995000004768372,
+        "bytes": 0,
+        "tiles": 25
+      },
+      "calls": 56,
+      "triangles": 472946,
+      "textures": 101
+    },
+    {
+      "name": "nearby-sources-day",
+      "time": 120,
+      "elapsed": 12.563160000033378,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 10,
+        "draws": 30
+      },
+      "roots": {
+        "builds": 3,
+        "totalBuildMs": 40.52499997615814,
+        "lastBuildMs": 7.5299999713897705,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 60,
+      "triangles": 472952,
+      "textures": 102
+    },
+    {
+      "name": "nearby-sources-night",
+      "time": 420,
+      "elapsed": 12.563160000033378,
+      "quality": "media",
+      "camera": [
+        92.5,
+        10.868869972229003,
+        1
+      ],
+      "target": [
+        87.5,
+        7.2688699722290036,
+        -6
+      ],
+      "glow": {
+        "frames": 11,
+        "draws": 33
+      },
+      "roots": {
+        "builds": 3,
+        "totalBuildMs": 40.52499997615814,
+        "lastBuildMs": 7.5299999713897705,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 60,
+      "triangles": 472952,
+      "textures": 102
+    },
+    {
+      "name": "distributed-sources-day",
+      "time": 120,
+      "elapsed": 17.563160000033378,
+      "quality": "media",
+      "camera": [
+        102.5,
+        17.375181198120117,
+        7
+      ],
+      "target": [
+        92.5,
+        8.075181198120116,
+        -6
+      ],
+      "glow": {
+        "frames": 13,
+        "draws": 39
+      },
+      "roots": {
+        "builds": 4,
+        "totalBuildMs": 127.38499987125397,
+        "lastBuildMs": 86.85999989509583,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 66,
+      "triangles": 622830,
+      "textures": 102
+    },
+    {
+      "name": "distributed-sources-night",
+      "time": 420,
+      "elapsed": 17.563160000033378,
+      "quality": "media",
+      "camera": [
+        102.5,
+        17.375181198120117,
+        7
+      ],
+      "target": [
+        92.5,
+        8.075181198120116,
+        -6
+      ],
+      "glow": {
+        "frames": 14,
+        "draws": 42
+      },
+      "roots": {
+        "builds": 4,
+        "totalBuildMs": 127.38499987125397,
+        "lastBuildMs": 86.85999989509583,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 66,
+      "triangles": 622830,
+      "textures": 102
+    },
+    {
+      "name": "wall-normal-day",
+      "time": 120,
+      "elapsed": 17.563160000033378,
+      "quality": "media",
+      "camera": [
+        96,
+        10.244674682617188,
+        -1
+      ],
+      "target": [
+        92,
+        7.844674682617187,
+        -6
+      ],
+      "glow": {
+        "frames": 16,
+        "draws": 48
+      },
+      "roots": {
+        "builds": 4,
+        "totalBuildMs": 127.38499987125397,
+        "lastBuildMs": 86.85999989509583,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 66,
+      "triangles": 637260,
+      "textures": 104
+    },
+    {
+      "name": "wall-blessed-day",
+      "time": 120,
+      "elapsed": 22.563160000033378,
+      "quality": "media",
+      "camera": [
+        96,
+        10.244674682617188,
+        -1
+      ],
+      "target": [
+        92,
+        7.844674682617187,
+        -6
+      ],
+      "glow": {
+        "frames": 18,
+        "draws": 54
+      },
+      "roots": {
+        "builds": 5,
+        "totalBuildMs": 153.05999982357025,
+        "lastBuildMs": 25.674999952316284,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 66,
+      "triangles": 637260,
+      "textures": 104
+    },
+    {
+      "name": "wall-blessed-night",
+      "time": 420,
+      "elapsed": 22.563160000033378,
+      "quality": "media",
+      "camera": [
+        96,
+        10.244674682617188,
+        -1
+      ],
+      "target": [
+        92,
+        7.844674682617187,
+        -6
+      ],
+      "glow": {
+        "frames": 19,
+        "draws": 57
+      },
+      "roots": {
+        "builds": 5,
+        "totalBuildMs": 153.05999982357025,
+        "lastBuildMs": 25.674999952316284,
+        "bytes": 2097152,
+        "tiles": 25
+      },
+      "calls": 66,
+      "triangles": 637260,
+      "textures": 104
+    }
+  ],
+  "errors": []
+}

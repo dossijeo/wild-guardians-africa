@@ -1,0 +1,577 @@
+TAP version 13
+# (node:45648) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: blessing feedback reuses event cards and keeps a location after the destroyed entity is retired
+ok 1 - blessing feedback reuses event cards and keeps a location after the destroyed entity is retired
+  ---
+  duration_ms: 25.4744
+  ...
+# Subtest: three effective good days report the streak inside one daily summary and cannot repeat it after evaluation
+ok 2 - three effective good days report the streak inside one daily summary and cannot repeat it after evaluation
+  ---
+  duration_ms: 4.26
+  ...
+# Subtest: new HUD, daily category and target descriptions participate in the existing bilingual catalog
+ok 3 - new HUD, daily category and target descriptions participate in the existing bilingual catalog
+  ---
+  duration_ms: 125.5241
+  ...
+# Subtest: glow reuses targets and adds three fixed draws while preserving renderer ownership
+ok 4 - glow reuses targets and adds three fixed draws while preserving renderer ownership
+  ---
+  duration_ms: 8.7685
+  ...
+# Subtest: glow restores renderer state even when a GPU draw fails
+ok 5 - glow restores renderer state even when a GPU draw fails
+  ---
+  duration_ms: 2.5369
+  ...
+# (node:47012) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the HUD reads legacy progress without mutating the save and only enables an available charge
+ok 6 - the HUD reads legacy progress without mutating the save and only enables an available charge
+  ---
+  duration_ms: 8.488
+  ...
+# Subtest: awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+ok 7 - awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.7152
+  ...
+# Subtest: awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+ok 8 - awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1711
+  ...
+# Subtest: awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+ok 9 - awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1331
+  ...
+# Subtest: awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+ok 10 - awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1751
+  ...
+# Subtest: awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+ok 11 - awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.4299
+  ...
+# Subtest: awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+ok 12 - awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.3631
+  ...
+# Subtest: awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+ok 13 - awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 4.8337
+  ...
+# Subtest: awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+ok 14 - awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.4838
+  ...
+# Subtest: awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+ok 15 - awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.2206
+  ...
+# Subtest: awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+ok 16 - awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1939
+  ...
+# (node:35860) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: root paths are deterministic, local, sparse and point toward actual beneficiaries
+ok 17 - root paths are deterministic, local, sparse and point toward actual beneficiaries
+  ---
+  duration_ms: 122.0281
+  ...
+# Subtest: paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+ok 18 - paths cross terrain chunk seams in global coordinates and follow the existing terrain fragment surface
+  ---
+  duration_ms: 16.8182
+  ...
+# Subtest: masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+ok 19 - masks rebuild only from local events, reuse one shared texture per terrain tile, and fade on destruction
+  ---
+  duration_ms: 47.9095
+  ...
+# Subtest: terrain quality replacement retains uniforms until the last material owner is disposed
+ok 20 - terrain quality replacement retains uniforms until the last material owner is disposed
+  ---
+  duration_ms: 4.125
+  ...
+# Subtest: root mask bounds participate in the same relative-origin window as the real terrain
+ok 21 - root mask bounds participate in the same relative-origin window as the real terrain
+  ---
+  duration_ms: 3.1212
+  ...
+# Subtest: root integration composes with both original ground quality paths and excludes ordinary objects
+ok 22 - root integration composes with both original ground quality paths and excludes ordinary objects
+  ---
+  duration_ms: 5.6722
+  ...
+# Subtest: growing occupied bounds preserves the previous mask in world coordinates during a fade
+ok 23 - growing occupied bounds preserves the previous mask in world coordinates during a fade
+  ---
+  duration_ms: 121.5055
+  ...
+# (node:24600) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: score rewards outcomes proportionally, never absolute farm size or spell casts
+ok 24 - score rewards outcomes proportionally, never absolute farm size or spell casts
+  ---
+  duration_ms: 3.9494
+  ...
+# Subtest: productive investment days score without requiring increasing sales
+ok 25 - productive investment days score without requiring increasing sales
+  ---
+  duration_ms: 1.4144
+  ...
+# Subtest: diminishing returns use live blessing count; losses are not multiplied or penalized twice
+ok 26 - diminishing returns use live blessing count; losses are not multiplied or penalized twice
+  ---
+  duration_ms: 0.406
+  ...
+# Subtest: legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+ok 27 - legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+  ---
+  duration_ms: 7.0925
+  ...
+# Subtest: banked charges do not overflow and survive bad management until explicitly spent
+ok 28 - banked charges do not overflow and survive bad management until explicitly spent
+  ---
+  duration_ms: 0.5058
+  ...
+# Subtest: delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+ok 29 - delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+  ---
+  duration_ms: 0.6327
+  ...
+# Subtest: invalid persisted progress is rejected
+ok 30 - invalid persisted progress is rejected
+  ---
+  duration_ms: 0.606
+  ...
+# Subtest: real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+ok 31 - real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+  ---
+  duration_ms: 12.3815
+  ...
+# Subtest: 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+ok 32 - 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+  ---
+  duration_ms: 0.5057
+  ...
+# (node:3880) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Wild Engine worker leases release a blessed target and deliver a real neighboring crop with a single bonus
+ok 33 - Wild Engine worker leases release a blessed target and deliver a real neighboring crop with a single bonus
+  ---
+  duration_ms: 1320.9529
+  ...
+# (node:38072) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every original crop can awaken without changing its identity or geometry, watering or harvest
+ok 34 - every original crop can awaken without changing its identity or geometry, watering or harvest
+  ---
+  duration_ms: 20.913
+  ...
+# Subtest: invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+ok 35 - invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+  ---
+  duration_ms: 9.5696
+  ...
+# Subtest: transforming an assigned task releases its worker and source can never reenter a work queue
+ok 36 - transforming an assigned task releases its worker and source can never reenter a work queue
+  ---
+  duration_ms: 118.1363
+  ...
+# Subtest: one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+ok 37 - one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+  ---
+  duration_ms: 24.7024
+  ...
+# Subtest: passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+ok 38 - passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+  ---
+  duration_ms: 1.3327
+  ...
+# Subtest: active Grow entitlement consumption remains separate from passive growth
+ok 39 - active Grow entitlement consumption remains separate from passive growth
+  ---
+  duration_ms: 2.2808
+  ...
+# Subtest: harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+ok 40 - harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+  ---
+  duration_ms: 84.6098
+  ...
+# Subtest: passive harvest does not multiply worker, event or active Multiply awards
+ok 41 - passive harvest does not multiply worker, event or active Multiply awards
+  ---
+  duration_ms: 28.891
+  ...
+# Subtest: sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+ok 42 - sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+  ---
+  duration_ms: 2.435
+  ...
+# Subtest: fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+ok 43 - fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+  ---
+  duration_ms: 1.2024
+  ...
+# Subtest: real area resolver includes a blessed source and applies peripheral damage once per attack
+ok 44 - real area resolver includes a blessed source and applies peripheral damage once per attack
+  ---
+  duration_ms: 3.6351
+  ...
+# Subtest: a permanent source alone cannot generate harvests or automatic income without workers
+ok 45 - a permanent source alone cannot generate harvests or automatic income without workers
+  ---
+  duration_ms: 83.9003
+  ...
+# Subtest: active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+ok 46 - active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+  ---
+  duration_ms: 1.7864
+  ...
+# Subtest: malformed blessing provenance, censes and impossible source tasks cannot be saved
+ok 47 - malformed blessing provenance, censes and impossible source tasks cannot be saved
+  ---
+  duration_ms: 1.4363
+  ...
+# (node:28284) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Wild Engine contact preserves target selection and applies own/adjacent wall protection to the actual attack
+ok 48 - real Wild Engine contact preserves target selection and applies own/adjacent wall protection to the actual attack
+  ---
+  duration_ms: 7042.6074
+  ...
+# (node:28328) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+ok 49 - all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+  ---
+  duration_ms: 26.5258
+  ...
+# Subtest: only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+ok 50 - only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+  ---
+  duration_ms: 3.8749
+  ...
+# Subtest: the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+ok 51 - the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+  ---
+  duration_ms: 2.3228
+  ...
+# Subtest: ordinary paid repair retains the blessing and never creates regeneration
+ok 52 - ordinary paid repair retains the blessing and never creates regeneration
+  ---
+  duration_ms: 74.9179
+  ...
+# Subtest: destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+ok 53 - destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+  ---
+  duration_ms: 45.4099
+  ...
+# Subtest: manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+ok 54 - manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+  ---
+  duration_ms: 3.885
+  ...
+# Subtest: unblessed walls and centers retain their original damage model
+ok 55 - unblessed walls and centers retain their original damage model
+  ---
+  duration_ms: 1.1163
+  ...
+# (node:6428) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+ok 56 - resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+  ---
+  duration_ms: 80.1809
+  ...
+# Subtest: source damage is localized, destruction fades sparks and restored sources do not replay transformations
+ok 57 - source damage is localized, destruction fades sparks and restored sources do not replay transformations
+  ---
+  duration_ms: 2.9338
+  ...
+# Subtest: object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+ok 58 - object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+  ---
+  duration_ms: 41.5725
+  ...
+# Subtest: young crop halos scale with their plant and open walls never receive a central aura
+ok 59 - young crop halos scale with their plant and open walls never receive a central aura
+  ---
+  duration_ms: 1.3256
+  ...
+# (node:37260) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 60 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 330.3058
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 61 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 10.5541
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 62 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 7.47
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 63 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 8.7926
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 64 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 2.7985
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 65 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 1.2237
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 66 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 2.7691
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 67 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 3.3378
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 68 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.7243
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 69 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 2.6464
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 70 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 3.867
+  ...
+# (node:23496) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-036: all 40 native originals and 32 opaque bridges preserve every indexed position, normal and UV corner
+ok 71 - QA-036: all 40 native originals and 32 opaque bridges preserve every indexed position, normal and UV corner
+  ---
+  duration_ms: 227.9569
+  ...
+# Subtest: QA-035: maiz reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 72 - QA-035: maiz reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 284.5852
+  ...
+# Subtest: QA-035: algodon reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 73 - QA-035: algodon reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 489.0877
+  ...
+# Subtest: QA-035: girasol reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 74 - QA-035: girasol reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 291.57
+  ...
+# Subtest: QA-035: platano reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 75 - QA-035: platano reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 242.5599
+  ...
+# Subtest: QA-035: sorgo reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 76 - QA-035: sorgo reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 356.913
+  ...
+# Subtest: QA-035: mijo reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 77 - QA-035: mijo reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 286.3265
+  ...
+# Subtest: QA-035: yuca reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 78 - QA-035: yuca reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 265.0012
+  ...
+# Subtest: QA-035: batata reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 79 - QA-035: batata reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 252.4782
+  ...
+# Subtest: experimental culling encloses every native original vertex across growth, rotation and wind extremes
+ok 80 - experimental culling encloses every native original vertex across growth, rotation and wind extremes
+  ---
+  duration_ms: 464.9968
+  ...
+# Subtest: experimental bounds follow membership and origin, reuse paused bounds, and leave logical plants unchanged
+ok 81 - experimental bounds follow membership and origin, reuse paused bounds, and leave logical plants unchanged
+  ---
+  duration_ms: 153.3089
+  ...
+# Subtest: V4 loading maize cooperative subset matches native baked bridges and releases only private objects
+ok 82 - V4 loading maize cooperative subset matches native baked bridges and releases only private objects
+  ---
+  duration_ms: 36.3829
+  ...
+# (node:28420) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a worker at the village releases its visual rig and can be rendered again after reassignment
+ok 83 - a worker at the village releases its visual rig and can be rendered again after reassignment
+  ---
+  duration_ms: 6.0267
+  ...
+# Subtest: empty and small farms preserve original minimum; exact visibility boundary is excluded
+ok 84 - empty and small farms preserve original minimum; exact visibility boundary is excluded
+  ---
+  duration_ms: 2.516
+  ...
+# Subtest: historical distant/dead plants do not inflate a dense restoration batch
+ok 85 - historical distant/dead plants do not inflate a dense restoration batch
+  ---
+  duration_ms: 92.918
+  ...
+# Subtest: uses the same operational work center as final focusFarm, with village fallback
+ok 86 - uses the same operational work center as final focusFarm, with village fallback
+  ---
+  duration_ms: 0.5142
+  ...
+# (node:23816) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: first real scene sync keeps an appropriately prepared dense batch instead of disposing it
+ok 87 - first real scene sync keeps an appropriately prepared dense batch instead of disposing it
+  ---
+  duration_ms: 725.3324
+  ...
+# Subtest: repeated scene sync does not inspect historical crops or delivered crates
+ok 88 - repeated scene sync does not inspect historical crops or delivered crates
+  ---
+  duration_ms: 66.8697
+  ...
+# (node:44976) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native negative: declared dawn minimum35 cannot pay wage30 and then seed5 with reserve30
+ok 89 - native negative: declared dawn minimum35 cannot pay wage30 and then seed5 with reserve30
+  ---
+  duration_ms: 40.7054
+  ...
+# Subtest: native positive: fixture65 legally pays wage30 and seed5, preserving30 without bypass
+ok 90 - native positive: fixture65 legally pays wage30 and seed5, preserving30 without bypass
+  ---
+  duration_ms: 2.9311
+  ...
+# Subtest: preselected seeds and affordable opening never use projected income or credit
+ok 91 - preselected seeds and affordable opening never use projected income or credit
+  ---
+  duration_ms: 1.5002
+  ...
+# Subtest: default-origin rendering never resolves bounds providers, including a failed draw
+ok 92 - default-origin rendering never resolves bounds providers, including a failed draw
+  ---
+  duration_ms: 5.6377
+  ...
+# Subtest: lazy bounds remain live across recentering and are restored after every draw or exception
+ok 93 - lazy bounds remain live across recentering and are restored after every draw or exception
+  ---
+  duration_ms: 3.2217
+  ...
+# Subtest: origin bounds retain shared hidden materials without walking the scene graph
+ok 94 - origin bounds retain shared hidden materials without walking the scene graph
+  ---
+  duration_ms: 7.3091
+  ...
+# Subtest: streaming, replacement, reparenting and changed uniform objects follow the live registry
+ok 95 - streaming, replacement, reparenting and changed uniform objects follow the live registry
+  ---
+  duration_ms: 19.9192
+  ...
+# Subtest: live bound identities are offset once and restored after a failing recentered draw
+ok 96 - live bound identities are offset once and restored after a failing recentered draw
+  ---
+  duration_ms: 3.0854
+  ...
+# (node:19508) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+ok 97 - all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+  ---
+  duration_ms: 9.1409
+  ...
+# Subtest: shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+ok 98 - shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+  ---
+  duration_ms: 1.5989
+  ...
+# Subtest: global bounds are collected once without moving instances or changing material identities
+ok 99 - global bounds are collected once without moving instances or changing material identities
+  ---
+  duration_ms: 2.4717
+  ...
+# Subtest: local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+ok 100 - local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+  ---
+  duration_ms: 0.659
+  ...
+# Subtest: PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+ok 101 - PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+  ---
+  duration_ms: 2.2682
+  ...
+# Subtest: native origin keeps strict 144-unit hysteresis, snaps both axes to 48 and never changes target data
+ok 102 - native origin keeps strict 144-unit hysteresis, snaps both axes to 48 and never changes target data
+  ---
+  duration_ms: 3.272
+  ...
+# Subtest: chunk-local and merged buffers preserve subunit positions far beyond Float32 world precision
+ok 103 - chunk-local and merged buffers preserve subunit positions far beyond Float32 world precision
+  ---
+  duration_ms: 17.394
+  ...
+# Subtest: original crop stages and opaque bridges use the same origin while surface queries and plant state stay global
+ok 104 - original crop stages and opaque bridges use the same origin while surface queries and plant state stay global
+  ---
+  duration_ms: 38.4772
+  ...
+# (node:30612) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 105 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 483.8589
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 106 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 224.2075
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 107 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.4712
+  ...
+1..107
+# tests 107
+# suites 0
+# pass 107
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7512.5744

@@ -1,0 +1,147 @@
+TAP version 13
+# (node:26108) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the HUD reads legacy progress without mutating the save and only enables an available charge
+ok 1 - the HUD reads legacy progress without mutating the save and only enables an available charge
+  ---
+  duration_ms: 5.8594
+  ...
+# Subtest: awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+ok 2 - awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.7204
+  ...
+# Subtest: awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+ok 3 - awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.2307
+  ...
+# Subtest: awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+ok 4 - awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1991
+  ...
+# Subtest: awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+ok 5 - awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1776
+  ...
+# Subtest: awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+ok 6 - awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1385
+  ...
+# Subtest: awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+ok 7 - awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.302
+  ...
+# Subtest: awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+ok 8 - awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1986
+  ...
+# Subtest: awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+ok 9 - awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.2292
+  ...
+# Subtest: awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+ok 10 - awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1445
+  ...
+# Subtest: awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+ok 11 - awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.2761
+  ...
+# Subtest: awakening shortcut follows the live control and never bypasses an unavailable charge
+ok 12 - awakening shortcut follows the live control and never bypasses an unavailable charge
+  ---
+  duration_ms: 2.2525
+  ...
+# Subtest: native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+ok 13 - native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+  ---
+  duration_ms: 1.612
+  ...
+# Subtest: typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+ok 14 - typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+  ---
+  duration_ms: 0.4717
+  ...
+# Subtest: buttons becoming disabled or inert are observed at dispatch time and may become usable again
+ok 15 - buttons becoming disabled or inert are observed at dispatch time and may become usable again
+  ---
+  duration_ms: 0.3307
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 16 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 2.7358
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 17 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.2415
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 18 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.351
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 19 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 86.705
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 20 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 11.731
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 21 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 13.4887
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 22 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.5151
+  ...
+# Subtest: current hiring dialog translates revised wages and every rendered hiring stepper
+ok 23 - current hiring dialog translates revised wages and every rendered hiring stepper
+  ---
+  duration_ms: 21.5171
+  ...
+# Subtest: revised reserve and dynamic damaged-wall refunds retain their amounts in English
+ok 24 - revised reserve and dynamic damaged-wall refunds retain their amounts in English
+  ---
+  duration_ms: 0.9197
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 25 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 1.2966
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 26 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 4.0293
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 27 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 1.8633
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 409.135
