@@ -109,3 +109,10 @@ The physics measurement had left the pause button saying Freeze while simulation
 `guardian-spell-wind.js` replaces the short uniform arrival gust with sustained, phased secondary motion over the authored Mantle_Spell clip. Mantle anchors/middle/tips use 0.035/0.16/0.29-radian base amplitudes with phase delays by depth and panel; feathers use separate root/tip amplitudes and wood a slower response. A smooth entry and fade bound the layer. It changes rotations only after clean pose restoration, adds no geometry or draw calls, and performs no per-frame object allocation. CPU cost has not yet been measured comparatively.
 
 `grow-wind-v2.mp4`, report and 6 fps contact sheet show real Game.tick/native WorldScene, beginning at age 0.12 s and ending with zero visible/pending summons and no errors. Sampled frames show a wider lower cloth silhouette early in arrival, visible hands and intact disappearance. Camera/background differ from the prior baseline, so this is not a matched pixel comparison. Full broad-wind artistic acceptance, rear angles, night and all four spells remain pending. Nineteen pose/singleton tests pass, including repeated renders of the installed rig and hand-origin Attack trajectories.
+
+
+## Shield night side inspection
+
+`shield-wind-v2.mp4`, report and 6 fps contact sheet capture the new secondary wind in native nighttime WorldScene, starting at spell age 0.12 s. Actual Game.tick advances 2.32834 seconds, with no reported errors, zero visible Guardians and zero queued presentations at the end. The sheet was inspected: lower cloth changes silhouette, hands/projected energy remain visible from this side, the spirit dissolves, and the persistent Shield dome correctly remains. This is not full angle/intersection or performance acceptance.
+
+An initial frontal close-camera attempt landed inside a building and was rejected; it was replaced, not counted as passed. The QA detail camera now has front/right/rear/left choices. Only the QA camera changes: player camera and production placement are untouched.
