@@ -2,6 +2,9 @@
 
 This is an index of current evidence, not acceptance of the entire phase. Earlier entries in PHASE2.md and CINEMATIC-RAGDOLL.md describe historical iterations; their pending lists must be read with the later evidence below.
 
+
+**Native-world validation correction:** Historical guardian-combat fixtures without `lightingReview=1` use legacy JavaScript terrain. Their rigs, animation traces and isolated rendering costs do not prove placement, water-layout or performance acceptance in the current spatial-WASM world. The corrected lightingReview path now uses production world initialization; see `../lighting-reference/README.md` for the native mangrove checks and their exact limits. Grow/Attack snapshots and two hyena physical cycles have passed their narrow checks, but no full all-biome/concurrency/performance acceptance is claimed. The initial cycle had a non-repeated 1.25s render spike whose cause remains unresolved. Global lighting remains opt-in.
+
 | Area | Current evidence | Remaining acceptance |
 | --- | --- | --- |
 | Guardian dialogue, face and wind | Eyelid revision, broader mantle weights and amplified wood/feather-tip wind installed; face-authoring/guardian; wind-wide/mantle-review; 62 offline voice sequences (including agricultural and Awakening additions) | Full requested continuous tutorial video with audio; perceptual review of all voice sequences; broader wind/artistic acceptance |

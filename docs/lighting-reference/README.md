@@ -91,3 +91,13 @@ Then `Medir ciclo físico real` ran continuous Game.tick/WorldScene on the nativ
 
 
 Repeat (`native-mangrove-hyena-repeat.json`): 340 frames / 12.005665 simulated seconds, no hidden frames/errors, finalDownCount zero, maximum one Guardian. The 1.25s peak did not recur: render maximum 21.065ms, p95 16.935ms; RAF interval maximum 66.495ms, p95 49.91ms; physics total p95 3.155ms. This narrows the observation to a non-repeated first-run spike but does not identify its cause or establish a before/after regression. These are Intel UHD measurements at 1600x900, not proof of a target FPS or smooth incursions with many animals.
+
+
+## Multiply, Shield and review-camera correction
+
+Added native mangrove Multiply and Shield snapshots. The initial Shield target was behind the centre from the building-focused camera; rotating revealed its dome, but clipped the Guardian at the edge. The QA building camera had ignored its Zoom control by hard-coding distance 18. It now scales that distance and height using the same review zoom setting, without changing the gameplay camera or teleporting the Guardian. `native-mangrove-shield-wide.png` shows both after zooming out. This is a controlled visual check; it is not all-angle visibility acceptance.
+
+The wide view also exposed the fixture's omitted far-vegetation layer. Lighting reviews now request `farVegetationProfile` and `farGroundReviewOverrides` as production does. Adding that layer uncovered a negative first-frame delta in the QA RAF loop (timestamp can precede its initialization timestamp); clamp it to zero before advancing simulation/rendering. The earlier screenshots in this section predate the far-layer correction. Their visible terrain edge is a fixture limitation, not a proposed game-world boundary.
+
+
+The full-horizon repeat loaded without fixture errors and retained maxVisibleGuardians=1. `native-mangrove-shield-full-horizon.png` shows the Guardian, energy connection and continuous surrounding terrain/vegetation after rotating and zooming out during Shield. One browser input command timed out; the same live tab was inspected and continued without reloading or duplicating the spell. No frametime/performance acceptance is inferred from this static frame. The prior two hyena timing runs predate far-layer attachment and must not be used as full-horizon timings.
