@@ -8,7 +8,7 @@ All six biomes: savanna, desert, grand river, mangrove, volcanoes, canyons. Comp
 
 | Group | Existing evidence | Remaining work |
 | --- | --- | --- |
-| Five work centers | Fresh AO maps, day views and Suajili night adjustment | All-culture night comparison, destruction/repair and combined contact shading |
+| Five work centers | Fresh AO maps, Suajili night adjustment, matched day/night pairs for all five cultures on savanna | Other angles/biomes, destruction/repair and combined contact shading |
 | Village buildings and native props | 46 village units, 120 prop slots / 360 LOD views baked; six-biome day/night captures | Near views, individual units, combined attenuation and full cost measurements |
 | Walls and gates | 20 pieces baked; damage and gate clipping preserve AO; adobe intact/damaged/ruined captures | Five-material day/night, gate motion, repair and incremental update cost |
 | Crops | 40 authored stages and 32 growth bridges; eight-species midpoint day/night captures | Endpoints, wind, production cinematic lighting and Grow transitions |
@@ -188,3 +188,9 @@ The QA-only `auditAODraws` button captures a forced render outside timing. Fresh
 ## Sahelian center: combined lighting comparison
 
 `saheliana-{day,night}-{combined-on,building-off}.png` compares only the center AO toggle with all other global AO, cinematic light and contacts held on. Native spatial-WASM savanna, seed 712, medium quality, fixture camera distance 22, paused clock 150/400. Roof, posts and facade remain readable in this inspected night angle; AO adds local relief without introducing large black patches. No further shader adjustment was made from this pair. This is not all-angle, all-culture, destruction or performance acceptance. Conditions are retained in `saheliana-comparison-report.json`.
+
+## Five-culture fixed-view checkpoint
+
+The Sahelian pair is now joined by Mapungubwe, Musgum, Etiope and Suajili day/night pairs, under the same native fixture settings with all global AO banks active. Only building AO is toggled within each pair. See `centers-combined-report.json` and `comparison.html`. All four additional scenes report no errors. Entrances, roof detail and supplies remain legible in the inspected night views; the building AO primarily strengthens recesses and joins. No shader change was warranted by these particular views. Saturated foreground foliage is noticeable and remains part of the combined-lighting review, not attributed to AO by this building-only test.
+
+These 20 screenshots cover five cultures, one savanna scene per culture and one fixed angle each. They do not establish all-angle/all-biome acceptance, animated destruction/repair, or incremental performance.
