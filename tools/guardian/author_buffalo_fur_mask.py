@@ -1,7 +1,7 @@
 """Export a soft dorsal-fur lighting mask without repainting the face or albedo."""
 import bpy,hashlib,json
 from pathlib import Path
-root=Path.cwd();source=root/'content/source/actors/buffalo/expressive-candidate.blend'
+root=Path.cwd();source=root/'content/source/actors/buffalo/expressive-pre-fur.blend'
 assert hashlib.sha256(source.read_bytes()).hexdigest()=='fe7d2241c34bd9c470856d3fc0f8f2e61104190819468ef6d5fa551e72074a8f', 'Use the arm-normal source from commit 62d53c8dc'
 bpy.ops.wm.open_mainfile(filepath=str(source));m=bpy.data.objects['Mesh_0'].data
 attr=m.attributes.new('_FUR_LIGHT','FLOAT','POINT')

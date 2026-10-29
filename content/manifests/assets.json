@@ -5286,6 +5286,15 @@
       "origins": [
         "content/source/actors/buffalo/expressive-candidate.blend"
       ]
+    },
+    {
+      "url": "/assets/d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e.glb",
+      "bytes": 77995596,
+      "sha256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
+      "mime": "application/octet-stream",
+      "origins": [
+        "content/source/actors/buffalo/expressive-candidate.blend"
+      ]
     }
   ],
   "models": [
@@ -5416,7 +5425,7 @@
       }
     },
     {
-      "url": "/assets/cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b.glb",
+      "url": "/assets/d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e.glb",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
       "animations": [
         {
@@ -5498,6 +5507,12 @@
         "report": "docs/guardian/phase2/vfx-scalar-review/buffalo-arm-runtime.json",
         "pipeline": "tools/guardian/transfer_authored_normals.py",
         "scope": "Rear mane and localized arm normals; non-normal payloads preserved"
+      },
+      "furLightingMask": {
+        "sourceSha256": "cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b",
+        "report": "docs/guardian/phase2/vfx-scalar-review/buffalo-masked-fur.md",
+        "attribute": "_FUR_LIGHT",
+        "pipeline": "tools/guardian/transfer_fur_mask.py"
       }
     },
     {

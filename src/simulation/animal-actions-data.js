@@ -151,9 +151,9 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "buffalo": {
-      "url": "/assets/cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b.glb",
+      "url": "/assets/d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e.glb",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
-      "sha256": "cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b",
+      "sha256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
       "presentation": {
         "scale": 1,
         "bindHeight": 2.27000033111051,

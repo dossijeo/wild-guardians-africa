@@ -35,7 +35,7 @@
       ]
     }
   ],
-  "bytes": 15078153,
+  "bytes": 15085209,
   "originalPackagingSource": "C:\\tmp\\guardian-faces\\buffalo-oral-v4.blend",
   "source": "content/source/actors/buffalo/expressive-pre-arm.blend",
   "normalRevision": {
@@ -54,12 +54,22 @@
       "sha256": "46439b046b4fb42735a085933b2e6f135676577e910a0c28cdc6159e77375315"
     },
     "expressive-candidate.blend": {
-      "bytes": 15078153,
-      "sha256": "fe7d2241c34bd9c470856d3fc0f8f2e61104190819468ef6d5fa551e72074a8f"
+      "bytes": 15085209,
+      "sha256": "ac62a5e30c39298832d40de3dc8a192e2be9dddb8d81627e5a3d79b1cc5ebc03"
     },
     "expressive-candidate.glb": {
-      "bytes": 6112176,
-      "sha256": "f1d759c7d378400aa90401df98a803eba54de4c9c8c2106b237c02368aa304b4"
+      "bytes": 6117900,
+      "sha256": "057eaeef7ff6a0159de12270b941bd533942d0337ed44abecca3f20bd7c59772"
+    },
+    "expressive-pre-fur.blend": {
+      "bytes": 15078153,
+      "sha256": "fe7d2241c34bd9c470856d3fc0f8f2e61104190819468ef6d5fa551e72074a8f"
     }
+  },
+  "furLightingMask": {
+    "sourceSha256": "cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b",
+    "report": "docs/guardian/phase2/vfx-scalar-review/buffalo-masked-fur.md",
+    "attribute": "_FUR_LIGHT",
+    "pipeline": "tools/guardian/transfer_fur_mask.py"
   }
 }

@@ -17,3 +17,7 @@ The focused african-toon and animal-actions suites passed all 36 tests at the pr
 ## Enlarged recovery diagnostic
 
 Added opt-in recoveryClose camera view to the combat fixture; gameplay camera is unchanged. Recorded and inspected the enlarged one-second contact sheet: dorsal mask follows the body through roll and rise without an obvious detached patch in those samples. The 2x orthographic view crops the upper body in standing frames, so this is a local shading diagnostic, not full-body framing acceptance. The full strategic recording remains the uncropped sequence. Candidate remains unregistered. Added a shader isolation regression test covering masked buffalo, unmasked buffalo and another species; all seven AfricanToon tests pass.
+
+## Registered revision
+
+Registered raw SHA d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e after the above diagnostic reviews. Prior candidate-only statements are historical. The original raw asset remains available; expressive-pre-fur.blend preserves the exact input for the hash-pinned authoring script. Updated only buffalo catalog and kinematic source references, retaining their sampled data. Compressed geometry/animation verification passes with zero conformance errors. Twelve shader and inclined-recovery tests pass. Actual WorldScene catalog load without face/furTrial overrides inspected and saved in installed.png/json. Broader visual and performance acceptance remains open.
