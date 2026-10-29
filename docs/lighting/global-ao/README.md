@@ -26,3 +26,26 @@ The fixture now exposes a building AO toggle whose label refreshes after async m
 ## Rendering audit notes
 
 Biomes contain 120 native prop slots (20 per biome), often with multiple LOD descriptors and shared texture sets, rather than individual GLBs. Their loader currently binds position/normal/UV/tangent; additional baked visibility must preserve native layouts and batching. Village/wall packs use separate geometry paths. The custom toon/illustrated shaders recompute lighting, so merely setting Three.js aoMap is not proof that AO reaches final pixels. Terrain already combines texture AO and contact visibility. Integrate at the indirect-light terms and verify each rendered path instead of multiplying final output.
+
+
+## Local AO implementation checkpoint — 29 October 2026
+
+Candidate switch: `globalAO=1`. The approved default rendering is unchanged while the remaining categories and artistic review are pending. New banks cover **120 native biome slots / 360 LOD views** and **46 village units / five cultures**. These are not all game elements: animated actors, crops, walls and distant vegetation still need their own integration or documented treatment.
+
+`tools/lighting/bake_native_prop_ao.py` and `bake_village_ao.py` share `vertex_visibility.py`. Blender 4.5.3 casts 32 deterministic cosine-weighted hemisphere rays per unique position/normal, with local radius 12% of the asset diagonal. Each village unit is baked separately: neighboring houses in the authoring atlas cannot imprint persistent occlusion when village layouts change. The files retain the original vertex/index layouts and source hashes. Runtime uses one normalized byte per vertex, shared across instances; the native batching path carries the attribute. Native props total 1,080,841 bytes, villages 724,772 bytes, total **1,805,613 bytes**, excluding JSON metadata and screenshots. GPU residency may duplicate attributes across existing render groups; these file sizes are not a measured GPU-memory total.
+
+The shader attenuates the approximate shaded hemisphere, preserves the direct-light excess and leaves the authored emission block intact. It replaces the former height-only local contact approximation rather than multiplying both. Strength is .50 on solid props and .28 on foliage by day, reduced to .28/.18 at night. Existing terrain/contact shading remains separate. `AO de vegetación y decorado` and `AO del poblado` controls in the real WorldScene fixture allow independent comparisons. The toggles preserve the shader and buffer allocations, so they are visual comparisons, not a complete performance baseline.
+
+The alpha-cutout baker supports clamped UVs and transparent-hit traversal. Current native textures were all opaque at their .35 threshold, so a dedicated Blender fixture was also executed: an opaque overhead surface occludes the sample, a fully transparent one does not, and negative UVs clamp instead of wrapping. That fixture passed. Refactoring the shared baker reproduced all 16,701 bytes for the three savanna tree_01 LOD views exactly.
+
+Validation at this checkpoint: 32 Node tests passed (bank provenance/layout, shader emission separation, asset batching/lifecycle, village bounds and existing cinematic/building AO); Blender geometric/alpha fixture passed; production build passed again after the village-loader extension. Native day/night views for all six biomes have been captured and inspected in this folder. No global visual or performance acceptance is claimed.
+
+### Screenshot interpretation
+
+The `*-native-on/off.png` pairs compare biome props only, before the village extension (savanna/suajili and mangrove/suajili). `*-native-village-on/off.png` pairs compare both new banks (desert/saheliana, grand_river/musgum, volcanoes/etiope, canyons/mapungubwe). Existing work-center AO, terrain contact and cinematic lighting stay enabled in both views. These are real WorldScene screenshots, seed 712, medium quality, strategic zoom 22, day time 150 / night 400, frozen presentation. The night fixture also introduces its test hyena. Initial savanna/mangrove day pairs include an object-fade settling difference and should not be treated as pixel-exact photometric measurements. Foreground tree transparency in volcanes is the existing camera-obstruction treatment.
+
+The newly baked local AO does not change mangrove water placement or terrain shading. The screenshots alone do not certify every island/water layout or every asset: near views, individual village units, animated mouths/eyelids/cloth, all crop states, wall transitions, far LOD treatment and paired performance measurements remain outstanding. `animated-and-crop-audit.json` identifies the actual runtime source files for the next pass; none declares an occlusionTexture channel, though albedo textures may contain painted shading.
+
+Canyon captures use two 90-degree camera turns to avoid a rock wall obscuring the center. The fixed-offset nighttime QA hyena appears on the cliff in this fixture; those images do not validate animal placement, navigation or ground support. No gameplay fix is inferred from this lighting trial.
+
+Browse [the side-by-side contact page](comparison.html). This is an intermediate checkpoint, not the requested final all-elements delivery.
