@@ -1,0 +1,2560 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "arriving",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "worker-28",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-113",
+      "weights": [
+        0.01967592592554379,
+        0.01967592592554379,
+        0.016724434277605157
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-114",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-115",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-116",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-117",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-118",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-119",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-120",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-121",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-122",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-123",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-124",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-125",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-126",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-127",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-128",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-129",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-130",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-131",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-132",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 20
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3102.7795449999917,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [],
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "opacity": 1
+    }
+  ],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [
+    {
+      "age": 0.8000000000001819,
+      "beam": false,
+      "impact": false,
+      "core": [
+        88.63180880117811,
+        14.26120331282299,
+        -3.748595798495371
+      ]
+    }
+  ],
+  "reused": 32,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    90,
+    -6
+  ],
+  "draws": 100,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "beast_take_damage",
+      "at": 3038.6041599999953,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3038.9370049999957,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3039.1198249999957,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3039.202894999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3039.202894999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3039.369299999996,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3039.452439999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3039.452439999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3039.967979999997,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3040.084454999997,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3040.084454999997,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3040.5999449999963,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3040.699504999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3040.699504999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3041.1984349999957,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3041.2981749999954,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3041.2981749999954,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3041.813634999996,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3041.913399999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3041.913399999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3042.462279999996,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3042.562164999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3042.562164999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3043.0611599999957,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3043.144244999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3043.144244999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3043.6763649999957,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3043.7761299999956,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3043.7761299999956,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3044.3081799999954,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3044.4080849999955,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3044.4080849999955,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3044.5244299999954,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3044.6407899999954,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3044.6407899999954,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3045.1395749999956,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3045.2395299999953,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3045.2395299999953,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3045.705399999996,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3045.821764999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3045.821764999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3046.320464999996,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3046.4203249999964,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3046.4203249999964,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3046.9357199999963,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3047.0526349999964,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3047.0526349999964,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3047.567569999997,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3047.650699999997,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3047.650699999997,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3048.149564999997,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3048.249434999997,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3048.249434999997,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3048.7649249999977,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3048.864819999998,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3048.864819999998,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3049.330434999998,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3049.4301399999986,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3049.4301399999986,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3049.5300049999987,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3049.679539999999,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3049.8126599999996,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3049.8126599999996,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3050.161745,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3050.3114400000004,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3050.4279250000004,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3050.4279250000004,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3050.7936250000002,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3050.95994,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3051.043065,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3051.043065,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3051.392445,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3051.5586749999998,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3051.6416949999993,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3051.6416949999993,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3051.97442,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3052.157355,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3052.2404699999997,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3052.2404699999997,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3052.5896199999997,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3052.739205,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3052.83899,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3052.83899,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3053.1883100000005,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3053.3376100000005,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3053.4374900000007,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3053.4374900000007,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3053.770065000001,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3053.919775000001,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3054.052885000001,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3054.052885000001,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3054.3687350000014,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3054.5349250000017,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3054.6181450000017,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3054.6181450000017,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3101.8595449999916,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3101.9795449999915,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3102.7795449999917,
+      "emitter": "qa-beast-113",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3102.7795449999917,
+      "emitter": "impact:qa-beast-113",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3102.7795449999917,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-113",
+      "x": 90,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-114",
+      "x": 92.3,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-115",
+      "x": 94.1,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-116",
+      "x": 95.9,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-117",
+      "x": 97.7,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-118",
+      "x": 90.5,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-119",
+      "x": 92.3,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-120",
+      "x": 94.1,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-121",
+      "x": 95.9,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-122",
+      "x": 97.7,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-123",
+      "x": 90.5,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-124",
+      "x": 92.3,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-125",
+      "x": 94.1,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-126",
+      "x": 95.9,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-127",
+      "x": 97.7,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-128",
+      "x": 90.5,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-129",
+      "x": 92.3,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-130",
+      "x": 94.1,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-131",
+      "x": 95.9,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-132",
+      "x": 97.7,
+      "z": -0.5999999999999996
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Latin-square order, interleaved frozen identical world; 40 warmup + 240 timed frames; GPU elapsed queries, not RAF FPS",
+    "age": 0.8,
+    "modes": [
+      {
+        "mode": "none",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "hiddenFrames": 0,
+        "animationP95": 0.3200000524520874,
+        "vfxP95": 0.10500001907348633,
+        "cpuP50": 27.125,
+        "cpuP95": 31.44000005722046,
+        "gpuP50": 25.178853,
+        "gpuP95": 28.09229,
+        "drawP95": 92
+      },
+      {
+        "mode": "body",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "hiddenFrames": 0,
+        "animationP95": 0.30000007152557373,
+        "vfxP95": 0.1100001335144043,
+        "cpuP50": 27.355000019073486,
+        "cpuP95": 32.454999923706055,
+        "gpuP50": 25.706405,
+        "gpuP95": 28.572343,
+        "drawP95": 96
+      },
+      {
+        "mode": "effects",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "hiddenFrames": 0,
+        "animationP95": 0.36000001430511475,
+        "vfxP95": 0.12000000476837158,
+        "cpuP50": 26.894999980926514,
+        "cpuP95": 33.09500002861023,
+        "gpuP50": 25.124166,
+        "gpuP95": 29.195624,
+        "drawP95": 96
+      },
+      {
+        "mode": "all",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "hiddenFrames": 0,
+        "animationP95": 0.38999998569488525,
+        "vfxP95": 0.12000012397766113,
+        "cpuP50": 27.110000014305115,
+        "cpuP95": 31.77999997138977,
+        "gpuP50": 25.998801,
+        "gpuP95": 30.293541,
+        "drawP95": 100
+      }
+    ],
+    "timer": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 40,
+          "ms": 32.389739
+        },
+        {
+          "frame": 41,
+          "ms": 31.100937
+        },
+        {
+          "frame": 42,
+          "ms": 28.09229
+        },
+        {
+          "frame": 43,
+          "ms": 28.088854
+        },
+        {
+          "frame": 44,
+          "ms": 30.293541
+        },
+        {
+          "frame": 45,
+          "ms": 25.2563
+        },
+        {
+          "frame": 46,
+          "ms": 30.853957
+        },
+        {
+          "frame": 47,
+          "ms": 29.195624
+        },
+        {
+          "frame": 48,
+          "ms": 30.004478
+        },
+        {
+          "frame": 49,
+          "ms": 26.624217
+        },
+        {
+          "frame": 50,
+          "ms": 26.623436
+        },
+        {
+          "frame": 51,
+          "ms": 27.835363
+        },
+        {
+          "frame": 52,
+          "ms": 27.698124
+        },
+        {
+          "frame": 53,
+          "ms": 24.453644
+        },
+        {
+          "frame": 54,
+          "ms": 27.92453
+        },
+        {
+          "frame": 55,
+          "ms": 27.328906
+        },
+        {
+          "frame": 56,
+          "ms": 26.70703
+        },
+        {
+          "frame": 57,
+          "ms": 27.566666
+        },
+        {
+          "frame": 58,
+          "ms": 30.940729
+        },
+        {
+          "frame": 59,
+          "ms": 29.621509
+        },
+        {
+          "frame": 60,
+          "ms": 28.528489
+        },
+        {
+          "frame": 61,
+          "ms": 25.58953
+        },
+        {
+          "frame": 62,
+          "ms": 25.46052
+        },
+        {
+          "frame": 63,
+          "ms": 25.047656
+        },
+        {
+          "frame": 64,
+          "ms": 25.138489
+        },
+        {
+          "frame": 65,
+          "ms": 25.244009
+        },
+        {
+          "frame": 66,
+          "ms": 25.289687
+        },
+        {
+          "frame": 67,
+          "ms": 26.860884
+        },
+        {
+          "frame": 68,
+          "ms": 25.914322
+        },
+        {
+          "frame": 69,
+          "ms": 25.905832
+        },
+        {
+          "frame": 70,
+          "ms": 25.891979
+        },
+        {
+          "frame": 71,
+          "ms": 23.297134
+        },
+        {
+          "frame": 72,
+          "ms": 27.189687
+        },
+        {
+          "frame": 73,
+          "ms": 27.340468
+        },
+        {
+          "frame": 74,
+          "ms": 23.110467
+        },
+        {
+          "frame": 75,
+          "ms": 27.751041
+        },
+        {
+          "frame": 76,
+          "ms": 27.283541
+        },
+        {
+          "frame": 77,
+          "ms": 26.270207
+        },
+        {
+          "frame": 78,
+          "ms": 25.87177
+        },
+        {
+          "frame": 79,
+          "ms": 25.066249
+        },
+        {
+          "frame": 80,
+          "ms": 25.881927
+        },
+        {
+          "frame": 81,
+          "ms": 24.488645
+        },
+        {
+          "frame": 82,
+          "ms": 27.460416
+        },
+        {
+          "frame": 83,
+          "ms": 25.060676
+        },
+        {
+          "frame": 84,
+          "ms": 25.706405
+        },
+        {
+          "frame": 85,
+          "ms": 26.815155
+        },
+        {
+          "frame": 86,
+          "ms": 25.149322
+        },
+        {
+          "frame": 87,
+          "ms": 25.896302
+        },
+        {
+          "frame": 88,
+          "ms": 24.491926
+        },
+        {
+          "frame": 89,
+          "ms": 25.505885
+        },
+        {
+          "frame": 90,
+          "ms": 24.696249
+        },
+        {
+          "frame": 91,
+          "ms": 25.19203
+        },
+        {
+          "frame": 92,
+          "ms": 23.484425
+        },
+        {
+          "frame": 93,
+          "ms": 22.424061
+        },
+        {
+          "frame": 94,
+          "ms": 26.528437
+        },
+        {
+          "frame": 95,
+          "ms": 25.682864
+        },
+        {
+          "frame": 96,
+          "ms": 22.518853
+        },
+        {
+          "frame": 97,
+          "ms": 25.375311
+        },
+        {
+          "frame": 98,
+          "ms": 22.491613
+        },
+        {
+          "frame": 99,
+          "ms": 22.736562
+        },
+        {
+          "frame": 100,
+          "ms": 22.643332
+        },
+        {
+          "frame": 101,
+          "ms": 24.934895
+        },
+        {
+          "frame": 102,
+          "ms": 25.23828
+        },
+        {
+          "frame": 103,
+          "ms": 22.21677
+        },
+        {
+          "frame": 104,
+          "ms": 24.812603
+        },
+        {
+          "frame": 105,
+          "ms": 25.320676
+        },
+        {
+          "frame": 106,
+          "ms": 22.408489
+        },
+        {
+          "frame": 107,
+          "ms": 25.132812
+        },
+        {
+          "frame": 108,
+          "ms": 25.441666
+        },
+        {
+          "frame": 109,
+          "ms": 22.338645
+        },
+        {
+          "frame": 110,
+          "ms": 27.392603
+        },
+        {
+          "frame": 111,
+          "ms": 24.803802
+        },
+        {
+          "frame": 112,
+          "ms": 24.337031
+        },
+        {
+          "frame": 113,
+          "ms": 24.54151
+        },
+        {
+          "frame": 114,
+          "ms": 23.783488
+        },
+        {
+          "frame": 115,
+          "ms": 24.822708
+        },
+        {
+          "frame": 116,
+          "ms": 26.227343
+        },
+        {
+          "frame": 117,
+          "ms": 26.274843
+        },
+        {
+          "frame": 118,
+          "ms": 24.382499
+        },
+        {
+          "frame": 119,
+          "ms": 25.807499
+        },
+        {
+          "frame": 120,
+          "ms": 24.482812
+        },
+        {
+          "frame": 121,
+          "ms": 26.434895
+        },
+        {
+          "frame": 122,
+          "ms": 25.811197
+        },
+        {
+          "frame": 123,
+          "ms": 24.22776
+        },
+        {
+          "frame": 124,
+          "ms": 24.135155
+        },
+        {
+          "frame": 125,
+          "ms": 22.261301
+        },
+        {
+          "frame": 126,
+          "ms": 27.371614
+        },
+        {
+          "frame": 127,
+          "ms": 25.092864
+        },
+        {
+          "frame": 128,
+          "ms": 22.437552
+        },
+        {
+          "frame": 129,
+          "ms": 27.919791
+        },
+        {
+          "frame": 130,
+          "ms": 25.384791
+        },
+        {
+          "frame": 131,
+          "ms": 28.034843
+        },
+        {
+          "frame": 132,
+          "ms": 27.18651
+        },
+        {
+          "frame": 133,
+          "ms": 27.276718
+        },
+        {
+          "frame": 134,
+          "ms": 26.954322
+        },
+        {
+          "frame": 135,
+          "ms": 26.229218
+        },
+        {
+          "frame": 136,
+          "ms": 27.82328
+        },
+        {
+          "frame": 137,
+          "ms": 28.830833
+        },
+        {
+          "frame": 138,
+          "ms": 27.173176
+        },
+        {
+          "frame": 139,
+          "ms": 26.735884
+        },
+        {
+          "frame": 140,
+          "ms": 26.059583
+        },
+        {
+          "frame": 141,
+          "ms": 27.081874
+        },
+        {
+          "frame": 142,
+          "ms": 28.433801
+        },
+        {
+          "frame": 143,
+          "ms": 27.584842
+        },
+        {
+          "frame": 144,
+          "ms": 27.604062
+        },
+        {
+          "frame": 145,
+          "ms": 26.834374
+        },
+        {
+          "frame": 146,
+          "ms": 29.210468
+        },
+        {
+          "frame": 147,
+          "ms": 31.933072
+        },
+        {
+          "frame": 148,
+          "ms": 26.961666
+        },
+        {
+          "frame": 149,
+          "ms": 27.054217
+        },
+        {
+          "frame": 150,
+          "ms": 24.083697
+        },
+        {
+          "frame": 151,
+          "ms": 23.18828
+        },
+        {
+          "frame": 152,
+          "ms": 23.104009
+        },
+        {
+          "frame": 153,
+          "ms": 23.97177
+        },
+        {
+          "frame": 154,
+          "ms": 25.469843
+        },
+        {
+          "frame": 155,
+          "ms": 25.216614
+        },
+        {
+          "frame": 156,
+          "ms": 25.542603
+        },
+        {
+          "frame": 157,
+          "ms": 22.155936
+        },
+        {
+          "frame": 158,
+          "ms": 22.866613
+        },
+        {
+          "frame": 159,
+          "ms": 24.851353
+        },
+        {
+          "frame": 160,
+          "ms": 24.748854
+        },
+        {
+          "frame": 161,
+          "ms": 25.170623
+        },
+        {
+          "frame": 162,
+          "ms": 24.845467
+        },
+        {
+          "frame": 163,
+          "ms": 27.189426
+        },
+        {
+          "frame": 164,
+          "ms": 26.415832
+        },
+        {
+          "frame": 165,
+          "ms": 22.951457
+        },
+        {
+          "frame": 166,
+          "ms": 25.514478
+        },
+        {
+          "frame": 167,
+          "ms": 22.325885
+        },
+        {
+          "frame": 168,
+          "ms": 24.78953
+        },
+        {
+          "frame": 169,
+          "ms": 25.171614
+        },
+        {
+          "frame": 170,
+          "ms": 24.655415
+        },
+        {
+          "frame": 171,
+          "ms": 23.088957
+        },
+        {
+          "frame": 172,
+          "ms": 25.157343
+        },
+        {
+          "frame": 173,
+          "ms": 24.497187
+        },
+        {
+          "frame": 174,
+          "ms": 24.76802
+        },
+        {
+          "frame": 175,
+          "ms": 25.024687
+        },
+        {
+          "frame": 176,
+          "ms": 24.847186
+        },
+        {
+          "frame": 177,
+          "ms": 23.496302
+        },
+        {
+          "frame": 178,
+          "ms": 22.628124
+        },
+        {
+          "frame": 179,
+          "ms": 23.019583
+        },
+        {
+          "frame": 180,
+          "ms": 26.441666
+        },
+        {
+          "frame": 181,
+          "ms": 28.323697
+        },
+        {
+          "frame": 182,
+          "ms": 24.957395
+        },
+        {
+          "frame": 183,
+          "ms": 24.320781
+        },
+        {
+          "frame": 184,
+          "ms": 25.981614
+        },
+        {
+          "frame": 185,
+          "ms": 25.193541
+        },
+        {
+          "frame": 186,
+          "ms": 26.133489
+        },
+        {
+          "frame": 187,
+          "ms": 24.933906
+        },
+        {
+          "frame": 188,
+          "ms": 26.951769
+        },
+        {
+          "frame": 189,
+          "ms": 24.56276
+        },
+        {
+          "frame": 190,
+          "ms": 23.993854
+        },
+        {
+          "frame": 191,
+          "ms": 24.027968
+        },
+        {
+          "frame": 192,
+          "ms": 25.766666
+        },
+        {
+          "frame": 193,
+          "ms": 24.300468
+        },
+        {
+          "frame": 194,
+          "ms": 26.589166
+        },
+        {
+          "frame": 195,
+          "ms": 28.045468
+        },
+        {
+          "frame": 196,
+          "ms": 27.339635
+        },
+        {
+          "frame": 197,
+          "ms": 26.75026
+        },
+        {
+          "frame": 198,
+          "ms": 27.667864
+        },
+        {
+          "frame": 199,
+          "ms": 25.840937
+        },
+        {
+          "frame": 200,
+          "ms": 27.86875
+        },
+        {
+          "frame": 201,
+          "ms": 26.696718
+        },
+        {
+          "frame": 202,
+          "ms": 23.219427
+        },
+        {
+          "frame": 203,
+          "ms": 25.975937
+        },
+        {
+          "frame": 204,
+          "ms": 26.066405
+        },
+        {
+          "frame": 205,
+          "ms": 25.242968
+        },
+        {
+          "frame": 206,
+          "ms": 25.899426
+        },
+        {
+          "frame": 207,
+          "ms": 25.656353
+        },
+        {
+          "frame": 208,
+          "ms": 27.735519
+        },
+        {
+          "frame": 209,
+          "ms": 28.572343
+        },
+        {
+          "frame": 210,
+          "ms": 26.845989
+        },
+        {
+          "frame": 211,
+          "ms": 28.144426
+        },
+        {
+          "frame": 212,
+          "ms": 23.903645
+        },
+        {
+          "frame": 213,
+          "ms": 25.124166
+        },
+        {
+          "frame": 214,
+          "ms": 26.561197
+        },
+        {
+          "frame": 215,
+          "ms": 27.939686
+        },
+        {
+          "frame": 216,
+          "ms": 26.997811
+        },
+        {
+          "frame": 217,
+          "ms": 27.244583
+        },
+        {
+          "frame": 218,
+          "ms": 25.347343
+        },
+        {
+          "frame": 219,
+          "ms": 25.471457
+        },
+        {
+          "frame": 220,
+          "ms": 26.373072
+        },
+        {
+          "frame": 221,
+          "ms": 25.385624
+        },
+        {
+          "frame": 222,
+          "ms": 26.816249
+        },
+        {
+          "frame": 223,
+          "ms": 26.506874
+        },
+        {
+          "frame": 224,
+          "ms": 26.691197
+        },
+        {
+          "frame": 225,
+          "ms": 25.3225
+        },
+        {
+          "frame": 226,
+          "ms": 23.763332
+        },
+        {
+          "frame": 227,
+          "ms": 25.912811
+        },
+        {
+          "frame": 228,
+          "ms": 26.274635
+        },
+        {
+          "frame": 229,
+          "ms": 25.366717
+        },
+        {
+          "frame": 230,
+          "ms": 24.449634
+        },
+        {
+          "frame": 231,
+          "ms": 25.178853
+        },
+        {
+          "frame": 232,
+          "ms": 22.832916
+        },
+        {
+          "frame": 233,
+          "ms": 27.326978
+        },
+        {
+          "frame": 234,
+          "ms": 26.459686
+        },
+        {
+          "frame": 235,
+          "ms": 26.253748
+        },
+        {
+          "frame": 236,
+          "ms": 26.706041
+        },
+        {
+          "frame": 237,
+          "ms": 23.651874
+        },
+        {
+          "frame": 238,
+          "ms": 25.175728
+        },
+        {
+          "frame": 239,
+          "ms": 22.763697
+        },
+        {
+          "frame": 240,
+          "ms": 24.52427
+        },
+        {
+          "frame": 241,
+          "ms": 24.872083
+        },
+        {
+          "frame": 242,
+          "ms": 25.794374
+        },
+        {
+          "frame": 243,
+          "ms": 25.637239
+        },
+        {
+          "frame": 244,
+          "ms": 25.677343
+        },
+        {
+          "frame": 245,
+          "ms": 25.244895
+        },
+        {
+          "frame": 246,
+          "ms": 24.909686
+        },
+        {
+          "frame": 247,
+          "ms": 22.345988
+        },
+        {
+          "frame": 248,
+          "ms": 22.482916
+        },
+        {
+          "frame": 249,
+          "ms": 25.093906
+        },
+        {
+          "frame": 250,
+          "ms": 24.217915
+        },
+        {
+          "frame": 251,
+          "ms": 22.497708
+        },
+        {
+          "frame": 252,
+          "ms": 25.998801
+        },
+        {
+          "frame": 253,
+          "ms": 25.316561
+        },
+        {
+          "frame": 254,
+          "ms": 24.537656
+        },
+        {
+          "frame": 255,
+          "ms": 22.335208
+        },
+        {
+          "frame": 256,
+          "ms": 22.253905
+        },
+        {
+          "frame": 257,
+          "ms": 25.044114
+        },
+        {
+          "frame": 258,
+          "ms": 25.053905
+        },
+        {
+          "frame": 259,
+          "ms": 23.06328
+        },
+        {
+          "frame": 260,
+          "ms": 25.028228
+        },
+        {
+          "frame": 261,
+          "ms": 22.360103
+        },
+        {
+          "frame": 262,
+          "ms": 25.136301
+        },
+        {
+          "frame": 263,
+          "ms": 24.497031
+        },
+        {
+          "frame": 264,
+          "ms": 24.621978
+        },
+        {
+          "frame": 265,
+          "ms": 27.015572
+        },
+        {
+          "frame": 266,
+          "ms": 24.230572
+        },
+        {
+          "frame": 267,
+          "ms": 26.427343
+        },
+        {
+          "frame": 268,
+          "ms": 26.22953
+        },
+        {
+          "frame": 269,
+          "ms": 25.548593
+        },
+        {
+          "frame": 270,
+          "ms": 24.741302
+        },
+        {
+          "frame": 271,
+          "ms": 24.623437
+        },
+        {
+          "frame": 272,
+          "ms": 25.779218
+        },
+        {
+          "frame": 273,
+          "ms": 26.523072
+        },
+        {
+          "frame": 274,
+          "ms": 24.555832
+        },
+        {
+          "frame": 275,
+          "ms": 24.410206
+        },
+        {
+          "frame": 276,
+          "ms": 24.891093
+        },
+        {
+          "frame": 277,
+          "ms": 25.035833
+        },
+        {
+          "frame": 278,
+          "ms": 25.658593
+        },
+        {
+          "frame": 279,
+          "ms": 24.64276
+        }
+      ]
+    }
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1050000190734863,
+      "logic": 0.0849999189376831,
+      "render": 0,
+      "total": 1.1899999380111694
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.3949999809265137,
+      "logic": 0.06499993801116943,
+      "render": 0.004999995231628418,
+      "total": 1.4649999141693115
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.534999966621399,
+      "logic": 0.0700000524520874,
+      "render": 0.004999995231628418,
+      "total": 1.6100000143051147
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.8700000047683716,
+      "logic": 0.05500006675720215,
+      "render": 0,
+      "total": 0.9250000715255737
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9049999713897705,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 0.9750000238418579
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.4550000429153442,
+      "logic": 0.10500001907348633,
+      "render": 0.004999995231628418,
+      "total": 1.565000057220459
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.0700000524520874,
+      "logic": 0.06499993801116943,
+      "render": 0.004999995231628418,
+      "total": 1.1399999856948853
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.4499999284744263,
+      "logic": 0.11500000953674316,
+      "render": 0,
+      "total": 1.5649999380111694
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.5700000524520874,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 1.6349999904632568
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.3900001049041748,
+      "logic": 0.06999993324279785,
+      "render": 0,
+      "total": 1.4600000381469727
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1750000715255737,
+      "logic": 0.0549999475479126,
+      "render": 0.004999995231628418,
+      "total": 1.2350000143051147
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.5099999904632568,
+      "logic": 0.060000061988830566,
+      "render": 0.004999995231628418,
+      "total": 1.5750000476837158
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.4449999332427979,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 1.5149999856948853
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1,
+      "logic": 0.059999942779541016,
+      "render": 0,
+      "total": 1.059999942779541
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.125,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 1.1899999380111694
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1200000047683716,
+      "logic": 0.06500005722045898,
+      "render": 0,
+      "total": 1.1850000619888306
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.9350000619888306,
+      "logic": 0.07999992370605469,
+      "render": 0,
+      "total": 2.0199999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 2.215000033378601,
+      "logic": 0.13499999046325684,
+      "render": 0.004999995231628418,
+      "total": 2.3550000190734863
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.2599999904632568,
+      "logic": 0.06500005722045898,
+      "render": 0,
+      "total": 1.3250000476837158
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.28000009059906,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 1.3450000286102295
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1049998998641968,
+      "logic": 0.06500005722045898,
+      "render": 0,
+      "total": 1.1699999570846558
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.909999966621399,
+      "logic": 0.09000003337860107,
+      "render": 0,
+      "total": 2
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.1350001096725464,
+      "logic": 0.07499992847442627,
+      "render": 0.004999995231628418,
+      "total": 1.215000033378601
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.2050000429153442,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 1.274999976158142
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.5750000476837158,
+      "logic": 0.13999998569488525,
+      "render": 0.004999995231628418,
+      "total": 1.7200000286102295
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.6150000095367432,
+      "logic": 0.06500005722045898,
+      "render": 0.004999995231628418,
+      "total": 1.6850000619888306
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.3300000429153442,
+      "logic": 0.09000003337860107,
+      "render": 0.004999995231628418,
+      "total": 1.4250000715255737
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 0.9450000524520874,
+      "logic": 0.0549999475479126,
+      "render": 0.004999995231628418,
+      "total": 1.0049999952316284
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-92",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.915000081062317,
+      "logic": 0.07999992370605469,
+      "render": 7.185000061988831,
+      "total": 9.180000066757202
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-113",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "plan": 1.3399999141693115,
+      "logic": 0.05000007152557373,
+      "render": 4.629999995231628,
+      "total": 6.019999980926514
+    }
+  ]
+}
