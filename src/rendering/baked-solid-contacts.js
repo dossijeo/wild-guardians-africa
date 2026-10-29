@@ -10,7 +10,7 @@ export class BakedSolidContacts{
  constructor(binding,boxes,peers=null){
   this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();this.peerOffset=new Vector3();this.solidBounds=boxes.length?new SkinContactBounds(binding.model):null;
  }
- static forAnimal(world,animal,binding,{peers=false}={}){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes,peers?()=>{const manager=world.nav.beastPhysics,entries=[...(manager?.entries.values()??[])];for(const e of manager?.baked?.entries.values()??[]){if(e.animal.id===animal.id)break;entries.push(e);}return entries;}:null);}
+ static forAnimal(world,animal,binding,{peers=false}={}){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes,peers?()=>{return recoveryPriorityPeers(world.nav.beastPhysics,animal.id);}:null);}
  refreshPeers(){
   this.peerBoxes.length=0;const seen=new Set();
   for(const e of this.peers?.()??[]){
@@ -61,4 +61,18 @@ export class BakedSolidContacts{
   else if(surface)for(let i=0;i<offset;i+=3)this.minimumClearance=Math.min(this.minimumClearance,this.positions[i+1]-surface(this.positions[i],this.positions[i+2]));
   return this.shift;
  }
+}
+
+// Admission order gives each pair one yielding actor. Physical actors precede
+// baked actors; stopping at self excludes self-contact and reciprocal pushing.
+export function recoveryPriorityPeers(manager,id){
+ const peers=[];
+ for(const entries of [manager?.entries,manager?.baked?.entries]){
+  for(const entry of entries?.values()??[]){
+   if(entry.animal.id===id)return peers;
+   peers.push(entry);
+  }
+ }
+ // An actor already removed from the manager must not keep moving neighbors.
+ return [];
 }

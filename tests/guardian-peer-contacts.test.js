@@ -23,3 +23,18 @@ test('baked vertices are queried against real Rapier collider volumes',async()=>
  assert.equal(sampleRecoverySkinBounds(manager)[0].bakedVerticesInsidePhysical.inside,0);
  world.free();geometry.dispose();material.dispose();
 });
+
+import {recoveryPriorityPeers} from '../src/rendering/baked-solid-contacts.js';
+test('recovery priority excludes self and reciprocal displacement across physical and baked actors',()=>{
+ const entry=id=>({animal:{id}}),a=entry('a'),b=entry('b'),c=entry('c'),d=entry('d');
+ const manager={entries:new Map([['a',a],['b',b]]),baked:{entries:new Map([['c',c],['d',d]])}};
+ assert.deepEqual(recoveryPriorityPeers(manager,'a'),[]);
+ assert.deepEqual(recoveryPriorityPeers(manager,'b'),[a]);
+ assert.deepEqual(recoveryPriorityPeers(manager,'c'),[a,b]);
+ assert.deepEqual(recoveryPriorityPeers(manager,'d'),[a,b,c]);
+ manager.entries.delete('a');
+ assert.deepEqual(recoveryPriorityPeers(manager,'b'),[]);
+ assert.deepEqual(recoveryPriorityPeers(manager,'a'),[]);
+ manager.entries.set('a',a);
+ assert.deepEqual(recoveryPriorityPeers(manager,'a'),[b]);
+});
