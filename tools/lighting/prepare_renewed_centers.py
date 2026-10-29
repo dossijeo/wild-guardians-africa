@@ -3,7 +3,7 @@
 Preserves proportions and textures; fits each former building's dimensions without expanding its envelope.
 Does not install runtime assets or reuse old model-specific geometry patches.
 """
-import json
+import json, runpy
 from pathlib import Path
 import bpy
 
@@ -33,6 +33,9 @@ for old in audit['rows']:
     for v in obj.data.vertices:
         for axis in range(3):
             v.co[axis] = (v.co[axis] - center[axis]) * scale
+    roof_repair = None
+    if culture == 'saheliana':
+        roof_repair = runpy.run_path(str(Path(__file__).with_name('repair_renewed_sahelian_roof.py')))['repair_roof'](obj.data)
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
@@ -40,7 +43,7 @@ for old in audit['rows']:
     bpy.ops.export_scene.gltf(filepath=str(output / (culture + '.glb')), export_format='GLB', use_selection=True)
     rows.append({'culture': culture, 'uniformScale': scale, 'oldDimensionsXYZ': old['currentDimensions'],
                  'newDimensionsXYZ': [(high[i]-low[i])*scale for i in (0,2,1)],
-                 'vertices': len(obj.data.vertices), 'triangles': sum(len(p.vertices)-2 for p in obj.data.polygons)})
+                 'roofRepair': roof_repair, 'vertices': len(obj.data.vertices), 'triangles': sum(len(p.vertices)-2 for p in obj.data.polygons)})
 (output / 'normalization.json').write_text(json.dumps(rows, indent=2), encoding='utf-8')
 catalogue = json.loads((ROOT / 'public/content/destruction.json').read_text(encoding='utf-8'))
 for building in catalogue['buildings']:
