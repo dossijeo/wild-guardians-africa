@@ -1,6 +1,11 @@
 """Isolated cloth-only trial: release residual torso influence below the anchors."""
-import bpy,pathlib,json
-root=pathlib.Path.cwd();bpy.ops.wm.open_mainfile(filepath=str(root/'art/guardian/guardian.blend'))
+import bpy,pathlib,json,argparse,sys,hashlib
+root=pathlib.Path.cwd()
+parser=argparse.ArgumentParser();parser.add_argument('--source',type=pathlib.Path,default=root/'art/guardian/guardian.blend')
+args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+if hashlib.sha256(args.source.read_bytes()).hexdigest()!='19c20eca661bbab8c605557a151e9cf4d70d9c6c5e06d5c400379ddf303225df':
+ raise RuntimeError('Use the pre-weight source from commit 39d03dcb9 via --source; do not apply the transfer twice.')
+bpy.ops.wm.open_mainfile(filepath=str(args.source))
 body=bpy.data.objects['Guardian'];names={g.index:g.name for g in body.vertex_groups};torso=body.vertex_groups['Torso'].index
 changed=[]
 for v in body.data.vertices:
