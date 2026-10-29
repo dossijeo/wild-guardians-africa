@@ -4,7 +4,7 @@ import numpy as np
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
-def bake_visibility(vertices, normals, indices, uv=None, alpha=None, opacity=1., samples=32):
+def bake_visibility(vertices, normals, indices, uv=None, alpha=None, opacity=1., samples=32, radius_fraction=.12, groups=None):
     if samples < 8:
         raise ValueError('At least eight samples required')
     hemisphere=[]
@@ -15,8 +15,8 @@ def bake_visibility(vertices, normals, indices, uv=None, alpha=None, opacity=1.,
     vectors = [Vector(v) for v in vertices]
     tree = BVHTree.FromPolygons(vectors, indices.tolist(), all_triangles=True)
     extent = float(np.linalg.norm(np.ptp(vertices, axis=0)))
-    radius, epsilon = max(.01, extent * .12), max(.00001, extent * .0001)
-    def blocks(origin, direction):
+    radius, epsilon = max(.01, extent * radius_fraction), max(.00001, extent * .0001)
+    def blocks(origin, direction, group):
         remaining = radius
         # Alpha-cutout traversal. Cap pathological stacks conservatively;
         # max-layer counters make such inputs visible in the report.
@@ -24,8 +24,8 @@ def bake_visibility(vertices, normals, indices, uv=None, alpha=None, opacity=1.,
             hit, _, face, distance = tree.ray_cast(origin, direction, remaining)
             if hit is None:
                 return False
-            opaque = True
-            if alpha is not None:
+            opaque = groups is None or np.any(groups[indices[face]] == group)
+            if opaque and alpha is not None:
                 ids = indices[face]
                 v0, v1, v2 = (vectors[int(j)] for j in ids)
                 e0, e1, delta = v1-v0, v2-v0, hit-v0
@@ -57,7 +57,7 @@ def bake_visibility(vertices, normals, indices, uv=None, alpha=None, opacity=1.,
             values[i] = 255
             continue
         normal.normalize()
-        vertex_key = tuple(position) + tuple(normal)
+        vertex_key = tuple(position) + tuple(normal) + (() if groups is None else (int(groups[i]),))
         if vertex_key in shared:
             values[i] = shared[vertex_key]
             continue
@@ -65,7 +65,7 @@ def bake_visibility(vertices, normals, indices, uv=None, alpha=None, opacity=1.,
         tangent = normal.cross(axis).normalized()
         bitangent = normal.cross(tangent)
         origin = position + normal*epsilon
-        blocked = sum(blocks(origin, tangent*x+bitangent*y+normal*z) for x,y,z in hemisphere)
+        blocked = sum(blocks(origin, tangent*x+bitangent*y+normal*z, None if groups is None else groups[i]) for x,y,z in hemisphere)
         values[i] = round(255*(1-blocked/samples))
         shared[vertex_key] = int(values[i])
     return values, radius, stats

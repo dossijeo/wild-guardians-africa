@@ -1,3 +1,4 @@
+import {attachModelVisibility} from './model-ambient-visibility.js';
 import {nativeAmbientVisibilityEnabled,nativeVisibilityViews,villageVisibilityView} from './native-ambient-visibility.js';
 import {prepareLoadingImage,ownLoadingBitmap} from './loading-image.js';
 import {LoadingImageDecoder} from './loading-image-decoder.js';
@@ -28,7 +29,17 @@ export class Assets {
   ownModel(gltf){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;this.own(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){this.own(material);for(const value of Object.values(material))if(value?.isTexture)this.own(value);}});return gltf;}
   async model(url) {
     this.assertOpen();
-    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(async gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??''))await this.modelVisibility(gltf,url);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+  }
+  async modelVisibility(gltf,url){
+    this.assertOpen();
+    this.modelAOManifest??=json('/content/lighting/global-ao/models.json',{signal:this.preparation.signal}).catch(error=>{this.modelAOManifest=null;throw error;});
+    const catalogue=await this.modelAOManifest,entry=catalogue.find(row=>assetUrl(row.source)===assetUrl(url));
+    if(!entry)return;
+    const meta=await json(entry.metadata,{signal:this.preparation.signal});
+    if(meta.source!==entry.source)throw Error('Stale model AO source');
+    const buffer=await bytes(meta.binary,{signal:this.preparation.signal});this.assertOpen();
+    attachModelVisibility(gltf,meta,buffer);
   }
   disposeModels(){
     if(this.modelsDisposed)return;this.modelsDisposed=true;
