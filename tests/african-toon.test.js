@@ -66,6 +66,8 @@ test('matte worker body has an isolated shader without changing maps or tool mat
  assert.notEqual(body.customProgramCacheKey(),tool.customProgramCacheKey());
  assert.match(shaders[0].fragmentShader,/rough\*\.40\)\*\.04/);
  assert.doesNotMatch(shaders[1].fragmentShader,/rough\*\.40\)\*\.04/);
+ assert.ok(shaders[0].fragmentShader.includes('toon+=reflected*.006;'));
+ assert.ok(!shaders[1].fragmentShader.includes('toon+=reflected*.006;'));
  assert.equal(body.normalMap,normal);
 });
 

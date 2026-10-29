@@ -48,7 +48,8 @@ const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnos
 const warthogToon=diagnosticToon
  .replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.12;')
  .replace('vec3 toon=albedo*base*(.76+.24*fill);','vec3 toon=albedo*(base+vec3(.060,.072,.090)*uNight)*(.76+.24*fill);');
-const matteWorkerToon=diagnosticToon.replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.04;');
+const matteWorkerToon=diagnosticToon.replace('float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40)*.04;')
+ .replace('toon+=reflected*(.03+.05*(1.-rough)+wet*.18);','toon+=reflected*.006;');
 const beastToon=beastLightingFunctions(diagnosticToon),warthogBeastToon=beastLightingFunctions(warthogToon);
 // Experimental village-only relief: retain the authored palette and broad toon
 // bands while allowing the existing tangent-space atlas to affect fine light.
@@ -81,7 +82,7 @@ export class AfricanToon {
     const {endpointFunctions,atmosphereCacheKey}=this.environmentRecipe;
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
-    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,fur=material.userData.furLightingMask===true,warthog=material.userData.warthogSurface===true,matteWorker=material.userData.matteWorkerBody===true,cache=()=>baseCache()+(fur?'|fur-mask-v1':'')+(beast?'|beast-contrast-v2'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':matteWorker?'|worker-matte-v1':'');
+    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,fur=material.userData.furLightingMask===true,warthog=material.userData.warthogSurface===true,matteWorker=material.userData.matteWorkerBody===true,cache=()=>baseCache()+(fur?'|fur-mask-v1':'')+(beast?'|beast-contrast-v2'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':matteWorker?'|worker-matte-v2':'');
     material.onBeforeCompile=(shader,renderer)=>{
       if(beast)Object.assign(shader.uniforms,this.beastUniforms);
       original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);if(material.userData.biomeGround)Object.assign(shader.uniforms,material.userData.biomeGround);if(material.userData.artBounds){Object.assign(shader.uniforms,this.artUniforms);const b=material.userData.artBounds;shader.uniforms.uArtLocalMin={value:b.min};shader.uniforms.uArtLocalSize={value:b.size};shader.uniforms.uArtCrown={value:b.crown};shader.uniforms.uArtVolcanicGlow=material.userData.nativeVolcanicGlow??this.artUniforms.uArtVolcanicGlow;}if(material.userData.toonGround)Object.assign(shader.uniforms,this.contactUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.artSurface??material.userData.nativeSurface?.type??1};

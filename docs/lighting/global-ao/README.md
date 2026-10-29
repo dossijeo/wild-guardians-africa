@@ -145,3 +145,10 @@ The older male shows pronounced nocturnal skin highlights with AO both enabled a
 The shipped olderFemale body has `matteWorkerBody` metadata and roughness 0.88; olderMale BakedMaterial lacks that metadata. Worker adoption now applies the same existing matte shader response, roughness 0.88 and metalness zero to the olderMale body atlas only, before attaching it to the scene. Tool and oral materials, textures and normals are preserved; other profiles are untouched. Raw source files and their AO hashes remain unchanged.
 
 Eight focused tests and the 539-module production build pass. `olderMale-matte-night.png` is an actual native WorldScene inspection of the hit expression. Some facial highlights remain visible, so this corrects missing material configuration but does not establish complete resolution of the waxy appearance. Environment response and painted highlights still need isolation. No additional runtime lights, textures or per-frame traversal are introduced.
+
+
+### Matte worker environment reflection
+
+The matte body variant now scales the environment reflection by 0.006 instead of the general toon coefficient (0.03 plus roughness-dependent terms). The diffuse lighting and normal/texture data are unchanged. This applies to materials explicitly marked matteWorkerBody: currently the older female authored body and older male adoption treatment. Tool materials retain their existing reflection. Shader cache advances to worker-matte-v2.
+
+Four `olderMale/olderFemale-matte-reflection-{day,night}.png` captures were inspected in native WorldScene. The older male nocturnal face loses the pronounced environment glints while wrinkles remain visible; both profiles retain readable facial forms in the sampled pose. These are close-ups of the initial hit expression, not a complete movement/all-biome acceptance. Eight material-isolation tests and the 539-module production build pass. The change adds no maps, lights or per-frame CPU work; GPU cost has not been measured.
