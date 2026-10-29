@@ -219,3 +219,15 @@ for(const mode of ['physical','baked'])for(const age of [0,.1,.29])test(`${mode}
  for(const b of bones){assert.ok(b.p.distanceTo(b.bone.getWorldPosition(new Vector3()))<1e-5,'visible bone position');assert.ok(b.q.angleTo(b.bone.getWorldQuaternion(new Quaternion()).normalize())<1e-5,'visible bone orientation');}
  assert.equal(f.animal.magicDown.phase,'falling');owner.dispose();if(owner!==f.manager)f.manager.dispose();
 });
+
+test('disposing combat restores a pending release blend and clears its ownership',()=>{
+ const f=fixture(),data=f.world.mixers.get(f.animal.id),hip=data.model.getObjectByName('Hips');
+ data.recoveryExit=new BeastRecoveryExit(data.model,f.state.elapsed);
+ hip.position.y+=.25;const native=hip.position.clone();data.model.updateMatrixWorld(true);
+ data.recoveryExit.apply(f.state.elapsed+.1);
+ assert.ok(hip.position.distanceTo(native)>.01,'Fixture must apply a visible blend');
+ f.manager.dispose();
+ assert.equal(data.recoveryExit,undefined);assert.ok(hip.position.distanceTo(native)<1e-8);
+ assert.equal(f.world.nav.beastPhysics,undefined);
+ f.manager.dispose();assert.ok(hip.position.distanceTo(native)<1e-8);
+});
