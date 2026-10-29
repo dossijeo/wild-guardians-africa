@@ -30,6 +30,8 @@ Las 12 jornadas anteriores a la retirada presentan iguales saldos, contabilidad 
 
 Durante las primeras 49 noches, la competente ingresó 48 757 monedas frente a 54 560 del control, pero su variación neta fue −447 frente a −671; perdió 784 cultivos frente a 627. Estas diferencias incluyen distintos gastos, decisiones y trayectorias de incursiones. La entrega pasiva en toda la campaña competente fue de 615 monedas. La recuperación adaptativa de esta misma semilla aún no ha terminado, por lo que no se concluye su comparación con la fija. [Métricas y gastos completos](campaigns-expanded-20261029/summary-123-progress.json).
 
+El control de la semilla 2026 ha terminado en derrota durante la jornada 58, tras superar 57 noches; su partida terminó sin cultivos y con 210 monedas. La campaña competente emparejada todavía sigue en ejecución, por lo que no se anticipa una comparación.
+
 ## En ejecución
 
-Semilla 123: recuperación adaptativa, agricultura y defensa. Semilla 2026: control y competente. Los archivos parciales, si existen, describen progreso de procesos vivos, no resultados finales. No se cambian parámetros de juego por la evidencia de una sola partida.
+Semilla 123: recuperación adaptativa, agricultura y defensa. Semilla 2026: competente. Los archivos parciales, si existen, describen progreso de procesos vivos, no resultados finales. No se cambian parámetros de juego por la evidencia de una sola partida.
