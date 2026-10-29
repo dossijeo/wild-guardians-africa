@@ -8,7 +8,7 @@ export function awakeningHudState(state,{selecting=false,blocked=false}={}){
   const available=ready&&state.awakenings?.enabled!==false&&permission(state,'awakening')&&!blocked;
   return {progress,ready,available,selecting,disabled:!selecting&&!available,
     label:selecting?'Cancelar selección de Despertar':ready?'Despertar disponible: bendecir una planta o muralla':`Energía de Despertar: ${Math.floor(progress)} de 100`,
-    caption:selecting?'Elige una planta o muralla':ready?'¡Despertar!':'Despertar'};
+    caption:'Despertar'};
 }
 // Keep the native action sizes and use the right-hand part of the tutorial reserve.
 export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w,safeBottom=0}={}){
@@ -45,7 +45,7 @@ export class AwakeningHud {
     this.element.style.setProperty('--awakening-arc',String(282.7433*(1-view.progress/100)));
     this.element.querySelector('[role="progressbar"]').setAttribute('aria-valuenow',String(Math.floor(view.progress)));
     this.element.querySelector('.awakening-caption').textContent=view.caption;
-    this.element.querySelector('.awakening-short-caption').textContent=view.selecting?'Cancelar':'Despertar';
+    this.element.querySelector('.awakening-short-caption').textContent=view.caption;
     this.element.querySelector('.awakening-value').textContent=`${Math.floor(view.progress)} / 100`;
   }
   layout(dims){
