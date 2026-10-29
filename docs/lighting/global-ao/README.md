@@ -159,3 +159,10 @@ Four `olderMale/olderFemale-matte-reflection-{day,night}.png` captures were insp
 Eight `youngFemale/youngMale-{day,night}-model-{on,off}.png` captures use the same frozen initial hit-expression procedure as the older workers. Native mangrove/suajili WorldScene, time 150/400, medium quality, closed eyes and open mouth. No runtime errors reported. Local AO produces restrained darkening in these views. YoungMale hair retains a strong highlight even with AO off; this remains a material-review item, not an AO bake failure.
 
 All nine worker/beast profiles now have at least one day/night AO comparison, but coverage is limited to these poses and angles. Open eyes, continuous facial animation, moving joints, all-biome strategic visibility and measured cost remain unverified. `young-workers-ao-report.json` records the scope and pixel differences.
+
+
+## Young male animated worker cycle
+
+`youngMale-motion.mp4` records the native Game.tick worker hit, fall, recovery and resumed flight with globalAO enabled. Report: 9.098 simulated seconds, finished=true, final fall=0/recovery=null, errors empty. Encoded video is 15.8 seconds, 2,070,497 bytes, silent 30 fps H.264; it includes capture/loading stalls and is not a frame-performance comparison. `youngMale-motion-report.json` contains state and facial-weight samples.
+
+The 1.5-second contact sheet was visually inspected through the fall, supine pose, rise and return to movement. No detached large AO patch was evident in those samples, but the nighttime camera is too distant/dark to certify fine facial or joint shading. Continuous close-up validation and the remaining profiles remain pending. The contact sheet final empty cell is padding beyond the video end.
