@@ -112,3 +112,10 @@ For an incremental runtime comparison, load the same native scene in separate ru
 `lion-{day,night}-model-{on,off}.png` and `buffalo-{day,night}-model-{on,off}.png` show frozen frontal views in the native mangrove/suajili WorldScene. The studio time buttons set time 150/400 without replacing the selected animal or changing the camera. Model AO is the only toggled shading contribution; crops also share that toggle. Browser errors were empty. Pixel differences are recorded in `lion-buffalo-ao-report.json`; they prove a visible shader contribution, not quality or performance acceptance.
 
 Lion markings and ornaments remain readable in these views. The buffalo crest and muzzle are very dark in both on/off images: simply reducing AO would not address the underlying appearance. Keep its material/lighting evaluation open, including strategic-distance views and other orientations. These static captures do not validate moving joints, facial animation or ragdoll transitions.
+
+
+### Buffalo darkness diagnosis
+
+`buffalo-albedo-diagnostic.png` uses the existing `beastLighting=albedo` diagnostic in the same native scene. The beast shader returns `filmic4(albedo)` before key/fill, shadow, local AO and contrast terms. Crest and muzzle remain dark in this view, establishing a dark base-color contribution; it does not imply lighting has no further influence. The diagnostic is not a final appearance or pixel-matched pose comparison. Browser warnings/errors were empty.
+
+The registered raw buffalo GLB retains `_FUR_LIGHT` on Mesh_0. Its authoring script deliberately masks dorsal fur while excluding face/eyes/decorations, and the shader applies that fill only in normal beast style. Do not remove the face darkness by disabling AO globally, or assume that the dark crest means its attribute was lost. Further adjustment should preserve black fur identity and evaluate material/contrast at strategic distance, separately from AO strength.
