@@ -102,3 +102,10 @@ The singleton lifecycle regression also covers replacement of the state object, 
 `grow-close.mp4` and its 6 fps contact sheet show daytime Grow from early materialization through dissolution. The hands and outgoing beams are visible, but cloth motion remains restrained from this angle. This is a baseline for further wind iteration, not artistic approval of the requested broad flag-like motion. The full repeat report was lost when the QA pause-label correction reloaded the page; `grow-close-report.json` explicitly records this limitation instead of attaching metadata from an earlier late-start capture.
 
 The physics measurement had left the pause button saying Freeze while simulation was already paused. Its cleanup now sets Resume consistently, preventing accidental unpause during subsequent frozen captures. This affects QA controls only.
+
+
+## Travelling secondary spell wind
+
+`guardian-spell-wind.js` replaces the short uniform arrival gust with sustained, phased secondary motion over the authored Mantle_Spell clip. Mantle anchors/middle/tips use 0.035/0.16/0.29-radian base amplitudes with phase delays by depth and panel; feathers use separate root/tip amplitudes and wood a slower response. A smooth entry and fade bound the layer. It changes rotations only after clean pose restoration, adds no geometry or draw calls, and performs no per-frame object allocation. CPU cost has not yet been measured comparatively.
+
+`grow-wind-v2.mp4`, report and 6 fps contact sheet show real Game.tick/native WorldScene, beginning at age 0.12 s and ending with zero visible/pending summons and no errors. Sampled frames show a wider lower cloth silhouette early in arrival, visible hands and intact disappearance. Camera/background differ from the prior baseline, so this is not a matched pixel comparison. Full broad-wind artistic acceptance, rear angles, night and all four spells remain pending. Nineteen pose/singleton tests pass, including repeated renders of the installed rig and hand-origin Attack trajectories.

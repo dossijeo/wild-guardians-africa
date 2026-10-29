@@ -1,3 +1,4 @@
+import {spellWindBinding,applySpellWind} from './guardian-spell-wind.js';
 import {GuardianPose} from './guardian-pose.js';
 import {GuardianLapPose} from './guardian-lap-pose.js';
 import {GuardianRitual} from './guardian-ritual.js';
@@ -30,7 +31,7 @@ export class GuardianSummons{
    model.traverse(o=>{if(o.isMesh){o.material=(Array.isArray(o.material)?o.material:[o.material]).map(m=>{const copy=guardianMaterial(m,this.world.toon);materials.push(copy);return copy;});if(o.material.length===1)o.material=o.material[0];o.castShadow=false;o.frustumCulled=false;}});this.world.scene.add(group);
    model.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(model),bottom=Number.isFinite(bounds.min.y)?bounds.min.y:-1.2,height=Number.isFinite(bounds.max.y)?bounds.max.y-bottom:3;
    const vortex=new GuardianVortex();this.world.scene.add(vortex);
-   const wind=[];model.traverse(bone=>{if(bone.isBone&&/^(Mantle|Feather|Wood)/.test(bone.name))wind.push({bone,phase:wind.length*.71});});
+   const wind=[];model.traverse(bone=>{if(bone.isBone){const binding=spellWindBinding(bone);if(binding)wind.push(binding);}});
    const mixer=new THREE.AnimationMixer(model),actions=new Map(gltf.animations.map(c=>[c.name,mixer.clipAction(c)]));for(const a of actions.values())a.play();
    const material=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false});
    const beam=new THREE.InstancedMesh(this.beamGeometry,material,8),impact=new THREE.Mesh(this.ringGeometry,material),core=new THREE.Mesh(this.coreGeometry,material);for(const m of [beam,impact,core]){m.visible=false;m.frustumCulled=false;this.world.scene.add(m);}
@@ -120,8 +121,7 @@ export class GuardianSummons{
    const clip=CLIPS[kind],selected=s.actions.has(clip)?clip:kind==='attack'?'Cast':'Invoke';
    for(const [name,a] of s.actions){a.enabled=['Float','Mantle_Spell',selected].includes(name);a.weight=1;a.time=name===selected?Math.min(a.getClip().duration,(kind==='attack'?(age<=ATTACK_TIMING.impact?.1+age/ATTACK_TIMING.impact*.5:.6+(age-ATTACK_TIMING.impact)/1.5*.4):age/1.5)*a.getClip().duration):state.elapsed%a.getClip().duration;}
    s.pose.update();
-   const gust=Math.sin(Math.PI*ease(age/.55))*Math.exp(-Math.max(0,age-.35)*3)+.3*Math.sin(Math.PI*ease((age-1.5)/.7));
-   for(const {bone,phase} of s.wind){bone.rotation.x+=gust*.16*Math.sin(phase-age*7);bone.rotation.z+=gust*.12*Math.cos(phase-age*5);}
+   applySpellWind(s.wind,age);
    const narration=w.guardianNarration?.();if(s.faceRecord!==narration?.record?.id){s.faceRecord=narration?.record?.id;s.face.setRecord(narration?.record);}s.face.update(narration?.audio??null,state.elapsed,{expression:{name:kind==='attack'?'focus':kind==='growth'?'joy':'surprise',value:.25*opacity}});s.group.updateMatrixWorld(true);
    const reachWeight=ease(age/.1)*(1-ease((age-.8)/.7));
    for(const bone of s.forearms)this.aimJoint(bone,s.target,.5*reachWeight);
