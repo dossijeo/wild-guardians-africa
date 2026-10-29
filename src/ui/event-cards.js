@@ -17,10 +17,20 @@ export function eventCardSpec(message){
   return {icon:11,title:'Aviso del poblado',urgent:false};
 }
 
+// Keep the original notice in game history and as a tooltip. The compact copy
+// only reduces overlap with the guardian while its tutorial is visible.
+export function eventCardDetail(message,compactUrgent=false){
+  if(!compactUrgent)return message.text;
+  const wall=/muralla/i.test(message.text);
+  if(message.category==='awakening-threat')return wall?'¡Muralla mágica bajo ataque!':'¡Fuente mágica bajo ataque!';
+  if(message.category==='awakening-lost')return wall?'Muralla perdida; su protección cesa.':'Fuente perdida; su influencia cesa.';
+  return message.text;
+}
+
 // Preserve each live DOM node, focus and click target while the lifetime changes.
 export class EventCards {
   constructor(container,assets){this.container=container;this.assets=assets;this.cards=new Map();}
-  render(messages,lifetime,now){
+  render(messages,lifetime,now,{compactUrgent=false}={}){
     const live=new Set(messages.map(m=>m.id));
     for(const [id,card] of this.cards)if(!live.has(id)){card.remove();this.cards.delete(id);}
     for(const message of messages){
@@ -29,10 +39,12 @@ export class EventCards {
         const spec=eventCardSpec(message);card=document.createElement('div');card.className='notice-card'+(spec.urgent?' urgent':'');
         const visit=document.createElement('button');visit.type='button';visit.dataset.notice=message.id;visit.className='notice-visit';
         const image=document.createElement('img');image.src=this.assets[spec.asset??'event'+spec.icon].src;image.alt='';image.setAttribute('aria-hidden','true');
-        const copy=document.createElement('span'),title=document.createElement('strong'),detail=document.createElement('small');title.textContent=spec.title;detail.textContent=message.text;copy.append(title,detail);visit.append(image,copy);
+        const copy=document.createElement('span'),title=document.createElement('strong'),detail=document.createElement('small');title.textContent=spec.title;detail.title=message.text;copy.append(title,detail);visit.append(image,copy);
         const close=document.createElement('button');close.type='button';close.dataset.dismissNotice=message.id;close.className='dismiss';close.setAttribute('aria-label','Cerrar');close.textContent='×';
         const life=document.createElement('i');life.className='life';life.setAttribute('aria-hidden','true');card.append(visit,close,life);this.container.append(card);this.cards.set(message.id,card);
       }
+      const detail=card.querySelector('small'),copy=eventCardDetail(message,compactUrgent);
+      if(detail.dataset.sourceText!==copy){detail.dataset.sourceText=copy;detail.textContent=copy;}
       card.querySelector('.life').style.transform=`scaleX(${lifetime.remaining(message.id,now)})`;
     }
   }

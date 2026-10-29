@@ -43,6 +43,18 @@ test('closing guardian animation keeps unrelated notices waiting without consumi
  assert.deepEqual(notices.visible(state,26),[]);
 });
 
+test('urgent awakening warnings can use verified tutorial space without spending queued notice time',()=>{
+ const ready={id:'ready',text:'Despertar disponible',category:'awakening-ready'};
+ const threat={id:'threat',text:'Una fuente mágica está bajo ataque',category:'awakening-threat'};
+ const state={messages:[ready,threat]},notices=new NoticeLifetime(15),tutorial={id:'basic.work',text:'Aprende a regar'};
+ assert.deepEqual(notices.visible(state,0,tutorial,{allowAwakeningUrgent:true}),[threat]);
+ assert.deepEqual(notices.visible(state,4,tutorial,{allowAwakeningUrgent:false}),[]);
+ assert.deepEqual(notices.visible(state,14,tutorial,{allowAwakeningUrgent:true}),[threat]);
+ assert.equal(notices.remaining('threat',14),11/15);
+ notices.dismiss('threat');assert.deepEqual(notices.visible(state,15,tutorial,{allowAwakeningUrgent:true}),[]);
+ assert.deepEqual(notices.visible(state,20),[ready]);assert.equal(notices.remaining('ready',20),1);
+});
+
 test('reserve explanation covers the matching command error only when actually presented',()=>{
  const state={messages:[]},message={text:RESERVE_MESSAGE},presentation={id:'budget.reserve',text:RESERVE_MESSAGE};
  assert.equal(tutorialCoversNotice(state,message,presentation),true);

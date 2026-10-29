@@ -5,7 +5,7 @@ import {awakeningState,evaluateAwakeningDay,startAwakeningDay} from '../src/simu
 import {createPlant} from '../src/simulation/crops.js';
 import {applyCropImpact} from '../src/simulation/crop-impact-health.js';
 import {retireFarmHistory} from '../src/simulation/retire-farm-history.js';
-import {eventCardSpec} from '../src/ui/event-cards.js';
+import {eventCardSpec,eventCardDetail} from '../src/ui/event-cards.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {translate} from '../public/i18n/catalog.js';
 
@@ -39,4 +39,12 @@ test('new HUD, daily category and target descriptions participate in the existin
   assert.equal(translate('Bendición permanente','en'),'Permanent blessing');
   assert.equal(translate('Magia bajo amenaza','es'),'Magia bajo amenaza');
   assert.ok(translate('Elige una planta viva o una sección de muralla en pie.','en').startsWith('Choose a living plant'));
+});
+test('compact tutorial alerts retain the original saved message and identify the threatened object',()=>{
+  const plant={category:'awakening-lost',text:'Una fuente mágica ha sido destruida. Sus cultivos pierden la influencia.'};
+  const wall={category:'awakening-threat',text:'Una muralla mágica está bajo ataque. ¡Protégela!'};
+  assert.equal(eventCardDetail(plant,true),'Fuente perdida; su influencia cesa.');
+  assert.equal(eventCardDetail(wall,true),'¡Muralla mágica bajo ataque!');
+  assert.equal(eventCardDetail(plant,false),plant.text);
+  assert.match(plant.text,/ha sido destruida/);
 });

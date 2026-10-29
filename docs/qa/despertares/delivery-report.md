@@ -1,5 +1,7 @@
 # Entrega de Despertares mágicos
 
+Actualización: las [campañas ampliadas](expanded-campaign-review.md) terminaron antes de la [revisión de usabilidad del HUD](hud-usability-review.md), cuya evidencia incluye una [comparación antes/después](hud-usability-comparison/index.html). La revisión no modifica el balance.
+
 Rama `feature/despertares-magia`, creada desde `origin/main` (`020dc1ea58857f3c0cdf154b62fc65bdd429cdea`). Implementación en checkout aislado; se conservan los cambios ajenos del checkout original. [PR #223](https://github.com/dossijeo/wild-guardians-africa/pull/223), en borrador y sin fusionar.
 
 ## Implementación jugable

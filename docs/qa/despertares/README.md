@@ -1,5 +1,7 @@
 # Despertares: registro de implementación y validación
 
+**Actualización de usabilidad:** [revisión del HUD y sus pruebas](hud-usability-review.md), [comparación antes/después](hud-usability-comparison/index.html) y [campañas ampliadas](expanded-campaign-review.md). El informe de revisión indica el alcance de la emulación y la comprobación pendiente en un móvil físico.
+
 **Entrega vigente:** [informe completo](delivery-report.md), [comparativa lado a lado](comparison-final/index.html), [informe visual](visual-mockup-review.md) y [ocho campañas comparativas](balance-review.md). Se comprobaron 70 variantes y la suite completa terminó con 5035 aprobadas, cero fallos y 62 omitidas. Las secciones siguientes conservan el historial; el perfil antiguo no describe el nuevo resplandor.
 
 ## Procedencia y preparación

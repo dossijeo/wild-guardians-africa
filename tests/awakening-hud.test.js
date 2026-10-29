@@ -27,12 +27,19 @@ for(const [w,h] of [[1280,720],[1024,768],[844,390],[740,360],[640,360],[568,320
     const d=dims(w,h),statsRight=d.short?426:568,menuLeft=w-(d.short?59:83),p=awakeningHudPlacement(d,{statsRight,menuLeft});
     const left=p.left??w-p.right-p.width,right=left+p.width;
     assert.ok(left>=0&&right<=w);assert.ok(p.width>=44&&p.height>=44);
-    assert.ok(p.top+p.height<=h-d.reserve,'the new control stays above the original tutorial reserve');
+    assert.ok(p.top+p.height<=h-7,'the control stays within the viewport');
     if(d.portrait){
-      assert.equal(p.width*1.25,p.height);assert.ok(p.actions.width>=44);
-      const actionsBottom=p.actions.top+4*p.actions.width/.715+3*p.actions.gap;
-      assert.ok(p.top>=actionsBottom+p.actions.gap-1e-8,'medallion must never cover an action');
-      assert.ok(p.actions.top>=d.header);
+      assert.equal(p.width*1.25,p.height);assert.ok(d.aw>=58,'the native action scale is retained');
+      const gap=d.short?3:4,total=4*d.aw/.715+3*gap;
+      const actionTop=d.header+Math.max(5,(h-d.reserve-d.header-total)/2);
+      assert.ok(p.top>=actionTop+total+gap-1e-8,'medallion must never cover an action');
+      assert.ok(left>=w-d.aw-28,'medallion stays clear of the tutorial bubble');
     }else if(!p.noticeOffset){assert.ok(left>statsRight);assert.ok(right<menuLeft);}
     else assert.ok(p.top>=d.header,'compact landscape allocates a separate row before notices');
+  });
+for(const [w,h] of [[320,568],[360,640],[390,844]])
+  test(`portrait awakening respects a 34px bottom safe area at ${w}×${h} without resizing actions`,()=>{
+    const d=dims(w,h),p=awakeningHudPlacement(d,{safeBottom:34});
+    assert.ok(p.top+p.height<=h-34);assert.ok(p.width>=44&&p.height>=44);
+    assert.equal(p.actions,undefined,'native action layout is untouched');
   });

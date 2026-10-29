@@ -300,7 +300,7 @@ function onPick({entityId,point,gestureSeconds=null}) {
     if(tool?.kind==='awakening'){
       const draft=Game.previewBlessing(state,entityId);
       if(!draft.valid)throw Error(draft.reason);
-      tool.targetId=entityId;commandFeedback=draft.description+' Confirma para gastar un Despertar. Cancelar no consume energía.';return;
+      tool.targetId=entityId;commandFeedback=awakeningSelectionCopy(draft.kind);return;
     }
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
@@ -388,7 +388,7 @@ function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
   if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
   closeSurface();cancelTool();selection=null;armTool({kind:'awakening'});
-  commandFeedback='Planta: +20 % de crecimiento y valor de cosecha cerca de ella; deja de cosecharse. Muralla: 25 % menos daño y 10 % en conexiones directas. Cancelar no consume energía.';
+  commandFeedback='Toca una planta o muralla. Cancelar conserva la carga.';
 }
 function confirmAwakening(){
   if(tool?.kind!=='awakening'||!tool.targetId)return;
@@ -436,7 +436,11 @@ function updateUI(force=false) {
   contextPanel();const activeTutorial=narrator();
   if(commandFeedback&&tutorialCoversNotice(state,{text:commandFeedback},activeTutorial))commandFeedback='';
   eventCards??=new EventCards(document.querySelector('#notices'),ASSETS);
-  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'||!!surfaces.active||document.hidden||tool?.kind==='awakening',maxVisible:stage.classList.contains('short')?2:3}),noticeLifetime,now/1000);
+  const tutorialBubble=stage.querySelector('#guardian-root[aria-hidden="false"] .bubble');
+  const allowAwakeningUrgent=stage.classList.contains('portrait')&&!!tutorialBubble&&!surfaces.active&&!document.hidden&&tool?.kind!=='awakening'&&
+    tutorialBubble.getBoundingClientRect().top-document.querySelector('#notices').getBoundingClientRect().top>=150;
+  stage.classList.toggle('awakening-urgent-over-tutorial',allowAwakeningUrgent);
+  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'||!!surfaces.active||document.hidden||tool?.kind==='awakening',maxVisible:stage.classList.contains('short')?2:3,allowAwakeningUrgent}),noticeLifetime,now/1000,{compactUrgent:allowAwakeningUrgent});
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice);if(!message)return;const target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target??message.location)world.focus(target??message.location);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
@@ -454,10 +458,14 @@ function updateUI(force=false) {
 function refreshCommandFeedback(){
   const selecting=tool?.kind==='awakening',draft=selecting&&tool.targetId?Game.previewBlessing(state,tool.targetId):null;
   const label=selecting?(draft?.valid?(draft.kind==='plant'?'Bendecir planta · fuente permanente':'Bendecir muralla · protección permanente'):'Selecciona una planta o muralla'):null;
-  renderCommandFeedback(document,{label,message:draft&&!draft.valid?draft.reason:commandFeedback,
+  const message=draft&&!draft.valid?draft.reason:commandFeedback||(draft?.valid?awakeningSelectionCopy(draft.kind):selecting?'Toca una planta o muralla. Cancelar conserva la carga.':'');
+  renderCommandFeedback(document,{label,message,
     confirmation:draft?{label:'Bendecir',disabled:!draft.valid||!permission(state,'awakening'),onConfirm:()=>safe(confirmAwakening)}:null,
     onCancel:()=>{cancelTool();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
+function awakeningSelectionCopy(kind){return kind==='plant'?
+  'Cultivos próximos: +20 % de crecimiento y valor base. Esta planta no se cosecha.':
+  'Muralla: −25 % de daño propio y −10 % en secciones contiguas.';}
 
 function buildPanel(){
   if(state.pauses.includes('hiring'))return;

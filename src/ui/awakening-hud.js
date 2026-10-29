@@ -10,15 +10,15 @@ export function awakeningHudState(state,{selecting=false,blocked=false}={}){
     label:selecting?'Cancelar selección de Despertar':ready?'Despertar disponible: bendecir una planta o muralla':`Energía de Despertar: ${Math.floor(progress)} de 100`,
     caption:selecting?'Elige una planta o muralla':ready?'¡Despertar!':'Despertar'};
 }
-// Allocate the new circular control inside the existing action column's vertical budget.
-export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w}={}){
+// Keep the native action sizes and use the right-hand part of the tutorial reserve.
+export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w,safeBottom=0}={}){
   const {w,h,header,reserve,portrait,short}=dims;
   if(portrait){
-    const gap=short?3:4,available=h-header-reserve-10,diameter=Math.min(clamp(w*.27,78,112),(available-4*44/.715-4*gap)/1.25),height=diameter*1.25;
-    const aw=Math.max(44,Math.min(dims.aw,(available-height-4*gap)/4*.715));
-    const ah=aw/.715,total=4*ah+4*gap+height,top=header+Math.max(5,(h-reserve-header-total)/2);
-    return {portrait:true,right:Math.max(6,12+(aw-diameter)/2),top:top+4*ah+4*gap,width:diameter,height,
-      actions:{top,width:aw,gap},noticeOffset:0};
+    const gap=short?3:4,aw=dims.aw,ah=aw/.715,total=4*ah+3*gap;
+    const actionTop=header+Math.max(5,(h-reserve-header-total)/2);
+    const top=actionTop+total+gap;
+    const diameter=Math.min(clamp(w*.27,78,112),Math.max(44,(h-top-Math.max(8,safeBottom+4))/1.25));
+    return {portrait:true,right:Math.max(6,12+(aw-diameter)/2),top,width:diameter,height:diameter*1.25,noticeOffset:0};
   }
   const left=statsRight+16,available=menuLeft-12-left;
   if(available>=128)return {portrait:false,left,top:short?7:8,width:Math.min(520,available),height:short?54:92,noticeOffset:0};
@@ -27,7 +27,7 @@ export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w}={}){
 export class AwakeningHud {
   constructor(stage,onActivate){
     this.stage=stage;this.element=stage.ownerDocument.createElement('div');this.element.id='awakeningHud';this.element.setAttribute('role','group');this.element.setAttribute('aria-label','Despertares');
-    this.element.innerHTML=`<span class="awakening-accessible-meter" role="progressbar" aria-label="Energía de Despertar" aria-valuemin="0" aria-valuemax="100"></span>
+    this.element.innerHTML=`<span class="awakening-safe-probe" aria-hidden="true"></span><span class="awakening-accessible-meter" role="progressbar" aria-label="Energía de Despertar" aria-valuemin="0" aria-valuemax="100"></span>
       <button type="button" id="awakeningButton" disabled><svg class="awakening-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45"/><circle class="awakening-ring-value" cx="50" cy="50" r="45"/></svg>
       <img class="awakening-icon" alt="" aria-hidden="true"><span class="awakening-caption">Despertar</span><span class="awakening-short-caption" aria-hidden="true">Despertar</span><span class="awakening-bar" aria-hidden="true"><i></i></span><span class="awakening-value" aria-hidden="true">0 / 100</span></button>`;
     this.button=this.element.querySelector('button');this.button.onclick=onActivate;
@@ -50,17 +50,17 @@ export class AwakeningHud {
   }
   layout(dims){
     const days=this.stage.querySelector('#days'),menu=this.stage.querySelector('#menuButton');
-    const placement=awakeningHudPlacement(dims,{statsRight:days.offsetLeft+days.offsetWidth,menuLeft:menu.offsetLeft});
+    const safeBottom=parseFloat(getComputedStyle(this.element.querySelector('.awakening-safe-probe')).paddingBottom)||0;
+    const placement=awakeningHudPlacement(dims,{statsRight:days.offsetLeft+days.offsetWidth,menuLeft:menu.offsetLeft,safeBottom});
     this.element.classList.toggle('is-medallion',placement.portrait);
+    this.element.classList.toggle('is-compact-medallion',placement.portrait&&placement.width<65);
     Object.assign(this.element.style,{left:placement.left===undefined?'auto':placement.left+'px',right:placement.right===undefined?'auto':`max(${placement.right}px, env(safe-area-inset-right, 0px))`,top:placement.top+'px',width:placement.width+'px',height:placement.height+'px'});
-    if(placement.actions){
-      const {width,top,gap}=placement.actions;dims.aw=width;this.stage.style.setProperty('--action-w',width+'px');
-      this.stage.querySelector('#actions').style.top=top+'px';this.stage.querySelector('#actions').style.gap=gap+'px';
-      this.stage.querySelector('#events').style.width=Math.min(240,dims.w-width-35)+'px';
-    }
+    this.element.style.setProperty('--awakening-size',placement.width+'px');
+    const notices=this.stage.querySelector('#notices');
+    notices.style.top=placement.noticeOffset?(dims.header+placement.noticeOffset+12)+'px':'';
+    notices.style.maxHeight=placement.noticeOffset?`max(62px, calc(100dvh - ${dims.header+dims.reserve+placement.noticeOffset+24}px))`:'';
     if(placement.noticeOffset){
-      const events=this.stage.querySelector('#events'),banner=this.stage.querySelector('#placementBanner');
-      events.style.top=(dims.header+placement.noticeOffset+8)+'px';banner.style.top=(dims.header+placement.noticeOffset+8)+'px';
+      this.stage.querySelector('#placementBanner').style.top=(dims.header+placement.noticeOffset+8)+'px';
     }
     return dims;
   }
