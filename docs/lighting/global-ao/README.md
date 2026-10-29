@@ -49,3 +49,13 @@ The newly baked local AO does not change mangrove water placement or terrain sha
 Canyon captures use two 90-degree camera turns to avoid a rock wall obscuring the center. The fixed-offset nighttime QA hyena appears on the cliff in this fixture; those images do not validate animal placement, navigation or ground support. No gameplay fix is inferred from this lighting trial.
 
 Browse [the side-by-side contact page](comparison.html). This is an intermediate checkpoint, not the requested final all-elements delivery.
+
+## Mangrove foreground impostors: corrected residency handoff
+
+The earlier `mangrove-*-native-*.png` images are superseded for tree AO validation: nearby trees were still billboards. The source geometry was loaded and fenced, but the separately required standby bank lacked those IDs. While one upload was in flight, a logical preload request replaced a queued physical-tree request. Since the native fence had already succeeded, that physical demand was not retried.
+
+`NativeTreeStandby.request` now coalesces pending demands by ID, with the latest identity/LOD winning. Existing distance pruning, population limits, GPU fences and resource checks remain active. This fixes a scheduling race independently of AO values; it does not bypass GPU readiness or force full-detail trees at every distance. No claim is made about whether AO loading timing made the race more likely.
+
+The new `mangrove-{day,night}-resident-{on,off}.png` pairs show the native WorldScene with actual nearby 3D trees. Both native-prop and village AO are toggled; center AO and ground contacts remain on. The hyena has the in-progress local model AO held constant in the night pair. Same seed 712, medium quality, zoom 22, frozen day 150/night 400. Root and branch geometry was visually inspected. Four 90-degree camera turns were exercised; this is not an exhaustive navigation or performance validation.
+
+`mangrove-residency-report.json` records the inspected tree identities, prepared coverage and transition readiness. For diagnostics add `farTreeReview=1` to the lightingReview fixture URL; expensive tree inspection is opt-in and not part of gameplay. Regression test reproduces overlapping physical/logical requests behind a held fence and verifies that all identities survive, with the newest LOD preserved. Existing fence, disposal, culling and population tests remain passing.
