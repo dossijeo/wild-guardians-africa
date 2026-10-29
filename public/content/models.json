@@ -128,7 +128,7 @@
     }
   },
   {
-    "url": "/assets/9dc6ecb1236bc79566fa2862c4624ad34d9111a4286b59220393c08a14076090.glb",
+    "url": "/assets/cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b.glb",
     "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
     "animations": [
       {
@@ -203,6 +203,13 @@
       "sourceSha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
       "editable": "content/source/actors/buffalo/expressive-candidate.blend",
       "report": "docs/guardian/phase2/face-authoring/buffalo/oral-v4-beard-audit.json"
+    },
+    "normalEdit": {
+      "sourceSha256": "fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb",
+      "previousSha256": "9dc6ecb1236bc79566fa2862c4624ad34d9111a4286b59220393c08a14076090",
+      "report": "docs/guardian/phase2/vfx-scalar-review/buffalo-arm-runtime.json",
+      "pipeline": "tools/guardian/transfer_authored_normals.py",
+      "scope": "Rear mane and localized arm normals; non-normal payloads preserved"
     }
   },
   {

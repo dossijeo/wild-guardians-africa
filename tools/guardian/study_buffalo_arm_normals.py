@@ -2,7 +2,7 @@
 import bpy,json,hashlib
 from pathlib import Path
 from mathutils import Vector
-root=Path.cwd();source=root/'content/source/actors/buffalo/expressive-candidate.blend';output=root/'test-results/buffalo-arm-normals.blend'
+root=Path.cwd();source=root/'content/source/actors/buffalo/expressive-pre-arm.blend';output=root/'test-results/buffalo-arm-normals.blend'
 assert hashlib.sha256(source.read_bytes()).hexdigest()=='46439b046b4fb42735a085933b2e6f135676577e910a0c28cdc6159e77375315','Use the registered rear-mane input from commit b728aa23e, not a recursively edited output'
 bpy.ops.wm.open_mainfile(filepath=str(source));o=bpy.data.objects['Mesh_0'];m=o.data
 original=[n.vector.copy() for n in m.corner_normals];keys=[tuple(v.co) for v in m.vertices];sums={k:Vector() for k in keys}
