@@ -80,3 +80,17 @@ test('loading an Attack cooldown resumes its remaining simulation time without p
  for(let i=0;i<100;i++)Game.tick(loadedAgain,.1,nav);
  assert.equal(loadedAgain.cooldowns.attack,0);
 });
+
+test('Guardian interruption cancels the native active strike and releases its approach lease',async()=>{
+ const {applyGuardianAttack}=await import('../src/simulation/guardian-combat.js');
+ for(const status of ['attacking','walking']){
+  const {s,a}=ready();a.status=status;a.approach={x:17,z:8,id:'approach'};a.destinationId='approach';
+  let active=true,cancelled=0;
+  const nativeNav={...nav,intentTaskPlanner:{cancelAttackIntent(id){assert.equal(id,a.id);active=false;cancelled++;}}};
+  applyGuardianAttack(s,a,{nav:nativeNav});
+  assert.equal(active,false,'interrupted native strike must not survive into recovery');
+  assert.equal(cancelled,1);assert.equal(a.targetId,null);assert.equal(a.reservation,null);
+  assert.equal(a.approach,null);assert.equal(s.raid.reservations.r,undefined);
+  assert.equal(a.status,'walking');assert.equal(a.hitApplied,true);assert.equal(a.attackRemaining,0);
+ }
+});

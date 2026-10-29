@@ -758,6 +758,12 @@ export function warmRaidApproaches(state,specs,entry,nav){
     }
   }finally{nav.state=originalState;}
 }
+// Interrupt both authoritative intent ownership and the JS approach reservation.
+// Recovery must select a fresh route from the displaced physical position.
+export function interruptAnimalAttack(s,a,nav) {
+ release(s,a,nav);a.destinationId=null;a.hitApplied=true;a.attackRemaining=0;
+ if(a.status==='attacking')a.status='walking';
+}
 export function retreatAnimal(s,a,reason='magic',nav={}) {
  release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
 }

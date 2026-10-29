@@ -1,6 +1,6 @@
 import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {BALANCE} from './balance.js';
-import {retreatAnimal} from './raids.js';
+import {retreatAnimal,interruptAnimalAttack} from './raids.js';
 import {emit} from './game.js';
 export const ATTACK=BALANCE.spells.find(s=>s.id==='attack');
 export function attackTarget(state,id){return state.raid?.animals.find(a=>a.id===id&&!['gone','retreating'].includes(a.status))??null;}
@@ -15,8 +15,7 @@ export function applyGuardianAttack(state,animal,{nav,origin,contact,ground=0}={
  // Their configured stun can be shorter than the shared presentation marker.
  animal.magicStunUntil=state.elapsed+Math.max(profile.stun,GUARDIAN_ATTACK_TIMING.impact);
  animal.magicImpact={at:state.elapsed,impactAt:state.elapsed+GUARDIAN_ATTACK_TIMING.impact,point:{...at},direction,intensity:1,ground,health:animal.magicHealth,origin:{...from}};
- animal.hitApplied=true;animal.attackRemaining=0;animal.path=null;
- if(animal.status==='attacking')animal.status='walking';
+ interruptAnimalAttack(state,animal,nav);
  emit(state,'GuardianMagicHit',{targetId:animal.id,species:animal.species,damage:ATTACK.damage,health:animal.magicHealth,presentation:{x:at.x,y:at.y,z:at.z,elapsed:state.elapsed,cueAt:animal.magicImpact.impactAt,direction,origin:{...from}}});
  if(animal.magicHealth===0)retreatAnimal(state,animal,'magic-resilience-exhausted',nav);
  return animal.magicImpact;
