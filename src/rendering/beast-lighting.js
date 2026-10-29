@@ -26,7 +26,10 @@ export function beastLightingFunctions(source){
   beastLight+=sqrt(max(albedo,vec3(0.)))*vec3(.11,.15,.21)*rim*mix(.45,.85,uNight);
   beastLight+=reflected*.012*(1.-rough*.6);
   vec3 color=saturateGrade4(filmic4(beastLight),1.08);
-  color=clamp((color-vec3(.40))*1.10+vec3(.40),0.,1.);
+  // Keep near-black texture detail: the linear contrast curve otherwise clips
+  // every channel below 0.036 to zero. Retain the original midtone contrast.
+  vec3 contrastColor=clamp((color-vec3(.40))*1.10+vec3(.40),0.,1.);
+  color=mix(color,contrastColor,smoothstep(vec3(.02),vec3(.14),color));
   float edge=smoothstep(.30,.68,length(fwidth(N))*2.);
   return color*(1.-edge*.10);
  }`+source.slice(end);
