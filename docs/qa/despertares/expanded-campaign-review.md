@@ -20,6 +20,16 @@ Las 12 jornadas anteriores a la retirada presentan iguales saldos, contabilidad 
 
 [Comparación verificable](campaigns-expanded-20261029/comparison-712.json) y [registro completo](campaigns-expanded-20261029/recovery-adaptive-712.json.gz). El guardado terminal se conserva junto al registro en gzip, verificado sin pérdida. `tools/compare_awakening_recovery.mjs` comprueba la pérdida y los datos previos y compara únicamente noches completas comunes; el campo terminal se toma de la última jornada real y puede corresponder a una jornada incompleta.
 
+## Resultados completos parciales: sabana, semilla 123
+
+| Política | Noches superadas | Resultado | Dinero final | Cultivos productivos finales | Fuentes finales |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Control | 49 | Derrota | 29 | 0 | 0 |
+| Competente | 53 | Derrota | 33 | 0 | 3 |
+| Recuperación fija | 51 | Derrota | 26 | 0 | 5 |
+
+Durante las primeras 49 noches, la competente ingresó 48 757 monedas frente a 54 560 del control, pero su variación neta fue −447 frente a −671; perdió 784 cultivos frente a 627. Estas diferencias incluyen distintos gastos, decisiones y trayectorias de incursiones. La entrega pasiva en toda la campaña competente fue de 615 monedas. La recuperación adaptativa de esta misma semilla aún no ha terminado, por lo que no se concluye su comparación con la fija. [Métricas y gastos completos](campaigns-expanded-20261029/summary-123-progress.json).
+
 ## En ejecución
 
-Semilla 123: control, competente, recuperación fija, recuperación adaptativa y agricultura. Semilla 2026: control y competente. Se añadirá el brazo defensivo de la semilla 123 cuando haya capacidad para ejecutarlo. Los archivos parciales, si existen, describen progreso de procesos vivos, no resultados finales. No se cambian parámetros de juego por la evidencia de una sola partida.
+Semilla 123: recuperación adaptativa, agricultura y defensa. Semilla 2026: control y competente. Los archivos parciales, si existen, describen progreso de procesos vivos, no resultados finales. No se cambian parámetros de juego por la evidencia de una sola partida.
