@@ -1,4 +1,5 @@
 import {GUARDIAN_ATTACK_TIMING} from '../../src/simulation/guardian-timing.js';
+import {awakeningVisible} from '../../src/rendering/awakening-presentation.js';
 import {playGuardianPresence} from '../../src/audio/guardian-presence.js';
 import {studySmoothBodyNormals} from './beast-normal-study.js';
 import {sampleRecoveryPeerContacts,sampleRecoverySkinBounds,sampleRecoveryPositions} from './guardian-peer-contacts.js';
@@ -166,6 +167,26 @@ try{
  function beast(){const species=$('species').value;state.raid={id:'qa-raid',animals:[{id:'qa-beast-'+serial++,species,x:site.x+2.5,z:site.z,radius:ANIMAL_ACTIONS.animals[species].presentation.footprint.radius,spawn:{x:site.x+15,z:site.z},exit:{x:site.x+15,z:site.z},hitsRemaining:8,status:'walking',heading:Math.PI/2,targetId:null,reservation:null,path:null,attackRemaining:0,hitApplied:false}],encounters:[],reservations:{}};nav.setState(state);world.render(0);}
 
  const ritualButton=document.createElement('button');ritualButton.id='ritualRecord';ritualButton.textContent='Grabar Despertar planta y muralla';document.querySelector('header').insertBefore(ritualButton,$('status'));
+ const interruptionButton=document.createElement('button');interruptionButton.id='ritualInterrupt';interruptionButton.textContent='Validar interrupciones del ritual';document.querySelector('header').insertBefore(interruptionButton,$('status'));
+ const interruptionReport=document.createElement('pre');interruptionReport.id='ritualInterruptReport';document.querySelector('header').append(interruptionReport);
+ interruptionButton.onclick=async()=>{interruptionButton.disabled=true;const rows=[];try{
+  paused=false;simulate=false;world.guardianSummons.clear();
+  for(const kind of ['growth','multiply','shield','attack']){
+   state.time=kind==='attack'||kind==='shield'?400:150;
+   if(kind==='attack')beast();
+   const plant=state.plants.find(p=>p.alive&&!p.blessing);if(!plant)throw Error('No unblessed crop for interruption');
+   state.awakenings.progress=100;Game.bless(state,'qa-interrupt-'+serial++,plant.id);world.render(0);
+   const start=state.elapsed,deadline=performance.now()+10000;
+   while(state.elapsed-start<.65){if(performance.now()>deadline)throw Error('Presentation clock stalled');await new Promise(r=>requestAnimationFrame(r));}
+   const before=world.guardianSummons.slots[0].event?.kind,hiddenBefore=!awakeningVisible(plant,state.elapsed),total=state.awakenings.total,charge=state.awakenings.progress;
+   cast(kind);
+   const row={kind,before,hiddenBefore,after:world.guardianSummons.slots[0].event?.kind,visible:awakeningVisible(plant,state.elapsed),committed:!!plant.blessing,totalUnchanged:state.awakenings.total===total,chargeUnchanged:state.awakenings.progress===charge,guardians:world.guardianSummons.slots.filter(s=>s.group.visible).length};
+   row.passed=row.before==='awakening'&&row.hiddenBefore&&row.after===kind&&row.visible&&row.committed&&row.totalUnchanged&&row.chargeUnchanged&&row.guardians===1;rows.push(row);interruptionReport.textContent=JSON.stringify({rows},null,2);
+   if(!row.passed)throw Error('Ritual replacement failed: '+kind);
+   await new Promise(r=>setTimeout(r,2800));
+  }
+  interruptionReport.textContent=JSON.stringify({passed:true,rows},null,2);
+ }catch(e){interruptionReport.textContent=JSON.stringify({passed:false,error:String(e),rows},null,2);fail(e);}finally{interruptionButton.disabled=false;}};
  ritualButton.onclick=async()=>{let rec,stream;try{
   paused=false;simulate=false;state.time=150;state.raid=null;world.guardianSummons.clear();
   const plant=state.plants.find(p=>p.alive&&!p.blessing);if(!plant)throw Error('No unblessed crop');
