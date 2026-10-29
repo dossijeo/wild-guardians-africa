@@ -30,3 +30,8 @@ The JSON contains the preceding 17 daytime audio rows plus 29 new night rows. Al
 The recovery is NOT accepted: rollFailures=1 and lastRoll records timeout after 3.516667 seconds, angular error 2.597606 radians and angular speed 4.293434, with zero contact grace. The manager selects BeastRecovery rather than AuthoredBeastRecovery after this timeout. The contact sheet shows eventual recovery/flight, but this does not satisfy the requested physical roll into the authored stand-up. Investigate the final repeated-hit hyena with continuous pose/contact diagnostics; do not increase the timeout or weaken completion tolerance without evidence.
 
 Evidence: night-spells-audio-fixed.json, .webm and .jpg. The video is a stream-copy remux of the browser recording (original 10,036,930 bytes). The contact sheet samples once per second, so it cannot establish every contact or transition. maxStepMs=23.065 in this run is an isolated maximum, not a comparative performance result or attribution.
+
+
+### Flat-terrain isolation
+
+Ran `node tools/experiments/probe-repeat-hit-roll.mjs` against the shipped hyena GLB and authored clip. Eight headings at 45-degree increments, identical world-space impact direction, two impacts one second apart, fixed 60 Hz and flat terrain. All eight completed AuthoredBeastRecovery without roll timeout; raw phase/angular traces are repeat-hit-roll-flat-probe.json. This does not reproduce or fix the browser failure. The diagnostic starts from the GLB pose with an empty walking clip, so it does not match the browser's animated contact pose, terrain, variable tick schedule or second impact direction. Capture those inputs from the failing browser sequence next; no solver constants changed on the strength of this limited pass.
