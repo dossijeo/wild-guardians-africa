@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 // Bounded work per accepted command. No navigation or camera movement is requested.
-export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,hoverAbove=false,cropHeight=()=>2.2}){
+export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,hoverAbove=false,cropHeight=()=>2.2,screenExclusions=[]}){
  // Commands can follow a camera turn before the renderer refreshes matrices.
  camera.updateWorldMatrix(true,false);
  // Sample the lateral silhouette too: a narrow clear ray through the center
@@ -10,15 +10,17 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  // Reserve a conservative body/vortex envelope, not just its center.
  // Applied only while planning a command, never per rendered frame.
  const framePenalty=(x,y,z)=>{
-  let penalty=0;
+  let penalty=0,minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
   for(const dx of [-1.4,1.4])for(const dz of [-1.4,1.4])for(const dy of [-1.2,1.4]){
    v.set(x+dx*bodyScale,y+dy*bodyScale,z+dz*bodyScale).applyMatrix4(camera.matrixWorldInverse);
    // Projected X/Y can look framed even behind a perspective camera.
    // Prefer a partially cropped visible body over an invisible candidate.
    if(-v.z<camera.near||-v.z>camera.far){penalty+=1000;continue;}
    v.applyMatrix4(camera.projectionMatrix);
+   minX=Math.min(minX,v.x);maxX=Math.max(maxX,v.x);minY=Math.min(minY,v.y);maxY=Math.max(maxY,v.y);
    penalty+=Math.max(0,Math.abs(v.x)-.92)+Math.max(0,Math.abs(v.y)-.92);
   }
+  for(const r of screenExclusions){const width=Math.min(maxX,r.maxX)-Math.max(minX,r.minX),height=Math.min(maxY,r.maxY)-Math.max(minY,r.minY);if(width>0&&height>0)penalty+=1+width*height;}
   return penalty;
  };
  const radius=target.radius??.7,base=Math.atan2(camera.position.x-target.x,camera.position.z-target.z),v=new Vector3(),candidates=[];

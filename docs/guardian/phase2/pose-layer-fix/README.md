@@ -306,3 +306,13 @@ Opened the actual main game at port 5194, created a new Savanna/Swahili game thr
 
 - `spell-panel-disabled-before.png` / `spell-panel-disabled-after.png`: actual main-game panel, 1280x720, English.
 - Scope: initial unavailable state only. This does not verify valid casts, night targeting, pause/resume during a cast, portrait layout or the full tutorial. The new QA game is paused in the pause menu for continuation.
+
+## Main-game Shield / HUD placement finding (2026-10-30)
+
+Continued the new Suajili QA save through hiring and the first night, using real menu controls. Multiply was observed beside the crop (tool screenshot only, not archived). A subsequent Growth click is inconclusive: selection-to-click clock interval suggests the ten-second selection expired; a worker also occupied the parcel. Do not count Growth as passed.
+
+`main-ui-shield.png` shows a successful night Shield via Power -> Shield -> ground click. The next menu showed its 79-second remaining cooldown. However the Guardian/vortex appears beneath the right action buttons. This is a new actual-main-UI composition failure, not covered by canvas-edge-only framing tests. Attack was selected but the moving lion had left the clicked coordinates; no accepted Attack is claimed.
+
+The planner now receives NDC exclusion rectangles from the actual visible HUD elements, padded by 8 pixels, on each placement request. The projected conservative body envelope penalizes HUD intersections, including the elevated/ritual candidate paths. Existing world clearance still takes priority; when every alternative is obstructed this remains a best-effort placement. No camera following or gameplay changes. Headless fixtures with no HUD provider retain old behavior. DOM reads occur at placement requests, not the animation update loop.
+
+Validation: 20 guardian-placement tests passed, including selecting the opposite free side when a HUD rectangle covers the original candidate; camera and target remain unchanged. Production build passed in 17.21 seconds with existing bundle-size/mixed-import warnings. Post-change graphical validation (landscape/portrait and camera motion) remains pending: the screenshot is BEFORE the fix.

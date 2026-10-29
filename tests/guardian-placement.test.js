@@ -139,3 +139,11 @@ test('world planner excludes a wall touching the mantle while the torso center i
  assert.equal(!!index.sweep([next.x,next.y-1,next.z],[next.x,next.y+1.2,next.z],1.2),false,'chosen body envelope must clear the wall');
  assert.ok(Math.hypot(first.x-next.x,first.y-next.y,first.z-next.z)>.1);
 });
+
+test('placement avoids HUD rectangles without moving the camera or target',()=>{
+ const args=setup(),first=guardianPlacement(args),p=new Vector3(first.x,first.y,first.z).project(args.camera),before=args.camera.matrixWorld.clone();
+ const rect=p.x<0?{minX:-1,maxX:0,minY:-1,maxY:1}:{minX:0,maxX:1,minY:-1,maxY:1};
+ const next=guardianPlacement({...args,screenExclusions:[rect]}),projected=new Vector3(next.x,next.y,next.z).project(args.camera);
+ assert.ok(projected.x*p.x<0,'choose the unobstructed side of the target');
+ assert.ok(args.camera.matrixWorld.equals(before));assert.deepEqual(args.target,{x:0,z:0,radius:1});
+});
