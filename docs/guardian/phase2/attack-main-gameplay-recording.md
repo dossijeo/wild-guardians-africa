@@ -1,0 +1,7 @@
+# Main-game continuous Attack recording
+
+Recorded the actual main application, loaded through Continue from qa-attack-gameplay. tests/browser/guardian-gameplay-recording.html wraps the ordinary application in a same-origin iframe and captures its world canvas at up to 30 fps for 20 wall-clock seconds after the next canvas pointerdown. It does not cast, advance simulation, clear cooldowns, change actor state or move the camera. The only prepared state changes are disclosed in attack-gameplay.html. No production recorder dependency is added.
+
+Operator used normal pause/resume to locate the target before recording, then Power -> Attack -> click the rhino. Recording ran uninterrupted after that click. Downloaded 10,832,161-byte WebM, copied to attack-main-gameplay.webm. The file has no audio and excludes DOM HUD/tutorial overlays; it is not the requested voiced tutorial video.
+
+Reviewed the 1 fps contact sheet attack-main-gameplay.jpg: initial single Guardian vortex, fall by roughly 2 s, prone/rolling recovery through roughly 6 s, upright by roughly 8 s, then walking and returning to attack near the center. Guardian disappears; no camera transition occurs. This proves one main-page cycle is visibly represented beyond unit/isolated fixture tests. The strategic distance and sparse inspection do not establish all-frame skin clearance, anatomical quality, audio synchronization, every direction/obstacle or performance. Broader visual acceptance remains open.
