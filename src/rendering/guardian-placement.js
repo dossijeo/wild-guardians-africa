@@ -17,19 +17,25 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  const radius=target.radius??.7,base=Math.atan2(camera.position.x-target.x,camera.position.z-target.z),v=new Vector3(),candidates=[];
  // Cull distant entries once per command, rather than scanning the whole farm
  // for each of the sixteen candidate footprints.
- const cropRange=radius+4.4,workerRange=radius+4.5;
+ const cropRange=radius+8,workerRange=radius+8.1;
  const crops=state.plants.filter(p=>p.alive&&Math.abs(p.x-target.x)<cropRange&&Math.abs(p.z-target.z)<cropRange);
  const workers=(state.workers??[]).filter(w=>w.status!=='gone'&&Math.abs(w.x-target.x)<workerRange&&Math.abs(w.z-target.z)<workerRange);
  const floor=nav.actorSurface?.(target.x,target.z)??nav.field.surface(target.x,target.z);
  v.set(target.x,floor+.7,target.z).project(camera);const sx=v.x,sy=v.y;
- for(const distance of [radius+2.1,radius+3.4])for(const offset of [-.9,.9,-1.5,1.5,-.4,.4,2,-2]){
+ const evaluate=(distance,offset)=>{
   const a=base+offset,x=target.x+Math.sin(a)*distance,z=target.z+Math.cos(a)*distance,y=nav.actorSurface?.(x,z)??nav.field.surface(x,z);
-  if(!Number.isFinite(y))continue;
+  if(!Number.isFinite(y))return;
   const clear=nav.placement(x,z,.8*bodyScale).valid&&!occupied?.(x,y+1.7*bodyScale,z)&&!workers.some(w=>Math.hypot(x-w.x,z-w.z)<1.1)&&!(state.raid?.animals??[]).some(a=>a.status!=='gone'&&Math.hypot(x-a.x,z-a.z)<.8+a.radius)&&!crops.some(p=>Math.hypot(x-p.x,z-p.z)<1);
   v.set(x,y+1.7*bodyScale,z).project(camera);
   const screen=Math.hypot(v.x-sx,v.y-sy),out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
   const blocked=blockedAt(x,y+1.7*bodyScale,z),score=(clear?0:1000)+(out+framePenalty(x,y+1.7*bodyScale,z))*100+Math.abs(y-floor)*3+blocked*12+Math.abs(screen-.19)*8+distance*.12;
   candidates.push({x,y:y+1.7*bodyScale,z,score,clear,distance});
+ };
+ for(const distance of [radius+2.1,radius+3.4])for(const offset of [-.9,.9,-1.5,1.5,-.4,.4,2,-2])evaluate(distance,offset);
+ // Edge targets may leave no framed candidate on the nearby rings. Try a
+ // bounded wider ring toward the camera before accepting a cropped body.
+ if(!candidates.some(p=>p.clear&&framePenalty(p.x,p.y,p.z)===0)){
+  for(const distance of [radius+5,radius+6.6])for(const offset of [0,-.4,.4,-.9,.9])evaluate(distance,offset);
  }
  candidates.sort((a,b)=>a.score-b.score);const best=candidates.find(p=>p.clear)??candidates[0];
  if(!best)return {x:target.x+2,y:floor+5,z:target.z};
