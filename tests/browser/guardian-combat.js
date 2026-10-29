@@ -299,6 +299,20 @@ try{
  const samples=[];let measuring=false,last=performance.now(),nextStatus=0;
  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  $('bench').onclick=async()=>{if(measuring)return;measuring=true;paused=false;simulate=false;state.time=150;state.raid=null;report=[];commandCosts.length=0;let timer;try{for(const mode of ['baseline','legacy-spells','single','consecutive']){showSummons=mode!=='legacy-spells';state.spells.length=0;world.guardianSummons.clear();await sleep(2500);samples.length=0;if(mode==='single')cast('growth');if(mode==='consecutive'||mode==='legacy-spells')timer=setInterval(()=>cast(serial%2?'growth':'multiply'),400);await sleep(8000);clearInterval(timer);const rows=samples.slice(),q=(key,p)=>rows.map(r=>r[key]).sort((a,b)=>a-b)[Math.min(rows.length-1,Math.floor(rows.length*p))];report.push({mode,frames:rows.length,frameMedian:q('dt',.5),frameP95:q('dt',.95),frameP99:q('dt',.99),frameMax:q('dt',1),averageFps:1000/(rows.reduce((s,r)=>s+r.dt,0)/rows.length),renderP95:q('renderMs',.95),animationP95:q('animationMs',.95),vfxP95:q('vfxMs',.95),drawP95:q('draws',.95),memory:{...world.renderer.info.memory},heap:performance.memory?.usedJSHeapSize});}}catch(e){fail(e);}finally{clearInterval(timer);showSummons=true;measuring=false;}};
+ const aoDrawButton=document.createElement('button');aoDrawButton.id='auditAODraws';aoDrawButton.textContent='Inspeccionar llamadas de dibujo AO';document.querySelector('header').insertBefore(aoDrawButton,$('status'));
+ aoDrawButton.onclick=()=>{
+  if(measuring||recording)return;
+  const renderer=world.renderer,original=renderer.renderBufferDirect,rows=[];
+  try{
+   renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){
+    rows.push({object:object.name,type:object.type,material:material.name,materialType:material.type,vertices:geometry.attributes.position?.count??0,indices:geometry.index?.count??0,instances:object.isInstancedMesh?object.count:geometry.instanceCount??null,ao:geometry.attributes.ambientVisibility?.count??0,group:group?{start:group.start,count:group.count,materialIndex:group.materialIndex}:null});
+    return original.apply(this,arguments);
+   };
+   world.render(0);
+   let output=$('aoDrawReport');if(!output){output=document.createElement('pre');output.id='aoDrawReport';document.querySelector('header').append(output);}
+   output.textContent=JSON.stringify({scope:'One forced QA frame, outside timing run; includes direct shadow submissions where applicable.',globalAO:new URLSearchParams(location.search).get('globalAO')==='1',renderCalls:renderer.info.render.calls,memory:{...renderer.info.memory},rows},null,2);
+  }catch(e){fail(e);}finally{renderer.renderBufferDirect=original;}
+ };
  const aoBenchButton=document.createElement('button');aoBenchButton.id='benchAOScene';aoBenchButton.textContent='Medir escena AO sin grabación';document.querySelector('header').insertBefore(aoBenchButton,$('status'));
  let aoSceneMeasured=false;
  aoBenchButton.onclick=async()=>{

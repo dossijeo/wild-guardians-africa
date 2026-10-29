@@ -180,3 +180,7 @@ The combat fixture now exposes `benchAOScene`: a fixed day/angle/zoom idle run w
 Closed the three other agent-owned QA scenes, then loaded AO-off and AO-on separately in the same tab. Both report native spatial-wasm, mangrove/suajili, medium, 1600x900, pixel ratio 1, identical camera/time/population, actors ready, no pending tree preparations, no hidden frames/errors. Raw samples and metadata: `idle-single-tab-{off,on}-1.json`; comparison: `idle-single-tab-comparison.json`.
 
 Off/on frame medians are 33.235/33.240ms, p95 33.365/49.885ms; render CPU p95 14.405/14.400ms. The on run has 82 versus 80 draws, 328 versus 326 geometries and 215 versus 208 textures. Those resource differences require investigation before interpreting the timing delta as shader-only AO overhead. One pair in one order is insufficient for attribution or approval. Repeated alternating runs, effects/raid scenarios and GPU-byte accounting remain pending. No baseline engine performance diagnosis is made here.
+
+## Draw-call audit follow-up
+
+The QA-only `auditAODraws` button captures a forced render outside timing. Fresh on/off reports (`draw-audit-on.json`, `draw-audit-off.json`) both report 82 calls, 328 geometries and 215 textures. Their intercepted draw descriptors match when the AO attribute count is excluded. Thus the earlier 80-versus-82 difference is not reproduced as an inherent AO draw cost. The earlier timing pair remains inconclusive; this audit does not identify the cause of its resource discrepancy or measure GPU memory.
