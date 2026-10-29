@@ -172,7 +172,12 @@ try{
    beast();const a=state.raid.animals[0];a.hitsRemaining=20;a.magicHealth=200;
    const deadline=performance.now()+60000;while(!world.mixers.get(a.id)&&performance.now()<deadline)await sleep(100);
    if(!world.mixers.get(a.id))throw Error('Beast rig did not load');
-   const y=nav.field.surface(a.x,a.z);world.cinematic=true;world.controls.target.set(a.x,y+.6,a.z-1);world.camera.position.set(a.x+6,y+1.1,a.z+3);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();
+   const y=nav.field.surface(a.x,a.z);world.cinematic=true;
+   const wide=new URLSearchParams(location.search).has('repeatWide');
+   // Fixed QA framing reserves room for both impulses; never follows the animal.
+   world.controls.target.set(a.x-(wide?1:0),y+.6,a.z+(wide?1:-1));
+   world.camera.position.set(a.x+(wide?10:6),y+(wide?5:1.1),a.z+(wide?8:3));
+   world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();
    capture=$('world').captureStream(30);recorder=new MediaRecorder(capture,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:5000000});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};done=new Promise(resolve=>recorder.onstop=resolve);recorder.start();
    simulate=true;paused=false;state.time=400;cast('attack');
    const rows=[],supportPoint=new Vector3();let second=false,entered=false;
