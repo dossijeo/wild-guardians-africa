@@ -131,3 +131,10 @@ The beast contrast operation previously clipped channels below about 0.036 to ze
 ## Rhino and warthog local AO review
 
 Eight `rhino/warthog-{day,night}-model-{on,off}.png` captures add frontal native WorldScene comparisons at time 150/400, frozen pose and medium quality in mangrove/suajili. Skin, face markings and tusks remain legible in these views; no runtime errors were reported. The model toggle also affects crops. `rhino-warthog-ao-report.json` records changed pixels, not performance. Rhino uses the revised near-black contrast; warthog retains its separate existing material path. Static frontal inspection does not establish all-angle or animated acceptance. The gallery now includes all five beast comparison sets; lion/hyena and the first buffalo pairs predate the contrast revision and must not be mistaken for new-revision regression coverage.
+
+
+## Older workers: facial AO comparison
+
+`olderFemale/olderMale-{day,night}-model-{on,off}.png` captures the initial worker-hit expression, frozen before the fall, with closed eyelids and open mouth. The attacking animal was removed using the day control; studio time then switches 150/400 without replacing the worker. Actual native WorldScene, mangrove/suajili, medium quality. Browser errors were empty. Wrinkles remain visible in these views. These are facial close-ups, not full-body framing or completed blink/fall/recovery evidence.
+
+The older male shows pronounced nocturnal skin highlights with AO both enabled and disabled; material response and other angles remain open. Do not certify night appearance solely from this AO comparison. Young profiles, open eyes, movement and strategic-distance visibility remain pending. `older-workers-ao-report.json` records the limited scope and image differences.
