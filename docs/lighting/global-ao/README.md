@@ -12,7 +12,7 @@ All six biomes: savanna, desert, grand river, mangrove, volcanoes, canyons. Comp
 | Village buildings and native props | 46 village units, 120 prop slots / 360 LOD views baked; six-biome day/night captures | Near views, individual units, combined attenuation and full cost measurements |
 | Walls and gates | 20 pieces baked; damage and gate clipping preserve AO; adobe intact/damaged/ruined captures | Five-material day/night, gate motion, repair and incremental update cost |
 | Crops | 40 authored stages and 32 growth bridges; eight-species midpoint day/night captures | Endpoints, wind, production cinematic lighting and Grow transitions |
-| Workers and animals | Nine banks, source/runtime mapping tests; hyena day/night comparison | Other eight models, animated joints, mouths and eyelids |
+| Workers and animals | Nine banks, source/runtime mapping tests; all nine models have static day/night comparisons, plus one young-male recovery cycle | Animated joints, mouths and eyelids across all models and camera angles |
 | Guardian | Local AO integrated into spirit hemisphere; Grow day/night comparison | Tutorial, all spells, cloth/face animation and reveal/dissolve boundaries |
 | Distant vegetation | Mangrove near-tree residency corrected and replacement captures published | Far impostor shading and visual consistency across LOD transitions |
 | Terrain and rocks | Texture AO, native rock AO and resident contact atlas | Combined attenuation, especially mangrove black patches; no duplicate AO |
@@ -184,3 +184,7 @@ Off/on frame medians are 33.235/33.240ms, p95 33.365/49.885ms; render CPU p95 14
 ## Draw-call audit follow-up
 
 The QA-only `auditAODraws` button captures a forced render outside timing. Fresh on/off reports (`draw-audit-on.json`, `draw-audit-off.json`) both report 82 calls, 328 geometries and 215 textures. Their intercepted draw descriptors match when the AO attribute count is excluded. Thus the earlier 80-versus-82 difference is not reproduced as an inherent AO draw cost. The earlier timing pair remains inconclusive; this audit does not identify the cause of its resource discrepancy or measure GPU memory.
+
+## Sahelian center: combined lighting comparison
+
+`saheliana-{day,night}-{combined-on,building-off}.png` compares only the center AO toggle with all other global AO, cinematic light and contacts held on. Native spatial-WASM savanna, seed 712, medium quality, fixture camera distance 22, paused clock 150/400. Roof, posts and facade remain readable in this inspected night angle; AO adds local relief without introducing large black patches. No further shader adjustment was made from this pair. This is not all-angle, all-culture, destruction or performance acceptance. Conditions are retained in `saheliana-comparison-report.json`.
