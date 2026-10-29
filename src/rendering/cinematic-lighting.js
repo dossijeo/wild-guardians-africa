@@ -15,9 +15,24 @@ export function patchCinematicVegetation(source){
  return source.replace(/dayShade=vec3\(\.(?:17,\.28,\.34|15,\.25,\.31|14,\.26,\.32)\)/,'dayShade=vec3(.38,.48,.54)')
   .replace('mix(vec3(.17,.28,.34),vec3(.095,.17,.32)*uNightLight,uNight)','mix(vec3(.38,.48,.54),vec3(.095,.17,.32)*uNightLight,uNight)');
 }
-export function patchCinematicLighting(source,{ground=false}={}){
+export function patchCinematicLighting(source,{ground=false,nativeSurface=false}={}){
  const anchor='#include <opaque_fragment>';
  if(!source.includes(anchor))throw Error('Cinematic lighting: output anchor missing');
+ // Native volcanic emission is added inside its authored tone mapper. Grade
+ // reflected radiance there, before emission, rather than tinting the output.
+ if(nativeSurface&&!ground){
+  const tint=`vec3 cinemaReflectedTint(float visibility,float night){
+ float sun=smoothstep(.12,.90,clamp(visibility,0.,1.));
+ return mix(mix(vec3(.77,.89,1.02),vec3(1.20,1.08,.87),sun),mix(vec3(.66,.91,.94),vec3(.76,.96,1.12),sun),night);
+ }
+`;
+  if(!source.includes('toon+=emission;'))throw Error('Cinematic lighting: native emission anchor missing');
+  source=source.replace('toon+=emission;','toon*=cinemaReflectedTint(visibility,uNight);\n toon+=emission;');
+  // Illustrated native props override the toon result with this second path.
+  source=source.replace('if(uArtVolcanicGlow>.5&&uSurfaceType>.5){','lit*=cinemaReflectedTint(1.-shadowCoverage*.93,uNight);\n if(uArtVolcanicGlow>.5&&uSurfaceType>.5){');
+  return tint+source;
+ }
+
  // Restore readable diffuse sky fill under projected shadows. Change the
  // daylight radiance before tone mapping, not shadow visibility or albedo.
  // Support both final-daylight and ungraded native ground recipes.

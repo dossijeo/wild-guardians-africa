@@ -53,3 +53,14 @@ test('dry-ground sky lobe uses authored normals only in daytime shadow',()=>{
  assert.ok(result.includes('max(dot(N,cinemaSkyDirection),0.)*(1.-visibility)*(1.-uNight)'));
  assert.equal(patchCinematicLighting(source).includes('cinemaSkyDirection'),false);
 });
+
+test('native volcanic and illustrated paths grade reflected light before authored emission',async()=>{
+ const {volcanicFunctions}=await import('../src/rendering/volcanic-source.js');
+ const {artLightingFunctions}=await import('../src/rendering/biome-material-source.js');
+ const result=patchCinematicLighting(volcanicFunctions+artLightingFunctions+'#include <opaque_fragment>',{nativeSurface:true});
+ assert.ok(result.includes('toon*=cinemaReflectedTint(visibility,uNight);\n toon+=emission;'));
+ assert.ok(result.includes('lit*=cinemaReflectedTint(1.-shadowCoverage*.93,uNight);\n if(uArtVolcanicGlow'));
+ assert.ok(result.includes('lit+=toLinear4(baseColor)*hot*1.65;'));
+ assert.doesNotMatch(result,/outgoingLight-totalEmissiveRadiance/);
+ assert.throws(()=>patchCinematicLighting('#include <opaque_fragment>',{nativeSurface:true}),/native emission anchor missing/);
+});
