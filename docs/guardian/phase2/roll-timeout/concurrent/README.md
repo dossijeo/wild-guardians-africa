@@ -12,3 +12,12 @@ The fixture deliberately resets cooldowns to issue four commands together. Recor
 Repeated with `peerSpecies=rhino`, automatic direction: one hyena and three rhinos. Peak 3 physical/1 baked, all four finish, no runtime errors or roll failures, final physical resources zero, one Guardian maximum. The final roll completes in 2.166667 s with .414038 rad error and .170733 rad/s speed. Files mixed-cycle.webm, mixed-contact.jpg and mixed-status.json.
 
 Inspected the 1 fps contact sheet: bodies fall and return upright, but the close framing crops the largest animals during some phases and crowding obscures contacts. This does not establish anatomical peer clearance. A wider/overhead peer-contact review remains required. The reported 54.9 ms maximum physics update is an unpaired diagnostic sample under recording and support scans, not evidence of acceptable performance or a causal regression.
+
+
+## Wide view and peer geometry sampling
+
+Added QA-only `recoveryOverview` to frame the group from above without following one beast. Repeated the mixed one-hyena/three-rhino run with `peerContacts=1&peerFalls=1`, including falling poses. The full 16-second simulation completes; all downed states and physical resources clear, zero roll failures/errors, one Guardian maximum.
+
+Inspected overview-contact.jpg: all four actors remain in view through the fall/rise cycle and separate before moving away. The diagnostic finds zero negative physical collider distances and zero intersecting deformed-mesh AABBs among sampled active actors (physical and baked). Disjoint AABBs establish mesh separation at those samples; the approximately 10 Hz sampling does not prove separation between samples. This is a different repeated trajectory, so it does not retroactively certify the obscured close-up run. No claim of contact performance: all-vertex skin scans are expensive QA-only diagnostics.
+
+Files: overview-cycle.webm, overview-contact.jpg, overview-status.json. The overview camera is confined to this test fixture; production camera behavior is unchanged.
