@@ -22,6 +22,7 @@ const campaign=new URLSearchParams(location.search).has('campaign');
 const faceSpecies=new URLSearchParams(location.search).get('face');
 const faceCandidates={rhino:{source:"rinoceronte",url:"/content/source/actors/rhino/expressive-candidate.glb"},buffalo:{source:'bufalo',url:'/content/source/actors/buffalo/expressive-candidate.glb'},hyena:{source:'hiena',url:'/content/source/actors/hyena/expressive-candidate.glb'},lion:{source:'leon',url:'/content/source/actors/lion/expressive-candidate.glb'},warthog:{source:'facoquero',url:'/content/source/actors/warthog/expressive-candidate.glb'}};
 if(new URLSearchParams(location.search).has('maneTrial'))faceCandidates.buffalo.url='/test-results/buffalo-mane-web.glb';
+if(new URLSearchParams(location.search).has('armTrial'))faceCandidates.buffalo.url='/test-results/buffalo-arm-web.glb';
 if(faceSpecies&&!faceCandidates[faceSpecies])throw Error('Unsupported facial candidate: '+faceSpecies);
 const workerCandidate=new URLSearchParams(location.search).get('workerCandidate');
 if(workerCandidate&&!['olderFemale','olderMale'].includes(workerCandidate))throw Error('Unsupported worker candidate: '+workerCandidate);

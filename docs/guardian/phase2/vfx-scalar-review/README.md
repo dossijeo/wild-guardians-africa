@@ -234,3 +234,12 @@ Added opt-in `slopeTrial=1` to the combat fixture. It searches existing terrain 
 ## Diffuse dark-fur diagnostic
 
 Fetched origin/main before further work: zero commits missing from this branch at the time of check. Added optional beastLighting=soft (style 6), a diffuse dark-albedo contribution without the power-8 sheen lobe. Default remains style 1. Low-strength .018/.019/.021 trial improved detail only slightly; .04/.039/.037 makes the dorsal strands easier to read in day/night, but also accentuates the untouched arm facets. Saved low/day/night screenshots and actual runtime status. This is not an accepted production material or a performance comparison. Do not enable globally from these buffalo-only views. The next material decision needs surface continuity outside the localized rear-mane normal edit, rather than further unbounded brightness increases. No lights or texture resources were added.
+
+
+## Local arm-normal candidate
+
+Runtime smooth-normal comparison removes the arm facets. Reproduced a localized source edit using existing shoulder/arm/forearm skin weights as a soft mask, retaining the registered rear-mane normals. No skin weights or vertex positions are changed. study_buffalo_arm_normals.py pins the input Blend SHA and exports both the original pre-mane baseline and revised candidate for transfer into original full-resolution GLB fc372bc8. Source audit matches all four mesh signatures for topology, positions, UV, skin and shape positions.
+
+Strict corner transfer initially rejected two coincident-corner normals differing by at most .000102818 per component. Added an explicit --normal-tolerance option (default zero, capped .001), used .00011 for this candidate; receipt reports exact maximum and count. Original non-normal binary data still passes the byte whitelist. Candidate cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b compresses to 6,112,176 bytes; exact decoded geometry/animation, texture PSNR minimum40.13 and zero glTF errors. Source and runtime remain isolated under test-results, not registered.
+
+Actual WorldScene candidate override: ?face=buffalo&armTrial=1&recoveryDay=1&beastLighting=soft. Day/night rear screenshots show continuous arm shading; untreated hands/legs retain facets. Single Attack cycle completes, finalDownCount=0, errors=[], maxVisibleGuardians=1. Contact sheet reviewed launch/fall/roll/rise. Wide footage does not certify all surface details during animation. Soft lighting remains experimental; model registration and final material decision remain pending.

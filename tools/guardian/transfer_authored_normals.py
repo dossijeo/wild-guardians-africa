@@ -2,7 +2,7 @@
 import argparse,hashlib,json,struct
 from pathlib import Path
 import numpy as np
-p=argparse.ArgumentParser();p.add_argument('original',type=Path);p.add_argument('baseline',type=Path);p.add_argument('candidate',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('original',type=Path);p.add_argument('baseline',type=Path);p.add_argument('candidate',type=Path);p.add_argument('output',type=Path);p.add_argument('--normal-tolerance',type=float,default=0);a=p.parse_args();assert 0<=a.normal_tolerance<=.001
 def read(path):
  raw=bytearray(path.read_bytes());n=struct.unpack_from('<I',raw,12)[0];return raw,json.loads(raw[20:20+n]),28+n
 def accessor(doc,index):
@@ -29,12 +29,14 @@ assert len(bp.get('targets',[]))==len(cp.get('targets',[]))
 for bt,ct in zip(bp.get('targets',[]),cp.get('targets',[])):
  for name,index in bt.items():
   if name!='NORMAL':assert np.array_equal(accessor(b,index)[bi],accessor(c,ct[name])[ci]),f'Morph corner mismatch {name}'
-before=bytes(o[0]);changed=0;pending=[]
+before=bytes(o[0]);changed=0;pending=[];maximum_ambiguity=0;ambiguous_corners=0
 for ot,ct in [(op['attributes'],cp['attributes'])]+list(zip(op.get('targets',[]),cp.get('targets',[]))):
  if 'NORMAL' not in ot:continue
  dest=accessor(o,ot['NORMAL']);values=accessor(c,ct['NORMAL']);mapped={}
  for x,y in zip(oi,ci):
-  if int(x) in mapped:assert np.array_equal(mapped[int(x)],values[y]),'Ambiguous normal transfer'
+  if int(x) in mapped:
+   error=float(np.max(np.abs(mapped[int(x)]-values[y])));maximum_ambiguity=max(maximum_ambiguity,error);ambiguous_corners+=error>0
+   assert error<=a.normal_tolerance,f'Ambiguous normal transfer: {error} exceeds {a.normal_tolerance}'
   else:mapped[int(x)]=values[y].copy()
  for i,n in mapped.items():
   if not np.array_equal(dest[i],n):changed+=1;dest[i]=n
@@ -55,4 +57,4 @@ for index,values in pending:
  acc=g['accessors'][index];acc.pop('sparse',None);acc['bufferView']=view;acc.pop('byteOffset',None)
 g['buffers'][0]['byteLength']=len(binary);doc=json.dumps(g,separators=(',',':')).encode();doc+=b' '*((-len(doc))%4);binary+=b'\0'*((-len(binary))%4)
 output=struct.pack('<III',0x46546c67,2,28+len(doc)+len(binary))+struct.pack('<II',len(doc),0x4e4f534a)+doc+struct.pack('<II',len(binary),0x004e4942)+binary
-a.output.write_bytes(output);a.output.with_suffix('.json').write_text(json.dumps({'originalSha256':hashlib.sha256(before).hexdigest(),'outputSha256':hashlib.sha256(output).hexdigest(),'changedNormalRecords':changed,'changedOriginalPayloadBytes':int(changed_bytes.sum()),'payloadChangesRestrictedToNormals':True,'normalAccessorsRepacked':len(pending),'triangleCornerParity':True,'note':'Original non-normal binary bytes preserved; JSON accessor metadata updated for repacked normal data. Animation, texture, position and skin payloads unchanged. Requires visual validation.'},indent=2))
+a.output.write_bytes(output);a.output.with_suffix('.json').write_text(json.dumps({'originalSha256':hashlib.sha256(before).hexdigest(),'outputSha256':hashlib.sha256(output).hexdigest(),'changedNormalRecords':changed,'normalTolerance':a.normal_tolerance,'maximumCornerNormalDisagreement':maximum_ambiguity,'ambiguousCorners':ambiguous_corners,'changedOriginalPayloadBytes':int(changed_bytes.sum()),'payloadChangesRestrictedToNormals':True,'normalAccessorsRepacked':len(pending),'triangleCornerParity':True,'note':'Original non-normal binary bytes preserved; JSON accessor metadata updated for repacked normal data. Animation, texture, position and skin payloads unchanged. Requires visual validation.'},indent=2))
