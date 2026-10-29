@@ -126,6 +126,12 @@ export class Assets {
   }
   async walls(pack) {
     this.assertOpen();
+    let wallAO=null,wallValues=null;
+    if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??'')){
+      wallAO=await json('/content/lighting/global-ao/walls.json',{signal:this.preparation.signal});
+      const buffer=await bytes(wallAO.binary,{signal:this.preparation.signal});this.assertOpen();
+      if(buffer.byteLength!==wallAO.byteLength)throw Error('Wall AO byte length mismatch');wallValues=new Uint8Array(buffer);
+    }
     const map=await this.texture(pack.texture,true);this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide})),result={};
     await Promise.all(Object.entries(pack.pieces).map(async([key,piece])=>{
       const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(p=>bytes(p.url,{signal:this.preparation.signal})));
@@ -133,7 +139,9 @@ export class Assets {
         const [p,n]=await Promise.all([bytes(bridge.p.url,{signal:this.preparation.signal}),bytes(bridge.n.url,{signal:this.preparation.signal})]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
       })));
       this.assertOpen();const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals),3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uv),2));geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
-      const mesh=new THREE.Mesh(geometry,material);mesh.userData.nativePiece={p:new Float32Array(positions),n:new Float32Array(normals),uv:new Float32Array(uv),i:new Uint16Array(index),faceRegions:new Uint16Array(faceRegions),regions:piece.regions,morph};mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
+      let visibility;
+      if(wallAO){const r=wallAO.records.find(r=>r.key===key);if(!r||r.source!==piece.p.url||r.count!==geometry.attributes.position.count||r.offset<0||r.offset+r.count>wallValues.length)throw Error('Wall AO layout mismatch: '+key);visibility=wallValues.subarray(r.offset,r.offset+r.count);geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(visibility,1,true));material.userData.modelAmbientVisibility??={value:1};}
+      const mesh=new THREE.Mesh(geometry,material);mesh.userData.nativePiece={p:new Float32Array(positions),n:new Float32Array(normals),uv:new Float32Array(uv),i:new Uint16Array(index),faceRegions:new Uint16Array(faceRegions),regions:piece.regions,morph,visibility};mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
     }));return result;
   }
 }
