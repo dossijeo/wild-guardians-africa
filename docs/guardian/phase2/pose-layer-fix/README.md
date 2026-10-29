@@ -176,3 +176,13 @@ The inspected 6 fps sheets cover daytime rear Multiply, nighttime left-side Shie
 Frame time mean/p95/p99/max: 32.61/66.48/83.035/83.54 ms. Physics total p95 8.65 ms; solver p95 3.165 ms; recovery-follow p95 5.575 ms; visual recovery p95 4.395 ms. These inclusive/phase-dependent percentiles must not be added. Guardian animation p95 0.230 ms, VFX p95 0.750 ms. Draws p95 103; renderer memory reports 343 geometries/173 textures, JS heap 497,519,696 bytes (not total GPU memory).
 
 This is diagnostic evidence, not a paired before/after regression measurement. Source inspection identifies authored recovery sampling in both the physics follow path and visual render path; reusing an identical pose is a candidate optimization, requiring contact/world-transform validation before adoption. Baseline engine performance is not attributed to this feature. Audio was not unlocked and no video was recorded in this run.
+
+## Reuse the physical-time get-up pose for rendering
+
+RecoveryPoseSample records all local bone transforms immediately after the physical follow path samples authored recovery. Rendering reapplies that exact pose at the same recovery age and model world transform, otherwise it recomputes. It does not reuse a pose across changed time/placement or skip physical contact sampling; passive bones are included. The physical sample is authoritative for that tick. Allocation occurs once per recovery, not per render.
+
+Seven tests pass, including all five species clearing wall/corner contact fixtures after sample/restore/reapply, and world-transform invalidation. Production build passes (542 modules; existing warnings).
+
+Initial same-session four-hyena A/B runs (`recovery-reuse-reference.json`, `recovery-reuse-enabled.json`) both complete with zero final down actors/errors. Visual recovery p95 changes from 4.300 to 0.065 ms; physical recovery-follow p95 remains 5.935 vs 5.830 ms. Frame p95 is 66.485 vs 49.970 ms, but one ordered pair with different trajectories is insufficient to attribute global frame improvement. A first warmup overlapping tests was excluded. Counters are session-cumulative. The QA toggle permits balanced repetitions.
+
+`recovery-reuse-video` records completed native recovery with reuse enabled. The inspected 2 fps sheet shows the hyena remaining visible through fall, get-up and resumed walking; this wide view does not approve fine contacts. Tests ran concurrently during this visual recording, so its timings are not performance evidence. No audio context was unlocked.

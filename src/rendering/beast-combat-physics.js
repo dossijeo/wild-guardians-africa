@@ -1,3 +1,4 @@
+import {RecoveryPoseSample} from './recovery-pose-sample.js';
 import {BeastRecoveryExit} from './beast-recovery-exit.js';
 import {SkinContactBounds} from './skin-contact-bounds.js';
 import {BakedSolidContacts} from './baked-solid-contacts.js';
@@ -79,7 +80,7 @@ export class BeastCombatPhysics{
    let firstHit=Infinity;for(const e of this.entries.values())firstHit=Math.min(firstHit,e.hitAt);
    this.accumulator+=Math.min(dt,Math.max(0,state.elapsed-firstHit));
    const followStarted=performance.now();
-   for(const e of this.entries.values())if(e.recovery){e.kinematicStart.set(e.actor.pose);e.recovery.age=0;e.recovery.apply(Math.min(e.recovery.duration,e.recoveryAge+dt));e.binding.physicalSnapshot(e.kinematicPose);e.recovery.restore();}
+   for(const e of this.entries.values())if(e.recovery){e.kinematicStart.set(e.actor.pose);e.recovery.age=0;e.recovery.apply(Math.min(e.recovery.duration,e.recoveryAge+dt));e.binding.physicalSnapshot(e.kinematicPose);e.recoverySample.capture(Math.min(e.recovery.duration,e.recoveryAge+dt));e.recovery.restore();}
    this.stats.recoveryFollowMs+=performance.now()-followStarted;
    while(this.accumulator>=1/60){
     const followStep=performance.now(),weight=dt>0?Math.max(0,Math.min(1,(dt-this.accumulator+1/60)/dt)):1;
@@ -113,14 +114,14 @@ export class BeastCombatPhysics{
      e.solver.rollTo(id,orientation);e.rolling=true;a.magicDown.phase='rolling';continue;
     }
     const rollFailed=e.rolling&&e.actor.roll.timedOut;this.stats.rollFailures=(this.stats.rollFailures??0)+(rollFailed?1:0);this.stats.lastRoll=e.actor.roll?{seconds:e.actor.roll.age,contactDelay:e.actor.roll.contactDelay,error:e.actor.roll.error,speed:e.actor.roll.speed,timedOut:rollFailed}:null;
-    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip,solidContacts:BakedSolidContacts.forAnimal(this.world,a,e.binding,{peers:true})}):new BeastRecovery(e.binding,e.actor.pose,options);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
+    e.recovery=clip&&!rollFailed?new AuthoredBeastRecovery(e.binding,e.actor.pose,{...options,clip,solidContacts:BakedSolidContacts.forAnimal(this.world,a,e.binding,{peers:true})}):new BeastRecovery(e.binding,e.actor.pose,options);e.recoverySample=new RecoveryPoseSample(e.data.model);e.rolling=false;e.recoveryAge=0;e.kinematicPose=new Float32Array(98);e.kinematicStart=new Float32Array(98);e.solver.makeKinematic(id);a.magicDown.phase='recovering';this.stats.recoverySetupMs+=performance.now()-recoveryStarted;
    }
   }
   this.baked?.step(state,dt);this.stats.bakedActive=this.baked?.entries.size??0;
   this.stats.kinematic=0;for(const e of this.entries.values())if(e.recovery)this.stats.kinematic++;this.stats.active=this.entries.size;this.stats.physicsMs=performance.now()-started;this.stats.maxStepMs=Math.max(this.stats.maxStepMs,this.stats.physicsMs);
  }
  before(id){this.world.mixers.get(id)?.recoveryExit?.restore();this.baked?.before(id);const e=this.entries.get(id);if(e?.recovery)e.recovery.restore();else e?.binding.restore();}
- render(id){this.baked?.render(id);const e=this.entries.get(id);if(!e){const data=this.world.mixers.get(id);if(data?.recoveryExit&&data.recoveryExit.apply(this.world.state.elapsed))delete data.recoveryExit;return;}if(e.recovery){const start=performance.now();e.recovery.age=0;e.recovery.apply(e.recoveryAge);this.stats.recoveryMs+=performance.now()-start;}else e.binding.apply(e.actor.pose);}
+ render(id){this.baked?.render(id);const e=this.entries.get(id);if(!e){const data=this.world.mixers.get(id);if(data?.recoveryExit&&data.recoveryExit.apply(this.world.state.elapsed))delete data.recoveryExit;return;}if(e.recovery){const start=performance.now();if(this.reuseRecoveryPose!==false&&e.recoverySample.apply(e.recoveryAge)){this.stats.recoveryPoseHits=(this.stats.recoveryPoseHits??0)+1;}else{e.recovery.age=0;e.recovery.apply(e.recoveryAge);this.stats.recoveryPoseMisses=(this.stats.recoveryPoseMisses??0)+1;}this.stats.recoveryMs+=performance.now()-start;}else e.binding.apply(e.actor.pose);}
  release(id){const e=this.entries.get(id);if(!e)return;e.recovery?.restore();e.binding.restore();e.solver.remove(id);delete e.animal.magicDown;this.entries.delete(id);if(!this.entries.size){this.solver.dispose();this.solver=null;this.environment=null;this.accumulator=0;}else this.environment.sync([...this.entries.values()].map(e=>e.animal));}
  dispose(){this.baked?.dispose();for(const id of this.entries.keys())this.release(id);for(const data of this.world.mixers.values()){data.recoveryExit?.restore();delete data.recoveryExit;}if(this.world.nav.beastPhysics===this)delete this.world.nav.beastPhysics;this.seen.clear();}
 }
