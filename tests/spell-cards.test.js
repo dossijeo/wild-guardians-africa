@@ -39,15 +39,15 @@ test('native markup retains symbols, current unlocks, cooldown details and trans
   const markup=spellCardsMarkup(ready(),i=>`<svg data-original="${i}"></svg>`);
   assert.equal((markup.match(/ disabled/g)||[]).length,2);
   assert.equal((markup.match(/data-original=/g)||[]).length,4);
-  assert.equal((markup.match(/una planta · sin recarga/g)||[]).length,2);
-  for(const [es,en] of [['Disponible desde la noche 1','Available from night 1'],['Disponible desde el día 1','Available from day 1'],['Recargando','Cooling down'],['No disponible ahora','Unavailable now'],['una planta · sin recarga','one plant · no cooldown']]){
+  assert.equal((markup.match(/una planta Â· sin recarga/g)||[]).length,2);
+  for(const [es,en] of [['Disponible desde la noche 1','Available from night 1'],['Disponible desde el dÃ­a 1','Available from day 1'],['Recargando','Cooling down'],['No disponible ahora','Unavailable now'],['una planta Â· sin recarga','one plant Â· no cooldown']]){
     assert.equal(translate(es,'es'),es);
     assert.equal(translate(es,'en'),en);
   }
 });
 
 test('spell panel explains per-plant and terrain targeting in both languages',()=>{
-  const hint='Crecimiento y Multiplicar: toca una planta. Escudo: toca el terreno. Ataque: toca una bestia activa. Cada aplicación mantiene la selección diez segundos.';
+  const hint='Crecimiento y Multiplicar: toca una planta. Escudo: toca el terreno. Ataque: toca una bestia activa. Cada aplicaciÃ³n mantiene la selecciÃ³n diez segundos.';
   assert.ok(spellCardsMarkup(ready(),()=>'<svg></svg>').includes(hint));
   assert.equal(translate(hint,'es'),hint);
   assert.equal(translate(hint,'en'),'Growth and Multiply: tap a plant. Shield: tap the ground. Attack: touch an active beast. Each cast keeps selection active for ten seconds.');
@@ -70,4 +70,15 @@ test('stable refresh preserves translated text, nodes and scroll while shield st
   assert.equal(number.textContent,'45');
   assert.equal(label.hidden,false);
   assert.equal(root.scrollTop,117);
+});
+
+
+test('Attack card exposes remaining cooldown and enables again at zero',()=>{
+ const s=ready();s.day=2;s.raid={animals:[]};const spec=BALANCE.spells.find(spec=>spec.id==='attack');
+ for(const remaining of [12,11.9,.1]){
+  s.cooldowns.attack=remaining;const card=spellCardStatus(s,spec);
+  assert.equal(card.disabled,true);assert.equal(card.label,'Recargando');
+  assert.equal(card.cooldown,remaining);assert.equal(card.ratio,remaining/12*100);
+ }
+ s.cooldowns.attack=0;assert.equal(spellCardStatus(s,spec).disabled,false);
 });

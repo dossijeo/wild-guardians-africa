@@ -65,7 +65,7 @@ const eventObservers=new WeakMap();
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
 export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slotId=crypto.randomUUID()}={}) {
-  if(!BIOMES.includes(biome)||!CULTURES.includes(culture))throw new Error('Combinación desconocida');
+  if(!BIOMES.includes(biome)||!CULTURES.includes(culture))throw new Error('CombinaciÃ³n desconocida');
   return {saveVersion:1,terrainVersion:'4.1.10.3',slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,cinematicSeenAct:0,postgame:false,result:null,
     initialPreparation:true,ledger:{balance:rational(B.initial_money),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
     pauses:[],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
@@ -98,7 +98,7 @@ function enqueueLooseCrates(s) {
 }
 export function commit(s,id,action,operation) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(!permission(s,action))throw new Error('Esta acción no está disponible ahora');
+  if(!permission(s,action))throw new Error('Esta acciÃ³n no estÃ¡ disponible ahora');
   operation();s.commandIds.push(id);return true;
 }
 export function previewCenter(s,{x,z,yaw=0},nav) {
@@ -145,18 +145,18 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     else inspect(nav.forBuildingPlacement?.(footprint,check.suppress??[])??nav);
   }
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
-  return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
+  return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino vÃ¡lido al poblado':failure??'El centro no tiene un camino vÃ¡lido al poblado'};
 }
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+  if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acciÃ³n no estÃ¡ disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
   if(draft?.valid){x=draft.x;z=draft.z;}
   const candidate={kind,x,z,yaw,culture};
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
   if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
-  if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
+  if(kind!=='center'&&kind!=='wall')throw new Error('ConstrucciÃ³n desconocida');
   const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
   if(kind==='wall'&&!gate){
@@ -446,7 +446,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
 // Geometry/price quote is read-only and may describe a future purchase. Actual
 // preview/build still enforce available cash and the native hiring reserve.
 export function quoteWallChain(s,material,points,nav,options={}) {
-  if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+  if(!permission(s,'wall'))throw new Error('Esta acciÃ³n no estÃ¡ disponible ahora');
   // A multi-arc enclosure is one atomic quote: gate selection must see every
   // proposed module before deciding whether the combined boundary is closed.
   const strokes=Array.isArray(points[0]?.[0])?points:[points];
@@ -519,7 +519,7 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
       prepared.structureCount!==s.structures.length||
       prepared.plantCount!==s.plants.length||
       prepared.workerCount!==s.workers.length)
-      throw Error('La cotización de la muralla ha caducado');
+      throw Error('La cotizaciÃ³n de la muralla ha caducado');
     plan=prepared.quote;
     if(compare(s.ledger.balance,rational(plan.cost))<0)
       throw Error('No hay monedas suficientes para todo el trazado');
@@ -566,7 +566,7 @@ export function plant(s,id,species,x,z,nav) {
   });
 }
 export function harvest(s,id,plantId) {
-  const living=activeCrops(s.plants),p=living.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
+  const living=activeCrops(s.plants),p=living.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavÃ­a no estÃ¡ maduro');
   return commit(s,id,'harvest',()=>{
     const group=contiguousGroup(living,p).filter(isMature);
     group.sort((a,b)=>{
@@ -587,8 +587,8 @@ function addHiredWorker(s,profileId,centerId,usedPeople){
 }
 export function hireAdditional(s,id,selection,centerId){
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(s.result||s.raid||s.hiringPaidDay!==s.day||s.time>=300||s.pauses.some(p=>!['menu','tutorial-action'].includes(p)))throw new Error('La contratación adicional no está disponible ahora');
-  if(!s.structures.some(c=>c.id===centerId&&operational(c)))throw new Error('El centro de trabajo no está disponible');
+  if(s.result||s.raid||s.hiringPaidDay!==s.day||s.time>=300||s.pauses.some(p=>!['menu','tutorial-action'].includes(p)))throw new Error('La contrataciÃ³n adicional no estÃ¡ disponible ahora');
+  if(!s.structures.some(c=>c.id===centerId&&operational(c)))throw new Error('El centro de trabajo no estÃ¡ disponible');
   const cost=hiringCost(selection,{time:s.time}),total=Object.values(selection).reduce((n,c)=>n+c,0);
   if(!total)return false;
   transact(s.ledger,id,rational(-cost));
@@ -600,7 +600,7 @@ export function hireAdditional(s,id,selection,centerId){
 export function hire(s,id,selection) {
   if(s.hiringPaidDay===s.day)return false;
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
+  if(!s.pauses.includes('hiring'))throw new Error('La contrataciÃ³n no estÃ¡ abierta');
   const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
   const living=activeCrops(s.plants);
   const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
@@ -687,7 +687,7 @@ export function dropCarriedCrate(s,worker){
   if(!s.raid){const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);}
 }
 export function requestRepair(s,id,targetId) {
-  const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparación');
+  const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparaciÃ³n');
   if(compare(s.ledger.balance,repairCost(target))<0)throw new Error('Fondos insuficientes');
   ensurePurchaseBudget(s,repairCost(target));
   return commit(s,id,'repair',()=>{
@@ -725,22 +725,22 @@ function agriculturalTarget(s,kind,x,z,targetPlantId){
   if(kind==='shield'||kind==='attack')return null;
   const p=activeCrops(s.plants).find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
-  if(kind==='growth'&&isMature(p))throw new Error('Esta planta ya está madura');
+  if(kind==='growth'&&isMature(p))throw new Error('Esta planta ya estÃ¡ madura');
   return p;
 }
 function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
-  if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
-  if(['shield','attack'].includes(kind)&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
-  if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
+  if(!spellUnlocked(s,kind))throw new Error('El EspÃ­ritu todavÃ­a no ha revelado esta magia');
+  if(['shield','attack'].includes(kind)&&s.cooldowns[kind]>0)throw new Error('La magia estÃ¡ recargando');
+  if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('UbicaciÃ³n mÃ¡gica invÃ¡lida');
   const radius=spellRadius(kind);
-  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>!['gone','retreating'].includes(a.status)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
+  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>!['gone','retreating'].includes(a.status)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa');if(!permission(s,kind))throw new Error('Esta acciÃ³n no estÃ¡ disponible ahora');return {spec,plant:null,animal};}
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(s.spells.some(a=>a.remaining>0&&(target?
     a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
-    a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
+    a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las Ã¡reas mÃ¡gicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
-  if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
+  if(!permission(s,kind))throw new Error('Esta acciÃ³n no estÃ¡ disponible ahora');
   return {spec};
 }
 export function cast(s,id,kind,x,z,nav,selection) {
@@ -750,7 +750,7 @@ export function cast(s,id,kind,x,z,nav,selection) {
   const {spec,animal}=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
-  for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
+  for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mÃ¡gico invÃ¡lido');
   return commit(s,id,kind,()=>{
     if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
@@ -1199,8 +1199,8 @@ function completeTask(s,w,t,target,nav) {
     try {
       const access=planRepairAccess(s,target,nav);
       if(access.status!=='safe')throw new Error(access.status==='unknown'?
-        'La reparación espera información del terreno para conservar el acceso.':
-        'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');
+        'La reparaciÃ³n espera informaciÃ³n del terreno para conservar el acceso.':
+        'La reparaciÃ³n cerrarÃ­a el acceso de los trabajadores sin una puerta vÃ¡lida.');
       ensurePurchaseBudget(s,repairCost(target));
       const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
       if(transact(s.ledger,paymentId,negate(repairCost(target)))){
@@ -1222,8 +1222,8 @@ function completeTask(s,w,t,target,nav) {
     }
     catch(error){
       if(error.code==='hiring-reserve')
-        notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);
-      else if(error.message?.startsWith('La reparación'))notice(s,error.message,target.id);
+        notice(s,'La reparaciÃ³n se cancelÃ³: fondos insuficientes al llegar.',target.id);
+      else if(error.message?.startsWith('La reparaciÃ³n'))notice(s,error.message,target.id);
       else throw error;
     }
   }
@@ -1576,7 +1576,7 @@ function prepareClockEvents(s,nav){
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
 export function tick(s,seconds,nav) {
-  if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
+  if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal invÃ¡lido');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     prepareClockEvents(s,nav);
@@ -1592,7 +1592,7 @@ export function tick(s,seconds,nav) {
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
     for(const kind of Object.keys(s.cooldowns)) {
-      if(kind!=='shield'){s.cooldowns[kind]=0;continue;}
+      if(kind!=='shield'&&kind!=='attack'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }

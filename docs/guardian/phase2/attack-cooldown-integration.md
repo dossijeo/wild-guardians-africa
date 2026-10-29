@@ -1,0 +1,7 @@
+# Attack cooldown integration repair
+
+Inspection found that Game.tick reset every cooldown except Shield to zero. Attack assigned 12 seconds on casting, but the next simulation step discarded it. The spell-card status also handled only Shield. Both now retain Attack alongside Shield; agricultural spells remain without cooldown.
+
+Validation: node --test tests/guardian-combat.test.js tests/spell-cards.test.js passes all 18 tests. The new integration regression casts Attack, advances the real Game.tick, rejects an immediate repeat, round-trips the remaining cooldown through snapshots, freezes it during a menu pause, advances to the last tenth of a second, rejects an early repeat, and permits a new cast at zero. Card status checks countdown, percentage, disabled state and recovery.
+
+This is simulation and UI-function evidence, not a graphical menu acceptance test. Existing controlled combat recordings that explicitly clear cooldowns do not prove normal gameplay cooldown behavior. Earlier repeated-attack performance recordings predate this repair and must not be taken as measurements of the corrected cadence without rerunning them. Full objective remains active.
