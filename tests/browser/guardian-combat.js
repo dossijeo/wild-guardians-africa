@@ -48,10 +48,12 @@ try{
  const biomeAssets={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
  const trialBiome=new URLSearchParams(location.search).get('biome')??'sabana';
  if(!biomeAssets[trialBiome]||(campaign&&trialBiome!=='sabana'))throw Error('Unsupported biome trial');
- const pack=await json('/content/biome-'+biomeAssets[trialBiome]+'.json');let payload=(await json('/content/villages.json')).find(v=>v.id===(campaign?'mapungubwe':'suajili'));
+ const trialCulture=campaign?'mapungubwe':new URLSearchParams(location.search).get('culture')??'suajili';
+ const pack=await json('/content/biome-'+biomeAssets[trialBiome]+'.json');let payload=(await json('/content/villages.json')).find(v=>v.id===trialCulture);
+ if(!payload)throw Error('Unknown trial culture');
  if(campaign){const response=await fetch('/docs/qa/raid-paid-defense-night31/failure-state.json.gz');const bytes=new Uint8Array(await response.arrayBuffer());const snapshot=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes);state=deserialize(snapshot);state.pauses=[];if(new URLSearchParams(location.search).has('freshRaid')){const former=state.raid?.animals.find(a=>!['gone','retreating'].includes(a.status));site=former?{x:former.x,z:former.z}:null;state.raid=null;planNight(state);state.time=state.nightPlan.at;}nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);const a=state.raid?.animals.find(a=>!['gone','retreating'].includes(a.status));if(a)site={x:a.x,z:a.z};}
  else{
- state=Game.newGame({biome:trialBiome,culture:'suajili',seed:712});nav=new Navigation(712,trialBiome,pack.profile);const location=await findInitialLocationAsync(nav,payload);
+ state=Game.newGame({biome:trialBiome,culture:trialCulture,seed:712});nav=new Navigation(712,trialBiome,pack.profile);const location=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');Game.placeStructure(state,'qa-center',location.center,nav);
  const center=state.structures[0];for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:center.x+x,z:center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}
  Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);
@@ -71,7 +73,7 @@ try{
   if(!best)throw Error('No suitable real terrain slope found for recovery trial');
   slopeSite=best;site={x:best.x-2.5,z:best.z};
  }
- function camera(){world.cinematic=false;world.camera.zoom=new URLSearchParams(location.search).has('castClose')?2:1;world.camera.updateProjectionMatrix();const y=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,y+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,y+zoom*.65,site.z+Math.cos(angle)*zoom);world.controls.update();}
+ function camera(){if(new URLSearchParams(location.search).has('buildingView')){const center=state.structures.find(s=>s.kind==='center');if(!center)throw Error('Building review needs a center');const y=nav.field.surface(center.x,center.z);world.cinematic=true;world.camera.zoom=1;world.camera.updateProjectionMatrix();world.controls.target.set(center.x,y+2,center.z);world.camera.position.set(center.x+Math.sin(angle)*18,y+11,center.z+Math.cos(angle)*18);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);return;}world.cinematic=false;world.camera.zoom=new URLSearchParams(location.search).has('castClose')?2:1;world.camera.updateProjectionMatrix();const y=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,y+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,y+zoom*.65,site.z+Math.cos(angle)*zoom);world.controls.update();}
  if(new URLSearchParams(location.search).has('authoredRecovery')){world.beastPhysics.recoveryClips=new Map(await Promise.all(['hyena','lion','warthog','buffalo','rhino'].map(async species=>{const data=await json('/content/source/animations/stand-up/'+species+'-candidate.json');return [species,AnimationClip.parse(data.clip)];})));}
  const guideToggle=document.createElement('button');guideToggle.id='guideToggle';guideToggle.textContent='Gu\u00eda del tutorial';document.querySelector('header').insertBefore(guideToggle,$('status'));
  let guideTrial=false;const normalGuideTarget=world.tutorialGuideTarget.bind(world);

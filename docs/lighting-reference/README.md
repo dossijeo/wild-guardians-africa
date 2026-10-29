@@ -27,3 +27,13 @@ Added reproducible Blender/Cycles offline bake `tools/lighting/bake_building_ao.
 Opt-in `cinematicLight=1&cinematicAO=1&lightingReview=1` loads it only for Suajili through Assets ownership/loading. Ambient and rim light receive 72% AO influence; direct/specular/emission do not. Caps and inner/destruction surfaces skip the intact atlas; influence fades between 2% and 30% damage. This fade is a conservative approximation, not dynamic cavity AO. One texture lookup on qualifying building fragments; actual GPU cost remains unmeasured.
 
 Production-profile day baseline/candidate captures are now present. [Original left / candidate with AO right](production-ao-comparison.png). Browser reports ready and no fixture errors. More localized darkening is visible under the roof and around wood/crates. This camera does not prove all UV seams, night behavior, destruction transitions or all cultures. Current result remains short of the reference and off by default. Contact shadows at building bases and improved indirect response remain outstanding, as do all-biome comparisons and cost measurements.
+
+## Five-culture AO bank
+
+All five original building meshes now have their own baked atlas: suajili, etiope, mapungubwe, saheliana, musgum. `bake_building_ao_bank.py --blender <Blender 4.5.3 executable>` runs the bakes, verifies achromatic pixels before lossless single-channel PNG conversion, and records hashes/settings. Opt-in loading resolves the current culture. Disk single-channel storage does not prove GPU single-channel allocation: the existing texture loader may expand it.
+
+12 selected bank/native-shadow/daylight tests pass; production build passes in 15.08s (existing large-chunk warnings). Bank verification checks every manifest culture, original GLB and output hashes, PNG dimensions and grayscale bit depth. It is not artistic validation.
+
+Gran Río + Ethiopian culture was loaded with the production profile and opt-in lighting/AO, with no fixture errors. Added `buildingView=1` to frame the entire centre rather than clip it at the left edge. [Full-building inspection](river-ethiopian-full-ao-day.png) shows separation under layered roof sections and around the doorway. The remaining three cultures still require visual review, and no broad performance/quality acceptance is claimed.
+
+Atlas disk sizes: [{"file": "etiope-geometric-ao.png", "bytes": 460221}, {"file": "mapungubwe-geometric-ao.png", "bytes": 492228}, {"file": "musgum-geometric-ao.png", "bytes": 518327}, {"file": "saheliana-geometric-ao.png", "bytes": 564449}, {"file": "suajili-geometric-ao.png", "bytes": 564027}]
