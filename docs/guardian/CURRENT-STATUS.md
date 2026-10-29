@@ -64,3 +64,7 @@ Full phase acceptance remains open, particularly incremental performance, the re
 ## Integration checkpoint at bf16322b0
 
 345 tests in 60 selected Guardian, beast/worker recovery, Awakening and tutorial files pass, with no failures, cancellations or skips. Production build succeeds (535 modules, 10.86 seconds, existing warnings). [Exact file selection and receipt](phase2/integration-checks-bf163.json). This includes the final Awaken/Grow labels and ritual replacement fixture source; browser execution evidence remains separately scoped above. This is not full repository, visual, audio or performance acceptance.
+
+## Component optimization checkpoint at 1ac423844
+
+[Ribbon upload reuse](phase2/ribbon-buffer-reuse.md) preserves all 18 effect geometries while avoiding temporary geometry storage and copying. [Peer collider caching](phase2/recovery-peer-cache.md) shares immutable shape data and retains live transforms. Both have sequential browser measurements supporting lower component cost; neither proves global FPS acceptance. The mixed real recovery run completes three physical plus one baked actor with one Guardian and no final down actors. Exact reports, tests and known diagnostic overhead are linked above. PR217 now includes these results and keeps its open acceptance list.
