@@ -75,3 +75,12 @@ test('expanded edge search frames the body and excludes distant crops and worker
   framed(next);
  }
 });
+
+test('close perspective views never prefer a projected candidate behind the camera',()=>{
+ const args=setup();args.camera.fov=70;args.camera.far=50;args.camera.position.set(0,2,3);args.camera.lookAt(0,1.7,0);args.camera.updateProjectionMatrix();
+ const p=guardianPlacement(args);
+ for(const dx of [-1.4,1.4])for(const dy of [-1.2,1.4])for(const dz of [-1.4,1.4]){
+  const view=new Vector3(p.x+dx,p.y+dy,p.z+dz).applyMatrix4(args.camera.matrixWorldInverse);
+  assert.ok(-view.z>=args.camera.near&&-view.z<=args.camera.far,`Invisible body corner: ${view.toArray()}`);
+ }
+});

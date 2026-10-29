@@ -9,7 +9,11 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  const framePenalty=(x,y,z)=>{
   let penalty=0;
   for(const dx of [-1.4,1.4])for(const dz of [-1.4,1.4])for(const dy of [-1.2,1.4]){
-   v.set(x+dx*bodyScale,y+dy*bodyScale,z+dz*bodyScale).project(camera);
+   v.set(x+dx*bodyScale,y+dy*bodyScale,z+dz*bodyScale).applyMatrix4(camera.matrixWorldInverse);
+   // Projected X/Y can look framed even behind a perspective camera.
+   // Prefer a partially cropped visible body over an invisible candidate.
+   if(-v.z<camera.near||-v.z>camera.far){penalty+=1000;continue;}
+   v.applyMatrix4(camera.projectionMatrix);
    penalty+=Math.max(0,Math.abs(v.x)-.92)+Math.max(0,Math.abs(v.y)-.92);
   }
   return penalty;
