@@ -31,7 +31,14 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  v.set(target.x,floor+.7,target.z).project(camera);const sx=v.x,sy=v.y;
  if(hoverAbove){
   const height=target.species?cropHeight(target):target.kind==='wall'?2.5:1;
-  const y=floor+height+1.7*bodyScale;
+  // A seedling's height alone can put the mantle alongside an adjacent wall.
+  // Keep the ceremonial silhouette above nearby intact wall tops, including
+  // walls behind it that an occlusion ray would correctly consider unblocked.
+  let ceiling=floor+height;
+  for(const wall of state.structures??[])if(wall.kind==='wall'&&wall.status==='intact'&&Math.hypot(wall.x-target.x,wall.z-target.z)<3*bodyScale){
+   ceiling=Math.max(ceiling,nav.field.surface(wall.x,wall.z)+2.5);
+  }
+  const y=ceiling+1.7*bodyScale;
   if(!occupied?.(target.x,y,target.z)&&blockedAt(target.x,y,target.z)===0&&framePenalty(target.x,y,target.z)<.3)return {x:target.x,y,z:target.z,clear:true,score:0};
  }
  const evaluate=(distance,offset)=>{
