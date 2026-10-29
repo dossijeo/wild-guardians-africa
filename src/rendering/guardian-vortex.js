@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+// Additive ribbons need no back/front ordering pass: retain both faces in one draw.
 // Two persistent draw calls. Time drives every vertex on the GPU; no particles
 // are allocated, sorted or uploaded while a summon is running.
 export class GuardianVortex extends THREE.Group{
@@ -14,7 +15,7 @@ export class GuardianVortex extends THREE.Group{
   }
   this.ribbonGeometry=new THREE.BufferGeometry();this.ribbonGeometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));this.ribbonGeometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
   const common=`uniform float age,flow,height,floor; uniform vec3 tint; varying float strength;`;
-  this.ribbonMaterial=new THREE.ShaderMaterial({uniforms:this.uniforms,transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false,
+  this.ribbonMaterial=new THREE.ShaderMaterial({uniforms:this.uniforms,transparent:true,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,blending:THREE.AdditiveBlending,toneMapped:false,
    vertexShader:common+`varying vec2 vUv;
     void main(){float h=position.y; float opening=smoothstep(0.,.35,age);float ending=smoothstep(1.45,2.2,age);
      float radius=(1.05+.3*sin(h*3.14159))*(1.-.32*opening)+ending*.5;

@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>Vortex pass comparison</title>
+<style>body{margin:0;background:#202625;color:white;font:16px sans-serif}canvas{display:block}header{padding:10px}</style>
+<header><button id="toggle">Use two passes</button><output id="status"></output></header><canvas id="view"></canvas>
+<script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';
+import {GuardianVortex} from '/src/rendering/guardian-vortex.js';
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#view'),antialias:true});renderer.setSize(800,600);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(40,4/3,.1,100);camera.position.set(5,3,7);camera.lookAt(0,1,0);
+const vortex=new GuardianVortex();scene.add(vortex);vortex.update(.3,0xa8ed8b,3,-.5);
+function draw(){renderer.render(scene,camera);document.querySelector('#status').textContent=JSON.stringify({singlePass:vortex.ribbonMaterial.forceSinglePass,draws:renderer.info.render.calls,triangles:renderer.info.render.triangles,points:renderer.info.render.points});}
+document.querySelector('#toggle').onclick=()=>{vortex.ribbonMaterial.forceSinglePass=!vortex.ribbonMaterial.forceSinglePass;document.querySelector('#toggle').textContent=vortex.ribbonMaterial.forceSinglePass?'Use two passes':'Use one pass';draw();};draw();
+</script>
