@@ -11,7 +11,7 @@ import {attachModelVisibility} from '../src/rendering/model-ambient-visibility.j
 const read=p=>readFileSync(new URL('../public'+p,import.meta.url));
 const json=p=>JSON.parse(read(p));
 const sha=b=>createHash('sha256').update(b).digest('hex');
-const catalogue=readdirSync(new URL('../public/content/lighting/global-ao/',import.meta.url)).filter(n=>/^model-(?!crops|guardian).*\.json$/.test(n)).map(n=>{const metadata='/content/lighting/global-ao/'+n;return {source:json(metadata).source,metadata};});
+const catalogue=readdirSync(new URL('../public/content/lighting/global-ao/',import.meta.url)).filter(n=>/^model-(?!crops).*\.json$/.test(n)).map(n=>{const metadata='/content/lighting/global-ao/'+n;return {source:json(metadata).source,metadata};});
 test('model AO maps original and shipped compressed primitives without changing rig or morph geometry',async()=>{
  const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
  for(const entry of catalogue){
