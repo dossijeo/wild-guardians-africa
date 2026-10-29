@@ -9,3 +9,9 @@ Inspected day-contact.jpg (2 frames/second across the ordinary recording) and fi
 The close Grow sequence shows limited change in the mantle silhouette during this short cast. The existing wide 12-second wind clip and static edge checks are insufficient artistic acceptance for a roughly two-second summon. Next evaluate the mantle playback rate/phase during actual casts against this baseline before changing its baked amplitude or mesh. No production animation change was made in this review. These sampled images are not a claim of frame-by-frame or real-time perceptual validation.
 
 Reproduce at `/tests/browser/guardian-combat.html` (or `?castClose=1`), wait for ready, activate sound, then select **Grabar día**. The existing local receiver on port 5197 saves combat-day.webm. Copy it before the next recording overwrites that receiver output.
+
+## Rejected double-speed experiment
+
+day-wind2.webm / day-wind2.json were recorded with only Mantle_Spell sampled at `(state.elapsed * 2) % duration`; body, float, tutorial and baked geometry remained unchanged. The authoring clip has three main waves per twelve-second loop. Sixteen model/singleton tests and the production build passed during the experiment.
+
+Inspected wind2-detail.jpg at the same five-frame-per-second sampling as first-cast-detail.jpg. The visible silhouette difference is insufficient to establish a convincing artistic improvement. This was not a phase-matched numerical comparison: recordings begin at different simulation times. The speed change was removed after review; runtime remains at the original rate. No claim of improved wind or performance is made. Next diagnose evaluated mantle vertices/bone contributions during the actual WorldScene cast, rather than increasing speed again without evidence.
