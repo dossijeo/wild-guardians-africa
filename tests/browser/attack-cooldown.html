@@ -1,0 +1,16 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Attack · recarga integrada</title>
+<link rel="stylesheet" href="/content/hud.css"><style>body{background:#263b30;color:white;font:18px sans-serif;padding:24px}#cards{max-width:650px}button{cursor:pointer}pre{white-space:pre-wrap}</style>
+<h1>Attack: recarga y pausa</h1><p>QA: estado nocturno preparado; tarjetas originales y Game.cast/Game.tick. No representa el recorrido completo del menú del juego.</p>
+<div id="cards"></div><button id="step">Avanzar 1 s</button><button id="pause">Pausar</button><button id="resume">Reanudar</button><pre id="status"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spellCardsMarkup,refreshSpellCards} from '../../src/ui/spell-cards.js';
+import {spellSVG} from '../../src/ui/native-hud.js';
+const nav={placement:()=>({valid:true}),setState(){},walkable:()=>true,terrainValid:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}],field:{surface:()=>0}};
+const s=Game.newGame({seed:712,slotId:'qa-attack-card'});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:12,z:8},nav);s.day=5;s.time=400;s.initialPreparation=false;s.elapsed=10;
+const animal={id:'beast',species:'rhino',x:17,z:8,radius:1,status:'walking',heading:0,hitsRemaining:4,attackRemaining:1,spawn:{x:30,z:0}};s.raid={animals:[animal],reservations:{}};
+const root=document.querySelector('#cards');root.innerHTML=spellCardsMarkup(s,spellSVG);let casts=0,error=null;
+function refresh(){refreshSpellCards(root,s);document.querySelector('#status').textContent=JSON.stringify({elapsed:s.elapsed,remaining:s.cooldowns.attack,pauses:s.pauses,casts,error},null,2);}
+root.addEventListener('click',event=>{if(event.target.closest('[data-spell]')?.dataset.spell!=='attack')return;try{Game.cast(s,'cast-'+casts,'attack',animal.x,animal.z,nav,{targetId:animal.id,origin:{x:15,y:2,z:8}});casts++;}catch(e){error=e.message;}refresh();});
+document.querySelector('#step').onclick=()=>{Game.tick(s,1,nav);refresh();};document.querySelector('#pause').onclick=()=>{Game.pause(s,'menu');refresh();};document.querySelector('#resume').onclick=()=>{Game.resume(s,'menu');refresh();};refresh();
+</script></html>
