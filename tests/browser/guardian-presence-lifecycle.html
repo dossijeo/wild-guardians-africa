@@ -19,6 +19,13 @@ button.onclick=async()=>{
    check(`old arrival released ${i}`,!audio.voices.has(arrival));
    audio.stop();check(`scene stop releases voices ${i}`,audio.voices.size===0&&audio.active.length===0);
   }
+  const pending=[];
+  for(let i=0;i<8;i++){pending.push(playGuardianWorldCue(audio,'spirit_appear'));pending.push(playGuardianWorldCue(audio,'spirit_power_activate'));}
+  const burst=await Promise.all(pending),latest=burst.slice(-2);
+  check('concurrent burst keeps both latest slots',latest.every(Boolean));
+  check('concurrent burst discards all stale decodes',burst.slice(0,-2).every(v=>v===null));
+  check('concurrent burst never retains more than two voices',audio.voices.size===2&&audio.active.length===2);
+  audio.stop();check('burst interruption releases both slots',audio.voices.size===0&&audio.active.length===0);
   report.contextBeforeDispose=audio.context.state;
  }catch(e){report.errors.push(e.message);}finally{
   audio.dispose();await audio.context?.close().catch(()=>{});report.contextAfterDispose=audio.context?.state;
