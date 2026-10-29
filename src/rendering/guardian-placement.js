@@ -3,7 +3,10 @@ import {Vector3} from 'three';
 export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,cropHeight=()=>2.2}){
  // Commands can follow a camera turn before the renderer refreshes matrices.
  camera.updateWorldMatrix(true,false);
- const blockedAt=(x,y,z)=>[y-.9*bodyScale,y,y+1.1*bodyScale].reduce((count,height)=>count+Number(occluded(x,height,z)),0);
+ // Sample the lateral silhouette too: a narrow clear ray through the center
+ // does not establish that the arms/mantle are visible beside a building.
+ const rightX=camera.matrixWorld.elements[0]*.8*bodyScale,rightZ=camera.matrixWorld.elements[2]*.8*bodyScale;
+ const blockedAt=(x,y,z)=>Number(occluded(x,y-.9*bodyScale,z))+Number(occluded(x,y,z))+Number(occluded(x,y+1.1*bodyScale,z))+Number(occluded(x-rightX,y,z-rightZ))+Number(occluded(x+rightX,y,z+rightZ));
  // Reserve a conservative body/vortex envelope, not just its center.
  // Applied only while planning a command, never per rendered frame.
  const framePenalty=(x,y,z)=>{

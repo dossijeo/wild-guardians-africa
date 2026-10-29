@@ -26,7 +26,18 @@ test('walkable vegetation still excludes the full body of a normal summon',()=>{
 test('visibility checks the lower mantle even when the face remains visible',()=>{
  const args=setup(),first=guardianPlacement(args);let checks=0;
  const next=guardianPlacement({...args,occluded:(x,y,z)=>{checks++;return y<1.2&&Math.hypot(x-first.x,z-first.z)<.2;}});
- assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);assert.equal(checks,48);
+ assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);assert.equal(checks,80);
+});
+
+test('placement avoids a building masking only the lateral silhouette',()=>{
+ const args=setup(),first=guardianPlacement(args);
+ const edge={x:first.x+.8,z:first.z};let seen=false;
+ const next=guardianPlacement({...args,occluded:(x,y,z)=>{
+  const blocked=Math.hypot(x-edge.x,z-edge.z)<.05&&Math.abs(y-first.y)<.05;
+  seen ||= blocked;return blocked;
+ }});
+ assert.equal(seen,true,'The body side must be sampled even with a clear center');
+ assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);
 });
 
 test("spirit placement never asks native navigation for an invented animal profile",()=>{const args=setup();args.nav.walkable=()=>{throw Error("Unsupported animal radius");};assert.ok(guardianPlacement(args));});
