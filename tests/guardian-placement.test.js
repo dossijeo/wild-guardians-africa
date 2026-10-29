@@ -50,3 +50,28 @@ test('edge targets leave room for the mantle and arrival vortex',()=>{
   assert.ok(Math.abs(screen.x)<1&&Math.abs(screen.y)<1,`Cropped arrival envelope: ${screen.toArray()}`);
  }
 });
+
+test('expanded edge search frames the body and excludes distant crops and workers',()=>{
+ const args=setup();args.target.z=-12;let checks=0;
+ args.nav.placement=()=>{checks++;return {valid:true};};
+ const first=guardianPlacement(args);
+ assert.equal(checks,26,'The edge case must exercise the ten extra candidates');
+ assert.ok(Math.hypot(first.x,first.z-args.target.z)>4.4);
+ const framed=p=>{
+  for(const dx of [-1.4,1.4])for(const dy of [-1.2,1.4])for(const dz of [-1.4,1.4]){
+   const screen=new Vector3(p.x+dx,p.y+dy,p.z+dz).project(args.camera);
+   assert.ok(Math.abs(screen.x)<=.92&&Math.abs(screen.y)<=.92,`Cropped expanded candidate: ${screen.toArray()}`);
+  }
+ };
+ framed(first);
+ for(const kind of ['crop','worker']){
+  // This obstacle lies outside the old nearby-ring broad phase.
+  assert.ok(Math.abs(first.z-args.target.z)>args.target.radius+4.5);
+  args.state.plants=kind==='crop'?[{x:first.x,z:first.z,alive:true}]:[];
+  args.state.workers=kind==='worker'?[{x:first.x,z:first.z,status:'incapacitated'}]:[];
+  checks=0;const next=guardianPlacement(args);
+  assert.equal(checks,26);assert.equal(next.y,1.7);
+  assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>=(kind==='crop'?1:1.1));
+  framed(next);
+ }
+});
