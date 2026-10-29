@@ -7,7 +7,12 @@ export function animalFootSamples(model){
   const {skinIndex,skinWeight}=mesh.geometry.attributes;let foot=0;
   for(let k=0;k<4;k++)if(/(?:Foot|ToeBase)$/.test(mesh.skeleton.bones[skinIndex.getComponent(index,k)].name))foot+=skinWeight.getComponent(index,k);
   return foot>.5;
- });cache.set(model,samples);return samples;
+ });
+ // Walking feet need the lower support envelope. Select nine downward-facing
+ // extrema per bone from the existing candidates; retain separate mesh groups.
+ const groups=new Map();for(const sample of samples){const {mesh,index}=sample,a=mesh.geometry.attributes;let best=0;for(let k=1;k<4;k++)if(a.skinWeight.getComponent(index,k)>a.skinWeight.getComponent(index,best))best=k;const bone=mesh.skeleton.bones[a.skinIndex.getComponent(index,best)];let byBone=groups.get(mesh);if(!byBone){byBone=new Map();groups.set(mesh,byBone);}let extrema=byBone.get(bone);if(!extrema){extrema=Array.from({length:9},()=>({score:-Infinity,sample:null}));byBone.set(bone,extrema);}let slot=0;for(let x=-1;x<=1;x++)for(let z=-1;z<=1;z++){const score=x*a.position.getX(index)-a.position.getY(index)+z*a.position.getZ(index),e=extrema[slot++];if(score>e.score){e.score=score;e.sample=sample;}}}
+ const chosen=new Set();for(const byBone of groups.values())for(const extrema of byBone.values())for(const e of extrema)chosen.add(e.sample);
+ samples=[...chosen];cache.set(model,samples);return samples;
 }
 // Existing animation grounding resets model Y before this call. Apply only the
 // extra world-up clearance demanded by terrain under the animated feet.

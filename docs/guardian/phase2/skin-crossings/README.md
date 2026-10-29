@@ -88,3 +88,14 @@ Five installed-GLB slope tests pass, checking the sampled contacts plus every fo
 terrain-support.json/webm mixed daylight cycle finishes all four recoveries without errors. All-skinned-vertex audit excluding tails has minimum .005733m during blend and .005758m after blend, versus negative clearances in prior runs; no sampled penetration in 64 audited frames. Runs have differing trajectories. Reviewed terrain-support-window.jpg at 2fps from 7s; rises and native locomotion remain present. This whole-model lift does not implement per-leg IK or guarantee every foot plants simultaneously on steep terrain.
 
 terrain-support-cost.json reproducible via audit_terrain_support_cost.mjs: Node warm median .0254–.0633ms/actor, p95 .0701–.1423ms on an analytic plane, with isolated maxima up to3.798ms. This excludes actual terrain-query cost, rendered animation and GPU; integrated-game raid performance remains to measure. Cold setup motivated the preparation hook.
+
+
+## Integrated support cost and reduced sampling
+
+Added an opt-in WorldScene terrainSupportStats accumulator, absent in normal play, and QA button Comparar coste de apoyos. Eight ABBA/BAAB blocks toggle only this support function; 1.2s warmup/4s samples per block, actual Game.tick, 20 spawned mixed beasts, no spell commands. The existing frame-pair summary labels guardian/cast counters generically; for these reports mode is support-enabled and cast callback is a no-op. An initial run overlapping a Vite build was discarded. The build itself passed (517 modules, existing import/chunk warnings).
+
+terrain-support-game-cost.json: first three enabled blocks have 20 support calls/frame and component p95 1.905,1.675,1.755ms. Disabled timing overhead is about .025ms/frame. Native scene counts change late in the run; do not compare unmatched later blocks as equal workloads.
+
+Reduced candidates to nine downward extrema per foot/toe bone and mesh, yielding 16–18 vertices per animal rather than 42–86. Five installed-model tests still pass, including full foot-vertex plane comparison. terrain-support-reduced.json/webm completes four recoveries with no errors; 65 all-skin non-tail support samples have minimum .001678m, still positive. This leaves less clearance margin and needs wider pose/terrain coverage. Reviewed reduced contact sheet at 2fps from7s; no gross release artifact in these samples, not close-foot acceptance.
+
+Clean repeated ABBA/BAAB measurement terrain-support-reduced-game-cost.json: three enabled blocks with20 calls/frame have component p95 .935,.950,.995ms. Later blocks have fewer active calls and are not comparable. The microbenchmark is separately recorded in reduced-cost.json. Frame p95 remains roughly67–83ms in comparable blocks and shared spikes persist; neither total fluency nor a causal FPS improvement is claimed. No baseline renderer investigation was performed.
