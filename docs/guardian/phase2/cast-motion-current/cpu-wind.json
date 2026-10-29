@@ -1,0 +1,140 @@
+{
+  "sha256": "d7410c48894efe331f77f885848fa56643986ef96f07d0f68a41da2f24aa0d4a",
+  "scope": "CPU skinning, two seconds, sampled summon action rule; no GPU or production gust/aim overlay",
+  "boneSweep": [
+    {
+      "name": "MantleFL0",
+      "degrees": 2.259697873012432
+    },
+    {
+      "name": "MantleFL1",
+      "degrees": 16.824065421246882
+    },
+    {
+      "name": "MantleFL2",
+      "degrees": 89.41033688252851
+    },
+    {
+      "name": "MantleFR0",
+      "degrees": 2.7570681732788667
+    },
+    {
+      "name": "MantleFR1",
+      "degrees": 13.434817498284584
+    },
+    {
+      "name": "MantleFR2",
+      "degrees": 89.41560209641477
+    },
+    {
+      "name": "MantleBL0",
+      "degrees": 3.073291968342535
+    },
+    {
+      "name": "MantleBL1",
+      "degrees": 11.12753379853668
+    },
+    {
+      "name": "MantleBL2",
+      "degrees": 80.49632781266277
+    },
+    {
+      "name": "MantleBR0",
+      "degrees": 3.1434527467809534
+    },
+    {
+      "name": "MantleBR1",
+      "degrees": 14.786377610700184
+    },
+    {
+      "name": "MantleBR2",
+      "degrees": 64.86169693965702
+    }
+  ],
+  "vertices": 1246,
+  "displacementFromFirst": {
+    "median": 0.02032345447685681,
+    "p95": 0.062029035320448386,
+    "max": 0.12543298345670087
+  },
+  "actionStates": [
+    {
+      "name": "Explain",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Warning",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Enthusiasm",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Invoke",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Cast",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Float",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    },
+    {
+      "name": "Idle",
+      "enabled": false,
+      "weight": 0,
+      "time": 2
+    },
+    {
+      "name": "Spell_Grow",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    },
+    {
+      "name": "Spell_Multiply",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Spell_Shield",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Spell_Attack",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Mantle_Breeze",
+      "enabled": false,
+      "weight": 0,
+      "time": 2
+    },
+    {
+      "name": "Mantle_Spell",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    }
+  ]
+}

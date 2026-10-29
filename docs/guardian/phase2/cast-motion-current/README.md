@@ -15,3 +15,11 @@ Reproduce at `/tests/browser/guardian-combat.html` (or `?castClose=1`), wait for
 day-wind2.webm / day-wind2.json were recorded with only Mantle_Spell sampled at `(state.elapsed * 2) % duration`; body, float, tutorial and baked geometry remained unchanged. The authoring clip has three main waves per twelve-second loop. Sixteen model/singleton tests and the production build passed during the experiment.
 
 Inspected wind2-detail.jpg at the same five-frame-per-second sampling as first-cast-detail.jpg. The visible silhouette difference is insufficient to establish a convincing artistic improvement. This was not a phase-matched numerical comparison: recordings begin at different simulation times. The speed change was removed after review; runtime remains at the original rate. No claim of improved wind or performance is made. Next diagnose evaluated mantle vertices/bone contributions during the actual WorldScene cast, rather than increasing speed again without evidence.
+
+## CPU deformation localization
+
+`node tools/guardian/audit_cast_wind.mjs` samples the installed GLB with the summon action selection/time rule, at simulation time 3000–3002 seconds, in 1/12-second steps. Texture loading is removed only in memory. Receipt: cpu-wind.json, bound to the runtime GLB SHA. This is a CPU evaluation, not an observation of GPU output or the full WorldScene gust/aim overlays.
+
+The four terminal mantle bones sweep 64.9–89.4 degrees during these two seconds. For 1,246 vertices whose summed mantle influence is at least .8, maximum displacement from the first sample has median .0203, p95 .0620 and maximum .1254 in mesh-local units (before the summon model scale of 2.4). These distances include the selected Grow/Float deformation; they do not isolate wind from body movement. The output proves that the animation reaches the sampled skeleton and CPU-skinned mesh. It does not prove correct GPU deformation or identify weights as the sole cause of the weak silhouette.
+
+Next inspect terminal-bone pivot positions and the weight distribution over the broad cloth panels. Large angular sweep with limited cloth displacement makes that a better-founded next experiment than increasing playback speed again. Keep original rig/model files until a local trial has been compared visually.
