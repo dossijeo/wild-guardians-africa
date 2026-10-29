@@ -323,7 +323,7 @@ try{
   const slot=world.guardianSummons.slots.find(s=>s.event&&s.group.visible);if(!slot){$('recordStatus').textContent='Prepara un hechizo pausado antes de grabar su detalle';return;}
   guardianDetailButton.onclick();const kind=slot.event.kind,targetId=slot.event.targetId,includeRecovery=includeTarget.checked&&kind==='attack',startAge=state.elapsed-slot.at,start=state.elapsed,wasSimulating=simulate;
   const recoveryRows=[],victim=()=>state.raid?.animals.find(a=>a.id===targetId);let enteredDown=false;
-  const sampleRecovery=()=>{const a=victim(),rig=a&&world.mixers.get(a.id);enteredDown ||= !!a?.magicDown;recoveryRows.push({elapsed:state.elapsed-start,present:!!a,status:a?.status,down:!!a?.magicDown,recoveryExit:!!rig?.recoveryExit,x:a?.x,z:a?.z});};
+  const sampleRecovery=()=>{const a=victim(),rig=a&&world.mixers.get(a.id);enteredDown ||= !!a?.magicDown;recoveryRows.push({elapsed:state.elapsed-start,present:!!a,status:a?.status,down:!!a?.magicDown,phase:a?.magicDown?.phase??null,recoveryExit:!!rig?.recoveryExit,x:a?.x,z:a?.z});};
   recording=true;const stream=$('world').captureStream(30),chunks=[];let rec,destination;
   try{
    if(audio.context){destination=audio.context.createMediaStreamDestination();audio.sfxGain.connect(destination);for(const track of destination.stream.getAudioTracks())stream.addTrack(track);}
