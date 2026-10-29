@@ -81,3 +81,31 @@ test('installed animated hand anchors Attack flight and reaches the selected sur
   assert.ok(moved,'test must sample changing authored hand poses');
  }finally{summons.dispose();}
 });
+
+
+test('installed spell layers reach the same pose at 15 and 60 updates per second',async()=>{
+ const {readFileSync}=await import('node:fs');const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
+ const {rigForSampling}=await import('../tools/prepare_watering_emitters.mjs');const {GuardianSummons}=await import('../src/rendering/guardian-summons.js');
+ const gltf=await new GLTFLoader().parseAsync(rigForSampling(readFileSync('public/content/guardian/guardian.glb')),'');
+ const make=()=>new GuardianSummons({toon:{uniforms:{uLightDir:{value:new THREE.Vector3(1,1,0)},uNight:{value:1}}},state:{events:[],elapsed:0,time:400},scene:new THREE.Scene(),assets:{model:async()=>gltf},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}});
+ const fast=make(),slow=make();await Promise.all([fast.ready,slow.ready]);
+ const bones=s=>{const out=[];s.slots[0].model.traverse(b=>{if(b.isBone)out.push(b);});return out;};
+ const fastBones=bones(fast),slowBones=bones(slow);assert.equal(fastBones.length,slowBones.length);
+ try{
+  for(const [index,kind] of ['growth','multiply','shield','attack','growth'].entries()){
+   const at=index*3;
+   for(const s of [fast,slow]){s.world.state.elapsed=at;s.world.state.events.push({type:'SpellActivated',kind,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:at}});s.update();}
+   for(let frame=1;frame<=132;frame++){
+    fast.world.state.elapsed=at+frame/60;fast.update();if(frame%4)continue;
+    slow.world.state.elapsed=at+frame/60;slow.update();
+    for(let i=0;i<fastBones.length;i++){
+     const a=fastBones[i],b=slowBones[i],label=`${kind} frame ${frame} bone ${a.name}`;
+     assert.ok(a.position.distanceTo(b.position)<1e-8,label+' position');
+     assert.ok(a.quaternion.toArray().every((v,j)=>Math.abs(v-b.quaternion.toArray()[j])<1e-8),label+' orientation');
+     assert.ok(a.scale.distanceTo(b.scale)<1e-8,label+' scale');
+    }
+    assert.ok(fast.slots[0].core.position.distanceTo(slow.slots[0].core.position)<1e-7,kind+' energy origin');
+   }
+  }
+ }finally{fast.dispose();slow.dispose();}
+});

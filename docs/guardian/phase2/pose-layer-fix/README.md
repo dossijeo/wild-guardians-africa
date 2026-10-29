@@ -274,3 +274,10 @@ The final remaining hyena has no magicDown state, Guardian active/pending counts
 `attack-hands-current.mp4/json/jpg` capture the installed rig from age zero in the native scene, close three-quarter view, 2.496525 simulation seconds, all 24 wind bindings present, zero errors and final active/pending zero. The 8 fps sheet was inspected: forearms move toward the target, lower mantle and ornaments change pose, and the body dissolves into particles. The projectile moves toward the camera/outside this deliberately actor-only view, so its full impact and recovery are not visible here. Its bright core and overlapping vortex obscure the exact launch palm in the early frames; this shot is therefore insufficient for precise palm-surface approval. Avoid interpreting the later travelling core as a static emitter position.
 
 Source inspection confirms that the beam start is derived from the current hand bone world position each frame. Existing simulation logic holds all species at the selected contact until the 0.24 s marker (including newly retreating targets), and existing tests exercise that contract. No homing behavior was added; changing that would conflict with the current short-flight interruption contract. Artistic continuous cloth acceptance and a clean unobscured hand-angle inspection remain open.
+
+
+### Pose cadence regression
+
+A new installed-GLB regression samples Grow, Multiply, Shield, Attack and Grow again at 60 updates/s versus 15 updates/s. At all 165 common sample times it compares every bone position, quaternion component and scale, plus the energy-core position. Both cadences agree within the recorded tolerances; all 21 pose/singleton tests pass. This verifies pose determinism under reduced update cadence, not animation smoothness, FPS or GPU performance.
+
+The initial quaternion angle assertion produced a false failure on EyeL despite identical components: imported quaternion length is slightly below unity, while angleTo assumes normalized inputs. The regression now compares components directly (1e-8), without modifying the installed asset or production transforms. No production defect was inferred from that failed assertion.
