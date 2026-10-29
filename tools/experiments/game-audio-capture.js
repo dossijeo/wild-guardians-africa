@@ -6,8 +6,8 @@ export function captureGameAudio(audio){
  try{for(const node of nodes)node.connect(destination);}catch(error){release();throw error;}
  return {stream:destination.stream,release};
 }
-export function installGameAudioCapture(target,audio){
- const handler=event=>{let tap;try{tap=captureGameAudio(audio);event.detail.accept(tap);}catch(error){tap?.release();event.detail.reject(error);}};
+export function installGameAudioCapture(target,audio,readState){
+ const handler=event=>{let tap;try{tap=captureGameAudio(audio);if(readState)tap.readState=readState;event.detail.accept(tap);}catch(error){tap?.release();event.detail.reject(error);}};
  target.addEventListener('guardian-qa-capture-audio',handler);
  return ()=>target.removeEventListener('guardian-qa-capture-audio',handler);
 }

@@ -1,10 +1,13 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>Grabar Attack en el juego real</title>
 <style>body{margin:0;background:#14271d;color:white;font:14px system-ui}header{height:64px;display:flex;gap:12px;align-items:center;padding:0 12px}iframe{width:100vw;height:calc(100vh - 64px);border:0}button,a{padding:8px}a{color:#cff}</style>
-<header><button id="arm">Grabar 20 s desde el siguiente clic en el mundo</button><button id="stop" disabled>Detener</button><a id="download" hidden>Descargar vídeo</a><output id="status">Grabación del canvas 3D, con SFX y música; sin HUD ni voz HTML.</output></header>
+<header><button id="arm">Grabar 20 s desde el siguiente clic en el mundo</button><button id="stop" disabled>Detener</button><a id="download" hidden>Descargar vídeo</a><a id="trace" hidden>Descargar diagnóstico</a><output id="status">Grabación del canvas 3D, con SFX y música; sin HUD ni voz HTML.</output></header>
 <iframe id="game" title="Wild Guardians QA" src="./attack-gameplay.html?qa-game-audio=1"></iframe>
 <script type="module">
 const frame=document.querySelector('#game'),arm=document.querySelector('#arm'),stop=document.querySelector('#stop'),download=document.querySelector('#download'),status=document.querySelector('#status');
+const traceLink=document.querySelector('#trace');
+let traceTimer=null,traceUrl=null,trace=[];
 let armed=false,recorder=null,stream=null,timer=null,url=null,chunks=[],audioTap=null;
+function sample(){try{trace.push({at:performance.now(),state:audioTap?.readState?.()});}catch(error){trace.push({error:String(error)});}}
 function finish(){if(recorder?.state==='recording')recorder.stop();}
 function begin(canvas){
  try{
@@ -16,12 +19,12 @@ function begin(canvas){
   recorder=new MediaRecorder(stream,{...(mimeType?{mimeType}:{}),videoBitsPerSecond:6000000});
   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
   recorder.onerror=e=>{status.textContent='Error de grabación: '+(e.error?.message??'desconocido');finish();};
-  recorder.onstop=()=>{clearTimeout(timer);audioTap?.release();audioTap=null;stream.getTracks().forEach(t=>t.stop());stream=null;recorder=null;stop.disabled=true;arm.disabled=false;if(url)URL.revokeObjectURL(url);const blob=new Blob(chunks,{type:mimeType??'video/webm'});url=URL.createObjectURL(blob);download.href=url;download.download='guardian-main-gameplay.webm';download.hidden=false;status.textContent='Vídeo listo: '+blob.size+' bytes. Canvas con audio del juego; revisar antes de aceptar.';};
-  recorder.start(250);stop.disabled=false;status.textContent='Grabando 20 s: controles y simulación normales.';timer=setTimeout(finish,20000);
- }catch(error){audioTap?.release();audioTap=null;stream?.getTracks().forEach(t=>t.stop());stream=null;armed=false;arm.disabled=false;status.textContent=String(error);}
+  recorder.onstop=()=>{clearTimeout(timer);clearInterval(traceTimer);sample();if(traceUrl)URL.revokeObjectURL(traceUrl);traceUrl=URL.createObjectURL(new Blob([JSON.stringify(trace,null,2)],{type:'application/json'}));traceLink.href=traceUrl;traceLink.download='guardian-main-gameplay-trace.json';traceLink.hidden=false;audioTap?.release();audioTap=null;stream.getTracks().forEach(t=>t.stop());stream=null;recorder=null;stop.disabled=true;arm.disabled=false;if(url)URL.revokeObjectURL(url);const blob=new Blob(chunks,{type:mimeType??'video/webm'});url=URL.createObjectURL(blob);download.href=url;download.download='guardian-main-gameplay.webm';download.hidden=false;status.textContent='Vídeo listo: '+blob.size+' bytes. Canvas con audio del juego; revisar antes de aceptar.';};
+  trace=[];sample();traceTimer=setInterval(sample,100);recorder.start(250);stop.disabled=false;status.textContent='Grabando 20 s: controles y simulación normales.';timer=setTimeout(finish,20000);
+ }catch(error){clearInterval(traceTimer);audioTap?.release();audioTap=null;stream?.getTracks().forEach(t=>t.stop());stream=null;armed=false;arm.disabled=false;status.textContent=String(error);}
 }
 function clicked(event){if(!armed||event.target?.id!=='world'||event.target.tagName!=='CANVAS')return;armed=false;begin(event.target);}
 frame.addEventListener('load',()=>{if(recorder)finish();frame.contentDocument.addEventListener('pointerdown',clicked,true);});
-arm.onclick=()=>{if(recorder)return;armed=true;arm.disabled=true;download.hidden=true;status.textContent='Preparado: selecciona Attack y pulsa una bestia. No se altera la simulación.';};stop.onclick=finish;
-addEventListener('pagehide',()=>{clearTimeout(timer);audioTap?.release();audioTap=null;stream?.getTracks().forEach(t=>t.stop());if(url)URL.revokeObjectURL(url);});
+arm.onclick=()=>{if(recorder)return;armed=true;arm.disabled=true;download.hidden=true;traceLink.hidden=true;status.textContent='Preparado: selecciona Attack y pulsa una bestia. No se altera la simulación.';};stop.onclick=finish;
+addEventListener('pagehide',()=>{clearTimeout(timer);clearInterval(traceTimer);if(traceUrl)URL.revokeObjectURL(traceUrl);audioTap?.release();audioTap=null;stream?.getTracks().forEach(t=>t.stop());if(url)URL.revokeObjectURL(url);});
 </script></html>
