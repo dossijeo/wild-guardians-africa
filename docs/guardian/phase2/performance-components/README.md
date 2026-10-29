@@ -21,3 +21,12 @@ This is one before/after sequence on Intel UHD in a controlled presentation-only
 At 362e7019f, temporarily changed only the main beam instanceMatrix usage back to StaticDrawUsage, reloaded the same fixture and repeated all eight blocks. `reverse-static.json`: all four Guardian p95 values return to 66.49–66.555 ms, average 23.36–24.11 FPS; reference p95 remains 49.855–49.920 ms. Restored DynamicDrawUsage, verified zero source diff, reloaded and repeated. `restored-dynamic.json`: all four Guardian p95 values return to 49.900–49.910 ms, average 28.58–28.83 FPS. The source remains dynamic; the static control was never committed.
 
 This A/B reversal strengthens attribution to the instance buffer usage declaration in this hardware/workload; it does not prove a particular driver mechanism. Original and restored geometry/effects/draw counts are identical. The presentation-only regression is addressed in the repeated test, but moving navigation/physics workloads and other GPUs still need separate validation. The baseline renderer is unchanged.
+
+
+## Moving incursion comparison at 785f8b29b
+
+Restored the same night-31 campaign snapshot in separate fresh loads, reference first and Guardian second. Native Game.tick/navigation and physical impacts remain active in both; only Guardian presentation differs. Fixed .05 s steps, 400 frames/20 simulated seconds, no health/cooldown resets. Initial animals and complete recorded final outcomes match exactly. Both runs issue one valid Attack at .55 s against animal-63429 (health 56); later scheduled opportunities find no valid active target. Thus this is not a sustained many-Attack workload.
+
+Reference: 10.1413 FPS, p95 149.695 ms, p99 199.695 ms. Guardian: 10.2537 FPS, p95 149.700 ms, p99 183.030 ms. No hidden frames or runtime errors. Guardian animation p95 .190 ms, VFX p95 .560 ms, peak one physical ragdoll. These sequential runs show no observed p95 regression and preserve logic, but cannot establish an improvement or broad performance acceptance: baseline is slow, a single attack has limited frame coverage, and run order is not counterbalanced. Do not attribute the lower p99 to the optimization from this pair. Baseline optimization remains assigned elsewhere.
+
+Raw status/report files: moving-reference.json and moving-guardian.json. moving-comparison.json records exact outcome checks and memory, draws, physics and tail metrics. No image/visual acceptance is claimed from this timing run.
