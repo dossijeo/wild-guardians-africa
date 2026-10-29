@@ -200,3 +200,9 @@ These 20 screenshots cover five cultures, one savanna scene per culture and one 
 The QA fixture now offers `Detalle del Guardian activo`: it pauses an active summon and frames its current bounds from a frontal three-quarter angle without changing the character or world lighting. It is disabled during measurement/recording and does nothing without an active visible summon.
 
 New Multiply captures cover strategic arrival at .12s, solid pose at .72s, frontal day/night AO on/off detail at .72s, a back view, and nocturnal dissolve at 1.92s. Eyes, hands and cloak remain readable; the luminous breakup remains visible. Cleanup at 2.76s reports zero active/visible summons, maximum one Guardian and no errors (`guardian-multiply-review.json`). These are paused poses, not full-motion or all-spell approval. The model toggle affects all loaded local model AO; native vegetation is held constant, but distant LOD preparation can continue after camera moves, so backgrounds are not a pixel-difference control.
+
+## Shield and Attack: close-view AO evidence
+
+Shield has day/night detail at .72s; Attack has a night release view at .12s and day/night impact-phase views at .30s. The eye/hand/energy response remains visible with AO enabled. Changing world time also changes the wind pose, so the day/night images are not identical-pose pixel comparisons. The target is outside the close framing; these do not validate impact contact or recovery. Both summons finish with zero active/visible Guardians and no errors, maximum one visible (`guardian-shield-attack-review.json`).
+
+The close Attack views expose substantial mantle folding during the gust. This is an explicit open artistic check for motion review, not accepted cloth behavior from these stills. Grow, Multiply, Shield and Attack now have scoped AO lighting evidence; complete moving cloth/facial and tutorial validation remain open.
