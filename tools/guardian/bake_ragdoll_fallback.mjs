@@ -27,7 +27,9 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
   preview.apply(preview.entryDuration);binding.physicalSnapshot(target);preview.restore();
   const orientation=new Quaternion().fromArray(target,3).normalize(),fallenAxis=new Vector3(0,1,0).applyQuaternion(new Quaternion().fromArray(actor.pose,3)),targetAxis=new Vector3(0,1,0).applyQuaternion(orientation);
   const recoveryYaw=Math.hypot(fallenAxis.x,fallenAxis.z)>.25&&Math.hypot(targetAxis.x,targetAxis.z)>.25?Math.atan2(fallenAxis.x,fallenAxis.z)-Math.atan2(targetAxis.x,targetAxis.z):0;
-  orientation.premultiply(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),recoveryYaw));solver.rollTo(species,orientation,{timeout:7});
+  // Flat-ground baking retains the gentler contact-tested roll. Live uneven
+  // terrain needs the higher default; baking it causes excessive wall offsets.
+  orientation.premultiply(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),recoveryYaw));solver.rollTo(species,orientation,{timeout:7,supportTorque:1.8});
   for(let i=1;i<=423;i++){solver.step();if(i%3===0){frames.push(...boneFrame(binding,actor.pose));if(actor.roll.done)break;}}
   if(!actor.roll.done||actor.roll.timedOut)throw Error('Failed supine roll '+species+'/'+directionName+' '+JSON.stringify({age:actor.roll.age,error:actor.roll.error,speed:actor.roll.speed,yaw:recoveryYaw}));
 
@@ -37,4 +39,4 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
  }
  model.traverse(o=>{if(o.isMesh){o.geometry.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());}});
 }
-const bytes=Buffer.concat(chunks);fs.writeFileSync(output+'/falls.bin',bytes);fs.writeFileSync(output+'/falls.json',JSON.stringify({version:2,snapshotKind:'bone-world',scope:'Offline flat-ground rest-pose falls followed by physical supine rolls. Runtime collision adaptation and visual acceptance still required.',frameStride:98,bones:RAGDOLL_LINKS.map(r=>r[0]),config:{...RAGDOLL_CONFIG,solverIterations:24},rollConfig:{...RAGDOLL_ROLL,timeout:7},contactMaskSha256:createHash('sha256').update(fs.readFileSync('src/rendering/actor-contact-masks.js')).digest('hex'),byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),clips},null,2)+'\n');console.log({clips:clips.length,bytes:bytes.length,durations:clips.map(c=>[c.species,c.direction,c.duration])});
+const bytes=Buffer.concat(chunks);fs.writeFileSync(output+'/falls.bin',bytes);fs.writeFileSync(output+'/falls.json',JSON.stringify({version:2,snapshotKind:'bone-world',scope:'Offline flat-ground rest-pose falls followed by physical supine rolls. Runtime collision adaptation and visual acceptance still required.',frameStride:98,bones:RAGDOLL_LINKS.map(r=>r[0]),config:{...RAGDOLL_CONFIG,solverIterations:24},rollConfig:{...RAGDOLL_ROLL,timeout:7,supportTorque:1.8},contactMaskSha256:createHash('sha256').update(fs.readFileSync('src/rendering/actor-contact-masks.js')).digest('hex'),byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),clips},null,2)+'\n');console.log({clips:clips.length,bytes:bytes.length,durations:clips.map(c=>[c.species,c.direction,c.duration])});

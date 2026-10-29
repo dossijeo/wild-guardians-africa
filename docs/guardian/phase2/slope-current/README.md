@@ -42,3 +42,11 @@ Fresh browser lateral warthog run completes recovery without errors/roll failure
 At dcfe1136f, recorded one warthog and three rhinos on the standard farm (NOT the slope site), recoveryDay/recoveryOverview/peerSpecies=rhino/peerContacts/peerFalls. All four complete within the 16.036-second diagnostic, peak three physical plus one baked, no errors/roll failures/down states at end, max one Guardian. 157 sampled physical peer pairs include 0 negative contact distances. This does not establish separation between samples or baked-mesh contact correctness.
 
 Inspected mixed-fixed-contact.jpg (1 fps) and retained mixed-fixed.webm/json. A building partly obscures one rhino, so its precise support is not visually approved. This is a focused concurrency regression after the torque change, not a full obstacle/performance benchmark. Silent recording.
+
+## Integrated fallback configuration
+
+The expanded integration run first found stale fallback roll metadata (210/211). Regenerating flat-ground clips at live torque 2.5 then exposed a rhino wall-displacement regression (5.184 cm per 120 Hz sample versus the unchanged 5 cm bound); 2.4 also failed. Compressed failing TAP receipts are retained.
+
+The final baker explicitly requests its prior contact-tested flat-ground support torque 1.8 through a validated rollTo option; live uneven-terrain rolls keep default 2.5. The 40 clips were genuinely regenerated, not relabeled. falls.bin is byte-identical to the committed prior payload; falls.json now includes current progress-grace metadata and explicit baked support. No wall/contact threshold was loosened.
+
+All 211 tests in 35 selected files pass after this integration (integration-checks-e035.json; source revision plus working changes recorded). Fresh mixed-rebaked recording uses the regenerated resource: three physical and one baked actor finish, zero errors/roll failures/down states. Inspected 1 fps samples; building occlusion still limits one animal's detailed contact review. Silent recording, no new performance or broad visual acceptance. Main remote was fetched and zero commits behind at this checkpoint.

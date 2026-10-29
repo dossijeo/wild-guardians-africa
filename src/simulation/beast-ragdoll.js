@@ -86,14 +86,15 @@ export class BeastRagdollSolver{
   for(const {body} of a.parts){this.recoveryColliders.add(body.collider(0).handle);body.setBodyType(this.R.RigidBodyType.KinematicPositionBased,true);body.setLinvel(vector(),true);body.setAngvel(vector(),true);}
   a.kinematic=true;
  }
- rollTo(id,target,{timeout=RAGDOLL_ROLL.timeout}={}){
+ rollTo(id,target,{timeout=RAGDOLL_ROLL.timeout,supportTorque=RAGDOLL_ROLL.supportTorque}={}){
+  if(!Number.isFinite(supportTorque)||supportTorque<0||supportTorque>4)throw Error('Invalid roll support torque');
   if(!Number.isFinite(timeout)||timeout<=0||timeout>10)throw Error('Invalid roll timeout');
   const a=this.actors.get(id);if(!a||a.kinematic)throw Error('Roll requires a dynamic actor');
   if(!target||![target.x,target.y,target.z,target.w].every(Number.isFinite)||Math.abs(Math.hypot(target.x,target.y,target.z,target.w)-1)>.01)throw Error('Invalid roll target');
   // Rotate the complete fallen configuration towards the authored supine hip
   // frame. Relative limb poses and all existing joint constraints are retained.
   const delta=multiply(target,inverse(a.parts[0].body.rotation()));
-  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],contactDelay:0,integrals:a.parts.map(()=>vector()),timeout};a.settled=false;
+  a.roll={targets:a.parts.map(({body})=>multiply(delta,body.rotation())),age:0,quiet:0,done:false,timedOut:false,error:Infinity,errors:[Infinity,Infinity],contactDelay:0,integrals:a.parts.map(()=>vector()),timeout,supportTorque};a.settled=false;
  }
  driveRoll(a){
   const roll=a.roll;if(!roll||roll.done)return;roll.age+=this.stepSize;
@@ -117,7 +118,7 @@ export class BeastRagdollSolver{
    // weight/lever-arm torque fading to zero within 0.1 radians of the target.
    // Near the target, velocity feedback brakes the body without gravity-assist
    // torque repeatedly driving it past the resting contact orientation.
-   const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*RAGDOLL_ROLL.supportTorque*Math.min(1,Math.max(0,angle-RAGDOLL_ROLL.supportDeadAngle)/.5)/sine:0;
+   const support=sine>1e-8?sign*body.mass()*9.81*a.parts[i].radius*(roll.supportTorque??RAGDOLL_ROLL.supportTorque)*Math.min(1,Math.max(0,angle-RAGDOLL_ROLL.supportDeadAngle)/.5)/sine:0;
    body.applyTorqueImpulse(vector((inertia.m11*x+inertia.m12*y+inertia.m13*z+q.x*support+integral.x*bias)*dt,(inertia.m21*x+inertia.m22*y+inertia.m23*z+q.y*support+integral.y*bias)*dt,(inertia.m31*x+inertia.m32*y+inertia.m33*z+q.z*support+integral.z*bias)*dt),true);
    if(i<2){roll.errors[i]=angle;rootError=Math.max(rootError,angle);rootSpeed=Math.max(rootSpeed,length(w));}
   }
