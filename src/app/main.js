@@ -133,7 +133,9 @@ function installMicroevents(){
   if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents'))window.__microevents=microevents;
 }
 settings.resolution=worldResolution(settings.resolution);
-const audio=new AudioSystem(settings);const uiAudio=new UiAudio((id,options)=>audio.sound(id,options));
+const audio=new AudioSystem(settings);
+if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-game-audio'))import('../../tools/experiments/game-audio-capture.js').then(({installGameAudioCapture})=>installGameAudioCapture(window,audio));
+const uiAudio=new UiAudio((id,options)=>audio.sound(id,options));
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading'))installLoadingAudioQa(audio);
 const dialogVoice=new SpiritVoice({url:assetUrl,volume:()=>settings.sfx});
 let commandFeedback='',hudSize='',frameImages=null,guardian=null,eventCards=null,hudHand=null,tutorial=null,tutorialInert=null,tutorialFocus=null;

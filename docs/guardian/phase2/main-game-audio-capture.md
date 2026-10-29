@@ -1,0 +1,7 @@
+# Main-game audio capture
+
+The development-only `?qa-game-audio=1` route installs a recording tap on the existing SFX and music buses. The gameplay recorder requests this tap synchronously before the selected world click reaches the game, combines it with the canvas stream, and releases capture connections and tracks after recording. Audible destination connections remain untouched. Locked or unavailable audio produces an explicit failure, not silent video presented as audio evidence.
+
+This captures neither DOM HUD nor HTML tutorial narration. It does not complete the requested voiced tutorial recording. Existing `attack-main-gameplay.webm` remains the historical silent recording; no new audiovisual acceptance is claimed by this change.
+
+Validation: four Node tests pass for bus capture, idempotent cleanup, partial connection failure, locked context and rejected receiver/listener removal. Production Vite build passes (7.81 s, existing chunk/import warnings). Searching production assets finds neither the capture event nor its diagnostic text. Actual browser recording and perceptual synchronization review remain pending.

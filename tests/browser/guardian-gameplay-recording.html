@@ -1,24 +1,27 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>Grabar Attack en el juego real</title>
 <style>body{margin:0;background:#14271d;color:white;font:14px system-ui}header{height:64px;display:flex;gap:12px;align-items:center;padding:0 12px}iframe{width:100vw;height:calc(100vh - 64px);border:0}button,a{padding:8px}a{color:#cff}</style>
-<header><button id="arm">Grabar 20 s desde el siguiente clic en el mundo</button><button id="stop" disabled>Detener</button><a id="download" hidden>Descargar vídeo</a><output id="status">Grabación del canvas 3D, sin HUD ni audio.</output></header>
-<iframe id="game" title="Wild Guardians QA" src="./attack-gameplay.html"></iframe>
+<header><button id="arm">Grabar 20 s desde el siguiente clic en el mundo</button><button id="stop" disabled>Detener</button><a id="download" hidden>Descargar vídeo</a><output id="status">Grabación del canvas 3D, con SFX y música; sin HUD ni voz HTML.</output></header>
+<iframe id="game" title="Wild Guardians QA" src="./attack-gameplay.html?qa-game-audio=1"></iframe>
 <script type="module">
 const frame=document.querySelector('#game'),arm=document.querySelector('#arm'),stop=document.querySelector('#stop'),download=document.querySelector('#download'),status=document.querySelector('#status');
-let armed=false,recorder=null,stream=null,timer=null,url=null,chunks=[];
+let armed=false,recorder=null,stream=null,timer=null,url=null,chunks=[],audioTap=null;
 function finish(){if(recorder?.state==='recording')recorder.stop();}
 function begin(canvas){
  try{
   stream=canvas.captureStream(30);chunks=[];
-  const mimeType=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));
+  let failure;frame.contentWindow.dispatchEvent(new CustomEvent('guardian-qa-capture-audio',{detail:{accept:tap=>audioTap=tap,reject:error=>failure=error}}));
+  if(!audioTap)throw failure??Error('Captura de audio QA no disponible');
+  for(const track of audioTap.stream.getAudioTracks())stream.addTrack(track);
+  const mimeType=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));
   recorder=new MediaRecorder(stream,{...(mimeType?{mimeType}:{}),videoBitsPerSecond:6000000});
   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
   recorder.onerror=e=>{status.textContent='Error de grabación: '+(e.error?.message??'desconocido');finish();};
-  recorder.onstop=()=>{clearTimeout(timer);stream.getTracks().forEach(t=>t.stop());stream=null;recorder=null;stop.disabled=true;arm.disabled=false;if(url)URL.revokeObjectURL(url);const blob=new Blob(chunks,{type:mimeType??'video/webm'});url=URL.createObjectURL(blob);download.href=url;download.download='guardian-main-gameplay.webm';download.hidden=false;status.textContent='Vídeo listo: '+blob.size+' bytes. Solo canvas; revisar antes de aceptar.';};
+  recorder.onstop=()=>{clearTimeout(timer);audioTap?.release();audioTap=null;stream.getTracks().forEach(t=>t.stop());stream=null;recorder=null;stop.disabled=true;arm.disabled=false;if(url)URL.revokeObjectURL(url);const blob=new Blob(chunks,{type:mimeType??'video/webm'});url=URL.createObjectURL(blob);download.href=url;download.download='guardian-main-gameplay.webm';download.hidden=false;status.textContent='Vídeo listo: '+blob.size+' bytes. Canvas con audio del juego; revisar antes de aceptar.';};
   recorder.start(250);stop.disabled=false;status.textContent='Grabando 20 s: controles y simulación normales.';timer=setTimeout(finish,20000);
- }catch(error){stream?.getTracks().forEach(t=>t.stop());stream=null;armed=false;arm.disabled=false;status.textContent=String(error);}
+ }catch(error){audioTap?.release();audioTap=null;stream?.getTracks().forEach(t=>t.stop());stream=null;armed=false;arm.disabled=false;status.textContent=String(error);}
 }
 function clicked(event){if(!armed||event.target?.id!=='world'||event.target.tagName!=='CANVAS')return;armed=false;begin(event.target);}
 frame.addEventListener('load',()=>{if(recorder)finish();frame.contentDocument.addEventListener('pointerdown',clicked,true);});
 arm.onclick=()=>{if(recorder)return;armed=true;arm.disabled=true;download.hidden=true;status.textContent='Preparado: selecciona Attack y pulsa una bestia. No se altera la simulación.';};stop.onclick=finish;
-addEventListener('pagehide',()=>{clearTimeout(timer);stream?.getTracks().forEach(t=>t.stop());if(url)URL.revokeObjectURL(url);});
+addEventListener('pagehide',()=>{clearTimeout(timer);audioTap?.release();audioTap=null;stream?.getTracks().forEach(t=>t.stop());if(url)URL.revokeObjectURL(url);});
 </script></html>
