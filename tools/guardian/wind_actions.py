@@ -25,12 +25,12 @@ def create_wind(rig):
      bone.location=bone.bone.matrix_local.to_3x3().inverted()@delta
    for i,bone in enumerate(b for b in secondary if b.name.startswith('Feather.')):
     bone.rotation_mode='XYZ';phase=int(bone.name.split('.')[1])*1.31
-    if bone.name.endswith('.Tip'):bone.rotation_euler=(gain*(.38*math.sin(w*3+phase-.7)+.10*math.sin(w*7+phase)),0,gain*.08*math.sin(w*5+phase-.4))
+    if bone.name.endswith('.Tip'):bone.rotation_euler=(gain*1.2*(.38*math.sin(w*3+phase-.7)+.10*math.sin(w*7+phase)),0,gain*1.2*.08*math.sin(w*5+phase-.4))
     else:bone.rotation_euler=(gain*.36*math.sin(w*3+phase),gain*.20*math.sin(w*2+phase+.5),gain*.29*math.sin(w*3+phase+1))
    for i,bone in enumerate(b for b in secondary if b.name.startswith('Wood.')):
     bone.rotation_mode='XYZ';phase=i*1.31
     bone.rotation_euler=(gain*.30*math.sin(w*2+phase),gain*.20*math.sin(w*3+phase+.5),gain*.25*math.sin(w*2+phase+1))
-    delta=Vector((.024*math.sin(w+phase),.024*math.sin(w*2+phase),.038*math.sin(w*2+phase+.7)))
+    delta=1.65*Vector((.024*math.sin(w+phase),.024*math.sin(w*2+phase),.038*math.sin(w*2+phase+.7)))
     bone.location=bone.bone.matrix_local.to_3x3().inverted()@delta
    for bone in secondary:
     for prop in ['location','rotation_euler']:bone.keyframe_insert(prop,frame=frame,group=bone.name)

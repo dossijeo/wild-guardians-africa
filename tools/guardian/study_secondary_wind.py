@@ -1,6 +1,9 @@
 """Isolated secondary wind trial; never overwrites the installed source/model."""
-import bpy,pathlib,hashlib,json
-root=pathlib.Path.cwd();source=root/'art/guardian/guardian.blend'
+import bpy,pathlib,hashlib,json,argparse,sys
+root=pathlib.Path.cwd()
+parser=argparse.ArgumentParser();parser.add_argument('--source',type=pathlib.Path,default=root/'art/guardian/guardian.blend')
+args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+source=args.source
 expected='80276fe5ebfe9b02f23812a27e5be907ef02c38b484482aef492aafc3da15424'
 assert hashlib.sha256(source.read_bytes()).hexdigest()==expected,'Expected installed mantle-weight source'
 bpy.ops.wm.open_mainfile(filepath=str(source));rig=bpy.data.objects['GuardianRig'];changed=[]
