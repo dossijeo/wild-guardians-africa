@@ -46,3 +46,5 @@ The moving comparison requested after the buffer optimization is now recorded in
 ## Active summon disposal
 
 Disposing during an active summon now clears guide/effect state and diagnostic counters before releasing GPU resources. Repeated disposal returns without releasing the same resources twice. A regression test fails on the old active counter and verifies zero scene children, zero active/retained counts and exactly one disposal event per owned geometry/echo material. All 19 singleton, retained-projectile and tutorial-lifecycle tests pass; production build passes in 10.04 seconds with the existing mixed-import/chunk-size warnings. This is lifecycle validation, not new graphical acceptance.
+
+Recovery peer update: ordered physical recovery contacts are enabled (24452b259). Four-hyena and daylight hyena/three-rhino runs finish all recoveries with no sampled strict surface crossings; recordings and frame/phase telemetry are in phase2/skin-crossings. This is bounded evidence, not all-species/obstacle acceptance. Manager-only telemetry does not yet cover release-to-navigation continuity.
