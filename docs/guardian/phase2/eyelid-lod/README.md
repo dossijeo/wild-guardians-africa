@@ -13,3 +13,11 @@ blender -b --python tools/guardian/study_guardian_lids.py -- --output C:/tmp/gua
 ```
 
 No runtime speedup or artistic approval is claimed.
+
+## Oblique comparison
+
+`render_lid_oblique.py` loads each saved source, disables NLA tracks and renders identical light/camera settings at -45 and +45 degrees, with 50% and full blink. All eight PNGs in `oblique-reference/` and `oblique-candidate/` were visually inspected. The visible contour and meeting seam remain similar at both angles; the closed eye globe is covered. The upper attachment shadow is present in both meshes. This is a matched offline inspection, not a runtime shader/animation/performance test. Runtime transplantation and AO validation remain the next gate.
+
+```powershell
+blender -b --python tools/guardian/render_lid_oblique.py -- --input content/source/guardian/eyelid-lod-study/guardian-lids-33x9.blend --output C:/tmp/guardian-lid-oblique
+```
