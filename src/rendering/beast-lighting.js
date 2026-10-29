@@ -19,6 +19,9 @@ export function beastLightingFunctions(source){
   if(uBeastStyle>3.5&&uBeastStyle<4.5)return filmic4(albedo*fillColor);
   if(uBeastStyle>5.5){float dark=1.-smoothstep(.015,.09,max(albedo.r,max(albedo.g,albedo.b)));beastLight+=vec3(.04,.039,.037)*(.35+.65*key)*dark*shadow;}
   else if(uBeastStyle>4.5){float dark=1.-smoothstep(.015,.09,max(albedo.r,max(albedo.g,albedo.b)));float sheen=pow(max(dot(N,normalize(keyDir+V)),0.),8.);beastLight+=vec3(.025,.028,.032)*sheen*dark*shadow;}
+  #ifdef GUARDIAN_FUR_MASK
+  if(uBeastStyle>.5&&uBeastStyle<1.5){float dark=1.-smoothstep(.015,.09,max(albedo.r,max(albedo.g,albedo.b)));beastLight+=vec3(.04,.039,.037)*(.35+.65*key)*dark*shadow*clamp(vFurLight,0.,1.);}
+  #endif
   float rim=pow(clamp(1.-nv,0.,1.),2.8)*smoothstep(-.30,.55,N.y);
   beastLight+=sqrt(max(albedo,vec3(0.)))*vec3(.11,.15,.21)*rim*mix(.45,.85,uNight);
   beastLight+=reflected*.012*(1.-rough*.6);

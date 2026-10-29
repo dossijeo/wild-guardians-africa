@@ -10,6 +10,7 @@ export function prepareAnimalModel(model,species){
   model.traverse(mesh=>{
     if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
       material.userData.beastSurface=true;
+      material.userData.furLightingMask=species==='buffalo'&&!!mesh.geometry.getAttribute('_fur_light');
       if(species==='warthog')material.userData.warthogSurface=true;
     }
   });
