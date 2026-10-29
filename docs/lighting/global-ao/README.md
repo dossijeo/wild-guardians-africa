@@ -152,3 +152,10 @@ Eight focused tests and the 539-module production build pass. `olderMale-matte-n
 The matte body variant now scales the environment reflection by 0.006 instead of the general toon coefficient (0.03 plus roughness-dependent terms). The diffuse lighting and normal/texture data are unchanged. This applies to materials explicitly marked matteWorkerBody: currently the older female authored body and older male adoption treatment. Tool materials retain their existing reflection. Shader cache advances to worker-matte-v2.
 
 Four `olderMale/olderFemale-matte-reflection-{day,night}.png` captures were inspected in native WorldScene. The older male nocturnal face loses the pronounced environment glints while wrinkles remain visible; both profiles retain readable facial forms in the sampled pose. These are close-ups of the initial hit expression, not a complete movement/all-biome acceptance. Eight material-isolation tests and the 539-module production build pass. The change adds no maps, lights or per-frame CPU work; GPU cost has not been measured.
+
+
+## Young workers: facial AO comparison
+
+Eight `youngFemale/youngMale-{day,night}-model-{on,off}.png` captures use the same frozen initial hit-expression procedure as the older workers. Native mangrove/suajili WorldScene, time 150/400, medium quality, closed eyes and open mouth. No runtime errors reported. Local AO produces restrained darkening in these views. YoungMale hair retains a strong highlight even with AO off; this remains a material-review item, not an AO bake failure.
+
+All nine worker/beast profiles now have at least one day/night AO comparison, but coverage is limited to these poses and angles. Open eyes, continuous facial animation, moving joints, all-biome strategic visibility and measured cost remain unverified. `young-workers-ao-report.json` records the scope and pixel differences.
