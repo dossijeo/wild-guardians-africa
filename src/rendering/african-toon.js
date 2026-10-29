@@ -56,7 +56,7 @@ const normalDetailLightingFunctions=artLightingFunctions.replace(
 export class AfricanToon {
   constructor({visualSearch=globalThis.location?.search??''}={}){
     this.visualSearch=visualSearch;this.finalDaylight=finalDaylightEnabled(visualSearch);
-    this.beastUniforms={uBeastStyle:{value:({legacy:0,albedo:2,key:3,fill:4,sheen:5})[new URLSearchParams(visualSearch).get('beastLighting')]??1}};
+    this.beastUniforms={uBeastStyle:{value:({legacy:0,albedo:2,key:3,fill:4,sheen:5,soft:6})[new URLSearchParams(visualSearch).get('beastLighting')]??1}};
     this.environmentRecipe=environmentRecipe(visualSearch);
     this.canyonWarmFloor=canyonWarmFloorEnabled(visualSearch);
     this.globalVisualLighting=new URLSearchParams(visualSearch).get('visualLab')==='global-lighting';
