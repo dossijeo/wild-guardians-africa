@@ -36,3 +36,9 @@ Diagnostic-only support torque multipliers 2.5 and 3.6 (existing 1.8) finish the
 Raised bounded mass/radius-scaled support torque from 1.8 to 2.5, retaining angular speed/acceleration limits, settling thresholds, timeout and bounded progress grace. The new captured-slope regression fails before this change; all 43 ragdoll, combat-manager and captured-terrain tests pass afterward, including all five installed rigs and the unstable-terrain negative control. Production build passes (10.27 s, existing warnings). Replay experiment variants now override the current parameter by name rather than assuming its previous value.
 
 Fresh browser lateral warthog run completes recovery without errors/roll failures and releases physics: warthog-fixed.webm/json. Inspected 2 fps sheet shows tipping onto the back and subsequent rise. This new initial pose takes 3.633333 seconds to roll, using the existing progress grace; do not claim every live roll is faster than the first successful baseline. The deterministic failing captured pose is fixed, but broader repeat stability and full-speed artistic acceptance remain open. Audio was disabled in this repeat.
+
+## Concurrent follow-up after support correction
+
+At dcfe1136f, recorded one warthog and three rhinos on the standard farm (NOT the slope site), recoveryDay/recoveryOverview/peerSpecies=rhino/peerContacts/peerFalls. All four complete within the 16.036-second diagnostic, peak three physical plus one baked, no errors/roll failures/down states at end, max one Guardian. 157 sampled physical peer pairs include 0 negative contact distances. This does not establish separation between samples or baked-mesh contact correctness.
+
+Inspected mixed-fixed-contact.jpg (1 fps) and retained mixed-fixed.webm/json. A building partly obscures one rhino, so its precise support is not visually approved. This is a focused concurrency regression after the torque change, not a full obstacle/performance benchmark. Silent recording.
