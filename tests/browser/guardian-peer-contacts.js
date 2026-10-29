@@ -1,3 +1,4 @@
+import {sampleMeshSurfaceCrossings} from './guardian-skin-crossings.js';
 import {Box3,Vector3} from 'three';
 // Diagnostic only: pairwise articulated collider distances, sampled at 10 Hz.
 // Excludes baked actors (no Rapier colliders); never use this as skin clearance.
@@ -19,7 +20,7 @@ export function sampleRecoveryPeerContacts(manager,includeFalling=false){
 const meshCache=new WeakMap(),point=new Vector3();
 // All deformed mesh vertices, not just contact samples. A disjoint AABB proves
 // separation; an intersecting AABB is only a candidate, never a penetration.
-export function sampleRecoverySkinBounds(manager,includeFalling=false){
+export function sampleRecoverySkinBounds(manager,includeFalling=false,surfaceCrossings=false){
  const entries=[...manager.entries.values(),...(manager.baked?.entries.values()??[])];
  const bounds=entries.map(e=>{
   let meshes=meshCache.get(e.data.model);
@@ -35,6 +36,7 @@ export function sampleRecoverySkinBounds(manager,includeFalling=false){
   const a=entries[i],b=entries[j];if(!includeFalling&&!a.recovery&&!b.recovery)continue;
   const x=bounds[i],y=bounds[j],overlap=['x','y','z'].map(axis=>Math.min(x.max[axis],y.max[axis])-Math.max(x.min[axis],y.min[axis]));
   const pair={a:a.animal.id,b:b.animal.id,modes:[a.actor?'physical':'baked',b.actor?'physical':'baked'],overlap,candidate:overlap.every(v=>v>0)};
+  if(pair.candidate&&surfaceCrossings)pair.surfaceCrossings=sampleMeshSurfaceCrossings(meshCache.get(a.data.model),meshCache.get(b.data.model),8,x.clone().intersect(y));
   if(pair.candidate&&!!a.actor!==!!b.actor){
    const physical=a.actor?a:b,baked=a.actor?b:a,box=a.actor?x:y;
    let inside=0;const byPart={},examples=[];
