@@ -292,3 +292,10 @@ Four hits reduce the same lion from 112 to 84/56/28/0 resilience. Its sampled do
 This establishes substantial single-target suppression with the current authored recovery duration, not final strategic balance. Four casts spend 36.3 s reaching the lion's retreat condition while fifteen other raid actors are not targeted by those casts. No parameter changed from one scenario alone. Heavy-species, alternative target selection and aggregate damage prevented still need comparable scenarios.
 
 Recorded frame p95/p99 are 182.985/216.11 ms, mean 7.745 FPS, physics p95/max 6.69/15.74 ms. This unpaired, instrumented run with visible diagnostic HUD is not a baseline comparison and does not approve performance or attribute overall slowness to Guardian work. Baseline engine investigation remains with the other agent.
+
+
+### Same raid without Attack
+
+The QA `noAttack=1` variant disables command issuance only, retaining simulation, navigation, renderer and physics availability. `tactical-no-attack.json` completed 1200 steps/60 s, zero commands and zero errors. The initial raid arrays are both empty before arrival; importantly, all sixteen first-step actor transition rows (identity/species/status/hit budget/position) match the Attack run. Both derive from the same unchanged source snapshot and planNight setup; no full-state initial hash was captured, so this is not a byte-for-byte initial-state proof.
+
+`tactical-comparison.json` records the final difference: 1012 living crops with five Attack uses versus 1008 without; total structure HP 5560 and all 51 intact in both; eight worker hits and seven incapacitated workers in both. Two animals are gone with Attack versus one without. This one ordered pair suggests a bounded agricultural benefit for this targeting policy, not universal strategic balance. Other target priorities, cultures/species and defensive layouts remain untested here. No balance values changed and no FPS difference is attributed to the feature: the two runs intentionally produce different gameplay trajectories.
