@@ -223,7 +223,11 @@ export function toonDestruction(fragment,visualSearch=globalThis.location?.searc
   if(cinematicLightingEnabled(visualSearch)){
     fragment=patchBuildingShadow(fragment).replace('vec3 ambient=mix(vec3(.28,.265,.20),vec3(.47,.56,.61),N.y*.5+.5);','vec3 ambient=mix(mix(vec3(.13,.15,.17),vec3(.30,.39,.48),N.y*.5+.5),mix(vec3(.025,.045,.055),vec3(.075,.13,.18),N.y*.5+.5),uNight);')
       .replace('vec3(1.90,1.59,1.11)*ndl*sh','mix(vec3(2.65,2.12,1.36),vec3(.36,.61,.92),uNight)*ndl*sh')
-      .replace('vec3(.14,.20,.27)*max','mix(vec3(.055,.08,.10),vec3(.025,.055,.08),uNight)*max');
+      .replace('vec3(.14,.20,.27)*max','mix(vec3(.055,.08,.10),vec3(.025,.055,.08),uNight)*max')
+      // Candidate endpoints already include night attenuation; avoid applying
+      // the world light intensity a second time to this calibrated response.
+      .replace('ambient*=uWorldAmbient;','ambient*=mix(uWorldAmbient,1.,uNight);')
+      .replace('ndl*sh*uWorldSun','ndl*sh*mix(uWorldSun,1.,uNight)');
     return fragment.replace('out vec4 fragColor;','uniform float uNight;\nout vec4 fragColor;');
   }
   return fragment.replace('out vec4 fragColor;', worldPatternFunctions+'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uEnvEndpoints,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+diagnosticToon+'\n'+endpointFunctions+'\nout vec4 fragColor;')
