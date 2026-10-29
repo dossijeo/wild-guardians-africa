@@ -46,3 +46,10 @@ test('vegetation fill supports grass, river and fern without changing night or s
  assert.ok(result.includes('vec3(.095,.17,.32)*uNightLight,uNight)'));
  assert.ok(result.includes('leafSun*mix(.07,1.,visibility)'));
 });
+
+test('dry-ground sky lobe uses authored normals only in daytime shadow',()=>{
+ const source='vec3 toon=albedo*base*(.76+.24*fill); #include <opaque_fragment>';
+ const result=patchCinematicLighting(source,{ground:true});
+ assert.ok(result.includes('max(dot(N,cinemaSkyDirection),0.)*(1.-visibility)*(1.-uNight)'));
+ assert.equal(patchCinematicLighting(source).includes('cinemaSkyDirection'),false);
+});

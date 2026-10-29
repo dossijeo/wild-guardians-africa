@@ -21,7 +21,14 @@ export function patchCinematicLighting(source,{ground=false}={}){
  // Restore readable diffuse sky fill under projected shadows. Change the
  // daylight radiance before tone mapping, not shadow visibility or albedo.
  // Support both final-daylight and ungraded native ground recipes.
- if(ground)source=source.replace('vec3 biomeDirect=', 'biomeAmbient+=vec3(.30,.35,.40)*(1.-uNight)*(1.-groundVisibility);\n vec3 biomeDirect=');
+ if(ground){
+  source=source.replace('vec3 biomeDirect=', 'biomeAmbient+=vec3(.30,.35,.40)*(1.-uNight)*(1.-groundVisibility);\n vec3 biomeDirect=');
+  // Dry ground still uses the native banded response. A broad sky lobe keeps
+  // authored sand normals readable when direct light falls into its lowest
+  // band. This is approximate diffuse irradiance, not another sun or shadow.
+  const dryAnchor='vec3 toon=albedo*base*(.76+.24*fill);';
+  source=source.replace(dryAnchor,dryAnchor+'\n vec3 cinemaSkyDirection=normalize(vec3(-uLightDir.x,1.3,-uLightDir.z));\n toon+=albedo*vec3(.22,.25,.28)*max(dot(N,cinemaSkyDirection),0.)*(1.-visibility)*(1.-uNight);');
+ }
  const visibility=ground?'groundVisibility':'toonVisibility';
  return source.replace(anchor,`// Apply to linear reflected radiance, preserving existing geometry/material response.
  float cinemaSun=smoothstep(.12,.90,clamp(${visibility},0.,1.));

@@ -101,3 +101,10 @@ The wide view also exposed the fixture's omitted far-vegetation layer. Lighting 
 
 
 The full-horizon repeat loaded without fixture errors and retained maxVisibleGuardians=1. `native-mangrove-shield-full-horizon.png` shows the Guardian, energy connection and continuous surrounding terrain/vegetation after rotating and zooming out during Shield. One browser input command timed out; the same live tab was inspected and continued without reloading or duplicating the spell. No frametime/performance acceptance is inferred from this static frame. The prior two hyena timing runs predate far-layer attachment and must not be used as full-horizon timings.
+
+
+## Native desert comparison and indirect sand relief
+
+Full native spatial world plus production far profile, Suajili centre, seed 712, identical building camera: `native-desert-baseline-day.png` / `native-desert-candidate-day.png` and corresponding night images compare all three lighting candidate flags off/on. Both scenes loaded with empty error lists. The candidate gives stronger roof/column/recess separation; both initial versions lose much of the sand-normal detail in the broad cast shadow. These are controlled visual comparisons, not GPU timing runs (both tabs were open).
+
+The dry-ground path uses `africanToon4`, whose lowest direct-light band suppresses most normal variation in shadow. Added an opt-in broad directional sky contribution to diffuse albedo before its tone mapping, using the existing normal and light direction, weighted by `(1-visibility)*(1-uNight)`. It adds arithmetic only, no textures/passes, and does not move or weaken the shadow visibility. Non-ground materials are excluded. `native-desert-sky-relief-day.png` and `native-desert-shadow-comparison.png` show sand ripples surviving in the shadow after this adjustment; the latter is initial candidate left / revised candidate right, without image grading. Night endpoints are excluded algebraically, but the final revised build still needs a fresh visual night/all-biome sweep. Eight selected lighting/daylight tests pass; no final all-biome or incremental GPU acceptance is claimed.
