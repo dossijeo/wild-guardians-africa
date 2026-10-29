@@ -281,3 +281,14 @@ Source inspection confirms that the beam start is derived from the current hand 
 A new installed-GLB regression samples Grow, Multiply, Shield, Attack and Grow again at 60 updates/s versus 15 updates/s. At all 165 common sample times it compares every bone position, quaternion component and scale, plus the energy-core position. Both cadences agree within the recorded tolerances; all 21 pose/singleton tests pass. This verifies pose determinism under reduced update cadence, not animation smoothness, FPS or GPU performance.
 
 The initial quaternion angle assertion produced a false failure on EyeL despite identical components: imported quaternion length is slightly below unity, while angleTo assumes normalized inputs. The regression now compares components directly (1e-8), without modifying the installed asset or production transforms. No production defect was inferred from that failed assertion.
+
+
+## Tactical interruption with real cooldowns (2026-10-30)
+
+`GuardianNavigationTrial` now records actor status/down-phase/hit-budget transitions, not every rendered pose. `tactical-current.json` is a completed graphical native run derived from the night-31 farm, fresh planned raid, 135 workers/51 structures/5362 crops/16 animals, 1200 fixed 0.05 s simulation steps (60 s). No cooldown or health reset. Five accepted attacks at 0.55, 12.65, 24.75, 36.85 and 48.95 s; zero captured errors, zero hidden frames, maximum one Guardian and one articulated actor. The final scene screenshot was inspected; it is not continuous visual recovery evidence.
+
+Four hits reduce the same lion from 112 to 84/56/28/0 resilience. Its sampled down intervals last 7.80, 8.55, 7.65 and 8.20 s; the three intervening recovery-to-next-hit gaps are approximately 4.30, 3.55 and 4.45 s. It resumes walking after the third recovery, begins retreat on the fourth command, finishes that recovery at 45.30 s and becomes gone at 50.75 s. Its attack budget remains nine throughout. The final hyena receives one hit, remains down for 8.70 s and resumes walking at 57.90 s. Transition precision is the 0.05 s simulation step.
+
+This establishes substantial single-target suppression with the current authored recovery duration, not final strategic balance. Four casts spend 36.3 s reaching the lion's retreat condition while fifteen other raid actors are not targeted by those casts. No parameter changed from one scenario alone. Heavy-species, alternative target selection and aggregate damage prevented still need comparable scenarios.
+
+Recorded frame p95/p99 are 182.985/216.11 ms, mean 7.745 FPS, physics p95/max 6.69/15.74 ms. This unpaired, instrumented run with visible diagnostic HUD is not a baseline comparison and does not approve performance or attribute overall slowness to Guardian work. Baseline engine investigation remains with the other agent.
