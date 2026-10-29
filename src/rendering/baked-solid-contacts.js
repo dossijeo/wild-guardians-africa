@@ -41,8 +41,10 @@ export class BakedSolidContacts{
   const b=this.bounds,r=this.reference;
   for(let pass=0;pass<4;pass++)for(const solid of [...this.peerBoxes,...this.boxes]){
    if(solid.active?.()===false||!b.intersectsBox(solid))continue;
-   const x=r.x<(solid.min.x+solid.max.x)/2?solid.min.x-b.max.x-.015:solid.max.x-b.min.x+.015;
-   const z=r.z<(solid.min.z+solid.max.z)/2?solid.min.z-b.max.z-.015:solid.max.z-b.min.z+.015;
+   // Bounds already include the 15 mm contact margin. Adding it again
+   // here creates a fixed displacement jump when contact begins.
+   const x=r.x<(solid.min.x+solid.max.x)/2?solid.min.x-b.max.x-1e-5:solid.max.x-b.min.x+1e-5;
+   const z=r.z<(solid.min.z+solid.max.z)/2?solid.min.z-b.max.z-1e-5:solid.max.z-b.min.z+1e-5;
    // Prefer a face that the initial hip was already outside.
    const outsideX=r.x<=solid.min.x||r.x>=solid.max.x,outsideZ=r.z<=solid.min.z||r.z>=solid.max.z;
    this.point.set((outsideX&&!outsideZ||outsideX===outsideZ&&Math.abs(x)<=Math.abs(z))?x:0,0,(outsideZ&&!outsideX||outsideX===outsideZ&&Math.abs(z)<Math.abs(x))?z:0);

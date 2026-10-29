@@ -15,7 +15,7 @@ for(const species of ['buffalo','rhino'])test(`${species} baked skin remains out
  for(const mesh of meshes)for(let i=0;i<mesh.geometry.attributes.position.count;i++){if(isTailContactVertex(mesh,i))continue;mesh.getVertexPosition(i,p).applyMatrix4(mesh.matrixWorld);edge=Math.max(edge,p.x);}
  const wall=edge+.05,clip=new BakedRagdollClip(meta.clips.find(c=>c.species===species&&c.direction==='side'),buffer),contacts=new BakedSolidContacts(binding,[new Box3(new Vector3(wall,0,-20),new Vector3(wall+.3,2.5,20))]),last=binding.bones.get('Hips').getWorldPosition(new Vector3()),start=last.clone(),radius=ANIMAL_ACTIONS.animals[species].presentation.footprint.radius;
  const fall=new BakedBeastFall(binding,clip,{surface:()=>0,solidContacts:contacts,clipPosition:p=>{if(p.x+radius>=wall){p.x=last.x;p.z=last.z;}last.copy(p);}});fall.apply(0);assert.ok(fall.hip.distanceTo(start)<1e-6);
- const previous=fall.hip.clone();for(let time=.1;time<=clip.duration;time+=.1){fall.apply(time);assert.ok(fall.hip.distanceTo(previous)<.15,`Contact correction jumps at ${time}: ${fall.hip.distanceTo(previous)}m; offset ${contacts.shift.toArray()}`);previous.copy(fall.hip);for(const mesh of meshes)for(let i=0;i<mesh.geometry.attributes.position.count;i++){if(isTailContactVertex(mesh,i))continue;mesh.getVertexPosition(i,p).applyMatrix4(mesh.matrixWorld);if(p.y>=0&&p.y<=2.5)assert.ok(p.x<=wall+.005,`Skin crossed wall ${p.x-wall}m`);}}
+ for(let time=.1;time<=clip.duration;time+=.1){fall.apply(time);for(const mesh of meshes)for(let i=0;i<mesh.geometry.attributes.position.count;i++){if(isTailContactVertex(mesh,i))continue;mesh.getVertexPosition(i,p).applyMatrix4(mesh.matrixWorld);if(p.y>=0&&p.y<=2.5)assert.ok(p.x<=wall+.005,`Skin crossed wall ${p.x-wall}m`);}}
 });
 
 test('baked peer correction survives empty peer lists and repeated restored poses',async()=>{
@@ -27,4 +27,25 @@ test('baked peer correction survives empty peer lists and repeated restored pose
   const expected=start.clone().add(new Vector3(.5,0,-.2));
   assert.ok(hip.getWorldPosition(new Vector3()).distanceTo(expected)<1e-6,'Peer removal must not undo or accumulate the applied correction');
  }
+});
+
+// A 15 cm / 100 ms cap incorrectly rejects continuous articulated falls at
+// speeds above 1.5 m/s. Detect discontinuities by temporal refinement instead:
+// finite motion shrinks with dt; a wall-side teleport does not.
+for(const species of ['buffalo','rhino'])test(`${species} wall contact displacement converges under temporal refinement`,async()=>{
+ const maxima=[];
+ for(const hz of [60,120,240]){
+  const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals[species].url,import.meta.url));
+  const binding=new BeastRagdollBinding(model),p=new Vector3();let edge=-Infinity;
+  model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let i=0;i<mesh.geometry.attributes.position.count;i++){if(isTailContactVertex(mesh,i))continue;mesh.getVertexPosition(i,p).applyMatrix4(mesh.matrixWorld);edge=Math.max(edge,p.x);}});
+  const wall=edge+.05,clip=new BakedRagdollClip(meta.clips.find(c=>c.species===species&&c.direction==='side'),buffer);
+  const contacts=new BakedSolidContacts(binding,[new Box3(new Vector3(wall,0,-20),new Vector3(wall+.3,2.5,20))]);
+  const last=binding.bones.get('Hips').getWorldPosition(new Vector3()),radius=ANIMAL_ACTIONS.animals[species].presentation.footprint.radius;
+  const fall=new BakedBeastFall(binding,clip,{surface:()=>0,solidContacts:contacts,clipPosition:p=>{if(p.x+radius>=wall){p.x=last.x;p.z=last.z;}last.copy(p);}});
+  fall.apply(0);const previous=fall.hip.clone();let maximum=0;
+  for(let frame=1;frame<=Math.ceil(clip.duration*hz);frame++){fall.apply(Math.min(frame/hz,clip.duration));maximum=Math.max(maximum,fall.hip.distanceTo(previous));previous.copy(fall.hip);}
+  maxima.push(maximum);
+ }
+ assert.ok(maxima[1]<.05,`120 Hz displacement exceeds 5 cm: ${maxima}`);
+ for(let i=1;i<maxima.length;i++)assert.ok(maxima[i]<maxima[i-1]*.65,`Displacement fails to shrink with timestep: ${maxima}`);
 });
