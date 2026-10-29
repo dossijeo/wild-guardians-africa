@@ -6,7 +6,8 @@ import R from '@dimforge/rapier3d-compat';
 import {BeastRagdollSolver} from '../src/simulation/beast-ragdoll.js';
 await R.init();
 const captures=JSON.parse(gunzipSync(fs.readFileSync(new URL('../docs/guardian/phase2/roll-timeout/capture.json.gz',import.meta.url))).toString()).rows;
-for(const [index,row]of captures.entries())test(`captured night roll ${index} completes with production terrain contacts`,()=>{
+const slopeCaptures=JSON.parse(gunzipSync(fs.readFileSync(new URL('../docs/guardian/phase2/slope-current/warthog-roll-capture.json.gz',import.meta.url))).toString()).rows;
+for(const [index,row]of [...captures,...slopeCaptures].entries())test(`captured terrain roll ${index} completes with production terrain contacts`,()=>{
  const solver=new BeastRagdollSolver(R,{step:row.stepSize});solver.world.free();solver.world=R.World.restoreSnapshot(Uint8Array.from(row.world));
  try{
  const terrain=[];solver.world.colliders.forEach(c=>{if(c.shapeType()===R.ShapeType.TriMesh)terrain.push(c);});
