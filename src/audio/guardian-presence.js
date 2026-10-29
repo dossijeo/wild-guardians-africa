@@ -16,3 +16,12 @@ export async function playGuardianWorldCue(audio,id,options={}){
  const ended=source.onended;source.onended=()=>{ended?.();if(ticket.voice===source)ticket.voice=null;};
  return source;
 }
+// Capture the owning simulation as well as the audio clock: a decoded cue must
+// not arrive after a result, state replacement or presentation-clock reset.
+export function playGuardianScenePresence(audio,owner,id,point,isOwnerCurrent){
+ const state=owner.state,elapsed=state?.elapsed,requested=audio.context?.currentTime??0;
+ return playGuardianPresence(audio,id,{
+  gain:.45/(1+(Math.hypot(point.x-owner.controls.target.x,point.z-owner.controls.target.z)/24)**2),
+  isCurrent:()=>!owner.disposed&&isOwnerCurrent()&&owner.state===state&&!state?.result&&!state?.pauses?.length&&state?.elapsed>=elapsed&&(audio.context?.currentTime??0)-requested<.4
+ });
+}

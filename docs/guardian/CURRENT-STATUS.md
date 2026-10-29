@@ -105,3 +105,10 @@ Current integration receipt: [integration-checks-de169.json](phase2/integration-
 Executed the browser fixture with native WorldScene: four immediate QA Attack commands (cooldown bypass), one visible Guardian and three pending summons at age 0.12 s. Both final game result and a one-second presentation-clock rollback clear the pending queue and hide body, aura, beam, impact, core and vortex. Both receipts report zero captured errors. Evidence: `phase2/pose-layer-fix/queued-lifecycle-result.json`, `queued-lifecycle-rollback.json` and associated PNGs.
 
 This closes those two presentation interruption cases only. It does not prove renderer disposal, production command cadence or scene replacement. The earlier shallow state-replacement experiment was invalid: native spatial movement requires its owning game state. That operation was removed from the fixture, not treated as a successful scene-replacement test.
+
+
+### Pending presence audio freshness — 2026-10-29
+
+Production presence requests now capture the owning simulation state and elapsed time. Arrival/dissolution decoding cannot start a voice after game result, clock rollback, state replacement, owner disposal, a different active world or pause. Previously the app checked owner identity, disposal, pause and audio age only; result/rollback/replacement could admit a late cue. The shared `playGuardianScenePresence` boundary retains existing distance gain and 0.4 s freshness window.
+
+Validation: 36 tests passed across guardian-presence, guardian-presence-lifecycle, guardian-combat-audio and guardian-singleton. Delayed decoding uses AudioSystem with controlled Web Audio stubs and includes a positive current-scene case; this is not perceptual audio validation. Production build passed (12.25 s; existing chunk-size and mixed-import warnings). Existing scene shutdown already calls AudioSystem.stop, invalidates decoding generation and disconnects voices; no new audio engine or resource ownership was introduced.
