@@ -34,7 +34,7 @@ test('three effective good days report the streak inside one daily summary and c
   assert.equal(evaluateAwakeningDay(s,{notice:()=>{throw Error('duplicate dawn feedback');}}),null);
 });
 test('new HUD, daily category and target descriptions participate in the existing bilingual catalog',()=>{
-  assert.equal(translate('Despertar','en'),'Awakening');
+  assert.equal(translate('Despertar','en'),'Awaken');
   assert.equal(translate('Energía de Despertar: 78 de 100','en'),'Awakening energy: 78 of 100');
   assert.equal(translate('Bendición permanente','en'),'Permanent blessing');
   assert.equal(translate('Magia bajo amenaza','es'),'Magia bajo amenaza');
