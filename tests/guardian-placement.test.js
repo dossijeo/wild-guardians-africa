@@ -26,7 +26,13 @@ test('walkable vegetation still excludes the full body of a normal summon',()=>{
 test('visibility checks the lower mantle even when the face remains visible',()=>{
  const args=setup(),first=guardianPlacement(args);let checks=0;
  const next=guardianPlacement({...args,occluded:(x,y,z)=>{checks++;return y<1.2&&Math.hypot(x-first.x,z-first.z)<.2;}});
- assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);assert.equal(checks,80);
+ assert.ok(Math.hypot(next.x-first.x,next.z-first.z)>.2);assert.ok(checks>=10&&checks<=80);
+});
+
+test('clear best candidate prunes visibility rays for candidates that cannot win',()=>{
+ const args=setup();let calls=0;
+ guardianPlacement({...args,occluded:()=>{calls++;return false;}});
+ assert.ok(calls>=5&&calls<80,`Expected bounded pruning, got ${calls} rays`);
 });
 
 test('placement avoids a building masking only the lateral silhouette',()=>{

@@ -35,8 +35,8 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
   const clear=nav.placement(x,z,.8*bodyScale).valid&&!occupied?.(x,y+1.7*bodyScale,z)&&!workers.some(w=>Math.hypot(x-w.x,z-w.z)<1.1)&&!(state.raid?.animals??[]).some(a=>a.status!=='gone'&&Math.hypot(x-a.x,z-a.z)<.8+a.radius)&&!crops.some(p=>Math.hypot(x-p.x,z-p.z)<1);
   v.set(x,y+1.7*bodyScale,z).project(camera);
   const screen=Math.hypot(v.x-sx,v.y-sy),out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
-  const blocked=blockedAt(x,y+1.7*bodyScale,z),score=(clear?0:1000)+(out+framePenalty(x,y+1.7*bodyScale,z))*100+Math.abs(y-floor)*3+blocked*12+Math.abs(screen-.19)*8+distance*.12;
-  candidates.push({x,y:y+1.7*bodyScale,z,score,clear,distance});
+  const score=(clear?0:1000)+(out+framePenalty(x,y+1.7*bodyScale,z))*100+Math.abs(y-floor)*3+Math.abs(screen-.19)*8+distance*.12;
+  candidates.push({x,y:y+1.7*bodyScale,z,score,clear,distance,order:candidates.length});
  };
  for(const distance of [radius+2.1,radius+3.4])for(const offset of [-.9,.9,-1.5,1.5,-.4,.4,2,-2])evaluate(distance,offset);
  // Edge targets may leave no framed candidate on the nearby rings. Try a
@@ -44,9 +44,19 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
  if(!candidates.some(p=>p.clear&&framePenalty(p.x,p.y,p.z)===0)){
   for(const distance of [radius+5,radius+6.6])for(const offset of [0,-.4,.4,-.9,.9])evaluate(distance,offset);
  }
- candidates.sort((a,b)=>a.score-b.score);const best=candidates.find(p=>p.clear)??candidates[0];
+ // Occlusion only adds a non-negative penalty. Once a candidate's lower
+ // bound exceeds the best fully evaluated score, no remaining ray can win.
+ const clearCandidates=candidates.filter(p=>p.clear),ranked=(clearCandidates.length?clearCandidates:candidates.slice()).sort((a,b)=>a.score-b.score||a.order-b.order);
+ let best=null;
+ for(const p of ranked){
+  if(clearCandidates.length&&best&&p.score>best.score)break;
+  p.score+=blockedAt(p.x,p.y,p.z)*12;
+  if(!best||p.score<best.score||(p.score===best.score&&p.order<best.order))best=p;
+ }
  if(!best)return {x:target.x+2,y:floor+5,z:target.z};
  if(!best.clear&&occupied){
+  // Preserve the exhaustive ordering for aerial fallback ties.
+  candidates.sort((a,b)=>a.score-b.score||a.order-b.order);
   // Evaluate the actual elevated body, not a ground candidate followed by a
   // blind five-metre lift that can put the spirit outside the camera.
   const aerial=[];
