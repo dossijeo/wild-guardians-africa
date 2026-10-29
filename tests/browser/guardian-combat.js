@@ -177,19 +177,19 @@ try{
   state.awakenings.progress=100;if(!Game.bless(state,'qa-views-'+serial++,plant.id))throw Error('Blessing rejected');
   const event=state.events.findLast(e=>e.type==='BlessingApplied');
   const sheet=document.createElement('canvas');sheet.width=1200;sheet.height=680;sheet.id='ritualViewsSheet';sheet.style.cssText='position:fixed;left:0;top:0;width:min(100vw,1200px);height:auto;z-index:99999;background:#111';
-  const ctx=sheet.getContext('2d'),rows=[];ctx.fillStyle='#111';ctx.fillRect(0,0,1200,680);
+  const ctx=sheet.getContext('2d'),rows=[],fullFrames=[];ctx.fillStyle='#111';ctx.fillRect(0,0,1200,680);
   for(let i=0;i<8;i++){
    state.time=i<4?150:400;angle=.7+(i%4)*Math.PI/2;zoom=i%2?22:10;site={x:plant.x,z:plant.z};world.cinematic=true;world.camera.zoom=1;world.camera.updateProjectionMatrix();const ground=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,ground+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,ground+zoom*.65,site.z+Math.cos(angle)*zoom);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.guardianSummons.clear();
-   const planned=world.guardianSummons.plan(plant.id,plant,{hoverAbove:true});
+   const samples=[];let planned;for(let sample=0;sample<21;sample++){const began=performance.now();planned=world.guardianSummons.plan(plant.id,plant,{hoverAbove:true});if(sample)samples.push(performance.now()-began);}samples.sort((a,b)=>a-b);const planMs={median:samples[10],p95:samples[18],max:samples[19],count:samples.length};
    world.guardianSummons.start({...event,kind:'awakening',x:plant.x,z:plant.z,presentation:{...event.presentation,elapsed:state.elapsed,origin:null}});
    advanceClock(.9);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const slot=world.guardianSummons.slots[0],visible=world.guardianSummons.slots.filter(s=>s.group.visible).length,origin={...slot.origin};
-   ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340,300,169);ctx.fillStyle='white';ctx.font='14px sans-serif';ctx.fillText((i<4?'Day':'Night')+' angle '+(i%4)+' zoom '+zoom,(i%4)*300+6,Math.floor(i/4)*340+190);
+   fullFrames.push($('world').toDataURL('image/png'));ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340,300,169);ctx.fillStyle='white';ctx.font='14px sans-serif';ctx.fillText((i<4?'Day':'Night')+' angle '+(i%4)+' zoom '+zoom,(i%4)*300+6,Math.floor(i/4)*340+190);
    advanceClock(2.1);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const finalVisible=world.guardianSummons.slots.filter(s=>s.group.visible).length;
    ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340+201,300,130);
-   rows.push({day:i<4,angle,zoom,planned,origin,visible,finalVisible});
+   rows.push({day:i<4,angle,zoom,planMs,planned,origin,visible,finalVisible});
   }
   const result={scope:'Presentation-only frozen clock, one committed plant beside a paid wall replayed across eight cameras; no AI, audio or frame-performance claim',rows,passed:rows.every(r=>r.visible===1&&r.finalVisible===0),errors:[...errors]};
-  let output=$('ritualViewsReport');if(!output){output=document.createElement('pre');output.id='ritualViewsReport';document.querySelector('header').append(output);}output.textContent=JSON.stringify(result,null,2);sheet.title='Arrival at 0.9s and disappearance at 3s; click to close';sheet.onclick=()=>sheet.remove();document.body.append(sheet);
+  let output=$('ritualViewsReport');if(!output){output=document.createElement('pre');output.id='ritualViewsReport';document.querySelector('header').append(output);}output.textContent=JSON.stringify(result,null,2);sheet.title='Arrival at 0.9s and disappearance at 3s; click a column to inspect full resolution';sheet.onclick=e=>{const rect=sheet.getBoundingClientRect(),column=Math.min(3,Math.floor((e.clientX-rect.left)/rect.width*4)),row=e.clientY-rect.top<rect.height/2?0:1;const detail=document.createElement('img');detail.src=fullFrames[row*4+column];detail.alt='Full-resolution ritual '+(row?'night':'day')+' angle '+column;detail.style.cssText='position:fixed;left:0;top:0;width:100vw;height:auto;z-index:100000';detail.onclick=()=>detail.remove();document.body.append(detail);};document.body.append(sheet);
  }catch(e){fail(e);}finally{ritualViews.disabled=false;}};
  const ritualButton=document.createElement('button');ritualButton.id='ritualRecord';ritualButton.textContent='Grabar Despertar planta y muralla';document.querySelector('header').insertBefore(ritualButton,$('status'));
  const interruptionButton=document.createElement('button');interruptionButton.id='ritualInterrupt';interruptionButton.textContent='Validar interrupciones del ritual';document.querySelector('header').insertBefore(interruptionButton,$('status'));

@@ -1,0 +1,480 @@
+Browser tab: 133, Title: "Guardián · Magias en Wild Engine", URL: "http://127.0.0.1:5194/tests/browser/guardian-combat.html".
+0 AXWebArea Guardián · Magias en Wild Engine, URL: 127.0.0.1:5194/tests/browser/guardian-combat.html
+	1 button (expanded) Ocultar controles, ID: togglePanel, Secondary Actions: Collapse
+	2 container qaPanel
+		3 text Prueba de integración: WorldScene, terreno, modelos, comandos y VFX reales. Fixture controlada; no modifica partidas. Recarga reiniciada para ensayos consecutivos; los medidores reinician las áreas mágicas entre muestras. Fuera de los medidores se conservan los efectos y se buscan cultivos válidos.
+		4 button Día, ID: day
+		5 button Noche, ID: night
+		6 pop up button (collapsed, settable) Value: hyena, ID: species, Secondary Actions: Expand
+			7 menu
+				8 (selected) hyena
+				9 lion
+				10 warthog
+				11 buffalo
+				12 rhino
+		13 button Preparar bestia, ID: beast
+		14 button Grow, ID: growth
+		15 button Multiply, ID: multiply
+		16 button Shield, ID: shield
+		17 button Attack, ID: attack
+		18 button Ráfaga QA, ID: burst
+		19 button Girar cámara, ID: camera
+		20 button Zoom, ID: zoom
+		21 button Congelar, ID: freeze
+		22 button +0,12 s, ID: step
+		23 button +0,02 s, ID: stepFine
+		24 button Medir 3 escenarios, ID: bench
+		25 container
+			26 button Rostro de bestia, ID: actorFace
+			27 button Ensayar ragdoll físico, ID: ragdoll
+			28 pop up button (collapsed, settable) Description: Velocidad de físicas, Value: Físicas 1×, ID: physicsSpeed, Secondary Actions: Expand
+				29 menu
+					30 (selected) Físicas 1×
+					31 Físicas 0,25×
+					32 Pausar físicas
+			33 button +0,12 s físicas, ID: physicsStep
+			34 button Bestia atacando muralla, ID: wall
+			35 pop up button (collapsed, settable) Value: Dirección automática, ID: direction, Secondary Actions: Expand
+				36 menu
+					37 (selected) Dirección automática
+					38 Frontal
+					39 Lateral
+					40 Elevado
+			41 button Simular movimiento real, ID: simulate
+			42 button 20 bestias, ID: stress
+			43 pop up button (collapsed, settable) Description: Cultivo de prueba, ID: cropTarget, Secondary Actions: Expand
+				44 menu
+					45 (selected) Cultivo de prueba
+					46 maiz
+					47 platano
+					48 yuca
+					49 mijo
+					50 algodon
+					51 girasol
+					52 sorgo
+					53 batata
+			54 button (disabled) Medir navegación real, ID: benchNavigation
+			55 button Comparación de fluidez ABBA, ID: benchFrames
+			56 pop up button (collapsed, settable) Description: Fase GPU, Value: GPU: llegada (0,12 s), ID: gpuPhase, Secondary Actions: Expand
+				57 menu
+					58 (selected) GPU: llegada (0,12 s)
+					59 GPU: impacto (0,30 s)
+					60 GPU: estabilización (0,80 s)
+					61 GPU: desaparición (1,90 s)
+			62 button Comparación GPU intercalada, ID: benchPairs
+			63 button Aislar coste gráfico, ID: benchGpu
+			64 button Choque entre dos bestias, ID: benchCollision
+			65 button Medir 4 impactos reales, ID: benchPhysicsMany
+			66 button Medir ciclo físico real, ID: benchPhysics
+			67 button Medir incursión, ID: benchStress
+			68 button Activar sonido, ID: sound
+			69 button Grabar día, ID: recordDay
+			70 button Grabar noche, ID: recordNight
+			71 button Attack durante levantada
+			72 button Comparar coste de apoyos
+		73 button Guía del tutorial, ID: guideToggle
+		74 container
+			75 pop up button (collapsed, settable) Description: Trabajador de prueba, Value: youngMale, ID: workerProfile, Secondary Actions: Expand
+				76 menu
+					77 (selected) youngMale
+					78 youngFemale
+					79 olderMale
+					80 olderFemale
+			81 button Golpear trabajador, ID: workerHit
+			82 button Detalle trabajador, ID: workerView
+			83 button Medir apoyo trabajador, ID: workerGround
+			84 button Muralla durante recuperación
+			85 button Grabar ciclo trabajador, ID: recordWorker
+			86 button Rostro del trabajador
+			87 button Otro lado del trabajador
+		88 button Perfil de zarpazo
+		89 button Lomo fijo
+		90 button Relieve desactivado
+		91 button Relieve original
+		92 button Normales suaves (ensayo)
+		93 button Normales originales
+		94 button Pelaje actual
+		95 button Pelaje anterior
+		96 button Pelaje reflejo tenue
+		97 button Luz de estudio día
+		98 button Luz de estudio noche
+		99 button Perfil facial cercano
+		100 button Otro perfil facial
+		101 button Rostro tres cuartos
+		102 button Inspeccionar ritual en ocho vistas, ID: ritualViews
+		103 button Grabar Despertar planta y muralla, ID: ritualRecord
+		104 button Validar interrupciones del ritual, ID: ritualInterrupt
+		105 button Medir caída contra muralla
+		106 button Vista lateral de recuperación
+		107 button Detalle de apoyos
+		108 button Grabar ciclo seleccionado, ID: recordCycle
+		109 button Grabar cuatro impactos
+		110 button Grabar caida contra muralla
+		111 button Grabar choque entre bestias
+		112 pop up button (collapsed, settable) Description: Componentes a medir, Value: Cuerpo y efectos, ID: componentSelection, Secondary Actions: Expand
+			113 menu
+				114 (selected) Cuerpo y efectos
+				115 Aura, vortice y descarga
+		116 button Comparar cuerpo y efectos
+		123 text {
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "arriving",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "worker-28",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 2,
+    "crops": 12,
+    "animals": 0
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3054.717089999975,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "draws": 45,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3030.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "build_place",
+      "at": 3031.617089999975,
+      "emitter": "structure-41",
+      "played": false
+    },
+    {
+      "id": "build_complete",
+      "at": 3031.617089999975,
+      "emitter": "structure-41",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3033.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3036.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3039.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3042.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3045.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3048.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3051.717089999975,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "errors": [],
+  "report": null,
+  "commandCosts": []
+}
+		118 text {
+  "scope": "Presentation-only frozen clock, one committed plant beside a paid wall replayed across eight cameras; no AI, audio or frame-performance claim",
+  "rows": [
+    {
+      "day": true,
+      "angle": 0.7,
+      "zoom": 10,
+      "planMs": {
+        "median": 0.26999998092651367,
+        "p95": 0.4599999189376831,
+        "max": 0.6949999332427979,
+        "count": 20
+      },
+      "planned": {
+        "x": 87.5,
+        "y": 14.359823423781068,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 14.579000490031069,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": true,
+      "angle": 2.2707963267948967,
+      "zoom": 22,
+      "planMs": {
+        "median": 0.30000007152557373,
+        "p95": 0.5049999952316284,
+        "max": 0.5299999713897705,
+        "count": 20
+      },
+      "planned": {
+        "x": 87.5,
+        "y": 14.359823423781068,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 14.579000490031069,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": true,
+      "angle": 3.8415926535897933,
+      "zoom": 10,
+      "planMs": {
+        "median": 0.18500006198883057,
+        "p95": 0.33500003814697266,
+        "max": 0.625,
+        "count": 20
+      },
+      "planned": {
+        "x": 87.5,
+        "y": 14.359823423781068,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 14.579000490031069,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": true,
+      "angle": 5.41238898038469,
+      "zoom": 22,
+      "planMs": {
+        "median": 7.674999952316284,
+        "p95": 10.605000019073486,
+        "max": 11.225000023841858,
+        "count": 20
+      },
+      "planned": {
+        "x": 85.97525667683985,
+        "y": 17.735480448781068,
+        "z": -11.492281656878
+      },
+      "origin": {
+        "x": 85.97525667683985,
+        "y": 17.735480448781068,
+        "z": -11.492281656878
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": false,
+      "angle": 0.7,
+      "zoom": 10,
+      "planMs": {
+        "median": 0.05000007152557373,
+        "p95": 0.06500005722045898,
+        "max": 0.11000001430511475,
+        "count": 20
+      },
+      "planned": {
+        "x": 87.5,
+        "y": 14.359823423781068,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 14.579000490031069,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": false,
+      "angle": 2.2707963267948967,
+      "zoom": 22,
+      "planMs": {
+        "median": 0.09500002861022949,
+        "p95": 0.14499998092651367,
+        "max": 0.21000003814697266,
+        "count": 20
+      },
+      "planned": {
+        "x": 87.5,
+        "y": 14.359823423781068,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 14.579000490031069,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": false,
+      "angle": 3.8415926535897933,
+      "zoom": 10,
+      "planMs": {
+        "median": 0.060000061988830566,
+        "p95": 0.11000001430511475,
+        "max": 0.13499999046325684,
+        "count": 20
+      },
+      "planned": {
+        "x": 87.5,
+        "y": 14.359823423781068,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 14.579000490031069,
+        "z": -6,
+        "clear": true,
+        "score": 0
+      },
+      "visible": 1,
+      "finalVisible": 0
+    },
+    {
+      "day": false,
+      "angle": 5.41238898038469,
+      "zoom": 22,
+      "planMs": {
+        "median": 4.950000047683716,
+        "p95": 7.735000014305115,
+        "max": 8.129999995231628,
+        "count": 20
+      },
+      "planned": {
+        "x": 85.97525667683985,
+        "y": 17.735480448781068,
+        "z": -11.492281656878
+      },
+      "origin": {
+        "x": 85.97525667683985,
+        "y": 17.735480448781068,
+        "z": -11.492281656878
+      },
+      "visible": 1,
+      "finalVisible": 0
+    }
+  ],
+  "passed": true,
+  "errors": []
+}
+	119 image world
+	120 image Description: Arrival at 0.9s and disappearance at 3s; click a column to inspect full resolution, ID: ritualViewsSheet
+	122 image Full-resolution ritual night angle 3
+
+The focused UI element is 0 AXWebArea Guardián · Magias en Wild Engine, URL: 127.0.0.1:5194/tests/browser/guardian-combat.html
