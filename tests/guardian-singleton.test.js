@@ -33,10 +33,10 @@ test('a replacement summon waits until the single Guardian finishes its hand-fir
  const summons=new GuardianSummons(world);await summons.ready;
  const attack={type:'SpellActivated',kind:'attack',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}};world.state.events.push(attack);summons.update();
  world.state.elapsed=1.1;const growth={type:'SpellActivated',kind:'growth',x:10,z:0,presentation:{origin:{x:12,y:1,z:0},contact:{x:10,y:1,z:0},elapsed:1.1}};world.state.events.push(growth);summons.update();
- const slot=summons.slots[0];assert.equal(slot.event,attack);assert.equal(slot.group.position.x,3);assert.equal(summons.attackEchoes.stats.active,0);
+ const slot=summons.slots[0];assert.equal(slot.event,attack);assert.equal(slot.group.position.x,3);assert.equal(summons.stats.retainedAttacks,0);
  world.state.elapsed=1.2;summons.update();assert.equal(slot.beam.visible,true);assert.equal(slot.group.position.x,3);
  world.state.elapsed=1.24;summons.update();assert.equal(slot.impact.visible,true);assert.equal(slot.event,attack);
- world.state.elapsed=1.6;summons.update();assert.equal(slot.event.kind,'growth');assert.equal(slot.at,1.6);assert.equal(slot.group.position.x,12);assert.equal(summons.attackEchoes.stats.active,0);assert.equal(summons.pending.length,0);
+ world.state.elapsed=1.6;summons.update();assert.equal(slot.event.kind,'growth');assert.equal(slot.at,1.6);assert.equal(slot.group.position.x,12);assert.equal(summons.stats.retainedAttacks,0);assert.equal(summons.pending.length,0);
  world.state.elapsed=.5;summons.update();assert.equal(slot.event,null);summons.dispose();assert.equal(world.scene.children.length,0);
 });
 
@@ -120,7 +120,7 @@ test('GPU prewarm does not query placement in unloaded terrain',()=>{
  let retained=0,updated=0;
  const receiver={world:{state:{elapsed:1},controls:{target:new THREE.Vector3(0,1,0)}},vector:new THREE.Vector3(),up:new THREE.Vector3(0,1,0),slots:[],plan(){throw Error('terrain not resident');},attackEchoes:{retain(){retained++;},update(){updated++;}}};
  GuardianSummons.prototype.beginPrewarm.call(receiver);
- assert.equal(retained,1);assert.equal(updated,1);
+ assert.equal(retained,0);assert.equal(updated,0);
 });
 
 
@@ -144,7 +144,7 @@ test('disposing an active summon clears diagnostics and releases owned resources
  world.state.events.push({type:'SpellActivated',kind:'growth',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});summons.update();
  assert.equal(summons.stats.active,1);
  const disposed=new Map();
- for(const resource of [summons.beamGeometry,summons.ringGeometry,summons.coreGeometry,summons.attackEchoes.material]){
+ for(const resource of [summons.beamGeometry,summons.ringGeometry,summons.coreGeometry,summons.slots[0].material]){
   disposed.set(resource,0);resource.addEventListener('dispose',()=>disposed.set(resource,disposed.get(resource)+1));
  }
  summons.dispose();summons.dispose();summons.update();
@@ -162,9 +162,21 @@ test('four queued presentations fire sequentially from the visible hand and clea
  summons.update();assert.equal(summons.pending.length,3);
  for(let i=0;i<4;i++){
   world.state.elapsed=1+i*.6;summons.update();assert.equal(slot.event.x,i);
-  world.state.elapsed+=.18;summons.update();assert.equal(slot.beam.visible,true);assert.equal(slot.beam.count,1);assert.equal(summons.attackEchoes.stats.active,0);
+  world.state.elapsed+=.18;summons.update();assert.equal(slot.beam.visible,true);assert.equal(slot.beam.count,1);assert.equal(summons.stats.retainedAttacks,0);
   const matrix=new THREE.Matrix4();slot.beam.getMatrixAt(0,matrix);
   assert.ok(new THREE.Vector3(0,-.5,0).applyMatrix4(matrix).distanceTo(hand.getWorldPosition(new THREE.Vector3()))<1e-5);
  }
  summons.clear();assert.equal(summons.pending.length,0);assert.equal(slot.beam.visible,false);summons.dispose();
+});
+
+
+test('a queued missing victim is skipped without appearance audio or delaying a valid spell',async()=>{
+ const cues=[],world={state:{events:[],elapsed:1,time:400,raid:{animals:[{id:'first',status:'walking'},{id:'removed',status:'walking'}]}},scene:new THREE.Scene(),onGuardianPresence:id=>cues.push(id),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ const event=(kind,targetId)=>({type:'SpellActivated',kind,targetId,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});
+ world.state.events.push(event('attack','first'),event('attack','removed'),event('growth'));
+ summons.update();assert.equal(summons.pending.length,2);assert.equal(cues.length,1);
+ world.state.raid.animals.pop();world.state.elapsed=1.6;summons.update();
+ assert.equal(summons.pending.length,0);assert.equal(summons.slots[0].event.kind,'growth');assert.equal(cues.length,2);
+ summons.dispose();assert.equal(world.scene.children.length,0);
 });
