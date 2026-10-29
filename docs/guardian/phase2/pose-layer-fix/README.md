@@ -144,3 +144,9 @@ An initial low joint framing hid the fall behind a rock and was replaced. Joint 
 ## Solid placement envelope
 
 The world planner previously checked only a 0.45 m radius torso capsule against indexed buildings/props/walls although framing reserved substantially wider cloth space. The solid envelope now uses 1.2 m times bodyScale. A regression exercises the real world-plan wrapper and volume index with a wall that misses the old capsule but touches the mantle envelope; the chosen alternative clears it. All 19 placement tests pass. `placement-wide-envelope.png` is a native daytime Grow smoke inspection beside the village, not exhaustive crowding or all-camera acceptance.
+
+## Buffalo elevated impact
+
+`buffalo-high.mp4`, JSON and 2 fps contact sheet record an elevated Attack with the active 24-bone wind and real Game.tick, from age zero through completed recovery (9.40025 simulation seconds). Maximum visible Guardians remains one; the cycle ends with no errors and no pending summon. The right-side QA view leaves the buffalo visible during fall, roll, get-up and resumed walking. Two earlier views were rejected because a building or tree canopy concealed the action; their recordings were replaced.
+
+The elevated origin is a QA direction override, not evidence for automatic placement. The wide view supports gross cycle continuity but cannot approve fine skin/ground contacts or continuous-motion quality from the sampled sheet alone. Audio events are preserved, including earlier attempts; this is not perceptual sound-mix approval or a performance benchmark.
