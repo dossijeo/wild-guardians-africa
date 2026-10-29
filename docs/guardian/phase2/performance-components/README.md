@@ -39,3 +39,12 @@ The old saved state is at time=600 with two surviving animals carrying only one/
 First Guardian-enabled execution uses the planner's 16-beast first wave, 135 workers, 51 structures and 5362 plants. Five valid Attack commands occur at .55, 12.65, 24.75, 36.85 and 48.95 s. First target health falls 84→56→28→0, then targeting switches to a second beast. Zero runtime errors, zero roll failures, one visible Guardian maximum, peak one physical ragdoll and no active physics at end; no hidden frames. Receipt: fresh-raid-guardian.json.
 
 This run alone is not a performance comparison. Average 8.9347 FPS and p95 149.835 ms include the existing slow farm/native workload; no cause or optimization acceptance is inferred. A fresh reference run of this exact derived scenario, followed by outcome/command equality checks, remains required. This change only adds QA setup/measurement options and does not alter the game.
+
+
+### Sustained reference completed
+
+Reference run after the Guardian run: same derived scenario, five identical command times/targets/health values and exactly equal recorded final outcomes. Both complete 1200 frames with no runtime errors. Reference 8.9225 FPS vs Guardian 8.9347; p99 183.060 vs 182.880 ms; p95 166.045 vs 149.835 ms. Equal 1076 frames over 50 ms; 403 vs 394 over 100 ms. This sequential pair shows no observed added regression but does not prove an improvement from the p95 difference.
+
+Crucially, maximum frames are 10509.34 ms reference and 10758.605 ms Guardian: both contain a severe spike. The run is not fluid and this comparison does not attribute the shared spike to a particular subsystem. Do not hide this with mean/p95 statistics or treat it as phase performance acceptance. Baseline investigation remains elsewhere.
+
+Guardian animation CPU p95 .185 ms, VFX .620 ms; reference/Guardian physics p95 5.220/5.330 ms. Raw heap readings differ between fresh browser loads and include allocation/GC noise; they are not per-feature retained-memory attribution. Full metrics and exact equality checks are fresh-raid-comparison.json; raw reference is fresh-raid-reference.json. This validates unchanged outcomes with repeated legitimate casts in the sampled workload, not every raid, GPU or camera/control responsiveness condition.
