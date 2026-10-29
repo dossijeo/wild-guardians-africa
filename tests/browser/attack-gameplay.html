@@ -10,6 +10,7 @@ import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {prepareWildEngineWorld} from '../../src/app/wild-engine-world.js';
 
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/wild-engine/spatial-movement-profiles.js';
 import {json} from '../../src/rendering/assets.js';
 const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
 const state=Game.newGame({seed:712,slotId:'qa-attack-gameplay'}),canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;document.body.append(canvas);
@@ -24,10 +25,12 @@ state.day=5;state.time=400;state.initialPreparation=false;state.tutorial.step='d
 transact(state.ledger,'qa-inspection-credit',rational(200),{kind:'qa-inspection-credit'});
 state.workers.forEach(w=>w.contractDay=5);state.hiringPaidDay=5;
 // Explicit QA actor near the crop; all subsequent updates use the game systems.
-const beastSite={x:site.x+3,z:site.z};
-state.raid={id:'qa-attack-raid',daytime:false,encounters:[],reservations:{},animals:[{id:`animal-${state.nextId++}`,species:'rhino',...beastSite,spawn:{...beastSite},exit:{x:beastSite.x+30,z:beastSite.z},radius:1.1,hitsRemaining:20,status:'walking',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}]};
+const radius=ANIMAL_SPATIAL_PROFILES.rhino.radius;let beastSite;
+for(let z=-12;z<=12&&!beastSite;z+=2)for(let x=4;x<=16&&!beastSite;x+=2){const p={x:location.center.x+x,z:location.center.z+z};if(nav.walkable(p.x,p.z,radius,null,false))beastSite=p;}
+if(!beastSite)throw Error('No clear native rhino position in QA area');
+state.raid={id:'qa-attack-raid',daytime:false,encounters:[],reservations:{},animals:[{id:`animal-${state.nextId++}`,species:'rhino',...beastSite,spawn:{...beastSite},exit:{x:beastSite.x+30,z:beastSite.z},radius,hitsRemaining:20,status:'walking',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}]};
 state.time=400;state.tutorial.basicSkipped=true;
-document.querySelector('#status').textContent=JSON.stringify({day:state.day,time:state.time,balance:state.ledger.balance,center:location.center,site},null,2);
+document.querySelector('#status').textContent=JSON.stringify({day:state.day,time:state.time,balance:state.ledger.balance,center:location.center,site,beastSite,radius},null,2);
 document.querySelector('#open').disabled=false;
 document.querySelector('#open').onclick=async()=>{await new BrowserSaveRepository(localStorage).save(state);window.location.href='../../';};
 </script></html>
