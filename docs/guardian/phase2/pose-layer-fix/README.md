@@ -216,3 +216,11 @@ The first run had the diagnostic panel visible and frame p95 ranged about 99.8â€
 In the panel-hidden run, draw-call p95 is stable at reference 141, body 145, effects 148, all 152: +4 body and +7 effects. Full-Guardian animation CPU p95 is 0.190/0.215 ms; VFX CPU p95 0.355/0.395 ms. These measured CPU scopes and draw counts do not establish GPU cost or a total frame budget. Body-only and effects-only retain CPU updates while hiding the opposite rendered layer.
 
 The fixture uses the presentation-only clock, with 20 rendered animals but no live navigation or articulated physics. This is component isolation, not raid gameplay or ragdoll performance acceptance. No engine-performance change was made on the basis of these measurements; baseline engine investigation remains outside this task.
+
+## Vanished target across a delayed contact frame
+
+A regression expanded target-removal observations from age 0.21 to 0.24 and 0.35 s. Before the fix, removal observed at the shared 0.24 s impact marker left the summon active and could show a ghost flash: current age was incorrectly treated as proof that contact had already been presented.
+
+Cancellation now checks the previous processed presentation age. If no contact frame was presented while the victim existed, missing/gone targets cancel the body, aura, vortex, beam, core and impact even when the next frame crosses the marker. An already presented impact is allowed to fade after removal. No game damage, cooldown, physics or audio timing was changed.
+
+The regression failed before the fix (`missing observed at 1.24`) and passes afterward for missing/gone targets observed before, on and beyond contact. A complementary test preserves post-contact fading and eventual cleanup. All 23 singleton/combat-audio tests and the production build pass; existing chunk-size warnings remain. This specific edge case has automated coverage, not a newly executed graphical removal scenario.

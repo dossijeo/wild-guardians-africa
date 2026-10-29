@@ -41,16 +41,16 @@ test('a replacement summon waits until the single Guardian finishes its hand-fir
 });
 
 test('removing an Attack target before contact cancels the active summon without a ghost impact',async()=>{
- for(const removal of ['missing','gone']){
+ for(const removal of ['missing','gone'])for(const observedAt of [1.21,1.24,1.35]){
   const animal={id:'target',status:'walking'};
   const world={state:{events:[],elapsed:1,time:400,raid:{animals:[animal]}},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
   const summons=new GuardianSummons(world);await summons.ready;
   world.state.events.push({type:'SpellActivated',kind:'attack',targetId:animal.id,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});
   summons.update();world.state.elapsed=1.2;summons.update();assert.equal(summons.slots[0].beam.visible,true);
   if(removal==='missing')world.state.raid=null;else animal.status='gone';
-  world.state.elapsed=1.21;summons.update();assert.equal(summons.stats.active,0,removal);
+  world.state.elapsed=observedAt;summons.update();assert.equal(summons.stats.active,0,removal+' observed at '+observedAt);
   assert.ok([summons.slots[0].group,summons.slots[0].beam,summons.slots[0].impact,summons.slots[0].core,summons.slots[0].aura,summons.slots[0].vortex].every(o=>!o.visible));
-  world.state.elapsed=1.3;summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.stats.retainedAttacks,0);summons.dispose();assert.equal(world.scene.children.length,0);
+  world.state.elapsed=1.4;summons.update();assert.equal(summons.stats.active,0);assert.equal(summons.stats.retainedAttacks,0);summons.dispose();assert.equal(world.scene.children.length,0);
  }
 });
 
@@ -209,4 +209,18 @@ test('summon disposal releases owned effects but preserves cached source geometr
  for(const resource of [geometry,material,texture])assert.equal(counts.get(resource),0,'asset cache retains ownership');
  assert.equal(slot.aura.disposalCount,1);assert.equal(world.scene.children.length,0);
  geometry.dispose();material.dispose();texture.dispose();
+});
+
+test('an impact already presented with a live target keeps fading after that target disappears',async()=>{
+ const animal={id:'target',status:'walking'};
+ const world={state:{events:[],elapsed:1,time:400,raid:{animals:[animal]}},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ world.state.events.push({type:'SpellActivated',kind:'attack',targetId:animal.id,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});
+ summons.update();world.state.elapsed=1.25;summons.update();
+ const slot=summons.slots[0];assert.equal(slot.impact.visible,true);
+ world.state.raid=null;world.state.elapsed=1.3;summons.update();
+ assert.equal(slot.impact.visible,true);assert.equal(summons.stats.active,1);
+ world.state.elapsed=4;summons.update();assert.equal(summons.stats.active,0);
+ assert.ok([slot.group,slot.beam,slot.impact,slot.core,slot.aura,slot.vortex].every(o=>!o.visible));
+ summons.dispose();assert.equal(world.scene.children.length,0);
 });

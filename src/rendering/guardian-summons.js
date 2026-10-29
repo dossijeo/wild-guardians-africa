@@ -111,9 +111,10 @@ export class GuardianSummons{
   const guideStart=performance.now(),guideActive=this.updateGuide();
   let anim=performance.now()-guideStart,vfx=0,auraAdvanceMs=0,active=guideActive?1:0;
   for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;
-   // Cancel vanished targets before contact, but
-   // let a completed impact fade even when that hit removed its victim.
-   if(s.event.kind==='attack'&&age<ATTACK_TIMING.impact&&!this.liveAttackTarget(s.event.targetId)){this.hide(s);continue;}
+   // Cancel if the target vanished before any contact frame was presented.
+   // A slow frame may cross the marker; current age alone cannot prove a hit.
+   // Keep fading an impact that was already presented with a live victim.
+   if(s.event.kind==='attack'&&s.lastAge<ATTACK_TIMING.impact&&!this.liveAttackTarget(s.event.targetId)){this.hide(s);continue;}
    if(s.event.kind==='awakening'){if(!s.ritualTarget?.blessing||(!s.ritualTarget.alive&&s.ritualTarget.kind!=='wall')||(s.ritualTarget.kind==='wall'&&s.ritualTarget.status!=='intact')){this.hide(s);continue;}if(age>=RITUAL.duration){this.hide(s);continue;}active++;const ritualStart=performance.now();this.ritual.update(this,s,age);anim+=performance.now()-ritualStart;if(age>=2.35&&!s.outroSound){s.outroSound=true;w.onGuardianPresence?.('spirit_disappear',s.origin);}continue;}if(age>2.2){this.hide(s);continue;}active++;
    if(age>=1.5&&!s.outroSound){s.outroSound=true;w.onGuardianPresence?.('spirit_disappear',s.origin);}
    const started=performance.now(),kind=s.event.kind,opacity=ease((age-(kind==='attack'?0:.06))/(kind==='attack'?.1:.18))*(1-ease((age-1.8)/.4));s.group.visible=true;
