@@ -104,15 +104,24 @@ The singleton lifecycle regression also covers replacement of the state object, 
 The physics measurement had left the pause button saying Freeze while simulation was already paused. Its cleanup now sets Resume consistently, preventing accidental unpause during subsequent frozen captures. This affects QA controls only.
 
 
-## Travelling secondary spell wind
+## Travelling secondary spell wind — superseded binding evidence
 
 `guardian-spell-wind.js` replaces the short uniform arrival gust with sustained, phased secondary motion over the authored Mantle_Spell clip. Mantle anchors/middle/tips use 0.035/0.16/0.29-radian base amplitudes with phase delays by depth and panel; feathers use separate root/tip amplitudes and wood a slower response. A smooth entry and fade bound the layer. It changes rotations only after clean pose restoration, adds no geometry or draw calls, and performs no per-frame object allocation. CPU cost has not yet been measured comparatively.
 
 `grow-wind-v2.mp4`, report and 6 fps contact sheet show real Game.tick/native WorldScene, beginning at age 0.12 s and ending with zero visible/pending summons and no errors. Sampled frames show a wider lower cloth silhouette early in arrival, visible hands and intact disappearance. Camera/background differ from the prior baseline, so this is not a matched pixel comparison. Full broad-wind artistic acceptance, rear angles, night and all four spells remain pending. Nineteen pose/singleton tests pass, including repeated renders of the installed rig and hand-origin Attack trajectories.
 
 
-## Shield night side inspection
+## Shield night side inspection — before binding correction
 
 `shield-wind-v2.mp4`, report and 6 fps contact sheet capture the new secondary wind in native nighttime WorldScene, starting at spell age 0.12 s. Actual Game.tick advances 2.32834 seconds, with no reported errors, zero visible Guardians and zero queued presentations at the end. The sheet was inspected: lower cloth changes silhouette, hands/projected energy remain visible from this side, the spirit dissolves, and the persistent Shield dome correctly remains. This is not full angle/intersection or performance acceptance.
 
 An initial frontal close-camera attempt landed inside a building and was rejected; it was replaced, not counted as passed. The QA detail camera now has front/right/rear/left choices. Only the QA camera changes: player camera and production placement are untouched.
+
+
+## Correction: Three.js bone-name sanitization
+
+The first wind benchmark found **zero matching bindings**: GLTFLoader removes periods, so `Mantle.FL.0` becomes `MantleFL0`. Consequently `grow-wind-v2` and `shield-wind-v2` did NOT exercise the new procedural wind. Their visible motion came from the baked clip; prior attribution to the added wave was incorrect. They remain historical evidence only. The binding now accepts both authored and sanitized names. The installed-rig test asserts exactly 12 cloth, 8 feather and 4 wood bindings, in addition to repeat-pose stability and hand trajectory checks. All 19 selected tests pass.
+
+`shield-wind-bound.mp4` and the inspected 6 fps sheet are after this fix, from age 0.31962 s through disappearance. The lateral lower-cloth silhouette moves without obvious gross breakup in the samples. A second attempted Shield was correctly rejected for overlapping areas before recording; that error remains in the report. This is therefore not a clean full command-flow validation, nor all-angle cloth acceptance.
+
+Reproduce CPU measurement with `node tools/guardian/benchmark_spell_wind.mjs`. `spell-wind-cpu.json` contains 12 alternating ABBA/BAAB blocks, 4,000 updates per batch, on the installed 24-bone rig. Node 20/i7-11800H median batch-average time is 0.003693 ms for the former gust versus 0.004111 ms for the bound wave, both including identical pose restoration. This is an isolated CPU microbenchmark, not browser frame percentiles, GPU cost or raid performance. The earlier zero-binding measurement was discarded. Production build passes (541 modules), with existing mixed-import and large-chunk warnings.

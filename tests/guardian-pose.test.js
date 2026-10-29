@@ -35,6 +35,8 @@ test('installed Guardian rig remains stable across repeated spell renders',async
  const gltf=await new GLTFLoader().parseAsync(rigForSampling(readFileSync('public/content/guardian/guardian.glb')),'');
  const world={toon:{uniforms:{uLightDir:{value:new THREE.Vector3(1,1,0)},uNight:{value:1}}},state:{events:[],elapsed:1,time:400},scene:new THREE.Scene(),assets:{model:async()=>gltf},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
  const summons=new GuardianSummons(world);await summons.ready;
+ assert.equal(summons.slots[0].wind.length,24,'all installed Three.js-sanitized wind bones must bind');
+ assert.deepEqual(Object.fromEntries(['cloth','feather','wood'].map(kind=>[kind,summons.slots[0].wind.filter(b=>b.kind===kind).length])),{cloth:12,feather:8,wood:4});
  for(const kind of ['attack','growth','multiply','shield']){
   world.state.elapsed+=3;summons.update();const at=world.state.elapsed;
   world.state.events.push({type:'SpellActivated',kind,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:at}});
