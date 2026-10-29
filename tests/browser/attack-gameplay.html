@@ -32,5 +32,5 @@ state.raid={id:'qa-attack-raid',daytime:false,encounters:[],reservations:{},anim
 state.time=400;state.tutorial.basicSkipped=true;
 document.querySelector('#status').textContent=JSON.stringify({day:state.day,time:state.time,balance:state.ledger.balance,center:location.center,site,beastSite,radius},null,2);
 document.querySelector('#open').disabled=false;
-document.querySelector('#open').onclick=async()=>{await new BrowserSaveRepository(localStorage).save(state);window.location.href='../../'+(new URLSearchParams(location.search).has('qa-game-audio')?'?qa-game-audio=1':'');};
+document.querySelector('#open').onclick=async()=>{await new BrowserSaveRepository(localStorage).save(state);window.location.href='../../'+(new URLSearchParams(window.location.search).has('qa-game-audio')?'?qa-game-audio=1':'');};
 </script></html>

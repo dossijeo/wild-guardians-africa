@@ -5,3 +5,5 @@ The development-only `?qa-game-audio=1` route installs a recording tap on the ex
 This captures neither DOM HUD nor HTML tutorial narration. It does not complete the requested voiced tutorial recording. Existing `attack-main-gameplay.webm` remains the historical silent recording; no new audiovisual acceptance is claimed by this change.
 
 Validation: four Node tests pass for bus capture, idempotent cleanup, partial connection failure, locked context and rejected receiver/listener removal. Production Vite build passes (7.81 s, existing chunk/import warnings). Searching production assets finds neither the capture event nor its diagnostic text. Actual browser recording and perceptual synchronization review remain pending.
+
+Browser follow-up found that the fixture's local `location` descriptor shadowed the browser URL, dropping the audio opt-in on navigation. Qualified the flag read with `window.location.search`; this is a fixture routing repair. Audiovisual acceptance still requires an actual recording.
