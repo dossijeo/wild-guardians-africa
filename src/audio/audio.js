@@ -1,3 +1,4 @@
+import {playGuardianWorldCue} from './guardian-presence.js';
 import {MagicCueQueue} from './magic-cue-queue.js';
 import {PowerReadyAudio} from './power-ready-audio.js';
 import {destructionSounds} from './destruction-audio.js';
@@ -212,7 +213,7 @@ export class AudioSystem {
       const requested=this.context?.currentTime??0,generation=this.generation;
       const magicOptions=event.type==='GuardianMagicHit'?{family:'animal-hurt',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length&&(!state||this.magicCues.state===state&&!state.result&&(!Number.isFinite(event.presentation?.cueAt)||state.elapsed>=event.presentation.cueAt)&&state.raid?.animals.some(a=>a.id===event.targetId&&a.status!=='gone'))}:{};
       const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
-      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      if(id){const options={...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})};(id==='spirit_power_activate'?playGuardianWorldCue(this,id,options):this.sound(id,options)).catch(()=>{});}
       if(event.type==='GuardianMagicHit'){
         const options=eventAudioOptions(event,'beast_take_damage',state,listener);
         this.sound('beast_take_damage',{...options,...magicOptions,family:'magic-contact',emitter:'impact:'+event.targetId,gain:options.gain*.45}).catch(()=>{});
