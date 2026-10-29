@@ -1,11 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Box3,Group,PerspectiveCamera,Raycaster,Vector2,Vector3} from 'three';
+import {Bone,Skeleton,SkinnedMesh,BufferGeometry,Float32BufferAttribute,Uint16BufferAttribute,Box3,Group,PerspectiveCamera,Raycaster,Vector2,Vector3} from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import * as Game from '../src/simulation/game.js';
 import {castPickedSpell} from '../src/app/spell-placement.js';
 import {actorGeometry} from './helpers/actor-geometry.js';
+
+test('diagnostic: cached skin bounds reproduce a missed posed-surface selection',()=>{
+ const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute([-1,-1,0,1,-1,0,0,1,0],3));geometry.setAttribute('skinIndex',new Uint16BufferAttribute(new Array(12).fill(0),4));geometry.setAttribute('skinWeight',new Float32BufferAttribute([1,0,0,0,1,0,0,0,1,0,0,0],4));
+ const mesh=new SkinnedMesh(geometry),bone=new Bone();mesh.add(bone);mesh.bind(new Skeleton([bone]));mesh.userData.entityId='posed';mesh.computeBoundingSphere();mesh.computeBoundingBox();
+ bone.position.x=4;mesh.updateMatrixWorld(true);
+ const camera=new PerspectiveCamera(45,1,.1,100);camera.position.set(4,0,5);camera.lookAt(4,0,0);camera.updateMatrixWorld(true);
+ const raycaster=new Raycaster();raycaster.setFromCamera(new Vector2(),camera);assert.equal(raycaster.intersectObject(mesh).length,0,'The stale bounds reproduce the missed click');
+ const world=Object.assign(Object.create(WorldScene.prototype),{camera,controls:{target:new Vector3(4,0,0)},nav:{},state:{plants:[]},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:new Vector2(),raycaster,objects:new Map([['posed',mesh]]),terrainMeshes:[]});
+ assert.equal(world.pick({clientX:50,clientY:50}).entityId,null,'Known unresolved stale-bounds defect');
+ mesh.computeBoundingBox();mesh.boundingBox.getBoundingSphere(mesh.boundingSphere);
+ const hit=world.pick({clientX:50,clientY:50});assert.equal(hit.entityId,'posed');assert.ok(Math.abs(hit.hitPoint.x-4)<1e-6);
+ geometry.dispose();mesh.material.dispose();
+});
 
 for(const species of ['hyena','lion','warthog','buffalo','rhino'])test(`${species}: installed skin ray contact reaches Attack and its presentation unchanged`,async()=>{
  const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}],field:{surface:()=>0}};
