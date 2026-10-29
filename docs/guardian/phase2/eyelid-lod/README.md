@@ -21,3 +21,9 @@ No runtime speedup or artistic approval is claimed.
 ```powershell
 blender -b --python tools/guardian/render_lid_oblique.py -- --input content/source/guardian/eyelid-lod-study/guardian-lids-33x9.blend --output C:/tmp/guardian-lid-oblique
 ```
+
+## Native WorldScene candidate selector
+
+The Guardian combat QA page now offers `Parpados QA: originales/33x9`. It clones only donor geometry, remaps skin indices by bone name and validates bind/local matrices and morph target order. Current production skeleton, materials and face bindings are retained. The live inverse bind matrix is intentionally retained: attached skinning updates it after world transforms. Original nonuniform AO is copied only from source vertices at the same position (tolerance 1e-7, closest normal for duplicates); unknown positions fail instead of receiving invented visibility. Donor resources are released even on failure. This is a QA study, not production LOD selection.
+
+`runtime-candidate.png` and `runtime-reference.png` were captured and inspected in the real native WorldScene, frozen Grow at 0.72 s, cinematic lighting and global AO. The neutral-eye silhouette is comparable and the transplant succeeds without errors after the compatibility fixes. Background tree residency changes between captures, so these are not pixel-exact scene comparisons. Runtime blink states, transitions and incremental GPU timings remain unvalidated. Production GLB remains unchanged.
