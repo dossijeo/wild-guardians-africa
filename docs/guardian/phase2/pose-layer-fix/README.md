@@ -95,3 +95,10 @@ Production Attack uses a 12-second simulation cooldown (`Game.cast`), with relea
 The QA cast helper deliberately resets cooldowns. Its rapid multi-target measurements are stress fixtures, not proof of normal balance or economic behavior. Guardian presentation queue tests prove one visible instance and sequential hand-origin beams; alone they do not prove damage/VFX synchronization for commands forced inside the cooldown. The production simulation has no such rapid-command queue. Do not use a forced simultaneous Attack fixture as evidence of correct player-facing impact timing. The 0.6-second sequential impact recorder avoids the presentation window, but still bypasses production cooldown and remains a stress test.
 
 The singleton lifecycle regression also covers replacement of the state object, clock rollback and a game result with four queued presentations: the queue is emptied, all six presentation objects are hidden, historical events are not replayed, and new commands after replacement/rollback work. This is automated lifecycle coverage, not graphical scene-transition acceptance. The combined singleton/combat/audio suites pass 35 tests at commit 8e5382eff.
+
+
+## Grow close wind baseline
+
+`grow-close.mp4` and its 6 fps contact sheet show daytime Grow from early materialization through dissolution. The hands and outgoing beams are visible, but cloth motion remains restrained from this angle. This is a baseline for further wind iteration, not artistic approval of the requested broad flag-like motion. The full repeat report was lost when the QA pause-label correction reloaded the page; `grow-close-report.json` explicitly records this limitation instead of attaching metadata from an earlier late-start capture.
+
+The physics measurement had left the pause button saying Freeze while simulation was already paused. Its cleanup now sets Resume consistently, preventing accidental unpause during subsequent frozen captures. This affects QA controls only.
