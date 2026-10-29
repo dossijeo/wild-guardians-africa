@@ -147,3 +147,14 @@ test('placement avoids HUD rectangles without moving the camera or target',()=>{
  assert.ok(projected.x*p.x<0,'choose the unobstructed side of the target');
  assert.ok(args.camera.matrixWorld.equals(before));assert.deepEqual(args.target,{x:0,z:0,radius:1});
 });
+
+test('portrait HUD keeps a feasible summon envelope between top and bottom controls',()=>{
+ const args=setup();args.camera.aspect=9/16;args.camera.position.set(0,12,22);args.camera.lookAt(0,0,0);args.camera.updateProjectionMatrix();
+ const rects=[{minX:-1,maxX:1,minY:.65,maxY:1},{minX:-1,maxX:1,minY:-1,maxY:-.65}];
+ const p=guardianPlacement({...args,screenExclusions:rects});
+ for(const dx of [-1.4,1.4])for(const dy of [-1.2,1.4])for(const dz of [-1.4,1.4]){const q=new Vector3(p.x+dx,p.y+dy,p.z+dz).project(args.camera);assert.ok(q.y<.65&&q.y>-.65);}
+});
+test('HUD covering the entire viewport still yields a finite best-effort world placement',()=>{
+ const args=setup(),p=guardianPlacement({...args,screenExclusions:[{minX:-1,maxX:1,minY:-1,maxY:1}]});
+ assert.ok(Number.isFinite(p.x+p.y+p.z));assert.equal(p.y,1.7);
+});

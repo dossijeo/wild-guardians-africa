@@ -316,3 +316,11 @@ Continued the new Suajili QA save through hiring and the first night, using real
 The planner now receives NDC exclusion rectangles from the actual visible HUD elements, padded by 8 pixels, on each placement request. The projected conservative body envelope penalizes HUD intersections, including the elevated/ritual candidate paths. Existing world clearance still takes priority; when every alternative is obstructed this remains a best-effort placement. No camera following or gameplay changes. Headless fixtures with no HUD provider retain old behavior. DOM reads occur at placement requests, not the animation update loop.
 
 Validation: 20 guardian-placement tests passed, including selecting the opposite free side when a HUD rectangle covers the original candidate; camera and target remain unchanged. Production build passed in 17.21 seconds with existing bundle-size/mixed-import warnings. Post-change graphical validation (landscape/portrait and camera motion) remains pending: the screenshot is BEFORE the fix.
+
+## HUD-aware placement follow-up (2026-10-30)
+
+Loaded the same QA save and continued through dawn/day 2 via normal hiring. `main-ui-shield-hud-aware.png`: actual main game, 1280x720, Shield on ground near the right action stack. The visible body/vortex sits left of the buttons; the next panel showed 75 seconds of cooldown. This is a post-fix graphical success for this landscape placement, not an exact same-camera A/B against the earlier night/raid camera.
+
+`main-ui-growth-quick.png`: selected Growth and clicked the visible crop in the same browser action batch (09:27 -> 09:28), observed green Guardian, vortex and connection to the crop with a worker nearby. The prior inconclusive click occurred after a much longer selection delay, consistent with ten-second ToolSession expiration. No picking change was made or needed to achieve this cast. This does not prove the precise cause of that previous miss.
+
+22 placement tests now pass, including a portrait-aspect camera with top/bottom excluded rectangles and an all-screen-covered finite fallback. Actual portrait HUD graphical validation remains pending, as does accepted Attack through the real main UI. The QA game is paused at day 2 10:11. No cooldown reset or state injection was used.
