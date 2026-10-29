@@ -1,0 +1,5 @@
+# Main integration: 060b2ead3
+
+Integrated26 incoming main commits (Awakenings PR223) into the Guardian branch. Resolved scene rendering/depth/disposal conflicts by retaining Guardian summon and combat lifecycle alongside awakening roots, blessing VFX and awakening glow. Retained both shader extensions/cache keys and both Attack/awakening command availability. Translation conflicts retain both sets of strings. Regenerated SFX inventory against the merged sources (126 entries,101 assigned,25 unassigned); this is static routing evidence, not listening.
+
+51 tests pass without skips across guardian-combat, guardian-combat-audio, tutorial-awakening, awakening-hud, awakening-roots, blessing-vfx and lion-walk-posture. Production build transforms531 modules and succeeds with the existing import/chunk warnings. Browser fixture loads with no recorded errors and renders daylight Grow with the single Guardian and vortex; grow.png shows the .24s appearance phase. This smoke check does not validate every Awakening/Guardian combination or the new tutorial lesson's voice coverage. Broader graphical acceptance and continuous voiced tutorial recording remain open.

@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {hudShortcut} from '../src/ui/hud-shortcuts.js';
+test('awakening shortcut follows the live control and never bypasses an unavailable charge',()=>{
+ let calls=0;const button={disabled:true,closest:()=>null,click:()=>calls++},root={querySelector:selector=>selector==='#awakeningButton'?button:null};
+ const event=()=>({key:'5',preventDefault(){},target:{closest:()=>null}});
+ assert.equal(hudShortcut(event(),root),false);assert.equal(calls,0);
+ button.disabled=false;assert.equal(hudShortcut(event(),root),true);assert.equal(calls,1);
+});
 
 function fixture(){
   const calls=[],buttons=new Map();

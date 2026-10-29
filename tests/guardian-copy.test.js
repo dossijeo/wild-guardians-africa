@@ -16,14 +16,14 @@ test('all supplied Spirit replacements preserve the exact Spanish and paired Eng
 });
 test('tutorial and post-raid copy use supplied replacements while unrelated messages stay unchanged',()=>{
  const replacements=new Set(Object.values(supplied.es));
- const laterMagic=new Set(['magic.growth','magic.multiply','reminder.multiply']);
+ const laterMagic=new Set(['magic.growth','magic.multiply','magic.awakening','reminder.multiply']);
  const outsideReference=[];
  for(const [id,message] of Object.entries(TUTORIAL_MESSAGES)){
   if(!replacements.has(message.text))outsideReference.push(id);
   if(laterMagic.has(id))assert.notEqual(translate(message.text,'en'),message.text,`${id} needs current English copy`);
  }
  assert.deepEqual(outsideReference,[...laterMagic],
-  'Only the later daily-power magic lessons may differ from the supplied Spirit script');
+  'Only later magic lessons may differ from the supplied Spirit script');
  assert.ok(replacements.has(DEFENSES_FOLLOWUP.text));
  for(const text of ['toString','Construir','mensaje futuro',null,undefined])assert.equal(guardianCopy(text),text);
 });

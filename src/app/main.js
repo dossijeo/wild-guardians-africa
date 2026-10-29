@@ -68,7 +68,9 @@ import {createFrameImageLoader} from '../ui/frame-image-loader.js';
 import {createLoadingFrameLoader} from '../ui/loading-ornament-loader.js';
 import {hiringConfirmation} from '../ui/hiring-confirmation.js';
 import {AudioSystem} from '../audio/audio.js';
-import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
+import {ASSETS,hudMarkup,layoutHud as layoutNativeHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
+import {AwakeningHud} from '../ui/awakening-hud.js';
+import '../ui/awakening-hud.css';
 import {NativeGuardian} from '../ui/guardian.js';
 import {hudShortcut} from '../ui/hud-shortcuts.js';
 import {refreshBuildPermissions} from '../ui/build-permissions.js';
@@ -89,6 +91,8 @@ for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 const loadFrameImages=createFrameImageLoader(ASSETS),loadLoadingFrameImages=createLoadingFrameLoader(loadFrameImages);
 const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
 let juice=null;
+let awakeningHud=null;
+function layoutHud(stage){const dims=layoutNativeHud(stage);return awakeningHud?.layout(dims)??dims;}
 let campaignCinema=null;
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-visibility'))globalThis.wildGuardiansVisibilityQa=()=>({
@@ -160,7 +164,7 @@ function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
 
-function clearWorld(){microevents?.dispose();microevents=null;if(import.meta.env.DEV)delete window.__microevents;nativeIntentCleanup?.();nativeIntentCleanup=null;if(import.meta.env.DEV)delete globalThis.wildGuardiansSpatialQa;campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;wildEngineSession?.dispose();wildEngineSession=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){awakeningHud?.dispose();awakeningHud=null;microevents?.dispose();microevents=null;if(import.meta.env.DEV)delete window.__microevents;nativeIntentCleanup?.();nativeIntentCleanup=null;if(import.meta.env.DEV)delete globalThis.wildGuardiansSpatialQa;campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;wildEngineSession?.dispose();wildEngineSession=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
@@ -248,6 +252,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href=assetUrl('/content/hud.css');document.head.append(nativeStyle);
     app.innerHTML=`<main class="game world-loading" id="stage" aria-busy="true"><div id="world-loading" class="loading interactive-loading-indicator" role="status"><div class="eyebrow">Wild Guardians / Africa</div><h2>La tierra despierta</h2><p>Preparando terreno, poblado y cultivos originales…</p><p id="loading-progress"></p></div><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
     document.querySelector('#world').replaceWith(prepared.canvas);document.querySelector('#world-loading').replaceWith(overlay.element);loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
+    awakeningHud=new AwakeningHud(document.querySelector('#stage'),()=>safe(toggleAwakening));
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
     // Prepare only presentation resources; no narrator/tutorial/voice action.
     if(new URLSearchParams(location.search).get('guardianWorker')==='1'&&new URLSearchParams(location.search).get('guardianWarm')==='1')ensureGuardianView();
@@ -295,6 +300,11 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
   if(!state||screen!=='game')return;
   safe(()=>{
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
+    if(tool?.kind==='awakening'){
+      const draft=Game.previewBlessing(state,entityId);
+      if(!draft.valid)throw Error(draft.reason);
+      tool.targetId=entityId;commandFeedback=awakeningSelectionCopy(draft.kind);return;
+    }
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
       const applicationStarted=performance.now();
@@ -355,6 +365,7 @@ function paintPanelFrame(host,stage,message){
 function openSurface(kind,key=kind){
   if(state.pauses.includes('hiring')&&!['hiring','result'].includes(kind))return false;
   if(!surfaces.open(kind,{mandatory:kind==='hiring',force:kind==='result'}))return false;
+  if(tool?.kind==='awakening')cancelTool();
   dialogVoice.stop();
   const beforePause=state.pauses.slice();
   setTutorialInteraction(false);if(!(kind==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(state.tutorial.reading)))guardian?.hide({immediate:true,interrupt:true});
@@ -376,6 +387,16 @@ function closeSurface(){
 }
 function armTool(value){tool=toolSession.select(value,performance.now()/1000);world?.focusTutorialPlacement(value.kind);}
 function cancelTool(){if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
+function toggleAwakening(){
+  if(tool?.kind==='awakening'){cancelTool();return;}
+  if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
+  closeSurface();cancelTool();selection=null;armTool({kind:'awakening'});
+  commandFeedback='Toca una planta o muralla. Cancelar conserva la carga.';
+}
+function confirmAwakening(){
+  if(tool?.kind!=='awakening'||!tool.targetId)return;
+  if(Game.bless(state,commandId(),tool.targetId)){cancelTool();save();}
+}
 function startDueCinematic(){
   if(campaignCinema||document.hidden)return false;
   const act=dueCinematicAct(state);if(!act)return false;
@@ -391,6 +412,9 @@ function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   if(campaignCinema||startDueCinematic())return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
+  if(tool?.kind==='awakening'&&(state.awakenings?.progress??0)<100)cancelTool();
+  world.awakeningSelecting=tool?.kind==='awakening';world.awakeningTargetId=world.awakeningSelecting?tool.targetId:null;
+  awakeningHud?.render(state,{selecting:world.awakeningSelecting,blocked:!!surfaces.active});
   manualMagicActivity.update(state);
   if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
   if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
@@ -415,9 +439,13 @@ function updateUI(force=false) {
   contextPanel();const activeTutorial=narrator();
   if(commandFeedback&&tutorialCoversNotice(state,{text:commandFeedback},activeTutorial))commandFeedback='';
   eventCards??=new EventCards(document.querySelector('#notices'),ASSETS);
-  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'||!!surfaces.active||document.hidden,maxVisible:stage.classList.contains('short')?2:3}),noticeLifetime,now/1000);
+  const tutorialBubble=stage.querySelector('#guardian-root[aria-hidden="false"] .bubble');
+  const allowAwakeningUrgent=stage.classList.contains('portrait')&&!!tutorialBubble&&!surfaces.active&&!document.hidden&&tool?.kind!=='awakening'&&
+    tutorialBubble.getBoundingClientRect().top-document.querySelector('#notices').getBoundingClientRect().top>=150;
+  stage.classList.toggle('awakening-urgent-over-tutorial',allowAwakeningUrgent);
+  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'||!!surfaces.active||document.hidden||tool?.kind==='awakening',maxVisible:stage.classList.contains('short')?2:3,allowAwakeningUrgent}),noticeLifetime,now/1000,{compactUrgent:allowAwakeningUrgent});
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
-  document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
+  document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice);if(!message)return;const target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target??message.location)world.focus(target??message.location);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
   if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();
   if(state.result&&!state.tutorial.reading&&surfaces.shouldOpen('result'))resultDialog();
@@ -431,9 +459,16 @@ function updateUI(force=false) {
   refreshCommandFeedback();
 }
 function refreshCommandFeedback(){
-  const label=null;
-  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(tool?.kind==='village')cancelVillagePreview();tool=null;commandFeedback='';updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
+  const selecting=tool?.kind==='awakening',draft=selecting&&tool.targetId?Game.previewBlessing(state,tool.targetId):null;
+  const label=selecting?(draft?.valid?(draft.kind==='plant'?'Bendecir planta · fuente permanente':'Bendecir muralla · protección permanente'):'Selecciona una planta o muralla'):null;
+  const message=draft&&!draft.valid?draft.reason:commandFeedback||(draft?.valid?awakeningSelectionCopy(draft.kind):selecting?'Toca una planta o muralla. Cancelar conserva la carga.':'');
+  renderCommandFeedback(document,{label,message,
+    confirmation:draft?{label:'Bendecir',disabled:!draft.valid||!permission(state,'awakening'),onConfirm:()=>safe(confirmAwakening)}:null,
+    onCancel:()=>{cancelTool();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
+function awakeningSelectionCopy(kind){return kind==='plant'?
+  'Cultivos próximos: +20 % de crecimiento y valor base. Esta planta no se cosecha.':
+  'Muralla: −25 % de daño propio y −10 % en secciones contiguas.';}
 
 function buildPanel(){
   if(state.pauses.includes('hiring'))return;

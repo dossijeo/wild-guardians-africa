@@ -1,0 +1,290 @@
+TAP version 13
+# (node:47508) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: blessing feedback reuses event cards and keeps a location after the destroyed entity is retired
+ok 1 - blessing feedback reuses event cards and keeps a location after the destroyed entity is retired
+  ---
+  duration_ms: 14.6284
+  ...
+# Subtest: three effective good days report the streak inside one daily summary and cannot repeat it after evaluation
+ok 2 - three effective good days report the streak inside one daily summary and cannot repeat it after evaluation
+  ---
+  duration_ms: 7.9954
+  ...
+# Subtest: new HUD, daily category and target descriptions participate in the existing bilingual catalog
+ok 3 - new HUD, daily category and target descriptions participate in the existing bilingual catalog
+  ---
+  duration_ms: 108.5975
+  ...
+# Subtest: compact tutorial alerts retain the original saved message and identify the threatened object
+ok 4 - compact tutorial alerts retain the original saved message and identify the threatened object
+  ---
+  duration_ms: 0.6287
+  ...
+# (node:47768) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the HUD reads legacy progress without mutating the save and only enables an available charge
+ok 5 - the HUD reads legacy progress without mutating the save and only enables an available charge
+  ---
+  duration_ms: 4.6466
+  ...
+# Subtest: awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+ok 6 - awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.4781
+  ...
+# Subtest: awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+ok 7 - awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1107
+  ...
+# Subtest: awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+ok 8 - awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1034
+  ...
+# Subtest: awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+ok 9 - awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0912
+  ...
+# Subtest: awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+ok 10 - awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0829
+  ...
+# Subtest: awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+ok 11 - awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0843
+  ...
+# Subtest: awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+ok 12 - awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1382
+  ...
+# Subtest: awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+ok 13 - awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.3328
+  ...
+# Subtest: awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+ok 14 - awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.3476
+  ...
+# Subtest: awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+ok 15 - awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.2032
+  ...
+# Subtest: portrait awakening respects a 34px bottom safe area at 320×568 without resizing actions
+ok 16 - portrait awakening respects a 34px bottom safe area at 320×568 without resizing actions
+  ---
+  duration_ms: 0.3191
+  ...
+# Subtest: portrait awakening respects a 34px bottom safe area at 360×640 without resizing actions
+ok 17 - portrait awakening respects a 34px bottom safe area at 360×640 without resizing actions
+  ---
+  duration_ms: 0.1298
+  ...
+# Subtest: portrait awakening respects a 34px bottom safe area at 390×844 without resizing actions
+ok 18 - portrait awakening respects a 34px bottom safe area at 390×844 without resizing actions
+  ---
+  duration_ms: 0.3605
+  ...
+# Subtest: awakening shortcut follows the live control and never bypasses an unavailable charge
+ok 19 - awakening shortcut follows the live control and never bypasses an unavailable charge
+  ---
+  duration_ms: 2.4659
+  ...
+# Subtest: native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+ok 20 - native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+  ---
+  duration_ms: 3.2156
+  ...
+# Subtest: typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+ok 21 - typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+  ---
+  duration_ms: 0.5936
+  ...
+# Subtest: buttons becoming disabled or inert are observed at dispatch time and may become usable again
+ok 22 - buttons becoming disabled or inert are observed at dispatch time and may become usable again
+  ---
+  duration_ms: 0.4036
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 23 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 1.9911
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 24 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.3126
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 25 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.393
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 26 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 119.8801
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 27 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 20.5179
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 28 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 18.8837
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 29 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 1.0327
+  ...
+# Subtest: current hiring dialog translates revised wages and every rendered hiring stepper
+ok 30 - current hiring dialog translates revised wages and every rendered hiring stepper
+  ---
+  duration_ms: 29.6746
+  ...
+# Subtest: revised reserve and dynamic damaged-wall refunds retain their amounts in English
+ok 31 - revised reserve and dynamic damaged-wall refunds retain their amounts in English
+  ---
+  duration_ms: 3.1148
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 32 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.9133
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 33 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 8.5543
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 34 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 3.6327
+  ...
+# Subtest: a returning tutorial freezes the already visible bar and manual dismissal survives it
+ok 35 - a returning tutorial freezes the already visible bar and manual dismissal survives it
+  ---
+  duration_ms: 5.0051
+  ...
+# Subtest: finished raids do not leave a live attack warning on the HUD or change saved history
+ok 36 - finished raids do not leave a live attack warning on the HUD or change saved history
+  ---
+  duration_ms: 0.5769
+  ...
+# Subtest: raid tutorial replaces the same raid warning permanently without deleting saved history
+ok 37 - raid tutorial replaces the same raid warning permanently without deleting saved history
+  ---
+  duration_ms: 0.5365
+  ...
+# Subtest: unrelated events wait behind the tutorial and get their full readable lifetime afterwards
+ok 38 - unrelated events wait behind the tutorial and get their full readable lifetime afterwards
+  ---
+  duration_ms: 0.398
+  ...
+# Subtest: the defeat explanation suppresses its identical event; unrelated errors remain available
+ok 39 - the defeat explanation suppresses its identical event; unrelated errors remain available
+  ---
+  duration_ms: 0.5972
+  ...
+# Subtest: closing guardian animation keeps unrelated notices waiting without consuming readable time
+ok 40 - closing guardian animation keeps unrelated notices waiting without consuming readable time
+  ---
+  duration_ms: 0.3699
+  ...
+# Subtest: urgent awakening warnings can use verified tutorial space without spending queued notice time
+ok 41 - urgent awakening warnings can use verified tutorial space without spending queued notice time
+  ---
+  duration_ms: 1.8146
+  ...
+# Subtest: reserve explanation covers the matching command error only when actually presented
+ok 42 - reserve explanation covers the matching command error only when actually presented
+  ---
+  duration_ms: 0.2885
+  ...
+# Subtest: the current raid warning persists until the whole raid ends, including after its first animal exits
+ok 43 - the current raid warning persists until the whole raid ends, including after its first animal exits
+  ---
+  duration_ms: 0.4595
+  ...
+# Subtest: a later raid hides the previous raid alert and displays the matching current alert in chronological order
+ok 44 - a later raid hides the previous raid alert and displays the matching current alert in chronological order
+  ---
+  duration_ms: 0.6199
+  ...
+# (node:8080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 45 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 516.8019
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 46 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 175.6638
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 47 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.6436
+  ...
+# (node:48228) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HUD then world guidance stops the clock through center and seed placement, without blocking commands
+ok 48 - HUD then world guidance stops the clock through center and seed placement, without blocking commands
+  ---
+  duration_ms: 21.7894
+  ...
+# Subtest: informational readings run; automatic text dismissal retains the hand; explicit dismissal releases it
+ok 49 - informational readings run; automatic text dismissal retains the hand; explicit dismissal releases it
+  ---
+  duration_ms: 3.3781
+  ...
+# Subtest: absent or inaccessible guidance cannot retain a pause; other pause reasons remain independent
+ok 50 - absent or inaccessible guidance cannot retain a pause; other pause reasons remain independent
+  ---
+  duration_ms: 7.8198
+  ...
+# Subtest: loading clears presentation-only pauses and reconstructs them from current actionable guidance
+ok 51 - loading clears presentation-only pauses and reconstructs them from current actionable guidance
+  ---
+  duration_ms: 3.9634
+  ...
+# (node:35996) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: interrupting the displayed voice by opening a panel acknowledges it exactly once
+ok 52 - interrupting the displayed voice by opening a panel acknowledges it exactly once
+  ---
+  duration_ms: 14.8777
+  ...
+# Subtest: background hiding preserves an unfinished message instead of acknowledging it
+ok 53 - background hiding preserves an unfinished message instead of acknowledging it
+  ---
+  duration_ms: 1.4482
+  ...
+# Subtest: dismissal records the daily ID even when presentation was queried without recording
+ok 54 - dismissal records the daily ID even when presentation was queried without recording
+  ---
+  duration_ms: 1.1982
+  ...
+1..54
+# tests 54
+# suites 0
+# pass 54
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 967.4007

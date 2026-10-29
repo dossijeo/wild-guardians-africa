@@ -1,0 +1,215 @@
+TAP version 13
+# (node:22320) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 1 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 391.8005
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 2 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 1.6794
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 3 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 11.2168
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 4 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 10.2422
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 5 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 1.2684
+  ...
+# Subtest: batched Growth preserves exact accounting at observation boundaries and entitlement caps
+ok 6 - batched Growth preserves exact accounting at observation boundaries and entitlement caps
+  ---
+  duration_ms: 13.4308
+  ...
+# Subtest: new task observers see flushed Growth consumption
+ok 7 - new task observers see flushed Growth consumption
+  ---
+  duration_ms: 1.8561
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 8 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 1.2973
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 9 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 62.795
+  ...
+# Subtest: one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+ok 10 - one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+  ---
+  duration_ms: 0.801
+  ...
+# Subtest: fractional Growth preserves agricultural event water penalties at the next real checkpoint
+ok 11 - fractional Growth preserves agricultural event water penalties at the next real checkpoint
+  ---
+  duration_ms: 0.5559
+  ...
+# Subtest: expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+ok 12 - expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+  ---
+  duration_ms: 1.2966
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 13 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 104.9205
+  ...
+# (node:20964) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every crop dies from one direct point, without repeated destruction
+ok 14 - every crop dies from one direct point, without repeated destruction
+  ---
+  duration_ms: 8.3374
+  ...
+# Subtest: two real half-point peripheral impacts are needed; reload is passive
+ok 15 - two real half-point peripheral impacts are needed; reload is passive
+  ---
+  duration_ms: 5.4812
+  ...
+# Subtest: old half-point wounds preserve their proportion only at the next physical impact
+ok 16 - old half-point wounds preserve their proportion only at the next physical impact
+  ---
+  duration_ms: 3.5283
+  ...
+# Subtest: introductory quota protects remaining plants and survives a reload
+ok 17 - introductory quota protects remaining plants and survives a reload
+  ---
+  duration_ms: 0.5092
+  ...
+# Subtest: unknown resistance and unrepresentable wounds cannot enter saved state
+ok 18 - unknown resistance and unrepresentable wounds cannot enter saved state
+  ---
+  duration_ms: 1.8617
+  ...
+# (node:34232) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: seed 712: native paid command replay survives two nights unchanged by VFX/music/global random draws
+ok 19 - seed 712: native paid command replay survives two nights unchanged by VFX/music/global random draws
+  ---
+  duration_ms: 20684.8146
+  ...
+# Subtest: seed 781: native paid command replay survives two nights unchanged by VFX/music/global random draws
+ok 20 - seed 781: native paid command replay survives two nights unchanged by VFX/music/global random draws
+  ---
+  duration_ms: 16474.4661
+  ...
+# (node:27600) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed staging, backup or primary writes never announce success or lose the previous playable save
+ok 21 - failed staging, backup or primary writes never announce success or lose the previous playable save
+  ---
+  duration_ms: 16.313
+  ...
+# Subtest: autosave is silent; an explicit confirmation is emitted only after a successful write
+ok 22 - autosave is silent; an explicit confirmation is emitted only after a successful write
+  ---
+  duration_ms: 0.6484
+  ...
+# Subtest: asynchronous saves confirm only after commit and report rejection without success
+ok 23 - asynchronous saves confirm only after commit and report rejection without success
+  ---
+  duration_ms: 0.992
+  ...
+# (node:17516) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 24 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 8.277
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 25 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 4.0866
+  ...
+# Subtest: A ruined wall no longer hides a physically open stroke slot
+ok 26 - A ruined wall no longer hides a physically open stroke slot
+  ---
+  duration_ms: 1.2209
+  ...
+# Subtest: rebuilding a ruined module removes its stale repair target atomically
+ok 27 - rebuilding a ruined module removes its stale repair target atomically
+  ---
+  duration_ms: 41.432
+  ...
+# Subtest: a single paid wall also replaces a coincident ruin
+ok 28 - a single paid wall also replaces a coincident ruin
+  ---
+  duration_ms: 5.7726
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 29 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 47.8947
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 30 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 21.2278
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 31 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 10.8753
+  ...
+# Subtest: unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge
+ok 32 - unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge
+  ---
+  duration_ms: 28.6565
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap with its refund and without replacement
+ok 33 - Removing an automatic gate opens a persistent gap with its refund and without replacement
+  ---
+  duration_ms: 12.9149
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 34 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 4.1008
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 35 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 7.7291
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 36 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 5.9544
+  ...
+# Subtest: Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+ok 37 - Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+  ---
+  duration_ms: 29.6501
+  ...
+# Subtest: Removing a reserved repair releases its worker and refunds the removed piece once
+ok 38 - Removing a reserved repair releases its worker and refunds the removed piece once
+  ---
+  duration_ms: 4.6632
+  ...
+# Subtest: one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths
+ok 39 - one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths
+  ---
+  duration_ms: 11956.0979
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 37962.3469

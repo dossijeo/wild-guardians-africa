@@ -1,0 +1,815 @@
+TAP version 13
+# (node:14296) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+ok 1 - QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+  ---
+  duration_ms: 9.8398
+  ...
+# Subtest: QA-039: confirming zero staff advances a recoverable farm without fictitious production
+ok 2 - QA-039: confirming zero staff advances a recoverable farm without fictitious production
+  ---
+  duration_ms: 18.5914
+  ...
+# Subtest: QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+ok 3 - QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+  ---
+  duration_ms: 11.0913
+  ...
+# Subtest: QA-041: scarce staff cover the most populated centers before assigning seconds
+ok 4 - QA-041: scarce staff cover the most populated centers before assigning seconds
+  ---
+  duration_ms: 4.6506
+  ...
+# Subtest: QA-042: tied scarcity uses creation order regardless of structure array order
+ok 5 - QA-042: tied scarcity uses creation order regardless of structure array order
+  ---
+  duration_ms: 1.2136
+  ...
+# Subtest: QA-042: equal weights and creation timestamps break ties by persistent ID
+ok 6 - QA-042: equal weights and creation timestamps break ties by persistent ID
+  ---
+  duration_ms: 14.0314
+  ...
+# Subtest: QA-043: eight workers divide 3/3/2 among empty centers and create no work
+ok 7 - QA-043: eight workers divide 3/3/2 among empty centers and create no work
+  ---
+  duration_ms: 79.4417
+  ...
+# Subtest: QA-044: species price, growth and water count do not change equal plant weights
+ok 8 - QA-044: species price, growth and water count do not change equal plant weights
+  ---
+  duration_ms: 2.74
+  ...
+# Subtest: QA-045: vastly different village populations do not introduce a village-first quota
+ok 9 - QA-045: vastly different village populations do not introduce a village-first quota
+  ---
+  duration_ms: 7.9204
+  ...
+# Subtest: QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+ok 10 - QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+  ---
+  duration_ms: 11.9454
+  ...
+# Subtest: QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+ok 11 - QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+  ---
+  duration_ms: 181.1925
+  ...
+# Subtest: QA-052/143: founding changes territorial center assignment while current staff return to their original village
+ok 12 - QA-052/143: founding changes territorial center assignment while current staff return to their original village
+  ---
+  duration_ms: 137.4859
+  ...
+# Subtest: QA-052: territorial choice respects full detours and excludes unreachable village routes
+ok 13 - QA-052: territorial choice respects full detours and excludes unreachable village routes
+  ---
+  duration_ms: 1.4729
+  ...
+# (node:39360) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 14 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 206.3713
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 15 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.5537
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 16 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 4.7804
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 17 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 3.5293
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 18 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 1.118
+  ...
+# Subtest: batched Growth preserves exact accounting at observation boundaries and entitlement caps
+ok 19 - batched Growth preserves exact accounting at observation boundaries and entitlement caps
+  ---
+  duration_ms: 8.1551
+  ...
+# Subtest: new task observers see flushed Growth consumption
+ok 20 - new task observers see flushed Growth consumption
+  ---
+  duration_ms: 0.9384
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 21 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 0.8077
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 22 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 31.6571
+  ...
+# Subtest: one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+ok 23 - one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+  ---
+  duration_ms: 0.5436
+  ...
+# Subtest: fractional Growth preserves agricultural event water penalties at the next real checkpoint
+ok 24 - fractional Growth preserves agricultural event water penalties at the next real checkpoint
+  ---
+  duration_ms: 0.2085
+  ...
+# Subtest: expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+ok 25 - expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+  ---
+  duration_ms: 0.4677
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 26 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 66.212
+  ...
+# (node:6428) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: score rewards outcomes proportionally, never absolute farm size or spell casts
+ok 27 - score rewards outcomes proportionally, never absolute farm size or spell casts
+  ---
+  duration_ms: 3.4407
+  ...
+# Subtest: productive investment days score without requiring increasing sales
+ok 28 - productive investment days score without requiring increasing sales
+  ---
+  duration_ms: 0.2615
+  ...
+# Subtest: diminishing returns use live blessing count; losses are not multiplied or penalized twice
+ok 29 - diminishing returns use live blessing count; losses are not multiplied or penalized twice
+  ---
+  duration_ms: 0.2365
+  ...
+# Subtest: legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+ok 30 - legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+  ---
+  duration_ms: 3.1824
+  ...
+# Subtest: banked charges do not overflow and survive bad management until explicitly spent
+ok 31 - banked charges do not overflow and survive bad management until explicitly spent
+  ---
+  duration_ms: 0.2689
+  ...
+# Subtest: delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+ok 32 - delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+  ---
+  duration_ms: 0.3621
+  ...
+# Subtest: invalid persisted progress is rejected
+ok 33 - invalid persisted progress is rejected
+  ---
+  duration_ms: 0.3469
+  ...
+# Subtest: real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+ok 34 - real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+  ---
+  duration_ms: 8.5652
+  ...
+# Subtest: 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+ok 35 - 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+  ---
+  duration_ms: 0.5674
+  ...
+# (node:26284) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Wild Engine worker leases release a blessed target and deliver a real neighboring crop with a single bonus
+ok 36 - Wild Engine worker leases release a blessed target and deliver a real neighboring crop with a single bonus
+  ---
+  duration_ms: 960.9847
+  ...
+# (node:47344) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every original crop can awaken without changing its identity or geometry, watering or harvest
+ok 37 - every original crop can awaken without changing its identity or geometry, watering or harvest
+  ---
+  duration_ms: 12.231
+  ...
+# Subtest: invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+ok 38 - invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+  ---
+  duration_ms: 3.4066
+  ...
+# Subtest: transforming an assigned task releases its worker and source can never reenter a work queue
+ok 39 - transforming an assigned task releases its worker and source can never reenter a work queue
+  ---
+  duration_ms: 69.9963
+  ...
+# Subtest: one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+ok 40 - one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+  ---
+  duration_ms: 21.8866
+  ...
+# Subtest: passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+ok 41 - passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+  ---
+  duration_ms: 1.3258
+  ...
+# Subtest: active Grow entitlement consumption remains separate from passive growth
+ok 42 - active Grow entitlement consumption remains separate from passive growth
+  ---
+  duration_ms: 1.6101
+  ...
+# Subtest: harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+ok 43 - harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+  ---
+  duration_ms: 36.9543
+  ...
+# Subtest: passive harvest does not multiply worker, event or active Multiply awards
+ok 44 - passive harvest does not multiply worker, event or active Multiply awards
+  ---
+  duration_ms: 19.9879
+  ...
+# Subtest: sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+ok 45 - sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+  ---
+  duration_ms: 1.6115
+  ...
+# Subtest: fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+ok 46 - fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+  ---
+  duration_ms: 0.8
+  ...
+# Subtest: real area resolver includes a blessed source and applies peripheral damage once per attack
+ok 47 - real area resolver includes a blessed source and applies peripheral damage once per attack
+  ---
+  duration_ms: 3.0315
+  ...
+# Subtest: a permanent source alone cannot generate harvests or automatic income without workers
+ok 48 - a permanent source alone cannot generate harvests or automatic income without workers
+  ---
+  duration_ms: 35.8145
+  ...
+# Subtest: active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+ok 49 - active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+  ---
+  duration_ms: 2.2847
+  ...
+# Subtest: malformed blessing provenance, censes and impossible source tasks cannot be saved
+ok 50 - malformed blessing provenance, censes and impossible source tasks cannot be saved
+  ---
+  duration_ms: 1.4146
+  ...
+# (node:31388) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Wild Engine contact preserves target selection and applies own/adjacent wall protection to the actual attack
+ok 51 - real Wild Engine contact preserves target selection and applies own/adjacent wall protection to the actual attack
+  ---
+  duration_ms: 7638.0352
+  ...
+# (node:48720) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+ok 52 - all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+  ---
+  duration_ms: 21.0502
+  ...
+# Subtest: only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+ok 53 - only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+  ---
+  duration_ms: 2.2306
+  ...
+# Subtest: the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+ok 54 - the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+  ---
+  duration_ms: 1.3207
+  ...
+# Subtest: ordinary paid repair retains the blessing and never creates regeneration
+ok 55 - ordinary paid repair retains the blessing and never creates regeneration
+  ---
+  duration_ms: 52.5189
+  ...
+# Subtest: destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+ok 56 - destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+  ---
+  duration_ms: 47.1241
+  ...
+# Subtest: manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+ok 57 - manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+  ---
+  duration_ms: 2.7622
+  ...
+# Subtest: unblessed walls and centers retain their original damage model
+ok 58 - unblessed walls and centers retain their original damage model
+  ---
+  duration_ms: 0.9874
+  ...
+# (node:40512) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every crop dies from one direct point, without repeated destruction
+ok 59 - every crop dies from one direct point, without repeated destruction
+  ---
+  duration_ms: 7.7923
+  ...
+# Subtest: two real half-point peripheral impacts are needed; reload is passive
+ok 60 - two real half-point peripheral impacts are needed; reload is passive
+  ---
+  duration_ms: 4.2091
+  ...
+# Subtest: old half-point wounds preserve their proportion only at the next physical impact
+ok 61 - old half-point wounds preserve their proportion only at the next physical impact
+  ---
+  duration_ms: 3.0341
+  ...
+# Subtest: introductory quota protects remaining plants and survives a reload
+ok 62 - introductory quota protects remaining plants and survives a reload
+  ---
+  duration_ms: 0.359
+  ...
+# Subtest: unknown resistance and unrepresentable wounds cannot enter saved state
+ok 63 - unknown resistance and unrepresentable wounds cannot enter saved state
+  ---
+  duration_ms: 1.255
+  ...
+# (node:1424) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A blocked route releases its worker and a topology change reopens the retained task
+ok 64 - A blocked route releases its worker and a topology change reopens the retained task
+  ---
+  duration_ms: 15.9672
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 65 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 21.9341
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 66 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 5.7037
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 67 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 12.3083
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 68 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 3.7755
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state
+ok 69 - Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state
+  ---
+  duration_ms: 9.7014
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 70 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 0.9332
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1500
+ok 71 - 30 canonical combinations validate and each new game starts isolated at 1500
+  ---
+  duration_ms: 2.2447
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 72 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.5757
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 73 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.307
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 74 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 34.7302
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 75 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.0499
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 76 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.1394
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 77 - New midday center does not move plants or employees
+  ---
+  duration_ms: 0.9199
+  ...
+# Subtest: Day-one Growth targets one crop, rejects overlap and has no cooldown after expiry
+ok 78 - Day-one Growth targets one crop, rejects overlap and has no cooldown after expiry
+  ---
+  duration_ms: 13.0142
+  ...
+# Subtest: First nights introduce mandatory warthog and hyena even with zero attraction
+ok 79 - First nights introduce mandatory warthog and hyena even with zero attraction
+  ---
+  duration_ms: 2.1943
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 80 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.6192
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 81 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 4.9853
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 82 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 3.0791
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 83 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 0.7137
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 84 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.5712
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 85 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.5161
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 86 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.351
+  ...
+# (node:8808) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 87 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 8.8487
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 88 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 3.1104
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 89 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 1.8732
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 90 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 1.216
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 91 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 1.2771
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 92 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 1.0216
+  ...
+# Subtest: attack radius cannot damage the central crop through an intact wall
+ok 93 - attack radius cannot damage the central crop through an intact wall
+  ---
+  duration_ms: 2.2679
+  ...
+# Subtest: a committed raid attack damages only crops on its side of a wall until the wall is ruined
+ok 94 - a committed raid attack damages only crops on its side of a wall until the wall is ruined
+  ---
+  duration_ms: 4.4162
+  ...
+# Subtest: an animal cannot hit a crop through a wall seam narrower than its body
+ok 95 - an animal cannot hit a crop through a wall seam narrower than its body
+  ---
+  duration_ms: 2.429
+  ...
+# Subtest: a wall-to-building seam narrower than the animal blocks crop splash
+ok 96 - a wall-to-building seam narrower than the animal blocks crop splash
+  ---
+  duration_ms: 2.3453
+  ...
+# Subtest: a wide wall opening remains attackable for an animal that can fit through it
+ok 97 - a wide wall opening remains attackable for an animal that can fit through it
+  ---
+  duration_ms: 0.963
+  ...
+# Subtest: a committed introductory strike cannot exploit a narrow seam after save and load
+ok 98 - a committed introductory strike cannot exploit a narrow seam after save and load
+  ---
+  duration_ms: 5.4876
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 99 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 0.9801
+  ...
+# Subtest: an introductory crop strike cannot pass through an intact wall
+ok 100 - an introductory crop strike cannot pass through an intact wall
+  ---
+  duration_ms: 1.8262
+  ...
+# Subtest: crop approach selection rejects a reachable position whose attack ray crosses a wall
+ok 101 - crop approach selection rejects a reachable position whose attack ray crosses a wall
+  ---
+  duration_ms: 1.868
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 102 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 0.7611
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 103 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 1.1058
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 104 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 1.084
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 105 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 1.1679
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 106 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 0.9818
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 107 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 13.924
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 108 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 3.186
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt0.1
+ok 109 - native warthog profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 74.0447
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt1
+ok 110 - native warthog profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 63.0594
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt0.1
+ok 111 - native hyena profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 62.8946
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt1
+ok 112 - native hyena profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 46.5429
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt0.1
+ok 113 - native buffalo profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 33.0598
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt1
+ok 114 - native buffalo profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 30.876
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt0.1
+ok 115 - native lion profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 33.3122
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt1
+ok 116 - native lion profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 31.2151
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt0.1
+ok 117 - native rhino profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 27.8161
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt1
+ok 118 - native rhino profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 27.1633
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 119 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 1004.1547
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 120 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 42.5581
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+ok 121 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 10.9033
+  ...
+# Subtest: live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+ok 122 - live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+  ---
+  duration_ms: 1.8265
+  ...
+# Subtest: maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+ok 123 - maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+  ---
+  duration_ms: 2.0593
+  ...
+# (node:42092) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Desierto 983 day 6 strikes the crop-facing perimeter deterministically
+ok 124 - Desierto 983 day 6 strikes the crop-facing perimeter deterministically
+  ---
+  duration_ms: 5239.9695
+  ...
+# Subtest: Desierto 983 day 7 strikes the crop-facing perimeter deterministically
+ok 125 - Desierto 983 day 7 strikes the crop-facing perimeter deterministically
+  ---
+  duration_ms: 5353.8085
+  ...
+# (node:16328) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: seed 712: native paid command replay survives two nights unchanged by VFX/music/global random draws
+ok 126 - seed 712: native paid command replay survives two nights unchanged by VFX/music/global random draws
+  ---
+  duration_ms: 13725.2535
+  ...
+# Subtest: seed 781: native paid command replay survives two nights unchanged by VFX/music/global random draws
+ok 127 - seed 781: native paid command replay survives two nights unchanged by VFX/music/global random draws
+  ---
+  duration_ms: 8096.9951
+  ...
+# Subtest: cached wall polygons exactly retain original corners and swept collision decisions
+ok 128 - cached wall polygons exactly retain original corners and swept collision decisions
+  ---
+  duration_ms: 68.0468
+  ...
+# Subtest: editing every geometry input invalidates cached wall geometry; gate pose does not change rigid animal envelope
+ok 129 - editing every geometry input invalidates cached wall geometry; gate pose does not change rigid animal envelope
+  ---
+  duration_ms: 0.9897
+  ...
+# Subtest: arbitrary radii cannot accumulate an unbounded per-wall polygon cache
+ok 130 - arbitrary radii cannot accumulate an unbounded per-wall polygon cache
+  ---
+  duration_ms: 2.142
+  ...
+# (node:25468) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wall quotes ignore dead crop geometry while preserving the same plan
+ok 131 - wall quotes ignore dead crop geometry while preserving the same plan
+  ---
+  duration_ms: 1045.9697
+  ...
+# Subtest: a wall stroke leaves its closing piece unbuilt if no gate is physically valid
+ok 132 - a wall stroke leaves its closing piece unbuilt if no gate is physically valid
+  ---
+  duration_ms: 931.1599
+  ...
+# Subtest: a single-piece rebuild cannot seal a room without a valid automatic gate
+ok 133 - a single-piece rebuild cannot seal a room without a valid automatic gate
+  ---
+  duration_ms: 8.014
+  ...
+# Subtest: an ungated secondary room containing a worker keeps a gap even if the first has a gate
+ok 134 - an ungated secondary room containing a worker keeps a gap even if the first has a gate
+  ---
+  duration_ms: 7.3782
+  ...
+# Subtest: native movement returns an enclosed worker through the gate and clears next-day hiring
+ok 135 - native movement returns an enclosed worker through the gate and clears next-day hiring
+  ---
+  duration_ms: 1463.6461
+  ...
+# (node:40824) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 136 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 2.234
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 137 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 3.7054
+  ...
+# Subtest: A ruined wall no longer hides a physically open stroke slot
+ok 138 - A ruined wall no longer hides a physically open stroke slot
+  ---
+  duration_ms: 0.5246
+  ...
+# Subtest: rebuilding a ruined module removes its stale repair target atomically
+ok 139 - rebuilding a ruined module removes its stale repair target atomically
+  ---
+  duration_ms: 15.9122
+  ...
+# Subtest: a single paid wall also replaces a coincident ruin
+ok 140 - a single paid wall also replaces a coincident ruin
+  ---
+  duration_ms: 2.0497
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 141 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 17.5852
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 142 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 8.9447
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 143 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 5.6939
+  ...
+# Subtest: unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge
+ok 144 - unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge
+  ---
+  duration_ms: 7.6637
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap with its refund and without replacement
+ok 145 - Removing an automatic gate opens a persistent gap with its refund and without replacement
+  ---
+  duration_ms: 5.8035
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 146 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 1.354
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 147 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 2.5398
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 148 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 2.6231
+  ...
+# Subtest: Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+ok 149 - Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+  ---
+  duration_ms: 12.2048
+  ...
+# Subtest: Removing a reserved repair releases its worker and refunds the removed piece once
+ok 150 - Removing a reserved repair releases its worker and refunds the removed piece once
+  ---
+  duration_ms: 2.3637
+  ...
+# Subtest: one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths
+ok 151 - one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths
+  ---
+  duration_ms: 6767.0189
+  ...
+# (node:38144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: paid wall refund at 0 damage cues income once without changing the ledger
+ok 152 - paid wall refund at 0 damage cues income once without changing the ledger
+  ---
+  duration_ms: 27.8244
+  ...
+# Subtest: paid wall refund at 0.4 damage cues income once without changing the ledger
+ok 153 - paid wall refund at 0.4 damage cues income once without changing the ledger
+  ---
+  duration_ms: 2.3419
+  ...
+# Subtest: zero, missing and invalid refunds do not cue income; crop sale keeps its specific sound
+ok 154 - zero, missing and invalid refunds do not cue income; crop sale keeps its specific sound
+  ---
+  duration_ms: 0.4366
+  ...
+# Subtest: pending refund decoding expires on pause, deadline and disposal
+ok 155 - pending refund decoding expires on pause, deadline and disposal
+  ---
+  duration_ms: 0.6937
+  ...
+1..155
+# tests 155
+# suites 0
+# pass 155
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 23630.2287

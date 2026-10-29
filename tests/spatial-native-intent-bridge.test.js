@@ -384,6 +384,14 @@ test('loading during a committed strike applies its damage frame exactly once',
     event.type==='AnimalLogicalHit'&&event.attackId==='attack-662').length,1);
    const actual=JSON.parse(serialize(game));
    const reference=JSON.parse(serialize(expected));
+   // This reference predates awakening accounting. Preserve its full original
+   // comparison and independently verify the new loss recorded by the hit.
+   if(!reference.awakenings){
+    assert.equal(actual.awakenings.current.losses,1);
+    assert.deepEqual(actual.awakenings.current.lossIds,['plant-373']);
+    assert.equal(actual.awakenings.current.cropValueLost,11);
+    delete actual.awakenings;
+   }
    // A restored session has a fresh navigation revision. Those counters are
    // internal; the confirmed world, event order and RNG must still match.
    for(const state of [actual,reference])for(const animal of state.raid.animals){

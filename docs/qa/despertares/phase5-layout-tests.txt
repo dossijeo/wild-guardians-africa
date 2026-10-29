@@ -1,0 +1,67 @@
+TAP version 13
+# (node:32388) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the HUD reads legacy progress without mutating the save and only enables an available charge
+ok 1 - the HUD reads legacy progress without mutating the save and only enables an available charge
+  ---
+  duration_ms: 6.5951
+  ...
+# Subtest: awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+ok 2 - awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.5724
+  ...
+# Subtest: awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+ok 3 - awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1117
+  ...
+# Subtest: awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+ok 4 - awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1001
+  ...
+# Subtest: awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+ok 5 - awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1027
+  ...
+# Subtest: awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+ok 6 - awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0822
+  ...
+# Subtest: awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+ok 7 - awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1035
+  ...
+# Subtest: awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+ok 8 - awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1483
+  ...
+# Subtest: awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+ok 9 - awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.2356
+  ...
+# Subtest: awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+ok 10 - awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1463
+  ...
+# Subtest: awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+ok 11 - awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1267
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 295.5817

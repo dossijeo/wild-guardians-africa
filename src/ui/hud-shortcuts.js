@@ -1,8 +1,9 @@
-// Native HUD: 1 home, 2 build, 3 grow, 4 magic, H village, P menu.
+// Native HUD: 1 home, 2 build, 3 grow, 4 magic, 5 awakening, H village, P menu.
 // Dispatch through the live buttons so their disabled state and handlers apply.
 const selectors={
   '1':'[data-menu="home"]','2':'[data-menu="build"]',
   '3':'[data-menu="grow"]','4':'[data-menu="magic"]',
+  '5':'#awakeningButton',
   h:'[data-menu="home"]',p:'#menuButton'
 };
 export function hudShortcut(event,root,{enabled=true}={}){

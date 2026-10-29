@@ -1,0 +1,10 @@
+
+> wild-guardians-africa@0.1.0 verify:audio-runtime
+> node tools/verify_audio_runtime.mjs && node tools/verify_sfx_runtime.mjs
+
+(node:26884) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"musicFiles":21,"indexFiles":2,"windows":550,"sourceBytes":52856733,"runtimeBytes":41269675,"savedBytes":11587058,"sourceHashesValid":true,"singleFileForWindowsAndCompatibility":true}
+(node:23416) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"sfx":126,"metadataFiles":3,"hashesAndExportsValid":true,"sourceBytes":6593968,"runtimeBytes":4982110}

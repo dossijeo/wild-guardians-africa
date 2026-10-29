@@ -1,0 +1,265 @@
+TAP version 13
+# (node:16704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the HUD reads legacy progress without mutating the save and only enables an available charge
+ok 1 - the HUD reads legacy progress without mutating the save and only enables an available charge
+  ---
+  duration_ms: 3.1675
+  ...
+# Subtest: awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+ok 2 - awakening layout fits 1280×720, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.381
+  ...
+# Subtest: awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+ok 3 - awakening layout fits 1024×768, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0874
+  ...
+# Subtest: awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+ok 4 - awakening layout fits 844×390, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0877
+  ...
+# Subtest: awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+ok 5 - awakening layout fits 740×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0759
+  ...
+# Subtest: awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+ok 6 - awakening layout fits 640×360, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0671
+  ...
+# Subtest: awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+ok 7 - awakening layout fits 568×320, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.0787
+  ...
+# Subtest: awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+ok 8 - awakening layout fits 390×844, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1161
+  ...
+# Subtest: awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+ok 9 - awakening layout fits 360×640, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.602
+  ...
+# Subtest: awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+ok 10 - awakening layout fits 320×568, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.1285
+  ...
+# Subtest: awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+ok 11 - awakening layout fits 768×1024, preserves the stats and leaves the tutorial reserve clear
+  ---
+  duration_ms: 0.108
+  ...
+# (node:38344) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: score rewards outcomes proportionally, never absolute farm size or spell casts
+ok 12 - score rewards outcomes proportionally, never absolute farm size or spell casts
+  ---
+  duration_ms: 1.8347
+  ...
+# Subtest: productive investment days score without requiring increasing sales
+ok 13 - productive investment days score without requiring increasing sales
+  ---
+  duration_ms: 0.1469
+  ...
+# Subtest: diminishing returns use live blessing count; losses are not multiplied or penalized twice
+ok 14 - diminishing returns use live blessing count; losses are not multiplied or penalized twice
+  ---
+  duration_ms: 0.184
+  ...
+# Subtest: legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+ok 15 - legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+  ---
+  duration_ms: 3.5045
+  ...
+# Subtest: banked charges do not overflow and survive bad management until explicitly spent
+ok 16 - banked charges do not overflow and survive bad management until explicitly spent
+  ---
+  duration_ms: 0.2594
+  ...
+# Subtest: delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+ok 17 - delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+  ---
+  duration_ms: 0.3403
+  ...
+# Subtest: invalid persisted progress is rejected
+ok 18 - invalid persisted progress is rejected
+  ---
+  duration_ms: 0.2931
+  ...
+# Subtest: real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+ok 19 - real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+  ---
+  duration_ms: 6.9947
+  ...
+# Subtest: 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+ok 20 - 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+  ---
+  duration_ms: 0.3065
+  ...
+# (node:47112) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every original crop can awaken without changing its identity or geometry, watering or harvest
+ok 21 - every original crop can awaken without changing its identity or geometry, watering or harvest
+  ---
+  duration_ms: 9.5316
+  ...
+# Subtest: invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+ok 22 - invalid, paused and repeated commands never consume a charge, and replay never grants another blessing
+  ---
+  duration_ms: 2.6951
+  ...
+# Subtest: transforming an assigned task releases its worker and source can never reenter a work queue
+ok 23 - transforming an assigned task releases its worker and source can never reenter a work queue
+  ---
+  duration_ms: 54.3581
+  ...
+# Subtest: one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+ok 24 - one source influences the four nearest grid neighbors, overlap is capped and its index is reused
+  ---
+  duration_ms: 13.9544
+  ...
+# Subtest: passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+ok 25 - passive growth is 20% faster, waits for manual watering and increases tolerance without spending spell power
+  ---
+  duration_ms: 0.8676
+  ...
+# Subtest: active Grow entitlement consumption remains separate from passive growth
+ok 26 - active Grow entitlement consumption remains separate from passive growth
+  ---
+  duration_ms: 1.0424
+  ...
+# Subtest: harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+ok 27 - harvest gains floor(20% base) once, survives pickup reload and requires paid physical delivery
+  ---
+  duration_ms: 22.8076
+  ...
+# Subtest: passive harvest does not multiply worker, event or active Multiply awards
+ok 28 - passive harvest does not multiply worker, event or active Multiply awards
+  ---
+  duration_ms: 16.6785
+  ...
+# Subtest: sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+ok 29 - sources remain physical raid targets, survive an incidental hit and disappear immediately on sustained damage
+  ---
+  duration_ms: 1.5527
+  ...
+# Subtest: fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+ok 30 - fractional peripheral area impacts and dangerous direct attacks use the shared two-HP model
+  ---
+  duration_ms: 1.143
+  ...
+# Subtest: real area resolver includes a blessed source and applies peripheral damage once per attack
+ok 31 - real area resolver includes a blessed source and applies peripheral damage once per attack
+  ---
+  duration_ms: 1.8659
+  ...
+# Subtest: a permanent source alone cannot generate harvests or automatic income without workers
+ok 32 - a permanent source alone cannot generate harvests or automatic income without workers
+  ---
+  duration_ms: 22.5037
+  ...
+# Subtest: active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+ok 33 - active spell commitments on a newly blessed source are forfeited without refilling budgets or minting a crate
+  ---
+  duration_ms: 1.1763
+  ...
+# Subtest: malformed blessing provenance, censes and impossible source tasks cannot be saved
+ok 34 - malformed blessing provenance, censes and impossible source tasks cannot be saved
+  ---
+  duration_ms: 0.9077
+  ...
+# (node:47776) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+ok 35 - all existing wall materials and gates get exactly 25% protection without changing collision, HP capacity or layout
+  ---
+  duration_ms: 15.167
+  ...
+# Subtest: only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+ok 36 - only directly connected segments receive 10%: near isolated pieces and the next chain link receive none
+  ---
+  duration_ms: 2.8394
+  ...
+# Subtest: the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+ok 37 - the same physical segment graph supports T junctions, crossings, scaled modules and gate widths
+  ---
+  duration_ms: 2.6275
+  ...
+# Subtest: ordinary paid repair retains the blessing and never creates regeneration
+ok 38 - ordinary paid repair retains the blessing and never creates regeneration
+  ---
+  duration_ms: 31.0193
+  ...
+# Subtest: destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+ok 39 - destruction and rebuilding never restore a lost blessing, reduce progress or remove another source
+  ---
+  duration_ms: 16.9735
+  ...
+# Subtest: manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+ok 40 - manual removal returns only the ordinary material refund, loses the source once and updates neighbors
+  ---
+  duration_ms: 1.4846
+  ...
+# Subtest: unblessed walls and centers retain their original damage model
+ok 41 - unblessed walls and centers retain their original damage model
+  ---
+  duration_ms: 0.6318
+  ...
+# (node:9404) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+ok 42 - resting sparks share one draw and stable buffers; transformation is a brief native VFX with no extra world lights
+  ---
+  duration_ms: 25.868
+  ...
+# Subtest: source damage is localized, destruction fades sparks and restored sources do not replay transformations
+ok 43 - source damage is localized, destruction fades sparks and restored sources do not replay transformations
+  ---
+  duration_ms: 3.1792
+  ...
+# Subtest: object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+ok 44 - object glow composes after grading, supports per-instance eligibility, and leaves ordinary objects untouched
+  ---
+  duration_ms: 3.1476
+  ...
+# Subtest: native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+ok 45 - native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+  ---
+  duration_ms: 1.8083
+  ...
+# Subtest: typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+ok 46 - typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+  ---
+  duration_ms: 0.2952
+  ...
+# Subtest: buttons becoming disabled or inert are observed at dispatch time and may become usable again
+ok 47 - buttons becoming disabled or inert are observed at dispatch time and may become usable again
+  ---
+  duration_ms: 0.2045
+  ...
+# Subtest: village placement feedback cannot fall through to an absent spell lookup
+ok 48 - village placement feedback cannot fall through to an absent spell lookup
+  ---
+  duration_ms: 1.1638
+  ...
+# Subtest: reloading recovers a disposed-world runtime error while preserving blocking gameplay pauses
+ok 49 - reloading recovers a disposed-world runtime error while preserving blocking gameplay pauses
+  ---
+  duration_ms: 0.6684
+  ...
+1..49
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 503.3995

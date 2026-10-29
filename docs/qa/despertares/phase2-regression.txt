@@ -1,0 +1,522 @@
+TAP version 13
+# (node:48880) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 1 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 175.028
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 2 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.5739
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 3 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 4.8797
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 4 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 7.3522
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 5 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.51
+  ...
+# Subtest: batched Growth preserves exact accounting at observation boundaries and entitlement caps
+ok 6 - batched Growth preserves exact accounting at observation boundaries and entitlement caps
+  ---
+  duration_ms: 9.8028
+  ...
+# Subtest: new task observers see flushed Growth consumption
+ok 7 - new task observers see flushed Growth consumption
+  ---
+  duration_ms: 1.4483
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 8 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 0.9091
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 9 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 30.5559
+  ...
+# Subtest: one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+ok 10 - one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+  ---
+  duration_ms: 0.4131
+  ...
+# Subtest: fractional Growth preserves agricultural event water penalties at the next real checkpoint
+ok 11 - fractional Growth preserves agricultural event water penalties at the next real checkpoint
+  ---
+  duration_ms: 0.2435
+  ...
+# Subtest: expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+ok 12 - expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+  ---
+  duration_ms: 0.6203
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 13 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 53.9925
+  ...
+# (node:41540) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: score rewards outcomes proportionally, never absolute farm size or spell casts
+ok 14 - score rewards outcomes proportionally, never absolute farm size or spell casts
+  ---
+  duration_ms: 2.1615
+  ...
+# Subtest: productive investment days score without requiring increasing sales
+ok 15 - productive investment days score without requiring increasing sales
+  ---
+  duration_ms: 0.1672
+  ...
+# Subtest: diminishing returns use live blessing count; losses are not multiplied or penalized twice
+ok 16 - diminishing returns use live blessing count; losses are not multiplied or penalized twice
+  ---
+  duration_ms: 0.2106
+  ...
+# Subtest: legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+ok 17 - legacy migration never awards historical days; daily evaluation and opportunity settlements are idempotent across reload
+  ---
+  duration_ms: 3.4794
+  ...
+# Subtest: banked charges do not overflow and survive bad management until explicitly spent
+ok 18 - banked charges do not overflow and survive bad management until explicitly spent
+  ---
+  duration_ms: 0.3315
+  ...
+# Subtest: delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+ok 19 - delivery attribution uses settled ledger income exactly once, ignoring unrelated coin transfers
+  ---
+  duration_ms: 0.4089
+  ...
+# Subtest: invalid persisted progress is rejected
+ok 20 - invalid persisted progress is rejected
+  ---
+  duration_ms: 0.3589
+  ...
+# Subtest: real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+ok 21 - real dawn evaluates the closing day once and reload at dawn cannot mint another reward
+  ---
+  duration_ms: 6.7881
+  ...
+# Subtest: 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+ok 22 - 100-night deterministic cadence screen distinguishes competent, excellent and struggling management
+  ---
+  duration_ms: 0.3413
+  ...
+# (node:21948) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every crop dies from one direct point, without repeated destruction
+ok 23 - every crop dies from one direct point, without repeated destruction
+  ---
+  duration_ms: 6.3975
+  ...
+# Subtest: two real half-point peripheral impacts are needed; reload is passive
+ok 24 - two real half-point peripheral impacts are needed; reload is passive
+  ---
+  duration_ms: 3.5208
+  ...
+# Subtest: old half-point wounds preserve their proportion only at the next physical impact
+ok 25 - old half-point wounds preserve their proportion only at the next physical impact
+  ---
+  duration_ms: 2.6542
+  ...
+# Subtest: introductory quota protects remaining plants and survives a reload
+ok 26 - introductory quota protects remaining plants and survives a reload
+  ---
+  duration_ms: 0.4577
+  ...
+# Subtest: unknown resistance and unrepresentable wounds cannot enter saved state
+ok 27 - unknown resistance and unrepresentable wounds cannot enter saved state
+  ---
+  duration_ms: 1.5931
+  ...
+# (node:11884) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lifecycle brackets watering and work changes, distinguishes pickup from settled delivery and retains terminal evidence across reloads
+ok 28 - lifecycle brackets watering and work changes, distinguishes pickup from settled delivery and retains terminal evidence across reloads
+  ---
+  duration_ms: 3.6622
+  ...
+# Subtest: optional higher staffing pays normal wages and the default policy is reproducible with current navigation
+ok 29 - optional higher staffing pays normal wages and the default policy is reproducible with current navigation
+  ---
+  duration_ms: 10465.8195
+  ...
+# Subtest: a crop with pending watering is recorded as destroyed only after actual hit-state changes
+ok 30 - a crop with pending watering is recorded as destroyed only after actual hit-state changes
+  ---
+  duration_ms: 1.0067
+  ...
+# Subtest: native paid farming with lifecycle observation preserves the complete state and requires physical crate delivery
+ok 31 - native paid farming with lifecycle observation preserves the complete state and requires physical crate delivery
+  ---
+  duration_ms: 7387.1688
+  ...
+# (node:44176) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A blocked route releases its worker and a topology change reopens the retained task
+ok 32 - A blocked route releases its worker and a topology change reopens the retained task
+  ---
+  duration_ms: 14.2137
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 33 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 17.7887
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 34 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 6.0666
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 35 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 7.5696
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 36 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 3.55
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state
+ok 37 - Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state
+  ---
+  duration_ms: 10.8511
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 38 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.0064
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1500
+ok 39 - 30 canonical combinations validate and each new game starts isolated at 1500
+  ---
+  duration_ms: 2.2707
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 40 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.7049
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 41 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.332
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 42 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 39.8492
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 43 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.459
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 44 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.2685
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 45 - New midday center does not move plants or employees
+  ---
+  duration_ms: 0.9657
+  ...
+# Subtest: Day-one Growth targets one crop, rejects overlap and has no cooldown after expiry
+ok 46 - Day-one Growth targets one crop, rejects overlap and has no cooldown after expiry
+  ---
+  duration_ms: 11.4945
+  ...
+# Subtest: First nights introduce mandatory warthog and hyena even with zero attraction
+ok 47 - First nights introduce mandatory warthog and hyena even with zero attraction
+  ---
+  duration_ms: 1.4953
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 48 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 0.9653
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 49 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 3.1116
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 50 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 4.4146
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 51 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 0.9569
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 52 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.9743
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 53 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.6959
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 54 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4808
+  ...
+# (node:44832) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pointer history stays bounded, ordered and independent of moving world anchors
+ok 55 - pointer history stays bounded, ordered and independent of moving world anchors
+  ---
+  duration_ms: 2.4462
+  ...
+# Subtest: pointer velocity remains finite for co-timed samples and very fast swipes
+ok 56 - pointer velocity remains finite for co-timed samples and very fast swipes
+  ---
+  duration_ms: 0.346
+  ...
+# Subtest: passive mouse tracking records motion before an event without claiming input
+ok 57 - passive mouse tracking records motion before an event without claiming input
+  ---
+  duration_ms: 0.7141
+  ...
+# Subtest: camera stability blocks spawning without resetting meaningful-action idle
+ok 58 - camera stability blocks spawning without resetting meaningful-action idle
+  ---
+  duration_ms: 1.5905
+  ...
+# Subtest: all blocked states and Off prevent opportunities; cooldown prevents rapid repeat
+ok 59 - all blocked states and Off prevent opportunities; cooldown prevents rapid repeat
+  ---
+  duration_ms: 0.9323
+  ...
+# Subtest: active interruption cancels with no ignored streak and no reward
+ok 60 - active interruption cancels with no ignored streak and no reward
+  ---
+  duration_ms: 0.265
+  ...
+# Subtest: idle rescue includes management during an event and counts each spawn once
+ok 61 - idle rescue includes management during an event and counts each spawn once
+  ---
+  duration_ms: 0.4374
+  ...
+# Subtest: ignored streak halves probability and engagement recovers gradually
+ok 62 - ignored streak halves probability and engagement recovers gradually
+  ---
+  duration_ms: 0.2835
+  ...
+# Subtest: director RNG is independent of simulation RNG and resumes from persisted state
+ok 63 - director RNG is independent of simulation RNG and resumes from persisted state
+  ---
+  duration_ms: 0.3717
+  ...
+# Subtest: microevent randomness and outcomes do not invalidate planning-worker keys or payloads
+ok 64 - microevent randomness and outcomes do not invalidate planning-worker keys or payloads
+  ---
+  duration_ms: 2.3084
+  ...
+# Subtest: day/night compatibility and nuisance frequency cap
+ok 65 - day/night compatibility and nuisance frequency cap
+  ---
+  duration_ms: 0.4925
+  ...
+# Subtest: seeds settle once using existing coins and production-derived daily cap
+ok 66 - seeds settle once using existing coins and production-derived daily cap
+  ---
+  duration_ms: 0.2195
+  ...
+# Subtest: no income, no economic reward; fireflies never alter magic
+ok 67 - no income, no economic reward; fireflies never alter magic
+  ---
+  duration_ms: 0.197
+  ...
+# Subtest: losses can be disabled independently while seed rewards remain enabled
+ok 68 - losses can be disabled independently while seed rewards remain enabled
+  ---
+  duration_ms: 0.2462
+  ...
+# Subtest: bird loss is local, rounded down, one harvest only and never multiplied
+ok 69 - bird loss is local, rounded down, one harvest only and never multiplied
+  ---
+  duration_ms: 0.3912
+  ...
+# Subtest: pending losses cannot stack and daily reservations are bounded
+ok 70 - pending losses cannot stack and daily reservations are bounded
+  ---
+  duration_ms: 0.3168
+  ...
+# Subtest: delayed harvests share a settlement-day cap as well as reservation caps
+ok 71 - delayed harvests share a settlement-day cap as well as reservation caps
+  ---
+  duration_ms: 0.5631
+  ...
+# Subtest: invalid or destroyed targets, cancellations, disabled economics and day rollover have no penalty
+ok 72 - invalid or destroyed targets, cancellations, disabled economics and day rollover have no penalty
+  ---
+  duration_ms: 0.3265
+  ...
+# Subtest: save/load keeps caps, deductions, serial and RNG; abandoned event never pays on load
+ok 73 - save/load keeps caps, deductions, serial and RNG; abandoned event never pays on load
+  ---
+  duration_ms: 2.5472
+  ...
+# Subtest: snapshot rejects malformed microevent ledgers and invalid serial tickets
+ok 74 - snapshot rejects malformed microevent ledgers and invalid serial tickets
+  ---
+  duration_ms: 0.3893
+  ...
+# Subtest: ordinary delivered income excludes microevent credit and resets at dawn
+ok 75 - ordinary delivered income excludes microevent credit and resets at dawn
+  ---
+  duration_ms: 0.1563
+  ...
+# Subtest: hover gives physical reaction but cannot complete; hold works at 30/60/120 Hz
+ok 76 - hover gives physical reaction but cannot complete; hold works at 30/60/120 Hz
+  ---
+  duration_ms: 782.4703
+  ...
+# Subtest: dispersed birds leave no invisible anchor hitbox and support hold where visible
+ok 77 - dispersed birds leave no invisible anchor hitbox and support hold where visible
+  ---
+  duration_ms: 7.2722
+  ...
+# Subtest: mouse and touch gesture ownership prevents forwarding to core actions
+ok 78 - mouse and touch gesture ownership prevents forwarding to core actions
+  ---
+  duration_ms: 1.6222
+  ...
+# Subtest: a second touch starting on UI keeps UI priority while cancelling the world event
+ok 79 - a second touch starting on UI keeps UI priority while cancelling the world event
+  ---
+  duration_ms: 0.4838
+  ...
+# Subtest: world projection rejects offscreen, behind-camera and UI-covered anchors
+ok 80 - world projection rejects offscreen, behind-camera and UI-covered anchors
+  ---
+  duration_ms: 2.7561
+  ...
+# Subtest: a held old gesture cannot farm a second event after cooldown expires
+ok 81 - a held old gesture cannot farm a second event after cooldown expires
+  ---
+  duration_ms: 1.5103
+  ...
+# Subtest: a stationary physical pointer is reprojected when its world anchor moves
+ok 82 - a stationary physical pointer is reprojected when its world anchor moves
+  ---
+  duration_ms: 0.7495
+  ...
+# Subtest: failed durable reservation never starts particles or pays a reward
+ok 83 - failed durable reservation never starts particles or pays a reward
+  ---
+  duration_ms: 1.0582
+  ...
+# Subtest: core action while spawn persistence is pending cancels its stale ticket
+ok 84 - core action while spawn persistence is pending cancels its stale ticket
+  ---
+  duration_ms: 0.3492
+  ...
+# Subtest: a day-only event does not appear after night falls during its save
+ok 85 - a day-only event does not appear after night falls during its save
+  ---
+  duration_ms: 0.2651
+  ...
+# Subtest: camera movement or contact during durable reservation prevents late appearance
+ok 86 - camera movement or contact during durable reservation prevents late appearance
+  ---
+  duration_ms: 0.7235
+  ...
+# Subtest: a saved reservation with a stable camera starts exactly one event
+ok 87 - a saved reservation with a stable camera starts exactly one event
+  ---
+  duration_ms: 0.3475
+  ...
+# Subtest: final atlas has transparency and nonempty distinct animation frames
+ok 88 - final atlas has transparency and nonempty distinct animation frames
+  ---
+  duration_ms: 78.4811
+  ...
+# Subtest: expanded events remain declarative, cosmetic and use real eligible anchor types
+ok 89 - expanded events remain declarative, cosmetic and use real eligible anchor types
+  ---
+  duration_ms: 0.4853
+  ...
+# Subtest: emergencies share a six-minute cooldown and require their own anchors
+ok 90 - emergencies share a six-minute cooldown and require their own anchors
+  ---
+  duration_ms: 0.3483
+  ...
+# Subtest: expanded atlas contains distinct animated insects and flames with transparent silhouettes
+ok 91 - expanded atlas contains distinct animated insects and flames with transparent silhouettes
+  ---
+  duration_ms: 64.5124
+  ...
+# Subtest: termite reservation validates actual wooden structures and never changes structure health or money
+ok 92 - termite reservation validates actual wooden structures and never changes structure health or money
+  ---
+  duration_ms: 0.5456
+  ...
+# Subtest: the original catalogue has fourteen opportunities, sixteen nuisances and ten emergencies
+ok 93 - the original catalogue has fourteen opportunities, sixteen nuisances and ten emergencies
+  ---
+  duration_ms: 0.257
+  ...
+# Subtest: every expanded catalogue outcome leaves the existing money, magic and health untouched
+ok 94 - every expanded catalogue outcome leaves the existing money, magic and health untouched
+  ---
+  duration_ms: 2.8012
+  ...
+# Subtest: falling, root pulling, orbit and connected body presets provide distinct physical responses
+ok 95 - falling, root pulling, orbit and connected body presets provide distinct physical responses
+  ---
+  duration_ms: 11.473
+  ...
+# Subtest: gathering progress requires the crop or sack destination, with a hold alternative
+ok 96 - gathering progress requires the crop or sack destination, with a hold alternative
+  ---
+  duration_ms: 1.2
+  ...
+# Subtest: tap targets use their visible shape while hidden burrowing animals cannot own input
+ok 97 - tap targets use their visible shape while hidden burrowing animals cannot own input
+  ---
+  duration_ms: 0.4312
+  ...
+# Subtest: all catalogue sprite and secondary regions are in bounds, nonempty and transparent
+ok 98 - all catalogue sprite and secondary regions are in bounds, nonempty and transparent
+  ---
+  duration_ms: 337.8654
+  ...
+# Subtest: all forty live particle presets complete through owned touch input without forwarding a gesture
+ok 99 - all forty live particle presets complete through owned touch input without forwarding a gesture
+  ---
+  duration_ms: 228.1914
+  ...
+# Subtest: world-occluded anchors are rejected before reservation or save
+ok 100 - world-occluded anchors are rejected before reservation or save
+  ---
+  duration_ms: 5.6805
+  ...
+1..100
+# tests 100
+# suites 0
+# pass 100
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18249.1999

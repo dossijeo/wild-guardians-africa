@@ -4,6 +4,7 @@ import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {activeCrops} from './active-crops.js';
 import {activeCrates} from './active-crates.js';
+import {wallDamageReduction} from './blessed-walls.js';
 export const cropSpec = id => { const c=B.crops.find(c=>c.id===id); if(!c)throw new Error('Cultivo desconocido'); return c; };
 export const animalSpec = id => { const c=B.animals.find(c=>c.id===id); if(!c)throw new Error('Animal desconocido'); return c; };
 export const wallSpec = id => { const c=B.walls.find(c=>c.id===id); if(!c)throw new Error('Material desconocido'); return c; };
@@ -18,7 +19,7 @@ export function permission(state,action) {
   const peaceful=state.time<300 && !state.raid;
   if(action==='camera')return true;
   if(!hasCenter) return action==='center' && peaceful;
-  if(action==='shield')return true;
+  if(action==='shield'||action==='awakening')return true;
   if(action==='attack')return !!state.raid;
   if(!peaceful)return false;
   if(action==='village')return state.postgame;
@@ -44,15 +45,15 @@ export function compositions(budget,unlocked) {
 }
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
-  const resources=activeCrops(state.plants).some(p=>p.alive)||activeCrates(state.crates).length>0;
+  const resources=activeCrops(state.plants).some(p=>p.alive&&!p.blessing)||activeCrates(state.crates).length>0;
   return (center?0:B.work_center.cost)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
 export function collapseThreshold(s) { return s.kind==='center'?s.maxHp*.21:s.maxHp*.2; }
-export function hitStructure(s,damage,elapsed) {
+export function hitStructure(s,damage,elapsed,state=null) {
   if(s.status!=='intact')return false;
   const visual=s.kind==='wall'&&Number.isFinite(elapsed)?wallVisualAt(s,elapsed):null;
-  s.hp=Math.max(0,s.hp-damage);
+  s.hp=Math.max(0,s.hp-damage*(1-wallDamageReduction(s,state)));
   if(s.hp<=collapseThreshold(s)+1e-9) {
     s.status='collapsing'; s.collapseRemaining=s.kind==='center'?3.2:1.4;
   }
