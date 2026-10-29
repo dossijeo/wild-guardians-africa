@@ -224,3 +224,9 @@ A regression expanded target-removal observations from age 0.21 to 0.24 and 0.35
 Cancellation now checks the previous processed presentation age. If no contact frame was presented while the victim existed, missing/gone targets cancel the body, aura, vortex, beam, core and impact even when the next frame crosses the marker. An already presented impact is allowed to fade after removal. No game damage, cooldown, physics or audio timing was changed.
 
 The regression failed before the fix (`missing observed at 1.24`) and passes afterward for missing/gone targets observed before, on and beyond contact. A complementary test preserves post-contact fading and eventual cleanup. All 23 singleton/combat-audio tests and the production build pass; existing chunk-size warnings remain. This specific edge case has automated coverage, not a newly executed graphical removal scenario.
+
+## Graphical verification of removed target across contact
+
+Two explicit QA buttons now reproduce the delayed-observation case without an intermediate render: prepare Attack at age 0.12 s, then remove the raid target and advance presentation directly by 0.23 s. They do not change production controls or simulation rules.
+
+`removed-target-before.png` shows the Guardian/vortex and live hyena. `removed-target-after.png` shows the same native scene after cancellation, without a ghost flash. `removed-target-visual.json` records all six presentation objects hidden, active/pending counts zero, and no errors. Screenshots were inspected. This closes graphical coverage for this specific cancellation edge case; it uses a QA presentation clock and does not validate physical recovery or live gameplay removal causes. QA script syntax and whitespace checks pass.
