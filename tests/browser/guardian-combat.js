@@ -1,3 +1,4 @@
+import {GUARDIAN_ATTACK_TIMING} from '../../src/simulation/guardian-timing.js';
 import {playGuardianPresence} from '../../src/audio/guardian-presence.js';
 import {studySmoothBodyNormals} from './beast-normal-study.js';
 import {sampleRecoveryPeerContacts,sampleRecoverySkinBounds,sampleRecoveryPositions} from './guardian-peer-contacts.js';
@@ -168,9 +169,9 @@ try{
  $('stress').onclick=()=>{state.time=new URLSearchParams(location.search).has('recoveryDay')?150:400;beast();const base=state.raid.animals[0];for(let i=1;i<20;i++){const a={...structuredClone(base),id:'qa-beast-'+serial++,species:['hyena','lion','warthog','buffalo','rhino'][i%5],x:site.x+3+(i%5)*1.8,z:site.z+Math.floor(i/5)*1.8};a.radius=ANIMAL_ACTIONS.animals[a.species].presentation.footprint.radius;state.raid.animals.push(a);}nav.setState(state);};
  const repeatHit=document.createElement('button');repeatHit.textContent='Attack durante levantada';extra.append(repeatHit);
  repeatHit.onclick=async()=>{
-  if(recording||measuring)return;measuring=true;repeatHit.disabled=true;let capture,recorder,done;const chunks=[];
+  if(recording||measuring)return;measuring=true;repeatHit.disabled=true;let capture,recorder,done,restoreStart;const chunks=[],releaseContacts=[];const releaseHit=new URLSearchParams(location.search).has('releaseHit');
   try{
-   beast();const a=state.raid.animals[0];a.hitsRemaining=20;a.magicHealth=200;
+   beast();const a=state.raid.animals[0];if(releaseHit){const manager=world.beastPhysics,original=manager.start;manager.start=function(animal){const blend=world.mixers.get(animal.id)?.recoveryExit;releaseContacts.push({time:state.elapsed,exitAge:blend?state.elapsed-blend.at:null});return original.call(this,animal);};restoreStart=()=>manager.start=original;}a.hitsRemaining=20;a.magicHealth=200;
    const deadline=performance.now()+60000;while(!world.mixers.get(a.id)&&performance.now()<deadline)await sleep(100);
    if(!world.mixers.get(a.id))throw Error('Beast rig did not load');
    const y=nav.field.surface(a.x,a.z);world.cinematic=true;
@@ -187,14 +188,14 @@ try{
     let support=null;
     if(e?.recovery){let minimum=Infinity,count=0,limiter=null;e.data.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let index=0;index<mesh.geometry.attributes.position.count;index++){if(isTailContactVertex(mesh,index))continue;mesh.getVertexPosition(index,supportPoint).applyMatrix4(mesh.matrixWorld);const gap=supportPoint.y-nav.field.surface(supportPoint.x,supportPoint.z);if(gap<minimum){minimum=gap;limiter=mesh.name;}count++;}});support={minimum,count,limiter};}
     rows.push({support,time:state.elapsed,x:a.x,z:a.z,phase,recoveryAge:e?.recoveryAge??null,active:world.beastPhysics.entries.size,guardians:world.guardianSummons.slots.filter(s=>s.group.visible).length,maxGuardians:maxVisibleGuardians});
-    if(e?.recovery&&!second&&e.recoveryAge>.6){cast('attack');second=true;}
+    if(e?.recovery&&!second&&e.recoveryAge>(releaseHit?e.recovery.duration-GUARDIAN_ATTACK_TIMING.impact+.15:.6)){cast('attack');second=true;}
     if(second&&phase==='falling')entered=true;
     if(entered&&!a.magicDown&&!world.beastPhysics.entries.has(a.id))break;
    }
-   report={kind:'attack-during-getup',species:a.species,second,entered,finished:entered&&!a.magicDown,rows,errors:[...errors],scope:'Actual cast and Game.tick; fixture resets cooldown and increases durability to isolate repeated contact.'};
+   report={kind:releaseHit?'attack-during-release':'attack-during-getup',releaseContacts,species:a.species,second,entered,finished:entered&&!a.magicDown,rows,errors:[...errors],scope:'Actual cast and Game.tick; fixture resets cooldown and increases durability to isolate repeated contact.'};
    if(!report.finished)throw Error('Repeated get-up impact did not complete before timeout');
    paused=true;recorder.stop();await done;const response=await fetch('http://127.0.0.1:5199/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});if(!response.ok)throw Error('Repeated impact video was not saved');report.videoSaved=true;
-  }catch(e){fail(e);}finally{if(recorder?.state==='recording')recorder.stop();for(const track of capture?.getTracks()??[])track.stop();paused=true;measuring=false;repeatHit.disabled=false;$('freeze').textContent='Reanudar';}
+  }catch(e){fail(e);}finally{restoreStart?.();if(recorder?.state==='recording')recorder.stop();for(const track of capture?.getTracks()??[])track.stop();paused=true;measuring=false;repeatHit.disabled=false;$('freeze').textContent='Reanudar';}
  };
  for(const kind of ['growth','multiply','shield','attack'])$(kind).onclick=()=>{try{cast(kind);}catch(e){fail(e);}};
  function advanceClock(dt){if(simulate)Game.tick(state,dt,nav);else{state.elapsed+=dt;for(const spell of state.spells)spell.remaining-=dt;state.spells=state.spells.filter(s=>s.remaining>0);for(const key in state.cooldowns)state.cooldowns[key]=Math.max(0,state.cooldowns[key]-dt);}}

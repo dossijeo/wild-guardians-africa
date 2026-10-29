@@ -1,3 +1,4 @@
+import {BeastRecoveryExit} from '../src/rendering/beast-recovery-exit.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import fs from 'node:fs';
 import {BakedBeastFallbacks} from '../src/rendering/baked-beast-fallbacks.js';
@@ -199,4 +200,22 @@ test('three runtime hyenas finish articulated rolls and authored recovery on the
   for(const a of state.raid.animals){const node=world.objects.get(a.id);manager.before(a.id);node.position.set(a.x,0,a.z);node.updateMatrixWorld(true);manager.render(a.id);const e=manager.entries.get(a.id);if(e?.recovery){assert.equal(e.recovery.constructor.name,'AuthoredBeastRecovery',JSON.stringify(manager.stats.lastRoll));recovered.add(a.id);}if(e?.actor.roll){assert.ok(e.actor.pose.every(Number.isFinite));maxContactDelay=Math.max(maxContactDelay,e.actor.roll.contactDelay);assert.ok(e.actor.roll.contactDelay<=2.5);assert.ok(e.actor.roll.age<=6.05);}}
  }
  assert.equal(peak,3);assert.equal(recovered.size,3);assert.equal(manager.stats.rollFailures,0);assert.equal(manager.entries.size,0);assert.equal(manager.solver,null);assert.ok(state.raid.animals.every(a=>!a.magicDown));manager.dispose();
+});
+
+for(const mode of ['physical','baked'])for(const age of [0,.1,.29])test(`${mode} impact captures the visible release blend at ${age}s`,()=>{
+ const f=fixture(),data=f.world.mixers.get(f.animal.id),model=data.model;
+ data.recoveryExit=new BeastRecoveryExit(model,f.state.elapsed);
+ f.root.rotation.y=.8;f.root.position.x+=.3;f.root.updateMatrixWorld(true);
+ f.state.elapsed+=age;data.recoveryExit.apply(f.state.elapsed);
+ const bones=[];model.traverse(bone=>{if(bone.isBone)bones.push({bone,p:bone.getWorldPosition(new Vector3()),q:bone.getWorldQuaternion(new Quaternion()).normalize()});});
+ f.animal.magicImpact={at:f.state.elapsed,impactAt:f.state.elapsed,direction:{x:-1,y:-.2,z:.2},intensity:1};
+ let owner=f.manager;
+ if(mode==='baked'){
+  const base=new URL('../public/content/guardian/ragdoll-fallback/',import.meta.url),meta=JSON.parse(fs.readFileSync(new URL('falls.json',base))),bytes=fs.readFileSync(new URL('falls.bin',base)),buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+  owner=new BakedBeastFallbacks(f.world,new Map(meta.clips.map(c=>[c.species+':'+c.direction,new BakedRagdollClip(c,buffer)])));
+ }
+ assert.equal(owner.start(f.animal),true);assert.equal(data.recoveryExit,undefined);
+ owner.render(f.animal.id);
+ for(const b of bones){assert.ok(b.p.distanceTo(b.bone.getWorldPosition(new Vector3()))<1e-5,'visible bone position');assert.ok(b.q.angleTo(b.bone.getWorldQuaternion(new Quaternion()).normalize())<1e-5,'visible bone orientation');}
+ assert.equal(f.animal.magicDown.phase,'falling');owner.dispose();if(owner!==f.manager)f.manager.dispose();
 });
