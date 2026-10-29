@@ -24,3 +24,9 @@ Fresh-page runs at b98bcfd2d, same real terrain and close tracking camera. Sound
 
 Lion and buffalo samples show fall, supine transition, rise and resumed movement. Warthog takes 2.85 seconds to roll; the sampled trajectory appears less fluid and needs a denser review before artistic acceptance. Successful final state does not resolve that visual concern. Near camera can crop Guardian/energy during forced-direction casts; these remain animal recovery diagnostics, not complete summon framing acceptance.
 All five species now have one slope recording, but this is not the complete cross-product of directions, terrain, obstacles or consecutive hits. Sampled skin minima are not all-frame contact proofs.
+
+## Warthog repeat exposes a real timeout
+
+Denser 4 fps review of the original roll is in warthog-roll-detail.jpg. Repeated the same slope/lateral setup with captureRoll enabled: the resulting roll times out at 3.516667 s, angular error 1.862030 radians. warthog-repeat-failed.json supersedes any inference of stable repeated recovery from the first successful run. The whole-world snapshot in warthog-roll-capture.json.gz reproduces the failure exactly through replay-captured-roll.mjs (warthog-roll-replay.json). Capture overhead excludes this run from performance claims.
+
+Diagnostic-only support torque multipliers 2.5 and 3.6 (existing 1.8) finish the same captured roll in 2.683333 and 2.066667 s, preserving completion thresholds. Results: warthog-support-2.5.json and warthog-support-3.6.json. These experiments do not change production parameters. Before adopting a correction, check other captured species/contact cases and repeat browser visuals; extra torque can alter contact motion and overshoot. This is an unresolved production recovery failure, not an accepted limitation or completed feature.

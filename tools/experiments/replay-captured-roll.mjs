@@ -4,6 +4,8 @@ import R from '@dimforge/rapier3d-compat';
 let solverSource=fs.readFileSync(new URL('../../src/simulation/beast-ragdoll.js',import.meta.url),'utf8');
 const variant=process.argv[4]??'baseline';
 if(variant==='no-support')solverSource=solverSource.replace('supportTorque:1.8','supportTorque:0').replace('integralGain:3','integralGain:0');
+if(variant==='support-2.5')solverSource=solverSource.replace('supportTorque:1.8','supportTorque:2.5');
+if(variant==='support-3.6')solverSource=solverSource.replace('supportTorque:1.8','supportTorque:3.6');
 if(variant==='passive')solverSource=solverSource.replace('this.driveRoll(a);','{};');
 const {BeastRagdollSolver}=await import('data:text/javascript;base64,'+Buffer.from(solverSource).toString('base64'));
 await R.init();
