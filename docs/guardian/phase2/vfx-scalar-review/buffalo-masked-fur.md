@@ -13,3 +13,7 @@ Actual Intel UHD WorldScene views inspected: rear daylight, front three-quarter 
 Recorded candidate on the real Game.tick/WorldScene path: 12.006385 simulated seconds, 12.668235 measured wall seconds; one physical ragdoll, no baked fallback, completedSimulation true, finalDownCount zero, errors empty, maximum one visible Guardian. The accompanying contact sheet was inspected across descent, roll, rise and return to walking. The strategic camera is too distant for continuous fine-shading acceptance; retain the candidate status. Recording was made without activating audio. Frame measurements include recording overhead and are not a paired performance comparison.
 
 The focused african-toon and animal-actions suites passed all 36 tests at the preceding shader revision.
+
+## Enlarged recovery diagnostic
+
+Added opt-in recoveryClose camera view to the combat fixture; gameplay camera is unchanged. Recorded and inspected the enlarged one-second contact sheet: dorsal mask follows the body through roll and rise without an obvious detached patch in those samples. The 2x orthographic view crops the upper body in standing frames, so this is a local shading diagnostic, not full-body framing acceptance. The full strategic recording remains the uncropped sequence. Candidate remains unregistered. Added a shader isolation regression test covering masked buffalo, unmasked buffalo and another species; all seven AfricanToon tests pass.

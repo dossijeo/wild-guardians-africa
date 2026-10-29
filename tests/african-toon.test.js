@@ -68,3 +68,18 @@ test('matte worker body has an isolated shader without changing maps or tool mat
  assert.doesNotMatch(shaders[1].fragmentShader,/rough\*\.40\)\*\.04/);
  assert.equal(body.normalMap,normal);
 });
+
+test('authored fur mask is opt-in per buffalo geometry and separates shader caches',()=>{
+ const keys=[];
+ for(const [species,masked] of [['buffalo',true],['buffalo',false],['lion',true]]){
+  const geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial(),root=new THREE.Group();
+  if(masked)geometry.setAttribute('_fur_light',new THREE.Uint8BufferAttribute(new Uint8Array(geometry.attributes.position.count),1,true));
+  root.add(new THREE.Mesh(geometry,material));prepareAnimalModel(root,species);new AfricanToon().apply(root);
+  const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});
+  const enabled=species==='buffalo'&&masked;
+  assert.equal(shader.vertexShader.includes('attribute float _fur_light;'),enabled);
+  assert.equal(shader.fragmentShader.includes('#define GUARDIAN_FUR_MASK'),enabled);
+  keys.push(material.customProgramCacheKey());
+ }
+ assert.notEqual(keys[0],keys[1]);assert.equal(keys[1],keys[2]);
+});
