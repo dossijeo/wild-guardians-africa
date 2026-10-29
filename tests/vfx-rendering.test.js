@@ -10,6 +10,21 @@ import {vfxDefinitions,vfxEnvironment,createVfxGeometries,packVfxSprites} from '
 const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url))),texture=new THREE.Texture({width:4096,height:2048});texture.flipY=false;
 function setup(){const renderer={shadowMap:{enabled:true},getDrawingBufferSize:v=>v.set(1280,720)},pipeline=new BuildingDestructionPass(renderer),library=new VfxLibrary(catalog,texture),camera=new THREE.PerspectiveCamera(43,1280/720,.2,400);camera.position.set(4,3,8);camera.lookAt(0,1,0);camera.updateMatrixWorld();return {pipeline,library,camera};}
 
+test('Ribbon uploads follow live geometry through repeated seeks and empty effects',()=>{
+ const {library,pipeline,camera}=setup();
+ for(const {id} of vfxDefinitions){
+  const fx=library.create(id,pipeline);
+  for(const time of [0,.15,.8,2,0,.4]){
+   fx.seek(time);fx.prepare(camera);const vertices=fx.native.geometry();
+   assert.deepEqual(fx.ribbonBuffer.updateRanges,vertices.length?[{start:0,count:vertices.length}]:[]);
+   assert.deepEqual([...fx.ribbonBuffer.array.slice(0,vertices.length)],[...vertices]);
+   assert.equal(fx.ribbons.geometry.drawRange.count,vertices.length/11);
+   assert.equal(fx.ribbons.visible,vertices.length>0);
+  }
+ }
+ library.dispose();pipeline.dispose();
+});
+
 test('Terrain contact maps world heights into a translated, rotated and scaled effect frame',()=>{
   const {library,pipeline}=setup(),surface=(x,z)=>12+.01*x+.02*z,fx=library.create('dig',pipeline,{worldSurface:surface}),parent=new THREE.Group();
   parent.position.set(30,surface(30,-20),-20);parent.rotation.y=Math.PI/2;parent.scale.setScalar(2);parent.add(fx);fx.seek(1.5);
@@ -38,7 +53,7 @@ test('All 18 Three.js VFX preserve native solid, ribbon and sprite uploads befor
     assert.ok(fx.sprites.geometry.isInstancedBufferGeometry);assert.equal(fx.sprites.geometry.getAttribute('iParams').offset,18);assert.equal(fx.sprites.geometry.getAttribute('iDirection').offset,22);assert.equal(fx.spriteBuffer.stride,25);
     const packed=packVfxSprites(fx.native.sprites(),library.rects,{eye:fx.uniforms.uEye.value.toArray(),forward:new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,2).negate().toArray()});assert.equal(fx.sprites.geometry.instanceCount,packed.count);assert.deepEqual([...fx.spriteBuffer.array.slice(0,packed.count*25)],[...packed.data.slice(0,packed.count*25)]);
     const solids=fx.native.rigidInstances();for(const [id,p] of Object.entries(solids)){const buffer=fx.buffers.get(id),mesh=fx.rigids.get(id);assert.deepEqual(buffer.updateRanges,p.count?[{start:0,count:p.count*23}]:[]);if(!p.count)assert.equal(buffer.version,0);assert.equal(buffer.stride,23);assert.equal(mesh.geometry.getAttribute('iModel').itemSize,16);assert.equal(mesh.geometry.instanceCount,p.count);assert.deepEqual([...buffer.array.slice(0,p.count*23)],[...p.data.slice(0,p.count*23)]);}
-    const vertices=fx.native.geometry();assert.equal(fx.ribbons.geometry.drawRange.count,vertices.length/11);assert.deepEqual([...fx.ribbonBuffer.array.slice(0,vertices.length)],[...vertices]);assert.ok(fx.ribbonCapacity<48000,'No maximum-sized per-effect ribbon allocation');fx.dispose();
+    const vertices=fx.native.geometry();assert.deepEqual(fx.ribbonBuffer.updateRanges,vertices.length?[{start:0,count:vertices.length}]:[]);if(!vertices.length)assert.equal(fx.ribbonBuffer.version,0);assert.equal(fx.ribbons.geometry.drawRange.count,vertices.length/11);assert.deepEqual([...fx.ribbonBuffer.array.slice(0,vertices.length)],[...vertices]);assert.ok(fx.ribbonCapacity<48000,'No maximum-sized per-effect ribbon allocation');fx.dispose();
   }
   library.dispose();pipeline.dispose();
 });

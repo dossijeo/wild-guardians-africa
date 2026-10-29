@@ -118,7 +118,7 @@ export class NativeVfx extends THREE.Group {
     }
     if(this.packedTime!==this.native.time){
       const solids=this.native.rigidInstances();for(const [id,data] of Object.entries(solids)){const buffer=this.buffers.get(id),m=this.rigids.get(id);buffer.clearUpdateRanges();if(data.count){const used=data.count*23;buffer.array.set(data.data.subarray(0,used));buffer.addUpdateRange(0,used);buffer.needsUpdate=true;}m.geometry.instanceCount=data.count;m.visible=data.count>0&&(this.fragments||['water','corn','leaf'].includes(id));}
-      const vertices=this.native.geometry();if(vertices.length/11>this.ribbonCapacity)this.setRibbonBuffer(vertices.length/11);this.ribbonBuffer.array.set(vertices);this.ribbonBuffer.needsUpdate=true;this.ribbons.geometry.setDrawRange(0,vertices.length/11);this.ribbons.visible=vertices.length>0;this.packedTime=this.native.time;
+      const vertices=this.native.geometry();if(vertices.length/11>this.ribbonCapacity)this.setRibbonBuffer(vertices.length/11);this.ribbonBuffer.clearUpdateRanges();if(vertices.length){this.ribbonBuffer.array.set(vertices);this.ribbonBuffer.addUpdateRange(0,vertices.length);this.ribbonBuffer.needsUpdate=true;}this.ribbons.geometry.setDrawRange(0,vertices.length/11);this.ribbons.visible=vertices.length>0;this.packedTime=this.native.time;
     }
     return packed.count>0&&this.softParticleDepth;
   }
