@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import {farVegetationProfile,farGroundReviewOverrides} from '../../src/rendering/far-vegetation-profile.js';
 import {globalFrameScheduler,globalFrameSchedulerEnabled} from '../../src/app/global-frame-scheduler.js';
 import {prepareWildEngineWorld} from '../../src/app/wild-engine-world.js';
@@ -299,6 +300,18 @@ try{
  const samples=[];let measuring=false,last=performance.now(),nextStatus=0;
  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  $('bench').onclick=async()=>{if(measuring)return;measuring=true;paused=false;simulate=false;state.time=150;state.raid=null;report=[];commandCosts.length=0;let timer;try{for(const mode of ['baseline','legacy-spells','single','consecutive']){showSummons=mode!=='legacy-spells';state.spells.length=0;world.guardianSummons.clear();await sleep(2500);samples.length=0;if(mode==='single')cast('growth');if(mode==='consecutive'||mode==='legacy-spells')timer=setInterval(()=>cast(serial%2?'growth':'multiply'),400);await sleep(8000);clearInterval(timer);const rows=samples.slice(),q=(key,p)=>rows.map(r=>r[key]).sort((a,b)=>a-b)[Math.min(rows.length-1,Math.floor(rows.length*p))];report.push({mode,frames:rows.length,frameMedian:q('dt',.5),frameP95:q('dt',.95),frameP99:q('dt',.99),frameMax:q('dt',1),averageFps:1000/(rows.reduce((s,r)=>s+r.dt,0)/rows.length),renderP95:q('renderMs',.95),animationP95:q('animationMs',.95),vfxP95:q('vfxMs',.95),drawP95:q('draws',.95),memory:{...world.renderer.info.memory},heap:performance.memory?.usedJSHeapSize});}}catch(e){fail(e);}finally{clearInterval(timer);showSummons=true;measuring=false;}};
+ const guardianDetailButton=document.createElement('button');guardianDetailButton.id='guardianDetail';guardianDetailButton.textContent='Detalle del Guardián activo';document.querySelector('header').insertBefore(guardianDetailButton,$('status'));
+ guardianDetailButton.onclick=()=>{
+  if(measuring||recording)return;
+  const slot=world.guardianSummons.slots.find(s=>s.event&&s.group.visible);if(!slot)return;
+  paused=true;$('freeze').textContent='Reanudar';world.cinematic=true;
+  const bounds=new THREE.Box3().setFromObject(slot.group),center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
+  const distance=Math.max(3,Math.max(size.x,size.y,size.z)*1.65);
+  world.camera.zoom=1;world.camera.updateProjectionMatrix();world.controls.target.copy(center);
+  const viewAngle=slot.group.rotation.y+.35;
+  world.camera.position.set(center.x+Math.sin(viewAngle)*distance,center.y+distance*.22,center.z+Math.cos(viewAngle)*distance);
+  world.camera.lookAt(center);world.camera.updateMatrixWorld(true);world.render(0);
+ };
  const aoDrawButton=document.createElement('button');aoDrawButton.id='auditAODraws';aoDrawButton.textContent='Inspeccionar llamadas de dibujo AO';document.querySelector('header').insertBefore(aoDrawButton,$('status'));
  aoDrawButton.onclick=()=>{
   if(measuring||recording)return;

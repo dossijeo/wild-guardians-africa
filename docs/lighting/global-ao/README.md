@@ -194,3 +194,9 @@ The QA-only `auditAODraws` button captures a forced render outside timing. Fresh
 The Sahelian pair is now joined by Mapungubwe, Musgum, Etiope and Suajili day/night pairs, under the same native fixture settings with all global AO banks active. Only building AO is toggled within each pair. See `centers-combined-report.json` and `comparison.html`. All four additional scenes report no errors. Entrances, roof detail and supplies remain legible in the inspected night views; the building AO primarily strengthens recesses and joins. No shader change was warranted by these particular views. Saturated foreground foliage is noticeable and remains part of the combined-lighting review, not attributed to AO by this building-only test.
 
 These 20 screenshots cover five cultures, one savanna scene per culture and one fixed angle each. They do not establish all-angle/all-biome acceptance, animated destruction/repair, or incremental performance.
+
+## Guardian Multiply: close-view lighting and dissolve
+
+The QA fixture now offers `Detalle del Guardian activo`: it pauses an active summon and frames its current bounds from a frontal three-quarter angle without changing the character or world lighting. It is disabled during measurement/recording and does nothing without an active visible summon.
+
+New Multiply captures cover strategic arrival at .12s, solid pose at .72s, frontal day/night AO on/off detail at .72s, a back view, and nocturnal dissolve at 1.92s. Eyes, hands and cloak remain readable; the luminous breakup remains visible. Cleanup at 2.76s reports zero active/visible summons, maximum one Guardian and no errors (`guardian-multiply-review.json`). These are paused poses, not full-motion or all-spell approval. The model toggle affects all loaded local model AO; native vegetation is held constant, but distant LOD preparation can continue after camera moves, so backgrounds are not a pixel-difference control.
