@@ -221,7 +221,8 @@ try{
  const recordOverflow=document.createElement('button');recordOverflow.textContent='Grabar cuatro impactos';document.querySelector('header').insertBefore(recordOverflow,$('status'));
  const recordWall=document.createElement('button');recordWall.textContent='Grabar caida contra muralla';document.querySelector('header').insertBefore(recordWall,$('status'));recordWall.onclick=()=>recordRecovery(1,true);
  recordCycle.onclick=()=>recordRecovery(1);recordOverflow.onclick=()=>recordRecovery(4);
- async function recordRecovery(count,wallTrial=false){
+ const recordPeers=document.createElement('button');recordPeers.textContent='Grabar choque entre bestias';document.querySelector('header').insertBefore(recordPeers,$('status'));recordPeers.onclick=()=>recordRecovery(2,false,true);
+ async function recordRecovery(count,wallTrial=false,headOn=false){
   if(recording||measuring||physicsTrial)return;
   recording=true;const stream=$('world').captureStream(30),chunks=[];
   let destination=null,rec=null;
@@ -230,7 +231,7 @@ try{
    rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8,opus',videoBitsPerSecond:5000000});
    rec.ondataavailable=e=>chunks.push(e.data);const done=new Promise(resolve=>rec.onstop=resolve);
    $('recordStatus').textContent='Grabando ciclo '+$('species').value;rec.start();
-   await measurePhysics(count,false,wallTrial);rec.stop();await done;
+   await measurePhysics(count,headOn,wallTrial);rec.stop();await done;
    const response=await fetch('http://127.0.0.1:5198/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});
    if(!response.ok)throw Error('No se pudo guardar el ciclo');
    $('recordStatus').textContent='Ciclo guardado: '+$('species').value;
