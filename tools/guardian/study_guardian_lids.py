@@ -1,7 +1,8 @@
 """Isolated Guardian lid study; never overwrites production assets."""
 import bpy,math,argparse,sys
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--output',required=True);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--output',required=True);p.add_argument('--columns',type=int,default=65);p.add_argument('--rows',type=int,default=17);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
+if a.columns<9 or a.rows<3:raise ValueError('Eyelid grid requires at least 9 columns and 3 rows')
 root=Path(__file__).resolve().parents[2];bpy.ops.wm.open_mainfile(filepath=str(root/'content/source/guardian/rig-before-eyelids.blend'))
 o=bpy.data.objects['GuardianFace'];mesh=o.data;keys=mesh.shape_keys.key_blocks
 slot=next(i for i,m in enumerate(mesh.materials) if m.name=='Painted wooden eyelids')
@@ -31,7 +32,7 @@ def depth(x,z):
 import bmesh
 bm=bmesh.new();bm.from_mesh(mesh);bmesh.ops.delete(bm,geom=[f for f in bm.faces if f.material_index==slot],context='FACES_ONLY');bm.to_mesh(mesh);bm.free();mesh.update()
 import numpy as np
-verts=[];faces=[];labels=[];fits={};cols=65;rows=17
+verts=[];faces=[];labels=[];fits={};cols=a.columns;rows=a.rows
 for side,(upper,lower) in contours.items():
  samples=[];values=[];cx=((upper[0][0]+upper[-1][0])/2-320)*.25/640;cz=.28+(320-(interp(upper,(upper[0][0]+upper[-1][0])/2)+interp(lower,(upper[0][0]+upper[-1][0])/2))/2)*.25/640
  for col in range(8,57,4):
