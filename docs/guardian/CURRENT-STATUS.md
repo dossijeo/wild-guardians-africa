@@ -77,3 +77,24 @@ Full phase acceptance remains open, particularly incremental performance, the re
 Plant and wall confirmation/cancellation are exercised through the real main-game UI; plant confirmation autosave survives browser reload. See [wall flow](awakening-ritual/main-game-wall.md) and [plant reload](awakening-ritual/main-game-plant.md). A nearby-wall height adjustment and lateral/elevated fallback search improve the observed obstacle cases. [Full-resolution tower inspection](awakening-ritual/full-resolution-review.md) shows the Guardian clear of the roof at the sampled pose, while the target remains behind it in this fixed QA camera. This does not close the general camera/obstacle matrix.
 
 [Placement query pruning](awakening-ritual/occupancy-pruning.md) preserves 64 reference decisions with fewer visibility/occupancy queries. Warm browser timings remain variable; no global performance approval. Continuous voiced tutorial video, broad audio/artistic acceptance and the release size gate remain open.
+
+## Delivery review at de1693154
+
+This review corrects stale descriptions; it does not mark the phase complete. The latest implementation/evidence is indexed in [pose-layer-fix](phase2/pose-layer-fix/README.md). Historical documentation above must not be read as either a current failure or a current pass without its revision and scope.
+
+| Requirement | Current evidence inspected | What remains unproven |
+| --- | --- | --- |
+| Broad mantle/feather/wood wind | Installed-rig binding correction; 24 bindings; increased distal amplitudes; age-zero Grow/Multiply/Shield/Attack recordings | Continuous close artistic review across the useful camera views; sampled sheets do not certify fine intersections |
+| Four spells, hand origins, one body | Current singleton/pose tests; differentiated branch/beam/dome effects; four-spell native recordings | Main-game end-to-end review of the latest combined revision, including realistic consecutive different spells |
+| Placement and camera | Native building-side recordings; larger solid envelope; unchanged world anchor during rotate/zoom | Dense terrain/occlusion cases at useful gameplay zooms. Arbitrary orbit can still occlude a fixed world actor; this must not be 'fixed' by teleporting it to follow the camera |
+| Robust interruption | Target removal across the contact marker reproduced failing before the fix; 23 singleton/audio tests; native before/after screenshots show all six effect objects cleared | Current graphical scene replacement/end-of-game with a nonempty visual queue |
+| Directional fall/recovery | Five installed species; physical/baked concurrency tests and recordings; current rhino lateral and hyena recovery-to-retreat cycles | Latest-version representative slope/structure/peer checks, with visible mesh contacts rather than collider/AABB evidence alone |
+| Damage/retreat/SFX | Hyena native run: hurt at 0.266435 s, retreat once at 8.362835 s after recovery, actor leaves; AAC track recorded | Perceptual audio mix and continuous synchronization review; playback admission is not auditory approval |
+| Incremental performance | Historical static/dynamic buffer reversal and legitimate five-Attack native comparison; current component blocks and recovery-pose reuse evidence | Current matched live-incursion comparison after the final changes, with frame tails and exact outcome equality. Do not infer no regression from small animation CPU or mean FPS |
+| Reviewable delivery | Commits pushed to codex/guardian-3d-animation; editable sources, balance/provenance docs, reproducible tests and evidence | PR description is behind recent commits after the previously reported automatic review rejection; no merge. Release size gate remains a separate unresolved packaging check |
+
+Next acceptance work should prioritize the current graphical queued-scene interruption, then a matched live-incursion comparison and continuous visual/audio review. Repeating static screenshots of already covered spells is not a substitute. The unrelated baseline-engine performance investigation remains assigned elsewhere.
+
+Other user follow-ups remain distinct and are not silently declared complete by a phase-2 check: continuous voiced tutorial capture, broad AO/lighting review, and the savanna HD texture task. For the latter, the exact current runtime tree GLBs have now been exported and linked to the user; no unapproved tree geometry or texture replacement was installed.
+
+Current integration receipt: [integration-checks-de169.json](phase2/integration-checks-de169.json). All **355 tests in 61 selected files** pass, zero failures/cancellations/skips, 80.31 seconds. The retired detached-echo test is explicitly recorded, not silently skipped; singleton behavior replaces that removed subsystem. This is not the whole repository suite or a graphical/performance pass. The last production build at the preceding target-removal fix passed; this review changes documentation only.

@@ -1,6 +1,6 @@
 # Invocación cinematográfica y derribo físico
 
-Ampliación solicitada por el usuario durante la fase 2. Rama actual, un único Guardián, sin cámara nueva ni merge. Sustituye la preferencia anterior por impactos exclusivamente esqueléticos suaves. Estado: en desarrollo; **no entregado ni validado como ragdoll funcional**.
+Ampliación solicitada por el usuario durante la fase 2. Rama actual, un único Guardián, sin cámara nueva ni merge. Sustituye la preferencia anterior por impactos exclusivamente esqueléticos suaves. Este documento conserva el historial de desarrollo, incluidas etapas anteriores a la integración. El ragdoll y su recuperación sí están integrados actualmente; la aceptación completa de la fase sigue abierta. Consultar [CURRENT-STATUS.md](CURRENT-STATUS.md) para la evidencia vigente.
 
 ## Contrato de entrega
 

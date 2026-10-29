@@ -2,9 +2,13 @@
 
 Actualizado el 27 de octubre de 2026. Rama `codex/guardian-3d-animation`; PR #217. No se ha hecho merge. La fase está implementada y disponible para revisión visual; la aceptación de rendimiento sostenido sigue pendiente.
 
+## Estado de esta documentación
+
+Los datos de geometría y los primeros valores de viento de este documento describen la revisión del 27 de octubre. Para la implementación y las comprobaciones posteriores, consultar [CURRENT-STATUS.md](CURRENT-STATUS.md), especialmente el apartado de revisión de entrega al commit de1693154. No interpretar las medidas históricas como una validación de la versión actual.
+
 ## Comportamiento
 
-Grow, Multiply, Shield y Attack reutilizan **una sola instancia** del Guardián. Una nueva orden sustituye su presentación, limpia el efecto anterior y conserva todos los resultados de simulación ya aplicados. No hay cola que retrase las magias. El personaje aparece en el mundo durante 2,2 s; la entrada dura 0,12 s y la salida 0,7 s. No navega hasta el objetivo ni modifica la cámara.
+Grow, Multiply, Shield y Attack reutilizan **una sola instancia** del Guardián. La simulación aplica los resultados del comando inmediatamente. La presentación mantiene una cola durante el lanzamiento y el impacto de Attack para que la descarga siempre salga del único cuerpo visible; los siguientes efectos se muestran secuencialmente. Esa cola visual no aplaza el daño ni los resultados de las magias. Los objetivos eliminados se descartan y las interrupciones limpian los efectos. El personaje aparece en el mundo durante 2,2 s; la entrada dura 0,12 s y la salida 0,7 s. No navega hasta el objetivo ni modifica la cámara.
 
 Si coincide con el tutorial, se oculta únicamente su avatar de diálogo: se conservan texto, controles y voz. El cuerpo del mundo puede muestrear esa misma voz y secuencia facial. Al terminar la invocación vuelve el avatar del tutorial, sin reiniciar la locución.
 
