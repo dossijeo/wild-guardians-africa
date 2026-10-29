@@ -3,6 +3,14 @@
 export function cinematicLightingEnabled(search=''){
  return new URLSearchParams(search).get('cinematicLight')==='1';
 }
+// Low-frequency diffuse ground bounce, in linear radiance. A hemispheric
+// approximation, not a light probe or simulated GI. Never includes emission.
+const groundBounce=Object.freeze(Object.fromEntries(Object.entries({
+ 'sabana':[.16,.13,.075],'gran-rio':[.12,.145,.095],
+ 'manglares':[.085,.115,.08],'volcanes':[.075,.075,.08],
+ 'gran-canon':[.19,.12,.065],'desierto':[.22,.17,.105],
+}).map(([key,value])=>[key,Object.freeze(value)])));
+export function cinematicGroundBounce(biome){return groundBounce[biome]??groundBounce.sabana;}
 export function patchCinematicLighting(source,{ground=false}={}){
  const anchor='#include <opaque_fragment>';
  if(!source.includes(anchor))throw Error('Cinematic lighting: output anchor missing');
@@ -11,7 +19,7 @@ export function patchCinematicLighting(source,{ground=false}={}){
  float cinemaSun=smoothstep(.12,.90,clamp(${visibility},0.,1.));
  vec3 cinemaDay=mix(vec3(.77,.89,1.02),vec3(1.20,1.08,.87),cinemaSun);
  vec3 cinemaNight=mix(vec3(.66,.91,.94),vec3(.76,.96,1.12),cinemaSun);
- outgoingLight*=mix(cinemaDay,cinemaNight,uNight);
+ ${ground?'outgoingLight*=mix(cinemaDay,cinemaNight,uNight);':'outgoingLight=max(vec3(0.),outgoingLight-totalEmissiveRadiance)*mix(cinemaDay,cinemaNight,uNight)+totalEmissiveRadiance;'}
  ${anchor}`);
 }
 

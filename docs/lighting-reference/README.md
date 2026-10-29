@@ -53,3 +53,14 @@ Added `Medir GPU de AO horneada` to the real-engine fixture. It freezes the simu
 [First Gran Río/Ethiopian run](ao-gpu-river.json): GPU median 17.581744ms off / 17.860937ms on (+0.279193ms); p95 20.175572 / 20.597655ms. All labels show 53 draw calls, zero hidden frames; no disjoint/discarded queries. Other QA tabs existed, so this is a first interleaved cost estimate, not isolated integrated-GPU acceptance or a whole-game FPS claim.
 
 Mapungubwe in the volcanic biome loaded and was inspected with candidate lighting, AO and contacts at [day](volcano-mapungubwe-day.png) and [night](volcano-mapungubwe-night.png). Roof curvature and pillars remain readable; lava remains visibly emissive. Dark ground and under-roof regions still need comparison against baseline and camera/zoom variants. The contact hull is an approximation under this open-sided structure, not a geometric footprint of individual pillars. No broad performance or all-biome visual acceptance is claimed.
+
+
+## Hemispheric ground bounce and remaining cultures
+
+Added biome-dependent diffuse ground radiance for buildings (shared uniform, no new pass or texture). The upper hemisphere retains the sky endpoint; the lower hemisphere uses restrained sand/soil/vegetation/rock colours. Night keeps its separate endpoint. This is an authored hemispheric indirect-light approximation, not scene-aware GI, interreflection or local window lighting. AO attenuates ambient/rim only; direct, specular and building emission remain separate. Standard-material emissive radiance is now excluded from the final global tint. Native volcanic emission embedded inside its own tonemapping is not yet independently isolated by this change.
+
+Fixed the QA village lookup: game culture `saheliana` resolves village asset `saheliano`, matching production. No gameplay mapping was changed.
+
+Inspected Musgum/mangrove and Sahelian/canyon in WorldScene with the production profile, opt-in lighting, baked AO and contacts. Saved day views before and after the ground-bounce adjustment (`mangrove-musgum-day.png`, `mangrove-musgum-bounce-day.png`, `canyon-sahelian-day.png`, `canyon-sahelian-bounce-day.png`) and night-control views (`mangrove-musgum-night.png`, `canyon-sahelian-night.png`). Both loaded with empty fixture error lists. Rounded Musgum surfaces and doorway recesses remain legible. The Sahelian roof is conspicuously flat and the night image still lacks the reference's warm local lighting; these are not final artistic acceptance. All five building cultures have now had at least one visual inspection, but this is not the complete six-biome/day-night/camera/damage matrix.
+
+Eight targeted AO-bank/contact/lighting/daylight tests pass. New shader checks cover actual destruction-source replacement, AO exclusion for caps, damage fade, and separate standard emission; they do not substitute for screenshots or GPU measurements. This iteration remains opt-in while the remaining lighting work is evaluated.

@@ -49,7 +49,7 @@ try{
  const trialBiome=new URLSearchParams(location.search).get('biome')??'sabana';
  if(!biomeAssets[trialBiome]||(campaign&&trialBiome!=='sabana'))throw Error('Unsupported biome trial');
  const trialCulture=campaign?'mapungubwe':new URLSearchParams(location.search).get('culture')??'suajili';
- const pack=await json('/content/biome-'+biomeAssets[trialBiome]+'.json');let payload=(await json('/content/villages.json')).find(v=>v.id===trialCulture);
+ const pack=await json('/content/biome-'+biomeAssets[trialBiome]+'.json');let payload=(await json('/content/villages.json')).find(v=>v.id===(trialCulture==='saheliana'?'saheliano':trialCulture));
  if(!payload)throw Error('Unknown trial culture');
  if(campaign){const response=await fetch('/docs/qa/raid-paid-defense-night31/failure-state.json.gz');const bytes=new Uint8Array(await response.arrayBuffer());const snapshot=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes);state=deserialize(snapshot);state.pauses=[];if(new URLSearchParams(location.search).has('freshRaid')){const former=state.raid?.animals.find(a=>!['gone','retreating'].includes(a.status));site=former?{x:former.x,z:former.z}:null;state.raid=null;planNight(state);state.time=state.nightPlan.at;}nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);const a=state.raid?.animals.find(a=>!['gone','retreating'].includes(a.status));if(a)site={x:a.x,z:a.z};}
  else{

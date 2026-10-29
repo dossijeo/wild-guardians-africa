@@ -1,3 +1,4 @@
+import {cinematicGroundBounce} from './cinematic-lighting.js';
 import {supportAnimalOnTerrain} from './animal-terrain-support.js';
 import {prepareWorkerClips} from './worker-clips.js';
 import {loadRecoveryClips} from './recovery-clips.js';
@@ -133,7 +134,7 @@ export class WorldScene {
     this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=true;configureTerrainControls(this.controls);this.releaseCameraIntent=installTerrainCameraIntent(this.camera,this.controls,()=>this.nav?.field);this.controls.enableRotate=true;this.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.sun.castShadow=true;this.sun.shadow.mapSize.set(1024,1024);configureShadowCamera(this.sun);updateShadowCamera(this.sun,this.controls.target);this.sun.shadow.bias=0;this.releaseNativeShadow=installNativeShadow(this.renderer,this.sun,this.toon.shadowUniforms);this.releaseAssetShadows=installAssetShadows(this.renderer,()=>this.assetGroups.enabled?this.assetGroups.shadowChunks:this.chunks,this.scene);
     this.scene.add(this.sun,this.sun.target);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.ambient);
-    this.destructionPass=new BuildingDestructionPass(this.renderer,this.sun,this.ambient);this.destructionPass.visualSearch=this.visualSearch;this.destructionPass.worldOriginUniform=this.toon.uniforms.uWorldOrigin;this.destructionPass.fineNoiseUniform=this.toon.uniforms.uFineNoise;this.buildingTemplates=new Map();
+    this.destructionPass=new BuildingDestructionPass(this.renderer,this.sun,this.ambient);this.destructionPass.visualSearch=this.visualSearch;this.destructionPass.cinemaGroundUniform={value:new THREE.Vector3()};this.destructionPass.worldOriginUniform=this.toon.uniforms.uWorldOrigin;this.destructionPass.fineNoiseUniform=this.toon.uniforms.uFineNoise;this.buildingTemplates=new Map();
     this.raycaster=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.terrainMeshes=[];
     this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
     this.spellPreview=new SpellPreview(this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
@@ -805,7 +806,7 @@ export class WorldScene {
     }
     for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
-    this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
+    this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.cinemaGroundUniform.value.fromArray(cinematicGroundBounce(s.biome));this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     updateShadowCamera(this.sun,this.controls.target);
   }
   pick(event,{terrainOnly=false}={}) {
