@@ -1,3 +1,4 @@
+import {balanceLionWalk} from './lion-walk-posture.js';
 import {animalFootSamples} from './animal-terrain-support.js';
 import {sampleFixedPose} from './fixed-pose.js';
 import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
@@ -51,7 +52,7 @@ export function applyAnimalPose(data,animal,elapsed){
     data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();
     data.action.paused=true;data.action.clampWhenFinished=true;data.key=pose.key;data.name=pose.name;
   }
-  const sampled=sampleFixedPose(data,pose.time,restart);if(sampled&&pose.name==='Walking')plantWarthogHooves(data.model);groundAnimal(data);return pose;
+  const sampled=sampleFixedPose(data,pose.time,restart);if(sampled&&pose.name==='Walking'){plantWarthogHooves(data.model);balanceLionWalk(data.model);}groundAnimal(data);return pose;
 }
 export function animalGroundSamples(model){
   const samples=[];
