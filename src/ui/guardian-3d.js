@@ -1,3 +1,4 @@
+import {GuardianPose} from '../rendering/guardian-pose.js';
 import {GuardianVortex} from '../rendering/guardian-vortex.js';
 import {pointGuardian} from '../rendering/guardian-pointing.js';
 import * as THREE from 'three';
@@ -17,7 +18,7 @@ export class Guardian3D {
  async load(){
   const gltf=await new GLTFLoader().loadAsync(assetUrl(this.modelUrl));
   if(this.disposed){this.release(gltf.scene);return;}
-  this.model=gltf.scene;this.scene.add(this.model);this.mixer=new THREE.AnimationMixer(this.model);this.actions=new Map(gltf.animations.map(clip=>[clip.name,this.mixer.clipAction(clip)]));
+  this.model=gltf.scene;this.scene.add(this.model);this.mixer=new THREE.AnimationMixer(this.model);this.pose=new GuardianPose(this.model,this.mixer);this.actions=new Map(gltf.animations.map(clip=>[clip.name,this.mixer.clipAction(clip)]));
   for(const a of this.actions.values())a.play();
   this.eyes=['L','R'].map(side=>{const bone=this.model.getObjectByName('Eye'+side)??this.model.getObjectByName('Eye.'+side);return bone?{bone,side,rest:bone.quaternion.clone()}:null;}).filter(Boolean);
   this.face=new GuardianFace(this.model,{resolve:assetUrl});if(this.record)this.face.setRecord(this.record);this.resize();
@@ -37,7 +38,7 @@ export class Guardian3D {
    a.weight=reduced?0:(name==='Float'||name===cloth)?1:name==='Idle'?(clip==='Idle'?1:this.manual.clip?0:1-envelope):this.manual.clip?1:envelope;
    a.time=name==='Float'||name.startsWith('Mantle_')||name==='Idle'||this.manual.clip?time%a.getClip().duration:event?Math.min(a.getClip().duration,(clock-event.start)/(event.end-event.start)*a.getClip().duration):0;
   }
-  this.mixer.update(0);
+  this.pose.update();
   const expression=this.manual.expression??(event?{name:event.expression,value:.35*envelope}:null);
   this.face.update(audio,time,{...this.manual,expression,reduced});
   const pause=speaking?this.face.data?.pauses?.findIndex(p=>clock>=p.start&&clock<=p.end):-1;

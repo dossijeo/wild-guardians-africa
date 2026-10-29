@@ -1,3 +1,4 @@
+import {GuardianPose} from './guardian-pose.js';
 import {GuardianLapPose} from './guardian-lap-pose.js';
 import {GuardianRitual} from './guardian-ritual.js';
 import {RITUAL,beginAwakening,revealAwakening} from './awakening-presentation.js';
@@ -36,7 +37,7 @@ export class GuardianSummons{
    const aura=this.world.vfxLibrary.create('repel',this.world.destructionPass,{density:.35,softParticles:false});aura.visible=false;aura.sprites.material.forceSinglePass=true;aura.ribbons.material.forceSinglePass=true;this.world.scene.add(aura);
    const eyes=['L','R'].map(side=>model.getObjectByName('Eye'+side)??model.getObjectByName('Eye.'+side)).filter(Boolean).map(bone=>({bone,rest:bone.quaternion.clone()}));
    beam.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-   this.slots.push({lapPose:new GuardianLapPose(model,group),vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
+   this.slots.push({pose:new GuardianPose(model,mixer),lapPose:new GuardianLapPose(model,group),vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
   }
  }
  plan(entityId,point,{bodyScale=1,hoverAbove=false}={}){const w=this.world,target=w.state.raid?.animals.find(a=>a.id===entityId)??w.state.plants.find(p=>p.id===entityId&&p.alive)??w.state.structures.find(s=>s.id===entityId)??point;if(!target)return null;
@@ -84,7 +85,7 @@ export class GuardianSummons{
   s.group.position.lerp(this.vector.set(origin.x,origin.y,origin.z),1-Math.exp(-dt*4));
   s.model.scale.setScalar(2.4*1.7);s.group.rotation.y=Math.atan2(w.camera.position.x-s.group.position.x,w.camera.position.z-s.group.position.z);s.group.visible=true;
   for(const m of s.materials){m.opacity=1;m.uniforms.opacity.value=1;m.uniforms.uSpiritTint.value.setHex(0xffffff);m.uniforms.uSpiritGlow.value=.08;m.uniforms.uReveal.value=1.12;m.uniforms.uDissolve.value=0;m.uniforms.uBottom.value=s.group.position.y+s.bottom*1.7;m.uniforms.uHeight.value=s.height*1.7;}
-  for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=this.guideTime%a.getClip().duration;}s.mixer.update(0);
+  for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=this.guideTime%a.getClip().duration;}s.pose.update();
   const narration=w.guardianNarration?.();if(s.faceRecord!==narration?.record?.id){s.faceRecord=narration?.record?.id;s.face.setRecord(narration?.record);}s.face.update(narration?.audio??null,this.guideTime,{});
   s.group.updateMatrixWorld(true);pointGuardian(s.model,this.vector.set(...p),ease(this.guideTime/.6));
   for(const {bone,rest} of s.eyes){bone.quaternion.copy(rest);bone.parent.worldToLocal(this.aim.copy(w.camera.position));this.aim.sub(bone.position).applyQuaternion(this.q.copy(rest).invert()).normalize();this.aim.set(THREE.MathUtils.clamp(this.aim.x,-.13,.13),1,THREE.MathUtils.clamp(this.aim.z,-.12,.12)).normalize();bone.quaternion.multiply(this.q.setFromUnitVectors(this.up,this.aim));}
@@ -118,7 +119,7 @@ export class GuardianSummons{
    for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.65*Math.exp(-(((age-(kind==='attack'?ATTACK_TIMING.impact:.48))/.14)**2));m.uniforms.uReveal.value=ease((age-(kind==='attack'?.02:.16))/(kind==='attack'?.12:.4))*1.12;m.uniforms.uDissolve.value=ease((age-1.5)/.7)*1.05;m.uniforms.uBottom.value=s.origin.y+s.bottom;m.uniforms.uHeight.value=s.height;}
    const clip=CLIPS[kind],selected=s.actions.has(clip)?clip:kind==='attack'?'Cast':'Invoke';
    for(const [name,a] of s.actions){a.enabled=['Float','Mantle_Spell',selected].includes(name);a.weight=1;a.time=name===selected?Math.min(a.getClip().duration,(kind==='attack'?(age<=ATTACK_TIMING.impact?.1+age/ATTACK_TIMING.impact*.5:.6+(age-ATTACK_TIMING.impact)/1.5*.4):age/1.5)*a.getClip().duration):state.elapsed%a.getClip().duration;}
-   s.mixer.update(0);
+   s.pose.update();
    const gust=Math.sin(Math.PI*ease(age/.55))*Math.exp(-Math.max(0,age-.35)*3)+.3*Math.sin(Math.PI*ease((age-1.5)/.7));
    for(const {bone,phase} of s.wind){bone.rotation.x+=gust*.16*Math.sin(phase-age*7);bone.rotation.z+=gust*.12*Math.cos(phase-age*5);}
    const narration=w.guardianNarration?.();if(s.faceRecord!==narration?.record?.id){s.faceRecord=narration?.record?.id;s.face.setRecord(narration?.record);}s.face.update(narration?.audio??null,state.elapsed,{expression:{name:kind==='attack'?'focus':kind==='growth'?'joy':'surprise',value:.25*opacity}});s.group.updateMatrixWorld(true);
@@ -167,7 +168,7 @@ export class GuardianSummons{
   bone.quaternion.premultiply(this.q);bone.updateWorldMatrix(false,true);
  }
  prepare(camera){const started=performance.now();let depth=false;for(const s of this.slots)if(s.event){depth=s.aura.prepare(camera,this.world.scene)||depth;for(const light of s.aura.localLights)light.visible=false;}this.stats.vfxPrepareMs=performance.now()-started;this.stats.vfxMs+=this.stats.vfxPrepareMs;return depth;}
- beginPrewarm(){for(const s of this.slots){s.group.visible=true;s.group.position.copy(this.world.controls.target);for(const m of s.materials)m.opacity=1;for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.time=0;}s.mixer.update(0);for(const m of [s.beam,s.impact,s.core]){m.visible=true;m.position.copy(s.group.position);m.frustumCulled=false;}s.vortex.position.copy(s.group.position);s.vortex.update(.3,0xa8ed8b,s.height,s.bottom);s.material.opacity=.5;s.aura.position.copy(s.group.position);s.aura.visible=true;s.aura.seek(.5);s.aura.prepare(this.world.camera,this.world.scene);for(const light of s.aura.localLights)light.visible=false;}}
+ beginPrewarm(){for(const s of this.slots){s.group.visible=true;s.group.position.copy(this.world.controls.target);for(const m of s.materials)m.opacity=1;for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.time=0;}s.pose.update();for(const m of [s.beam,s.impact,s.core]){m.visible=true;m.position.copy(s.group.position);m.frustumCulled=false;}s.vortex.position.copy(s.group.position);s.vortex.update(.3,0xa8ed8b,s.height,s.bottom);s.material.opacity=.5;s.aura.position.copy(s.group.position);s.aura.visible=true;s.aura.seek(.5);s.aura.prepare(this.world.camera,this.world.scene);for(const light of s.aura.localLights)light.visible=false;}}
  endPrewarm(){this.clear();}
  hide(s){if(s.event?.kind==='awakening')revealAwakening(s.ritualTarget,this.world.state.elapsed);s.ritualTarget=null;this.ritual?.hide();s.event=null;s.lastAge=0;s.aura.clear();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])o.visible=false;}
  clear(){this.pending.length=0;this.guiding=false;this.guide=null;this.guideKey=null;this.guideOrigin=null;for(const s of this.slots)this.hide(s);Object.assign(this.stats,{active:0,retainedAttacks:0,animationMs:0,vfxMs:0,vfxUpdateMs:0,vfxPrepareMs:0,auraAdvanceMs:0});}

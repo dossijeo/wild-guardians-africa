@@ -17,7 +17,7 @@ export class GuardianRitual {
   s.group.visible=true;s.group.position.set(s.origin.x,s.origin.y+Math.sin(age*Math.PI/RITUAL.duration)*.16,s.origin.z);
   const targetYaw=Math.atan2(w.camera.position.x-s.origin.x,w.camera.position.z-s.origin.z);
   s.group.rotation.y=targetYaw;
-  for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=age%a.getClip().duration;}s.mixer.update(0);
+  for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=age%a.getClip().duration;}s.pose.update();
   s.face.update(null,age,{blink:concentration,expression:{name:'focus',value:concentration*.25}});
   s.group.updateMatrixWorld(true);
   s.lapPose.update(concentration);
