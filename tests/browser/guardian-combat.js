@@ -18,6 +18,8 @@ import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {castPickedSpell} from '../../src/app/spell-placement.js';
 import {AudioSystem} from '../../src/audio/audio.js';
+import {installRollCapture} from './guardian-roll-capture.js';
+if(new URLSearchParams(location.search).has('captureRoll'))installRollCapture(document.querySelector('header'));
 const peerDiagnostics=new URLSearchParams(location.search).has('peerContacts'),peerFalls=new URLSearchParams(location.search).has('peerFalls');
 const campaign=new URLSearchParams(location.search).has('campaign');
 const faceSpecies=new URLSearchParams(location.search).get('face');
