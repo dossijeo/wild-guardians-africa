@@ -228,7 +228,11 @@ export function toonDestruction(fragment,visualSearch=globalThis.location?.searc
       // the world light intensity a second time to this calibrated response.
       .replace('ambient*=uWorldAmbient;','ambient*=mix(uWorldAmbient,1.,uNight);')
       .replace('ndl*sh*uWorldSun','ndl*sh*mix(uWorldSun,1.,uNight)');
-    return fragment.replace('out vec4 fragColor;','uniform float uNight;\nout vec4 fragColor;');
+    fragment=fragment.replace('vec3 color=base*(ambient+direct+rim)+spec+emit;',`
+ float localAO=1.;
+ if(uBuildingAOOn>.5&&uMode==0&&uInner<.5&&vUV.x>=0.&&vUV.y>=0.)localAO=mix(1.,texture(uBuildingAO,vUV).r,.72*(1.-smoothstep(.02,.30,uDamage)));
+ vec3 color=base*((ambient+rim)*localAO+direct)+spec+emit;`);
+    return fragment.replace('out vec4 fragColor;','uniform float uNight,uBuildingAOOn;uniform sampler2D uBuildingAO;\nout vec4 fragColor;');
   }
   return fragment.replace('out vec4 fragColor;', worldPatternFunctions+'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uEnvEndpoints,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+diagnosticToon+'\n'+endpointFunctions+'\nout vec4 fragColor;')
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),rough):vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),worldPatternPosition((uToonModel*vec4(vWorld,1.)).xyz))+toSRGB(emit)');

@@ -17,3 +17,13 @@ The first night candidate double-attenuated building lighting: both the calibrat
 **Scope correction:** the initial Guardian fixture did not enable `approvedVisuals`. These initial screenshots therefore demonstrate changes against the legacy fixture configuration, not the full production visual profile. Desert inspection exposed the missing sand/terrain options. They must not be treated as production appearance approval.
 
 The fixture now supports `lightingReview=1` to use WorldScene's actual `approvedVisualSearch` profile, retaining the explicit `cinematicLight` toggle. `biome` accepts sabana, gran-rio, manglares, volcanes, gran-canon, desierto and creates a legal settlement using that biome's navigation/profile. Existing default combat fixtures stay unchanged. Redo both sides with this flag before judging the reference match. The legacy desert capture is retained to show why the profile correction was needed.
+
+## Geometric AO candidate
+
+Audited all five building GLBs: none declares `occlusionTexture`. The MR red channel is not identified as AO and is not used as one. NativeContacts currently rasterizes natural prop instances only; it does not establish building-to-ground contact.
+
+Added reproducible Blender/Cycles offline bake `tools/lighting/bake_building_ao.py`. First asset: original Suajili geometry/UVs, 1024² linear grayscale atlas, 32 Cycles samples, 16 AO samples, radius 0.96 local units (12% of height). Source/output hashes and settings accompany the PNG in public/content/lighting. Derived from the existing project asset; no third-party asset added. No source GLB overwritten.
+
+Opt-in `cinematicLight=1&cinematicAO=1&lightingReview=1` loads it only for Suajili through Assets ownership/loading. Ambient and rim light receive 72% AO influence; direct/specular/emission do not. Caps and inner/destruction surfaces skip the intact atlas; influence fades between 2% and 30% damage. This fade is a conservative approximation, not dynamic cavity AO. One texture lookup on qualifying building fragments; actual GPU cost remains unmeasured.
+
+Production-profile day baseline/candidate captures are now present. [Original left / candidate with AO right](production-ao-comparison.png). Browser reports ready and no fixture errors. More localized darkening is visible under the roof and around wood/crates. This camera does not prove all UV seams, night behavior, destruction transitions or all cultures. Current result remains short of the reference and off by default. Contact shadows at building bases and improved indirect response remain outstanding, as do all-biome comparisons and cost measurements.
