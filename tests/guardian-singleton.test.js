@@ -123,3 +123,17 @@ test('GPU prewarm does not query placement in unloaded terrain',()=>{
  GuardianSummons.prototype.beginPrewarm.call(receiver);
  assert.equal(retained,1);assert.equal(updated,1);
 });
+
+
+test('disappearance sound starts once during dissolve, resets on reuse and skips an expired summon',async()=>{
+ const cues=[],world={state:{events:[],elapsed:1,time:150},scene:new THREE.Scene(),onGuardianPresence:id=>cues.push(id),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ const cast=()=>{world.state.events.push({type:'SpellActivated',kind:'growth',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:world.state.elapsed}});summons.update();};
+ cast();world.state.elapsed=2.49;summons.update();assert.deepEqual(cues,['spirit_appear']);
+ world.state.elapsed=2.5;summons.update();assert.equal(summons.slots[0].group.visible,true);assert.deepEqual(cues,['spirit_appear','spirit_disappear']);
+ world.state.elapsed=2.8;summons.update();assert.equal(cues.length,2);
+ world.state.elapsed=3.3;summons.update();assert.equal(cues.length,2);assert.equal(summons.stats.active,0);
+ cast();world.state.elapsed=4.81;summons.update();assert.equal(cues.filter(id=>id==='spirit_disappear').length,2);
+ world.state.elapsed=6;cast();world.state.elapsed=10;summons.update();assert.equal(cues.filter(id=>id==='spirit_disappear').length,2);
+ summons.dispose();
+});

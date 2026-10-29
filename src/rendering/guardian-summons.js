@@ -93,7 +93,7 @@ export class GuardianSummons{
    this.attackEchoes.retain(s.at,this.vector,s.target,s.event.targetId);
   }
   this.hide(s);this.guiding=false;
-  s.model.scale.setScalar(2.4);s.lastAge=0;s.event=event;s.at=event.presentation?.elapsed??w.state.elapsed;s.origin=event.presentation?.origin??this.plan(event.targetId,{x:event.x,z:event.z});if(!s.origin){s.event=null;return;}
+  s.model.scale.setScalar(2.4);s.lastAge=0;s.outroSound=false;s.event=event;s.at=event.presentation?.elapsed??w.state.elapsed;s.origin=event.presentation?.origin??this.plan(event.targetId,{x:event.x,z:event.z});if(!s.origin){s.event=null;return;}
   const contact=event.presentation?.contact??{x:event.x,y:w.nav.field.surface(event.x,event.z)+.5,z:event.z};s.target=new THREE.Vector3(contact.x,contact.y,contact.z);
   s.group.position.set(s.origin.x,s.origin.y,s.origin.z);s.group.rotation.y=Math.atan2(contact.x-s.origin.x,contact.z-s.origin.z);s.group.visible=true;s.material.color.setHex(COLORS[event.kind]);s.aura.position.copy(s.group.position);s.aura.position.y-=.8;s.aura.scale.setScalar(.65);s.aura.seek(0);s.aura.visible=true;s.vortex.position.copy(s.group.position);s.vortex.update(0,COLORS[event.kind],s.height,s.bottom);w.onGuardianPresence?.('spirit_appear',s.origin);s.aura.environment=vfxEnvironment(w.state.time>=300?1:0);
  }
@@ -108,7 +108,8 @@ export class GuardianSummons{
    // Match retained projectiles: cancel vanished targets before contact, but
    // let a completed impact fade even when that hit removed its victim.
    if(s.event.kind==='attack'&&age<ATTACK_TIMING.impact&&!this.liveAttackTarget(s.event.targetId)){this.hide(s);continue;}
-   if(age>2.2){w.onGuardianPresence?.('spirit_disappear',s.origin);this.hide(s);continue;}active++;
+   if(age>2.2){this.hide(s);continue;}active++;
+   if(age>=1.5&&!s.outroSound){s.outroSound=true;w.onGuardianPresence?.('spirit_disappear',s.origin);}
    const started=performance.now(),kind=s.event.kind,opacity=ease((age-(kind==='attack'?0:.06))/(kind==='attack'?.1:.18))*(1-ease((age-1.8)/.4));s.group.visible=true;
    for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.65*Math.exp(-(((age-(kind==='attack'?ATTACK_TIMING.impact:.48))/.14)**2));m.uniforms.uReveal.value=ease((age-(kind==='attack'?.02:.16))/(kind==='attack'?.12:.4))*1.12;m.uniforms.uDissolve.value=ease((age-1.5)/.7)*1.05;m.uniforms.uBottom.value=s.origin.y+s.bottom;m.uniforms.uHeight.value=s.height;}
    const clip=CLIPS[kind],selected=s.actions.has(clip)?clip:kind==='attack'?'Cast':'Invoke';
