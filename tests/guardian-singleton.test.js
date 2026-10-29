@@ -194,3 +194,19 @@ test('scene replacement and clock rollback discard queued attacks without replay
  world.state.events.push(event());summons.update();assert.equal(summons.stats.active,1,'rollback does not disable later commands');
  world.state.result='won';summons.update();hidden();summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+
+test('summon disposal releases owned effects but preserves cached source geometry and textures',async()=>{
+ const geometry=new THREE.BoxGeometry(),texture=new THREE.Texture(),material=new THREE.MeshStandardMaterial({map:texture}),model=new THREE.Group();model.add(new THREE.Mesh(geometry,material));
+ const world={state:{events:[],elapsed:1,time:150},scene:new THREE.Scene(),assets:{model:async()=>({scene:model,animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){this.disposalCount=(this.disposalCount??0)+1;}})}};
+ world.toon={uniforms:{uLightDir:{value:new THREE.Vector3(0,1,0)},uNight:{value:0}}};
+ const summons=new GuardianSummons(world);await summons.ready;const slot=summons.slots[0],v=slot.vortex,r=summons.ritual;
+ const owned=[...slot.materials,slot.material,summons.beamGeometry,summons.ringGeometry,summons.coreGeometry,v.ribbonGeometry,v.ribbonMaterial,v.moteGeometry,v.moteMaterial,r.geometry,r.material];
+ const counts=new Map();for(const resource of [...owned,geometry,material,texture]){counts.set(resource,0);resource.addEventListener('dispose',()=>counts.set(resource,counts.get(resource)+1));}
+ const meshes=[];slot.model.traverse(o=>{if(o.isMesh)meshes.push(o);});assert.equal(meshes[0].geometry,geometry);assert.notEqual(meshes[0].material,material);
+ summons.dispose();summons.dispose();
+ for(const resource of owned)assert.equal(counts.get(resource),1,'owned resource disposed once');
+ for(const resource of [geometry,material,texture])assert.equal(counts.get(resource),0,'asset cache retains ownership');
+ assert.equal(slot.aura.disposalCount,1);assert.equal(world.scene.children.length,0);
+ geometry.dispose();material.dispose();texture.dispose();
+});
