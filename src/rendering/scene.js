@@ -728,6 +728,7 @@ export class WorldScene {
     if(entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery))this.objects.get(entity.id).rotation.y=entity.downHeading;
       else if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
     this.beastPhysics?.render(entity.id);
+    if(!entity.magicDown)supportAnimalOnTerrain(data,this.animalSupportSurface??=(x,z)=>this.nav.actorSurface(x,z));
     applyActorExpression(data,entity,'animal',this.state.elapsed);
   }
   prepareUpcomingAnimalRigs(s=this.state,now=performance.now()) {
