@@ -31,3 +31,9 @@ The recorder now uses Game.tick for both day and night and stores per-plant init
 The QA detail control now offers `Incluir objetivo en detalle`. It encloses the Guardian, the target model and contact point, adds a two-meter motion margin, and fits a bounding sphere using the limiting horizontal/vertical camera FOV. This affects only the QA camera.
 
 `attack-joint.mp4`, `attack-joint-sheet.jpg` and `attack-joint-release.png` retain the native night Attack with both characters in frame. The sampled sequence shows the connecting discharge followed by recoil and falling; the inspected release image is extracted at video time 0.35 s (video timestamps are not simulation age). The report records 2.486775 simulation seconds, zero final visible/pending summons and no errors. The view is still too wide for exact palm/contact-surface certification; the recording ends before recovery. No frame-accurate audiovisual timing, full recovery, continuous smoothness or performance approval is claimed.
+
+## Installed-rig discharge verification
+
+The added guardian-pose regression loads the installed Guardian GLB and its authored Spell_Attack clip, with an actual live victim ID. It samples charge, early/mid/late flight and impact across three contact locations including elevation changes. It verifies a real hand binding, changing hand poses, charging at the hand, initial trail attachment, both cylinder endpoints on the current hand-to-contact segment, no premature tip contact, and impact flash/location at the shared marker. The trail is intentionally detached from the hand late in flight. This geometric check does not certify the bone lies inside the visible palm surface.
+
+37 tests pass across guardian-pose, guardian-singleton, guardian-combat and guardian-surface-pick, including installed skin picking for all five beasts and sequential presentations. Combined visual timing/audio and exact visible palm placement still require perceptual review.

@@ -46,3 +46,36 @@ test('installed Guardian rig remains stable across repeated spell renders',async
  }
  summons.dispose();
 });
+
+
+test('installed animated hand anchors Attack flight and reaches the selected surface on the impact marker',async()=>{
+ const {readFileSync}=await import('node:fs');const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
+ const {rigForSampling}=await import('../tools/prepare_watering_emitters.mjs');const {GuardianSummons}=await import('../src/rendering/guardian-summons.js');
+ const {GUARDIAN_ATTACK_TIMING:T}=await import('../src/simulation/guardian-timing.js');
+ const gltf=await new GLTFLoader().parseAsync(rigForSampling(readFileSync('public/content/guardian/guardian.glb')),'');
+ const world={toon:{uniforms:{uLightDir:{value:new THREE.Vector3(1,1,0)},uNight:{value:1}}},state:{events:[],elapsed:1,time:400,raid:{animals:[{id:'victim',status:'walking'}]}},scene:new THREE.Scene(),assets:{model:async()=>gltf},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;const slot=summons.slots[0];
+ assert.ok(slot.hand?.isBone,'the installed model must expose the actual hand bone');
+ assert.ok(slot.actions.has('Spell_Attack'),'exercise the authored attack clip');
+ const matrix=new THREE.Matrix4();let previousHand=null,moved=false;
+ try{
+  for(const contact of [{x:0,y:1,z:0},{x:5,y:.2,z:-3},{x:-2,y:4,z:3}]){
+   summons.clear();world.state.elapsed+=4;summons.update();const at=world.state.elapsed;
+   world.state.events.push({type:'SpellActivated',kind:'attack',targetId:'victim',x:contact.x,z:contact.z,presentation:{origin:{x:3,y:1,z:0},contact,elapsed:at}});
+   summons.update();assert.equal(slot.event.targetId,'victim');previousHand=null;
+   for(const age of [T.release*.5,T.release+.005,T.release+(T.impact-T.release)*.5,T.impact-.001,T.impact+.001]){
+    world.state.elapsed=at+age;summons.update();const hand=slot.hand.getWorldPosition(new THREE.Vector3()),target=new THREE.Vector3(contact.x,contact.y,contact.z);
+    if(previousHand&&previousHand.distanceTo(hand)>.001)moved=true;previousHand=hand.clone();
+    assert.equal(slot.impact.visible,age>=T.impact,'impact flash must not precede the shared marker');
+    if(age<T.release){assert.equal(slot.beam.visible,false);assert.ok(slot.core.position.distanceTo(hand)<1e-6);continue;}
+    assert.equal(slot.beam.visible,true);assert.equal(slot.beam.count,1);slot.beam.getMatrixAt(0,matrix);
+    const tail=new THREE.Vector3(0,-.5,0).applyMatrix4(matrix),tip=new THREE.Vector3(0,.5,0).applyMatrix4(matrix),ray=target.clone().sub(hand),length=ray.length();ray.normalize();
+    for(const point of [tail,tip]){const delta=point.clone().sub(hand),along=delta.dot(ray);assert.ok(along>=-1e-5&&along<=length+1e-5);assert.ok(delta.addScaledVector(ray,-along).length()<1e-5,'beam endpoints must remain on the current hand-to-contact line');}
+    if(age<T.release+(T.impact-T.release)*.5+.0001)assert.ok(tail.distanceTo(hand)<1e-5,'initial trail is attached to the animated hand');
+    if(age<T.impact)assert.ok(tip.distanceTo(target)>1e-4,'no premature contact');
+    else{assert.ok(tip.distanceTo(target)<1e-5);assert.ok(slot.impact.position.distanceTo(target)<1e-6);}
+   }
+  }
+  assert.ok(moved,'test must sample changing authored hand poses');
+ }finally{summons.dispose();}
+});
