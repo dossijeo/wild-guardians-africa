@@ -8,12 +8,15 @@ All six biomes: savanna, desert, grand river, mangrove, volcanoes, canyons. Comp
 
 | Group | Existing evidence | Remaining work |
 | --- | --- | --- |
-| Five work centers | Fresh geometric AO maps, native shader integration, day views; some night views | Suajili night correction, all-culture comparison and destruction/repair AO transitions |
-| Village buildings, walls, props | Ground contact approximation and existing lighting | Audit material AO; bake missing local visibility and verify no doubled shading |
-| Trees, bushes, grass, crops | Canopy/ground contact shading exists | Audit per-material channels; local AO with transparent-leaf-aware bake and bounded strength |
-| Workers, animals, Guardian | Expressive rigs and normal/material treatments | Audit source channels; pose-independent cavity AO, check blink/mouth/cloth/moving joints |
-| Terrain and rocks | Texture AO and resident contact atlas already exist | Calibrate combined attenuation, especially mangrove black patches; no duplicate AO |
-| Water and translucent/emissive VFX | Separate material paths | Verify contact/lighting consistency; do not multiply opaque cavity AO into water transparency or magic emission |
+| Five work centers | Fresh AO maps, day views and Suajili night adjustment | All-culture night comparison, destruction/repair and combined contact shading |
+| Village buildings and native props | 46 village units, 120 prop slots / 360 LOD views baked; six-biome day/night captures | Near views, individual units, combined attenuation and full cost measurements |
+| Walls and gates | 20 pieces baked; damage and gate clipping preserve AO; adobe intact/damaged/ruined captures | Five-material day/night, gate motion, repair and incremental update cost |
+| Crops | 40 authored stages and 32 growth bridges; eight-species midpoint day/night captures | Endpoints, wind, production cinematic lighting and Grow transitions |
+| Workers and animals | Nine banks, source/runtime mapping tests; hyena day/night comparison | Other eight models, animated joints, mouths and eyelids |
+| Guardian | Local AO integrated into spirit hemisphere; Grow day/night comparison | Tutorial, all spells, cloth/face animation and reveal/dissolve boundaries |
+| Distant vegetation | Mangrove near-tree residency corrected and replacement captures published | Far impostor shading and visual consistency across LOD transitions |
+| Terrain and rocks | Texture AO, native rock AO and resident contact atlas | Combined attenuation, especially mangrove black patches; no duplicate AO |
+| Water and translucent/emissive VFX | Separate material paths | Contact/lighting consistency; preserve transparency and magic emission |
 
 No group is globally accepted yet. New captures will be stored in this directory. Earlier center evidence remains in docs/renewed-work-centers. Final artistic acceptance belongs to the user after publication.
 
@@ -93,3 +96,12 @@ Twenty packed wall/gate/damaged/ruined pieces now have a 71,367-byte sidecar. Ba
 `wallBridge` expands visibility alongside each indexed corner. Gate clipping interpolates it with other vertex fields, so new cut vertices cannot lose their value or misalign it. Runtime wall AO uses Float32 for these interpolated values. During regional damage morphs, attenuation is released towards unoccluded at the midpoint and returns to the authored endpoint visibility; an opening leaf similarly releases its baked shade. This avoids retaining a closed-wall shadow after geometry separates, but may soften cavities temporarily. Updates occur in the existing changed-pose path; incremental cost remains unmeasured.
 
 Selected wall/asset lifecycle tests passed (15 distinct tests across two runs), including five materials, five HP values and three gate openings; production build passed. `wall-adobe-{intact,damaged,ruined}.png` shows 300, 140 and 0 HP after real hitStructure commands in the isolated walls-world WorldScene fixture; no browser errors were reported. That fixture uses legacy Navigation, a running clock and its own lighting, so these are state/appearance checks, not frozen AO comparisons or production biome-layout approval. All-material day/night pairs, repair visuals and performance remain pending.
+
+
+## Resource inventory and performance comparison scope
+
+Run `node tools/lighting/audit_ao_resources.mjs` to regenerate `resource-inventory.json`. The script checks every binary against its declared byte length and SHA-256 before reporting totals. Current 24 optional banks contain **2,979,913 binary bytes** and **213,395 metadata bytes**, including the model catalogue. This is the complete on-disk candidate inventory, not the amount fetched in one biome. Existing center AO textures, terrain/contact atlases and impostor atlases are excluded.
+
+These totals are not GPU-memory measurements: render groups can clone buffers, and wall clipping expands/interpolates visibility into Float32 corner attributes. Nor do uniform-toggle comparisons measure the complete AO overhead: attributes remain resident and shaders retain their AO operations. Those toggles are valid for artistic comparisons only.
+
+For an incremental runtime comparison, load the same native scene in separate runs with `globalAO` absent and with `globalAO=1`. Keep seed, biome, culture, camera, quality, pixel ratio, clock and entity population fixed. Wait for model/tree preparation to finish in both runs and record their readiness; discard hidden-tab samples. Alternate run order, separate cold loading from warmed frame measurements, and retain raw frame samples. Report p50/p95/p99 frame time, CPU animation/VFX time where instrumented, draws, active effects/physics and allocation/residency evidence. Include idle, one cast and consecutive casts; do not attribute existing engine stalls to AO without a reproducible paired difference. No full-cost result is claimed yet.
