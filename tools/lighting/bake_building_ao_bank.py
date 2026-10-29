@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 p=argparse.ArgumentParser();p.add_argument('--blender',required=True);p.add_argument('--culture',action='append');a=p.parse_args()
 root=Path(__file__).resolve().parents[2]
-manifest=json.loads((root/'content/manifests/destruction-native.json').read_text())
+manifest=json.loads((root/'public/content/destruction.json').read_text())
 for building in manifest['buildings']:
  culture=building['culture']
  if a.culture and culture not in a.culture:continue

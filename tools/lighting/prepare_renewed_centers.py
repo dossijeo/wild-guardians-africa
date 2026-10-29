@@ -1,6 +1,6 @@
 """Blender: normalize user-supplied center copies for the native destruction input.
 
-Preserves proportions and textures; matches each former building's height.
+Preserves proportions and textures; fits each former building's dimensions without expanding its envelope.
 Does not install runtime assets or reuse old model-specific geometry patches.
 """
 import json
@@ -28,7 +28,7 @@ for old in audit['rows']:
     coords = [v.co for v in obj.data.vertices]
     low = [min(v[i] for v in coords) for i in range(3)]
     high = [max(v[i] for v in coords) for i in range(3)]
-    scale = old['currentDimensions'][1] / (high[2] - low[2])
+    scale = min(old['currentDimensions'][axis] / (high[blender_axis] - low[blender_axis]) for axis, blender_axis in enumerate((0, 2, 1)))
     center = [(low[0]+high[0])/2, (low[1]+high[1])/2, low[2]]
     for v in obj.data.vertices:
         for axis in range(3):

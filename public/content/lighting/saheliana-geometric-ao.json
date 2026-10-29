@@ -1,14 +1,14 @@
 {
-  "source": "/assets/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
-  "sourceSHA256": "f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f",
-  "outputSHA256": "2e2c982c0f2ddb4a09d11785c33028f1a4c2e6bd270241fa86c1d0140cb07634",
+  "source": "/assets/7cf0163007eaf470b4e69e651b08cb8ed7126a30c38ba78db9d5d16b25336afe.glb",
+  "sourceSHA256": "7cf0163007eaf470b4e69e651b08cb8ed7126a30c38ba78db9d5d16b25336afe",
+  "outputSHA256": "955f94ac8e5547fe9bf32db8a0f9a72a5aebccf147877321eb1aaf8ae470ebe0",
   "tool": "tools/lighting/bake_building_ao.py",
   "blender": "4.5.3",
   "size": 1024,
   "samples": 32,
   "aoSamples": 16,
+  "scope": "Renewed intact center; new UVs, freshly baked",
   "distance": 1.08,
   "storage": "8-bit grayscale PNG",
-  "newExternalAsset": false,
-  "scope": "Candidate for intact building; not dynamic cavity AO"
+  "normalization": "Uniform scaling preserves AO visibility when bake distance scales with height"
 }

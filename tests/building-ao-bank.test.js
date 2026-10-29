@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url));
 const hash=buffer=>createHash('sha256').update(buffer).digest('hex');
 test('building AO bank matches every original geometry and declared grayscale atlas',()=>{
- const manifest=JSON.parse(read('content/manifests/destruction-native.json'));
+ const manifest=JSON.parse(read('public/content/destruction.json'));
  for(const building of manifest.buildings){
   const base='public/content/lighting/'+building.culture+'-geometric-ao';
   const data=read(base+'.png'),meta=JSON.parse(read(base+'.json'));

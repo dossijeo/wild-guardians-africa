@@ -25,7 +25,7 @@ for(const file of files){
   for(const [i,image] of (json.images??[]).entries()){
     if(image.bufferView===undefined)throw Error('External image in '+file);
     const v=views[image.bufferView],source=bin.subarray(v.byteOffset??0,(v.byteOffset??0)+v.byteLength),info=await sharp(source).metadata();
-    const textureIds=new Set((json.textures??[]).flatMap((t,id)=>t.source===i?[id]:[])),color=(json.materials??[]).some(m=>textureIds.has(m.pbrMetallicRoughness?.baseColorTexture?.index)||textureIds.has(m.emissiveTexture?.index)),normal=(json.materials??[]).some(m=>textureIds.has(m.normalTexture?.index)),quality=color?90:95,lossless=normal||losslessImages.has(hash(source));
+    const textureIds=new Set((json.textures??[]).flatMap((t,id)=>(t.source??t.extensions?.EXT_texture_webp?.source)===i?[id]:[])),color=(json.materials??[]).some(m=>textureIds.has(m.pbrMetallicRoughness?.baseColorTexture?.index)||textureIds.has(m.emissiveTexture?.index)),normal=(json.materials??[]).some(m=>textureIds.has(m.normalTexture?.index)),quality=color?90:95,lossless=normal||losslessImages.has(hash(source));
     // High-quality WebP with lossless alpha; higher quality for normal/ORM maps.
     // A 2048 limit bounds web texture allocations; no upscaling.
     const output=await sharp(source).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).webp({quality,lossless,alphaQuality:100,effort:6}).toBuffer(),after=await sharp(output).metadata();
@@ -50,7 +50,7 @@ for(const file of files){
     if(!Buffer.from(decoded).equals(source))throw Error('Meshopt byte mismatch: '+file+'/'+i);
     v.buffer=1;v.extensions={...v.extensions,EXT_meshopt_compression:{buffer:0,byteOffset:append(encoded),byteLength:encoded.length,byteStride:stride,count,mode,filter:'NONE'}};compressedViews++;
   }
-  for(const texture of json.textures??[]){texture.extensions={...texture.extensions,EXT_texture_webp:{source:texture.source}};delete texture.source;}
+  for(const texture of json.textures??[]){texture.extensions={...texture.extensions,EXT_texture_webp:{source:texture.source??texture.extensions?.EXT_texture_webp?.source}};delete texture.source;}
   const codecs=['EXT_meshopt_compression',...((json.images??[]).length?['EXT_texture_webp']:[])];
   json.extensionsUsed=[...new Set([...(json.extensionsUsed??[]),...codecs])];json.extensionsRequired=[...new Set([...(json.extensionsRequired??[]),...codecs])];
   json.buffers=[{byteLength:length},{byteLength:bin.length,extensions:{EXT_meshopt_compression:{fallback:true}}}];
