@@ -63,7 +63,7 @@ try{
   if(!best)throw Error('No suitable real terrain slope found for recovery trial');
   slopeSite=best;site={x:best.x-2.5,z:best.z};
  }
- function camera(){world.cinematic=false;world.camera.zoom=1;world.camera.updateProjectionMatrix();const y=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,y+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,y+zoom*.65,site.z+Math.cos(angle)*zoom);world.controls.update();}
+ function camera(){world.cinematic=false;world.camera.zoom=new URLSearchParams(location.search).has('castClose')?2:1;world.camera.updateProjectionMatrix();const y=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,y+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,y+zoom*.65,site.z+Math.cos(angle)*zoom);world.controls.update();}
  if(new URLSearchParams(location.search).has('authoredRecovery')){world.beastPhysics.recoveryClips=new Map(await Promise.all(['hyena','lion','warthog','buffalo','rhino'].map(async species=>{const data=await json('/content/source/animations/stand-up/'+species+'-candidate.json');return [species,AnimationClip.parse(data.clip)];})));}
  const guideToggle=document.createElement('button');guideToggle.id='guideToggle';guideToggle.textContent='Gu\u00eda del tutorial';document.querySelector('header').insertBefore(guideToggle,$('status'));
  let guideTrial=false;const normalGuideTarget=world.tutorialGuideTarget.bind(world);
