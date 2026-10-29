@@ -1,5 +1,4 @@
 {
-  "source": "C:\\tmp\\guardian-faces\\buffalo-oral-v4.blend",
   "geometryChanged": false,
   "textures": [
     {
@@ -36,5 +35,27 @@
       ]
     }
   ],
-  "bytes": 14992262
+  "bytes": 15012303,
+  "originalPackagingSource": "C:\\tmp\\guardian-faces\\buffalo-oral-v4.blend",
+  "source": "content/source/actors/buffalo/expressive-pre-mane.blend",
+  "normalRevision": {
+    "pipeline": "tools/guardian/study_buffalo_mane_normals.py",
+    "transfer": "tools/guardian/transfer_authored_normals.py",
+    "scope": "Rear mane normals only; original runtime non-normal payloads preserved",
+    "sourceAudit": "docs/guardian/phase2/vfx-scalar-review/buffalo-mane-source-audit.json"
+  },
+  "files": {
+    "expressive-pre-mane.blend": {
+      "bytes": 14992262,
+      "sha256": "6f52cb652aee89963a445527762041b31ce04a67c43c2804133c633100d59436"
+    },
+    "expressive-candidate.blend": {
+      "bytes": 15012303,
+      "sha256": "46439b046b4fb42735a085933b2e6f135676577e910a0c28cdc6159e77375315"
+    },
+    "expressive-candidate.glb": {
+      "bytes": 6126224,
+      "sha256": "d7fee4c5cbe452dfb21ac087fc1ad079bf9bce9b7de7fa871649994c2ae8c2cd"
+    }
+  }
 }

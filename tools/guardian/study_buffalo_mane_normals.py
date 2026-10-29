@@ -1,7 +1,7 @@
 import bpy,json,hashlib
 from pathlib import Path
 from mathutils import Vector
-root=Path.cwd();source=root/'content/source/actors/buffalo/expressive-candidate.blend';output=root/'test-results/buffalo-mane-normals.blend'
+root=Path.cwd();source=root/'content/source/actors/buffalo/expressive-pre-mane.blend';output=root/'test-results/buffalo-mane-normals.blend'
 bpy.ops.wm.open_mainfile(filepath=str(source));o=bpy.data.objects['Mesh_0'];m=o.data
 original=[n.vector.copy() for n in m.corner_normals];keys=[tuple(v.co) for v in m.vertices];sums={k:Vector() for k in keys}
 for p in m.polygons:

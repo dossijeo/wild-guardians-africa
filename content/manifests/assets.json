@@ -5268,6 +5268,15 @@
       "origins": [
         "content/source/actors/rhino/expressive-candidate.blend#corrected-lower-mouth"
       ]
+    },
+    {
+      "url": "/assets/9dc6ecb1236bc79566fa2862c4624ad34d9111a4286b59220393c08a14076090.glb",
+      "bytes": 77803860,
+      "sha256": "9dc6ecb1236bc79566fa2862c4624ad34d9111a4286b59220393c08a14076090",
+      "mime": "application/octet-stream",
+      "origins": [
+        "content/source/actors/buffalo/expressive-candidate.blend"
+      ]
     }
   ],
   "models": [
@@ -5398,7 +5407,7 @@
       }
     },
     {
-      "url": "/assets/fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb.glb",
+      "url": "/assets/9dc6ecb1236bc79566fa2862c4624ad34d9111a4286b59220393c08a14076090.glb",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
       "animations": [
         {
@@ -5473,6 +5482,12 @@
         "sourceSha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
         "editable": "content/source/actors/buffalo/expressive-candidate.blend",
         "report": "docs/guardian/phase2/face-authoring/buffalo/oral-v4-beard-audit.json"
+      },
+      "normalEdit": {
+        "sourceSha256": "fc372bc8ea55017e8e9153b09db6959c26946712929ba281f0b873a23c04bdcb",
+        "report": "docs/guardian/phase2/vfx-scalar-review/buffalo-mane-transfer.json",
+        "pipeline": "tools/guardian/transfer_authored_normals.py",
+        "scope": "Localized rear mane normals; original non-normal payloads preserved"
       }
     },
     {
