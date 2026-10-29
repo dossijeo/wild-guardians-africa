@@ -1,3 +1,4 @@
+import {isTailContactVertex} from '../../src/rendering/beast-ground-contact.js';
 import {sampleMeshSurfaceCrossings} from './guardian-skin-crossings.js';
 import {Box3,Vector3} from 'three';
 // Diagnostic only: pairwise articulated collider distances, sampled at 10 Hz.
@@ -65,8 +66,14 @@ export function sampleRecoveryPositions(manager,world=null){
   const present=new Set(active.map(a=>a.id));
   for(const animal of world.state.raid?.animals??[]){
    if(present.has(animal.id))continue;
-   const hip=world.mixers.get(animal.id)?.model?.getObjectByName('Hips');
-   if(hip)active.push({id:animal.id,mode:'navigation',phase:animal.status,logical:[animal.x,animal.z],hip:hip.getWorldPosition(new Vector3()).toArray(),correction:null,recoveryAge:null,lift:null,entryClearance:null});
+   const rig=world.mixers.get(animal.id),hip=rig?.model?.getObjectByName('Hips');
+   let exitSupport=null;
+   if(rig?.recoveryExit&&world.nav?.field?.surface){
+    let minimum=Infinity,count=0,limiter=null;
+    rig.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let index=0;index<mesh.geometry.attributes.position.count;index++){if(isTailContactVertex(mesh,index))continue;mesh.getVertexPosition(index,point).applyMatrix4(mesh.matrixWorld);const gap=point.y-world.nav.field.surface(point.x,point.z);count++;if(gap<minimum){minimum=gap;limiter={mesh:mesh.name,index,position:point.toArray()};}}});
+    exitSupport={age:world.state.elapsed-rig.recoveryExit.at,minimum,count,limiter};
+   }
+   if(hip)active.push({id:animal.id,mode:'navigation',phase:animal.status,exitSupport,logical:[animal.x,animal.z],hip:hip.getWorldPosition(new Vector3()).toArray(),correction:null,recoveryAge:null,lift:null,entryClearance:null});
   }
  }
  return active;
