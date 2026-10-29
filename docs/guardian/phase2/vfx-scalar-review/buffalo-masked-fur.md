@@ -7,3 +7,9 @@ Reproduce from the arm-normal source at commit 62d53c8dc with tools/guardian/aut
 Compressed size 6,117,900 bytes versus registered 6,112,176: +5,724 bytes. Decoded mask storage 191,544 bytes. Compression validation: 4,671,134 exact geometry/animation bytes, texture PSNR minimum 40.13, zero validator errors. These are asset measurements, not frame-time performance acceptance.
 
 Actual Intel UHD WorldScene views inspected: rear daylight, front three-quarter daylight and rear nighttime. Rear strands are more legible; the front retains dark crest and facial appearance. Screenshots and status accompany this document. These static views do not prove all-angle continuity or animation acceptance. Candidate is not yet registered; moving-pose review remains required.
+
+## Real Attack cycle
+
+Recorded candidate on the real Game.tick/WorldScene path: 12.006385 simulated seconds, 12.668235 measured wall seconds; one physical ragdoll, no baked fallback, completedSimulation true, finalDownCount zero, errors empty, maximum one visible Guardian. The accompanying contact sheet was inspected across descent, roll, rise and return to walking. The strategic camera is too distant for continuous fine-shading acceptance; retain the candidate status. Recording was made without activating audio. Frame measurements include recording overhead and are not a paired performance comparison.
+
+The focused african-toon and animal-actions suites passed all 36 tests at the preceding shader revision.
