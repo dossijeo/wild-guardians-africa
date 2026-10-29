@@ -2,6 +2,7 @@ import {AnimationMixer} from 'three';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from './animal-actions.js';
 import {prepareSkinEnvelope,updateSkinEnvelopeSphere} from './skin-envelope.js';
+import {installSkinPicking} from './skin-pick-bounds.js';
 
 export function releaseActorRig(rig){
   if(!rig)return;rig.mixer.stopAllAction();rig.mixer.uncacheRoot(rig.model);
@@ -43,7 +44,7 @@ export class AnimalPreload {
       if(envelope)rig.skinEnvelopes.set(mesh,envelope);
       if(!updateSkinEnvelopeSphere(mesh,envelope))mesh.computeBoundingSphere();
     }});
-    return rig;
+    installSkinPicking(model);return rig;
   }
   async take(species){
     if(this.disposed)return null;
