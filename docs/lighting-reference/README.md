@@ -37,3 +37,11 @@ All five original building meshes now have their own baked atlas: suajili, etiop
 Gran Río + Ethiopian culture was loaded with the production profile and opt-in lighting/AO, with no fixture errors. Added `buildingView=1` to frame the entire centre rather than clip it at the left edge. [Full-building inspection](river-ethiopian-full-ao-day.png) shows separation under layered roof sections and around the doorway. The remaining three cultures still require visual review, and no broad performance/quality acceptance is claimed.
 
 Atlas disk sizes: [{"file": "etiope-geometric-ao.png", "bytes": 460221}, {"file": "mapungubwe-geometric-ao.png", "bytes": 492228}, {"file": "musgum-geometric-ao.png", "bytes": 518327}, {"file": "saheliana-geometric-ao.png", "bytes": 564449}, {"file": "suajili-geometric-ao.png", "bytes": 564027}]
+
+## Building-to-ground contact candidate
+
+Opt-in `cinematicContacts=1` adds centres to the existing 256² resident contact map. Uses each culture's actual rotated placement hull, a smooth 1.2-world-unit falloff, maximum 38% ambient attenuation, and minimum composition with existing natural-prop AO. No additional GPU texture or pass. Only centres are covered: village decorative buildings, walls and moving entities are not included yet. This is approximate low-frequency sky occlusion, not ray-traced contact shadows; hulls can include space beyond the mesh.
+
+The cache key includes centre position, heading, culture and presence. Ruined/collapsing centres are omitted; removal and rotation refresh the same texture. 16 contact/horizon tests pass, including new localization, natural-AO preservation, rotation, removal and stable-texture checks. Build passes in 15.55s.
+
+[Gran Río contact inspection](river-ethiopian-contacts-day.png) runs with the production profile, Ethiopian building, candidate lighting and baked AO. Contact contribution is restrained at this camera scale; no broad black halo is apparent in this frame. It does not establish sufficient quality across slopes, other zooms or cultures. Since the atlas covers the resident terrain, texel footprint can limit narrow-contact fidelity. Measure that tradeoff and CPU update cost before enabling by default. Build/fixture tests are not final performance acceptance.
