@@ -11,7 +11,9 @@ export function applyGuardianAttack(state,animal,{nav,origin,contact,ground=0}={
  const dx=at.x-from.x,dy=at.y-from.y,dz=at.z-from.z,length=Math.hypot(dx,dy,dz)||1;
  const direction={x:dx/length,y:dy/length,z:dz/length};
  animal.magicHealth=Math.max(0,(animal.magicHealth??profile.resilience)-ATTACK.damage);
- animal.magicStunUntil=state.elapsed+profile.stun;
+ // Even resistant species must stay at the selected contact through flight.
+ // Their configured stun can be shorter than the shared presentation marker.
+ animal.magicStunUntil=state.elapsed+Math.max(profile.stun,GUARDIAN_ATTACK_TIMING.impact);
  animal.magicImpact={at:state.elapsed,impactAt:state.elapsed+GUARDIAN_ATTACK_TIMING.impact,point:{...at},direction,intensity:1,ground,health:animal.magicHealth,origin:{...from}};
  animal.hitApplied=true;animal.attackRemaining=0;animal.path=null;
  if(animal.status==='attacking')animal.status='walking';
