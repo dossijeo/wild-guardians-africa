@@ -186,3 +186,9 @@ Seven tests pass, including all five species clearing wall/corner contact fixtur
 Initial same-session four-hyena A/B runs (`recovery-reuse-reference.json`, `recovery-reuse-enabled.json`) both complete with zero final down actors/errors. Visual recovery p95 changes from 4.300 to 0.065 ms; physical recovery-follow p95 remains 5.935 vs 5.830 ms. Frame p95 is 66.485 vs 49.970 ms, but one ordered pair with different trajectories is insufficient to attribute global frame improvement. A first warmup overlapping tests was excluded. Counters are session-cumulative. The QA toggle permits balanced repetitions.
 
 `recovery-reuse-video` records completed native recovery with reuse enabled. The inspected 2 fps sheet shows the hyena remaining visible through fall, get-up and resumed walking; this wide view does not approve fine contacts. Tests ran concurrently during this visual recording, so its timings are not performance evidence. No audio context was unlocked.
+
+## Rhino lateral cycle with recovery reuse enabled
+
+`rhino-recovery-reuse.json`, MP4 and 2 fps sheet record native Game.tick from spell age zero through the heavy species' fall, roll, authored recovery and resumed walking. The run advances 10.392195 simulation seconds; 24 wind bindings, zero prior/new errors, maximum one visible Guardian, zero final visible/pending summons, and completed recovery are reported. The inspected sheet keeps the animal visible beside the village throughout the gross cycle.
+
+The impact direction is a QA lateral override, not proof of automatic origin selection. Cooldown is reset by the fixture. The wide static view cannot approve fine skin/ground or horn contacts, continuous-motion quality, or all species/obstacle combinations. No audio context was unlocked. This recording is visual evidence, not a paired performance measurement. No production behavior was changed in this validation step.
