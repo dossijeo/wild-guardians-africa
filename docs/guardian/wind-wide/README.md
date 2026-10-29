@@ -44,4 +44,6 @@ Imported the installed public/content/guardian/guardian.glb in Blender and match
 
 An isolated candidate (C:/tmp/guardian-hand-weights.blend) smooths 35 right-wrist vertices within 18 mm, using an 8 mm neighborhood, radial blending and four normalized influences. No positions, topology, clips or cloth weights outside this region are changed by the script. check_deformation reports Attack maximum 2.78679 to 2.47026; p99 1.20282 to 1.20210. Idle maximum stays 1.54370. The new maximum is the left wrist. Reproduce with study_guardian_hand_weights.py, then check_deformation.py --blend C:/tmp/guardian-hand-weights.blend --clips Idle Spell_Attack.
 
-The candidate is NOT installed and has not been visually accepted. Numeric improvement alone does not justify replacing the shipped character. Next inspect local posed wrists, consider the mirrored region and preserve ornament rigidity, then validate source/export/animation parity before installation.
+The candidate is NOT installed. Subsequent close-up comparison in wrist-review rejected it: the visible benefit was insufficient to justify replacing the shipped character. Numeric improvement alone does not justify replacement.
+
+The current maximum Idle mantle edge was subsequently inspected from three angles at frame 13; see mantle-review. It lies at the lower hem. No opening is visible in those sampled views, but the thick hem and its moving silhouette still require artistic assessment; static close-ups do not certify light-cloth behavior.
