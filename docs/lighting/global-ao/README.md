@@ -13,7 +13,7 @@ All six biomes: savanna, desert, grand river, mangrove, volcanoes, canyons. Comp
 | Walls and gates | 20 pieces baked; damage and gate clipping preserve AO; adobe intact/damaged/ruined captures | Five-material day/night, gate motion, repair and incremental update cost |
 | Crops | 40 authored stages and 32 growth bridges; eight-species midpoint day/night captures | Endpoints, wind, production cinematic lighting and Grow transitions |
 | Workers and animals | Nine banks, source/runtime mapping tests; all nine models have static day/night comparisons, plus one young-male recovery cycle | Animated joints, mouths and eyelids across all models and camera angles |
-| Guardian | Local AO integrated into spirit hemisphere; Grow day/night comparison | Tutorial, all spells, cloth/face animation and reveal/dissolve boundaries |
+| Guardian | Local AO integrated into spirit hemisphere; scoped day/night stills for four spells, Multiply dissolve, corrected repeated-pose drift | Tutorial, close continuous cloth/face review and remaining reveal/dissolve boundaries |
 | Distant vegetation | Mangrove near-tree residency corrected and replacement captures published | Far impostor shading and visual consistency across LOD transitions |
 | Terrain and rocks | Texture AO, native rock AO and resident contact atlas | Combined attenuation, especially mangrove black patches; no duplicate AO |
 | Water and translucent/emissive VFX | Separate material paths | Contact/lighting consistency; preserve transparency and magic emission |
