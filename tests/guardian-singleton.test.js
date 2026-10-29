@@ -180,3 +180,17 @@ test('a queued missing victim is skipped without appearance audio or delaying a 
  assert.equal(summons.pending.length,0);assert.equal(summons.slots[0].event.kind,'growth');assert.equal(cues.length,2);
  summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+
+test('scene replacement and clock rollback discard queued attacks without replaying historical events',async()=>{
+ const world={state:{events:[],elapsed:1,time:400},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ const event=()=>({type:'SpellActivated',kind:'attack',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:world.state.elapsed}});
+ const queue=()=>{world.state.events.push(event(),event(),event(),event());summons.update();assert.equal(summons.pending.length,3);assert.equal(summons.stats.active,1);};
+ const hidden=()=>{assert.equal(summons.pending.length,0);assert.equal(summons.stats.active,0);assert.equal(summons.slots[0].event,null);for(const key of ['group','aura','beam','impact','core','vortex'])assert.equal(summons.slots[0][key].visible,false,key);};
+ queue();world.state={...world.state,events:[...world.state.events]};summons.update();hidden();
+ world.state.events.push(event());summons.update();assert.equal(summons.stats.active,1,'new scene accepts new commands');
+ world.state.elapsed=2;queue();world.state.elapsed=1.9;summons.update();hidden();
+ world.state.events.push(event());summons.update();assert.equal(summons.stats.active,1,'rollback does not disable later commands');
+ world.state.result='won';summons.update();hidden();summons.dispose();assert.equal(world.scene.children.length,0);
+});
