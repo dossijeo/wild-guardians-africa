@@ -62,11 +62,11 @@ export function webPackagePlugin(){
       const originals=readdirSync(resolve(config.root,'public/assets')).filter(name=>name.endsWith('.glb')).sort(),covered=mapping.records.filter(item=>item.source.endsWith('.glb')).map(item=>item.source.slice('assets/'.length)).sort();
       if(JSON.stringify(originals)!==JSON.stringify(covered))throw Error('GLB inventory changed: run npm run assets:compress before building');
       function walk(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())walk(file);else if(['.html','.js','.json','.css'].includes(extname(file))&&!relative(dist,file).replaceAll('\\','/').startsWith('assets/')){const path=relative(dist,file).replaceAll('\\','/');writeFileSync(file,publicText(readFileSync(file,'utf8'),path,mapping));}}}
-      // Offline authoring keeps 54 separate records. Release fetches one bank.
+      // Offline authoring keeps separate records for all voice manifests. Release fetches one bank.
       const cueDir=resolve(dist,'content/guardian/lipsync');
       if(existsSync(cueDir)){
         const records={};
-        for(const name of readdirSync(cueDir).filter(n=>/^(ES|EN)_\d+\.json$/.test(n)).sort()){
+        for(const name of readdirSync(cueDir).filter(n=>n.endsWith('.json')&&n!=='bank.json').sort()){
           const file=resolve(cueDir,name);if(!file.startsWith(cueDir+sep))throw Error('Cue path escapes package');
           const record=JSON.parse(readFileSync(file,'utf8'));if(record.id!==name.slice(0,-5))throw Error('Cue identity mismatch');
           records[record.id]=record;rmSync(file);

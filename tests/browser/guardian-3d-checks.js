@@ -21,7 +21,7 @@ export async function checkGuardian(actor,audio,voices,resolve){
  for(let i=0;i<3;i++)assert(['head rotation','arm rotation','baked mantle'][i],JSON.stringify(first[i])!==JSON.stringify(second[i]));
  for(const prefix of ['Feather','Wood','Root']){const bone=bones.find(b=>b.name.startsWith(prefix));actor.draw({time:.3});const before=bone.matrixWorld.toArray();actor.draw({time:3.7});assert(prefix+' continuous floating motion',JSON.stringify(before)!==JSON.stringify(bone.matrixWorld.toArray()));}
  actor.manual.clip=null;
- for(const id of ['ES_01','EN_01']){
+ for(const id of ['ES_01','EN_01','spirit.awakening.es','spirit.awakening.en']){
   const record=voices.find(v=>v.id===id);await actor.setRecord({id,path:record.audio});
   const cue=actor.face.data.mouthCues.find(c=>c.value!=='X'&&c.end-c.start>.12),time=(cue.start+cue.end)/2;
   actor.draw({time:3,audio:{currentTime:time,ended:false,paused:true}});assert(id+' audio-time morph',read('viseme_'+cue.value)>.99);
@@ -35,7 +35,7 @@ export async function checkGuardian(actor,audio,voices,resolve){
   await new Promise((ok,bad)=>{const timer=setTimeout(()=>bad(Error('Media timeout '+voice.id)),10000);audio.onloadedmetadata=()=>{clearTimeout(timer);ok();};audio.onerror=()=>{clearTimeout(timer);bad(Error('Media error '+voice.id));};audio.src=resolve(voice.audio);audio.load();});
   const data=await fetch(resolve(voice.cues)).then(r=>r.json());assert(voice.id+' browser duration',Math.abs(audio.duration-data.duration)<.04,{browser:audio.duration,data:data.duration});
  }
- for(const id of ['ES_01','EN_01']){
+ for(const id of ['ES_01','EN_01','spirit.awakening.es','spirit.awakening.en']){
   const voice=voices.find(v=>v.id===id);await actor.setRecord({id,path:voice.audio});
   await new Promise((ok,bad)=>{audio.onloadedmetadata=ok;audio.onerror=bad;audio.src=resolve(voice.audio);audio.load();});
   await audio.play();const deadline=performance.now()+3000;while(audio.currentTime<.08&&performance.now()<deadline)await new Promise(requestAnimationFrame);assert(id+' real playback clock',audio.currentTime>0);audio.pause();

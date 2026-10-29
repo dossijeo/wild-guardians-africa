@@ -1,7 +1,8 @@
+import awakeningManifest from '../../content/manifests/awakening-spirit-voices.json' with {type:'json'};
 import manifest from '../../content/manifests/spirit-voices.json' with {type:'json'};
 import agriculturalManifest from '../../content/manifests/agricultural-spirit-voices.json' with {type:'json'};
 
-export function spiritVoice(text,language){return agriculturalManifest.records.find(item=>item.language===language&&item.text===text)??manifest.records.find(item=>item.language===language&&item.text===text);}
+export function spiritVoice(text,language){return awakeningManifest.records.find(item=>item.language===language&&item.text===text)??agriculturalManifest.records.find(item=>item.language===language&&item.text===text)??manifest.records.find(item=>item.language===language&&item.text===text);}
 
 // One streamed clip at a time. No bank preload, PCM cache or changed sample clock.
 export class SpiritVoice {

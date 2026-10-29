@@ -4,7 +4,8 @@ ROOT=pathlib.Path(__file__).resolve().parents[2]
 def run():
     p=argparse.ArgumentParser();p.add_argument('--rhubarb',required=True);p.add_argument('--ffmpeg',default='ffmpeg');p.add_argument('--only');args=p.parse_args()
     version=subprocess.check_output([args.rhubarb,'--version'],text=True).strip()
-    records=json.loads((ROOT/'content/manifests/spirit-voices.json').read_text(encoding='utf8'))['records']
+    records=[r for name in ['spirit-voices','agricultural-spirit-voices','awakening-spirit-voices'] for r in json.loads((ROOT/('content/manifests/'+name+'.json')).read_text(encoding='utf8'))['records']]
+    if len({r['id'] for r in records})!=len(records):raise ValueError('Duplicate voice IDs')
     out=ROOT/'public/content/guardian/lipsync';out.mkdir(parents=True,exist_ok=True)
     for r in records:
         if args.only and r['id']!=args.only:continue

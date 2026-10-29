@@ -102,8 +102,9 @@ for(const record of retiredBiomes.records){
  for(const file of inventory)if(/\.(json|js|mjs|html|css)$/.test(file))assert(!(await readFile(resolve(root,file),'utf8')).includes(record.archive.split('/').at(-1)),'Packaged reference to retired geometry: '+file);
 }
 const cueBank=JSON.parse(await readFile(resolve(root,'content/guardian/lipsync/bank.json'),'utf8'));
-assert.equal(cueBank.version,1);assert.equal(Object.keys(cueBank.records).length,54);
-for(const record of spiritManifest.records){
+assert.equal(cueBank.version,1);const allSpiritRecords=[...spiritManifest.records,...JSON.parse(await readFile('content/manifests/agricultural-spirit-voices.json','utf8')).records,...JSON.parse(await readFile('content/manifests/awakening-spirit-voices.json','utf8')).records];
+assert.equal(Object.keys(cueBank.records).length,allSpiritRecords.length);
+for(const record of allSpiritRecords){
  assert.deepEqual(cueBank.records[record.id],JSON.parse(publicText(await readFile(`public/content/guardian/lipsync/${record.id}.json`,'utf8'),`content/guardian/lipsync/${record.id}.json`,packagedAssets)),'Packed cues must preserve every authored timing and gesture');
  assert(!inventory.has(`content/guardian/lipsync/${record.id}.json`),'Individual cues duplicated in release');
 }
