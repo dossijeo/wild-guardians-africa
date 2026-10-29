@@ -13,3 +13,7 @@ Repeated with the extended collector (abba-cast-attribution.json). The reference
 Cast CPU p95 was generally 2.93–4.95 ms, with one Guardian block at 14.20 ms. Guardian non-post-cast frame p95 remained 83.14–116.31 ms; post-cast p95 was 66.49–99.68 ms. Therefore command-call duration alone does not explain the frame-tail cost. Each block contains few casts, making its cast p95 especially noisy. The collector labels the next RAF interval after the command; deferred presentation/update and GPU scheduling can fall elsewhere. This does not identify a causal subsystem.
 
 No runtime optimization or performance acceptance follows from this measurement. The unrelated baseline investigation remains separate. Further comparison needs stable reference conditions and component timing, not attribution from these aggregate FPS figures.
+
+## Single-pass vortex integrated repeat
+
+Ran the eight-block fixture again at 10c1da2e5 in a fresh page. Reference average FPS 27.72–28.84, p95 49.89–49.94 ms. Guardian average FPS 23.46–24.36, p95 66.44–83.14 ms. No hidden frames or errors. Draw p95 remains 93 versus 104; aggregate scene percentiles are not an identical-phase draw-count comparison. The isolated fixed-pose renderer proves 3 to 2 calls for the vortex with identical compared pixels, but this integrated run does not demonstrate a frame-tail improvement. Different reference rates prevent attributing differences versus previous runs to the one-pass change. Performance acceptance remains open.
