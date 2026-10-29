@@ -167,6 +167,29 @@ try{
  $('ragdoll').onclick=async()=>{try{physicsTrial?.dispose();physicsTrial=null;simulate=false;paused=true;const a=state.raid?.animals.find(a=>a.status!=='gone');if(!a)throw Error('Preparar una bestia primero');physicsTrial=await ragdollTrial(world,a);}catch(e){fail(e);}};
  function beast(){const species=$('species').value;state.raid={id:'qa-raid',animals:[{id:'qa-beast-'+serial++,species,x:site.x+2.5,z:site.z,radius:ANIMAL_ACTIONS.animals[species].presentation.footprint.radius,spawn:{x:site.x+15,z:site.z},exit:{x:site.x+15,z:site.z},hitsRemaining:8,status:'walking',heading:Math.PI/2,targetId:null,reservation:null,path:null,attackRemaining:0,hitApplied:false}],encounters:[],reservations:{}};nav.setState(state);world.render(0);}
 
+ const ritualViews=document.createElement('button');ritualViews.id='ritualViews';ritualViews.textContent='Inspeccionar ritual en ocho vistas';document.querySelector('header').insertBefore(ritualViews,$('status'));
+ ritualViews.onclick=async()=>{ritualViews.disabled=true;try{
+  await world.guardianSummons.ready;paused=true;simulate=false;state.raid=null;world.guardianSummons.clear();
+  const plant=state.plants.find(p=>p.alive&&!p.blessing);if(!plant)throw Error('No unblessed crop');
+  let nearbyWall=state.structures.find(s=>s.kind==='wall'&&s.status==='intact');
+  for(let dz=-3;dz<=3&&!nearbyWall;dz++)for(let dx=-3;dx<=3&&!nearbyWall;dx++){if(Math.hypot(dx,dz)<1.5)continue;if(Game.placeStructure(state,'qa-view-wall-'+serial++,{kind:'wall',material:'zarzas',x:plant.x+dx,z:plant.z+dz},nav))nearbyWall=state.structures.at(-1);}
+  if(!nearbyWall)throw Error('No wall site for ritual views');
+  state.awakenings.progress=100;if(!Game.bless(state,'qa-views-'+serial++,plant.id))throw Error('Blessing rejected');
+  const event=state.events.findLast(e=>e.type==='BlessingApplied');
+  const sheet=document.createElement('canvas');sheet.width=1200;sheet.height=680;sheet.id='ritualViewsSheet';sheet.style.cssText='position:fixed;left:0;top:0;width:min(100vw,1200px);height:auto;z-index:99999;background:#111';
+  const ctx=sheet.getContext('2d'),rows=[];ctx.fillStyle='#111';ctx.fillRect(0,0,1200,680);
+  for(let i=0;i<8;i++){
+   state.time=i<4?150:400;angle=.7+(i%4)*Math.PI/2;zoom=i%2?22:10;site={x:plant.x,z:plant.z};world.cinematic=true;world.camera.zoom=1;world.camera.updateProjectionMatrix();const ground=nav.field.surface(site.x,site.z);world.controls.target.set(site.x,ground+1,site.z);world.camera.position.set(site.x+Math.sin(angle)*zoom,ground+zoom*.65,site.z+Math.cos(angle)*zoom);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.guardianSummons.clear();
+   world.guardianSummons.start({...event,kind:'awakening',x:plant.x,z:plant.z,presentation:{...event.presentation,elapsed:state.elapsed,origin:null}});
+   advanceClock(.9);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const slot=world.guardianSummons.slots[0],visible=world.guardianSummons.slots.filter(s=>s.group.visible).length,origin={...slot.origin};
+   ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340,300,169);ctx.fillStyle='white';ctx.font='14px sans-serif';ctx.fillText((i<4?'Day':'Night')+' angle '+(i%4)+' zoom '+zoom,(i%4)*300+6,Math.floor(i/4)*340+190);
+   advanceClock(2.1);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const finalVisible=world.guardianSummons.slots.filter(s=>s.group.visible).length;
+   ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340+201,300,130);
+   rows.push({day:i<4,angle,zoom,origin,visible,finalVisible});
+  }
+  const result={scope:'Presentation-only frozen clock, one committed plant beside a paid wall replayed across eight cameras; no AI, audio or frame-performance claim',rows,passed:rows.every(r=>r.visible===1&&r.finalVisible===0),errors:[...errors]};
+  let output=$('ritualViewsReport');if(!output){output=document.createElement('pre');output.id='ritualViewsReport';document.querySelector('header').append(output);}output.textContent=JSON.stringify(result,null,2);sheet.title='Arrival at 0.9s and disappearance at 3s; click to close';sheet.onclick=()=>sheet.remove();document.body.append(sheet);
+ }catch(e){fail(e);}finally{ritualViews.disabled=false;}};
  const ritualButton=document.createElement('button');ritualButton.id='ritualRecord';ritualButton.textContent='Grabar Despertar planta y muralla';document.querySelector('header').insertBefore(ritualButton,$('status'));
  const interruptionButton=document.createElement('button');interruptionButton.id='ritualInterrupt';interruptionButton.textContent='Validar interrupciones del ritual';document.querySelector('header').insertBefore(interruptionButton,$('status'));
  const interruptionReport=document.createElement('pre');interruptionReport.id='ritualInterruptReport';document.querySelector('header').append(interruptionReport);
