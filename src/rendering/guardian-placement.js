@@ -1,7 +1,19 @@
 import {Vector3} from 'three';
 // Bounded work per accepted command. No navigation or camera movement is requested.
 export function guardianPlacement({target,camera,nav,state,occluded=()=>false,occupied=null,bodyScale=1,cropHeight=()=>2.2}){
+ // Commands can follow a camera turn before the renderer refreshes matrices.
+ camera.updateWorldMatrix(true,false);
  const blockedAt=(x,y,z)=>[y-.9*bodyScale,y,y+1.1*bodyScale].reduce((count,height)=>count+Number(occluded(x,height,z)),0);
+ // Reserve a conservative body/vortex envelope, not just its center.
+ // Applied only while planning a command, never per rendered frame.
+ const framePenalty=(x,y,z)=>{
+  let penalty=0;
+  for(const dx of [-1.4,1.4])for(const dz of [-1.4,1.4])for(const dy of [-1.2,1.4]){
+   v.set(x+dx*bodyScale,y+dy*bodyScale,z+dz*bodyScale).project(camera);
+   penalty+=Math.max(0,Math.abs(v.x)-.92)+Math.max(0,Math.abs(v.y)-.92);
+  }
+  return penalty;
+ };
  const radius=target.radius??.7,base=Math.atan2(camera.position.x-target.x,camera.position.z-target.z),v=new Vector3(),candidates=[];
  // Cull distant entries once per command, rather than scanning the whole farm
  // for each of the sixteen candidate footprints.
@@ -16,7 +28,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
   const clear=nav.placement(x,z,.8*bodyScale).valid&&!occupied?.(x,y+1.7*bodyScale,z)&&!workers.some(w=>Math.hypot(x-w.x,z-w.z)<1.1)&&!(state.raid?.animals??[]).some(a=>a.status!=='gone'&&Math.hypot(x-a.x,z-a.z)<.8+a.radius)&&!crops.some(p=>Math.hypot(x-p.x,z-p.z)<1);
   v.set(x,y+1.7*bodyScale,z).project(camera);
   const screen=Math.hypot(v.x-sx,v.y-sy),out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
-  const blocked=blockedAt(x,y+1.7*bodyScale,z),score=(clear?0:1000)+out*100+Math.abs(y-floor)*3+blocked*12+Math.abs(screen-.19)*8+distance*.12;
+  const blocked=blockedAt(x,y+1.7*bodyScale,z),score=(clear?0:1000)+(out+framePenalty(x,y+1.7*bodyScale,z))*100+Math.abs(y-floor)*3+blocked*12+Math.abs(screen-.19)*8+distance*.12;
   candidates.push({x,y:y+1.7*bodyScale,z,score,clear,distance});
  }
  candidates.sort((a,b)=>a.score-b.score);const best=candidates.find(p=>p.clear)??candidates[0];
@@ -34,7 +46,7 @@ export function guardianPlacement({target,camera,nav,state,occluded=()=>false,oc
     const y=p.y+lift;if(y-1.2*bodyScale<ceiling||occupied(p.x,y,p.z))continue;
     v.set(p.x,y,p.z).project(camera);const screen=Math.hypot(v.x-sx,v.y-sy);let out=Math.max(0,Math.abs(v.x)-.82)+Math.max(0,Math.abs(v.y)-.78);
     v.set(p.x,y+1.3*bodyScale,p.z).project(camera);out+=Math.max(0,Math.abs(v.y)-.88);
-    const score=out*100+blockedAt(p.x,y,p.z)*12+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
+    const score=(out+framePenalty(p.x,y,p.z))*100+blockedAt(p.x,y,p.z)*12+Math.abs(screen-.25)*8+lift*.6+p.distance*.12;
     aerial.push({x:p.x,y,z:p.z,score});
    }
   }

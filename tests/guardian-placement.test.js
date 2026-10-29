@@ -30,3 +30,23 @@ test('visibility checks the lower mantle even when the face remains visible',()=
 });
 
 test("spirit placement never asks native navigation for an invented animal profile",()=>{const args=setup();args.nav.walkable=()=>{throw Error("Unsupported animal radius");};assert.ok(guardianPlacement(args));});
+
+
+test('placement projects with the current camera after a same-frame turn',()=>{
+ const args=setup(),camera=args.camera;
+ camera.position.set(-12,8,1);camera.lookAt(0,0,0);
+ const beforeRender=guardianPlacement(args);
+ camera.updateMatrixWorld(true);
+ const afterRender=guardianPlacement(args);
+ assert.deepEqual(beforeRender,afterRender,'A render must not change the placement decision');
+});
+
+
+test('edge targets leave room for the mantle and arrival vortex',()=>{
+ const args=setup();args.target.x=5;
+ const p=guardianPlacement(args);
+ for(const x of [-1.4,1.4])for(const y of [-1.2,1.4])for(const z of [-1.4,1.4]){
+  const screen=new Vector3(p.x+x,p.y+y,p.z+z).project(args.camera);
+  assert.ok(Math.abs(screen.x)<1&&Math.abs(screen.y)<1,`Cropped arrival envelope: ${screen.toArray()}`);
+ }
+});
