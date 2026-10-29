@@ -25,3 +25,14 @@ test('contact indices reuse immutable geometry and invalidate changed deformatio
  const before=changed.meshes[0].indices,oldName=mesh.skeleton.bones[0].name;mesh.skeleton.bones[0].name='tail';
  const renamed=new SkinContactBounds(model);assert.notEqual(before,renamed.meshes[0].indices);mesh.skeleton.bones[0].name=oldName;
 });
+
+
+test('an existing bounds sampler refreshes changed rest positions and replaced weights',async()=>{
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url)),bounds=new SkinContactBounds(model),point=new Vector3();
+ const mesh=bounds.meshes[0].mesh,g=mesh.geometry;
+ for(const change of [()=>{const p=g.attributes.position;for(let i=0;i<p.count;i++)p.setX(i,p.getX(i)+.25);p.needsUpdate=true;},()=>{const weights=g.attributes.skinWeight.clone();for(let i=0;i<weights.count;i++){weights.setX(i,1);weights.setY(i,0);weights.setZ(i,0);weights.setW(i,0);}g.setAttribute('skinWeight',weights);}]){
+  const old=bounds.meshes[0].inputs;change();model.updateMatrixWorld(true);const actual=bounds.expand(new Box3()),expected=new Box3();
+  model.traverse(m=>{if(m.isSkinnedMesh)for(let i=0;i<m.geometry.attributes.position.count;i++){if(isTailContactVertex(m,i))continue;m.getVertexPosition(i,point).applyMatrix4(m.matrixWorld);expected.expandByPoint(point);}});
+  assert.ok(bounds.meshes[0].inputs!==old,'changed attributes refresh decoded inputs');assert.ok(actual.min.distanceTo(expected.min)<1e-6);assert.ok(actual.max.distanceTo(expected.max)<1e-6);
+ }
+});

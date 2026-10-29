@@ -2,7 +2,13 @@ import {Matrix4,Vector3} from 'three';
 import {skinContactIndices} from './skin-contact-indices.js';
 // The index list is versioned by skinContactIndices. Share decoded immutable
 // attributes across recovery instances; keep double precision for normalized weights.
-const inputs=new WeakMap();
+const inputs=new WeakMap(),inputNames=['position','skinWeight','skinIndex'];
+const version=a=>a?.isInterleavedBufferAttribute?a.data.version:a?.version;
+function refreshInputs(entry){
+ const g=entry.mesh.geometry.attributes;
+ if(entry.attributes&&inputNames.every((name,i)=>g[name]===entry.attributes[i]&&version(g[name])===entry.versions[i]))return;
+ entry.indices=skinContactIndices(entry.mesh);entry.inputs=contactInputs(entry.mesh,entry.indices);entry.attributes=inputNames.map(name=>g[name]);entry.versions=entry.attributes.map(version);
+}
 function contactInputs(mesh,indices){
  let packed=inputs.get(indices);if(packed)return packed;
  const g=mesh.geometry.attributes,positions=new Float64Array(indices.length*3),weights=new Float64Array(indices.length*4),joints=new Uint32Array(indices.length*4);
@@ -16,11 +22,12 @@ export class SkinContactBounds {
  constructor(model){
   this.matrix=new Matrix4();this.post=new Matrix4();this.point=new Vector3();this.meshes=[];
   model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=skinContactIndices(mesh);
-   this.meshes.push({mesh,indices,inputs:contactInputs(mesh,indices),activeMorphs:[],matrices:new Float64Array(mesh.skeleton.bones.length*16)});
+   const entry={mesh,indices,activeMorphs:[],matrices:new Float64Array(mesh.skeleton.bones.length*16)};refreshInputs(entry);this.meshes.push(entry);
   });
  }
  expand(bounds){
-  for(const {mesh,indices,inputs,matrices,activeMorphs}of this.meshes){
+  for(const entry of this.meshes){
+   refreshInputs(entry);const {mesh,indices,inputs,matrices,activeMorphs}=entry;
    activeMorphs.length=0;const morphs=mesh.geometry.morphAttributes.position??[],influences=mesh.morphTargetInfluences??[];for(let m=0;m<morphs.length;m++)if(influences[m])activeMorphs.push(m);
    const skeleton=mesh.skeleton,{positions,joints,weights}=inputs;
    for(let b=0;b<skeleton.bones.length;b++)this.matrix.multiplyMatrices(skeleton.bones[b].matrixWorld,skeleton.boneInverses[b]).multiply(mesh.bindMatrix).toArray(matrices,b*16);
