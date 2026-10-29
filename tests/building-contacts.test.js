@@ -21,3 +21,28 @@ test('cached contact atlas refreshes on placement, rotation and demolition witho
  s.structures=[];assert.equal(update(),true);assert.ok(texture.image.data.every(v=>v===255));
  assert.equal(contacts.texture,texture);contacts.dispose();
 });
+
+
+test('wall contacts follow scale/rotation/damage and exclude open gate footprints',()=>{
+ const wall={id:'wall',kind:'wall',x:0,z:0,yaw:0,baseScaleX:2,material:'adobe',status:'intact',hp:100,maxHp:100};
+ const s={structures:[wall]},a=blank();rasterBuildingContacts(a,s);
+ const dark=data=>data.pixels.reduce((sum,v)=>sum+255-v,0);
+ assert.ok(dark(a)>0);assert.equal(a.pixels[0],255);
+ wall.yaw=Math.PI/2;const b=blank();rasterBuildingContacts(b,s);assert.notDeepEqual(a.pixels,b.pixels);
+ wall.hp=25;const damaged=blank();rasterBuildingContacts(damaged,s);assert.ok(dark(damaged)<dark(b)*.3);
+ for(const change of [{gate:true},{gate:false,status:'ruined'},{status:'collapsing'}]){
+  Object.assign(wall,change);const c=blank();rasterBuildingContacts(c,s);assert.equal(dark(c),0);
+ }
+});
+
+test('wall contact cache observes damage, dimensions and conversion to gate',()=>{
+ const contacts=new NativeContacts({buildings:true});
+ const wall={id:'wall',kind:'wall',x:0,z:0,status:'intact',hp:100,maxHp:100};
+ const s={structures:[wall]},prototypes=Array.from({length:20},()=>({group:0,radius:1}));
+ const update=()=>contacts.update(new Map(),prototypes,[-16,-16,16,16],1,[true,true,true,true],s);
+ assert.equal(update(),true);assert.equal(update(),false);
+ wall.hp=20;assert.equal(update(),true);assert.equal(update(),false);
+ wall.baseScaleX=2;assert.equal(update(),true);
+ wall.gate=true;assert.equal(update(),true);assert.ok(contacts.texture.image.data.every(v=>v===255));
+ contacts.dispose();
+});
