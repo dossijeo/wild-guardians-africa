@@ -125,3 +125,10 @@ The first wind benchmark found **zero matching bindings**: GLTFLoader removes pe
 `shield-wind-bound.mp4` and the inspected 6 fps sheet are after this fix, from age 0.31962 s through disappearance. The lateral lower-cloth silhouette moves without obvious gross breakup in the samples. A second attempted Shield was correctly rejected for overlapping areas before recording; that error remains in the report. This is therefore not a clean full command-flow validation, nor all-angle cloth acceptance.
 
 Reproduce CPU measurement with `node tools/guardian/benchmark_spell_wind.mjs`. `spell-wind-cpu.json` contains 12 alternating ABBA/BAAB blocks, 4,000 updates per batch, on the installed 24-bone rig. Node 20/i7-11800H median batch-average time is 0.003693 ms for the former gust versus 0.004111 ms for the bound wave, both including identical pose restoration. This is an isolated CPU microbenchmark, not browser frame percentiles, GPU cost or raid performance. The earlier zero-binding measurement was discarded. Production build passes (541 modules), with existing mixed-import and large-chunk warnings.
+
+
+## Multiply rear view after binding correction
+
+`multiply-wind-rear.mp4`, report and 6 fps contact sheet inspect the active 24-bone wind from behind in daytime native WorldScene. The capture begins at 0.12 seconds and advances 2.344095 simulation seconds; it ends with zero visible/pending summons. The rear cloth hem varies in height/silhouette, ornament geometry remains attached in the sampled frames, and dissolution completes. The retained Shield dome is from the preceding command and is intentionally not cleared by the recorder.
+
+The report preserves the previously recorded Shield-overlap rejection; no additional error was added during this capture. This is visual rear coverage of Multiply, not a clean-start integration run or a continuous-motion/performance approval. The close view exposes the back but does not prove all fine cloth/body intersections are absent.
