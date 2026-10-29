@@ -132,3 +132,10 @@ Reproduce CPU measurement with `node tools/guardian/benchmark_spell_wind.mjs`. `
 `multiply-wind-rear.mp4`, report and 6 fps contact sheet inspect the active 24-bone wind from behind in daytime native WorldScene. The capture begins at 0.12 seconds and advances 2.344095 simulation seconds; it ends with zero visible/pending summons. The rear cloth hem varies in height/silhouette, ornament geometry remains attached in the sampled frames, and dissolution completes. The retained Shield dome is from the preceding command and is intentionally not cleared by the recorder.
 
 The report preserves the previously recorded Shield-overlap rejection; no additional error was added during this capture. This is visual rear coverage of Multiply, not a clean-start integration run or a continuous-motion/performance approval. The close view exposes the back but does not prove all fine cloth/body intersections are absent.
+
+
+## Attack with active wind and captured SFX
+
+`attack-wind-audio.mp4`, report and one-second contact sheet show native nighttime Attack from age zero through completed hyena recovery (11.12386 simulation seconds). The report explicitly records 24 wind bindings, no pre-existing or new errors, zero final visible/pending summons and a completed down/recovery cycle. The audio context was unlocked; appearance, launch, species hurt, impact and disappearance cues report played. The MP4 contains AAC audio. Playback events and an audio stream do not establish perceptual mix quality or audible synchronization, which remain unapproved.
+
+An initial low joint framing hid the fall behind a rock and was replaced. Joint Guardian/target inspection now raises the QA camera elevation ratio from 0.22 to 0.7; body-only close framing is unchanged. The replacement sheet was visually inspected: the target remains visible through fall, grounded recovery and walking. At this wide scale it cannot validate fine cloth intersections or contact deformation. Production camera behavior is untouched. Close reports now record the selected angle, binding count, pre-existing error count and errors during recording while retaining the complete error list.
