@@ -137,3 +137,19 @@ test('disappearance sound starts once during dissolve, resets on reuse and skips
  world.state.elapsed=6;cast();world.state.elapsed=10;summons.update();assert.equal(cues.filter(id=>id==='spirit_disappear').length,2);
  summons.dispose();
 });
+
+
+test('disposing an active summon clears diagnostics and releases owned resources only once',async()=>{
+ const world={state:{events:[],elapsed:1,time:150},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ world.state.events.push({type:'SpellActivated',kind:'growth',x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:1}});summons.update();
+ assert.equal(summons.stats.active,1);
+ const disposed=new Map();
+ for(const resource of [summons.beamGeometry,summons.ringGeometry,summons.coreGeometry,summons.attackEchoes.material]){
+  disposed.set(resource,0);resource.addEventListener('dispose',()=>disposed.set(resource,disposed.get(resource)+1));
+ }
+ summons.dispose();summons.dispose();summons.update();
+ assert.equal(world.scene.children.length,0);assert.equal(summons.stats.active,0);
+ assert.equal(summons.stats.retainedAttacks,0);assert.equal(summons.guide,null);
+ for(const count of disposed.values())assert.equal(count,1,'owned GPU resources are released once');
+});
