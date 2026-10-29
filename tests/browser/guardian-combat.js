@@ -301,13 +301,17 @@ try{
  const samples=[];let measuring=false,last=performance.now(),nextStatus=0;
  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  $('bench').onclick=async()=>{if(measuring)return;measuring=true;paused=false;simulate=false;state.time=150;state.raid=null;report=[];commandCosts.length=0;let timer;try{for(const mode of ['baseline','legacy-spells','single','consecutive']){showSummons=mode!=='legacy-spells';state.spells.length=0;world.guardianSummons.clear();await sleep(2500);samples.length=0;if(mode==='single')cast('growth');if(mode==='consecutive'||mode==='legacy-spells')timer=setInterval(()=>cast(serial%2?'growth':'multiply'),400);await sleep(8000);clearInterval(timer);const rows=samples.slice(),q=(key,p)=>rows.map(r=>r[key]).sort((a,b)=>a-b)[Math.min(rows.length-1,Math.floor(rows.length*p))];report.push({mode,frames:rows.length,frameMedian:q('dt',.5),frameP95:q('dt',.95),frameP99:q('dt',.99),frameMax:q('dt',1),averageFps:1000/(rows.reduce((s,r)=>s+r.dt,0)/rows.length),renderP95:q('renderMs',.95),animationP95:q('animationMs',.95),vfxP95:q('vfxMs',.95),drawP95:q('draws',.95),memory:{...world.renderer.info.memory},heap:performance.memory?.usedJSHeapSize});}}catch(e){fail(e);}finally{clearInterval(timer);showSummons=true;measuring=false;}};
+ const includeTargetLabel=document.createElement('label');includeTargetLabel.textContent=' Incluir objetivo en detalle ';const includeTarget=document.createElement('input');includeTarget.type='checkbox';includeTarget.id='guardianDetailTarget';includeTargetLabel.append(includeTarget);document.querySelector('header').insertBefore(includeTargetLabel,$('status'));
  const guardianDetailButton=document.createElement('button');guardianDetailButton.id='guardianDetail';guardianDetailButton.textContent='Detalle del Guardián activo';document.querySelector('header').insertBefore(guardianDetailButton,$('status'));
  guardianDetailButton.onclick=()=>{
   if(measuring||recording)return;
   const slot=world.guardianSummons.slots.find(s=>s.event&&s.group.visible);if(!slot)return;
   paused=true;$('freeze').textContent='Reanudar';world.cinematic=true;
-  const bounds=new THREE.Box3().setFromObject(slot.group),center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
-  const distance=Math.max(3,Math.max(size.x,size.y,size.z)*1.65);
+  const bounds=new THREE.Box3().setFromObject(slot.group);
+  if(includeTarget.checked){const target=world.mixers.get(slot.event.targetId)?.model;if(target)bounds.union(new THREE.Box3().setFromObject(target));if(slot.target)bounds.expandByPoint(slot.target);bounds.expandByScalar(2);}
+  const center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
+  const vertical=THREE.MathUtils.degToRad(world.camera.fov/2),horizontal=Math.atan(Math.tan(vertical)*world.camera.aspect);
+  const distance=includeTarget.checked?Math.max(3,size.length()*.5/Math.sin(Math.min(vertical,horizontal))*1.08):Math.max(3,Math.max(size.x,size.y,size.z)*1.65);
   world.camera.zoom=1;world.camera.updateProjectionMatrix();world.controls.target.copy(center);
   const viewAngle=slot.group.rotation.y+.35;
   world.camera.position.set(center.x+Math.sin(viewAngle)*distance,center.y+distance*.22,center.z+Math.cos(viewAngle)*distance);
@@ -327,7 +331,7 @@ try{
    if(slot.event)throw Error('El hechizo no terminó dentro del límite de grabación');
    await sleep(250);paused=true;rec.stop();await done;
    const response=await fetch('http://127.0.0.1:5199/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});if(!response.ok)throw Error('No se pudo guardar el detalle');
-   report={kind:'guardian-close-recording',spell:kind,startAge,simulationSeconds:state.elapsed-start,clockMode:'Game.tick',visible:world.guardianSummons.slots.filter(s=>s.group.visible).length,pending:world.guardianSummons.pending.length,errors:[...errors],scope:'Close inspection camera; target can leave frame. Not a full recovery or performance test.'};$('recordStatus').textContent='Guardado detalle '+kind;
+   report={kind:'guardian-close-recording',spell:kind,startAge,simulationSeconds:state.elapsed-start,clockMode:'Game.tick',visible:world.guardianSummons.slots.filter(s=>s.group.visible).length,pending:world.guardianSummons.pending.length,errors:[...errors],includesTarget:includeTarget.checked,scope:includeTarget.checked?'Guardian and initial target bounds plus two-meter motion margin; static QA camera, not a full recovery or performance test.':'Close inspection camera; target can leave frame. Not a full recovery or performance test.'};$('recordStatus').textContent='Guardado detalle '+kind;
   }catch(e){$('recordStatus').textContent='Falló la grabación de detalle';fail(e);}
   finally{paused=true;simulate=wasSimulating;$('freeze').textContent='Reanudar';if(rec?.state==='recording')rec.stop();if(destination)audio.sfxGain.disconnect(destination);for(const track of stream.getTracks())track.stop();recording=false;}
  };
