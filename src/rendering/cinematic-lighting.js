@@ -11,9 +11,17 @@ const groundBounce=Object.freeze(Object.fromEntries(Object.entries({
  'gran-canon':[.19,.12,.065],'desierto':[.22,.17,.105],
 }).map(([key,value])=>[key,Object.freeze(value)])));
 export function cinematicGroundBounce(biome){return groundBounce[biome]??groundBounce.sabana;}
+export function patchCinematicVegetation(source){
+ return source.replace(/dayShade=vec3\(\.(?:17,\.28,\.34|15,\.25,\.31|14,\.26,\.32)\)/,'dayShade=vec3(.38,.48,.54)')
+  .replace('mix(vec3(.17,.28,.34),vec3(.095,.17,.32)*uNightLight,uNight)','mix(vec3(.38,.48,.54),vec3(.095,.17,.32)*uNightLight,uNight)');
+}
 export function patchCinematicLighting(source,{ground=false}={}){
  const anchor='#include <opaque_fragment>';
  if(!source.includes(anchor))throw Error('Cinematic lighting: output anchor missing');
+ // Restore readable diffuse sky fill under projected shadows. Change the
+ // daylight radiance before tone mapping, not shadow visibility or albedo.
+ // Support both final-daylight and ungraded native ground recipes.
+ if(ground)source=source.replace('vec3 biomeDirect=', 'biomeAmbient+=vec3(.30,.35,.40)*(1.-uNight)*(1.-groundVisibility);\n vec3 biomeDirect=');
  const visibility=ground?'groundVisibility':'toonVisibility';
  return source.replace(anchor,`// Apply to linear reflected radiance, preserving existing geometry/material response.
  float cinemaSun=smoothstep(.12,.90,clamp(${visibility},0.,1.));
