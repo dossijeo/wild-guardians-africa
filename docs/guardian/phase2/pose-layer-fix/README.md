@@ -150,3 +150,9 @@ The world planner previously checked only a 0.45 m radius torso capsule against 
 `buffalo-high.mp4`, JSON and 2 fps contact sheet record an elevated Attack with the active 24-bone wind and real Game.tick, from age zero through completed recovery (9.40025 simulation seconds). Maximum visible Guardians remains one; the cycle ends with no errors and no pending summon. The right-side QA view leaves the buffalo visible during fall, roll, get-up and resumed walking. Two earlier views were rejected because a building or tree canopy concealed the action; their recordings were replaced.
 
 The elevated origin is a QA direction override, not evidence for automatic placement. The wide view supports gross cycle continuity but cannot approve fine skin/ground contacts or continuous-motion quality from the sampled sheet alone. Audio events are preserved, including earlier attempts; this is not perceptual sound-mix approval or a performance benchmark.
+
+## Recovery handoff instrumentation
+
+The close recorder now captures visible hip world position and recovery solid correction alongside logical x/z. Logical positions alone cannot establish a visible teleport because BeastRecoveryExit retains and blends the world pose for 0.3 seconds.
+
+`buffalo-handoff.json` and matching MP4/sheet repeat elevated Attack after a fresh page load. The inspected sheet shows a complete cycle. Across the samples at 7.33935 and 7.43913 seconds, logical displacement is about 0.150 m while visible hip horizontal displacement is about 0.0133 m; solid correction is zero in the last recovery sample. This supports continuity for this run, not a reproduction or explanation of the larger lateral change in the earlier recording. The dedicated world-pose handoff regression passes. No production recovery behavior was changed on this evidence.
