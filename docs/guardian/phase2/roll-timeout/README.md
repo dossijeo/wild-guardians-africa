@@ -15,3 +15,16 @@ Removing support/integral torque fails both controls and does not cure the unsta
 Next isolate constraints/terrain contacts in the failing snapshot and capture the earlier impact state if necessary. Do not relax the supine completion requirement or mask the failure with a longer timeout.
 
 Inspected `contact.jpg` (1 fps) from `night-capture.webm`: the final hyena remains low/sideways before eventual fallback recovery. Fine contact/anatomy cannot be certified at this sampling. The authored recovery requirement remains unsatisfied for this case.
+
+
+## Terrain contact correction
+
+Isolated the failing captured state: disabling joint motors or loosening limits does not resolve it; disabling terrain contacts does, whereas disabling solid boxes leaves the original result exactly unchanged. Enabling Rapier FIX_INTERNAL_EDGES resolves all three snapshots. Resetting each terrain shape with identical geometry and default flags still times out (error 1.68315 rad, speed 14.7592), so merely invalidating the shape/contact cache does not explain the successful result. Numeric variants are contact-isolation.json. These runs predate the progress grace below.
+
+Production terrain creation now enables FIX_INTERNAL_EDGES, preserving terrain geometry, colliders and collisions. No physics dependency, per-frame geometry construction or increased iteration count. The change initially exposed a buffalo recovery deadline regression: it was still tipping over its support edge at 3.5 s (error .8170 rad), then reached the existing orientation/velocity criteria at 4.1333 s in a diagnostic longer run. Added a strictly bounded progress grace of 1.5 s, available only while error improves by at least .1 rad within .5 s. Completion thresholds remain unchanged. Failed/stalled rolls retain the fallback, and the captured uncorrected instability still times out in the new regression test; extending the deadline alone is not the hyena fix.
+
+Validation: 41 combined physics/manager/captured-terrain tests passed, then all four captured-terrain tests passed after adding the negative control that retains the old terrain and asserts timeout. Existing shipped-GLB tests cover all five species and require authored recovery (including buffalo). No full graphical acceptance of buffalo is claimed by these tests.
+
+Actual corrected WorldScene night recording: fixed-night.webm (9,675,660 browser bytes), fixed-night-status.json, fixed-contact.jpg at 2 fps. One Guardian maximum; errors empty; zero active bodies/worlds at end; zero rollFailures; final hyena roll finishes at 1.05 s, error .377708 rad, speed .342387 rad/s. Inspected the contact sheet: final hyena reaches supine, rises and subsequently moves away. Terrain clearance of every vertex and full-speed motion quality remain outside this sparse visual check. Capture hooks were active, so performance numbers are not benchmark evidence. The scene uses deliberate camera changes and QA cooldown resets, as before.
+
+Production build also passes; existing dynamic/static import and large-chunk warnings remain.

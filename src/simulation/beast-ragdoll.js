@@ -25,7 +25,7 @@ function multiply(a,b){return {x:a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,y:a.w*b.y-a.x*b
 function fromY(v){const n=length(v);if(n<1e-6)throw Error('Degenerate ragdoll segment');const y=v.y/n;if(y<-.99999)return {x:1,y:0,z:0,w:0};const q={x:v.z/n,y:0,z:-v.x/n,w:1+y},d=Math.hypot(q.x,q.z,q.w);return {x:q.x/d,y:0,z:q.z/d,w:q.w/d};}
 const FRAMES={x:{x:0,y:0,z:0,w:1},y:{x:0,y:0,z:Math.SQRT1_2,w:Math.SQRT1_2},z:{x:0,y:-Math.SQRT1_2,z:0,w:Math.SQRT1_2}};
 export const RAGDOLL_CONFIG=Object.freeze({capacity:3,step:1/60,launchSpeed:2.25,liftSpeed:1.65,settleSpeed:.28,settleSeconds:.25,jointDamping:2.5,forearmDamping:4});
-export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,integralGain:3,integralLimit:.6,integralAngle:.9,integralSpeed:.8,angleTolerance:.45,settleSeconds:.15,timeout:3.5,recoveryContactGrace:2.5});
+export const RAGDOLL_ROLL=Object.freeze({speed:2,response:24,maxAcceleration:80,supportTorque:1.8,supportDeadAngle:.1,integralGain:3,integralLimit:.6,integralAngle:.9,integralSpeed:.8,angleTolerance:.45,settleSeconds:.15,timeout:3.5,progressGrace:1.5,progressWindow:.5,progressAngle:.1,recoveryContactGrace:2.5});
 export class BeastRagdollSolver{
  constructor(R,{capacity=RAGDOLL_CONFIG.capacity,step=RAGDOLL_CONFIG.step,solverIterations=12}={}){
   if(!Number.isInteger(solverIterations)||solverIterations<1||solverIterations>32)throw Error('Invalid solver iterations');
@@ -35,7 +35,9 @@ export class BeastRagdollSolver{
  }
  // Each scene supplies a local terrain patch and conservative solid volumes.
  // Static colliders are retained across steps; never rebuild them per frame.
- terrain(vertices,indices){const c=this.world.createCollider(this.R.ColliderDesc.trimesh(vertices,indices).setFriction(.85).setRestitution(.02).setCollisionGroups(0x0001fffe));this.obstacles.push(c);return c;}
+ // Suppress artificial contact normals on internal terrain triangle edges.
+ // Otherwise convex limbs can chatter indefinitely even without roll motors.
+ terrain(vertices,indices){const c=this.world.createCollider(this.R.ColliderDesc.trimesh(vertices,indices,this.R.TriMeshFlags.FIX_INTERNAL_EDGES).setFriction(.85).setRestitution(.02).setCollisionGroups(0x0001fffe));this.obstacles.push(c);return c;}
  box(center,half,rotation={x:0,y:0,z:0,w:1}){const c=this.world.createCollider(this.R.ColliderDesc.cuboid(half.x,half.y,half.z).setTranslation(center.x,center.y,center.z).setRotation(rotation).setFriction(.8).setCollisionGroups(0x0001fffe));this.obstacles.push(c);return c;}
  add(id,{pose,colliders=null,scale=1,mass=1,direction=vector(1,0,0),velocity=vector(),intensity=1,heading=0}){
   if(this.actors.size>=this.capacity&&!this.actors.has(id)){this.stats.rejected++;return null;}
@@ -126,7 +128,12 @@ export class BeastRagdollSolver{
    if(blocked)roll.contactDelay=Math.min(RAGDOLL_ROLL.recoveryContactGrace,roll.contactDelay+this.stepSize);
   }
   roll.speed=rootSpeed;roll.error=rootError;roll.quiet=rootError<RAGDOLL_ROLL.angleTolerance&&rootSpeed<.65?roll.quiet+this.stepSize:0;
-  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=roll.timeout+roll.contactDelay;roll.done||=roll.timedOut;
+  // A heavy body may still be tipping over its support edge at the deadline.
+  // Extend only while angular error makes measurable progress, never for a
+  // stalled/oscillating roll, and retain an absolute 1.5 s progress budget.
+  if(rootError<(roll.progressError??Infinity)-RAGDOLL_ROLL.progressAngle){roll.progressError=rootError;roll.progressAt=roll.age;}
+  const progressing=roll.age-(roll.progressAt??0)<=RAGDOLL_ROLL.progressWindow&&roll.age<roll.timeout+roll.contactDelay+RAGDOLL_ROLL.progressGrace;
+  roll.done=roll.quiet>=RAGDOLL_ROLL.settleSeconds;roll.timedOut=!roll.done&&roll.age>=roll.timeout+roll.contactDelay&&!progressing;roll.done||=roll.timedOut;
  }
  follow(id,pose,from=null,weight=1){
   const a=this.actors.get(id);if(!a?.kinematic)throw Error('Actor is not kinematic');
