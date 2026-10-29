@@ -1,3 +1,4 @@
+import {prepareWorkerMaterials} from './worker-materials.js';
 import {cinematicGroundBounce} from './cinematic-lighting.js';
 import {supportAnimalOnTerrain} from './animal-terrain-support.js';
 import {prepareWorkerClips} from './worker-clips.js';
@@ -694,6 +695,7 @@ export class WorldScene {
           // Geometry/materials are borrowed; only this rig's skeleton and mixer
           // belong to the adoption. Native poses and skin bounds stay unchanged.
           if(type==='animal')prepareAnimalModel(model,entity.species);
+          if(type==='worker')prepareWorkerMaterials(model,entity.profile);
           if(!prepared){rig.clips=type==='animal'?prepareAnimalClips(gltf.animations):[...prepareWorkerClips(gltf.animations),this.workerRecoveries.get(entity.profile)];rig.groundSamples=type==='animal'?animalGroundSamples(model):null;}
           installSkinPicking(model);root.add(model);this.mixers.set(entity.id,rig);adopted=true;
           this.updateActor(entity,0,type);root.updateMatrixWorld(true);

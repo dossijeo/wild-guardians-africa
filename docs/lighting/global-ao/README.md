@@ -138,3 +138,10 @@ Eight `rhino/warthog-{day,night}-model-{on,off}.png` captures add frontal native
 `olderFemale/olderMale-{day,night}-model-{on,off}.png` captures the initial worker-hit expression, frozen before the fall, with closed eyelids and open mouth. The attacking animal was removed using the day control; studio time then switches 150/400 without replacing the worker. Actual native WorldScene, mangrove/suajili, medium quality. Browser errors were empty. Wrinkles remain visible in these views. These are facial close-ups, not full-body framing or completed blink/fall/recovery evidence.
 
 The older male shows pronounced nocturnal skin highlights with AO both enabled and disabled; material response and other angles remain open. Do not certify night appearance solely from this AO comparison. Young profiles, open eyes, movement and strategic-distance visibility remain pending. `older-workers-ao-report.json` records the limited scope and image differences.
+
+
+### Older male matte material parity
+
+The shipped olderFemale body has `matteWorkerBody` metadata and roughness 0.88; olderMale BakedMaterial lacks that metadata. Worker adoption now applies the same existing matte shader response, roughness 0.88 and metalness zero to the olderMale body atlas only, before attaching it to the scene. Tool and oral materials, textures and normals are preserved; other profiles are untouched. Raw source files and their AO hashes remain unchanged.
+
+Eight focused tests and the 539-module production build pass. `olderMale-matte-night.png` is an actual native WorldScene inspection of the hit expression. Some facial highlights remain visible, so this corrects missing material configuration but does not establish complete resolution of the waxy appearance. Environment response and painted highlights still need isolation. No additional runtime lights, textures or per-frame traversal are introduced.
