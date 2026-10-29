@@ -173,3 +173,10 @@ The 1.5-second contact sheet was visually inspected through the fall, supine pos
 The combat fixture now exposes `benchAOScene`: a fixed day/angle/zoom idle run with 5 seconds settling and 10 seconds raw frame samples, one run per page load. Compare separate loads with globalAO absent/present; model-uniform toggles cannot substitute for this. It records camera, population, framebuffer size, pixel ratio, actor/tree readiness, renderer memory, hidden frames and raw CPU/frame samples. It does not measure GPU time or shader memory, and requires matching metadata and alternating repetitions before attribution.
 
 `idle-ao-on-run1.json` is a diagnostic first run only: 147 frames, no hidden frames/errors, tree preparations all idle. Frame p50 66.53ms, p95 99.62ms; render CPU p95 12.97ms; 82 draws. Other QA tabs remained open, so browser/device contention is not excluded. No AO-off pair or repeated runs yet: these values do not prove AO overhead, a regression cause or satisfactory performance. Script syntax validation passes.
+
+
+### First single-tab off/on pair
+
+Closed the three other agent-owned QA scenes, then loaded AO-off and AO-on separately in the same tab. Both report native spatial-wasm, mangrove/suajili, medium, 1600x900, pixel ratio 1, identical camera/time/population, actors ready, no pending tree preparations, no hidden frames/errors. Raw samples and metadata: `idle-single-tab-{off,on}-1.json`; comparison: `idle-single-tab-comparison.json`.
+
+Off/on frame medians are 33.235/33.240ms, p95 33.365/49.885ms; render CPU p95 14.405/14.400ms. The on run has 82 versus 80 draws, 328 versus 326 geometries and 215 versus 208 textures. Those resource differences require investigation before interpreting the timing delta as shader-only AO overhead. One pair in one order is insufficient for attribution or approval. Repeated alternating runs, effects/raid scenarios and GPU-byte accounting remain pending. No baseline engine performance diagnosis is made here.
