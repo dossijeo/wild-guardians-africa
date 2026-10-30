@@ -359,3 +359,13 @@ The graphical native fixture now exposes an explicit shutdown action calling Wor
 Two executed cases: scene-disposal.json starts with one slot, three queued spells and six attached effect/body objects. scene-disposal-physical.json starts with one slot, two queued spells and one live articulated falling animal/solver. Both immediately and after 1.2 seconds have zero slots, pending spells, visible/attached objects, physics entries, mixers and audio voices, no solver, and zero captured errors. Screenshot scene-disposal.png shows the disposed renderer and disabled QA controls.
 
 The physical preparation explicitly clears fixture pause reasons, advances Game.tick, and bypasses cooldown using the existing queue stress setup; this is lifecycle testing, not production cast cadence. There were no active audio voices at either shutdown instant, so active-voice interruption is not certified by these receipts. This proves those two real owner-disposal cases only; no heap-leak, browser GC, replacement-scene loading or broad performance claim. No production disposal code changed.
+
+## Full-resolution wind inspection (2026-10-30)
+
+Reviewed extracted, unresized 1600x900 frames from the existing installed-binding recordings: `wind-rear-detail.png` is Multiply at video offset 0.8 s; `wind-side-detail.png` is Grow at offset 1.2 s. Offsets are video timestamps, not exact spell ages. Also inspected the Grow, Multiply rear and Shield contact sheets.
+
+The rear view shows a lifted asymmetric hem with the decorative pattern following the surface. The side view shows the projecting hem and the visible hand connected to the outgoing beam. Neither inspected frame shows a detached cloth patch or a large tear. These stills do not establish temporal smoothness, absence of self-intersection, or complete hand visibility.
+
+Do not treat the rear recording as an isolated clean trial: an earlier Shield dome crosses the right side and its accumulated report contains the documented previous overlap rejection. The small sheets are insufficient to judge the hanging feathers and wood individually. Source inspection of `tools/guardian/ethereal.py` confirms feather controls were assigned to small detached lateral hanging islands, not indiscriminately to the entire head ornament; head motion must not be counted as independent feather flutter.
+
+Next useful visual test is a fresh, unobstructed rear/side close sequence with no previous Shield, explicitly inspecting the hanging feather tips and lower wood throughout the arrival and release. No production amplitudes changed on the basis of these stills; broad artistic acceptance remains open.
