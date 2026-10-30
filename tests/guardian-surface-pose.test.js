@@ -6,3 +6,11 @@ test('real rhino pose replays exact full-skin floor minimum after animation and 
  const replay=replaySurfacePose(model,copy);assert.ok(Math.abs(replay.minimum-captured.minimum)<1e-8,JSON.stringify({replay:replay.minimum,captured:captured.minimum}));assert.ok(replay.witness);assert.ok(captured.meshes.every(m=>m.floors.length>0));
  const altered=structuredClone(copy);altered.nodes[1].name+='wrong';assert.throws(()=>replaySurfacePose(model,altered),/mismatch/);
 });
+
+
+test('browser-captured native rhino contact pose replays against installed geometry',async()=>{
+ const {readFileSync}=await import('node:fs'),{gunzipSync}=await import('node:zlib'),{BeastRagdollBinding}=await import('../src/rendering/beast-ragdoll-binding.js');
+ const capture=JSON.parse(gunzipSync(readFileSync(new URL('./fixtures/rhino-recovery-surface-pose.json.gz',import.meta.url))));
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.rhino.url,import.meta.url));new BeastRagdollBinding(model,{species:'rhino'});
+ const result=replaySurfacePose(model,capture);assert.ok(Math.abs(result.minimum-capture.minimum)<1e-6);assert.equal(result.witness.mesh,'Mesh_0');assert.equal(result.witness.index,22693);
+});

@@ -59,3 +59,10 @@ The real rhino GLB regression changes its bones and parent transform, JSON-round
 The first captureSurface browser run saved its video, but putting all vertex floor samples in the repeatedly rendered status panel made browser observations time out. Neither a full pose nor a valid negative-contact reproduction was extracted; do not treat this attempt as a pass. The panel now displays only species/minimum/age/vertex count and offers the full pose via a download link. The change still needs a fresh successful browser extraction.
 
 Added tools/guardian/replay-surface-pose.mjs to load a JSON or gzip capture, reconstruct the catalog model and ragdoll virtual endpoints, and compare replayed versus recorded minimum (1e-6 m tolerance). The real-model helper regression passes, but this does not replace the still-pending browser-to-offline capture validation.
+
+
+## Browser-to-offline replay validated
+
+After the panel fix, a fresh native rhino double-impact run completed without errors and exported guardian-surface-pose.json through the new download link. Saved as tests/fixtures/rhino-recovery-surface-pose.json.gz. Captured recovery age 1.182595 s, 46518 vertices, minimum 0.004182471459302839 m. The offline replay finds Mesh_0 vertex 22693 and minimum 0.004182471459303727 m (difference 8.88e-16 m). A regression now exercises this actual browser capture against installed geometry and virtual ragdoll endpoints.
+
+The earlier negative-entry case has not recurred in this run. This validates the capture/extraction/replay mechanism, not a penetration fix. No new physical offset, collider or tolerance change was introduced.
