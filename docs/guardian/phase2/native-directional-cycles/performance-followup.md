@@ -19,3 +19,13 @@ Es una repetición diagnóstica, no un benchmark ABBA: no permite cuantificar pe
 Respecto al anclaje, scene.js coloca el centro en `field.surface(e.x,e.z)+0.025`. El muestreo visual del terreno triangulado existe en terrain-surface.js, pero no se utiliza para ese anclaje. Además, una altura central no comprueba todo el suelo interior. Son hipótesis pendientes de reproducción visual y medición del área: aún no se ha demostrado cuál causa el z-fighting y no se ha aplicado un desplazamiento arbitrario.
 
 Pendiente: reproducir el parpadeo interior con cámara en movimiento, medir suelo/modelo en esa zona, corregir la causa y volver a grabar; perfilar etapas sin alterar mecánicas y validar cualquier optimización con condiciones comparables. Ninguno de estos problemas se considera resuelto por esta medición.
+
+## Desglose adicional
+
+Añadiendo `profileStages` a la misma URL se mide cada avance del generador de actualización, el dibujo, Game.tick y el endFrame del scheduler anterior. Se conservan los datos completos en `lion-side-stage-profile.json`. El ciclo terminó sin errores: media de fotograma 172,56 ms, P95 449,13 ms, P99 515,54 ms. Es otra muestra diagnóstica, no una mejora.
+
+Game.tick: media 17,59 ms, P95 53,17 ms, máximo 115,30 ms. Scheduler anterior: media 0,12 ms, máximo 2,86 ms. La etapa 9 (`drawRenderFrame`) cuesta 54,63 ms de media, P95 67,31 ms y máximo 120,71 ms. Se mide duración síncrona de la llamada, no tiempo GPU: puede incluir esperas del controlador.
+
+Mapa de etapas: 0 cámara/chunks; 1 LOD y sync de entidades; 2 obstrucciones; 3 vegetación lejana; 4 agrupación de assets; 5 efectos y Guardián; 6 uniformes; 7 preparación de recursos; 8 cierre del generador; 9 dibujo. Las medias de 1 y 5 son 3,92 y 4,91 ms respectivamente. No se pueden sumar percentiles de etapas para construir un percentil total.
+
+La siguiente investigación debe desglosar las pasadas de dibujo y la simulación. El intervalo total incluye también trabajo de diagnóstico, audio, navegador y esperas no cubiertas; no atribuir ese resto automáticamente a GPU. No hay cambios de producción en esta instrumentación.
