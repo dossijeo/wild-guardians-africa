@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import * as T from 'three';import {actorAsset} from './helpers/actor-geometry.js';
+const inventory=JSON.parse(fs.readFileSync('tests/fixtures/animal-cost/inventory.json'));
+for(const row of inventory)test(row.species+' experimental rig retains original bone transforms and animation',async()=>{
+ const original=await actorAsset(row.original),candidate=await actorAsset(row.file),a=new Map(),b=new Map();original.scene.traverse(n=>{if(n.isBone)a.set(n.name,n);});candidate.scene.traverse(n=>{if(n.isBone)b.set(n.name,n);});assert.deepEqual([...a.keys()].sort(),[...b.keys()].sort());
+ const ma=new T.AnimationMixer(original.scene),mb=new T.AnimationMixer(candidate.scene);
+ for(const clip of original.animations){const other=candidate.animations.find(c=>c.name===clip.name);assert.ok(other);ma.clipAction(clip).play();mb.clipAction(other).play();for(const t of [0,clip.duration*.37,clip.duration*.83]){ma.setTime(t);mb.setTime(t);original.scene.updateMatrixWorld(true);candidate.scene.updateMatrixWorld(true);for(const [name,bone]of a){const values=b.get(name).matrixWorld.elements;assert.ok(bone.matrixWorld.elements.every((v,i)=>Math.abs(v-values[i])<1e-4),name+' at '+t);}}ma.stopAllAction();mb.stopAllAction();}
+ let triangles=0,meshes=0;candidate.scene.traverse(n=>{if(n.isMesh){meshes++;triangles+=(n.geometry.index?.count??n.geometry.attributes.position.count)/3;assert.ok(n.isSkinnedMesh);assert.equal(n.material.map,null);assert.equal(n.material.normalMap,null);assert.equal(n.morphTargetInfluences?.length??0,0);}});assert.equal(meshes,1);assert.ok(triangles>=300&&triangles<=500);
+});

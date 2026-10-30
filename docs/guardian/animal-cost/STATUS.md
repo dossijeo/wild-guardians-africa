@@ -1,0 +1,11 @@
+# Controlled animal cost experiment — active
+
+User requested A/B/C/D with 16 identical animals on the real Wild Engine / Intel UHD. This supersedes further packaging work as the immediate task. Do not change production assets, AI, navigation, balance, physics or introduce production LOD. Work stays on codex/guardian-3d-animation.
+
+Completed: reproducible experimental models in tests/fixtures/animal-cost, five species, 448 triangles each, one untextured standard material, one skinned mesh. Six original clips per species and every original bone transform/hierarchy are retained. Facial morph tracks are omitted because no experimental facial geometry exists. Primitive skin regions use the sixteen largest dominant-bone regions from the installed original mesh. No ornamental or eyelid mesh is copied. This is intentionally not an artistic model.
+
+Five real-GLB tests pass: all original bone names and sampled world matrices agree within 0.0001 across every installed clip at three clip times; experimental triangle/material/morph invariants pass. Original GLBs are unchanged. No benchmark results yet, no LOD recommendation yet.
+
+Next: implement QA-only four-variant native raid runner, exactly 16 fixed actors and state seed, fixed camera/resolution/light and fixed simulation steps. Preserve original collision bindings/ground-support data; deriving colliders from ultralight geometry would confound the experiment. C must stop visual animation evaluation without disabling physics or navigation; clearly report any pose evaluation retained for physics. D retains original geometry with the same simple material as B/C. Retain GPU skinning in C if only CPU pose evaluation is disabled and describe that distinction.
+
+Collect raw frames, average/median FPS, p95/p99 frame time, animation CPU separately from simulation/navigation/physics, reliable disjoint-aware GPU queries if supported, triangles/draws/memory. Alternate repeated order (e.g. ABCD/DCBA plus balanced rotations), compare exact simulation outcomes and retain mismatches. Do not call a presentation-only clock a simulation experiment. Review screenshots of each variant. Bound any LOD triangle advice by measured evidence; two geometry endpoints do not determine an optimum.
