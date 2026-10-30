@@ -1,4 +1,5 @@
 export const liveCropCue=(event,state)=>event.type!=='SpellActivated'||!['growth','multiply'].includes(event.kind)||!event.targetId||!state||!!state.plants?.some(p=>p.id===event.targetId&&p.alive);
+export const liveMagicCue=(event,state)=>liveCropCue(event,state)&&(event.type!=='SpellActivated'||event.kind!=='attack'||!event.targetId||!state||!!state.raid?.animals.some(a=>a.id===event.targetId&&a.status!=='gone'));
 // No wall-clock timers: pause/resume and slow frames follow simulation time.
 export class MagicCueQueue {
  constructor(){this.pending=new Map();this.state=null;this.elapsed=null;}
@@ -14,7 +15,7 @@ export class MagicCueQueue {
   if(!state||state.pauses?.length)return [];
   const ready=[];
   for(const [id,cue] of this.pending){
-   if(!liveCropCue(cue.event,state)||cue.state!==state||state.elapsed-cue.at>.5||(cue.event.type==='GuardianMagicHit'&&!state.raid?.animals.some(a=>a.id===cue.event.targetId&&a.status!=='gone'))){this.pending.delete(id);continue;}
+   if(!liveMagicCue(cue.event,state)||cue.state!==state||state.elapsed-cue.at>.5||(cue.event.type==='GuardianMagicHit'&&!state.raid?.animals.some(a=>a.id===cue.event.targetId&&a.status!=='gone'))){this.pending.delete(id);continue;}
    if(state.elapsed>=cue.at){ready.push(cue.event);this.pending.delete(id);}
   }
   return ready.sort((a,b)=>a.presentation.cueAt-b.presentation.cueAt);

@@ -1,5 +1,5 @@
 import {playGuardianWorldCue} from './guardian-presence.js';
-import {MagicCueQueue,liveCropCue} from './magic-cue-queue.js';
+import {MagicCueQueue,liveMagicCue} from './magic-cue-queue.js';
 import {PowerReadyAudio} from './power-ready-audio.js';
 import {destructionSounds} from './destruction-audio.js';
 import {UnlockAudio} from './unlock-audio.js';
@@ -207,13 +207,13 @@ export class AudioSystem {
       if(index>=0){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(this.magicCues.defer(event,state))continue;}
       // Automatic harvest only queues worker work; it is not a player click.
       // Consume its ID normally so history changes cannot replay it later.
-      if(event.type==='HarvestRequested'&&event.automatic===true||!liveCropCue(event,state))continue;
+      if(event.type==='HarvestRequested'&&event.automatic===true||!liveMagicCue(event,state))continue;
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
       const id=event.type==='GuardianMagicHit'&&ANIMAL_SOUND_ROUTES[event.species]?event.species+'_hurt':event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
       const requested=this.context?.currentTime??0,generation=this.generation;
       const magicOptions=event.type==='GuardianMagicHit'?{family:'animal-hurt',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length&&(!state||this.magicCues.state===state&&!state.result&&(!Number.isFinite(event.presentation?.cueAt)||state.elapsed>=event.presentation.cueAt)&&state.raid?.animals.some(a=>a.id===event.targetId&&a.status!=='gone'))}:{};
-      const cropLaunch=event.type==='SpellActivated'&&['growth','multiply'].includes(event.kind)&&event.targetId;
-      if(cropLaunch){const elapsed=state?.elapsed;magicOptions.isCurrent=()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&(!state||this.magicCues.state===state&&!state.result&&!state.pauses?.length&&state.elapsed>=elapsed)&&liveCropCue(event,state);}
+      const targetedLaunch=event.type==='SpellActivated'&&['growth','multiply','attack'].includes(event.kind)&&event.targetId;
+      if(targetedLaunch){const elapsed=state?.elapsed;magicOptions.isCurrent=()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&(!state||this.magicCues.state===state&&!state.result&&!state.pauses?.length&&state.elapsed>=elapsed)&&liveMagicCue(event,state);}
       const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
       if(id){const options={...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})};(id==='spirit_power_activate'?playGuardianWorldCue(this,id,options):this.sound(id,options)).catch(()=>{});}
       if(event.type==='GuardianMagicHit'){

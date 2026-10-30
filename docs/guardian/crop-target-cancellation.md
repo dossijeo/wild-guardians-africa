@@ -15,3 +15,8 @@ Grow/Multiply launch audio now checks crop existence/liveness when draining dela
 Forty focused combat/animal/presence lifecycle tests pass, including removed/dead crop cues both queued and decoding, and the seven invalidation conditions for each agricultural spell. These are deterministic audio-routing tests with mocked sound calls; they do not claim a new listening-based browser validation. Production build passes in 16.29 seconds with the existing warnings.
 
 Integration follow-up: four delayed-decode tests now exercise AudioSystem.process, the real sound method and buffer cache (with a controlled fake AudioContext). Removed/dead crops produce zero source nodes, voices or active entries after decoding. A subsequent valid cast reuses the decoded buffer and starts one voice, then stop disconnects it. All 13 presence lifecycle tests pass. This is stronger than inspecting isCurrent alone, but still not browser listening evidence.
+
+
+## Attack launch cancellation follow-up
+
+The same target-lifetime gate now covers Attack launch audio: removed/gone beasts discard a pending launch and invalidate a decode that completes after cancellation. Previously only the impact cue had this protection for beasts. Targetless compatibility events remain supported. This does not stop an already playing source or change damage/cooldowns. Six regression combinations cover missing/gone targets at queued, immediate and decode phases. The existing emitter-routing fixture now supplies a live beast rather than a nonexistent target. Combat-audio plus presence-lifecycle suites: 23/23 passed; production build passed in 15.52 seconds with the existing chunk/import warnings. This is automated audio-path verification, not a new browser listening review.

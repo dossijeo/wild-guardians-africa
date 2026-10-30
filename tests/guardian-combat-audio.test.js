@@ -31,7 +31,7 @@ test('a slow observation crossing both markers keeps launch before impact',()=>{
 
 
 test('spell launch belongs to the Guardian, so it cannot consume the beast hurt voice slots',()=>{
- const {audio,calls}=fixture(),state={elapsed:1,pauses:[]};audio.process([{id:'cast',type:'SpellActivated',kind:'attack',targetId:'beast',presentation:{x:0,z:0,origin:{x:24,z:0},cueAt:1}}],{state,listener:{x:0,z:0}});
+ const {audio,calls}=fixture(),state={elapsed:1,pauses:[],raid:{animals:[{id:'beast',status:'walking'}]}};audio.process([{id:'cast',type:'SpellActivated',kind:'attack',targetId:'beast',presentation:{x:0,z:0,origin:{x:24,z:0},cueAt:1}}],{state,listener:{x:0,z:0}});
  assert.equal(calls[0].options.emitter,'guardian-world');assert.equal(calls[0].options.gain,.5);
 });
 
@@ -61,5 +61,20 @@ for(const kind of ['growth','multiply'])test(`${kind} rejects stale queued and d
  for(const deferred of [false,true]){
   const {audio,calls}=fixture(),state={elapsed:0,pauses:[],plants:[{id:'crop',alive:true}]},event={id:'cast',type:'SpellActivated',kind,targetId:'crop',presentation:{cueAt:deferred?.2:0}};
   if(deferred)audio.process([event],{state});state.plants=[];state.elapsed=.2;audio.process([event],{state});assert.equal(calls.length,0);assert.equal(audio.magicCues.pending.size,0);
+ }
+});
+
+
+test('Attack launch is cancelled with its vanished target before dispatch or decode',()=>{
+ for(const reason of ['missing','gone'])for(const phase of ['queued','immediate','decode']){
+  const {audio,calls}=fixture(),animal={id:'beast',status:'walking'},state={elapsed:0,pauses:[],raid:{animals:[animal]}};
+  const event={id:'cast',type:'SpellActivated',kind:'attack',targetId:'beast',presentation:{cueAt:phase==='queued'?.14:0}};
+  if(phase!=='immediate')audio.process([event],{state});
+  if(phase==='decode'){assert.equal(calls.length,1);assert.equal(calls[0].options.isCurrent(),true);}
+  if(reason==='missing')state.raid=null;else animal.status='gone';
+  state.elapsed=.14;audio.process([event],{state});
+  if(phase==='decode')assert.equal(calls[0].options.isCurrent(),false);
+  else assert.equal(calls.length,0);
+  assert.equal(audio.magicCues.pending.size,0);
  }
 });
