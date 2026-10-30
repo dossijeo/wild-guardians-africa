@@ -1,3 +1,4 @@
+import {poseSkinSampler} from './pose-skin-sampler.js';
 import {contactQuantile as quantile} from './contact-quantile.js';
 import {tailContactPredicate} from './beast-ground-contact.js';
 import {Vector3,Quaternion,Bone} from 'three';
@@ -40,7 +41,7 @@ export class BeastRagdollBinding{
   const frames=this.entries.map(e=>{const a=e.bone.getWorldPosition(new Vector3()),b=e.tip.getWorldPosition(new Vector3());return {center:a.clone().add(b).multiplyScalar(.5),inverse:new Quaternion().setFromUnitVectors(this.y,b.sub(a).normalize()).invert()};});
   const v=new Vector3(),selected=new Map();
   this.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
-   const isTail=tailContactPredicate(mesh);
+   const isTail=tailContactPredicate(mesh),sample=poseSkinSampler(mesh);
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
    // Recovery poses can expose different skin extrema. Do not reuse or replace
    // the standing-pose support cache when rebuilding a knocked-down animal.
@@ -49,7 +50,7 @@ export class BeastRagdollBinding{
    for(const i of samples){if(isTail(i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
     // Skin once; adjacent head/neck supports share the same world-space point.
     const primary=mapping[indices.getComponent(i,best)];if(primary===undefined)continue;
-    mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld);
+    sample(i,v);
     let secondary;
     if(primary===2||primary===3)for(let k=0;k<4;k++){const owner=mapping[indices.getComponent(i,k)];if(owner!==primary&&(owner===2||owner===3)&&weights.getComponent(i,k)>=.25)secondary=owner;}
     for(let k=0;k<(secondary===undefined?1:2);k++){const owner=k===0?primary:secondary,f=frames[owner],point=v.clone().sub(f.center).applyQuaternion(f.inverse);point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);}

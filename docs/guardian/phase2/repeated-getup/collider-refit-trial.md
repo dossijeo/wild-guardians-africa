@@ -74,3 +74,19 @@ justify the worse median or establish reduced browser stutter. The candidate
 and its helper were removed. No production code changes from this experiment
 remain. The result points away from repacking each fit and toward reducing
 per-fit allocation/skinning work. Full-refit activation remains pending.
+
+## Prepare bone matrices once per collider scan
+
+`poseSkinSampler` computes bone-world × inverse-bind matrices once per mesh
+scan. Morph evaluation still uses Three's Mesh implementation, and bind,
+weighted skin and world transforms retain their original operation order.
+The sampler is local to a synchronous scan, so no pose cache can survive an
+animation update. All vertices of five real beasts, with active morphs and a
+translated/rotated/nonuniformly scaled parent, agree with Three within 1e-9 m.
+The real-model collider-refit comparison and articulated physics tests pass
+alongside these comparisons (22 tests).
+
+`rhino-skin-sampler.json` records twelve local full refits: 56.5–97.6 ms. These
+are not an interleaved browser benchmark and do not prove a gameplay frametime
+improvement. The full-refit recovery-hit activation remains disabled. This
+reduces redundant matrix work without accepting the remaining input-time cost.
