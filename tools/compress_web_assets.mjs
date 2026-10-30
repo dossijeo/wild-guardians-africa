@@ -1,3 +1,4 @@
+import {smallerLosslessImage} from './smaller-lossless-image.mjs';
 import {readdir,readFile,writeFile,mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {resolve,dirname} from 'node:path';
@@ -28,9 +29,12 @@ for(const file of files){
     const textureIds=new Set((json.textures??[]).flatMap((t,id)=>(t.source??t.extensions?.EXT_texture_webp?.source)===i?[id]:[])),color=(json.materials??[]).some(m=>textureIds.has(m.pbrMetallicRoughness?.baseColorTexture?.index)||textureIds.has(m.emissiveTexture?.index)),normal=(json.materials??[]).some(m=>textureIds.has(m.normalTexture?.index)),quality=color?90:95,lossless=normal||losslessImages.has(hash(source));
     // High-quality WebP with lossless alpha; higher quality for normal/ORM maps.
     // A 2048 limit bounds web texture allocations; no upscaling.
-    const output=await sharp(source).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).webp({quality,lossless,alphaQuality:100,effort:6}).toBuffer(),after=await sharp(output).metadata();
-    const offset=append(output);v.buffer=0;v.byteOffset=offset;v.byteLength=output.length;image.mimeType='image/webp';
-    images.push({index:i,beforeBytes:source.length,afterBytes:output.length,before:[info.width,info.height],after:[after.width,after.height],alpha:info.hasAlpha,quality,lossless,role:normal?'normal':color?'color':'data',alphaQuality:100});
+    const encoded=await sharp(source).resize({width:2048,height:2048,fit:'inside',withoutEnlargement:true}).webp({quality,lossless,alphaQuality:100,effort:6}).toBuffer();
+    // Reviewed color recipes bind the whole baseline GLB hash; preserve those baselines.
+    const choice=approved.images.some(r=>r.source==='assets/'+file)?{bytes:encoded,mimeType:'image/webp',retained:false}:await smallerLosslessImage(source,encoded,{lossless,mimeType:image.mimeType,width:info.width,height:info.height});
+    const output=choice.bytes,after=await sharp(output).metadata();
+    const offset=append(output);v.buffer=0;v.byteOffset=offset;v.byteLength=output.length;image.mimeType=choice.mimeType;
+    images.push({index:i,retainedOriginal:choice.retained,mimeType:choice.mimeType,beforeBytes:source.length,afterBytes:output.length,before:[info.width,info.height],after:[after.width,after.height],alpha:info.hasAlpha,quality,lossless,role:normal?'normal':color?'color':'data',alphaQuality:100});
   }
   const imageViews=new Set((json.images??[]).map(im=>im.bufferView));let compressedViews=0;
   for(const [i,v] of views.entries()){
@@ -50,8 +54,8 @@ for(const file of files){
     if(!Buffer.from(decoded).equals(source))throw Error('Meshopt byte mismatch: '+file+'/'+i);
     v.buffer=1;v.extensions={...v.extensions,EXT_meshopt_compression:{buffer:0,byteOffset:append(encoded),byteLength:encoded.length,byteStride:stride,count,mode,filter:'NONE'}};compressedViews++;
   }
-  for(const texture of json.textures??[]){texture.extensions={...texture.extensions,EXT_texture_webp:{source:texture.source??texture.extensions?.EXT_texture_webp?.source}};delete texture.source;}
-  const codecs=['EXT_meshopt_compression',...((json.images??[]).length?['EXT_texture_webp']:[])];
+  for(const texture of json.textures??[]){const index=texture.source??texture.extensions?.EXT_texture_webp?.source;if(json.images[index].mimeType==='image/webp'){texture.extensions={...texture.extensions,EXT_texture_webp:{source:index}};delete texture.source;}else{texture.source=index;if(texture.extensions){delete texture.extensions.EXT_texture_webp;if(!Object.keys(texture.extensions).length)delete texture.extensions;}}}
+  const codecs=['EXT_meshopt_compression',...((json.images??[]).some(i=>i.mimeType==='image/webp')?['EXT_texture_webp']:[])];
   json.extensionsUsed=[...new Set([...(json.extensionsUsed??[]),...codecs])];json.extensionsRequired=[...new Set([...(json.extensionsRequired??[]),...codecs])];
   json.buffers=[{byteLength:length},{byteLength:bin.length,extensions:{EXT_meshopt_compression:{fallback:true}}}];
   const packed=new Uint8Array(length);for(const chunk of chunks)packed.set(chunk.bytes,chunk.offset);
