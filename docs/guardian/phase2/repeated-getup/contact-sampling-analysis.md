@@ -27,3 +27,28 @@ No production support margin, collider, animation or geometry is changed by this
 diagnostic. Increasing every animal's height would risk reintroducing floating
 feet. Next evidence needed remains a negative native entry capture with its
 vertex witness and physical pose. Full visual acceptance remains open.
+
+## Negative native capture now reproduced
+
+A new real WorldScene/Game.tick repeated-hit run captured penetration at recovery
+age 0.05 s. The native report completes both knockdowns, has no errors, and never
+shows more than one Guardian. The full-pose fixture is
+`tests/fixtures/rhino-recovery-negative-surface-pose.json.gz`.
+
+- Full non-tail skin minimum: -0.01364654 m, Mesh_0 vertex 30255.
+- Runtime support-sample minimum: -0.00587140 m, vertex 34768.
+- Additional depth missed by samples: 0.00777514 m.
+- Exact replay discrepancy: zero.
+- Negative minima also occur at ages 0.15 and 0.26666 s.
+
+Receipts: `rhino-negative-contact-report.json` and
+`rhino-negative-contact-sampling.json`. The added replay test passes and
+intentionally preserves this defect as diagnostic evidence; it does not assert
+that penetration is acceptable or fixed. The three pose-replay tests pass.
+
+This rules out sparse sampling as the entire explanation: even sampled skin is
+below ground. However this capture is already 0.05 s into recovery, not the
+exact incoming physical pose. The next targeted capture should retain the
+incoming physical snapshot, entryClearance and fitted colliders so that their
+support and the entry blend can be evaluated independently. No production
+animation or support margin has changed.

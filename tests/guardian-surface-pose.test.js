@@ -14,3 +14,14 @@ test('browser-captured native rhino contact pose replays against installed geome
  const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.rhino.url,import.meta.url));new BeastRagdollBinding(model,{species:'rhino'});
  const result=replaySurfacePose(model,capture);assert.ok(Math.abs(result.minimum-capture.minimum)<1e-6);assert.equal(result.witness.mesh,'Mesh_0');assert.equal(result.witness.index,22693);
 });
+
+test('native early-recovery penetration remains reproducible for collider diagnosis',async()=>{
+ const {readFileSync}=await import('node:fs'),{gunzipSync}=await import('node:zlib'),{BeastRagdollBinding}=await import('../src/rendering/beast-ragdoll-binding.js');
+ const capture=JSON.parse(gunzipSync(readFileSync(new URL('./fixtures/rhino-recovery-negative-surface-pose.json.gz',import.meta.url))));
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.rhino.url,import.meta.url));new BeastRagdollBinding(model,{species:'rhino'});
+ const result=replaySurfacePose(model,capture);
+ assert.ok(Math.abs(result.minimum-capture.minimum)<1e-6);
+ assert.equal(result.witness.mesh,'Mesh_0');assert.equal(result.witness.index,30255);
+ assert.ok(result.minimum<-.013&&result.minimum>-.014);
+ // This asserts faithful replay of a known defect, not acceptable ground contact.
+});
