@@ -1,3 +1,4 @@
+import {skinContactRepresentatives} from './skin-contact-indices.js';
 import {colliderSupportSearch} from './collider-support-search.js';
 import {poseSkinSampler} from './pose-skin-sampler.js';
 import {contactQuantile as quantile} from './contact-quantile.js';
@@ -47,14 +48,21 @@ export class BeastRagdollBinding{
    // Recovery poses can expose different skin extrema. Do not reuse or replace
    // the standing-pose support cache when rebuilding a knocked-down animal.
    const cached=refit?null:colliderSamples.get(mesh.geometry)?.get(this.sampleStride);if(!cached)selected.set(mesh.geometry,new Set());
+   const representatives=refit?skinContactRepresentatives(mesh):null,duplicates=refit?new Map():null;
    const samples=cached??Array.from({length:Math.ceil(indices.count/this.sampleStride)},(_,i)=>i*this.sampleStride);
-   for(const i of samples){if(isTail(i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
+   for(const i of samples){
+    const representative=representatives?.[i];
+    if(representatives&&representative<0)continue;
+    const previous=duplicates?.get(representative);if(previous){for(const {owner,point} of previous)groups[owner].push(point);continue;}
+    if(!representatives&&isTail(i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
     // Skin once; adjacent head/neck supports share the same world-space point.
     const primary=mapping[indices.getComponent(i,best)];if(primary===undefined)continue;
     sample(i,v);
     let secondary;
     if(primary===2||primary===3)for(let k=0;k<4;k++){const owner=mapping[indices.getComponent(i,k)];if(owner!==primary&&(owner===2||owner===3)&&weights.getComponent(i,k)>=.25)secondary=owner;}
-    for(let k=0;k<(secondary===undefined?1:2);k++){const owner=k===0?primary:secondary,f=frames[owner],point=localPoint.copy(v).sub(f.center).applyQuaternion(f.inverse);groups[owner].push({x:point.x,y:point.y,z:point.z,geometry:mesh.geometry,index:i});}
+    const records=duplicates?[]:null;
+    for(let k=0;k<(secondary===undefined?1:2);k++){const owner=k===0?primary:secondary,f=frames[owner],point=localPoint.copy(v).sub(f.center).applyQuaternion(f.inverse);const record={x:point.x,y:point.y,z:point.z,geometry:mesh.geometry,index:i};groups[owner].push(record);records?.push({owner,point:record});}
+    if(duplicates)duplicates.set(representative,records);
    }
   });
   const fits=groups.map((points,i)=>{if(points.length<8)return null;

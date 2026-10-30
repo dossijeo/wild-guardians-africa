@@ -128,3 +128,22 @@ acceptance remain unproven, and gameplay full-refit activation remains disabled.
 The radius/quantile computation cannot simply be dropped for convex hulls:
 `BeastRagdollSolver` uses the radius in physical roll support torque as well as
 in capsule fallback. Its behavior is preserved.
+
+## Reuse identical UV-seam skin evaluation
+
+The existing versioned skin-contact index cache now also records each vertex's
+exact representative (position, joint indices, weights and all position morphs).
+During an explicit full refit only, identical vertices reuse the evaluated point.
+Their multiplicity and ordering remain in each group, preserving quantiles,
+radii, support tie choices and sample counts. The ordinary cached scan is unchanged.
+Rhino has 46,518 vertices and 11,574 distinct eligible representatives; buffalo
+51,598/11,623, hyena 22,242/10,462, lion 24,579/10,538, warthog 20,421/10,972.
+
+Tests verify all representative inputs, geometry/mask invalidation, exact real
+collider equality, and physics behavior (18 selected tests). Twenty alternating
+pairs against e6a9765f3 are in `collider-dedup-pairs.json` (historical labels
+vector=baseline, plain=candidate). Medians: 58.424/41.2928 ms. Maxima:
+96.1761/118.7758 ms; the candidate's worst observed spike is higher. This is
+Node evidence only, not browser performance acceptance. Gameplay full refit
+remains disabled. The extra cache costs one Int32 per mesh vertex and is tied
+to the existing weak geometry cache; no per-frame full-skin scan was added.
