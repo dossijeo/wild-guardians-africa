@@ -28,3 +28,22 @@ are visible. The wide camera and grass limit millimetre-scale contact inspection
 the sheet does not validate every transition frame or frame pacing. No measured
 browser performance claim is made. Incoming collider/skin fit and the separate
 costly recovery-hit refit remain open.
+
+## Cross-system follow-up
+
+At d8eff70e3, all 14 tests in authored-recovery-solids, baked-beast-fall,
+baked-solid-contacts and recovery-entry-clearance pass without skips. Full TAP
+is preserved in `entry-solid-tests.tap.gz`. This checks the five species beside
+walls/corners and the baked fallback affected by the shared recovery class.
+Workers do not use AuthoredBeastRecovery, so this change does not alter their
+recovery implementation. Production build passes in 16.79 seconds with existing
+large-chunk and mixed-import warnings.
+
+`hyena-entry-settle.json` and its MP4 show another actual native repeated-hit
+cycle: both impacts and final recovery complete, errors are empty, maximum
+Guardians is one, and recorded full-skin recovery samples have no negative
+clearance. The 1 fps sheet was inspected and shows the fall, repeated cast,
+second fall and resumed upright pose. Wide framing/grass limit detailed contact
+judgment. Audio is not part of the recording. Tests/build overlapped with the
+browser session, so this video and its timings are not performance evidence.
+These results do not establish a universal absence of initial penetration.
