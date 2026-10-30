@@ -94,8 +94,9 @@ export class GuardianSummons{
   for(const {bone,rest} of s.eyes){bone.quaternion.copy(rest);bone.parent.worldToLocal(this.aim.copy(w.camera.position));this.aim.sub(bone.position).applyQuaternion(this.q.copy(rest).invert()).normalize();this.aim.set(THREE.MathUtils.clamp(this.aim.x,-.13,.13),1,THREE.MathUtils.clamp(this.aim.z,-.12,.12)).normalize();bone.quaternion.multiply(this.q.setFromUnitVectors(this.up,this.aim));}
   return true;
  }
+ liveCropTarget(event){return !['growth','multiply'].includes(event.kind)||!event.targetId||!!this.world.state.plants?.some(p=>p.id===event.targetId&&p.alive);}
  start(event,dequeued=false){if(!this.slots.length)return;const w=this.world,s=this.slots[0];
-  if(event.kind==='attack'&&!this.liveAttackTarget(event.targetId))return;
+  if(!this.liveCropTarget(event)||event.kind==='attack'&&!this.liveAttackTarget(event.targetId))return;
   if(!dequeued&&(this.pending.length||(s.event?.kind==='attack'&&w.state.elapsed<s.at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow))){this.pending.push(event);return;}
   if(s.event)this.stats.reused++;
   this.hide(s);this.guiding=false;
@@ -108,11 +109,11 @@ export class GuardianSummons{
   this.presentationState=state;this.lastElapsed=state.elapsed;
   const events=state.events,index=this.anchor?events.lastIndexOf(this.anchor):-1;
   for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);else if(e.type==='BlessingApplied'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start({...e,kind:'awakening',x:e.presentation.x,z:e.presentation.z});}this.anchor=events.at(-1);
-  while(this.pending[0]?.kind==='attack'&&!this.liveAttackTarget(this.pending[0].targetId))this.pending.shift();
+  while(this.pending.length&&(!this.liveCropTarget(this.pending[0])||this.pending[0].kind==='attack'&&!this.liveAttackTarget(this.pending[0].targetId)))this.pending.shift();
   if(this.pending.length&&(!this.slots[0].event||state.elapsed>=this.slots[0].at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow)){const next=this.pending.shift();this.start({...next,presentation:{...next.presentation,elapsed:state.elapsed}},true);}
   const guideStart=performance.now(),guideActive=this.updateGuide();
   let anim=performance.now()-guideStart,vfx=0,auraAdvanceMs=0,active=guideActive?1:0;
-  for(const s of this.slots){if(!s.event)continue;const age=state.elapsed-s.at;
+  for(const s of this.slots){if(!s.event)continue;if(!this.liveCropTarget(s.event)){this.hide(s);continue;}const age=state.elapsed-s.at;
    // Cancel if the target vanished before any contact frame was presented.
    // A slow frame may cross the marker; current age alone cannot prove a hit.
    // Keep fading an impact that was already presented with a live victim.

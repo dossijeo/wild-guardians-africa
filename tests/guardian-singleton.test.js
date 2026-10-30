@@ -224,3 +224,18 @@ test('an impact already presented with a live target keeps fading after that tar
  assert.ok([slot.group,slot.beam,slot.impact,slot.core,slot.aura,slot.vortex].every(o=>!o.visible));
  summons.dispose();assert.equal(world.scene.children.length,0);
 });
+
+for(const kind of ['growth','multiply'])for(const removal of ['missing','dead'])test(`${kind} cancels removed crops in queue and during presentation (${removal})`,async()=>{
+ const plant={id:'crop',alive:true};
+ const world={state:{events:[],elapsed:1,time:150,plants:[plant]},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;const slot=summons.slots[0];
+ const event=(kind,targetId,at)=>({type:'SpellActivated',kind,targetId,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:at}});
+ const remove=()=>{if(removal==='missing')world.state.plants=[];else plant.alive=false;};
+ try{
+  world.state.events.push(event('attack',null,1));summons.update();
+  world.state.elapsed=1.1;world.state.events.push(event(kind,plant.id,1.1));summons.update();assert.equal(summons.pending.length,1);
+  remove();world.state.elapsed=1.6;summons.update();assert.equal(summons.pending.length,0);assert.equal(slot.event.kind,'attack','removed crop must not replace the current presentation');
+  plant.alive=true;world.state.plants=[plant];world.state.elapsed=2;world.state.events.push(event(kind,plant.id,2));summons.update();assert.equal(slot.event.kind,kind);
+  remove();world.state.elapsed=2.1;summons.update();assert.equal(slot.event,null);for(const key of ['group','beam','core','impact','aura','vortex'])assert.equal(slot[key].visible,false,key);
+ }finally{summons.dispose();}
+});
