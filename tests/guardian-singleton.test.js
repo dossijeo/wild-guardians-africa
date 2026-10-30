@@ -64,6 +64,7 @@ test('tutorial guide yields to a spell and resumes the same body without retaine
  const guide={target:'center-site',position:[0,0,0]};summons.setGuide(guide);summons.update();
  const slot=summons.slots[0];assert.equal(summons.stats.active,1);assert.equal(summons.guiding,true);assert.equal(slot.model.scale.x,4.08);
  summons.setGuide({...guide,position:[0,0,0]});summons.update();assert.equal(plans,1,'stable hints reuse their placement');
+ for(let i=0;i<5;i++){summons.guideStamp=performance.now()/1000-.05;const previous=slot.group.position.clone();summons.update();assert.ok(slot.group.position.distanceTo(previous)>0);assert.ok(slot.vortex.position.distanceTo(slot.group.position)<1e-10,'vortex follows this frame, not the previous guide position');}
  const event={type:'SpellActivated',kind:'multiply',x:3,z:0,presentation:{origin:{x:5,y:2,z:0},contact:{x:3,y:1,z:0},elapsed:1}};
  world.state.events.push(event);world.state.elapsed=1.3;summons.update();
  assert.equal(slot.event,event);assert.equal(summons.guiding,false);assert.equal(summons.stats.active,1);assert.equal(slot.model.scale.x,2.4);

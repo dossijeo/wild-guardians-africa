@@ -84,8 +84,8 @@ export class GuardianSummons{
   const p=this.guide.position,origin=this.guideOrigin,dt=Math.min(.05,Math.max(0,stamp-(this.guideStamp??stamp)));this.guideStamp=stamp;
   if(!this.guiding){s.group.position.set(origin.x,origin.y+1.2,origin.z);this.guideTime=0;}
   this.guiding=true;this.guideTime+=dt;
-  s.vortex.position.copy(s.group.position);s.vortex.update(this.guideTime,0xb8edce,s.height*1.7,s.bottom*1.7,true);
   s.group.position.lerp(this.vector.set(origin.x,origin.y,origin.z),1-Math.exp(-dt*4));
+  s.vortex.position.copy(s.group.position);s.vortex.update(this.guideTime,0xb8edce,s.height*1.7,s.bottom*1.7,true);
   s.model.scale.setScalar(2.4*1.7);s.group.rotation.y=Math.atan2(w.camera.position.x-s.group.position.x,w.camera.position.z-s.group.position.z);s.group.visible=true;
   for(const m of s.materials){m.opacity=1;m.uniforms.opacity.value=1;m.uniforms.uSpiritTint.value.setHex(0xffffff);m.uniforms.uSpiritGlow.value=.08;m.uniforms.uReveal.value=1.12;m.uniforms.uDissolve.value=0;m.uniforms.uBottom.value=s.group.position.y+s.bottom*1.7;m.uniforms.uHeight.value=s.height*1.7;}
   for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.weight=1;a.time=this.guideTime%a.getClip().duration;}s.pose.update();

@@ -13,3 +13,8 @@ Evidence:
 - [After Attack, complete figure](guide-after-attack-wide.png)
 
 Scope: the guide is the fixture world-target override, not the full tutorial HUD or its narration. Audio was not unlocked: recorded audio events explicitly have played=false. Screenshots establish sampled final appearance, not continuous transition quality. The burst uses a presentation clock; the Attack cycle runs Game.tick. This is not a balance or paired performance test. Frame p95 was 66.64 ms with a 316.06 ms maximum; no fluidity claim is made. This evidence does not close the remaining tutorial-video, collision or artistic acceptance work.
+
+
+## Same-frame vortex tracking correction
+
+Review of guide movement found the vortex copied the body position before the body interpolation, leaving it one update behind. Moved that copy after interpolation. A regression advances five 50 ms guide steps and compares both positions; it fails on the previous implementation and passes after the correction. The singleton/pose suites pass all 25 tests (956.443 ms). No animation amplitudes, cloth clips, camera, gameplay rules or materials changed. This is a deterministic transform correction; no new continuous visual acceptance is claimed.
