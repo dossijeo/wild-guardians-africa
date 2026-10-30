@@ -285,3 +285,15 @@ test('concurrent cancelled building requests release each shared native template
   template.dispose();assert.ok([...disposals.values()].every(n=>n===1));
  }
 });
+
+test('installed building templates classify coincident faces on the existing vertex layout',()=>{
+ for(const building of catalogue){
+  const template=prepareNativeBuilding(originalModel(building),building);
+  const attr=template.body.attributes.aFacePolicy,counts=[0,0,0];
+  for(let i=0;i<attr.count;i++)counts[attr.getX(i)]++;
+  assert.equal(attr.count,template.body.attributes.aPos.count);
+  assert.ok(counts[1]+counts[2]>0,building.culture+' lost duplicate classification');
+  console.log('coincident face vertices',building.culture,counts);
+  template.dispose();
+ }
+});

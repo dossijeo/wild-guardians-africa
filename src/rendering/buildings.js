@@ -1,3 +1,4 @@
+import {buildingFacePolicy,buildingFaceShaders} from './building-face-policy.js';
 import {loadingYieldBudget} from './loading-yield-budget.js';
 import {withScreenTarget} from './screen-target.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
@@ -24,6 +25,7 @@ function geometry(data,repairNormals=null){
   for(const [name,size,offset] of [['aPos',3,0],['aNormal',3,3],['aUV',2,6],['aAnchor',3,8],['aSeed',1,11]])result.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
   // Three uses position for frustum bounds; the shader uses the same source data.
   result.setAttribute('position',result.getAttribute('aPos'));
+  result.setAttribute('aFacePolicy',new THREE.BufferAttribute(buildingFacePolicy(result.getAttribute('aPos')),1));
   result.setAttribute('aRepairNormal',new THREE.BufferAttribute(repairNormals??new Float32Array(data.length/4),3));
   result.computeBoundingBox();result.computeBoundingSphere();return result;
 }
@@ -64,7 +66,8 @@ function shaderMaterial(uniforms,fragmentShader,visualSearch){
     fragmentShader=fragmentShader.slice(0,start)+' float fog=smoothstep(uWorldFogRange.x,uWorldFogRange.y,length(uEye-vWorld)*uWorldScale);\n fragColor=vec4(mix(toSRGB(tonemap(color)),uWorldFogColor,fog),1.);'+fragmentShader.slice(end);
   }
   if(fragmentShader.includes('uWorldFogColor'))fragmentShader=toonDestruction(fragmentShader,visualSearch);
-  return new THREE.RawShaderMaterial({vertexShader:glsl(destructionVertex),fragmentShader:glsl(fragmentShader),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
+  const faces=buildingFaceShaders(destructionVertex,fragmentShader);
+  return new THREE.RawShaderMaterial({vertexShader:glsl(faces.vertex),fragmentShader:glsl(faces.fragment),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
 }
 export class NativeBuilding extends THREE.Group {
   constructor(template,entity,pipeline,elapsed=0){
