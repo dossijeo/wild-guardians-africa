@@ -16,16 +16,17 @@ const partitions={cloth:[],arms:[]};for(let i=0;i<g.index.count;i+=3){const ids=
 const position=new THREE.Float32BufferAttribute(new Float32Array(g.attributes.position.count*3),3),material=new THREE.MeshBasicMaterial();
 const meshes=Object.fromEntries(Object.entries(partitions).map(([kind,indices])=>{const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',position);geometry.setIndex(indices);return [kind,new THREE.Mesh(geometry,material)];}));
 const rows=[],point=new THREE.Vector3();
-for(const kind of ['growth','multiply','shield','attack']){
+const targets=[{name:'level',x:0,y:1,z:0},{name:'low-side',x:5,y:.2,z:-3},{name:'high-side',x:-2,y:4,z:3},{name:'close-high',x:2,y:3,z:.5}];
+for(const contact of targets)for(const kind of ['growth','multiply','shield','attack']){
  summons.clear();world.state.elapsed+=3;summons.update();const at=world.state.elapsed;
- world.state.events.push({type:'SpellActivated',kind,x:0,z:0,presentation:{origin:{x:3,y:1,z:0},contact:{x:0,y:1,z:0},elapsed:at}});
+ world.state.events.push({type:'SpellActivated',kind,x:contact.x,z:contact.z,presentation:{origin:{x:3,y:1,z:0},contact,elapsed:at}});
  for(let frame=0;frame<=42;frame++){
   const age=frame/20;world.state.elapsed=at+age;summons.update();skin.updateWorldMatrix(true,false);skin.skeleton.update();
   for(let i=0;i<position.count;i++){skin.getVertexPosition(i,point).applyMatrix4(skin.matrixWorld);position.setXYZ(i,point.x,point.y,point.z);}
-  const result=sampleMeshSurfaceCrossings([meshes.cloth],[meshes.arms],8);rows.push({kind,age,...result});
+  const result=sampleMeshSurfaceCrossings([meshes.cloth],[meshes.arms],8);rows.push({target:contact.name,kind,age,...result});
  }
 }
-const report={scope:'Dominant skin-weight partitions, all three vertices >=0.6 within cloth or arm family. Mixed/boundary triangles excluded. Strict transverse crossings only; no containment/coplanar guarantee. One target direction; 20 Hz samples, not continuous collision detection.',triangles:Object.fromEntries(Object.entries(partitions).map(([k,v])=>[k,v.length/3])),rows};
+const report={scope:'Dominant skin-weight partitions, all three vertices >=0.6 within cloth or arm family. Mixed/boundary triangles excluded. Strict transverse crossings only; no containment/coplanar guarantee. Four target directions/heights; 20 Hz samples, not continuous collision detection.',targets,triangles:Object.fromEntries(Object.entries(partitions).map(([k,v])=>[k,v.length/3])),rows};
 const output=process.argv[2]??'C:/tmp/guardian-cloth-crossings.json';fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({output,triangles:report.triangles,samples:rows.length,flagged:rows.filter(r=>r.points.length).map(r=>({kind:r.kind,age:r.age,points:r.points.length}))}));
+console.log(JSON.stringify({output,triangles:report.triangles,samples:rows.length,flagged:rows.filter(r=>r.points.length).map(r=>({target:r.target,kind:r.kind,age:r.age,points:r.points.length}))}));
 summons.dispose();for(const mesh of Object.values(meshes))mesh.geometry.dispose();material.dispose();
