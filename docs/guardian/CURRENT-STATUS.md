@@ -142,3 +142,11 @@ Browser fixture tests/browser/narration-capture.html played the first three seco
 ## Campaign performance evidence correction (2026-10-30)
 
 The night-31 campaign QA path uses legacy-js, even with lightingReview requested; its snapshot lacks wildEngineWorldVersion. Prior campaign-derived performance and tactical descriptions saying native were incorrect. Reports now require and include explicit worldAuthority; campaign plus lightingReview fails with an explanation instead of silently using the old path. No production behavior changed. Existing paired timing results cannot certify Wild Engine; a compatible native populated-world scenario is still needed. Non-campaign screenshots/receipts explicitly reporting spatial-wasm remain valid within their stated scope.
+
+## Review delivery checkpoint (2026-10-30)
+
+PR217 is open, MERGEABLE/CLEAN, with no reported CI checks. After fetching origin/main, HEAD has zero missing main commits. This is mergeability evidence only, not approval to merge or a CI pass. The remote PR body remains stale following the previously reported automatic-review rejection; PR-DESCRIPTION-PROPOSED.md is a prepared replacement, not a claim that the GitHub body was updated.
+
+Current native performance evidence is native-populated-comparison.json and native-raid-comparison.json in phase2/performance-components. Both paired runs explicitly report spatial-wasm and equal commands/final outcomes. The thirteen-beast pair has p95 99.880/99.850 ms reference/Guardian and severe spikes in both, so it does not certify fluidity. Older campaign-derived timings remain legacy evidence only.
+
+Scene-disposal-audio.json closes the previously missing active-voice shutdown case. multiply-clean-rear and grow-clean-side supersede the barrier-obscured views for sampled cloth inspection. Fine contact/artistic coverage and continuous full-HUD voiced tutorial capture remain open. The six-biome image-generation task remains queued.
