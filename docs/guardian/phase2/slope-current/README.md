@@ -50,3 +50,10 @@ The expanded integration run first found stale fallback roll metadata (210/211).
 The final baker explicitly requests its prior contact-tested flat-ground support torque 1.8 through a validated rollTo option; live uneven-terrain rolls keep default 2.5. The 40 clips were genuinely regenerated, not relabeled. falls.bin is byte-identical to the committed prior payload; falls.json now includes current progress-grace metadata and explicit baked support. No wall/contact threshold was loosened.
 
 All 211 tests in 35 selected files pass after this integration (integration-checks-e035.json; source revision plus working changes recorded). Fresh mixed-rebaked recording uses the regenerated resource: three physical and one baked actor finish, zero errors/roll failures/down states. Inspected 1 fps samples; building occlusion still limits one animal's detailed contact review. Silent recording, no new performance or broad visual acceptance. Main remote was fetched and zero commits behind at this checkpoint.
+
+
+## Native Wild Engine repeat, 2026-10-30
+
+At beb5e29d1, ran the installed warthog with lateral impact and lightingReview=1&slopeTrial=1&recoveryDay=1&recoveryClose=1. The receipt explicitly reports spatial-wasm. Actual terrain grade is 0.1775803. The complete cycle finishes with no reported errors and no downed actors; the roll takes 1.416667 seconds, error 0.218634 rad, and does not time out. This is a new initial pose, not a paired speed comparison with the old timeout.
+
+Saved warthog-native-repeat.mp4 (continuous canvas capture), warthog-native-repeat.json (browser DOM receipt), and warthog-native-repeat.jpg (2 fps contact sheet). Inspected sheet: lateral fall beside a tree remnant, turn onto the back, rise and resumed locomotion. Vegetation obscures portions of ground contact; the close camera crops the Guardian during launch. Neither precise mesh/obstacle clearance nor summon framing is certified by these views. Sound was enabled, but no perceptual listening approval is claimed. This repeat adds native-engine evidence for the previously problematic slope roll; it does not close the complete terrain/direction/concurrency matrix.
