@@ -74,3 +74,10 @@ Separate fresh graphical runs, Guardian then reference, complete 1200 fixed .05 
 Reference/Guardian: mean 14.594/14.608 FPS, p95 99.880/99.850 ms, p99 166.260/149.530 ms, maximum 1646.135/1413.295 ms; 56/40 frames above 100 ms. Guardian animation/VFX p95 .315/.855 ms. Physics p95 5.385/5.155 ms; draw p95 177/179. No clear incremental regression appears in this ordered pair, but the lower Guardian tail cannot be attributed to an improvement. Severe pauses in both runs prevent a fluidity claim. Baseline investigation remains outside this task.
 
 Raw files: native-raid-guardian.json and native-raid-reference.json; equality and metrics: native-raid-comparison.json; inspected final screenshot: native-raid-final.png. The final still does not certify all impact contacts or input responsiveness during the run. Counterbalanced repetitions and different camera/layout coverage remain separate from this bounded evidence.
+
+
+## Reverse-order native repeat (9576cea69)
+
+Repeated the populated native raid in fresh browser loads, reference first and Guardian second, reversing the earlier ordered pair. Both run 1200 fixed simulation steps with five legal commands, identical final outcomes, spatial-wasm, zero errors and zero hidden frames. No recording, build or other test workload was run concurrently. Same visible QA panel and default camera. Source/metrics receipts: native-raid-reference-repeat.json, native-raid-guardian-repeat.json, native-raid-repeat-comparison.json.
+
+Reference/Guardian: mean 15.097/14.689 FPS; p95 99.830/99.880 ms; p99 133.110/166.280 ms; maximum 1612.990/1479.955 ms; 39/44 frames above 100 ms. Guardian animation/VFX p95 0.290/0.800 ms. This repeat has a worse p99 with Guardian, whereas the earlier pair had the reverse ordering of p99 values. Do not cherry-pick either run as causal proof. Two pairs on revisions separated by small fixes are not a tightly controlled same-revision ABBA study. Persistent severe spikes in both variants still prevent fluidity approval; baseline-engine work remains assigned separately. Command/outcome equality establishes that the presentation variant does not change these recorded gameplay results.
