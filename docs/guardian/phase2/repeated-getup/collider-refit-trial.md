@@ -27,3 +27,17 @@ Next implementation work: reduce pose-dependent support selection cost before
 enabling refit, retaining the fresh-refit output as the correctness oracle.
 This one successful contact run neither proves a fix for the earlier entry
 penetration nor establishes the full visual acceptance matrix.
+
+## Exact quantile optimization
+
+The fit now selects coordinate/radius order statistics with three-way partitioning
+instead of sorting the entire arrays five times per collider. Numeric-sort oracle
+tests cover equal, increasing, decreasing, discrete and continuous samples up to
+12,000 entries and all used quantiles. The captured-pose refit regression still
+matches an uncached fit and preserves the standing support cache.
+
+The twelve local refit measurements in `rhino-refit-quickselect.json` range from
+98.0 to 149.8 ms, compared with 134.8–194.1 ms in the previous receipt. These are
+separate Node runs, not an interleaved browser performance comparison. The full
+refit remains disabled in gameplay: this reduction is insufficient to justify
+an input-time rebuild. No claim of browser frametime acceptance is made.

@@ -1,3 +1,4 @@
+import {contactQuantile as quantile} from './contact-quantile.js';
 import {isTailContactVertex} from './beast-ground-contact.js';
 import {Vector3,Quaternion,Bone} from 'three';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
@@ -53,7 +54,6 @@ export class BeastRagdollBinding{
     for(let k=0;k<(secondary===undefined?1:2);k++){const owner=k===0?primary:secondary,f=frames[owner],point=v.clone().sub(f.center).applyQuaternion(f.inverse);point.geometry=mesh.geometry;point.index=i;groups[owner].push(point);}
    }
   });
-  const quantile=(values,p)=>{values.sort((a,b)=>a-b);return values[Math.floor((values.length-1)*p)];};
   const fits=groups.map((points,i)=>{if(points.length<8)return null;
    const x=quantile(points.map(p=>p.x),.5),z=quantile(points.map(p=>p.z),.5),lo=quantile(points.map(p=>p.y),.02),hi=quantile(points.map(p=>p.y),.98);
    const radius=Math.max(.05,quantile(points.map(p=>Math.hypot(p.x-x,p.z-z)),.96)+.025);
