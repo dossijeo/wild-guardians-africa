@@ -1,3 +1,4 @@
+import {wallBufferReader} from './wall-buffer-reader.js';
 import {attachModelVisibility} from './model-ambient-visibility.js';
 import {nativeAmbientVisibilityEnabled,nativeVisibilityViews,villageVisibilityView} from './native-ambient-visibility.js';
 import {prepareLoadingImage,ownLoadingBitmap} from './loading-image.js';
@@ -125,6 +126,7 @@ export class Assets {
     });
   }
   async walls(pack) {
+    const readWall=wallBufferReader(pack,url=>bytes(url,{signal:this.preparation.signal}));
     this.assertOpen();
     let wallAO=null,wallValues=null;
     if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??'')){
@@ -134,9 +136,9 @@ export class Assets {
     }
     const map=await this.texture(pack.texture,true);this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide})),result={};
     await Promise.all(Object.entries(pack.pieces).map(async([key,piece])=>{
-      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(p=>bytes(p.url,{signal:this.preparation.signal})));
+      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(readWall));
       const morph=Object.fromEntries(await Promise.all(Object.entries(piece.morph).map(async([dest,bridge])=>{
-        const [p,n]=await Promise.all([bytes(bridge.p.url,{signal:this.preparation.signal}),bytes(bridge.n.url,{signal:this.preparation.signal})]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
+        const [p,n]=await Promise.all([readWall(bridge.p),readWall(bridge.n)]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
       })));
       this.assertOpen();const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals),3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uv),2));geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
       let visibility;
