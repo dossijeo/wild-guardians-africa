@@ -31,7 +31,7 @@ export class GuardianRitual {
   for(let i=0;i<48;i++){
    const hand=s.hands[i%2];if(hand)hand.getWorldPosition(this.hand);else this.hand.copy(s.group.position);
    const t=THREE.MathUtils.clamp((age-.32-i/48*.65)/1.18,0,1),orbit=ease(t/.3),theta=i*2.39996+t*Math.PI*4;
-   this.point.copy(s.group.position).lerp(s.target,ease(t));this.point.x+=Math.cos(theta)*radius*Math.sin(Math.PI*t);this.point.z+=Math.sin(theta)*radius*Math.sin(Math.PI*t);
+   this.point.copy(s.group.position).lerp(s.target,ease(t));if(s.ritualArc){const wave=Math.sin(Math.PI*ease(t));this.point.x+=s.ritualArc.x*wave;this.point.y+=s.ritualArc.y*wave;this.point.z+=s.ritualArc.z*wave;}this.point.x+=Math.cos(theta)*radius*Math.sin(Math.PI*t);this.point.z+=Math.sin(theta)*radius*Math.sin(Math.PI*t);
    this.temp.position.copy(this.hand).lerp(this.point,orbit);this.temp.rotation.set(t*5+i,theta,t*3);this.temp.scale.setScalar((.2+.15*(i%3)/2)*Math.sin(Math.PI*t));this.temp.updateMatrix();this.leaves.setMatrixAt(i,this.temp.matrix);
   }
   this.leaves.instanceMatrix.needsUpdate=true;
