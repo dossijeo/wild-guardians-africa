@@ -1,3 +1,4 @@
+import {inspectBuildingGround} from './building-ground-review.js';
 import {configureAnimalCostState,prepareAnimalCostTrial} from './animal-cost-trial.js';
 import {captureSurfacePose} from './guardian-surface-pose.js';
 import {planRitualArc} from '../../src/rendering/guardian-ritual-path.js';
@@ -531,6 +532,8 @@ try{
  const aoGpu=document.createElement('button');aoGpu.id='benchBuildingAO';aoGpu.textContent='Medir GPU de AO horneada';document.querySelector('header').insertBefore(aoGpu,$('status'));
  aoGpu.onclick=()=>{if(measuring||gpuPairs||framePairs)return;const buildings=[...world.destructionPass.buildings].filter(b=>b.uniforms.uBuildingAOOn.value>0);if(!buildings.length){fail(Error('Enable cinematicLight and cinematicAO with a loaded building'));return;}simulate=false;paused=true;world.guardianSummons.clear();report=null;gpuPairs=new GuardianGpuPairs(world.renderer,mode=>{for(const b of buildings)b.uniforms.uBuildingAOOn.value=['effects','all'].includes(mode)?1:0;},result=>{for(const b of buildings)b.uniforms.uBuildingAOOn.value=1;report={...result,scope:'Baked building AO uniform toggle only; identical frozen world/camera. none/body=AO off, effects/all=AO on; each label has 60 timed samples. Does not measure whole lighting changes or contact atlas CPU cost.',biome:state.biome,culture:trialCulture,buildings:buildings.length};gpuPairs=null;},{age:0});};
  $('recordDay').onclick=()=>record(false);$('recordNight').onclick=()=>record(true);
+ const groundReview=document.createElement('button');groundReview.textContent='Inspeccionar suelo del centro';document.querySelector('header').insertBefore(groundReview,$('status'));
+ groundReview.onclick=()=>{try{paused=true;simulate=false;world.render(0);report=inspectBuildingGround(world,state,nav);const c=state.structures.find(s=>s.kind==='center'),y=nav.field.surface(c.x,c.z);world.cinematic=true;world.camera.zoom=2;world.camera.updateProjectionMatrix();world.controls.target.set(c.x,y+.7,c.z);world.camera.position.set(c.x+9,y+5,c.z+10);world.controls.update();}catch(e){fail(e);}};
  const stageProfile=new URLSearchParams(location.search).has('profileStages');let previousSchedulerMs=0;
  const drawProfile={};
  if(stageProfile){
