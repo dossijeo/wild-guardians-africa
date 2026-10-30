@@ -49,7 +49,7 @@ The expanded integration run first found stale fallback roll metadata (210/211).
 
 The final baker explicitly requests its prior contact-tested flat-ground support torque 1.8 through a validated rollTo option; live uneven-terrain rolls keep default 2.5. The 40 clips were genuinely regenerated, not relabeled. falls.bin is byte-identical to the committed prior payload; falls.json now includes current progress-grace metadata and explicit baked support. No wall/contact threshold was loosened.
 
-All 211 tests in 35 selected files pass after this integration (integration-checks-e035.json; source revision plus working changes recorded). Fresh mixed-rebaked recording uses the regenerated resource: three physical and one baked actor finish, zero errors/roll failures/down states. Inspected 1 fps samples; building occlusion still limits one animal's detailed contact review. Silent recording, no new performance or broad visual acceptance. Main remote was fetched and zero commits behind at this checkpoint.
+All 211 tests in 35 selected files pass after this integration ([integration-checks-e035.json](../integration-checks-e035.json); source revision plus working changes recorded). Fresh mixed-rebaked recording uses the regenerated resource: three physical and one baked actor finish, zero errors/roll failures/down states. Inspected 1 fps samples; building occlusion still limits one animal's detailed contact review. Silent recording, no new performance or broad visual acceptance. Main remote was fetched and zero commits behind at this checkpoint.
 
 
 ## Native Wild Engine repeat, 2026-10-30
