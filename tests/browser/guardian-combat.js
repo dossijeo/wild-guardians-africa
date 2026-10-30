@@ -357,6 +357,19 @@ try{
   world.camera.position.set(center.x+Math.sin(viewAngle)*distance,center.y+distance*(includeTarget.checked?.7:.22),center.z+Math.cos(viewAngle)*distance);
   world.camera.lookAt(center);world.camera.updateMatrixWorld(true);world.render(0);
  };
+ const ritualDetailTarget=document.createElement('select');ritualDetailTarget.id='ritualDetailTarget';ritualDetailTarget.setAttribute('aria-label','Objetivo del detalle ritual');
+ for(const [value,label] of [['plant','Planta'],['wall','Muralla']]){const option=document.createElement('option');option.value=value;option.textContent=label;ritualDetailTarget.append(option);}document.querySelector('header').insertBefore(ritualDetailTarget,$('status'));
+ const ritualDetail=document.createElement('button');ritualDetail.id='ritualDetail';ritualDetail.textContent='Preparar detalle del ritual';document.querySelector('header').insertBefore(ritualDetail,$('status'));
+ ritualDetail.onclick=async()=>{if(measuring||recording)return;ritualDetail.disabled=true;try{
+  await world.guardianSummons.ready;paused=true;simulate=false;$('freeze').textContent='Reanudar';world.guardianSummons.clear();
+  let target=state.plants.find(p=>p.alive&&!p.blessing);if(!target)throw Error('No unblessed crop for ritual detail');
+  if(ritualDetailTarget.value==='wall'){
+   let wall=state.structures.find(s=>s.kind==='wall'&&s.status==='intact'&&!s.blessing);const time=state.time,raid=state.raid;state.time=150;state.raid=null;
+   try{for(let dz=-3;dz<=3&&!wall;dz++)for(let dx=-3;dx<=3&&!wall;dx++){if(Math.hypot(dx,dz)<1.5)continue;if(Game.placeStructure(state,'qa-detail-wall-'+serial++,{kind:'wall',material:'zarzas',x:target.x+dx,z:target.z+dz},nav))wall=state.structures.at(-1);}}finally{state.time=time;state.raid=raid;}
+   if(!wall)throw Error('No valid wall site for ritual detail');target=wall;
+  }
+  state.awakenings.progress=100;if(!Game.bless(state,'qa-ritual-detail-'+serial++,target.id))throw Error('Ritual detail blessing rejected');world.render(0);advanceClock(.6);world.render(0);guardianDetailButton.onclick();
+ }catch(e){fail(e);}finally{ritualDetail.disabled=false;}};
  const recordDetailButton=document.createElement('button');recordDetailButton.id='recordGuardianDetail';recordDetailButton.textContent='Grabar detalle del hechizo activo';document.querySelector('header').insertBefore(recordDetailButton,$('status'));
  recordDetailButton.onclick=async()=>{
   if(recording||measuring)return;
