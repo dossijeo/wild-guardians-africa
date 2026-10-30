@@ -9,10 +9,10 @@ Implementados cinco animales, cuatro trabajadores y el Guardián. Los modelos or
 | buffalo | 22,697 | 1,749 | 631 |
 | lion | 20,654 | 1,677 | 661 |
 | rhino | 20,848 | 1,632 | 806 |
-| youngMale | 54,121 | 1,847 | 522 |
+| youngMale | 54,121 | 1,972 | 521 |
 | olderMale | 48,965 | 1,835 | 579 |
-| olderFemale | 57,931 | 1,860 | 527 |
-| youngFemale | 50,718 | 1,830 | 584 |
+| olderFemale | 57,931 | 1,986 | 540 |
+| youngFemale | 50,718 | 1,952 | 585 |
 | guardian | 25,729 | 1,710 | 581 |
 
 ## Distancia y criterio visual
@@ -63,3 +63,5 @@ npm run dev -- --host 127.0.0.1 --port 5194
 Abrir `/tests/browser/character-lod-review.html` para comparar clips y tamaños. Abrir `/tests/browser/guardian-combat.html?nativeRaid&lightingReview&characterLod=auto` para el motor real; seleccionar distancia y modo LOD. Activar **Simular movimiento real** para evaluar físicas: el modo de presentación solo reproduce efectos. Los parámetros QA no alteran partidas de producción.
 
 Fuentes editables: `content/source/character-lod/*.blend`. Manifest de origen y hashes: `sources.json` y `validation.json`. GLB finales: `public/content/character-lod/`. No se incorporan recursos externos.
+
+Revisión posterior: [contornos oculares de tres trabajadores](eyes/README.md). Las capturas iniciales fuera de `eyes/` documentan la primera versión; las nuevas capturas y `validation.json` corresponden a los modelos corregidos.
