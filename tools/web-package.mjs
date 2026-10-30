@@ -22,7 +22,8 @@ export const RETIRED_MENU_ASSETS=new Set([
  'assets/a1458a9c5a3eee9dc6a0dde33da7790a12ed8a6514039305ab0006cda5357d5d.webp',
  'assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png'
 ]);
-export const QA_ONLY_GROUND_FILES=['grass-arched.glb','grass-broad.glb','grass-cushion.glb','grass-dense.glb','grass-island.glb','grass-mixed.glb','savanna-ph-compact.glb','savanna-ph-structured.glb','savanna-polyhaven-crossed.glb','savanna-polyhaven-dry-atlas.png','savanna-polyhaven-grass-card.png','grass-fine.glb','grass-fine-lite.glb','kenney-dry-grass.glb','grass-clumps.glb','grass-lod.glb'];
+// Canyon normal/microshadow candidates are referenced only by isolated experiment routes.
+export const QA_ONLY_GROUND_FILES=['cliff_side-nor_gl.png','canyon-soil-solar-arh.png','grass-arched.glb','grass-broad.glb','grass-cushion.glb','grass-dense.glb','grass-island.glb','grass-mixed.glb','savanna-ph-compact.glb','savanna-ph-structured.glb','savanna-polyhaven-crossed.glb','savanna-polyhaven-dry-atlas.png','savanna-polyhaven-grass-card.png','grass-fine.glb','grass-fine-lite.glb','kenney-dry-grass.glb','grass-clumps.glb','grass-lod.glb'];
 export const QA_ONLY_VILLAGE_FILES=[
  'mapungubwe-shared-art.bin','mapungubwe-shared-art.webp',
  'mapungubwe-color-detail.webp','mapungubwe-normal-enhanced.webp',
