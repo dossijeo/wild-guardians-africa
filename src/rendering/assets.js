@@ -1,3 +1,6 @@
+import {wallBufferReader} from './wall-buffer-reader.js';
+import {attachModelVisibility} from './model-ambient-visibility.js';
+import {nativeAmbientVisibilityEnabled,nativeVisibilityViews,villageVisibilityView} from './native-ambient-visibility.js';
 import {prepareLoadingImage,ownLoadingBitmap} from './loading-image.js';
 import {LoadingImageDecoder} from './loading-image-decoder.js';
 import {prepareBiomeTangentsAsync} from './prepare-biome-tangents.js';
@@ -27,7 +30,17 @@ export class Assets {
   ownModel(gltf){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;this.own(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){this.own(material);for(const value of Object.values(material))if(value?.isTexture)this.own(value);}});return gltf;}
   async model(url) {
     this.assertOpen();
-    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(async gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??''))await this.modelVisibility(gltf,url);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+  }
+  async modelVisibility(gltf,url){
+    this.assertOpen();
+    this.modelAOManifest??=json('/content/lighting/global-ao/models.json',{signal:this.preparation.signal}).catch(error=>{this.modelAOManifest=null;throw error;});
+    const catalogue=await this.modelAOManifest,entry=catalogue.find(row=>assetUrl(row.source)===assetUrl(url));
+    if(!entry)return;
+    const meta=await json(entry.metadata,{signal:this.preparation.signal});
+    if(meta.source!==entry.source)throw Error('Stale model AO source');
+    const buffer=await bytes(meta.binary,{signal:this.preparation.signal});this.assertOpen();
+    attachModelVisibility(gltf,meta,buffer);
   }
   disposeModels(){
     if(this.modelsDisposed)return;this.modelsDisposed=true;
@@ -67,6 +80,8 @@ export class Assets {
     this.assertOpen();
     const [buffer,entries]=await Promise.all([bytes(pack.binary.url,{signal:this.preparation.signal}),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);this.assertOpen();
     const textureSets=await Promise.all((pack.textureSets??[]).map(set=>Promise.all(set.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')])).then(Object.fromEntries)));this.assertOpen();
+    const visibilityManifest=nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??'')?await json('/content/lighting/global-ao/'+pack.biomeId+'.json',{signal:this.preparation.signal}):null;
+    const visibility=visibilityManifest?nativeVisibilityViews(pack,visibilityManifest,await bytes(visibilityManifest.binary,{signal:this.preparation.signal})):null;this.assertOpen();
     const preparedTangents=this.asyncTextureImages?await prepareBiomeTangentsAsync(buffer,pack.assets,{signal:this.preparation.signal}):null;this.assertOpen();
     let preparationFrame=performance.now();
     const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array};
@@ -74,9 +89,10 @@ export class Assets {
     const result=[];for(const [index,a] of pack.assets.entries()){const levels=[];for(const [level,lod] of a.lods.entries()){
       const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(attribute(lod.position),3));geometry.setAttribute('normal',new THREE.BufferAttribute(attribute(lod.normal),3));geometry.setAttribute('uv',new THREE.BufferAttribute(attribute(lod.uv),2));geometry.setIndex(new THREE.BufferAttribute(attribute(lod.index),1));geometry.computeBoundingSphere();
       geometry.setAttribute('tangent',new THREE.BufferAttribute(preparedTangents?.[index][level]??computeTangents(geometry.attributes.position.array,geometry.attributes.normal.array,geometry.attributes.uv.array,geometry.index.array),4));geometry.computeBoundingBox();
+      if(visibility)geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(visibility[index][level],1,true));
       levels.push(geometry);
       if(this.asyncTextureImages&&performance.now()-preparationFrame>=4){await new Promise(resolve=>requestAnimationFrame(resolve));this.assertOpen();preparationFrame=performance.now();}
-    }const material=this.own(nativeAssetMaterial(pack,a,index,a.textureSet===undefined?textures:textureSets[a.textureSet],levels[0].boundingBox));result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
+    }const material=this.own(nativeAssetMaterial(pack,a,index,a.textureSet===undefined?textures:textureSets[a.textureSet],levels[0].boundingBox));if(visibility)material.userData.nativeAmbientVisibility={value:1};result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
   }
   async village(payload) {
     this.assertOpen();
@@ -92,9 +108,10 @@ export class Assets {
     if(labVariant==='texture-aniso'){map.anisotropy=8;map.needsUpdate=true;}
     this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}));
     if(normalMap){material.normalMap=normalMap;material.normalScale.setScalar(labVariant==='normal'?1.15:1.35);material.userData.visualLabNormal=true;material.userData.visualLabNormalDetail=labVariant!=='normal';material.needsUpdate=true;}
+    let villageAO=null;if(!labVariant&&nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??'')){const m=await json('/content/lighting/global-ao/village-'+payload.id+'.json',{signal:this.preparation.signal});villageAO=new THREE.BufferAttribute(villageVisibilityView(payload,m,await bytes(m.binary,{signal:this.preparation.signal})),1,true);this.assertOpen();material.userData.nativeAmbientVisibility={value:1};}
     material.userData.artSurface=5;material.userData.artBounds={min:new THREE.Vector3(),size:new THREE.Vector3(1,1,1),crown:.43};
     return payload.units.map(unit=>{
-      const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(interleaved,2,6));geometry.setIndex(new THREE.BufferAttribute(index,1));geometry.setDrawRange(unit.offset,unit.count);
+      const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(interleaved,2,6));geometry.setIndex(new THREE.BufferAttribute(index,1));geometry.setDrawRange(unit.offset,unit.count);if(villageAO)geometry.setAttribute('ambientVisibility',villageAO);
       // Units borrow the complete village buffer; drawRange does not constrain
       // Three's automatic bounds. Use the authored unit envelope for both passes.
       geometry.boundingBox=new THREE.Box3(new THREE.Vector3().fromArray(unit.min),new THREE.Vector3().fromArray(unit.max));
@@ -109,15 +126,24 @@ export class Assets {
     });
   }
   async walls(pack) {
+    const readWall=wallBufferReader(pack,url=>bytes(url,{signal:this.preparation.signal}));
     this.assertOpen();
+    let wallAO=null,wallValues=null;
+    if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??'')){
+      wallAO=await json('/content/lighting/global-ao/walls.json',{signal:this.preparation.signal});
+      const buffer=await bytes(wallAO.binary,{signal:this.preparation.signal});this.assertOpen();
+      if(buffer.byteLength!==wallAO.byteLength)throw Error('Wall AO byte length mismatch');wallValues=new Uint8Array(buffer);
+    }
     const map=await this.texture(pack.texture,true);this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide})),result={};
     await Promise.all(Object.entries(pack.pieces).map(async([key,piece])=>{
-      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(p=>bytes(p.url,{signal:this.preparation.signal})));
+      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(readWall));
       const morph=Object.fromEntries(await Promise.all(Object.entries(piece.morph).map(async([dest,bridge])=>{
-        const [p,n]=await Promise.all([bytes(bridge.p.url,{signal:this.preparation.signal}),bytes(bridge.n.url,{signal:this.preparation.signal})]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
+        const [p,n]=await Promise.all([readWall(bridge.p),readWall(bridge.n)]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
       })));
       this.assertOpen();const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals),3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uv),2));geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
-      const mesh=new THREE.Mesh(geometry,material);mesh.userData.nativePiece={p:new Float32Array(positions),n:new Float32Array(normals),uv:new Float32Array(uv),i:new Uint16Array(index),faceRegions:new Uint16Array(faceRegions),regions:piece.regions,morph};mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
+      let visibility;
+      if(wallAO){const r=wallAO.records.find(r=>r.key===key);if(!r||r.source!==piece.p.url||r.count!==geometry.attributes.position.count||r.offset<0||r.offset+r.count>wallValues.length)throw Error('Wall AO layout mismatch: '+key);visibility=wallValues.subarray(r.offset,r.offset+r.count);geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(visibility,1,true));material.userData.modelAmbientVisibility??={value:1};}
+      const mesh=new THREE.Mesh(geometry,material);mesh.userData.nativePiece={p:new Float32Array(positions),n:new Float32Array(normals),uv:new Float32Array(uv),i:new Uint16Array(index),faceRegions:new Uint16Array(faceRegions),regions:piece.regions,morph,visibility};mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
     }));return result;
   }
 }

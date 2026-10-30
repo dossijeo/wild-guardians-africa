@@ -1,0 +1,27 @@
+{
+  "base": "ef2222cd282bb8a6297ebaeeb7dd5bf8609e5498",
+  "directed": {
+    "passed": 90,
+    "failed": 0
+  },
+  "broadened": {
+    "passed": 203,
+    "failed": 0
+  },
+  "inheritedDefensive": {
+    "basePassed": 2,
+    "baseFailed": 6,
+    "candidateSameFailureNames": true,
+    "failureNames": [
+      "QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits",
+      "QA-096: saheliana one defensive set has one owner and a free companion retreats with hits",
+      "QA-096: suajili one defensive set has one owner and a free companion retreats with hits",
+      "QA-096: musgum one defensive set has one owner and a free companion retreats with hits",
+      "QA-096: etiope one defensive set has one owner and a free companion retreats with hits",
+      "QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner"
+    ]
+  },
+  "build": "PASS; existing dynamic/static import and large-chunk warnings",
+  "scope": "CPU/headless geometry and compatibility. No campaign/CI/GPU/visual/balance assertion. Operation counts only; test durations are not performance claims.",
+  "processes": "All tests/build/probe processes terminal"
+}

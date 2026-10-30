@@ -1,3 +1,7 @@
+import {advanceWorkerRecovery} from './worker-recovery.js';
+import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
+import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
+import {attackTarget,applyGuardianAttack} from './guardian-combat.js';
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
 import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {AWAKENINGS} from './awakening-config.js';
@@ -71,7 +75,7 @@ export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slo
   return {saveVersion:1,terrainVersion:'4.1.10.3',slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,cinematicSeenAct:0,postgame:false,result:null,
     initialPreparation:true,ledger:{balance:rational(B.initial_money),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
     pauses:[],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
-    cooldowns:{shield:0,growth:0,multiply:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
+    cooldowns:{shield:0,growth:0,multiply:0,attack:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
 export const resume=(s,reason)=>{s.pauses=s.pauses.filter(r=>r!==reason);};
@@ -137,6 +141,7 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
       cultures.set(culture,{candidate,footprint,check});
     }
     const {candidate,footprint,check}=cultures.get(culture);
+    if(!firstCenterWithinVillage(s,candidate)){failure='Construye el primer centro cerca del poblado';continue;}
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
     const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
     const inspect=routes=>{
@@ -747,7 +752,7 @@ export function requestRepair(s,id,targetId) {
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
 }
-export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
+export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65,attack:.8})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
 const agriculturalSpellIndex=new WeakMap();
 export function spellAt(s,id,p) {
   if(!s.spells.length)return undefined;
@@ -775,7 +780,7 @@ export function previewSpell(s,kind,x,z,nav,targetPlantId) {
   return draft;
 }
 function agriculturalTarget(s,kind,x,z,targetPlantId){
-  if(kind==='shield')return null;
+  if(kind==='shield'||kind==='attack')return null;
   const p=activeCrops(s.plants).find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
   if(p.blessing)throw new Error('Esta planta ya es una fuente mágica permanente');
@@ -785,28 +790,34 @@ function agriculturalTarget(s,kind,x,z,targetPlantId){
 function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
-  if(kind==='shield'&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
+  if(['shield','attack'].includes(kind)&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
+  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>!['gone','retreating'].includes(a.status)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(s.spells.some(a=>a.remaining>0&&(target?
     a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
     a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
-  return spec;
+  return {spec};
 }
-export function cast(s,id,kind,x,z,nav,targetPlantId) {
+export function cast(s,id,kind,x,z,nav,selection) {
+  const {targetId:targetPlantId,origin:requestedOrigin=null,contact=null}=typeof selection==='object'&&selection!==null?selection:{targetId:selection};
+  let origin=requestedOrigin;
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const spec=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
+  const {spec,animal}=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
+  if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
+  for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
+    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
     if(target)area.targetPlantId=target.id;
     if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
     s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
     if(kind==='shield')nav.setState(s);
-    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
+    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
   });
 }
 function retainRouteAfterWallChange(w,destination,nav){
@@ -1428,7 +1439,7 @@ function updateWorkers(s,dt,nav) {
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
   if(!s.raid&&s.time<300)for(const w of s.workers){
-    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
+    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||w.recovery||contractExpired(w,s)||s.time>=profile(w).end)continue;
     if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
     if(!nativeTasks)w.status='idle';
     newArrivals.push(w);
@@ -1443,7 +1454,10 @@ function updateWorkers(s,dt,nav) {
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
   for(const w of s.workers) {
     try {
-      if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
+      if(advanceWorkerRecovery(w,dt,nav)){
+        if(!w.fallRemaining&&!w.recovery)notifyWorkerPlanningChange(s,w);
+        continue;
+      }
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
@@ -1643,7 +1657,7 @@ export function tick(s,seconds,nav) {
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
     for(const kind of Object.keys(s.cooldowns)) {
-      if(kind!=='shield'){s.cooldowns[kind]=0;continue;}
+      if(kind!=='shield'&&kind!=='attack'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
@@ -1673,7 +1687,7 @@ export function tick(s,seconds,nav) {
     // A restored or event-invalidated animal route must be published before
     // the raid controller attempts physical movement in this interval.
     reconcileNativeIntents(s,nav);
-    updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    nav.beastPhysics?.step(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);

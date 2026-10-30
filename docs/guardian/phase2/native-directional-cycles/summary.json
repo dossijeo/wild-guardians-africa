@@ -1,0 +1,140 @@
+[
+  {
+    "case": "lion-side",
+    "completed": true,
+    "finalActors": [
+      {
+        "id": "qa-beast-0",
+        "status": "walking",
+        "health": 84,
+        "x": 89,
+        "z": 5.564104848898719,
+        "down": false
+      }
+    ],
+    "maxVisibleGuardians": 1,
+    "errors": [],
+    "phases": [
+      "falling",
+      "recovering",
+      "rolling",
+      "walking"
+    ],
+    "maxDownDisplacement": 1.6006805879676764,
+    "audio": [
+      {
+        "id": "spirit_appear",
+        "at": 6.355255000019077,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 0.04999999999999982
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 6.4552550000190765,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 0.14999999999999947
+      },
+      {
+        "id": "lion_hurt",
+        "at": 6.555255000019076,
+        "emitter": "qa-beast-0",
+        "phase": "falling",
+        "played": true,
+        "time": 0.2499999999999991
+      },
+      {
+        "id": "beast_take_damage",
+        "at": 6.555255000019076,
+        "emitter": "impact:qa-beast-0",
+        "played": true,
+        "time": 0.2499999999999991
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 7.8552550000190715,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 1.5499999999999945
+      },
+      {
+        "id": "lion_neutral",
+        "at": 18.255255000019215,
+        "emitter": "qa-beast-0",
+        "phase": "walking",
+        "played": true,
+        "time": 11.950000000000138
+      }
+    ]
+  },
+  {
+    "case": "rhino-high",
+    "completed": true,
+    "finalActors": [
+      {
+        "id": "qa-beast-0",
+        "status": "retreating",
+        "health": 0,
+        "x": 89,
+        "z": 0.1019568468267473,
+        "down": false
+      }
+    ],
+    "maxVisibleGuardians": 1,
+    "errors": [],
+    "phases": [
+      "falling",
+      "recovering",
+      "retreating",
+      "rolling"
+    ],
+    "maxDownDisplacement": 2.322348129453222,
+    "audio": [
+      {
+        "id": "spirit_appear",
+        "at": 19.001505000085885,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 0.05000000000000071
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 19.134505000085888,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 0.18300000000000338
+      },
+      {
+        "id": "rhino_hurt",
+        "at": 19.23450500008589,
+        "emitter": "qa-beast-0",
+        "phase": "falling",
+        "played": true,
+        "time": 0.2830000000000048
+      },
+      {
+        "id": "beast_take_damage",
+        "at": 19.23450500008589,
+        "emitter": "impact:qa-beast-0",
+        "played": true,
+        "time": 0.2830000000000048
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 20.484120000085923,
+        "emitter": "guardian-world",
+        "played": true,
+        "time": 1.532615000000039
+      },
+      {
+        "id": "rhino_retreat",
+        "at": 27.725570000085987,
+        "emitter": "qa-beast-0",
+        "phase": "retreating",
+        "played": true,
+        "time": 8.774065000000103
+      }
+    ]
+  }
+]

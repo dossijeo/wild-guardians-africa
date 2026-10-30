@@ -1,0 +1,2148 @@
+{
+  "scope": "Analytical reference lattice and pure descriptors only; no spawn, travel, damage, deaths, campaign or performance acceptance. EMA bootstrapped to static agricultural value; not historic day58 state.",
+  "sourceHashes": {
+    "src/simulation/raid-pressure-budget.js": "6e4ee41f2d7b1cf57f685dac414ea37c1113bb41099935e487a269bb447a2378",
+    "content/balance/raid_pressure_candidate.json": "81840662936e8f16c4cf4f499616404b877df6da558ee8fa564e29e71d18e934",
+    "src/simulation/balance.js": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
+    "tools/screen-raid-pressure-product.mjs": "21026da9e656832081beb0a64ca8a3fc7c0c65125031a7e3081acd6c14acf9b2"
+  },
+  "rows": [
+    {
+      "night": 6,
+      "crop": "mijo",
+      "count": 60,
+      "value": 660,
+      "summary": {
+        "night": 6,
+        "observedValue": 660,
+        "capturedValue": 660,
+        "effectiveValue": 660,
+        "pressure": 0.10828326471513525,
+        "targetAnimals": 7,
+        "areaCap": 1,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo"
+      ],
+      "counts": {
+        "warthog": 7,
+        "hyena": 0,
+        "buffalo": 0,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 21,
+      "minProduct": 14,
+      "meanProduct": 21,
+      "maxProduct": 28,
+      "structureEnvelope": {
+        "min": 295.15965706011895,
+        "mean": 442.7394855901784,
+        "max": 590.3193141202379,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 1
+      },
+      "actualDescriptorProduct": 20,
+      "actorCount": 7,
+      "waveSizes": [
+        7
+      ],
+      "draws": 14
+    },
+    {
+      "night": 6,
+      "crop": "mixed",
+      "count": 60,
+      "value": 4116,
+      "summary": {
+        "night": 6,
+        "observedValue": 4116,
+        "capturedValue": 4116,
+        "effectiveValue": 4116,
+        "pressure": 0.2982885016739542,
+        "targetAnimals": 13,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 10,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 65.5,
+      "minProduct": 47,
+      "meanProduct": 65.5,
+      "maxProduct": 84,
+      "structureEnvelope": {
+        "min": 890.5867943986573,
+        "mean": 1258.31295466649,
+        "max": 1626.0391149343227,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 61,
+      "actorCount": 13,
+      "waveSizes": [
+        13
+      ],
+      "draws": 26
+    },
+    {
+      "night": 6,
+      "crop": "mijo",
+      "count": 200,
+      "value": 2200,
+      "summary": {
+        "night": 6,
+        "observedValue": 2200,
+        "capturedValue": 2200,
+        "effectiveValue": 2200,
+        "pressure": 0.2190790191925908,
+        "targetAnimals": 11,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 9,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 46,
+      "minProduct": 33,
+      "meanProduct": 46,
+      "maxProduct": 59,
+      "structureEnvelope": {
+        "min": 637.9852180178699,
+        "mean": 904.2747003209809,
+        "max": 1170.5641826240917,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 46,
+      "actorCount": 11,
+      "waveSizes": [
+        11
+      ],
+      "draws": 22
+    },
+    {
+      "night": 6,
+      "crop": "mixed",
+      "count": 200,
+      "value": 14425,
+      "summary": {
+        "night": 6,
+        "observedValue": 14425,
+        "capturedValue": 14425,
+        "effectiveValue": 14425,
+        "pressure": 0.4845902794935187,
+        "targetAnimals": 19,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 3,
+        "buffalo": 2,
+        "lion": 1,
+        "rhino": 1
+      },
+      "q": 143.5,
+      "minProduct": 107,
+      "meanProduct": 143.5,
+      "maxProduct": 180,
+      "structureEnvelope": {
+        "min": 1795.1164769340676,
+        "mean": 2459.744376698584,
+        "max": 3124.3722764630998,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 135,
+      "actorCount": 19,
+      "waveSizes": [
+        16,
+        3
+      ],
+      "draws": 38
+    },
+    {
+      "night": 6,
+      "crop": "mijo",
+      "count": 353,
+      "value": 3883,
+      "summary": {
+        "night": 6,
+        "observedValue": 3883,
+        "capturedValue": 3883,
+        "effectiveValue": 3883,
+        "pressure": 0.29041973414321715,
+        "targetAnimals": 13,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 10,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 65.5,
+      "minProduct": 47,
+      "meanProduct": 65.5,
+      "maxProduct": 84,
+      "structureEnvelope": {
+        "min": 887.5376469804967,
+        "mean": 1254.0048044434116,
+        "max": 1620.4719619063262,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 61,
+      "actorCount": 13,
+      "waveSizes": [
+        13
+      ],
+      "draws": 26
+    },
+    {
+      "night": 6,
+      "crop": "mixed",
+      "count": 353,
+      "value": 25399,
+      "summary": {
+        "night": 6,
+        "observedValue": 25399,
+        "capturedValue": 25399,
+        "effectiveValue": 25399,
+        "pressure": 0.5752981836399083,
+        "targetAnimals": 21,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 3,
+        "buffalo": 3,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 248,
+      "minProduct": 198,
+      "meanProduct": 248.25,
+      "maxProduct": 298.5,
+      "structureEnvelope": {
+        "min": 2968.031156644994,
+        "mean": 3779.2500844915653,
+        "max": 4590.469012338136,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 237.5,
+      "actorCount": 21,
+      "waveSizes": [
+        16,
+        5
+      ],
+      "draws": 42
+    },
+    {
+      "night": 6,
+      "crop": "mijo",
+      "count": 600,
+      "value": 6600,
+      "summary": {
+        "night": 6,
+        "observedValue": 6600,
+        "capturedValue": 6600,
+        "effectiveValue": 6600,
+        "pressure": 0.3650994286757721,
+        "targetAnimals": 15,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 2,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 77.5,
+      "minProduct": 56,
+      "meanProduct": 77.5,
+      "maxProduct": 99,
+      "structureEnvelope": {
+        "min": 1052.4692457607184,
+        "mean": 1484.0998914940471,
+        "max": 1915.7305372273754,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 75,
+      "actorCount": 15,
+      "waveSizes": [
+        15
+      ],
+      "draws": 30
+    },
+    {
+      "night": 6,
+      "crop": "mixed",
+      "count": 600,
+      "value": 43275,
+      "summary": {
+        "night": 6,
+        "observedValue": 43275,
+        "capturedValue": 43275,
+        "effectiveValue": 43275,
+        "pressure": 0.6625889455443316,
+        "targetAnimals": 24,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 4,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 1
+      },
+      "q": 302.5,
+      "minProduct": 242,
+      "meanProduct": 302.75,
+      "maxProduct": 363.5,
+      "structureEnvelope": {
+        "min": 3700.998634306621,
+        "mean": 4699.469488885745,
+        "max": 5697.94034346487,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 294.5,
+      "actorCount": 24,
+      "waveSizes": [
+        16,
+        8
+      ],
+      "draws": 48
+    },
+    {
+      "night": 14,
+      "crop": "mijo",
+      "count": 60,
+      "value": 660,
+      "summary": {
+        "night": 14,
+        "observedValue": 660,
+        "capturedValue": 660,
+        "effectiveValue": 660,
+        "pressure": 0.14464690107877162,
+        "targetAnimals": 8,
+        "areaCap": 1,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo"
+      ],
+      "counts": {
+        "warthog": 8,
+        "hyena": 0,
+        "buffalo": 0,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 24,
+      "minProduct": 16,
+      "meanProduct": 24,
+      "maxProduct": 32,
+      "structureEnvelope": {
+        "min": 343.14350417260346,
+        "mean": 514.7152562589051,
+        "max": 686.2870083452069,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 1
+      },
+      "actualDescriptorProduct": 22,
+      "actorCount": 8,
+      "waveSizes": [
+        8
+      ],
+      "draws": 16
+    },
+    {
+      "night": 14,
+      "crop": "mixed",
+      "count": 60,
+      "value": 4116,
+      "summary": {
+        "night": 14,
+        "observedValue": 4116,
+        "capturedValue": 4116,
+        "effectiveValue": 4116,
+        "pressure": 0.3346521380375906,
+        "targetAnimals": 14,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 73.5,
+      "minProduct": 53,
+      "meanProduct": 73.5,
+      "maxProduct": 94,
+      "structureEnvelope": {
+        "min": 951.3707462503181,
+        "mean": 1348.2616097167083,
+        "max": 1745.1524731830987,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 71,
+      "actorCount": 14,
+      "waveSizes": [
+        14
+      ],
+      "draws": 28
+    },
+    {
+      "night": 14,
+      "crop": "mijo",
+      "count": 200,
+      "value": 2200,
+      "summary": {
+        "night": 14,
+        "observedValue": 2200,
+        "capturedValue": 2200,
+        "effectiveValue": 2200,
+        "pressure": 0.25544265555622714,
+        "targetAnimals": 12,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 10,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 49,
+      "minProduct": 35,
+      "meanProduct": 49,
+      "maxProduct": 63,
+      "structureEnvelope": {
+        "min": 693.5486165835398,
+        "mean": 986.7561618058494,
+        "max": 1279.9637070281588,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 48,
+      "actorCount": 12,
+      "waveSizes": [
+        12
+      ],
+      "draws": 24
+    },
+    {
+      "night": 14,
+      "crop": "mixed",
+      "count": 200,
+      "value": 14425,
+      "summary": {
+        "night": 14,
+        "observedValue": 14425,
+        "capturedValue": 14425,
+        "effectiveValue": 14425,
+        "pressure": 0.5209539158571551,
+        "targetAnimals": 20,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 3,
+        "buffalo": 2,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 218,
+      "minProduct": 173,
+      "meanProduct": 218.25,
+      "maxProduct": 263.5,
+      "structureEnvelope": {
+        "min": 2684.8159203878704,
+        "mean": 3434.799710355374,
+        "max": 4184.783500322877,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 202.5,
+      "actorCount": 20,
+      "waveSizes": [
+        16,
+        4
+      ],
+      "draws": 40
+    },
+    {
+      "night": 14,
+      "crop": "mijo",
+      "count": 353,
+      "value": 3883,
+      "summary": {
+        "night": 14,
+        "observedValue": 3883,
+        "capturedValue": 3883,
+        "effectiveValue": 3883,
+        "pressure": 0.3267833705068535,
+        "targetAnimals": 14,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 68.5,
+      "minProduct": 49,
+      "meanProduct": 68.5,
+      "maxProduct": 88,
+      "structureEnvelope": {
+        "min": 948.1642234815426,
+        "mean": 1343.7173964677077,
+        "max": 1739.270569453873,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 65,
+      "actorCount": 14,
+      "waveSizes": [
+        14
+      ],
+      "draws": 28
+    },
+    {
+      "night": 14,
+      "crop": "mixed",
+      "count": 353,
+      "value": 25399,
+      "summary": {
+        "night": 14,
+        "observedValue": 25399,
+        "capturedValue": 25399,
+        "effectiveValue": 25399,
+        "pressure": 0.6116618200035446,
+        "targetAnimals": 22,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 4,
+        "buffalo": 3,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 253,
+      "minProduct": 202,
+      "meanProduct": 253.25,
+      "maxProduct": 304.5,
+      "structureEnvelope": {
+        "min": 3140.5233385542624,
+        "mean": 3995.8425846054233,
+        "max": 4851.161830656584,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 234.5,
+      "actorCount": 22,
+      "waveSizes": [
+        16,
+        6
+      ],
+      "draws": 44
+    },
+    {
+      "night": 14,
+      "crop": "mijo",
+      "count": 600,
+      "value": 6600,
+      "summary": {
+        "night": 14,
+        "observedValue": 6600,
+        "capturedValue": 6600,
+        "effectiveValue": 6600,
+        "pressure": 0.4014630650394085,
+        "targetAnimals": 16,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 2,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 1
+      },
+      "q": 116.5,
+      "minProduct": 86,
+      "meanProduct": 116.5,
+      "maxProduct": 147,
+      "structureEnvelope": {
+        "min": 1428.8705236984479,
+        "mean": 1975.2033709949137,
+        "max": 2521.536218291379,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 109,
+      "actorCount": 16,
+      "waveSizes": [
+        16
+      ],
+      "draws": 32
+    },
+    {
+      "night": 14,
+      "crop": "mixed",
+      "count": 600,
+      "value": 43275,
+      "summary": {
+        "night": 14,
+        "observedValue": 43275,
+        "capturedValue": 43275,
+        "effectiveValue": 43275,
+        "pressure": 0.6989525819079679,
+        "targetAnimals": 25,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 5,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 1
+      },
+      "q": 503.5,
+      "minProduct": 401.5,
+      "meanProduct": 503.75,
+      "maxProduct": 606,
+      "structureEnvelope": {
+        "min": 3886.4917179474733,
+        "mean": 4932.335843436811,
+        "max": 5978.179968926148,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 493,
+      "actorCount": 25,
+      "waveSizes": [
+        16,
+        9
+      ],
+      "draws": 50
+    },
+    {
+      "night": 21,
+      "crop": "mijo",
+      "count": 60,
+      "value": 660,
+      "summary": {
+        "night": 21,
+        "observedValue": 660,
+        "capturedValue": 660,
+        "effectiveValue": 660,
+        "pressure": 0.17646508289695345,
+        "targetAnimals": 9,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo"
+      ],
+      "counts": {
+        "warthog": 8,
+        "hyena": 1,
+        "buffalo": 0,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 28,
+      "minProduct": 19,
+      "meanProduct": 28,
+      "maxProduct": 37,
+      "structureEnvelope": {
+        "min": 429.85185387214835,
+        "mean": 631.1748740401165,
+        "max": 832.4978942080847,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 26,
+      "actorCount": 9,
+      "waveSizes": [
+        9
+      ],
+      "draws": 18
+    },
+    {
+      "night": 21,
+      "crop": "mixed",
+      "count": 60,
+      "value": 4116,
+      "summary": {
+        "night": 21,
+        "observedValue": 4116,
+        "capturedValue": 4116,
+        "effectiveValue": 4116,
+        "pressure": 0.3664703198557724,
+        "targetAnimals": 15,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 2,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 77.5,
+      "minProduct": 56,
+      "meanProduct": 77.5,
+      "maxProduct": 99,
+      "structureEnvelope": {
+        "min": 1053.0792923358188,
+        "mean": 1484.960125709497,
+        "max": 1916.8409590831757,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 75,
+      "actorCount": 15,
+      "waveSizes": [
+        15
+      ],
+      "draws": 30
+    },
+    {
+      "night": 21,
+      "crop": "mijo",
+      "count": 200,
+      "value": 2200,
+      "summary": {
+        "night": 21,
+        "observedValue": 2200,
+        "capturedValue": 2200,
+        "effectiveValue": 2200,
+        "pressure": 0.287260837374409,
+        "targetAnimals": 13,
+        "areaCap": 2,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 10,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 65.5,
+      "minProduct": 47,
+      "meanProduct": 65.5,
+      "maxProduct": 84,
+      "structureEnvelope": {
+        "min": 886.3135744825832,
+        "mean": 1252.2753084624887,
+        "max": 1618.2370424423943,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 1.5,
+        "lion": 1.5,
+        "rhino": 1.5
+      },
+      "actualDescriptorProduct": 61,
+      "actorCount": 13,
+      "waveSizes": [
+        13
+      ],
+      "draws": 26
+    },
+    {
+      "night": 21,
+      "crop": "mixed",
+      "count": 200,
+      "value": 14425,
+      "summary": {
+        "night": 21,
+        "observedValue": 14425,
+        "capturedValue": 14425,
+        "effectiveValue": 14425,
+        "pressure": 0.5527720976753369,
+        "targetAnimals": 21,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 3,
+        "buffalo": 3,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 248,
+      "minProduct": 198,
+      "meanProduct": 248.25,
+      "maxProduct": 298.5,
+      "structureEnvelope": {
+        "min": 2942.0698425708256,
+        "mean": 3746.1930533385566,
+        "max": 4550.316264106288,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 237.5,
+      "actorCount": 21,
+      "waveSizes": [
+        16,
+        5
+      ],
+      "draws": 42
+    },
+    {
+      "night": 21,
+      "crop": "mijo",
+      "count": 353,
+      "value": 3883,
+      "summary": {
+        "night": 21,
+        "observedValue": 3883,
+        "capturedValue": 3883,
+        "effectiveValue": 3883,
+        "pressure": 0.3586015523250353,
+        "targetAnimals": 15,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 2,
+        "buffalo": 1,
+        "lion": 1,
+        "rhino": 0
+      },
+      "q": 77.5,
+      "minProduct": 56,
+      "meanProduct": 77.5,
+      "maxProduct": 99,
+      "structureEnvelope": {
+        "min": 1049.5776907846407,
+        "mean": 1480.0224740839597,
+        "max": 1910.4672573832786,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 75,
+      "actorCount": 15,
+      "waveSizes": [
+        15
+      ],
+      "draws": 30
+    },
+    {
+      "night": 21,
+      "crop": "mixed",
+      "count": 353,
+      "value": 25399,
+      "summary": {
+        "night": 21,
+        "observedValue": 25399,
+        "capturedValue": 25399,
+        "effectiveValue": 25399,
+        "pressure": 0.6434800018217265,
+        "targetAnimals": 23,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 4,
+        "buffalo": 4,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 283,
+      "minProduct": 227,
+      "meanProduct": 283.25,
+      "maxProduct": 339.5,
+      "structureEnvelope": {
+        "min": 3410.0892023500273,
+        "mean": 4322.089802978523,
+        "max": 5234.090403607019,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 269.5,
+      "actorCount": 23,
+      "waveSizes": [
+        16,
+        7
+      ],
+      "draws": 46
+    },
+    {
+      "night": 21,
+      "crop": "mijo",
+      "count": 600,
+      "value": 6600,
+      "summary": {
+        "night": 21,
+        "observedValue": 6600,
+        "capturedValue": 6600,
+        "effectiveValue": 6600,
+        "pressure": 0.4332812468575903,
+        "targetAnimals": 17,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 2,
+        "buffalo": 2,
+        "lion": 1,
+        "rhino": 1
+      },
+      "q": 136.5,
+      "minProduct": 102,
+      "meanProduct": 136.5,
+      "maxProduct": 171,
+      "structureEnvelope": {
+        "min": 1618.1320291602974,
+        "mean": 2214.2859346404075,
+        "max": 2810.4398401205167,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 128,
+      "actorCount": 17,
+      "waveSizes": [
+        16,
+        1
+      ],
+      "draws": 34
+    },
+    {
+      "night": 21,
+      "crop": "mixed",
+      "count": 600,
+      "value": 43275,
+      "summary": {
+        "night": 21,
+        "observedValue": 43275,
+        "capturedValue": 43275,
+        "effectiveValue": 43275,
+        "pressure": 0.7307707637261498,
+        "targetAnimals": 26,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 5,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 2
+      },
+      "q": 593.5,
+      "minProduct": 473.5,
+      "meanProduct": 593.75,
+      "maxProduct": 714,
+      "structureEnvelope": {
+        "min": 4423.848637236362,
+        "mean": 5604.906992547922,
+        "max": 6785.965347859482,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 572.5,
+      "actorCount": 26,
+      "waveSizes": [
+        16,
+        10
+      ],
+      "draws": 52
+    },
+    {
+      "night": 58,
+      "crop": "mijo",
+      "count": 60,
+      "value": 660,
+      "summary": {
+        "night": 58,
+        "observedValue": 660,
+        "capturedValue": 660,
+        "effectiveValue": 660,
+        "pressure": 0.3446469010787716,
+        "targetAnimals": 14,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 2,
+        "buffalo": 1,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 61,
+      "minProduct": 44,
+      "meanProduct": 61,
+      "maxProduct": 78,
+      "structureEnvelope": {
+        "min": 855.7961188937518,
+        "mean": 1213.3547713082644,
+        "max": 1570.913423722777,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 56,
+      "actorCount": 14,
+      "waveSizes": [
+        14
+      ],
+      "draws": 28
+    },
+    {
+      "night": 58,
+      "crop": "mixed",
+      "count": 60,
+      "value": 4116,
+      "summary": {
+        "night": 58,
+        "observedValue": 4116,
+        "capturedValue": 4116,
+        "effectiveValue": 4116,
+        "pressure": 0.5346521380375906,
+        "targetAnimals": 20,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 3,
+        "buffalo": 2,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 218,
+      "minProduct": 173,
+      "meanProduct": 218.25,
+      "maxProduct": 263.5,
+      "structureEnvelope": {
+        "min": 2699.404527010034,
+        "mean": 3453.463538076217,
+        "max": 4207.522549142401,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 202.5,
+      "actorCount": 20,
+      "waveSizes": [
+        16,
+        4
+      ],
+      "draws": 40
+    },
+    {
+      "night": 58,
+      "crop": "mijo",
+      "count": 200,
+      "value": 2200,
+      "summary": {
+        "night": 58,
+        "observedValue": 2200,
+        "capturedValue": 2200,
+        "effectiveValue": 2200,
+        "pressure": 0.45544265555622715,
+        "targetAnimals": 18,
+        "areaCap": 3,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 2,
+        "buffalo": 2,
+        "lion": 1,
+        "rhino": 1
+      },
+      "q": 139.5,
+      "minProduct": 104,
+      "meanProduct": 139.5,
+      "maxProduct": 175,
+      "structureEnvelope": {
+        "min": 1681.9782190560156,
+        "mean": 2308.1160962228537,
+        "max": 2934.2539733896915,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2,
+        "lion": 1.5,
+        "rhino": 2
+      },
+      "actualDescriptorProduct": 130,
+      "actorCount": 18,
+      "waveSizes": [
+        16,
+        2
+      ],
+      "draws": 36
+    },
+    {
+      "night": 58,
+      "crop": "mixed",
+      "count": 200,
+      "value": 14425,
+      "summary": {
+        "night": 58,
+        "observedValue": 14425,
+        "capturedValue": 14425,
+        "effectiveValue": 14425,
+        "pressure": 0.7209539158571551,
+        "targetAnimals": 26,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 5,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 2
+      },
+      "q": 593.5,
+      "minProduct": 473.5,
+      "meanProduct": 593.75,
+      "maxProduct": 714,
+      "structureEnvelope": {
+        "min": 4407.9453436885915,
+        "mean": 5584.757912296811,
+        "max": 6761.570480905031,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 572.5,
+      "actorCount": 26,
+      "waveSizes": [
+        16,
+        10
+      ],
+      "draws": 52
+    },
+    {
+      "night": 58,
+      "crop": "mijo",
+      "count": 353,
+      "value": 3883,
+      "summary": {
+        "night": 58,
+        "observedValue": 3883,
+        "capturedValue": 3883,
+        "effectiveValue": 3883,
+        "pressure": 0.5267833705068535,
+        "targetAnimals": 20,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 3,
+        "buffalo": 2,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 218,
+      "minProduct": 173,
+      "meanProduct": 218.25,
+      "maxProduct": 263.5,
+      "structureEnvelope": {
+        "min": 2691.024289589799,
+        "mean": 3442.7423423155883,
+        "max": 4194.460395041377,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 202.5,
+      "actorCount": 20,
+      "waveSizes": [
+        16,
+        4
+      ],
+      "draws": 40
+    },
+    {
+      "night": 58,
+      "crop": "mixed",
+      "count": 353,
+      "value": 25399,
+      "summary": {
+        "night": 58,
+        "observedValue": 25399,
+        "capturedValue": 25399,
+        "effectiveValue": 25399,
+        "pressure": 0.8116618200035446,
+        "targetAnimals": 28,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 6,
+        "buffalo": 5,
+        "lion": 4,
+        "rhino": 2
+      },
+      "q": 670,
+      "minProduct": 535.5,
+      "meanProduct": 670,
+      "maxProduct": 804.5,
+      "structureEnvelope": {
+        "min": 5138.311976056478,
+        "mean": 6494.938804208188,
+        "max": 7851.565632359899,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 640,
+      "actorCount": 28,
+      "waveSizes": [
+        16,
+        12
+      ],
+      "draws": 56
+    },
+    {
+      "night": 58,
+      "crop": "mijo",
+      "count": 600,
+      "value": 6600,
+      "summary": {
+        "night": 58,
+        "observedValue": 6600,
+        "capturedValue": 6600,
+        "effectiveValue": 6600,
+        "pressure": 0.6014630650394085,
+        "targetAnimals": 22,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 4,
+        "buffalo": 3,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 253,
+      "minProduct": 202,
+      "meanProduct": 253.25,
+      "maxProduct": 304.5,
+      "structureEnvelope": {
+        "min": 3128.2593357098885,
+        "mean": 3980.238489510295,
+        "max": 4832.217643310701,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 234.5,
+      "actorCount": 22,
+      "waveSizes": [
+        16,
+        6
+      ],
+      "draws": 44
+    },
+    {
+      "night": 58,
+      "crop": "mixed",
+      "count": 600,
+      "value": 43275,
+      "summary": {
+        "night": 58,
+        "observedValue": 43275,
+        "capturedValue": 43275,
+        "effectiveValue": 43275,
+        "pressure": 0.898952581907968,
+        "targetAnimals": 31,
+        "areaCap": 6,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 10,
+        "hyena": 8,
+        "buffalo": 6,
+        "lion": 5,
+        "rhino": 2
+      },
+      "q": 826,
+      "minProduct": 661.5,
+      "meanProduct": 826.25,
+      "maxProduct": 991,
+      "structureEnvelope": {
+        "min": 6044.316133278113,
+        "mean": 7624.245290417955,
+        "max": 9204.174447557798,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1.5,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3.5
+      },
+      "actualDescriptorProduct": 789,
+      "actorCount": 31,
+      "waveSizes": [
+        16,
+        15
+      ],
+      "draws": 62
+    },
+    {
+      "night": 100,
+      "crop": "mijo",
+      "count": 60,
+      "value": 660,
+      "summary": {
+        "night": 100,
+        "observedValue": 660,
+        "capturedValue": 660,
+        "effectiveValue": 660,
+        "pressure": 0.5355559919878626,
+        "targetAnimals": 20,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo"
+      ],
+      "counts": {
+        "warthog": 14,
+        "hyena": 3,
+        "buffalo": 3,
+        "lion": 0,
+        "rhino": 0
+      },
+      "q": 161,
+      "minProduct": 129,
+      "meanProduct": 161,
+      "maxProduct": 193,
+      "structureEnvelope": {
+        "min": 2110.8503633298956,
+        "mean": 2694.028241487104,
+        "max": 3277.206119644313,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 157,
+      "actorCount": 20,
+      "waveSizes": [
+        16,
+        4
+      ],
+      "draws": 40
+    },
+    {
+      "night": 100,
+      "crop": "mixed",
+      "count": 60,
+      "value": 4116,
+      "summary": {
+        "night": 100,
+        "observedValue": 4116,
+        "capturedValue": 4116,
+        "effectiveValue": 4116,
+        "pressure": 0.7255612289466815,
+        "targetAnimals": 26,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 5,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 2
+      },
+      "q": 593.5,
+      "minProduct": 473.5,
+      "meanProduct": 593.75,
+      "maxProduct": 714,
+      "structureEnvelope": {
+        "min": 4415.409190893624,
+        "mean": 5594.214422413064,
+        "max": 6773.019653932503,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 572.5,
+      "actorCount": 26,
+      "waveSizes": [
+        16,
+        10
+      ],
+      "draws": 52
+    },
+    {
+      "night": 100,
+      "crop": "mijo",
+      "count": 200,
+      "value": 2200,
+      "summary": {
+        "night": 100,
+        "observedValue": 2200,
+        "capturedValue": 2200,
+        "effectiveValue": 2200,
+        "pressure": 0.6463517464653181,
+        "targetAnimals": 23,
+        "areaCap": 4,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 4,
+        "buffalo": 4,
+        "lion": 2,
+        "rhino": 1
+      },
+      "q": 283,
+      "minProduct": 227,
+      "meanProduct": 283.25,
+      "maxProduct": 339.5,
+      "structureEnvelope": {
+        "min": 3413.79375294026,
+        "mean": 4326.785105470795,
+        "max": 5239.77645800133,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 2.5
+      },
+      "actualDescriptorProduct": 269.5,
+      "actorCount": 23,
+      "waveSizes": [
+        16,
+        7
+      ],
+      "draws": 46
+    },
+    {
+      "night": 100,
+      "crop": "mixed",
+      "count": 200,
+      "value": 14425,
+      "summary": {
+        "night": 100,
+        "observedValue": 14425,
+        "capturedValue": 14425,
+        "effectiveValue": 14425,
+        "pressure": 0.9118630067662461,
+        "targetAnimals": 31,
+        "areaCap": 6,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 10,
+        "hyena": 8,
+        "buffalo": 6,
+        "lion": 5,
+        "rhino": 2
+      },
+      "q": 826,
+      "minProduct": 661.5,
+      "meanProduct": 826.25,
+      "maxProduct": 991,
+      "structureEnvelope": {
+        "min": 6071.234369107622,
+        "mean": 7658.199707795228,
+        "max": 9245.165046482833,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1.5,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3.5
+      },
+      "actualDescriptorProduct": 789,
+      "actorCount": 31,
+      "waveSizes": [
+        16,
+        15
+      ],
+      "draws": 62
+    },
+    {
+      "night": 100,
+      "crop": "mijo",
+      "count": 353,
+      "value": 3883,
+      "summary": {
+        "night": 100,
+        "observedValue": 3883,
+        "capturedValue": 3883,
+        "effectiveValue": 3883,
+        "pressure": 0.7176924614159446,
+        "targetAnimals": 26,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 12,
+        "hyena": 5,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 2
+      },
+      "q": 593.5,
+      "minProduct": 473.5,
+      "meanProduct": 593.75,
+      "maxProduct": 714,
+      "structureEnvelope": {
+        "min": 4402.66178749383,
+        "mean": 5578.063777056226,
+        "max": 6753.465766618622,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 572.5,
+      "actorCount": 26,
+      "waveSizes": [
+        16,
+        10
+      ],
+      "draws": 52
+    },
+    {
+      "night": 100,
+      "crop": "mixed",
+      "count": 353,
+      "value": 25399,
+      "summary": {
+        "night": 100,
+        "observedValue": 25399,
+        "capturedValue": 25399,
+        "effectiveValue": 25399,
+        "pressure": 1,
+        "targetAnimals": 34,
+        "areaCap": 7,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 8,
+        "hyena": 10,
+        "buffalo": 8,
+        "lion": 5,
+        "rhino": 3
+      },
+      "q": 1256.5,
+      "minProduct": 1045,
+      "meanProduct": 1256.75,
+      "maxProduct": 1468.5,
+      "structureEnvelope": {
+        "min": 9045,
+        "mean": 10935,
+        "max": 12825,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1.5,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 4
+      },
+      "actualDescriptorProduct": 1221,
+      "actorCount": 34,
+      "waveSizes": [
+        16,
+        16,
+        2
+      ],
+      "draws": 68
+    },
+    {
+      "night": 100,
+      "crop": "mijo",
+      "count": 600,
+      "value": 6600,
+      "summary": {
+        "night": 100,
+        "observedValue": 6600,
+        "capturedValue": 6600,
+        "effectiveValue": 6600,
+        "pressure": 0.7923721559484995,
+        "targetAnimals": 28,
+        "areaCap": 5,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 11,
+        "hyena": 6,
+        "buffalo": 5,
+        "lion": 4,
+        "rhino": 2
+      },
+      "q": 670,
+      "minProduct": 535.5,
+      "meanProduct": 670,
+      "maxProduct": 804.5,
+      "structureEnvelope": {
+        "min": 5103.060114995883,
+        "mean": 6450.379680241034,
+        "max": 7797.699245486186,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 3
+      },
+      "actualDescriptorProduct": 640,
+      "actorCount": 28,
+      "waveSizes": [
+        16,
+        12
+      ],
+      "draws": 56
+    },
+    {
+      "night": 100,
+      "crop": "mixed",
+      "count": 600,
+      "value": 43275,
+      "summary": {
+        "night": 100,
+        "observedValue": 43275,
+        "capturedValue": 43275,
+        "effectiveValue": 43275,
+        "pressure": 1,
+        "targetAnimals": 34,
+        "areaCap": 7,
+        "introductory": false
+      },
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "counts": {
+        "warthog": 8,
+        "hyena": 10,
+        "buffalo": 8,
+        "lion": 5,
+        "rhino": 3
+      },
+      "q": 1256.5,
+      "minProduct": 1045,
+      "meanProduct": 1256.75,
+      "maxProduct": 1468.5,
+      "structureEnvelope": {
+        "min": 9045,
+        "mean": 10935,
+        "max": 12825,
+        "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+      },
+      "areas": {
+        "warthog": 1,
+        "hyena": 1.5,
+        "buffalo": 2.5,
+        "lion": 1.5,
+        "rhino": 4
+      },
+      "actualDescriptorProduct": 1221,
+      "actorCount": 34,
+      "waveSizes": [
+        16,
+        16,
+        2
+      ],
+      "draws": 68
+    }
+  ]
+}

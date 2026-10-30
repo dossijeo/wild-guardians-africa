@@ -1,0 +1,62 @@
+import {RecoveryClothContacts} from './recovery-cloth-contacts.js';
+import {Vector3,Quaternion} from 'three';
+import {BeastRecovery} from './beast-recovery.js';
+const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
+
+// Samples an offline-retargeted clip without taking ownership of the native
+// mixer. The physical manager retains collider ownership during this transition.
+export class AuthoredBeastRecovery{
+ constructor(binding,snapshot,{clip,surface,solidContacts=null,entryDuration=.65,playDuration=3.1,exitDuration=.3}){
+  this.binding=binding;this.surface=surface;this.solidContacts=solidContacts;this.horizontalCorrection=new Vector3();this.age=0;this.entryDuration=entryDuration;this.playDuration=playDuration;this.exitDuration=exitDuration;this.duration=entryDuration+playDuration+exitDuration;this.clipDuration=clip.duration;this.arms=[];this.v=new Vector3();this.lift=0;
+  this.groundNormal=new Vector3();this.up=new Vector3(0,1,0);this.slopeRotation=new Quaternion();this.worldRotation=new Quaternion();this.parentRotation=new Quaternion();this.identity=new Quaternion();
+  this.entries=[];binding.model.traverse(bone=>{if(bone.isBone)this.entries.push({bone,standingP:bone.position.clone(),standingQ:bone.quaternion.clone()});});
+  this.samples=BeastRecovery.contactSamples(binding.model);this.cloth=new RecoveryClothContacts(binding,this.samples);
+  binding.apply(snapshot);for(const e of this.entries){e.fallenP=e.bone.position.clone();e.fallenQ=e.bone.quaternion.clone();}
+  this.entryClearance=Infinity;if(surface)for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);this.entryClearance=Math.min(this.entryClearance,this.v.y-surface(this.v.x,this.v.z));}
+  binding.restore();
+  const byName=new Map(this.entries.map(e=>[e.bone.name,e]));this.tracks=clip.tracks.map(track=>{const split=track.name.lastIndexOf('.'),name=track.name.slice(0,split),property=track.name.slice(split+1),entry=byName.get(name);if(!entry||!['position','quaternion'].includes(property))throw Error('Invalid recovery channel '+track.name);return {entry,property,interpolant:track.createInterpolant()};});
+  this.hip=binding.bones.get('Hips');const hipTrack=this.tracks.find(t=>t.entry.bone===this.hip&&t.property==='position');if(!hipTrack)throw Error('Recovery clip lacks hips');
+  this.hipOffset=byName.get(this.hip.name).standingP.clone().sub(new Vector3().fromArray(hipTrack.interpolant.evaluate(clip.duration)));
+ }
+ apply(dt){
+  this.age=Math.min(this.duration,this.age+Math.max(0,dt));const entry=smooth(this.age/this.entryDuration),exit=smooth((this.age-this.entryDuration-this.playDuration)/this.exitDuration),time=Math.max(0,Math.min(1,(this.age-this.entryDuration)/this.playDuration))*this.clipDuration;
+  for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}
+  for(const t of this.tracks){const value=t.interpolant.evaluate(time);t.entry.bone[t.property].fromArray(value);if(t.entry.bone===this.hip&&t.property==='position')this.hip.position.add(this.hipOffset);}
+  for(const e of this.entries){e.bone.position.lerp(e.fallenP,1-entry).lerp(e.standingP,exit);e.bone.quaternion.slerp(e.fallenQ,1-entry).slerp(e.standingQ,exit);}
+  const model=this.binding.model;model.updateMatrixWorld(true);let clearance=Infinity,correction=0;
+  // A horizontal authored supine pose otherwise rests on its uphill shoulder,
+  // leaving downhill feet suspended. Fit a local plane while lying down and
+  // release its tilt as the torso rises; never change bone lengths.
+  const slopeWeight=entry*(1-exit)*(1-smooth((time-2)/4));
+  if(this.surface&&slopeWeight>0){
+   this.hip.getWorldPosition(this.v);const x=this.v.x,z=this.v.z,r=.6;
+   const dx=(this.surface(x+r,z)-this.surface(x-r,z))/(2*r),dz=(this.surface(x,z+r)-this.surface(x,z-r))/(2*r);
+   this.groundNormal.set(-dx,1,-dz).normalize();this.slopeRotation.setFromUnitVectors(this.up,this.groundNormal);
+   const angle=this.identity.angleTo(this.slopeRotation);this.slopeRotation.slerp(this.identity,1-slopeWeight*Math.min(1,.35/Math.max(angle,1e-6)));
+   this.hip.getWorldQuaternion(this.worldRotation).normalize();this.hip.parent.getWorldQuaternion(this.parentRotation).normalize().invert();
+   this.hip.quaternion.copy(this.parentRotation.multiply(this.slopeRotation).multiply(this.worldRotation));model.updateMatrixWorld(true);
+  }
+  this.horizontalCorrection.set(0,0,0);if(this.age>0&&!this.surface&&this.solidContacts)this.horizontalCorrection.copy(this.solidContacts.resolve(this.surface));
+  if(this.surface&&this.age>0){
+   if(this.cloth.entries.length){
+    let bodyClearance=Infinity;for(const sample of this.samples){if(this.cloth.clothSamples.has(sample))continue;sample.mesh.getVertexPosition(sample.index,this.v).applyMatrix4(sample.mesh.matrixWorld);bodyClearance=Math.min(bodyClearance,this.v.y-this.surface(this.v.x,this.v.z));}
+    if(Number.isFinite(bodyClearance)){const base=(.01-bodyClearance)*entry*(1-exit);this.hip.getWorldPosition(this.v);this.v.y+=base;this.hip.position.copy(this.hip.parent.worldToLocal(this.v));model.updateMatrixWorld(true);}
+    this.cloth.resolve(this.surface,entry*(1-exit));
+   }
+   if(this.solidContacts)this.horizontalCorrection.copy(this.solidContacts.resolve(this.surface));
+   if(this.solidContacts&&this.horizontalCorrection.lengthSq()===0&&Number.isFinite(this.solidContacts.minimumClearance))clearance=this.solidContacts.minimumClearance;
+   else for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.v).applyMatrix4(mesh.matrixWorld);clearance=Math.min(clearance,this.v.y-this.surface(this.v.x,this.v.z));}
+   // Interpolating two supported poses can lift their shared support away from
+   // the ground. Correct both signs, retaining the exact physical entry pose
+   // and smoothly settling its original clearance onto the authored floor.
+   // Keep the exact incoming pose, but do not preserve solver penetration
+   // throughout the slower body-pose blend. A smooth 150 ms push-out has zero
+   // initial velocity and leaves already-supported entries on their old timing.
+   const supportBlend=this.entryClearance<0?smooth(this.age/Math.min(.15,this.entryDuration)):entry;
+   const target=Number.isFinite(this.entryClearance)?this.entryClearance*(1-supportBlend)+.01*supportBlend:.01;
+   if(Number.isFinite(clearance))correction=target-clearance;
+  }
+  this.lift=correction;this.hip.getWorldPosition(this.v);this.v.y+=correction;this.hip.position.copy(this.hip.parent.worldToLocal(this.v));model.updateMatrixWorld(true);this.done=this.age>=this.duration;return this.done;
+ }
+ restore(){for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}this.binding.model.updateMatrixWorld(true);}
+}

@@ -1,0 +1,15 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Centro: malla y material originales</title><style>body{margin:0}canvas{display:block}header{position:absolute;background:white;padding:8px}</style><header id="status">Cargando malla sin shader de destrucción…</header><button id="sides" style="position:absolute;right:8px;top:8px">Mostrar caras posteriores</button><canvas id="view"></canvas><script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+const culture=new URLSearchParams(location.search).get('culture')??'saheliana';
+const descriptor=(await json('/content/destruction.json')).buildings.find(x=>x.culture===culture);
+const assets=new Assets(),gltf=await assets.model(descriptor.url),scene=new THREE.Scene();scene.background=new THREE.Color('#bbc2ca');scene.add(gltf.scene);
+const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#view'),antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(1);renderer.toneMapping=THREE.ACESFilmicToneMapping;
+scene.add(new THREE.HemisphereLight(0xfff1d8,0x6a7380,2));const sun=new THREE.DirectionalLight(0xffffff,3);sun.position.set(-8,20,10);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.1,200);camera.position.copy(center).add(new THREE.Vector3(size.x*1.1,size.y*1.5,size.z*1.4));const controls=new OrbitControls(camera,renderer.domElement);controls.target.copy(center);controls.update();
+document.querySelector('#status').textContent=culture+' · GLB y MeshStandardMaterial originales · sin destrucción ni AO añadido';
+let doubleSided=false;document.querySelector('#sides').onclick=()=>{doubleSided=!doubleSided;gltf.scene.traverse(o=>{if(o.isMesh)for(const material of (Array.isArray(o.material)?o.material:[o.material])){material.side=doubleSided?THREE.DoubleSide:THREE.FrontSide;material.needsUpdate=true;}});document.querySelector('#sides').textContent=doubleSided?'Ocultar caras posteriores':'Mostrar caras posteriores';};
+function frame(){controls.update();renderer.render(scene,camera);requestAnimationFrame(frame);}frame();
+</script></html>

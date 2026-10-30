@@ -1,0 +1,1050 @@
+TAP version 13
+# (node:32404) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: day1 native paid complete contour preserves crops, props, reserves and a worker-only gate
+not ok 1 - day1 native paid complete contour preserves crops, props, reserves and a worker-only gate
+  ---
+  duration_ms: 441.3067
+  location: 'file:///C:/Users/PC/.codex/worktrees/native-closed-defense-policy/wild-guardians-africa/tests/native-closed-defense-policy.test.js:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected ... Lines skipped
+    
+      [
+        {
+    ...
+          villageId: 'village-1',
+          x: 75.21000000000001,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 77.39000000000001,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 79.57,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 81.75,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 83.93,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 86.11000000000001,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 88.29,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+        },
+    ...
+          villageId: 'village-1',
+          x: 90.47,
+    +     yaw: 0,
+    -     yaw: -0,
+          z: -6.540000000000001
+    ...
+          z: -5.450000000000001
+        }
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      id: 'structure-2'
+      created: 1
+      kind: 'center'
+      material: 'zarzas'
+      gate: false
+      x: 83
+      z: 0
+      yaw: 0
+      culture: 'mapungubwe'
+      maxHp: 600
+      hp: 600
+      status: 'intact'
+      villageId: 'village-1'
+      cost: 800
+      collapseRemaining: 0
+    1:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 75.21000000000001
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-3'
+      created: 3
+    2:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 77.39000000000001
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-4'
+      created: 4
+    3:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 79.57
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-5'
+      created: 5
+    4:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 81.75
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-6'
+      created: 6
+    5:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 83.93
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-7'
+      created: 7
+    6:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 86.11000000000001
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-8'
+      created: 8
+    7:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 88.29
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-9'
+      created: 9
+    8:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 90.47
+      z: -6.540000000000001
+      yaw: -0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-10'
+      created: 10
+    9:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: -5.450000000000001
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-11'
+      created: 11
+    10:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: -3.2700000000000014
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-12'
+      created: 12
+    11:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: -1.0900000000000016
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-13'
+      created: 13
+    12:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: 1.089999999999998
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-14'
+      created: 14
+    13:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: 3.269999999999998
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-15'
+      created: 15
+    14:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: 5.4499999999999975
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-16'
+      created: 16
+    15:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 90.47
+      z: 6.539999999999999
+      yaw: -3.141592653589792
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-17'
+      created: 17
+    16:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 88.29
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-18'
+      created: 18
+    17:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 86.11000000000001
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-19'
+      created: 19
+    18:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 83.93
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-20'
+      created: 20
+    19:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 81.75
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-21'
+      created: 21
+    20:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 79.57
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-22'
+      created: 22
+    21:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 77.39000000000001
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-23'
+      created: 23
+    22:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 75.21000000000001
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-24'
+      created: 24
+    23:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 74.12
+      z: 5.450000000000001
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-25'
+      created: 25
+    24:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1
+      x: 74.12
+      z: 3.2700000000000014
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-26'
+      created: 26
+    25:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: true
+      baseScaleX: 1.0000000000000004
+      x: 74.12
+      z: 1.0900000000000005
+      yaw: 1.5707963267948966
+      maxHp: 60
+      hp: 60
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-27'
+      created: 27
+      autoGate: true
+    26:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 74.12
+      z: -1.0899999999999999
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-28'
+      created: 28
+    27:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.0000000000000007
+      x: 74.12
+      z: -3.2700000000000005
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-29'
+      created: 29
+    28:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 74.12
+      z: -5.450000000000001
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-30'
+      created: 30
+  actual:
+    0:
+      id: 'structure-2'
+      created: 1
+      kind: 'center'
+      material: 'zarzas'
+      gate: false
+      x: 83
+      z: 0
+      yaw: 0
+      culture: 'mapungubwe'
+      maxHp: 600
+      hp: 600
+      status: 'intact'
+      villageId: 'village-1'
+      cost: 800
+      collapseRemaining: 0
+    1:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 75.21000000000001
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-3'
+      created: 3
+    2:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 77.39000000000001
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-4'
+      created: 4
+    3:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 79.57
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-5'
+      created: 5
+    4:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 81.75
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-6'
+      created: 6
+    5:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 83.93
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-7'
+      created: 7
+    6:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 86.11000000000001
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-8'
+      created: 8
+    7:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 88.29
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-9'
+      created: 9
+    8:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 90.47
+      z: -6.540000000000001
+      yaw: 0
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-10'
+      created: 10
+    9:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: -5.450000000000001
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-11'
+      created: 11
+    10:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: -3.2700000000000014
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-12'
+      created: 12
+    11:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: -1.0900000000000016
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-13'
+      created: 13
+    12:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: 1.089999999999998
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-14'
+      created: 14
+    13:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: 3.269999999999998
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-15'
+      created: 15
+    14:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 91.56
+      z: 5.4499999999999975
+      yaw: -1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-16'
+      created: 16
+    15:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 90.47
+      z: 6.539999999999999
+      yaw: -3.141592653589792
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-17'
+      created: 17
+    16:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 88.29
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-18'
+      created: 18
+    17:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 86.11000000000001
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-19'
+      created: 19
+    18:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 83.93
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-20'
+      created: 20
+    19:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 81.75
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-21'
+      created: 21
+    20:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 79.57
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-22'
+      created: 22
+    21:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999966
+      x: 77.39000000000001
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-23'
+      created: 23
+    22:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.000000000000003
+      x: 75.21000000000001
+      z: 6.540000000000001
+      yaw: -3.141592653589793
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-24'
+      created: 24
+    23:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 74.12
+      z: 5.450000000000001
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-25'
+      created: 25
+    24:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1
+      x: 74.12
+      z: 3.2700000000000014
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-26'
+      created: 26
+    25:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: true
+      baseScaleX: 1.0000000000000004
+      x: 74.12
+      z: 1.0900000000000005
+      yaw: 1.5707963267948966
+      maxHp: 60
+      hp: 60
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-27'
+      created: 27
+      autoGate: true
+    26:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 74.12
+      z: -1.0899999999999999
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-28'
+      created: 28
+    27:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 1.0000000000000007
+      x: 74.12
+      z: -3.2700000000000005
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-29'
+      created: 29
+    28:
+      kind: 'wall'
+      material: 'zarzas'
+      gate: false
+      baseScaleX: 0.9999999999999998
+      x: 74.12
+      z: -5.450000000000001
+      yaw: 1.5707963267948966
+      maxHp: 100
+      hp: 100
+      status: 'intact'
+      cost: 10
+      collapseRemaining: 0
+      villageId: 'village-1'
+      id: 'structure-30'
+      created: 30
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/native-closed-defense-policy/wild-guardians-africa/tests/native-closed-defense-policy.test.js:20:48)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: insufficient protected funds do not buy fragments or alter the native state
+ok 2 - insufficient protected funds do not buy fragments or alter the native state
+  ---
+  duration_ms: 293.1191
+  ...
+# Subtest: existing paid mixed-material modules are retained and only genuinely new modules are charged
+ok 3 - existing paid mixed-material modules are retained and only genuinely new modules are charged
+  ---
+  duration_ms: 280.3317
+  ...
+# Subtest: existing ruined occupancy cannot masquerade as a complete paid barrier; repairs remain requests
+ok 4 - existing ruined occupancy cannot masquerade as a complete paid barrier; repairs remain requests
+  ---
+  duration_ms: 306.0351
+  ...
+# Subtest: bounded native Canyon search records every omission and leaves its terrain and original ledger intact
+ok 5 - bounded native Canyon search records every omission and leaves its terrain and original ledger intact
+  ---
+  duration_ms: 684.0544
+  ...
+# Subtest: configuration bounds and finite protected funds are enforced without simulation writes
+ok 6 - configuration bounds and finite protected funds are enforced without simulation writes
+  ---
+  duration_ms: 208.1264
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2454.9537

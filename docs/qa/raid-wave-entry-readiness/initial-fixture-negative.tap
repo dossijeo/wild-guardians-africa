@@ -1,0 +1,98 @@
+TAP version 13
+# Subtest: only all-gone previous actors permit valid1..16 next-wave preparation
+ok 1 - only all-gone previous actors permit valid1..16 next-wave preparation # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.3571
+  ...
+# Subtest: malformed/finished waves do not escape active raid veto
+ok 2 - malformed/finished waves do not escape active raid veto # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0839
+  ...
+# Subtest: request copies current workers/incapacitation and wave owner without former raid actors
+not ok 3 - request copies current workers/incapacitation and wave owner without former raid actors
+  ---
+  duration_ms: 311.7013
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-wave-entry-readiness/wild-guardians-africa/tests/raid-wave-entry-readiness.test.js:28:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-wave-entry-readiness/wild-guardians-africa/tests/raid-wave-entry-readiness.test.js:30:77)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+ok 4 - native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1137
+  ...
+# Subtest: wave-index: stale wave reply cannot install or be taken
+ok 5 - wave-index: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0685
+  ...
+# Subtest: raid-id: stale wave reply cannot install or be taken
+ok 6 - raid-id: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0624
+  ...
+# Subtest: camera: stale wave reply cannot install or be taken
+ok 7 - camera: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0705
+  ...
+# Subtest: topology: stale wave reply cannot install or be taken
+ok 8 - topology: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.176
+  ...
+# Subtest: bounds: stale wave reply cannot install or be taken
+ok 9 - bounds: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0743
+  ...
+# Subtest: rng: stale wave reply cannot install or be taken
+ok 10 - rng: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1393
+  ...
+# Subtest: worker: stale wave reply cannot install or be taken
+ok 11 - worker: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0968
+  ...
+# Subtest: finished: stale wave reply cannot install or be taken
+ok 12 - finished: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0566
+  ...
+# Subtest: active-actor: stale wave reply cannot install or be taken
+ok 13 - active-actor: stale wave reply cannot install or be taken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0518
+  ...
+# Subtest: accepted wave cannot leak through changed identity and disposal rejects delayed reply
+ok 14 - accepted wave cannot leak through changed identity and disposal rejects delayed reply # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1082
+  ...
+# Subtest: result/postgame remove readiness; ordinary no-raid key stays byte-identical
+ok 15 - result/postgame remove readiness; ordinary no-raid key stays byte-identical # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0561
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 14
+# todo 0
+# duration_ms 514.3754

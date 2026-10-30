@@ -36,6 +36,8 @@ rigid_pack = rigid_pack.replace('function updateRigidBuffers()', 'function rigid
 rigid_pack = rigid_pack.replace('rigidGeo[k].instancesFrom(rigidBuffers[k],Math.min(256,counts[k]));', 'rigidPacked[k].count=Math.min(256,counts[k]);')
 rigid_pack = rigid_pack.rstrip()[:-1]+'return rigidPacked;}\n'
 geometry = 'let fxVertices=[];\n'+section('function fxTri(', 'function paintGeometryFX(')
+# Mirror claw curvature along the attack axis; retain contact origin and timing.
+geometry = geometry.replace('arcRibbon(center,[1,0,0],[0,.91,.32]', 'arcRibbon(center,[-1,0,0],[0,.91,.32]')
 simulation = section('let current=', 'function updateRigidBuffers(')
 simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
 simulation = simulation.replace('const mouth=M.pt(toolModel,[.62,.21,0]);', "const source=waterSource?.(clock);if(waterSource&&!source)return;const mouth=source?.position??M.pt(toolModel,[.62,.21,0]);")
@@ -69,6 +71,8 @@ for original in ["'#a7d5a4'","'#d3dda2'","'#9fb765'"]:
     combat = combat.replace(original,"(agricultureMode==='multiply'?'#eac98d':"+original+")")
 combat = combat.replace('V.scale([.16,.43,.13],vis*.65)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.16,.43,.13],vis*.65)")
 combat = combat.replace('V.scale([.11,.3,.2],vis*.45)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.11,.3,.2],vis*.45)")
+# Avoid per-vertex iterator/spread temporary arrays without changing float output.
+geometry = geometry.replace('for(const [i,p]of[a,b,c].entries())fxVertices.push(...p,...(n[i]||n[0]),...col,alpha,kind);', 'for(let i=0;i<3;i++){const p=i===0?a:i===1?b:c,normal=n[i]||n[0];fxVertices.push(p[0],p[1],p[2],normal[0],normal[1],normal[2],col[0],col[1],col[2],alpha,kind);}')
 geometry = geometry.replace('const at=(r,a)=>V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));',"const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};")
 geometry = geometry.replace('return[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)]',"const q=[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)];if(agricultureMode&&surface)q[1]+=floorAt(q);return q")
 combat = combat.replace("solid('leaf',[Math.cos(a)*.55,.1,Math.sin(a)*.55]","solid('leaf',blessingLeafOrigin(a)")
@@ -76,8 +80,10 @@ combat = "function blessingLeafOrigin(a){const p=[Math.cos(a)*.55,.1,Math.sin(a)
 rects = section('const spriteRects={};', 'const MAX_SPRITES=')
 rects = 'export function createVfxAtlasRects(ASSETS,width,height){const atlasImage={width,height};'+rects+'return spriteRects;}\n'
 pack = section('function paintSprites(', 'gl.useProgram(spriteP.p);')
-pack = pack.replace('function paintSprites(list,env,cam)', 'export function packVfxSprites(list,spriteRects,cam)')
-pack = pack.replace('if(!list.length)return;', 'const spriteData=new Float32Array(MAX_SPRITES*25);if(!list.length)return {count:0,data:spriteData};')
+pack = pack.replace('function paintSprites(list,env,cam)', 'export function packVfxSprites(list,spriteRects,cam,spriteData=new Float32Array(MAX_SPRITES*25))')
+pack = pack.replace('if(!list.length)return;', 'if(spriteData.length<MAX_SPRITES*25)throw new RangeError("VFX sprite buffer too small");if(!list.length)return {count:0,data:spriteData};')
+pack = pack.replace('V.dot(V.sub(b.p,cam.eye),cam.forward)-V.dot(V.sub(a.p,cam.eye),cam.forward)', '((b.p[0]-cam.eye[0])*cam.forward[0]+(b.p[1]-cam.eye[1])*cam.forward[1]+(b.p[2]-cam.eye[2])*cam.forward[2])-((a.p[0]-cam.eye[0])*cam.forward[0]+(a.p[1]-cam.eye[1])*cam.forward[1]+(a.p[2]-cam.eye[2])*cam.forward[2])')
+pack = pack.replace('spriteData.set([f%1,s.orient||0,s.emit||0,s.soft||0],o+18);spriteData.set(s.dir||[0,1,0],o+22);', 'spriteData[o+18]=f%1;spriteData[o+19]=s.orient||0;spriteData[o+20]=s.emit||0;spriteData[o+21]=s.soft||0;spriteData[o+22]=s.dir?s.dir[0]:0;spriteData[o+23]=s.dir?s.dir[1]:1;spriteData[o+24]=s.dir?s.dir[2]:0;')
 pack += 'return {count,data:spriteData};}\n'
 
 module = '// Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.\n'+helpers+shaders+shapes+style+rects+'export const MAX_SPRITES=760,MAX_FX_VERTS=48000;\n'+pack
@@ -105,7 +111,7 @@ export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surf
   step(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');if(dt)simulate(dt);},
   advance(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');for(let remaining=dt;remaining>1e-9;){const sub=Math.min(1/60,remaining);simulate(sub);remaining-=sub;}},
   seek(t){if(!Number.isFinite(t)||t<0)throw new Error('Tiempo VFX inválido');contacts.length=0;seekTo(t);},
-  sprites(){return spriteInstances();},rigidInstances,geometry(){composeGeometryFX();return new Float32Array(fxVertices.slice(0,MAX_FX_VERTS*11));},
+  sprites(){return spriteInstances();},rigidInstances,geometry(target=null){composeGeometryFX();const length=Math.min(fxVertices.length,MAX_FX_VERTS*11);if(!target||target.length<length)return new Float32Array(fxVertices.slice(0,length));if(length===fxVertices.length)target.set(fxVertices);else for(let i=0;i<length;i++)target[i]=fxVertices[i];return target.subarray(0,length);},
   clear(){parts.length=0;rigids.length=0;events.length=0;contacts.length=0;fxVertices.length=0;lightCol0=[0,0,0];lightCol1=[0,0,0];},
  };
 }

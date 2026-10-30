@@ -1,3 +1,4 @@
+import {cinematicLightingEnabled,patchCinematicVegetation} from './cinematic-lighting.js';
 import {DAYLIGHT_BIOMES,patchDaylightGrass} from './final-daylight.js';
 import {assetUrl} from './asset-url.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
@@ -166,5 +167,6 @@ export async function createContinuousGrass(world){
   for(const key of q.chunks.keys())if(!world.chunks.has(key))q.release(key);
   for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz);}
  }catch(e){q.dispose();throw e;}}
+ if(cinematicLightingEnabled(world.visualSearch))for(const {mesh} of q.meshes){mesh.material.vertexShader=patchCinematicVegetation(mesh.material.vertexShader);mesh.material.fragmentShader=patchCinematicVegetation(mesh.material.fragmentShader);mesh.material.needsUpdate=true;}
  return q;
 }

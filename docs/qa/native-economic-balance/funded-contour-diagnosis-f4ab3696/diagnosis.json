@@ -1,0 +1,153 @@
+{
+  "scope": "Cloned day8 after actual paid11-worker native contract. Geometric feasibility diagnostic only; not a continued campaign, physical interception or accepted balance.",
+  "gitHead": "f4ab36963050b66f1e1bd6f81fc2b95281c33b14",
+  "input": "docs/qa/native-economic-balance/pilot-funded-5985791f-q8-good-day6-712-7/state.json.gz",
+  "inputSHA256": "10eba576748149df30c3359f8ec496e01c509815725cefce52a9dc7037d4278d",
+  "nativeHirePaid": 330,
+  "cashAfterHire": 259,
+  "decision": {
+    "day": 8,
+    "time": 0,
+    "protectedCash": 330,
+    "pendingRepairCoins": 0,
+    "attempts": [
+      {
+        "bounds": [
+          71.94000000000001,
+          -15.260000000000002,
+          104.64000000000001,
+          15.260000000000002
+        ],
+        "expectedPieces": 59,
+        "legalPieces": 53,
+        "nativeVegetationRemoval": 5,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          69.76,
+          -15.260000000000002,
+          106.82000000000002,
+          15.260000000000002
+        ],
+        "expectedPieces": 63,
+        "legalPieces": 54,
+        "nativeVegetationRemoval": 7,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          71.94000000000001,
+          -17.44,
+          104.64000000000001,
+          17.44
+        ],
+        "expectedPieces": 63,
+        "legalPieces": 56,
+        "nativeVegetationRemoval": 4,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          69.76,
+          -17.44,
+          106.82000000000002,
+          17.44
+        ],
+        "expectedPieces": 67,
+        "legalPieces": 58,
+        "nativeVegetationRemoval": 6,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          67.58000000000001,
+          -15.260000000000002,
+          109.00000000000001,
+          15.260000000000002
+        ],
+        "expectedPieces": 66,
+        "legalPieces": 54,
+        "nativeVegetationRemoval": 4,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          71.94000000000001,
+          -19.62,
+          104.64000000000001,
+          19.62
+        ],
+        "expectedPieces": 66,
+        "legalPieces": 59,
+        "nativeVegetationRemoval": 5,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          67.58000000000001,
+          -17.44,
+          109.00000000000001,
+          17.44
+        ],
+        "expectedPieces": 70,
+        "legalPieces": 57,
+        "nativeVegetationRemoval": 4,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          69.76,
+          -19.62,
+          106.82000000000002,
+          19.62
+        ],
+        "expectedPieces": 70,
+        "legalPieces": 64,
+        "nativeVegetationRemoval": 6,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      },
+      {
+        "bounds": [
+          67.58000000000001,
+          -19.62,
+          109.00000000000001,
+          19.62
+        ],
+        "expectedPieces": 74,
+        "legalPieces": 64,
+        "nativeVegetationRemoval": 2,
+        "reason": "native-placement-omissions",
+        "legal": false,
+        "cost": null
+      }
+    ],
+    "paidCost": 0,
+    "paidPieces": 0,
+    "remainingCost": 0,
+    "complete": false,
+    "reason": "no-bounded-legal-contour"
+  },
+  "sourceHashes": {
+    "src/simulation/game.js": "e67527984652395ea8dc69952187b5b68bf7077c7b68472388605970145c3bcc",
+    "src/world/navigation.js": "68957cd8e407e6e6cd944af8fc5bfd7bc1f14c39bbc52f302884c2d2e6cf70a1",
+    "tools/native-funded-defense-policy.mjs": "e3a87773f8f225c7de0284fd14c215f19e605568080b8bec361d96ed80b4fd9f",
+    "tools/probe-funded-defense-snapshot.mjs": "a21cedef52ed8cad90d8293e1ba20743f7a45aae2cc8507f2fc017f99df35f0b"
+  }
+}

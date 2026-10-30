@@ -1,0 +1,174 @@
+{
+  "scope": "Installed mesh, world-space wind-only displacement relative to same authored pose. Vertex membership requires >=50% weight in each wind bone group. This is not collision, artistic or performance acceptance.",
+  "vertexGroups": {
+    "cloth": 1668,
+    "feather": 308,
+    "wood": 112
+  },
+  "spells": {
+    "growth": {
+      "cloth": {
+        "maxMetres": 0.4808980482690455,
+        "rmsMetres": 0.05343044470740774,
+        "peakAge": 0.3333333333333333,
+        "samples": 108420,
+        "maxCombinedDistanceFromFirstMetres": 0.7812486279468338,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.7626782596816861,
+          "rmsMetres": 0.09547520868201166,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "feather": {
+        "maxMetres": 0.10583759498424215,
+        "rmsMetres": 0.017219210808102552,
+        "peakAge": 0.23333333333333334,
+        "samples": 20020,
+        "maxCombinedDistanceFromFirstMetres": 0.3606669704924119,
+        "parentMotionRemoved": {
+          "referenceBone": "Head",
+          "maxMetres": 0.3507263055380741,
+          "rmsMetres": 0.08022989417428221,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "wood": {
+        "maxMetres": 0.02201463981542793,
+        "rmsMetres": 0.007536389283575386,
+        "peakAge": 0.2,
+        "samples": 7280,
+        "maxCombinedDistanceFromFirstMetres": 0.3133912694908144,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.3342045786372988,
+          "rmsMetres": 0.1403197850093019,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      }
+    },
+    "multiply": {
+      "cloth": {
+        "maxMetres": 0.48470191585343825,
+        "rmsMetres": 0.05341102891860371,
+        "peakAge": 0.3333333333333333,
+        "samples": 108420,
+        "maxCombinedDistanceFromFirstMetres": 0.7604667305750609,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.7515951927106064,
+          "rmsMetres": 0.09146415129692836,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "feather": {
+        "maxMetres": 0.11016474627728659,
+        "rmsMetres": 0.01753973417956939,
+        "peakAge": 0.23333333333333334,
+        "samples": 20020,
+        "maxCombinedDistanceFromFirstMetres": 0.29164772331036726,
+        "parentMotionRemoved": {
+          "referenceBone": "Head",
+          "maxMetres": 0.3161261645043395,
+          "rmsMetres": 0.07430617533045775,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "wood": {
+        "maxMetres": 0.028961831568651113,
+        "rmsMetres": 0.008593188172771217,
+        "peakAge": 0.7333333333333333,
+        "samples": 7280,
+        "maxCombinedDistanceFromFirstMetres": 0.33526661762069937,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.32423081304103285,
+          "rmsMetres": 0.15174230564508243,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      }
+    },
+    "shield": {
+      "cloth": {
+        "maxMetres": 0.48104917474528713,
+        "rmsMetres": 0.053111375597469763,
+        "peakAge": 0.3333333333333333,
+        "samples": 108420,
+        "maxCombinedDistanceFromFirstMetres": 0.7276299451579296,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.7567936670496134,
+          "rmsMetres": 0.09220681079811718,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "feather": {
+        "maxMetres": 0.10521383618702093,
+        "rmsMetres": 0.017118404725216915,
+        "peakAge": 0.23333333333333334,
+        "samples": 20020,
+        "maxCombinedDistanceFromFirstMetres": 0.3639204346159544,
+        "parentMotionRemoved": {
+          "referenceBone": "Head",
+          "maxMetres": 0.3464631048592009,
+          "rmsMetres": 0.08280207130612847,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "wood": {
+        "maxMetres": 0.026384833892330848,
+        "rmsMetres": 0.008025239453909056,
+        "peakAge": 0.7666666666666667,
+        "samples": 7280,
+        "maxCombinedDistanceFromFirstMetres": 0.3095882513648683,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.3396679792711172,
+          "rmsMetres": 0.1604368742987897,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      }
+    },
+    "attack": {
+      "cloth": {
+        "maxMetres": 0.4808980482428338,
+        "rmsMetres": 0.05343044470930438,
+        "peakAge": 0.3333333333333333,
+        "samples": 108420,
+        "maxCombinedDistanceFromFirstMetres": 0.7700194433161235,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.7626782596593621,
+          "rmsMetres": 0.09547521679272777,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "feather": {
+        "maxMetres": 0.10583759500598336,
+        "rmsMetres": 0.01721921080939848,
+        "peakAge": 0.23333333333333334,
+        "samples": 20020,
+        "maxCombinedDistanceFromFirstMetres": 0.3546743573783466,
+        "parentMotionRemoved": {
+          "referenceBone": "Head",
+          "maxMetres": 0.35072630655799386,
+          "rmsMetres": 0.08022989635849011,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      },
+      "wood": {
+        "maxMetres": 0.022014639820598897,
+        "rmsMetres": 0.007536389283768069,
+        "peakAge": 0.2,
+        "samples": 7280,
+        "maxCombinedDistanceFromFirstMetres": 0.32468852094759154,
+        "parentMotionRemoved": {
+          "referenceBone": "Torso",
+          "maxMetres": 0.3342045786401386,
+          "rmsMetres": 0.14031978501008177,
+          "scope": "Authored plus procedural motion relative to first sampled pose, removing animated Head/Torso transform. Not wind-only."
+        }
+      }
+    }
+  }
+}

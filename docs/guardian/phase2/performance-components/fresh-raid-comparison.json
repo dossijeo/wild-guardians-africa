@@ -1,0 +1,67 @@
+{
+  "sameOutcome": true,
+  "sameCommands": true,
+  "sameInitialActors": true,
+  "errors": {
+    "reference": [],
+    "guardian": []
+  },
+  "metrics": {
+    "averageFps": {
+      "reference": 8.922516531843103,
+      "guardian": 8.934674795334521
+    },
+    "frameP95": {
+      "reference": 166.0449999999837,
+      "guardian": 149.8350000000064
+    },
+    "frameP99": {
+      "reference": 183.05999999999767,
+      "guardian": 182.88000000000466
+    },
+    "frameMax": {
+      "reference": 10509.340000000004,
+      "guardian": 10758.604999999996
+    },
+    "framesOver50ms": {
+      "reference": 1076,
+      "guardian": 1076
+    },
+    "framesOver100ms": {
+      "reference": 403,
+      "guardian": 394
+    },
+    "physicsP95": {
+      "reference": 5.2200000286102295,
+      "guardian": 5.329999923706055
+    },
+    "physicsP99": {
+      "reference": 8.224999904632568,
+      "guardian": 7.899999976158142
+    },
+    "physicsMax": {
+      "reference": 15.725000023841858,
+      "guardian": 13.480000019073486
+    },
+    "animationP95": {
+      "reference": 0,
+      "guardian": 0.18499994277954102
+    },
+    "vfxP95": {
+      "reference": 0.004999995231628418,
+      "guardian": 0.6200000047683716
+    },
+    "drawP95": {
+      "reference": 279,
+      "guardian": 280
+    },
+    "heapStart": {
+      "reference": 608759110,
+      "guardian": 591402026
+    },
+    "heapEnd": {
+      "reference": 661842624,
+      "guardian": 688382387
+    }
+  }
+}

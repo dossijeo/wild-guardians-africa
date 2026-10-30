@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: V uses only native living agricultural base value, not cash/maturity/magic bonuses
+ok 1 - V uses only native living agricultural base value, not cash/maturity/magic bonuses
+  ---
+  duration_ms: 1.6753
+  ...
+# Subtest: five-night EMA is pure/idempotent, initializes legacy, persists exactly and never invents missing samples
+ok 2 - five-night EMA is pure/idempotent, initializes legacy, persists exactly and never invents missing samples
+  ---
+  duration_ms: 0.9265
+  ...
+# Subtest: P follows independent formula with clamping and growing/retiring agriculture
+ok 3 - P follows independent formula with clamping and growing/retiring agriculture
+  ---
+  duration_ms: 0.349
+  ...
+# Subtest: species formulas apply jointly with no cash-dependent input
+ok 4 - species formulas apply jointly with no cash-dependent input
+  ---
+  duration_ms: 0.5393
+  ...
+# Subtest: mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding
+ok 5 - mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding
+  ---
+  duration_ms: 0.7997
+  ...
+# Subtest: reference directional area is below cap when radius/spacing cannot reach neighbours
+ok 6 - reference directional area is below cap when radius/spacing cannot reach neighbours
+  ---
+  duration_ms: 0.5601
+  ...
+# Subtest: Q controls joint product without deleting animals or materializing composition lists
+ok 7 - Q controls joint product without deleting animals or materializing composition lists
+  ---
+  duration_ms: 8.7373
+  ...
+# Subtest: selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged
+ok 8 - selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged
+  ---
+  duration_ms: 1.6576
+  ...
+# Subtest: introductions keep original one actor/min budget without new random draws
+ok 9 - introductions keep original one actor/min budget without new random draws
+  ---
+  duration_ms: 0.2976
+  ...
+# Subtest: explicit infeasible Q rejects composition before any random draw
+ok 10 - explicit infeasible Q rejects composition before any random draw
+  ---
+  duration_ms: 0.5589
+  ...
+# Subtest: invalid inputs reject bounded work instead of propagating unsafe values
+ok 11 - invalid inputs reject bounded work instead of propagating unsafe values
+  ---
+  duration_ms: 0.8208
+  ...
+# Subtest: peaceful postgame has no actor, pressure draw or budget assignment
+ok 12 - peaceful postgame has no actor, pressure draw or budget assignment
+  ---
+  duration_ms: 0.1483
+  ...
+# Subtest: unintegrated candidate configuration matches the pure module decisions
+ok 13 - unintegrated candidate configuration matches the pure module decisions
+  ---
+  duration_ms: 3.4156
+  ...
+# Subtest: full-range hit roll is independent of remaining Q after composition is fixed
+ok 14 - full-range hit roll is independent of remaining Q after composition is fixed
+  ---
+  duration_ms: 6.7505
+  ...
+# Subtest: composition adjusts before RNG under maximum shares, finite swaps, exact N and transparent Q floor
+ok 15 - composition adjusts before RNG under maximum shares, finite swaps, exact N and transparent Q floor
+  ---
+  duration_ms: 52.1649
+  ...
+# Subtest: strict config/source contracts reject unknown keys, drift, malformed numbers and unreviewed costs
+ok 16 - strict config/source contracts reject unknown keys, drift, malformed numbers and unreviewed costs
+  ---
+  duration_ms: 5.472
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 241.7043

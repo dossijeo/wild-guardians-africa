@@ -1,0 +1,21 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Grabar tutorial real · Wild Guardians</title>
+<style>body{margin:0;background:#171d19;color:white;font:14px system-ui}header{height:44px;display:flex;align-items:center;gap:12px;padding:0 12px}button{padding:6px}iframe{border:0;width:100vw;height:calc(100vh - 44px)}output{font-size:12px}</style>
+<header><button id="start">Grabar pestaña con audio</button><button id="stop" disabled>Terminar y guardar</button><a id="download" hidden style="color:#fff">Descargar vídeo</a><output id="status">Selecciona esta pestaña en el selector de captura y activa compartir audio.</output></header>
+<iframe src="/" title="Wild Guardians — aplicación real" allow="autoplay; fullscreen"></iframe>
+<script type="module">
+// Records the rendered application including DOM HUD, Guardian canvas and world.
+// No synthetic tutorial advancement, replacement voice or reconstructed frames.
+const start=document.querySelector('#start'),stop=document.querySelector('#stop'),status=document.querySelector('#status'),download=document.querySelector('#download');let stream,recorder,parts=[],started=0,downloadUrl=null;
+function release(){for(const t of stream?.getTracks()??[])t.stop();stream=null;start.disabled=false;stop.disabled=true;}
+start.onclick=async()=>{start.disabled=true;status.textContent='Esperando selección de pantalla o pestaña. Comparte también su audio.';try{
+ if(!navigator.mediaDevices?.getDisplayMedia)throw Error('Este navegador no ofrece captura de pestaña.');
+ stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:true,preferCurrentTab:true});
+ if(!stream.getAudioTracks().length){release();throw Error('No se ha compartido audio; repite activando el audio de la pestaña.');}
+ const mimeType=['video/webm;codecs=vp8,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));if(!mimeType)throw Error('Grabación WebM no disponible');
+ parts=[];recorder=new MediaRecorder(stream,{mimeType,videoBitsPerSecond:6000000});recorder.ondataavailable=e=>{if(e.data.size)parts.push(e.data)};
+ recorder.onstop=async()=>{const duration=(performance.now()-started)/1000,blob=new Blob(parts,{type:mimeType});parts=[];release();if(downloadUrl)URL.revokeObjectURL(downloadUrl);downloadUrl=URL.createObjectURL(blob);download.href=downloadUrl;download.download='guardian-tutorial.webm';download.hidden=false;status.textContent=`Vídeo disponible: ${duration.toFixed(1)} s, con pista de audio. Requiere inspección audiovisual.`;};
+ stream.getVideoTracks()[0].onended=()=>{if(recorder.state==='recording')recorder.stop()};started=performance.now();recorder.start(1000);stop.disabled=false;status.textContent='Grabando aplicación real. Avanza el tutorial manualmente hasta el primer centro.';
+ }catch(e){release();status.textContent=e.message;}};
+stop.onclick=()=>{if(recorder?.state==='recording'){stop.disabled=true;recorder.stop();}};
+addEventListener('pagehide',()=>{if(recorder?.state==='recording')recorder.stop();release()});
+</script></html>

@@ -2,7 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {AudioSystem,eventSound} from '../src/audio/audio.js';
-test('upcoming raid sounds decode once per species before first contact, without starting any voice',async()=>{const audio=new AudioSystem({sfx:1,music:1}),decoded=[],buffers=new Map();audio.sfxBank=async()=>JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));audio.buffer=async url=>{if(!buffers.has(url)){decoded.push(url);buffers.set(url,{});}return buffers.get(url);};audio.prepareAnimalSounds({day:1});await Promise.all(audio.animalSoundPreparation.values());assert.equal(decoded.length,5);audio.prepareAnimalSounds({day:1});await Promise.all(audio.animalSoundPreparation.values());assert.equal(decoded.length,5);audio.prepareAnimalSounds({day:3,nightPlan:{group:['lion','lion','warthog']}});await Promise.all(audio.animalSoundPreparation.values());assert.equal(decoded.length,9);assert.equal(audio.voices.size,0);});
+test('upcoming raid sounds decode once per species before first contact, including hurt, without starting any voice',async()=>{
+ const audio=new AudioSystem({sfx:1,music:1}),decoded=[],buffers=new Map(),bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));
+ audio.sfxBank=async()=>bank;audio.buffer=async url=>{if(!buffers.has(url)){decoded.push(url);buffers.set(url,{});}return buffers.get(url);};
+ const expected=species=>new Set(['game_enemy_detected',...species.flatMap(s=>[s+'_neutral',s+'_aggressive',s+(['lion','hyena'].includes(s)?'_attack':'_charge'),s+'_retreat',s+'_hurt'])].map(id=>bank.items.find(item=>item.id===id).audio.url));
+ audio.prepareAnimalSounds({day:1});await Promise.all(audio.animalSoundPreparation.values());assert.deepEqual(new Set(decoded),expected(['warthog']));const count=decoded.length;
+ audio.prepareAnimalSounds({day:1});await Promise.all(audio.animalSoundPreparation.values());assert.equal(decoded.length,count);
+ audio.prepareAnimalSounds({day:3,nightPlan:{group:['lion','lion','warthog']}});await Promise.all(audio.animalSoundPreparation.values());assert.deepEqual(new Set(decoded),expected(['warthog','lion']));assert.equal(decoded.length,new Set(decoded).size);assert.equal(audio.voices.size,0);
+});
 
 test('Every gameplay sound resolves to a one-shot in the supplied SFX lab',()=>{
   const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));

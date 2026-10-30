@@ -1,0 +1,19 @@
+# Full-range H revision of74c7bb69
+
+The original13-test receipt and reference-envelopes.json remain historical, unchanged. Their H selector conditionally reduced the maximum hit roll. This revision removes that mechanism entirely. Root requested full original min/max+floor2P, with composition adjusted before generating actors. Structure damage now usesMath.round(original*(1+.5P)), as requested.
+
+## Pre-RNG joint budget planning
+
+Compute rounded reference counts, normalized unlocked capsceil(N*w), and per-species worst-case productHmax*Dcrop*Aref. Find the cheapest legalN-actor cohort under those same caps by greedy ascending cost; only five species and34actors are needed. It gives an exact minimum achievable worst-case product for this linear-cap problem. The requested mean-product Q can be below this minimum: atP0, four warthogs require worstcase16 but meanQ12. Native full-range rolls and hardQ12 cannot both hold for that cohort.
+
+Candidate default therefore exposes requestedQ and usesQ=max(requestedQ,minimumLegalWorstCase). `qRaisedForRangeSafety` records the feasibility floor explicitly; it is not disguised as the originally requested mean budget. A strict explicitQ passed to the pure API is NEVER raised: infeasible returns no plan/no draws. Configuration documents this default feasibility policy; root must approve that candidate decision. A mean budget that is feasible is retained unchanged.
+
+Before any random draw, replace one currently expensive actor with a lower-product species having unused allowed quota, choosing greatest reduction with stable ties. Continue until full worst-case cohort fitsQ; at mostN*5 positive reductions, with an explicit bound. Maintain exactN, native unlocks and ceil caps. No complete composition pool, sampled hit resampling, retry loop or dropped actor. This biases composition toward cheaper reference-capability species relative to Hamilton reference quotas; it is explicit. Exposure/actual farm density remains outside this pure mathematical choice.
+
+Only then shuffle the fixed multiset with one draw/actor and independently roll each H with one draw over its FULL native range. The roll has no Q argument and no clamp; actual product fits because EVERY allowed roll fits the already planned worst-case envelope. Tests reproduce the two draws per actor independently and assert exact H equality, proving no budget-dependent truncated upper range remains. The16 tests include101 pressures×3unlock sets with fixedN/caps/worstcaseQ/finite work.
+
+## Strict drift checks
+
+`validateRaidPressureConfiguration(parsedCanonicalJSON,balance)` checks the complete exact config tree, including unknown/missing keys, formula constants, weights, radii, Q policy and structure rounding. `validateRaidPressureRuntimeConfig` rejects unknown or changed runtime knobs. `validateRaidPressureSource` checks centre800, wages30/40, the exact eight crop prices/values, five ordered species' original H ranges, threat costs and structure damages. Selection validates runtime config/source automatically. ConfigJSON must be validated explicitly by integration when loading that configuration; the pure browser module does not read files or magically validate an unpassed file. Physical-file hashes/protected unchanged-source blobs are recorded separately. A subsequent deliberate parameter revision needs reviewed source/config updates, rather than silently bypassing those guards.
+
+No raids/game/snapshots/generated edits or campaigns. New reference-envelopes-fullrange.json is a separately named derivative, not replacement of original output. Q still bounds reference agricultural HP capability; structural alternative envelope is separate, and physical exposureE/occlusion/Shield/damage/oleada arrival are unimplemented. Root integration/acceptance gates remain open.

@@ -1,0 +1,6867 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        3.995048610584626e-119
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": {
+    "x": 109.5,
+    "z": -14,
+    "gx": -0.17499141270376395,
+    "gz": 0.04105442636044465,
+    "grade": 0.17974276186774313,
+    "score": 0.01196193804297649
+  },
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3016.669614999892,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 56,
+  "animalState": "walking",
+  "animalPosition": [
+    108,
+    -15.802031221696618
+  ],
+  "draws": 33,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3004.6806199998937,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3004.797194999894,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 3004.880379999894,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3004.880379999894,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3006.1440099998927,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.059999942779541016,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 11.830000042915344,
+    "maxStepMs": 26.730000019073486,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "warthog",
+      "captureMs": 0.7000000476837158,
+      "colliderFitMs": 5.384999990463257,
+      "environmentMs": 3.4850000143051147,
+      "bodiesMs": 2.0749999284744263
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 1,
+    "lastRoll": {
+      "seconds": 3.516666666666659,
+      "contactDelay": 0,
+      "error": 1.8620303854373437,
+      "speed": 0.5567993696390989,
+      "timedOut": true
+    }
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 108,
+      "z": -15.802031221696618
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "requestedImpacts": 1,
+    "headOn": false,
+    "wallTrial": false,
+    "actorSpecies": [
+      "warthog"
+    ],
+    "recoveryTrace": [
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 111.70000004768372,
+        "time": 0.13292500000034124,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 216.50999999046326,
+        "time": 0.2160900000003494,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 318.56000006198883,
+        "time": 0.31588000000056127,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 420.2649999856949,
+        "time": 0.4322900000001937,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 528.6449999809265,
+        "time": 0.5321000000003551,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 633.6850000619888,
+        "time": 0.6318949999999859,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 736.8400000333786,
+        "time": 0.7483050000005278,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 837.6100000143051,
+        "time": 0.8479800000004616,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 952.9700000286102,
+        "time": 0.9643000000000939,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1055.0800000429153,
+        "time": 1.0641399999999521,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1155.7799999713898,
+        "time": 1.1639149999996334,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1270.2849999666214,
+        "time": 1.2969299999990653,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1378.2450000047684,
+        "time": 1.3801999999991494,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1485.7200000286102,
+        "time": 1.5130749999989348,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1586.8250000476837,
+        "time": 1.5961849999989681,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1697.7999999523163,
+        "time": 1.7128799999986768,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1799.4950000047684,
+        "time": 1.8125199999985853,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1900.8600000143051,
+        "time": 1.9288749999986976,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2009.4950000047684,
+        "time": 2.012129999998706,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2126.1749999523163,
+        "time": 2.145034999998188,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2230.445000052452,
+        "time": 2.228109999998196,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2332.0299999713898,
+        "time": 2.344654999998056,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2439.524999976158,
+        "time": 2.4442549999980656,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2540.899999976158,
+        "time": 2.577364999998281,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2645.0349999666214,
+        "time": 2.6437549999982366,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2748.4400000572205,
+        "time": 2.7603849999977683,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2849.3550000190735,
+        "time": 2.8765849999977036,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2961.125,
+        "time": 2.9763499999976375,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3065.9700000286102,
+        "time": 3.0761949999973695,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3173.2849999666214,
+        "time": 3.2092549999974835,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3281.0199999809265,
+        "time": 3.292509999997492,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3382.610000014305,
+        "time": 3.4087799999979325,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3485.0049999952316,
+        "time": 3.4920199999983197,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3585.360000014305,
+        "time": 3.6082749999982298,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3687.2050000429153,
+        "time": 3.7247199999978875,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3791.2799999713898,
+        "time": 3.807839999998123,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3898.125,
+        "time": 3.924174999997831,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 4001.360000014305,
+        "time": 4.023989999998321,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 4105.210000038147,
+        "time": 4.107184999998481,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 4209.060000061989,
+        "time": 4.206879999998819,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 4315.7699999809265,
+        "time": 4.339884999999413,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.03333333333333333,
+              "contactDelay": 0,
+              "error": 3.1046215067517138,
+              "errors": [
+                3.1046215067517138,
+                3.1045466503601378
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4417.659999966621,
+        "time": 4.423019999999724,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.16666666666666666,
+              "contactDelay": 0,
+              "error": 2.9202490645655392,
+              "errors": [
+                2.9178318657517464,
+                2.9202490645655392
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4519.360000014305,
+        "time": 4.556294999999864,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.2333333333333333,
+              "contactDelay": 0,
+              "error": 2.73889143891621,
+              "errors": [
+                2.7210217916207986,
+                2.73889143891621
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4622.3150000572205,
+        "time": 4.622764999999617,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.36666666666666664,
+              "contactDelay": 0,
+              "error": 2.2959935722188365,
+              "errors": [
+                2.237535268986633,
+                2.2959935722188365
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4729.3150000572205,
+        "time": 4.7556699999991,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.44999999999999996,
+              "contactDelay": 0,
+              "error": 2.179794486519823,
+              "errors": [
+                2.0868548000577825,
+                2.179794486519823
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4836.365000009537,
+        "time": 4.838829999999234,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.5666666666666668,
+              "contactDelay": 0,
+              "error": 2.1112099127243535,
+              "errors": [
+                1.9608786592167733,
+                2.1112099127243535
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4943.490000009537,
+        "time": 4.955319999999119,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.7000000000000005,
+              "contactDelay": 0,
+              "error": 2.074267429285311,
+              "errors": [
+                1.906227688905927,
+                2.074267429285311
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5051.610000014305,
+        "time": 5.0881649999996625,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.7833333333333341,
+              "contactDelay": 0,
+              "error": 2.055544796578122,
+              "errors": [
+                1.887409545963746,
+                2.055544796578122
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5152.77999997139,
+        "time": 5.171474999999646,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.8833333333333344,
+              "contactDelay": 0,
+              "error": 2.0331650434121866,
+              "errors": [
+                1.8631594347219598,
+                2.0331650434121866
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5255.15499997139,
+        "time": 5.271274999999605,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.0000000000000013,
+              "contactDelay": 0,
+              "error": 2.008208797473274,
+              "errors": [
+                1.8379036447862718,
+                2.008208797473274
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5356.7699999809265,
+        "time": 5.387549999999919,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.0833333333333344,
+              "contactDelay": 0,
+              "error": 1.9913988311384858,
+              "errors": [
+                1.8196976057835006,
+                1.9913988311384858
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5458.080000042915,
+        "time": 5.470754999999826,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.183333333333334,
+              "contactDelay": 0,
+              "error": 1.9684758044854365,
+              "errors": [
+                1.7939972757079181,
+                1.9684758044854365
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5560.745000004768,
+        "time": 5.570585000000392,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.3000000000000003,
+              "contactDelay": 0,
+              "error": 1.9468683637555995,
+              "errors": [
+                1.765704896665133,
+                1.9468683637555995
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5663.185000061989,
+        "time": 5.686805000000277,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.4,
+              "contactDelay": 0,
+              "error": 1.92608538670209,
+              "errors": [
+                1.7412365770818232,
+                1.92608538670209
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5763.710000038147,
+        "time": 5.786765000000287,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.5166666666666662,
+              "contactDelay": 0,
+              "error": 1.8971685125549544,
+              "errors": [
+                1.7092807964623986,
+                1.8971685125549544
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5875.554999947548,
+        "time": 5.903165000000172,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.6166666666666658,
+              "contactDelay": 0,
+              "error": 1.8719427507185675,
+              "errors": [
+                1.682338019653239,
+                1.8719427507185675
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5986.325000047684,
+        "time": 6.002834999999777,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.733333333333332,
+              "contactDelay": 0,
+              "error": 1.859619600927631,
+              "errors": [
+                1.6674062798541043,
+                1.859619600927631
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6097.40499997139,
+        "time": 6.119134999999915,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.816666666666665,
+              "contactDelay": 0,
+              "error": 1.8594231135346382,
+              "errors": [
+                1.665477551421918,
+                1.8594231135346382
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6198.1900000572205,
+        "time": 6.202354999999898,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.9333333333333313,
+              "contactDelay": 0,
+              "error": 1.8551842072382585,
+              "errors": [
+                1.6611968497082128,
+                1.8551842072382585
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6301.365000009537,
+        "time": 6.318745000000035,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.066666666666664,
+              "contactDelay": 0,
+              "error": 1.8523704219946016,
+              "errors": [
+                1.65574800986158,
+                1.8523704219946016
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6418.34500002861,
+        "time": 6.45174999999972,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.1499999999999972,
+              "contactDelay": 0,
+              "error": 1.855815829474735,
+              "errors": [
+                1.6564456537831749,
+                1.855815829474735
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6519.25,
+        "time": 6.534964999999374,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.2333333333333303,
+              "contactDelay": 0,
+              "error": 1.8522062756393902,
+              "errors": [
+                1.6513439413089885,
+                1.8522062756393902
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6620.544999957085,
+        "time": 6.618084999999155,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.366666666666663,
+              "contactDelay": 0,
+              "error": 1.8562155032868481,
+              "errors": [
+                1.6541781587751863,
+                1.8562155032868481
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6723.580000042915,
+        "time": 6.751079999999092,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.449999999999996,
+              "contactDelay": 0,
+              "error": 1.8600733031304335,
+              "errors": [
+                1.6561543124343452,
+                1.8600733031304335
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6826.1900000572205,
+        "time": 6.834254999998848,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.583333333333329,
+              "contactDelay": 0,
+              "error": 1.865911083180709,
+              "errors": [
+                1.658681457168922,
+                1.865911083180709
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6930.1050000190735,
+        "time": 6.96728499999881,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.6499999999999955,
+              "contactDelay": 0,
+              "error": 1.8676692942063404,
+              "errors": [
+                1.6595160831363467,
+                1.8676692942063404
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7032.580000042915,
+        "time": 7.033819999998741,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.7666666666666617,
+              "contactDelay": 0,
+              "error": 1.8647105454140593,
+              "errors": [
+                1.6568557428621147,
+                1.8647105454140593
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7134.0650000572205,
+        "time": 7.150109999998676,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.883333333333328,
+              "contactDelay": 0,
+              "error": 1.8630359526599511,
+              "errors": [
+                1.6537999416106148,
+                1.8630359526599511
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7240.784999966621,
+        "time": 7.26665999999841,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 2.9999999999999942,
+              "contactDelay": 0,
+              "error": 1.8662230038397305,
+              "errors": [
+                1.6564014681066046,
+                1.8662230038397305
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7350.34500002861,
+        "time": 7.383044999998219,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 3.0833333333333273,
+              "contactDelay": 0,
+              "error": 1.8619472465689237,
+              "errors": [
+                1.6514318776955696,
+                1.8619472465689237
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7455.289999961853,
+        "time": 7.466134999997848,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 3.1999999999999935,
+              "contactDelay": 0,
+              "error": 1.8638413116712393,
+              "errors": [
+                1.6521776083574014,
+                1.8638413116712393
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7555.870000004768,
+        "time": 7.582534999997733,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 3.299999999999993,
+              "contactDelay": 0,
+              "error": 1.861306867753601,
+              "errors": [
+                1.6496731911860456,
+                1.861306867753601
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7661.975000023842,
+        "time": 7.68237999999792,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 3.399999999999993,
+              "contactDelay": 0,
+              "error": 1.858198493419159,
+              "errors": [
+                1.6476185920374988,
+                1.858198493419159
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7770,
+        "time": 7.782179999997879,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 3.4999999999999925,
+              "contactDelay": 0,
+              "error": 1.8590063086639876,
+              "errors": [
+                1.6484656386990808,
+                1.8590063086639876
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7871.639999985695,
+        "time": 7.8818899999978385,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 7979.97000002861,
+        "time": 7.998244999997951,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.08302000000000044,
+        "groundCorrection": 0,
+        "support": {
+          "minimum": 0.06914435243305128,
+          "footMinimum": 0.0953679697370653,
+          "limiter": "RightArm",
+          "footPoint": {
+            "position": [
+              109.70018054498303,
+              11.701216236006514,
+              -15.132820377417726
+            ],
+            "floor": 11.605848266269449
+          },
+          "bodyPoint": {
+            "position": [
+              109.12626740773914,
+              11.747424169717258,
+              -15.693760694344117
+            ],
+            "floor": 11.678279817284206
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.2515057458646499,
+              "count": 67,
+              "position": [
+                109.03049719116639,
+                11.964183125932164,
+                -15.317379348640031
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.42292074015865033,
+              "count": 18,
+              "position": [
+                110.09399136095188,
+                11.94544714604964,
+                -15.461673119966072
+              ]
+            },
+            "Head": {
+              "minimum": 0.1519437490647313,
+              "count": 643,
+              "position": [
+                108.78370589361933,
+                11.910948620462205,
+                -15.204933640161826
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.37944942487984257,
+              "count": 28,
+              "position": [
+                109.96322865682278,
+                11.922056770671071,
+                -15.52078164400128
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.14289119812375617,
+              "count": 24,
+              "position": [
+                108.97885879386837,
+                11.850212051601314,
+                -15.610688469848492
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.1800634968265591,
+              "count": 31,
+              "position": [
+                109.82891568433212,
+                11.752289945002476,
+                -15.381207821458132
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.06914435243305128,
+              "count": 22,
+              "position": [
+                109.12626740773914,
+                11.747424169717258,
+                -15.693760694344117
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.4066365275457198,
+              "count": 23,
+              "position": [
+                110.15294935488055,
+                11.921499864626353,
+                -15.403986477312353
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6575421166828566,
+              "count": 21,
+              "position": [
+                109.54654818798653,
+                12.258999700455659,
+                -15.798827572867333
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6791590615551186,
+              "count": 22,
+              "position": [
+                109.9798056872704,
+                12.216688882524792,
+                -15.569151173397609
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.23631774869325994,
+              "count": 20,
+              "position": [
+                109.20039790514127,
+                11.924920588737399,
+                -15.214193722510236
+              ]
+            },
+            "Spine": {
+              "minimum": 0.32029437005609473,
+              "count": 12,
+              "position": [
+                109.2861181244981,
+                11.992898744680987,
+                -15.24033538605728
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.0953679697370653,
+              "count": 21,
+              "position": [
+                109.70018054498303,
+                11.701216236006514,
+                -15.132820377417726
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.732433339263924,
+              "count": 11,
+              "position": [
+                109.97146288456166,
+                12.26704893364291,
+                -15.664605757648003
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.08444185891216272,
+              "count": 19,
+              "position": [
+                109.3964229871572,
+                11.72163427472523,
+                -15.588253226924904
+              ]
+            },
+            "Hips": {
+              "minimum": 0.1523141269225441,
+              "count": 23,
+              "position": [
+                109.33607814575865,
+                11.810405144666387,
+                -15.367271641586669
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.12409829904048308,
+              "count": 8,
+              "position": [
+                109.31128366556435,
+                11.775874577887933,
+                -15.58738638849613
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.46141716161117685,
+              "count": 22,
+              "position": [
+                109.9497636604094,
+                12.019466289166084,
+                -15.233612850767258
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.12934896464811985,
+              "count": 16,
+              "position": [
+                109.31140462082926,
+                11.788555523191006,
+                -15.43192717667937
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.5390278570880334,
+              "count": 7,
+              "position": [
+                109.46526488177382,
+                12.154971929324716,
+                -15.786250468685754
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.59566710054625,
+            12.067017189312269,
+            -15.37585872676622
+          ],
+          "groundGap": 0.4541764112714155
+        },
+        "hands": [
+          {
+            "position": [
+              110.08321643100408,
+              12.364865104561213,
+              -15.74801607067136
+            ],
+            "target": [
+              110.08364464629331,
+              12.364499068052073,
+              -15.748003588574539
+            ],
+            "targetDistance": 0.0005634774731056341,
+            "groundGap": 0.8535304697041735
+          },
+          {
+            "position": [
+              109.41385281532722,
+              11.80495357898775,
+              -15.450027620588425
+            ],
+            "target": [
+              109.41385284633876,
+              11.804953598727225,
+              -15.450027593310443
+            ],
+            "targetDistance": 4.5776093549906514e-8,
+            "groundGap": 0.16411332707838788
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8087.1449999809265,
+        "time": 8.114529999998012,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.1993050000000003,
+        "groundCorrection": 0,
+        "support": {
+          "minimum": 0.07142838471479607,
+          "footMinimum": 0.09603226176147572,
+          "limiter": "RightUpLeg",
+          "footPoint": {
+            "position": [
+              109.66931563600758,
+              11.707916639442747,
+              -15.11761820618494
+            ],
+            "floor": 11.611884377681271
+          },
+          "bodyPoint": {
+            "position": [
+              109.66542869758443,
+              11.670376213082307,
+              -15.415694369936059
+            ],
+            "floor": 11.59894782836751
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.2824673031451077,
+              "count": 67,
+              "position": [
+                109.51366724772372,
+                11.922687000992036,
+                -15.087040915207616
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.3841909703423596,
+              "count": 18,
+              "position": [
+                110.06157699633329,
+                11.91081752295732,
+                -15.495861561478906
+              ]
+            },
+            "Head": {
+              "minimum": 0.23423441174912263,
+              "count": 643,
+              "position": [
+                108.86199988550827,
+                11.991421730827975,
+                -14.972809778145727
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.34857382714205265,
+              "count": 28,
+              "position": [
+                109.92443143139775,
+                11.901232893522026,
+                -15.447697933354013
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.1867049074034277,
+              "count": 24,
+              "position": [
+                109.20433635277264,
+                11.8534826435094,
+                -15.655525222048308
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.1764990635904944,
+              "count": 31,
+              "position": [
+                109.85682362645784,
+                11.730795425174271,
+                -15.668125928708342
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.13801792272662539,
+              "count": 22,
+              "position": [
+                109.04684801780625,
+                11.835342028481667,
+                -15.579445376926538
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.3684656226875198,
+              "count": 23,
+              "position": [
+                110.12394913148265,
+                11.886752912790437,
+                -15.439925404036824
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6620712798884263,
+              "count": 21,
+              "position": [
+                109.60259900179649,
+                12.255092763289257,
+                -15.775089726049565
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.649687867688117,
+              "count": 22,
+              "position": [
+                109.95216506631459,
+                12.194350249322579,
+                -15.51771145034039
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.33371781489816854,
+              "count": 20,
+              "position": [
+                109.26857300236391,
+                12.012007543493654,
+                -15.182322795173722
+              ]
+            },
+            "Spine": {
+              "minimum": 0.332120071933133,
+              "count": 12,
+              "position": [
+                109.6771371080378,
+                11.921883651889473,
+                -15.572467047249026
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.09603226176147572,
+              "count": 21,
+              "position": [
+                109.66931563600758,
+                11.707916639442747,
+                -15.11761820618494
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7023714936098546,
+              "count": 11,
+              "position": [
+                109.93443247213563,
+                12.245561356316712,
+                -15.61718413827293
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.07142838471479607,
+              "count": 19,
+              "position": [
+                109.66542869758443,
+                11.670376213082307,
+                -15.415694369936059
+              ]
+            },
+            "Hips": {
+              "minimum": 0.1597671757028305,
+              "count": 23,
+              "position": [
+                109.33483055700688,
+                11.818361029767933,
+                -15.361226385881245
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.1845280431187586,
+              "count": 8,
+              "position": [
+                109.25795327974367,
+                11.847709217282514,
+                -15.539487217709594
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.4231542195708382,
+              "count": 22,
+              "position": [
+                109.9160758546931,
+                11.985674806026012,
+                -15.263381407019088
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.142869624765952,
+              "count": 16,
+              "position": [
+                109.2712728071546,
+                11.81068700992964,
+                -15.395287923235106
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.5562084228331265,
+              "count": 7,
+              "position": [
+                109.39383491754158,
+                12.186503648968102,
+                -15.741382058900447
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.60029651161604,
+            12.056286482381076,
+            -15.375024302601625
+          ],
+          "groundGap": 0.4442088543285969
+        },
+        "hands": [
+          {
+            "position": [
+              110.05296398180259,
+              12.324269952303329,
+              -15.710397184343615
+            ],
+            "target": [
+              110.07272159385714,
+              12.30473579045095,
+              -15.706756266325273
+            ],
+            "targetDistance": 0.028021473861829998,
+            "groundGap": 0.8059342302160584
+          },
+          {
+            "position": [
+              109.3947842510448,
+              11.817787041781166,
+              -15.437934139954667
+            ],
+            "target": [
+              109.4340495444881,
+              11.809003521855233,
+              -15.418172658359376
+            ],
+            "targetDistance": 0.04482666222594876,
+            "groundGap": 0.17311013912172157
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8193.075000047684,
+        "time": 8.21447999999782,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.29925500000000105,
+        "groundCorrection": 0,
+        "support": {
+          "minimum": 0.0640763791782284,
+          "footMinimum": 0.08600595884230877,
+          "limiter": "RightUpLeg",
+          "footPoint": {
+            "position": [
+              109.63267625650545,
+              11.704613209138255,
+              -15.109264265734312
+            ],
+            "floor": 11.618607250295947
+          },
+          "bodyPoint": {
+            "position": [
+              109.57948301357457,
+              11.677686254733368,
+              -15.420364526505583
+            ],
+            "floor": 11.61360987555514
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.2508259268754376,
+              "count": 67,
+              "position": [
+                109.58910041607633,
+                11.877577446305024,
+                -15.096073169164969
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.343964857774786,
+              "count": 18,
+              "position": [
+                109.9925565780737,
+                11.880264907127982,
+                -15.547749854970856
+              ]
+            },
+            "Head": {
+              "minimum": 0.3141410718532711,
+              "count": 643,
+              "position": [
+                109.06265016389086,
+                12.048334155527847,
+                -14.732161322810487
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.31499938629981905,
+              "count": 28,
+              "position": [
+                109.919000040035,
+                11.872247180735977,
+                -15.367783169316825
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.2441806700830078,
+              "count": 24,
+              "position": [
+                109.12142805363597,
+                11.929602924758637,
+                -15.561984500544556
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.1801612950154894,
+              "count": 31,
+              "position": [
+                109.74320325461542,
+                11.764138965569996,
+                -15.448747808121404
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.23473163582233703,
+              "count": 22,
+              "position": [
+                108.99215745062403,
+                11.94921644115819,
+                -15.415382881085362
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.31686910807503743,
+              "count": 23,
+              "position": [
+                110.14947608294513,
+                11.828808714861674,
+                -15.481309160193021
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6545547078541443,
+              "count": 21,
+              "position": [
+                109.5447484870005,
+                12.258230400279905,
+                -15.758961826009934
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6207026464672332,
+              "count": 22,
+              "position": [
+                109.93324161865972,
+                12.171730261527863,
+                -15.450032843860107
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.411252027250244,
+              "count": 20,
+              "position": [
+                109.4996745045401,
+                12.04801189565363,
+                -15.215863392318312
+              ]
+            },
+            "Spine": {
+              "minimum": 0.3140330041922823,
+              "count": 12,
+              "position": [
+                109.58316964235739,
+                11.919789767393862,
+                -15.578391218911998
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.08600595884230877,
+              "count": 21,
+              "position": [
+                109.63267625650545,
+                11.704613209138255,
+                -15.109264265734312
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6726008243032844,
+              "count": 11,
+              "position": [
+                109.90301265964527,
+                12.224095896619023,
+                -15.554386803679403
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.0640763791782284,
+              "count": 19,
+              "position": [
+                109.57948301357457,
+                11.677686254733368,
+                -15.420364526505583
+              ]
+            },
+            "Hips": {
+              "minimum": 0.17590437987569274,
+              "count": 23,
+              "position": [
+                109.30521264840603,
+                11.841554475285559,
+                -15.319553518140104
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.24225486215917336,
+              "count": 8,
+              "position": [
+                109.2029868871271,
+                11.919247742817475,
+                -15.44720177213818
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.37312877840566117,
+              "count": 22,
+              "position": [
+                109.89549881761815,
+                11.937546825411715,
+                -15.299826208246282
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.17124991247978016,
+              "count": 16,
+              "position": [
+                109.24034519178451,
+                11.84720833158854,
+                -15.335649018554987
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.5989101420098972,
+              "count": 7,
+              "position": [
+                109.3383324218678,
+                12.242602418784541,
+                -15.659658693677521
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.60620266734949,
+            12.042596355211472,
+            -15.373959752707576
+          ],
+          "groundGap": 0.431492346181237
+        },
+        "hands": [
+          {
+            "position": [
+              110.02292305667079,
+              12.27360348782594,
+              -15.665535542966447
+            ],
+            "target": [
+              110.05878607424133,
+              12.22849040646294,
+              -15.654133350554782
+            ],
+            "targetDistance": 0.05874824364286684,
+            "groundGap": 0.7479729375385595
+          },
+          {
+            "position": [
+              109.35592950183317,
+              11.858033139983386,
+              -15.393756249830833
+            ],
+            "target": [
+              109.45981628733585,
+              11.814170372744465,
+              -15.377532455131776
+            ],
+            "targetDistance": 0.11392812675706054,
+            "groundGap": 0.20460222495491642
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8304.019999980927,
+        "time": 8.330729999997857,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.41550500000000107,
+        "groundCorrection": 0,
+        "support": {
+          "minimum": 0.053034914062982,
+          "footMinimum": 0.053034914062982,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.60289599332243,
+              11.674145319896411,
+              -15.16733062123665
+            ],
+            "floor": 11.621110405833429
+          },
+          "bodyPoint": {
+            "position": [
+              109.60289599332243,
+              11.674145319896411,
+              -15.16733062123665
+            ],
+            "floor": 11.621110405833429
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.18568295244691058,
+              "count": 67,
+              "position": [
+                109.63647994622778,
+                11.801864992504171,
+                -15.147963109693785
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.2947834734523713,
+              "count": 18,
+              "position": [
+                109.92742434213652,
+                11.835450378135643,
+                -15.699009503673569
+              ]
+            },
+            "Head": {
+              "minimum": 0.2625885662640943,
+              "count": 643,
+              "position": [
+                109.91171595482747,
+                11.844858114632446,
+                -14.838771942055677
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.2784115655065573,
+              "count": 28,
+              "position": [
+                109.91218272011457,
+                11.841959536076963,
+                -15.255637381124867
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.3455056559833576,
+              "count": 24,
+              "position": [
+                109.09422567269756,
+                12.042631854128917,
+                -15.414731855575917
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.18945760060588235,
+              "count": 31,
+              "position": [
+                109.62282451092115,
+                11.797566987044133,
+                -15.376538842671035
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.3265795482803444,
+              "count": 22,
+              "position": [
+                109.28879390505163,
+                12.001086841753136,
+                -15.18851350369471
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.19559583737642683,
+              "count": 23,
+              "position": [
+                109.97739061842779,
+                11.731976788215496,
+                -15.603469268006272
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6676945012654141,
+              "count": 21,
+              "position": [
+                109.49896889194773,
+                12.28181748774238,
+                -15.704133179081829
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.5884826047108085,
+              "count": 22,
+              "position": [
+                109.9440254581499,
+                12.14138722149071,
+                -15.368042456053495
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.4183193956972868,
+              "count": 20,
+              "position": [
+                109.70141997324217,
+                12.018169561853272,
+                -15.259494731601258
+              ]
+            },
+            "Spine": {
+              "minimum": 0.3162696460455994,
+              "count": 12,
+              "position": [
+                109.57069127802035,
+                11.927922549958739,
+                -15.496554749859547
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.053034914062982,
+              "count": 21,
+              "position": [
+                109.60289599332243,
+                11.674145319896411,
+                -15.16733062123665
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6434368173172178,
+              "count": 11,
+              "position": [
+                109.89593636758063,
+                12.199864846515455,
+                -15.473168116171262
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.1205985206600495,
+              "count": 19,
+              "position": [
+                109.50497446057145,
+                11.747172595343335,
+                -15.418865583455387
+              ]
+            },
+            "Hips": {
+              "minimum": 0.19977514777052185,
+              "count": 23,
+              "position": [
+                109.30482890012578,
+                11.868229335181024,
+                -15.26030536115194
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.34031563765002026,
+              "count": 8,
+              "position": [
+                109.20517382489349,
+                12.024566257977632,
+                -15.287979828160868
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.30748010453580576,
+              "count": 22,
+              "position": [
+                109.83430365119075,
+                11.880267034113155,
+                -15.348507146209588
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.21296152476284114,
+              "count": 16,
+              "position": [
+                109.24634102477455,
+                11.891847860681187,
+                -15.253192130140262
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.6765657586021128,
+              "count": 7,
+              "position": [
+                109.34115502758551,
+                12.325931536778878,
+                -15.531225523961096
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.61410227370854,
+            12.02428552486331,
+            -15.372535895042438
+          ],
+          "groundGap": 0.41448375156245376
+        },
+        "hands": [
+          {
+            "position": [
+              110.00090489649838,
+              12.201342670193569,
+              -15.607758122379627
+            ],
+            "target": [
+              110.04014702638314,
+              12.126510616667051,
+              -15.583749104217123
+            ],
+            "targetDistance": 0.08784198282151295,
+            "groundGap": 0.6692287515629349
+          },
+          {
+            "position": [
+              109.34966610592153,
+              11.928573434261057,
+              -15.290492936843407
+            ],
+            "target": [
+              109.4942798427919,
+              11.821081143469595,
+              -15.32317533650195
+            ],
+            "targetDistance": 0.1831280009137036,
+            "groundGap": 0.2692578399157455
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8411.794999957085,
+        "time": 8.447299999997995,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.5320750000000007,
+        "groundCorrection": 0,
+        "support": {
+          "minimum": 0.016983547694419343,
+          "footMinimum": 0.016983547694419343,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.50085078134715,
+              11.65637905222138,
+              -15.15367758345901
+            ],
+            "floor": 11.639395504526961
+          },
+          "bodyPoint": {
+            "position": [
+              109.50085078134715,
+              11.65637905222138,
+              -15.15367758345901
+            ],
+            "floor": 11.639395504526961
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.11943017318000493,
+              "count": 67,
+              "position": [
+                109.617920119297,
+                11.736165281864295,
+                -15.206206451956266
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.3182910932377325,
+              "count": 18,
+              "position": [
+                109.75568252410935,
+                11.887218252418005,
+                -15.731083548702916
+              ]
+            },
+            "Head": {
+              "minimum": 0.07322491134658904,
+              "count": 643,
+              "position": [
+                110.03315911111204,
+                11.627573519212781,
+                -14.995392747156608
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.24615265001083486,
+              "count": 28,
+              "position": [
+                109.9532355839322,
+                11.806241405547768,
+                -15.175778679200096
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.36379544880698056,
+              "count": 24,
+              "position": [
+                109.50711929323663,
+                12.00773368149124,
+                -15.030418156963112
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.22071682669287895,
+              "count": 31,
+              "position": [
+                109.50060914356041,
+                11.849188825636508,
+                -15.393844594006014
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.4011260945437449,
+              "count": 22,
+              "position": [
+                109.40482492936026,
+                12.060680324284023,
+                -15.076169344014819
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.20287188093030828,
+              "count": 23,
+              "position": [
+                109.7012015809549,
+                11.78522653545526,
+                -15.643516338647226
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6139664785919798,
+              "count": 21,
+              "position": [
+                109.96332968750598,
+                12.16014181583969,
+                -15.442251073506457
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.559084366495135,
+              "count": 22,
+              "position": [
+                109.99424479108768,
+                12.106047937276584,
+                -15.307793422488857
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.3535046897945229,
+              "count": 20,
+              "position": [
+                109.7686481107097,
+                11.942156986941495,
+                -15.249905512637909
+              ]
+            },
+            "Spine": {
+              "minimum": 0.3494169367540376,
+              "count": 12,
+              "position": [
+                109.45296509564118,
+                11.983076279100315,
+                -15.460465921044865
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.016983547694419343,
+              "count": 21,
+              "position": [
+                109.50085078134715,
+                11.65637905222138,
+                -15.15367758345901
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6225737645964653,
+              "count": 11,
+              "position": [
+                109.93234154918088,
+                12.175707376263459,
+                -15.407318457415053
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.1665333517156089,
+              "count": 19,
+              "position": [
+                109.38205025185606,
+                11.824059203583243,
+                -15.20693028375449
+              ]
+            },
+            "Hips": {
+              "minimum": 0.22991749755584223,
+              "count": 23,
+              "position": [
+                109.44167470058983,
+                11.875757010701117,
+                -15.236863903219454
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.4124319957589737,
+              "count": 8,
+              "position": [
+                109.42226364018643,
+                12.065407544435644,
+                -15.154151329266131
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.22546299874081654,
+              "count": 22,
+              "position": [
+                109.92094194344843,
+                11.782228478676712,
+                -15.37098561829223
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.27086617221498344,
+              "count": 16,
+              "position": [
+                109.2939016783945,
+                11.943772168904983,
+                -15.204223124275233
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.7488904198653188,
+              "count": 7,
+              "position": [
+                109.42855920857684,
+                12.388735111337253,
+                -15.417883301200781
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.62182767063182,
+            12.006378501904846,
+            -15.371143437605259
+          ],
+          "groundGap": 0.3978502462249818
+        },
+        "hands": [
+          {
+            "position": [
+              109.99303166541809,
+              12.123657087104862,
+              -15.557152116434853
+            ],
+            "target": [
+              110.02191902407118,
+              12.026779779645922,
+              -15.514917036467175
+            ],
+            "targetDistance": 0.10956045897276324,
+            "groundGap": 0.5878685446617755
+          },
+          {
+            "position": [
+              109.4127739478899,
+              11.980794074681345,
+              -15.186454334120684
+            ],
+            "target": [
+              109.52798337600407,
+              11.827839511478176,
+              -15.270016951395847
+            ],
+            "targetDistance": 0.2089282693580303,
+            "groundGap": 0.3276509341254137
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8516.419999957085,
+        "time": 8.513664999998127,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.5984399999999988,
+        "groundCorrection": 0.04318251801569417,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.04079583746395521,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              109.45370694459548,
+              11.687365120489249,
+              -15.175268177131086
+            ],
+            "floor": 11.646569283025293
+          },
+          "bodyPoint": {
+            "position": [
+              110.01918067840327,
+              11.56166433096913,
+              -15.109648576763782
+            ],
+            "floor": 11.55166433096913
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.13840303649180008,
+              "count": 67,
+              "position": [
+                109.58631920067397,
+                11.759676349168755,
+                -15.226602127140204
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.37263288627917746,
+              "count": 18,
+              "position": [
+                109.64716619967939,
+                11.963166680726992,
+                -15.668166868728536
+              ]
+            },
+            "Head": {
+              "minimum": 0.009999999999999787,
+              "count": 643,
+              "position": [
+                110.01918067840327,
+                11.56166433096913,
+                -15.109648576763782
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.27494458895527885,
+              "count": 28,
+              "position": [
+                109.98253658259266,
+                11.831510574821321,
+                -15.14186112516464
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.40059526872671114,
+              "count": 24,
+              "position": [
+                109.55521894514463,
+                12.036496722516505,
+                -15.024106025970532
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2658949599433136,
+              "count": 31,
+              "position": [
+                109.55072994232965,
+                11.886075332420784,
+                -15.385452442700602
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.4665543840303581,
+              "count": 22,
+              "position": [
+                109.47945278943416,
+                12.114856579687373,
+                -15.039715489562472
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.25511191517629506,
+              "count": 23,
+              "position": [
+                109.77005284457131,
+                11.832971092366247,
+                -15.480975674214715
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.5895216812896233,
+              "count": 21,
+              "position": [
+                109.96634155765645,
+                12.132723964087173,
+                -15.495950663053314
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.5861904697160671,
+              "count": 22,
+              "position": [
+                110.10804070473209,
+                12.111828107418589,
+                -15.339788089309435
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.34873546732380944,
+              "count": 20,
+              "position": [
+                109.79308935112235,
+                11.93322681989327,
+                -15.248387966990682
+              ]
+            },
+            "Spine": {
+              "minimum": 0.38529823126297735,
+              "count": 12,
+              "position": [
+                109.61176605981561,
+                12.008457677720415,
+                -15.088826927950652
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.04079583746395521,
+              "count": 21,
+              "position": [
+                109.45370694459548,
+                11.687365120489249,
+                -15.175268177131086
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6560090644384715,
+              "count": 11,
+              "position": [
+                109.9680445064923,
+                12.20386612741644,
+                -15.387544233821362
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.2562968745630698,
+              "count": 19,
+              "position": [
+                109.33825650201878,
+                11.923879269677617,
+                -15.152681845842823
+              ]
+            },
+            "Hips": {
+              "minimum": 0.3086381793478594,
+              "count": 23,
+              "position": [
+                109.46536370117688,
+                11.95417274391358,
+                -15.153742386729736
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.47034318294275934,
+              "count": 8,
+              "position": [
+                109.58088153226257,
+                12.100872035689607,
+                -15.044496767235568
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.21892060068549313,
+              "count": 22,
+              "position": [
+                109.89016551552821,
+                11.779177431220297,
+                -15.411184405078643
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.3549718921502567,
+              "count": 16,
+              "position": [
+                109.30484078524974,
+                12.028014091261433,
+                -15.15977183194874
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.8176040681235079,
+              "count": 7,
+              "position": [
+                109.49562704022135,
+                12.447730563277474,
+                -15.376493386440899
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.62561194819415,
+            12.040789283547271,
+            -15.370461343793332
+          ],
+          "groundGap": 0.43288485913539354
+        },
+        "hands": [
+          {
+            "position": [
+              109.99124757650777,
+              12.127628033536206,
+              -15.536957321104852
+            ],
+            "target": [
+              110.01299005629899,
+              11.977926733963008,
+              -15.481199720432564
+            ],
+            "targetDistance": 0.1612207323953911,
+            "groundGap": 0.5906086696013197
+          },
+          {
+            "position": [
+              109.46166575847663,
+              12.035704536517759,
+              -15.146704176503976
+            ],
+            "target": [
+              109.54449301632064,
+              11.831150090943133,
+              -15.243977372328962
+            ],
+            "targetDistance": 0.241174108212942,
+            "groundGap": 0.38920859667120844
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8622.615000009537,
+        "time": 8.63026999999829,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.7150450000000018,
+        "groundCorrection": 0.16606980927288362,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.1424952799520014,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              109.3864957695875,
+              11.799403734145077,
+              -15.203600639532402
+            ],
+            "floor": 11.656908454193076
+          },
+          "bodyPoint": {
+            "position": [
+              109.9391727159303,
+              11.569571048715373,
+              -15.240427435260289
+            ],
+            "floor": 11.559571048715373
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.24484147738449558,
+              "count": 67,
+              "position": [
+                109.53639284907626,
+                11.87420232725483,
+                -15.238727210376583
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.49736918193908863,
+              "count": 18,
+              "position": [
+                109.55749644459048,
+                12.106739082285431,
+                -15.594725024504898
+              ]
+            },
+            "Head": {
+              "minimum": 0.009999999999999787,
+              "count": 643,
+              "position": [
+                109.9391727159303,
+                11.569571048715373,
+                -15.240427435260289
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.37768492645491847,
+              "count": 28,
+              "position": [
+                110.03119475921739,
+                11.926838453294303,
+                -15.118684927760114
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.5104110016713648,
+              "count": 24,
+              "position": [
+                109.60748458964846,
+                12.137264547446257,
+                -15.024147543137019
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.381752400047322,
+              "count": 31,
+              "position": [
+                109.47711960530307,
+                12.013215706280679,
+                -15.417372278311177
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.5859712216061368,
+              "count": 22,
+              "position": [
+                109.75291488350564,
+                12.179345980993872,
+                -15.206114004350619
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.34229059174646004,
+              "count": 23,
+              "position": [
+                109.72938096701161,
+                11.926315760288327,
+                -15.500105225638066
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6278438460905438,
+              "count": 21,
+              "position": [
+                109.94345969390267,
+                12.172097215617708,
+                -15.559670255567479
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6631012359718138,
+              "count": 22,
+              "position": [
+                110.15226064528639,
+                12.180213332201099,
+                -15.357367704813436
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.4021985668769634,
+              "count": 20,
+              "position": [
+                109.80830456933117,
+                11.984026659288546,
+                -15.24904168060307
+              ]
+            },
+            "Spine": {
+              "minimum": 0.4903730515496978,
+              "count": 12,
+              "position": [
+                109.64443811113136,
+                12.107429297446824,
+                -15.098647970062594
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.1424952799520014,
+              "count": 21,
+              "position": [
+                109.3864957695875,
+                11.799403734145077,
+                -15.203600639532402
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7394538891602451,
+              "count": 11,
+              "position": [
+                110.02386411922001,
+                12.272045292911075,
+                -15.509476380189845
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.42494648480463937,
+              "count": 19,
+              "position": [
+                109.37198087923278,
+                12.089283487705858,
+                -15.095920848815355
+              ]
+            },
+            "Hips": {
+              "minimum": 0.4821382809283019,
+              "count": 23,
+              "position": [
+                109.63504566514949,
+                12.095291841745528,
+                -15.219731172767487
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.5896301138383606,
+              "count": 8,
+              "position": [
+                109.67322370425937,
+                12.204297282439965,
+                -15.04185363742117
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.2541743858911758,
+              "count": 22,
+              "position": [
+                109.97448645803047,
+                11.795014204167508,
+                -15.516818497920994
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.5033093647969817,
+              "count": 16,
+              "position": [
+                109.51559359613191,
+                12.144211632173915,
+                -15.064788572463875
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.9525103160103434,
+              "count": 7,
+              "position": [
+                109.62422082741847,
+                12.560439439944437,
+                -15.375193846675668
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63025626640032,
+            12.152911313993881,
+            -15.369624232704922
+          ],
+          "groundGap": 0.5457724969846769
+        },
+        "hands": [
+          {
+            "position": [
+              109.98921913693096,
+              12.202575421666303,
+              -15.51896051787509
+            ],
+            "target": [
+              110.00203183061295,
+              11.917971013021551,
+              -15.439819577950004
+            ],
+            "targetDistance": 0.29568077873213783,
+            "groundGap": 0.6643832985429832
+          },
+          {
+            "position": [
+              109.52844782801608,
+              12.158430507486644,
+              -15.11186524728155
+            ],
+            "target": [
+              109.56475474972595,
+              11.835213055202184,
+              -15.212019861509667
+            ],
+            "targetDistance": 0.3403214080490479,
+            "groundGap": 0.5219024038975739
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8726.414999961853,
+        "time": 8.74659999999858,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.831375,
+        "groundCorrection": 0.18962793488126195,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.16164592829458968,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              109.36898292343041,
+              11.82127690157379,
+              -15.210358895951908
+            ],
+            "floor": 11.659630973279201
+          },
+          "bodyPoint": {
+            "position": [
+              109.91309811867005,
+              11.572862487663661,
+              -15.267180996321153
+            ],
+            "floor": 11.562862487663661
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.2685977192631377,
+              "count": 67,
+              "position": [
+                109.52473411049309,
+                11.899982478395824,
+                -15.238594859941314
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.5187522189064637,
+              "count": 18,
+              "position": [
+                109.53998013464157,
+                12.131715832673938,
+                -15.582168413078739
+              ]
+            },
+            "Head": {
+              "minimum": 0.009999999999999787,
+              "count": 643,
+              "position": [
+                109.91309811867005,
+                11.572862487663661,
+                -15.267180996321153
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.3966236584531373,
+              "count": 28,
+              "position": [
+                110.0437530949246,
+                11.943614352325266,
+                -15.118017989541055
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.5321451179605354,
+              "count": 24,
+              "position": [
+                109.61923206748476,
+                12.156931618404066,
+                -15.024888282973155
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.4006054935613026,
+              "count": 31,
+              "position": [
+                109.50116647489583,
+                12.030188962540949,
+                -15.367387990810931
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.5998178572344255,
+              "count": 22,
+              "position": [
+                109.76445045105007,
+                12.191000132317008,
+                -15.210405471718085
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.35678480172380667,
+              "count": 23,
+              "position": [
+                109.72139390852944,
+                11.941975466930316,
+                -15.5048555120508
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6335801751074115,
+              "count": 21,
+              "position": [
+                109.93422856497921,
+                12.178791741844002,
+                -15.573676939003025
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6743923089434816,
+              "count": 22,
+              "position": [
+                110.16154262546513,
+                12.18946762956407,
+                -15.366472530369135
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.4091363084677351,
+              "count": 20,
+              "position": [
+                109.80849115427029,
+                11.990945820378522,
+                -15.248741329176323
+              ]
+            },
+            "Spine": {
+              "minimum": 0.5112716621411817,
+              "count": 12,
+              "position": [
+                109.65150939491903,
+                12.126994498901551,
+                -15.101046902653614
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.16164592829458968,
+              "count": 21,
+              "position": [
+                109.36898292343041,
+                11.82127690157379,
+                -15.210358895951908
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.752017007196919,
+              "count": 11,
+              "position": [
+                110.02842224651911,
+                12.283668980722478,
+                -15.512616399295027
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.46170429003366564,
+              "count": 19,
+              "position": [
+                109.37716088282818,
+                12.125815145720557,
+                -15.081237579726015
+              ]
+            },
+            "Hips": {
+              "minimum": 0.5101762784120201,
+              "count": 23,
+              "position": [
+                109.64430541478399,
+                12.121674912266062,
+                -15.22087604839225
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.6110450846867526,
+              "count": 8,
+              "position": [
+                109.6937002294066,
+                12.222065255727463,
+                -15.044108920572635
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.2569477690468247,
+              "count": 22,
+              "position": [
+                109.95762235657728,
+                11.799975453720737,
+                -15.53282766098701
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.5246402691206526,
+              "count": 16,
+              "position": [
+                109.67552500807457,
+                12.13752007467869,
+                -15.072277363228123
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.9768596859778551,
+              "count": 7,
+              "position": [
+                109.64537703636319,
+                12.581251584093737,
+                -15.372468309383285
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.175188934221914,
+            -15.369424033250345
+          ],
+          "groundGap": 0.5682332161903307
+        },
+        "hands": [
+          {
+            "position": [
+              109.98823386973582,
+              12.216365311855151,
+              -15.517009715280807
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 0.32482443874044564,
+            "groundGap": 0.6779135930709614
+          },
+          {
+            "position": [
+              109.5440702928932,
+              12.180989529112553,
+              -15.105351386254323
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.3596501341058613,
+            "groundGap": 0.5468679203325042
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8836.284999966621,
+        "time": 8.846334999998817,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.9311100000000004,
+        "groundCorrection": 0.14902458736853497,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.12104258596632356,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              109.36898292365905,
+              11.780673559287317,
+              -15.210358894169811
+            ],
+            "floor": 11.659630973320994
+          },
+          "bodyPoint": {
+            "position": [
+              109.94312154456638,
+              11.568367820249925,
+              -15.251811748857024
+            ],
+            "floor": 11.558367820249924
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.24990093700354876,
+              "count": 67,
+              "position": [
+                109.54090192996254,
+                11.87886528710057,
+                -15.230318415433366
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.47180006835535515,
+              "count": 18,
+              "position": [
+                109.53009260399125,
+                12.086035523496012,
+                -15.590869052641695
+              ]
+            },
+            "Head": {
+              "minimum": 0.010000000000001563,
+              "count": 643,
+              "position": [
+                109.94312154456638,
+                11.568367820249925,
+                -15.251811748857024
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.37664090348575563,
+              "count": 28,
+              "position": [
+                110.03207465963001,
+                11.925105949200201,
+                -15.130398520791854
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.5186695240891588,
+              "count": 24,
+              "position": [
+                109.62572951275098,
+                12.142483322229486,
+                -15.021562185400809
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.36023906018410123,
+              "count": 31,
+              "position": [
+                109.50094105127543,
+                11.989924355644284,
+                -15.366012285618403
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.5779338101530698,
+              "count": 22,
+              "position": [
+                109.75635676859108,
+                12.170702638788587,
+                -15.206337792848206
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.31452857528982037,
+              "count": 23,
+              "position": [
+                109.72258400333473,
+                11.899471206991597,
+                -15.505776612046217
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.621882922145808,
+              "count": 21,
+              "position": [
+                109.93950873985223,
+                12.166304018467084,
+                -15.570973972505238
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.656725982088938,
+              "count": 22,
+              "position": [
+                110.14896279368514,
+                12.173559057871955,
+                -15.376093872182826
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.38522405122340686,
+              "count": 20,
+              "position": [
+                109.8010422276338,
+                11.968594482119897,
+                -15.242790958741317
+              ]
+            },
+            "Spine": {
+              "minimum": 0.4953356061395642,
+              "count": 12,
+              "position": [
+                109.6594626141714,
+                12.109867803446061,
+                -15.096975581973977
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.12104258596632356,
+              "count": 21,
+              "position": [
+                109.36898292365905,
+                11.780673559287317,
+                -15.210358894169811
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7331345619008278,
+              "count": 11,
+              "position": [
+                110.01675521065296,
+                12.266291220658857,
+                -15.524288951332515
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.4346156299421846,
+              "count": 19,
+              "position": [
+                109.3761356265718,
+                12.099002674829865,
+                -15.079074929896127
+              ]
+            },
+            "Hips": {
+              "minimum": 0.4872566566937788,
+              "count": 23,
+              "position": [
+                109.64613158784992,
+                12.098458164553445,
+                -15.220461136693505
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.5938516509208878,
+              "count": 8,
+              "position": [
+                109.68648930939165,
+                12.206234772619961,
+                -15.04159229283946
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.21634441875630728,
+              "count": 22,
+              "position": [
+                109.9576223582252,
+                11.759372103172524,
+                -15.5328276603842
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.5110013090724284,
+              "count": 16,
+              "position": [
+                109.53209720114141,
+                12.149329584794003,
+                -15.05860305525534
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.9551776043772051,
+              "count": 7,
+              "position": [
+                109.63190496722626,
+                12.56158634328765,
+                -15.379364776337
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.152608172145529,
+            -15.369424033250345
+          ],
+          "groundGap": 0.5456524541139451
+        },
+        "hands": [
+          {
+            "position": [
+              109.97997697771042,
+              12.197488333144415,
+              -15.531539272644864
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 0.311536296706585,
+            "groundGap": 0.6582709086415957
+          },
+          {
+            "position": [
+              109.53674450024295,
+              12.159839197752671,
+              -15.099895650459423
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.3416841955355936,
+            "groundGap": 0.5242005653021327
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 8943.705000042915,
+        "time": 8.962774999999056,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.047549999999999,
+        "groundCorrection": 0.04524202934815591,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.017260019933200255,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              109.36898291716477,
+              11.67689099386253,
+              -15.210358905464368
+            ],
+            "floor": 11.65963097392933
+          },
+          "bodyPoint": {
+            "position": [
+              110.01187882236172,
+              11.558055838123947,
+              -15.216614312741756
+            ],
+            "floor": 11.548055838123947
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.20239414434058922,
+              "count": 67,
+              "position": [
+                109.5793999834251,
+                11.825595129955307,
+                -15.210610933970806
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.3498724572764864,
+              "count": 18,
+              "position": [
+                109.50492104682368,
+                11.967276067134296,
+                -15.614472946288839
+              ]
+            },
+            "Head": {
+              "minimum": 0.009999999999999787,
+              "count": 643,
+              "position": [
+                110.01187882236172,
+                11.558055838123947,
+                -15.216614312741756
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.2753669801645735,
+              "count": 28,
+              "position": [
+                109.85995248833348,
+                11.843179840600701,
+                -15.360221205320153
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.48133123330283034,
+              "count": 24,
+              "position": [
+                109.63985924556373,
+                12.10302973487765,
+                -15.014329054845803
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.25722835149676193,
+              "count": 31,
+              "position": [
+                109.50058759511474,
+                11.887079285666243,
+                -15.363724287059274
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.47787890888693774,
+              "count": 22,
+              "position": [
+                109.67866078675127,
+                12.085169523323977,
+                -15.182806914505875
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.20652244220729443,
+              "count": 23,
+              "position": [
+                109.72659636212688,
+                11.790648071892768,
+                -15.508460807759093
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.5884823569199344,
+              "count": 21,
+              "position": [
+                109.95037170033463,
+                12.131277209964317,
+                -15.56541313051246
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.530961281229354,
+              "count": 22,
+              "position": [
+                110.02391324317549,
+                12.06567180393987,
+                -15.462874676592046
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.28639207613967166,
+              "count": 20,
+              "position": [
+                109.71096888412323,
+                11.885809543976299,
+                -15.232773707760584
+              ]
+            },
+            "Spine": {
+              "minimum": 0.45249701547864873,
+              "count": 12,
+              "position": [
+                109.67755853108396,
+                12.064320157250007,
+                -15.087712127989395
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.017260019933200255,
+              "count": 21,
+              "position": [
+                109.36898291716477,
+                11.67689099386253,
+                -15.210358905464368
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6227046896546877,
+              "count": 11,
+              "position": [
+                110.02617221277448,
+                12.151287867184394,
+                -15.58843723591061
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.3626739014753273,
+              "count": 19,
+              "position": [
+                109.37623539492738,
+                12.027243830783007,
+                -15.07469111848403
+              ]
+            },
+            "Hips": {
+              "minimum": 0.42508689852618886,
+              "count": 23,
+              "position": [
+                109.65144403291264,
+                12.035416833571691,
+                -15.219412177182914
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.5109419222262694,
+              "count": 8,
+              "position": [
+                109.61949821853639,
+                12.135689859197942,
+                -15.024723986177928
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.1125618473543728,
+              "count": 22,
+              "position": [
+                109.95762235199581,
+                11.655589534575965,
+                -15.532827622554192
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.45888988525036467,
+              "count": 16,
+              "position": [
+                109.54457408023363,
+                12.095350305447887,
+                -15.052216034588858
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.8938231651205211,
+              "count": 7,
+              "position": [
+                109.59909052741503,
+                12.505144401154476,
+                -15.396162767573923
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.09220070761557,
+            -15.369424033250345
+          ],
+          "groundGap": 0.4852449895839861
+        },
+        "hands": [
+          {
+            "position": [
+              109.85948541219241,
+              12.112927015418338,
+              -15.628387663808834
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 0.32058007765035745,
+            "groundGap": 0.5572770156500795
+          },
+          {
+            "position": [
+              109.46837582388761,
+              12.097398166417648,
+              -15.082535949536028
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.30548999539899946,
+            "groundGap": 0.44913385386465343
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9055.924999952316,
+        "time": 9.079019999999673,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.1637949999999981,
+        "groundCorrection": 0.037981998891764235,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.3689829183822,
+              11.669630973725653,
+              -15.210358905310377
+            ],
+            "floor": 11.659630973725651
+          },
+          "bodyPoint": {
+            "position": [
+              109.3689829183822,
+              11.669630973725653,
+              -15.210358905310377
+            ],
+            "floor": 11.659630973725651
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.28223866929715413,
+              "count": 67,
+              "position": [
+                109.63158990936815,
+                11.897626543893688,
+                -15.183894466467587
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.32998169228404706,
+              "count": 18,
+              "position": [
+                109.47969964940559,
+                11.950123957778079,
+                -15.647215689478756
+              ]
+            },
+            "Head": {
+              "minimum": 0.1614800474121445,
+              "count": 643,
+              "position": [
+                110.09853178974372,
+                11.696427426363202,
+                -15.172255920911283
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.30088666803557373,
+              "count": 28,
+              "position": [
+                109.66991516778786,
+                11.899490493024684,
+                -15.406221490787514
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.5695284913547365,
+              "count": 24,
+              "position": [
+                109.6557949500849,
+                12.18884133273902,
+                -15.006171432042889
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2513540809859123,
+              "count": 31,
+              "position": [
+                109.50062369393646,
+                11.881246725163663,
+                -15.362673893745738
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.4688158298796825,
+              "count": 22,
+              "position": [
+                109.55747592385812,
+                12.099855222327253,
+                -15.122041057035942
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.19371814620317096,
+              "count": 23,
+              "position": [
+                109.59301575618989,
+                11.79936357969637,
+                -15.54350480922999
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.6813056918964158,
+              "count": 21,
+              "position": [
+                109.96099517037791,
+                12.222510154661283,
+                -15.559974885761214
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.515284435399348,
+              "count": 22,
+              "position": [
+                109.82031139582469,
+                12.076218128937832,
+                -15.661163536285837
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.2843505026542861,
+              "count": 20,
+              "position": [
+                109.5880932795668,
+                11.905333534168625,
+                -15.226234776568846
+              ]
+            },
+            "Spine": {
+              "minimum": 0.5340978357866177,
+              "count": 12,
+              "position": [
+                109.70007015078188,
+                12.142550867699136,
+                -15.07618823819537
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.010000000000001563,
+              "count": 21,
+              "position": [
+                109.3689829183822,
+                11.669630973725653,
+                -15.210358905310377
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6050197090976734,
+              "count": 11,
+              "position": [
+                109.83962967732205,
+                12.158139878530351,
+                -15.759066444771637
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.39441379663648135,
+              "count": 19,
+              "position": [
+                109.46380122976257,
+                12.039127080861821,
+                -15.177653438923214
+              ]
+            },
+            "Hips": {
+              "minimum": 0.47479607089361764,
+              "count": 23,
+              "position": [
+                109.66016864500898,
+                12.083651050505061,
+                -15.218643851593862
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.5281424949908082,
+              "count": 8,
+              "position": [
+                109.51454035352728,
+                12.173252411344022,
+                -14.976055090984364
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.1116260386243404,
+              "count": 22,
+              "position": [
+                109.95347249182022,
+                11.65519107154858,
+                -15.53678981406798
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.5265945766824842,
+              "count": 16,
+              "position": [
+                109.56076582172142,
+                12.160631006587458,
+                -15.043927344257494
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.9387248082326831,
+              "count": 7,
+              "position": [
+                109.55284109445631,
+                12.5569698317151,
+                -15.419838246156024
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.14579288733396,
+            -15.369424033250345
+          ],
+          "groundGap": 0.5388371693023757
+        },
+        "hands": [
+          {
+            "position": [
+              109.67007907078559,
+              12.180408243163413,
+              -15.814412071238133
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 0.5769715204732639,
+            "groundGap": 0.6007974323901362
+          },
+          {
+            "position": [
+              109.36328965563627,
+              12.152133430418072,
+              -15.043623344111534
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.4101578697204085,
+            "groundGap": 0.4839044193054214
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9157.789999961853,
+        "time": 9.178669999999784,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.2634449999999995,
+        "groundCorrection": 0.03798199404253033,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.36898292051987,
+              11.669630973277647,
+              -15.210358907019312
+            ],
+            "floor": 11.659630973277645
+          },
+          "bodyPoint": {
+            "position": [
+              109.36898292051987,
+              11.669630973277647,
+              -15.210358907019312
+            ],
+            "floor": 11.659630973277645
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.3784393985133878,
+              "count": 67,
+              "position": [
+                109.68048916282677,
+                11.98650679335528,
+                -15.158862522349233
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.3508426518138048,
+              "count": 18,
+              "position": [
+                109.48227977444405,
+                11.96966394634897,
+                -15.665581970897945
+              ]
+            },
+            "Head": {
+              "minimum": 0.3298820411108103,
+              "count": 643,
+              "position": [
+                110.13239606989981,
+                11.859185522739027,
+                -15.166333104778785
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.3737639640474715,
+              "count": 28,
+              "position": [
+                109.484259870463,
+                11.99538312169645,
+                -15.60014970721611
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.6669795412158681,
+              "count": 24,
+              "position": [
+                109.66682889827257,
+                12.284640541543936,
+                -15.000523060106623
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2520894068324555,
+              "count": 31,
+              "position": [
+                109.45940497142776,
+                11.886471601137869,
+                -15.420594522278682
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.4904463164452917,
+              "count": 22,
+              "position": [
+                109.47381541912159,
+                12.139405556702172,
+                -15.046694863746787
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.20657634451601226,
+              "count": 23,
+              "position": [
+                109.59224003402485,
+                11.811323258069278,
+                -15.56612517316568
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.7620164090100694,
+              "count": 21,
+              "position": [
+                109.94437960777081,
+                12.303872024988705,
+                -15.608699593322683
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.5628395986194086,
+              "count": 22,
+              "position": [
+                109.6992444935217,
+                12.1357266712345,
+                -15.850760019627634
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.31542783886859915,
+              "count": 20,
+              "position": [
+                109.4781210329235,
+                11.957513232550186,
+                -15.180926825987687
+              ]
+            },
+            "Spine": {
+              "minimum": 0.5712964271923635,
+              "count": 12,
+              "position": [
+                109.48235306820766,
+                12.20110323093258,
+                -15.433814570634294
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.010000000000001563,
+              "count": 21,
+              "position": [
+                109.36898292051987,
+                11.669630973277647,
+                -15.210358907019312
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.6603485057906298,
+              "count": 11,
+              "position": [
+                109.69911175617543,
+                12.229757135096035,
+                -15.923808616264772
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.41030672083696373,
+              "count": 19,
+              "position": [
+                109.44333459545877,
+                12.055756584409133,
+                -15.239105810012509
+              ]
+            },
+            "Hips": {
+              "minimum": 0.5320087610628637,
+              "count": 23,
+              "position": [
+                109.6697009244646,
+                12.13917597452774,
+                -15.219474874022076
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.5735739801116946,
+              "count": 8,
+              "position": [
+                109.43971834519965,
+                12.234328092922317,
+                -14.915610926283094
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.12232345847815296,
+              "count": 22,
+              "position": [
+                109.94716644332965,
+                11.66670359033782,
+                -15.542842254097401
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.6042818384646296,
+              "count": 16,
+              "position": [
+                109.57506198499632,
+                12.236178056270985,
+                -15.036609016594813
+              ]
+            },
+            "Spine2": {
+              "minimum": 0.9808781941221305,
+              "count": 7,
+              "position": [
+                109.47241542576569,
+                12.613391395042768,
+                -15.412209738359637
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.206788164063203,
+            -15.369424033250345
+          ],
+          "groundGap": 0.5998324460316198
+        },
+        "hands": [
+          {
+            "position": [
+              109.5361739696173,
+              12.302574202711938,
+              -15.967649255548068
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 0.8141821056112787,
+            "groundGap": 0.7074360228862098
+          },
+          {
+            "position": [
+              109.29073458886285,
+              12.216628992267873,
+              -14.996177797621629
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.5156073435819798,
+            "groundGap": 0.5336802416860742
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9269.019999980927,
+        "time": 9.295165000000452,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.3799399999999984,
+        "groundCorrection": 0.037981999085433316,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.36898292385872,
+              11.669630972644715,
+              -15.210358908225054
+            ],
+            "floor": 11.659630972644713
+          },
+          "bodyPoint": {
+            "position": [
+              109.36898292385872,
+              11.669630972644715,
+              -15.210358908225054
+            ],
+            "floor": 11.659630972644713
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.5086402101953258,
+              "count": 67,
+              "position": [
+                109.73439582208402,
+                12.108637489846986,
+                -15.131267244751877
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.3812904261806054,
+              "count": 18,
+              "position": [
+                109.49115261955683,
+                11.997637115391221,
+                -15.685592350636348
+              ]
+            },
+            "Head": {
+              "minimum": 0.5464917895864794,
+              "count": 643,
+              "position": [
+                110.20193444927924,
+                12.065120601530502,
+                -15.130735816917875
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.42697776422455824,
+              "count": 28,
+              "position": [
+                109.4363969257789,
+                12.050187681664706,
+                -15.737531693584819
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.7884728643033618,
+              "count": 24,
+              "position": [
+                109.21092163860388,
+                12.477606823424223,
+                -15.16335376719748
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2542607410764415,
+              "count": 31,
+              "position": [
+                109.45823694955577,
+                11.88869874008365,
+                -15.423800020317241
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.5515754527685051,
+              "count": 22,
+              "position": [
+                109.43631477653304,
+                12.211032049345889,
+                -14.95793687100036
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.2256640160855934,
+              "count": 23,
+              "position": [
+                109.59538107529538,
+                11.828684960479022,
+                -15.592020935991073
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.8427283316620713,
+              "count": 21,
+              "position": [
+                109.86971117947192,
+                12.395642110096123,
+                -15.649553488672993
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6303522116969766,
+              "count": 22,
+              "position": [
+                109.59651039028873,
+                12.213446985836615,
+                -16.003799881625635
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.37503973727991813,
+              "count": 20,
+              "position": [
+                109.43121761223821,
+                12.028913945314276,
+                -15.100525678024304
+              ]
+            },
+            "Spine": {
+              "minimum": 0.6038455376087128,
+              "count": 12,
+              "position": [
+                109.49952776962297,
+                12.230752314213746,
+                -15.43222601101189
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.010000000000001563,
+              "count": 21,
+              "position": [
+                109.36898292385872,
+                11.669630972644715,
+                -15.210358908225054
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7414078625495417,
+              "count": 11,
+              "position": [
+                109.60499287820905,
+                12.320475983947981,
+                -16.056166959501102
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.42013912359642447,
+              "count": 19,
+              "position": [
+                109.43558053972825,
+                12.066995515626612,
+                -15.237693650918832
+              ]
+            },
+            "Hips": {
+              "minimum": 0.5860665575649708,
+              "count": 23,
+              "position": [
+                109.53246000086725,
+                12.212778506424659,
+                -15.311653204803559
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.6356580945891803,
+              "count": 8,
+              "position": [
+                109.32883073424807,
+                12.31337612186121,
+                -14.965601804282764
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.13434601420481052,
+              "count": 22,
+              "position": [
+                109.94174143458343,
+                11.679414381045463,
+                -15.548333460580816
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.7034723040904467,
+              "count": 16,
+              "position": [
+                109.58952330073629,
+                12.33320358558792,
+                -15.02920614604529
+              ]
+            },
+            "Spine2": {
+              "minimum": 1.0206974144578993,
+              "count": 7,
+              "position": [
+                109.4183980118391,
+                12.66124855658241,
+                -15.43986171229306
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.282425671522565,
+            -15.369424033250345
+          ],
+          "groundGap": 0.6754699534909818
+        },
+        "hands": [
+          {
+            "position": [
+              109.44650131177562,
+              12.418381066861775,
+              -16.081328325715315
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 0.9974988999793779,
+            "groundGap": 0.8134801959252016
+          },
+          {
+            "position": [
+              109.2535314180932,
+              12.289641593689348,
+              -14.93582145251779
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.6145281670463568,
+            "groundGap": 0.5975635392663836
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9373.985000014305,
+        "time": 9.37831000000051,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.4630849999999989,
+        "groundCorrection": 0.03798200306104782,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.36898292862607,
+              11.669630971934215,
+              -15.21035890571457
+            ],
+            "floor": 11.659630971934213
+          },
+          "bodyPoint": {
+            "position": [
+              109.36898292862607,
+              11.669630971934215,
+              -15.21035890571457
+            ],
+            "floor": 11.659630971934213
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.6064546307413909,
+              "count": 67,
+              "position": [
+                109.76675354328249,
+                12.201607786470545,
+                -15.114703052051684
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.4066609155467962,
+              "count": 18,
+              "position": [
+                109.5008220519548,
+                12.020767450267584,
+                -15.697872211391832
+              ]
+            },
+            "Head": {
+              "minimum": 0.7050620326071222,
+              "count": 643,
+              "position": [
+                110.23600998210146,
+                12.218423734881968,
+                -15.113292262188812
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.43332201280157534,
+              "count": 28,
+              "position": [
+                109.42778444436996,
+                12.055460516606447,
+                -15.790578915282135
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.8186351094055571,
+              "count": 24,
+              "position": [
+                109.20276246805113,
+                12.509294632353738,
+                -15.160870163051719
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2570677957814418,
+              "count": 31,
+              "position": [
+                109.45648376972916,
+                11.891644582195639,
+                -15.427406223469696
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.6152579194327252,
+              "count": 22,
+              "position": [
+                109.44967213822187,
+                12.274368157832754,
+                -14.913840704793337
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.23677753676871482,
+              "count": 23,
+              "position": [
+                109.72052603795167,
+                11.820212779824589,
+                -15.546593409953164
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.9028393113473534,
+              "count": 21,
+              "position": [
+                109.86730324787298,
+                12.456035025489404,
+                -15.65250644319595
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6557065117189982,
+              "count": 22,
+              "position": [
+                109.58995323402311,
+                12.237891804419133,
+                -16.04502824289475
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.42504245470409785,
+              "count": 20,
+              "position": [
+                109.45725326602796,
+                12.077254801465095,
+                -15.038228079758605
+              ]
+            },
+            "Spine": {
+              "minimum": 0.6281043493683178,
+              "count": 12,
+              "position": [
+                109.51402900485347,
+                12.252619219070802,
+                -15.429643014150065
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.010000000000001563,
+              "count": 21,
+              "position": [
+                109.36898292862607,
+                11.669630971934215,
+                -15.21035890571457
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7703114846024643,
+              "count": 11,
+              "position": [
+                109.59356607152097,
+                12.349467363860404,
+                -16.094033781188813
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.4278308372925448,
+              "count": 19,
+              "position": [
+                109.42873228133011,
+                12.075967419473866,
+                -15.235614893895029
+              ]
+            },
+            "Hips": {
+              "minimum": 0.6185151291339164,
+              "count": 23,
+              "position": [
+                109.54719345933509,
+                12.242597525663681,
+                -15.31339489816406
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.6856369546207208,
+              "count": 8,
+              "position": [
+                109.33196796638568,
+                12.364262100724869,
+                -14.933068637732635
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.14316201513984694,
+              "count": 22,
+              "position": [
+                109.93902891005425,
+                11.688558209448399,
+                -15.551435930847743
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.7747407063131941,
+              "count": 16,
+              "position": [
+                109.59723197702112,
+                12.40331795774052,
+                -15.025260009131076
+              ]
+            },
+            "Spine2": {
+              "minimum": 1.042213057954184,
+              "count": 7,
+              "position": [
+                109.38392368187846,
+                12.68780679705009,
+                -15.45750941511231
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.335701720170652,
+            -15.369424033250345
+          ],
+          "groundGap": 0.7287460021390686
+        },
+        "hands": [
+          {
+            "position": [
+              109.42905153529404,
+              12.438913663598242,
+              -16.12152368016572
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 1.0441011822540816,
+            "groundGap": 0.8330108977621471
+          },
+          {
+            "position": [
+              109.25866000838562,
+              12.336564159198184,
+              -14.899180223456986
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.6634822028358087,
+            "groundGap": 0.6437405364381377
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9487.090000033379,
+        "time": 9.511340000000473,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.5961150000000013,
+        "groundCorrection": 0.0379820268988631,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.36898293157431,
+              11.669630971605908,
+              -15.21035890172898
+            ],
+            "floor": 11.659630971605909
+          },
+          "bodyPoint": {
+            "position": [
+              109.36898293157431,
+              11.669630971605908,
+              -15.21035890172898
+            ],
+            "floor": 11.659630971605909
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.7360843913555115,
+              "count": 67,
+              "position": [
+                109.7358757628637,
+                12.331616269229574,
+                -15.223460085913333
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.45048046580902934,
+              "count": 18,
+              "position": [
+                109.51930533712978,
+                12.060706814767055,
+                -15.7129598190491
+              ]
+            },
+            "Head": {
+              "minimum": 0.9384122142894409,
+              "count": 643,
+              "position": [
+                110.26190695777755,
+                12.447770979536346,
+                -15.100035381080238
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.4313645496669718,
+              "count": 28,
+              "position": [
+                109.4356739392286,
+                12.050819938380172,
+                -15.818444148777674
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.8629267470341233,
+              "count": 24,
+              "position": [
+                109.26340497962849,
+                12.535735360517448,
+                -15.319188128224726
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2632875525681513,
+              "count": 31,
+              "position": [
+                109.451267613008,
+                11.898454680157032,
+                -15.434249819990134
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.7270585373987792,
+              "count": 22,
+              "position": [
+                109.49407469239713,
+                12.379923962052487,
+                -14.88152806506195
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.2553337137770928,
+              "count": 23,
+              "position": [
+                109.72035620218627,
+                11.838361420784935,
+                -15.55616324414652
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 0.9568587853960011,
+              "count": 21,
+              "position": [
+                109.44690902059203,
+                12.575101713845783,
+                -15.803702207796267
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.6824675532475233,
+              "count": 22,
+              "position": [
+                109.62203618883812,
+                12.25998708830462,
+                -16.028487865273867
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.5222031748106932,
+              "count": 20,
+              "position": [
+                109.5402772830525,
+                12.163616727420843,
+                -14.95904656664697
+              ]
+            },
+            "Spine": {
+              "minimum": 0.6665523362337691,
+              "count": 12,
+              "position": [
+                109.5371103147127,
+                12.287312916906158,
+                -15.42437398075316
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.009999999999999787,
+              "count": 21,
+              "position": [
+                109.36898293157431,
+                11.669630971605908,
+                -15.21035890172898
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7679361052967106,
+              "count": 11,
+              "position": [
+                109.50552395757536,
+                12.367100309862257,
+                -15.992878141288598
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.44122566697398824,
+              "count": 19,
+              "position": [
+                109.41348381457759,
+                12.092164769206391,
+                -15.232037093256185
+              ]
+            },
+            "Hips": {
+              "minimum": 0.6650313382957176,
+              "count": 23,
+              "position": [
+                109.56896930322546,
+                12.285251365115403,
+                -15.315441871424046
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.7661114414721606,
+              "count": 8,
+              "position": [
+                109.3599161917526,
+                12.440897052105894,
+                -14.91068570234563
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.15879240190251842,
+              "count": 22,
+              "position": [
+                109.93606998625363,
+                11.704509123852164,
+                -15.555632338948728
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.8791489380073596,
+              "count": 16,
+              "position": [
+                109.6044007310853,
+                12.506652988604039,
+                -15.021590263094678
+              ]
+            },
+            "Spine2": {
+              "minimum": 1.0651683249175719,
+              "count": 7,
+              "position": [
+                109.3408694390188,
+                12.717059653993175,
+                -15.479549248181977
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.412853141256766,
+            -15.369424033250345
+          ],
+          "groundGap": 0.8058974232251828
+        },
+        "hands": [
+          {
+            "position": [
+              109.46008884373386,
+              12.413469699979249,
+              -16.138792868495308
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 1.026303442430772,
+            "groundGap": 0.813718379422598
+          },
+          {
+            "position": [
+              109.2891069311759,
+              12.407421077571042,
+              -14.861157562926676
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.7230402439776027,
+            "groundGap": 0.7181723481145852
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9600.174999952316,
+        "time": 9.594390000000203,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.6791650000000005,
+        "groundCorrection": 0.06520656273064951,
+        "support": {
+          "minimum": 0.00999999999999801,
+          "footMinimum": 0.00999999999999801,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.33295491475126,
+              11.675071793785298,
+              -15.227767381888832
+            ],
+            "floor": 11.6650717937853
+          },
+          "bodyPoint": {
+            "position": [
+              109.33295491475126,
+              11.675071793785298,
+              -15.227767381888832
+            ],
+            "floor": 11.6650717937853
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.828852310522592,
+              "count": 67,
+              "position": [
+                109.75168313642475,
+                12.422017740027975,
+                -15.21536815702252
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.4979050647968464,
+              "count": 18,
+              "position": [
+                109.51614751940888,
+                12.108435341039554,
+                -15.717872280042908
+              ]
+            },
+            "Head": {
+              "minimum": 1.020799110748996,
+              "count": 643,
+              "position": [
+                109.08485437497589,
+                12.735800114067922,
+                -15.07470107171922
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.4608291092143979,
+              "count": 28,
+              "position": [
+                109.49231579403323,
+                12.070847223557754,
+                -15.813488843462837
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.9184428578418,
+              "count": 24,
+              "position": [
+                109.26989561575202,
+                12.590602602542162,
+                -15.309595281267594
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.27159420757383224,
+              "count": 31,
+              "position": [
+                109.33103124570613,
+                11.93099570857555,
+                -15.357915181390748
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.8178806100266094,
+              "count": 22,
+              "position": [
+                109.51428439399794,
+                12.467909950141163,
+                -14.866681387171651
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.29221261601828985,
+              "count": 23,
+              "position": [
+                109.71585490375683,
+                11.875775845449354,
+                -15.561497607322002
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 1.00111947294584,
+              "count": 21,
+              "position": [
+                109.4499140033421,
+                12.618733564004131,
+                -15.806113461359605
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.7280897122516681,
+              "count": 22,
+              "position": [
+                109.65915750896295,
+                12.299750741614066,
+                -16.018695309841753
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.6130518068708763,
+              "count": 20,
+              "position": [
+                109.58242922517516,
+                12.248970761312378,
+                -14.918641934282205
+              ]
+            },
+            "Spine": {
+              "minimum": 0.7125867138801247,
+              "count": 12,
+              "position": [
+                109.54718031794881,
+                12.331663903502356,
+                -15.423070766599206
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.00999999999999801,
+              "count": 21,
+              "position": [
+                109.33295491475126,
+                11.675071793785298,
+                -15.227767381888832
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.7975666481325572,
+              "count": 11,
+              "position": [
+                109.52990815993968,
+                12.392669550022168,
+                -15.990715169292864
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.46888118553267866,
+              "count": 19,
+              "position": [
+                109.38287911696736,
+                12.124323006395972,
+                -15.249433493358845
+              ]
+            },
+            "Hips": {
+              "minimum": 0.7102730393382437,
+              "count": 23,
+              "position": [
+                109.57914934313195,
+                12.328555671228116,
+                -15.319284823575579
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.839472764278101,
+              "count": 8,
+              "position": [
+                109.37418689162111,
+                12.512283392195663,
+                -14.89958133614709
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.18142257502592507,
+              "count": 22,
+              "position": [
+                109.91971503837225,
+                11.729867010676063,
+                -15.55788744249102
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.9550697063445739,
+              "count": 16,
+              "position": [
+                109.44373551554256,
+                12.610111178689197,
+                -15.027506728583015
+              ]
+            },
+            "Spine2": {
+              "minimum": 1.1010100216336252,
+              "count": 7,
+              "position": [
+                109.32261132663403,
+                12.755571984266842,
+                -15.488895731100444
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.479343547815933,
+            -15.369424033250345
+          ],
+          "groundGap": 0.8723878297843495
+        },
+        "hands": [
+          {
+            "position": [
+              109.48493305152974,
+              12.43140811579498,
+              -16.14275088182052
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 1.025357574390853,
+            "groundGap": 0.83609517274434
+          },
+          {
+            "position": [
+              109.3046498868976,
+              12.477322724489328,
+              -14.842255111757941
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.7825528902142519,
+            "groundGap": 0.7899215920735543
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "BeastRecovery",
+            "roll": {
+              "age": 3.516666666666659,
+              "contactDelay": 0,
+              "error": 1.8620303854373437,
+              "errors": [
+                1.6509758834649624,
+                1.8620303854373437
+              ],
+              "timedOut": true
+            }
+          }
+        ],
+        "wallMs": 9703.350000023842,
+        "time": 9.710909999999785,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.7956850000000009,
+        "groundCorrection": 0.07845530313551663,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "RightFoot",
+          "footPoint": {
+            "position": [
+              109.31328181012323,
+              11.67796370553255,
+              -15.239004672792825
+            ],
+            "floor": 11.66796370553255
+          },
+          "bodyPoint": {
+            "position": [
+              109.31328181012323,
+              11.67796370553255,
+              -15.239004672792825
+            ],
+            "floor": 11.66796370553255
+          },
+          "supportByBone": {
+            "Neck": {
+              "minimum": 0.9068845399377299,
+              "count": 67,
+              "position": [
+                109.76474958438735,
+                12.49809385229401,
+                -15.208679331298566
+              ]
+            },
+            "LeftUpLeg": {
+              "minimum": 0.5160961494600773,
+              "count": 18,
+              "position": [
+                109.41344366069723,
+                12.148597206479787,
+                -15.625477855845865
+              ]
+            },
+            "Head": {
+              "minimum": 1.033541748627318,
+              "count": 643,
+              "position": [
+                109.1645688612527,
+                12.717416504050925,
+                -15.440528488019757
+              ]
+            },
+            "LeftHand": {
+              "minimum": 0.48421291180721227,
+              "count": 28,
+              "position": [
+                109.55384938488139,
+                12.084056922839952,
+                -15.806474026248432
+              ]
+            },
+            "RightShoulder": {
+              "minimum": 0.9572789955159777,
+              "count": 24,
+              "position": [
+                109.23189772409194,
+                12.64447930677499,
+                -15.126188836211206
+              ]
+            },
+            "RightLeg": {
+              "minimum": 0.2625600675496571,
+              "count": 31,
+              "position": [
+                109.32495785748374,
+                11.923261086974478,
+                -15.35244565634644
+              ]
+            },
+            "RightArm": {
+              "minimum": 0.873299958852197,
+              "count": 22,
+              "position": [
+                109.29639694674276,
+                12.556000373482197,
+                -14.979762253328005
+              ]
+            },
+            "LeftLeg": {
+              "minimum": 0.32203118175484313,
+              "count": 23,
+              "position": [
+                109.45783317928166,
+                11.947900038535328,
+                -15.60566085092571
+              ]
+            },
+            "LeftShoulder": {
+              "minimum": 1.0326079550700626,
+              "count": 21,
+              "position": [
+                109.46382505289694,
+                12.647709469688149,
+                -15.808961117468312
+              ]
+            },
+            "LeftArm": {
+              "minimum": 0.760727633989676,
+              "count": 22,
+              "position": [
+                109.63706067739078,
+                12.33985506967261,
+                -15.942167124719148
+              ]
+            },
+            "RightHand": {
+              "minimum": 0.6967570250046382,
+              "count": 20,
+              "position": [
+                109.6210377820869,
+                12.327703060204504,
+                -14.880292391902403
+              ]
+            },
+            "Spine": {
+              "minimum": 0.7472569487158491,
+              "count": 12,
+              "position": [
+                109.54828995440238,
+                12.365965249893943,
+                -15.426943882755182
+              ]
+            },
+            "RightFoot": {
+              "minimum": 0.009999999999999787,
+              "count": 21,
+              "position": [
+                109.31328181012323,
+                11.67796370553255,
+                -15.239004672792825
+              ]
+            },
+            "LeftForeArm": {
+              "minimum": 0.8174053586500012,
+              "count": 11,
+              "position": [
+                109.55805459058871,
+                12.407896067628531,
+                -15.986638488287046
+              ]
+            },
+            "RightUpLeg": {
+              "minimum": 0.4968384016196339,
+              "count": 19,
+              "position": [
+                109.30612280362419,
+                12.163012576974428,
+                -15.305338151881042
+              ]
+            },
+            "Hips": {
+              "minimum": 0.7355211599299327,
+              "count": 23,
+              "position": [
+                109.58016835061848,
+                12.353018138415495,
+                -15.332629650932402
+              ]
+            },
+            "RightForeArm": {
+              "minimum": 0.8929240116563619,
+              "count": 8,
+              "position": [
+                109.33366438954823,
+                12.570561868043939,
+                -14.948631323890465
+              ]
+            },
+            "LeftFoot": {
+              "minimum": 0.22820865267635604,
+              "count": 22,
+              "position": [
+                109.92065219121582,
+                11.77708228277907,
+                -15.544934480003972
+              ]
+            },
+            "Spine1": {
+              "minimum": 0.9977807333888329,
+              "count": 16,
+              "position": [
+                109.47598344833065,
+                12.647944426797832,
+                -15.01209584906787
+              ]
+            },
+            "Spine2": {
+              "minimum": 1.1210560927388684,
+              "count": 7,
+              "position": [
+                109.30755148304162,
+                12.77782087474796,
+                -15.4966049929737
+              ]
+            }
+          },
+          "modelY": 0.05463880850617795
+        },
+        "pelvis": {
+          "position": [
+            109.63136697916553,
+            12.530603052032983,
+            -15.369424033250345
+          ],
+          "groundGap": 0.9236473340013998
+        },
+        "hands": [
+          {
+            "position": [
+              109.51373315980273,
+              12.43952808788561,
+              -16.144070219541963
+            ],
+            "target": [
+              109.9994111141561,
+              11.90363229167609,
+              -15.429923302449083
+            ],
+            "targetDistance": 1.016402085266053,
+            "groundGap": 0.8491993243882288
+          },
+          {
+            "position": [
+              109.31865689892777,
+              12.536086233293384,
+              -14.82458709200866
+            ],
+            "target": [
+              109.56960044826334,
+              11.83618473415846,
+              -15.2043770571978
+            ],
+            "targetDistance": 0.8349102892543713,
+            "groundGap": 0.8503218828770365
+          }
+        ]
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 9810.320000052452,
+        "time": 9.827324999999291,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 9919.549999952316,
+        "time": 9.943654999999126,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10031.370000004768,
+        "time": 10.059974999999213,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10140.25,
+        "time": 10.1596899999995,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10248.195000052452,
+        "time": 10.259539999999106,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10349.945000052452,
+        "time": 10.359319999998661,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10457.860000014305,
+        "time": 10.475689999998394,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10558.94000005722,
+        "time": 10.575369999998657,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10659.980000019073,
+        "time": 10.658669999998438,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10762.759999990463,
+        "time": 10.791759999998249,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10870.705000042915,
+        "time": 10.87478499999861,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10975.215000033379,
+        "time": 10.97454499999867,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11083.240000009537,
+        "time": 11.107694999998785,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11193.649999976158,
+        "time": 11.190794999998616,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11296.740000009537,
+        "time": 11.323959999998351,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11397.554999947548,
+        "time": 11.42361499999788,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11501.164999961853,
+        "time": 11.523389999998017,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11602.5,
+        "time": 11.623034999997799,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11713.384999990463,
+        "time": 11.722769999998036,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11819.985000014305,
+        "time": 11.8225899999984,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11925.195000052452,
+        "time": 11.922314999998434,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 12026.054999947548,
+        "time": 12.038679999998294,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      }
+    ],
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "warthog",
+    "direction": "side",
+    "wallMs": 12029.019999980927,
+    "simulationSeconds": 12.038679999998294,
+    "frames": 418,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 28.840741626794255,
+        "p95": 33.54999999999927,
+        "p99": 49.97999999999956,
+        "max": 66.52000000000044
+      },
+      "renderMs": {
+        "mean": 8.030669861718229,
+        "p95": 12.870000004768372,
+        "p99": 14.085000038146973,
+        "max": 18.134999990463257
+      },
+      "physicsTotal": {
+        "mean": 1.5203349216703022,
+        "p95": 2.840000033378601,
+        "p99": 3.8249999284744263,
+        "max": 26.730000019073486
+      },
+      "solverMs": {
+        "mean": 0.8843899528946032,
+        "p95": 1.875,
+        "p99": 2.3999998569488525,
+        "max": 4.889999985694885
+      },
+      "solverSteps": {
+        "mean": 1.375598086124402,
+        "p95": 2,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.028361244064769107,
+        "p95": 0,
+        "p99": 0,
+        "max": 11.855000019073486
+      },
+      "bindingMs": {
+        "mean": 0.11858851287923931,
+        "p95": 0.26999998092651367,
+        "p99": 0.3400000333786011,
+        "max": 0.9950000047683716
+      },
+      "recoverySetupMs": {
+        "mean": 0.009126794395264256,
+        "p95": 0,
+        "p99": 0,
+        "max": 3.815000057220459
+      },
+      "recoveryFollowMs": {
+        "mean": 0.3294138731568624,
+        "p95": 2.1799999475479126,
+        "p99": 2.744999885559082,
+        "max": 3.325000047683716
+      },
+      "recoveryMs": {
+        "mean": 0.21980861299916318,
+        "p95": 1.6699999570846558,
+        "p99": 1.9700000286102295,
+        "max": 2.8299999237060547
+      },
+      "animationMs": {
+        "mean": 0.04754784888627997,
+        "p95": 0.29499995708465576,
+        "p99": 0.38999998569488525,
+        "max": 1.7049999237060547
+      },
+      "vfxMs": {
+        "mean": 0.3661961706631492,
+        "p95": 3.0799999237060547,
+        "p99": 4.759999990463257,
+        "max": 5.350000023841858
+      },
+      "draws": {
+        "mean": 29.11244019138756,
+        "p95": 36,
+        "p99": 40,
+        "max": 40
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 206,
+      "textures": 112
+    },
+    "heap": 474269366,
+    "errors": []
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 109.27488,
+        "z": -14
+      },
+      "origin": {
+        "x": 109.27488,
+        "y": 13.379276671801346,
+        "z": -11
+      },
+      "plan": 11.009999990463257,
+      "logic": 0.36000001430511475,
+      "render": 0.014999985694885254,
+      "total": 11.384999990463257
+    }
+  ]
+}

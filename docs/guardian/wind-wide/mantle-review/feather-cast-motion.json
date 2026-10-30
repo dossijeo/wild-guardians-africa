@@ -1,0 +1,125 @@
+{
+  "group": "Feather",
+  "sha256": "48ec4840a95ed2397dadd22e308ab6ef4c166dcc046e75218fadc37365251bc3",
+  "scope": "CPU skinning, two seconds, sampled summon action rule; no GPU or production gust/aim overlay",
+  "boneSweep": [
+    {
+      "name": "Feather00",
+      "degrees": 42.006972742458565
+    },
+    {
+      "name": "Feather00Tip",
+      "degrees": 46.43604042644016
+    },
+    {
+      "name": "Feather01",
+      "degrees": 66.1085424798688
+    },
+    {
+      "name": "Feather01Tip",
+      "degrees": 42.963674150651165
+    },
+    {
+      "name": "Feather02",
+      "degrees": 44.735379478010685
+    },
+    {
+      "name": "Feather02Tip",
+      "degrees": 62.976705238340855
+    },
+    {
+      "name": "Feather03",
+      "degrees": 65.71026257636187
+    },
+    {
+      "name": "Feather03Tip",
+      "degrees": 23.66978725495889
+    }
+  ],
+  "vertices": 308,
+  "displacementFromFirst": {
+    "median": 0.045105485364469365,
+    "p95": 0.08467729119117598,
+    "max": 0.13778431645580788
+  },
+  "actionStates": [
+    {
+      "name": "Explain",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Warning",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Enthusiasm",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Invoke",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Cast",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Float",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    },
+    {
+      "name": "Idle",
+      "enabled": false,
+      "weight": 0,
+      "time": 2
+    },
+    {
+      "name": "Spell_Grow",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    },
+    {
+      "name": "Spell_Multiply",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Spell_Shield",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Spell_Attack",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Mantle_Breeze",
+      "enabled": false,
+      "weight": 0,
+      "time": 2
+    },
+    {
+      "name": "Mantle_Spell",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    }
+  ]
+}

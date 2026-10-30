@@ -1,0 +1,505 @@
+TAP version 13
+# Subtest: original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 1 - original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 9.5927
+  ...
+# Subtest: original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 2 - original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 0.75
+  ...
+# Subtest: late portrait asset load still has one genuine entry when first rendered during reading
+ok 3 - late portrait asset load still has one genuine entry when first rendered during reading
+  ---
+  duration_ms: 0.4491
+  ...
+# Subtest: reopening during farewell or outro supersedes the old withdrawal
+ok 4 - reopening during farewell or outro supersedes the old withdrawal
+  ---
+  duration_ms: 0.7211
+  ...
+# Subtest: immediate hiding from intro cancels every owned source and pending request
+ok 5 - immediate hiding from intro cancels every owned source and pending request
+  ---
+  duration_ms: 0.5467
+  ...
+# Subtest: immediate hiding from reading cancels every owned source and pending request
+ok 6 - immediate hiding from reading cancels every owned source and pending request
+  ---
+  duration_ms: 0.4106
+  ...
+# Subtest: immediate hiding from outro cancels every owned source and pending request
+ok 7 - immediate hiding from outro cancels every owned source and pending request
+  ---
+  duration_ms: 0.379
+  ...
+# Subtest: immediate hiding from closed cancels every owned source and pending request
+ok 8 - immediate hiding from closed cancels every owned source and pending request
+  ---
+  duration_ms: 0.5271
+  ...
+# Subtest: hidden invalidates a pending withdrawal decode
+ok 9 - hidden invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.7841
+  ...
+# Subtest: disposed invalidates a pending withdrawal decode
+ok 10 - disposed invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.7824
+  ...
+# Subtest: reentry invalidates a pending withdrawal decode
+ok 11 - reentry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 2.1377
+  ...
+# Subtest: expiry invalidates a pending withdrawal decode
+ok 12 - expiry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 2.3485
+  ...
+# Subtest: suspend invalidates a pending withdrawal decode
+ok 13 - suspend invalidates a pending withdrawal decode
+  ---
+  duration_ms: 3.7083
+  ...
+# Subtest: a normal closed portrait still accepts its timely pending exit tail
+ok 14 - a normal closed portrait still accepts its timely pending exit tail
+  ---
+  duration_ms: 1.1971
+  ...
+# Subtest: suspension cancels voices and silently seeds the unchanged portrait on resume
+ok 15 - suspension cancels voices and silently seeds the unchanged portrait on resume
+  ---
+  duration_ms: 0.7751
+  ...
+# Subtest: presentation callback failures do not form a per-frame retry loop
+ok 16 - presentation callback failures do not form a per-frame retry loop
+  ---
+  duration_ms: 0.9533
+  ...
+# Subtest: portrait cues use the UI bus and avatar emitter without a fictitious world position
+ok 17 - portrait cues use the UI bus and avatar emitter without a fictitious world position
+  ---
+  duration_ms: 1.0609
+  ...
+# (node:41280) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: each species uses its own hurt cue plus the existing quiet impact, never retreat on a normal hit
+ok 18 - each species uses its own hurt cue plus the existing quiet impact, never retreat on a normal hit
+  ---
+  duration_ms: 2.8115
+  ...
+# Subtest: retreat audio is triggered only by the authoritative retreat event and is consumed once
+ok 19 - retreat audio is triggered only by the authoritative retreat event and is consumed once
+  ---
+  duration_ms: 0.221
+  ...
+# (node:39904) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: impact preserves the imported model orientation and never accumulates offsets
+ok 20 - impact preserves the imported model orientation and never accumulates offsets
+  ---
+  duration_ms: 3.9139
+  ...
+# Subtest: rejected casts do no placement work, and placement failure cannot cancel damage
+ok 21 - rejected casts do no placement work, and placement failure cannot cancel damage
+  ---
+  duration_ms: 3.0199
+  ...
+# Subtest: Attack uses native command deduplication, cooldown, and leaves other spell areas untouched
+ok 22 - Attack uses native command deduplication, cooldown, and leaves other spell areas untouched
+  ---
+  duration_ms: 1.666
+  ...
+# Subtest: only the selected active beast is hit, with the real surface contact retained
+ok 23 - only the selected active beast is hit, with the real surface contact retained
+  ---
+  duration_ms: 0.8925
+  ...
+# Subtest: species resistance differs and retreat releases the existing target reservation
+ok 24 - species resistance differs and retreat releases the existing target reservation
+  ---
+  duration_ms: 3.0182
+  ...
+# Subtest: invalid vectors and menu pause do not mutate health or spend cooldown
+ok 25 - invalid vectors and menu pause do not mutate health or spend cooldown
+  ---
+  duration_ms: 0.6279
+  ...
+# Subtest: directional response distinguishes sides, descending hits and mass, and decays to rest
+ok 26 - directional response distinguishes sides, descending hits and mass, and decays to rest
+  ---
+  duration_ms: 0.5067
+  ...
+# Subtest: impact contact, intensity and ground survive snapshots and reject invalid values
+ok 27 - impact contact, intensity and ground survive snapshots and reject invalid values
+  ---
+  duration_ms: 0.8885
+  ...
+# Subtest: audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+ok 28 - audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+  ---
+  duration_ms: 7.9004
+  ...
+# Subtest: short, repeated and missing cues remain finite
+ok 29 - short, repeated and missing cues remain finite
+  ---
+  duration_ms: 0.2598
+  ...
+# Subtest: a late language response cannot animate the newer recording; pausing preserves the pose
+ok 30 - a late language response cannot animate the newer recording; pausing preserves the pose
+  ---
+  duration_ms: 0.7466
+  ...
+# Subtest: all 54 real recordings have bounded Rhubarb cues and matching source identities
+ok 31 - all 54 real recordings have bounded Rhubarb cues and matching source identities
+  ---
+  duration_ms: 54.3428
+  ...
+# Subtest: blink closes fully and returns to rest
+ok 32 - blink closes fully and returns to rest
+  ---
+  duration_ms: 0.2961
+  ...
+# Subtest: Lifecycle preserves original transition timings in both motion modes
+ok 33 - Lifecycle preserves original transition timings in both motion modes
+  ---
+  duration_ms: 5.1635
+  ...
+# Subtest: Entrance leads to reading and rest without closing or advancing text
+ok 34 - Entrance leads to reading and rest without closing or advancing text
+  ---
+  duration_ms: 0.49
+  ...
+# Subtest: Closing performs farewell and native exit, repeated hide calls do not restart it
+ok 35 - Closing performs farewell and native exit, repeated hide calls do not restart it
+  ---
+  duration_ms: 0.2727
+  ...
+# Subtest: New message cancels withdrawal and cannot be closed by a stale transition
+ok 36 - New message cancels withdrawal and cannot be closed by a stale transition
+  ---
+  duration_ms: 0.2876
+  ...
+# Subtest: Reduced motion still has explicit entry and exit and native neutral poses
+ok 37 - Reduced motion still has explicit entry and exit and native neutral poses
+  ---
+  duration_ms: 0.988
+  ...
+# Subtest: shipping rig is floating, bounded, and has all facial controls
+ok 38 - shipping rig is floating, bounded, and has all facial controls
+  ---
+  duration_ms: 1.5381
+  ...
+# Subtest: cloth and body clips have disjoint properties and eyes are free for gaze
+ok 39 - cloth and body clips have disjoint properties and eyes are free for gaze
+  ---
+  duration_ms: 0.5317
+  ...
+# Subtest: float is independent of dialogue and secondary motion is explicitly rigged
+ok 40 - float is independent of dialogue and secondary motion is explicitly rigged
+  ---
+  duration_ms: 0.249
+  ...
+# Subtest: continuous wind and float loops have matching endpoints and bounded speed at the seam
+ok 41 - continuous wind and float loops have matching endpoints and bounded speed at the seam
+  ---
+  duration_ms: 62.3865
+  ...
+# Subtest: Extracted renderer and native source retain their registered hashes
+ok 42 - Extracted renderer and native source retain their registered hashes
+  ---
+  duration_ms: 3.794
+  ...
+# Subtest: Native greeting curves match the original V8 source at every sampled phase
+ok 43 - Native greeting curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 7.8201
+  ...
+# Subtest: Native speak curves match the original V8 source at every sampled phase
+ok 44 - Native speak curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 1.674
+  ...
+# Subtest: Native acknowledge curves match the original V8 source at every sampled phase
+ok 45 - Native acknowledge curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.3565
+  ...
+# Subtest: Native curious curves match the original V8 source at every sampled phase
+ok 46 - Native curious curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.0191
+  ...
+# Subtest: Native warning curves match the original V8 source at every sampled phase
+ok 47 - Native warning curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.3895
+  ...
+# Subtest: Native reveal curves match the original V8 source at every sampled phase
+ok 48 - Native reveal curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.7407
+  ...
+# Subtest: Native idle curves match the original V8 source at every sampled phase
+ok 49 - Native idle curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 1.4905
+  ...
+# Subtest: Native farewell curves match the original V8 source at every sampled phase
+ok 50 - Native farewell curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.1544
+  ...
+# Subtest: Native ornament springs remain finite across reading, rest and gesture changes
+ok 51 - Native ornament springs remain finite across reading, rest and gesture changes
+  ---
+  duration_ms: 47.8892
+  ...
+# Subtest: placement stays near the target and inside the camera from four angles
+ok 52 - placement stays near the target and inside the camera from four angles
+  ---
+  duration_ms: 5.191
+  ...
+# Subtest: placement rejects occupied footprints and prefers a visible alternative
+ok 53 - placement rejects occupied footprints and prefers a visible alternative
+  ---
+  duration_ms: 0.6629
+  ...
+# Subtest: all blocked candidates produce a finite elevated fallback without mutating the world
+ok 54 - all blocked candidates produce a finite elevated fallback without mutating the world
+  ---
+  duration_ms: 0.3118
+  ...
+# Subtest: consecutive spells reuse exactly one body and clear the previous presentation
+ok 55 - consecutive spells reuse exactly one body and clear the previous presentation
+  ---
+  duration_ms: 16.2764
+  ...
+# Subtest: closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+ok 56 - closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+  ---
+  duration_ms: 6.5915
+  ...
+# Subtest: a superseded ended callback cannot close the next presentation
+ok 57 - a superseded ended callback cannot close the next presentation
+  ---
+  duration_ms: 0.9666
+  ...
+# Subtest: closeAfter retains timed fallback when media is unavailable or no voice exists
+ok 58 - closeAfter retains timed fallback when media is unavailable or no voice exists
+  ---
+  duration_ms: 2.4426
+  ...
+# (node:39984) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: snapshot owner posts once, returns state, terminates and removes handlers
+ok 59 - snapshot owner posts once, returns state, terminates and removes handlers
+  ---
+  duration_ms: 6.4164
+  ...
+# Subtest: pre-abort never creates a worker or performs fallback parsing
+ok 60 - pre-abort never creates a worker or performs fallback parsing
+  ---
+  duration_ms: 0.865
+  ...
+# Subtest: abort owns termination and a late result cannot be adopted
+ok 61 - abort owns termination and a late result cannot be adopted
+  ---
+  duration_ms: 0.5606
+  ...
+# Subtest: a never-responding worker times out without RAF and is terminated
+ok 62 - a never-responding worker times out without RAF and is terminated
+  ---
+  duration_ms: 4.8922
+  ...
+# Subtest: worker validation errors preserve their name/message and close the owner
+ok 63 - worker validation errors preserve their name/message and close the owner
+  ---
+  duration_ms: 0.603
+  ...
+# Subtest: worker error failure rejects without blocking fallback
+ok 64 - worker error failure rejects without blocking fallback
+  ---
+  duration_ms: 0.4522
+  ...
+# Subtest: worker messageerror failure rejects without blocking fallback
+ok 65 - worker messageerror failure rejects without blocking fallback
+  ---
+  duration_ms: 0.3535
+  ...
+# Subtest: worker protocol failure rejects without blocking fallback
+ok 66 - worker protocol failure rejects without blocking fallback
+  ---
+  duration_ms: 0.2643
+  ...
+# Subtest: postMessage failure and diagnostic failure still close the worker
+ok 67 - postMessage failure and diagnostic failure still close the worker
+  ---
+  duration_ms: 0.6958
+  ...
+# Subtest: compatibility fallback is explicitly reported and preserves full validation
+ok 68 - compatibility fallback is explicitly reported and preserves full validation
+  ---
+  duration_ms: 2.2751
+  ...
+# Subtest: actual worker module preserves the complete native snapshot and validator failures
+ok 69 - actual worker module preserves the complete native snapshot and validator failures
+  ---
+  duration_ms: 192.494
+  ...
+# (node:17736) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cards and game validation agree on unlock dates, pauses, infrastructure and workers
+ok 70 - cards and game validation agree on unlock dates, pauses, infrastructure and workers
+  ---
+  duration_ms: 17.2429
+  ...
+# Subtest: cooldown starts at casting and updates cards while effect continues; pauses freeze it
+ok 71 - cooldown starts at casting and updates cards while effect continues; pauses freeze it
+  ---
+  duration_ms: 6.3924
+  ...
+# Subtest: native markup keeps original symbols and translated status labels
+ok 72 - native markup keeps original symbols and translated status labels
+  ---
+  duration_ms: 0.8526
+  ...
+# Subtest: the spell panel describes direct placement in both languages
+ok 73 - the spell panel describes direct placement in both languages
+  ---
+  duration_ms: 0.3169
+  ...
+# Subtest: stable refresh preserves translated text, existing nodes and scroll; a state transition updates only status
+ok 74 - stable refresh preserves translated text, existing nodes and scroll; a state transition updates only status
+  ---
+  duration_ms: 1.6524
+  ...
+# (node:11452) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shield: tapping elevated crop covers it instead of terrain behind it
+ok 75 - shield: tapping elevated crop covers it instead of terrain behind it
+  ---
+  duration_ms: 7.9657
+  ...
+# Subtest: growth: tapping elevated crop covers it instead of terrain behind it
+ok 76 - growth: tapping elevated crop covers it instead of terrain behind it
+  ---
+  duration_ms: 1.7987
+  ...
+# Subtest: multiply: tapping elevated crop covers it instead of terrain behind it
+ok 77 - multiply: tapping elevated crop covers it instead of terrain behind it
+  ---
+  duration_ms: 0.8304
+  ...
+# Subtest: shield can target free terrain or a structure, while agricultural magic needs a living crop
+ok 78 - shield can target free terrain or a structure, while agricultural magic needs a living crop
+  ---
+  duration_ms: 1.7567
+  ...
+# Subtest: dead crops do not capture placement, empty sky does nothing, and invalid spells keep their rejection
+ok 79 - dead crops do not capture placement, empty sky does nothing, and invalid spells keep their rejection
+  ---
+  duration_ms: 0.6073
+  ...
+# Subtest: World surface replaces the demonstration crop bed and follows drifting sprite contacts
+ok 80 - World surface replaces the demonstration crop bed and follows drifting sprite contacts
+  ---
+  duration_ms: 11.7824
+  ...
+# Subtest: VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders
+ok 81 - VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders
+  ---
+  duration_ms: 10.1446
+  ...
+# Subtest: Day, sunset and night environment values match original source lighting and matrices
+ok 82 - Day, sunset and night environment values match original source lighting and matrices
+  ---
+  duration_ms: 3.1646
+  ...
+# Subtest: All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights
+ok 83 - All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights
+  ---
+  duration_ms: 1687.5688
+  ...
+# Subtest: Seven rigid particle geometries preserve every original position and normal
+ok 84 - Seven rigid particle geometries preserve every original position and normal
+  ---
+  duration_ms: 37.3695
+  ...
+# Subtest: Atlas frames retain original inset, flipped rows and interpolated final frame
+ok 85 - Atlas frames retain original inset, flipped rows and interpolated final frame
+  ---
+  duration_ms: 0.3375
+  ...
+# Subtest: Private VFX clocks freeze at zero elapsed, keep preview contacts external and clear resources
+ok 86 - Private VFX clocks freeze at zero elapsed, keep preview contacts external and clear resources
+  ---
+  duration_ms: 17.7517
+  ...
+# Subtest: Original presentation caps bound dense particle bursts and layer switches hide their own outputs
+ok 87 - Original presentation caps bound dense particle bursts and layer switches hide their own outputs
+  ---
+  duration_ms: 67.1097
+  ...
+# Subtest: Rig water sources replace only new droplet origins; seek replays sources and missing rigs do not emit
+ok 88 - Rig water sources replace only new droplet origins; seek replays sources and missing rigs do not emit
+  ---
+  duration_ms: 1.07
+  ...
+# Subtest: Terrain contact maps world heights into a translated, rotated and scaled effect frame
+ok 89 - Terrain contact maps world heights into a translated, rotated and scaled effect frame
+  ---
+  duration_ms: 40.7742
+  ...
+# Subtest: Native debris follows original terrain heights in all six biomes without changing domain state
+ok 90 - Native debris follows original terrain heights in all six biomes without changing domain state
+  ---
+  duration_ms: 42.5776
+  ...
+# Subtest: All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+ok 91 - All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+  ---
+  duration_ms: 154.0195
+  ...
+# Subtest: Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+ok 92 - Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+  ---
+  duration_ms: 22.7026
+  ...
+# Subtest: Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+ok 93 - Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+  ---
+  duration_ms: 16.4885
+  ...
+# Subtest: Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+ok 94 - Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+  ---
+  duration_ms: 27.8964
+  ...
+# Subtest: Effects never participate in interaction raycasts and release private resources before the shared atlas
+ok 95 - Effects never participate in interaction raycasts and release private resources before the shared atlas
+  ---
+  duration_ms: 10.4936
+  ...
+# Subtest: Native environment retains distinct day, sunset and night lighting for particles
+ok 96 - Native environment retains distinct day, sunset and night lighting for particles
+  ---
+  duration_ms: 0.6892
+  ...
+# Subtest: Two native local lights retain source positions/colors on world materials and disappear when stopped
+ok 97 - Two native local lights retain source positions/colors on world materials and disappear when stopped
+  ---
+  duration_ms: 9.9102
+  ...
+1..97
+# tests 97
+# suites 0
+# pass 97
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3225.7476

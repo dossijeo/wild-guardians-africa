@@ -1,0 +1,52 @@
+{
+  "actor": null,
+  "candidate": null,
+  "sources": {
+    "artistOriginal": { "path": null, "sha256": null },
+    "prepared": { "path": null, "sha256": null, "branch": null, "commit": null },
+    "runtime": { "path": null, "sha256": null }
+  },
+  "anatomyProfile": null,
+  "observedDefects": [],
+  "iterations": [],
+  "hypothesesNotYetProven": [],
+  "rejectedApproaches": [],
+  "verifiedCorrections": [],
+  "gates": {
+    "validTestFixture": { "status": "pending", "evidence": [] },
+    "animatedPoseToPhysicsContinuity": { "status": "pending", "evidence": [] },
+    "recoveryToNavigationContinuity": { "status": "pending", "evidence": [] },
+    "simulationBudgetOverflow": { "status": "pending", "evidence": [] },
+
+    "sourceAndPreparedComparison": { "status": "pending", "evidence": [] },
+    "anatomicalLandmarks": { "status": "pending", "evidence": [] },
+    "neutralSilhouetteAndAccessories": { "status": "pending", "evidence": [] },
+    "mouthInteriorAndDentition": { "status": "pending", "evidence": [] },
+    "independentAndCombinedEyelids": { "status": "pending", "evidence": [] },
+    "partialMorphsBothProfiles": { "status": "pending", "weights": [0, 0.25, 0.5, 0.75, 1], "evidence": [] },
+    "textureBakeAndUVInvariants": { "status": "pending", "evidence": [] },
+    "sourceExportRuntimeVisualComparison": { "status": "pending", "evidence": [] },
+    "nativeClipPoseEquivalence": { "status": "pending", "evidence": [] },
+    "nativeClipSkinAndAccessoryAppearance": { "status": "pending", "evidence": [] },
+    "gameAttackDamageFallGetupFlee": { "status": "pending", "evidence": [] },
+    "pauseInterruptionAndCleanup": { "status": "pending", "evidence": [] },
+    "optimizedAssetParity": { "status": "pending", "evidence": [] },
+    "comparableScenePerformance": { "status": "pending", "evidence": [] }
+  },
+  "metrics": {
+    "sourceBytes": null,
+    "runtimeBytes": null,
+    "vertices": null,
+    "triangles": null,
+    "bones": null,
+    "morphBytes": null,
+    "drawCalls": null,
+    "memoryBytes": null,
+    "animationCpuMs": null,
+    "frameP95Ms": null,
+    "frameP99Ms": null,
+    "comparisonScenario": null
+  },
+  "remaining": [],
+  "runtimeApproved": false
+}

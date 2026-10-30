@@ -1,0 +1,69 @@
+{
+  "profile": "guardian",
+  "source": "/content/guardian/guardian.glb",
+  "sourceSHA256": "c6bfcf09bf57550038186e43ca87acebef1e41677ffe4aa8980c81e246826cc8",
+  "binary": "/content/lighting/global-ao/model-guardian.bin",
+  "outputSHA256": "5425c7e362d9ca50f4320fd6120a97d99576a2cb1abec69b692a0173d1955f34",
+  "byteLength": 17733,
+  "samples": 32,
+  "records": [
+    {
+      "mesh": 0,
+      "primitive": 0,
+      "name": "Mesh_0",
+      "offset": 0,
+      "count": 11963,
+      "radius": 0.04107992887496949,
+      "mean": 166.38000501546435,
+      "minimum": 0,
+      "excludedMorphVertices": 511,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 1,
+      "primitive": 0,
+      "name": "Guardian eyelid curved shells",
+      "offset": 11963,
+      "count": 5060,
+      "radius": 0.01,
+      "mean": 254.99683794466404,
+      "minimum": 239,
+      "excludedMorphVertices": 4540,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 2,
+      "primitive": 0,
+      "name": "Localized face topology",
+      "offset": 17023,
+      "count": 576,
+      "radius": 0,
+      "mean": 255.0,
+      "minimum": 255,
+      "excludedMorphVertices": 512,
+      "dominantJointFiltered": true,
+      "invalidNormals": 0,
+      "traversalLimit": 0
+    },
+    {
+      "mesh": 2,
+      "primitive": 1,
+      "name": "Localized face topology",
+      "offset": 17599,
+      "count": 134,
+      "radius": 0,
+      "mean": 255.0,
+      "minimum": 255,
+      "excludedMorphVertices": 134,
+      "dominantJointFiltered": true,
+      "invalidNormals": 0,
+      "traversalLimit": 0
+    }
+  ],
+  "seconds": 3.7906963999848813,
+  "scope": "Local cavity candidate; excludes moving morph surfaces and cross-joint occlusion. No dynamic AO claim."
+}

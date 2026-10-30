@@ -1,0 +1,101 @@
+{
+  "checks": [
+    {
+      "name": "cancel cold request",
+      "passed": true
+    },
+    {
+      "name": "arrival 0",
+      "passed": true
+    },
+    {
+      "name": "launch 0",
+      "passed": true
+    },
+    {
+      "name": "dissolve 0",
+      "passed": true
+    },
+    {
+      "name": "two live voices 0",
+      "passed": true
+    },
+    {
+      "name": "old arrival released 0",
+      "passed": true
+    },
+    {
+      "name": "scene stop releases voices 0",
+      "passed": true
+    },
+    {
+      "name": "arrival 1",
+      "passed": true
+    },
+    {
+      "name": "launch 1",
+      "passed": true
+    },
+    {
+      "name": "dissolve 1",
+      "passed": true
+    },
+    {
+      "name": "two live voices 1",
+      "passed": true
+    },
+    {
+      "name": "old arrival released 1",
+      "passed": true
+    },
+    {
+      "name": "scene stop releases voices 1",
+      "passed": true
+    },
+    {
+      "name": "arrival 2",
+      "passed": true
+    },
+    {
+      "name": "launch 2",
+      "passed": true
+    },
+    {
+      "name": "dissolve 2",
+      "passed": true
+    },
+    {
+      "name": "two live voices 2",
+      "passed": true
+    },
+    {
+      "name": "old arrival released 2",
+      "passed": true
+    },
+    {
+      "name": "scene stop releases voices 2",
+      "passed": true
+    },
+    {
+      "name": "concurrent burst keeps both latest slots",
+      "passed": true
+    },
+    {
+      "name": "concurrent burst discards all stale decodes",
+      "passed": true
+    },
+    {
+      "name": "concurrent burst never retains more than two voices",
+      "passed": true
+    },
+    {
+      "name": "burst interruption releases both slots",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "sampleRate": 48000,
+  "contextBeforeDispose": "running",
+  "contextAfterDispose": "closed",
+  "passed": true
+}

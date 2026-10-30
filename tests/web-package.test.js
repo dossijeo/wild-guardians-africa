@@ -24,7 +24,7 @@ test('native menu and library receive local decoding before their original parse
  const menu=publicText(readFileSync(new URL('../public/menu/index.html',import.meta.url),'utf8'),'menu/index.html',manifest);
  assert(menu.includes("from '../runtime/glb-legacy.js'"));assert(menu.includes('window.decodeWebGlb=decodeWebGlb'));
  const loader=publicText(readFileSync(new URL('../public/library.html',import.meta.url),'utf8'),'library.html',manifest);
- assert(loader.includes('decodeWebGlb(result)'));assert(!loader.includes("fetch('/"));
+ assert(loader.includes('decodeWebGlb(result,new URL(url,document.baseURI).href)'));assert(!loader.includes("fetch('/"));
 });
 test('unlinked worker lab models are omitted without removing gameplay worker rigs',()=>{
  const workers=JSON.parse(readFileSync(new URL('../public/content/worker-actions.json',import.meta.url)));
@@ -33,4 +33,14 @@ test('unlinked worker lab models are omitted without removing gameplay worker ri
  const packaged=JSON.parse(publicText(original,'content/models.json',manifest));
  assert.equal(packaged.length,JSON.parse(original).length-UNUSED_WORKER_LAB_MODELS.size);
  for(const model of packaged)assert(![...UNUSED_WORKER_LAB_MODELS].some(source=>model.url.includes(source)));
+});
+
+test('editable facial sources remain repository provenance, never runtime download routes',()=>{
+ const source=JSON.parse(readFileSync(new URL('../public/content/models.json',import.meta.url),'utf8'));
+ const packed=JSON.parse(publicText(JSON.stringify(source),'content/models.json',manifest));
+ let count=0;for(const model of source.filter(m=>m.facialEdit?.editable?.startsWith('content/source/'))){
+  const result=packed.find(m=>m.source===model.source);assert.ok(result);assert.equal(result.facialEdit.editable,'repository:'+model.facialEdit.editable);
+  assert.equal(result.url,assetUrl(model.url).replace(/^\//,''));count++;
+ }
+ assert.equal(count,4);
 });

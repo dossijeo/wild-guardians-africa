@@ -1,0 +1,61 @@
+{
+  "source": "C:/tmp/guardian-faces/hyena-lids-v9.glb",
+  "edited": "C:/tmp/guardian-faces/hyena-face-v12.glb",
+  "bones": 21,
+  "samples": 246,
+  "maxPosition": 0,
+  "maxAngle": 7.300048299977715e-8,
+  "clips": [
+    "Weapon_Combo_2",
+    "Weapon_Combo",
+    "Right_Hand_Sword_Slash",
+    "Charged_Upward_Slash",
+    "Walking",
+    "Running"
+  ],
+  "muzzle": {
+    "vertices": 1011,
+    "maxHeadRelativeError": 1.3507158977068525e-15,
+    "scope": "neutral core muzzle skin through all native clips",
+    "worst": {
+      "mesh": "Mesh_0_1",
+      "index": 9741,
+      "rest": [
+        -0.02671980252684018,
+        1.5354283814730616,
+        0.6770860558462986
+      ],
+      "weights": [
+        [
+          "Head",
+          1
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ]
+      ],
+      "clip": "Running",
+      "time": 0.3541666567325592,
+      "expected": [
+        -0.06283568024617267,
+        1.5060594926202926,
+        0.8782392196242776
+      ],
+      "actual": [
+        -0.06283568024617266,
+        1.5060594926202913,
+        0.8782392196242779
+      ]
+    }
+  },
+  "pass": true
+}

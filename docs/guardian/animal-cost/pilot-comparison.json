@@ -1,0 +1,36 @@
+{
+  "scope": "Unbalanced A then B pilot, not final comparison",
+  "initialEqual": true,
+  "finalEqual": true,
+  "cameraEqual": true,
+  "variants": [
+    {
+      "variant": "A",
+      "frames": 400,
+      "averageFps": 15.224787323994322,
+      "medianFps": 15.039855617384887,
+      "p95": 83.23999999999796,
+      "p99": 99.88500000000204,
+      "gpuSamples": 397,
+      "gpuDisjoint": 0,
+      "resolution": [
+        1600,
+        900
+      ]
+    },
+    {
+      "variant": "B",
+      "frames": 400,
+      "averageFps": 18.89646978513533,
+      "medianFps": 20.034057898426976,
+      "p95": 66.63500000000204,
+      "p99": 99.47499999999854,
+      "gpuSamples": 398,
+      "gpuDisjoint": 0,
+      "resolution": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

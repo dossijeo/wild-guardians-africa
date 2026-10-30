@@ -42,3 +42,23 @@ for(const species of Object.keys(ANIMAL_SOUND_ROUTES))test(species+' native paid
 test('a synchronous audio failure is contained and neutral requests remain rate limited',()=>{
  const f=fixture();f.audio.update(f.state);f.audio.play=()=>{throw Error('audio unavailable');};f.state.raid.animals.push({id:'a',species:'lion',status:'entering',x:0,z:0});assert.doesNotThrow(()=>f.advance());assert.equal(f.audio.entries.get('a').nextNeutral,f.state.elapsed+12);
 });
+
+
+test('magical retreat waits through stun, ragdoll and get-up, then sounds once at the displaced actor',async()=>{
+ const f=fixture();f.audio.update(f.state);
+ const actor={id:'a',species:'hyena',status:'attacking',attackId:'one',x:0,z:0};f.state.raid.animals.push(actor);f.advance();await flush();
+ assert.equal(f.played.at(-1).id,'hyena_attack');
+ actor.status='retreating';actor.magicHealth=0;actor.magicStunUntil=1;
+ f.advance();await flush();assert.equal(f.played.length,1);assert.ok(f.stopped.includes(f.played[0].source));
+ actor.magicDown={phase:'falling'};for(let i=0;i<20;i++)f.advance();actor.magicDown.phase='recovering';for(let i=0;i<15;i++)f.advance();
+ await flush();assert.equal(f.played.length,1);
+ actor.x=24;delete actor.magicDown;f.advance();await flush();
+ assert.equal(f.played.at(-1).id,'hyena_retreat');assert.equal(f.played.at(-1).options.gain,.25);
+ for(let i=0;i<20;i++)f.advance();await flush();assert.equal(f.played.length,2);
+});
+
+test('a knockdown invalidates an attack voice still decoding before the next audio observation',async()=>{
+ const f=fixture();let resolve;f.audio.play=(id,options)=>{f.played.push({id,options});return new Promise(done=>resolve=done);};
+ f.audio.update(f.state);const actor={id:'a',species:'rhino',status:'attacking',attackId:'one',x:0,z:0};f.state.raid.animals.push(actor);f.advance();
+ actor.magicDown={phase:'falling'};assert.equal(f.played[0].options.isCurrent(),false);const source={};resolve(source);await flush();assert.ok(f.stopped.includes(source));
+});

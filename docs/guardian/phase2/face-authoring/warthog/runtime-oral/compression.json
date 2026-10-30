@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "codec": "EXT_meshopt_compression (v0, lossless, no reorder)",
+  "textures": "EXT_texture_webp (default color quality 90, ORM 95, normals lossless, alpha 100, max 2048; reviewed color overrides in embedded-color-recipes.json)",
+  "records": [
+    {
+      "source": "C:\\tmp\\guardian-faces\\warthog-oral-v5.glb",
+      "runtime": "C:\\tmp\\guardian-faces\\warthog-oral-v5-web.glb",
+      "sourceSha256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
+      "runtimeSha256": "ff33abeb0006b0ddad1f3f758843e91f6145379fd5f4b90ee5d8fa8aab2e4c6d",
+      "beforeBytes": 75278672,
+      "afterBytes": 4698684,
+      "compressedViews": 946,
+      "images": [
+        {
+          "index": 0,
+          "beforeBytes": 10305453,
+          "afterBytes": 2388956,
+          "before": [
+            4096,
+            4096
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": true,
+          "role": "normal",
+          "alphaQuality": 100
+        },
+        {
+          "index": 1,
+          "beforeBytes": 61236541,
+          "afterBytes": 688810,
+          "before": [
+            8192,
+            8192
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        },
+        {
+          "index": 2,
+          "beforeBytes": 1745736,
+          "afterBytes": 166316,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": true,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        }
+      ],
+      "geometryTolerance": 0,
+      "animationTolerance": 0
+    }
+  ]
+}

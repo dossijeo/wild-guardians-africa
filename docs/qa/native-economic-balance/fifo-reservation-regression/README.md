@@ -1,0 +1,5 @@
+# Defensive reservation acceptance under FIFO contention
+
+Retained `before.txt` records six obsolete expectations of immediate retreat when a defensive group is occupied. The candidate now stages a waiting companion at its entry position and preserves its hits until the existing owner releases that group. The tests continue enforcing exclusive ownership, topology changes, malformed legacy claims and exact save/reload replay.
+
+Updated tests additionally require the waiting actor to perform a native damage hit after receiving its turn, while conserving its hit budget and physical position during the initial wait. Actor attribution uses the actual `StructureHit`/`CropHit` event: an intermediate test incorrectly queried `animalId` on `AnimalLogicalHit`, where that field is absent, and was corrected without changing simulation behavior. All five cultures complete their native raid and exact replay. This change does not alter gameplay to satisfy an old retreat expectation and does not weaken the requirement of one owner per group.

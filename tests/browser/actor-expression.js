@@ -1,0 +1,64 @@
+import * as T from 'three';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {ActorExpression} from '../../src/rendering/actor-expression.js';
+const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(1);document.body.prepend(renderer.domElement);
+const scene=new T.Scene();scene.background=new T.Color('#343d39');const ambient=new T.HemisphereLight(0xffffff,0x635748,2),faceLights=[];scene.add(ambient);for(const [x,y,z,p] of [[3,5,4,2],[-3,2,2,1]]){const light=new T.DirectionalLight(0xffffff,p);light.position.set(x,y,z);scene.add(light);faceLights.push(light);}
+const params=new URLSearchParams(location.search),lion=params.get('actor')==='lion',warthog=params.get('actor')==='warthog',buffalo=params.get('actor')==='buffalo',rhino=params.get('actor')==='rhino',female=params.get('actor')==='youngFemale',olderFemale=params.get('actor')==='olderFemale',olderMale=params.get('actor')==='olderMale',worker=female||olderFemale||olderMale||params.get('actor')==='youngMale';
+const faceTarget=new T.Vector3(0,(olderFemale||olderMale)?1.2:worker?1.32:rhino?2.32:buffalo?1.72:warthog?(params.get('view')==='mouth'?1.4:1.85):lion?1.57:1.5,worker?.12:rhino?.55:buffalo?.35:warthog?.4:lion?.20:.48),faceDistance=(olderFemale||olderMale)?1.8:worker?1.6:rhino?1.85:buffalo?1.15:warthog?(params.get('view')==='mouth'?1.7:1.25):lion?.65:1.35;
+const camera=new T.PerspectiveCamera(32,innerWidth/innerHeight,.01,50);camera.position.set(0,1.52,1.85);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,.48);controls.update();
+const $=id=>document.getElementById(id),errors=[];let elapsed=20,previous=performance.now(),paused=false,automatic=false,action=null,actor={id:'qa-face',status:'walking'},frame=0;
+const asset=olderMale?(params.has('cheekFrameTrial')?'/test-results/olderMale-cheek-frame.glb':params.has('wideFrameTrial')?'/test-results/olderMale-wide-frame-expressive.glb':params.has('original')?'/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb':'/content/source/actors/olderMale/expressive-candidate.glb'):params.has('lidsV10Trial')?'/test-results/olderFemale-lids-v10-surface.glb':params.has('lidsV9Trial')?'/test-results/olderFemale-lids-v9-surface.glb':params.has('lidsV6Trial')?'/test-results/olderFemale-lids-v6-surface.glb':params.has('lidsV5Trial')?'/test-results/olderFemale-lids-v5-surface.glb':params.has('edgeExpressiveTrial')?'/test-results/olderFemale-edge-fit-expressive.glb':params.has('edgeFrameTrial')?'/test-results/olderFemale-edge-fit.glb':params.has('expressiveSeamTrial')?'/content/source/actors/olderFemale/surface-candidate.glb':params.has('normalSeamTrial')?'/test-results/olderFemale-normal-seam-trial.glb':olderFemale?(params.has('original')?'/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb':'/content/source/actors/olderFemale/expressive-candidate.glb'):female?'/content/source/actors/youngFemale/mouth-candidate.glb':worker?(params.has('gameplayCandidate')?'/content/source/actors/youngMale/gameplay-candidate.glb':'/content/source/actors/youngMale/expressive-candidate.glb'):rhino?'/content/source/actors/rhino/expressive-candidate.glb':buffalo?(params.has('maneTrial')?'/test-results/buffalo-mane-web.glb':params.has('original')?'/assets/0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb':'/content/source/actors/buffalo/expressive-candidate.glb'):warthog?'/content/source/actors/warthog/expressive-candidate.glb':lion?(params.has('uncompressed')?'/test-results/lion-face-candidate.glb':'/content/source/actors/lion/expressive-candidate.glb'):params.has('uncompressed')?'/test-results/hyena-face-candidate.glb':'/content/source/actors/hyena/expressive-candidate.glb';
+const lightMode=document.createElement('select');lightMode.id='lightMode';lightMode.setAttribute('aria-label','Iluminación');
+for(const [value,label] of [['studio','Luz de estudio'],['left','Luz rasante izquierda'],['right','Luz rasante derecha']]){const option=document.createElement('option');option.value=value;option.textContent=label;lightMode.append(option);}
+$('front').after(lightMode);lightMode.onchange=()=>{const studio=lightMode.value==='studio';ambient.intensity=studio?2:.6;faceLights[0].position.set(studio?3:(lightMode.value==='left'?-4:4),studio?5:1.6,studio?4:2);faceLights[0].intensity=studio?2:3;faceLights[1].intensity=studio?1:.15;};
+const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(asset);scene.add(gltf.scene);const expression=new ActorExpression(gltf.scene,actor.id),mixer=new T.AnimationMixer(gltf.scene);
+let surfacePick=null;
+renderer.domElement.addEventListener('dblclick',event=>{
+ const rect=renderer.domElement.getBoundingClientRect(),ray=new T.Raycaster();ray.setFromCamera(new T.Vector2((event.clientX-rect.left)/rect.width*2-1,1-(event.clientY-rect.top)/rect.height*2),camera);
+ gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.isSkinnedMesh){o.computeBoundingBox();o.computeBoundingSphere();}});
+ surfacePick=ray.intersectObject(gltf.scene,true).filter(hit=>hit.object.visible).slice(0,6).map(hit=>({mesh:hit.object.name,face:hit.faceIndex,vertices:hit.face&&[hit.face.a,hit.face.b,hit.face.c],point:hit.point.toArray(),uv:hit.uv?.toArray(),distance:hit.distance,material:(Array.isArray(hit.object.material)?hit.object.material[hit.face.materialIndex]:hit.object.material)?.name}));
+});
+const oralToggle=document.createElement('button');oralToggle.textContent='Ocultar interior oral';oralToggle.id='oralToggle';let oralVisible=true;
+oralToggle.onclick=()=>{oralVisible=!oralVisible;gltf.scene.traverse(o=>{if(o.isMesh&&/Oral|Cavity/i.test(o.name))o.visible=oralVisible;});oralToggle.textContent=oralVisible?'Ocultar interior oral':'Mostrar interior oral';};$('body').after(oralToggle);
+gltf.scene.updateMatrixWorld(true);const head=gltf.scene.getObjectByName('Head')??gltf.scene.getObjectByName('mixamorigHead'),headAnchor=head?head.worldToLocal(faceTarget.clone()):null,headPoint=new T.Vector3(),cameraShift=new T.Vector3(),headRotation=new T.Quaternion(),restHeadInverse=head?head.getWorldQuaternion(new T.Quaternion()).invert():new T.Quaternion();let followFace=false;
+$('follow').onclick=()=>followFace=!followFace;
+$('clipTime').oninput=()=>{paused=true;if(action)mixer.setTime(Number($('clipTime').value));};
+for(const clip of gltf.animations){const option=document.createElement('option');option.value=option.textContent=clip.name;$('clip').append(option);}
+const manual=()=>{automatic=false;expression.setValues(Number($('left').value),Number($('right').value),Number($('mouth').value));};
+for(const id of ['left','right','mouth'])$(id).oninput=manual;
+function set(l,r,m){$('left').value=l;$('right').value=r;$('mouth').value=m;manual();}
+$('neutral').onclick=()=>set(0,0,0);$('pain').onclick=()=>set(1,1,.85);$('half').onclick=()=>set(.5,.5,0);
+function faceView(x,z){
+ gltf.scene.updateMatrixWorld(true);
+ const target=head?head.localToWorld(headAnchor.clone()):faceTarget;
+ const offset=new T.Vector3(x*faceDistance,.02,z*faceDistance);
+ if(head)offset.applyQuaternion(restHeadInverse).applyQuaternion(head.getWorldQuaternion(headRotation));
+ controls.target.copy(target);camera.position.copy(target).add(offset);controls.update();
+}
+$('otherSide').onclick=()=>faceView(-1,0);$('quarter').onclick=()=>faceView(.7,.8);$('body').onclick=()=>{controls.target.set(0,.9,0);camera.position.set(2,1.8,4);controls.update();};
+for(const [label,x,z] of [['Cuerpo frontal',0,4],['Cuerpo lateral',4,0],['Cuerpo posterior',0,-4]]){const button=document.createElement('button');button.textContent=label;button.onclick=()=>{controls.target.set(0,.95,0);camera.position.set(x,1.1,z);controls.update();};$('body').after(button);}
+$('side').onclick=()=>faceView(1,0);$('front').onclick=()=>faceView(0,1);faceView(0,1);
+$('candidateLabel').textContent=olderMale?'GRANJERO MAYOR: reparación local de mejillas y nariz; modelo expresivo registrado.':params.has('lidsV10Trial')?'AMARA MAYOR: atributos de borde v10; sin instalar.':params.has('lidsV9Trial')?'AMARA MAYOR: muestreo de piel v9; sin instalar.':params.has('lidsV6Trial')?'AMARA MAYOR: parpados v6 y ajuste de aristas; sin instalar.':params.has('lidsV5Trial')?'AMARA MAYOR: parpados v5 y ajuste de aristas; sin instalar.':params.has('edgeExpressiveTrial')?'AMARA MAYOR: ajuste experimental de aristas y expresiones; sin instalar.':params.has('edgeFrameTrial')?'AMARA MAYOR: ajuste experimental de aristas, original sin expresiones; sin instalar.':params.has('expressiveSeamTrial')?'AMARA MAYOR: candidato expresivo con corrección de normales, sin instalar.':params.has('normalSeamTrial')?'AMARA MAYOR: prueba aislada de normales sobre el original, sin expresiones ni instalar.':olderFemale?(params.has('original')?'TRABAJADORA MAYOR ORIGINAL: comparación de material y tangentes.':'TRABAJADORA MAYOR: candidato facial, sin instalar; conservar arrugas y revisar costuras.'):female?'AMARA JOVEN: candidato de boca, interior y párpados. No instalado.':worker?'KOFI JOVEN: boca e interior con párpados en validación. No instalado.':rhino?'RINOCERONTE: candidato local; boca y párpados en validación. No instalado.':buffalo?(params.has('maneTrial')?'/test-results/buffalo-mane-web.glb':params.has('original')?'BÚFALO ORIGINAL: comparación del rig; sin expresiones nuevas.':'BÚFALO: boca, interior y párpados integrados en la rama; revisión en curso.'):warthog?'JABALÍ: candidato facial local; revisar sus canales cargados. No integrado en el catálogo.':lion?'LEÓN: candidato de mandíbula, interior oral y párpados. Integrado en la rama; revisión visual en curso.':'HIENA: modelo expresivo. Controles de validación de boca y parpadeo.';
+$('clip').onchange=()=>{mixer.stopAllAction();action=null;const clip=gltf.animations.find(c=>c.name===$('clip').value);$('clipTime').value=0;$('clipTime').max=clip?.duration??0;if(clip)action=mixer.clipAction(clip).reset().play();};
+$('auto').onclick=()=>{automatic=true;actor.status='walking';};if(worker)$('attack').textContent='Huir';
+$('attack').onclick=()=>{automatic=true;actor.status=worker?'fleeing':'attacking';actor.attackDuration=2;actor.attackRemaining=2;};$('hit').onclick=()=>{automatic=true;actor.status='walking';if(worker)actor.hits=(actor.hits??0)+1;else actor.magicImpact={at:elapsed,impactAt:elapsed+.24};};$('pause').onclick=()=>paused=!paused;
+addEventListener('error',e=>errors.push(e.message));
+function render(now){requestAnimationFrame(render);const dt=paused?0:Math.min(.1,(now-previous)/1000);previous=now;elapsed+=dt;if(actor.status==='attacking'){actor.attackRemaining=Math.max(0,actor.attackRemaining-dt);if(!actor.attackRemaining)actor.status='walking';}if(action)mixer.update(dt);if(automatic)expression.update(actor,worker?'worker':'animal',elapsed);if(followFace&&head){gltf.scene.updateMatrixWorld(true);headPoint.copy(headAnchor).applyMatrix4(head.matrixWorld);cameraShift.copy(headPoint).sub(controls.target);camera.position.add(cameraShift);controls.target.copy(headPoint);controls.update();}renderer.render(scene,camera);if(++frame%10===0)$('status').textContent=JSON.stringify({ready:true,asset,surfacePick,lighting:lightMode.value,elapsed,paused,automatic,clip:action?.getClip().name??null,clipTime:action?.time??0,followFace,state:actor.status,clips:gltf.animations.map(c=>c.name),morphs:expression.bindings.map(b=>({mesh:b.mesh.name,channel:b.channel,level:b.level,value:b.mesh.morphTargetInfluences[b.index]})),draws:renderer.info.render.calls,errors},null,2);}
+requestAnimationFrame(render);
+const recordFace=document.createElement('button');recordFace.textContent='Grabar rostro 6 s';$('body').after(recordFace);
+recordFace.onclick=async()=>{
+ if(recordFace.disabled)return;recordFace.disabled=true;let recorder,stream;
+ try{
+  stream=renderer.domElement.captureStream(30);const chunks=[];
+  recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:5000000});
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  const done=new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=reject;});
+  recorder.start();recordFace.textContent='Grabando rostro';
+  await new Promise(resolve=>setTimeout(resolve,6000));recorder.stop();await done;
+  const response=await fetch('http://127.0.0.1:5199/idle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});
+  if(!response.ok)throw Error('Face recording could not be saved');recordFace.textContent='Rostro guardado';
+ }catch(error){errors.push(String(error));recordFace.textContent='Error al grabar rostro';}
+ finally{if(recorder?.state==='recording')recorder.stop();for(const track of stream?.getTracks()??[])track.stop();recordFace.disabled=false;}
+};

@@ -1,0 +1,59 @@
+{
+  "ready": true,
+  "campaign": true,
+  "entityCounts": {
+    "workers": 135,
+    "structures": 51,
+    "crops": 5362,
+    "animals": 0
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 20482.431537980025,
+  "simulate": false,
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 110.49538060817201,
+        "y": 14.2963325729409,
+        "z": 11.770069139991618
+      },
+      "opacity": 1
+    }
+  ],
+  "reused": 2,
+  "draws": 152,
+  "audioVoices": 0,
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "growth",
+      "plan": 19.700000047683716,
+      "logic": 1.2999999523162842,
+      "render": 46.799999952316284,
+      "total": 67.79999995231628
+    },
+    {
+      "kind": "growth",
+      "plan": 7.900000095367432,
+      "logic": 1.5,
+      "render": 37.199999928474426,
+      "total": 46.60000002384186
+    },
+    {
+      "kind": "multiply",
+      "plan": 5.800000071525574,
+      "logic": 2.100000023841858,
+      "render": 35.699999928474426,
+      "total": 43.60000002384186
+    }
+  ]
+}

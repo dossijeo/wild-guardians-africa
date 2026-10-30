@@ -1,0 +1,27 @@
+diff --git a/src/rendering/african-toon.js b/src/rendering/african-toon.js
+index 88b76d0be..84396b847 100644
+--- a/src/rendering/african-toon.js
++++ b/src/rendering/african-toon.js
+@@ -76,7 +76,7 @@ export class AfricanToon {
+     const {endpointFunctions,atmosphereCacheKey}=this.environmentRecipe;
+     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
+     this.materials.add(material);
+-    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,warthog=material.userData.warthogSurface===true,matteWorker=material.userData.matteWorkerBody===true,cache=()=>baseCache()+(beast?'|beast-contrast-v1'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':matteWorker?'|worker-matte-v1':'');
++    const original=material.onBeforeCompile,baseCache=material.customProgramCacheKey.bind(material),beast=material.userData.beastSurface===true,warthog=material.userData.warthogSurface===true,matteWorker=material.userData.matteWorkerBody===true,cache=()=>baseCache()+(beast?'|beast-contrast-v2'+(warthog?'|legacy-warthog':''):warthog?'|warthog-matte-night-v1':matteWorker?'|worker-matte-v1':'');
+     material.onBeforeCompile=(shader,renderer)=>{
+       if(beast)Object.assign(shader.uniforms,this.beastUniforms);
+       original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);if(material.userData.biomeGround)Object.assign(shader.uniforms,material.userData.biomeGround);if(material.userData.artBounds){Object.assign(shader.uniforms,this.artUniforms);const b=material.userData.artBounds;shader.uniforms.uArtLocalMin={value:b.min};shader.uniforms.uArtLocalSize={value:b.size};shader.uniforms.uArtCrown={value:b.crown};shader.uniforms.uArtVolcanicGlow=material.userData.nativeVolcanicGlow??this.artUniforms.uArtVolcanicGlow;}if(material.userData.toonGround)Object.assign(shader.uniforms,this.contactUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.artSurface??material.userData.nativeSurface?.type??1};
+diff --git a/src/rendering/beast-lighting.js b/src/rendering/beast-lighting.js
+index 4510c2bb7..3e5c2fb24 100644
+--- a/src/rendering/beast-lighting.js
++++ b/src/rendering/beast-lighting.js
+@@ -18,7 +18,8 @@ export function beastLightingFunctions(source){
+   beastLight+=sqrt(max(albedo,vec3(0.)))*vec3(.11,.15,.21)*rim*mix(.45,.85,uNight);
+   beastLight+=reflected*.012*(1.-rough*.6);
+   vec3 color=saturateGrade4(filmic4(beastLight),1.08);
+-  color=clamp((color-vec3(.40))*1.10+vec3(.40),0.,1.);
++  // Preserve dark fur detail instead of clipping all values below 0.036.
++  color=pow(clamp(color,0.,1.),vec3(1.10));
+   float edge=smoothstep(.30,.68,length(fwidth(N))*2.);
+   return color*(1.-edge*.10);
+  }`+source.slice(end);

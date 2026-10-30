@@ -1,0 +1,68 @@
+# Seguimiento de fluidez y contacto del centro
+
+El usuario solicita investigar tanto el z-fighting interior del centro de trabajo como el rendimiento de los últimos vídeos. Esta petición amplía la prioridad de rendimiento, anteriormente delegada a otra investigación.
+
+Se repitió el ciclo lateral del león sin MediaRecorder, en WorldScene/spatial-WASM, con `nativeRaid&lightingReview&characterLod=auto&recoveryClose&recoveryDay`, mediante «Medir ciclo físico real». Datos completos en `lion-side-no-recording.json`.
+
+| Métrica | Vídeo anterior | Sin grabación |
+| --- | ---: | ---: |
+| Media de fotograma | 177,16 ms | 176,36 ms |
+| P95 | 481,97 ms | 482,22 ms |
+| P99 | 532,19 ms | 548,89 ms |
+| Bloque world.render, media | 64,99 ms | 65,34 ms |
+| Física total, media | 3,13 ms | 2,61 ms |
+
+El ciclo sin grabación completó 12,05 segundos simulados en 42,36 segundos de reloj, sin errores. El delta de simulación de esta herramienta está limitado a 50 ms; por eso los segundos simulados no reflejan tiempo real cuando cae el framerate. No se ha alterado ese límite para disfrazar la fluidez.
+
+Es una repetición diagnóstica, no un benchmark ABBA: no permite cuantificar pequeñas diferencias de captura. Sí contradice la hipótesis de que eliminar la grabación resuelva por sí solo la lentitud. `renderMs` rodea world.render e incluye actualizaciones; no es tiempo GPU. Faltan medidas separadas de Game.tick, trabajo diagnóstico, espera de scheduler y etapas de renderizado. No atribuir el tiempo restante a GPU sin temporizadores válidos.
+
+Respecto al anclaje, scene.js coloca el centro en `field.surface(e.x,e.z)+0.025`. El muestreo visual del terreno triangulado existe en terrain-surface.js, pero no se utiliza para ese anclaje. Además, una altura central no comprueba todo el suelo interior. Son hipótesis pendientes de reproducción visual y medición del área: aún no se ha demostrado cuál causa el z-fighting y no se ha aplicado un desplazamiento arbitrario.
+
+Pendiente: reproducir el parpadeo interior con cámara en movimiento, medir suelo/modelo en esa zona, corregir la causa y volver a grabar; perfilar etapas sin alterar mecánicas y validar cualquier optimización con condiciones comparables. Ninguno de estos problemas se considera resuelto por esta medición.
+
+## Desglose adicional
+
+Añadiendo `profileStages` a la misma URL se mide cada avance del generador de actualización, el dibujo, Game.tick y el endFrame del scheduler anterior. Se conservan los datos completos en `lion-side-stage-profile.json`. El ciclo terminó sin errores: media de fotograma 172,56 ms, P95 449,13 ms, P99 515,54 ms. Es otra muestra diagnóstica, no una mejora.
+
+Game.tick: media 17,59 ms, P95 53,17 ms, máximo 115,30 ms. Scheduler anterior: media 0,12 ms, máximo 2,86 ms. La etapa 9 (`drawRenderFrame`) cuesta 54,63 ms de media, P95 67,31 ms y máximo 120,71 ms. Se mide duración síncrona de la llamada, no tiempo GPU: puede incluir esperas del controlador.
+
+Mapa de etapas: 0 cámara/chunks; 1 LOD y sync de entidades; 2 obstrucciones; 3 vegetación lejana; 4 agrupación de assets; 5 efectos y Guardián; 6 uniformes; 7 preparación de recursos; 8 cierre del generador; 9 dibujo. Las medias de 1 y 5 son 3,92 y 4,91 ms respectivamente. No se pueden sumar percentiles de etapas para construir un percentil total.
+
+La siguiente investigación debe desglosar las pasadas de dibujo y la simulación. El intervalo total incluye también trabajo de diagnóstico, audio, navegador y esperas no cubiertas; no atribuir ese resto automáticamente a GPU. No hay cambios de producción en esta instrumentación.
+
+## Demanda de profundidad de partículas
+
+El perfil de pasadas (`lion-side-pass-profile.json`) mide 16,32 ms de media en captureDepth, 0,15 ms en cielo y 0,07 ms en máscara de edificios. Las llamadas renderer.render del mundo suman 45,91 ms, incluyendo profundidad: estas cifras están anidadas y NO deben sumarse entre sí.
+
+Se corrigió NativeVfx para solicitar profundidad solo si existe un sprite empaquetado con suavizado de contacto activo cuya esfera conservadora intersecte el frustum local. La esfera contempla la rotación previa al escalado del shader. No cambia simulación ni elimina sprites; únicamente evita capturar profundidad que no puede ser consultada por fragmentos visibles. Se conservan los sprites que cruzan bordes de pantalla.
+
+36 pruebas de ataques, locomoción, trabajo y demanda de profundidad pasan. Un ciclo real posterior (`lion-side-depth-demand.json`) completa la recuperación sin errores. La captura final no certifica por sí sola todas las transiciones de partículas; queda pendiente ampliar la revisión gráfica.
+
+Resultado negativo de rendimiento en esta escena: captureDepth conserva una media de 16,15 ms (antes 16,32). El intervalo medio pasa de 171,76 a 166,28 ms, pero son muestras únicas, no un ABBA, y no se atribuye esa variación al cambio. Persisten partículas visibles con suavizado; la optimización no resuelve el cuello de botella. Se mantienen los datos de ambas ejecuciones.
+
+## Reutilización de sombras y precálculo
+
+`lion-side-shadow-profile.json` conserva una muestra adicional anterior a la deduplicación de lecturas de huesos. La pasada shadowMap.render cuesta 13,16 ms de media, P95 18,94 ms y P99 23,35 ms. Son tiempos síncronos CPU/controlador, no temporizadores GPU. El intervalo de fotograma es 139,90 ms de media, P95 415,60 ms y P99 449,01 ms; no se atribuye la diferencia respecto a muestras anteriores a una optimización.
+
+La caché registra 697 dibujos y 1 reutilización acumulados desde la carga de la escena, NO únicamente durante el intervalo medido. No hay contratos de sombra desconocidos. Con personajes en movimiento, reutilizar el mapa completo tiene poco margen en esta muestra.
+
+Se evita leer repetidamente las matrices de un mismo Skeleton compartido por varias mallas en cada snapshot. Se mantienen las matrices bind por malla y se registra la identidad del Skeleton; cada nuevo snapshot sigue comprobando la pose. Las pruebas cubren cambios de huesos, bind e identidad del esqueleto. No se ha medido todavía un ahorro de FPS ni validado gráficamente este último ajuste.
+
+Criterio para siguientes optimizaciones: considerar AO horneado por recurso, preparación fuera del hilo principal y reutilización de contribuciones estáticas. Separar sombras estáticas y dinámicas requiere medir también el coste de composición, memoria e invalidación por destrucción, construcción, viento y cambio de luz. No congelar sombras animadas. La profundidad depende de cámara y geometría visible: solo reutilizarla cuando esas entradas y sus consumidores lo permitan; no es un mapa global que pueda hornearse una vez. El problema de fluidez sigue abierto.
+
+## Comparación diagnóstica del escaneo de caché durante combate
+
+Después de deduplicar los huesos compartidos se ejecutaron dos ciclos nuevos, primero caché desactivada y después activa. Misma URL nativa, león lateral, día, LOD auto y cámara recoveryClose; añadir `noShadowCache` únicamente para el primero. Seleccionar lion y side, después «Medir ciclo físico real». No se desactivan sombras: sin caché se dibujan siempre. `shadowCacheInterval` cuenta solo el intervalo del ciclo, separado de los acumulados históricos.
+
+| Medida | Sin caché | Con caché |
+| --- | ---: | ---: |
+| Pasadas / reutilizaciones en intervalo | 241 / 0 | 241 / 0 |
+| shadowMap.render media | 6,95 ms | 12,65 ms |
+| shadowMap.render P95 | 9,42 ms | 18,26 ms |
+| Fotograma medio | 129,99 ms | 136,20 ms |
+| Fotograma P95 | 415,75 ms | 399,12 ms |
+| Fotograma P99 | 465,61 ms | 432,57 ms |
+
+Ambos ciclos completan la simulación sin errores. Informes compactos: `lion-side-cache-off.json` y `lion-side-cache-on.json`; se omiten las trazas extensas por hueso, conservando métricas, estado final y comandos. Captura final `shadow-cache-cycle.png`.
+
+La diferencia de la pasada es compatible con un coste relevante del escaneo sin reutilizaciones durante movimiento. No es un ABBA ni una medición GPU; los percentiles globales incluso evolucionan en sentido contrario a la media. No se declara ganancia de fluidez. No se desactiva la caché en producción: ya existe evidencia de beneficio en escenas quietas. Próximo candidato: reducir de forma adaptativa la frecuencia de comprobación tras fallos repetidos, redibujando siempre durante los intervalos omitidos para no congelar sombras. Requiere pruebas y comparaciones alternadas antes de adoptarlo.

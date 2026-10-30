@@ -1,0 +1,19 @@
+{
+  "revision": "13dc68d4d100ca018150e4be2b7377ebe0594638",
+  "tests": {
+    "command": "node --test tests/awakening-ritual.test.js tests/awakenings.test.js tests/guardian-ritual-path.test.js tests/guardian-placement.test.js",
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0
+  },
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "viteSeconds": 16.35,
+    "warnings": [
+      "existing mixed static/dynamic far-atmosphere import",
+      "large bundle chunks"
+    ]
+  },
+  "scope": "Ritual logic/path/placement regression and production compile; not full graphical or performance acceptance."
+}

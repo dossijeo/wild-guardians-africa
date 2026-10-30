@@ -1,3 +1,4 @@
+import {awakeningVisible,awakeningVisibleAt} from './awakening-presentation.js';
 import * as THREE from 'three';
 import {wallVisualAt} from '../simulation/structure-presentation.js';
 import {wallStages,morphedWallPositions} from './walls-native.js';
@@ -7,13 +8,14 @@ import {splitGateBridge,articulateGate} from './gate-articulation.js';
 // Original getVAO expands indexed faces so each triangle keeps ONE region.
 export function wallBridge(source,destination=null){
   const count=source.i.length,pos=new Float32Array(count*3),normal=new Float32Array(count*3),uv=new Float32Array(count*2),roots=new Float32Array(count*3),peers=new Float32Array(count*3),targets=new Float32Array(count*3),targetNormals=new Float32Array(count*3);
+  const visibility=source.visibility?new Float32Array(count):null;
   for(let face=0;face<count/3;face++){
     const region=source.faceRegions[face],root=destination?source.regions[region].root:[0,0,0],peer=destination?destination.peers[region]:root;
     for(let j=0;j<3;j++){
-      const at=face*3+j,vi=source.i[at];pos.set(source.p.subarray(vi*3,vi*3+3),at*3);normal.set(source.n.subarray(vi*3,vi*3+3),at*3);uv.set(source.uv.subarray(vi*2,vi*2+2),at*2);roots.set(root,at*3);peers.set(peer,at*3);targets.set((destination?.p??source.p).subarray(vi*3,vi*3+3),at*3);targetNormals.set((destination?.n??source.n).subarray(vi*3,vi*3+3),at*3);
+      const at=face*3+j,vi=source.i[at];if(visibility)visibility[at]=source.visibility[vi]/255;pos.set(source.p.subarray(vi*3,vi*3+3),at*3);normal.set(source.n.subarray(vi*3,vi*3+3),at*3);uv.set(source.uv.subarray(vi*2,vi*2+2),at*2);roots.set(root,at*3);peers.set(peer,at*3);targets.set((destination?.p??source.p).subarray(vi*3,vi*3+3),at*3);targetNormals.set((destination?.n??source.n).subarray(vi*3,vi*3+3),at*3);
     }
   }
-  return {pos,normal,uv,roots,peers,targets,targetNormals,lastMorph:NaN,morphed:null};
+  return {pos,normal,uv,roots,peers,targets,targetNormals,...(visibility?{visibility}:{}),lastMorph:NaN,morphed:null};
 }
 
 export class NativeWall extends THREE.Group {
@@ -24,7 +26,7 @@ export class NativeWall extends THREE.Group {
     this.update(entity,undefined,elapsed);
   }
   update(entity,seconds,elapsed){
-    this.blessingUniform.value.set(entity.blessing?1:0,entity.blessing?.at??0,entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?(this.awakeningSelected?2:1):0);
+    this.blessingUniform.value.set(awakeningVisible(entity,elapsed)?1:0,awakeningVisibleAt(entity),entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?(this.awakeningSelected?2:1):0);
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -53,6 +55,7 @@ export class NativeWall extends THREE.Group {
         if(stage.key.endsWith('_puerta')&&nativeGateLeaves[entity.material])bridge=splitGateBridge(bridge,nativeGateLeaves[entity.material]);
         const geometry=new THREE.BufferGeometry();
         geometry.setAttribute('position',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('normal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('uv',new THREE.BufferAttribute(bridge.uv,2));
+        if(bridge.visibility)geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(bridge.visibility.slice(),1));
         const material=prototype.material.clone();material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;material.userData.blessingObject=this.blessingUniform;
         geometry.computeBoundingBox();const bounds=geometry.boundingBox;material.userData.blessingWallBounds={value:new THREE.Vector4(bounds.min.x,bounds.min.y,Math.max(.01,bounds.max.x-bounds.min.x),Math.max(.01,bounds.max.y-bounds.min.y))};
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge});
@@ -65,6 +68,7 @@ export class NativeWall extends THREE.Group {
       for(let j=0;j<normals.length;j++)normals[j]=bridge.normal[j]+(bridge.targetNormals[j]-bridge.normal[j])*t;
       for(let j=0;j<normals.length;j+=3)if(normals[j]**2+normals[j+1]**2+normals[j+2]**2<.0001)normals.set(bridge.normal.subarray(j,j+3),j);
       mesh.geometry.attributes.position.array.set(articulateGate(bridge,opening,positions,normals));mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
+      const ao=mesh.geometry.attributes.ambientVisibility;if(ao){const release=Math.sin(Math.PI*t);for(let k=0;k<ao.count;k++){const fade=Math.max(release,bridge.leafFlags?.[k]?opening:0);ao.array[k]=bridge.visibility[k]+(1-bridge.visibility[k])*fade;}ao.needsUpdate=true;}
       mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
     });
   }

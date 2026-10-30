@@ -758,6 +758,18 @@ export function warmRaidApproaches(state,specs,entry,nav){
     }
   }finally{nav.state=originalState;}
 }
+// Interrupt both authoritative intent ownership and the JS approach reservation.
+// Recovery must select a fresh route from the displaced physical position.
+export function interruptAnimalAttack(s,a,nav) {
+ // Native cancellation deliberately refuses a committed strike. Finish its
+ // ownership first; damage is emitted by updateRaid, not by this operation.
+ if(a.status==='attacking')nav?.intentTaskPlanner?.finishAttackIntent(a.id);
+ release(s,a,nav);a.destinationId=null;a.hitApplied=true;a.attackRemaining=0;
+ if(a.status==='attacking')a.status='walking';
+}
+export function retreatAnimal(s,a,reason='magic',nav={}) {
+ release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
+}
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   // Resolve confirmed crop and barrier changes before the next attack
@@ -773,6 +785,8 @@ export function updateRaid(s,dt,nav) {
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
+    if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
+    if((a.magicStunUntil??0)>s.elapsed)continue;
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
       a.attackRemaining=Math.max(0,a.attackRemaining-dt);

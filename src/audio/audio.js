@@ -1,3 +1,5 @@
+import {playGuardianWorldCue} from './guardian-presence.js';
+import {MagicCueQueue,liveMagicCue} from './magic-cue-queue.js';
 import {PowerReadyAudio} from './power-ready-audio.js';
 import {destructionSounds} from './destruction-audio.js';
 import {UnlockAudio} from './unlock-audio.js';
@@ -28,8 +30,9 @@ export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
 export function eventAudioOptions(event,id,state,listener){
   const bus=soundBus(id);if(bus!=='world')return id==='ui_unlock'?{bus,emitter:'ui:unlock'}:{bus};
-  const emitter=id==='beast_hit_character'?event.animalId??event.targetId:event.workerId??(event.type.startsWith('Worker')?event.targetId:event.animalId??event.targetId);
-  let entity=event.presentation;
+  const launch=event.type==='SpellActivated'&&id==='spirit_power_activate';
+  const emitter=launch?'guardian-world':id==='beast_hit_character'?event.animalId??event.targetId:event.workerId??(event.type.startsWith('Worker')?event.targetId:event.animalId??event.targetId);
+  let entity=launch?event.presentation?.origin??event.presentation:event.presentation;
   if(!entity&&state)for(const list of [state.workers,state.raid?.animals,state.structures,state.plants,state.crates]){entity=list?.find(e=>e.id===emitter);if(entity)break;}
   const distance=entity&&listener?Math.hypot(entity.x-listener.x,entity.z-listener.z):0;
   return {bus,emitter,gain:Number.isFinite(distance)?1/(1+(distance/24)**2):1};
@@ -179,7 +182,7 @@ export class AudioSystem {
     }
   }
   async sound(id,options={}) {
-    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:soundPriority(id),family:options.family??id});return null;
+    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:options.priority??soundPriority(id),family:options.family??id});return null;
   }
   async ambientSound(id,options={}){
     if(this.context?.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;
@@ -190,6 +193,7 @@ export class AudioSystem {
     this.ambient??=new AmbientAudio((id,opts)=>this.ambientSound(id,opts),source=>this.stopVoice(source),(source,value)=>{const gain=this.voices.get(source)?.volume.gain;if(gain){if(gain.setTargetAtTime)gain.setTargetAtTime(value,this.context.currentTime,.08);else gain.value=value;}},()=>this.context.currentTime);this.ambient.update(state,options);
   }
   process(events,{state,listener}={}){
+    this.magicCues??=new MagicCueQueue();const due=this.magicCues.take(state);
     let start=0;
     // Game.emit appends and shifts this bounded history. Stable frames inspect
     // one anchor; a shifted history searches only when there are new facts.
@@ -198,16 +202,24 @@ export class AudioSystem {
       else {const previous=events.lastIndexOf(this.eventAnchor);if(previous>=0)start=previous+1;}
     }
     let alerts;
-    for(let index=start;index<events.length;index++){
-      const event=events[index];if(this.seen.has(event.id))continue;this.seen.add(event.id);
+    for(let index=due.length?-due.length:start;index<events.length;index++){
+      if(index===0&&start>0)index=start;if(index>=events.length)break;const event=index<0?due[index+due.length]:events[index];
+      if(index>=0){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(this.magicCues.defer(event,state))continue;}
       // Automatic harvest only queues worker work; it is not a player click.
       // Consume its ID normally so history changes cannot replay it later.
-      if(event.type==='HarvestRequested'&&event.automatic===true)continue;
+      if(event.type==='HarvestRequested'&&event.automatic===true||!liveMagicCue(event,state))continue;
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
-      const id=event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
+      const id=event.type==='GuardianMagicHit'&&ANIMAL_SOUND_ROUTES[event.species]?event.species+'_hurt':event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
       const requested=this.context?.currentTime??0,generation=this.generation;
+      const magicOptions=event.type==='GuardianMagicHit'?{family:'animal-hurt',priority:2,isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length&&(!state||this.magicCues.state===state&&!state.result&&(!Number.isFinite(event.presentation?.cueAt)||state.elapsed>=event.presentation.cueAt)&&state.raid?.animals.some(a=>a.id===event.targetId&&a.status!=='gone'))}:{};
+      const targetedLaunch=event.type==='SpellActivated'&&['growth','multiply','attack'].includes(event.kind)&&event.targetId;
+      if(targetedLaunch){const elapsed=state?.elapsed;magicOptions.isCurrent=()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&(!state||this.magicCues.state===state&&!state.result&&!state.pauses?.length&&state.elapsed>=elapsed)&&liveMagicCue(event,state);}
       const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
-      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      if(id){const options={...eventAudioOptions(event,id,state,listener),...magicOptions,...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})};(id==='spirit_power_activate'?playGuardianWorldCue(this,id,options):this.sound(id,options)).catch(()=>{});}
+      if(event.type==='GuardianMagicHit'){
+        const options=eventAudioOptions(event,'beast_take_damage',state,listener);
+        this.sound('beast_take_damage',{...options,...magicOptions,family:'magic-contact',emitter:'impact:'+event.targetId,gain:options.gain*.45}).catch(()=>{});
+      }
       const alert=event.type==='StructureHit'?structureAlertSound(event):eventAlertSound[event.type];
       if(alert&&!(alerts??=new Set()).has(alert)){alerts.add(alert);const requested=this.context?.currentTime??0,generation=this.generation;
         this.sound(alert,{bus:'ui',family:alert==='ui_objective_complete'?'tutorial-complete':alert==='game_farmer_hurt'?'worker-danger':'structure-danger',emitter:alert==='ui_objective_complete'?'ui:tutorial':alert==='game_farmer_hurt'?'ui:worker-danger':'ui:structure-danger',gain:1,
@@ -291,7 +303,7 @@ export class AudioSystem {
     this.animalSoundPreparation??=new Map();
     for(const id of new Set([...species,...(state.raid?.animals.map(a=>a.species)??[])])){
       if(this.animalSoundPreparation.has(id))continue;
-      const pending=this.sfxBank().then(bank=>Promise.all([...Object.values(ANIMAL_SOUND_ROUTES[id]??{}),'game_enemy_detected'].map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
+      const pending=this.sfxBank().then(bank=>Promise.all([...Object.values(ANIMAL_SOUND_ROUTES[id]??{}),id+'_hurt','game_enemy_detected'].map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
       this.animalSoundPreparation.set(id,pending);pending.catch(()=>{if(this.animalSoundPreparation.get(id)===pending)this.animalSoundPreparation.delete(id);});
     }
   }
@@ -300,7 +312,7 @@ export class AudioSystem {
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);}
-  stop(){this.powerReadyPreparation=null;this.powerReadyRetryAt=0;this.powerReady?.dispose();this.raidArrival?.dispose();this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  stop(){this.magicCues?.clear();this.powerReadyPreparation=null;this.powerReadyRetryAt=0;this.powerReady?.dispose();this.raidArrival?.dispose();this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.powerReady?.dispose();this.raidArrival?.dispose();this.menuStream?.pause();this.unlocks?.dispose();this.guardianAudio?.suspend();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}
   resume(){this.context?.resume().then(()=>this.menuStream?.play()).catch(error=>{this.musicError=error;});}
   dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}

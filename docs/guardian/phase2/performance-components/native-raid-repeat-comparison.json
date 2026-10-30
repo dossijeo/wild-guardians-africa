@@ -1,0 +1,67 @@
+{
+  "sourceRevision": "9576cea69",
+  "order": [
+    "reference",
+    "guardian"
+  ],
+  "worldAuthority": [
+    "spatial-wasm",
+    "spatial-wasm"
+  ],
+  "frames": [
+    1200,
+    1200
+  ],
+  "equalOutcomes": true,
+  "equalCommands": true,
+  "commands": [
+    5,
+    5
+  ],
+  "metrics": {
+    "averageFps": {
+      "reference": 15.097356245332794,
+      "guardian": 14.688642998284978
+    },
+    "frameP95": {
+      "reference": 99.8299999999872,
+      "guardian": 99.8799999999901
+    },
+    "frameP99": {
+      "reference": 133.11000000000058,
+      "guardian": 166.27999999999884
+    },
+    "frameMax": {
+      "reference": 1612.9900000000052,
+      "guardian": 1479.9550000000017
+    },
+    "framesOver100ms": {
+      "reference": 39,
+      "guardian": 44
+    },
+    "animationP95": {
+      "reference": 0,
+      "guardian": 0.28999996185302734
+    },
+    "vfxP95": {
+      "reference": 0.004999995231628418,
+      "guardian": 0.7999999523162842
+    },
+    "physicsP95": {
+      "reference": 4.865000009536743,
+      "guardian": 5.320000052452087
+    },
+    "drawP95": {
+      "reference": 181,
+      "guardian": 179
+    },
+    "hiddenFrames": {
+      "reference": 0,
+      "guardian": 0
+    }
+  },
+  "errors": [
+    [],
+    []
+  ]
+}

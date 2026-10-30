@@ -8,8 +8,10 @@ const canvas=document.querySelector('#world'),renderer=new THREE.WebGLRenderer({
 const scene=new THREE.Scene();scene.background=new THREE.Color('#c8cdb9');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-8,13,9);scene.add(sun,sun.target);
 const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(2,16,25);const controls=new OrbitControls(camera,canvas);controls.target.set(0,1,0);controls.update();
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:'#ada78b',roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.025;scene.add(floor);
-const assets=new Assets(),descriptors=(await json('/content/destruction.json')).buildings,pass=new BuildingDestructionPass(renderer,sun),houses=[];
-for(let i=0;i<descriptors.length;i++){const descriptor=descriptors[i],template=await assets.building(descriptor),entity={id:descriptor.culture,kind:'center',maxHp:600,hp:600,status:'intact',collapseRemaining:0},house=new NativeBuilding(template,entity,pass);house.position.x=(i-2)*6;scene.add(house);houses.push({descriptor,template,entity,house});}
+const renewed=new URLSearchParams(location.search).has('renewed');
+if(renewed){document.title='QA · Centros renovados';canvas.setAttribute('aria-label','Cinco centros renovados con destrucción nativa');camera.far=250;camera.position.set(0,28,70);controls.target.set(0,3,0);controls.update();}
+const assets=new Assets(),descriptors=(await json(renewed?'/test-results/renewed-centers/catalogue.json':'/content/destruction.json')).buildings,pass=new BuildingDestructionPass(renderer,sun),houses=[];
+for(let i=0;i<descriptors.length;i++){const descriptor=descriptors[i],template=await assets.building(descriptor),entity={id:descriptor.culture,kind:'center',maxHp:600,hp:600,status:'intact',collapseRemaining:0},house=new NativeBuilding(template,entity,pass);house.position.x=(i-2)*(renewed?16:6);scene.add(house);houses.push({descriptor,template,entity,house});}
 let elapsed=0,paused=true,playing=false;
 function status(){for(const item of houses)item.house.update(item.entity,elapsed);document.querySelector('#status').textContent=houses.map(({descriptor,entity,house})=>`${descriptor.name}: daño visual ${(house.damage*100).toFixed(2)} % · ${entity.status} · caída pendiente ${entity.collapseRemaining.toFixed(2)} s · humo ${house.effects.native.smoke.length} · escombros ${house.effects.native.debris.length} · instancias ${house.effects.debris.geometry.instanceCount}`).join('\n')+`\nTiempo simulado ${elapsed.toFixed(2)} s · ${paused?'pausado':'activo'}`;}
 function advance(dt){if(paused)return;elapsed+=dt;for(const {entity} of houses)if(entity.status==='collapsing'){entity.collapseRemaining=Math.max(0,entity.collapseRemaining-dt);if(entity.collapseRemaining<=1e-9){entity.status='ruined';entity.hp=0;}}status();}
@@ -21,7 +23,15 @@ document.querySelector('#fade').onclick=()=>{const before=paused;paused=false;ad
 document.querySelector('#finish').onclick=()=>{const before=paused;paused=false;for(let i=0;i<32;i++)advance(.1);paused=before;status();};
 document.querySelector('#pause').onclick=()=>{paused=!paused;playing=!paused;document.querySelector('#pause').textContent=paused?'Reanudar':'Pausar';status();};
 document.querySelector('#reset').onclick=()=>{playing=false;paused=true;elapsed=0;document.querySelector('#pause').textContent='Reanudar';for(const {entity} of houses){entity.status='intact';entity.hp=600;entity.collapseRemaining=0;}status();};
-document.querySelector('#close-up').onclick=()=>{controls.target.set(-12,1.5,0);camera.position.set(-5,5,9);controls.update();};
+document.querySelector('#close-up').onclick=()=>{controls.target.set(renewed?-32:-12,1.5,0);camera.position.set(renewed?-25:-5,5,9);controls.update();};
+let reviewCulture=null;
+if(new URLSearchParams(location.search).has('faceReview')){
+ const select=document.createElement('select');select.id='cultureReview';select.setAttribute('aria-label','Cultura para inspección');
+ for(const {descriptor} of houses){const option=document.createElement('option');option.value=descriptor.culture;option.textContent=descriptor.culture;select.append(option);}
+ const orbit=document.createElement('button');orbit.textContent='Girar vista 45 grados';let angle=.6;
+ function frameHouse(){reviewCulture=select.value;pass.key='' ;const selected=houses.find(h=>h.descriptor.culture===select.value);for(const item of houses){item.house.visible=item===selected;item.house.opening.visible=item===selected&&item.house.damage>.015&&item.house.damage<.9998;}const x=selected.house.position.x;controls.target.set(x,1.5,0);camera.position.set(x+Math.sin(angle)*15,7,Math.cos(angle)*15);controls.update();}
+ select.onchange=frameHouse;orbit.onclick=()=>{angle+=Math.PI/4;frameHouse();};document.querySelector('header').append(select,orbit);frameHouse();
+}
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);resize();status();let last=performance.now();
-function render(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(playing)advance(dt);controls.update();pass.render(camera);renderer.render(scene,camera);pass.renderSmoke(camera,scene);requestAnimationFrame(render);}requestAnimationFrame(render);
+function render(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(playing)advance(dt);controls.update();if(reviewCulture)for(const item of houses)item.house.opening.visible=item.descriptor.culture===reviewCulture&&item.house.damage>.015&&item.house.damage<.9998;pass.render(camera);renderer.render(scene,camera);pass.renderSmoke(camera,scene);requestAnimationFrame(render);}requestAnimationFrame(render);
 </script></html>

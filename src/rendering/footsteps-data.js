@@ -4,8 +4,8 @@ export const FOOTSTEPS = {
   "method": "120 Hz native ToeBase (Foot for rigs without toes) height sampling; descending crossing of lowest 20% of each foot vertical range; in-place native clips; presentation contacts only",
   "sources": {
     "youngMale": {
-      "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
-      "sha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+      "url": "/assets/d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2.glb",
+      "sha256": "d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2",
       "clips": {
         "Walk_Skip": {
           "duration": 2.875,
@@ -284,8 +284,8 @@ export const FOOTSTEPS = {
       }
     },
     "olderFemale": {
-      "url": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
-      "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+      "url": "/assets/a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c.glb",
+      "sha256": "a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c",
       "clips": {
         "Walk_Skip": {
           "duration": 2.875,
@@ -424,8 +424,8 @@ export const FOOTSTEPS = {
       }
     },
     "youngFemale": {
-      "url": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
-      "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+      "url": "/assets/382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c.glb",
+      "sha256": "382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c",
       "clips": {
         "Walk_Skip": {
           "duration": 2.875,
@@ -564,8 +564,8 @@ export const FOOTSTEPS = {
       }
     },
     "warthog": {
-      "url": "/assets/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
-      "sha256": "6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275",
+      "url": "/assets/53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89.glb",
+      "sha256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
@@ -646,47 +646,47 @@ export const FOOTSTEPS = {
       }
     },
     "hyena": {
-      "url": "/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
-      "sha256": "e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472",
+      "url": "/assets/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb",
+      "sha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
           "samples": 126,
           "heights": {
             "Left": {
-              "min": 0.10199646418627234,
-              "max": 0.24094103018745572,
-              "threshold": 0.12978537738650903
+              "min": 0.10199690214086687,
+              "max": 0.24094110262181606,
+              "threshold": 0.12978574223705672
             },
             "Right": {
-              "min": 0.09507031991726395,
-              "max": 0.2194188494061815,
-              "threshold": 0.11994002581504745
+              "min": 0.09507093366957237,
+              "max": 0.21941902344967323,
+              "threshold": 0.11994055162559254
             }
           },
           "contacts": [
             {
               "foot": "Left",
-              "time": 0.0010183691865580508,
+              "time": 0.0010182158909089133,
               "point": [
-                0.1351819201646606,
-                0.12377013132744744
+                0.13518193756941746,
+                0.12377011898496502
               ]
             },
             {
               "foot": "Left",
-              "time": 0.24398896104899062,
+              "time": 0.24398921040254615,
               "point": [
-                0.16965449776648728,
-                0.49201089406198306
+                0.16965440483698577,
+                0.49201080461484537
               ]
             },
             {
               "foot": "Right",
-              "time": 0.5480112116789652,
+              "time": 0.5480111426867537,
               "point": [
-                -0.14792344761164639,
-                0.12493099827695789
+                -0.14792341666968437,
+                0.1249311680158122
               ]
             }
           ]
@@ -696,31 +696,31 @@ export const FOOTSTEPS = {
           "samples": 80,
           "heights": {
             "Left": {
-              "min": 0.0938211818901738,
-              "max": 0.6833804901017141,
-              "threshold": 0.21173304353248185
+              "min": 0.0938215542635818,
+              "max": 0.6833807553616853,
+              "threshold": 0.2117333944832025
             },
             "Right": {
-              "min": 0.08846021148943278,
-              "max": 0.5785479309823233,
-              "threshold": 0.18647775538801087
+              "min": 0.08846085348771088,
+              "max": 0.5785481314114745,
+              "threshold": 0.1864783090724636
             }
           },
           "contacts": [
             {
               "foot": "Left",
-              "time": 0.03872929382909025,
+              "time": 0.03872932789227001,
               "point": [
-                0.16354044565110953,
-                -0.1667866890604097
+                0.16354049048632524,
+                -0.16678648628070428
               ]
             },
             {
               "foot": "Right",
-              "time": 0.35482193979765075,
+              "time": 0.3548219055743066,
               "point": [
-                -0.2252777491602666,
-                -0.09166562013753335
+                -0.22527771450411443,
+                -0.09166534421860814
               ]
             }
           ]
@@ -728,8 +728,8 @@ export const FOOTSTEPS = {
       }
     },
     "buffalo": {
-      "url": "/assets/0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
-      "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
+      "url": "/assets/d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e.glb",
+      "sha256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
@@ -802,55 +802,55 @@ export const FOOTSTEPS = {
       }
     },
     "lion": {
-      "url": "/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
-      "sha256": "539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968",
+      "url": "/assets/12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55.glb",
+      "sha256": "12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,
           "samples": 126,
           "heights": {
             "Left": {
-              "min": 0.16995132338667707,
-              "max": 0.3110924239314881,
-              "threshold": 0.19817954349563927
+              "min": 0.16995186661421613,
+              "max": 0.31109306583192253,
+              "threshold": 0.1981801064577574
             },
             "Right": {
-              "min": 0.17376231583724006,
-              "max": 0.2675148917571001,
-              "threshold": 0.19251283102121206
+              "min": 0.1737623286980879,
+              "max": 0.26751531460949557,
+              "threshold": 0.19251292588036942
             }
           },
           "contacts": [
             {
               "foot": "Left",
-              "time": 0.3143191096007894,
+              "time": 0.3143190643134034,
               "point": [
-                0.12515531173690855,
-                0.43200767385419164
+                0.1251552530262084,
+                0.43200745522311246
               ]
             },
             {
               "foot": "Right",
-              "time": 0.5031162877261287,
+              "time": 0.5031158423636123,
               "point": [
-                -0.1359284172460957,
-                -0.008842494250030447
+                -0.1359286636539056,
+                -0.008843935874759068
               ]
             },
             {
               "foot": "Right",
-              "time": 0.8120175255623522,
+              "time": 0.8120177398093087,
               "point": [
-                -0.07356864005280825,
-                0.44144567700265885
+                -0.07356879216252872,
+                0.44144516546292784
               ]
             },
             {
               "foot": "Left",
-              "time": 0.9649571675333722,
+              "time": 0.9649561116095593,
               "point": [
-                0.1551906190342005,
-                -0.1518686342733052
+                0.15519038490303433,
+                -0.15187114909154253
               ]
             }
           ]
@@ -860,31 +860,31 @@ export const FOOTSTEPS = {
           "samples": 80,
           "heights": {
             "Left": {
-              "min": 0.1693366046189087,
-              "max": 0.6536586805138485,
-              "threshold": 0.2662010197978967
+              "min": 0.16933722848342048,
+              "max": 0.6536589161729736,
+              "threshold": 0.2662015660213311
             },
             "Right": {
-              "min": 0.17317704425770958,
-              "max": 0.5319354751967071,
-              "threshold": 0.2449287304455091
+              "min": 0.17317789148889834,
+              "max": 0.531935613562884,
+              "threshold": 0.24492943590369548
             }
           },
           "contacts": [
             {
               "foot": "Left",
-              "time": 0.03720264960651974,
+              "time": 0.03720263509673856,
               "point": [
-                0.1377645418330178,
-                -0.06173138108844666
+                0.13776453824761914,
+                -0.06173122064775513
               ]
             },
             {
               "foot": "Right",
-              "time": 0.35983803869870623,
+              "time": 0.3598380490532126,
               "point": [
-                -0.09048547360152444,
-                0.06858495429274167
+                -0.09048565350092957,
+                0.06858515235217746
               ]
             }
           ]
@@ -892,8 +892,8 @@ export const FOOTSTEPS = {
       }
     },
     "rhino": {
-      "url": "/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
-      "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff",
+      "url": "/assets/34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4.glb",
+      "sha256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
       "clips": {
         "Walking": {
           "duration": 1.0416667461395264,

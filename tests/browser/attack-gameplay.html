@@ -1,0 +1,46 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Preparar Attack en el juego</title>
+<p>Fixture explícita de QA: semilla 712, Sabana/Mapungubwe, centro, cultivo y trabajador pagados. Adelanta a la noche 5, inserta un rinoceronte junto al cultivo y añade 200 monedas para evitar la derrota económica durante la inspección; no acredita una campaña natural. Guarda solo el slot qa-attack-gameplay en este origen de QA.</p>
+<button id="open" disabled>Abrir partida de prueba en el juego</button><pre id="status">Preparando…</pre>
+<script type="module">
+import {globalFrameScheduler} from '../../src/app/global-frame-scheduler.js';
+let frame;const pump=now=>{globalFrameScheduler.beginFrame(now);globalFrameScheduler.endFrame();frame=requestAnimationFrame(pump);};frame=requestAnimationFrame(pump);addEventListener('pagehide',()=>cancelAnimationFrame(frame));
+import * as Game from '../../src/simulation/game.js';
+import {rational,transact} from '../../src/simulation/money.js';
+import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {prepareWildEngineWorld} from '../../src/app/wild-engine-world.js';
+
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/wild-engine/spatial-movement-profiles.js';
+import {json} from '../../src/rendering/assets.js';
+const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
+const awakeningTrial=new URLSearchParams(window.location.search).has('awakening');
+const state=Game.newGame({seed:712,slotId:awakeningTrial?'qa-awakening-gameplay':'qa-attack-gameplay'}),canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;document.body.append(canvas);
+const world=new WorldScene(canvas,()=>{}),spatial=await prepareWildEngineWorld(world,state,payload),nav=spatial.navigation,location={center:state.villages[0].center,suppress:[]};
+document.querySelector('#status').textContent='Cargando mundo nativo…';await world.load(state,nav,payload,{spatialSession:spatial.session});await world.whenChunksReady();
+document.querySelector('#status').textContent='Preparando entidades…';nav.setState(state);Game.resume(state,'intro');
+Game.placeStructure(state,'qa-center',{x:location.center.x,z:location.center.z},nav);
+let site;
+for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:location.center.x+x,z:location.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}
+Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-contract',{olderMale:1});
+state.day=5;state.time=400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={day:5,done:true};
+transact(state.ledger,'qa-inspection-credit',rational(200),{kind:'qa-inspection-credit'});
+state.workers.forEach(w=>w.contractDay=5);state.hiringPaidDay=5;
+// Explicit QA actor near the crop; all subsequent updates use the game systems.
+const radius=ANIMAL_SPATIAL_PROFILES.rhino.radius;let beastSite;
+for(let z=-12;z<=12&&!beastSite;z+=2)for(let x=4;x<=16&&!beastSite;x+=2){const p={x:location.center.x+x,z:location.center.z+z};if(nav.walkable(p.x,p.z,radius,null,false))beastSite=p;}
+if(!beastSite)throw Error('No clear native rhino position in QA area');
+state.raid={id:'qa-attack-raid',daytime:false,encounters:[],reservations:{},animals:[{id:`animal-${state.nextId++}`,species:'rhino',...beastSite,spawn:{...beastSite},exit:{x:beastSite.x+30,z:beastSite.z},radius,hitsRemaining:20,status:'walking',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}]};
+state.time=400;state.tutorial.basicSkipped=true;
+let ritualWall;
+if(awakeningTrial){
+ state.raid=null;state.time=150;state.awakenings.progress=100;
+ for(let z=-8;z<=8&&!ritualWall;z+=2)for(let x=4;x<=14&&!ritualWall;x+=2){if(Game.placeStructure(state,'qa-ritual-wall-'+x+'-'+z,{kind:'wall',material:'zarzas',x:location.center.x+x,z:location.center.z+z},nav))ritualWall=state.structures.at(-1);}
+ if(!ritualWall)throw Error('No valid ritual wall site');
+ document.querySelector('p').textContent='QA Awakening: separate qa-awakening-gameplay save; seed 712, day 5 at 150 seconds, paid center/crop/worker/wall, 200 inspection coins and one manually filled Awakening charge. No beasts. Confirm/cancel and subsequent gameplay use production controls and rules. This is not natural campaign progression.';
+ document.title='QA Awakening in main game';
+}
+
+document.querySelector('#status').textContent=JSON.stringify({day:state.day,time:state.time,balance:state.ledger.balance,center:location.center,site,beastSite,radius,awakeningTrial,ritualWall:ritualWall&&{id:ritualWall.id,x:ritualWall.x,z:ritualWall.z}},null,2);
+document.querySelector('#open').disabled=false;
+document.querySelector('#open').onclick=async()=>{await new BrowserSaveRepository(localStorage).save(state);window.location.href='../../'+(new URLSearchParams(window.location.search).has('qa-game-audio')?'?qa-game-audio=1':'');};
+</script></html>

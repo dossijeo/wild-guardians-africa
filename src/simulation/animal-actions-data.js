@@ -4,36 +4,36 @@ export const ANIMAL_ACTIONS = {
   "logicalMarker": "Complete native clip. Original bestiary labs encode no logical damage/contact markers; decorative contacts do not drive damage.",
   "animals": {
     "warthog": {
-      "url": "/assets/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
+      "url": "/assets/53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89.glb",
       "source": "Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2.html#model-data",
-      "sha256": "6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275",
+      "sha256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
       "presentation": {
         "scale": 1,
-        "bindHeight": 2.640000152085766,
+        "bindHeight": 2.6400006539730003,
         "bindMin": [
-          -1.316841181185814,
-          6.084209790706968e-8,
-          -1.168020323944846
+          -1.3168411511467928,
+          2.7726459005392096e-7,
+          -1.1680209926581886
         ],
         "bindMax": [
-          1.3241483268724497,
-          2.640000212927864,
-          0.7819252945545977
+          1.3241483746973808,
+          2.6400009312375903,
+          0.7819261013533298
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2/script-1.js",
         "sourceScriptSha256": "10f1d17bb2ef4a766656936624783d5a34d70941fe0465767b88a2ab791715a8",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 13450,
-          "bindRadius": 1.355439489379763,
+          "bodyVertices": 17218,
+          "bindRadius": 1.3554399647238777,
           "clips": {
             "Running": {
               "samples": 65,
-              "radius": 1.4773656408072264
+              "radius": 1.4773659121178317
             },
             "Walking": {
               "samples": 65,
-              "radius": 1.4019408060550105
+              "radius": 1.40194105120096
             }
           },
           "clearance": 0.05,
@@ -80,36 +80,36 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "hyena": {
-      "url": "/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+      "url": "/assets/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb",
       "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
-      "sha256": "e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472",
+      "sha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
       "presentation": {
         "scale": 1,
-        "bindHeight": 2.0300002154199173,
+        "bindHeight": 2.0300010112604725,
         "bindMin": [
-          -1.2021073945661818,
-          -1.318950898209484e-7,
-          -0.36858223122881306
+          -1.2021075528769787,
+          -5.537150740506572e-7,
+          -0.3685824868747339
         ],
         "bindMax": [
-          1.1779367417041668,
-          2.0300000835248273,
-          0.7620203071764773
+          1.1779369367786692,
+          2.0300004575453983,
+          0.7620200739697435
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2/script-1.js",
         "sourceScriptSha256": "24b60f541191b52c03d6325f92624578aec63158315787605e710cc99a885057",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 15612,
-          "bindRadius": 0.7620323682554265,
+          "bodyVertices": 17594,
+          "bindRadius": 0.7620321351658541,
           "clips": {
-            "Running": {
-              "samples": 65,
-              "radius": 1.0106999510079384
-            },
             "Walking": {
               "samples": 65,
-              "radius": 1.0405336784735186
+              "radius": 1.0405334078183572
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 1.0106997246393068
             }
           },
           "clearance": 0.05,
@@ -118,23 +118,8 @@ export const ANIMAL_ACTIONS = {
         }
       },
       "clips": {
-        "Running": {
-          "duration": 0.6666666455566883,
-          "start": 0.0416666679084301,
-          "loop": true
-        },
-        "Walking": {
-          "duration": 1.041666705161333,
-          "start": 0.0416666679084301,
-          "loop": true
-        },
-        "Charged_Upward_Slash": {
-          "duration": 3.20833333209157,
-          "start": 0.0416666679084301,
-          "loop": false
-        },
-        "Right_Hand_Sword_Slash": {
-          "duration": 1.541666705161333,
+        "Weapon_Combo_2": {
+          "duration": 4.541666824370623,
           "start": 0.0416666679084301,
           "loop": false
         },
@@ -143,44 +128,59 @@ export const ANIMAL_ACTIONS = {
           "start": 0.0416666679084301,
           "loop": false
         },
-        "Weapon_Combo_2": {
-          "duration": 4.541666824370623,
+        "Right_Hand_Sword_Slash": {
+          "duration": 1.541666705161333,
           "start": 0.0416666679084301,
           "loop": false
+        },
+        "Charged_Upward_Slash": {
+          "duration": 3.20833333209157,
+          "start": 0.0416666679084301,
+          "loop": false
+        },
+        "Walking": {
+          "duration": 1.041666705161333,
+          "start": 0.0416666679084301,
+          "loop": true
+        },
+        "Running": {
+          "duration": 0.6666666455566883,
+          "start": 0.0416666679084301,
+          "loop": true
         }
       }
     },
     "buffalo": {
-      "url": "/assets/0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
+      "url": "/assets/d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e.glb",
       "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
-      "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
+      "sha256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
       "presentation": {
         "scale": 1,
-        "bindHeight": 2.269999727003923,
+        "bindHeight": 2.27000033111051,
         "bindMin": [
-          -1.5210823406864513,
-          2.9664078116030407e-7,
-          -0.4571883482051048
+          -1.5210818221025142,
+          2.3345597610382447e-7,
+          -0.45718863196049864
         ],
         "bindMax": [
-          1.5287403381203897,
-          2.2700000236447044,
-          0.5061148642941876
+          1.528740424585711,
+          2.270000564566486,
+          0.5061157127399238
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3/script-1.js",
         "sourceScriptSha256": "d1e99dbc2349a08d31131472ad8496cbc93ed423636f4bb6f10d388f5d66b90e",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 34224,
-          "bindRadius": 0.5759744085443311,
+          "bodyVertices": 38841,
+          "bindRadius": 0.5759743183368129,
           "clips": {
             "Running": {
               "samples": 65,
-              "radius": 0.6689843895629675
+              "radius": 0.6689843186207928
             },
             "Walking": {
               "samples": 65,
-              "radius": 0.7171341574906563
+              "radius": 0.7171340365346196
             }
           },
           "clearance": 0.05,
@@ -222,36 +222,36 @@ export const ANIMAL_ACTIONS = {
       }
     },
     "lion": {
-      "url": "/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
+      "url": "/assets/12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55.glb",
       "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
-      "sha256": "539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968",
+      "sha256": "12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55",
       "presentation": {
         "scale": 1,
-        "bindHeight": 1.81000025589583,
+        "bindHeight": 1.810000855796624,
         "bindMin": [
-          -1.0785419836593455,
-          1.8311670255123415e-7,
-          -0.5336184325889677
+          -1.0785422902882071,
+          2.6399983083706586e-7,
+          -0.5336171387952588
         ],
         "bindMax": [
-          1.098148679037297,
-          1.8100004390125324,
-          0.2865323469090436
+          1.0981492218539939,
+          1.810001119796455,
+          0.2865320524943254
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Leon_Bestiario_Corregido_v2/script-1.js",
         "sourceScriptSha256": "757c7e2898ba70c5622d5648e200ff19273785452ccab340c78759a36000bd94",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand/Tail/ClothRear; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 12643,
-          "bindRadius": 0.4760489271249138,
+          "bodyVertices": 16002,
+          "bindRadius": 0.47604945354593975,
           "clips": {
-            "Running": {
-              "samples": 65,
-              "radius": 0.6922909619400105
-            },
             "Walking": {
               "samples": 65,
-              "radius": 0.7498684187420198
+              "radius": 0.7498681826199298
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 0.6922906489964841
             }
           },
           "clearance": 0.05,
@@ -260,23 +260,8 @@ export const ANIMAL_ACTIONS = {
         }
       },
       "clips": {
-        "Running": {
-          "duration": 0.6666666455566883,
-          "start": 0.0416666679084301,
-          "loop": true
-        },
-        "Walking": {
-          "duration": 1.041666705161333,
-          "start": 0.0416666679084301,
-          "loop": true
-        },
-        "Charged_Upward_Slash": {
-          "duration": 3.20833333209157,
-          "start": 0.0416666679084301,
-          "loop": false
-        },
-        "Right_Hand_Sword_Slash": {
-          "duration": 1.541666705161333,
+        "Weapon_Combo_2": {
+          "duration": 4.541666824370623,
           "start": 0.0416666679084301,
           "loop": false
         },
@@ -285,44 +270,59 @@ export const ANIMAL_ACTIONS = {
           "start": 0.0416666679084301,
           "loop": false
         },
-        "Weapon_Combo_2": {
-          "duration": 4.541666824370623,
+        "Right_Hand_Sword_Slash": {
+          "duration": 1.541666705161333,
           "start": 0.0416666679084301,
           "loop": false
+        },
+        "Charged_Upward_Slash": {
+          "duration": 3.20833333209157,
+          "start": 0.0416666679084301,
+          "loop": false
+        },
+        "Walking": {
+          "duration": 1.041666705161333,
+          "start": 0.0416666679084301,
+          "loop": true
+        },
+        "Running": {
+          "duration": 0.6666666455566883,
+          "start": 0.0416666679084301,
+          "loop": true
         }
       }
     },
     "rhino": {
-      "url": "/assets/e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff.glb",
+      "url": "/assets/34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4.glb",
       "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
-      "sha256": "e77e4a48a6d072d58420575e0e58b3545e8f4eb5d8ea54f4a7f38819e93f1cff",
+      "sha256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
       "presentation": {
         "scale": 1,
-        "bindHeight": 3.00000135024716,
+        "bindHeight": 3.0000025356901903,
         "bindMin": [
-          -2.295239537827477,
-          -1.8238101559740477e-7,
-          -0.5876918471688918
+          -2.29523921656354,
+          -3.639892878493695e-7,
+          -0.5876916414896118
         ],
         "bindMax": [
-          2.2219789301413533,
-          3.0000011678661442,
-          1.0869482569990547
+          2.2219786890991853,
+          3.000002171700902,
+          1.086947537710439
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3/script-1.js",
         "sourceScriptSha256": "de7c89474ef48b3016d5e607974bb440d4b93c70aa620a53df517b5d01cd3f06",
         "footprint": {
           "method": "dominant skin weight excluding Shoulder/Arm/Hand/Tail/ClothRear; native in-place Walking/Running; radial body cylinder",
-          "bodyVertices": 27293,
-          "bindRadius": 1.0872783498970946,
+          "bodyVertices": 31345,
+          "bindRadius": 1.0872776294568394,
           "clips": {
             "Running": {
               "samples": 65,
-              "radius": 1.1840818199601346
+              "radius": 1.1840825419226133
             },
             "Walking": {
               "samples": 65,
-              "radius": 1.1782282277650158
+              "radius": 1.178228257231459
             }
           },
           "clearance": 0.05,

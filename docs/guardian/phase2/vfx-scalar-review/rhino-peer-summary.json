@@ -1,0 +1,97 @@
+{
+  "source": "docs\\guardian\\phase2\\vfx-scalar-review\\rhino-peer-status.json",
+  "species": "rhino",
+  "complete": true,
+  "errors": [],
+  "finalDown": 0,
+  "maxGuardians": 1,
+  "physicalBodies": 0,
+  "pairSamples": 157,
+  "volumeCandidates": 0,
+  "penetratingVolumeSamples": 0,
+  "maxInsideVertices": 0,
+  "minimumPhysicalDistance": 0,
+  "largestBakedSteps": [
+    {
+      "id": "qa-beast-3",
+      "phase": "recovering",
+      "time": 9.58506500001431,
+      "dt": 0.1332100000004175,
+      "distance": 0.5856470056016932,
+      "horizontal": 0.24608399044359577,
+      "vertical": -0.5314368116884509,
+      "speed": 4.396419229786486
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "recovering",
+      "time": 11.929315000016231,
+      "dt": 0.16618500000004133,
+      "distance": 0.5158695534410163,
+      "horizontal": 0.14413923828296465,
+      "vertical": 0.49532340561964183,
+      "speed": 3.1041884251941387
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "rolling",
+      "time": 8.220875000012711,
+      "dt": 0.16629000000057204,
+      "distance": 0.4361923846764828,
+      "horizontal": 0.4352745723123604,
+      "vertical": -0.028281498334573385,
+      "speed": 2.6230824744421333
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "recovering",
+      "time": 11.76313000001619,
+      "dt": 0.1332550000001902,
+      "distance": 0.3920962512311693,
+      "horizontal": 0.07155559066505872,
+      "vertical": 0.38551169589794654,
+      "speed": 2.9424505739417635
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "recovering",
+      "time": 11.464745000016137,
+      "dt": 0.13301000000001295,
+      "distance": 0.3788674650453716,
+      "horizontal": 0.27105053704063437,
+      "vertical": 0.26471147017061725,
+      "speed": 2.848413390311516
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "rolling",
+      "time": 8.054585000012139,
+      "dt": 0.18262000000049738,
+      "distance": 0.3463509083699898,
+      "horizontal": 0.3463505039333168,
+      "vertical": 0.00052929562117221,
+      "speed": 1.8965661393551991
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "recovering",
+      "time": 9.451855000013893,
+      "dt": 0.09974000000011074,
+      "distance": 0.3456458630275094,
+      "horizontal": 0.2081008513976516,
+      "vertical": -0.27598024979263336,
+      "speed": 3.4654688492793824
+    },
+    {
+      "id": "qa-beast-3",
+      "phase": "recovering",
+      "time": 9.352115000013782,
+      "dt": 0.18326000000024578,
+      "distance": 0.3074406127327865,
+      "horizontal": 0.2999185366857837,
+      "vertical": -0.0675914322216169,
+      "speed": 1.6776198446599049
+    }
+  ],
+  "limitations": "Sampled simplified collider containment, not exact skin penetration or continuous-frame acceptance. Variable-rate QA run, not performance comparison."
+}

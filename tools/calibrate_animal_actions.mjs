@@ -6,11 +6,14 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {calibrateAnimalFootprint} from './animal_footprint.mjs';
 const assets=JSON.parse(readFileSync(new URL('../content/manifests/assets.json',import.meta.url)));
 const fragments={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
-const actions={};
+const previous=JSON.parse(readFileSync(new URL('../content/manifests/animal-actions.json',import.meta.url)));
+const selected=new Set(process.argv.slice(2));for(const species of selected)if(!fragments[species])throw Error('Unknown species '+species);
+const actions=selected.size?structuredClone(previous.animals):{};
 // Published gameplay contract (main before the visual replacements). Geometry
 // calibration must not change saved actors, navigation or shield clearance.
 const gameplayRadii={warthog:1.1,hyena:.9,buffalo:.97,lion:.85,rhino:1.55};
 for(const [species,fragment] of Object.entries(fragments)){
+  if(selected.size&&!selected.has(species))continue;
   const model=assets.models.find(m=>m.source.includes(fragment));
   const bytes=readFileSync(new URL('../public'+model.url,import.meta.url));
   const jsonLength=bytes.readUInt32LE(12),doc=JSON.parse(bytes.subarray(20,20+jsonLength)),bin=bytes.subarray(28+jsonLength);

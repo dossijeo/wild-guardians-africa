@@ -1,0 +1,62 @@
+{
+  "scope": "Native presentation-only QA with command cooldown reset; interruption persistence and single-Guardian invariants, not gameplay balance or audio acceptance.",
+  "url": "http://127.0.0.1:5194/tests/browser/guardian-combat.html?lightingReview=1",
+  "result": {
+    "passed": true,
+    "rows": [
+      {
+        "kind": "growth",
+        "before": "awakening",
+        "hiddenBefore": true,
+        "after": "growth",
+        "visible": true,
+        "committed": true,
+        "totalUnchanged": true,
+        "chargeUnchanged": true,
+        "guardians": 1,
+        "passed": true
+      },
+      {
+        "kind": "multiply",
+        "before": "awakening",
+        "hiddenBefore": true,
+        "after": "multiply",
+        "visible": true,
+        "committed": true,
+        "totalUnchanged": true,
+        "chargeUnchanged": true,
+        "guardians": 1,
+        "passed": true
+      },
+      {
+        "kind": "shield",
+        "before": "awakening",
+        "hiddenBefore": true,
+        "after": "shield",
+        "visible": true,
+        "committed": true,
+        "totalUnchanged": true,
+        "chargeUnchanged": true,
+        "guardians": 1,
+        "passed": true
+      },
+      {
+        "kind": "attack",
+        "before": "awakening",
+        "hiddenBefore": true,
+        "after": "attack",
+        "visible": true,
+        "committed": true,
+        "totalUnchanged": true,
+        "chargeUnchanged": true,
+        "guardians": 1,
+        "passed": true
+      }
+    ]
+  },
+  "worldAuthority": "spatial-wasm",
+  "maxVisibleGuardians": 1,
+  "finalActive": 0,
+  "finalPending": 0,
+  "errors": []
+}

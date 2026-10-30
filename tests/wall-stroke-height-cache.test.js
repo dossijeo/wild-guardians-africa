@@ -35,12 +35,12 @@ test('wall guide retains ground heights, reprojects on camera movement and inval
 test('wall picking touches only resident ground, while ordinary picks retain entity selection',()=>{
  const camera=new PerspectiveCamera(60,1,.1,100);camera.position.set(0,15,15);
  const ground={},entity={userData:{entityId:'house'}},intersections=[];
- const scene={camera,controls:{target:new Vector3()},nav:{field:{surface:()=>0}},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:{set(){}},terrainMeshes:[ground],objects:new Map([['house',entity]]),state:{plants:[]},raycaster:{setFromCamera(){},intersectObjects:list=>{intersections.push(list);return list[0]===ground?[{point:{x:2,z:3}}]:[{object:entity,distance:1}];}}};
+ const scene={camera,controls:{target:new Vector3()},nav:{field:{surface:()=>0}},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:{set(){}},terrainMeshes:[ground],objects:new Map([['house',entity]]),state:{plants:[]},raycaster:{setFromCamera(){},intersectObjects:list=>{intersections.push(list);return list[0]===ground?[{point:{x:2,z:3}}]:[{object:entity,distance:1,point:{x:2,y:1,z:3}}];}}};
  const event={clientX:50,clientY:50};
  assert.deepEqual(WorldScene.prototype.pick.call(scene,event,{terrainOnly:true}),{entityId:null,point:{x:2,z:3}});
  assert.deepEqual(intersections,[[ground]]);
  intersections.length=0;
- assert.deepEqual(WorldScene.prototype.pick.call(scene,event),{entityId:'house',point:{x:2,z:3}});
+ assert.deepEqual(WorldScene.prototype.pick.call(scene,event),{entityId:'house',point:{x:2,z:3},hitPoint:{x:2,y:1,z:3}});
  assert.deepEqual(intersections,[[entity],[ground]]);
 });
 

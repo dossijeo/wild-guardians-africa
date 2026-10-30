@@ -89,6 +89,6 @@ test('real OrbitControls do not turn a cliff height correction into a moving cam
 test('picking uses the protected camera even when input arrives before the next rendered frame',()=>{
   const camera=new THREE.PerspectiveCamera(42,1,.1,600),field={surface:()=>7},controls={target:new THREE.Vector3(0,7,0)};camera.position.set(2,-10,20);
   const world={camera,controls,nav:{field},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:new THREE.Vector2(),raycaster:new THREE.Raycaster(),objects:new Map(),state:{plants:[]},terrainMeshes:[]};
-  assert.deepEqual(WorldScene.prototype.pick.call(world,{clientX:50,clientY:50}),{entityId:null,point:null});assert.ok(camera.position.y>=9);
+  assert.deepEqual(WorldScene.prototype.pick.call(world,{clientX:50,clientY:50}),{entityId:null,point:null,hitPoint:null});assert.ok(camera.position.y>=9);
   assert.deepEqual(world.raycaster.ray.origin.toArray(),camera.position.toArray());
 });

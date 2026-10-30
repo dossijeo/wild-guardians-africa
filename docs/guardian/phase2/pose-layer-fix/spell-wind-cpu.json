@@ -1,0 +1,262 @@
+{
+  "scope": "Node CPU microbenchmark of secondary wind plus identical quaternion restoration, installed rig. Batch averages are not frame percentiles. Excludes mixer, skinning, render, VFX, GPU and gameplay. Not raid-performance acceptance.",
+  "node": "v20.11.0",
+  "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+  "bones": 24,
+  "matchedBindings": 24,
+  "updatesPerBatch": 4000,
+  "summaries": {
+    "previous": {
+      "medianBatchMsPerUpdate": 0.003692700000000002,
+      "minBatchMsPerUpdate": 0.0030602499999999966,
+      "maxBatchMsPerUpdate": 0.006452325000000002
+    },
+    "current": {
+      "medianBatchMsPerUpdate": 0.004110950000000003,
+      "minBatchMsPerUpdate": 0.0035721750000000086,
+      "maxBatchMsPerUpdate": 0.007803374999999988
+    }
+  },
+  "rows": [
+    {
+      "block": 0,
+      "mode": "previous",
+      "msPerUpdate": 0.0036311250000000046
+    },
+    {
+      "block": 0,
+      "mode": "current",
+      "msPerUpdate": 0.003935274999999997
+    },
+    {
+      "block": 0,
+      "mode": "current",
+      "msPerUpdate": 0.0035721750000000086
+    },
+    {
+      "block": 0,
+      "mode": "previous",
+      "msPerUpdate": 0.0032919250000000063
+    },
+    {
+      "block": 1,
+      "mode": "current",
+      "msPerUpdate": 0.003879125000000002
+    },
+    {
+      "block": 1,
+      "mode": "previous",
+      "msPerUpdate": 0.0030602499999999966
+    },
+    {
+      "block": 1,
+      "mode": "previous",
+      "msPerUpdate": 0.003461749999999995
+    },
+    {
+      "block": 1,
+      "mode": "current",
+      "msPerUpdate": 0.003593849999999989
+    },
+    {
+      "block": 2,
+      "mode": "previous",
+      "msPerUpdate": 0.003440074999999993
+    },
+    {
+      "block": 2,
+      "mode": "current",
+      "msPerUpdate": 0.003654900000000012
+    },
+    {
+      "block": 2,
+      "mode": "current",
+      "msPerUpdate": 0.0037882000000000033
+    },
+    {
+      "block": 2,
+      "mode": "previous",
+      "msPerUpdate": 0.0035798249999999996
+    },
+    {
+      "block": 3,
+      "mode": "current",
+      "msPerUpdate": 0.0035906500000000108
+    },
+    {
+      "block": 3,
+      "mode": "previous",
+      "msPerUpdate": 0.0036111000000000077
+    },
+    {
+      "block": 3,
+      "mode": "previous",
+      "msPerUpdate": 0.0032266500000000062
+    },
+    {
+      "block": 3,
+      "mode": "current",
+      "msPerUpdate": 0.004008700000000005
+    },
+    {
+      "block": 4,
+      "mode": "previous",
+      "msPerUpdate": 0.0033582249999999903
+    },
+    {
+      "block": 4,
+      "mode": "current",
+      "msPerUpdate": 0.0037369250000000138
+    },
+    {
+      "block": 4,
+      "mode": "current",
+      "msPerUpdate": 0.003968774999999994
+    },
+    {
+      "block": 4,
+      "mode": "previous",
+      "msPerUpdate": 0.0034781500000000136
+    },
+    {
+      "block": 5,
+      "mode": "current",
+      "msPerUpdate": 0.004031374999999997
+    },
+    {
+      "block": 5,
+      "mode": "previous",
+      "msPerUpdate": 0.003298374999999993
+    },
+    {
+      "block": 5,
+      "mode": "previous",
+      "msPerUpdate": 0.003667924999999997
+    },
+    {
+      "block": 5,
+      "mode": "current",
+      "msPerUpdate": 0.004310250000000025
+    },
+    {
+      "block": 6,
+      "mode": "previous",
+      "msPerUpdate": 0.004121574999999979
+    },
+    {
+      "block": 6,
+      "mode": "current",
+      "msPerUpdate": 0.005051250000000011
+    },
+    {
+      "block": 6,
+      "mode": "current",
+      "msPerUpdate": 0.004557800000000015
+    },
+    {
+      "block": 6,
+      "mode": "previous",
+      "msPerUpdate": 0.004112350000000021
+    },
+    {
+      "block": 7,
+      "mode": "current",
+      "msPerUpdate": 0.004110950000000003
+    },
+    {
+      "block": 7,
+      "mode": "previous",
+      "msPerUpdate": 0.003692700000000002
+    },
+    {
+      "block": 7,
+      "mode": "previous",
+      "msPerUpdate": 0.003742124999999987
+    },
+    {
+      "block": 7,
+      "mode": "current",
+      "msPerUpdate": 0.0041738
+    },
+    {
+      "block": 8,
+      "mode": "previous",
+      "msPerUpdate": 0.003932200000000023
+    },
+    {
+      "block": 8,
+      "mode": "current",
+      "msPerUpdate": 0.004077574999999996
+    },
+    {
+      "block": 8,
+      "mode": "current",
+      "msPerUpdate": 0.004313275000000004
+    },
+    {
+      "block": 8,
+      "mode": "previous",
+      "msPerUpdate": 0.003967999999999989
+    },
+    {
+      "block": 9,
+      "mode": "current",
+      "msPerUpdate": 0.004606974999999978
+    },
+    {
+      "block": 9,
+      "mode": "previous",
+      "msPerUpdate": 0.005633825000000002
+    },
+    {
+      "block": 9,
+      "mode": "previous",
+      "msPerUpdate": 0.005427324999999996
+    },
+    {
+      "block": 9,
+      "mode": "current",
+      "msPerUpdate": 0.007803374999999988
+    },
+    {
+      "block": 10,
+      "mode": "previous",
+      "msPerUpdate": 0.006452325000000002
+    },
+    {
+      "block": 10,
+      "mode": "current",
+      "msPerUpdate": 0.006583800000000025
+    },
+    {
+      "block": 10,
+      "mode": "current",
+      "msPerUpdate": 0.00476487499999999
+    },
+    {
+      "block": 10,
+      "mode": "previous",
+      "msPerUpdate": 0.005313349999999986
+    },
+    {
+      "block": 11,
+      "mode": "current",
+      "msPerUpdate": 0.0052021749999999825
+    },
+    {
+      "block": 11,
+      "mode": "previous",
+      "msPerUpdate": 0.005783050000000003
+    },
+    {
+      "block": 11,
+      "mode": "previous",
+      "msPerUpdate": 0.006189225000000022
+    },
+    {
+      "block": 11,
+      "mode": "current",
+      "msPerUpdate": 0.007794775000000016
+    }
+  ]
+}

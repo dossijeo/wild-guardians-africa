@@ -1,8 +1,9 @@
-import {GuardianCanvasExecutor} from './guardian-canvas-executor.js';
+import * as THREE from 'three';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
 import './guardian-native.css';
-import {GuardianMesh,GuardianMagic,OrnamentPhysics,guardianPose,GUARDIAN_SPRITE,GESTURE_MIN_SECONDS} from './guardian-native.js';
-import {assetUrl} from '../rendering/asset-url.js';
+import './guardian-3d.css';
+import {Guardian3D} from './guardian-3d.js';
+const GESTURE_MIN_SECONDS={greeting:5.8,speak:5.8,acknowledge:6.8,curious:6.8,warning:6.2,reveal:7.8,idle:7,farewell:6.8};
 import {GuardianLifecycle} from './guardian-lifecycle.js';
 import {spiritVoice} from '../audio/spirit-voice.js';
 
@@ -10,10 +11,9 @@ export class NativeGuardian {
   constructor(container,onError=()=>{},onPresentation=()=>{},voice=null){
     this.voice=voice;
     this.container=container;this.onError=onError;this.onPresentation=onPresentation;this.disposed=false;this.key=null;this.time=0;this.age=0;this.lastStamp=null;
-    this.physics=new OrnamentPhysics();this.pose=Object.fromEntries(['roll','yaw','pitch','lift','zoom','headX','headY','bodyX','bodyRoll','eyes','medallion','reveal'].map(k=>[k,0]));
     this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.lifecycle=new GuardianLifecycle(this.reduced);
-    container.innerHTML='<section id="guardian-root" class="closed" aria-hidden="true"><div class="avatar-shell"><canvas id="guardian-avatar" aria-label="El Espíritu" role="img"></canvas><canvas id="guardian-magic" aria-hidden="true"></canvas></div><div class="bubble"><div class="message-body"><p class="message" aria-live="polite"></p><button type="button" class="tutorial-skip" hidden>Omitir tutorial básico</button></div><button type="button" class="next-button" aria-label="Continuar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></section>';
+    container.innerHTML='<section id="guardian-root" class="closed guardian-3d" aria-hidden="true"><div class="avatar-shell"><canvas id="guardian-avatar" aria-label="El Espíritu" role="img"></canvas><canvas id="guardian-magic" aria-hidden="true"></canvas></div><div class="bubble"><div class="message-body"><p class="message" aria-live="polite"></p><button type="button" class="tutorial-skip" hidden>Omitir tutorial básico</button></div><button type="button" class="next-button" aria-label="Continuar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></section>';
     this.root=container.querySelector('#guardian-root');this.canvas=container.querySelector('#guardian-avatar');this.fx=container.querySelector('#guardian-magic');this.message=container.querySelector('.message');this.button=container.querySelector('.next-button');
     this.button.onclick=()=>{this.voice?.stop();this.advance?.();};
     this.closeButton=document.createElement('button');this.closeButton.type='button';this.closeButton.className='tutorial-close';this.closeButton.setAttribute('aria-label','Cerrar');this.closeButton.textContent='×';this.closeButton.onclick=()=>{this.voice?.stop();this.dismiss?.();};this.root.querySelector('.bubble').append(this.closeButton);
@@ -28,34 +28,21 @@ export class NativeGuardian {
   }
   async load(){
     try{
-      const image=new Image();image.decoding='async';
-      await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('No se ha podido cargar el Espíritu original.'));image.src=assetUrl(GUARDIAN_SPRITE);});
+      this.mesh=new Guardian3D(this.canvas);await this.mesh.ready;
       if(this.disposed)return;
-      this.loadedImage=image;
-      if(new URLSearchParams(globalThis.location?.search??'').get('guardianWorker')==='1'){
-        this.canvasWorker=new GuardianCanvasExecutor(this.canvas,this.fx,image,{onFailure:()=>{try{this.restoreMainRenderer();}catch(error){this.onError(error);}}});
-        try{await this.canvasWorker.ready;if(this.disposed)return;this.resize();return;}catch{if(this.disposed)return;this.restoreMainRenderer();return;}
-      }
-      this.mesh=new GuardianMesh(this.canvas,image);this.magic=new GuardianMagic(this.fx);this.resize();
+      if(this.voiceRecord)this.mesh.setRecord(this.voiceRecord);this.resize();
     }catch(error){if(!this.disposed)this.onError(error);}
   }
-  restoreMainRenderer(){
-    if(this.disposed||this.mesh)return;
-    this.workerDiagnostic={...this.canvasWorker?.stats};this.canvasWorker?.dispose();this.canvasWorker=null;
-    // A transferred canvas cannot acquire a main-thread context again.
-    this.observer.unobserve(this.canvas);
-    const avatar=this.canvas.cloneNode(false),magic=this.fx.cloneNode(false);this.canvas.replaceWith(avatar);this.fx.replaceWith(magic);this.canvas=avatar;this.fx=magic;this.observer.observe(avatar);
-    this.mesh=new GuardianMesh(avatar,this.loadedImage);this.magic=new GuardianMagic(magic);this.resize();
-  }
   show({key,text,gesture='speak',advance=null,dismiss=null,closeAfter=false,blocking=false,skip=null,result=false,onVoiceEnded=null}){
-    if(this.disposed||this.key===key)return;
+    const language=window.WildGuardiansLanguage?.getLanguage()??'en';
+    if(this.disposed||(this.key===key&&this.language===language))return;
+    this.language=language;
     this.key=key;this.age=0;this.gesture=gesture;this.advance=advance;this.dismiss=dismiss;this.closeButton.hidden=!dismiss;this.closeAfter=closeAfter;this.lastStamp=null;
     const entering=['closed','farewell','outro'].includes(this.lifecycle.phase);this.lifecycle.open();
     this.blocking=blocking;this.skip=skip;this.skipButton.hidden=!skip;this.root.classList.toggle('reading',blocking);this.root.classList.toggle('result-narration',result);
     this.root.setAttribute('role',blocking?'dialog':'region');this.root.setAttribute('aria-label','El Espíritu');
     if(blocking)this.root.setAttribute('aria-modal','true');else this.root.removeAttribute('aria-modal');
     text=guardianCopy(text);
-    const language=window.WildGuardiansLanguage?.getLanguage()??'en';
     const rendered=window.WildGuardiansLanguage?.translate(text,language)??text;
     const words=text.trim().split(/\s+/).length;
     this.duration=Math.max(GESTURE_MIN_SECONDS[gesture]??5.8,words*60/155+.45);
@@ -65,7 +52,8 @@ export class NativeGuardian {
     this.root.classList.add('visible');
     this.root.dataset.gesture=gesture;this.resize();
     if(blocking)this.button.focus({preventScroll:true});
-    this.voice?.play(spiritVoice(rendered,language),()=>{
+    this.voiceRecord=spiritVoice(rendered,language);this.mesh?.setRecord(this.voiceRecord);
+    this.voice?.play(this.voiceRecord,()=>{
       if(this.disposed||this.key!==key)return;
       onVoiceEnded?.();
       if(closeAfter&&this.key===key)this.hide();
@@ -83,38 +71,50 @@ export class NativeGuardian {
     if(immediate){this.lifecycle.close();this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.lastStamp=null;this.present('hidden');}
     else this.lifecycle.finish();
   }
+  setGuide(rect){
+    this.guideRect=rect;this.root.classList.toggle('guiding',!!rect);
+    if(!rect&&this.mesh)this.mesh.pointTarget=null;
+  }
+  moveGuide(dt){
+    if(!this.mesh)return;
+    const r=this.guideRect,shell=this.root.querySelector('.avatar-shell'),w=shell.offsetWidth,h=shell.offsetHeight;
+    const bubble=this.root.querySelector('.bubble').getBoundingClientRect(),portrait=this.root.closest('#stage')?.classList.contains('portrait')??innerHeight>innerWidth;
+    const x=Math.max(4,Math.min(innerWidth-w-4,r?r.left-w+16:portrait?bubble.left+(bubble.width-w)/2:bubble.left-w)),y=Math.max(4,Math.min(innerHeight-h-4,r?r.top+r.height*.5-h*.48:portrait?bubble.top-h-8:bubble.top+bubble.height*.5-h*.5));
+    this.root.classList.add('floating-guide');
+    this.guidePosition??={x,y};const p=this.guidePosition,t=this.reduced?1:1-Math.exp(-Math.max(dt,.001)*5);
+    p.x+=(x-p.x)*t;p.y+=(y-p.y)*t;shell.style.setProperty('--guide-x',p.x+'px');shell.style.setProperty('--guide-y',p.y+'px');
+    if(!r){this.mesh.pointTarget=null;return;}
+    const c=this.mesh.camera,tx=((r.left+r.width*.5-p.x)/w*2-1),ty=1-(r.top+r.height*.5-p.y)/h*2;
+    this.mesh.pointTarget??=new THREE.Vector3();this.mesh.pointTarget.set(tx,ty,0).unproject(c);this.mesh.pointTarget.z=0;
+  }
+  setWorldPresence(active,screenPosition=null){
+    if(active&&screenPosition){const shell=this.root.querySelector('.avatar-shell');this.guidePosition={x:screenPosition.x-shell.offsetWidth/2,y:screenPosition.y-shell.offsetHeight/2};}
+    // Keep narration and its controls alive; the spirit has one visible body.
+    this.worldPresence=active;this.root.querySelector('.avatar-shell').style.visibility=active?'hidden':'';
+  }
   present(phase){try{this.onPresentation(phase);}catch{}}
-  resize(){if(this.canvasWorker?.readyState){this.canvasWorker.resize();this.draw(0);}else if(this.mesh){this.mesh.resize();this.magic.resize();this.draw(0);}}
+  resize(){if(this.mesh){this.mesh.resize();this.draw(0);}}
   update(){
-    if(this.disposed||document.hidden||this.root.classList.contains('closed')){this.lastStamp=null;return;}
+    if(this.disposed||document.hidden||this.root.classList.contains('closed')&&!this.guideRect){this.lastStamp=null;return;}
     const stamp=performance.now(),elapsed=this.lastStamp===null?0:Math.max(0,(stamp-this.lastStamp)/1000);this.lastStamp=stamp;
     this.time+=elapsed;this.age+=elapsed;
     if(this.voice?.duration)this.duration=this.voice.duration;
     if(this.closeAfter&&(!this.voice||this.voice.status==='fallback')&&this.age>=this.duration+.9)this.hide();
     this.lifecycle.advance(elapsed,this.duration);
     this.root.classList.toggle('leaving',this.lifecycle.phase==='outro');
-    if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.lastStamp=null;this.present('closed');return;}
-    this.draw(Math.min(elapsed,.065));
+    if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.present('closed');if(!this.guideRect){this.lastStamp=null;return;}}
+    this.moveGuide(elapsed);this.draw(Math.min(elapsed,.065));
   }
   draw(dt){
-    if((!this.mesh&&!this.canvasWorker?.readyState)||this.mesh?.lost)return;
+    if(!this.mesh)return;
     const sample=this.lifecycle.sample(this.gesture??'idle',this.duration??7),gesture=sample.state;
-    const q=guardianPose(gesture,sample.age,sample.duration,this.time,1),gain=this.reduced?0:1,follow=1-Math.exp(-dt*5.4);
-    for(const k of ['roll','yaw','pitch','lift','zoom','headX','headY','bodyX','bodyRoll']){
-      const target=k==='roll'?Math.max(-.46,Math.min(.46,q[k])):k==='yaw'?Math.max(-.34,Math.min(.34,q[k])):k==='pitch'?Math.max(-.38,Math.min(.26,q[k])):q[k];
-      this.pose[k]+=(target*gain-this.pose[k])*follow;
-    }
-    for(const k of ['eyes','medallion','reveal'])this.pose[k]+=(q[k]*gain-this.pose[k])*(1-Math.exp(-dt*4));
-    this.physics.step(this.time,dt,this.pose.roll,this.pose.yaw,q.reveal*gain,gain,gain);
-    const pose={...this.pose,blend:1,angles:this.physics.angles,offsets:this.physics.offsets};
-    if(this.canvasWorker?.readyState)this.canvasWorker.render(this.time,pose);
-    else{this.mesh.update(this.pose.roll,this.pose.yaw,this.pose.pitch,pose);this.mesh.draw();this.magic.draw(this.mesh,this.time,this.pose,false);}
+    if(!this.worldPresence)this.mesh.draw({time:this.time,audio:this.voice?.audio,gesture:this.gesture??gesture,reduced:this.reduced});
     this.present(document.hidden?'hidden':this.lifecycle.phase);
     this.root.dataset.phase=gesture;
     this.root.dataset.lifecycle=this.lifecycle.phase;
   }
   dispose(){
     this.voice?.dispose();
-    this.disposed=true;this.canvasWorker?.dispose();this.present('disposed');this.observer.disconnect();this.mesh?.gl?.getExtension('WEBGL_lose_context')?.loseContext();this.container.replaceChildren();
+    this.disposed=true;this.present('disposed');this.observer.disconnect();this.mesh?.dispose();this.container.replaceChildren();
   }
 }

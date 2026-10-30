@@ -1,0 +1,31 @@
+{
+  "scope": "One ordered native pair, 13 beasts, 32 workers, 144 crops, 13 structures, five legal Attack commands. Fixed .05s simulation steps.",
+  "outcomeEqual": true,
+  "commandsEqual": true,
+  "reference": {
+    "averageFps": 14.593595722130638,
+    "frameP95": 99.8799999999901,
+    "frameP99": 166.26000000000204,
+    "frameMax": 1646.1349999999984,
+    "framesOver50ms": 792,
+    "framesOver100ms": 56,
+    "animationP95": 0,
+    "vfxP95": 0.005000114440917969,
+    "physicsP95": 5.384999990463257,
+    "drawP95": 177,
+    "hiddenFrames": 0
+  },
+  "guardian": {
+    "averageFps": 14.608398148969872,
+    "frameP95": 99.85000000000582,
+    "frameP99": 149.53000000000247,
+    "frameMax": 1413.2949999999983,
+    "framesOver50ms": 814,
+    "framesOver100ms": 40,
+    "animationP95": 0.315000057220459,
+    "vfxP95": 0.8550000190734863,
+    "physicsP95": 5.1549999713897705,
+    "drawP95": 179,
+    "hiddenFrames": 0
+  }
+}

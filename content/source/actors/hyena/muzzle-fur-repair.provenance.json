@@ -1,0 +1,12 @@
+{
+  "type": "generated derivative texture repair",
+  "tool": "built-in image_gen (not CLI)",
+  "sourceModel": "public/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+  "sourceBranch": "codex/global-visual-lab",
+  "sourceReference": "docs/guardian/phase2/face-authoring/muzzle-before-hidden-canine.png",
+  "purpose": "Remove painted canine imprint on upper muzzle while keeping actual tooth geometry ivory",
+  "thirdPartyDownload": false,
+  "licenseNote": "No external CC0 asset was downloaded. This is a generated edit of the existing project texture; original asset provenance remains applicable.",
+  "runtimeStatus": "authoring only; projection shader must be baked before GLB export",
+  "prompt": "Edit this exact 1024x1024 flat albedo reference for a 3D game texture repair. Preserve camera, silhouette, every facial feature, eye markings, fur spots, nose, jaw, existing lower row of small teeth, colors and all pixels outside the tiny damaged muzzle area. The actual 3D canine has been hidden for this diagnostic render. A WRONG WHITE PAINTED CANINE IMPRINT remains on the brown upper muzzle: triangular ivory shape approximately x315-420 y485-635 in this 1024 square image, rising above the lower tooth row. Remove ONLY this painted upward canine silhouette and its white smear/shadow from the upper muzzle. Replace that local area with continuous short brown muzzle fur matching the immediate adjacent fur color, direction and texture. The mouth\u2019s curved lower dental row from approximately (340,650) toward (550,510) must remain intact; do not remove its actual small teeth. Do not add any fang or tooth in the repaired upper muzzle. Do not alter mouth geometry, eye, nose, markings, lighting, background, resolution or crop. This is a tightly localized albedo retouch, not a redesign or an illustration."
+}
