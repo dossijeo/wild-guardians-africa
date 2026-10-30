@@ -50,3 +50,9 @@ Reference run after the Guardian run: same derived scenario, five identical comm
 Crucially, maximum frames are 10509.34 ms reference and 10758.605 ms Guardian: both contain a severe spike. The run is not fluid and this comparison does not attribute the shared spike to a particular subsystem. Do not hide this with mean/p95 statistics or treat it as phase performance acceptance. Baseline investigation remains elsewhere.
 
 Guardian animation CPU p95 .185 ms, VFX .620 ms; reference/Guardian physics p95 5.220/5.330 ms. Raw heap readings differ between fresh browser loads and include allocation/GC noise; they are not per-feature retained-memory attribution. Full metrics and exact equality checks are fresh-raid-comparison.json; raw reference is fresh-raid-reference.json. This validates unchanged outcomes with repeated legitimate casts in the sampled workload, not every raid, GPU or camera/control responsiveness condition.
+
+## Compatible native snapshot loading (2026-10-30)
+
+The nativeCampaign=1 QA route restores docs/qa/browser-visibility/native-farm-current-fixture.json, verifies its world version through prepareWildEngineWorld(..., loaded:true), and loads rendering/navigation from the same spatial session. It does not convert the old terrain or relocate its village. The inspection camera now falls back to the center when no living raid target exists. Reports distinguish native-farm-day1 from legacy-night31 instead of hardcoding night-31 provenance.
+
+Executed nativeCampaign=1&lightingReview=1: spatial-wasm, one worker, one structure, one crop, no animals, no captured errors. Screenshot and receipt: native-snapshot-load.png/json. This establishes the compatible loading path only. A populated native scenario and matched runs are still needed; this sparse opening farm is not representative of a large incursion. No game-production code changed.
