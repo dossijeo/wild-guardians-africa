@@ -47,3 +47,31 @@ second fall and resumed upright pose. Wide framing/grass limit detailed contact
 judgment. Audio is not part of the recording. Tests/build overlapped with the
 browser session, so this video and its timings are not performance evidence.
 These results do not establish a universal absence of initial penetration.
+
+## Lion, warthog and buffalo native follow-up
+
+Three consecutive fixture runs at f2b6ec29f used spatial-wasm/Game.tick, fixed
+wide framing and the reversible ground-cover hide control. Each resets QA
+cooldown/durability, so these are interruption tests, not balance validation.
+All three complete the second knockdown and final recovery with no errors and
+maximum one Guardian. Audio was not enabled. Full videos and receipts are named
+`lion-entry-settle`, `warthog-entry-settle`, and `buffalo-entry-settle`.
+
+| Species | Full-skin recovery samples | Lowest clearance | Contact result |
+| --- | ---: | ---: | --- |
+| Lion | 46 | +0.006938 m | No negative sampled clearance |
+| Warthog | 51 | -0.033419 m | Defect remains |
+| Buffalo | 42 | +0.009329 m | No negative sampled clearance |
+
+Warthog's deepest sample occurs at recovery age 0.482435 s, vertex 5264,
+weighted entirely to Head. Additional negatives occur around 0.58–0.65 s and
+a near-zero negative at 0.99938 s. This is later than initial support settling;
+do not attribute it to the initial-entry fix or claim it is corrected. Next
+investigation should capture that pose and compare head support samples with
+the exact skin minimum. The recording shows a long tilted physical phase before
+recovery; its naturalness remains a visual concern despite eventual completion.
+
+All 1 fps sheets were inspected. The warthog overview covers only the first
+20 seconds; `warthog-entry-final.jpg` additionally samples its last six seconds
+at 2 fps and shows it upright again. Framing is still too wide for fine skin
+contact acceptance. Ground cover was restored before closing the QA tab.
