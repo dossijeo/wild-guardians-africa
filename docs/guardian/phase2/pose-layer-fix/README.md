@@ -339,3 +339,15 @@ This establishes one accepted portrait placement using the real DOM-exclusion pr
 Wind-only maximum displacement: cloth 0.481–0.485 m, feathers 0.105–0.110 m, wood 0.022–0.029 m. RMS over sampled vertices/times is much smaller (cloth around 0.053 m): maxima must not be presented as uniform movement of the whole fabric. Combined animation movement from the first sample reaches 0.728–0.781 m cloth, 0.292–0.364 m feathers and 0.310–0.335 m wood. Combined measurements include parent/body motion and authored animation, so they do not isolate independent flutter.
 
 This confirms that the additional wind deforms the installed mesh while spell gestures play; it is not collision, contact, artistic or performance acceptance. No amplitudes or production animation were changed from this measurement. Repeated-pose and cadence tests remain the evidence for non-accumulation/FPS independence.
+
+## Building-side camera review (2026-10-30)
+
+Executed guardian-combat.html?buildingView=1&lightingReview=1 using spatial-wasm and installed assets. Paused presentation clock, stepped in 0.12 s increments; QA commands reset cooldowns. This is native rendered placement evidence, not production UI cadence, physical recovery or performance testing. Exact snapshots: building-cast-camera.json.
+
+- building-grow-front.png: Grow at 0.24 s beside the center, target and body visible outside the building silhouette.
+- building-grow-orbit.png: camera rotated 90 degrees during the same paused cast. The world origin is identical, but the body becomes cropped below the frame. This is an observed framing limitation after camera movement, not an always-visible pass. No teleport or camera correction was introduced.
+- building-multiply-replanned.png: subsequent Multiply planned from the rotated view at 0.48 s is fully framed beside the center, with divided streams reaching the crop.
+- building-shield-wide.png: fixture night setting (time=400), wider camera, Shield at 0.48 s remains visible beside the building. This is the actual current fixture lighting, not a dark-night grading claim.
+- building-shield-retired.png: after another 2.4 s the body/vortex are gone, the protection dome remains. Active/visible/pending Guardians all zero.
+
+All snapshots report zero captured errors and maximum one Guardian. Inspected all five screenshots. No fine mesh-contact or continuous animation acceptance follows from these wide stills. The full voiced tutorial, broader recovery/obstacle coverage and queued six-biome texture work remain open.
