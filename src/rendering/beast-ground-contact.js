@@ -30,3 +30,22 @@ export function isTailContactVertex(mesh,index){
  }
  return total>0&&tail/total>.5;
 }
+
+// One immutable classification per scan, rather than walking four bone chains
+// for every vertex. Rebuild for each scan so rig/mask edits are observed.
+export function tailContactPredicate(mesh){
+ applyAuthoredContactMask(mesh);
+ const mask=mesh.geometry.getAttribute('tailContactExempt');
+ const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
+ const tails=mesh.skeleton.bones.map(bone=>{
+  for(let b=bone;b?.isBone;b=b.parent)if(/^(?:mixamorig[:_]?)?tail(?:[_.\d]|$)/i.test(b.name))return true;
+  return false;
+ });
+ return index=>{
+  if(mask?.getX(index)>.5)return true;
+  if(!indices||!weights)return false;
+  let tail=0,total=0;
+  for(let k=0;k<4;k++){const weight=weights.getComponent(index,k);total+=weight;if(tails[indices.getComponent(index,k)])tail+=weight;}
+  return total>0&&tail/total>.5;
+ };
+}

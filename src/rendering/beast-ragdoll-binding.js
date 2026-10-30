@@ -1,5 +1,5 @@
 import {contactQuantile as quantile} from './contact-quantile.js';
-import {isTailContactVertex} from './beast-ground-contact.js';
+import {tailContactPredicate} from './beast-ground-contact.js';
 import {Vector3,Quaternion,Bone} from 'three';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
 const colliderSamples=new WeakMap();
@@ -40,12 +40,13 @@ export class BeastRagdollBinding{
   const frames=this.entries.map(e=>{const a=e.bone.getWorldPosition(new Vector3()),b=e.tip.getWorldPosition(new Vector3());return {center:a.clone().add(b).multiplyScalar(.5),inverse:new Quaternion().setFromUnitVectors(this.y,b.sub(a).normalize()).invert()};});
   const v=new Vector3(),selected=new Map();
   this.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
+   const isTail=tailContactPredicate(mesh);
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
    // Recovery poses can expose different skin extrema. Do not reuse or replace
    // the standing-pose support cache when rebuilding a knocked-down animal.
    const cached=refit?null:colliderSamples.get(mesh.geometry)?.get(this.sampleStride);if(!cached)selected.set(mesh.geometry,new Set());
    const samples=cached??Array.from({length:Math.ceil(indices.count/this.sampleStride)},(_,i)=>i*this.sampleStride);
-   for(const i of samples){if(isTailContactVertex(mesh,i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
+   for(const i of samples){if(isTail(i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
     // Skin once; adjacent head/neck supports share the same world-space point.
     const primary=mapping[indices.getComponent(i,best)];if(primary===undefined)continue;
     mesh.getVertexPosition(i,v).applyMatrix4(mesh.matrixWorld);

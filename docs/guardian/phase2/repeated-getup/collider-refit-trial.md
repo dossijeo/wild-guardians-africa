@@ -41,3 +41,19 @@ The twelve local refit measurements in `rhino-refit-quickselect.json` range from
 separate Node runs, not an interleaved browser performance comparison. The full
 refit remains disabled in gameplay: this reduction is insufficient to justify
 an input-time rebuild. No claim of browser frametime acceptance is made.
+
+## Per-scan tail classification
+
+A Node CPU profile of the full-refit audit identified repeated tail hierarchy
+walks as a substantial cost (378 self samples plus 82 regex samples, alongside
+397 garbage-collection and 375 hull-selection samples). Collider scans now
+prepare tail ownership once per mesh, retaining identical weighted-majority
+and authored-mask rules. The predicate is rebuilt each scan, avoiding stale
+classification after hierarchy or mask edits.
+
+Every vertex of all five installed beast models is compared with the original
+classifier. Those tests and the refit/ragdoll tests pass (22 tests total).
+The next local measurement is `rhino-refit-tail-scan.json`: 64.7–128.3 ms across
+twelve full refits. These separate Node runs do not establish browser frametime
+gains. Full-refit gameplay activation remains off. Allocation and hull-selection
+costs remain the next targets; no contact acceptance claim is added.
