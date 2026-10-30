@@ -1,3 +1,4 @@
+import {planRitualArc} from '../../src/rendering/guardian-ritual-path.js';
 import {installDisposalReview} from './guardian-disposal-review.js';
 import {guardianLidStudy} from './guardian-lid-study.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -241,7 +242,8 @@ try{
    fullFrames.push($('world').toDataURL('image/png'));ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340,300,169);ctx.fillStyle='white';ctx.font='14px sans-serif';ctx.fillText((i<4?'Day':'Night')+' angle '+(i%4)+' zoom '+zoom,(i%4)*300+6,Math.floor(i/4)*340+190);
    advanceClock(2.1);world.render(0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const finalVisible=world.guardianSummons.slots.filter(s=>s.group.visible).length;
    ctx.drawImage($('world'),(i%4)*300,Math.floor(i/4)*340+201,300,130);
-   rows.push({day:i<4,angle,zoom,planMs,planned,origin,ritualArc:slot.ritualArc,visible,finalVisible});
+   const arcSamples=[];let arcQueries=0;for(let sample=0;sample<21;sample++){const began=performance.now();planRitualArc(slot.origin,slot.target,world.camera,(a,b,r)=>{arcQueries++;return !!world.guardianSummons.occluders.index.sweep(a,b,r);});if(sample)arcSamples.push(performance.now()-began);}arcSamples.sort((a,b)=>a-b);const arcPlanMs={median:arcSamples[10],p95:arcSamples[18],max:arcSamples[19],count:20,queriesPerPlan:arcQueries/21};
+   rows.push({day:i<4,angle,zoom,planMs,arcPlanMs,planned,origin,ritualArc:slot.ritualArc,visible,finalVisible});
   }
   const result={worldAuthority:reviewSpatial?'spatial-wasm':'legacy-js',biome:state.biome,culture:trialCulture,scope:'Presentation-only frozen clock, one committed plant beside a paid wall replayed across eight cameras; no AI, audio or frame-performance claim',rows,passed:rows.every(r=>r.visible===1&&r.finalVisible===0),errors:[...errors]};
   let output=$('ritualViewsReport');if(!output){output=document.createElement('pre');output.id='ritualViewsReport';document.querySelector('header').append(output);}output.textContent=JSON.stringify(result,null,2);sheet.title='Arrival at 0.9s and disappearance at 3s; click a column to inspect full resolution';sheet.onclick=e=>{const rect=sheet.getBoundingClientRect(),column=Math.min(3,Math.floor((e.clientX-rect.left)/rect.width*4)),row=e.clientY-rect.top<rect.height/2?0:1;const detail=document.createElement('img');detail.src=fullFrames[row*4+column];detail.alt='Full-resolution ritual '+(row?'night':'day')+' angle '+column;detail.style.cssText='position:fixed;left:0;top:0;width:100vw;height:auto;z-index:100000';detail.onclick=()=>detail.remove();document.body.append(detail);};document.body.append(sheet);
