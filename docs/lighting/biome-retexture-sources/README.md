@@ -45,3 +45,13 @@ Importación: metros, eje Y vertical, pivote original. Conservar geometría, esc
 - [tree_03 — Baobab volcánico](volcanoes/tree_03.glb)
 - [tree_04 — Árbol carbonizado](volcanoes/tree_04.glb)
 - [shrub_01 — Arbusto de hojas rígidas](volcanoes/shrub_01.glb)
+
+## savanna
+
+- [tree_01 — Acacia paraguas](savanna/tree_01.glb)
+- [tree_02 — Acacia irregular](savanna/tree_02.glb)
+- [tree_03 — Baobab](savanna/tree_03.glb)
+- [tree_04 — Árbol seco](savanna/tree_04.glb)
+- [shrub_01 — Arbusto espinoso](savanna/shrub_01.glb)
+
+Los 30 archivos quedan inventariados en [inventory.json](inventory.json). Revalidar contra la versión instalada con `python tools/trees/audit_retexture_sources.py` antes de iniciar el trabajo de texturas. Este inventario prepara la tarea en cola; no contiene texturas generadas ni sustituye recursos del juego.

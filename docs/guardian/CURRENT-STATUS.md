@@ -118,7 +118,7 @@ Validation: 36 tests passed across guardian-presence, guardian-presence-lifecycl
 
 The user rejected integration of the supplied replacement tree textures because their tone and brightness change too much. Do not integrate the previous HD/4K texture candidates or the rejected detailed-tree LOD models. Keep current production models and materials.
 
-After the current outstanding work, this task is part of the thread objective: process the first five assets of **each of the six biomes** (savanna, desert, grand_river, mangrove, canyons, volcanoes), 30 assets total. Use the isolated current-runtime GLBs in docs/lighting/biome-retexture-sources; export the fifth savanna asset as well (existing savanna comparison exports cover only four).
+After the current outstanding work, this task is part of the thread objective: process the first five assets of **each of the six biomes** (savanna, desert, grand_river, mangrove, canyons, volcanoes), 30 assets total. Use the isolated current-runtime GLBs in docs/lighting/biome-retexture-sources; The savanna folder now includes all five assets as well; inventory.json records all 30 current-runtime sources.
 
 Requested workflow: import the current models in Blender, render reference images of their existing appearance, then use the **imagegen skill** to create clearer textures based on those references. Read and apply that skill when executing this phase. Project/rebake the generated detail onto the original surfaces; preserve original geometry, proportions, pivot, UV compatibility and the established palette/material response. Preserve and validate normal/PBR maps; do not replace them blindly with generated color or baked lighting.
 
