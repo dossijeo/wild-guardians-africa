@@ -34,13 +34,15 @@ export class BeastRagdollBinding{
   pose.parents=this.entries.map(e=>{let parent=e.bone.parent;while(parent&&!owners.has(parent))parent=parent.parent;return parent?owners.get(parent):-1;});
   return pose;
  }
- colliders(){
+ colliders({refit=false}={}){
   const groups=this.entries.map(()=>[]),owners=new Map(this.entries.map((e,i)=>[e.bone,i]));
   const frames=this.entries.map(e=>{const a=e.bone.getWorldPosition(new Vector3()),b=e.tip.getWorldPosition(new Vector3());return {center:a.clone().add(b).multiplyScalar(.5),inverse:new Quaternion().setFromUnitVectors(this.y,b.sub(a).normalize()).invert()};});
   const v=new Vector3(),selected=new Map();
   this.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;const indices=mesh.geometry.attributes.skinIndex,weights=mesh.geometry.attributes.skinWeight;
    const mapping=mesh.skeleton.bones.map(b=>{while(b&&!owners.has(b))b=b.parent;return owners.get(b);});
-   const cached=colliderSamples.get(mesh.geometry)?.get(this.sampleStride);if(!cached)selected.set(mesh.geometry,new Set());
+   // Recovery poses can expose different skin extrema. Do not reuse or replace
+   // the standing-pose support cache when rebuilding a knocked-down animal.
+   const cached=refit?null:colliderSamples.get(mesh.geometry)?.get(this.sampleStride);if(!cached)selected.set(mesh.geometry,new Set());
    const samples=cached??Array.from({length:Math.ceil(indices.count/this.sampleStride)},(_,i)=>i*this.sampleStride);
    for(const i of samples){if(isTailContactVertex(mesh,i))continue;let best=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,best))best=k;
     // Skin once; adjacent head/neck supports share the same world-space point.
@@ -58,7 +60,7 @@ export class BeastRagdollBinding{
    const hull=[];for(const {x:dx,y:dy,z:dz} of supportDirections){let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
    return {hull,radius,halfHeight:Math.max(.005,(hi-lo)/2-radius),offset:{x,y:(lo+hi)/2,z},samples:points.length};
   });
-  for(const [geometry,indices] of selected){let cache=colliderSamples.get(geometry);if(!cache)colliderSamples.set(geometry,cache=new Map());cache.set(this.sampleStride,[...indices]);}
+  if(!refit)for(const [geometry,indices] of selected){let cache=colliderSamples.get(geometry);if(!cache)colliderSamples.set(geometry,cache=new Map());cache.set(this.sampleStride,[...indices]);}
   return fits;
  }
  physicalSnapshot(out){
