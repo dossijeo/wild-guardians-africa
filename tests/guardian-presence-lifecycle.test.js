@@ -52,3 +52,16 @@ test('current scene presence starts after decoding within its freshness window',
  owner.state.elapsed+=.1;audio.context.currentTime+=.1;pending[0].resolve(pending[0].data);
  assert.ok((await request).started);assert.equal(sources.length,1);audio.stop();
 });
+
+for(const kind of ['growth','multiply'])for(const removal of ['missing','dead'])test(`${kind}: real sound pipeline rejects late crop decode and remains reusable (${removal})`,async()=>{
+ const {audio,pending,sources}=setup(),plant={id:'crop',alive:true},state={elapsed:1,pauses:[],plants:[plant]};
+ const event={id:'old-crop-cast',type:'SpellActivated',kind,targetId:plant.id,presentation:{cueAt:1,x:0,z:0}};
+ audio.process([event],{state});await flush();assert.equal(pending.length,1,'exercise asynchronous decode rather than a stubbed sound call');
+ if(removal==='missing')state.plants=[];else plant.alive=false;
+ pending[0].resolve(pending[0].data);await flush();await flush();
+ assert.equal(sources.length,0);assert.equal(audio.voices.size,0);assert.equal(audio.active.length,0);
+ state.plants=[{id:'new-crop',alive:true}];state.elapsed=1.1;
+ audio.process([{...event,id:'valid-crop-cast',targetId:'new-crop',presentation:{cueAt:1.1,x:0,z:0}}],{state});await flush();await flush();
+ assert.equal(sources.length,1);assert.equal(sources[0].started,true);assert.equal(audio.voices.size,1);
+ audio.stop();assert.equal(audio.voices.size,0);assert.ok(sources[0].stopped&&sources[0].disconnected);
+});
