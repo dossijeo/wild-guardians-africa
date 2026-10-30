@@ -1,5 +1,9 @@
 // Prepared once per template. 0 = ordinary two-sided face, 1 = authored front
 // only (opposite face supplies its own UVs), 2 = redundant same-winding copy.
+export function buildingFacePolicyFromInterleaved(data){
+ if(data.length%36)throw Error('Expected complete building triangles with stride 12');
+ return buildingFacePolicy({count:data.length/12,getX:i=>data[i*12],getY:i=>data[i*12+1],getZ:i=>data[i*12+2]});
+}
 export function buildingFacePolicy(position){
  const policy=new Float32Array(position.count),groups=new Map();
  for(let i=0;i+2<position.count;i+=3){

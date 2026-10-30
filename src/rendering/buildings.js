@@ -20,12 +20,12 @@ export function centerVisualDamage(entity){
   if(entity.status==='collapsing')return COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*clamp(1-entity.collapseRemaining/COLLAPSE_SECONDS);
   return clamp(1-entity.hp/entity.maxHp);
 }
-function geometry(data,repairNormals=null){
+function geometry(data,repairNormals=null,facePolicy=null){
   const result=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(data,12);
   for(const [name,size,offset] of [['aPos',3,0],['aNormal',3,3],['aUV',2,6],['aAnchor',3,8],['aSeed',1,11]])result.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
   // Three uses position for frustum bounds; the shader uses the same source data.
   result.setAttribute('position',result.getAttribute('aPos'));
-  result.setAttribute('aFacePolicy',new THREE.BufferAttribute(buildingFacePolicy(result.getAttribute('aPos')),1));
+  result.setAttribute('aFacePolicy',new THREE.BufferAttribute(facePolicy??buildingFacePolicy(result.getAttribute('aPos')),1));
   result.setAttribute('aRepairNormal',new THREE.BufferAttribute(repairNormals??new Float32Array(data.length/4),3));
   result.computeBoundingBox();result.computeBoundingSphere();return result;
 }
@@ -49,7 +49,7 @@ export async function prepareNativeBuildingAsync(gltf,building,{signal}={}){
 }
 export function prepareNativeBuilding(gltf,building,{source=buildingInput(gltf),prepared=null}={}){
   const {mesh,original,input}=source;
-  const kernel=createNativeDestruction(building,input,prepared),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
+  const kernel=createNativeDestruction(building,input,prepared),body=geometry(kernel.vertices,kernel.repairNormals,prepared?.facePolicy),ash=geometry(kernel.ash,null,new Float32Array(kernel.ash.length/12));
   const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
   let disposed=false;
   return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),

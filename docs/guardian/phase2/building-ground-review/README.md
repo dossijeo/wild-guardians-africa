@@ -22,6 +22,10 @@ Validación: 33 pruebas de edificios, destrucción y regla de caras aprobadas; u
 
 ### Revisión de daño
 
+### Preparación fuera del hilo principal
+
+La ruta asíncrona calcula ahora la política de caras dentro del worker de geometría y transfiere su Float32Array con el resto de buffers. El constructor gráfico reutiliza ese resultado; la ruta síncrona de compatibilidad conserva el cálculo local. Las cenizas reciben una política neutra sin ejecutar la búsqueda de coincidencias. Ocho pruebas específicas cubren clasificación, transferencia, handler real del worker, cancelación y fallback; build de producción correcto (10,60 s). Esto evita trabajo nuevo en el hilo principal de carga, no es evidencia de mejora de FPS durante una incursión. No se introduce una caché de profundidad de cámara ni se congelan sombras dinámicas.
+
 El visor `tests/browser/buildings.html?faceReview` ahora permite seleccionar cultura y girar 45 grados. Aísla también la máscara separada de apertura, que no hereda la visibilidad del grupo del edificio. Se descartó la primera ronda de capturas: las máscaras de casas ocultas interferían y algunas capturas inmediatas correspondían al fotograma previo. No se publican como validación de cinco culturas.
 
 Con el visor corregido se revisó Mapungubwe al 35 % de daño y en ruina tras avanzar los 3,2 segundos de colapso. Se ven aperturas, capa interior, cenizas y escombros; consola sin errores. Se guardan `mapungubwe-damage35.png` y `mapungubwe-collapse.png`. Es una comprobación del renderizador nativo en visor aislado, no una grabación temporal del juego ni una certificación de sombras solares (el visor no las habilita). Quedan pendientes el movimiento continuo y el resto de culturas con encuadres completos.
