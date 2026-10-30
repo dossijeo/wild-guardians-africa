@@ -53,3 +53,10 @@ Distribution: 550,627,533 bytes and 1,071 files (shared-image-production-package
 The browser route tests/browser/shared-glb-render.html loads every original from public and its compiled counterpart from dist, renders both with one WebGL renderer, identical framing and lights, and compares RGBA pixels at 240x240. All 20 pairs have zero changed channels and zero maximum difference; no caught errors. Receipt: shared-image-render-parity.json. Inspected screenshots: shared-image-render-top.png and shared-image-render-bottom.png, showing textured buildings, beasts and workers rather than empty renders.
 
 This verifies static material/geometry output at one pose/view/light setup per model. It does not establish animation, every viewing angle, the legacy Library renderer, nested deployment, performance or full game acceptance. The source-authored tool disposes loaded meshes/materials/textures between pairs; it is QA-only and is not bundled into gameplay.
+
+
+## Nested release Library validation
+
+Started tools/serve_web_package.mjs and opened the actual compiled Library at http://127.0.0.1:4175/nested/itch/game/library.html?lab=destruction (server has no root fallback). Swahili loads initially; switching the real selector to Sahelian house finishes loading with 12,666 triangles. This house references shared-image model assets/web/007b4158ed340f9f382920fc5512c74522ff93a2539aba693a350843b7eae644.glb in dist/content/destruction.json. Inspected intact and 50% damage screenshots, confirming textured surfaces and visible damage holes. Artifacts: shared-image-nested-library-intact.png and shared-image-nested-library-damage.png.
+
+This provides an actual nested deployment and native legacy-renderer check for one affected model, including its damage shader. It is not all-model nested deployment coverage, gameplay acceptance or a performance benchmark. The server's diagnostic FPS counter is not treated as a performance result. Publication file/byte gates remain failing as recorded above.
