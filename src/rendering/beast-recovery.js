@@ -3,14 +3,15 @@ import {Vector3,Quaternion} from 'three';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 const X=new Vector3(1,0,0),Z=new Vector3(0,0,1);
 const sampleCache=new WeakMap();
+const headSupportDirections=Array.from({length:96},(_,i)=>{const y=1-2*(i+.5)/96,r=Math.sqrt(1-y*y),a=i*2.399963229728653;return [Math.cos(a)*r,y,Math.sin(a)*r];});
 function contactIndices(mesh){
  const geometry=mesh.geometry;
  if(sampleCache.has(geometry))return sampleCache.get(geometry);const p=geometry.attributes.position,indices=geometry.attributes.skinIndex,weights=geometry.attributes.skinWeight,directions=[];
  for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++)if(x||y||z)directions.push([x,y,z]);
  const groups=new Map(),chosen=new Set();for(let i=0;i<p.count;i++){
   if(isTailContactVertex(mesh,i))continue;
-  let dominant=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,dominant))dominant=k;const id=indices.getComponent(i,dominant);let group=groups.get(id);if(!group){group=directions.map(()=>({score:-Infinity,index:0}));groups.set(id,group);}
-  for(let j=0;j<directions.length;j++){const d=directions[j],score=p.getX(i)*d[0]+p.getY(i)*d[1]+p.getZ(i)*d[2];if(score>group[j].score){group[j].score=score;group[j].index=i;}}
+  let dominant=0;for(let k=1;k<4;k++)if(weights.getComponent(i,k)>weights.getComponent(i,dominant))dominant=k;const id=indices.getComponent(i,dominant);let group=groups.get(id);if(!group){const scans=/head|jaw/i.test(mesh.skeleton.bones[id]?.name??'')?directions.concat(headSupportDirections):directions;group=scans.map(direction=>({score:-Infinity,index:0,direction}));groups.set(id,group);}
+  for(let j=0;j<group.length;j++){const d=group[j].direction,score=p.getX(i)*d[0]+p.getY(i)*d[1]+p.getZ(i)*d[2];if(score>group[j].score){group[j].score=score;group[j].index=i;}}
  }
  for(const group of groups.values())for(const item of group)chosen.add(item.index);for(let i=0;i<p.count;i+=Math.max(1,Math.ceil(p.count/240)))chosen.add(i);const out=[...chosen];sampleCache.set(geometry,out);return out;
 }
