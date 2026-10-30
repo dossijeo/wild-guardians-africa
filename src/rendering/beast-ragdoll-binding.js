@@ -1,3 +1,4 @@
+import {colliderSupportSearch} from './collider-support-search.js';
 import {poseSkinSampler} from './pose-skin-sampler.js';
 import {contactQuantile as quantile} from './contact-quantile.js';
 import {tailContactPredicate} from './beast-ground-contact.js';
@@ -59,7 +60,7 @@ export class BeastRagdollBinding{
   const fits=groups.map((points,i)=>{if(points.length<8)return null;
    const x=quantile(points.map(p=>p.x),.5),z=quantile(points.map(p=>p.z),.5),lo=quantile(points.map(p=>p.y),.02),hi=quantile(points.map(p=>p.y),.98);
    const radius=Math.max(.05,quantile(points.map(p=>Math.hypot(p.x-x,p.z-z)),.96)+.025);
-   const hull=[];for(const {x:dx,y:dy,z:dz} of supportDirections){let best=-Infinity,point=points[0];for(const p of points){const dot=p.x*dx+p.y*dy+p.z*dz;if(dot>best){best=dot;point=p;}}hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
+   const hull=[];for(const index of colliderSupportSearch(points,supportDirections)){const point=points[index];hull.push(point.x,point.y,point.z);selected.get(point.geometry)?.add(point.index);}
    return {hull,radius,halfHeight:Math.max(.005,(hi-lo)/2-radius),offset:{x,y:(lo+hi)/2,z},samples:points.length};
   });
   if(!refit)for(const [geometry,indices] of selected){let cache=colliderSamples.get(geometry);if(!cache)colliderSamples.set(geometry,cache=new Map());cache.set(this.sampleStride,[...indices]);}

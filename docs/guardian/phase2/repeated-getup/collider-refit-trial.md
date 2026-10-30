@@ -106,3 +106,25 @@ Receipt `collider-allocation-pairs.json`: original median 61.0321 ms, candidate
 This is a local Node measurement, not browser frametime acceptance. The 22
 skinning, refit and articulated-physics tests pass. Full refit at recovery-hit
 time remains disabled; its remaining cost still needs a bounded solution.
+
+## Conservative block support search
+
+Each large point group is split into contiguous blocks of 32. Directional bounds
+skip a block only when its maximum possible dot product cannot beat the current
+winner. Original order, arithmetic and strict tie rules remain unchanged. Groups
+below 128 points retain a direct scan to avoid overhead on the standing cache.
+Randomized exhaustive-oracle comparisons and deep equality of every real rhino
+collider field pass; the selected support/refit/physics suite passes 18 tests.
+
+Twenty alternating Node pairs against f90a6ac66, with three warmups, are recorded
+in `collider-support-bound-pairs.json`. Historical benchmark labels `vector` and
+`plain` mean baseline and candidate here: medians 70.86585/57.90695 ms, maxima
+152.594/152.7746 ms. The candidate does not improve the observed worst spike.
+Reproduce with `node tools/guardian/benchmark-collider-allocation.mjs f90a6ac66`.
+The receipt precedes the direct-scan shortcut for small groups; all groups in
+this full-refit rhino fixture exceed that threshold. Browser cost and visual
+acceptance remain unproven, and gameplay full-refit activation remains disabled.
+
+The radius/quantile computation cannot simply be dropped for convex hulls:
+`BeastRagdollSolver` uses the radius in physical roll support torque as well as
+in capsule fallback. Its behavior is preserved.
