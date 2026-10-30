@@ -1,0 +1,597 @@
+{
+  "ready": true,
+  "modelAO": [],
+  "nativeAO": [
+    {
+      "slot": "tree_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_04",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_04",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "worldAuthority": "spatial-wasm",
+  "mangroveNetwork": false,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        2.924657204214777e-119
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 2,
+    "crops": 12,
+    "animals": 1
+  },
+  "groundCoverHidden": false,
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3026.8811650000453,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "pendingSummons": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 140,
+  "animalState": "walking",
+  "animalPosition": [
+    88.85981998651206,
+    -6
+  ],
+  "draws": 98,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3014.884875000006,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3014.9848750000065,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3015.084875000007,
+      "emitter": "qa-beast-1",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3015.084875000007,
+      "emitter": "impact:qa-beast-1",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3016.350935000011,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.019999980926513672,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 16.58999991416931,
+    "maxStepMs": 26.96999990940094,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "rhino",
+      "captureMs": 1.34499990940094,
+      "colliderFitMs": 7.129999995231628,
+      "environmentMs": 5.235000014305115,
+      "bodiesMs": 2.774999976158142
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 1.2833333333333337,
+      "contactDelay": 0,
+      "error": 0.3079755586073622,
+      "speed": 0.40138168232152627,
+      "timedOut": false
+    },
+    "recoveryPoseMisses": 82
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-1",
+      "x": 88.85981998651206,
+      "z": -6
+    }
+  ],
+  "errors": [],
+  "report": {
+    "reuseRecoveryPose": true,
+    "scope": "Full sequential Attack cycles: sampling starts before the first command, includes all launches and recovery. Continuous Game.tick and native WorldScene when lightingReview=1. Diagnostic, not a paired before/after benchmark.",
+    "retreatTrial": false,
+    "initialResilience": 168,
+    "finalActors": [
+      {
+        "id": "qa-beast-1",
+        "status": "walking",
+        "health": 140,
+        "x": 88.85981998651206,
+        "z": -6,
+        "down": false
+      }
+    ],
+    "requestedImpacts": 1,
+    "issuedImpacts": 1,
+    "attackSchedule": [
+      {
+        "index": 0,
+        "targetId": "qa-beast-1",
+        "time": 0
+      }
+    ],
+    "audioContext": null,
+    "audioTrace": [
+      {
+        "id": "spirit_appear",
+        "at": 3014.884875000006,
+        "emitter": "guardian-world",
+        "played": false,
+        "time": 0.0500000000001819
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3014.9848750000065,
+        "emitter": "guardian-world",
+        "played": false,
+        "time": 0.1500000000005457
+      },
+      {
+        "id": "rhino_hurt",
+        "at": 3015.084875000007,
+        "emitter": "qa-beast-1",
+        "phase": "falling",
+        "played": false,
+        "time": 0.2500000000009095
+      },
+      {
+        "id": "beast_take_damage",
+        "at": 3015.084875000007,
+        "emitter": "impact:qa-beast-1",
+        "played": false,
+        "time": 0.2500000000009095
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 3016.350935000011,
+        "emitter": "guardian-world",
+        "played": false,
+        "time": 1.5160600000049271
+      }
+    ],
+    "headOn": false,
+    "wallTrial": true,
+    "actorSpecies": [
+      "rhino"
+    ],
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "rhino",
+    "direction": "auto",
+    "wallMs": 16755.75499999523,
+    "simulationSeconds": 12.046290000039335,
+    "frames": 242,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 69.19376033057851,
+        "p95": 83.20999999999913,
+        "p99": 99.93000000000029,
+        "max": 432.1399999999994
+      },
+      "renderMs": {
+        "mean": 20.256818183197463,
+        "p95": 27.884999990463257,
+        "p99": 34.06000006198883,
+        "max": 163.42500007152557
+      },
+      "physicsTotal": {
+        "mean": 4.244938010519201,
+        "p95": 9.990000009536743,
+        "p99": 21.134999990463257,
+        "max": 26.96999990940094
+      },
+      "solverMs": {
+        "mean": 1.1313223134387622,
+        "p95": 3.5449999570846558,
+        "p99": 4.170000076293945,
+        "max": 5.090000033378601
+      },
+      "solverSteps": {
+        "mean": 2.049586776859504,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.07150826424606575,
+        "p95": 0,
+        "p99": 0,
+        "max": 17.304999947547913
+      },
+      "bindingMs": {
+        "mean": 0.11749999976355183,
+        "p95": 0.44999992847442627,
+        "p99": 0.5099999904632568,
+        "max": 0.6549999713897705
+      },
+      "recoverySetupMs": {
+        "mean": 0.08855371928412067,
+        "p95": 0,
+        "p99": 0,
+        "max": 21.430000066757202
+      },
+      "recoveryFollowMs": {
+        "mean": 2.653657027019942,
+        "p95": 8.815000057220459,
+        "p99": 10.039999961853027,
+        "max": 26.289999961853027
+      },
+      "recoveryMs": {
+        "mean": 1.4235330563931425,
+        "p95": 5.544999957084656,
+        "p99": 7.465000033378601,
+        "max": 8.634999990463257
+      },
+      "animationMs": {
+        "mean": 0.0688429745760831,
+        "p95": 0.3799999952316284,
+        "p99": 0.7149999141693115,
+        "max": 1.8799999952316284
+      },
+      "vfxMs": {
+        "mean": 0.21283057849269268,
+        "p95": 1.5750000476837158,
+        "p99": 2.225000023841858,
+        "max": 3.4850000143051147
+      },
+      "draws": {
+        "mean": 97.4504132231405,
+        "p95": 103,
+        "p99": 104,
+        "max": 105
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 301,
+      "textures": 138
+    },
+    "heap": 532468367,
+    "errors": [],
+    "recoveryTraceSamples": 144
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-1",
+      "position": {
+        "x": 87.5,
+        "z": -2
+      },
+      "origin": {
+        "x": 87.5,
+        "y": 7.594174385070801,
+        "z": 1
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.84780679676377,
+          -1.3877787807814457e-17,
+          -0.5303052284874774,
+          0,
+          -0.16571800046682,
+          0.9499192381550959,
+          -0.26493581355513507,
+          0,
+          0.5037471386344885,
+          0.3124955055402273,
+          0.8053479864845526,
+          0,
+          95.06845383957716,
+          11.469204147756214,
+          9.099798873353723,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          95.06845383957716,
+          11.469204147756214,
+          9.099798873353723
+        ],
+        "matrixWorld": [
+          0.84780679676377,
+          -1.3877787807814457e-17,
+          -0.5303052284874774,
+          0,
+          -0.16571800046682,
+          0.9499192381550959,
+          -0.26493581355513507,
+          0,
+          0.5037471386344885,
+          0.3124955055402273,
+          0.8053479864845526,
+          0,
+          95.06845383957716,
+          11.469204147756214,
+          9.099798873353723,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 3.8350000381469727,
+      "logic": 1.1549999713897705,
+      "render": 0.034999966621398926,
+      "total": 5.024999976158142
+    }
+  ]
+}
