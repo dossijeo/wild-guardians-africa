@@ -34,3 +34,8 @@ The target itself remains occluded by the house in that view. This is a frozen-t
 ## Isolated route planning cost
 
 The eight-view QA now measures planRitualArc separately from body placement, using the actual native scene registry and slot endpoints, one discarded warm-up plus 20 samples per view. On the displaced fourth view it performs 48 sweeps: first/day series median 0.285 ms, p95 0.475 ms, max 0.630 ms; later/night series median 0.105 ms, p95 0.120 ms, max 0.155 ms. Overhead views perform zero sweeps; timer zeros indicate resolution limits, not literally zero work. Receipt: ritual-path-command-cost.json. This runs once at ritual start in production, not every frame. The ordered series are not counterbalanced; no causal day/night or overall FPS conclusion is drawn. This measures the route function with a query counter, excluding registry construction, body placement, GPU rendering and full command latency. The existing planMs field measures body placement separately.
+
+
+## Native interruption regression after route change
+
+Ran the real browser ritualInterrupt control with lightingReview=1 after the path integration. Grow, Multiply, Shield and Attack each replace an active awakening at approximately 0.65 s, reveal the already committed blessing, preserve its total/charge, and retain exactly one Guardian. Final runtime status confirms spatial-wasm, maxVisibleGuardians=1, active=0, pending=0 and errors=[]. Receipt: ritual-interruption-after-path.json. This fixture resets spell cooldowns and disables AI movement, so it proves presentation replacement/persistence invariants rather than economic balance, natural input cadence, audio quality or performance. No production fixes were needed for these four cases.
