@@ -1,11 +1,12 @@
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 const status=document.querySelector('#status');
-const base='/test-results/shared-glb-images/';
+const production=new URLSearchParams(location.search).has('production');
+const base=production?'/dist/':'/test-results/shared-glb-images/';
 const report={scope:'Candidate browser decode and external-buffer loading; not rendered visual acceptance.',models:[],errors:[]};
 const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 try {
- const names=await (await fetch(base+'models.json')).json();
+ const names=await (await fetch('/test-results/shared-glb-images/models.json')).json();
  for(const name of names){
   const gltf=await loader.loadAsync(base+name);let meshes=0,textures=new Set(),geometries=new Set(),materials=new Set();
   gltf.scene.traverse(o=>{if(!o.isMesh)return;meshes++;geometries.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material])){materials.add(m);for(const value of Object.values(m))if(value?.isTexture)textures.add(value);}});

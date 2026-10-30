@@ -2,7 +2,7 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 import {shareGlbImageFamilies} from '../share-glb-image-families.mjs';
 const root=path.resolve('dist'),out=path.resolve('test-results/shared-glb-images');
 const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):e.name.endsWith('.glb')?[path.join(d,e.name)]:[]);
-const inputs=walk(root).map(p=>({name:path.relative(root,p).replaceAll('\\','/'),bytes:fs.readFileSync(p)}));
+const inputs=walk(root).map(p=>({name:path.relative(root,p).replaceAll('\\','/'),bytes:fs.readFileSync(path.resolve('public',path.relative(root,p)))}));
 const result=shareGlbImageFamilies(inputs);
 const parse=b=>{const n=b.readUInt32LE(12);return {json:JSON.parse(b.subarray(20,20+n)),bin:b.subarray(28+n)};};
 let views=0,images=0;

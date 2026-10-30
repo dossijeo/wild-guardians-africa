@@ -39,3 +39,10 @@ The source-authored browser audit at tests/browser/shared-glb-images.html loaded
 Production adoption review found that the linked native Library loaders read a single embedded BIN directly, so GLTFLoader success alone was insufficient. The legacy decoder now resolves external buffers relative to the model URL and re-embeds each view before handing the GLB to those parsers. Library/menu injection supplies that URL. Missing base URLs, failed HTTP requests, truncated buffers and out-of-range views fail explicitly.
 
 Seven focused tests pass, including relative URL resolution under a nested deployment and truncated-data rejection. check_shared_glb_legacy.mjs also decodes all 20 real candidates and originals, comparing metadata and 30,737 decoded views byte for byte; shared-image-legacy-candidate.json records that pass. This closes a loader compatibility gap, not the pending rendered Library and production-package validation. Image sharing remains a candidate and is not enabled by closeBundle yet.
+
+
+## Build integration of exact image sharing
+
+closeBundle now applies consumer-partitioned sharing to release GLBs after the main asset pruning. Source GLBs remain embedded and unchanged. The package validator checks every external buffer URI is relative, resolves within the package inventory and has sufficient bytes. Build succeeds (18.90 s reported by Vite before closeBundle); sharing removes 35,116,636 bytes. All 20 compiled GLBs equal the previously parity-tested candidates byte for byte, and all 20 load and decode in the browser from /dist/ paths (shared-image-production-browser.json). Seven focused loader/package tests pass.
+
+Distribution: 550,627,533 bytes and 1,071 files (shared-image-production-package.json). The package validator reaches and fails the existing 1,000-file gate; the independent byte measurement also exceeds 500 MB. Those limits remain unchanged. This is an achieved package-byte reduction, not a publication-ready package or rendered gameplay/Library acceptance. Nested deployment and full visual checks remain pending.

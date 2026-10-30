@@ -1,5 +1,6 @@
-import {readFileSync,readdirSync,statSync,writeFileSync,rmSync,existsSync} from 'node:fs';
-import {resolve,extname,relative,sep} from 'node:path';
+import {shareGlbImageFamilies} from './share-glb-image-families.mjs';
+import {readFileSync,readdirSync,statSync,writeFileSync,rmSync,existsSync,mkdirSync} from 'node:fs';
+import {resolve,extname,relative,sep,dirname} from 'node:path';
 // Original GLBs used only by the four unlinked worker reference labs. Gameplay
 // loads the separate optimized worker rigs listed in content/worker-actions.json.
 export const UNUSED_WORKER_LAB_MODELS=new Set([
@@ -100,6 +101,13 @@ export function webPackagePlugin(){
           rmSync(target,{force:true});
         }
       }
+      // Build-only exact image sharing; source GLBs remain self-contained.
+      const glbs=[];
+      function collectGlbs(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())collectGlbs(file);else if(name.endsWith('.glb'))glbs.push({name:relative(dist,file).replaceAll('\\','/'),bytes:readFileSync(file)});}}
+      collectGlbs(dist);
+      const shared=shareGlbImageFamilies(glbs);
+      for(const entry of [...shared.outputs,...shared.banks]){const file=resolve(dist,entry.name);if(!file.startsWith(dist+sep))throw Error('Shared GLB path escapes package');mkdirSync(dirname(file),{recursive:true});writeFileSync(file,entry.bytes);}
+      console.log(`Shared GLB images: ${shared.outputs.length} models, ${shared.banks.length} banks, ${shared.savedBytes} bytes saved`);
       writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify({...mapping,records:mapping.records.filter(item=>!UNUSED_LAB_MODELS.has(item.source)&&!RETIRED_MENU_ASSETS.has(item.source))},null,2)+'\n');
       // The four worker reference labs are retained in source but have no menu entry.
       // Exclude them from both the itch.io ZIP and the Tauri frontend bundle.

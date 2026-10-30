@@ -9,7 +9,7 @@ const array=b=>b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength);
 const parse=b=>{const n=b.readUInt32LE(12);return {json:JSON.parse(b.subarray(20,20+n)),bin:b.subarray(28+n)};};
 let payloadViews=0;
 for(const name of names){
- const original=await fs.readFile(path.join('dist',name)),candidate=await fs.readFile(path.join(root,name));
+ const original=await fs.readFile(path.join('public',name)),candidate=await fs.readFile(path.join(root,name));
  const before=parse(Buffer.from(await decodeWebGlb(array(original))));
  const after=parse(Buffer.from(await decodeWebGlb(array(candidate),pathToFileURL(path.join(root,name)).href,async url=>array(await fs.readFile(new URL(url))))));
  for(const field of ['accessors','meshes','skins','animations','nodes','materials','textures','images'])assert.deepEqual(after.json[field],before.json[field],name+' '+field);
