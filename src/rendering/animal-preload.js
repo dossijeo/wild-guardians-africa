@@ -5,7 +5,7 @@ import {prepareSkinEnvelope,updateSkinEnvelopeSphere} from './skin-envelope.js';
 import {installSkinPicking} from './skin-pick-bounds.js';
 
 export function releaseActorRig(rig){
-  if(!rig)return;rig.mixer.stopAllAction();rig.mixer.uncacheRoot(rig.model);
+  if(!rig)return;rig.lod?.dispose();rig.mixer.stopAllAction();rig.mixer.uncacheRoot(rig.model);
   const skeletons=new Set();rig.model.traverse(mesh=>{if(mesh.isSkinnedMesh)skeletons.add(mesh.skeleton);});
   for(const skeleton of skeletons)skeleton.dispose();
 }

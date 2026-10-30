@@ -1,4 +1,5 @@
 import {prepareWorkerMaterials} from './worker-materials.js';
+import {attachCharacterLod} from './character-lod.js';
 import {cinematicGroundBounce} from './cinematic-lighting.js';
 import {supportAnimalOnTerrain} from './animal-terrain-support.js';
 import {prepareWorkerClips} from './worker-clips.js';
@@ -700,6 +701,7 @@ export class WorldScene {
           installSkinPicking(model);root.add(model);this.mixers.set(entity.id,rig);adopted=true;
           this.updateActor(entity,0,type);root.updateMatrixWorld(true);
           model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
+          attachCharacterLod(this,rig,entity.profile??entity.species).catch(error=>this.onError?.(error));
         }catch(error){cleanup();throw error;}
       });
     };
@@ -722,6 +724,7 @@ export class WorldScene {
   }
   updateActor(entity,dt,type) {
     const data=this.mixers.get(entity.id);if(!data)return;
+    data.lod?.beforePose();
     if(type==='worker'){
       const task=this.state.tasks.find(t=>t.id===entity.taskId);
       applyWorkerPose(data,entity,task,this.state.elapsed,this.workerLibraries[entity.profile],this.workerToolCulling!==false);
@@ -729,7 +732,7 @@ export class WorldScene {
       if(entity.status==='acting'&&(task?.kind==='initial'||task?.kind==='water'))this.objects.get(entity.id).rotation.y=entity.heading??0;
       if(entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery))this.objects.get(entity.id).rotation.y=entity.downHeading;
       else if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
-      return;
+      data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);return;
     }
     this.beastPhysics?.before(entity.id);restoreAnimalImpact(data);captureAnimalImpact(data,entity,this.state.elapsed);applyAnimalPose(data,entity,this.state.elapsed);if(!entity.magicDown)applyAnimalImpact(data,entity,this.state.elapsed);
     this.objects.get(entity.id).rotation.y=entity.heading??0;
@@ -742,6 +745,7 @@ export class WorldScene {
       if(audit){audit.ms+=performance.now()-start;audit.calls++;}
     }
     applyActorExpression(data,entity,'animal',this.state.elapsed);
+    data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);
   }
   prepareUpcomingAnimalRigs(s=this.state,now=performance.now()) {
     if(!s||this.disposed)return;
@@ -876,7 +880,7 @@ export class WorldScene {
     this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});yield;
     this.farVegetation?.update(dt);yield;
     this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);yield;
-    if(!this.cinematic)this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.guardianSummons?.update();this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);yield;
+    if(!this.cinematic)this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.guardianSummons?.beforeLods();this.guardianSummons?.update();this.guardianSummons?.updateLods();this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);yield;
     this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);yield;
     this.prepareFrameResources();yield;
   }

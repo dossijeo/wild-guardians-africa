@@ -8,6 +8,7 @@ import {RITUAL,beginAwakening,revealAwakening} from './awakening-presentation.js
 import {pointGuardian} from './guardian-pointing.js';
 import {GUARDIAN_ATTACK_TIMING as ATTACK_TIMING} from '../simulation/guardian-timing.js';
 import * as THREE from 'three';
+import {CharacterLod} from './character-lod.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {GuardianFace} from '../ui/guardian-face.js';
 import {guardianPropBounds} from './guardian-prop-bounds.js';
@@ -24,6 +25,7 @@ export class GuardianSummons{
  constructor(world){this.world=world;this.slots=[];this.pending=[];this.anchor=world.state.events.at(-1);this.presentationState=world.state;this.lastElapsed=world.state.elapsed;this.vector=new THREE.Vector3();this.direction=new THREE.Vector3();this.up=new THREE.Vector3(0,1,0);this.forward=new THREE.Vector3(0,0,1);this.aim=new THREE.Vector3();this.axis=new THREE.Vector3();this.q=new THREE.Quaternion();this.identity=new THREE.Quaternion();this.beamMatrix=new THREE.Matrix4();this.beamScale=new THREE.Vector3();this.stats={active:0,animationMs:0,vfxMs:0,vfxUpdateMs:0,vfxPrepareMs:0,auraAdvanceMs:0,reused:0};this.liveAttackTarget=id=>!id||this.world.state.raid?.animals.some(a=>a.id===id&&a.status!=='gone');this.ready=this.load();}
  async load(){
   const gltf=await this.world.assets.model('content/guardian/guardian.glb');if(this.disposed)return;
+  const low=await this.world.assets.model('/content/character-lod/guardian.glb').catch(error=>{this.world.onError?.(error);return null;});if(this.disposed)return;
   this.beamGeometry=new THREE.CylinderGeometry(1,1,1,8,1,true);this.ringGeometry=new THREE.TorusGeometry(1,.045,5,32);this.coreGeometry=new THREE.IcosahedronGeometry(1,1);
   this.ritual=new GuardianRitual(this.world.scene);
   // A single ancestral spirit: subsequent casts wait for an active shot,
@@ -41,8 +43,11 @@ export class GuardianSummons{
    const eyes=['L','R'].map(side=>model.getObjectByName('Eye'+side)??model.getObjectByName('Eye.'+side)).filter(Boolean).map(bone=>({bone,rest:bone.quaternion.clone()}));
    beam.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
    this.slots.push({handEmitters:guardianHandEmitters(model),pose:new GuardianPose(model,mixer),lapPose:new GuardianLapPose(model,group),vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
+   if(low){const slot=this.slots.at(-1);slot.lod=new CharacterLod(model,low.scene,{height,materialFactory:m=>{const ao=m.userData.modelAmbientVisibility;m.userData.modelAmbientVisibility={value:1};const result=guardianMaterial(m,this.world.toon);m.userData.modelAmbientVisibility=ao;return result;}});materials.push(...slot.lod.materials);}
   }
  }
+ beforeLods(){for(const s of this.slots)s.lod?.beforePose();}
+ updateLods(){for(const s of this.slots)s.lod?.update(this.world.camera,this.world.renderer.domElement.height,this.guide?false:this.world.characterLodForce??null);}
  plan(entityId,point,{bodyScale=1,hoverAbove=false}={}){const w=this.world,target=w.state.raid?.animals.find(a=>a.id===entityId)??w.state.plants.find(p=>p.id===entityId&&p.alive)??w.state.structures.find(s=>s.id===entityId)??point;if(!target)return null;
   // Reuse native building volumes: never raycast every skinned triangle for
   // each of the placement candidates. This work runs only on an accepted cast.
@@ -176,5 +181,5 @@ export class GuardianSummons{
  endPrewarm(){this.clear();}
  hide(s){if(s.event?.kind==='awakening')revealAwakening(s.ritualTarget,this.world.state.elapsed);s.ritualTarget=null;this.ritual?.hide();s.event=null;s.lastAge=0;s.aura.clear();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])o.visible=false;}
  clear(){this.pending.length=0;this.guiding=false;this.guide=null;this.guideKey=null;this.guideOrigin=null;for(const s of this.slots)this.hide(s);Object.assign(this.stats,{active:0,retainedAttacks:0,animationMs:0,vfxMs:0,vfxUpdateMs:0,vfxPrepareMs:0,auraAdvanceMs:0});}
- dispose(){if(this.disposed)return;this.disposed=true;this.clear();this.ritual?.dispose();for(const s of this.slots){s.mixer.stopAllAction();s.mixer.uncacheRoot(s.model);s.model.traverse(o=>o.skeleton?.dispose());for(const m of s.materials)m.dispose();s.face.dispose();s.vortex.dispose();s.aura.dispose();s.beam.dispose();s.material.dispose();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])this.world.scene.remove(o);}this.beamGeometry?.dispose();this.ringGeometry?.dispose();this.coreGeometry?.dispose();this.slots.length=0;}
+ dispose(){if(this.disposed)return;this.disposed=true;this.clear();this.ritual?.dispose();for(const s of this.slots){s.lod?.dispose();s.mixer.stopAllAction();s.mixer.uncacheRoot(s.model);s.model.traverse(o=>o.skeleton?.dispose());for(const m of s.materials)if(!s.lod?.materials.includes(m))m.dispose();s.face.dispose();s.vortex.dispose();s.aura.dispose();s.beam.dispose();s.material.dispose();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])this.world.scene.remove(o);}this.beamGeometry?.dispose();this.ringGeometry?.dispose();this.coreGeometry?.dispose();this.slots.length=0;}
 }
