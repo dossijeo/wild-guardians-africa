@@ -12,7 +12,7 @@ export function projectedCharacterPixels(camera,height,position,viewportHeight){
  return height*viewportHeight*camera.projectionMatrix.elements[5]/(2*depth);
 }
 export class CharacterLod {
- constructor(original,template,{height,materialFactory}={}){
+ constructor(original,template,{height,materialFactory,prepareRoot}={}){
   this.original=original;this.root=clone(template);this.root.name='CharacterLOD';this.low=false;this.links=[];this.draws=[];this.skeletons=new Set();this.materials=[];
   original.updateMatrixWorld(true);this.height=height??new Box3().setFromObject(original).getSize(new Vector3()).y;this.initialScale=Math.max(1e-8,Math.abs(original.getWorldScale(worldScale).y));
   const bones=new Map(),nodes=new Map();original.traverse(o=>{nodes.set(o.name,o);if(o.isBone)bones.set(o.name,o);if(o.isMesh)this.draws.push({mesh:o,visible:o.visible});});
@@ -29,7 +29,7 @@ export class CharacterLod {
    });o.material=materials.length===1?materials[0]:materials;
    o.castShadow=source?.castShadow??true;o.receiveShadow=true;o.frustumCulled=false;
   });
-  for(const s of oldSkeletons)s.dispose();this.root.visible=false;original.parent.add(this.root);
+  for(const s of oldSkeletons)s.dispose();this.root.visible=false;prepareRoot?.(this.root);original.parent.add(this.root);
  }
  beforePose(){if(this.low)for(const d of this.draws)d.mesh.visible=d.visible;}
  update(camera,viewportHeight,force=null){
@@ -48,7 +48,6 @@ export class CharacterLod {
 export async function attachCharacterLod(world,data,id){
  const asset=await world.assets.model('/content/character-lod/'+id+'.glb');
  if(world.disposed||!data.model.parent||data.lod||![...world.mixers.values()].includes(data))return;
- const lod=new CharacterLod(data.model,asset.scene);
- lod.root.traverse(o=>{if(!o.isMesh)return;for(const m of Array.isArray(o.material)?o.material:[o.material]){if(!data.profile){m.userData.beastSurface=true;m.userData.furLightingMask=id==='buffalo'&&!!o.geometry.getAttribute('_fur_light');if(id==='warthog')m.userData.warthogSurface=true;}if(id==='olderMale'&&m.name==='BakedMaterial'){m.roughness=.88;m.metalness=0;}}});
+ const lod=new CharacterLod(data.model,asset.scene,{prepareRoot:root=>root.traverse(o=>{if(!o.isMesh)return;for(const m of Array.isArray(o.material)?o.material:[o.material]){if(!data.profile){m.userData.beastSurface=true;m.userData.furLightingMask=id==='buffalo'&&!!o.geometry.getAttribute('_fur_light');if(id==='warthog')m.userData.warthogSurface=true;}if(id==='olderMale'&&m.name==='BakedMaterial'){m.userData.matteWorkerBody=true;m.roughness=.88;m.metalness=0;}}})});
  data.lod=lod;
 }

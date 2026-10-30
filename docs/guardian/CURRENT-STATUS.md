@@ -157,3 +157,8 @@ Scene-disposal-audio.json closes the previously missing active-voice shutdown ca
 Character LODs are integrated at 4581856a0: five beasts, four workers and Guardian, 1,632-1,860 triangles, 256 px maps, 65/82 projected-pixel switching. See [pipeline, visual evidence and limits](character-lod/README.md). The 25 focused tests and 38 Guardian lifecycle/single-instance tests pass; production build passes. This does not certify a full recovery matrix or an FPS improvement.
 
 User priority: defer broader distribution packaging. After this LOD delivery, prioritize outstanding Guardian visual/audio acceptance, then regenerate sharper textures from the existing five isolated large assets in each of the six biomes, preserving their color/material identity. The rejected external HD texture/model candidates remain excluded. The full objective stays active.
+
+
+## LOD native recovery material correction
+
+Four sequential native-world hyena attacks exposed a LOD material-ordering defect: scene insertion compiled the generic surface before beast metadata existed. Preparation now precedes insertion, with a regression test. Corrected canvas/audio recording, before/after images and complete recovery trace: [LOD native recovery](phase2/lod-native-recovery/README.md). All four recover, one Guardian maximum, three physical plus one baked fallback, zero runtime errors. Twelve LOD tests and production build pass. Frametime spikes remain; no global performance acceptance is claimed.

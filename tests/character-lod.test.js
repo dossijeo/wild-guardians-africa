@@ -15,3 +15,9 @@ for(const entry of entries)test(entry.id+' LOD budgets, skin ownership and lifec
  const bytes=fs.readFileSync('public'+entry.url),size=bytes.readUInt32LE(12),g=JSON.parse(bytes.subarray(20,20+size)),bin=bytes.subarray(28+size);for(const image of g.images??[]){const view=g.bufferViews[image.bufferView],meta=await sharp(bin.subarray(view.byteOffset,view.byteOffset+view.byteLength)).metadata();assert.ok(meta.width<=256&&meta.height<=256,`${meta.width}x${meta.height}`);}
 });
 test('screen-space selection respects zoom and perspective depth',()=>{const o=new OrthographicCamera(-10,10,10,-10);assert.equal(projectedCharacterPixels(o,2,new Vector3(),900),90);o.zoom=2;assert.equal(projectedCharacterPixels(o,2,new Vector3(),900),180);const p=new PerspectiveCamera(60,1,.1,100);p.updateMatrixWorld();assert.ok(projectedCharacterPixels(p,2,new Vector3(0,0,-10),900)>projectedCharacterPixels(p,2,new Vector3(0,0,-20),900));});
+
+test('LOD surface metadata exists before scene registry observes insertion',async()=>{
+ const original=await actorAsset(entries[1].source),low=await actorAsset('public'+entries[1].url),root=new Group();root.add(original.scene);let observed=0;
+ root.addEventListener('childadded',({child})=>child.traverse(m=>{if(m.isMesh){observed++;assert.equal(m.material.userData.beastSurface,true);}}));
+ const controller=new CharacterLod(original.scene,low.scene,{prepareRoot:lod=>lod.traverse(m=>{if(m.isMesh)for(const material of Array.isArray(m.material)?m.material:[m.material])material.userData.beastSurface=true;})});assert.ok(observed>0);controller.dispose();
+});
