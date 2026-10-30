@@ -49,3 +49,17 @@ test('impact decode cannot start after victim removal, result, clock rewind or w
   assert.ok(calls.every(c=>!c.options.isCurrent()),reason);
  }
 });
+
+for(const kind of ['growth','multiply'])test(`${kind} rejects stale queued and decoding crop cues`,()=>{
+ for(const reason of ['removed','dead','result','rewind','replacement','paused','late']){
+  const {audio,calls}=fixture(),plant={id:'crop',alive:true},state={elapsed:1,pauses:[],plants:[plant]};
+  const event={id:'cast',type:'SpellActivated',kind,targetId:'crop',presentation:{cueAt:1}};
+  audio.process([event],{state});assert.equal(calls.length,1);assert.equal(calls[0].options.isCurrent(),true);
+  if(reason==='removed')state.plants=[];if(reason==='dead')plant.alive=false;if(reason==='result')state.result={won:false};if(reason==='rewind')state.elapsed=.5;if(reason==='replacement')audio.process([],{state:{elapsed:1,pauses:[],plants:[plant]}});if(reason==='paused')state.pauses=['menu'];if(reason==='late')audio.context.currentTime=1;
+  assert.equal(calls[0].options.isCurrent(),false,reason);
+ }
+ for(const deferred of [false,true]){
+  const {audio,calls}=fixture(),state={elapsed:0,pauses:[],plants:[{id:'crop',alive:true}]},event={id:'cast',type:'SpellActivated',kind,targetId:'crop',presentation:{cueAt:deferred?.2:0}};
+  if(deferred)audio.process([event],{state});state.plants=[];state.elapsed=.2;audio.process([event],{state});assert.equal(calls.length,0);assert.equal(audio.magicCues.pending.size,0);
+ }
+});

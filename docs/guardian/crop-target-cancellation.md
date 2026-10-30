@@ -7,3 +7,9 @@ The renderer now rejects missing/dead crop targets at admission, skips obsolete 
 25 singleton/pose tests pass, including four new combinations of Grow/Multiply and missing/dead crops, queued and active. Existing Attack sequencing, impact timing, guide handoff and resource disposal tests also pass. Production build passes in 22.20 seconds with existing warnings.
 
 Native browser evidence: crop-target-cancellation.json. For Grow and Multiply, the fixture removes the real target between presentation frames at age 0.12 s and observes at 0.35 s. All six owned visual objects become hidden, active and pending counts are zero, and no errors occur. This is an artificial lifetime edge case with a presentation clock, not natural crop destruction or a performance test. The QA selector also retains the existing Attack removal case.
+
+## Pending audio follow-up
+
+Grow/Multiply launch audio now checks crop existence/liveness when draining delayed simulation cues, before dispatch, and when asynchronous decoding completes. The decode guard also rejects result, clock rollback, scene replacement, pause and expired audio requests. Already-playing audio is not cut and gameplay is not rolled back. Coordinate-only events and calls without a supplied state retain compatibility.
+
+Forty focused combat/animal/presence lifecycle tests pass, including removed/dead crop cues both queued and decoding, and the seven invalidation conditions for each agricultural spell. These are deterministic audio-routing tests with mocked sound calls; they do not claim a new listening-based browser validation. Production build passes in 16.29 seconds with the existing warnings.
