@@ -49,7 +49,11 @@ export class AuthoredBeastRecovery{
    // Interpolating two supported poses can lift their shared support away from
    // the ground. Correct both signs, retaining the exact physical entry pose
    // and smoothly settling its original clearance onto the authored floor.
-   const target=Number.isFinite(this.entryClearance)?this.entryClearance*(1-entry)+.01*entry:.01;
+   // Keep the exact incoming pose, but do not preserve solver penetration
+   // throughout the slower body-pose blend. A smooth 150 ms push-out has zero
+   // initial velocity and leaves already-supported entries on their old timing.
+   const supportBlend=this.entryClearance<0?smooth(this.age/Math.min(.15,this.entryDuration)):entry;
+   const target=Number.isFinite(this.entryClearance)?this.entryClearance*(1-supportBlend)+.01*supportBlend:.01;
    if(Number.isFinite(clearance))correction=target-clearance;
   }
   this.lift=correction;this.hip.getWorldPosition(this.v);this.v.y+=correction;this.hip.position.copy(this.hip.parent.worldToLocal(this.v));model.updateMatrixWorld(true);this.done=this.age>=this.duration;return this.done;
