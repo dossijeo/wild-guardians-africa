@@ -39,3 +39,13 @@ Se corrigió NativeVfx para solicitar profundidad solo si existe un sprite empaq
 36 pruebas de ataques, locomoción, trabajo y demanda de profundidad pasan. Un ciclo real posterior (`lion-side-depth-demand.json`) completa la recuperación sin errores. La captura final no certifica por sí sola todas las transiciones de partículas; queda pendiente ampliar la revisión gráfica.
 
 Resultado negativo de rendimiento en esta escena: captureDepth conserva una media de 16,15 ms (antes 16,32). El intervalo medio pasa de 171,76 a 166,28 ms, pero son muestras únicas, no un ABBA, y no se atribuye esa variación al cambio. Persisten partículas visibles con suavizado; la optimización no resuelve el cuello de botella. Se mantienen los datos de ambas ejecuciones.
+
+## Reutilización de sombras y precálculo
+
+`lion-side-shadow-profile.json` conserva una muestra adicional anterior a la deduplicación de lecturas de huesos. La pasada shadowMap.render cuesta 13,16 ms de media, P95 18,94 ms y P99 23,35 ms. Son tiempos síncronos CPU/controlador, no temporizadores GPU. El intervalo de fotograma es 139,90 ms de media, P95 415,60 ms y P99 449,01 ms; no se atribuye la diferencia respecto a muestras anteriores a una optimización.
+
+La caché registra 697 dibujos y 1 reutilización acumulados desde la carga de la escena, NO únicamente durante el intervalo medido. No hay contratos de sombra desconocidos. Con personajes en movimiento, reutilizar el mapa completo tiene poco margen en esta muestra.
+
+Se evita leer repetidamente las matrices de un mismo Skeleton compartido por varias mallas en cada snapshot. Se mantienen las matrices bind por malla y se registra la identidad del Skeleton; cada nuevo snapshot sigue comprobando la pose. Las pruebas cubren cambios de huesos, bind e identidad del esqueleto. No se ha medido todavía un ahorro de FPS ni validado gráficamente este último ajuste.
+
+Criterio para siguientes optimizaciones: considerar AO horneado por recurso, preparación fuera del hilo principal y reutilización de contribuciones estáticas. Separar sombras estáticas y dinámicas requiere medir también el coste de composición, memoria e invalidación por destrucción, construcción, viento y cambio de luz. No congelar sombras animadas. La profundidad depende de cámara y geometría visible: solo reutilizarla cuando esas entradas y sus consumidores lo permitan; no es un mapa global que pueda hornearse una vez. El problema de fluidez sigue abierto.
