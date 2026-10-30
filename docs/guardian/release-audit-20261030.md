@@ -46,3 +46,10 @@ Seven focused tests pass, including relative URL resolution under a nested deplo
 closeBundle now applies consumer-partitioned sharing to release GLBs after the main asset pruning. Source GLBs remain embedded and unchanged. The package validator checks every external buffer URI is relative, resolves within the package inventory and has sufficient bytes. Build succeeds (18.90 s reported by Vite before closeBundle); sharing removes 35,116,636 bytes. All 20 compiled GLBs equal the previously parity-tested candidates byte for byte, and all 20 load and decode in the browser from /dist/ paths (shared-image-production-browser.json). Seven focused loader/package tests pass.
 
 Distribution: 550,627,533 bytes and 1,071 files (shared-image-production-package.json). The package validator reaches and fails the existing 1,000-file gate; the independent byte measurement also exceeds 500 MB. Those limits remain unchanged. This is an achieved package-byte reduction, not a publication-ready package or rendered gameplay/Library acceptance. Nested deployment and full visual checks remain pending.
+
+
+## Rendered parity after build integration
+
+The browser route tests/browser/shared-glb-render.html loads every original from public and its compiled counterpart from dist, renders both with one WebGL renderer, identical framing and lights, and compares RGBA pixels at 240x240. All 20 pairs have zero changed channels and zero maximum difference; no caught errors. Receipt: shared-image-render-parity.json. Inspected screenshots: shared-image-render-top.png and shared-image-render-bottom.png, showing textured buildings, beasts and workers rather than empty renders.
+
+This verifies static material/geometry output at one pose/view/light setup per model. It does not establish animation, every viewing angle, the legacy Library renderer, nested deployment, performance or full game acceptance. The source-authored tool disposes loaded meshes/materials/textures between pairs; it is QA-only and is not bundled into gameplay.
