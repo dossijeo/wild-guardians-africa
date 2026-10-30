@@ -6,4 +6,3 @@ test('real rhino pose replays exact full-skin floor minimum after animation and 
  const replay=replaySurfacePose(model,copy);assert.ok(Math.abs(replay.minimum-captured.minimum)<1e-8,JSON.stringify({replay:replay.minimum,captured:captured.minimum}));assert.ok(replay.witness);assert.ok(captured.meshes.every(m=>m.floors.length>0));
  const altered=structuredClone(copy);altered.nodes[1].name+='wrong';assert.throws(()=>replaySurfacePose(model,altered),/mismatch/);
 });
-

@@ -52,3 +52,10 @@ Enhanced the QA scanner to retain the minimum vertex index, world position and n
 Optional captureSurface=1 now retains the lowest sampled recovery pose in report.surfaceCapture: hierarchy transforms, active morph weights, model world matrix and exact terrain height under each non-tail vertex. tests/browser/guardian-surface-pose.js restores this pose and recomputes its minimum against those saved heights. This is a single-pose contact replay, NOT a physics trajectory or a terrain field for moved poses. It is diagnostic-only and adds significant allocations.
 
 The real rhino GLB regression changes its bones and parent transform, JSON-roundtrips the snapshot, then restores it and reproduces the minimum within 1e-8 m; mismatched hierarchy is rejected. The initial test exposed a stale skinned bind-matrix update in the capture helper; explicit updateMatrixWorld after parent propagation fixes it. Syntax checks pass for the browser fixture. The new opt-in browser capture has not yet supplied a reproduction of the earlier negative contact, so the penetration remains open.
+
+
+## Browser capture extraction correction
+
+The first captureSurface browser run saved its video, but putting all vertex floor samples in the repeatedly rendered status panel made browser observations time out. Neither a full pose nor a valid negative-contact reproduction was extracted; do not treat this attempt as a pass. The panel now displays only species/minimum/age/vertex count and offers the full pose via a download link. The change still needs a fresh successful browser extraction.
+
+Added tools/guardian/replay-surface-pose.mjs to load a JSON or gzip capture, reconstruct the catalog model and ragdoll virtual endpoints, and compare replayed versus recorded minimum (1e-6 m tolerance). The real-model helper regression passes, but this does not replace the still-pending browser-to-offline capture validation.
