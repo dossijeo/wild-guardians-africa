@@ -49,3 +49,20 @@ La caché registra 697 dibujos y 1 reutilización acumulados desde la carga de l
 Se evita leer repetidamente las matrices de un mismo Skeleton compartido por varias mallas en cada snapshot. Se mantienen las matrices bind por malla y se registra la identidad del Skeleton; cada nuevo snapshot sigue comprobando la pose. Las pruebas cubren cambios de huesos, bind e identidad del esqueleto. No se ha medido todavía un ahorro de FPS ni validado gráficamente este último ajuste.
 
 Criterio para siguientes optimizaciones: considerar AO horneado por recurso, preparación fuera del hilo principal y reutilización de contribuciones estáticas. Separar sombras estáticas y dinámicas requiere medir también el coste de composición, memoria e invalidación por destrucción, construcción, viento y cambio de luz. No congelar sombras animadas. La profundidad depende de cámara y geometría visible: solo reutilizarla cuando esas entradas y sus consumidores lo permitan; no es un mapa global que pueda hornearse una vez. El problema de fluidez sigue abierto.
+
+## Comparación diagnóstica del escaneo de caché durante combate
+
+Después de deduplicar los huesos compartidos se ejecutaron dos ciclos nuevos, primero caché desactivada y después activa. Misma URL nativa, león lateral, día, LOD auto y cámara recoveryClose; añadir `noShadowCache` únicamente para el primero. Seleccionar lion y side, después «Medir ciclo físico real». No se desactivan sombras: sin caché se dibujan siempre. `shadowCacheInterval` cuenta solo el intervalo del ciclo, separado de los acumulados históricos.
+
+| Medida | Sin caché | Con caché |
+| --- | ---: | ---: |
+| Pasadas / reutilizaciones en intervalo | 241 / 0 | 241 / 0 |
+| shadowMap.render media | 6,95 ms | 12,65 ms |
+| shadowMap.render P95 | 9,42 ms | 18,26 ms |
+| Fotograma medio | 129,99 ms | 136,20 ms |
+| Fotograma P95 | 415,75 ms | 399,12 ms |
+| Fotograma P99 | 465,61 ms | 432,57 ms |
+
+Ambos ciclos completan la simulación sin errores. Informes compactos: `lion-side-cache-off.json` y `lion-side-cache-on.json`; se omiten las trazas extensas por hueso, conservando métricas, estado final y comandos. Captura final `shadow-cache-cycle.png`.
+
+La diferencia de la pasada es compatible con un coste relevante del escaneo sin reutilizaciones durante movimiento. No es un ABBA ni una medición GPU; los percentiles globales incluso evolucionan en sentido contrario a la media. No se declara ganancia de fluidez. No se desactiva la caché en producción: ya existe evidencia de beneficio en escenas quietas. Próximo candidato: reducir de forma adaptativa la frecuencia de comprobación tras fallos repetidos, redibujando siempre durante los intervalos omitidos para no congelar sombras. Requiere pruebas y comparaciones alternadas antes de adoptarlo.
