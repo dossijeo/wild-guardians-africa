@@ -90,3 +90,19 @@ alongside these comparisons (22 tests).
 are not an interleaved browser benchmark and do not prove a gameplay frametime
 improvement. The full-refit recovery-hit activation remains disabled. This
 reduces redundant matrix work without accepting the remaining input-time cost.
+
+## Compact point records
+
+The fit now reuses one temporary Vector3 for local-frame transformation, storing
+plain coordinate/vertex records rather than allocating a Vector3 and adding
+metadata to it for every skin point. This preserves arithmetic and vertex order.
+An interleaved twenty-pair comparison against c010b3767 asserts deep equality of
+all collider fields before timing. After three warmups per implementation,
+execution order alternates on the same captured rhino pose.
+
+Receipt `collider-allocation-pairs.json`: original median 61.0321 ms, candidate
+49.0328 ms; maxima 112.2055 and 77.3335 ms. Reproduce with
+`node tools/guardian/benchmark-collider-allocation.mjs` from the repository root.
+This is a local Node measurement, not browser frametime acceptance. The 22
+skinning, refit and articulated-physics tests pass. Full refit at recovery-hit
+time remains disabled; its remaining cost still needs a bounded solution.
