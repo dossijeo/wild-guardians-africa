@@ -31,3 +31,10 @@ Independent non-tail skinned-vertex terrain minima during recovery: buffalo 32 s
 ### Fixed wide framing follow-up
 
 `guardian-combat.html?repeatWide=1` selects a fixed, wider and slightly elevated camera only in the repeated-hit diagnostic. Production camera/placement are unchanged. Fresh buffalo/lateral and warthog/front runs in `*-wide.webm/json` complete both hits and recovery with errors=[] and rollFailures=0. Reviewed 3 fps sheets: buffalo remains in frame through both falls and return upright; a 6 fps crop around the second contact provides more pose detail but crops the lower image. The Guardian still briefly masks the warthog's second contact, so that particular visual transition remains unverified. Sampled minimum non-tail skin gaps: buffalo 0.007469–0.046041 m, warthog 0.004234–0.036190 m. Silent diagnostic recordings, not performance evidence. JavaScript syntax and diff-whitespace checks pass.
+
+
+## Native heavy-species interruption (2026-10-30)
+
+At 7a25ca4a5, selected rhino in spatial-wasm WorldScene and ran Attack durante levantada. The first low camera was obscured by terrain/vegetation and is not visual evidence. Repeated with repeatWide=1 and the reversible ground-cover visibility control. The control intentionally sets night for Attack, regardless of recoveryDay.
+
+Final rhino-native.json confirms second=true, entered=true, finished=true, videoSaved=true, zero errors, maximum one Guardian. rhino-native.mp4 is the complete silent capture; rhino-native.jpg samples 1 fps. Inspected the clear overview: first knockdown, second manifestation during recovery, interrupted rise, subsequent get-up and return upright. This camera is too distant for millimetre contact/anatomical approval; use the report support samples only within their sampled scope. Fixture durability is 200 and cooldown is reset to force the second hit; no production balance changed. The unused last sheet row is black padding, not footage. This extends repeated-hit lifecycle/visual coverage to a heavy species; it does not certify every direction or obstacle.
