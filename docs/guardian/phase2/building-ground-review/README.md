@@ -20,6 +20,12 @@ Validación: 33 pruebas de edificios, destrucción y regla de caras aprobadas; u
 
 ![Corrección selectiva, revisión inicial](face-policy.png)
 
+### Revisión de daño
+
+El visor `tests/browser/buildings.html?faceReview` ahora permite seleccionar cultura y girar 45 grados. Aísla también la máscara separada de apertura, que no hereda la visibilidad del grupo del edificio. Se descartó la primera ronda de capturas: las máscaras de casas ocultas interferían y algunas capturas inmediatas correspondían al fotograma previo. No se publican como validación de cinco culturas.
+
+Con el visor corregido se revisó Mapungubwe al 35 % de daño y en ruina tras avanzar los 3,2 segundos de colapso. Se ven aperturas, capa interior, cenizas y escombros; consola sin errores. Se guardan `mapungubwe-damage35.png` y `mapungubwe-collapse.png`. Es una comprobación del renderizador nativo en visor aislado, no una grabación temporal del juego ni una certificación de sombras solares (el visor no las habilita). Quedan pendientes el movimiento continuo y el resto de culturas con encuadres completos.
+
 `python tools/guardian/audit-building-faces.py docs/guardian/phase2/building-ground-review/face-audit.json` examina los cinco GLB instalados, conserva sus hashes y no los modifica. Encontró grupos de triángulos coincidentes: suajili 44, etíope 35, Mapungubwe 15, saheliana 9 y musgum 24. Mapungubwe además contiene una cara degenerada. La tolerancia de agrupación es 1e-6 por coordenada local; no detecta solapamientos parciales de triangulaciones diferentes.
 
 Inspección adicional de Mapungubwe: el par de caras 6/275 está en y local 0,0259–0,0299, tiene orientación opuesta y UV diferentes. Otros pares coincidentes también usan UV distintos. El renderizador de destrucción crea materiales DoubleSide: ambas superficies pueden competir en profundidad. No se deben borrar todos los duplicados indiscriminadamente porque algunos representan texturas distintas para las dos orientaciones. Investigar culling por cara para estas parejas, preservando las superficies simples de doble cara, y validar la máscara/profundidad de destrucción. Esto identifica una causa plausible concreta, pero aún no demuestra que corresponda al punto exacto visto por el usuario ni constituye una corrección visual validada.
