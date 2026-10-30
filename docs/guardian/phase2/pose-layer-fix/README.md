@@ -351,3 +351,11 @@ Executed guardian-combat.html?buildingView=1&lightingReview=1 using spatial-wasm
 - building-shield-retired.png: after another 2.4 s the body/vortex are gone, the protection dome remains. Active/visible/pending Guardians all zero.
 
 All snapshots report zero captured errors and maximum one Guardian. Inspected all five screenshots. No fine mesh-contact or continuous animation acceptance follows from these wide stills. The full voiced tutorial, broader recovery/obstacle coverage and queued six-biome texture work remain open.
+
+## Actual scene disposal with pending summons (2026-10-30)
+
+The graphical native fixture now exposes an explicit shutdown action calling WorldScene.dispose, spatial-session disposal and AudioSystem.dispose, and stops its RAF loop once disposed. Its growing control panel is height-limited and scrollable; previously upper controls could fall outside the viewport.
+
+Two executed cases: scene-disposal.json starts with one slot, three queued spells and six attached effect/body objects. scene-disposal-physical.json starts with one slot, two queued spells and one live articulated falling animal/solver. Both immediately and after 1.2 seconds have zero slots, pending spells, visible/attached objects, physics entries, mixers and audio voices, no solver, and zero captured errors. Screenshot scene-disposal.png shows the disposed renderer and disabled QA controls.
+
+The physical preparation explicitly clears fixture pause reasons, advances Game.tick, and bypasses cooldown using the existing queue stress setup; this is lifecycle testing, not production cast cadence. There were no active audio voices at either shutdown instant, so active-voice interruption is not certified by these receipts. This proves those two real owner-disposal cases only; no heap-leak, browser GC, replacement-scene loading or broad performance claim. No production disposal code changed.
