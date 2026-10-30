@@ -225,7 +225,7 @@ try{
 
  const ritualViews=document.createElement('button');ritualViews.id='ritualViews';ritualViews.textContent='Inspeccionar ritual en ocho vistas';document.querySelector('header').insertBefore(ritualViews,$('status'));
  ritualViews.onclick=async()=>{ritualViews.disabled=true;try{
-  await world.guardianSummons.ready;paused=true;simulate=false;state.raid=null;world.guardianSummons.clear();
+  await world.guardianSummons.ready;paused=true;simulate=false;state.raid=null;state.time=150;world.guardianSummons.clear();
   const plant=state.plants.find(p=>p.alive&&!p.blessing);if(!plant)throw Error('No unblessed crop');
   let nearbyWall=state.structures.find(s=>s.kind==='wall'&&s.status==='intact');
   for(let dz=-3;dz<=3&&!nearbyWall;dz++)for(let dx=-3;dx<=3&&!nearbyWall;dx++){if(Math.hypot(dx,dz)<1.5)continue;if(Game.placeStructure(state,'qa-view-wall-'+serial++,{kind:'wall',material:'zarzas',x:plant.x+dx,z:plant.z+dz},nav))nearbyWall=state.structures.at(-1);}
