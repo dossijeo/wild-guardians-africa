@@ -330,3 +330,12 @@ Loaded the same QA save and continued through dawn/day 2 via normal hiring. `mai
 `tests/browser/game-viewport.html` embeds the unmodified main entry in a 390x650 iframe (optional 1000x600 button). It uses normal browser saves and controls; it is not an injected simulation fixture. Loaded the existing Suajili QA day-2 save, waited for Shield cooldown, selected it in Power, and clicked ground just left of the vertical action stack. `main-ui-shield-portrait.png` shows the full visible materializing body and vortex left of the Power button, clear of the upper HUD and lower Awakening control. Actual portrait action layout remains a right-hand vertical stack. The outer screenshot is 1280x720; the game viewport is 390x650.
 
 This establishes one accepted portrait placement using the real DOM-exclusion provider. It is not a phone hardware/touch performance test or proof of every target/camera combination. No camera-motion stress or full Attack was performed in this run. The QA save remains paused at day 2 14:16. Additional checks: all 14 spell-card and agricultural-single-plant tests passed.
+
+
+## Installed vertex wind audit (2026-10-30)
+
+`node tools/guardian/audit_spell_wind.mjs` samples the installed Guardian through all four spells at 30 Hz for 65 samples. It compares the same authored pose with/without the additional wind layer, using skinned world-space vertex positions. Cohorts are vertices with at least 50% summed weight on wind-bound bones: 1668 cloth, 308 feather, 112 wood. Report: wind-vertex-audit.json.
+
+Wind-only maximum displacement: cloth 0.481–0.485 m, feathers 0.105–0.110 m, wood 0.022–0.029 m. RMS over sampled vertices/times is much smaller (cloth around 0.053 m): maxima must not be presented as uniform movement of the whole fabric. Combined animation movement from the first sample reaches 0.728–0.781 m cloth, 0.292–0.364 m feathers and 0.310–0.335 m wood. Combined measurements include parent/body motion and authored animation, so they do not isolate independent flutter.
+
+This confirms that the additional wind deforms the installed mesh while spell gestures play; it is not collision, contact, artistic or performance acceptance. No amplitudes or production animation were changed from this measurement. Repeated-pose and cadence tests remain the evidence for non-accumulation/FPS independence.
