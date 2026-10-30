@@ -18,3 +18,8 @@ Scope: the guide is the fixture world-target override, not the full tutorial HUD
 ## Same-frame vortex tracking correction
 
 Review of guide movement found the vortex copied the body position before the body interpolation, leaving it one update behind. Moved that copy after interpolation. A regression advances five 50 ms guide steps and compares both positions; it fails on the previous implementation and passes after the correction. The singleton/pose suites pass all 25 tests (956.443 ms). No animation amplitudes, cloth clips, camera, gameplay rules or materials changed. This is a deterministic transform correction; no new continuous visual acceptance is claimed.
+
+
+## Invalid placement recovery
+
+A guide that was already visible retained its old body/vortex and guiding flag when a subsequent placement query returned null. This could expose an obsolete position after terrain/obstacle changes. The failed-placement branch now hides both visuals, clears guiding and refreshes its time stamp; it keeps the requested guide target so normal placement retries can restore the same instance. A regression verifies hidden visuals, zero active count, null guide screen position and successful restoration when planning becomes valid again. It failed before the fix. Singleton plus placement suites pass 42/42 in 548.376 ms. This does not change the placement candidate scoring or discard a valid fallback. No new graphical acceptance claim is made.

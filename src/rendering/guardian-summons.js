@@ -80,7 +80,7 @@ export class GuardianSummons{
   if(!s||s.event)return false;
   if(!this.guide){if(this.guiding){s.group.visible=false;s.vortex.visible=false;}this.guiding=false;return false;}
   const stamp=performance.now()/1000;
-  this.refreshGuidePlacement(stamp);if(!this.guideOrigin)return false;
+  this.refreshGuidePlacement(stamp);if(!this.guideOrigin){s.group.visible=false;s.vortex.visible=false;this.guiding=false;this.guideStamp=stamp;return false;}
   const p=this.guide.position,origin=this.guideOrigin,dt=Math.min(.05,Math.max(0,stamp-(this.guideStamp??stamp)));this.guideStamp=stamp;
   if(!this.guiding){s.group.position.set(origin.x,origin.y+1.2,origin.z);this.guideTime=0;}
   this.guiding=true;this.guideTime+=dt;
