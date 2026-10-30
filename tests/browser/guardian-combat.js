@@ -1,3 +1,4 @@
+import {captureSurfacePose} from './guardian-surface-pose.js';
 import {planRitualArc} from '../../src/rendering/guardian-ritual-path.js';
 import {installDisposalReview} from './guardian-disposal-review.js';
 import {guardianLidStudy} from './guardian-lid-study.js';
@@ -302,17 +303,18 @@ try{
    world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld();
    capture=$('world').captureStream(30);recorder=new MediaRecorder(capture,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:5000000});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};done=new Promise(resolve=>recorder.onstop=resolve);recorder.start();
    simulate=true;paused=false;state.time=400;cast('attack');
-   const rows=[],supportPoint=new Vector3();let second=false,entered=false;
+   const rows=[],supportPoint=new Vector3();let second=false,entered=false,surfaceCapture=null;const captureSurface=new URLSearchParams(location.search).has('captureSurface');
    while(performance.now()<deadline){
     await sleep(100);const e=world.beastPhysics.entries.get(a.id),phase=a.magicDown?.phase??null;
     let support=null;
     if(e?.recovery){let minimum=Infinity,count=0,limiter=null,witness=null;e.data.model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;for(let index=0;index<mesh.geometry.attributes.position.count;index++){if(isTailContactVertex(mesh,index))continue;mesh.getVertexPosition(index,supportPoint).applyMatrix4(mesh.matrixWorld);const gap=supportPoint.y-nav.field.surface(supportPoint.x,supportPoint.z);if(gap<minimum){minimum=gap;limiter=mesh.name;witness={index,position:supportPoint.toArray(),bones:Array.from({length:4},(_,k)=>({name:mesh.skeleton.bones[mesh.geometry.attributes.skinIndex.getComponent(index,k)]?.name,weight:mesh.geometry.attributes.skinWeight.getComponent(index,k)})).filter(b=>b.weight>0)};}count++;}});support={minimum,count,limiter,witness};}
+    if(captureSurface&&support&&(!surfaceCapture||support.minimum<surfaceCapture.minimum)){surfaceCapture=captureSurfacePose(e.data.model,(x,z)=>nav.field.surface(x,z));surfaceCapture.species=a.species;surfaceCapture.recoveryAge=e.recoveryAge;surfaceCapture.time=state.elapsed;}
     rows.push({support,time:state.elapsed,x:a.x,z:a.z,phase,recoveryAge:e?.recoveryAge??null,active:world.beastPhysics.entries.size,guardians:world.guardianSummons.slots.filter(s=>s.group.visible).length,maxGuardians:maxVisibleGuardians});
     if(e?.recovery&&!second&&e.recoveryAge>(releaseHit?e.recovery.duration-GUARDIAN_ATTACK_TIMING.impact+.15:.6)){cast('attack');second=true;}
     if(second&&phase==='falling')entered=true;
     if(entered&&!a.magicDown&&!world.beastPhysics.entries.has(a.id))break;
    }
-   report={kind:releaseHit?'attack-during-release':'attack-during-getup',releaseContacts,species:a.species,second,entered,finished:entered&&!a.magicDown,rows,errors:[...errors],scope:'Actual cast and Game.tick; fixture resets cooldown and increases durability to isolate repeated contact.'};
+   report={kind:releaseHit?'attack-during-release':'attack-during-getup',releaseContacts,surfaceCapture,species:a.species,second,entered,finished:entered&&!a.magicDown,rows,errors:[...errors],scope:'Actual cast and Game.tick; fixture resets cooldown and increases durability to isolate repeated contact.'};
    if(!report.finished)throw Error('Repeated get-up impact did not complete before timeout');
    paused=true;recorder.stop();await done;const response=await fetch('http://127.0.0.1:5199/combat-cycle.webm',{method:'POST',body:new Blob(chunks,{type:'video/webm'})});if(!response.ok)throw Error('Repeated impact video was not saved');report.videoSaved=true;
   }catch(e){fail(e);}finally{restoreStart?.();if(recorder?.state==='recording')recorder.stop();for(const track of capture?.getTracks()??[])track.stop();paused=true;measuring=false;repeatHit.disabled=false;$('freeze').textContent='Reanudar';}
