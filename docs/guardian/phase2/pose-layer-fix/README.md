@@ -324,3 +324,9 @@ Loaded the same QA save and continued through dawn/day 2 via normal hiring. `mai
 `main-ui-growth-quick.png`: selected Growth and clicked the visible crop in the same browser action batch (09:27 -> 09:28), observed green Guardian, vortex and connection to the crop with a worker nearby. The prior inconclusive click occurred after a much longer selection delay, consistent with ten-second ToolSession expiration. No picking change was made or needed to achieve this cast. This does not prove the precise cause of that previous miss.
 
 22 placement tests now pass, including a portrait-aspect camera with top/bottom excluded rectangles and an all-screen-covered finite fallback. Actual portrait HUD graphical validation remains pending, as does accepted Attack through the real main UI. The QA game is paused at day 2 10:11. No cooldown reset or state injection was used.
+
+## Actual portrait viewport check (2026-10-30)
+
+`tests/browser/game-viewport.html` embeds the unmodified main entry in a 390x650 iframe (optional 1000x600 button). It uses normal browser saves and controls; it is not an injected simulation fixture. Loaded the existing Suajili QA day-2 save, waited for Shield cooldown, selected it in Power, and clicked ground just left of the vertical action stack. `main-ui-shield-portrait.png` shows the full visible materializing body and vortex left of the Power button, clear of the upper HUD and lower Awakening control. Actual portrait action layout remains a right-hand vertical stack. The outer screenshot is 1280x720; the game viewport is 390x650.
+
+This establishes one accepted portrait placement using the real DOM-exclusion provider. It is not a phone hardware/touch performance test or proof of every target/camera combination. No camera-motion stress or full Attack was performed in this run. The QA save remains paused at day 2 14:16. Additional checks: all 14 spell-card and agricultural-single-plant tests passed.
