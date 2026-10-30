@@ -25,3 +25,8 @@ Copiar los cuatro archivos del usuario `tree_01_4k.glb` … `tree_04_4k.glb` a e
 - [Árbol seco, iluminación nocturna de prueba](tree-4-night.png)
 
 La iluminación es una previsualización PBR aislada, no una captura del escenario de Wild Engine.
+
+
+## Decisión del usuario
+
+Descartada la integración de estas texturas: cambian demasiado el tono y el brillo. La propuesta alternativa para los 30 elementos de los seis biomas queda registrada en docs/guardian/CURRENT-STATUS.md, para después de los pendientes actuales.

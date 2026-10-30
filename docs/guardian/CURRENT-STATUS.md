@@ -112,3 +112,16 @@ This closes those two presentation interruption cases only. It does not prove re
 Production presence requests now capture the owning simulation state and elapsed time. Arrival/dissolution decoding cannot start a voice after game result, clock rollback, state replacement, owner disposal, a different active world or pause. Previously the app checked owner identity, disposal, pause and audio age only; result/rollback/replacement could admit a late cue. The shared `playGuardianScenePresence` boundary retains existing distance gain and 0.4 s freshness window.
 
 Validation: 36 tests passed across guardian-presence, guardian-presence-lifecycle, guardian-combat-audio and guardian-singleton. Delayed decoding uses AudioSystem with controlled Web Audio stubs and includes a positive current-scene case; this is not perceptual audio validation. Production build passed (12.25 s; existing chunk-size and mixed-import warnings). Existing scene shutdown already calls AudioSystem.stop, invalidates decoding generation and disconnects voices; no new audio engine or resource ownership was introduced.
+
+
+## User-requested follow-up: texture clarity across all six biomes (2026-10-30)
+
+The user rejected integration of the supplied replacement tree textures because their tone and brightness change too much. Do not integrate the previous HD/4K texture candidates or the rejected detailed-tree LOD models. Keep current production models and materials.
+
+After the current outstanding work, this task is part of the thread objective: process the first five assets of **each of the six biomes** (savanna, desert, grand_river, mangrove, canyons, volcanoes), 30 assets total. Use the isolated current-runtime GLBs in docs/lighting/biome-retexture-sources; export the fifth savanna asset as well (existing savanna comparison exports cover only four).
+
+Requested workflow: import the current models in Blender, render reference images of their existing appearance, then use the **imagegen skill** to create clearer textures based on those references. Read and apply that skill when executing this phase. Project/rebake the generated detail onto the original surfaces; preserve original geometry, proportions, pivot, UV compatibility and the established palette/material response. Preserve and validate normal/PBR maps; do not replace them blindly with generated color or baked lighting.
+
+Acceptance: increased legibility of foliage/bark/large-element detail without perceptible palette, brightness or gloss shifts. Compare fixed-camera, matched-lighting original/candidate views, close and gameplay distances, in day and night for all six biomes. Check seams, projection alignment, leaf cutouts, normal direction and material response. Image generation is not proof of color/material preservation: reject or correct candidates that drift. Document texture residency/size and validate runtime cost before integration. No production integration is authorized by the mere existence of generated candidates.
+
+Status: queued after existing pending work; not started and not completed. This addition does not close or replace the Guardian phase-2 acceptance requirements.
