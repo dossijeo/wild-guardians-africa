@@ -1,3 +1,5 @@
+> Correction (2026-10-30): the night-31 campaign fixture uses legacy-js navigation/world loading. Its saved state has no wildEngineWorldVersion, and the campaign branch bypasses prepareWildEngineWorld. Earlier descriptions of campaign-derived runs here as native are incorrect. Their measurements and outcome equality remain historical legacy-engine evidence only; they do not validate Wild Engine performance. Non-campaign lightingReview runs explicitly reporting spatial-wasm are unaffected. A compatible native populated-world comparison remains required.
+
 # Isolating Guardian presentation cost
 
 Current reference at 9d69dcaa5: eight balanced blocks, identical Attack commands every 600 ms, 1.2 s warmup plus 4 s samples, twenty static beasts and presentation-only clock. No navigation/ragdoll cost is covered. Single IAB tab confirmed, Intel UHD, no hidden frames. current-abba.json shows reference p95 near 50 ms versus full Guardian near 67 ms; this remains a meaningful presentation regression, not acceptable merely because animation CPU is small.

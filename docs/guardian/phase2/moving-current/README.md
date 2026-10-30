@@ -1,3 +1,5 @@
+> Correction (2026-10-30): the night-31 campaign fixture uses legacy-js navigation/world loading. Its saved state has no wildEngineWorldVersion, and the campaign branch bypasses prepareWildEngineWorld. Earlier descriptions of campaign-derived runs here as native are incorrect. Their measurements and outcome equality remain historical legacy-engine evidence only; they do not validate Wild Engine performance. Non-campaign lightingReview runs explicitly reporting spatial-wasm are unaffected. A compatible native populated-world comparison remains required.
+
 # Moving-scene component comparison
 
 Restored the same night-31 snapshot in separate tabs, closing each previous WebGL tab. Used guardian-combat.html?campaign=1&navigation=reference, then navigation=guardian, and clicked Medir navegacion real. Each executes 400 fixed .05-second Game.tick steps with real navigation, four initial animals and two legal Attack commands at .55 and 12.65 simulation seconds. Reference retains combat physics and suppresses Guardian presentation. Zero hidden frames/errors. Final simulation outcomes are exactly identical, including animal/worker/structure state and RNG.

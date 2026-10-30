@@ -1,3 +1,5 @@
+> Correction (2026-10-30): the night-31 campaign fixture uses legacy-js navigation/world loading. Its saved state has no wildEngineWorldVersion, and the campaign branch bypasses prepareWildEngineWorld. Earlier descriptions of campaign-derived runs here as native are incorrect. Their measurements and outcome equality remain historical legacy-engine evidence only; they do not validate Wild Engine performance. Non-campaign lightingReview runs explicitly reporting spatial-wasm are unaffected. A compatible native populated-world comparison remains required.
+
 # Moving campaign comparison at bd5f97961
 
 Restored the same night-31 campaign in two fresh page loads, Guardian presentation then reference with presentation disabled. Both retain physical reactions and run native Game.tick/navigation for 400 fixed .05-second simulation steps. Two real-cooldown Attack commands occur at .55 and 12.65 seconds; no fixture health resets. No recording, hidden frames or reported errors. Initial actor records and the complete serialized report outcome compare exactly equal between runs.
