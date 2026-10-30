@@ -29,3 +29,13 @@ Game.tick: media 17,59 ms, P95 53,17 ms, máximo 115,30 ms. Scheduler anterior: 
 Mapa de etapas: 0 cámara/chunks; 1 LOD y sync de entidades; 2 obstrucciones; 3 vegetación lejana; 4 agrupación de assets; 5 efectos y Guardián; 6 uniformes; 7 preparación de recursos; 8 cierre del generador; 9 dibujo. Las medias de 1 y 5 son 3,92 y 4,91 ms respectivamente. No se pueden sumar percentiles de etapas para construir un percentil total.
 
 La siguiente investigación debe desglosar las pasadas de dibujo y la simulación. El intervalo total incluye también trabajo de diagnóstico, audio, navegador y esperas no cubiertas; no atribuir ese resto automáticamente a GPU. No hay cambios de producción en esta instrumentación.
+
+## Demanda de profundidad de partículas
+
+El perfil de pasadas (`lion-side-pass-profile.json`) mide 16,32 ms de media en captureDepth, 0,15 ms en cielo y 0,07 ms en máscara de edificios. Las llamadas renderer.render del mundo suman 45,91 ms, incluyendo profundidad: estas cifras están anidadas y NO deben sumarse entre sí.
+
+Se corrigió NativeVfx para solicitar profundidad solo si existe un sprite empaquetado con suavizado de contacto activo cuya esfera conservadora intersecte el frustum local. La esfera contempla la rotación previa al escalado del shader. No cambia simulación ni elimina sprites; únicamente evita capturar profundidad que no puede ser consultada por fragmentos visibles. Se conservan los sprites que cruzan bordes de pantalla.
+
+36 pruebas de ataques, locomoción, trabajo y demanda de profundidad pasan. Un ciclo real posterior (`lion-side-depth-demand.json`) completa la recuperación sin errores. La captura final no certifica por sí sola todas las transiciones de partículas; queda pendiente ampliar la revisión gráfica.
+
+Resultado negativo de rendimiento en esta escena: captureDepth conserva una media de 16,15 ms (antes 16,32). El intervalo medio pasa de 171,76 a 166,28 ms, pero son muestras únicas, no un ABBA, y no se atribuye esa variación al cambio. Persisten partículas visibles con suavizado; la optimización no resuelve el cuello de botella. Se mantienen los datos de ambas ejecuciones.
