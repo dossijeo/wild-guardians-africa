@@ -57,3 +57,20 @@ The next local measurement is `rhino-refit-tail-scan.json`: 64.7–128.3 ms acro
 twelve full refits. These separate Node runs do not establish browser frametime
 gains. Full-refit gameplay activation remains off. Allocation and hull-selection
 costs remain the next targets; no contact acceptance claim is added.
+
+## Rejected packed support search
+
+An experiment packed each group's point coordinates into Float64Array before
+scanning the same 96 directions, preserving strict comparison and original
+vertex tie order. Randomized and tied-point oracle tests and the real rhino
+refit comparison passed. It was then measured against the existing object scan
+in one Node process: three warmup refits per implementation, twenty pairs,
+alternating execution order, same captured rhino pose, full refit each time.
+
+`rhino-support-interleaved.json` records all pairs. Median full-fit time was
+93.9885 ms for the existing scan and 104.7623 ms for the packed candidate;
+maxima were 202.7293 and 161.5377 ms respectively. The lower maximum does not
+justify the worse median or establish reduced browser stutter. The candidate
+and its helper were removed. No production code changes from this experiment
+remain. The result points away from repacking each fit and toward reducing
+per-fit allocation/skinning work. Full-refit activation remains pending.
