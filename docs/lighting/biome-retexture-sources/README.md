@@ -55,3 +55,5 @@ Importación: metros, eje Y vertical, pivote original. Conservar geometría, esc
 - [shrub_01 — Arbusto espinoso](savanna/shrub_01.glb)
 
 Los 30 archivos quedan inventariados en [inventory.json](inventory.json). Revalidar contra la versión instalada con `python tools/trees/audit_retexture_sources.py` antes de iniciar el trabajo de texturas. Este inventario prepara la tarea en cola; no contiene texturas generadas ni sustituye recursos del juego.
+
+Preparación en Blender: los 30 GLB se han importado en Blender 4.5.3 LTS y se han decodificado sus 90 imágenes, comprobando UV y materiales. [Informe](blender-import-audit.json). Reproducible con Blender headless, `--python-exit-code 1 --python tools/trees/inspect_blender_sources.py`. Es validación de importación; todavía no hay renders de referencia ni texturas generadas.
