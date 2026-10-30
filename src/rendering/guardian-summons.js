@@ -1,3 +1,4 @@
+import {guardianHandEmitters,guardianHandPosition} from './guardian-hand-emitters.js';
 import {planRitualArc} from './guardian-ritual-path.js';
 import {spellWindBinding,applySpellWind} from './guardian-spell-wind.js';
 import {GuardianPose} from './guardian-pose.js';
@@ -39,7 +40,7 @@ export class GuardianSummons{
    const aura=this.world.vfxLibrary.create('repel',this.world.destructionPass,{density:.35,softParticles:false});aura.visible=false;aura.sprites.material.forceSinglePass=true;aura.ribbons.material.forceSinglePass=true;this.world.scene.add(aura);
    const eyes=['L','R'].map(side=>model.getObjectByName('Eye'+side)??model.getObjectByName('Eye.'+side)).filter(Boolean).map(bone=>({bone,rest:bone.quaternion.clone()}));
    beam.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-   this.slots.push({pose:new GuardianPose(model,mixer),lapPose:new GuardianLapPose(model,group),vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
+   this.slots.push({handEmitters:guardianHandEmitters(model),pose:new GuardianPose(model,mixer),lapPose:new GuardianLapPose(model,group),vortex,bottom,height,wind,group,model,materials,mixer,actions,eyes,face:new GuardianFace(model),beam,impact,core,material,aura,hand:model.getObjectByName('HandR')??model.getObjectByName('Hand.R'),hands:['L','R'].map(side=>model.getObjectByName('Hand'+side)??model.getObjectByName('Hand.'+side)).filter(Boolean),forearms:['L','R'].map(side=>model.getObjectByName('Forearm'+side)??model.getObjectByName('Forearm.'+side)).filter(Boolean),event:null});
   }
  }
  plan(entityId,point,{bodyScale=1,hoverAbove=false}={}){const w=this.world,target=w.state.raid?.animals.find(a=>a.id===entityId)??w.state.plants.find(p=>p.id===entityId&&p.alive)??w.state.structures.find(s=>s.id===entityId)??point;if(!target)return null;
@@ -141,7 +142,7 @@ export class GuardianSummons{
    if(s.core.visible){
     const branching=kind==='multiply';beam.position.set(0,0,0);beam.count=attack?1:branching?8:2;
     for(let i=0;i<beam.count;i++){
-     const hand=attack?s.hand:s.hands[branching&&i>=2?Math.floor((i-2)/3):i];hand?.getWorldPosition(this.vector);if(!hand)this.vector.copy(s.group.position);
+     const hand=attack?s.hand:s.hands[branching&&i>=2?Math.floor((i-2)/3):i];if(hand)guardianHandPosition(s.handEmitters,hand,this.vector);if(!hand)this.vector.copy(s.group.position);
      if(branching){
       // Two hand-fed trunks divide into six rays around the crop. All eight
       // segments share one instanced draw and the existing material/geometry.

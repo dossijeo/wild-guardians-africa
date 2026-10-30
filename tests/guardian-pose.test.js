@@ -66,7 +66,7 @@ test('installed animated hand anchors Attack flight and reaches the selected sur
    world.state.events.push({type:'SpellActivated',kind:'attack',targetId:'victim',x:contact.x,z:contact.z,presentation:{origin:{x:3,y:1,z:0},contact,elapsed:at}});
    summons.update();assert.equal(slot.event.targetId,'victim');previousHand=null;
    for(const age of [T.release*.5,T.release+.005,T.release+(T.impact-T.release)*.5,T.impact-.001,T.impact+.001]){
-    world.state.elapsed=at+age;summons.update();const hand=slot.hand.getWorldPosition(new THREE.Vector3()),target=new THREE.Vector3(contact.x,contact.y,contact.z);
+    world.state.elapsed=at+age;summons.update();const hand=slot.hand.localToWorld(slot.handEmitters.get(slot.hand).clone()),target=new THREE.Vector3(contact.x,contact.y,contact.z);
     if(previousHand&&previousHand.distanceTo(hand)>.001)moved=true;previousHand=hand.clone();
     assert.equal(slot.impact.visible,age>=T.impact,'impact flash must not precede the shared marker');
     if(age<T.release){assert.equal(slot.beam.visible,false);assert.ok(slot.core.position.distanceTo(hand)<1e-6);continue;}
