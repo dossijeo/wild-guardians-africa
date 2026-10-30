@@ -21,3 +21,9 @@ Native spatial-WASM WorldScene loads and renders the center with zero captured e
 ## Exact embedded-image duplication audit
 
 The existing release plugin already consolidates all lip-sync JSON records into one bank; no additional saving was claimed there. A read-only GLB scan (`python tools/guardian/audit_shared_images.py`) finds 17 groups of byte-identical encoded images, with 35,118,182 bytes of theoretical duplicate payload. Full file/image/hash inventory: shared-image-audit.json. No assets were changed. External image reuse would require GLB buffer/view rewriting, relative-URL loading checks and package verification; it would also add up to 17 files, worsening the current file-count limit. This is a measured optimization opportunity, not an achieved saving or a passing package gate.
+
+## Single-buffer candidate and adoption constraint
+
+share-glb-images.mjs packs exact duplicated images into one external glTF buffer, preserving bufferView indices and rebasing retained BIN/meshopt ranges. check_shared_glb_images.mjs creates an isolated candidate under test-results/shared-glb-images and compares all metadata plus 30,737 raw/compressed payload views with the built originals. Twenty models and 57 image references pass exact parity; 17 duplicate groups save 35,118,340 net bytes (including JSON/container changes). Receipt: shared-image-candidate.json.
+
+This candidate is NOT installed in the build pipeline or game. Its single shared buffer is 26,129,108 bytes. Standard GLTFLoader would fetch that entire buffer when any participating model loads, increasing the initial transfer for a small model. Sharing must be partitioned by asset co-loading/family, or use a separately validated bounded-loading design, before adoption. Exact data parity does not establish browser loading, memory or first-load performance acceptance. Current source/runtime GLBs remain unchanged; the production release gate remains unresolved.
