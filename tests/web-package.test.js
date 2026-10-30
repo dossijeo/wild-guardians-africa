@@ -24,7 +24,7 @@ test('native menu and library receive local decoding before their original parse
  const menu=publicText(readFileSync(new URL('../public/menu/index.html',import.meta.url),'utf8'),'menu/index.html',manifest);
  assert(menu.includes("from '../runtime/glb-legacy.js'"));assert(menu.includes('window.decodeWebGlb=decodeWebGlb'));
  const loader=publicText(readFileSync(new URL('../public/library.html',import.meta.url),'utf8'),'library.html',manifest);
- assert(loader.includes('decodeWebGlb(result)'));assert(!loader.includes("fetch('/"));
+ assert(loader.includes('decodeWebGlb(result,new URL(url,document.baseURI).href)'));assert(!loader.includes("fetch('/"));
 });
 test('unlinked worker lab models are omitted without removing gameplay worker rigs',()=>{
  const workers=JSON.parse(readFileSync(new URL('../public/content/worker-actions.json',import.meta.url)));

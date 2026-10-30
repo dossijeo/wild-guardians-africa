@@ -47,8 +47,8 @@ export function publicText(text,path,manifest){
     if(Array.isArray(models))text=JSON.stringify(models.filter(model=>!UNUSED_LAB_MODELS.has(model.url.replace(/^\//,''))).map(model=>model.facialEdit?.editable?.startsWith('content/source/')?{...model,facialEdit:{...model.facialEdit,editable:'repository:'+model.facialEdit.editable}}:model));
   }
   for(const item of manifest.records)text=text.replaceAll('/'+item.source,'/'+item.runtime);
-  if(path==='library.html')text=text.replace("const get=", "import {decodeWebGlb} from './runtime/glb-legacy.js';\nconst get=").replace('return response[type]();',"const result=await response[type]();return type==='arrayBuffer'&&url.endsWith('.glb')?decodeWebGlb(result):result;");
-  if(path==='menu/native.js')text=text.replace('return await (await fetch(el.textContent.trim())).arrayBuffer();','return await window.decodeWebGlb(await (await fetch(el.textContent.trim())).arrayBuffer());');
+  if(path==='library.html')text=text.replace("const get=", "import {decodeWebGlb} from './runtime/glb-legacy.js';\nconst get=").replace('return response[type]();',"const result=await response[type]();return type==='arrayBuffer'&&url.endsWith('.glb')?decodeWebGlb(result,new URL(url,document.baseURI).href):result;");
+  if(path==='menu/native.js')text=text.replace('return await (await fetch(el.textContent.trim())).arrayBuffer();','return await window.decodeWebGlb(await (await fetch(el.textContent.trim())).arrayBuffer(),new URL(el.textContent.trim(),document.baseURI).href);');
   if(path==='library/destruction/script-5.js')text=text.replaceAll('json.textures[index].source','(json.textures[index].extensions?.EXT_texture_webp?.source??json.textures[index].source)');
   if(path==='menu/index.html')text=text.replace('<script src="/menu/native.js"></script>',`<script type="module">import {decodeWebGlb} from '/runtime/glb-legacy.js';window.decodeWebGlb=decodeWebGlb;const script=document.createElement('script');script.src='/menu/native.js';document.body.append(script);</script>`);
   // JSON and injected library scripts resolve from the game/library document.
