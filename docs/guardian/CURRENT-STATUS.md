@@ -162,3 +162,6 @@ User priority: defer broader distribution packaging. After this LOD delivery, pr
 ## LOD native recovery material correction
 
 Four sequential native-world hyena attacks exposed a LOD material-ordering defect: scene insertion compiled the generic surface before beast metadata existed. Preparation now precedes insertion, with a regression test. Corrected canvas/audio recording, before/after images and complete recovery trace: [LOD native recovery](phase2/lod-native-recovery/README.md). All four recover, one Guardian maximum, three physical plus one baked fallback, zero runtime errors. Twelve LOD tests and production build pass. Frametime spikes remain; no global performance acceptance is claimed.
+
+
+Directional native checkpoint: [lion lateral daylight and rhino elevated retreat](phase2/native-directional-cycles/README.md). Both recover with one Guardian and no runtime errors; sound traces distinguish hurt from retreat. Rhino down displacement 2.32 m remains a tuning observation, not a matched mass comparison. No global fluency or automatic placement acceptance is inferred from these QA-origin recordings.
