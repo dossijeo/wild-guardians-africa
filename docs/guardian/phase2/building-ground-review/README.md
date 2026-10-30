@@ -8,5 +8,11 @@ Se guardan imágenes de la misma vista con sombras solares y sin ellas. La ilumi
 
 La petición posterior del usuario añade prioridad a precalcular y reutilizar profundidad, sombras y oclusión cuando haya beneficio medido. Ya existe shadow-cache.js con invalidación por entradas geométricas. Antes de duplicar caches hay que medir sus aciertos y costes. Una profundidad de cámara no se puede reutilizar sin invalidar por cámara/oclusores; la luz diurna y los personajes animados tampoco son estáticos. Evaluar por separado AO horneado de modelos, sombras estáticas y componentes dinámicos conservando apariencia. No se ha incorporado aún un nuevo horneado o cache como consecuencia de esta inspección.
 
+## Auditoría del recurso
+
+`python tools/guardian/audit-building-faces.py docs/guardian/phase2/building-ground-review/face-audit.json` examina los cinco GLB instalados, conserva sus hashes y no los modifica. Encontró grupos de triángulos coincidentes: suajili 44, etíope 35, Mapungubwe 15, saheliana 9 y musgum 24. Mapungubwe además contiene una cara degenerada. La tolerancia de agrupación es 1e-6 por coordenada local; no detecta solapamientos parciales de triangulaciones diferentes.
+
+Inspección adicional de Mapungubwe: el par de caras 6/275 está en y local 0,0259–0,0299, tiene orientación opuesta y UV diferentes. Otros pares coincidentes también usan UV distintos. El renderizador de destrucción crea materiales DoubleSide: ambas superficies pueden competir en profundidad. No se deben borrar todos los duplicados indiscriminadamente porque algunos representan texturas distintas para las dos orientaciones. Investigar culling por cara para estas parejas, preservando las superficies simples de doble cara, y validar la máscara/profundidad de destrucción. Esto identifica una causa plausible concreta, pero aún no demuestra que corresponda al punto exacto visto por el usuario ni constituye una corrección visual validada.
+
 ![Con sombras](shadows.png)
 ![Sin sombras, solo diagnóstico](no-shadows.png)
