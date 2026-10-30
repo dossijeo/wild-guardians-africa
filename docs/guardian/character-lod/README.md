@@ -37,6 +37,7 @@ Las copias lejanas no contienen morph targets faciales. La expresividad completa
 
 - Validador glTF: diez archivos, cero errores. Advertencias de mallas skinned no raíz documentadas en `validation.json`; se enlazan explícitamente a los huesos canónicos en ejecución.
 - 25 pruebas automatizadas aprobadas: presupuesto, texturas, todos los clips muestreados, huesos compartidos, transformaciones no skinned, escala, limpieza, herramientas y materiales AO.
+- Otras 38 pruebas del ciclo de vida y de instancia unica del Guardian aprobadas.
 - Build de producción correcto. Conserva advertencias de tamaño de chunks; el trabajo de distribución queda aplazado por prioridad del usuario.
 - Comparador gráfico: diez modelos, dos tamaños y dos orientaciones; inspección visual de silueta y articulaciones.
 - Wild Engine real sobre Intel UHD: alternancia original/automático cerca/lejos, escena diurna, lanzamiento nocturno con Guardián LOD y caída física de hiena. Metadatos de las capturas sin errores de runtime.

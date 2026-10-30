@@ -150,3 +150,10 @@ PR217 is open, MERGEABLE/CLEAN, with no reported CI checks. After fetching origi
 Current native performance evidence is native-populated-comparison.json and native-raid-comparison.json in phase2/performance-components. Both paired runs explicitly report spatial-wasm and equal commands/final outcomes. The thirteen-beast pair has p95 99.880/99.850 ms reference/Guardian and severe spikes in both, so it does not certify fluidity. Older campaign-derived timings remain legacy evidence only.
 
 Scene-disposal-audio.json closes the previously missing active-voice shutdown case. multiply-clean-rear and grow-clean-side supersede the barrier-obscured views for sampled cloth inspection. Fine contact/artistic coverage and continuous full-HUD voiced tutorial capture remain open. The six-biome image-generation task remains queued.
+
+
+## Character LOD and priorities (2026-10-30)
+
+Character LODs are integrated at 4581856a0: five beasts, four workers and Guardian, 1,632-1,860 triangles, 256 px maps, 65/82 projected-pixel switching. See [pipeline, visual evidence and limits](character-lod/README.md). The 25 focused tests and 38 Guardian lifecycle/single-instance tests pass; production build passes. This does not certify a full recovery matrix or an FPS improvement.
+
+User priority: defer broader distribution packaging. After this LOD delivery, prioritize outstanding Guardian visual/audio acceptance, then regenerate sharper textures from the existing five isolated large assets in each of the six biomes, preserving their color/material identity. The rejected external HD texture/model candidates remain excluded. The full objective stays active.
