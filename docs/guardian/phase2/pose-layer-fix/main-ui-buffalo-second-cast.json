@@ -1,0 +1,91 @@
+{
+  "status": "finished",
+  "syntheticPointer": true,
+  "target": {
+    "id": "animal-20",
+    "species": "buffalo",
+    "status": "walking",
+    "phase": null,
+    "x": 66.18658520536636,
+    "z": 15,
+    "health": 112
+  },
+  "beforeCooldown": 0,
+  "clientX": 764.5426575779833,
+  "clientY": 249.48074979222184,
+  "transitions": [
+    {
+      "elapsed": 0.09999999999990905,
+      "id": "animal-20",
+      "species": "buffalo",
+      "status": "walking",
+      "phase": "walking/normal",
+      "x": 66.18658520536636,
+      "z": 15,
+      "health": 84
+    },
+    {
+      "elapsed": 0.28290999999990163,
+      "id": "animal-20",
+      "species": "buffalo",
+      "status": "walking",
+      "phase": "walking/falling",
+      "x": 66.22826642264879,
+      "z": 15.005194343072564,
+      "health": 84
+    },
+    {
+      "elapsed": 3.159699999997656,
+      "id": "animal-20",
+      "species": "buffalo",
+      "status": "walking",
+      "phase": "walking/rolling",
+      "x": 66.25444264826159,
+      "z": 15.650508434617334,
+      "health": 84
+    },
+    {
+      "elapsed": 4.107439999997041,
+      "id": "animal-20",
+      "species": "buffalo",
+      "status": "walking",
+      "phase": "walking/recovering",
+      "x": 65.75510557295914,
+      "z": 16.295615531829327,
+      "health": 84
+    },
+    {
+      "elapsed": 8.18155499999375,
+      "id": "animal-20",
+      "species": "buffalo",
+      "status": "walking",
+      "phase": "walking/normal",
+      "x": 65.80299485895519,
+      "z": 16.23780769634811,
+      "health": 84
+    },
+    {
+      "elapsed": 14.533574999988105,
+      "id": "animal-20",
+      "species": "buffalo",
+      "status": "attacking",
+      "phase": "attacking/normal",
+      "x": 59.14967153460221,
+      "z": 13.890485257121355,
+      "health": 84
+    }
+  ],
+  "maxGuardian": 1,
+  "afterCooldown": 12,
+  "accepted": true,
+  "final": {
+    "id": "animal-20",
+    "species": "buffalo",
+    "status": "attacking",
+    "phase": null,
+    "x": 59.14967153460221,
+    "z": 13.890485257121355,
+    "health": 84
+  },
+  "finalCooldown": 0
+}
