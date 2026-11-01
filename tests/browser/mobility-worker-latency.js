@@ -37,6 +37,25 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ window.runColdProfileAudit=async mode=>{
+  if(!['idle','worker'].includes(mode))throw Error('Invalid cold profile mode');
+  const backend=new Worker(new URL('./mobility-worker-cold-profile.js',import.meta.url),{type:'module'});let failure=null,started=null,result=null,cancel=null,currentVersion=1,invalidatedAt=null;
+  try{
+   const info=await new Promise((resolve,reject)=>{backend.onerror=e=>{failure=e.message;reject(Error(failure));};backend.onmessage=e=>{const row=e.data;if(row.kind==='ready')resolve(row);else if(row.kind==='error'){failure=row.error;reject(Error(row.error));}else if(row.kind==='started'){started=row.at-performance.timeOrigin;setTimeout(()=>{currentVersion++;invalidatedAt=performance.now();backend.postMessage({kind:'cancel',id:1});},10);}else if(row.kind==='result')result={...row,finishedAt:row.at-performance.timeOrigin,receivedAt:performance.now(),accepted:row.version===currentVersion};else if(row.kind==='cancel-result')cancel={...row,handledAt:row.at-performance.timeOrigin};};});
+   if(info.chunks!==9||!info.network)throw Error('Wrong world fixture');
+   const frames=[],timer=new GpuTimer(gl,64);let start=null,last=null,frame=0,requestedAt=null;
+   await new Promise((resolve,reject)=>{const draw=now=>{try{
+    if(failure)throw Error(failure);if(start===null)start=now;if(last!==null)frames.push({start:last,end:now,dt:now-last});last=now;
+    if(mode==='worker'&&requestedAt===null&&now-start>=500){requestedAt=performance.now();backend.postMessage({kind:'run',id:1,version:currentVersion});}
+    clock.value=(now-start)/1000;const timed=timer.begin(frame++);renderer.render(scene,camera);if(timed)timer.end();
+    if(now-start>=3000&&(mode==='idle'||result&&cancel)){resolve();return;}if(now-start>12000)throw Error('Cold profile timed out');requestAnimationFrame(draw);
+   }catch(error){reject(error);}};requestAnimationFrame(draw);});
+   for(let i=0;i<30&&timer.pending.length;i++){await new Promise(requestAnimationFrame);timer.poll();}const gpu=timer.report();timer.dispose();
+   const summary=rows=>{const x=rows.map(r=>r.dt);return {count:x.length,p95:percentile(x,.95),p99:percentile(x,.99),max:x.length?Math.max(...x):null};};
+   if(mode==='worker'&&(!result||!cancel||invalidatedAt===null||result.accepted||cancel.accepted||result.finishedAt<=invalidatedAt))throw Error('Invalid stale-result audit');
+   return {mode,device,frames:summary(frames),overlap:summary(mode==='worker'?frames.filter(row=>row.end>=started&&row.start<=result.finishedAt):[]),profile:result?{elapsedMs:result.elapsed,requestToResultMs:result.receivedAt-requestedAt,cancelHandledMs:cancel.handledAt-invalidatedAt,accepted:result.accepted,cancelAccepted:cancel.accepted,region:result.result}:null,gpu:{reason:gpu.reason,samples:gpu.samples.length,p95:percentile(gpu.samples.map(x=>x.ms),.95),p99:percentile(gpu.samples.map(x=>x.ms),.99)},scope:'One real cold native navigation-profile build in an isolated Worker, synthetic mangrove island network and synthetic version invalidation. Static animal pose, no gameplay state or safety guarantee.'};
+  }finally{backend.terminate();}
+ };
  window.runWorkerContentionAudit=async mode=>{
   if(!['idle','worker'].includes(mode))throw Error('Invalid contention mode');
   const backend=new Worker(new URL('./mobility-worker-budget.js',import.meta.url),{type:'module'}),requests=new Map();let requestId=0;
