@@ -5,9 +5,9 @@ import {skinContactIndices} from './skin-contact-indices.js';
 const inputs=new WeakMap(),inputNames=['position','skinWeight','skinIndex'];
 const version=a=>a?.isInterleavedBufferAttribute?a.data.version:a?.version;
 function refreshInputs(entry){
- const g=entry.mesh.geometry.attributes;
- if(entry.attributes&&inputNames.every((name,i)=>g[name]===entry.attributes[i]&&version(g[name])===entry.versions[i]))return;
- entry.indices=skinContactIndices(entry.mesh);entry.inputs=contactInputs(entry.mesh,entry.indices);entry.attributes=inputNames.map(name=>g[name]);entry.versions=entry.attributes.map(version);
+ const geometry=entry.mesh.geometry,g=geometry.attributes,morphs=geometry.morphAttributes.position??[],mask=g.tailContactExempt;
+ if(entry.attributes&&inputNames.every((name,i)=>g[name]===entry.attributes[i]&&version(g[name])===entry.versions[i])&&mask===entry.mask&&version(mask)===entry.maskVersion&&morphs.length===entry.morphs.length&&morphs.every((a,i)=>a===entry.morphs[i]&&version(a)===entry.morphVersions[i]))return;
+ entry.indices=skinContactIndices(entry.mesh);entry.inputs=contactInputs(entry.mesh,entry.indices);entry.attributes=inputNames.map(name=>g[name]);entry.versions=entry.attributes.map(version);entry.mask=g.tailContactExempt;entry.maskVersion=version(entry.mask);entry.morphs=morphs.slice();entry.morphVersions=morphs.map(version);
 }
 function contactInputs(mesh,indices){
  let packed=inputs.get(indices);if(packed)return packed;

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Box3,Vector3} from 'three';
+import {Box3,Vector3,Uint8BufferAttribute} from 'three';
 import {actorGeometry} from './helpers/actor-geometry.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {SkinContactBounds} from '../src/rendering/skin-contact-bounds.js';
@@ -34,5 +34,15 @@ test('an existing bounds sampler refreshes changed rest positions and replaced w
   const old=bounds.meshes[0].inputs;change();model.updateMatrixWorld(true);const actual=bounds.expand(new Box3()),expected=new Box3();
   model.traverse(m=>{if(m.isSkinnedMesh)for(let i=0;i<m.geometry.attributes.position.count;i++){if(isTailContactVertex(m,i))continue;m.getVertexPosition(i,point).applyMatrix4(m.matrixWorld);expected.expandByPoint(point);}});
   assert.ok(bounds.meshes[0].inputs!==old,'changed attributes refresh decoded inputs');assert.ok(actual.min.distanceTo(expected.min)<1e-6);assert.ok(actual.max.distanceTo(expected.max)<1e-6);
+ }
+});
+
+test('an existing bounds sampler invalidates contact masks and morph attributes',async()=>{
+ const model=await actorGeometry(new URL('../public'+ANIMAL_ACTIONS.animals.hyena.url,import.meta.url)),bounds=new SkinContactBounds(model),point=new Vector3();
+ const mesh=bounds.meshes[0].mesh,g=mesh.geometry,mask=new Uint8BufferAttribute(new Uint8Array(g.attributes.position.count),1);
+ for(const change of [()=>g.setAttribute('tailContactExempt',mask),()=>{mask.setX(0,1);mask.needsUpdate=true;},()=>{const p=g.attributes.position.clone();g.morphAttributes.position=[p];},()=>{g.morphAttributes.position[0].needsUpdate=true;}]){
+  const old=bounds.meshes[0].indices;change();model.updateMatrixWorld(true);const actual=bounds.expand(new Box3()),expected=new Box3();
+  model.traverse(m=>{if(m.isSkinnedMesh)for(let i=0;i<m.geometry.attributes.position.count;i++){if(isTailContactVertex(m,i))continue;m.getVertexPosition(i,point).applyMatrix4(m.matrixWorld);expected.expandByPoint(point);}});
+  assert.notEqual(bounds.meshes[0].indices,old);assert.ok(actual.min.distanceTo(expected.min)<1e-6);assert.ok(actual.max.distanceTo(expected.max)<1e-6);
  }
 });
