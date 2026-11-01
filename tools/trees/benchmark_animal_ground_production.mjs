@@ -1,18 +1,22 @@
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {unrollSkinBounds} from './skin_bounds_unroll_candidate.mjs';
 const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
 const species=process.env.REVIEW_SPECIES??'lion',peer=process.env.PEER_SPECIES??species,biome=process.env.REVIEW_BIOME??'manglares',slope=process.env.SLOPE_TRIAL==='1',stageSlope=process.env.STAGE_SLOPE==='1',profile=process.env.PROFILE_RECOVERY==='1';
-const skinTrial=process.env.SKIN_UNROLL_ABBA==='1',poseAudit=process.env.FIXED_POSE_AUDIT==='1';
+const skinTrial=process.env.SKIN_UNROLL_ABBA==='1',poseAudit=process.env.FIXED_POSE_AUDIT==='1',invalidationTrial=process.env.CONTACT_INVALIDATION_ABBA==='1';
+const previousRefresh=invalidationTrial?execFileSync('git',['show','93fe26470:src/rendering/skin-contact-bounds.js'],{encoding:'utf8'}).match(/function refreshInputs\(entry\)\{[\s\S]*?\n\}/)?.[0]:null;
+if(invalidationTrial&&!previousRefresh)throw Error('Previous contact validation unavailable');
 const out=`docs/lighting/tree-near-retexture/performance/animal-ground-production-${biome}-${species}-${peer}${slope?'-slope':''}${stageSlope?'-staged':''}${profile?'-profile':''}${skinTrial?'-skin-unroll':''}${poseAudit?'-pose-audit':''}${process.env.ONE_BLOCK==='1'?'-single':''}-abba${process.env.RUN_SUFFIX??''}`;fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'msedge',headless:true});
 try{
  for(const [lot,trial] of (process.env.ONE_BLOCK==='1'?[process.env.CACHED_ONLY==='1']:[false,true,true,false]).entries()){
-  const cached=skinTrial?true:trial;
+  const cached=skinTrial||invalidationTrial?true:trial;
   const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
   let candidateLoads=0;
   let poseAuditLoads=0;if(poseAudit)await page.route('**/src/rendering/fixed-pose.js*',async route=>{const response=await route.fetch();let source=await response.text();const hit='action.weight===previous.weight)return false;',miss=' action.time=time;data.mixer.update(0);';if(!source.includes(hit)||!source.includes(miss))throw Error('Fixed pose audit hook changed');source=source.replace(hit,"action.weight===previous.weight){globalThis.qaPoseAuditRecord?.(data,'hit');return false;}");source=source.replace(miss," globalThis.qaPoseAuditRecord?.(data,'miss');\n"+miss);poseAuditLoads++;await route.fulfill({response,body:source});});
   if(skinTrial&&trial)await page.route('**/src/rendering/skin-contact-bounds.js*',async route=>{const response=await route.fetch(),body=unrollSkinBounds(await response.text());candidateLoads++;await route.fulfill({response,body});});
+  if(invalidationTrial)await page.route('**/src/rendering/skin-contact-bounds.js*',async route=>{const response=await route.fetch(),source=await response.text(),pattern=/function refreshInputs\(entry\)\s*\{[\s\S]*?\n\}/;if(!pattern.test(source))throw Error('Contact validation hook changed');candidateLoads++;await route.fulfill({response,body:trial?source:source.replace(pattern,previousRefresh)});});
   const query='biome='+encodeURIComponent(biome)+'&culture=mapungubwe&lightingReview&characterLod=auto&recoveryClose&profileStages&recoveryDay&frameTrace&depthReview&productionFarWarm&treeReview&wildEngineThreads=0&peerSpecies='+encodeURIComponent(peer)+(slope?'&slopeTrial':'')+(profile?'&profileRecovery':'')+(cached?'':'&animalGroundFast=0');
   console.log(JSON.stringify({lot,cached,phase:'loading',biome,species,peer,slope}));
   await page.goto('http://127.0.0.1:5175/tests/browser/guardian-combat.html?'+query);
@@ -34,7 +38,7 @@ try{
   fs.writeFileSync(`${out}/${lot}.json`,JSON.stringify({...data,lot,cached,skinUnroll:skinTrial&&trial,candidateLoads,poseAuditLoads,poseStats,device,seen,gpuTimer:gpu,pageErrors:errors},null,2));
   const details=await page.evaluate(async()=>{const href=document.querySelector('#peerReportDownload')?.href;if(!href)throw Error('Full recovery report unavailable');return await (await fetch(href)).json();});
   fs.writeFileSync(`${out}/${lot}-full.json`,JSON.stringify(details,null,2));
-  if(errors.length||data.errors.length||data.report.errors.length||data.report.hiddenFrames||data.report.rejectedPhysics||skinTrial&&trial&&candidateLoads!==1||poseAudit&&poseAuditLoads!==1||!seen.includes(cached?2:false)||seen.some(value=>value!==(cached?2:false)))throw Error('Invalid run '+lot+' modes '+JSON.stringify(seen)+' candidate loads '+candidateLoads+' pose audit loads '+poseAuditLoads);
+  if(errors.length||data.errors.length||data.report.errors.length||data.report.hiddenFrames||data.report.rejectedPhysics||skinTrial&&trial&&candidateLoads!==1||invalidationTrial&&candidateLoads!==1||poseAudit&&poseAuditLoads!==1||!seen.includes(cached?2:false)||seen.some(value=>value!==(cached?2:false)))throw Error('Invalid run '+lot+' modes '+JSON.stringify(seen)+' candidate loads '+candidateLoads+' pose audit loads '+poseAuditLoads);
   console.log(JSON.stringify({lot,cached,device,dt:data.report.metrics.dt,render:data.report.metrics.renderMs,physics:data.report.metrics.physicsTotal,gpuSamples:gpu.samples.length,gpuReason:gpu.reason,poseStats}));await page.close();
  }
 }finally{await browser.close();}
