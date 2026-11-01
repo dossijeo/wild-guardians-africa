@@ -2088,12 +2088,23 @@ int nav_declarative_attack_present(double actorId){
 }
 int nav_declarative_attack_reconcile(double actorId,double x,double z,
                                      int eligible,int blockers,int reserved){
-  if(!integer(actorId))return -1;
+  if(!integer(actorId)||!coordinate(x)||!coordinate(z)||
+     (eligible!=0&&eligible!=1)||blockers<0||blockers>100000||
+     reserved<0||reserved>100000)return -1;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
   const auto declaration=s.attackDeclarations.find(actor);
   if(declaration==s.attackDeclarations.end())return -2;
   if(!declaration->second.dirty)return 5;
   if(lazy_selected_context()!=declaration->second.profile)return -3;
+  if(s.attackBlockers.size()!=size_t(blockers)*3||
+     s.attackReservedTargets.size()!=size_t(reserved))return -1;
+  for(int i=0;i<blockers;i++){
+    const size_t at=size_t(i)*3;
+    if(!coordinate(s.attackBlockers[at])||!coordinate(s.attackBlockers[at+1])||
+       !std::isfinite(s.attackBlockers[at+2])||s.attackBlockers[at+2]<=0||
+       s.attackBlockers[at+2]>2)return -1;
+  }
+  for(double id:s.attackReservedTargets)if(!integer(id))return -1;
   const auto active=s.activeIntents.find(actor);
   if(active!=s.activeIntents.end()){
     if(active->second.state==PlanningState::ActionActive)return 6;
