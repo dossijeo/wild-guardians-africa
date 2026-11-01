@@ -1,0 +1,165 @@
+{
+  "scope": "Static local-clearance samples in a synthetic 3x3 mangrove island-network world. Absence of counterexamples is not a monotonicity proof. Does not test moving bodies, complete routes, invalidations or gameplay.",
+  "mangroveNetwork": true,
+  "settlementVersion": 2,
+  "points": 58081,
+  "profiles": [
+    {
+      "species": "lion",
+      "radius": 0.85,
+      "clear": 36647
+    },
+    {
+      "species": "hyena",
+      "radius": 0.9,
+      "clear": 36249
+    },
+    {
+      "species": "buffalo",
+      "radius": 0.97,
+      "clear": 35471
+    },
+    {
+      "species": "warthog",
+      "radius": 1.1,
+      "clear": 34042
+    },
+    {
+      "species": "rhino",
+      "radius": 1.55,
+      "clear": 29966
+    }
+  ],
+  "pairs": [
+    {
+      "smaller": {
+        "species": "lion",
+        "radius": 0.85
+      },
+      "larger": {
+        "species": "hyena",
+        "radius": 0.9
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 398,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "lion",
+        "radius": 0.85
+      },
+      "larger": {
+        "species": "buffalo",
+        "radius": 0.97
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 1176,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "lion",
+        "radius": 0.85
+      },
+      "larger": {
+        "species": "warthog",
+        "radius": 1.1
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 2605,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "lion",
+        "radius": 0.85
+      },
+      "larger": {
+        "species": "rhino",
+        "radius": 1.55
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 6681,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "hyena",
+        "radius": 0.9
+      },
+      "larger": {
+        "species": "buffalo",
+        "radius": 0.97
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 778,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "hyena",
+        "radius": 0.9
+      },
+      "larger": {
+        "species": "warthog",
+        "radius": 1.1
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 2207,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "hyena",
+        "radius": 0.9
+      },
+      "larger": {
+        "species": "rhino",
+        "radius": 1.55
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 6283,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "buffalo",
+        "radius": 0.97
+      },
+      "larger": {
+        "species": "warthog",
+        "radius": 1.1
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 1429,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "buffalo",
+        "radius": 0.97
+      },
+      "larger": {
+        "species": "rhino",
+        "radius": 1.55
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 5505,
+      "examples": []
+    },
+    {
+      "smaller": {
+        "species": "warthog",
+        "radius": 1.1
+      },
+      "larger": {
+        "species": "rhino",
+        "radius": 1.55
+      },
+      "smallerBlockedLargerClear": 0,
+      "smallerClearLargerBlocked": 4076,
+      "examples": []
+    }
+  ]
+}
