@@ -26,3 +26,12 @@ test('a partially applied edit or failing query poisons the gate until a new ses
  assert.throws(()=>replacement.query(msg(0,'new'),()=>{throw Error('query failed');}),/query failed/);
  assert.equal(replacement.query(msg(0,'new'),()=>world).reason,'poisoned');
 });
+
+test('a restored session starts at the supplied confirmed version',()=>{
+ assert.throws(()=>createWorldEventGate('new',{initialVersion:-1}),/Invalid/);
+ const gate=createWorldEventGate('new',{initialVersion:7}),message=version=>({session:'new',version});
+ assert.equal(gate.query(message(6),()=>true).reason,'stale');
+ assert.deepEqual(gate.query(message(7),()=>true),{accepted:true,version:7,value:true});
+ assert.equal(gate.edit(message(9),()=>true).reason,'gap');
+ assert.deepEqual(gate.edit(message(8),()=>true),{accepted:true,version:8,value:true});
+});
