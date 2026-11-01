@@ -15,6 +15,9 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     // game never exits the spatial module. Older binaries omit the import.
     wasi_snapshot_preview1:{proc_exit(code){throw Error(`Wild Engine exited: ${code}`);}}
   }).exports;
+  // Newer standalone Emscripten reactors expose explicit C++ constructors.
+  // Threaded runtime exports are initialized by their factory already.
+  if(!runtimeExports)wasm._initialize?.();
   let chunk=null,navigationBuilt=false,chunks=[],generated=false,chunkRevision=0;
   let workerPortalRoutes=[];
   let diagnoseConnectivity=false;

@@ -782,8 +782,10 @@ export function updateRaid(s,dt,nav) {
       release(s,animal,nav);
   reconcileRaidReservationsOnChange(s,nav);
   updateWorkerEncounters(s,nav);
+  nav.dynamicBodies?.sync(s);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
+    try {
     if(a.status==='gone')continue;
     if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
     if((a.magicStunUntil??0)>s.elapsed)continue;
@@ -999,6 +1001,7 @@ export function updateRaid(s,dt,nav) {
       }
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
+    } finally {nav.dynamicBodies?.update(a,1);}
   }
   if(s.raid.animals.every(a=>a.status==='gone')) {
     const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);

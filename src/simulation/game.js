@@ -1011,15 +1011,18 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     }
   }
   const phased=(w.mobilePhaseRemaining??0)>0;
+  let motionMark=nav.tickProfile?performance.now():0;
   const dynamicClear=phased?
     (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
       nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
     prepareActorMotion(s,w,nav,worker);
+  if(nav.tickProfile){nav.tickProfile.prepareMotion+=performance.now()-motionMark;motionMark=performance.now();}
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
+  if(nav.tickProfile)nav.tickProfile.moveMotion+=performance.now()-motionMark;
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
   if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
@@ -1419,6 +1422,8 @@ export function workerAtVillageEntry(worker,entry,nav){
     nav.segmentClear?.(worker,entry,radius,null,true)??false;
 }
 function updateWorkers(s,dt,nav) {
+  nav.dynamicBodies?.sync(s);
+  const reserve=()=>{if(!nav.tickProfile)return reserveAvailableTasks(s,nav);const started=performance.now();try{return reserveAvailableTasks(s,nav);}finally{nav.tickProfile.reservations+=performance.now()-started;}};
   reconcileNativeIntents(s,nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
@@ -1447,12 +1452,13 @@ function updateWorkers(s,dt,nav) {
   // New contracts reserve from their actual village position before any idle
   // motion. Returning raid survivors retain the existing arrival sequence.
   if(newArrivals.length){
-    reserveAvailableTasks(s,nav);
+    reserve();
     if(!nativeTasks)for(const w of newArrivals)if(!w.taskId)w.status='arriving';
   }
   // Small crews retain direct queries; amortize bookkeeping only in large farms.
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
   for(const w of s.workers) {
+    const workerProfile=nav.tickProfile,workerStatus=workerProfile?w.status:null,workerStart=workerProfile?performance.now():0;
     try {
       if(advanceWorkerRecovery(w,dt,nav)){
         if(!w.fallRemaining&&!w.recovery)notifyWorkerPlanningChange(s,w);
@@ -1492,15 +1498,19 @@ function updateWorkers(s,dt,nav) {
       const ended=contractExpired(w,s)||s.time>=p.end;
       if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       if(w.status==='arriving') {
+        let arrivalMark=workerProfile?performance.now():0;
         const arrival={...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`};
+        if(workerProfile){workerProfile.arrivalPoint+=performance.now()-arrivalMark;arrivalMark=performance.now();}
         const reached=walkTo(s,w,arrival,dt,nav,
           {motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}});
+        if(workerProfile){workerProfile.arrivalWalk+=performance.now()-arrivalMark;arrivalMark=performance.now();}
         // Several paid workers share one authored center entrance. Reaching
         // its clear approach zone is sufficient; insisting on the occupied
         // exact point can strand later arrivals behind an idle coworker.
         const nearEntrance=w.path?.length>0&&w.destinationId===arrival.id&&
           w.pathVersion===nav.version&&dist(w,arrival)<=2&&
           (nav.segmentClear?.(w,arrival,w.radius??.28,null,true)??false);
+        if(workerProfile)workerProfile.arrivalEntrance+=performance.now()-arrivalMark;
         if(reached||nearEntrance){
           w.path=null;w.destinationId=null;w.status='idle';w.raidReturn=false;
           notifyWorkerPlanningChange(s,w);
@@ -1581,9 +1591,9 @@ function updateWorkers(s,dt,nav) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
       }
-    } finally {urgency?.changed(w);idleBodies?.update(w);}
+    } finally {urgency?.changed(w);idleBodies?.update(w);nav.dynamicBodies?.update(w,0);if(workerProfile)workerProfile.byStatus[workerStatus]=(workerProfile.byStatus[workerStatus]??0)+performance.now()-workerStart;}
   }
-  reserveAvailableTasks(s,nav);
+  reserve();
 }
 function closeNight(s) {
   if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:(text,metadata)=>notice(s,text,null,metadata)});
@@ -1686,8 +1696,15 @@ export function tick(s,seconds,nav) {
     advanceGateLeaves(s,step);
     // A restored or event-invalidated animal route must be published before
     // the raid controller attempts physical movement in this interval.
+    const tickProfile=nav.tickProfile;let tickMark=tickProfile?performance.now():0;
     reconcileNativeIntents(s,nav);
-    nav.beastPhysics?.step(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    if(tickProfile){tickProfile.intents+=performance.now()-tickMark;tickMark=performance.now();}
+    nav.beastPhysics?.step(s,step);
+    if(tickProfile){tickProfile.physics+=performance.now()-tickMark;tickMark=performance.now();}
+    updateRaid(s,step,nav);
+    if(tickProfile){tickProfile.raid+=performance.now()-tickMark;tickMark=performance.now();}
+    updateWorkers(s,step,nav);
+    if(tickProfile)tickProfile.workers+=performance.now()-tickMark;
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
