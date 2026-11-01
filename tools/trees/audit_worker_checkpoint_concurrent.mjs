@@ -10,5 +10,5 @@ try{
   const error=await page.evaluate(()=>window.concurrentCheckpointError);if(error)throw Error(error);
   const result=await page.evaluate(()=>window.runConcurrentCheckpointAudit());if(errors.length)throw Error(errors.join('\n'));results.push(result);console.log(JSON.stringify(result));await page.close();
  }
- await writeFile('docs/lighting/tree-near-retexture/performance/mobility-worker-checkpoint-concurrent.json',JSON.stringify({results},null,2)+'\n');
+ await writeFile(process.env.OUTPUT??'docs/lighting/tree-near-retexture/performance/mobility-worker-checkpoint-consumer.json',JSON.stringify({results},null,2)+'\n');
 }finally{await browser.close();}

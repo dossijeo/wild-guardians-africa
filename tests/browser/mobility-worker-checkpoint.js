@@ -16,6 +16,6 @@ self.onmessage=event=>{const request=event.data;try{
   core=scratch;gate=nextGate;if(oldWorld){oldWorld.session.dispose();oldWorld=null;}
   postMessage({kind:'restored',id:request.id,session:request.newSession,version:request.version,elapsed:performance.now()-start,chunks:9,at:performance.timeOrigin+performance.now()});
  }else if(request.kind==='query'){
-  const result=gate.query(request,()=>({clear:request.points.map(p=>core.localClear(p,p)),routes:request.routes.map(({start,end})=>core.routeWorldNative(start,end)),spatial:core.snapshot()}));postMessage({kind:'result',id:request.id,...result});
+  const result=gate.query(request,()=>({clear:request.points.map(p=>core.localClear(p,p)),routes:request.routes.map(({start,end})=>core.routeWorldNative(start,end)),spatial:core.snapshot()}));postMessage({kind:'result',id:request.id,session:request.session,...result});
  }
 }catch(error){postMessage({kind:'error',id:request.id,error:String(error?.message??error)});}};
