@@ -20,7 +20,7 @@ if sector_changes:
                 '_spatial_world_segment_clear']
 declarative_attack = os.environ.get('SPATIAL_DECLARATIVE_ATTACK') == '1'
 if declarative_attack:
-    exports += ['_nav_declarative_attack_declare', '_nav_declarative_attack_present',
+    exports += ['_nav_declarative_attack_declare', '_nav_declarative_attack_present', '_nav_declarative_attack_adopt',
                 '_nav_declarative_attack_reconcile', '_nav_declarative_attack_cancel',
                 '_nav_declarative_attack_release_blocked',
                 '_nav_declarative_attack_next_deadline', '_nav_declarative_attack_next_due',

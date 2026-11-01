@@ -2114,6 +2114,20 @@ int nav_declarative_attack_declare(double actorId,double x,double z,double radiu
 int nav_declarative_attack_present(double actorId){
   return integer(actorId)&&state().attackDeclarations.count(uint64_t(actorId))?1:0;
 }
+// Adopt an already restored crop route without changing its lease or route.
+int nav_declarative_attack_adopt(double actorId,double radius){
+  if(!integer(actorId)||!std::isfinite(radius)||radius<=0||radius>2)return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  if(s.attackDeclarations.count(actor))return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active==s.activeIntents.end()||!active->second.animal||
+     active->second.state!=PlanningState::RouteActive)return -2;
+  const auto target=s.targets.find(active->second.target);
+  if(target==s.targets.end()||!target->second.active||
+     (target->second.kind!=1&&target->second.kind!=2))return -3;
+  s.attackDeclarations.emplace(actor,IntentState::AttackDeclaration{
+    radius,active->second.profile,false});return 1;
+}
 int nav_declarative_attack_reconcile(double actorId,double x,double z,
                                      int eligible,int blockers,int reserved){
   if(!integer(actorId)||!coordinate(x)||!coordinate(z)||

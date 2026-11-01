@@ -1,0 +1,63 @@
+{
+  "scope": "Controlled barrier around one restored crop approach in a saved eight-animal raid; test-only adapter, 80 subsequent simulation ticks. No GPU or performance measurement.",
+  "equal": true,
+  "firstDifference": null,
+  "reference": {
+    "restored": 8,
+    "invalidated": 6,
+    "events": 200,
+    "timeline": [
+      {
+        "step": 0,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 1,
+        "state": {
+          "status": "walking",
+          "targetId": "plant-4758",
+          "waiting": false
+        }
+      }
+    ]
+  },
+  "candidate": {
+    "restored": 8,
+    "invalidated": 6,
+    "events": 200,
+    "counts": {
+      "replan": 1,
+      "blocked": 1,
+      "release": 1,
+      "reselect": 1,
+      "selectionCalls": 1,
+      "missingDeclaration": 0,
+      "cancellations": 2,
+      "resets": 1
+    },
+    "timeline": [
+      {
+        "step": 0,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 1,
+        "state": {
+          "status": "walking",
+          "targetId": "plant-4758",
+          "waiting": false,
+          "declaration": 1
+        }
+      }
+    ]
+  }
+}
