@@ -4,6 +4,8 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {GpuTimer} from './gpu-timer.js';
 import {createWorkload} from './mobility-worker-workload.js';
 import {createTrajectoryReceiver} from '../../tools/trees/prototype_mobility_contract.mjs';
+import {createGuardedTrajectory} from '../../tools/trees/prototype_guarded_trajectory.mjs';
+import {createWorld} from './mobility-worker-world-change.js';
 
 const status=document.querySelector('#status'),canvas=document.querySelector('#view');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});renderer.setPixelRatio(1);renderer.setSize(640,360,false);renderer.setClearColor(0x000000,0);
@@ -37,6 +39,23 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ window.runGuardedWorldStopAudit=async()=>{
+  const world=await createWorld(),options={worker:false,species:'hyena'};let base=null;
+  try{
+   for(let z=-10;z<=10&&!base;z+=2)for(let x=-10;x<=10&&!base;x+=2){const p={x:world.village.x+x,z:world.village.z+z},end={x:p.x+1.4,z:p.z};if(!world.session.actorStepClear(p,end,options))continue;const id=world.session.core.addOrientedBarrier(p.x+2.6,p.z,1.2,1.2,0,0);const safe=id>0&&world.session.actorStepClear(p,{x:p.x+.4,z:p.z},options)&&!world.session.actorCanStand(end,options);if(id>0)world.session.core.removeBarrier(id);if(safe)base=p;}
+   if(!base||!world.network)throw Error('No test path on island network');
+   const gate=createGuardedTrajectory('guarded','animal',{worldVersion:1}),route={session:'guarded',actorId:'animal',version:1,worldVersion:1,kind:'trajectory',startTime:0,points:[{x:0,z:0},{x:1.4,z:0}],durations:[3.5],movementMode:'walk',animationState:'walk'};
+   if(!gate.install(route,0).accepted)throw Error('Route rejected');gate.presented(1);horizon.value=3.5;
+   const job={id:nextId++,duration:500,requestedAt:performance.now()};pending.set(job.id,job);worker.postMessage({kind:'work',id:job.id,duration:job.duration});
+   const deadline=performance.now()+5000;while(!Number.isFinite(job.startedAt)){if(workerError||performance.now()>deadline)throw Error(workerError||'Worker did not start');await new Promise(requestAnimationFrame);}
+   const before=inspectPixels(1),wallStart=performance.now(),barrier=world.session.core.addOrientedBarrier(base.x+2.6,base.z,1.2,1.2,0,0),stopPoint={x:base.x+.4,z:base.z},future={x:base.x+1.4,z:base.z};
+   const stopSafe=world.session.actorStepClear(base,stopPoint,options),futureBlocked=!world.session.actorCanStand(future,options),barrierMs=performance.now()-wallStart;
+   const decision=gate.invalidate({worldVersion:2,at:1,point:{x:.4,z:0},version:2},1);horizon.value=1;const appliedAt=performance.now(),stopped=inspectPixels(1),after=inspectPixels(2),stale=gate.install({...route,version:3},1);
+   while(!Number.isFinite(job.receivedAt)){if(workerError||performance.now()>deadline)throw Error(workerError||'Worker did not finish');await new Promise(requestAnimationFrame);}
+   if(!barrier||!stopSafe||!futureBlocked||!decision.accepted||stale.reason!=='world'||appliedAt>=job.finishedAt||before.hash!==stopped.hash||stopped.hash!==after.hash||gate.sample(2).x!==.4)throw Error('Guarded world stop failed');
+   horizon.value=3.5;return {network:world.network,base,stopPoint,future,barrier,barrierMs,stopSafe,futureBlocked,decision,stale,before,stopped,after,workerElapsedMs:job.elapsed,stopToWorkerCompletionMs:job.finishedAt-appliedAt,scope:'Synthetic single actor trajectory with a real native barrier, point and short-segment tests; synthetic confirmed time and version. Not an authoritative gameplay collision or visual-safety proof.'};
+  }finally{world.session.dispose();}
+ };
  window.runColdProfileAudit=async mode=>{
   if(!['idle','worker'].includes(mode))throw Error('Invalid cold profile mode');
   const backend=new Worker(new URL('./mobility-worker-cold-profile.js',import.meta.url),{type:'module'});let failure=null,started=null,result=null,cancel=null,currentVersion=1,invalidatedAt=null;
