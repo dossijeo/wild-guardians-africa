@@ -8,7 +8,8 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[2]
 script = (root / 'tools/build-spatial-savanna-wasm.sh').read_text(encoding='utf-8')
 exports = json.loads(re.search(r"-s 'EXPORTED_FUNCTIONS=(\[.*?\])'", script).group(1))
-exports += ['_lazy_route_trace_clear', '_lazy_route_trace_count', '_lazy_route_trace_ptr']
+exports += ['_lazy_route_trace_clear', '_lazy_route_trace_count', '_lazy_route_trace_ptr',
+            '_lazy_local_route_trace_count', '_lazy_local_route_trace_ptr']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
 compiler = os.environ.get('EMXX', 'em++')
 export_file = Path(output + '.exports.json')

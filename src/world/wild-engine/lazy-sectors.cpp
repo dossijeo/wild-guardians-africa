@@ -45,6 +45,7 @@ struct Sector {
 };
 #ifdef WILD_ROUTE_TRACE
 std::vector<int32_t> routeTrace;
+std::vector<int32_t> localRouteTrace;
 #endif
 struct Context {
   int sectorSize=0,updates=0;
@@ -276,7 +277,12 @@ bool localPath(const Sector& sector,int from,int to){
   localParent.assign(sectorSize*sectorSize,-1);
   queueBuffer.clear();queueBuffer.push_back(from);localParent[from]=from;
   for(size_t q=0;q<queueBuffer.size();q++){
-    const int at=queueBuffer[q];if(at==to)break;
+    const int at=queueBuffer[q];
+#ifdef WILD_ROUTE_TRACE
+    localRouteTrace.push_back(sector.sx*sectorSize+at%sectorSize);
+    localRouteTrace.push_back(sector.sz*sectorSize+at/sectorSize);
+#endif
+    if(at==to)break;
     const int x=at%sectorSize,z=at/sectorSize;
     for(int d=0;d<4;d++){
       if(!(sector.steps[at]&(1<<d)))continue;
@@ -825,9 +831,11 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
 }
 int32_t* lazy_route_ptr(){return routePoints.data();}
 #ifdef WILD_ROUTE_TRACE
-void lazy_route_trace_clear(){routeTrace.clear();}
+void lazy_route_trace_clear(){routeTrace.clear();localRouteTrace.clear();}
 int lazy_route_trace_count(){return int(routeTrace.size()/3);}
 const int32_t* lazy_route_trace_ptr(){return routeTrace.data();}
+int lazy_local_route_trace_count(){return int(localRouteTrace.size()/2);}
+const int32_t* lazy_local_route_trace_ptr(){return localRouteTrace.data();}
 #endif
 int lazy_loaded_sectors(){return sectors?static_cast<int>(sectors->size()):0;}
 int lazy_sector_slots(){return static_cast<int>(byId.size());}
