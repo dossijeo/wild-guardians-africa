@@ -3,6 +3,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {GpuTimer} from './gpu-timer.js';
 import {createWorkload} from './mobility-worker-workload.js';
+import {createTrajectoryReceiver} from '../../tools/trees/prototype_mobility_contract.mjs';
 
 const status=document.querySelector('#status'),canvas=document.querySelector('#view');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});renderer.setPixelRatio(1);renderer.setSize(640,360,false);renderer.setClearColor(0x000000,0);
@@ -23,9 +24,9 @@ function installVisual(model){
  const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),factor=2.2/Math.max(size.x,size.y,size.z),center=box.getCenter(new THREE.Vector3());model.scale.setScalar(factor);model.position.set(-center.x*factor,-box.min.y*factor,-center.z*factor);scene.add(model);
 }
 function inspectPixels(time){
- const target=new THREE.WebGLRenderTarget(640,360,{depthBuffer:true}),pixels=new Uint8Array(640*360*4);clock.value=time;renderer.setRenderTarget(target);renderer.clear();renderer.render(scene,camera);renderer.readRenderTargetPixels(target,0,0,640,360,pixels);renderer.setRenderTarget(null);target.dispose();let count=0,sumX=0,sumY=0;
- for(let y=0;y<360;y++)for(let x=0;x<640;x++)if(pixels[(y*640+x)*4+3]>0){count++;sumX+=x;sumY+=y;}
- return {count,centerX:count?sumX/count:null,centerY:count?sumY/count:null};
+ const target=new THREE.WebGLRenderTarget(640,360,{depthBuffer:true}),pixels=new Uint8Array(640*360*4);clock.value=time;renderer.setRenderTarget(target);renderer.clear();renderer.render(scene,camera);renderer.readRenderTargetPixels(target,0,0,640,360,pixels);renderer.setRenderTarget(null);target.dispose();let count=0,sumX=0,sumY=0,hash=2166136261;
+ for(let y=0;y<360;y++)for(let x=0;x<640;x++){const offset=(y*640+x)*4;for(let c=0;c<4;c++)hash=Math.imul(hash^pixels[offset+c],16777619)>>>0;if(pixels[offset+3]>0){count++;sumX+=x;sumY+=y;}}
+ return {count,centerX:count?sumX/count:null,centerY:count?sumY/count:null,hash};
 }
 const percentile=(items,p)=>{const sorted=[...items].sort((a,b)=>a-b);return sorted.length?sorted[Math.min(sorted.length-1,Math.floor(sorted.length*p))]:null;};
 try{
@@ -36,6 +37,26 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ // A synthetic external invalidation can be delivered while the planner is busy.
+ // It does not establish when real world changes become authoritative.
+ window.runMobilityWorkerInvalidationExperiment=async()=>{
+  const receiver=createTrajectoryReceiver('lab-world'),actorId='lab-animal';
+  const trajectory={session:'lab-world',actorId,version:1,kind:'trajectory',startTime:0,points:[{x:0,z:0},{x:1.4,z:0}],durations:[3.5],movementMode:'walk',animationState:'walk'};
+  receiver.apply(trajectory,0);horizon.value=3.5;
+  const job={id:nextId++,duration:500,requestedAt:performance.now()};pending.set(job.id,job);worker.postMessage({kind:'work',id:job.id,duration:job.duration});
+  const deadline=performance.now()+5000;
+  while(!Number.isFinite(job.startedAt)){if(workerError||performance.now()>deadline)throw Error(workerError||'Worker did not start');await new Promise(requestAnimationFrame);}
+  if(Number.isFinite(job.receivedAt))throw Error('Worker completed before invalidation');
+  const invalidatedAt=performance.now(),confirmedTime=1,confirmed=receiver.sample(actorId,confirmedTime),before=inspectPixels(confirmedTime);
+  receiver.apply({session:'lab-world',actorId,version:2,kind:'stop',at:confirmedTime,point:{x:confirmed.x,z:confirmed.z},animationState:'idle'},confirmedTime);
+  horizon.value=confirmedTime;const stoppedAt=performance.now();
+  const stopped=inspectPixels(confirmedTime),after=inspectPixels(2);
+  while(!Number.isFinite(job.receivedAt)){if(workerError||performance.now()>deadline)throw Error(workerError||'Worker did not finish');await new Promise(requestAnimationFrame);}
+  const obsolete=receiver.apply(trajectory,confirmedTime),sample=receiver.sample(actorId,2);
+  if(stoppedAt>=job.finishedAt||obsolete.accepted||obsolete.reason!=='stale'||sample.x!==confirmed.x||before.hash!==stopped.hash||stopped.hash!==after.hash)throw Error('Invalidation or stale-result check failed');
+  horizon.value=3.5;
+  return {device,invalidatedWhileBusy:true,workerElapsedMs:job.elapsed,invalidationToCompletionMs:job.receivedAt-invalidatedAt,stopToWorkerCompletionMs:job.finishedAt-stoppedAt,confirmedTime,confirmedPosition:confirmed,before,stopped,after,obsolete,sample};
+ };
  window.runMobilityWorkerExperiment=async mode=>{
   if(!['main','worker'].includes(mode))throw Error('Invalid mode');
   const jobs=[],frames=[],timer=new GpuTimer(gl,64),schedule=[{at:500,duration:30},{at:1300,duration:50},{at:2100,duration:100},{at:2900,duration:100}];let next=0,last=null,start=null,frame=0;
