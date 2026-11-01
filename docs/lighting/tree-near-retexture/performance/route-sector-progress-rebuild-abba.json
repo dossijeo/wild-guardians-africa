@@ -1,0 +1,165 @@
+{
+  "scope": "Synthetic same-session ABBA; each candidate rebuilds the JS index for one event and checks its candidates, baseline checks all routes. Includes native segment calls but not mutation, movement, simulation, rendering or GPU; order, warmup and GC affect times.",
+  "results": [
+    {
+      "biome": "sabana",
+      "phase": "wall-added",
+      "routes": 132,
+      "unverified": 14,
+      "events": 6,
+      "globalEvents": 0,
+      "candidates": 53,
+      "invalid": 15,
+      "missed": 0,
+      "benchmark": {
+        "iterations": 20,
+        "blocks": [
+          {
+            "indexed": false,
+            "mean": 17.855184999999988,
+            "p95": 22.20270000000005,
+            "max": 22.20270000000005
+          },
+          {
+            "indexed": true,
+            "mean": 7.389710000000025,
+            "p95": 8.183700000000044,
+            "max": 8.183700000000044
+          },
+          {
+            "indexed": true,
+            "mean": 7.414639999999997,
+            "p95": 8.542699999999968,
+            "max": 8.542699999999968
+          },
+          {
+            "indexed": false,
+            "mean": 17.368740000000003,
+            "p95": 18.097800000000007,
+            "max": 18.097800000000007
+          }
+        ]
+      }
+    },
+    {
+      "biome": "sabana",
+      "phase": "wall-removed",
+      "routes": 131,
+      "unverified": 14,
+      "events": 6,
+      "globalEvents": 0,
+      "candidates": 52,
+      "invalid": 14,
+      "missed": 0,
+      "benchmark": {
+        "iterations": 20,
+        "blocks": [
+          {
+            "indexed": false,
+            "mean": 17.504789999999993,
+            "p95": 18.630600000000186,
+            "max": 18.630600000000186
+          },
+          {
+            "indexed": true,
+            "mean": 7.046960000000036,
+            "p95": 7.866100000000188,
+            "max": 7.866100000000188
+          },
+          {
+            "indexed": true,
+            "mean": 7.002689999999961,
+            "p95": 7.3474999999998545,
+            "max": 7.3474999999998545
+          },
+          {
+            "indexed": false,
+            "mean": 17.329425000000036,
+            "p95": 18.205399999999827,
+            "max": 18.205399999999827
+          }
+        ]
+      }
+    },
+    {
+      "biome": "sabana",
+      "phase": "chunk-removed",
+      "routes": 132,
+      "unverified": 14,
+      "events": 72,
+      "globalEvents": 0,
+      "candidates": 50,
+      "invalid": 25,
+      "missed": 0,
+      "benchmark": {
+        "iterations": 20,
+        "blocks": [
+          {
+            "indexed": false,
+            "mean": 14.102124999999955,
+            "p95": 20.577999999999975,
+            "max": 20.577999999999975
+          },
+          {
+            "indexed": true,
+            "mean": 5.920775000000026,
+            "p95": 6.33809999999994,
+            "max": 6.33809999999994
+          },
+          {
+            "indexed": true,
+            "mean": 5.931379999999967,
+            "p95": 6.615299999999934,
+            "max": 6.615299999999934
+          },
+          {
+            "indexed": false,
+            "mean": 12.061605000000009,
+            "p95": 12.488299999999981,
+            "max": 12.488299999999981
+          }
+        ]
+      }
+    },
+    {
+      "biome": "sabana",
+      "phase": "chunk-restored",
+      "routes": 120,
+      "unverified": 13,
+      "events": 72,
+      "globalEvents": 0,
+      "candidates": 38,
+      "invalid": 13,
+      "missed": 0,
+      "benchmark": {
+        "iterations": 20,
+        "blocks": [
+          {
+            "indexed": false,
+            "mean": 14.971069999999987,
+            "p95": 15.486399999999776,
+            "max": 15.486399999999776
+          },
+          {
+            "indexed": true,
+            "mean": 5.186959999999954,
+            "p95": 6.056899999999587,
+            "max": 6.056899999999587
+          },
+          {
+            "indexed": true,
+            "mean": 5.166665000000057,
+            "p95": 5.483299999999872,
+            "max": 5.483299999999872
+          },
+          {
+            "indexed": false,
+            "mean": 14.974450000000024,
+            "p95": 16.111399999999776,
+            "max": 16.111399999999776
+          }
+        ]
+      }
+    }
+  ]
+}

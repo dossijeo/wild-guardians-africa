@@ -11,10 +11,10 @@ export class RouteSectorIndex {
     for(const key of previous){const owners=this.sectors.get(key);owners.delete(id);if(!owners.size)this.sectors.delete(key);}
     this.unknown.delete(id);this.routes.delete(id);return true;
   }
-  set(id,start,points,radius){
+  set(id,start,points,radius,{verified=true}={}){
     this.remove(id);
     const keys=new Set(),valid=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.z);
-    let uncertain=!valid(start)||!Array.isArray(points)||!Number.isFinite(radius)||radius<0||!points.length;
+    let uncertain=!verified||!valid(start)||!Array.isArray(points)||!Number.isFinite(radius)||radius<0||!points.length;
     let from=start;
     if(!uncertain)for(const to of points){
       if(!valid(to)){uncertain=true;break;}
