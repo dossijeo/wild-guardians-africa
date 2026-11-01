@@ -1,0 +1,131 @@
+{
+  "scope": "Synthetic read-only native route batches in an isolated Worker. Cooperative variants yield by timer or MessageChannel between 40-query groups, independent of rendering. Results from invalidated single jobs must be discarded by the caller; no authoritative state, gameplay or frame measurement.",
+  "results": [
+    {
+      "mode": "single",
+      "cancel": false,
+      "elapsedMs": 53.964824222028255,
+      "startedDelayMs": 0.32493164390325546,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446
+    },
+    {
+      "mode": "cooperative",
+      "cancel": false,
+      "elapsedMs": 103.52480468899012,
+      "startedDelayMs": 0.11977539211511612,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446
+    },
+    {
+      "mode": "channel",
+      "cancel": false,
+      "elapsedMs": 50.169824220240116,
+      "startedDelayMs": 0.09487304836511612,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446
+    },
+    {
+      "mode": "channel",
+      "cancel": false,
+      "elapsedMs": 48.844746097922325,
+      "startedDelayMs": 0.08986328542232513,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446
+    },
+    {
+      "mode": "cooperative",
+      "cancel": false,
+      "elapsedMs": 99.32988281548023,
+      "startedDelayMs": 0.11479492485523224,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446
+    },
+    {
+      "mode": "single",
+      "cancel": false,
+      "elapsedMs": 47.25993164628744,
+      "startedDelayMs": 0.08488281816244125,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446
+    },
+    {
+      "mode": "single",
+      "cancel": true,
+      "elapsedMs": 49.799785159528255,
+      "startedDelayMs": 0.21482422202825546,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446,
+      "invalidationToCancelHandledMs": 39.25475586205721,
+      "cancelAccepted": false,
+      "completedAfterInvalidation": true
+    },
+    {
+      "mode": "cooperative",
+      "cancel": true,
+      "elapsedMs": 11.119755864143372,
+      "startedDelayMs": 0.09973633289337158,
+      "status": "cancelled",
+      "queries": 160,
+      "hash": null,
+      "invalidationToCancelHandledMs": 0.589716799557209,
+      "cancelAccepted": true,
+      "completedAfterInvalidation": false
+    },
+    {
+      "mode": "channel",
+      "cancel": true,
+      "elapsedMs": 10.469785161316395,
+      "startedDelayMs": 0.0847753956913948,
+      "status": "cancelled",
+      "queries": 160,
+      "hash": null,
+      "invalidationToCancelHandledMs": 0.059882812201976776,
+      "cancelAccepted": true,
+      "completedAfterInvalidation": false
+    },
+    {
+      "mode": "channel",
+      "cancel": true,
+      "elapsedMs": 11.489726565778255,
+      "startedDelayMs": 0.10984375327825546,
+      "status": "cancelled",
+      "queries": 120,
+      "hash": null,
+      "invalidationToCancelHandledMs": 0.2948242202401161,
+      "cancelAccepted": true,
+      "completedAfterInvalidation": false
+    },
+    {
+      "mode": "cooperative",
+      "cancel": true,
+      "elapsedMs": 13.724746093153954,
+      "startedDelayMs": 0.13490234315395355,
+      "status": "cancelled",
+      "queries": 200,
+      "hash": null,
+      "invalidationToCancelHandledMs": 2.459736332297325,
+      "cancelAccepted": true,
+      "completedAfterInvalidation": false
+    },
+    {
+      "mode": "single",
+      "cancel": true,
+      "elapsedMs": 47.00977539271116,
+      "startedDelayMs": 0.08985351771116257,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446,
+      "invalidationToCancelHandledMs": 36.65473633259535,
+      "cancelAccepted": false,
+      "completedAfterInvalidation": true
+    }
+  ]
+}
