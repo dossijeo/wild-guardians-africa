@@ -1,0 +1,102 @@
+{
+  "scope": "Diagnostic control only; not a performance comparison",
+  "runs": [
+    {
+      "name": "instrumented",
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "authority": "spatial-wasm",
+        "network": true,
+        "stageSlope": false
+      },
+      "control": {
+        "armed": true,
+        "triggered": true,
+        "object": "RhinoOralAnatomy",
+        "material": "Rhino oral tissue",
+        "type": "MeshStandardMaterial",
+        "before": 90,
+        "after": 91,
+        "found": true,
+        "materialPrograms": 2
+      },
+      "observedFrames": [],
+      "errors": [],
+      "reportErrors": [],
+      "hiddenFrames": 0,
+      "rejectedPhysics": 0
+    },
+    {
+      "name": "measured",
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "authority": "spatial-wasm",
+        "network": true,
+        "stageSlope": false
+      },
+      "control": {
+        "armed": true,
+        "triggered": true,
+        "object": "WarthogOralAnatomy",
+        "material": "Warthog oral tissue",
+        "type": "MeshStandardMaterial",
+        "before": 87,
+        "after": 88,
+        "found": true,
+        "materialPrograms": 2
+      },
+      "observedFrames": [
+        {
+          "renderMs": 41.400000005960464,
+          "owners": [
+            {
+              "object": "WarthogOralAnatomy",
+              "material": "Warthog oral tissue",
+              "matchingPrograms": 1
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "reportErrors": [],
+      "hiddenFrames": 0,
+      "rejectedPhysics": 0
+    },
+    {
+      "name": "verified",
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "authority": "spatial-wasm",
+        "network": true,
+        "stageSlope": false
+      },
+      "control": {
+        "armed": true,
+        "triggered": true,
+        "object": "WarthogOralAnatomy",
+        "material": "Warthog oral tissue",
+        "type": "MeshStandardMaterial",
+        "before": 87,
+        "after": 88,
+        "found": true,
+        "materialPrograms": 2
+      },
+      "observedFrames": [
+        {
+          "renderMs": 40.48499999940395,
+          "owners": [
+            {
+              "object": "WarthogOralAnatomy",
+              "material": "Warthog oral tissue",
+              "matchingPrograms": 1
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "reportErrors": [],
+      "hiddenFrames": 0,
+      "rejectedPhysics": 0
+    }
+  ]
+}
