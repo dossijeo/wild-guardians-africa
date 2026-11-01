@@ -79,6 +79,15 @@ struct Context {
 constexpr int navigationProfiles=6;
 Context* contexts[navigationProfiles]={};
 int selectedContext=0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+// Diagnostic only: capture changes across all navigation profiles. A global
+// record means that sector-local dependency information is insufficient.
+std::vector<int32_t>* sectorChangeTrace=nullptr;
+void traceSectorChange(int kind,int x=0,int z=0){
+  if(!sectorChangeTrace)sectorChangeTrace=new std::vector<int32_t>();
+  sectorChangeTrace->insert(sectorChangeTrace->end(),{selectedContext,kind,x,z});
+}
+#endif
 Context& active(){
   Context*& context=contexts[selectedContext];
   if(!context)context=new Context();
@@ -307,6 +316,14 @@ bool localPath(const Sector& sector,int from,int to){
 }
 
 extern "C" {
+#ifdef WILD_SECTOR_CHANGE_TRACE
+void lazy_sector_change_trace_clear(){
+  if(!sectorChangeTrace)sectorChangeTrace=new std::vector<int32_t>();
+  sectorChangeTrace->clear();
+}
+int lazy_sector_change_trace_count(){return sectorChangeTrace?int(sectorChangeTrace->size()/4):0;}
+const int32_t* lazy_sector_change_trace_ptr(){return sectorChangeTrace?sectorChangeTrace->data():nullptr;}
+#endif
 int lazy_select_context(int profile){
   if(profile<0||profile>=navigationProfiles)return 0;
   selectedContext=profile;return 1;
@@ -320,11 +337,17 @@ int lazy_reject_route_edge(int x,int z,int nx,int nz){
   if(std::abs(x-nx)+std::abs(z-nz)!=1||!sectorSize)return -1;
   if(rejectedRouteEdges.size()>=256)return -2;
   if(!rejectedRouteEdges.insert({x,z,nx,nz}).second)return 0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(0);
+#endif
   active().routeRevision++;
   return 1;
 }
 int lazy_init(int size){
   if(size<2||size>32)return 0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(0);
+#endif
   sectorSize=size;updates=0;
   active().routeRevision++;
   rejectedRouteEdges.clear();
@@ -348,6 +371,9 @@ int lazy_stage_sector(int sx,int sz){
 }
 int lazy_commit_sector(int sx,int sz){
   if(!sectorSize)return -1;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(1,sx,sz);
+#endif
   auto [it,inserted]=sectors->try_emplace(key(sx,sz));
   Sector& sector=it->second;
   if(inserted){
@@ -374,6 +400,9 @@ int lazy_remove_sector(int sx,int sz){
   if(!sectorSize)return 0;
   const auto it=sectors->find(key(sx,sz));
   if(it==sectors->end())return 0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(2,sx,sz);
+#endif
   const int id=it->second.id;
   byId[id]=nullptr;freeIds.push_back(id);sectors->erase(it);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
@@ -430,6 +459,9 @@ int lazy_grid_edge(int x,int z,int nx,int nz){
     (from->steps[first]&(1<<direction))?1:0;
 }
 int lazy_commit_portals(){
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(0);
+#endif
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
   active().routeRevision++;

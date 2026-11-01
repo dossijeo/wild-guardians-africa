@@ -13,6 +13,11 @@ if trace:
     exports += ['_lazy_route_trace_clear', '_lazy_route_trace_count', '_lazy_route_trace_ptr',
                 '_lazy_local_route_trace_count', '_lazy_local_route_trace_ptr',
                 '_lazy_local_search_trace_count', '_lazy_local_search_trace_ptr']
+sector_changes = os.environ.get('SPATIAL_SECTOR_CHANGE_TRACE') == '1'
+if sector_changes:
+    exports += ['_lazy_sector_change_trace_clear', '_lazy_sector_change_trace_count',
+                '_lazy_sector_change_trace_ptr', '_lazy_selected_context',
+                '_spatial_world_segment_clear']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
 compiler = os.environ.get('EMXX', 'em++')
 export_file = Path(output + '.exports.json')
@@ -21,6 +26,8 @@ export_file.write_text(json.dumps(exports, separators=(',', ':')), encoding='utf
 sources = ['spatial-savanna.cpp', 'lazy-sectors.cpp', 'spatial-route-planner.cpp',
            'spatial-action-planner.cpp', 'spatial-intent-state.cpp', 'spatial-dynamic-bodies.cpp']
 flags = (['-DWILD_ROUTE_TRACE'] if trace else [])
+if sector_changes:
+    flags.append('-DWILD_SECTOR_CHANGE_TRACE')
 if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
     flags.append('-DWILD_PROFILE_TWO_PASS')
 command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),
