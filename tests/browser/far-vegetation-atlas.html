@@ -14,6 +14,8 @@ const biome=params.get('biome')??'savanna',slot=Number(params.get('slot')??0),ga
 const bakedLod=Number(params.get('lod')??0);if(!Number.isInteger(bakedLod)||bakedLod<0||bakedLod>2)throw Error('Invalid atlas LOD');
 const rotationViews=prelitBake&&params.get('rotations')==='8'?8:1,cameraViews=prelitBake&&params.get('views')==='16'?16:8,viewResolution=params.get('resolution')==='512'?512:params.get('resolution')==='128'?128:256,atlasWidth=cameraViews*viewResolution,atlasHeight=rotationViews*viewResolution;
 let renderer,mesh,material,scene,metadata,prototypes=[];
+// Far atlases always use original textures and native geometric LOD numbering.
+assets.visualSearch='?noNearTreeTextures';
 try{
  const pack=await json('/content/biome-'+biome+'.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(slot,slot+1)}),source=levels[0][bakedLod],geometry=source.geometry,frameGeometry=levels[0][0].geometry,position=frameGeometry.getAttribute('position'),box=frameGeometry.boundingBox,height=box.max.y-box.min.y;
  prototypes=levels;

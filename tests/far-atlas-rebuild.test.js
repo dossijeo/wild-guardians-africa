@@ -12,7 +12,9 @@ test('preserved source archive and two external linear PNGs have reviewed hashes
  assert.equal(manifest.records.filter(r=>r.encoder==='sharp-lossless').length,42);
  const linear=manifest.records.filter(r=>r.encoder==='pillow-exact');assert.equal(linear.length,2);
  for(const r of linear)assert.equal(sha256(await fs.readFile(r.input)),r.inputSha256);
- assert.equal(sha256(await fs.readFile('tools/sources/far-atlases/reviewed-native-manifest.json')),manifest.publicManifestSha256);
+ // Git may check this text fixture out with CRLF on Windows; its reviewed
+ // source hash is the repository's LF encoding, not a platform newline choice.
+ assert.equal(sha256((await fs.readFile('tools/sources/far-atlases/reviewed-native-manifest.json','utf8')).replaceAll('\r\n','\n')),manifest.publicManifestSha256);
 });
 test('archived native recipe admits exactly 44 phases',()=>assert.doesNotThrow(()=>admitReviewedAtlasSources(manifest,reviewed,metadata())));
 test('missing/duplicate records and changed encoder/destination fail before output',()=>{

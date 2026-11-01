@@ -105,7 +105,10 @@ export class ShadowCache {
   invalidate() { this.snapshot = null; }
   matches(next, forced = false) {
     if (!next) { this.stats.untracked++; return false; }
-    return this.enabled && !forced && this.snapshot && next.length === this.snapshot.length && next.every((value, i) => Object.is(value, this.snapshot[i]));
+    const previous = this.snapshot;
+    if (!this.enabled || forced || !previous || next.length !== previous.length) return false;
+    for (let i = 0; i < next.length; i++) if (!Object.is(next[i], previous[i])) return false;
+    return true;
   }
   commit(snapshot) { this.snapshot = snapshot; this.stats.draws++; }
 }

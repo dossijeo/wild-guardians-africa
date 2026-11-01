@@ -4,6 +4,7 @@ import {sampleFixedPose} from './fixed-pose.js';
 import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
 import {prepareWarthogHooves,plantWarthogHooves} from './warthog-hooves.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
+import {GroundSkinSampler} from './ground-skin-sampler.js';
 
 export function prepareAnimalModel(model,species){
   model.userData.beastSpecies=species;
@@ -74,13 +75,14 @@ function groundAnimal(data){
   const model=data.model;if(!model||!data.groundSamples?.length)return;
   model.position.y=0;model.parent?.updateWorldMatrix(true,false);model.updateMatrixWorld(true);
   if(model.parent)rootInverse.copy(model.parent.matrixWorld).invert();else rootInverse.identity();
-  let min=Infinity,previousMesh=null;
+  let min=Infinity,previousMesh=null;const vertical=data.cachedSkinning===2?(data.groundSkinSampler??=new GroundSkinSampler()):null;
   for(const {mesh,index} of data.groundSamples){
     // Samples are grouped by mesh. Compose its parent-relative transform once,
     // rather than taking every skinned vertex through world space and back.
     // Recompute if a caller supplies interleaved samples; no frame cache can
     // outlive a changed pose, parent transform, model scale or floating origin.
-    if(mesh!==previousMesh){meshToRoot.multiplyMatrices(rootInverse,mesh.matrixWorld);previousMesh=mesh;}
+    if(mesh!==previousMesh){meshToRoot.multiplyMatrices(rootInverse,mesh.matrixWorld);vertical?.bind(mesh,meshToRoot);previousMesh=mesh;}
+    if(vertical){min=Math.min(min,vertical.height(index));continue;}
     mesh.getVertexPosition(index,vertex);
     // Object transforms are affine, and grounding only needs local height.
     // Do not compute the unused X/Z coordinates or a homogeneous division.

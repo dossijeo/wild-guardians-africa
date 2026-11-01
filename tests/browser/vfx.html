@@ -21,6 +21,12 @@ function draw(){
  const glError=renderer.getContext().getError();if(glError)error='WebGL '+glError;
  document.querySelector('#status').textContent=`${fx.native.definition.title} · ${fx.native.time.toFixed(2)} s · sprites ${fx.sprites.geometry.instanceCount} · sólidos ${[...fx.rigids.values()].reduce((n,m)=>n+m.geometry.instanceCount,0)} · vértices de cintas ${fx.ribbons.geometry.drawRange.count} · contactos decorativos ${fx.native.contacts.length} · ${error||'WebGL sin errores'}`;
 }
+if(new URLSearchParams(location.search).has('groundDepthReview')){
+ const {installGroundDepthProxy}=await import('../../tools/experiments/ground-depth-proxy.js');
+ floor.userData.ground=true;
+ const review=installGroundDepthProxy({destructionPass:pipeline,terrainMeshes:[floor]});
+ window.vfxDepthReview={scene,camera,pipeline,renderer,review,choose,draw,get effect(){return fx;}};
+}
 select.onchange=()=>choose(select.value);document.querySelector('#contact').onclick=()=>fx.seek(({dig:.7,water:1.6,harvest:.7,dust:.65,wood:.55,adobe:.55,stone:.55}[fx.native.definition.id])??fx.native.definition.duration*.5);document.querySelector('#step').onclick=()=>fx.advance(.1);document.querySelector('#second').onclick=()=>fx.advance(1);document.querySelector('#clear').onclick=()=>fx.clear();
 document.querySelector('#all').onclick=async()=>{
  document.querySelector('#all').disabled=true;document.querySelector('#report').replaceChildren();

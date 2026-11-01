@@ -1,4 +1,5 @@
 import {wallBufferReader} from './wall-buffer-reader.js';
+import {blendNearTreeMaterial} from './near-tree-material.js';
 import {attachModelVisibility} from './model-ambient-visibility.js';
 import {nativeAmbientVisibilityEnabled,nativeVisibilityViews,villageVisibilityView} from './native-ambient-visibility.js';
 import {prepareLoadingImage,ownLoadingBitmap} from './loading-image.js';
@@ -14,6 +15,7 @@ export {json,bytes} from './asset-fetch.js';
 import {prepareNativeBuilding,prepareNativeBuildingAsync} from './buildings.js';
 import {nativeAssetMaterial} from './asset-surface.js';
 import {computeTangents} from './surface-source.js';
+import {nearTreeGeometry,removeReviewedTreeTriangles} from './near-tree-textures.js';
 export class Assets {
   constructor(){this.preparation=new AbortController();this.activeModelTransfers=new Set();this.loadedTextureKeys=new Set();const manager=new THREE.LoadingManager();this.transfers=observeLoadingManager(manager,{skip:url=>this.activeModelTransfers.has(url)});this.loader=new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader(manager);this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
   assertOpen(){if(this.modelsDisposed)throw new Error('Asset collection is disposed');}
@@ -92,7 +94,23 @@ export class Assets {
       if(visibility)geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(visibility[index][level],1,true));
       levels.push(geometry);
       if(this.asyncTextureImages&&performance.now()-preparationFrame>=4){await new Promise(resolve=>requestAnimationFrame(resolve));this.assertOpen();preparationFrame=performance.now();}
-    }const material=this.own(nativeAssetMaterial(pack,a,index,a.textureSet===undefined?textures:textureSets[a.textureSet],levels[0].boundingBox));if(visibility)material.userData.nativeAmbientVisibility={value:1};result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
+    }const originalTextures=a.textureSet===undefined?textures:textureSets[a.textureSet];
+    const material=this.own(nativeAssetMaterial(pack,a,index,originalTextures,levels[0].boundingBox));if(visibility)material.userData.nativeAmbientVisibility={value:1};
+    const meshes=levels.map(geometry=>new THREE.Mesh(geometry,material));
+    if(a.nearTextures&&!new URLSearchParams(this.visualSearch??globalThis.location?.search??'').has('noNearTreeTextures')){
+      const near=a.nearTextures;
+      const [uvBuffer,entries]=await Promise.all([bytes(near.cornerUV,{signal:this.preparation.signal}),Promise.all(Object.entries(near.textures).map(async([role,url])=>[role,await this.texture(url,role==='baseColor')]))]);
+      this.assertOpen();const maps={...originalTextures};
+      for(const [role,texture]of entries){const copy=this.own(texture.clone());copy.channel=1;copy.needsUpdate=true;maps[role]=copy;}
+      const geometry=this.own(nearTreeGeometry(levels[0],new Float32Array(uvBuffer)));
+      const nearMaterial=this.own(nativeAssetMaterial(pack,a,index,maps,geometry.boundingBox));
+      blendNearTreeMaterial(nearMaterial,material,geometry.boundingBox,near);
+      if(visibility)nearMaterial.userData.nativeAmbientVisibility={value:1};
+      removeReviewedTreeTriangles(geometry,a.geometryCleanup?.removedTriangles?.[0]);
+      const mesh=new THREE.Mesh(geometry,nearMaterial);mesh.userData.nearTextureDistance=near.distance;meshes.unshift(mesh);
+    }
+    for(const [level,geometry]of levels.entries())removeReviewedTreeTriangles(geometry,a.geometryCleanup?.removedTriangles?.[level]);
+    result.push(meshes);}return result;
   }
   async village(payload) {
     this.assertOpen();
