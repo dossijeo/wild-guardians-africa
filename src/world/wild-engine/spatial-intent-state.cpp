@@ -146,6 +146,9 @@ struct IntentState {
     bool blockedApproach=false;};
   std::unordered_map<uint64_t,AttackDeclaration> attackDeclarations;
   std::set<std::pair<double,uint64_t>> attackDeadlines;
+#ifdef WILD_DECLARATIVE_STATS
+  uint64_t attackWakeEvents=0,attackWakeVisits=0,attackWakeIdle=0,attackWakeTransitions=0;
+#endif
 #endif
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byBlockedCropGroup;
@@ -650,6 +653,9 @@ void nav_intent_reset(){
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
 #ifdef WILD_DECLARATIVE_ATTACK
   s.attackDeclarations.clear();s.attackDeadlines.clear();
+#ifdef WILD_DECLARATIVE_STATS
+  s.attackWakeEvents=s.attackWakeVisits=s.attackWakeIdle=s.attackWakeTransitions=0;
+#endif
 #endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
@@ -893,8 +899,22 @@ int nav_intent_apply_changes(double sequence,int count){
     if(change.kind==2||change.kind==5)s.cropProtection.erase(change.id);
     invalidateDependents(s,change);
 #ifdef WILD_DECLARATIVE_ATTACK
-    if(change.kind==2||change.kind==5)for(auto& [actor,declaration]:s.attackDeclarations)
-      if(!s.activeIntents.count(actor))declaration.dirty=true;
+    if(change.kind==2||change.kind==5){
+#ifdef WILD_DECLARATIVE_STATS
+      s.attackWakeEvents++;
+#endif
+      for(auto& [actor,declaration]:s.attackDeclarations){
+#ifdef WILD_DECLARATIVE_STATS
+        s.attackWakeVisits++;
+#endif
+        if(!s.activeIntents.count(actor)){
+#ifdef WILD_DECLARATIVE_STATS
+          s.attackWakeIdle++;if(!declaration.dirty)s.attackWakeTransitions++;
+#endif
+          declaration.dirty=true;
+        }
+      }
+    }
 #endif
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
@@ -2103,6 +2123,13 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   return int(s.attackResult[0]);
 }
 #ifdef WILD_DECLARATIVE_ATTACK
+#ifdef WILD_DECLARATIVE_STATS
+void nav_declarative_attack_wake_reset(){auto& s=state();s.attackWakeEvents=s.attackWakeVisits=s.attackWakeIdle=s.attackWakeTransitions=0;}
+double nav_declarative_attack_wake_events(){return double(state().attackWakeEvents);}
+double nav_declarative_attack_wake_visits(){return double(state().attackWakeVisits);}
+double nav_declarative_attack_wake_idle(){return double(state().attackWakeIdle);}
+double nav_declarative_attack_wake_transitions(){return double(state().attackWakeTransitions);}
+#endif
 // The embedding supplies current actor position and the existing transient
 // collision/lease facts at an event boundary. No movement policy is replaced.
 int nav_declarative_attack_declare(double actorId,double x,double z,double radius,

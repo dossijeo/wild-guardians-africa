@@ -41,18 +41,20 @@ function run(experimental){
    const actor=game.raid.animals[0];focus=Number(actor.id.match(/\d+$/)[0]);
    if(experimental)for(const item of adoptAll?game.raid.animals:[actor]){const id=Number(item.id.match(/\d+$/)[0]);if(raw.nav_declarative_attack_adopt(id,item.radius)!==1)throw Error(`Could not adopt restored crop route ${id}`);adoptedActors.set(id,item);everAdopted.push(id);}
    for(let i=0;i<10;i++){tick(game,.1,nav);nav.serviceRaidConnectivityDemand?.();}
+   raw.nav_declarative_attack_wake_reset?.();
    if(!actor.approach||actor.status==='attacking')throw Error('Actor is not travelling to an approach');
    const {x,z}=actor.approach,d=2.5;
    for(const [wx,wz,hx,hz] of [[x-d,z,.25,d+.25],[x+d,z,.25,d+.25],[x,z-d,d+.25,.25],[x,z+d,d+.25,.25]])if(session.core.addWall(wx,wz,hx,hz)<=0)throw Error('Could not add barrier');
    const invalidated=planner.reconcileNavigationRevision(game,nav.version+1);planner.reconcileWorkerRoutes(game,{navVersion:nav.version+1});
    for(let i=0;i<maxSteps;i++){const started=benchmark?performance.now():0;tick(game,.1,nav);nav.serviceRaidConnectivityDemand?.();if(benchmark)times.push(performance.now()-started);states.push(createHash('sha256').update(serialize(game)).digest('hex'));const row={status:actor.status,targetId:actor.targetId,waiting:!!actor.raidWait,...(experimental?{declaration:raw.nav_declarative_attack_present(focus)}:{})};if(!timeline.length||JSON.stringify(timeline.at(-1).state)!==JSON.stringify(row))timeline.push({step:i,state:row});if(untilEnd&&!game.raid)break;}
    if(experimental&&!game.raid&&everAdopted.some(id=>raw.nav_declarative_attack_present(id)!==0))throw Error('Declaration survived raid completion');
-   return {states,counts,timeline,times,restored:restored.restoredAnimalRoutes,invalidated,final:serialize(game),events:game.events.length,completed:!game.raid};
+   const wakeStats=typeof raw.nav_declarative_attack_wake_events==='function'?{events:raw.nav_declarative_attack_wake_events(),visits:raw.nav_declarative_attack_wake_visits(),withoutActive:raw.nav_declarative_attack_wake_idle(),newlyDirty:raw.nav_declarative_attack_wake_transitions()}:null;
+   return {states,counts,timeline,times,wakeStats,restored:restored.restoredAnimalRoutes,invalidated,final:serialize(game),events:game.events.length,completed:!game.raid};
   }finally{stopTasks();stopWorld();}
  }finally{session.dispose();}
 }
 const reference=run(false),candidate=run(true),firstDifference=reference.states.findIndex((hash,i)=>hash!==candidate.states[i]);
-const output={scope:'Controlled barrier around one restored crop approach in a saved eight-animal raid; test-only adapter. No GPU or performance measurement.',untilEnd,adoptAll,equal:firstDifference<0&&reference.states.length===candidate.states.length&&reference.final===candidate.final,firstDifference:firstDifference<0?null:firstDifference,reference:{steps:reference.states.length,completed:reference.completed,restored:reference.restored,invalidated:reference.invalidated,events:reference.events,timeline:reference.timeline},candidate:{steps:candidate.states.length,completed:candidate.completed,restored:candidate.restored,invalidated:candidate.invalidated,events:candidate.events,counts:candidate.counts,timeline:candidate.timeline}};
+const output={scope:'Controlled barrier around one restored crop approach in a saved eight-animal raid; test-only adapter. No GPU or performance measurement.',untilEnd,adoptAll,equal:firstDifference<0&&reference.states.length===candidate.states.length&&reference.final===candidate.final,firstDifference:firstDifference<0?null:firstDifference,reference:{steps:reference.states.length,completed:reference.completed,restored:reference.restored,invalidated:reference.invalidated,events:reference.events,wakeStats:reference.wakeStats,timeline:reference.timeline},candidate:{steps:candidate.states.length,completed:candidate.completed,restored:candidate.restored,invalidated:candidate.invalidated,events:candidate.events,wakeStats:candidate.wakeStats,counts:candidate.counts,timeline:candidate.timeline}};
 if(benchmark){
  const laterCandidate=run(true),laterReference=run(false),all=[reference,candidate,laterCandidate,laterReference];
  const percentile=(values,p)=>values[Math.min(values.length-1,Math.floor(values.length*p))];

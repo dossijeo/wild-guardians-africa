@@ -25,6 +25,12 @@ if declarative_attack:
                 '_nav_declarative_attack_release_blocked',
                 '_nav_declarative_attack_next_deadline', '_nav_declarative_attack_next_due',
                 '_nav_declarative_attack_begin_wait', '_nav_declarative_attack_service_wait']
+declarative_stats = os.environ.get('SPATIAL_DECLARATIVE_STATS') == '1'
+if declarative_stats:
+    if not declarative_attack:
+        raise ValueError('SPATIAL_DECLARATIVE_STATS requires SPATIAL_DECLARATIVE_ATTACK')
+    exports += ['_nav_declarative_attack_wake_reset', '_nav_declarative_attack_wake_events', '_nav_declarative_attack_wake_visits',
+                '_nav_declarative_attack_wake_idle', '_nav_declarative_attack_wake_transitions']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
 compiler = os.environ.get('EMXX', 'em++')
 export_file = Path(output + '.exports.json')
@@ -37,6 +43,8 @@ if sector_changes:
     flags.append('-DWILD_SECTOR_CHANGE_TRACE')
 if declarative_attack:
     flags.append('-DWILD_DECLARATIVE_ATTACK')
+if declarative_stats:
+    flags.append('-DWILD_DECLARATIVE_STATS')
 if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
     flags.append('-DWILD_PROFILE_TWO_PASS')
 command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),
