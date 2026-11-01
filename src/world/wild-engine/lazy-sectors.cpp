@@ -43,6 +43,9 @@ struct Sector {
   std::vector<uint8_t> unknown,weakUnknown;
   std::vector<std::vector<std::pair<int,int>>> frontiers;
 };
+#ifdef WILD_ROUTE_TRACE
+std::vector<int32_t> routeTrace;
+#endif
 struct Context {
   int sectorSize=0,updates=0;
   uint32_t routeRevision=1;
@@ -765,6 +768,9 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   const int firstCell=cellIndex(fromX-first.sx*sectorSize,fromZ-first.sz*sectorSize);
   const int lastCell=cellIndex(toX-last.sx*sectorSize,toZ-last.sz*sectorSize);
   if(source==target){
+#ifdef WILD_ROUTE_TRACE
+    routeTrace.insert(routeTrace.end(),{first.sx,first.sz,source%stride});
+#endif
     const bool found=localPath(first,firstCell,lastCell);
     connectivityReason=found?4:9;
     return found?static_cast<int>(routePoints.size()/2):-1;
@@ -777,6 +783,9 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   for(size_t q=0;q<queueBuffer.size()&&visited[target]!=generation;q++){
     const int32_t node=queueBuffer[q],sectorId=node/stride,local=node%stride;
     const Sector& sector=*byId[sectorId];
+#ifdef WILD_ROUTE_TRACE
+    routeTrace.insert(routeTrace.end(),{sector.sx,sector.sz,local});
+#endif
     if(sector.unknown[local])unknown=true;
     for(const Arc& arc:sector.edges[local]){
       if(arc.portal<0){
@@ -815,6 +824,11 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   return static_cast<int>(routePoints.size()/2);
 }
 int32_t* lazy_route_ptr(){return routePoints.data();}
+#ifdef WILD_ROUTE_TRACE
+void lazy_route_trace_clear(){routeTrace.clear();}
+int lazy_route_trace_count(){return int(routeTrace.size()/3);}
+const int32_t* lazy_route_trace_ptr(){return routeTrace.data();}
+#endif
 int lazy_loaded_sectors(){return sectors?static_cast<int>(sectors->size()):0;}
 int lazy_sector_slots(){return static_cast<int>(byId.size());}
 int lazy_sector_updates(){return updates;}
