@@ -22,9 +22,9 @@
 #endif
 #ifdef WILD_SPATIAL_PROFILE
 #include <emscripten/emscripten.h>
-namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[14]{}; }
-extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,14,0.0);}
-extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<14?spatialProfileTimes[index]:-1;}
+namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[19]{}; }
+extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,19,0.0);}
+extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<19?spatialProfileTimes[index]:-1;}
 #define SPATIAL_TICK(name) const double name=emscripten_get_now()
 #define SPATIAL_TOCK(index,name) spatialProfileTimes[index]+=emscripten_get_now()-name
 #else
@@ -2099,10 +2099,13 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   }
 #else
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz,false);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileRaster);buildActiveRaster();SPATIAL_TOCK(15,profileRaster);
+    SPATIAL_TICK(profileCommit);commitActiveSectors();SPATIAL_TOCK(16,profileCommit);
+    SPATIAL_TICK(profileBorder);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(17,profileBorder);
   }
 #endif
-  if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
+  SPATIAL_TICK(profileRestore);if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);SPATIAL_TOCK(18,profileRestore);
   navReady=true;
   saveProfile();
   return lazy_loaded_sectors();

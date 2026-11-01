@@ -34,6 +34,9 @@ if declarative_stats:
 central_mobility = os.environ.get('SPATIAL_CENTRAL_MOBILITY') == '1'
 if central_mobility:
     exports += ['_spatial_mobility_input_ptr', '_spatial_mobility_output_ptr', '_spatial_mobility_step', '_lazy_selected_context']
+spatial_profile = os.environ.get('SPATIAL_PROFILE') == '1'
+if spatial_profile:
+    exports += ['_spatial_profile_reset', '_spatial_profile_ms']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
 exports = list(dict.fromkeys(exports))
 compiler = os.environ.get('EMXX', 'em++')
@@ -51,6 +54,8 @@ if declarative_stats:
     flags.append('-DWILD_DECLARATIVE_STATS')
 if central_mobility:
     flags.append('-DWILD_CENTRAL_MOBILITY')
+if spatial_profile:
+    flags.append('-DWILD_SPATIAL_PROFILE')
 if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
     flags.append('-DWILD_PROFILE_TWO_PASS')
 command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),
