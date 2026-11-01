@@ -17,7 +17,7 @@ function run(halfSize,declarative){
   const first=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_attack_result_ptr(),13)),x=first[2],z=first[3],d=halfSize;
   for(const [wx,wz,hx,hz] of [[x-d,z,.25,d+.25],[x+d,z,.25,d+.25],[x,z-d,d+.25,.25],[x,z+d,d+.25,.25]])if(session.core.addWall(wx,wz,hx,hz)<=0)throw Error('Could not add ring wall');
   session.actorSectorRevision(options);const invalidated=wasm.nav_intent_reconcile_topology();if(invalidated!==1)throw Error('Ring did not invalidate attack route');
-  let next;if(declarative)next=wasm.nav_declarative_attack_reconcile(id,animal.x,animal.z,1,0,0);
+  let next;if(declarative){if(wasm.nav_declarative_attack_reconcile(id,animal.x,animal.z,1,0,0)!==8||wasm.nav_declarative_attack_release_blocked(id)!==1)throw Error('Deferred blocked transition failed');next=wasm.nav_declarative_attack_reconcile(id,animal.x,animal.z,1,0,0);}
   else{const status=wasm.nav_intent_replan_attack_route(id,animal.x,animal.z,x,z),reason=wasm.spatial_world_route_reason();if(status!==3||reason!==0)throw Error(`Approach was not definitively blocked: ${status}/${reason}`);if(wasm.nav_intent_attack_cancel(id)!==1)throw Error('Reference release failed');next=wasm.nav_intent_plan_attack_crop(id,animal.x,animal.z,animal.radius,1,0,0);}
   if(next!==1)throw Error(`No replacement crop or access: ${next}`);
   const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_attack_result_ptr(),13)),count=wasm.nav_intent_route_points(row[4],row[5],row[6]);if(count<=0)throw Error('Replacement has no route');

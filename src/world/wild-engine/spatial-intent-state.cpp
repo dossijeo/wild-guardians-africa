@@ -142,7 +142,8 @@ struct IntentState {
   // Experimental high-level intent survives loss of its current route/target.
   // Never used by the production binary.
   struct AttackDeclaration {double radius;int profile;bool dirty;
-    bool waiting=false;double since=0,next=0;int attempts=0;};
+    bool waiting=false;double since=0,next=0;int attempts=0;
+    bool blockedApproach=false;};
   std::unordered_map<uint64_t,AttackDeclaration> attackDeclarations;
   std::set<std::pair<double,uint64_t>> attackDeadlines;
 #endif
@@ -332,6 +333,7 @@ void invalidateDependents(IntentState& s,const Change& change){
       const auto declaration=s.attackDeclarations.find(actor);
       if(declaration!=s.attackDeclarations.end()){
         clearAttackDeadline(s,actor);declaration->second.dirty=true;
+        declaration->second.blockedApproach=false;
       }
 #endif
       if(active->second.state==PlanningState::ActionActive){
@@ -2130,14 +2132,11 @@ int nav_declarative_attack_reconcile(double actorId,double x,double z,
     const int result=nav_intent_replan_attack_route(actorId,x,z,
       active->second.approachX,active->second.approachZ);
     if(result==3&&spatial_world_route_reason()==0){
-      // Only a definitive route failure releases this particular approach.
-      // Unknown connectors/sectors keep the lease and use bounded recovery.
+      // Preserve the existing raid ordering: release at this actor's action
+      // boundary and choose a replacement at a later selection boundary.
       clearAttackDeadline(s,actor);
-      releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
-      const int replacement=nav_intent_plan_attack_crop(actorId,x,z,
-        declaration->second.radius,eligible,blockers,reserved);
-      if(replacement>=0)declaration->second.dirty=false;
-      return replacement;
+      declaration->second.blockedApproach=true;
+      declaration->second.dirty=false;return 8;
     }
     if(result==1)clearAttackDeadline(s,actor);
     if(result>=0)declaration->second.dirty=false;
@@ -2147,6 +2146,20 @@ int nav_declarative_attack_reconcile(double actorId,double x,double z,
     declaration->second.radius,eligible,blockers,reserved);
   if(result>=0)declaration->second.dirty=false;
   return result;
+}
+// Apply the blocked-approach transition at the same ordered actor boundary as
+// the current raid policy. The high-level goal is retained for selection at
+// the next boundary; other actors may claim their own reservations in between.
+int nav_declarative_attack_release_blocked(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end()||!declaration->second.blockedApproach)return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active==s.activeIntents.end()||active->second.state==PlanningState::ActionActive)return -2;
+  clearAttackDeadline(s,actor);releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);declaration->second.blockedApproach=false;
+  declaration->second.dirty=true;return 1;
 }
 int nav_declarative_attack_cancel(double actorId){
   if(!integer(actorId))return -1;
@@ -2182,8 +2195,8 @@ int nav_declarative_attack_begin_wait(double actorId,double now){
   auto& wait=declaration->second;wait.waiting=true;wait.since=now;wait.next=now+8;wait.attempts=0;
   s.attackDeadlines.insert({wait.next,actor});return 1;
 }
-// 9 means the bounded wait expired; the caller retains authority for the
-// established retreat policy.
+// 8 requests an ordered blocked-approach transition. 9 means the bounded wait
+// expired; the caller retains authority for the established retreat policy.
 int nav_declarative_attack_service_wait(double actorId,double now,double x,double z,
                                         int eligible,int blockers,int reserved){
   if(!integer(actorId)||!std::isfinite(now)||!coordinate(x)||!coordinate(z)||
@@ -2202,6 +2215,7 @@ int nav_declarative_attack_service_wait(double actorId,double now,double x,doubl
   wait.dirty=true;
   const int result=nav_declarative_attack_reconcile(actorId,x,z,eligible,blockers,reserved);
   if(result==1)return 1;
+  if(result==8)return 8;
   if(!s.activeIntents.count(actor)){clearAttackDeadline(s,actor);return result;}
   if(result!=3)return result;
   s.attackDeadlines.erase({wait.next,actor});wait.attempts++;
