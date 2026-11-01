@@ -1,0 +1,287 @@
+{
+  "scope": "Four independent deterministic sessions in ABBA order; CPU time of tick and raid connectivity service in Node. Excludes capture hashing, rendering and GPU; setup and wall mutation occur outside timed samples.",
+  "untilEnd": true,
+  "adoptAll": true,
+  "equal": true,
+  "firstDifference": null,
+  "reference": {
+    "steps": 956,
+    "completed": true,
+    "restored": 8,
+    "invalidated": 6,
+    "events": 200,
+    "timeline": [
+      {
+        "step": 0,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 1,
+        "state": {
+          "status": "walking",
+          "targetId": "plant-4758",
+          "waiting": false
+        }
+      },
+      {
+        "step": 275,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4758",
+          "waiting": false
+        }
+      },
+      {
+        "step": 291,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 292,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4434",
+          "waiting": false
+        }
+      },
+      {
+        "step": 325,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 326,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4449",
+          "waiting": false
+        }
+      },
+      {
+        "step": 372,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 373,
+        "state": {
+          "status": "retreating",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 551,
+        "state": {
+          "status": "gone",
+          "targetId": null,
+          "waiting": false
+        }
+      }
+    ]
+  },
+  "candidate": {
+    "steps": 956,
+    "completed": true,
+    "restored": 8,
+    "invalidated": 6,
+    "events": 200,
+    "counts": {
+      "replan": 15,
+      "blocked": 1,
+      "release": 1,
+      "reselect": 10,
+      "selectionCalls": 10,
+      "missingDeclaration": 0,
+      "cancellations": 28,
+      "resets": 1
+    },
+    "timeline": [
+      {
+        "step": 0,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 1,
+        "state": {
+          "status": "walking",
+          "targetId": "plant-4758",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 275,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4758",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 291,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 292,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4434",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 325,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 326,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4449",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 372,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 0
+        }
+      },
+      {
+        "step": 373,
+        "state": {
+          "status": "retreating",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 0
+        }
+      },
+      {
+        "step": 551,
+        "state": {
+          "status": "gone",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 0
+        }
+      }
+    ]
+  },
+  "benchmark": [
+    {
+      "variant": "reference",
+      "completed": true,
+      "steps": 956,
+      "mean": 0.3526541841003947,
+      "p95": 0.74350000000004,
+      "p99": 6.7807999999995445,
+      "max": 26.612300000000005,
+      "equalToReference": true,
+      "counts": {
+        "replan": 0,
+        "blocked": 0,
+        "release": 0,
+        "reselect": 0,
+        "selectionCalls": 0,
+        "missingDeclaration": 0,
+        "cancellations": 0,
+        "resets": 0
+      }
+    },
+    {
+      "variant": "declarative",
+      "completed": true,
+      "steps": 956,
+      "mean": 0.30473640167361493,
+      "p95": 0.5964999999996508,
+      "p99": 6.6120000000009895,
+      "max": 17.22979999999916,
+      "equalToReference": true,
+      "counts": {
+        "replan": 15,
+        "blocked": 1,
+        "release": 1,
+        "reselect": 10,
+        "selectionCalls": 10,
+        "missingDeclaration": 0,
+        "cancellations": 28,
+        "resets": 1
+      }
+    },
+    {
+      "variant": "declarative",
+      "completed": true,
+      "steps": 956,
+      "mean": 0.28499089958164386,
+      "p95": 0.554599999999482,
+      "p99": 6.704600000000937,
+      "max": 17.29739999999947,
+      "equalToReference": true,
+      "counts": {
+        "replan": 15,
+        "blocked": 1,
+        "release": 1,
+        "reselect": 10,
+        "selectionCalls": 10,
+        "missingDeclaration": 0,
+        "cancellations": 28,
+        "resets": 1
+      }
+    },
+    {
+      "variant": "reference",
+      "completed": true,
+      "steps": 956,
+      "mean": 0.277536297071127,
+      "p95": 0.5116999999954714,
+      "p99": 6.714500000001863,
+      "max": 20.34219999999914,
+      "equalToReference": true,
+      "counts": {
+        "replan": 0,
+        "blocked": 0,
+        "release": 0,
+        "reselect": 0,
+        "selectionCalls": 0,
+        "missingDeclaration": 0,
+        "cancellations": 0,
+        "resets": 0
+      }
+    }
+  ]
+}

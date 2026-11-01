@@ -1563,6 +1563,10 @@ int nav_intent_request_reroute(double actorId){
       found->second.state!=PlanningState::WaitingUnknown&&
       found->second.state!=PlanningState::WaitingBlocked))return 0;
   ActiveIntent& intent=found->second;
+#ifdef WILD_DECLARATIVE_ATTACK
+  const auto declaration=s.attackDeclarations.find(uint64_t(actorId));
+  if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
   releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
   intent.topology=lazy_route_revision();
   emitIntentChange(s,intent);s.invalidations++;
