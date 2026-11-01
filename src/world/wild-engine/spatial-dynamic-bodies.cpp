@@ -12,6 +12,7 @@
 extern "C" int spatial_local_clear(float,float,float,float);
 extern "C" uint32_t lazy_route_revision();
 extern "C" int lazy_selected_context();
+extern "C" int spatial_select_nav_profile_index(int);
 namespace {
 struct Body {double x,z,r; int kind,flags;uint64_t revision;};
 std::unordered_map<uint64_t,Body> bodies;
@@ -52,6 +53,9 @@ template<class Visitor> bool visitBox(double minX,double minZ,double maxX,double
  return false;
 }
 std::vector<double> result;
+#ifdef WILD_CENTRAL_MOBILITY
+std::vector<double> mobilityInput,mobilityOutput;
+#endif
 // Terrain edges are independent of moving bodies. Each native profile owns a
 // bounded exact-coordinate cache invalidated by its topology revision. Dynamic
 // collision tests still run for every graph edge; this never caches a route or
@@ -124,7 +128,11 @@ __attribute__((noinline)) int indexedSegment(uint64_t id,const Body& actor,doubl
 }
 }
 extern "C" {
-void spatial_bodies_reset(){bodies.clear();cells.clear();unindexed.clear();maxRadius=0;indexed=false;result.clear();for(auto& cache:terrainEdges){cache.values.clear();cache.initialized=false;}terrainCacheHits=terrainCacheMisses=0;blockedEdges.clear();blockedEdgeHits=blockedEdgeRechecks=blockedEdgeMisses=0;nextBodyRevision=1;lastSegmentBlocked=false;}
+void spatial_bodies_reset(){bodies.clear();cells.clear();unindexed.clear();maxRadius=0;indexed=false;result.clear();for(auto& cache:terrainEdges){cache.values.clear();cache.initialized=false;}terrainCacheHits=terrainCacheMisses=0;blockedEdges.clear();blockedEdgeHits=blockedEdgeRechecks=blockedEdgeMisses=0;nextBodyRevision=1;lastSegmentBlocked=false;
+#ifdef WILD_CENTRAL_MOBILITY
+ mobilityInput.clear();mobilityOutput.clear();
+#endif
+}
 double spatial_body_terrain_cache_hits(){return double(terrainCacheHits);}
 double spatial_body_terrain_cache_misses(){return double(terrainCacheMisses);}
 int spatial_body_terrain_cache_entries(){size_t count=0;for(const auto& cache:terrainEdges)count+=cache.values.size();return int(count);}
@@ -189,6 +197,40 @@ int spatial_body_segment_clear(double id,double ax,double az,double bx,double bz
  }
  return 1;
 }
+#ifdef WILD_CENTRAL_MOBILITY
+// Experimental ordered single-segment batch. It is not a path planner,
+// traffic coordinator, authoritative game state or production entry point.
+// Input rows: body ID, target X/Z, maximum distance, navigation profile.
+// Output rows: ID, status (0 blocked, 1 advanced, 2 arrived), X/Z, distance.
+double* spatial_mobility_input_ptr(int count){
+ if(count<0||count>4096)return nullptr;
+ mobilityInput.resize(size_t(count)*5);return mobilityInput.data();
+}
+const double* spatial_mobility_output_ptr(){return mobilityOutput.data();}
+int spatial_mobility_step(int count){
+ mobilityOutput.clear();
+ if(count<0||count>4096||mobilityInput.size()!=size_t(count)*5)return -1;
+ std::unordered_set<uint64_t> seen;
+ for(int i=0;i<count;i++){
+  const size_t at=size_t(i)*5;const double id=mobilityInput[at],x=mobilityInput[at+1],z=mobilityInput[at+2],distance=mobilityInput[at+3],profile=mobilityInput[at+4];
+  if(!validId(id)||!std::isfinite(x)||!std::isfinite(z)||std::abs(x)>2147483000.0||std::abs(z)>2147483000.0||!std::isfinite(distance)||distance<0||distance>1000000||!std::isfinite(profile)||std::floor(profile)!=profile||profile<0||profile>=6||!bodies.count(uint64_t(id))||!seen.insert(uint64_t(id)).second)return -1;
+ }
+ const int previous=lazy_selected_context();
+ for(int i=0;i<count;i++)if(spatial_select_nav_profile_index(int(mobilityInput[size_t(i)*5+4]))<=0){spatial_select_nav_profile_index(previous);return -2;}
+ mobilityOutput.reserve(size_t(count)*5);
+ for(int i=0;i<count;i++){
+  const size_t at=size_t(i)*5;const double id=mobilityInput[at],gx=mobilityInput[at+1],gz=mobilityInput[at+2],budget=mobilityInput[at+3];
+  spatial_select_nav_profile_index(int(mobilityInput[at+4]));const Body body=bodies.at(uint64_t(id));
+  const double dx=gx-body.x,dz=gz-body.z,length=std::hypot(dx,dz),travel=std::min(length,budget);
+  if(budget==0){mobilityOutput.insert(mobilityOutput.end(),{id,1,body.x,body.z,0});continue;}
+  const double nx=length?body.x+dx*(travel/length):body.x,nz=length?body.z+dz*(travel/length):body.z;
+  const bool clear=terrainSegment(body.x,body.z,nx,nz)&&spatial_body_segment_clear(id,body.x,body.z,nx,nz,-1)==1;
+  if(clear&&travel>0)spatial_body_upsert(id,nx,nz,body.r,body.kind,body.flags);
+  mobilityOutput.insert(mobilityOutput.end(),{id,clear?(travel>=length?2.0:1.0):0.0,clear?nx:body.x,clear?nz:body.z,clear?travel:0.0});
+ }
+ spatial_select_nav_profile_index(previous);return count;
+}
+#endif
 // Experimental local detour; callers select the appropriate native navigation
 // profile before invoking it. Returns -1 for invalid inputs, 0 when no route
 // exists, otherwise the number of point pairs exposed through the result ptr.

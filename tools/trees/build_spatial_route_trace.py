@@ -31,7 +31,11 @@ if declarative_stats:
         raise ValueError('SPATIAL_DECLARATIVE_STATS requires SPATIAL_DECLARATIVE_ATTACK')
     exports += ['_nav_declarative_attack_wake_reset', '_nav_declarative_attack_wake_events', '_nav_declarative_attack_wake_visits',
                 '_nav_declarative_attack_wake_idle', '_nav_declarative_attack_wake_transitions']
+central_mobility = os.environ.get('SPATIAL_CENTRAL_MOBILITY') == '1'
+if central_mobility:
+    exports += ['_spatial_mobility_input_ptr', '_spatial_mobility_output_ptr', '_spatial_mobility_step', '_lazy_selected_context']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
+exports = list(dict.fromkeys(exports))
 compiler = os.environ.get('EMXX', 'em++')
 export_file = Path(output + '.exports.json')
 export_file.parent.mkdir(parents=True, exist_ok=True)
@@ -45,6 +49,8 @@ if declarative_attack:
     flags.append('-DWILD_DECLARATIVE_ATTACK')
 if declarative_stats:
     flags.append('-DWILD_DECLARATIVE_STATS')
+if central_mobility:
+    flags.append('-DWILD_CENTRAL_MOBILITY')
 if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
     flags.append('-DWILD_PROFILE_TWO_PASS')
 command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),
