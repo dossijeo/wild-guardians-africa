@@ -1,0 +1,37 @@
+{
+  "scope": "Native route comparison on one saved raid actor; controlled wall added at an approach and removed, empty transient bodies and leases. Retry schedule, if enabled, is compared with a direct implementation of the current timing policy, not a full simulation or performance measurement.",
+  "waitTest": true,
+  "equal": true,
+  "initialTarget": 4851,
+  "initialApproach": [
+    93.64799499511719,
+    10.352812767028809
+  ],
+  "blocked": 3,
+  "reason": 2,
+  "retries": [
+    {
+      "time": 8,
+      "result": 3
+    },
+    {
+      "time": 24,
+      "result": 3
+    },
+    {
+      "time": 56,
+      "result": 3
+    },
+    {
+      "time": 90,
+      "result": 9
+    }
+  ],
+  "target": 4851,
+  "points": [
+    94,
+    11,
+    93.64799499511719,
+    10.352812767028809
+  ]
+}

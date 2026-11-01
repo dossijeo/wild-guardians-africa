@@ -5,7 +5,7 @@ import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game
 import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 
 const binary=process.env.DECLARATIVE_ATTACK_WASM;if(!binary)throw Error('Set DECLARATIVE_ATTACK_WASM');
-const module=new WebAssembly.Module(fs.readFileSync(binary)),source=gunzipSync(fs.readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString();
+const module=new WebAssembly.Module(fs.readFileSync(binary)),source=gunzipSync(fs.readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString(),waitTest=process.env.DECLARATIVE_WAIT_TEST==='1';
 function run(declarative){
  const game=deserialize(source),loaded=new Map(),session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:d=>loaded.set(`${d.cx},${d.cz}`,d)}),wasm=session.core.wasm;
  try{
@@ -23,6 +23,20 @@ function run(declarative){
   if(wasm.nav_intent_actor(id)!==1)throw Error('Unknown route lost the underlying attack');
   const waiting=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10));if(waiting[1]!==3||waiting[3]!==first[1])throw Error('Unknown route lost its target');
   if(declarative&&wasm.nav_declarative_attack_reconcile(id,animal.x,animal.z,1,0,0)!==5)throw Error('Unchanged unknown route was polled');
+  const retries=[];
+  if(waitTest){
+   if(declarative&&wasm.nav_declarative_attack_begin_wait(id,0)!==1)throw Error('Could not schedule bounded retry');
+   for(const time of [8,24,56,90]){
+    if(declarative){
+     if(wasm.nav_declarative_attack_next_deadline()!==time||wasm.nav_declarative_attack_next_due(time-.001)!==0||wasm.nav_declarative_attack_next_due(time)!==id)throw Error('Incorrect retry deadline');
+     const before=wasm.nav_intent_actor_planning_calls(id);if(wasm.nav_declarative_attack_service_wait(id,time-.001,animal.x,animal.z,1,0,0)!==5||wasm.nav_intent_actor_planning_calls(id)!==before)throw Error('Premature retry');
+     const result=wasm.nav_declarative_attack_service_wait(id,time,animal.x,animal.z,1,0,0);retries.push({time,result});
+    }else if(time===90)retries.push({time,result:9});
+    else{if(wasm.nav_intent_request_reroute(id)!==1)throw Error('Reference retry request rejected');retries.push({time,result:wasm.nav_intent_replan_attack_route(id,animal.x,animal.z,first[2],first[3])});}
+   }
+   if(retries.some((r,i)=>r.result!==(i===3?9:3)))throw Error('Unexpected retry or timeout result');
+   if(declarative&&wasm.nav_declarative_attack_next_deadline()!==Infinity)throw Error('Expired timer was retained');
+  }
   if(!session.core.removeWall(wall))throw Error('Barrier removal failed');session.actorSectorRevision(options);
   if(wasm.nav_intent_reconcile_topology()!==1)throw Error('Unknown route did not become pending after event');
   const status=declarative?wasm.nav_declarative_attack_reconcile(id,animal.x,animal.z,1,0,0):wasm.nav_intent_replan_attack_route(id,animal.x,animal.z,first[2],first[3]);
@@ -30,8 +44,8 @@ function run(declarative){
   const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10)),count=wasm.nav_intent_route_points(row[4],row[5],row[6]);
   if(count<=0)throw Error('Replacement has no route');
   if(declarative&&wasm.nav_declarative_attack_present(id)!==1)throw Error('Attack declaration did not survive');
-  return {initialTarget:first[1],initialApproach:first.slice(2,4),blocked,reason,target:row[3],points:Array.from(new Float32Array(wasm.memory.buffer,wasm.nav_intent_route_ptr(row[4],row[5],row[6]),count*2))};
+  return {initialTarget:first[1],initialApproach:first.slice(2,4),blocked,reason,retries,target:row[3],points:Array.from(new Float32Array(wasm.memory.buffer,wasm.nav_intent_route_ptr(row[4],row[5],row[6]),count*2))};
  }finally{session.dispose();}
 }
 const reference=run(false),candidate=run(true);if(JSON.stringify(reference)!==JSON.stringify(candidate))throw Error('Blocked-access reconsideration differs');
-const result={scope:'Native route comparison on one saved raid actor; controlled wall added at an approach and removed, empty transient bodies and leases. Not a complete simulation or performance measurement.',equal:true,...reference};console.log(JSON.stringify(result,null,2));if(process.env.OUTPUT)fs.writeFileSync(process.env.OUTPUT,JSON.stringify(result,null,2)+'\n');
+const result={scope:'Native route comparison on one saved raid actor; controlled wall added at an approach and removed, empty transient bodies and leases. Retry schedule, if enabled, is compared with a direct implementation of the current timing policy, not a full simulation or performance measurement.',waitTest,equal:true,...reference};console.log(JSON.stringify(result,null,2));if(process.env.OUTPUT)fs.writeFileSync(process.env.OUTPUT,JSON.stringify(result,null,2)+'\n');

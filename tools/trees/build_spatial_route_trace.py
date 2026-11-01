@@ -21,7 +21,9 @@ if sector_changes:
 declarative_attack = os.environ.get('SPATIAL_DECLARATIVE_ATTACK') == '1'
 if declarative_attack:
     exports += ['_nav_declarative_attack_declare', '_nav_declarative_attack_present',
-                '_nav_declarative_attack_reconcile', '_nav_declarative_attack_cancel']
+                '_nav_declarative_attack_reconcile', '_nav_declarative_attack_cancel',
+                '_nav_declarative_attack_next_deadline', '_nav_declarative_attack_next_due',
+                '_nav_declarative_attack_begin_wait', '_nav_declarative_attack_service_wait']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
 compiler = os.environ.get('EMXX', 'em++')
 export_file = Path(output + '.exports.json')
