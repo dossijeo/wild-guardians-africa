@@ -1,0 +1,58 @@
+{
+  "scope": "Node WASM replay of one captured raid, reconstructed 5x5 resident chunks, original event order and navigation profiles. Includes JS bridge and result allocations, excludes complete simulation and GPU.",
+  "binarySha256": [
+    "e4dc46ecb3476ce10b4f1e4c1dcc71a14e74675a35c0eff894db72a6c3a42fe5",
+    "e4dc46ecb3476ce10b4f1e4c1dcc71a14e74675a35c0eff894db72a6c3a42fe5"
+  ],
+  "events": 10144,
+  "queries": 3046,
+  "parity": true,
+  "blocks": [
+    {
+      "kind": "baseline",
+      "ms": 866.7373000000002
+    },
+    {
+      "kind": "candidate",
+      "ms": 865.6958999999997
+    },
+    {
+      "kind": "candidate",
+      "ms": 874.7793999999994
+    },
+    {
+      "kind": "baseline",
+      "ms": 869.4789000000001
+    }
+  ],
+  "profile": {
+    "newFound": {
+      "count": 606,
+      "totalMs": 164.96029999999337,
+      "p95": 0.8087000000004991,
+      "p99": 1.8575000000000728,
+      "max": 2.8608000000003813
+    },
+    "newFailed": {
+      "count": 1207,
+      "totalMs": 349.12269999998625,
+      "p95": 0.827899999998408,
+      "p99": 1.8235999999997148,
+      "max": 3.759399999999914
+    },
+    "repeatFailed": {
+      "count": 1222,
+      "totalMs": 356.6693999999916,
+      "p95": 1.0153000000009342,
+      "p99": 1.5460999999995693,
+      "max": 2.7130999999999403
+    },
+    "repeatFound": {
+      "count": 11,
+      "totalMs": 8.251800000000912,
+      "p95": 1.4057999999995445,
+      "p99": 1.4057999999995445,
+      "max": 1.4057999999995445
+    }
+  }
+}
