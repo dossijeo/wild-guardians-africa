@@ -37,6 +37,27 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ window.runWorkerContentionAudit=async mode=>{
+  if(!['idle','worker'].includes(mode))throw Error('Invalid contention mode');
+  const backend=new Worker(new URL('./mobility-worker-budget.js',import.meta.url),{type:'module'}),requests=new Map();let requestId=0;
+  try{
+   await new Promise((resolve,reject)=>{backend.onerror=e=>reject(Error(e.message));backend.onmessage=e=>{const row=e.data;if(row.kind==='ready')resolve();else if(row.kind==='error'){const p=requests.get(row.id);if(p){requests.delete(row.id);p.reject(Error(row.error));}else reject(Error(row.error));}else{const p=requests.get(row.id);if(p){requests.delete(row.id);p.resolve(row);}}};});
+   const send=message=>new Promise((resolve,reject)=>{const id=++requestId;requests.set(id,{resolve,reject});backend.postMessage({...message,id});});
+   const frames=[],jobs=[],timer=new GpuTimer(gl,64);let start=null,last=null,next=500,busy=false,frame=0;
+   await new Promise((resolve,reject)=>{
+    const draw=now=>{try{
+     if(start===null)start=now;if(last!==null)frames.push({start:last,end:now,dt:now-last});last=now;
+     if(mode==='worker'&&now-start>=next&&next<=6500&&!busy){next+=600;busy=true;const requestedAt=performance.now();send({kind:'start'}).then(()=>send({kind:'run',count:700,final:true})).then(result=>{jobs.push({requestedAt,receivedAt:performance.now(),startedAt:result.startedEpoch-performance.timeOrigin,finishedAt:result.finishedEpoch-performance.timeOrigin,workerMs:result.elapsed,hash:result.hash,queries:result.queries});busy=false;}).catch(reject);}
+     clock.value=(now-start)/1000;const timed=timer.begin(frame++);renderer.render(scene,camera);if(timed)timer.end();
+     if(now-start>=8000&&!busy){resolve();return;}requestAnimationFrame(draw);
+    }catch(error){reject(error);}};requestAnimationFrame(draw);
+   });
+   for(let i=0;i<30&&timer.pending.length;i++){await new Promise(requestAnimationFrame);timer.poll();}const gpu=timer.report();timer.dispose();
+   const overlap=row=>jobs.some(job=>row.end>=job.startedAt&&row.start<=job.finishedAt),summary=rows=>{const values=rows.map(row=>row.dt);return {count:values.length,p95:percentile(values,.95),p99:percentile(values,.99),max:values.length?Math.max(...values):null,over50:values.filter(n=>n>50).length};};
+   if(mode==='worker'&&(jobs.length!==11||jobs.some(j=>j.queries!==700||j.hash!==jobs[0].hash)))throw Error('Invalid worker workload');
+   return {mode,device,frames:summary(frames),overlapping:summary(frames.filter(overlap)),nonOverlapping:summary(frames.filter(row=>!overlap(row))),jobs,gpu:{reason:gpu.reason,samples:gpu.samples.length,p95:percentile(gpu.samples.map(s=>s.ms),.95),p99:percentile(gpu.samples.map(s=>s.ms),.99),discarded:gpu.discarded},scope:'8-second isolated WebGL lab; 11 synthetic batches of 700 real native route queries in a Worker or idle control. Frame overlap is temporal, not proof of cause.'};
+  }finally{backend.terminate();}
+ };
  window.runWorkerBudgetExperiment=async(mode,count)=>{
   if(!['full','sliced'].includes(mode)||![450,700].includes(count))throw Error('Invalid budget experiment');
   const backend=new Worker(new URL('./mobility-worker-budget.js',import.meta.url),{type:'module'}),requests=new Map();let requestId=0;
