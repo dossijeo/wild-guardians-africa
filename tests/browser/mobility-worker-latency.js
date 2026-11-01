@@ -37,6 +37,21 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ window.runWorkerBudgetExperiment=async(mode,count)=>{
+  if(!['full','sliced'].includes(mode)||![450,700].includes(count))throw Error('Invalid budget experiment');
+  const backend=new Worker(new URL('./mobility-worker-budget.js',import.meta.url),{type:'module'}),requests=new Map();let requestId=0;
+  try{
+   await new Promise((resolve,reject)=>{backend.onerror=e=>reject(Error(e.message));backend.onmessage=e=>{const row=e.data;if(row.kind==='ready')resolve();else if(row.kind==='error'){const p=requests.get(row.id);if(p){requests.delete(row.id);p.reject(Error(row.error));}else reject(Error(row.error));}else{const p=requests.get(row.id);if(p){requests.delete(row.id);p.resolve(row);}}};});
+   const send=message=>new Promise((resolve,reject)=>{const id=++requestId;requests.set(id,{resolve,reject});backend.postMessage({...message,id});});
+   let active=true,last=null,frameStart=null;const frames=[];
+   const draw=now=>{if(!active)return;if(frameStart===null)frameStart=now;if(last!==null)frames.push(now-last);last=now;clock.value=(now-frameStart)/1000;renderer.render(scene,camera);requestAnimationFrame(draw);};requestAnimationFrame(draw);
+   await new Promise(resolve=>setTimeout(resolve,300));await send({kind:'start'});
+   const start=performance.now();let result,remaining=count,workerMs=0,slices=0;
+   while(remaining){if(mode==='sliced')await new Promise(requestAnimationFrame);const amount=mode==='full'?remaining:Math.min(100,remaining);remaining-=amount;result=await send({kind:'run',count:amount,final:remaining===0});workerMs+=result.elapsed;slices++;}
+   const latencyMs=performance.now()-start;await new Promise(resolve=>setTimeout(resolve,300));active=false;
+   return {mode,count,latencyMs,workerMs,slices,queries:result.queries,found:result.found,unknown:result.unknown,hash:result.hash,frames:frames.length,intervals:{p95:percentile(frames,.95),p99:percentile(frames,.99),max:Math.max(...frames)},device,scope:'Synthetic fixed set of real native route queries; sliced mode waits for a render callback between batches, not an existing production scheduler.'};
+  }finally{backend.terminate();}
+ };
  // A synthetic external invalidation can be delivered while the planner is busy.
  // It does not establish when real world changes become authoritative.
  window.runMobilityWorkerInvalidationExperiment=async()=>{
