@@ -1,0 +1,319 @@
+{
+  "results": [
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "requestedAt": 1116.9100000038743,
+      "started": 1117.31982421875,
+      "build": {
+        "kind": "build-result",
+        "accepted": true,
+        "version": 0,
+        "value": true,
+        "elapsed": 123.56499999761581,
+        "at": 1793573835539.76,
+        "finishedAt": 1240.889892578125,
+        "acceptedByReference": false
+      },
+      "mutationCompletedAt": 1157.4100000038743,
+      "expected": [
+        true,
+        false
+      ],
+      "responses": [
+        {
+          "kind": "query-result",
+          "requestId": "future",
+          "accepted": false,
+          "reason": "gap",
+          "version": 0
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "add-a",
+          "accepted": true,
+          "version": 1,
+          "value": 95
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "duplicate",
+          "accepted": false,
+          "reason": "stale",
+          "version": 1
+        },
+        {
+          "kind": "query-result",
+          "requestId": "too-early",
+          "accepted": false,
+          "reason": "gap",
+          "version": 1
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "gap",
+          "accepted": false,
+          "reason": "gap",
+          "version": 1
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "add-b",
+          "accepted": true,
+          "version": 2,
+          "value": 96
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "remove-a",
+          "accepted": true,
+          "version": 3,
+          "value": 95
+        },
+        {
+          "kind": "query-result",
+          "requestId": "final",
+          "accepted": true,
+          "version": 3,
+          "value": [
+            true,
+            false
+          ]
+        },
+        {
+          "kind": "query-result",
+          "requestId": "old",
+          "accepted": false,
+          "reason": "stale",
+          "version": 3
+        },
+        {
+          "kind": "query-result",
+          "requestId": "session",
+          "accepted": false,
+          "reason": "session",
+          "version": 3
+        }
+      ],
+      "scope": "Two private Wild Engine worlds with three manually ordered native barrier edits and simulated delivery faults while a cold profile builds. No real game events, recovery protocol, rendering, physical movement or authoritative production state."
+    },
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "requestedAt": 762.4249999970198,
+      "started": 762.844970703125,
+      "build": {
+        "kind": "build-result",
+        "accepted": true,
+        "version": 0,
+        "value": true,
+        "elapsed": 116.95499999821186,
+        "at": 1793573836722.17,
+        "finishedAt": 879.809814453125,
+        "acceptedByReference": false
+      },
+      "mutationCompletedAt": 803.5399999991059,
+      "expected": [
+        true,
+        false
+      ],
+      "responses": [
+        {
+          "kind": "query-result",
+          "requestId": "future",
+          "accepted": false,
+          "reason": "gap",
+          "version": 0
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "add-a",
+          "accepted": true,
+          "version": 1,
+          "value": 95
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "duplicate",
+          "accepted": false,
+          "reason": "stale",
+          "version": 1
+        },
+        {
+          "kind": "query-result",
+          "requestId": "too-early",
+          "accepted": false,
+          "reason": "gap",
+          "version": 1
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "gap",
+          "accepted": false,
+          "reason": "gap",
+          "version": 1
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "add-b",
+          "accepted": true,
+          "version": 2,
+          "value": 96
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "remove-a",
+          "accepted": true,
+          "version": 3,
+          "value": 95
+        },
+        {
+          "kind": "query-result",
+          "requestId": "final",
+          "accepted": true,
+          "version": 3,
+          "value": [
+            true,
+            false
+          ]
+        },
+        {
+          "kind": "query-result",
+          "requestId": "old",
+          "accepted": false,
+          "reason": "stale",
+          "version": 3
+        },
+        {
+          "kind": "query-result",
+          "requestId": "session",
+          "accepted": false,
+          "reason": "session",
+          "version": 3
+        }
+      ],
+      "scope": "Two private Wild Engine worlds with three manually ordered native barrier edits and simulated delivery faults while a cold profile builds. No real game events, recovery protocol, rendering, physical movement or authoritative production state."
+    },
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "requestedAt": 772.7850000038743,
+      "started": 773.2197265625,
+      "build": {
+        "kind": "build-result",
+        "accepted": true,
+        "version": 0,
+        "value": true,
+        "elapsed": 117.85999999940395,
+        "at": 1793573837896.1948,
+        "finishedAt": 891.084716796875,
+        "acceptedByReference": false
+      },
+      "mutationCompletedAt": 812.9949999973178,
+      "expected": [
+        true,
+        false
+      ],
+      "responses": [
+        {
+          "kind": "query-result",
+          "requestId": "future",
+          "accepted": false,
+          "reason": "gap",
+          "version": 0
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "add-a",
+          "accepted": true,
+          "version": 1,
+          "value": 95
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "duplicate",
+          "accepted": false,
+          "reason": "stale",
+          "version": 1
+        },
+        {
+          "kind": "query-result",
+          "requestId": "too-early",
+          "accepted": false,
+          "reason": "gap",
+          "version": 1
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "gap",
+          "accepted": false,
+          "reason": "gap",
+          "version": 1
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "add-b",
+          "accepted": true,
+          "version": 2,
+          "value": 96
+        },
+        {
+          "kind": "edit-result",
+          "requestId": "remove-a",
+          "accepted": true,
+          "version": 3,
+          "value": 95
+        },
+        {
+          "kind": "query-result",
+          "requestId": "final",
+          "accepted": true,
+          "version": 3,
+          "value": [
+            true,
+            false
+          ]
+        },
+        {
+          "kind": "query-result",
+          "requestId": "old",
+          "accepted": false,
+          "reason": "stale",
+          "version": 3
+        },
+        {
+          "kind": "query-result",
+          "requestId": "session",
+          "accepted": false,
+          "reason": "session",
+          "version": 3
+        }
+      ],
+      "scope": "Two private Wild Engine worlds with three manually ordered native barrier edits and simulated delivery faults while a cold profile builds. No real game events, recovery protocol, rendering, physical movement or authoritative production state."
+    }
+  ]
+}
