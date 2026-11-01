@@ -1,0 +1,158 @@
+{
+  "scope": "Geometric overlap of output polylines in 12-unit sectors; one synthetic savanna fixture. Does not expose search graph expansions, component identity, obstacle dependencies or runtime cost.",
+  "sectorSize": 12,
+  "groups": [
+    {
+      "group": [
+        "warthog",
+        "warthog"
+      ],
+      "paths": [
+        {
+          "id": "animal-368",
+          "species": "warthog",
+          "sectors": [
+            "6,-10",
+            "6,-9"
+          ]
+        },
+        {
+          "id": "animal-369",
+          "species": "warthog",
+          "sectors": [
+            "7,-10",
+            "7,-9"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "first": "animal-368",
+          "second": "animal-369",
+          "sameSpecies": true,
+          "shared": []
+        }
+      ]
+    },
+    {
+      "group": [
+        "lion",
+        "lion"
+      ],
+      "paths": [
+        {
+          "id": "animal-368",
+          "species": "lion",
+          "sectors": [
+            "6,-10",
+            "6,-9"
+          ]
+        },
+        {
+          "id": "animal-369",
+          "species": "lion",
+          "sectors": [
+            "7,-10",
+            "7,-9"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "first": "animal-368",
+          "second": "animal-369",
+          "sameSpecies": true,
+          "shared": []
+        }
+      ]
+    },
+    {
+      "group": [
+        "warthog",
+        "lion"
+      ],
+      "paths": [
+        {
+          "id": "animal-368",
+          "species": "warthog",
+          "sectors": [
+            "6,-10",
+            "6,-9"
+          ]
+        },
+        {
+          "id": "animal-369",
+          "species": "lion",
+          "sectors": [
+            "7,-10",
+            "7,-9"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "first": "animal-368",
+          "second": "animal-369",
+          "sameSpecies": false,
+          "shared": []
+        }
+      ]
+    },
+    {
+      "group": [
+        "warthog",
+        "warthog",
+        "warthog"
+      ],
+      "paths": [
+        {
+          "id": "animal-368",
+          "species": "warthog",
+          "sectors": [
+            "6,-10",
+            "6,-9"
+          ]
+        },
+        {
+          "id": "animal-369",
+          "species": "warthog",
+          "sectors": [
+            "7,-10",
+            "7,-9"
+          ]
+        },
+        {
+          "id": "animal-370",
+          "species": "warthog",
+          "sectors": [
+            "7,-10",
+            "7,-9"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "first": "animal-368",
+          "second": "animal-369",
+          "sameSpecies": true,
+          "shared": []
+        },
+        {
+          "first": "animal-368",
+          "second": "animal-370",
+          "sameSpecies": true,
+          "shared": []
+        },
+        {
+          "first": "animal-369",
+          "second": "animal-370",
+          "sameSpecies": true,
+          "shared": [
+            "7,-10",
+            "7,-9"
+          ]
+        }
+      ]
+    }
+  ]
+}
