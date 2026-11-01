@@ -2090,9 +2090,18 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   if(!lazy_init(sector))return 0;
   const int selectedX=chunkX,selectedZ=chunkZ;
   chunkRasters->clear();
+#ifdef WILD_PROFILE_TWO_PASS
+  for(const auto& [cx,cz]:loadedChunks){
+    populateChunk(cx,cz,false);buildActiveRaster();
+  }
+  for(const auto& [cx,cz]:loadedChunks){
+    populateChunk(cx,cz,false);commitActiveSectors();
+  }
+#else
   for(const auto& [cx,cz]:loadedChunks){
     populateChunk(cx,cz,false);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
   }
+#endif
   if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
   navReady=true;
   saveProfile();
