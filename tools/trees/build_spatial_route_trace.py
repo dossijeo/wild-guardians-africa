@@ -18,6 +18,10 @@ if sector_changes:
     exports += ['_lazy_sector_change_trace_clear', '_lazy_sector_change_trace_count',
                 '_lazy_sector_change_trace_ptr', '_lazy_selected_context',
                 '_spatial_world_segment_clear']
+declarative_attack = os.environ.get('SPATIAL_DECLARATIVE_ATTACK') == '1'
+if declarative_attack:
+    exports += ['_nav_declarative_attack_declare', '_nav_declarative_attack_present',
+                '_nav_declarative_attack_reconcile', '_nav_declarative_attack_cancel']
 output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
 compiler = os.environ.get('EMXX', 'em++')
 export_file = Path(output + '.exports.json')
@@ -28,6 +32,8 @@ sources = ['spatial-savanna.cpp', 'lazy-sectors.cpp', 'spatial-route-planner.cpp
 flags = (['-DWILD_ROUTE_TRACE'] if trace else [])
 if sector_changes:
     flags.append('-DWILD_SECTOR_CHANGE_TRACE')
+if declarative_attack:
+    flags.append('-DWILD_DECLARATIVE_ATTACK')
 if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
     flags.append('-DWILD_PROFILE_TWO_PASS')
 command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),

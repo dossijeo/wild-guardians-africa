@@ -138,6 +138,12 @@ struct IntentState {
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
+#ifdef WILD_DECLARATIVE_ATTACK
+  // Experimental high-level intent survives loss of its current route/target.
+  // Never used by the production binary.
+  struct AttackDeclaration {double radius;int profile;bool dirty;};
+  std::unordered_map<uint64_t,AttackDeclaration> attackDeclarations;
+#endif
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byBlockedCropGroup;
   std::vector<double> wallOpportunityActors;
@@ -298,6 +304,10 @@ void invalidateDependents(IntentState& s,const Change& change){
     const auto active=s.activeIntents.find(actor);
     if(active==s.activeIntents.end())continue;
     if(active->second.animal){
+#ifdef WILD_DECLARATIVE_ATTACK
+      const auto declaration=s.attackDeclarations.find(actor);
+      if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
       if(active->second.state==PlanningState::ActionActive){
         // A committed strike resolves against its original target ID at the
         // animation's damage frame. Its lease becomes stale, but the hit is
@@ -610,6 +620,9 @@ void nav_intent_reset(){
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+#ifdef WILD_DECLARATIVE_ATTACK
+  s.attackDeclarations.clear();
+#endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
   s.attackRouteInput.clear();s.attackBlockers.clear();
@@ -851,6 +864,10 @@ int nav_intent_apply_changes(double sequence,int count){
   for(const Change& change:parsed){
     if(change.kind==2||change.kind==5)s.cropProtection.erase(change.id);
     invalidateDependents(s,change);
+#ifdef WILD_DECLARATIVE_ATTACK
+    if(change.kind==2||change.kind==5)for(auto& [actor,declaration]:s.attackDeclarations)
+      if(!s.activeIntents.count(actor))declaration.dirty=true;
+#endif
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
       else if(change.kind==2){
@@ -1258,6 +1275,9 @@ double nav_intent_actor_planning_calls(double actorId){
 int nav_intent_retire_actor(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+#ifdef WILD_DECLARATIVE_ATTACK
+  s.attackDeclarations.erase(actor);
+#endif
   const auto active=s.activeIntents.find(actor);
   if(active!=s.activeIntents.end()){
     // The caller has already removed this actor from the confirmed game.
@@ -1387,6 +1407,10 @@ int nav_intent_reconcile_topology(){
   for(const auto& [actor,revision]:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
     if(intent.animal){
+#ifdef WILD_DECLARATIVE_ATTACK
+      const auto declaration=s.attackDeclarations.find(actor);
+      if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
       // A wall can invalidate the travel route without invalidating the
       // target or its exclusive lease. The caller supplies the animal's live
       // position at this event boundary for a same-target native reroute.
@@ -2046,6 +2070,57 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
 }
+#ifdef WILD_DECLARATIVE_ATTACK
+// The embedding supplies current actor position and the existing transient
+// collision/lease facts at an event boundary. No movement policy is replaced.
+int nav_declarative_attack_declare(double actorId,double x,double z,double radius,
+                                   int eligible,int blockers,int reserved){
+  IntentState& s=state();
+  if(!integer(actorId)||s.attackDeclarations.count(uint64_t(actorId)))return -2;
+  const int profile=lazy_selected_context();
+  const int result=nav_intent_plan_attack_crop(actorId,x,z,radius,eligible,blockers,reserved);
+  if(result>=0)s.attackDeclarations.emplace(uint64_t(actorId),
+    IntentState::AttackDeclaration{radius,profile,false});
+  return result;
+}
+int nav_declarative_attack_present(double actorId){
+  return integer(actorId)&&state().attackDeclarations.count(uint64_t(actorId))?1:0;
+}
+int nav_declarative_attack_reconcile(double actorId,double x,double z,
+                                     int eligible,int blockers,int reserved){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end())return -2;
+  if(!declaration->second.dirty)return 5;
+  if(lazy_selected_context()!=declaration->second.profile)return -3;
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()){
+    if(active->second.state==PlanningState::ActionActive)return 6;
+    if(active->second.state!=PlanningState::NeedsPlan)return 7;
+    const int result=nav_intent_replan_attack_route(actorId,x,z,
+      active->second.approachX,active->second.approachZ);
+    if(result>=0)declaration->second.dirty=false;
+    return result;
+  }
+  const int result=nav_intent_plan_attack_crop(actorId,x,z,
+    declaration->second.radius,eligible,blockers,reserved);
+  if(result>=0)declaration->second.dirty=false;
+  return result;
+}
+int nav_declarative_attack_cancel(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end())return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()&&active->second.state==PlanningState::ActionActive)return -2;
+  if(active!=s.activeIntents.end()){
+    releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
+  }
+  s.attackDeclarations.erase(actor);return 1;
+}
+#endif
 // Experimental complete wall proposal. Crop groups nominate only first
 // crossings of certified enclosures; the native route and attack-site lease
 // then confirm one physically reachable, unreserved wall in the same call.
@@ -2193,6 +2268,10 @@ int nav_intent_attack_finished(double actorId){
   if(found==s.activeIntents.end()||!found->second.animal||
      found->second.state!=PlanningState::ActionActive)return -1;
   const int tactical=found->second.tacticalPending?1:0;
+#ifdef WILD_DECLARATIVE_ATTACK
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);
   return tactical;
