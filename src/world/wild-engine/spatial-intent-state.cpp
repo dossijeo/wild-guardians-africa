@@ -2129,6 +2129,16 @@ int nav_declarative_attack_reconcile(double actorId,double x,double z,
     if(active->second.state!=PlanningState::NeedsPlan)return 7;
     const int result=nav_intent_replan_attack_route(actorId,x,z,
       active->second.approachX,active->second.approachZ);
+    if(result==3&&spatial_world_route_reason()==0){
+      // Only a definitive route failure releases this particular approach.
+      // Unknown connectors/sectors keep the lease and use bounded recovery.
+      clearAttackDeadline(s,actor);
+      releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
+      const int replacement=nav_intent_plan_attack_crop(actorId,x,z,
+        declaration->second.radius,eligible,blockers,reserved);
+      if(replacement>=0)declaration->second.dirty=false;
+      return replacement;
+    }
     if(result==1)clearAttackDeadline(s,actor);
     if(result>=0)declaration->second.dirty=false;
     return result;
@@ -2173,7 +2183,7 @@ int nav_declarative_attack_begin_wait(double actorId,double now){
   s.attackDeadlines.insert({wait.next,actor});return 1;
 }
 // 9 means the bounded wait expired; the caller retains authority for the
-// established retreat policy. 8 means a definitively blocked approach.
+// established retreat policy.
 int nav_declarative_attack_service_wait(double actorId,double now,double x,double z,
                                         int eligible,int blockers,int reserved){
   if(!integer(actorId)||!std::isfinite(now)||!coordinate(x)||!coordinate(z)||
@@ -2192,8 +2202,8 @@ int nav_declarative_attack_service_wait(double actorId,double now,double x,doubl
   wait.dirty=true;
   const int result=nav_declarative_attack_reconcile(actorId,x,z,eligible,blockers,reserved);
   if(result==1)return 1;
+  if(!s.activeIntents.count(actor)){clearAttackDeadline(s,actor);return result;}
   if(result!=3)return result;
-  if(spatial_world_route_reason()==0){clearAttackDeadline(s,actor);return 8;}
   s.attackDeadlines.erase({wait.next,actor});wait.attempts++;
   wait.next=std::min(wait.since+90,now+8*(1<<std::min(wait.attempts,3)));
   s.attackDeadlines.insert({wait.next,actor});return 3;
