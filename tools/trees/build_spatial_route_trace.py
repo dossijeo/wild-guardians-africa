@@ -17,7 +17,7 @@ sector_changes = os.environ.get('SPATIAL_SECTOR_CHANGE_TRACE') == '1'
 if sector_changes:
     exports += ['_lazy_sector_change_trace_clear', '_lazy_sector_change_trace_count',
                 '_lazy_sector_change_trace_ptr', '_lazy_selected_context',
-                '_spatial_world_segment_clear']
+                '_spatial_world_segment_clear', '_nav_intent_debug_route_clear']
 declarative_attack = os.environ.get('SPATIAL_DECLARATIVE_ATTACK') == '1'
 if declarative_attack:
     exports += ['_nav_declarative_attack_declare', '_nav_declarative_attack_present', '_nav_declarative_attack_adopt',

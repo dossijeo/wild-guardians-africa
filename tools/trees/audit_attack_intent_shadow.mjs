@@ -19,6 +19,7 @@ function run(audit){
   // the original WASM exports, and the native reconciliation always runs.
   if(audit)session.core.wasm={...raw,nav_intent_reconcile_topology(){
    if(!armed)return raw.nav_intent_reconcile_topology();
+   const shadowStarted=performance.now();
    const originalProfile=raw.lazy_selected_context(),indices=new Map(),actors=[];
    for(const [worker,list] of [[true,game.workers],[false,game.raid?.animals??[]]])for(const actor of list){
     const match=String(actor.id).match(/(\d+)$/);if(!match||raw.nav_intent_actor(Number(match[1]))!==1)continue;
@@ -33,12 +34,15 @@ function run(audit){
    const count=raw.lazy_sector_change_trace_count(),data=Array.from(new Int32Array(raw.memory.buffer,raw.lazy_sector_change_trace_ptr(),count*4)),events=[];
    for(let i=0;i<data.length;i+=4)events.push({profile:data[i],kind:data[i+1],x:data[i+2],z:data[i+3]});
    const candidates=new Set();for(const [profile,index] of indices){const relevant=events.filter(e=>e.profile===profile);for(const id of index.affected({complete:!relevant.some(e=>e.kind===0),sectors:relevant.filter(e=>e.kind!==0)}))candidates.add(id);}
-   const before=raw.nav_intent_change_count(),invalidated=raw.nav_intent_reconcile_topology(),after=raw.nav_intent_change_count();
+   const shadowInvalid=[];for(const actor of actors)if(candidates.has(actor.id)){const valid=raw.nav_intent_debug_route_clear(actor.id);if(valid<0)throw Error('Native diagnostic rejected a live route');if(!valid)shadowInvalid.push(actor.id);}
+   const shadowMs=performance.now()-shadowStarted;
+   const before=raw.nav_intent_change_count(),nativeStarted=performance.now(),invalidated=raw.nav_intent_reconcile_topology(),nativeMs=performance.now()-nativeStarted,after=raw.nav_intent_change_count();
    const changes=Array.from(new Float64Array(raw.memory.buffer,raw.nav_intent_change_ptr(),after*8));
    const invalidIds=[];for(let i=before;i<after;i++)if(changes[i*8+1]===0)invalidIds.push(changes[i*8]);
    const untrackedInvalidIds=invalidIds.filter(id=>!actors.some(a=>a.id===id));
    const missed=invalidIds.filter(id=>actors.some(a=>a.id===id)&&!candidates.has(id));
-   records.push({actors:actors.length,unverified:actors.filter(a=>!a.verified).length,events:events.length,globalEvents:events.filter(e=>e.kind===0).length,candidates:candidates.size,invalidated,invalidIds,untrackedInvalidIds,missed});
+   const diagnosticEqual=JSON.stringify([...shadowInvalid].sort((a,b)=>a-b))===JSON.stringify([...invalidIds].sort((a,b)=>a-b));
+   records.push({actors:actors.length,unverified:actors.filter(a=>!a.verified).length,events:events.length,globalEvents:events.filter(e=>e.kind===0).length,candidates:candidates.size,invalidated,invalidIds,untrackedInvalidIds,missed,diagnosticEqual,shadowMs,nativeMs});
    raw.lazy_sector_change_trace_clear();return invalidated;
   }};
   const planner=createEventDrivenTaskPlanner(session),restored=planner.resetFromState(game),nav=createSpatialNavigationMovement(session,game),stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;
@@ -54,8 +58,9 @@ function run(audit){
   }finally{stopTasks();stopWorld();}
  }finally{session.dispose();}
 }
-const reference=run(false),candidate=run(true);
-if(reference.state!==candidate.state)throw Error('Shadow audit changed deterministic confirmed state');
-if(!candidate.records.length||candidate.records.some(row=>row.missed.length||row.untrackedInvalidIds.length))throw Error('Shadow audit missed or did not track a route invalidation');
-const result={scope:'One saved eight-animal raid advanced ten ticks; controlled barrier placed on an existing route, followed by twenty more ticks. Shadow diagnostics only; no timings or GPU.',stateEqual:true,restored:candidate.restored.restoredAnimalRoutes,animalId:candidate.animalId,point:candidate.point,targets:candidate.targets,invalidated:candidate.invalidated,records:candidate.records};
+const reference=run(false),runs=[],repetitions=Number(process.env.REPETITIONS??1);if(!Number.isInteger(repetitions)||repetitions<1||repetitions>30)throw Error('Invalid repetitions');
+for(let i=0;i<repetitions;i++)runs.push(run(true));const candidate=runs[0];
+if(runs.some(run=>reference.state!==run.state))throw Error('Shadow audit changed deterministic confirmed state');
+if(runs.some(run=>!run.records.length||run.records.some(row=>row.missed.length||row.untrackedInvalidIds.length||!row.diagnosticEqual)))throw Error('Shadow audit missed or did not track a route invalidation');
+const result={scope:'One saved eight-animal raid advanced ten ticks; independent sessions with a controlled barrier and twenty further ticks. Timings compare a JS shadow index and per-candidate native clearance probes against the subsequent full native reconcile; candidate does not perform required state updates. Existing route progress projection, event mutation, setup, rendering and GPU excluded. Shadow-first fixed order, not ABBA.',stateEqual:true,repetitions,restored:candidate.restored.restoredAnimalRoutes,animalId:candidate.animalId,point:candidate.point,targets:candidate.targets,invalidated:candidate.invalidated,records:runs.map(run=>run.records).flat()};
 console.log(JSON.stringify(result,null,2));if(process.env.OUTPUT)fs.writeFileSync(process.env.OUTPUT,JSON.stringify(result,null,2)+'\n');

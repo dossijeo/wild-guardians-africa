@@ -1395,6 +1395,19 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   }
   return true;
 }
+#ifdef WILD_SECTOR_CHANGE_TRACE
+// Diagnostic only: inspect the real pinned route/cursor without mutating it.
+int nav_intent_debug_route_clear(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)return -1;
+  const int previous=lazy_selected_context();
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(found->second.profile);
+  const bool clear=activeRouteClear(s,found->second);
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(previous);
+  return clear?1:0;
+}
+#endif
 // JS movement consumes a suffix of the pinned native route. At a topology
 // event, accept that progress only when every remaining point exactly matches
 // the native suffix. An unmatched JS path forces a conservative reroute at
