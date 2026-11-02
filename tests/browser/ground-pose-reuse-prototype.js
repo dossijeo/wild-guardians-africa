@@ -2,7 +2,7 @@ import {SkinnedMesh} from 'three';
 // Diagnostic only: attribute versions do not detect writes without needsUpdate.
 // Sample arrays and underlying buffer contents must remain immutable.
 export function createGroundPoseReuse(){
- const entries=new WeakMap(),stats={hits:0,misses:0,unsupported:0,checks:0,maxDifference:0};let mode='reference';
+ const entries=new WeakMap(),stats={hits:0,misses:0,bypassed:0,unsupported:0,checks:0,maxDifference:0};let mode='reference';
  function signature(data){
   const model=data.model,samples=data.groundSamples;if(!model||!samples?.length)return null;
   model.position.y=0;model.parent?.updateWorldMatrix(true,false);model.updateMatrixWorld(true);
@@ -18,12 +18,13 @@ export function createGroundPoseReuse(){
   return values;
  }
  const equal=(a,b)=>a?.length===b?.length&&a.every((v,i)=>Object.is(v,b[i]));
- function run(data,original){
+ function run(data,original,sampled){
   if(mode==='reference')return original(data);
+  if((mode==='candidate-sampled'||mode==='verify-sampled')&&sampled!==false){entries.delete(data);stats.bypassed++;return original(data);}
   const sig=signature(data),previous=entries.get(data);if(!sig){stats.unsupported++;return original(data);}
   const hit=previous&&equal(sig,previous.signature);if(hit)stats.hits++;else stats.misses++;
-  if(mode==='verify'||!hit){original(data);const value=data.model.position.y;if(hit){stats.checks++;stats.maxDifference=Math.max(stats.maxDifference,Math.abs(value-previous.y));}entries.set(data,{signature:sig,y:value});return;}
+  if(mode==='verify'||mode==='verify-sampled'||!hit){original(data);const value=data.model.position.y;if(hit){stats.checks++;stats.maxDifference=Math.max(stats.maxDifference,Math.abs(value-previous.y));}entries.set(data,{signature:sig,y:value});return;}
   data.model.position.y=previous.y;if(previous.y>0)data.model.updateMatrixWorld(true);
  }
- return {run,setMode(value){if(!['reference','candidate','verify'].includes(value))throw Error('Bad mode');mode=value;},reset(){for(const k of Object.keys(stats))stats[k]=0;},stats(){return {...stats};}};
+ return {run,setMode(value){if(!['reference','candidate','verify','candidate-sampled','verify-sampled'].includes(value))throw Error('Bad mode');mode=value;},reset(){for(const k of Object.keys(stats))stats[k]=0;},stats(){return {...stats};}};
 }
