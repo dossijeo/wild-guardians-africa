@@ -43,6 +43,9 @@ uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
 int lazy_stage_sector(int sx,int sz);
 int lazy_commit_sector(int sx,int sz);
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+void lazy_profile_compat_revisions(uint32_t count);
+#endif
 int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
 int lazy_component(int worldX,int worldZ);
@@ -2106,6 +2109,16 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   for(const auto& [cx,cz]:loadedChunks){
     populateChunk(cx,cz,false);commitActiveSectors();
   }
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+  // The old one-pass builder recommits four sectors for each shared border.
+  // Preserve its externally visible revision tokens without rebuilding them.
+  uint32_t omittedCommits=0;
+  for(const auto& [cx,cz]:loadedChunks){
+    if(chunkRasters->count(chunkKey(cx+1,cz)))omittedCommits+=4;
+    if(chunkRasters->count(chunkKey(cx,cz+1)))omittedCommits+=4;
+  }
+  lazy_profile_compat_revisions(omittedCommits);
+#endif
 #else
   for(const auto& [cx,cz]:loadedChunks){
     SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);

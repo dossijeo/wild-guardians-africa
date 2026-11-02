@@ -330,6 +330,14 @@ int lazy_select_context(int profile){
 }
 int lazy_selected_context(){return selectedContext;}
 uint32_t lazy_route_revision(){return active().routeRevision;}
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+// Experimental compatibility counter for omitted border recommits. This does
+// not claim those commits occurred; it preserves the existing revision tokens.
+void lazy_profile_compat_revisions(uint32_t count){
+  active().routeRevision+=count;
+  updates+=static_cast<int>(count);
+}
+#endif
 // A physical movement rejection is a route-search overlay, not a change to
 // confirmed world topology. It is scoped to the current movement profile and
 // cleared when that profile's graph changes. A cached route cannot hide it.
