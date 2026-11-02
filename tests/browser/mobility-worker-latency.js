@@ -40,6 +40,31 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ // Single cold tick of the same restored simulation, with real model rendering.
+ window.runColdTickRenderAudit=async mode=>{
+  if(!['main','worker'].includes(mode))throw Error('Invalid mode');
+  const {createSimulation}=await import('./mobility-worker-simulation-core.js');
+  let sim,backend,result=null,failed=null,requestAt=null,completedAt=null;
+  if(mode==='main')sim=await createSimulation({mangrove:true});
+  else{
+   backend=new Worker(new URL('./mobility-worker-cooperative.js',import.meta.url),{type:'module'});
+   await new Promise((resolve,reject)=>{backend.onerror=e=>reject(Error(e.message));backend.onmessage=({data:d})=>{if(d.kind==='ready')resolve();else if(d.kind==='error')reject(Error(d.error));};});
+   backend.onerror=e=>failed=e.message;
+   backend.onmessage=({data:d})=>{if(d.kind==='advance-result'){result=d;completedAt=performance.now();}else if(d.kind==='error')failed=d.error;};
+  }
+  const frames=[],timer=new GpuTimer(gl,64);let start=null,previous=null,frame=0;
+  try{
+   await new Promise((resolve,reject)=>{const draw=now=>{try{
+    if(failed)throw Error(failed);if(start===null)start=now;if(previous!==null)frames.push({start:previous,end:now,dt:now-previous});previous=now;
+    if(requestAt===null&&now-start>=500){requestAt=performance.now();if(mode==='main'){const tick=sim.advanceTick(.05);result={timings:[tick],state:sim.state()};completedAt=performance.now();}else backend.postMessage({session:'cooperative-test',sequence:1,request:1,action:'advance',steps:1,mode:'sync'});}
+    clock.value=(now-start)/1000;const timed=timer.begin(frame++);renderer.render(scene,camera);if(timed)timer.end();
+    if(now-start>=3000&&result){resolve();return;}if(now-start>15000)throw Error('Cold tick timeout');requestAnimationFrame(draw);
+   }catch(e){reject(e);}};requestAnimationFrame(draw);});
+   for(let i=0;i<30&&timer.pending.length;i++){await new Promise(requestAnimationFrame);timer.poll();}const gpu=timer.report();
+   const summary=rows=>{const values=rows.map(r=>r.dt);return {count:values.length,p95:percentile(values,.95),p99:percentile(values,.99),max:values.length?Math.max(...values):null};};
+   return {mode,device,frames:summary(frames),overlap:summary(frames.filter(r=>r.end>=requestAt&&r.start<=completedAt)),tickMs:result.timings[0],responseMs:completedAt-requestAt,snapshot:result.state.snapshot,gpu:{samples:gpu.samples.length,p95:percentile(gpu.samples.map(x=>x.ms),.95),p99:percentile(gpu.samples.map(x=>x.ms),.99),reason:gpu.reason}};
+  }finally{timer.dispose();sim?.dispose();backend?.terminate();}
+ };
  window.runGpuPauseAudit=async()=>{
   const backend=new Worker(new URL('./mobility-worker-commands.js',import.meta.url),{type:'module'});let failure=null,readyResolve,startedResolve,pausedResolve;
   const readyPromise=new Promise(resolve=>readyResolve=resolve),startedPromise=new Promise(resolve=>startedResolve=resolve),pausedPromise=new Promise(resolve=>pausedResolve=resolve);
