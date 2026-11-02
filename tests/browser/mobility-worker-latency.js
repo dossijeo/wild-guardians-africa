@@ -42,27 +42,30 @@ try{
  let nextId=1;
  // Single cold tick of the same restored simulation, with real model rendering.
  window.runColdTickRenderAudit=async mode=>{
-  if(!['main','worker'].includes(mode))throw Error('Invalid mode');
+  if(!['main','worker','main-idle','worker-idle'].includes(mode))throw Error('Invalid mode');
+  const isMain=mode.startsWith('main'),idle=mode.endsWith('-idle');
   const {createSimulation}=await import('./mobility-worker-simulation-core.js');
   let sim,backend,result=null,failed=null,requestAt=null,completedAt=null;
-  if(mode==='main')sim=await createSimulation({mangrove:true});
+  if(isMain)sim=await createSimulation({mangrove:true});
   else{
    backend=new Worker(new URL('./mobility-worker-cooperative.js',import.meta.url),{type:'module'});
    await new Promise((resolve,reject)=>{backend.onerror=e=>reject(Error(e.message));backend.onmessage=({data:d})=>{if(d.kind==='ready')resolve();else if(d.kind==='error')reject(Error(d.error));};});
    backend.onerror=e=>failed=e.message;
    backend.onmessage=({data:d})=>{if(d.kind==='advance-result'){result=d;completedAt=performance.now();}else if(d.kind==='error')failed=d.error;};
   }
-  const frames=[],timer=new GpuTimer(gl,64);let start=null,previous=null,frame=0;
+  const frames=[],renderTimes=[],timer=new GpuTimer(gl,64);let start=null,previous=null,frame=0;
   try{
    await new Promise((resolve,reject)=>{const draw=now=>{try{
     if(failed)throw Error(failed);if(start===null)start=now;if(previous!==null)frames.push({start:previous,end:now,dt:now-previous});previous=now;
-    if(requestAt===null&&now-start>=500){requestAt=performance.now();if(mode==='main'){const tick=sim.advanceTick(.05);result={timings:[tick],state:sim.state()};completedAt=performance.now();}else backend.postMessage({session:'cooperative-test',sequence:1,request:1,action:'advance',steps:1,mode:'sync'});}
-    clock.value=(now-start)/1000;const timed=timer.begin(frame++);renderer.render(scene,camera);if(timed)timer.end();
+    if(requestAt===null&&now-start>=500){requestAt=performance.now();if(idle){completedAt=requestAt;result={timings:[null],state:{snapshot:null}};}else if(isMain){const tick=sim.advanceTick(.05);result={timings:[tick],state:sim.state()};completedAt=performance.now();}else backend.postMessage({session:'cooperative-test',sequence:1,request:1,action:'advance',steps:1,mode:'sync'});}
+    clock.value=(now-start)/1000;renderTimes.push(performance.now());const timed=timer.begin(frame++);renderer.render(scene,camera);if(timed)timer.end();
     if(now-start>=3000&&result){resolve();return;}if(now-start>15000)throw Error('Cold tick timeout');requestAnimationFrame(draw);
    }catch(e){reject(e);}};requestAnimationFrame(draw);});
    for(let i=0;i<30&&timer.pending.length;i++){await new Promise(requestAnimationFrame);timer.poll();}const gpu=timer.report();
    const summary=rows=>{const values=rows.map(r=>r.dt);return {count:values.length,p95:percentile(values,.95),p99:percentile(values,.99),max:values.length?Math.max(...values):null};};
-   return {mode,device,frames:summary(frames),overlap:summary(frames.filter(r=>r.end>=requestAt&&r.start<=completedAt)),tickMs:result.timings[0],responseMs:completedAt-requestAt,snapshot:result.state.snapshot,gpu:{samples:gpu.samples.length,p95:percentile(gpu.samples.map(x=>x.ms),.95),p99:percentile(gpu.samples.map(x=>x.ms),.99),reason:gpu.reason}};
+   const gpuSummary=items=>({count:items.length,p50:percentile(items.map(x=>x.ms),.5),p95:percentile(items.map(x=>x.ms),.95),p99:percentile(items.map(x=>x.ms),.99)});
+   const groups={before:gpu.samples.filter(s=>renderTimes[s.frame]<requestAt),during:gpu.samples.filter(s=>renderTimes[s.frame]>=requestAt&&renderTimes[s.frame]<=completedAt),after:gpu.samples.filter(s=>renderTimes[s.frame]>completedAt)};
+   return {mode,device,frames:summary(frames),overlap:summary(frames.filter(r=>r.end>=requestAt&&r.start<=completedAt)),tickMs:result.timings[0],responseMs:completedAt-requestAt,snapshot:result.state.snapshot,gpu:{samples:gpu.samples.length,p95:percentile(gpu.samples.map(x=>x.ms),.95),p99:percentile(gpu.samples.map(x=>x.ms),.99),reason:gpu.reason,disjointEvents:gpu.disjointEvents,discarded:gpu.discarded,overflowSkipped:gpu.overflowSkipped,pending:gpu.pending,groups:Object.fromEntries(Object.entries(groups).map(([name,items])=>[name,gpuSummary(items)]))}};
   }finally{timer.dispose();sim?.dispose();backend?.terminate();}
  };
  window.runGpuPauseAudit=async()=>{
