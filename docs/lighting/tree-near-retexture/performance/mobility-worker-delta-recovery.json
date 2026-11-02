@@ -1,0 +1,49 @@
+{
+  "steps": 60,
+  "gaps": 1,
+  "recoveryBytes": 2222,
+  "eventCount": 1,
+  "eventTypes": [
+    "StructureRuined"
+  ],
+  "finalVersion": 60,
+  "finalProjectionEqual": true,
+  "wrongAckRejected": true,
+  "pending": 0,
+  "packetBytes": {
+    "count": 60,
+    "p50": 1467,
+    "p95": 1558,
+    "p99": 1607,
+    "max": 2645
+  },
+  "projectionBytes": {
+    "count": 60,
+    "p50": 2144,
+    "p95": 2159,
+    "p99": 2162,
+    "max": 2230
+  },
+  "buildMs": {
+    "count": 60,
+    "p50": 0.08500000834465027,
+    "p95": 0.13500000536441803,
+    "p99": 0.1550000011920929,
+    "max": 0.5850000083446503
+  },
+  "responseMs": {
+    "count": 60,
+    "p50": 1.155000001192093,
+    "p95": 3.1099999994039536,
+    "p99": 18.16500000655651,
+    "max": 26.685000002384186
+  },
+  "tickMs": {
+    "count": 60,
+    "p50": 0.3199999928474426,
+    "p95": 1.2000000029802322,
+    "p99": 7.989999994635582,
+    "max": 14.174999997019768
+  },
+  "scope": "One browser Worker and independent reference using saved savanna raid, 60 serial steps and damaged center; one deliberately dropped delta, snapshot recovery and cumulative event acknowledgment. JSON payload sizes, no byte cap, render, physics manager, production state or latency under realistic contention. Response includes reference tick on main thread."
+}
