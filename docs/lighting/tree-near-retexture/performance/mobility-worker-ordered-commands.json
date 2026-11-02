@@ -1,0 +1,65 @@
+{
+  "runs": [
+    {
+      "firstTickMs": 109.29500000178814,
+      "pauseLatencyMs": 125.7250000089407,
+      "firstCompletionAfterStartMs": 118.82500000298023,
+      "pauseAppliedAfterFirst": true,
+      "pausedElapsed": 6069.050000003834,
+      "resumedElapsed": 6069.100000003834,
+      "rejections": [
+        "sequence",
+        "sequence",
+        "session"
+      ],
+      "snapshotEqual": true,
+      "frames": {
+        "count": 99,
+        "p95": 33.379999999999654,
+        "p99": 33.4050000000002,
+        "max": 33.42000000000007
+      }
+    },
+    {
+      "firstTickMs": 119.11500000953674,
+      "pauseLatencyMs": 135.69000001251698,
+      "firstCompletionAfterStartMs": 128.25,
+      "pauseAppliedAfterFirst": true,
+      "pausedElapsed": 6069.050000003834,
+      "resumedElapsed": 6069.100000003834,
+      "rejections": [
+        "sequence",
+        "sequence",
+        "session"
+      ],
+      "snapshotEqual": true,
+      "frames": {
+        "count": 99,
+        "p95": 33.36500000000001,
+        "p99": 33.38500000000022,
+        "max": 33.4849999999999
+      }
+    },
+    {
+      "firstTickMs": 134.0549999922514,
+      "pauseLatencyMs": 152.11499999463558,
+      "firstCompletionAfterStartMs": 144.3699999898672,
+      "pauseAppliedAfterFirst": true,
+      "pausedElapsed": 6069.050000003834,
+      "resumedElapsed": 6069.100000003834,
+      "rejections": [
+        "sequence",
+        "sequence",
+        "session"
+      ],
+      "snapshotEqual": true,
+      "frames": {
+        "count": 99,
+        "p95": 33.38000000000011,
+        "p99": 33.434999999999945,
+        "max": 33.43500000000017
+      }
+    }
+  ],
+  "scope": "Edge headless; converted mangrove-islands fixture with nine synthetic chunks. One Worker owns a test simulation. Pause is queued after a cold tick begins, then resume and sequence rejections are tested. Simple canvas only; no production input, queue bound, recovery, priority, interrupt, collisions, physics manager, GPU timer or gameplay render."
+}

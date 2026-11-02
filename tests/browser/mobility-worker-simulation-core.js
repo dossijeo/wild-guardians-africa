@@ -1,5 +1,5 @@
 import {deserialize,serialize} from '../../src/persistence/snapshots.js';
-import {tick,observeGameEvents} from '../../src/simulation/game.js';
+import {tick,observeGameEvents,pause,resume} from '../../src/simulation/game.js';
 import {hitStructure} from '../../src/simulation/rules.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
@@ -35,6 +35,8 @@ export async function createSimulation({mangrove=false,snapshotSource=null,chunk
    return {snapshot,projection,projectionMs,timings,...(recorder?{motion}:{}),...(segmentTrace?{movementSegments}:{}),serializationMs,elapsed:game.elapsed,animals:game.raid?.animals.length??0,restored:restored.restoredAnimalRoutes,centerStatus:game.structures.find(s=>s.kind==='center')?.status,ruinedEvents:game.events.filter(e=>e.type==='StructureRuined').length};
   },
   damageCenter(){const center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!center||!hitStructure(center,center.hp,game.elapsed,game))throw Error('No intact center');nav.setState(game);},
+  pause(reason){pause(game,reason);},resume(reason){resume(game,reason);},
+  state(){return {elapsed:game.elapsed,pauses:[...game.pauses],snapshot:serialize(game)};},
   dispose(){stopEvents();stopTasks();stopWorld();session.dispose();}
  };
 }
