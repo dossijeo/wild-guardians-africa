@@ -1,0 +1,181 @@
+{
+  "runs": [
+    {
+      "mode": "snapshot",
+      "events": 12,
+      "responseMs": {
+        "count": 60,
+        "p50": 0.2150000035762787,
+        "p95": 0.3049999922513962,
+        "p99": 0.4350000023841858,
+        "max": 0.5499999970197678
+      },
+      "applyMs": {
+        "count": 60,
+        "p50": 0.06000000238418579,
+        "p95": 0.09000000357627869,
+        "p99": 0.10000000894069672,
+        "max": 0.38500000536441803
+      },
+      "buildMs": {
+        "count": 60,
+        "p50": 0.050000011920928955,
+        "p95": 0.06999999284744263,
+        "p99": 0.08500000834465027,
+        "max": 0.2449999898672104
+      },
+      "bytes": {
+        "count": 60,
+        "p50": 2516,
+        "p95": 2569,
+        "p99": 2570,
+        "max": 4209
+      },
+      "byteMeasurementMs": {
+        "count": 60,
+        "p50": 0.025000005960464478,
+        "p95": 0.040000006556510925,
+        "p99": 0.040000006556510925,
+        "max": 0.13500000536441803
+      }
+    },
+    {
+      "mode": "delta",
+      "events": 12,
+      "responseMs": {
+        "count": 60,
+        "p50": 0.23499999940395355,
+        "p95": 0.3099999874830246,
+        "p99": 0.35999999940395355,
+        "max": 0.7249999940395355
+      },
+      "applyMs": {
+        "count": 60,
+        "p50": 0.06000000238418579,
+        "p95": 0.08500000834465027,
+        "p99": 0.0949999988079071,
+        "max": 0.16500000655651093
+      },
+      "buildMs": {
+        "count": 60,
+        "p50": 0.08499999344348907,
+        "p95": 0.13500000536441803,
+        "p99": 0.1599999964237213,
+        "max": 0.5199999958276749
+      },
+      "bytes": {
+        "count": 60,
+        "p50": 2410,
+        "p95": 2741,
+        "p99": 2769,
+        "max": 4585
+      },
+      "byteMeasurementMs": {
+        "count": 60,
+        "p50": 0.02000001072883606,
+        "p95": 0.030000001192092896,
+        "p99": 0.030000001192092896,
+        "max": 0.03999999165534973
+      }
+    },
+    {
+      "mode": "delta",
+      "events": 12,
+      "responseMs": {
+        "count": 60,
+        "p50": 0.23499999940395355,
+        "p95": 0.2800000011920929,
+        "p99": 0.3200000077486038,
+        "max": 0.3200000077486038
+      },
+      "applyMs": {
+        "count": 60,
+        "p50": 0.06000000238418579,
+        "p95": 0.07999999821186066,
+        "p99": 0.0949999988079071,
+        "max": 0.10500000417232513
+      },
+      "buildMs": {
+        "count": 60,
+        "p50": 0.07999999821186066,
+        "p95": 0.10499998927116394,
+        "p99": 0.12000000476837158,
+        "max": 0.12999999523162842
+      },
+      "bytes": {
+        "count": 60,
+        "p50": 2410,
+        "p95": 2741,
+        "p99": 2769,
+        "max": 4585
+      },
+      "byteMeasurementMs": {
+        "count": 60,
+        "p50": 0.02000001072883606,
+        "p95": 0.025000005960464478,
+        "p99": 0.030000001192092896,
+        "max": 0.030000001192092896
+      }
+    },
+    {
+      "mode": "snapshot",
+      "events": 12,
+      "responseMs": {
+        "count": 60,
+        "p50": 0.20999999344348907,
+        "p95": 0.26000000536441803,
+        "p99": 0.3100000023841858,
+        "max": 0.3149999976158142
+      },
+      "applyMs": {
+        "count": 60,
+        "p50": 0.05500000715255737,
+        "p95": 0.07999999821186066,
+        "p99": 0.07999999821186066,
+        "max": 0.10999999940395355
+      },
+      "buildMs": {
+        "count": 60,
+        "p50": 0.04999999701976776,
+        "p95": 0.07500000298023224,
+        "p99": 0.09000000357627869,
+        "max": 0.10999999940395355
+      },
+      "bytes": {
+        "count": 60,
+        "p50": 2516,
+        "p95": 2569,
+        "p99": 2570,
+        "max": 4209
+      },
+      "byteMeasurementMs": {
+        "count": 60,
+        "p50": 0.025000005960464478,
+        "p95": 0.034999996423721313,
+        "p99": 0.040000006556510925,
+        "max": 0.04500000178813934
+      }
+    }
+  ],
+  "events": [
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable"
+  ],
+  "projectionsEqual": true,
+  "fixture": {
+    "animals": 20,
+    "chunks": 25,
+    "adaptedQaId": true
+  },
+  "scope": "One Edge headless session; 60 identical recorded projections restored from QA mangrove-islands scene with 20 synthetic animals and visible chunk keys; QA zero ID renamed. Snapshot/delta/delta/snapshot replay, one request at a time, 65536-byte JSON event cap and acknowledgments. JSON sizes are estimates; messages use structured clone, response includes byte-measurement instrumentation. No simultaneous simulation, render, physics manager, full game state, lost messages or integrated GPU."
+}
