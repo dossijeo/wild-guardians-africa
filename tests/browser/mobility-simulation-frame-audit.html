@@ -1,0 +1,17 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Simulación y fotogramas</title><body><canvas id="view" width="640" height="360"></canvas><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+window.audit=async mode=>{
+ const gl=document.querySelector('#view').getContext('webgl2');if(!gl)throw Error('WebGL2 unavailable');
+ let simulation,worker,ready;
+ if(mode==='main')simulation=await createSimulation();
+ else{worker=new Worker(new URL('./mobility-worker-simulation.js',import.meta.url),{type:'module'});ready=new Promise((resolve,reject)=>{worker.onerror=e=>reject(Error(e.message));worker.onmessage=e=>e.data.kind==='ready'?resolve():e.data.kind==='error'?reject(Error(e.data.error)):null;});await ready;}
+ const frames=[],started=performance.now();let sentAt,doneAt,result,pending;
+ const work=()=>{sentAt=performance.now();if(mode==='main'){result=simulation.run(100,.1,{full:false});doneAt=performance.now();}else{pending=new Promise((resolve,reject)=>{worker.onmessage=e=>e.data.kind==='result'?resolve(e.data):e.data.kind==='error'?reject(Error(e.data.error)):null;});worker.postMessage({kind:'run',id:1,steps:100,dt:.1,full:false});pending.then(value=>{result=value;doneAt=performance.now();});}};
+ try{
+  for(let i=0;i<120;i++){const t=await new Promise(requestAnimationFrame);frames.push(t);if(i===10)work();gl.clearColor(.15,.25,.35,1);gl.clear(gl.COLOR_BUFFER_BIT);}
+  if(pending)await pending;
+  const intervals=frames.slice(1).map((t,i)=>t-frames[i]),sorted=[...intervals].sort((a,b)=>a-b),p=q=>sorted[Math.floor((sorted.length-1)*q)];
+  return {mode,projection:result.projection,elapsed:result.elapsed,frames:{count:intervals.length,p95:p(.95),p99:p(.99),max:sorted.at(-1)},responseMs:doneAt-sentAt,firstTickMs:result.timings[0],totalMs:performance.now()-started};
+ }finally{simulation?.dispose();worker?.terminate();}
+};window.ready=true;
+</script></body></html>
