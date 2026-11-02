@@ -1,0 +1,47 @@
+{
+  "rows": [
+    {
+      "species": "warthog",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "skipped": 1000,
+      "equal": true
+    },
+    {
+      "species": "hyena",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "skipped": 8580,
+      "equal": true
+    },
+    {
+      "species": "buffalo",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "skipped": 43195,
+      "equal": true
+    },
+    {
+      "species": "lion",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "skipped": 6455,
+      "equal": true
+    },
+    {
+      "species": "rhino",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "skipped": 15786,
+      "equal": true
+    }
+  ],
+  "network": true,
+  "sceneErrors": [],
+  "scope": "Five original animal rigs, 100 deterministic modified poses per species, synthetic bone rotations and parent transforms including offsets of 10000; active morph and custom skinning exercise full-scan fallback. Compares exact minima with the same height sampler; no collision, actual impacts/recovery, geometry mutation, integrated rendering or numerical proof."
+}
