@@ -8,6 +8,15 @@ function fixture(){const camera=new THREE.PerspectiveCamera(42,1,.1,500);camera.
 test('loading audio handoff fires once before the first world presentation',async()=>{
  const {world,diorama,calls}=fixture(),cinema=new LoadingCinematic(world,diorama,{onHandoff:()=>calls.push('handoff')});cinema.step(.8);assert.equal(calls.includes('handoff'),false);cinema.step(.4);assert.deepEqual(calls.slice(-2),['handoff','world']);cinema.step(.3);assert.equal(calls.filter(c=>c==='handoff').length,1);cinema.cancel();
 });
+test('loading overlay ends at the sky before world handoff, even when a frame skips phases',()=>{
+ for(const step of [.8,3]){
+  const {world,diorama,calls}=fixture(),cinema=new LoadingCinematic(world,diorama,{onSky:()=>calls.push('hide-overlay'),onHandoff:()=>calls.push('handoff')});
+  cinema.step(.2);assert.equal(calls.includes('hide-overlay'),false);cinema.step(step);
+  assert.equal(calls.filter(x=>x==='hide-overlay').length,1);
+  if(step===3)assert.ok(calls.indexOf('hide-overlay')<calls.indexOf('handoff'));
+  cinema.step(.2);assert.equal(calls.filter(x=>x==='hide-overlay').length,1);cinema.cancel();
+ }
+});
 test('cinematic advances far presentation without advancing simulation',()=>{
  const {world,diorama}=fixture(),before=JSON.stringify(world.state),calls=[];
  world.render=(simulationDelta,farVisualDelta)=>calls.push([simulationDelta,farVisualDelta]);

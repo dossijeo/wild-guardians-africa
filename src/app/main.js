@@ -283,7 +283,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     await world.loadReady(prepareInitialFarWorld(world,{afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}}));assertLoading();
     await loadingDiorama.freezeForCinematic();assertLoading();
     progressQa?.cameraPose('before-cinematic',world);
-    loadingCinema=new LoadingCinematic(world,loadingDiorama,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,autoStart:false,onHandoff:()=>loadingAudio?.dispose()});
+    loadingCinema=new LoadingCinematic(world,loadingDiorama,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,autoStart:false,onSky:()=>{loadingOverlay?.dispose();loadingOverlay=null;},onHandoff:()=>loadingAudio?.dispose()});
     await loadingCinema.prepare({afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}});assertLoading();
     loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
     if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();

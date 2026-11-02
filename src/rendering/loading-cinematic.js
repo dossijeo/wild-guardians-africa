@@ -4,9 +4,9 @@ import {CameraBuildingRegistry} from './camera-building-registry.js';
 const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Camera poses are presentation-only and never written to simulation/save data.
 export class LoadingCinematic {
-  constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true,onHandoff=()=>{}}={}) {
+  constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true,onSky=()=>{},onHandoff=()=>{}}={}) {
     if(diorama.orbit&&!diorama.orbit.settled)throw Error('Loading orbit must settle before cinematic capture');
-    this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;this.onHandoff=onHandoff;this.handedOff=false;
+    this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;this.onSky=onSky;this.skyReached=false;this.onHandoff=onHandoff;this.handedOff=false;
     this.gameplay={eye:world.camera.position.clone(),quaternion:world.camera.quaternion.clone(),target:world.controls.target.clone()};
     // Raising above the existing opening eye preserves the same X/Z chunk
     // centre. Never ask the reveal to generate a different resident region.
@@ -51,6 +51,7 @@ export class LoadingCinematic {
     if(this.done||!this.armed)return;
     if(this.world.disposed||this.diorama.disposed)return this.cancel();
     this.time+=Math.max(0,dt);const [a,b,c,d]=this.durations,{world,diorama}=this;
+    if(this.time>=a&&!this.skyReached){this.skyReached=true;this.onSky();}
     diorama.loadingSky?.setGrade(1-ease(this.time/a));
     if(diorama.loadingSky)diorama.mist.uniforms.uLoadingTransition.value=1-ease(this.time/a);
     if(this.time<a){const t=ease(this.time/a);diorama.camera.fov=THREE.MathUtils.lerp(this.loadingFov,world.camera.fov,t);diorama.camera.updateProjectionMatrix();diorama.camera.position.lerpVectors(this.loadingEye,this.loadingSkyEye,t);diorama.camera.quaternion.slerpQuaternions(this.loadingQuaternion,this.skyQuaternion,t);diorama.render(dt,1,{ready:true});return;}
