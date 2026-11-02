@@ -17,7 +17,7 @@ export async function createSimulation({mangrove=false,snapshotSource=null,chunk
  const v=game.villages[0],cx=Math.floor((v.x+24)/48),cz=Math.floor((v.z+24)/48),bounds=mangrove?{xmin:cx-1,xmax:cx+1,zmin:cz-1,zmax:cz+1}:{xmin:1,xmax:3,zmin:-1,zmax:2};
  const chunks=chunkKeys??Array.from({length:bounds.zmax-bounds.zmin+1},(_,z)=>Array.from({length:bounds.xmax-bounds.xmin+1},(_,x)=>`${x+bounds.xmin},${z+bounds.zmin}`)).flat();
  if(!Array.isArray(chunks)||chunks.some(key=>typeof key!=='string'||!/^[-]?\d+,[-]?\d+$/.test(key)))throw TypeError('Invalid chunk keys');
- for(const key of chunks){const [x,z]=key.split(',').map(Number);if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(key,session.core.chunkPayload());}
+ for(const key of chunks){const [x,z]=key.split(',').map(Number);if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
  const planner=createEventDrivenTaskPlanner(session),restored=planner.resetFromState(game),nav=createSpatialNavigationMovement(session,game),stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;
  const recorder=motionTrace?observeCoordinateWrites([...game.workers,...(game.raid?.animals??[])],{stacks:motionTrace==='stacks'}):null;
  let segments=null;if(segmentTrace)nav.movementSegmentObserver=(actor,from,to)=>segments?.push({id:actor.id,from,to});
@@ -34,6 +34,7 @@ export async function createSimulation({mangrove=false,snapshotSource=null,chunk
    const start=performance.now(),snapshot=full?serialize(game):null,serializationMs=full?performance.now()-start:null;
    return {snapshot,projection,projectionMs,timings,...(recorder?{motion}:{}),...(segmentTrace?{movementSegments}:{}),serializationMs,elapsed:game.elapsed,animals:game.raid?.animals.length??0,restored:restored.restoredAnimalRoutes,centerStatus:game.structures.find(s=>s.kind==='center')?.status,ruinedEvents:game.events.filter(e=>e.type==='StructureRuined').length};
   },
+  diagnosticWorld(){return {game,nav};},
   damageCenter(){const center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!center||!hitStructure(center,center.hp,game.elapsed,game))throw Error('No intact center');nav.setState(game);},
   advanceTick(dt){if(recorder||segmentTrace||!Number.isFinite(dt)||dt<=0||dt>.1)throw Error('Invalid direct tick');const start=performance.now();tick(game,dt,nav);nav.serviceRaidConnectivityDemand?.();return performance.now()-start;},
   pause(reason){pause(game,reason);},resume(reason){resume(game,reason);},
