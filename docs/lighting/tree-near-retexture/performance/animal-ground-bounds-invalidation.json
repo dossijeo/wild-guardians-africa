@@ -1,0 +1,57 @@
+{
+  "rows": [
+    {
+      "species": "warthog",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "geometryFallback": true,
+      "bindFallback": true,
+      "skipped": 1000,
+      "equal": true
+    },
+    {
+      "species": "hyena",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "geometryFallback": true,
+      "bindFallback": true,
+      "skipped": 8580,
+      "equal": true
+    },
+    {
+      "species": "buffalo",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "geometryFallback": true,
+      "bindFallback": true,
+      "skipped": 43195,
+      "equal": true
+    },
+    {
+      "species": "lion",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "geometryFallback": true,
+      "bindFallback": true,
+      "skipped": 6455,
+      "equal": true
+    },
+    {
+      "species": "rhino",
+      "cases": 100,
+      "morphChecks": 20,
+      "customChecks": 15,
+      "geometryFallback": true,
+      "bindFallback": true,
+      "skipped": 15786,
+      "equal": true
+    }
+  ],
+  "network": true,
+  "sceneErrors": [],
+  "scope": "Five original animal rigs, 100 deterministic modified poses per species, synthetic bone rotations and parent transforms including offsets of 10000; active morph and custom skinning exercise full-scan fallback. Compares exact minima with the same height sampler; checks versioned position and bind changes force full scan. No collision, actual impacts/recovery, unversioned mutations, integrated rendering or numerical proof."
+}

@@ -20,7 +20,11 @@ export async function audit(world){
     if((morph||custom)&&candidate.skipped!==0)throw Error('Fallback did not perform full scan');skipped+=candidate.skipped;
     if(morph)morph[0]=oldMorph;if(custom)mesh.getVertexPosition=original;
    }
-   rows.push({species,cases:100,morphChecks,customChecks,skipped,equal:true});
+   // Geometry changed using Three's normal upload/version contract.
+   const position=mesh.geometry.attributes.position,oldX=position.getX(0);position.setX(0,oldX+1);position.needsUpdate=true;parent.updateMatrixWorld(true);inv.copy(parent.matrixWorld).invert();const toRoot=m=>relative.multiplyMatrices(inv,m.matrixWorld);
+   let ref=calculateGroundBounds(prepared,toRoot,false),result=calculateGroundBounds(prepared,toRoot,true);if(ref.min!==result.min||result.skipped!==0)throw Error('Changed position did not invalidate bounds');position.setX(0,oldX);position.needsUpdate=true;
+   const rebound=prepareGroundBounds(rig.groundSamples),oldBind=mesh.bindMatrix.elements[12];mesh.bindMatrix.elements[12]=oldBind+.1;ref=calculateGroundBounds(rebound,toRoot,false);result=calculateGroundBounds(rebound,toRoot,true);if(ref.min!==result.min||result.skipped!==0)throw Error('Changed bind did not invalidate bounds');mesh.bindMatrix.elements[12]=oldBind;
+   rows.push({species,cases:100,morphChecks,customChecks,geometryFallback:true,bindFallback:true,skipped,equal:true});
   }finally{releaseActorRig(rig);}
  }
  return rows;
