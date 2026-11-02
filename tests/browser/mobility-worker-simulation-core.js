@@ -19,7 +19,7 @@ export async function createSimulation({mangrove=false,snapshotSource=null,chunk
  if(!Array.isArray(chunks)||chunks.some(key=>typeof key!=='string'||!/^[-]?\d+,[-]?\d+$/.test(key)))throw TypeError('Invalid chunk keys');
  for(const key of chunks){const [x,z]=key.split(',').map(Number);if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(key,session.core.chunkPayload());}
  const planner=createEventDrivenTaskPlanner(session),restored=planner.resetFromState(game),nav=createSpatialNavigationMovement(session,game),stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;
- const recorder=motionTrace?observeCoordinateWrites([...game.workers,...(game.raid?.animals??[])]):null;
+ const recorder=motionTrace?observeCoordinateWrites([...game.workers,...(game.raid?.animals??[])],{stacks:motionTrace==='stacks'}):null;
  let events=[];const stopEvents=observeGameEvents(game,event=>events.push(event));
  return {
   run(steps,dt,{full=true}={}){
