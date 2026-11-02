@@ -103,6 +103,22 @@ En los 724 cuadros, el error máximo de posición de pie por cuadro tuvo p95/p99
 
 La variante sigue usando las transformaciones de malla del rig original, skinning y soporte exacto en CPU; no es una implementación de animación en GPU ni una validación de eliminar contactos. No incluye entrada ni navegación, otras bestias, impactos, cambios de clip, obstáculos, cámara, imágenes o rendimiento. Tampoco certifica todos los tiempos, superficies o vértices del modelo. El ensayo A/B/C/D y la presentación de producción no se han modificado.
 
+### Movimiento y apoyo de las cinco especies
+
+Se generalizó el ensayo anterior con selección explícita de especie y comprobación de orden de huesos. Dos ejecuciones independientes por especie produjeron informes por cuadro idénticos; la hiena conserva exactamente las filas y resultados del ensayo anterior. Son 181 muestras a 60 Hz por cada uno de cuatro lugares de Wild Engine, con raíz sintética que se desplaza y gira y un banco de caminar a 30 Hz. Se examinan todos los vértices con más de 50 % de peso en huesos de pie o dedo, entre 433 y 6.326 según especie. Los lugares no se certifican como rutas navegables.
+
+| Especie | Vértices de pie | p99 error de posición | p99 error de desplazamiento por cuadro | p99 error de desplazamiento en contacto aproximado | p99 diferencia de elevación |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Búfalo | 4.539 | 0,01377 | 0,01377 | 0,00574 | 0,00335 |
+| Hiena | 552 | 0,01000 | 0,00975 | 0,00675 | 0,00310 |
+| León | 1.304 | 0,01586 | 0,01586 | 0,01358 | 0,00383 |
+| Rinoceronte | 6.326 | 0,02354 | 0,02368 | 0,01065 | 0,00574 |
+| Facóquero | 433 | 0,01581 | 0,01575 | 0,01052 | 0,00375 |
+
+Las distancias son unidades del mundo. El contacto aproximado exige una distancia al suelo inferior a 0,03 en ambos cuadros; no identifica realmente la fase de pie plantado. Para el rinoceronte el error máximo de desplazamiento alrededor de los ocho reinicios fue 0,01723, frente a 0,00041 en hiena. La mínima separación de la hiena fue −0,001389 en referencia y −0,001391 en candidato; las mínimas registradas para las otras especies fueron positivas. Son mínimos de los puntos y cuadros examinados, no una garantía de ausencia de penetración.
+
+El candidato sigue evaluando el rig original para las transformaciones de malla y calcula soporte exacto en CPU; no demuestra ahorro, calidad perceptible ni viabilidad GPU para estas especies. Faltan imágenes, vídeo, ataques, transiciones, terreno dinámico, colisiones, partida y rendimiento. El informe resumido, hashes de los informes completos y resultados está en `gpu-animation/walk-five-species-moving-support-audit.json`; `tools/guardian/audit_baked_walk_motion_species.mjs` regenera los informes completos en `.cache`. Las rutas de producción y el experimento A/B/C/D permanecen intactos.
+
 ### Prototipo WebGL2 con textura ósea compartida
 
 Se preparó una escena experimental con tres hienas reales, fases distintas y una textura `RGBA32F` compartida de 44.352 bytes para el clip de caminar. Los shaders de color y profundidad recuperan e interpolan matrices desde esa textura; un único uniforme de tiempo controla las tres. La transformación de cada raíz fija se obtiene en shader a partir de la matriz de la malla y una inversa canónica. El camino original se conserva en la misma escena. La caché de sombras nativa se invalida explícitamente al avanzar el tiempo: sin una dependencia de animación GPU, reutilizar su sombra anterior sería incorrecto.
