@@ -3,11 +3,17 @@ import {writeFile} from 'node:fs/promises';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({channel:'msedge',headless:true});
 try{
- const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+ const validCrowd=process.env.VALID_CROWD==='1',page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
  await page.goto('http://127.0.0.1:5175/tests/browser/guardian-combat.html?biome=manglares&culture=mapungubwe&lightingReview&productionFarWarm&treeReview&recoveryDay&wildEngineThreads=0');
  await page.waitForFunction(()=>window.treeReview&&document.querySelector('#status')?.textContent.includes('"ready": true'),null,{timeout:180000});await page.locator('#stress').evaluate(e=>e.click());await page.waitForFunction(()=>{const r=window.treeReview;return r.state.raid?.animals.length===20&&r.state.raid.animals.every(a=>r.world.mixers.has(a.id));},null,{timeout:120000});
- const report=await page.evaluate(async()=>{
+ const report=await page.evaluate(async validCrowd=>{
   const r=window.treeReview,w=r.world;if(r.authority!=='spatial-wasm'||!r.state.mangroveNetwork)throw Error('Wrong scene');r.setManual(true);
+  if(validCrowd){
+   const animals=r.state.raid.animals,placed=[],workers=r.state.workers.filter(a=>a.status!=='home'&&Number.isFinite(a.x)&&Number.isFinite(a.z));
+   const base={x:animals[0].x,z:animals[0].z},offsets=[];for(let z=-60;z<=60;z+=2)for(let x=-60;x<=60;x+=2)offsets.push({x,z,d:x*x+z*z});offsets.sort((a,b)=>a.d-b.d||a.x-b.x||a.z-b.z);
+   for(const a of animals){let found=null;for(const off of offsets){const p={x:base.x+off.x,z:base.z+off.z},clear=[...placed,...workers].every(b=>Math.hypot(p.x-b.x,p.z-b.z)>a.radius+(b.radius??.28)+.15);if(clear&&r.spatialSession.actorCanStand(p,{worker:false,species:a.species})){found=p;break;}}if(!found)throw Error('No non-overlapping native placement for '+a.id);a.x=found.x;a.z=found.z;placed.push(a);}
+   r.nav.setState(r.state);w.render(0);
+  }
   const {serialize}=await import('/src/persistence/snapshots.js'),{actorBlockers,actorSegmentClear}=await import('/src/simulation/actor-motion.js'),source=serialize(r.state).replaceAll('"qa-beast-0"','"qa-beast-1000000"'),before=JSON.parse(source),chunks=[...w.chunks.keys()],worker=new Worker('/tests/browser/mobility-worker-live-snapshot.js',{type:'module'}),raf=()=>new Promise(requestAnimationFrame);
   const request=data=>new Promise((resolve,reject)=>{worker.onerror=e=>reject(Error(e.message));worker.onmessage=e=>e.data.kind==='error'?reject(Error(e.data.error)):resolve(e.data);worker.postMessage(data);});
   try{
@@ -27,10 +33,11 @@ try{
    const targets=new Map(JSON.parse(received.projection).animals.map(a=>[a.id,a])),segments=[];
    for(const animal of before.raid.animals){const end=targets.get(animal.id);if(!end)throw Error('Missing trajectory endpoint');const distance=Math.hypot(end.x-animal.x,end.z-animal.z);if(distance>1e-9)segments.push({id:animal.id,distance,terrainClear:r.nav.segmentClear(animal,end,animal.radius,null,false),staticBodiesClear:actorSegmentClear(animal,end,animal,actorBlockers(before,animal,false))});}
    let overlappingPairs=0,newSweptConflicts=0;for(let i=0;i<before.raid.animals.length;i++)for(let j=i+1;j<before.raid.animals.length;j++){const a=before.raid.animals[i],b=before.raid.animals[j],ae=targets.get(a.id),be=targets.get(b.id),x=a.x-b.x,z=a.z-b.z,vx=(ae.x-a.x)-(be.x-b.x),vz=(ae.z-a.z)-(be.z-b.z),sum=(a.radius??.28)+(b.radius??.28),d0=Math.hypot(x,z),den=vx*vx+vz*vz,t=den?Math.max(0,Math.min(1,-(x*vx+z*vz)/den)):0,closest=Math.hypot(x+vx*t,z+vz*t);if(d0<sum)overlappingPairs++;else if(closest<sum-1e-8)newSweptConflicts++;}
+   if(validCrowd&&overlappingPairs)throw Error('Initial crowd overlaps');
    return {animals:applied,moved,initializationMs:init.initializationMs,workerTickMs:received.timings[0],responseMs:receivedAt-sentAt,applyDelayMs:appliedAt-receivedAt,frames:stats(intervals.map(x=>x.ms)),overlapFrames:stats(overlap.map(x=>x.ms)),renderMs:stats(draw),maxPositionError,baselineCount:baseline.size,segments,overlappingPairs,newSweptConflicts,sceneErrors:r.errors};
   }finally{worker.terminate();}
- });
+ },validCrowd);
  if(errors.length||report.sceneErrors.length)throw Error(JSON.stringify({errors,report}));
- report.scope='Single frozen mangrove QA scene with 20 animals; Worker restores adapted copy and executes one tick; after response the test copies only x/z back for rendering. After measurement, straight segments are checked against the original scene navigation and initial body positions, plus a simultaneous linear disc approximation between animals. This is not an authoritative gameplay bridge, trajectory, collision, pose, input or visual-equivalence proof. Initialization and segment audits outside measurement; no GPU timer.';
- await writeFile('docs/lighting/tree-near-retexture/performance/mobility-live-worker-segment-audit.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+ report.scope=`Single frozen mangrove QA scene with 20 animals${validCrowd?' manually placed in native-standable non-overlapping positions':''}; Worker restores adapted copy and executes one tick; after response the test copies only x/z back for rendering. After measurement, straight segments are checked against the original scene navigation and initial body positions, plus a simultaneous linear disc approximation between animals. This is not an authoritative gameplay bridge, trajectory, collision, pose, input or visual-equivalence proof. Initialization and segment audits outside measurement; no GPU timer.`;
+ await writeFile(`docs/lighting/tree-near-retexture/performance/mobility-live-worker-${validCrowd?'valid-crowd-':''}segment-audit.json`,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }finally{await browser.close();}
