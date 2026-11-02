@@ -9,3 +9,5 @@ test('disposal rejects pending work and terminates worker',async()=>{const w=new
 test('worker errors reject active and queued work',async()=>{const w=new FakeWorker(),q=new MudWorkerQueue(w);const a=q.request('a',1,input()),b=q.request('b',1,input());const failures=Promise.all([assert.rejects(a,/failed/),assert.rejects(b,/failed/)]);w.dispatchEvent(Object.assign(new Event('error'),{message:'failed'}));await failures;assert.equal(w.terminated,true);});
 
 test('timeout rejects all queued work and terminates an unresponsive worker',async()=>{const w=new FakeWorker(),q=new MudWorkerQueue(w,{timeoutMs:10});const a=q.request('a',1,input()),b=q.request('b',1,input());await Promise.all([assert.rejects(a,/timeout/),assert.rejects(b,/timeout/)]);assert.equal(w.terminated,true);});
+
+test('snapshot rejects non-finite texture scales before sampling',async()=>{const {captureMudInputs}=await import('../tools/trees/mud-worker-input.js');assert.throws(()=>captureMudInputs({},0,0,new Float32Array(49*49*3),NaN),/Invalid mud scale/);});

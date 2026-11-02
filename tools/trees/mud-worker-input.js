@@ -2,7 +2,8 @@ import {hashCell} from '../../src/world/terrain.js';
 
 // Prototype only: immutable render payload and sampled selection inputs, never
 // a second simulation world. Preserve the exact query coordinates used by mud.
-export function captureMudInputs(field,cx,cz,positions){
+export function captureMudInputs(field,cx,cz,positions,scale=.115){
+ if(!Number.isFinite(scale))throw Error('Invalid mud scale');
  if(positions.length!==49*49*3)throw Error('Expected a native 49x49 terrain payload');
  const random=(i,salt)=>hashCell(field.seed,cx*13+i,cz*17-i,salt)/4294967296;
  const inside=[],slopes=[];
@@ -13,7 +14,7 @@ export function captureMudInputs(field,cx,cz,positions){
   for(let j=0;j<12;j++){const a=j*Math.PI/6,r=1+.13*Math.sin(a*3+phase)+.08*Math.cos(a*5-phase),px=x+Math.cos(a)*rx*r,pz=z+Math.sin(a)*rz*r;inside.push([px,pz,field.fluidInside(px,pz)]);}
  }
  const heights=new Float32Array(49*49);for(let i=0;i<heights.length;i++)heights[i]=positions[i*3+1];
- return {cx,cz,seed:field.seed,site:field.c.settlementSite??null,heights,inside,slopes};
+ return {cx,cz,scale,seed:field.seed,site:field.c.settlementSite??null,heights,inside,slopes};
 }
 export function mudSnapshotField(input){
  const inside=new Map(input.inside.map(([x,z,v])=>[x+','+z,v])),slopes=new Map(input.slopes.map(([x,z,v])=>[x+','+z,v]));
