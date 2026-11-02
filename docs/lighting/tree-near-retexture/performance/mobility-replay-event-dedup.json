@@ -1,0 +1,41 @@
+{
+  "scope": "Three Edge headless trials with converted mangrove islands and nine synthetic chunks; in-memory consumer applies events, retains a confirmed checkpoint, then replays an unacknowledged damage command after Worker restart. No durable ledger, transactional effects, concurrent inputs, actual dropped network messages, physics manager, rendering, or full gameplay.",
+  "runs": [
+    {
+      "checkpointBytes": 958982,
+      "deliveredEvents": 1,
+      "eventTypes": [
+        "StructureRuined"
+      ],
+      "firstApplied": 1,
+      "duplicatesSuppressed": 1,
+      "duplicateApplied": 0,
+      "finalEqual": true,
+      "recoveryReplayMs": 1080.390000000596
+    },
+    {
+      "checkpointBytes": 958982,
+      "deliveredEvents": 1,
+      "eventTypes": [
+        "StructureRuined"
+      ],
+      "firstApplied": 1,
+      "duplicatesSuppressed": 1,
+      "duplicateApplied": 0,
+      "finalEqual": true,
+      "recoveryReplayMs": 1086.0999999940395
+    },
+    {
+      "checkpointBytes": 958982,
+      "deliveredEvents": 1,
+      "eventTypes": [
+        "StructureRuined"
+      ],
+      "firstApplied": 1,
+      "duplicatesSuppressed": 1,
+      "duplicateApplied": 0,
+      "finalEqual": true,
+      "recoveryReplayMs": 1112.1299999952316
+    }
+  ]
+}
