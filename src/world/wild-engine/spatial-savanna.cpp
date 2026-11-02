@@ -1263,10 +1263,11 @@ void patchActiveRaster(const Prop& changed){
     }
   }
 }
-void commitActiveSectors(){
-  const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
+void commitChunkSectors(int cx,int cz){
+  const int firstX=cx*side-24,firstZ=cz*side-24;
   for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
 }
+void commitActiveSectors(){commitChunkSectors(chunkX,chunkZ);}
 void refreshNeighborBorders(int cx,int cz){
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int direction=0;direction<4;direction++){
@@ -2104,10 +2105,18 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   chunkRasters->clear();
 #ifdef WILD_PROFILE_TWO_PASS
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz,false);buildActiveRaster();
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileRaster);buildActiveRaster();SPATIAL_TOCK(15,profileRaster);
   }
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz,false);commitActiveSectors();
+#ifndef WILD_PROFILE_TWO_PASS_DIRECT_COMMIT
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileCommit);commitActiveSectors();SPATIAL_TOCK(16,profileCommit);
+#else
+    // Experimental: sector overlay reads resident rasters and obstacle
+    // indexes by coordinates; it does not require selecting this chunk again.
+    SPATIAL_TICK(profileCommit);commitChunkSectors(cx,cz);SPATIAL_TOCK(16,profileCommit);
+#endif
   }
 #ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
   // The old one-pass builder recommits four sectors for each shared border.

@@ -64,6 +64,10 @@ if os.environ.get('SPATIAL_PROFILE_COMPAT_REVISION') == '1':
     if os.environ.get('SPATIAL_PROFILE_TWO_PASS') != '1':
         raise ValueError('SPATIAL_PROFILE_COMPAT_REVISION requires SPATIAL_PROFILE_TWO_PASS')
     flags.append('-DWILD_PROFILE_TWO_PASS_COMPAT_REVISION')
+if os.environ.get('SPATIAL_PROFILE_DIRECT_COMMIT') == '1':
+    if os.environ.get('SPATIAL_PROFILE_TWO_PASS') != '1':
+        raise ValueError('SPATIAL_PROFILE_DIRECT_COMMIT requires SPATIAL_PROFILE_TWO_PASS')
+    flags.append('-DWILD_PROFILE_TWO_PASS_DIRECT_COMMIT')
 command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),
            *flags, '-std=c++17', '-O3', '-s', 'STANDALONE_WASM=1',
            '-s', 'ALLOW_MEMORY_GROWTH=1', '-s', 'INITIAL_MEMORY=16777216',
