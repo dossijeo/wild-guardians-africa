@@ -1,0 +1,149 @@
+{
+  "runs": [
+    {
+      "mode": "reference",
+      "reuse": {
+        "hits": 0,
+        "misses": 0,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 34.0249999910593,
+        "p99": 35.07500000298023,
+        "max": 39.46500000357628
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.419999999998254,
+        "p99": 33.43000000000029,
+        "max": 33.520000000004075
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 10.616832,
+        "p99": 11.775328,
+        "max": 19.09968
+      },
+      "disjoint": 0,
+      "discarded": 0
+    },
+    {
+      "mode": "candidate",
+      "reuse": {
+        "hits": 1480,
+        "misses": 20,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 18.99499998986721,
+        "p99": 19.525000005960464,
+        "max": 27.444999992847443
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.395000000004075,
+        "p99": 33.40999999999622,
+        "max": 33.44499999999971
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 10.725568,
+        "p99": 10.84496,
+        "max": 10.972224
+      },
+      "disjoint": 0,
+      "discarded": 0
+    },
+    {
+      "mode": "candidate",
+      "reuse": {
+        "hits": 1500,
+        "misses": 0,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 20.825000002980232,
+        "p99": 22.614999994635582,
+        "max": 24.67000000178814
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.41000000000349,
+        "p99": 33.455000000001746,
+        "max": 33.51000000000204
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 21.248352,
+        "p99": 21.4896,
+        "max": 22.491136
+      },
+      "disjoint": 0,
+      "discarded": 0
+    },
+    {
+      "mode": "reference",
+      "reuse": {
+        "hits": 0,
+        "misses": 0,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 25.179999992251396,
+        "p99": 25.394999995827675,
+        "max": 25.625
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.38999999999942,
+        "p99": 33.40999999999622,
+        "max": 33.44000000000233
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 21.844352,
+        "p99": 23.059168,
+        "max": 23.130528
+      },
+      "disjoint": 0,
+      "discarded": 0
+    }
+  ],
+  "active": {
+    "hits": 368,
+    "misses": 2032,
+    "unsupported": 0,
+    "checks": 368,
+    "maxDifference": 0
+  },
+  "impact": {
+    "hits": 734,
+    "misses": 4468,
+    "unsupported": 0,
+    "checks": 734,
+    "maxDifference": 0
+  },
+  "phases": {
+    "falling": 68,
+    "rolling": 27,
+    "recovering": 82,
+    "recoveryExit": 6,
+    "upright": 77
+  },
+  "animals": 20,
+  "sceneErrors": [],
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "One Edge headless mangrove-islands QA scene, 20 synthetic animals. Frozen-scene ABBA compares reference and experimental pose-signature cache; then verification mode computes both candidates during 120 active and 260 impact/recovery ticks. No gameplay or pixel parity in ABBA. Raw buffer writes without version increments, sample-array mutation, context lifecycle and integrated GPU not covered. Signature test is a diagnostic, not production."
+}
