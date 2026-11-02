@@ -1,0 +1,50 @@
+{
+  "biome": "manglares",
+  "network": true,
+  "authority": "spatial-wasm",
+  "keepMaterial": true,
+  "before": {
+    "buildings": 1,
+    "opening": 1,
+    "smoke": 1,
+    "programs": 86
+  },
+  "afterDispose": {
+    "buildings": 1,
+    "opening": 1,
+    "smoke": 1,
+    "programs": 87
+  },
+  "after": {
+    "buildings": 1,
+    "opening": 1,
+    "smoke": 1,
+    "programs": 87
+  },
+  "memoryBefore": 340,
+  "memoryAfter": 340,
+  "alreadyCompiled": false,
+  "sameProgram": true,
+  "programKeys": [
+    "39,40,onBeforeCompile() {\n  }",
+    "39,40,onBeforeCompile() {\n  }"
+  ],
+  "retained": true,
+  "lease": {
+    "retained": 1,
+    "released": 0,
+    "destroyed": 0,
+    "abandoned": 0,
+    "skipped": 0,
+    "unsupported": false
+  },
+  "times": {
+    "construct": 1.2349999994039536,
+    "prepare": 191.10999999940395,
+    "dispose": 0.1300000101327896,
+    "actualPrepare": 0.9699999988079071
+  },
+  "totalMs": 194.41499999165535,
+  "sceneErrors": [],
+  "scope": "Isolated existing-center QA scene, synthetic NativeBuilding and program retention only. Does not prove the new-game loading path, visual equivalence, frame-time improvement, or safe production integration."
+}
