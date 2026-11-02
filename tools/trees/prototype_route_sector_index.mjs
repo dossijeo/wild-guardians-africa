@@ -20,7 +20,9 @@ export class RouteSectorIndex {
       if(!valid(to)){uncertain=true;break;}
       const reach=this.padding+radius,minX=Math.floor((Math.min(from.x,to.x)-reach)/this.size),maxX=Math.floor((Math.max(from.x,to.x)+reach)/this.size),minZ=Math.floor((Math.min(from.z,to.z)-reach)/this.size),maxZ=Math.floor((Math.max(from.z,to.z)+reach)/this.size);
       const count=(maxX-minX+1)*(maxZ-minZ+1);
-      if(!Number.isSafeInteger(count)||count>this.limit||keys.size+count>this.limit){uncertain=true;break;}
+      // Outside the exact integer range x++ or z++ may not advance at all.
+      // Never enter those loops or certify a partial sector set.
+      if(![minX,maxX,minZ,maxZ].every(Number.isSafeInteger)||!Number.isSafeInteger(count)||count>this.limit||keys.size+count>this.limit){uncertain=true;break;}
       for(let x=minX;x<=maxX;x++)for(let z=minZ;z<=maxZ;z++)keys.add(`${x},${z}`);
       from=to;
     }

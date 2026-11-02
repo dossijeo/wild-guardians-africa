@@ -13,6 +13,17 @@ test('shadow index selects nearby routes and replaces their dependencies',()=>{
   assert.equal(index.remove('animal'),false);
 });
 
+test('out-of-range sector coordinates conservatively include the route',()=>{
+  const index=new RouteSectorIndex(1,{padding:0});
+  for(const [id,x] of [['positive',Number.MAX_SAFE_INTEGER+1],['negative',-Number.MAX_SAFE_INTEGER-1]])
+    index.set(id,{x,z:0},[{x,z:0}],0);
+  assert.deepEqual(new Set(index.affected({complete:true,sectors:[{x:0,z:0}]})),new Set(['positive','negative']));
+  index.set('edge',{x:Number.MAX_SAFE_INTEGER,z:0},[{x:Number.MAX_SAFE_INTEGER,z:0}],0);
+  assert.equal(index.affected({complete:true,sectors:[{x:Number.MAX_SAFE_INTEGER,z:0}]}).has('edge'),true);
+  index.set('positive',{x:0,z:0},[{x:0,z:0}],0);
+  assert.deepEqual(new Set(index.affected({complete:true,sectors:[{x:2,z:0}]})),new Set(['negative']));
+});
+
 test('incomplete events and uncertain routes never produce a negative certificate',()=>{
   const index=new RouteSectorIndex(12,{maxSectors:4});
   index.set('large',{x:0,z:0},[{x:1000,z:1000}],1);
