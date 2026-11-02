@@ -1,0 +1,86 @@
+{
+  "runs": [
+    {
+      "firstTickMs": 112.43499998748302,
+      "pauseLatencyMs": 129.07500000298023,
+      "firstCompletionAfterStartMs": 121.18500000238419,
+      "pauseAppliedAfterFirst": true,
+      "pausedElapsed": 6069.050000003834,
+      "resumedElapsed": 6069.100000003834,
+      "pauseGate": {
+        "displayed": 6069.0000000038335,
+        "confirmed": 6069.050000003834,
+        "phase": "paused",
+        "needsReconciliation": true,
+        "pending": null
+      },
+      "rejections": [
+        "sequence",
+        "sequence",
+        "session"
+      ],
+      "snapshotEqual": true,
+      "frames": {
+        "count": 99,
+        "p95": 33.404999999999745,
+        "p99": 33.429999999999836,
+        "max": 33.45000000000027
+      }
+    },
+    {
+      "firstTickMs": 112.46000000834465,
+      "pauseLatencyMs": 129.8800000101328,
+      "firstCompletionAfterStartMs": 121.77500000596046,
+      "pauseAppliedAfterFirst": true,
+      "pausedElapsed": 6069.050000003834,
+      "resumedElapsed": 6069.100000003834,
+      "pauseGate": {
+        "displayed": 6069.0000000038335,
+        "confirmed": 6069.050000003834,
+        "phase": "paused",
+        "needsReconciliation": true,
+        "pending": null
+      },
+      "rejections": [
+        "sequence",
+        "sequence",
+        "session"
+      ],
+      "snapshotEqual": true,
+      "frames": {
+        "count": 99,
+        "p95": 33.38500000000022,
+        "p99": 33.40000000000009,
+        "max": 33.404999999999745
+      }
+    },
+    {
+      "firstTickMs": 120.84999999403954,
+      "pauseLatencyMs": 138.1850000023842,
+      "firstCompletionAfterStartMs": 130.1899999976158,
+      "pauseAppliedAfterFirst": true,
+      "pausedElapsed": 6069.050000003834,
+      "resumedElapsed": 6069.100000003834,
+      "pauseGate": {
+        "displayed": 6069.0000000038335,
+        "confirmed": 6069.050000003834,
+        "phase": "paused",
+        "needsReconciliation": true,
+        "pending": null
+      },
+      "rejections": [
+        "sequence",
+        "sequence",
+        "session"
+      ],
+      "snapshotEqual": true,
+      "frames": {
+        "count": 99,
+        "p95": 33.36999999999989,
+        "p99": 33.409999999999854,
+        "max": 33.424999999999955
+      }
+    }
+  ],
+  "scope": "Edge headless; converted mangrove-islands fixture with nine synthetic chunks. One Worker owns a test simulation. Pause is queued after a cold tick begins; a diagnostic clock gate freezes and detects the gap. Subsequent resume tests command order independently, not safe presentation reconciliation. Simple canvas only; no production input, queue bound, recovery, priority, interrupt, collisions, physics manager, GPU timer or gameplay render."
+}

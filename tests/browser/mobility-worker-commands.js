@@ -1,6 +1,6 @@
 import {createSimulation} from './mobility-worker-simulation-core.js';
 const session='commands-test';let sequence=0,simulation;
-try{simulation=await createSimulation({mangrove:true});postMessage({kind:'ready',session});}catch(error){postMessage({kind:'error',error:String(error?.stack??error)});}
+try{simulation=await createSimulation({mangrove:true});postMessage({kind:'ready',session,initialElapsed:simulation.state().elapsed});}catch(error){postMessage({kind:'error',error:String(error?.stack??error)});}
 self.onmessage=({data})=>{
  try{
   if(!simulation)throw Error('Unavailable');
