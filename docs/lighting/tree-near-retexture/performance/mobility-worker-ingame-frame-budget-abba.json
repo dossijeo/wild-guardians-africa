@@ -1,0 +1,889 @@
+{
+  "scope": "Independent ABBA sessions with 150 manual Game.tick calls and real WorldScene mangrove island-network rendering, plus 700 independent native route queries in one Worker. Sliced mode waits for a render frame between batches of 100. Synthetic workload and crowd; Worker does not own game simulation. No gameplay integration or production scheduler change.",
+  "results": [
+    {
+      "mode": "full",
+      "warmup": null,
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3007.5000000000273,
+      "frames": {
+        "count": 149,
+        "p95": 66.7699999999968,
+        "p99": 299.9850000000006,
+        "max": 933.3000000000029
+      },
+      "overlapFrames": {
+        "count": 2,
+        "p95": 66.65499999999884,
+        "p99": 66.65499999999884,
+        "max": 66.65499999999884
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.909999996423721,
+        "p99": 11.114999994635582,
+        "max": 12.765000000596046
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 58.99000000953674,
+        "p99": 76.80000001192093,
+        "max": 283.89000000059605
+      },
+      "longFrames": [
+        {
+          "index": 1,
+          "start": 47559.52,
+          "end": 48492.82,
+          "dt": 933.3000000000029,
+          "previous": {
+            "simulationMs": 913.4350000023842,
+            "renderMs": 47.125,
+            "tickProfile": {
+              "intents": 0.03999999165534973,
+              "physics": 0.8499999940395355,
+              "raid": 909.3399999886751,
+              "workers": 1.2049999982118607,
+              "reservations": 0.23499999940395355,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 7.989999979734421,
+              "moveMotion": 1.0600000321865082,
+              "byStatus": {
+                "arriving": 0.2750000059604645
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 12.765000000596046,
+          "renderMs": 49.224999994039536
+        },
+        {
+          "index": 92,
+          "start": 52859.62,
+          "end": 53159.605,
+          "dt": 299.9850000000006,
+          "previous": {
+            "simulationMs": 3.125,
+            "renderMs": 283.89000000059605,
+            "tickProfile": {
+              "intents": 0.005000010132789612,
+              "physics": 0.015000000596046448,
+              "raid": 3.0249999910593033,
+              "workers": 0.015000000596046448,
+              "reservations": 0.004999995231628418,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 2.135000005364418,
+              "moveMotion": 0.2500000149011612,
+              "byStatus": {
+                "home": 0.005000010132789612
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 5.299999997019768,
+          "renderMs": 52.644999995827675
+        }
+      ],
+      "firstTickNavCalls": {},
+      "regionSamples": [],
+      "hiddenFrames": 0,
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 33.986528,
+        "p99": 56.930336
+      },
+      "jobs": [
+        {
+          "requestedAt": 49466.63499999046,
+          "receivedAt": 49599.89999999106,
+          "startedAt": 49509.580078125,
+          "finishedAt": 49563.969970703125,
+          "workerMs": 54.389999985694885,
+          "queries": 700,
+          "found": 244,
+          "unknown": 456,
+          "hash": 1269783446,
+          "slices": 1,
+          "responseMs": 133.26500000059605
+        }
+      ],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": [],
+      "stateHashes": {
+        "initial": "a8f7d04798ca3fb2810f1546757fda011d8a4dcb2e22b3d48b1c13518c6674fd",
+        "final": "02377e6e98ddd8a116a0f77738d94c654cb581e15ae7a0712557caefea88589c"
+      }
+    },
+    {
+      "mode": "sliced",
+      "warmup": null,
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3007.5000000000273,
+      "frames": {
+        "count": 149,
+        "p95": 66.75,
+        "p99": 66.81500000000233,
+        "max": 933.3100000000013
+      },
+      "overlapFrames": {
+        "count": 13,
+        "p95": 66.81500000000233,
+        "p99": 66.81500000000233,
+        "max": 66.81500000000233
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 6.605000004172325,
+        "p99": 10.060000002384186,
+        "max": 12.344999998807907
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 51.45499999821186,
+        "p99": 54.554999992251396,
+        "max": 56.85999999940395
+      },
+      "longFrames": [
+        {
+          "index": 1,
+          "start": 32123.435,
+          "end": 33056.745,
+          "dt": 933.3100000000013,
+          "previous": {
+            "simulationMs": 917.0649999976158,
+            "renderMs": 48.11499999463558,
+            "tickProfile": {
+              "intents": 0.030000001192092896,
+              "physics": 0.5600000023841858,
+              "raid": 913.3499999940395,
+              "workers": 1.1799999922513962,
+              "reservations": 0.1850000023841858,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 7.894999995827675,
+              "moveMotion": 1,
+              "byStatus": {
+                "arriving": 0.2749999910593033
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 12.344999998807907,
+          "renderMs": 41.054999992251396
+        }
+      ],
+      "firstTickNavCalls": {},
+      "regionSamples": [],
+      "hiddenFrames": 0,
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 30.885888,
+        "p99": 42.100128
+      },
+      "jobs": [
+        {
+          "requestedAt": 33976.32000000775,
+          "receivedAt": 34685.489999994636,
+          "startedAt": 34061.969970703125,
+          "finishedAt": 34645.159912109375,
+          "workerMs": 54.47500002384186,
+          "queries": 700,
+          "found": 244,
+          "unknown": 456,
+          "hash": 1269783446,
+          "slices": 7,
+          "responseMs": 709.169999986887
+        }
+      ],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": [],
+      "stateHashes": {
+        "initial": "a8f7d04798ca3fb2810f1546757fda011d8a4dcb2e22b3d48b1c13518c6674fd",
+        "final": "02377e6e98ddd8a116a0f77738d94c654cb581e15ae7a0712557caefea88589c"
+      }
+    },
+    {
+      "mode": "sliced",
+      "warmup": null,
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3007.5000000000273,
+      "frames": {
+        "count": 149,
+        "p95": 66.77999999999884,
+        "p99": 66.82499999999709,
+        "max": 933.2849999999999
+      },
+      "overlapFrames": {
+        "count": 13,
+        "p95": 66.75,
+        "p99": 66.75,
+        "max": 66.75
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 6.415000006556511,
+        "p99": 15.07999999821186,
+        "max": 17.359999999403954
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 51.54500000178814,
+        "p99": 54.2749999910593,
+        "max": 57.974999994039536
+      },
+      "longFrames": [
+        {
+          "index": 1,
+          "start": 31763.83,
+          "end": 32697.115,
+          "dt": 933.2849999999999,
+          "previous": {
+            "simulationMs": 914.6799999922514,
+            "renderMs": 47.64000000059605,
+            "tickProfile": {
+              "intents": 0.025000005960464478,
+              "physics": 0.5599999874830246,
+              "raid": 911.0699999928474,
+              "workers": 1.2049999982118607,
+              "reservations": 0.1899999976158142,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 8.044999971985817,
+              "moveMotion": 1.0099999755620956,
+              "byStatus": {
+                "arriving": 0.3149999976158142
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 15.07999999821186,
+          "renderMs": 44.11499999463558
+        }
+      ],
+      "firstTickNavCalls": {},
+      "regionSamples": [],
+      "hiddenFrames": 0,
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 31.41808,
+        "p99": 35.15392
+      },
+      "jobs": [
+        {
+          "requestedAt": 33683.064999997616,
+          "receivedAt": 34399.47499999404,
+          "startedAt": 33776.050048828125,
+          "finishedAt": 34361.135009765625,
+          "workerMs": 56.230000019073486,
+          "queries": 700,
+          "found": 244,
+          "unknown": 456,
+          "hash": 1269783446,
+          "slices": 7,
+          "responseMs": 716.4099999964237
+        }
+      ],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": [],
+      "stateHashes": {
+        "initial": "a8f7d04798ca3fb2810f1546757fda011d8a4dcb2e22b3d48b1c13518c6674fd",
+        "final": "02377e6e98ddd8a116a0f77738d94c654cb581e15ae7a0712557caefea88589c"
+      }
+    },
+    {
+      "mode": "full",
+      "warmup": null,
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3007.5000000000273,
+      "frames": {
+        "count": 149,
+        "p95": 66.73999999999796,
+        "p99": 66.77000000000407,
+        "max": 966.7199999999975
+      },
+      "overlapFrames": {
+        "count": 2,
+        "p95": 66.66500000000087,
+        "p99": 66.66500000000087,
+        "max": 66.66500000000087
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.905000001192093,
+        "p99": 10.325000002980232,
+        "max": 15.344999998807907
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 53.12000000476837,
+        "p99": 62.3500000089407,
+        "max": 64.2800000011921
+      },
+      "longFrames": [
+        {
+          "index": 1,
+          "start": 32499.06,
+          "end": 33465.78,
+          "dt": 966.7199999999975,
+          "previous": {
+            "simulationMs": 931.2700000107288,
+            "renderMs": 57.014999985694885,
+            "tickProfile": {
+              "intents": 0.025000005960464478,
+              "physics": 0.6050000041723251,
+              "raid": 927.7600000053644,
+              "workers": 1.2300000041723251,
+              "reservations": 0.18000000715255737,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 7.685000032186508,
+              "moveMotion": 0.9699999988079071,
+              "byStatus": {
+                "arriving": 0.2749999910593033
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 15.344999998807907,
+          "renderMs": 42.57999999821186
+        }
+      ],
+      "firstTickNavCalls": {},
+      "regionSamples": [],
+      "hiddenFrames": 0,
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 34.255968,
+        "p99": 43.753504
+      },
+      "jobs": [
+        {
+          "requestedAt": 34394.625,
+          "receivedAt": 34535.465000003576,
+          "startedAt": 34445.135009765625,
+          "finishedAt": 34499.385009765625,
+          "workerMs": 54.25,
+          "queries": 700,
+          "found": 244,
+          "unknown": 456,
+          "hash": 1269783446,
+          "slices": 1,
+          "responseMs": 140.84000000357628
+        }
+      ],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": [],
+      "stateHashes": {
+        "initial": "a8f7d04798ca3fb2810f1546757fda011d8a4dcb2e22b3d48b1c13518c6674fd",
+        "final": "02377e6e98ddd8a116a0f77738d94c654cb581e15ae7a0712557caefea88589c"
+      }
+    }
+  ]
+}
