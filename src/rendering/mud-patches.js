@@ -22,6 +22,7 @@ export function clipMudTriangle(subject,clip){
 export function mudPatchGeometry(field,cx,cz,scale=.115){
   if(field.c.biome!=='mangrove')return null;
   const origin=[cx*48,cz*48],positions=[],uvs=[],centers=[],outlines=[],heights=new Map();let patches=0;
+  const inside=field.fluidInside?(x,z)=>field.fluidInside(x,z):(x,z)=>field.waterInfo(x,z).inside;
   const sampled={surface:(x,z)=>{const key=x+","+z;if(!heights.has(key))heights.set(key,field.surface(x,z));return heights.get(key);}};
   const random=(i,salt)=>hashCell(field.seed,cx*13+i,cz*17-i,salt)/4294967296;
   for(let i=0;i<10;i++){
@@ -30,9 +31,9 @@ export function mudPatchGeometry(field,cx,cz,scale=.115){
     if(centers.some(p=>Math.hypot(x-p.x,z-p.z)<Math.max(rx,rz)+p.radius+.2))continue;
     const site=field.c.settlementSite;
     if(site&&Math.hypot(x-site.x,z-site.z)<site.clearRadius+Math.max(rx,rz)+2)continue;
-    if(field.slope(x,z)>.23||field.waterInfo(x,z).inside)continue;
+    if(field.slope(x,z)>.23||inside(x,z))continue;
     const contour=Array.from({length:12},(_,j)=>{const a=j*Math.PI/6,r=1+.13*Math.sin(a*3+phase)+.08*Math.cos(a*5-phase);return new THREE.Vector2(x+Math.cos(a)*rx*r,z+Math.sin(a)*rz*r);});
-    if(contour.some(p=>Math.abs(p.x-origin[0])>=24||Math.abs(p.y-origin[1])>=24||field.waterInfo(p.x,p.y).inside))continue;
+    if(contour.some(p=>Math.abs(p.x-origin[0])>=24||Math.abs(p.y-origin[1])>=24||inside(p.x,p.y)))continue;
     const triangles=THREE.ShapeUtils.triangulateShape(contour,[]),offset=[random(i,84331),random(i,84337)];
     for(const ids of triangles){
       const subject=ids.map(j=>[contour[j].x,contour[j].y]),minX=Math.floor(Math.min(...subject.map(p=>p[0]))),maxX=Math.ceil(Math.max(...subject.map(p=>p[0]))),minZ=Math.floor(Math.min(...subject.map(p=>p[1]))),maxZ=Math.ceil(Math.max(...subject.map(p=>p[1])));
