@@ -1,0 +1,176 @@
+{
+  "network": true,
+  "animals": 20,
+  "runs": [
+    {
+      "mode": "reference",
+      "cull": {
+        "calls": 0,
+        "examined": 0,
+        "removed": 0,
+        "ms": 0
+      },
+      "cpu": {
+        "count": 60,
+        "p50": 29.774999991059303,
+        "p95": 36.06999999284744,
+        "p99": 38.16999998688698,
+        "max": 42.51000000536442
+      },
+      "frames": {
+        "count": 59,
+        "p50": 33.3350000000064,
+        "p95": 33.3949999999968,
+        "p99": 33.41500000000087,
+        "max": 33.419999999998254
+      },
+      "gpu": {
+        "count": 60,
+        "p50": 18.477056,
+        "p95": 26.281984,
+        "p99": 27.172768,
+        "max": 27.758752
+      },
+      "gpuDiscarded": 0
+    },
+    {
+      "mode": "candidate",
+      "cull": {
+        "calls": 60,
+        "examined": 41280,
+        "removed": 5640,
+        "ms": 12.834999993443489
+      },
+      "cpu": {
+        "count": 60,
+        "p50": 29.049999997019768,
+        "p95": 33.67000000178814,
+        "p99": 42.35999999940395,
+        "max": 44.40500000119209
+      },
+      "frames": {
+        "count": 59,
+        "p50": 33.33499999999913,
+        "p95": 33.375,
+        "p99": 33.38999999999942,
+        "max": 33.395000000004075
+      },
+      "gpu": {
+        "count": 60,
+        "p50": 14.338432,
+        "p95": 21.589216,
+        "p99": 23.676256,
+        "max": 23.879488
+      },
+      "gpuDiscarded": 0
+    },
+    {
+      "mode": "candidate",
+      "cull": {
+        "calls": 60,
+        "examined": 41280,
+        "removed": 5640,
+        "ms": 11.374999955296516
+      },
+      "cpu": {
+        "count": 60,
+        "p50": 28.944999992847443,
+        "p95": 31.635000005364418,
+        "p99": 32.15500000119209,
+        "max": 32.875
+      },
+      "frames": {
+        "count": 59,
+        "p50": 33.3350000000064,
+        "p95": 33.3949999999968,
+        "p99": 33.44000000000233,
+        "max": 33.45999999999913
+      },
+      "gpu": {
+        "count": 60,
+        "p50": 21.188032,
+        "p95": 27.527904,
+        "p99": 27.972192,
+        "max": 28.229632
+      },
+      "gpuDiscarded": 0
+    },
+    {
+      "mode": "reference",
+      "cull": {
+        "calls": 0,
+        "examined": 0,
+        "removed": 0,
+        "ms": 0
+      },
+      "cpu": {
+        "count": 60,
+        "p50": 28.234999999403954,
+        "p95": 29.024999991059303,
+        "p99": 29.96000000834465,
+        "max": 30.49499998986721
+      },
+      "frames": {
+        "count": 59,
+        "p50": 33.33499999999913,
+        "p95": 33.38000000000466,
+        "p99": 33.3949999999968,
+        "max": 33.395000000004075
+      },
+      "gpu": {
+        "count": 60,
+        "p50": 15.129824,
+        "p95": 23.447552,
+        "p99": 24.161536,
+        "max": 25.867904
+      },
+      "gpuDiscarded": 0
+    }
+  ],
+  "comparisons": [
+    {
+      "a": 0,
+      "b": 1,
+      "shadow": {
+        "changed": 0,
+        "total": 4194304,
+        "max": 0
+      },
+      "color": {
+        "changed": 0,
+        "total": 921600,
+        "max": 0
+      }
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "shadow": {
+        "changed": 0,
+        "total": 4194304,
+        "max": 0
+      },
+      "color": {
+        "changed": 0,
+        "total": 921600,
+        "max": 0
+      }
+    },
+    {
+      "a": 0,
+      "b": 3,
+      "shadow": {
+        "changed": 0,
+        "total": 4194304,
+        "max": 0
+      },
+      "color": {
+        "changed": 0,
+        "total": 921600,
+        "max": 0
+      }
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Experimental per-frame CPU frustum compaction of static asset shadow proxies only, forced shadow redraw, one Edge headless session with 20 synthetic walking animals; packing and restoration included in CPU time. Shadow comparison reads packed color depth, not depth texture directly. No live simulation, input, camera motion, alpha/deformation coverage, integrated GPU or production change."
+}
