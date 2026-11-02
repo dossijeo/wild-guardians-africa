@@ -4,7 +4,7 @@ window.audit=async()=>{
  const main=await runPhysics(),start=performance.now();
  const remote=await new Promise((resolve,reject)=>{const worker=new Worker(new URL('./mobility-physics-parity-worker.js',import.meta.url),{type:'module'});worker.onerror=e=>reject(Error(e.message));worker.onmessage=e=>{worker.terminate();e.data.error?reject(Error(e.data.error)):resolve(e.data.result);};});
  const workerWallMs=performance.now()-start;let mismatch=-1;for(let i=0;i<main.samples.length;i++)if(JSON.stringify(main.samples[i])!==JSON.stringify(remote.samples[i])){mismatch=i;break;}
- if(mismatch!==-1||!main.phases.includes('falling')||!main.phases.includes('recovering')||!main.phases.includes('released'))throw Error(`Parity or phases: ${mismatch} ${main.phases}`);
- return {equal:true,steps:main.samples.length,phases:main.phases,main:{initializationMs:main.initializationMs,runMs:main.runMs},worker:{initializationMs:remote.initializationMs,runMs:remote.runMs,wallMs:workerWallMs}};
+ if(mismatch!==-1||!main.phases.includes('falling')||!main.phases.includes('recovering')||!main.phases.includes('released')||!main.recoveriesUsed.includes('AuthoredBeastRecovery'))throw Error(`Parity or phases: ${mismatch} ${main.phases} ${main.recoveriesUsed}`);
+ return {equal:true,steps:main.samples.length,phases:main.phases,recoveriesUsed:main.recoveriesUsed,boneCount:main.boneCount,main:{initializationMs:main.initializationMs,runMs:main.runMs},worker:{initializationMs:remote.initializationMs,runMs:remote.runMs,wallMs:workerWallMs}};
 };window.ready=true;document.querySelector('#status').textContent='Preparado';
 </script></body></html>
