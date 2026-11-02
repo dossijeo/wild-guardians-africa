@@ -1,0 +1,32 @@
+import * as THREE from 'three';
+import {Assets} from '/src/rendering/assets.js';
+import {ANIMAL_ACTIONS} from '/src/simulation/animal-actions-data.js';
+import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '/src/rendering/animal-actions.js';
+import {animalFootSamples,supportAnimalOnTerrain} from '/src/rendering/animal-terrain-support.js';
+import {AfricanToon} from '/src/rendering/african-toon.js';
+import {createSpatialWorld} from '/src/world/wild-engine/spatial-world.js';
+import {createSpatialTerrainView} from '/src/world/wild-engine/spatial-terrain-view.js';
+
+try {
+ const module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
+ const core=createSpatialWorld(module);core.generate(712,0,0,'savanna',{});
+ for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++)if(core.selectChunk(x,z)<0)core.addChunk(x,z);
+ const terrain=createSpatialTerrainView(core),surface=(x,z)=>terrain.surface(x,z),cx=15,cz=-35;
+ const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#view'),antialias:false,preserveDrawingBuffer:true});renderer.setSize(800,600,false);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;
+ const scene=new THREE.Scene();scene.background=new THREE.Color('#ddd6be');const camera=new THREE.PerspectiveCamera(35,800/600,.1,100),floorY=surface(cx,cz);camera.position.set(cx+5,floorY+3.3,cz+7);camera.lookAt(cx,floorY+1.2,cz);
+ const light=new THREE.DirectionalLight('#ffe2a8',3);light.position.set(cx-8,floorY+12,cz+7);light.target.position.set(cx,floorY,cz);light.castShadow=true;light.shadow.camera.left=-8;light.shadow.camera.right=8;light.shadow.camera.top=8;light.shadow.camera.bottom=-8;scene.add(light,light.target,new THREE.HemisphereLight('#ebf1d9','#765b3b',2));
+ const geometry=new THREE.PlaneGeometry(18,18,72,72);geometry.rotateX(-Math.PI/2);const pos=geometry.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i)+cx,z=pos.getZ(i)+cz;pos.setY(i,surface(x,z));}geometry.computeVertexNormals();const ground=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color:'#829459'}));ground.position.set(cx,0,cz);ground.receiveShadow=true;scene.add(ground);
+ const assets=new Assets(),toon=new AfricanToon();toon.update(0,light,'sabana');const target=new THREE.WebGLRenderTarget(800,600),pixels=new Uint8Array(800*600*4),sample=new THREE.Vector3();
+ const snap=()=>{renderer.setRenderTarget(target);renderer.render(scene,camera);renderer.readRenderTargetPixels(target,0,0,800,600,pixels);return new Uint8Array(pixels);};
+ const diff=(a,b)=>{let changed=0,max=0,sum=0;for(let i=0;i<a.length;i+=4){let p=0;for(let j=0;j<3;j++){const d=Math.abs(a[i+j]-b[i+j]);sum+=d;p=Math.max(p,d);}if(p)changed++;max=Math.max(max,p);}return {changed,max,mean:sum/(800*600*3)};};
+ const png=a=>{const c=document.createElement('canvas');c.width=800;c.height=600;const ctx=c.getContext('2d'),im=ctx.createImageData(800,600);for(let y=0;y<600;y++)im.data.set(a.subarray((599-y)*800*4,(600-y)*800*4),y*800*4);ctx.putImageData(im,0,0);return c.toDataURL('image/png');};
+ const rows=[],pictures={};for(const species of Object.keys(ANIMAL_ACTIONS.animals).sort()){
+  const gltf=await assets.model(ANIMAL_ACTIONS.animals[species].url),model=prepareAnimalModel(gltf.scene,species),root=new THREE.Group();root.add(model);scene.add(root);model.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;});toon.apply(model);
+  const data={model,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model),cachedSkinning:2},animal={species,status:'walking',motionPhase:0},contacts=animalFootSamples(model),duration=ANIMAL_ACTIONS.animals[species].clips.Walking.duration,n=Math.ceil(duration*30),last=(n-1)/30,times=Array.from({length:n},(_,i)=>i/30).concat(duration-Math.min(1e-7,(duration-last)/2));
+  const bank=times.map(t=>{animal.motionPhase=t;applyAnimalPose(data,animal,t);root.updateMatrixWorld(true);return contacts.map(({mesh,index})=>Float32Array.from(mesh.getVertexPosition(index,new THREE.Vector3()).applyMatrix4(mesh.matrixWorld).toArray()));});
+  let worst=null;for(let i=0;i<180;i++){const t=i/60+.003,x=cx+.35*Math.sin(t*.65),z=cz+.65*Math.sin(t*.4),yaw=.7*Math.sin(t*.55);root.position.set(x,surface(x,z),z);root.rotation.y=yaw;animal.motionPhase=t;applyAnimalPose(data,animal,t);root.updateMatrixWorld(true);const original=supportAnimalOnTerrain(data,surface);animal.motionPhase=t;applyAnimalPose(data,animal,t);root.updateMatrixWorld(true);let lo=0,phase=t%duration;while(lo+1<times.length&&times[lo+1]<=phase)lo++;const hi=Math.min(lo+1,times.length-1),f=hi===lo?0:(phase-times[lo])/(times[hi]-times[lo]);let baked=0;for(let j=0;j<contacts.length;j++){const a=bank[lo][j],b=bank[hi][j];sample.set(a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f).applyMatrix4(root.matrixWorld);baked=Math.max(baked,.01+surface(sample.x,sample.z)-sample.y);}if(!worst||Math.abs(original-baked)>worst.error)worst={t,x,z,yaw,original,baked,error:Math.abs(original-baked)};}
+  const draw=lift=>{root.position.set(worst.x,surface(worst.x,worst.z),worst.z);root.rotation.y=worst.yaw;animal.motionPhase=worst.t;applyAnimalPose(data,animal,worst.t);model.position.y+=lift;root.updateMatrixWorld(true);snap();return snap();};
+  const a=draw(worst.original),again=draw(worst.original),b=draw(worst.baked),neg=draw(worst.baked+.15);if(diff(a,again).changed||diff(b,neg).changed<100)throw Error('Unstable or insensitive visual control '+species);pictures[species+'-original']=png(a);pictures[species+'-baked']=png(b);rows.push({species,...worst,pixels:diff(a,b),negative:diff(b,neg),contacts:contacts.length});scene.remove(root);
+ }
+ const gl=renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');window.contactBankVisual={rows,pictures,device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),scope:'Static worst support correction in 180 sampled moving-root times, five species, one native savanna location. Both use original animated rig; only terrain lift differs. Terrain mesh approximates native height at 0.25-unit grid. Not GPU baked animation, runtime benchmark, gameplay or a full temporal/perceptual review.'};document.querySelector('#status').textContent='done';
+} catch(error){window.contactBankVisualError=String(error?.stack??error);document.querySelector('#status').textContent='error';}
