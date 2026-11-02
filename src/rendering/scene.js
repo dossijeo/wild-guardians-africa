@@ -15,6 +15,7 @@ import {streamingOptions} from './streaming-options.js';
 import {replaceWarmedPrograms} from './retain-warmed-programs.js';
 import {approvedVisualSearch} from './approved-visual-profile.js';
 import {createMangroveMaterialCache,mangroveMaterialCacheEnabled} from './mangrove-material-cache.js';
+import {prepareMangroveCacheProgram} from './prepare-mangrove-cache-program.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {waterOpaqueCoreEnabled,prepareOpaqueCore} from './water-opaque-core.js';
 import {naturalWaterEdgesEnabled,prepareNaturalWaterBed,prepareNaturalWater,prepareNaturalAssetWater,prepareNaturalAssetWaterBed,prepareNaturalWaterBedIncremental} from './natural-water-edges.js';
@@ -589,6 +590,10 @@ export class WorldScene {
       // not only the linear, shadowless variant used by VFX depth capture.
       // Prepare the first fixed512 recipe before world compilation, not on first draw.
       const cachePreparation=new URLSearchParams(this.visualSearch).get('groundCachePreparation');
+      if(import.meta.env.DEV&&this.loadingProgress&&new URLSearchParams(this.requestedVisualSearch).get('qaGroundProgramWarm')==='1'&&this.biomeGround?.mangroveSubstrate&&this.biomeGround?.mangroveShore&&mangroveMaterialCacheEnabled(this.visualSearch)){
+        this.mangroveMaterialCache??=createMangroveMaterialCache(this);
+        await phase('warm-ground-program-experiment',()=>prepareMangroveCacheProgram(this.renderer,this.mangroveMaterialCache,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onSubmit:this.onLoadingSpan}));if(this.disposed)return;
+      }
       if(cachePreparation==='1'||(cachePreparation!=='0'&&this.frameScheduler))await phase('warm-ground-cache-recipe',()=>this.prepareFrameResources());
       await phase('warm-compile-world',()=>compile(this.scene,this.camera,this.scene));if(this.disposed)return;
       if(this.streamingOptions.warmObstruction){

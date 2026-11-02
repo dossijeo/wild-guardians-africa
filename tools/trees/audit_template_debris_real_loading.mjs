@@ -29,7 +29,7 @@ try{
   `:''));if(groundSkip){const n="const cachePreparation=new URLSearchParams(this.visualSearch).get('groundCachePreparation');";if(!source.includes(n))throw Error('Missing ground preparation hook');source=source.replace(n,"const cachePreparation='0';");}injected++;await route.fulfill({response,body:source});
  });
  await page.addInitScript(()=>{localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',sfx:0,music:0}));window.qaTimes=[];window.qaFrameRows=[];let last=null;const tick=()=>{const now=performance.now();if(last!==null){window.qaTimes.push(now-last);window.qaFrameRows.push({start:last,end:now,interval:now-last});}last=now;requestAnimationFrame(tick);};requestAnimationFrame(tick);});
- await page.goto('http://127.0.0.1:5175/?qa-spatial-seed=712&qa-loading&qa-crop-spell-frame'+(process.env.LOADING_GPU==='1'?'&qa-loading-gpu':''));await page.waitForSelector('#native-menu',{timeout:30000});
+ await page.goto('http://127.0.0.1:5175/?qa-spatial-seed=712&qa-loading&qa-crop-spell-frame'+(process.env.LOADING_GPU==='1'?'&qa-loading-gpu':'')+(process.env.NATIVE_GROUND_WARM==='1'?'&qaGroundProgramWarm=1':''));await page.waitForSelector('#native-menu',{timeout:30000});
  const menu=page.frames().find(f=>f.url().includes('/menu/'));if(!menu)throw Error('Menu unavailable');
  const start=Date.now();await menu.evaluate(b=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome:b,culture:'mapungubwe'},location.origin),biome);
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')||document.querySelector('.loading-failure'),null,{timeout:240000});
