@@ -1,0 +1,70 @@
+{
+  "biome": "manglares",
+  "mangroveNetwork": true,
+  "animals": 20,
+  "chunks": 25,
+  "snapshotBytes": 29370,
+  "captureMs": 1.895000010728836,
+  "mainInitMs": 830.515000000596,
+  "workerInitMs": 845.9000000059605,
+  "workerInitResponseMs": 1059.5600000023842,
+  "rows": [
+    {
+      "steps": 1,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        969.6500000059605
+      ],
+      "workerTickMs": [
+        958.9449999928474
+      ],
+      "responseMs": 970.8849999904633,
+      "elapsed": 3000.3998650000012
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        11.61999998986721,
+        6.75,
+        3.7849999964237213,
+        3.1500000059604645,
+        2.915000006556511
+      ],
+      "workerTickMs": [
+        15.064999997615814,
+        7.045000001788139,
+        3.1599999964237213,
+        4.090000003576279,
+        3.1099999994039536
+      ],
+      "responseMs": 33.445000007748604,
+      "elapsed": 3000.649865000002
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        2.730000004172325,
+        2.560000002384186,
+        2.1599999964237213,
+        2.6200000047683716,
+        1.9500000029802322
+      ],
+      "workerTickMs": [
+        2.449999988079071,
+        2.310000002384186,
+        1.969999998807907,
+        2.935000002384186,
+        1.8400000035762787
+      ],
+      "responseMs": 12.769999995827675,
+      "elapsed": 3000.899865000003
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Snapshot captured from live mangrove-islands QA scene with 20 test animals; QA ID qa-beast-0 is renamed in the copy because native intent IDs require a positive numeric suffix. Both main and Worker restore independent game and spatial sessions from the same adapted serialized state and visible chunk keys. No comparison against the original scene native state, physics manager, GPU, inputs, render, full residency or production migration."
+}
