@@ -1,0 +1,234 @@
+{
+  "scope": "One Edge headless session, GTX 1660, 20 synthetic animals; frozen then active sequential 120-frame blocks. V8 CPU statistical samples, inclusive values overlap, timeDeltas are sampling weights, not exact timings. Active manually ticks Game at 0.05s per frame; no HUD, audio or input. Frame cadence and initial scene state differ between blocks, not an AB comparison.",
+  "results": [
+    {
+      "mode": "frozen",
+      "frames": {
+        "count": 119,
+        "p50": 33.3350000000064,
+        "p95": 33.41500000000087,
+        "p99": 33.43500000000495,
+        "max": 33.455000000001746
+      },
+      "ticks": null,
+      "render": {
+        "count": 120,
+        "p50": 25.935000002384186,
+        "p95": 30.649999991059303,
+        "p99": 33.73499999940395,
+        "max": 41.17000000178814
+      },
+      "animals": 20,
+      "errors": [],
+      "samples": 6947,
+      "actorSamples": 2051,
+      "inclusiveSampledMs": {
+        "sync": 1203.544,
+        "updateActor": 1163.542,
+        "groundAnimal": 956.112,
+        "supportAnimalOnTerrain": 178.066,
+        "drawWorldFrame": 1637.263
+      },
+      "topActorSelfSamples": [
+        {
+          "functionName": "height @ ground-skin-sampler.js:22",
+          "sampledMs": 550.758
+        },
+        {
+          "functionName": "getVertexPosition @ three.js?v=d06880d7:11740",
+          "sampledMs": 199.566
+        },
+        {
+          "functionName": "groundAnimal @ animal-actions.js:74",
+          "sampledMs": 124.42
+        },
+        {
+          "functionName": "wasm-function[47] @ 00206f66:1",
+          "sampledMs": 58.935
+        },
+        {
+          "functionName": "updateMatrixWorld @ three.js?v=d06880d7:8325",
+          "sampledMs": 48.318
+        },
+        {
+          "functionName": "wasm-function[575] @ 00206f66:1",
+          "sampledMs": 36.972
+        },
+        {
+          "functionName": "multiplyMatrices @ three.js?v=d06880d7:6652",
+          "sampledMs": 31.846
+        },
+        {
+          "functionName": "updateWorldMatrix @ three.js?v=d06880d7:8351",
+          "sampledMs": 10.684
+        },
+        {
+          "functionName": "wasm-function[40] @ 00206f66:1",
+          "sampledMs": 10.163
+        },
+        {
+          "functionName": "wasm-function[113] @ 00206f66:1",
+          "sampledMs": 6.73
+        },
+        {
+          "functionName": "compose @ three.js?v=d06880d7:7082",
+          "sampledMs": 6.144
+        },
+        {
+          "functionName": "bind @ ground-skin-sampler.js:8",
+          "sampledMs": 5.67
+        },
+        {
+          "functionName": "actorSurface @ spatial-navigation-movement.js:266",
+          "sampledMs": 4.516
+        },
+        {
+          "functionName": "copy @ three.js?v=d06880d7:6345",
+          "sampledMs": 4.465
+        },
+        {
+          "functionName": "updateActor @ scene.js:744",
+          "sampledMs": 3.981
+        },
+        {
+          "functionName": "applyBoneTransform @ three.js?v=d06880d7:14092",
+          "sampledMs": 3.954
+        },
+        {
+          "functionName": "wasm-function[587] @ 00206f66:1",
+          "sampledMs": 2.855
+        },
+        {
+          "functionName": "updateMatrix @ three.js?v=d06880d7:8310",
+          "sampledMs": 2.838
+        },
+        {
+          "functionName": "getVertexPosition @ three.js?v=d06880d7:14027",
+          "sampledMs": 2.834
+        },
+        {
+          "functionName": "fromBufferAttribute @ three.js?v=d06880d7:4687",
+          "sampledMs": 2.812
+        }
+      ]
+    },
+    {
+      "mode": "active",
+      "frames": {
+        "count": 119,
+        "p50": 66.54000000000087,
+        "p95": 66.77000000000407,
+        "p99": 100,
+        "max": 1033.3199999999997
+      },
+      "ticks": {
+        "count": 120,
+        "p50": 2.5399999916553497,
+        "p95": 6.690000012516975,
+        "p99": 10.370000004768372,
+        "max": 1006.7199999988079
+      },
+      "render": {
+        "count": 120,
+        "p50": 45.7250000089407,
+        "p95": 54.814999997615814,
+        "p99": 61.21999999880791,
+        "max": 238.9050000011921
+      },
+      "animals": 20,
+      "errors": [],
+      "samples": 12916,
+      "actorSamples": 2288,
+      "inclusiveSampledMs": {
+        "tick": 1312.686,
+        "updateActor": 1277.792,
+        "sync": 1316.896,
+        "groundAnimal": 961.254,
+        "supportAnimalOnTerrain": 181.291,
+        "drawWorldFrame": 3846.623
+      },
+      "topActorSelfSamples": [
+        {
+          "functionName": "height @ ground-skin-sampler.js:22",
+          "sampledMs": 535.888
+        },
+        {
+          "functionName": "groundAnimal @ animal-actions.js:74",
+          "sampledMs": 140.241
+        },
+        {
+          "functionName": "getVertexPosition @ three.js?v=d06880d7:11740",
+          "sampledMs": 96.222
+        },
+        {
+          "functionName": "wasm-function[47] @ 00206f66:1",
+          "sampledMs": 59.026
+        },
+        {
+          "functionName": "wasm-function[575] @ 00206f66:1",
+          "sampledMs": 43.129
+        },
+        {
+          "functionName": "getX @ three.js?v=d06880d7:10531",
+          "sampledMs": 39.34
+        },
+        {
+          "functionName": "updateMatrixWorld @ three.js?v=d06880d7:8325",
+          "sampledMs": 39.103
+        },
+        {
+          "functionName": "fromBufferAttribute @ three.js?v=d06880d7:2786",
+          "sampledMs": 27.655
+        },
+        {
+          "functionName": "multiplyMatrices @ three.js?v=d06880d7:6652",
+          "sampledMs": 22.557
+        },
+        {
+          "functionName": "getZ @ three.js?v=d06880d7:10577",
+          "sampledMs": 22.464
+        },
+        {
+          "functionName": "evaluate @ three.js?v=d06880d7:22115",
+          "sampledMs": 22.274
+        },
+        {
+          "functionName": "getY @ three.js?v=d06880d7:10554",
+          "sampledMs": 16.819
+        },
+        {
+          "functionName": "add @ three.js?v=d06880d7:2057",
+          "sampledMs": 13.984
+        },
+        {
+          "functionName": "slerpFlat @ three.js?v=d06880d7:1316",
+          "sampledMs": 12.774
+        },
+        {
+          "functionName": "compose @ three.js?v=d06880d7:7082",
+          "sampledMs": 11.905
+        },
+        {
+          "functionName": "set @ three.js?v=d06880d7:1941",
+          "sampledMs": 11.725
+        },
+        {
+          "functionName": "setFromRotationMatrix @ three.js?v=d06880d7:7436",
+          "sampledMs": 10.728
+        },
+        {
+          "functionName": "copySampleValue_ @ three.js?v=d06880d7:22203",
+          "sampledMs": 10.667
+        },
+        {
+          "functionName": "updateWorldMatrix @ three.js?v=d06880d7:8351",
+          "sampledMs": 9.946
+        },
+        {
+          "functionName": "wasm-function[113] @ 00206f66:1",
+          "sampledMs": 7.443
+        }
+      ]
+    }
+  ]
+}
