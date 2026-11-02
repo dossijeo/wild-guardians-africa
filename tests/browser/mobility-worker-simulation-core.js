@@ -6,13 +6,15 @@ import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spati
 import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 
 // Isolated parity experiment. This owns one simulation and one WASM world.
-export async function createSimulation(){
- const [binary,fixture]=await Promise.all([fetch('/src/world/wild-engine/spatial-savanna.wasm'),fetch('/tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')]);
+export async function createSimulation({mangrove=false}={}){
+ const [binary,fixture]=await Promise.all([fetch('/src/world/wild-engine/spatial-savanna.wasm'),fetch(mangrove?'/tests/fixtures/manglares-123-d10-raid-state.json.gz':'/tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')]);
  if(!binary.ok||!fixture.ok)throw Error(`Missing fixture: ${binary.status}/${fixture.status}`);
  const body=fixture.headers.get('content-encoding')?.includes('gzip')?fixture.body:fixture.body.pipeThrough(new DecompressionStream('gzip'));
  const [module,source]=await Promise.all([WebAssembly.compile(await binary.arrayBuffer()),new Response(body).text()]);
- const game=deserialize(source),loaded=new Map(),session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
- for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(`${x},${z}`,session.core.chunkPayload());}
+ let game;if(mangrove){const converted=JSON.parse(source);converted.mangroveNetwork=true;converted.mangroveSettlementVersion=2;game=deserialize(JSON.stringify(converted));}else game=deserialize(source);
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ const v=game.villages[0],cx=Math.floor((v.x+24)/48),cz=Math.floor((v.z+24)/48),bounds=mangrove?{xmin:cx-1,xmax:cx+1,zmin:cz-1,zmax:cz+1}:{xmin:1,xmax:3,zmin:-1,zmax:2};
+ for(let z=bounds.zmin;z<=bounds.zmax;z++)for(let x=bounds.xmin;x<=bounds.xmax;x++){if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(`${x},${z}`,session.core.chunkPayload());}
  const planner=createEventDrivenTaskPlanner(session),restored=planner.resetFromState(game),nav=createSpatialNavigationMovement(session,game),stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;
  let events=[];const stopEvents=observeGameEvents(game,event=>events.push(event));
  return {
