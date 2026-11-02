@@ -1,0 +1,16 @@
+{
+  "ticks": 120,
+  "elapsed": 6.000000000021828,
+  "animals": 20,
+  "checks": 2400,
+  "skipped": 849204,
+  "maxError": 0,
+  "phaseCounts": {
+    "walking": 1549,
+    "waiting": 671,
+    "attacking": 180
+  },
+  "network": true,
+  "sceneErrors": [],
+  "scope": "One active mangrove-islands QA simulation, 20 initially spawned animals, 120 ticks; compares full and candidate minima in the same render pose. Synthetic crowd, no deliberate physical impacts or recovery, no timing because each evaluation executes both algorithms; no complete gameplay or pixel parity."
+}
