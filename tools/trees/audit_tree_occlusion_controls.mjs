@@ -1,0 +1,14 @@
+import {createRequire} from 'node:module';
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
+const browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ const page=await browser.newPage();await page.goto('http://127.0.0.1:5175/');
+ const result=await page.evaluate(async()=>{
+  const THREE=await import('/node_modules/.vite-pthreads/deps/three.js'),canvas=document.createElement('canvas'),renderer=new THREE.WebGLRenderer({canvas,antialias:false});renderer.setSize(128,128,false);const gl=renderer.getContext(),camera=new THREE.PerspectiveCamera(50,1,.1,30);camera.position.set(0,0,5);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+  const scene=new THREE.Scene(),occluder=new THREE.Mesh(new THREE.PlaneGeometry(3,3),new THREE.MeshBasicMaterial());scene.add(occluder);renderer.render(scene,camera);renderer.autoClear=false;
+  const queryScene=new THREE.Scene(),material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false,depthTest:true,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});const inputs=[['behind',0,0,-1],['front',0,0,1],['offscreen',30,0,0]],queries=[];
+  const submit=control=>{for(const [name,x,y,z] of inputs){const mesh=new THREE.Mesh(new THREE.BoxGeometry(.5,.5,.5),material);mesh.position.set(x,y,z);mesh.frustumCulled=false;queryScene.add(mesh);const q=gl.createQuery();gl.beginQuery(gl.ANY_SAMPLES_PASSED_CONSERVATIVE,q);renderer.render(queryScene,camera);gl.endQuery(gl.ANY_SAMPLES_PASSED_CONSERVATIVE);queryScene.remove(mesh);mesh.geometry.dispose();queries.push({name,control,q});}};
+  submit(false);renderer.state.buffers.depth.setMask(true);renderer.clearDepth();submit(true);gl.flush();const deadline=performance.now()+5000;while(queries.some(v=>!gl.getQueryParameter(v.q,gl.QUERY_RESULT_AVAILABLE))&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));const rows=queries.map(({name,control,q})=>({name,control,available:gl.getQueryParameter(q,gl.QUERY_RESULT_AVAILABLE),samples:gl.getQueryParameter(q,gl.QUERY_RESULT_AVAILABLE)?gl.getQueryParameter(q,gl.QUERY_RESULT):null}));const error=gl.getError();for(const {q} of queries)gl.deleteQuery(q);material.dispose();occluder.geometry.dispose();occluder.material.dispose();renderer.dispose();return {rows,error};
+ });
+ const get=(name,control)=>result.rows.find(x=>x.name===name&&x.control===control);for(const [name,normal,control] of [['behind',false,true],['front',true,true],['offscreen',false,false]])if(!get(name,false)?.available||!get(name,true)?.available||Boolean(get(name,false).samples)!==normal||Boolean(get(name,true).samples)!==control)throw Error(JSON.stringify(result));if(result.error)throw Error('WebGL error '+result.error);console.log(JSON.stringify(result));
+}finally{await browser.close();}
