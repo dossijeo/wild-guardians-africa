@@ -1,0 +1,441 @@
+{
+  "scope": "300 ordered Worker ticks with a scripted structure hit and per-step event delivery, bounded by wall-time simulation deadlines versus one request per render frame. One in flight; clock mode coalesces pending visual poses while recording all samples and events. Textured hyena in reduced WebGL scene. Not a production clock, pause, real input, event delivery, safe horizon or gameplay integration; initialization excluded.",
+  "runs": [
+    {
+      "mode": "frame",
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 323.6850000023842,
+        "p99": 323.6850000023842,
+        "max": 323.6850000023842
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 300,
+      "coalesced": 0,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 10411.245000004768,
+      "displayElapsedMs": 10433.140000000596,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.855000004172325,
+        "p99": 11.485000014305115,
+        "max": 323.6850000023842
+      },
+      "presentationDelayMs": {
+        "count": 300,
+        "p95": 30.82999999821186,
+        "p99": 30.885000005364418,
+        "max": 31.04000000655651
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 5.154999986290932,
+        "p99": 7.480000004172325,
+        "max": 322.25
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.5150000005960464,
+        "p99": 10.54500000178814,
+        "max": 322.93000000715256
+      },
+      "poseApplyMs": {
+        "count": 300,
+        "p95": 0.10500000417232513,
+        "p99": 0.14499999582767487,
+        "max": 0.17499999701976776
+      },
+      "visualGapSteps": {
+        "count": 300,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "rootShift": {
+        "count": 300,
+        "p95": 0.04084554431565211,
+        "p99": 0.08333414753504743,
+        "max": 0.0978675106338216
+      },
+      "frames": {
+        "count": 327,
+        "p95": 33.3849999999984,
+        "p99": 33.39500000000044,
+        "max": 33.414999999999054
+      },
+      "renderMs": {
+        "count": 328,
+        "p95": 0.6449999958276749,
+        "p99": 0.75,
+        "max": 1.0250000059604645
+      },
+      "gpu": {
+        "reason": null,
+        "count": 328,
+        "p95": 32.935872,
+        "p99": 33.280288,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    },
+    {
+      "mode": "clock",
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 318.53999999165535,
+        "p99": 318.53999999165535,
+        "max": 318.53999999165535
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 139,
+      "coalesced": 161,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 5011.324999988079,
+      "displayElapsedMs": 5033.119999989867,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.9649999886751175,
+        "p99": 9.16499999165535,
+        "max": 318.53999999165535
+      },
+      "presentationDelayMs": {
+        "count": 139,
+        "p95": 14.390000000596046,
+        "p99": 14.54500000178814,
+        "max": 29.984999999403954
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 5.204999998211861,
+        "p99": 6.929999992251396,
+        "max": 316.9650000035763
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.700000002980232,
+        "p99": 8.925000011920929,
+        "max": 317.69499999284744
+      },
+      "poseApplyMs": {
+        "count": 139,
+        "p95": 0.11499999463558197,
+        "p99": 0.14499999582767487,
+        "max": 0.19500000774860382
+      },
+      "visualGapSteps": {
+        "count": 139,
+        "p95": 2,
+        "p99": 6,
+        "max": 7
+      },
+      "rootShift": {
+        "count": 139,
+        "p95": 0.06096412476191566,
+        "p99": 0.11231904676029726,
+        "max": 0.2610105261593224
+      },
+      "frames": {
+        "count": 165,
+        "p95": 33.400000000000546,
+        "p99": 33.465000000000146,
+        "max": 33.48499999999967
+      },
+      "renderMs": {
+        "count": 166,
+        "p95": 0.6500000059604645,
+        "p99": 0.8849999904632568,
+        "max": 1.3299999982118607
+      },
+      "gpu": {
+        "reason": null,
+        "count": 166,
+        "p95": 2.263008,
+        "p99": 2.826752,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    },
+    {
+      "mode": "clock",
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 307.0649999976158,
+        "p99": 307.0649999976158,
+        "max": 307.0649999976158
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 140,
+      "coalesced": 160,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 5011.444999992847,
+      "displayElapsedMs": 5033.04999999702,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.280000001192093,
+        "p99": 10.474999994039536,
+        "max": 307.0649999976158
+      },
+      "presentationDelayMs": {
+        "count": 140,
+        "p95": 14.219999998807907,
+        "p99": 14.509999990463257,
+        "max": 29.984999999403954
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 4.159999996423721,
+        "p99": 8.760000005364418,
+        "max": 305.7450000047684
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.049999997019768,
+        "p99": 10.290000006556511,
+        "max": 306.4099999964237
+      },
+      "poseApplyMs": {
+        "count": 140,
+        "p95": 0.11499999463558197,
+        "p99": 0.1300000101327896,
+        "max": 0.17500001192092896
+      },
+      "visualGapSteps": {
+        "count": 140,
+        "p95": 2,
+        "p99": 5,
+        "max": 9
+      },
+      "rootShift": {
+        "count": 140,
+        "p95": 0.0500967408944901,
+        "p99": 0.09211135445095978,
+        "max": 0.3005764503880372
+      },
+      "frames": {
+        "count": 165,
+        "p95": 33.38499999999931,
+        "p99": 33.409999999999854,
+        "max": 33.414999999999964
+      },
+      "renderMs": {
+        "count": 166,
+        "p95": 0.6549999862909317,
+        "p99": 0.8799999952316284,
+        "max": 2.310000002384186
+      },
+      "gpu": {
+        "reason": null,
+        "count": 166,
+        "p95": 3.568448,
+        "p99": 4.440416,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    },
+    {
+      "mode": "frame",
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 305.934999987483,
+        "p99": 305.934999987483,
+        "max": 305.934999987483
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 300,
+      "coalesced": 0,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 10411.534999996424,
+      "displayElapsedMs": 10433.060000002384,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.519999995827675,
+        "p99": 11.79500000178814,
+        "max": 305.934999987483
+      },
+      "presentationDelayMs": {
+        "count": 300,
+        "p95": 30.814999997615814,
+        "p99": 30.929999992251396,
+        "max": 33.12999999523163
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 4.855000004172325,
+        "p99": 7.459999993443489,
+        "max": 304.5300000011921
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.215000003576279,
+        "p99": 10.82999999821186,
+        "max": 305.26500000059605
+      },
+      "poseApplyMs": {
+        "count": 300,
+        "p95": 0.10500000417232513,
+        "p99": 0.1599999964237213,
+        "max": 0.29500000178813934
+      },
+      "visualGapSteps": {
+        "count": 300,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "rootShift": {
+        "count": 300,
+        "p95": 0.04084554431565211,
+        "p99": 0.08333414753504743,
+        "max": 0.0978675106338216
+      },
+      "frames": {
+        "count": 327,
+        "p95": 33.3799999999992,
+        "p99": 33.39499999999953,
+        "max": 33.44999999999982
+      },
+      "renderMs": {
+        "count": 328,
+        "p95": 0.6800000071525574,
+        "p99": 0.8200000077486038,
+        "max": 1.0049999952316284
+      },
+      "gpu": {
+        "reason": null,
+        "count": 328,
+        "p95": 4.245504,
+        "p99": 4.544256,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    }
+  ]
+}
