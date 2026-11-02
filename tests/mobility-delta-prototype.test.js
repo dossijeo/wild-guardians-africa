@@ -9,3 +9,13 @@ test('byte saturation rejects atomically and retry preserves ordered events',()=
  assert.equal(tx.acknowledge('s',1),true);const retried=tx.publish(p(2,[{id:'a',x:2}],[second]));assert.equal(retried.version,2);assert.equal(rx.accept(retried).accepted,true);assert.deepEqual(rx.state().events.map(x=>x.event),[first,second]);assert.ok(tx.status().pendingBytes<=capacity);
  const oversized=tx.publish(p(3,[{id:'a'}],[makeEvent('z'.repeat(capacity*2))]));assert.equal(oversized.reason,'oversize');assert.equal(tx.status().version,2);
 });
+
+test('pause reasons survive deltas, snapshots and invalid packets without partial application',()=>{
+ const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s');
+ const initial={...p(1,[{id:'a'}]),pauses:[]};assert.equal(rx.accept(tx.publish(initial)).accepted,true);
+ const paused={...p(2,[{id:'a',x:2}],[{kind:'pause'}]),pauses:['diagnostic']},message=tx.publish(paused);
+ const before=rx.state();assert.equal(rx.accept({...message,pauses:[42]}).accepted,false);assert.deepEqual(rx.state(),before);
+ assert.equal(rx.accept(message).accepted,true);assert.deepEqual(rx.state().state.pauses,['diagnostic']);
+ assert.equal(rx.accept(tx.snapshot()).accepted,true);assert.deepEqual(rx.state().state.pauses,['diagnostic']);
+ const resumed={...p(3,[{id:'a',x:3}]),pauses:[]};assert.equal(rx.accept(tx.publish(resumed)).accepted,true);assert.deepEqual(rx.state().state.pauses,[]);
+});
