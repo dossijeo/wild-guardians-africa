@@ -14,4 +14,11 @@ test('ordered static-body sweeps cannot certify concurrent visual interpolation'
  // At equal normalized simulation time 0.6, the two swept discs overlap.
  const t=.6,first={x:t,z:0},second={x:1-t,z:1-t};
  assert.ok(Math.hypot(first.x-second.x,first.z-second.z)<.5);
+ // A diagnostic ordered playback holds the other body fixed in each phase.
+ // Exact closest-point distances for the two segments are 1 and sqrt(1/2).
+ const distanceToSegment=(p,a,b)=>{const dx=b.x-a.x,dz=b.z-a.z,den=dx*dx+dz*dz,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/den));return Math.hypot(p.x-a.x-t*dx,p.z-a.z-t*dz);};
+ const firstPhase=distanceToSegment({x:1,z:1},{x:0,z:0},{x:1,z:0});
+ const secondPhase=distanceToSegment({x:1,z:0},{x:1,z:1},{x:0,z:0});
+ assert.equal(firstPhase,1);assert.ok(Math.abs(secondPhase-Math.SQRT1_2)<1e-12);
+ assert.ok(Math.min(firstPhase,secondPhase)>.5);
 });
