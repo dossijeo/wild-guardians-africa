@@ -693,8 +693,17 @@ bool terrainValid(double x,double z,float radius,bool worker){
   for(int i=0;i<5;i++){
     const double px=x+(i==1?radius:i==2?-radius:0),pz=z+(i==3?radius:i==4?-radius:0);
     if(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))return false;
+#ifdef WILD_EXPERIMENT_SLOPE_BOUND
+    const double slopeX=travelSurface(px+.8,pz)-travelSurface(px-.8,pz);
+    const double slopeZ=travelSurface(px,pz+.8)-travelSurface(px,pz-.8);
+    // If both components are at most 0.5, hypot is below 0.8 by a wide
+    // margin. Ambiguous and non-finite values keep the original predicate.
+    if(!(std::abs(slopeX)<=.5&&std::abs(slopeZ)<=.5)&&
+       std::hypot(slopeX,slopeZ)/1.6>.5)return false;
+#else
     if(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
       travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5)return false;
+#endif
   }
   return true;
 }
