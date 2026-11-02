@@ -20,7 +20,7 @@ try {
  const snap=()=>{renderer.setRenderTarget(target);renderer.render(scene,camera);renderer.readRenderTargetPixels(target,0,0,800,600,pixels);return new Uint8Array(pixels);};
  const diff=(a,b)=>{let changed=0,max=0,sum=0;for(let i=0;i<a.length;i+=4){let p=0;for(let j=0;j<3;j++){const d=Math.abs(a[i+j]-b[i+j]);sum+=d;p=Math.max(p,d);}if(p)changed++;max=Math.max(max,p);}return {changed,max,mean:sum/(800*600*3)};};
  const png=a=>{const c=document.createElement('canvas');c.width=800;c.height=600;const ctx=c.getContext('2d'),im=ctx.createImageData(800,600);for(let y=0;y<600;y++)im.data.set(a.subarray((599-y)*800*4,(600-y)*800*4),y*800*4);ctx.putImageData(im,0,0);return c.toDataURL('image/png');};
- const rows=[],pictures={},videos=[];const temporal=new URLSearchParams(location.search).has('temporal');for(const species of Object.keys(ANIMAL_ACTIONS.animals).sort()){
+ const rows=[],pictures={},videos=[],frameAudits=[];const exhaustive=new URLSearchParams(location.search).has('frames');const temporal=new URLSearchParams(location.search).has('temporal');for(const species of Object.keys(ANIMAL_ACTIONS.animals).sort()){
   const gltf=await assets.model(ANIMAL_ACTIONS.animals[species].url),model=prepareAnimalModel(gltf.scene,species),root=new THREE.Group();root.add(model);scene.add(root);model.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;});toon.apply(model);
   const data={model,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model),cachedSkinning:2},animal={species,status:'walking',motionPhase:0},contacts=animalFootSamples(model),duration=ANIMAL_ACTIONS.animals[species].clips.Walking.duration,n=Math.ceil(duration*30),last=(n-1)/30,times=Array.from({length:n},(_,i)=>i/30).concat(duration-Math.min(1e-7,(duration-last)/2));
   const bank=times.map(t=>{animal.motionPhase=t;applyAnimalPose(data,animal,t);root.updateMatrixWorld(true);return contacts.map(({mesh,index})=>Float32Array.from(mesh.getVertexPosition(index,new THREE.Vector3()).applyMatrix4(mesh.matrixWorld).toArray()));});
@@ -35,7 +35,18 @@ try {
     recorder.stop();await stopped;const blob=new Blob(chunks,{type}),encoded=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});if(!blob.size)throw Error('Empty comparison video '+species);videos.push({species,frames:90,nominalFps:30,width:1600,height:600,bytes:blob.size,maxLiftDifference,data:encoded});
    }finally{for(const t of stream.getTracks())t.stop();}
   }
+  if(exhaustive){
+   const frames=[];let prevOriginal=null,prevBaked=null;
+   for(let i=0;i<180;i++){
+    const t=i/60+.003,x=cx+.35*Math.sin(t*.65),z=cz+.65*Math.sin(t*.4),yaw=.7*Math.sin(t*.55);root.position.set(x,surface(x,z),z);root.rotation.y=yaw;animal.motionPhase=t;applyAnimalPose(data,animal,t);root.updateMatrixWorld(true);const original=supportAnimalOnTerrain(data,surface),a=snap();
+    animal.motionPhase=t;applyAnimalPose(data,animal,t);root.updateMatrixWorld(true);let lo=0,phase=t%duration;while(lo+1<times.length&&times[lo+1]<=phase)lo++;const hi=Math.min(lo+1,times.length-1),f=hi===lo?0:(phase-times[lo])/(times[hi]-times[lo]);let baked=0;for(let j=0;j<contacts.length;j++){const p=bank[lo][j],q=bank[hi][j];sample.set(p[0]+(q[0]-p[0])*f,p[1]+(q[1]-p[1])*f,p[2]+(q[2]-p[2])*f).applyMatrix4(root.matrixWorld);baked=Math.max(baked,.01+surface(sample.x,sample.z)-sample.y);}model.position.y+=baked;root.updateMatrixWorld(true);const b=snap(),spatial=diff(a,b);let temporalMean=null;
+    if(prevOriginal){let sum=0;for(let k=0;k<a.length;k+=4)for(let c=0;c<3;c++)sum+=Math.abs((b[k+c]-prevBaked[k+c])-(a[k+c]-prevOriginal[k+c]));temporalMean=sum/(800*600*3);}
+    frames.push({frame:i,time:t,liftDifference:baked-original,changedPixels:spatial.changed,meanPixelDifference:spatial.mean,maxChannelDifference:spatial.max,temporalResidualMean:temporalMean});prevOriginal=a;prevBaked=b;
+   }
+   if(frames.length!==180||frames.some((f,i)=>f.frame!==i||!Number.isFinite(f.meanPixelDifference)))throw Error('Incomplete frame audit '+species);
+   frameAudits.push({species,frames});
+  }
   scene.remove(root);
  }
- const gl=renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');window.contactBankVisual={rows,pictures,videos,device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),scope:'Static worst support correction in 180 sampled moving-root times, five species, one native savanna location. Both use original animated rig; only terrain lift differs. Terrain mesh approximates native height at 0.25-unit grid. Not GPU baked animation, runtime benchmark, gameplay or a full temporal/perceptual review.'};document.querySelector('#status').textContent='done';
+ const gl=renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');window.contactBankVisual={rows,pictures,videos,frameAudits,device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),scope:'Static worst support correction in 180 sampled moving-root times, five species, one native savanna location. Both use original animated rig; only terrain lift differs. Terrain mesh approximates native height at 0.25-unit grid. Not GPU baked animation, runtime benchmark, gameplay or a full temporal/perceptual review.'};document.querySelector('#status').textContent='done';
 } catch(error){window.contactBankVisualError=String(error?.stack??error);document.querySelector('#status').textContent='error';}
