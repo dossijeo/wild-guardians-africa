@@ -19,3 +19,18 @@ test('retroactive or inconsistent stops fail closed',()=>{
   assert.deepEqual(gate.invalidate({worldVersion:2,at,point,version:2},1),{accepted:false,reason,hide:true});assert.equal(gate.sample(2),null);
  }
 });
+
+test('replacement cannot silently jump from the confirmed presentation',()=>{
+ const gate=createGuardedTrajectory('world','animal',{worldVersion:1});assert.equal(gate.install(route(),0).accepted,true);gate.presented(1);
+ const replacement={...route(),version:2,startTime:1,points:[{x:2,z:0},{x:3,z:0}]};
+ assert.deepEqual(gate.install(replacement,1),{accepted:false,reason:'position',hide:true});assert.equal(gate.sample(1),null);assert.equal(gate.install({...route(),version:3},1).reason,'reconciliation');
+});
+test('continuous replacement preserves monotonic version and endpoint',()=>{
+ const gate=createGuardedTrajectory('world','animal',{worldVersion:1});gate.install(route(),0);gate.presented(1);
+ const replacement={...route(),version:2,startTime:1,points:[{x:.4,z:0},{x:2,z:0}]};assert.equal(gate.install(replacement,1).accepted,true);assert.equal(gate.sample(1).x,.4);assert.equal(gate.sample(20).x,2);assert.equal(gate.install({...replacement,version:1},1).reason,'stale');
+});
+
+test('obsolete discontinuous packets are discarded without suspending the current route',()=>{
+ const gate=createGuardedTrajectory('world','animal',{worldVersion:1});gate.install(route(),0);gate.presented(1);
+ const stale={...route(),version:1,startTime:1,points:[{x:99,z:0},{x:100,z:0}]};assert.equal(gate.install(stale,1).reason,'stale');assert.ok(Math.abs(gate.sample(1).x-.4)<1e-12);
+});
