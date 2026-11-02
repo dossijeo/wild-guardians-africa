@@ -34,6 +34,12 @@ export class LoadingCinematic {
         check();
         this.world.camera.position.copy(eye);this.world.camera.quaternion.copy(quaternion);this.world.camera.updateMatrixWorld();
         if(this.world.renderLoadingFrame)await this.world.renderLoadingFrame({nextFrame:frame,afterRender});else this.world.render(0);afterRender();
+        // No world pixels have been handed off yet. Start already verified
+        // 3D representations at their final coverage instead of revealing a
+        // forest of impostors and fading it all in after gameplay begins.
+        // setCoverage only targets entries with a prepared GPU-backed model.
+        for(const adapter of this.world.farVegetation?.adapters??[]){const transitions=adapter.layer.transitions;transitions.advance(transitions.duration);}
+        this.world.farVegetation?.update(0);
         this.restore();this.world.cinematic=true;
         await frame();check();
       }
