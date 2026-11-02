@@ -1,2 +1,2 @@
 import {runPhysics} from './mobility-physics-parity-core.js';
-try{postMessage({result:await runPhysics()});}catch(error){postMessage({error:String(error?.stack??error)});}
+self.onmessage=async({data})=>{try{postMessage({result:await runPhysics(data)});}catch(error){postMessage({error:String(error?.stack??error)});}};

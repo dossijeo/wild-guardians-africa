@@ -1,10 +1,11 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>Paridad física Worker</title><body><pre id="status">Preparando…</pre><script type="module">
 import {runPhysics} from './mobility-physics-parity-core.js';
-window.audit=async()=>{
- const main=await runPhysics(),start=performance.now();
- const remote=await new Promise((resolve,reject)=>{const worker=new Worker(new URL('./mobility-physics-parity-worker.js',import.meta.url),{type:'module'});worker.onerror=e=>reject(Error(e.message));worker.onmessage=e=>{worker.terminate();e.data.error?reject(Error(e.data.error)):resolve(e.data.result);};});
+window.audit=async(options={})=>{
+ const main=await runPhysics(options),start=performance.now();
+ const remote=await new Promise((resolve,reject)=>{const worker=new Worker(new URL('./mobility-physics-parity-worker.js',import.meta.url),{type:'module'});worker.onerror=e=>reject(Error(e.message));worker.onmessage=e=>{worker.terminate();e.data.error?reject(Error(e.data.error)):resolve(e.data.result);};worker.postMessage(options);});
  const workerWallMs=performance.now()-start;let mismatch=-1;for(let i=0;i<main.samples.length;i++)if(JSON.stringify(main.samples[i])!==JSON.stringify(remote.samples[i])){mismatch=i;break;}
  if(mismatch!==-1||!main.phases.includes('falling')||!main.phases.includes('recovering')||!main.phases.includes('released')||!main.recoveriesUsed.includes('AuthoredBeastRecovery'))throw Error(`Parity or phases: ${mismatch} ${main.phases} ${main.recoveriesUsed}`);
- return {equal:true,steps:main.samples.length,phases:main.phases,recoveriesUsed:main.recoveriesUsed,boneCount:main.boneCount,main:{initializationMs:main.initializationMs,runMs:main.runMs},worker:{initializationMs:remote.initializationMs,runMs:remote.runMs,wallMs:workerWallMs}};
+ if(main.peerContacts!==remote.peerContacts||main.barrierContacts!==remote.barrierContacts||options.crowd&&(!main.peerContacts||!main.barrierContacts))throw Error('Contact counts differ or scenario did not exercise both contacts');
+ return {equal:true,steps:main.samples.length,phases:main.phases,recoveriesUsed:main.recoveriesUsed,boneCount:main.boneCount,peerContacts:main.peerContacts,barrierContacts:main.barrierContacts,main:{initializationMs:main.initializationMs,runMs:main.runMs},worker:{initializationMs:remote.initializationMs,runMs:remote.runMs,wallMs:workerWallMs}};
 };window.ready=true;document.querySelector('#status').textContent='Preparado';
 </script></body></html>
