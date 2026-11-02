@@ -1,0 +1,66 @@
+{
+  "scope": "Offline hyena Walking; canonical root, original pose and grounding. Add last sample just before cycle end and hold until the runtime wrap; sparse vertex and matrix comparisons only. No GPU, visual acceptance, transitions, physics, dynamic terrain, campaign or production integration. Source loop jump is the difference between the original pre-wrap and zero pose, not an added baked jump.",
+  "repeat30HashEqual": true,
+  "rates": [
+    {
+      "sampleRate": 15,
+      "frames": 17,
+      "strideFloats": 337,
+      "sharedMatrixChannels": 1,
+      "byteLength": 22916,
+      "sha256": "b6a993de4db277be34a9aabf95c044d558ac9f1722f5f81d786663b1b9158905",
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 16,
+        "maxMatrixElementError": 0.06600567698478699,
+        "maxGroundHeightError": 0.006356578320264816,
+        "vertexComparisons": 7191,
+        "maxWorldVertexError": 0.024918357957699065,
+        "maxWrapWorldVertexError": 1.2516737847039172e-07,
+        "maxSourceLoopJump": 0.1210555459271244,
+        "rmsWorldVertexError": 0.004882063906846057
+      }
+    },
+    {
+      "sampleRate": 30,
+      "frames": 33,
+      "strideFloats": 337,
+      "sharedMatrixChannels": 1,
+      "byteLength": 44484,
+      "sha256": "4474a53547835cd45ef59ba2140f2bb676386aa064af661d3b2bc02040b5002c",
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 32,
+        "maxMatrixElementError": 0.02783796191215515,
+        "maxGroundHeightError": 0.005176470149308443,
+        "vertexComparisons": 13959,
+        "maxWorldVertexError": 0.009695259158315246,
+        "maxWrapWorldVertexError": 1.2516737847039172e-07,
+        "maxSourceLoopJump": 0.1210555459271244,
+        "rmsWorldVertexError": 0.0018615702108623318
+      }
+    },
+    {
+      "sampleRate": 60,
+      "frames": 64,
+      "strideFloats": 337,
+      "sharedMatrixChannels": 1,
+      "byteLength": 86272,
+      "sha256": "46fe6e01dd9e9a104006f47936d40ef2200521ff7354f19e1e16c4e64d3ed597",
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 63,
+        "maxMatrixElementError": 0.021549202501773834,
+        "maxGroundHeightError": 0.0026646535843610764,
+        "vertexComparisons": 27072,
+        "maxWorldVertexError": 0.007396665682971038,
+        "maxWrapWorldVertexError": 1.2516737847039172e-07,
+        "maxSourceLoopJump": 0.1210555459271244,
+        "rmsWorldVertexError": 0.0006354147463991011
+      }
+    }
+  ]
+}
