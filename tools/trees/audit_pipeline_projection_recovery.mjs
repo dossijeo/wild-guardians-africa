@@ -29,5 +29,5 @@ try{
    return {authority:r.authority,network:r.state.mangroveNetwork,animals:r.state.raid.animals.length,chunks:chunks.length,gap:gap.reason,recoveredVersion:accepted.version,duplicateNewEvents:repeat.newEvents,finalVersion:fourth.sequence,finalSnapshotEqual:equal,eventEqual,receivedEvents:receiver.state().lastEvent,scope:'QA Worker with deliberately dropped projection and snapshot retry. Frozen scene; no rendering, real input, Rapier, Worker crash, safe horizon or performance claim.'};
   }finally{worker.terminate();}
  });
- if(errors.length)throw Error(JSON.stringify(errors));await writeFile('docs/lighting/tree-near-retexture/performance/mobility-pipeline-projection-recovery.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+ if(errors.length)throw Error(JSON.stringify(errors));await writeFile(process.env.OUTPUT??'docs/lighting/tree-near-retexture/performance/mobility-pipeline-projection-recovery.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{await browser.close();}

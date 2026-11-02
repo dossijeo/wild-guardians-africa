@@ -1,6 +1,15 @@
 // Diagnostic projection protocol. It is not a complete game snapshot.
 const kinds=['workers','animals','structures'];
 const clone=x=>structuredClone(x);
+// An equal-version snapshot is an idempotent replay, not permission to alter
+// already accepted state. Key order is immaterial; array order is significant.
+function sameValue(a,b,seen=new WeakMap()){
+ if(Object.is(a,b))return true;
+ if(!a||!b||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)!==Array.isArray(b))return false;
+ if(seen.has(a))return seen.get(a)===b;seen.set(a,b);
+ const ak=Object.keys(a).sort(),bk=Object.keys(b).sort();
+ return ak.length===bk.length&&ak.every((key,i)=>key===bk[i]&&sameValue(a[key],b[key],seen));
+}
 function validProjection(p){return p&&Number.isFinite(p.elapsed)&&(p.pauses===undefined||Array.isArray(p.pauses)&&p.pauses.every(x=>typeof x==='string'))&&kinds.every(k=>Array.isArray(p[k])&&new Set(p[k].map(x=>x.id)).size===p[k].length&&p[k].every(x=>typeof x.id==='string'));}
 export function createProjectionPublisher(session,{maxPendingBytes=Infinity}={}){
  if(maxPendingBytes!==Infinity&&(!Number.isSafeInteger(maxPendingBytes)||maxPendingBytes<2))throw Error('Invalid event capacity');
@@ -24,6 +33,7 @@ export function createProjectionReceiver(session){
   accept(packet){if(!packet||packet.session!==session||!Number.isSafeInteger(packet.version)||packet.version<1||!Array.isArray(packet.events))return {accepted:false,reason:'invalid'};
    if(packet.kind==='delta'&&(packet.base!==version||packet.version!==version+1))return {accepted:false,reason:'gap'};
    if(packet.kind==='snapshot'&&packet.version<version)return {accepted:false,reason:'stale'};
+   if(packet.kind==='snapshot'&&packet.version===version&&state&&!sameValue(packet.state,state))return {accepted:false,reason:'conflict'};
    let nextEvent=lastEvent;const fresh=[];for(const e of packet.events){if(!Number.isSafeInteger(e.sequence)||e.sequence<1)return {accepted:false,reason:'event'};if(e.sequence<=nextEvent)continue;if(e.sequence!==nextEvent+1)return {accepted:false,reason:'event-gap'};nextEvent=e.sequence;fresh.push(e);}
    let next;if(packet.kind==='snapshot'){if(!validProjection(packet.state))return {accepted:false,reason:'invalid'};next=clone(packet.state);}
    else if(packet.kind==='delta'){

@@ -23,3 +23,10 @@ test('game events and native conditions retain a shared order across replay and 
  const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s'),first={channel:'game',payload:{type:'StructureHit',targetId:'structure-1'}},second={channel:'condition',payload:{at:1,change:{type:'StructureConditionChanged',structureId:'structure-1',status:'collapsing'}}};
  const packet=tx.publish(p(1,[{id:'a'}],[first,second]));assert.equal(rx.accept(packet).accepted,true);assert.deepEqual(rx.state().events.map(x=>x.event),[first,second]);assert.equal(rx.accept(tx.snapshot()).newEvents,0);assert.equal(tx.acknowledge('s',1),true);const resend=tx.snapshot();assert.deepEqual(resend.events.map(x=>x.event),[second]);assert.equal(rx.accept(resend).newEvents,0);assert.equal(tx.acknowledge('s',2),true);assert.equal(tx.status().pending,0);
 });
+
+test('same-version snapshot cannot rewrite state and equivalent reordered keys are idempotent',()=>{
+ const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s');const delta=tx.publish(p(1,[{id:'a',x:1,z:2}],[{kind:'a'}]));assert.equal(rx.accept(delta).accepted,true);
+ const snapshot=tx.snapshot(),before=rx.state();const changed=structuredClone(snapshot);changed.state.workers[0].x=999;
+ assert.equal(rx.accept(changed).reason,'conflict');assert.deepEqual(rx.state(),before);
+ const reordered=structuredClone(snapshot);reordered.state.workers[0]={z:2,x:1,id:'a'};assert.equal(rx.accept(reordered).accepted,true);assert.deepEqual(rx.state().state,before.state);
+});
