@@ -37,6 +37,7 @@ import {initializeLoadingTextures} from './loading-textures.js';
 import {compileLoadingPrograms,compileLoadingProgramsBatched} from './loading-programs.js';
 import {createRendererWithGlEpoch} from './gl-resource-epoch.js';
 import {FluidGpuPreload} from './fluid-preload.js';
+import {prepareDebrisProgram} from './debris-gpu-preload.js';
 import {chunkInPropTransition} from './prop-transition-residency.js';
 import {CameraBuildingRegistry} from './camera-building-registry.js';
 import {CameraTreeRegistry} from './camera-tree-registry.js';
@@ -575,6 +576,12 @@ export class WorldScene {
       // that retained native recipe even while the intact opening is hidden.
       await phase('warm-compile-destruction',()=>compile(this.destructionPass.scene,this.camera,this.scene));if(this.disposed)return;
       await phase('warm-compile-smoke',()=>this.destructionPass.prepareSmokePrograms(this.camera));if(this.disposed)return;
+      if(import.meta.env.DEV&&new URLSearchParams(this.requestedVisualSearch).get('qaDebrisWarm')==='1'){
+        const center=this.state.structures.find(item=>item.kind==='center');
+        const building=[...this.destructionPass.buildings].find(item=>item.entityId===center?.id);
+        this.qaDebrisWarm='skipped-no-center';
+        if(building){await phase('warm-debris-experiment',()=>prepareDebrisProgram(this.renderer,this.scene,this.camera,building.effects.debris,{compile,cancelled:()=>this.disposed||this.loading.signal.aborted}));if(this.disposed)return;this.qaDebrisWarm='prepared';}
+      }
       if(this.nav.field.canyon)await compile(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
       if(this.disposed)return;
       // Resident clipped/alpha props can be outside the opening view or on
