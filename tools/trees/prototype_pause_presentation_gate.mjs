@@ -1,8 +1,8 @@
 // Diagnostic only: prevents presentation clock advancement after a pause
 // request. A later authoritative time requires external reconciliation.
-export function createPausePresentationGate(session,initialTime){
- if(typeof session!=='string'||!session||!Number.isFinite(initialTime)||initialTime<0)throw TypeError('Invalid session or time');
- let displayed=initialTime,confirmed=initialTime,lastSequence=0,pending=null,phase='running',needsReconciliation=false;
+export function createPausePresentationGate(session,initialTime,{displayedTime=initialTime}={}){
+ if(typeof session!=='string'||!session||!Number.isFinite(initialTime)||initialTime<0||!Number.isFinite(displayedTime)||displayedTime<0||displayedTime>initialTime)throw TypeError('Invalid session or time');
+ let displayed=displayedTime,confirmed=initialTime,lastSequence=0,pending=null,phase='running',needsReconciliation=false;
  const validSeq=seq=>Number.isSafeInteger(seq)&&seq>lastSequence;
  return {
   advance(time){if(!Number.isFinite(time)||time<displayed||time>confirmed)throw RangeError('Time outside confirmed interval');if(phase==='running')displayed=time;return displayed;},

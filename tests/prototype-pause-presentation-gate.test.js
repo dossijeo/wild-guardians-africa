@@ -14,3 +14,6 @@ test('inconsistent confirmation fails closed and cannot resume',()=>{
  const gate=createPausePresentationGate('s',10);gate.requestPause(2);assert.throws(()=>gate.confirmPause({session:'s',sequence:2,paused:false,time:10}));
  assert.equal(gate.snapshot().phase,'suspended');assert.equal(gate.requestResume(3),false);assert.throws(()=>gate.advance(11));
 });
+test('presentation can start behind confirmed time but cannot advance beyond it',()=>{
+ const gate=createPausePresentationGate('s',10,{displayedTime:9.5});assert.equal(gate.advance(9.75),9.75);assert.throws(()=>gate.advance(10.01));assert.throws(()=>createPausePresentationGate('s',10,{displayedTime:11}));
+});

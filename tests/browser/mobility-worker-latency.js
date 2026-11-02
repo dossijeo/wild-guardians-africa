@@ -5,6 +5,7 @@ import {GpuTimer} from './gpu-timer.js';
 import {createWorkload} from './mobility-worker-workload.js';
 import {createTrajectoryReceiver} from '../../tools/trees/prototype_mobility_contract.mjs';
 import {createGuardedTrajectory} from '../../tools/trees/prototype_guarded_trajectory.mjs';
+import {createPausePresentationGate} from '../../tools/trees/prototype_pause_presentation_gate.mjs';
 import {createWorld} from './mobility-worker-world-change.js';
 
 const status=document.querySelector('#status'),canvas=document.querySelector('#view');
@@ -39,6 +40,23 @@ try{
  if(!compiled||visual.some(v=>!v.count)||Math.abs(visual[0].centerX-visual[1].centerX)<3||Math.abs(visual[1].centerX-visual[2].centerX)>.01)throw Error('GPU trajectory or horizon control did not render as expected');
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
+ window.runGpuPauseAudit=async()=>{
+  const backend=new Worker(new URL('./mobility-worker-commands.js',import.meta.url),{type:'module'});let failure=null,readyResolve,startedResolve,pausedResolve;
+  const readyPromise=new Promise(resolve=>readyResolve=resolve),startedPromise=new Promise(resolve=>startedResolve=resolve),pausedPromise=new Promise(resolve=>pausedResolve=resolve);
+  const bounded=promise=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error(failure||'Worker timeout')),30000))]);
+  backend.onerror=e=>{failure=e.message;};backend.onmessage=e=>{const d=e.data;if(d.kind==='ready')readyResolve(d);else if(d.kind==='started'&&d.request===1)startedResolve();else if(d.kind==='ack'&&d.request===2)pausedResolve(d);else if(d.kind==='error')failure=d.error;};
+  try{
+   const info=await bounded(readyPromise),base=info.initialElapsed-.5,gate=createPausePresentationGate(info.session,info.initialElapsed,{displayedTime:base});horizon.value=3.5;
+   const initial=inspectPixels(0);gate.advance(base+.25);const before=inspectPixels(gate.snapshot().displayed-base);
+   backend.postMessage({session:info.session,sequence:1,request:1,action:'advance',steps:1});await bounded(startedPromise);
+   if(!gate.requestPause(2))throw Error('Pause request rejected');backend.postMessage({session:info.session,sequence:2,request:2,action:'pause'});
+   const stopped=inspectPixels(gate.advance(info.initialElapsed)-base),ack=await bounded(pausedPromise);if(failure)throw Error(failure);
+   if(!gate.confirmPause({session:info.session,sequence:2,paused:ack.state.pauses.includes('diagnostic'),time:ack.state.elapsed}))throw Error('Pause acknowledgement rejected');
+   const after=inspectPixels(gate.advance(ack.state.elapsed)-base),state=gate.snapshot(),resumeAllowed=gate.requestResume(3);
+   if(initial.hash===before.hash||before.hash!==stopped.hash||stopped.hash!==after.hash||!state.needsReconciliation||resumeAllowed)throw Error('GPU pause audit failed');
+   return {initial,before,stopped,after,pauseState:state,resumeAllowed,scope:'Synthetic shader trajectory on one static-pose model; confirmed horizon and displayed history are supplied by test. Worker runs a separate restored simulation. Synchronous pixel reads, no performance, physics, collisions, visual reconciliation or gameplay integration.'};
+  }finally{backend.terminate();horizon.value=3.5;}
+ };
  window.runGuardedWorldStopAudit=async()=>{
   const world=await createWorld(),options={worker:false,species:'hyena'};let base=null;
   try{
