@@ -26,6 +26,9 @@ export async function createGamePhysics({originalClips=false,initialAnimation=fa
     return {tickMs,sample:JSON.stringify({elapsed:game.elapsed,x:animal.x,z:animal.z,heading:animal.heading,status:animal.status,path:animal.path,magicDown:animal.magicDown??null,pose:entry?Array.from(entry.actor.pose):null,...(traceBones?{boneMatrices:bones.flatMap(b=>b.matrixWorld.toArray())}:{})})};
    },
    clock(){return game.elapsed;},
+   pause(reason){simulation.pause(reason);},
+   resume(reason){simulation.resume(reason);},
+   pauseReasons(){return [...game.pauses];},
    damageCenter(){simulation.damageCenter();},
    eventsSince(index){if(!Number.isInteger(index)||index<0||index>events.length)throw RangeError('Invalid event index');return events.slice(index);},
    visualRig(){return {root,model,bones};},
