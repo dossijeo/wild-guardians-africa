@@ -8,6 +8,12 @@ function fixture(){const camera=new THREE.PerspectiveCamera(42,1,.1,500);camera.
 test('loading audio handoff fires once before the first world presentation',async()=>{
  const {world,diorama,calls}=fixture(),cinema=new LoadingCinematic(world,diorama,{onHandoff:()=>calls.push('handoff')});cinema.step(.8);assert.equal(calls.includes('handoff'),false);cinema.step(.4);assert.deepEqual(calls.slice(-2),['handoff','world']);cinema.step(.3);assert.equal(calls.filter(c=>c==='handoff').length,1);cinema.cancel();
 });
+test('cinematic advances far presentation without advancing simulation',()=>{
+ const {world,diorama}=fixture(),before=JSON.stringify(world.state),calls=[];
+ world.render=(simulationDelta,farVisualDelta)=>calls.push([simulationDelta,farVisualDelta]);
+ const cinema=new LoadingCinematic(world,diorama);cinema.step(1.2);cinema.step(.2);
+ assert.deepEqual(calls,[[0,1.2],[0,.2]]);assert.equal(JSON.stringify(world.state),before);cinema.cancel();
+});
 test('camera sky handoff and travel preserve exact gameplay pose and simulation state',async()=>{
  const {world,diorama,calls}=fixture(),before=JSON.stringify(world.state),eye=world.camera.position.toArray(),q=world.camera.quaternion.toArray(),target=world.controls.target.toArray(),cinema=new LoadingCinematic(world,diorama);
  cinema.step(.35);assert.equal(calls.at(-1),'diorama');cinema.step(.4);assert.equal(calls.at(-1),'sky');assert.deepEqual(world.camera.quaternion.toArray(),diorama.camera.quaternion.toArray());cinema.step(.7);assert.equal(calls.at(-1),'world');cinema.step(3);await cinema.finished;

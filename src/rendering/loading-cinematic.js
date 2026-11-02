@@ -56,8 +56,8 @@ export class LoadingCinematic {
     if(this.time<a){const t=ease(this.time/a);diorama.camera.fov=THREE.MathUtils.lerp(this.loadingFov,world.camera.fov,t);diorama.camera.updateProjectionMatrix();diorama.camera.position.lerpVectors(this.loadingEye,this.loadingSkyEye,t);diorama.camera.quaternion.slerpQuaternions(this.loadingQuaternion,this.skyQuaternion,t);diorama.render(dt,1,{ready:true});return;}
     if(this.time<a+b){diorama.camera.fov=world.camera.fov;diorama.camera.updateProjectionMatrix();diorama.camera.quaternion.copy(this.skyQuaternion);diorama.render(dt,1,{ready:true,skyOnly:true});world.camera.position.copy(this.panorama);world.camera.quaternion.copy(this.skyQuaternion);return;}
     if(!this.handedOff){this.handedOff=true;this.onHandoff();}
-    if(this.time<a+b+c){world.camera.position.copy(this.panorama);world.camera.quaternion.slerpQuaternions(this.skyQuaternion,this.panoramaQuaternion,ease((this.time-a-b)/c));world.render(0);return;}
-    const t=ease((this.time-a-b-c)/d);world.camera.position.lerpVectors(this.panorama,this.gameplay.eye,t);world.camera.quaternion.slerpQuaternions(this.panoramaQuaternion,this.gameplay.quaternion,t);world.render(0);
+    if(this.time<a+b+c){world.camera.position.copy(this.panorama);world.camera.quaternion.slerpQuaternions(this.skyQuaternion,this.panoramaQuaternion,ease((this.time-a-b)/c));world.render(0,Math.max(0,dt));return;}
+    const t=ease((this.time-a-b-c)/d);world.camera.position.lerpVectors(this.panorama,this.gameplay.eye,t);world.camera.quaternion.slerpQuaternions(this.panoramaQuaternion,this.gameplay.quaternion,t);world.render(0,Math.max(0,dt));
     if(this.time>=a+b+c+d){this.restore();this.done=true;this.resolve();}
   }
   restore(){const {world}=this;if(world.disposed)return;world.camera.position.copy(this.gameplay.eye);world.camera.quaternion.copy(this.gameplay.quaternion);world.controls.target.copy(this.gameplay.target);world.camera.updateMatrixWorld();world.cinematic=false;}
