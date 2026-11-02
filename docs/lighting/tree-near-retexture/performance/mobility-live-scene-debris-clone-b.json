@@ -1,0 +1,149 @@
+{
+  "preparation": {
+    "compileMs": 196.01999999582767,
+    "drawMs": 2.7749999910593033,
+    "totalMs": 226.89499999582767,
+    "programsBefore": 88,
+    "programsAfter": 89,
+    "frames": 6,
+    "maxIntervalMs": 33.375,
+    "maxRenderMs": 33.71500000357628,
+    "originalParentPreserved": true
+  },
+  "trace": [
+    {
+      "frame": 45,
+      "at": 50018.635,
+      "drawMs": 80.73499999940395,
+      "afterApply": true,
+      "spans": [
+        {
+          "label": "world-frame-stage:1",
+          "duration": 11.725000008940697
+        },
+        {
+          "label": "renderer.render",
+          "duration": 37.875,
+          "programsBefore": 89,
+          "programsAfter": 89,
+          "caller": null
+        },
+        {
+          "label": "renderer.render",
+          "duration": 5.540000006556511,
+          "programsBefore": 89,
+          "programsAfter": 89,
+          "caller": null
+        },
+        {
+          "label": "renderer.render",
+          "duration": 22.16500000655651,
+          "programsBefore": 89,
+          "programsAfter": 90,
+          "caller": null
+        },
+        {
+          "label": "drawWorldFrame",
+          "duration": 66.75999999046326
+        },
+        {
+          "label": "world-frame-draw",
+          "duration": 66.77000001072884
+        }
+      ]
+    }
+  ],
+  "applicationAt": 50021.77500000596,
+  "network": true,
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 849.5350000113249,
+  "tickMs": 977.9749999940395,
+  "responseMs": 1158.2550000101328,
+  "applyDelayMs": 11.265000000596046,
+  "applyMs": 2.945000007748604,
+  "projectionBytes": 7163,
+  "snapshotBytes": 54119,
+  "actorsApplied": 21,
+  "actorsChanged": 20,
+  "eventsReceived": 41,
+  "eventTypes": [
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "StructureRuined",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "CropHit",
+    "CropDestroyed",
+    "AnimalLogicalHit",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable"
+  ],
+  "localCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 0
+  },
+  "workerCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 3.1780134079895106e-15
+  },
+  "observerCount": 41,
+  "simulationObserverCount": 0,
+  "fenceState": {
+    "received": 1,
+    "nextEvent": 41,
+    "displayed": 1,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false
+  },
+  "frames": {
+    "count": 149,
+    "p95": 33.40999999999622,
+    "p99": 33.479999999995925,
+    "max": 66.68499999999767
+  },
+  "renderMs": {
+    "count": 150,
+    "p95": 32.17499999701977,
+    "p99": 36.8999999910593,
+    "max": 80.73499999940395
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "scope": "One 70-step publication from a Worker-owned clone into a frozen mangrove-islands QA scene after a diagnostic center-damage action. Structure status and HP, actor x/z/heading and events are applied under a diagnostic fence; all events are classified as structural. Scene and simulation have separate native worlds. A snapshot is requested separately for validation. No full collapse transition, physics manager, input, reliable event delivery, collision validation, GPU timing, visual interpolation or production authority is demonstrated."
+}
