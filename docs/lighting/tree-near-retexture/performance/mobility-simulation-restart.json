@@ -1,0 +1,41 @@
+{
+  "scope": "Three Edge headless experiments, converted mangrove islands fixture and nine synthetic chunks. Compare restored serialized game after 10 ticks and continuation of 20 ticks with uninterrupted original; native spatial world reconstructed rather than checkpointed. Two isolated Worker sessions and buffers, but no simulated in-flight failure, physical manager, rendering, input, events after checkpoint or full campaign.",
+  "runs": [
+    {
+      "checkpointBytes": 958982,
+      "chunks": 9,
+      "initialEqual": true,
+      "finalEqual": true,
+      "staleSessionRejected": true,
+      "oldSignalIgnored": true,
+      "initMs": 721.8649999946356,
+      "initResponseMs": 925.8250000029802,
+      "initialDiff": [],
+      "finalDiff": []
+    },
+    {
+      "checkpointBytes": 958982,
+      "chunks": 9,
+      "initialEqual": true,
+      "finalEqual": true,
+      "staleSessionRejected": true,
+      "oldSignalIgnored": true,
+      "initMs": 716.8550000041723,
+      "initResponseMs": 901.2049999982119,
+      "initialDiff": [],
+      "finalDiff": []
+    },
+    {
+      "checkpointBytes": 958982,
+      "chunks": 9,
+      "initialEqual": true,
+      "finalEqual": true,
+      "staleSessionRejected": true,
+      "oldSignalIgnored": true,
+      "initMs": 709.8649999946356,
+      "initResponseMs": 909.4049999862909,
+      "initialDiff": [],
+      "finalDiff": []
+    }
+  ]
+}
