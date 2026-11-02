@@ -9,6 +9,7 @@ onmessage=async({data})=>{try{
  if(!simulation)throw Error('Not initialized');
  if(data.session!==session){postMessage({kind:'rejected',reason:'session',version:last,elapsed:simulation.diagnosticWorld().game.elapsed,status:publisher.status()});return;}
  if(data.kind==='snapshot'){postMessage({kind:'snapshot',...simulation.state()});return;}
+ if(data.kind==='projection-snapshot'){postMessage({kind:'projection-snapshot',packet:publisher.snapshot()});return;}
  if(data.kind==='ack'){const result=data.appliedVersion===last?stage.acknowledge(session,data.ack):{kind:'rejected',reason:'uncommitted'};postMessage({kind:'ack',result,status:publisher.status()});return;}
  if(data.kind!=='advance'||data.sequence!==last+1)throw Error('Invalid sequence');if(!Number.isSafeInteger(data.appliedVersion)||data.appliedVersion<confirmed||data.appliedVersion>last||!versionWindow.permits(data.appliedVersion,data.ack)){postMessage({kind:'refused',reason:'invalid-commit',sequence:data.sequence,version:last,elapsed:simulation.diagnosticWorld().game.elapsed,status:publisher.status()});return;}if(!stage.mayAdvance())throw Error('Unpublished state');if(!versionWindow.canAppendAfter(data.appliedVersion)){postMessage({kind:'refused',reason:'version-capacity',sequence:data.sequence,version:last,elapsed:simulation.diagnosticWorld().game.elapsed,status:publisher.status()});return;}
  const ack=stage.acknowledge(session,data.ack);if(ack.kind!=='acknowledged')throw Error('Invalid acknowledgement');confirmed=data.appliedVersion;versionWindow.confirm(confirmed);
