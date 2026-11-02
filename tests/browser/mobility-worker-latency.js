@@ -41,6 +41,23 @@ try{
  window.mobilityWorkerReady={device,compiled,visual,horizon:horizon.value,staticPose:true};status.textContent=JSON.stringify(window.mobilityWorkerReady,null,2);
  let nextId=1;
  // Single cold tick of the same restored simulation, with real model rendering.
+ window.runGamePhysicsFrameAudit=async mode=>{
+  if(!['main','worker'].includes(mode))throw Error('Invalid mode');
+  const {createGamePhysics}=await import('./mobility-game-physics-core.js');let simulation,backend,result=null,failure=null,receivedAt=null,requestAt=null;
+  if(mode==='main')simulation=await createGamePhysics();else{backend=new Worker(new URL('./mobility-game-physics-frame-worker.js',import.meta.url),{type:'module'});await new Promise((resolve,reject)=>{backend.onerror=e=>reject(Error(e.message));backend.onmessage=e=>{if(e.data.kind==='ready')resolve();else if(e.data.kind==='error')reject(Error(e.data.error));};});backend.onerror=e=>failure=e.message;backend.onmessage=e=>{if(e.data.kind==='result'){result=e.data;receivedAt=performance.now();}else if(e.data.kind==='error')failure=e.data.error;};}
+  const frames=[],renderTimes=[],timer=new GpuTimer(gl,64);let start=null,previous=null,frame=0;
+  try{
+   await new Promise((resolve,reject)=>{const draw=now=>{try{
+    if(failure)throw Error(failure);if(start===null)start=now;if(previous!==null)frames.push({start:previous,end:now,dt:now-previous});previous=now;
+    if(requestAt===null&&now-start>=500){requestAt=performance.now();if(simulation){const begin=performance.now(),step=simulation.step(),state=simulation.state();result={step,state,workerTotalMs:performance.now()-begin};receivedAt=performance.now();}else backend.postMessage({kind:'step'});}
+    clock.value=(now-start)/1000;const before=performance.now(),timed=timer.begin(frame++);renderer.render(scene,camera);if(timed)timer.end();renderTimes.push(performance.now()-before);
+    if(now-start>=3000&&result){resolve();return;}if(now-start>15000)throw Error('Physics frame audit timeout');requestAnimationFrame(draw);
+   }catch(error){reject(error);}};requestAnimationFrame(draw);});
+   for(let i=0;i<30&&timer.pending.length;i++){await new Promise(requestAnimationFrame);timer.poll();}const gpu=timer.report();
+   const stats=values=>({count:values.length,p95:percentile(values,.95),p99:percentile(values,.99),max:values.length?Math.max(...values):null});
+   return {mode,device,frames:stats(frames.map(r=>r.dt)),overlap:stats(frames.filter(r=>r.end>=requestAt&&r.start<=receivedAt).map(r=>r.dt)),renderMs:stats(renderTimes),gpu:{reason:gpu.reason,count:gpu.samples.length,p95:percentile(gpu.samples.map(s=>s.ms),.95),p99:percentile(gpu.samples.map(s=>s.ms),.99),disjoint:gpu.disjointEvents,discarded:gpu.discarded},tickMs:result.step.tickMs,totalComputeMs:result.workerTotalMs,responseMs:receivedAt-requestAt,sample:result.step.sample,snapshot:result.state.snapshot,events:result.state.events,phases:result.state.phases,network:result.state.network};
+  }finally{timer.dispose();simulation?.dispose();backend?.terminate();}
+ };
  window.runColdTickRenderAudit=async mode=>{
   if(!['main','worker','main-idle','worker-idle'].includes(mode))throw Error('Invalid mode');
   const isMain=mode.startsWith('main'),idle=mode.endsWith('-idle');
