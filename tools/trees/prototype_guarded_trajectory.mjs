@@ -14,6 +14,9 @@ export function createGuardedTrajectory(session,actorId,{worldVersion=0}={}){
    const probe=createTrajectoryReceiver(session),checked=probe.apply(event,at);
    if(!checked.accepted)return checked;
    if(event.version<=lastVersion)return {accepted:false,reason:'stale'};
+   // An instruction applied at another instant needs explicit reconciliation.
+   // This prototype has no scheduled queue or rollback for already drawn poses.
+   if(lastPresented>=0&&at!==lastPresented){suspended=true;return {accepted:false,reason:'reconciliation',hide:true};}
    const previous=receiver.sample(actorId,at),next=probe.sample(actorId,at);
    if(previous&&next&&Math.hypot(previous.x-next.x,previous.z-next.z)>1e-6){suspended=true;return {accepted:false,reason:'position',hide:true};}
    const result=receiver.apply(event,at);if(result.accepted)lastVersion=event.version;return result;

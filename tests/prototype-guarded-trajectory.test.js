@@ -34,3 +34,15 @@ test('obsolete discontinuous packets are discarded without suspending the curren
  const gate=createGuardedTrajectory('world','animal',{worldVersion:1});gate.install(route(),0);gate.presented(1);
  const stale={...route(),version:1,startTime:1,points:[{x:99,z:0},{x:100,z:0}]};assert.equal(gate.install(stale,1).reason,'stale');assert.ok(Math.abs(gate.sample(1).x-.4)<1e-12);
 });
+
+test('new instructions for another instant require explicit reconciliation',()=>{
+ for(const at of [.5,1.5]){
+  const gate=createGuardedTrajectory('world','animal',{worldVersion:1});gate.install(route(),0);gate.presented(1);
+  const replacement={...route(),version:2,startTime:at,points:[{x:.4*at,z:0},{x:2,z:0}]};
+  assert.deepEqual(gate.install(replacement,at),{accepted:false,reason:'reconciliation',hide:true});assert.equal(gate.sample(1),null);
+ }
+});
+test('obsolete instructions for an earlier instant do not force reconciliation',()=>{
+ const gate=createGuardedTrajectory('world','animal',{worldVersion:1});gate.install(route(),0);gate.presented(1);
+ assert.equal(gate.install({...route(),version:1},.5).reason,'stale');assert.ok(Math.abs(gate.sample(1).x-.4)<1e-12);
+});
