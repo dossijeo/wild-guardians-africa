@@ -9,7 +9,7 @@ import {markGroundDetailEvent} from './blender-ground-details.js';
 import * as THREE from 'three';
 import {hashCell,noise} from '../world/terrain.js';
 import {footprintDistance} from '../world/footprints.js';
-import {observeGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const vertex=`
 in vec4 coverageAnchor,coverageData;in vec2 coverageSlope;in vec3 flatPosition,bladeRoot,flatNormal;
@@ -160,7 +160,7 @@ export async function createContinuousGrass(world){
   q.chunks.clear();q.tiles.clear();q.blockers.clear();
  };
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
- q.releaseEvents=observeGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
+ q.releaseEvents=observePresentationGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
  q.audit=()=>({distribution:varied?'varied':'original',leafShape:mangrove?(cupped?'cupped':'original'):null,variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*(mangrove?8:12)+q.far*(mangrove?4:8),triangles:q.meshes.reduce((n,e)=>n+e.mesh.geometry.index.count/3*e.mesh.geometry.instanceCount,0),chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
  if(fern){try{const {applyHollyFern}=await import('./mangrove-fern-material.js');await applyHollyFern(world,q);
   // Chunks can arrive or be replaced while the fern textures load. Reconcile

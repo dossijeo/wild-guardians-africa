@@ -1,6 +1,6 @@
 import {beginAwakening,awakeningVisible} from './awakening-presentation.js';
 import * as THREE from 'three';
-import {observeGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game.js';
 import {vfxEnvironment} from './vfx-native.js';
 
 // All resting sources share one culled Points draw. Only event/origin changes upload data.
@@ -24,7 +24,7 @@ export class BlessingVfx {
         #include <colorspace_fragment>
       }`});
     this.points=new THREE.Points(this.geometry,this.material);this.points.name='awakening-sparks';this.points.raycast=()=>{};scene.add(this.points);
-    this.releaseEvents=observeGameEvents(state,event=>this.event(event));
+    this.releaseEvents=observePresentationGameEvents(state,event=>this.event(event));
     this.stats={uploads:0,sources:0,particles:0};
   }
   event(event){

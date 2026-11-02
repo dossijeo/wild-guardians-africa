@@ -1,7 +1,7 @@
 import {beginAwakening,awakeningVisible} from './awakening-presentation.js';
 import * as THREE from 'three';
 import {AWAKENINGS as A} from '../simulation/awakening-config.js';
-import {observeGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game.js';
 import {chunkBounds} from './water-source.js';
 import {awakeningRootPaths,rasterizeAwakeningRoots,ROOT_VISUAL_RADIUS as R} from './awakening-roots-data.js';
 
@@ -16,7 +16,7 @@ export class AwakeningRoots {
     this.empty=texture(new Uint8Array(2),1);this.tiles=new Map();this.entries=new WeakMap();this.dirty=new Set();this.fading=new Set();
     this.sources=new Map([...state.plants,...state.structures].filter(p=>p.blessing&&(p.alive||p.kind==='wall'&&p.status==='intact')).map(p=>[p.id,p]));
     this.stats={builds:0,totalBuildMs:0,lastBuildMs:0,bytes:0};
-    this.releaseEvents=observeGameEvents(state,event=>this.event(event));
+    this.releaseEvents=observePresentationGameEvents(state,event=>this.event(event));
   }
   event(event){
     if(event.type==='BlessingApplied'){
