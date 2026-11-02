@@ -153,5 +153,6 @@
   "animals": 20,
   "sceneErrors": [],
   "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
-  "scope": "One Edge headless mangrove-islands QA scene, 20 synthetic animals. Frozen-scene ABBA compares reference and experimental pose-signature cache; then verification mode computes both candidates during 120 active and 260 impact/recovery ticks. No gameplay parity in ABBA; image and pose hashes cover only the final frame of each block. Raw buffer writes without version increments, sample-array mutation, context lifecycle and integrated GPU not covered. Signature test is a diagnostic, not production."
+  "scope": "One Edge headless mangrove-islands QA scene, 20 synthetic animals. Frozen-scene ABBA compares reference and experimental pose-signature cache; then verification mode computes both candidates during 120 active and 260 impact/recovery ticks. No gameplay parity in ABBA; image and pose hashes cover only the final frame of each block. Raw buffer writes without version increments, sample-array mutation, context lifecycle and integrated GPU not covered. Signature test is a diagnostic, not production.",
+  "imageAuditInvalidReason": "All image hashes match a 1280x720 all-zero RGBA buffer; framebuffer was read after yielding. They do not establish visual equivalence."
 }
