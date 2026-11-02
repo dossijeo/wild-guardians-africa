@@ -1,0 +1,452 @@
+{
+  "schema": "wg-gpu-walk-motion-species-audit/1",
+  "repeats": 2,
+  "results": [
+    {
+      "species": "buffalo",
+      "reportSha256": "a645926ff31b3fdfaecd3349d758deac41b7abaeeacd4c34e4f48ce5fbd5f2b6",
+      "sourceSha256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
+      "bakeSha256": "1ca99df0c5a467575aa41de92d4231ebd6cfdd291956056b1ba80510389bba23",
+      "contactBankBytes": 7128,
+      "feet": 4539,
+      "contactSamples": 18,
+      "terrains": [
+        {
+          "name": "native:mangrove:0",
+          "tx": -40,
+          "tz": -40,
+          "slope": 0
+        },
+        {
+          "name": "native:savanna:0.05",
+          "tx": 0,
+          "tz": 15,
+          "slope": 0.050043103522472474
+        },
+        {
+          "name": "native:savanna:0.15",
+          "tx": 30,
+          "tz": 15,
+          "slope": 0.15026110015671923
+        },
+        {
+          "name": "native:savanna:0.25",
+          "tx": 15,
+          "tz": -35,
+          "slope": 0.2459625540364157
+        }
+      ],
+      "result": {
+        "position": {
+          "count": 724,
+          "p95": 0.007759651841650284,
+          "p99": 0.013772623579662394,
+          "max": 0.01458042705769106
+        },
+        "motionDelta": {
+          "count": 720,
+          "p95": 0.008392174419999034,
+          "p99": 0.013772626240836288,
+          "max": 0.014668138747192222
+        },
+        "contactMotionDelta": {
+          "count": 720,
+          "p95": 0.003795874876190518,
+          "p99": 0.005744635160463748,
+          "max": 0.013924212088790341
+        },
+        "liftErrorAbs": {
+          "count": 724,
+          "p95": 0.0013496765781009223,
+          "p99": 0.0033544251523118795,
+          "max": 0.005640168309970051
+        },
+        "negativeControlDifference": {
+          "count": 724,
+          "p95": 0.05,
+          "p99": 0.05,
+          "max": 0.05
+        },
+        "anchorLiftErrorAbs": {
+          "count": 724,
+          "p95": 0.001349674511494925,
+          "p99": 0.003354423761019021,
+          "max": 0.0056401665725180905
+        },
+        "anchorVsBakedLiftAbs": {
+          "count": 724,
+          "p95": 2.5829196559357115e-9,
+          "p99": 8.778267890363622e-9,
+          "max": 4.769335344434467e-7
+        },
+        "worstAnchorClearance": 0.003942722498049278,
+        "worstReferenceClearance": 0.0039034018194463727,
+        "worstBakedClearance": 0.0039427230533903845,
+        "wrapFrames": 8,
+        "wrapMotionDelta": {
+          "count": 8,
+          "p95": 0.009699919248400237,
+          "p99": 0.009699919248400237,
+          "max": 0.009765173384084199
+        }
+      }
+    },
+    {
+      "species": "hyena",
+      "reportSha256": "726264c9fbb7b71a895e36a9cf6285075b79f1cff0142c21878170632b6bc0fb",
+      "sourceSha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
+      "bakeSha256": "4474a53547835cd45ef59ba2140f2bb676386aa064af661d3b2bc02040b5002c",
+      "contactBankBytes": 6336,
+      "feet": 552,
+      "contactSamples": 16,
+      "terrains": [
+        {
+          "name": "native:mangrove:0",
+          "tx": -40,
+          "tz": -40,
+          "slope": 0
+        },
+        {
+          "name": "native:savanna:0.05",
+          "tx": 0,
+          "tz": 15,
+          "slope": 0.050043103522472474
+        },
+        {
+          "name": "native:savanna:0.15",
+          "tx": 30,
+          "tz": 15,
+          "slope": 0.15026110015671923
+        },
+        {
+          "name": "native:savanna:0.25",
+          "tx": 15,
+          "tz": -35,
+          "slope": 0.2459625540364157
+        }
+      ],
+      "result": {
+        "position": {
+          "count": 724,
+          "p95": 0.0071885368968999976,
+          "p99": 0.009996716225121178,
+          "max": 0.010733423477824472
+        },
+        "motionDelta": {
+          "count": 720,
+          "p95": 0.007375068716633687,
+          "p99": 0.009751077901773552,
+          "max": 0.00993142194431717
+        },
+        "contactMotionDelta": {
+          "count": 706,
+          "p95": 0.004611728630512581,
+          "p99": 0.006750735155662605,
+          "max": 0.00993142194431717
+        },
+        "liftErrorAbs": {
+          "count": 724,
+          "p95": 0.0012919108378661726,
+          "p99": 0.0031047442975200568,
+          "max": 0.005304776235290021
+        },
+        "negativeControlDifference": {
+          "count": 724,
+          "p95": 0.05,
+          "p99": 0.05,
+          "max": 0.05
+        },
+        "anchorLiftErrorAbs": {
+          "count": 724,
+          "p95": 0.0012919103039941149,
+          "p99": 0.0031047434524396067,
+          "max": 0.005304776910610265
+        },
+        "anchorVsBakedLiftAbs": {
+          "count": 724,
+          "p95": 1.5668475406016569e-9,
+          "p99": 3.4935556669779544e-9,
+          "max": 7.799444645684162e-9
+        },
+        "worstAnchorClearance": -0.001390942381346516,
+        "worstReferenceClearance": -0.001388647778408636,
+        "worstBakedClearance": -0.0013909411455879095,
+        "wrapFrames": 8,
+        "wrapMotionDelta": {
+          "count": 8,
+          "p95": 0.0004110916409254576,
+          "p99": 0.0004110916409254576,
+          "max": 0.0004110916409282414
+        }
+      }
+    },
+    {
+      "species": "lion",
+      "reportSha256": "ac7e5298b93819ad35a792d3c0d73acc007cf3f2a323f8edf99b3b361e3cb5e9",
+      "sourceSha256": "12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55",
+      "bakeSha256": "4a62d9d6de2159426f358619cabb41f9e3dc6da3cc6ac2e3fb551baac5b5c9fe",
+      "contactBankBytes": 6336,
+      "feet": 1304,
+      "contactSamples": 16,
+      "terrains": [
+        {
+          "name": "native:mangrove:0",
+          "tx": -40,
+          "tz": -40,
+          "slope": 0
+        },
+        {
+          "name": "native:savanna:0.05",
+          "tx": 0,
+          "tz": 15,
+          "slope": 0.050043103522472474
+        },
+        {
+          "name": "native:savanna:0.15",
+          "tx": 30,
+          "tz": 15,
+          "slope": 0.15026110015671923
+        },
+        {
+          "name": "native:savanna:0.25",
+          "tx": 15,
+          "tz": -35,
+          "slope": 0.2459625540364157
+        }
+      ],
+      "result": {
+        "position": {
+          "count": 724,
+          "p95": 0.007168312268471301,
+          "p99": 0.015860387529124862,
+          "max": 0.01603874005915093
+        },
+        "motionDelta": {
+          "count": 720,
+          "p95": 0.009444929475190784,
+          "p99": 0.015860386230056634,
+          "max": 0.016323291002848777
+        },
+        "contactMotionDelta": {
+          "count": 702,
+          "p95": 0.005266177504686962,
+          "p99": 0.013576823499599922,
+          "max": 0.01613896027954996
+        },
+        "liftErrorAbs": {
+          "count": 724,
+          "p95": 0.0017987394834033665,
+          "p99": 0.0038349463121103433,
+          "max": 0.005257770891976321
+        },
+        "negativeControlDifference": {
+          "count": 724,
+          "p95": 0.05,
+          "p99": 0.05,
+          "max": 0.05
+        },
+        "anchorLiftErrorAbs": {
+          "count": 724,
+          "p95": 0.0017987394614182861,
+          "p99": 0.0038349479665082953,
+          "max": 0.005257771337412009
+        },
+        "anchorVsBakedLiftAbs": {
+          "count": 724,
+          "p95": 1.8915757848958492e-9,
+          "p99": 3.3628193563117748e-9,
+          "max": 2.3883014721448603e-7
+        },
+        "worstAnchorClearance": 0.008420172023588801,
+        "worstReferenceClearance": 0.008342283151911989,
+        "worstBakedClearance": 0.008420171827103307,
+        "wrapFrames": 8,
+        "wrapMotionDelta": {
+          "count": 8,
+          "p95": 0.011112479161932195,
+          "p99": 0.011112479161932195,
+          "max": 0.011125590096635789
+        }
+      }
+    },
+    {
+      "species": "rhino",
+      "reportSha256": "8dba47859c74469780373a7f98705e88df5d31d46d35ec1620b0fbfe6f0c1b00",
+      "sourceSha256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
+      "bakeSha256": "ade73424ec2f4488e9fa23c2d1515dde36a20f7a6b9038696a1adfcbc351b48a",
+      "contactBankBytes": 6336,
+      "feet": 6326,
+      "contactSamples": 16,
+      "terrains": [
+        {
+          "name": "native:mangrove:0",
+          "tx": -40,
+          "tz": -40,
+          "slope": 0
+        },
+        {
+          "name": "native:savanna:0.05",
+          "tx": 0,
+          "tz": 15,
+          "slope": 0.050043103522472474
+        },
+        {
+          "name": "native:savanna:0.15",
+          "tx": 30,
+          "tz": 15,
+          "slope": 0.15026110015671923
+        },
+        {
+          "name": "native:savanna:0.25",
+          "tx": 15,
+          "tz": -35,
+          "slope": 0.2459625540364157
+        }
+      ],
+      "result": {
+        "position": {
+          "count": 724,
+          "p95": 0.012346783967772609,
+          "p99": 0.023544487142223017,
+          "max": 0.02481550552072298
+        },
+        "motionDelta": {
+          "count": 720,
+          "p95": 0.01603706590499456,
+          "p99": 0.02368027681778334,
+          "max": 0.024815504787933748
+        },
+        "contactMotionDelta": {
+          "count": 718,
+          "p95": 0.007379116216152363,
+          "p99": 0.010654781794856485,
+          "max": 0.023640430739559508
+        },
+        "liftErrorAbs": {
+          "count": 724,
+          "p95": 0.0019401581996598694,
+          "p99": 0.0057361751854188014,
+          "max": 0.008436618162152243
+        },
+        "negativeControlDifference": {
+          "count": 724,
+          "p95": 0.05,
+          "p99": 0.05,
+          "max": 0.05
+        },
+        "anchorLiftErrorAbs": {
+          "count": 724,
+          "p95": 0.0019401581760805087,
+          "p99": 0.005736175678508815,
+          "max": 0.00843661788771044
+        },
+        "anchorVsBakedLiftAbs": {
+          "count": 724,
+          "p95": 2.8599904666748444e-9,
+          "p99": 6.2525957744696825e-9,
+          "max": 4.774772355276014e-7
+        },
+        "worstAnchorClearance": 0.0006898922971005916,
+        "worstReferenceClearance": 0.0006582473505405417,
+        "worstBakedClearance": 0.0006898918158655398,
+        "wrapFrames": 8,
+        "wrapMotionDelta": {
+          "count": 8,
+          "p95": 0.01715848388860928,
+          "p99": 0.01715848388860928,
+          "max": 0.017227989261173384
+        }
+      }
+    },
+    {
+      "species": "warthog",
+      "reportSha256": "462688e9872ed22b200d7b1c65ab81727a7c5949958f320ea6c7477131dd31bd",
+      "sourceSha256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
+      "bakeSha256": "fbc5cf2120df361c6ee62ef7afb81eb22d8df7786023056cc57cada36bf5abf9",
+      "contactBankBytes": 6732,
+      "feet": 433,
+      "contactSamples": 17,
+      "terrains": [
+        {
+          "name": "native:mangrove:0",
+          "tx": -40,
+          "tz": -40,
+          "slope": 0
+        },
+        {
+          "name": "native:savanna:0.05",
+          "tx": 0,
+          "tz": 15,
+          "slope": 0.050043103522472474
+        },
+        {
+          "name": "native:savanna:0.15",
+          "tx": 30,
+          "tz": 15,
+          "slope": 0.15026110015671923
+        },
+        {
+          "name": "native:savanna:0.25",
+          "tx": 15,
+          "tz": -35,
+          "slope": 0.2459625540364157
+        }
+      ],
+      "result": {
+        "position": {
+          "count": 724,
+          "p95": 0.011898161475494896,
+          "p99": 0.015813416824724476,
+          "max": 0.02096052610707404
+        },
+        "motionDelta": {
+          "count": 720,
+          "p95": 0.012450823736639043,
+          "p99": 0.015754906867723836,
+          "max": 0.019694058745115362
+        },
+        "contactMotionDelta": {
+          "count": 641,
+          "p95": 0.0055537434899149436,
+          "p99": 0.010519699662071929,
+          "max": 0.019694058745115362
+        },
+        "liftErrorAbs": {
+          "count": 724,
+          "p95": 0.001632316169912329,
+          "p99": 0.0037539941032536106,
+          "max": 0.01400052916696648
+        },
+        "negativeControlDifference": {
+          "count": 724,
+          "p95": 0.05,
+          "p99": 0.05,
+          "max": 0.05
+        },
+        "anchorLiftErrorAbs": {
+          "count": 724,
+          "p95": 0.001632313767645055,
+          "p99": 0.003753998494982369,
+          "max": 0.014000536008011544
+        },
+        "anchorVsBakedLiftAbs": {
+          "count": 724,
+          "p95": 6.028844978800407e-9,
+          "p99": 8.456867650608046e-9,
+          "max": 4.776483137902687e-7
+        },
+        "worstAnchorClearance": 0.0034343711693809453,
+        "worstReferenceClearance": 0.003417959675711124,
+        "worstBakedClearance": 0.0034343653890580583,
+        "wrapFrames": 8,
+        "wrapMotionDelta": {
+          "count": 8,
+          "p95": 0.00031234553769933797,
+          "p99": 0.00031234553769933797,
+          "max": 0.0003320021567152271
+        }
+      }
+    }
+  ],
+  "scope": "Offline comparison of precomputed contact points against current CPU pose and exact CPU terrain support; synthetic moving root, 181 samples at 60 Hz on four Wild Engine terrain locations per species. Full per-frame reports are reproducible in .cache. No gameplay, GPU, visual review or performance measurement."
+}
