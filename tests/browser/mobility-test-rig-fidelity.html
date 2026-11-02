@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Worker rig fidelity</title></head><body><script type="module">
+import {AnimationMixer,Group,Vector3} from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {ANIMAL_ACTIONS} from '../../src/simulation/animal-actions-data.js';
+import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '../../src/rendering/animal-actions.js';
+import {loadTestRig} from './mobility-physics-rig.js';
+import {loadTestClips} from './mobility-test-clips.js';
+try{
+ const [gltf,model,clips]=await Promise.all([new GLTFLoader().loadAsync(ANIMAL_ACTIONS.animals.hyena.url),loadTestRig('hyena'),loadTestClips('hyena')]);
+ function rig(m,cs){prepareAnimalModel(m,'hyena');const root=new Group();root.add(m);root.position.set(204,0,28.6633971449);root.rotation.y=1.2;root.updateMatrixWorld(true);return {root,model:m,mixer:new AnimationMixer(m),clips:cs,groundSamples:animalGroundSamples(m)};}
+ const ref=rig(gltf.scene,prepareAnimalClips(gltf.animations)),test=rig(model,clips),bones=o=>{const a=[];o.traverse(n=>{if(n.isBone)a.push(n);});return a;},meshes=o=>{const a=[];o.traverse(n=>{if(n.isSkinnedMesh)a.push(n);});return a;};
+ const rb=bones(ref.model),tb=bones(test.model),rm=meshes(ref.model),tm=meshes(test.model);if(rb.length!==tb.length||rm.length!==tm.length)throw Error('Rig structure differs');
+ const rows=[];for(const status of ['entering','walking'])for(const time of [0,.125,.333,.5]){
+  const animal={species:'hyena',status,motionPhase:time,path:[{x:1,z:1}]};applyAnimalPose(ref,animal,time);applyAnimalPose(test,animal,time);ref.root.updateMatrixWorld(true);test.root.updateMatrixWorld(true);let boneMax=0,vertexMax=0,vertexCount=0;const a=new Vector3(),b=new Vector3();
+  for(let i=0;i<rb.length;i++){if(rb[i].name!==tb[i].name)throw Error('Bone order differs');for(let j=0;j<16;j++)boneMax=Math.max(boneMax,Math.abs(rb[i].matrixWorld.elements[j]-tb[i].matrixWorld.elements[j]));}
+  for(let i=0;i<rm.length;i++){const r=rm[i],t=tm[i],n=r.geometry.getAttribute('position').count;if(t.geometry.getAttribute('position').count!==n)throw Error('Vertex structure differs');r.skeleton.update();t.skeleton.update();for(let v=0;v<n;v++){r.getVertexPosition(v,a);r.localToWorld(a);t.getVertexPosition(v,b);t.localToWorld(b);vertexMax=Math.max(vertexMax,a.distanceTo(b));vertexCount++;}}
+  rows.push({status,time,boneMax,vertexMax,vertexCount,groundDelta:Math.abs(ref.model.position.y-test.model.position.y)});
+ }
+ window.auditResult={boneCount:rb.length,meshCount:rm.length,rows};
+}catch(error){window.auditError=String(error?.stack??error);}
+</script></body></html>
