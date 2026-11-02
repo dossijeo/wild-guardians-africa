@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Original clips and physics Worker parity</title></head><body><script type="module">
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {ANIMAL_ACTIONS} from '../../src/simulation/animal-actions-data.js';
+import {prepareAnimalClips} from '../../src/rendering/animal-actions.js';
+import {loadTestClips} from './mobility-test-clips.js';
+import {runGamePhysics} from './mobility-game-physics-core.js';
+try{
+ const [reference,decoded]=await Promise.all([new GLTFLoader().loadAsync(ANIMAL_ACTIONS.animals.hyena.url),loadTestClips('hyena')]);
+ const official=prepareAnimalClips(reference.animations);const norm=clips=>clips.map(clip=>({name:clip.name,duration:clip.duration,tracks:clip.tracks.map(t=>({name:t.name,times:Array.from(t.times),values:Array.from(t.values),interpolation:t.getInterpolation()}))}));
+ if(JSON.stringify(norm(official))!==JSON.stringify(norm(decoded)))throw Error('Original clip decoding mismatch');
+ const worker=new Worker('./mobility-game-animated-impact-worker.js',{type:'module'}),remote=new Promise((resolve,reject)=>{worker.onerror=e=>reject(Error(e.message));worker.onmessage=e=>e.data.kind==='error'?reject(Error(e.data.error)):resolve(e.data.result);});
+ const local=await runGamePhysics({originalClips:true,initialAnimation:true,traceBones:true}),other=await remote;worker.terminate();const mismatch=(a,b)=>a.findIndex((x,i)=>x!==b[i]);const samples=mismatch(local.samples,other.samples),checkpoints=mismatch(local.checkpoints,other.checkpoints);
+ if(samples!==-1||checkpoints!==-1||JSON.stringify(local.events)!==JSON.stringify(other.events)||JSON.stringify(local.phases)!==JSON.stringify(other.phases)||!local.network)throw Error(JSON.stringify({samples,checkpoints,localPhases:local.phases,otherPhases:other.phases}));
+ window.auditResult={initialPoseChanges:local.initialPoseChanges,boneCount:local.boneCount,clipCount:official.length,tracks:official.reduce((n,c)=>n+c.tracks.length,0),samples:local.samples.length,checkpoints:local.checkpoints.length,events:local.events.map(e=>JSON.parse(e).type),phases:local.phases,activeSteps:local.activeSteps,animalId:local.animalId,network:local.network};
+}catch(error){window.auditError=String(error?.stack??error);}
+</script></body></html>
