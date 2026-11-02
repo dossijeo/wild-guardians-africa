@@ -15,6 +15,20 @@ window.audit=async(options={})=>{
   for(const sample of remote.samples){const apply=(node,v,i)=>{node.position.fromArray(v,i);node.quaternion.fromArray(v,i+3);node.scale.fromArray(v,i+7);};apply(root,sample.localPose.root,0);bones.forEach((b,i)=>apply(b,sample.localPose.bones,i*10));root.updateMatrixWorld(true);let offset=0;for(const b of bones)for(const n of b.matrixWorld.elements)maxError=Math.max(maxError,Math.abs(n-sample.boneMatrices[offset++]));}
   if(maxError>1e-9)throw Error(`Reconstruction error ${maxError}`);
   reconstruction={maxError,boneCount:bones.length,rawFloat64Bytes:(10+bones.length*10)*8,totalApplyMs:performance.now()-start};
+  if(options.precision){
+   reconstruction.float32=[];
+   for(const origin of [0,10000,1000000]){
+    let maxPositionError=0,maxMatrixError=0;
+    for(const sample of remote.samples){
+     const rootValues=sample.localPose.root.slice();rootValues[0]+=origin;rootValues[2]+=origin;
+     const apply=(node,v,i)=>{node.position.set(Math.fround(v[i]),Math.fround(v[i+1]),Math.fround(v[i+2]));node.quaternion.set(Math.fround(v[i+3]),Math.fround(v[i+4]),Math.fround(v[i+5]),Math.fround(v[i+6]));node.scale.set(Math.fround(v[i+7]),Math.fround(v[i+8]),Math.fround(v[i+9]));};
+     apply(root,rootValues,0);bones.forEach((b,i)=>apply(b,sample.localPose.bones,i*10));root.updateMatrixWorld(true);
+     let offset=0;for(const b of bones){const m=b.matrixWorld.elements,ref=sample.boneMatrices.slice(offset,offset+16);ref[12]+=origin;ref[14]+=origin;maxPositionError=Math.max(maxPositionError,Math.hypot(m[12]-ref[12],m[13]-ref[13],m[14]-ref[14]));for(let i=0;i<16;i++)maxMatrixError=Math.max(maxMatrixError,Math.abs(m[i]-ref[i]));offset+=16;}
+    }
+    reconstruction.float32.push({origin,maxPositionError,maxMatrixError});
+   }
+   reconstruction.rawFloat32Bytes=(10+bones.length*10)*4;
+  }
  }
  return {equal:true,steps:main.samples.length,phases:main.phases,recoveriesUsed:main.recoveriesUsed,boneCount:main.boneCount,peerContacts:main.peerContacts,barrierContacts:main.barrierContacts,reconstruction,main:{initializationMs:main.initializationMs,runMs:main.runMs},worker:{initializationMs:remote.initializationMs,runMs:remote.runMs,wallMs:workerWallMs}};
 };window.ready=true;document.querySelector('#status').textContent='Preparado';
