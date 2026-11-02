@@ -2,16 +2,20 @@
 const kinds=['workers','animals','structures'];
 const clone=x=>structuredClone(x);
 function validProjection(p){return p&&Number.isFinite(p.elapsed)&&kinds.every(k=>Array.isArray(p[k])&&new Set(p[k].map(x=>x.id)).size===p[k].length&&p[k].every(x=>typeof x.id==='string'));}
-export function createProjectionPublisher(session){
+export function createProjectionPublisher(session,{maxPendingBytes=Infinity}={}){
+ if(maxPendingBytes!==Infinity&&(!Number.isSafeInteger(maxPendingBytes)||maxPendingBytes<2))throw Error('Invalid event capacity');
+ const bytes=value=>new TextEncoder().encode(JSON.stringify(value)).length;
  let state=null,version=0,nextEvent=1,acknowledged=0,delivered=0,events=[];
  const packetEvents=()=>{if(events.length)delivered=events.at(-1).sequence;return clone(events);};
  return {
   publish(projection){if(!validProjection(projection)||!Array.isArray(projection.events))throw Error('Invalid projection');const incoming=clone(projection),added=incoming.events;delete incoming.events;
+   const prospective=added.map((event,i)=>({sequence:nextEvent+i,event}));
+   if(maxPendingBytes!==Infinity){const needed=bytes([...events,...prospective]);if(needed>maxPendingBytes)return {kind:'blocked',reason:bytes(prospective)>maxPendingBytes?'oversize':'event-capacity',needed,maxPendingBytes,version};}
    const base=version,updates={};for(const k of kinds){const old=new Map((state?.[k]??[]).map(x=>[x.id,x]));updates[k]={order:incoming[k].map(x=>x.id),changed:incoming[k].filter(x=>JSON.stringify(x)!==JSON.stringify(old.get(x.id)))};}
    state=incoming;version++;for(const event of added)events.push({sequence:nextEvent++,event});return {kind:'delta',session,base,version,elapsed:state.elapsed,updates,events:packetEvents()};},
   snapshot(){if(!state)throw Error('Not initialized');return {kind:'snapshot',session,version,state:clone(state),events:packetEvents()};},
   acknowledge(s,n){if(s!==session||!Number.isSafeInteger(n)||n<acknowledged||n>delivered)return false;acknowledged=n;events=events.filter(e=>e.sequence>n);return true;},
-  status(){return {version,acknowledged,delivered,pending:events.length};}
+  status(){return {version,acknowledged,delivered,pending:events.length,pendingBytes:bytes(events),maxPendingBytes};}
  };
 }
 export function createProjectionReceiver(session){
