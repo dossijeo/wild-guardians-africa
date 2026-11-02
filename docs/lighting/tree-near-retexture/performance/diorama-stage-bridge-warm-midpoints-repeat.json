@@ -1,0 +1,98 @@
+{
+  "runs": [
+    {
+      "mode": "candidate",
+      "records": [
+        {
+          "progress": 0.23105,
+          "visible": [
+            "puente_maiz_1_2"
+          ],
+          "cpuMs": 3.259999990463257,
+          "gpuMs": 1.658496,
+          "pngHash": "0d3a736f14e43ed08118acfab0020b32cb29ced04ea1034941858d4a2f0a1df9"
+        },
+        {
+          "progress": 0.4806,
+          "visible": [
+            "puente_maiz_2_3"
+          ],
+          "cpuMs": 1.8200000077486038,
+          "gpuMs": 5.323168,
+          "pngHash": "0f4e870efdf4693e8564078fbce68f50f91968abcf2a61b335f74c347b1e23f7"
+        },
+        {
+          "progress": 0.7325,
+          "visible": [
+            "puente_maiz_3_4"
+          ],
+          "cpuMs": 1.7899999916553497,
+          "gpuMs": 3.909152,
+          "pngHash": "25deda8119a96777142bbc1030a9c477f2cbba96410247b894d3df56a1b9ce16"
+        },
+        {
+          "progress": 0.9582,
+          "visible": [
+            "puente_maiz_4_5"
+          ],
+          "cpuMs": 1.780000001192093,
+          "gpuMs": 4.958176,
+          "pngHash": "3fcef865b194083c119c0475473625ed3b026f051867a4f557863a6883613f63"
+        }
+      ],
+      "warmCandidateCount": 2,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "scope": "Isolated reduced-motion diorama; one direct render per bridge midpoint followed by synchronous PNG readback. CPU render excludes PNG readback, but readbacks affect later timing; not a frame-time or integrated loading test."
+    },
+    {
+      "mode": "control",
+      "records": [
+        {
+          "progress": 0.23105,
+          "visible": [
+            "puente_maiz_1_2"
+          ],
+          "cpuMs": 3.2049999982118607,
+          "gpuMs": 2.8288,
+          "pngHash": "0d3a736f14e43ed08118acfab0020b32cb29ced04ea1034941858d4a2f0a1df9"
+        },
+        {
+          "progress": 0.4806,
+          "visible": [
+            "puente_maiz_2_3"
+          ],
+          "cpuMs": 1.375,
+          "gpuMs": 3.38864,
+          "pngHash": "10ff3fad232b27510a2078a07da024bf0208fe4cddcf53cc81f3c9af8c52b3dd"
+        },
+        {
+          "progress": 0.7325,
+          "visible": [
+            "puente_maiz_3_4"
+          ],
+          "cpuMs": 1.2450000047683716,
+          "gpuMs": 4.142464,
+          "pngHash": "25deda8119a96777142bbc1030a9c477f2cbba96410247b894d3df56a1b9ce16"
+        },
+        {
+          "progress": 0.9582,
+          "visible": [
+            "puente_maiz_4_5"
+          ],
+          "cpuMs": 1.199999988079071,
+          "gpuMs": 3.485952,
+          "pngHash": "f5559d22cf865627141e4cb4d2f2a49457811b9bbae9b8b79ab208da708f3203"
+        }
+      ],
+      "warmCandidateCount": 0,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "scope": "Isolated reduced-motion diorama; one direct render per bridge midpoint followed by synchronous PNG readback. CPU render excludes PNG readback, but readbacks affect later timing; not a frame-time or integrated loading test."
+    }
+  ],
+  "imageMatches": [
+    true,
+    false,
+    true,
+    false
+  ]
+}
