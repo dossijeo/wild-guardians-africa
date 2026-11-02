@@ -1,0 +1,183 @@
+{
+  "rows": [
+    {
+      "species": "buffalo",
+      "t": 1.853,
+      "x": 15.326774820510595,
+      "z": -34.56113716767084,
+      "yaw": 0.5961639971842543,
+      "original": 0.07414970005515809,
+      "baked": 0.06861215451464231,
+      "error": 0.005537545540515776,
+      "pixels": {
+        "changed": 19430,
+        "max": 219,
+        "mean": 0.30086666666666667
+      },
+      "negative": {
+        "changed": 35285,
+        "max": 239,
+        "mean": 2.818346527777778
+      },
+      "contacts": 18
+    },
+    {
+      "species": "hyena",
+      "t": 0.5696666666666667,
+      "x": 15.126657851901411,
+      "z": -34.85316509661638,
+      "yaw": 0.21575086805722749,
+      "original": 0.07348831947608225,
+      "baked": 0.07154099961742721,
+      "error": 0.0019473198586550389,
+      "pixels": {
+        "changed": 13033,
+        "max": 171,
+        "mean": 0.08881666666666667
+      },
+      "negative": {
+        "changed": 24006,
+        "max": 226,
+        "mean": 1.7898895833333333
+      },
+      "contacts": 16
+    },
+    {
+      "species": "lion",
+      "t": 0.353,
+      "x": 15.079604690397167,
+      "z": -34.90852467249574,
+      "yaw": 0.13505280218189378,
+      "original": 0.04044181093495558,
+      "baked": 0.03593728579580757,
+      "error": 0.004504525139148008,
+      "pixels": {
+        "changed": 12000,
+        "max": 188,
+        "mean": 0.17855972222222222
+      },
+      "negative": {
+        "changed": 19098,
+        "max": 217,
+        "mean": 1.2799159722222222
+      },
+      "contacts": 16
+    },
+    {
+      "species": "rhino",
+      "t": 0.353,
+      "x": 15.079604690397167,
+      "z": -34.90852467249574,
+      "yaw": 0.13505280218189378,
+      "original": 0.09153446006774901,
+      "baked": 0.0835348150506614,
+      "error": 0.007999645017087609,
+      "pixels": {
+        "changed": 44188,
+        "max": 211,
+        "mean": 0.9858368055555555
+      },
+      "negative": {
+        "changed": 54944,
+        "max": 232,
+        "mean": 4.916702777777778
+      },
+      "contacts": 16
+    },
+    {
+      "species": "warthog",
+      "t": 1.1196666666666666,
+      "x": 15.232825668155337,
+      "z": -34.718521665224635,
+      "yaw": 0.4043377530219466,
+      "original": 0.04346520468724968,
+      "baked": 0.03795633176431146,
+      "error": 0.005508872922938224,
+      "pixels": {
+        "changed": 26689,
+        "max": 206,
+        "mean": 0.3372291666666667
+      },
+      "negative": {
+        "changed": 40881,
+        "max": 229,
+        "mean": 3.4382111111111113
+      },
+      "contacts": 17
+    }
+  ],
+  "videos": [
+    {
+      "species": "buffalo",
+      "frames": 90,
+      "nominalFps": 30,
+      "width": 1600,
+      "height": 600,
+      "bytes": 967967,
+      "maxLiftDifference": 0.003354423761019021,
+      "decoded": {
+        "width": 1600,
+        "height": 600,
+        "advanced": true
+      }
+    },
+    {
+      "species": "hyena",
+      "frames": 90,
+      "nominalFps": 30,
+      "width": 1600,
+      "height": 600,
+      "bytes": 972711,
+      "maxLiftDifference": 0.0019473198586550389,
+      "decoded": {
+        "width": 1600,
+        "height": 600,
+        "advanced": true
+      }
+    },
+    {
+      "species": "lion",
+      "frames": 90,
+      "nominalFps": 30,
+      "width": 1600,
+      "height": 600,
+      "bytes": 966406,
+      "maxLiftDifference": 0.003540082747058193,
+      "decoded": {
+        "width": 1600,
+        "height": 600,
+        "advanced": true
+      }
+    },
+    {
+      "species": "rhino",
+      "frames": 90,
+      "nominalFps": 30,
+      "width": 1600,
+      "height": 600,
+      "bytes": 977089,
+      "maxLiftDifference": 0.005736175678508815,
+      "decoded": {
+        "width": 1600,
+        "height": 600,
+        "advanced": true
+      }
+    },
+    {
+      "species": "warthog",
+      "frames": 90,
+      "nominalFps": 30,
+      "width": 1600,
+      "height": 600,
+      "bytes": 975241,
+      "maxLiftDifference": 0.0047643491160851426,
+      "decoded": {
+        "width": 1600,
+        "height": 600,
+        "advanced": true
+      }
+    }
+  ],
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "Synchronized side-by-side recordings, 90 nominal 30 Hz frames per species; same original CPU rig and synthetic root, original versus interpolated baked contact lift on one native savanna terrain. Rendering and encoding are sequential within each frame; no frame-time benchmark, other clips, gameplay, GPU animation, dynamic obstacles or complete visual validation."
+}
