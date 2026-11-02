@@ -6,6 +6,7 @@ import {Guardian3D} from './guardian-3d.js';
 const GESTURE_MIN_SECONDS={greeting:5.8,speak:5.8,acknowledge:6.8,curious:6.8,warning:6.2,reveal:7.8,idle:7,farewell:6.8};
 import {GuardianLifecycle} from './guardian-lifecycle.js';
 import {spiritVoice} from '../audio/spirit-voice.js';
+import {guardianNarrationAudio} from './guardian-narration-clock.js';
 
 export class NativeGuardian {
   constructor(container,onError=()=>{},onPresentation=()=>{},voice=null){
@@ -93,6 +94,7 @@ export class NativeGuardian {
     this.worldPresence=active;this.root.querySelector('.avatar-shell').style.visibility=active?'hidden':'';
   }
   present(phase){try{this.onPresentation(phase);}catch{}}
+  narrationAudio(){return guardianNarrationAudio(this.voice,this.voiceRecord,this.age);}
   resize(){if(this.mesh){this.mesh.resize();this.draw(0);}}
   update(){
     if(this.disposed||document.hidden||this.root.classList.contains('closed')&&!this.guideRect){this.lastStamp=null;return;}
@@ -108,7 +110,7 @@ export class NativeGuardian {
   draw(dt){
     if(!this.mesh)return;
     const sample=this.lifecycle.sample(this.gesture??'idle',this.duration??7),gesture=sample.state;
-    if(!this.worldPresence)this.mesh.draw({time:this.time,audio:this.voice?.audio,gesture:this.gesture??gesture,reduced:this.reduced});
+    if(!this.worldPresence)this.mesh.draw({time:this.time,audio:this.narrationAudio(),gesture:this.gesture??gesture,reduced:this.reduced});
     this.present(document.hidden?'hidden':this.lifecycle.phase);
     this.root.dataset.phase=gesture;
     this.root.dataset.lifecycle=this.lifecycle.phase;
