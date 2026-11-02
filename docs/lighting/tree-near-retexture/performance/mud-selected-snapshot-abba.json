@@ -1,0 +1,57 @@
+{
+  "runs": [
+    {
+      "mode": "all",
+      "count": 75,
+      "counts": {
+        "inside": 9750,
+        "slopes": 750
+      },
+      "mean": 0.16855733333334078,
+      "p95": 0.19929999999999382,
+      "p99": 0.3143999999999778,
+      "max": 0.3631000000000313,
+      "verified": 75
+    },
+    {
+      "mode": "selected",
+      "count": 75,
+      "counts": {
+        "inside": 5701,
+        "slopes": 617
+      },
+      "mean": 0.13561733333334208,
+      "p95": 0.17989999999963402,
+      "p99": 0.19419999999990978,
+      "max": 0.20190000000002328,
+      "verified": 75
+    },
+    {
+      "mode": "selected",
+      "count": 75,
+      "counts": {
+        "inside": 5701,
+        "slopes": 617
+      },
+      "mean": 0.14971333333330525,
+      "p95": 0.2948999999998705,
+      "p99": 0.37609999999995125,
+      "max": 0.5716999999999643,
+      "verified": 75
+    },
+    {
+      "mode": "all",
+      "count": 75,
+      "counts": {
+        "inside": 9750,
+        "slopes": 750
+      },
+      "mean": 0.16105866666664345,
+      "p95": 0.16640000000006694,
+      "p99": 0.19129999999995562,
+      "max": 0.4230999999999767,
+      "verified": 75
+    }
+  ],
+  "scope": "75 native WASM mangrove-network chunks across three seeds, node synchronous snapshot-only timings; verifies exact positions, normals, UV and metadata after reconstruction in main thread. Excludes browser Worker, transfer, rendering, mutations, frame time and hardware integrated. Selection code duplicated and may diverge from production."
+}
