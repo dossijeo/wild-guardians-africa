@@ -39,6 +39,20 @@ En una escena congelada de manglares de islotes con 20 animales, [el informe pre
 
 `tools/guardian/prototype_bake_gpu_walk.mjs` carga el GLB real de la hiena y utiliza `prepareAnimalClips`, `applyAnimalPose` y el grounding actual para capturar matrices de `Skeleton.update` en una raíz canónica. Es un ensayo offline independiente, no una ruta de producción ni una reproducción GPU. Exporta binario y manifiesto a `.cache`, con hash del GLB y del resultado, nombres y orden de huesos, matrices de bind y altura de grounding. Conserva el desplazamiento lógico fuera del clip; sin embargo, las matrices capturadas contienen la transformación canónica del modelo y aún necesitan un contrato validado para raíces y `bindMatrixInverse` en cada instancia.
 
+### Extensión offline a las cinco especies
+
+`tools/guardian/audit_baked_walk_species.mjs` ejecuta el mismo horneador dos veces para cada especie a 30 Hz, compara los hashes y las métricas y conserva el informe en `gpu-animation/walk-five-species-offline-audit.json`. Las diez ejecuciones reconstruyeron exactamente las matrices almacenadas y empaquetadas. Cada especie permitió compartir su canal de matrices entre sus propias mallas tras comparar los datos, sin asumir que pueda compartirse entre especies. Los tamaños son de los bancos binarios, no de memoria GPU residente.
+
+| Especie | Huesos | Tamaño | Error máximo de vértice entre muestras | Error RMS | Salto del clip original al reiniciar |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Búfalo | 61 | 128.964 bytes | 0,023953 | 0,001721 | 0,164359 |
+| Hiena | 21 | 44.484 bytes | 0,009695 | 0,001862 | 0,121056 |
+| León | 78 | 164.868 bytes | 0,015116 | 0,001546 | 0,109505 |
+| Rinoceronte | 76 | 160.644 bytes | 0,032250 | 0,002858 | 0,226505 |
+| Facóquero | 21 | 44.484 bytes | 0,013919 | 0,001976 | 0,099096 |
+
+Las distancias están expresadas en unidades del modelo canónico. Se compararon entre 9.999 y 16.962 vértices-tiempo dispersos por especie en los puntos medios entre muestras; el salto mide la diferencia geométrica entre el final y el reinicio del clip original, no un salto introducido por el banco. La política experimental conserva esa discontinuidad. Estas cifras no establecen calidad perceptible, ausencia de penetraciones o deslizamiento; faltan vídeo, terreno móvil, otros clips, transiciones, impactos y comparación GPU en las cuatro especies adicionales. No se han modificado activos ni rutas de producción, y no se ha medido ahorro de fotograma. Reproducir con `.cache/tooling/node20.exe tools/guardian/audit_baked_walk_species.mjs`; `BAKE_FPS` y `OUTPUT` permiten seleccionar frecuencia y destino del informe.
+
 Se ensayaron 15, 30 y 60 muestras/s con 16, 32 y 63 muestras respectivamente. Las matrices en las muestras originales y su reconstrucción compacta coincidieron exactamente. Las cuatro mallas usan 21 huesos y tuvieron matrices idénticas durante este clip; compartirlas después de compararlas reduce el binario de 30 Hz de 172.160 a 43.136 bytes. La igualdad no se presume para otros clips, mallas o especies. Dos ejecuciones independientes de 30 Hz produjeron el mismo SHA-256 `35b8929247d082788107427fa631c942f6350c404be7ee9609cb1148a84c87`.
 
 En puntos medios entre muestras, interpolando linealmente las matrices, el error máximo de posición de vértice muestreado fue 0,02492 / 0,00970 / 0,00740 unidades a 15 / 30 / 60 Hz; RMS 0,00520 / 0,00192 / 0,00065. Se compararon 6.345 / 13.113 / 26.226 vértices-tiempo, aproximadamente cien vértices por malla y tiempo. El máximo de diferencia del grounding fue 0,00636 / 0,00518 / 0,00266 unidades. Son métricas geométricas del rig canónico: no son diferencias de píxel ni garantizan ausencia de deslizamiento o penetración. No se ha medido el cierre del ciclo, todos los vértices, morphs, cámaras, transiciones, pendientes, impactos ni sombras. La interpolación lineal de matrices puede no preservar rotaciones rígidas; debe compararse con otras representaciones antes de seleccionarla.
