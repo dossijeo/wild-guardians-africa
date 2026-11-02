@@ -1,0 +1,48 @@
+{
+  "scope": "Instrumented native combat cycle with two staged beasts: candidate support is calculated in shadow, then the original support is always applied. Eligibility excludes non-Walking clips and active impact reaction; no candidate is integrated. Candidate and reference both run, so timing and FPS are not performance comparisons. Does not validate other biomes, visual differences, falling/recovery, all pose modifications or future integration.",
+  "setup": {
+    "authority": "spatial-wasm",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "intercepted": 1,
+  "frames": 341,
+  "outcome": [
+    {
+      "id": "qa-beast-0",
+      "status": "entering",
+      "health": 84,
+      "x": 39.80330492637277,
+      "z": 71,
+      "down": false
+    },
+    {
+      "id": "qa-beast-1",
+      "status": "walking",
+      "health": 84,
+      "x": 87,
+      "z": -6.878804397389187,
+      "down": false
+    }
+  ],
+  "audit": {
+    "eligible": 169,
+    "fallback": {
+      "other-clip": 124
+    },
+    "bySpecies": {
+      "lion": {
+        "count": 169,
+        "maxError": 0.02374850455075439,
+        "sumError": 0.05553645292773535,
+        "statuses": {
+          "walking": 162,
+          "waiting": 7
+        },
+        "p95": 0.0011000674912136077,
+        "p99": 0.005261796888801129
+      }
+    }
+  },
+  "errors": [],
+  "fixtureErrors": []
+}

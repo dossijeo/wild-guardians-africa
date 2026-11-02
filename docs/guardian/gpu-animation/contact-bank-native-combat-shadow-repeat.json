@@ -1,0 +1,86 @@
+{
+  "scope": "Instrumented native combat cycle with two staged beasts: candidate support is calculated in shadow, then the original support is always applied. Eligibility excludes non-Walking clips and active impact reaction; no candidate is integrated. Candidate and reference both run, so timing and FPS are not performance comparisons. Does not validate other biomes, visual differences, falling/recovery, all pose modifications or future integration.",
+  "setup": {
+    "authority": "spatial-wasm",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "intercepted": 1,
+  "frames": 341,
+  "outcome": [
+    {
+      "id": "qa-beast-0",
+      "status": "entering",
+      "health": 84,
+      "x": 41.12746113195667,
+      "z": 71,
+      "down": false
+    },
+    {
+      "id": "qa-beast-1",
+      "status": "walking",
+      "health": 84,
+      "x": 87,
+      "z": -7.581661892503411,
+      "down": false
+    }
+  ],
+  "audit": {
+    "eligible": 178,
+    "fallback": {
+      "other-clip": 122
+    },
+    "bySpecies": {
+      "lion": {
+        "count": 178,
+        "maxError": 0.013775543310865501,
+        "sumError": 0.06752400835669903,
+        "statuses": {
+          "walking": 170,
+          "waiting": 8
+        },
+        "worst": {
+          "phase": 0.8832449999999993,
+          "original": 0,
+          "candidate": 0.013775543310865501,
+          "status": "walking",
+          "x": 89.1334839843865,
+          "z": -0.17495026889756773,
+          "heading": -0.6517582316005615,
+          "rootMatrix": [
+            0.7950185107367393,
+            0,
+            0.6065851692762831,
+            0,
+            0,
+            1,
+            0,
+            0,
+            -0.6065851692762831,
+            0,
+            0.7950185107367393,
+            0,
+            89.1334839843865,
+            6.7040114402771,
+            -0.17495026889756773,
+            1
+          ],
+          "localScale": [
+            1,
+            1,
+            1
+          ],
+          "localQuaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "p95": 0.0017866037917650957,
+        "p99": 0.009052239013502827
+      }
+    }
+  },
+  "errors": [],
+  "fixtureErrors": []
+}

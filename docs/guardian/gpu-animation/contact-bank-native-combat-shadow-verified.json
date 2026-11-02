@@ -1,0 +1,91 @@
+{
+  "scope": "Instrumented native combat cycle with two staged beasts: candidate support is calculated in shadow, then the original support is always applied. Eligibility excludes non-Walking clips and active impact reaction; no candidate is integrated. Candidate and reference both run, so timing and FPS are not performance comparisons. Does not validate other biomes, visual differences, falling/recovery, all pose modifications or future integration.",
+  "setup": {
+    "authority": "spatial-wasm",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "intercepted": 1,
+  "frames": 342,
+  "quality": {
+    "hiddenFrames": 0,
+    "rejectedPhysics": 0,
+    "reportedErrors": []
+  },
+  "outcome": [
+    {
+      "id": "qa-beast-0",
+      "status": "entering",
+      "health": 84,
+      "x": 40.04249981460412,
+      "z": 71,
+      "down": false
+    },
+    {
+      "id": "qa-beast-1",
+      "status": "attacking",
+      "health": 84,
+      "x": 87.27544489184395,
+      "z": -7.576402405327587,
+      "down": false
+    }
+  ],
+  "audit": {
+    "eligible": 144,
+    "fallback": {
+      "other-clip": 156
+    },
+    "bySpecies": {
+      "lion": {
+        "count": 144,
+        "maxError": 0.016529701461458934,
+        "sumError": 0.041973941974015716,
+        "statuses": {
+          "walking": 136,
+          "waiting": 8
+        },
+        "worst": {
+          "phase": 0.04170329483866264,
+          "original": 0.016529701461458934,
+          "candidate": 0,
+          "status": "walking",
+          "x": 88,
+          "z": -2.001583506173493,
+          "heading": -1.4562086712776396,
+          "rootMatrix": [
+            -1,
+            0,
+            -1.2246467991473532e-16,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1.2246467991473532e-16,
+            0,
+            -1,
+            0,
+            88,
+            6.668869972229004,
+            -2.001583506173493,
+            1
+          ],
+          "localScale": [
+            1,
+            1,
+            1
+          ],
+          "localQuaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "p95": 1.1752092632377753e-9,
+        "p99": 0.004208318099119701
+      }
+    }
+  },
+  "errors": [],
+  "fixtureErrors": []
+}
