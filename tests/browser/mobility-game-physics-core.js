@@ -2,17 +2,18 @@ import {Group,AnimationClip,AnimationMixer} from 'three';
 import {createSimulation} from './mobility-worker-simulation-core.js';
 import {loadTestRig} from './mobility-physics-rig.js';
 import {loadTestClips} from './mobility-test-clips.js';
-import {prepareAnimalModel,animalGroundSamples,applyAnimalPose} from '../../src/rendering/animal-actions.js';
+import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '../../src/rendering/animal-actions.js';
 import {BeastCombatPhysics,beastPhysicsRuntime} from '../../src/rendering/beast-combat-physics.js';
 import {loadRecoveryClips} from '../../src/rendering/recovery-clips.js';
 import {observeGameEvents} from '../../src/simulation/game.js';
 
-export async function createGamePhysics({originalClips=false,initialAnimation=false,traceBones=false}={}){
+export async function createGamePhysics({originalClips=false,initialAnimation=false,traceBones=false,referenceRig=false}={}){
  const chunkKeys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunkKeys.push(`${x},${z}`);
  const simulation=await createSimulation({mangrove:true,chunkKeys}),{game,nav}=simulation.diagnosticWorld();let manager,stop;
  try{
   const animal=game.raid?.animals.find(a=>a.species==='hyena');if(!animal)throw Error('Hyena absent');
-  const [R,model,recoveries,clips]=await Promise.all([beastPhysicsRuntime(),loadTestRig('hyena'),loadRecoveryClips(),originalClips?loadTestClips('hyena'):Promise.resolve([new AnimationClip('Walking',1,[]),new AnimationClip('Running',1,[])])]),root=new Group();root.add(model);root.position.set(animal.x,nav.field.surface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);
+  const real=referenceRig?await (async()=>{const [{GLTFLoader},{ANIMAL_ACTIONS}]=await Promise.all([import('three/addons/loaders/GLTFLoader.js'),import('../../src/simulation/animal-actions-data.js')]);return new GLTFLoader().loadAsync(ANIMAL_ACTIONS.animals.hyena.url);})():null;
+  const [R,model,recoveries,clips]=await Promise.all([beastPhysicsRuntime(),real?real.scene:loadTestRig('hyena'),loadRecoveryClips(),originalClips?(real?prepareAnimalClips(real.animations):loadTestClips('hyena')):Promise.resolve([new AnimationClip('Walking',1,[]),new AnimationClip('Running',1,[])])]),root=new Group();root.add(model);root.position.set(animal.x,nav.field.surface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);
   const bones=[];model.traverse(node=>{if(node.isBone)bones.push(node);});const rig={model,mixer:new AnimationMixer(model),clips};let initialPoseChanges=0;if(initialAnimation){if(!originalClips)throw Error('Initial pose needs original clips');prepareAnimalModel(model,'hyena');rig.groundSamples=animalGroundSamples(model);root.rotation.y=animal.heading??0;root.updateMatrixWorld(true);const before=bones.map(b=>b.quaternion.toArray());applyAnimalPose(rig,animal,game.elapsed);root.updateMatrixWorld(true);initialPoseChanges=bones.filter((b,i)=>b.quaternion.toArray().some((v,j)=>v!==before[i][j])).length;if(!initialPoseChanges)throw Error('Original animation did not change pose');}
   const world={state:game,nav,objects:new Map([[animal.id,root]]),mixers:new Map([[animal.id,rig]]),onError:error=>{throw error;}};
   manager=new BeastCombatPhysics(world,R);manager.recoveryClips=recoveries;const events=[];stop=observeGameEvents(game,e=>events.push(JSON.stringify(e)));let i=0,activeSteps=0;const phases=new Set();
