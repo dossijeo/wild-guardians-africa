@@ -1,0 +1,45 @@
+diff --git a/src/world/wild-engine/spatial-savanna.cpp b/src/world/wild-engine/spatial-savanna.cpp
+index 0f32da076..b3e49ecc1 100644
+--- a/src/world/wild-engine/spatial-savanna.cpp
++++ b/src/world/wild-engine/spatial-savanna.cpp
+@@ -2394,6 +2394,18 @@ int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int
+ int spatial_local_clear(float x,float z,float nx,float nz){
+   return spatial_local_clear_except(x,z,nx,nz,0,0,0,0);
+ }
++#ifdef WILD_EXPERIMENT_LOCAL_PROFILE
++// Laboratory only: reuse an existing profile's residency, never its passability.
++// Not a production API: identical residency and all revisions must be proven.
++int spatial_local_clear_for_profile(float x,float z,float nx,float nz,float radius,int worker){
++  if(!navReady||!std::isfinite(radius)||radius<=0||radius>maxIndexedRadius)return 0;
++  const float savedRadius=radiusNow;const bool savedWorker=workerNow;
++  radiusNow=radius;workerNow=worker!=0;
++  const int result=spatial_local_clear(x,z,nx,nz);
++  radiusNow=savedRadius;workerNow=savedWorker;
++  return result;
++}
++#endif
+ // Read-only local physical query for a hypothetical wall stroke or gate.
+ // Existing barriers named in the removal buffer are ignored and proposed
+ // barriers are tested without changing occupancy, sectors or graph revisions.
+diff --git a/tools/trees/build_spatial_route_trace.py b/tools/trees/build_spatial_route_trace.py
+index 621ef867f..9dbfc9117 100644
+--- a/tools/trees/build_spatial_route_trace.py
++++ b/tools/trees/build_spatial_route_trace.py
+@@ -37,6 +37,8 @@ if central_mobility:
+ spatial_profile = os.environ.get('SPATIAL_PROFILE') == '1'
+ if spatial_profile:
+     exports += ['_spatial_profile_reset', '_spatial_profile_ms']
++if os.environ.get('SPATIAL_LOCAL_PROFILE') == '1':
++    exports.append('_spatial_local_clear_for_profile')
+ output = os.environ.get('SPATIAL_TRACE_OUTPUT', str(root / '.cache/spatial-route-trace.wasm'))
+ exports = list(dict.fromkeys(exports))
+ compiler = os.environ.get('EMXX', 'em++')
+@@ -60,6 +62,8 @@ if os.environ.get('SPATIAL_SLOPE_BOUND') == '1':
+     flags.append('-DWILD_EXPERIMENT_SLOPE_BOUND')
+ if os.environ.get('SPATIAL_PROFILE_TWO_PASS') == '1':
+     flags.append('-DWILD_PROFILE_TWO_PASS')
++if os.environ.get('SPATIAL_LOCAL_PROFILE') == '1':
++    flags.append('-DWILD_EXPERIMENT_LOCAL_PROFILE')
+ command = [compiler, *(str(root / 'src/world/wild-engine' / name) for name in sources),
+            *flags, '-std=c++17', '-O3', '-s', 'STANDALONE_WASM=1',
+            '-s', 'ALLOW_MEMORY_GROWTH=1', '-s', 'INITIAL_MEMORY=16777216',
