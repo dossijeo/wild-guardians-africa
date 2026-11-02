@@ -4,6 +4,218 @@
     "max": 214,
     "mean": 1.1388758680555555
   },
+  "rootCases": [
+    {
+      "shadows": true,
+      "config": "translation",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 1,
+        "max": 1,
+        "mean": 0.000002170138888888889
+      }
+    },
+    {
+      "shadows": true,
+      "config": "translation",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 6927,
+        "max": 218,
+        "mean": 0.07149631076388889
+      }
+    },
+    {
+      "shadows": true,
+      "config": "yaw",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 4,
+        "max": 1,
+        "mean": 0.000004340277777777778
+      }
+    },
+    {
+      "shadows": true,
+      "config": "yaw",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 6629,
+        "max": 179,
+        "mean": 0.061780598958333335
+      }
+    },
+    {
+      "shadows": true,
+      "config": "uniform-scale",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 13,
+        "max": 1,
+        "mean": 0.000016276041666666666
+      }
+    },
+    {
+      "shadows": true,
+      "config": "uniform-scale",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 10889,
+        "max": 204,
+        "mean": 0.11800998263888889
+      }
+    },
+    {
+      "shadows": true,
+      "config": "nonuniform-scale",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 2,
+        "max": 1,
+        "mean": 0.000002170138888888889
+      }
+    },
+    {
+      "shadows": true,
+      "config": "nonuniform-scale",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 7690,
+        "max": 202,
+        "mean": 0.07547960069444444
+      }
+    },
+    {
+      "shadows": false,
+      "config": "translation",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      }
+    },
+    {
+      "shadows": false,
+      "config": "translation",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 6852,
+        "max": 218,
+        "mean": 0.07113932291666666
+      }
+    },
+    {
+      "shadows": false,
+      "config": "yaw",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 4,
+        "max": 1,
+        "mean": 0.000004340277777777778
+      }
+    },
+    {
+      "shadows": false,
+      "config": "yaw",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 6497,
+        "max": 179,
+        "mean": 0.058611111111111114
+      }
+    },
+    {
+      "shadows": false,
+      "config": "uniform-scale",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 13,
+        "max": 1,
+        "mean": 0.000016276041666666666
+      }
+    },
+    {
+      "shadows": false,
+      "config": "uniform-scale",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 11072,
+        "max": 204,
+        "mean": 0.12025390625
+      }
+    },
+    {
+      "shadows": false,
+      "config": "nonuniform-scale",
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "diff": {
+        "changed": 2,
+        "max": 1,
+        "mean": 0.000002170138888888889
+      }
+    },
+    {
+      "shadows": false,
+      "config": "nonuniform-scale",
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "diff": {
+        "changed": 7493,
+        "max": 202,
+        "mean": 0.07172200520833333
+      }
+    }
+  ],
+  "rebasingControls": [
+    {
+      "config": "translation",
+      "diff": {
+        "changed": 19633,
+        "max": 204,
+        "mean": 5.43888671875
+      }
+    },
+    {
+      "config": "yaw",
+      "diff": {
+        "changed": 18450,
+        "max": 204,
+        "mean": 4.953410373263889
+      }
+    },
+    {
+      "config": "uniform-scale",
+      "diff": {
+        "changed": 22582,
+        "max": 217,
+        "mean": 6.364564887152778
+      }
+    },
+    {
+      "config": "nonuniform-scale",
+      "diff": {
+        "changed": 14710,
+        "max": 215,
+        "mean": 3.3618033854166667
+      }
+    }
+  ],
   "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "cases": [
     {
@@ -889,14 +1101,14 @@
   ],
   "glError": 0,
   "meshes": 4,
-  "scope": "Isolated hyena, original GLB/textures and AfricanToon, one flat floor with shadow on/off, a directional light, a canonical root and near/far cameras. Candidate uploads interpolated baked matrices on CPU; GPU only performs existing skinning. Readbacks perturb timing; no FPS benchmark, gameplay, animated morphs, terrain adaptation, arbitrary transforms or GPU-autonomous playback.",
+  "scope": "Isolated hyena, original GLB/textures and AfricanToon, one flat floor with shadow on/off, a directional light, a canonical and transformed roots and near/far cameras. Candidate uploads interpolated baked matrices on CPU; GPU only performs existing skinning. Readbacks perturb timing; no FPS benchmark, gameplay, animated morphs, terrain adaptation, moving roots, arbitrary transforms or GPU-autonomous playback.",
   "videos": [
     {
       "mode": "source",
       "frames": 96,
       "fpsNominal": 30,
       "type": "video/webm;codecs=vp9",
-      "bytes": 527945,
+      "bytes": 529055,
       "decoded": {
         "width": 640,
         "height": 480,
@@ -908,7 +1120,7 @@
       "frames": 96,
       "fpsNominal": 30,
       "type": "video/webm;codecs=vp9",
-      "bytes": 530083,
+      "bytes": 530050,
       "decoded": {
         "width": 640,
         "height": 480,
