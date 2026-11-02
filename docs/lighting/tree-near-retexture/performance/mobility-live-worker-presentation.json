@@ -1,0 +1,30 @@
+{
+  "animals": 20,
+  "moved": 5,
+  "initializationMs": 850.9950000047684,
+  "workerTickMs": 988.7049999982119,
+  "responseMs": 992.3700000047684,
+  "applyDelayMs": 7.939999997615814,
+  "frames": {
+    "count": 119,
+    "p95": 33.404999999998836,
+    "p99": 33.41500000000087,
+    "max": 33.450000000004366
+  },
+  "overlapFrames": {
+    "count": 30,
+    "p95": 33.354999999995925,
+    "p99": 33.36499999999796,
+    "max": 33.404999999998836
+  },
+  "renderMs": {
+    "count": 120,
+    "p95": 29.79000000655651,
+    "p99": 35.13499999046326,
+    "max": 39.1499999910593
+  },
+  "maxPositionError": 0,
+  "baselineCount": 20,
+  "sceneErrors": [],
+  "scope": "Single frozen mangrove QA scene with 20 animals; Worker restores adapted copy and executes one tick; after response the test copies only x/z back for rendering. This is not an authoritative gameplay bridge, synchronization, GPU trajectory, collision, pose, input or visual-equivalence proof. Initialization happens before measurement; no GPU timer."
+}
