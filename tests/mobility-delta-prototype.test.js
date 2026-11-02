@@ -19,3 +19,7 @@ test('pause reasons survive deltas, snapshots and invalid packets without partia
  assert.equal(rx.accept(tx.snapshot()).accepted,true);assert.deepEqual(rx.state().state.pauses,['diagnostic']);
  const resumed={...p(3,[{id:'a',x:3}]),pauses:[]};assert.equal(rx.accept(tx.publish(resumed)).accepted,true);assert.deepEqual(rx.state().state.pauses,[]);
 });
+test('game events and native conditions retain a shared order across replay and acknowledgment',()=>{
+ const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s'),first={channel:'game',payload:{type:'StructureHit',targetId:'structure-1'}},second={channel:'condition',payload:{at:1,change:{type:'StructureConditionChanged',structureId:'structure-1',status:'collapsing'}}};
+ const packet=tx.publish(p(1,[{id:'a'}],[first,second]));assert.equal(rx.accept(packet).accepted,true);assert.deepEqual(rx.state().events.map(x=>x.event),[first,second]);assert.equal(rx.accept(tx.snapshot()).newEvents,0);assert.equal(tx.acknowledge('s',1),true);const resend=tx.snapshot();assert.deepEqual(resend.events.map(x=>x.event),[second]);assert.equal(rx.accept(resend).newEvents,0);assert.equal(tx.acknowledge('s',2),true);assert.equal(tx.status().pending,0);
+});
