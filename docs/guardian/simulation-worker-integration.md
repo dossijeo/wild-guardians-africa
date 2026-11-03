@@ -928,3 +928,13 @@ fixed the discrepancy in that scenario. Multiple simultaneous actors, baked
 fallbacks, checkpoints taken during recovery, disk encoding, full UI load and
 corrupt inputs remain unverified. The ordinary game still blocks active-physics
 saves.
+
+The experimental Worker checkpoint now has a JSON-compatible codec for Rapier
+bytes and non-finite roll-controller markers; it is still not written to the
+game's save repository. Two mangrove Workers matched state, events and every
+published pose for 60 ticks after a JSON round trip with two simultaneously
+active animals (833,445 UTF-8 bytes). A separate rolling checkpoint matched for
+120 ticks through recovery and release (448,971 bytes). These are single
+headless scenarios, not measurements of storage latency or peak memory. Active
+recovery checkpoints, baked fallbacks, corrupt-data hardening, disk writes and
+normal UI restore remain open; the production save gate remains unchanged.

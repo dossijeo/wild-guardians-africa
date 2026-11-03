@@ -3,25 +3,27 @@ import {createSimulation} from './mobility-worker-simulation-core.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {encodePhysicsCheckpoint,decodePhysicsCheckpoint} from '../../src/simulation/physics-checkpoint-codec.js';
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
- const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena'),source=serialize(game),bindings=captureRaidWaitBindings(game,nav);fixture.dispose();
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena'),second=game.raid.animals.find(a=>a.species==='warthog'&&a.status==='entering'),source=serialize(game),bindings=captureRaidWaitBindings(game,nav);fixture.dispose();
  const original=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,dynamicPhysics:true,session:'original'});let restored;
  const submit=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');return request.result;};
  try{
   await original.ready;const attack=await submit(original,{kind:'castAttack',id:'active-checkpoint-attack',targetId:animal.id,x:animal.x,z:animal.z});if(!attack.value)throw Error('Attack rejected');
-  const rolling=new URLSearchParams(location.search).has('rolling');let phase=null;
-  for(let i=0;i<(rolling?240:20);i++){const current=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});phase=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(rolling&&phase==='rolling')break;}
+  const params=new URLSearchParams(location.search),rolling=params.has('rolling'),multi=params.has('multi');let phase=null,current;
+  for(let i=0;i<(rolling?240:multi?36:20);i++){current=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});phase=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(rolling&&phase==='rolling')break;}
+  if(multi){const target=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===second.id),hit=await submit(original,{kind:'castAttack',id:'second-active-hit',targetId:target.id,x:target.x,z:target.z});if(!hit.value)throw Error('Second attack rejected: '+hit.rejection);for(let i=0;i<8;i++)await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});}
   if(rolling&&phase!=='rolling')throw Error('Animal did not reach rolling phase');
-  const checkpoint=await submit(original,{kind:'snapshot',physicsCheckpoint:true});if(checkpoint.saveAvailable||!checkpoint.physicsPose?.active||!checkpoint.physicsCheckpoint)throw Error('No experimental active fall checkpoint');
-  restored=createSimulationAuthorityClient({snapshot:checkpoint.snapshot,chunkKeys:chunks,raidWaitBindings:checkpoint.raidWaitBindings,physicsCheckpoint:checkpoint.physicsCheckpoint,session:'restored'});await restored.ready;
+  const checkpoint=await submit(original,{kind:'snapshot',physicsCheckpoint:true});if(checkpoint.saveAvailable||!checkpoint.physicsPose?.active||!checkpoint.physicsCheckpoint||multi&&(checkpoint.physicsPoses??[]).filter(p=>p.active).length<2)throw Error('No experimental active fall checkpoint');
+  const encoded=encodePhysicsCheckpoint(checkpoint.physicsCheckpoint),decoded=decodePhysicsCheckpoint(encoded);restored=createSimulationAuthorityClient({snapshot:checkpoint.snapshot,chunkKeys:chunks,raidWaitBindings:checkpoint.raidWaitBindings,physicsCheckpoint:decoded,session:'restored'});await restored.ready;
   const phases=new Set(),ticks=rolling?120:60;let active=0;for(let i=0;i<ticks;i++){
    const command={kind:'advance',seconds:.05,nightFastForward:true},[a,b]=await Promise.all([submit(original,command),submit(restored,command)]);
    const normalized=p=>{const state=JSON.parse(p.snapshot);for(const actor of state.raid?.animals??[])if(actor.raidWait)delete actor.raidWait.epoch;return JSON.stringify(state);};
-   if(normalized(a)!==normalized(b)||JSON.stringify(a.events)!==JSON.stringify(b.events)||JSON.stringify(a.physicsPose)!==JSON.stringify(b.physicsPose)){const differences=[];const scan=(x,y,path='')=>{if(differences.length>=8)return;if(x&&y&&typeof x==='object'&&typeof y==='object'){for(const key of new Set([...Object.keys(x),...Object.keys(y)]))scan(x[key],y[key],path+'/'+key);}else if(!Object.is(x,y))differences.push({path,left:x,right:y});};scan(a.physicsPose,b.physicsPose);throw Error('Restored active fall diverged at tick '+i+': '+JSON.stringify({state:normalized(a)===normalized(b),events:JSON.stringify(a.events)===JSON.stringify(b.events),differences}));}
-   if(a.physicsPose?.active)active++;const current=JSON.parse(a.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(current)phases.add(current);
+   if(normalized(a)!==normalized(b)||JSON.stringify(a.events)!==JSON.stringify(b.events)||JSON.stringify(a.physicsPose)!==JSON.stringify(b.physicsPose)||JSON.stringify(a.physicsPoses)!==JSON.stringify(b.physicsPoses)){const differences=[];const scan=(x,y,path='')=>{if(differences.length>=8)return;if(x&&y&&typeof x==='object'&&typeof y==='object'){for(const key of new Set([...Object.keys(x),...Object.keys(y)]))scan(x[key],y[key],path+'/'+key);}else if(!Object.is(x,y))differences.push({path,left:x,right:y});};scan(a.physicsPoses??a.physicsPose,b.physicsPoses??b.physicsPose);throw Error('Restored active fall diverged at tick '+i+': '+JSON.stringify({state:normalized(a)===normalized(b),events:JSON.stringify(a.events)===JSON.stringify(b.events),differences}));}
+   if((a.physicsPoses??[a.physicsPose]).filter(p=>p?.active).length>=(multi?2:1))active++;const current=JSON.parse(a.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(current)phases.add(current);
   }
-  if(!active)throw Error('No active physics');return {phase,ticks,active,phases:[...phases],scope:'Structured-clone active physics checkpoint between two real Workers in mangroves; no disk persistence, UI or full recovery checkpoint.'};
+  if(!active)throw Error('No active physics');return {phase,multi,ticks,active,encodedBytes:new TextEncoder().encode(encoded).byteLength,phases:[...phases],scope:'JSON-encoded active physics checkpoint between two real Workers in mangroves; no disk persistence, UI or full recovery checkpoint.'};
  }finally{original.dispose();restored?.dispose();}
 };window.ready=true;
 </script>
