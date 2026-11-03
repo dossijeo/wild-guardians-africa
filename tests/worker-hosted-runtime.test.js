@@ -18,8 +18,15 @@ test('hosted runtime fails pending commands on a wrong session',async()=>{
  const {runtime,worker}=setup(),start=runtime.start(),rejected=assert.rejects(start,/session mismatch/);worker.onmessage({data:{kind:'started',session:'wrong'}});await rejected;assert.equal(runtime.status().running,false);assert.equal(worker.terminated,true);
 });
 test('hosted runtime reserves bounded space for control commands',async()=>{
- const messages=[],worker={postMessage:value=>messages.push(value),terminate(){}},world={createConfirmedReceiver:()=>({status:()=>({sequence:0,lastElapsed:0})})};
- const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{},maxPending:1,controlReserve:1,workerFactory:()=>worker}),start=runtime.start();worker.onmessage({data:{kind:'started',session:'s',initial:{},status:{}}});await start;
+ const messages=[],worker={postMessage:value=>messages.push(value),terminate(){}},world={createConfirmedReceiver:()=>({status:()=>({sequence:1,lastElapsed:0})})};
+ const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{},maxPending:1,controlReserve:1,workerFactory:()=>worker}),start=runtime.start();worker.onmessage({data:{kind:'started',session:'s',initial:{sequence:1},status:{}}});await start;
  const ordinary=runtime.submit({kind:'plant'}),paused=runtime.submit({kind:'pause',reason:'menu'});await assert.rejects(runtime.submit({kind:'resume',reason:'menu'}),/queue is full/);
  const rejected=[assert.rejects(ordinary,/disposed/),assert.rejects(paused,/disposed/)];runtime.dispose();await Promise.all(rejected);
+});
+test('hosted runtime rejects startup and command results that precede their publications',async()=>{
+ const first=setup(),start=first.runtime.start(),rejectedStart=assert.rejects(start,/start before confirmed publication/);
+ first.worker.onmessage({data:{kind:'started',session:'s',initial:{sequence:1},status:{}}});await rejectedStart;assert.equal(first.worker.terminated,true);
+ const second=setup(),ready=second.runtime.start();second.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});second.worker.onmessage({data:{kind:'started',session:'s',initial:{sequence:1},status:{}}});await ready;
+ const command=second.runtime.submit({kind:'pause'}),rejected=assert.rejects(command,/command before confirmed publication/),id=second.messages.at(-1).id;
+ second.worker.onmessage({data:{kind:'commandResult',session:'s',id,result:{sequence:2}}});await rejected;assert.equal(second.worker.terminated,true);
 });

@@ -9,8 +9,8 @@ export function createWorkerHostedRuntime({world,session,clientOptions,runtimeOp
   if(data.kind==='failure')throw Error(data.message);
   if(data.kind==='publication'){const p=data.publication,accepted=p?.unchanged?receiver.acceptUnchanged(p):receiver.accept(p);if(!accepted.accepted)throw Error('Hosted publication rejected: '+accepted.reason);lastPublication=p;if(p.diagnostics?.kind==='castAttack')lastAttackDiagnostic=p.diagnostics;return;}
   if(data.kind==='status'){lastStatus=data.status;return;}
-  if(data.kind==='started'&&phase==='starting'){phase='running';lastStatus=data.status;resolveStart(data.initial);return;}
-  if(data.kind==='commandResult'||data.kind==='commandFailure'){const item=pending.get(data.id);if(!item)throw Error('Unexpected hosted command result');pending.delete(data.id);if(data.kind==='commandFailure')item.reject(Error(data.message));else item.resolve(data.result);return;}
+  if(data.kind==='started'&&phase==='starting'){if(!Number.isSafeInteger(data.initial?.sequence)||data.initial.sequence!==receiver.status().sequence||data.initial.sequence<1)throw Error('Hosted start before confirmed publication');phase='running';lastStatus=data.status;resolveStart(data.initial);return;}
+  if(data.kind==='commandResult'||data.kind==='commandFailure'){const item=pending.get(data.id);if(!item)throw Error('Unexpected hosted command result');if(data.kind==='commandResult'&&(!Number.isSafeInteger(data.result?.sequence)||data.result.sequence<1||data.result.sequence>receiver.status().sequence))throw Error('Hosted command before confirmed publication');pending.delete(data.id);if(data.kind==='commandFailure')item.reject(Error(data.message));else item.resolve(data.result);return;}
   throw Error('Unexpected runtime host message');
  }catch(error){fail(error);}};
  worker.onerror=event=>fail(Error(event.message||'Runtime host failed'));worker.onmessageerror=()=>fail(Error('Runtime host message failed'));

@@ -478,6 +478,15 @@ publications can accumulate. Active-physics save/restore, all other game
 actions, microevents, other biomes, sustained saturation and GPU presentation
 remain incomplete. The option stays development-only.
 
+The presentation adapter now checks that startup and successful command
+responses never overtake their confirmed publication. An out-of-order response
+fails the experimental runtime rather than allowing the UI to act on an
+unconfirmed result. Unit tests exercise both cases. This check does not bound
+the publication backlog: snapshots can carry ordered game events and physics
+poses, and the scene receiver applies both before acknowledging a publication.
+Dropping intermediate snapshots without a separate, lossless event and pose
+protocol would therefore risk changing presentation or action ordering.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent
