@@ -49,12 +49,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }
    }
   }
+  function missingCenterRouteChunks(start,end){
+   const coord=n=>Math.floor((n+24)/48),margin=48;
+   const minX=coord(Math.min(start.x,end.x)-margin),maxX=coord(Math.max(start.x,end.x)+margin),minZ=coord(Math.min(start.z,end.z)-margin),maxZ=coord(Math.max(start.z,end.z)+margin);
+   if(![minX,maxX,minZ,maxZ].every(Number.isSafeInteger)||(maxX-minX+1)*(maxZ-minZ+1)>64)throw new SpatialChunkUnavailable(start,end,[]);
+   const missing=[];for(let cz=minZ;cz<=maxZ;cz++)for(let cx=minX;cx<=maxX;cx++)if(!loaded.has(`${cx},${cz}`))missing.push({cx,cz});return missing;
+  }
   function prepareResidentStructure(structure){
    if((structure.kind??'center')!=='center')return prepareStructurePlacement(game,structure,nav);
    const original=nav.withCenterPreview;if(!original)return prepareStructurePlacement(game,structure,nav);
    nav.withCenterPreview=(building,suppressed,inspect)=>original(building,suppressed,routes=>inspect({...routes,
-    walkable:(x,z,...rest)=>{const result=routes.walkable(x,z,...rest);if(result===null||result===undefined)throw new SpatialChunkUnavailable({x,z},{x,z},[]);return result;},
-    reachCost:(start,end)=>{const result=routes.reachCost(start,end);if(result?.status==='unknown')throw new SpatialChunkUnavailable(start,end,[]);return result;}}));
+    walkable:(x,z,...rest)=>{const result=routes.walkable(x,z,...rest);if(result===null||result===undefined){const point={x,z},missing=missingCenterRouteChunks(point,point);if(missing.length)throw new SpatialChunkUnavailable(point,point,missing);}return result;},
+    reachCost:(start,end)=>{const result=routes.reachCost(start,end);if(result?.status==='unknown'){const missing=missingCenterRouteChunks(start,end);if(missing.length)throw new SpatialChunkUnavailable(start,end,missing);}return result;}}));
    try{return prepareStructurePlacement(game,structure,nav);}finally{nav.withCenterPreview=original;}
   }
   return {
