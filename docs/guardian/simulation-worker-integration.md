@@ -805,4 +805,18 @@ translucent previews. The center uses the nearest village's loaded appearance,
 which can differ from the Worker-selected site or culture. A browser test checks
 an accepted individual gate and a rejected overlapping center in a peaceful fixture
 with an increased starting balance. It does not cover an accepted center, real
-pointer input or visual equivalence. Awakening and attack previews remain open.
+pointer input or visual equivalence. Awakening and attack previews are experimental.
+
+Attack now uses the existing 1.74-second gesture marker rather than the former
+12-second global cooldown. The authority rejects targets in impact, falling,
+rolling or recovery and accepts a different standing animal after the gesture.
+In a headless opt-in Worker raid, two different beasts were hit while the first
+was still falling, and a further attempt on that beast while rolling did not
+change its health. The guardian begins provisionally, but speculative animal
+ragdoll is not implemented: the animal still reacts after confirmation. This
+test uses direct input and SwiftShader, without visual or performance comparison;
+the publication queue reached 141 pending messages in this run.
+
+New village founding uses the culture selected for the game, enforced in the
+simulation as well as the UI. Existing mixed-culture saves retain their villages,
+so their center previews can still differ from the selected authoritative site.

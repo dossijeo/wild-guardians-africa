@@ -24,10 +24,10 @@ test('walking and newly retreating targets stay at the selected contact until pr
   }
  }
 });
-test('rejected casts do no placement work, and placement failure cannot cancel damage',()=>{const {s,a}=ready();let calls=0;s.cooldowns.attack=1;assert.throws(()=>fire(s,'blocked',{origin:()=>{calls++;}}));assert.equal(calls,0);s.cooldowns.attack=0;assert.equal(fire(s,'valid',{origin:()=>{calls++;throw Error('visual failure');}}),true);assert.equal(calls,1);assert.equal(a.magicHealth,28);});
-test('Attack uses native command deduplication, cooldown, and leaves other spell areas untouched',()=>{const {s,a}=ready();assert.equal(fire(s),true);assert.equal(a.magicHealth,28);assert.equal(a.status,'walking');assert.ok(a.magicStunUntil>s.elapsed);assert.equal(s.cooldowns.attack,12);assert.equal(s.spells.length,0);const before=serialize(s);assert.equal(fire(s),false);assert.equal(serialize(s),before);assert.throws(()=>fire(s,'second'),/recargando/);assert.equal(a.magicHealth,28);});
+test('rejected casts do no placement work, and placement failure cannot cancel damage',()=>{const {s,a}=ready();let calls=0;s.guardianAttackStartedAt=s.elapsed;assert.throws(()=>fire(s,'blocked',{origin:()=>{calls++;}}));assert.equal(calls,0);delete s.guardianAttackStartedAt;assert.equal(fire(s,'valid',{origin:()=>{calls++;throw Error('visual failure');}}),true);assert.equal(calls,1);assert.equal(a.magicHealth,28);});
+test('Attack uses native command deduplication and leaves other spell areas untouched',()=>{const {s,a}=ready();assert.equal(fire(s),true);assert.equal(a.magicHealth,28);assert.equal(a.status,'walking');assert.ok(a.magicStunUntil>s.elapsed);assert.equal(s.cooldowns.attack,0);assert.equal(s.spells.length,0);const before=serialize(s);assert.equal(fire(s),false);assert.equal(serialize(s),before);assert.throws(()=>fire(s,'second'),/terminando/);assert.equal(a.magicHealth,28);});
 test('only the selected active beast is hit, with the real surface contact retained',()=>{const {s,a}=ready();assert.throws(()=>castPickedSpell(s,'bad','attack',{entityId:'tree',point:{x:17,z:8}},nav),/bestia/);assert.equal(s.cooldowns.attack,0);fire(s);assert.deepEqual(a.magicImpact.point,{x:16.5,y:.8,z:8});assert.equal(s.events.filter(e=>e.type==='GuardianMagicHit').length,1);assert.equal(s.events.filter(e=>e.type==='SpellActivated').length,1);assert.equal(s.events.find(e=>e.type==='SpellActivated').commandId,'hit');});
-test('species resistance differs and retreat releases the existing target reservation',()=>{for(const species of Object.keys(ATTACK.profiles)){const {s,a}=ready(species);const hits=Math.ceil(ATTACK.profiles[species].resilience/ATTACK.damage);for(let i=0;i<hits;i++){s.cooldowns.attack=0;fire(s,'hit-'+i);if(i<hits-1)assert.notEqual(a.status,'retreating');}assert.equal(a.status,'retreating');assert.equal(a.targetId,null);assert.equal(s.raid.reservations.r,undefined);assert.equal(s.events.filter(e=>e.type==='AnimalRetreating').length,1);s.cooldowns.attack=0;assert.throws(()=>fire(s,'again'),/bestia/);}});
+test('species resistance differs and retreat releases the existing target reservation',()=>{for(const species of Object.keys(ATTACK.profiles)){const {s,a}=ready(species);const hits=Math.ceil(ATTACK.profiles[species].resilience/ATTACK.damage);for(let i=0;i<hits;i++){s.elapsed+=3;delete a.magicDown;fire(s,'hit-'+i);if(i<hits-1)assert.notEqual(a.status,'retreating');}assert.equal(a.status,'retreating');assert.equal(a.targetId,null);assert.equal(s.raid.reservations.r,undefined);assert.equal(s.events.filter(e=>e.type==='AnimalRetreating').length,1);s.elapsed+=3;assert.throws(()=>fire(s,'again'),/bestia/);}});
 test('invalid vectors and menu pause do not mutate health or spend cooldown',()=>{const {s,a}=ready();assert.throws(()=>fire(s,'bad',{contact:{x:NaN,y:0,z:0}}),/inválido/);assert.equal(a.magicHealth,undefined);s.pauses.push('menu');assert.throws(()=>fire(s),/disponible/);assert.equal(s.cooldowns.attack,0);});
 test('directional response distinguishes sides, descending hits and mass, and decays to rest',()=>{const {a}=ready();a.magicImpact={at:10,point:{x:17,y:1,z:8},direction:{x:1,y:0,z:0}};const lateral=impactResponse(a,10.12);a.magicImpact.direction.x=-1;assert.ok(lateral.roll*impactResponse(a,10.12).roll<0);a.magicImpact.direction={x:0,y:-.8,z:.6};assert.notEqual(impactResponse(a,10.12).pitch,0);a.magicImpact.direction={x:1,y:0,z:0};a.species='rhino';assert.ok(Math.abs(impactResponse(a,10.12).roll)<Math.abs(lateral.roll));assert.equal(impactResponse(a,12),null);});
 
@@ -52,33 +52,23 @@ test('presentation marker survives saves while damage and interruption remain im
 });
 
 
-test('Attack cooldown counts simulation time, survives saving and pauses, and prevents rapid recasts',()=>{
- const {s,a}=ready();fire(s);
- Game.tick(s,.1,nav);assert.ok(Math.abs(s.cooldowns.attack-11.9)<1e-8);
- assert.throws(()=>fire(s,'rapid'),/recargando/);
- const restored=deserialize(serialize(s));assert.equal(restored.cooldowns.attack,s.cooldowns.attack);
- Game.pause(s,'menu');Game.tick(s,5,nav);assert.equal(s.cooldowns.attack,restored.cooldowns.attack);
- Game.resume(s,'menu');
- for(let i=0;i<118;i++)Game.tick(s,.1,nav);
- assert.ok(Math.abs(s.cooldowns.attack-.1)<1e-8);assert.throws(()=>fire(s,'early'),/recargando/);
- Game.tick(s,.1,nav);assert.equal(s.cooldowns.attack,0);
- // Reposition the live target after its normal navigation during the cooldown.
- a.x=17;a.z=8;a.status='walking';assert.equal(fire(s,'ready-again'),true);
+test('gesture limits attacks by simulation time; downed animals remain immune',()=>{
+ const {s,a}=ready();const b={...a,id:'other',x:19,reservation:null};s.raid.animals.push(b);fire(s);
+ assert.throws(()=>fire(s,'rapid',{targetId:b.id}),/terminando/);
+ const restored=deserialize(serialize(s));assert.equal(restored.guardianAttackStartedAt,s.elapsed);
+ s.elapsed+=1.74;a.magicDown={phase:'recovering',since:s.elapsed,until:s.elapsed+1};
+ assert.throws(()=>fire(s,'down'),/de pie/);assert.equal(fire(s,'other',{targetId:b.id}),true);
+ s.elapsed+=1.74;delete a.magicDown;assert.equal(fire(s,'standing'),true);
+});
+test('the same animal cannot be attacked during impact, fall, rolling or recovery',()=>{
+ for(const phase of ['falling','rolling','recovering']){const {s,a}=ready();a.magicDown={phase,since:s.elapsed,until:s.elapsed+2};assert.throws(()=>fire(s,phase),/de pie/);assert.equal(a.magicHealth,undefined);}
+ const {s,a}=ready();a.magicImpact={at:s.elapsed,impactAt:s.elapsed+.24};assert.throws(()=>fire(s,'pending'),/de pie/);delete a.magicImpact;a.fallRemaining=1;assert.throws(()=>fire(s,'fallen'),/de pie/);delete a.fallRemaining;a.recovery={};assert.throws(()=>fire(s,'rising'),/de pie/);
 });
 
 
-test('loading an Attack cooldown resumes its remaining simulation time without permitting another hit',()=>{
- const {s}=ready();fire(s);Game.tick(s,1,nav);
- const entries=new Map(),repository=new SaveRepository({getItem:key=>entries.get(key)??null,setItem:(key,value)=>entries.set(key,value),removeItem:key=>entries.delete(key)});
- repository.save(s);const loaded=repository.load(s.slotId);
- assert.throws(()=>fire(loaded,'after-load'),/recargando/);
- Game.tick(loaded,1,nav);assert.ok(Math.abs(loaded.cooldowns.attack-10)<1e-8);
- assert.ok(Math.abs(s.cooldowns.attack-11)<1e-8);
- repository.save(loaded);const loadedAgain=repository.load(s.slotId);
- assert.equal(loadedAgain.cooldowns.attack,loaded.cooldowns.attack);
- assert.throws(()=>fire(loadedAgain,'after-second-load'),/recargando/);
- for(let i=0;i<100;i++)Game.tick(loadedAgain,.1,nav);
- assert.equal(loadedAgain.cooldowns.attack,0);
+test('loading preserves the active attack gesture, independently of legacy cooldown',()=>{
+ const {s}=ready();fire(s);const entries=new Map(),repository=new SaveRepository({getItem:key=>entries.get(key)??null,setItem:(key,value)=>entries.set(key,value),removeItem:key=>entries.delete(key)});
+ repository.save(s);const loaded=repository.load(s.slotId);assert.throws(()=>fire(loaded,'after-load'),/terminando/);loaded.elapsed+=2;loaded.cooldowns.attack=11;assert.equal(fire(loaded,'after-gesture'),true);
 });
 
 test('Guardian interruption cancels the native active strike and releases its approach lease',async()=>{

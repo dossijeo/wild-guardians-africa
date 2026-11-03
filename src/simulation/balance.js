@@ -355,7 +355,7 @@ export const BALANCE = {
       "id": "attack",
       "name": "Ataque",
       "duration_seconds": 0,
-      "cooldown_seconds": 12,
+      "cooldown_seconds": 0,
       "unlock": "night_1",
       "radius_m": 0.8,
       "damage": 28,

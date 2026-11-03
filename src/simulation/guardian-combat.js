@@ -1,9 +1,11 @@
-import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
+import {GUARDIAN_ATTACK_TIMING,guardianImpactTime} from './guardian-timing.js';
 import {BALANCE} from './balance.js';
 import {retreatAnimal,interruptAnimalAttack} from './raids.js';
 import {emit} from './game.js';
 export const ATTACK=BALANCE.spells.find(s=>s.id==='attack');
-export function attackTarget(state,id){return state.raid?.animals.find(a=>a.id===id&&!['gone','retreating'].includes(a.status))??null;}
+export function attackGestureActive(state){return Number.isFinite(state.guardianAttackStartedAt)&&state.elapsed-state.guardianAttackStartedAt<GUARDIAN_ATTACK_TIMING.gestureEnd-1e-9;}
+export function attackTargetAvailable(state,animal){return !!animal&&!['gone','retreating'].includes(animal.status)&&!animal.magicDown&&!animal.recovery&&!(animal.fallRemaining>0)&&(animal.magicStunUntil??0)<=state.elapsed&&(!animal.magicImpact||state.elapsed-guardianImpactTime(animal.magicImpact)>=.5);}
+export function attackTarget(state,id){return state.raid?.animals.find(a=>a.id===id&&attackTargetAvailable(state,a))??null;}
 export function applyGuardianAttack(state,animal,{nav,origin,contact,ground=0}={}){
  const profile=ATTACK.profiles[animal.species],floor=ground;
  const at=contact??{x:animal.x,y:floor+animal.radius,z:animal.z};

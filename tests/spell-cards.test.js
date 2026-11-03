@@ -73,12 +73,8 @@ test('stable refresh preserves translated text, nodes and scroll while shield st
 });
 
 
-test('Attack card exposes remaining cooldown and enables again at zero',()=>{
+test('Attack card follows the gesture and ignores old cooldowns',()=>{
  const s=ready();s.day=2;s.raid={animals:[]};const spec=BALANCE.spells.find(spec=>spec.id==='attack');
- for(const remaining of [12,11.9,.1]){
-  s.cooldowns.attack=remaining;const card=spellCardStatus(s,spec);
-  assert.equal(card.disabled,true);assert.equal(card.label,'Recargando');
-  assert.equal(card.cooldown,remaining);assert.equal(card.ratio,remaining/12*100);
- }
- s.cooldowns.attack=0;assert.equal(spellCardStatus(s,spec).disabled,false);
+ s.cooldowns.attack=12;s.guardianAttackStartedAt=s.elapsed;assert.equal(spellCardStatus(s,spec).disabled,true);assert.equal(spellCardStatus(s,spec).label,'Terminando el ataque');
+ s.elapsed+=1.74;assert.equal(spellCardStatus(s,spec).disabled,false);
 });

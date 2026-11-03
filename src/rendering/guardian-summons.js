@@ -101,8 +101,9 @@ export class GuardianSummons{
  }
  liveCropTarget(event){return !['growth','multiply'].includes(event.kind)||!event.targetId||!!this.world.state.plants?.some(p=>p.id===event.targetId&&p.alive);}
  beginProvisional(command){
-  if(!['growth','multiply'].includes(command.spell)||!this.slots.length)return;
-  const event={type:'SpellActivated',commandId:command.id,kind:command.spell,targetId:command.selection.targetId,x:command.x,z:command.z,provisional:true,startedAt:performance.now(),presentation:{elapsed:this.world.state.elapsed,origin:command.selection.origin,contact:command.selection.contact}};
+  const kind=command.kind==='castAttack'?'attack':command.spell;
+  if(!['growth','multiply','attack'].includes(kind)||!this.slots.length)return;
+  const event={type:'SpellActivated',commandId:command.id,kind,targetId:command.targetId??command.selection.targetId,x:command.x,z:command.z,provisional:true,startedAt:performance.now(),presentation:{elapsed:this.world.state.elapsed,origin:command.selection.origin,contact:command.selection.contact}};
   this.start(event);
  }
  beginProvisionalAwakening(id,targetId){

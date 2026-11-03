@@ -1,7 +1,7 @@
 import {advanceWorkerRecovery} from './worker-recovery.js';
 import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
 import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
-import {attackTarget,applyGuardianAttack} from './guardian-combat.js';
+import {attackTarget,attackTargetAvailable,attackGestureActive,applyGuardianAttack} from './guardian-combat.js';
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
 import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {AWAKENINGS} from './awakening-config.js';
@@ -834,10 +834,11 @@ function agriculturalTarget(s,kind,x,z,targetPlantId){
 function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
-  if(['shield','attack'].includes(kind)&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
+  if(kind==='shield'&&s.cooldowns.shield>0)throw new Error('La magia está recargando');
+  if(kind==='attack'&&attackGestureActive(s))throw new Error('El guardián está terminando el ataque');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
-  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>!['gone','retreating'].includes(a.status)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
+  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>attackTargetAvailable(s,a)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa que esté de pie');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(s.spells.some(a=>a.remaining>0&&(target?
     a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
@@ -855,7 +856,7 @@ export function cast(s,id,kind,x,z,nav,selection) {
   if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
   for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
-    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{commandId:id,kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
+    if(kind==='attack'){s.cooldowns.attack=0;s.guardianAttackStartedAt=s.elapsed;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{commandId:id,kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
     if(target)area.targetPlantId=target.id;
     if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
@@ -1663,6 +1664,7 @@ function closeNight(s) {
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {
   if(!CULTURES.includes(culture))throw new Error('Cultura desconocida');
+  if(culture!==s.culture)throw new Error('El nuevo poblado debe conservar la cultura de la partida');
   const resolved=resolveFluidPlacement(nav,(px,pz)=>villageLayout(payload,px,pz),x,z),buildings=resolved.shapes,checks=resolved.checks;
   x=resolved.x;z=resolved.z;
   const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
