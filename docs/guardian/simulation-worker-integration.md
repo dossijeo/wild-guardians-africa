@@ -506,6 +506,20 @@ can separate otherwise mergeable ticks; discarding them would require a
 separate ordering design and validation of camera-dependent raid decisions.
 This instrumentation is disabled without diagnostics.
 
+With `qa-worker-fold-view` in addition to compact view acknowledgements and
+coalescing, an unchanged camera confirmation can share the immediately
+preceding queued quiet tick's snapshot after checking slot, state sequence,
+time, pauses and save availability. The camera command still runs in its
+original simulation order, and its caller receives the original compact
+receipt after the matching state is confirmed. It never folds across a command
+barrier or a prior eventful state. A deterministic two-Worker mangrove test
+executed 100 ticks and 34 view changes, folded 33 confirmations and preserved
+all ten events and their observed states. A headless real savanna raid also
+accepted attack, pause and a safe post-recovery save; its diagnostic run
+folded 31 views by the pause. That run is not a controlled performance or
+visual comparison, and the queue remains unbounded for eventful states and
+command barriers. The option stays experimental.
+
 `tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
 simulation Workers for 100 identical ticks, holding the coalesced presentation
 until the end. It delivered three publications instead of 100, preserved all

@@ -21,3 +21,13 @@ test('diagnostics count queued snapshots and eventful barriers without counting 
  const sent=[],q=createHostPublicationQueue({session:'s',diagnostics:true,send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),snapshot:'abcdef'},true);q.publication({...packet(3,[{id:'e'}]),snapshot:'xyz'},true);q.message({kind:'commandResult',id:1,sequence:3});q.publication({...packet(4,[{id:'f'}]),snapshot:'12345'},true);
  let s=q.status();assert.equal(s.queuedPublications,2);assert.equal(s.eventfulPublications,2);assert.equal(s.tickPublications,2);assert.equal(s.unchangedPublications,0);assert.equal(s.snapshotChars,8);assert.equal(s.peakEventfulPublications,2);q.ack(1);s=q.status();assert.equal(s.queuedPublications,1);assert.equal(s.snapshotChars,5);q.ack(3);assert.equal(q.status().snapshotChars,0);assert.equal(sent.at(-1).publication.sequence,4);
 });
+test('an unchanged camera confirmation can share the preceding quiet state without changing its receipt',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
+ q.publication(full(1),true);q.publication(full(2),true);const receipt={session:'s',sequence:3,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true};
+ assert.equal(q.publication(receipt,false),true);q.message({kind:'commandResult',id:5,sequence:3,receipt});q.publication(full(4),true);q.ack(1);
+ assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.snapshot,full(2).snapshot);q.ack(3);assert.equal(sent[2].receipt,receipt);assert.equal(sent[3].publication.sequence,4);
+});
+test('view folding rejects mismatched confirmed state',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
+ q.publication(full(1),true);q.publication(full(2),true);assert.equal(q.publication({sequence:3,unchanged:true,slotId:'slot',stateSequence:8,elapsed:1,pauses:[],events:[],saveAvailable:true},false),false);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);
+});
