@@ -662,7 +662,7 @@ export function bless(s,id,targetId){
       s.spells=s.spells.filter(a=>a.targetPlantId!==targetId);
     }
     a.total++;a.progress=0;invalidateBlessingInfluence(s);
-    emit(s,'BlessingApplied',{targetId,kind:target.species?'plant':target.kind,blessing,
+    emit(s,'BlessingApplied',{commandId:id,targetId,kind:target.species?'plant':target.kind,blessing,
       presentation:{x:target.x,z:target.z,elapsed:s.elapsed}});
     notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId,{category:'awakening-applied',location:target});
   });
@@ -855,13 +855,13 @@ export function cast(s,id,kind,x,z,nav,selection) {
   if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
   for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
-    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
+    if(kind==='attack'){s.cooldowns.attack=spec.cooldown_seconds;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{commandId:id,kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
     if(target)area.targetPlantId=target.id;
     if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
     s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
     if(kind==='shield')nav.setState(s);
-    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
+    emit(s,'SpellActivated',{commandId:id,kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
   });
 }
 function retainRouteAfterWallChange(w,destination,nav){

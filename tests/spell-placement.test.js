@@ -22,6 +22,7 @@ for(const kind of ['shield','growth','multiply'])test(`${kind}: tapping elevated
   assert.equal(s.spells.length,1);assert.equal(Game.spellAt(s,kind,p),s.spells[0]);
   assert.deepEqual([s.spells[0].x,s.spells[0].z],[p.x,p.z]);
   assert.equal(s.events.filter(e=>e.type==='SpellActivated').length,1);
+  assert.equal(s.events.find(e=>e.type==='SpellActivated').commandId,'tap');
   assert.equal(s.cooldowns[kind],kind==='shield'?90:0);if(kind==='multiply')assert.equal(p.multiplyHarvest,true);
   const saved=serialize(s);assert.equal(castPickedSpell(s,'tap',kind,{entityId:p.id,point:null},nav),false);assert.equal(serialize(s),saved);
 });
