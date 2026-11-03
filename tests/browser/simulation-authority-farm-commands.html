@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {cropSpec} from '../../src/simulation/rules.js';
+import {harvest,requestRepair,pause,resume,observeGameEvents} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.time=100;game.pauses=[];
+ const plant=game.plants.find(p=>p.alive),center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!plant||!center)throw Error('Missing farm fixture');plant.growth=cropSpec(plant.species).growth_seconds;center.hp=Math.max(1,center.maxHp-1);nav.setState(game);
+ const source=serialize(game),client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'farm-commands'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));let sequence=0;
+ try{
+  await client.ready;
+  async function compare(command,fn){let value=null,rejection=null;try{value=fn();}catch(error){rejection=error.message;}const expectedEvents=events.splice(0);const request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');const result=await request.result;if(result.sequence!==++sequence||result.value!==(rejection?false:value)||(result.rejection??null)!==rejection||result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(expectedEvents))throw Error('Farm command divergence at '+sequence+': '+JSON.stringify({rejection,remote:result.rejection,value,remoteValue:result.value}));return result;}
+  const badHarvest=await compare({kind:'harvest',id:'bad-harvest',targetId:'missing'},()=>harvest(game,'bad-harvest','missing'));
+  const goodHarvest=await compare({kind:'harvest',id:'harvest-1',targetId:plant.id},()=>harvest(game,'harvest-1',plant.id));
+  const duplicate=await compare({kind:'harvest',id:'harvest-1',targetId:plant.id},()=>harvest(game,'harvest-1',plant.id));
+  const badRepair=await compare({kind:'requestRepair',id:'bad-repair',targetId:'missing'},()=>requestRepair(game,'bad-repair','missing'));
+  const goodRepair=await compare({kind:'requestRepair',id:'repair-1',targetId:center.id},()=>requestRepair(game,'repair-1',center.id));
+  await compare({kind:'pause',reason:'test-menu'},()=>{pause(game,'test-menu');return null;});
+  const paused=await compare({kind:'requestRepair',id:'paused-repair',targetId:center.id},()=>requestRepair(game,'paused-repair',center.id));
+  await compare({kind:'resume',reason:'test-menu'},()=>{resume(game,'test-menu');return null;});
+  if(!badHarvest.rejection||!goodHarvest.value||duplicate.value!==false||!badRepair.rejection||!goodRepair.value||!paused.rejection||client.status().state!=='ready')throw Error('Incomplete farm command coverage');
+  return {sequence,harvestEvents:goodHarvest.events.map(e=>e.type),repairEvents:goodRepair.events.map(e=>e.type),invalidHarvest:badHarvest.rejection,invalidRepair:badRepair.rejection,pausedRepair:paused.rejection,duplicate:duplicate.value,scope:'Programmatic commands on a modified peaceful island-mangrove capture, compared against direct Game functions on the main thread. No player UI, save/restore, long-running campaign or production integration.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

@@ -610,8 +610,12 @@ export function plant(s,id,species,x,z,nav) {
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
 }
-export function harvest(s,id,plantId) {
+export function validateHarvest(s,plantId) {
   const living=activeCrops(s.plants),p=living.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
+  return {living,plant:p};
+}
+export function harvest(s,id,plantId) {
+  const {living,plant:p}=validateHarvest(s,plantId);
   return commit(s,id,'harvest',()=>{
     const group=contiguousGroup(living,p).filter(isMature);
     group.sort((a,b)=>{
@@ -760,10 +764,14 @@ export function dropCarriedCrate(s,worker){
   crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id});
   if(!s.raid){const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);}
 }
-export function requestRepair(s,id,targetId) {
+export function validateRepair(s,targetId) {
   const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparación');
   if(compare(s.ledger.balance,repairCost(target))<0)throw new Error('Fondos insuficientes');
   ensurePurchaseBudget(s,repairCost(target));
+  return target;
+}
+export function requestRepair(s,id,targetId) {
+  const target=validateRepair(s,targetId);
   return commit(s,id,'repair',()=>{
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
