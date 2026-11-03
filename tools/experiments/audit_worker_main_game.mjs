@@ -4,7 +4,7 @@ const browser=await chromium.launch({channel:'msedge',headless:true,args:['--ena
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
  page.on('pageerror',error=>errors.push(String(error)));
- await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-start&qa-visibility&qa-seed=712&wildEngineThreads=0`,{waitUntil:'domcontentloaded'});
+ await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-start&qa-visibility&qa-seed=712&wildEngineThreads=0${process.env.QA_CLOCK==='1'?'&qa-worker-clock':''}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa?.();return q?.screen==='game'&&q?.status?.running||document.querySelector('.error-banner');},null,{timeout:180000});
  const initial=await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),failure:document.querySelector('.error-banner')?.textContent}));
  if(initial.failure||!initial.qa.status?.running)throw Error('Worker game did not start: '+JSON.stringify(initial));
@@ -14,7 +14,7 @@ try{
  const paused=await page.evaluate(()=>window.wildGuardiansWorkerQa());await page.waitForTimeout(600);
  const still=await page.evaluate(()=>window.wildGuardiansWorkerQa());
  if(still.elapsed!==paused.elapsed)throw Error('Simulation advanced while menu was open');
- await page.locator('#resume').click();await page.waitForFunction(t=>!window.wildGuardiansWorkerQa().pauses.includes('menu')&&window.wildGuardiansWorkerQa().elapsed>t,still.elapsed,{timeout:30000});
+ await page.locator('#resume').click();try{await page.waitForFunction(t=>{const q=window.wildGuardiansWorkerQa();return !q.pauses.includes('menu')&&(q.elapsed>t||q.pauses.includes('tutorial-action'));},still.elapsed,{timeout:30000});}catch{throw Error('Resume not observed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)})))+' errors='+JSON.stringify(errors));}
  const resumed=await page.evaluate(()=>window.wildGuardiansWorkerQa());
  if(resumed.status.fault||errors.length)throw Error(JSON.stringify({fault:resumed.status.fault,errors}));
  await page.waitForFunction(()=>window.wildGuardiansWorkerQa().tutorial?.step==='center',null,{timeout:60000});

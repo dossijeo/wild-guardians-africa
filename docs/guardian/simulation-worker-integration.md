@@ -331,8 +331,8 @@ loads the capture, observes 13 animals enter, and uses a real pointer attack
 that produces a confirmed `GuardianMagicHit`. Both were run with headless Edge
 and SwiftShader enabled; these are functional checks, not GPU benchmarks.
 
-This does not establish a completed raid or production readiness. The runtime
-clock and presentation reconciliation still run on the main thread; ordinary
+This does not establish production readiness. In the original experimental
+path the runtime clock and presentation reconciliation run on the main thread; ordinary
 actor presentation and skeletal animation remain CPU-driven. Microevents,
 several game actions, result screens, active-physics save/restore, full
 determinism, saturation, multiple impacts and all biomes remain unverified.
@@ -444,6 +444,39 @@ replayed, and the direct hook bypasses pointer picking. Therefore the results
 suggest a response-latency benefit but do not establish deterministic visual
 equivalence or a global frame-time improvement. The option remains off by
 default, and the remaining response latency is still too high.
+
+### Experimental Worker-hosted clock
+
+`qa-worker-clock` moves the existing runtime's clock, step queue, command
+admission and residency coordination into a dedicated Worker. That Worker
+owns a nested simulation Worker, which remains the only game authority. The
+main thread receives ordered publications without the coordinator waiting for
+rendering; command responses follow their corresponding publication. The
+previous experimental runtime remains available. The extra Worker and its
+message traffic are not a proposed final topology without further measurement.
+
+`tests/browser/worker-hosted-runtime.html` deliberately blocks the main thread
+for 500 ms; the Worker clock continues and pause/resume preserve simulation
+time. Unit tests cover message ordering, failure and disposal. In the real
+game, `QA_CLOCK=1` passed the new-game UI sequence (pause, center, crop and
+hire). With `QA_BATCH=16 QA_VIEW_ACK=1`, the day-31 savanna raid spawned 13
+animals, accepted a direct-handler attack, rejected an unsafe save during the
+fall, stored a safe checkpoint after recovery and emitted `RaidEnded` at
+elapsed 135.37 s. This is one functional full-raid run, not a determinism or
+collision-equivalence audit.
+
+Two exploratory direct-handler runs of the same setup measured Worker attack
+preparation at 816 and 754 ms and the maximum observed requestAnimationFrame
+gap during confirmation at 100 and 167 ms (23 and 19 samples). Pause
+confirmation was 193 and 146 ms. Headless Edge used SwiftShader; inputs and
+camera were not deterministically replayed, there is no separate GPU timing,
+and the samples are far too short for reliable p95/p99. This suggests the
+clock no longer requires a matching presentation stall in these runs, but is
+not evidence of a production-wide frame-time improvement. Publications are
+still reconciled and characters animated on the main thread, and unconsumed
+publications can accumulate. Active-physics save/restore, all other game
+actions, microevents, other biomes, sustained saturation and GPU presentation
+remain incomplete. The option stays development-only.
 
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took

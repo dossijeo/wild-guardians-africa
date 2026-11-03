@@ -59,6 +59,7 @@ import {cropSpec,permission,operational,attraction} from '../simulation/rules.js
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
 import {serialize} from '../persistence/snapshots.js';
 import {createSimulationAuthorityClient} from '../simulation/simulation-authority-client.js';
+import {createWorkerHostedRuntime} from '../simulation/worker-hosted-runtime.js';
 import {captureRaidWaitBindings} from '../simulation/raid-wait-handoff.js';
 import {captureStructureTemplate} from '../simulation/worker-structure-geometry.js';
 import {BIOME_IDS} from '../world/biome-ids.js';
@@ -198,9 +199,10 @@ async function installWorkerGame(owner,ownerState,navigation){
   }
   const navigationView={bounds:[...navigation.activeBounds],eye:{...navigation.raidView.eye},target:{...navigation.raidView.target}};
   const diagnostics=new URLSearchParams(location.search).has('qa-worker-diagnostics'),compactViewAcks=new URLSearchParams(location.search).has('qa-worker-view-ack');
-  const session=crypto.randomUUID(),client=createSimulationAuthorityClient({snapshot:serialize(ownerState),chunkKeys:[...owner.chunks.keys()],raidWaitBindings:captureRaidWaitBindings(ownerState,navigation),navigationView,session,dynamicPhysics:true,structureTemplates:templates,diagnostics,compactViewAcks});
+  const session=crypto.randomUUID(),clientOptions={snapshot:serialize(ownerState),chunkKeys:[...owner.chunks.keys()],raidWaitBindings:captureRaidWaitBindings(ownerState,navigation),navigationView,dynamicPhysics:true,structureTemplates:templates,diagnostics,compactViewAcks};
   const maxBatchSteps=Number(new URLSearchParams(location.search).get('qa-worker-batch')??1);
-  const runtime=owner.createWorkerRuntime({client,session,maxBatchSteps,diagnostics,onError:failure=>{if(owner===world&&ownerState===state)error(failure.message);}});
+  const onError=failure=>{if(owner===world&&ownerState===state)error(failure.message);},hosted=new URLSearchParams(location.search).has('qa-worker-clock');
+  const runtime=hosted?createWorkerHostedRuntime({world:owner,session,clientOptions,runtimeOptions:{maxBatchSteps,diagnostics},onError}):owner.createWorkerRuntime({client:createSimulationAuthorityClient({...clientOptions,session}),session,maxBatchSteps,diagnostics,onError});
   try{await runtime.start();if(owner.disposed)throw Error('World closed during worker startup');owner.workerRuntime=runtime;return runtime;}catch(failure){runtime.dispose();throw failure;}
 }
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
