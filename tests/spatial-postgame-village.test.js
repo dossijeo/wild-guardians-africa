@@ -17,7 +17,7 @@ const payload=JSON.parse(readFileSync(new URL(
   .find(item=>item.id==='suajili');
 
 test('native suppression cannot be rolled back by restoring the game state',async()=>{
-  const {state,nav,session,start}=await createSpatialCampaignOpening({seed:712,biome:'desierto',culture:'mapungubwe',slotId:'village-suppression-proof'});
+  const {state,nav,session,start}=await createSpatialCampaignOpening({seed:712,biome:'desierto',culture:'suajili',slotId:'village-suppression-proof'});
   try{
     state.tutorial.step='done';state.initialPreparation=false;state.day=101;state.completedNights=100;state.result='victory';state.ledger.balance=rational(200000);
     Game.continuePostgame(state);Game.hire(state,'native-postgame-hire',{});
@@ -33,7 +33,7 @@ test('native suppression cannot be rolled back by restoring the game state',asyn
 
 test('a paid native postgame village gets a valid entry and survives reload',async()=>{
   const {state,nav,session,loaded,start}=await createSpatialCampaignOpening({
-    seed:712,biome:'desierto',culture:'mapungubwe',slotId:'spatial-postgame-village'});
+    seed:712,biome:'desierto',culture:'suajili',slotId:'spatial-postgame-village'});
   try{
     state.tutorial.step='done';state.initialPreparation=false;
     state.day=101;state.completedNights=100;state.result='victory';
@@ -73,6 +73,7 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120],maxAdded:0}),SpatialChunkUnavailable,'preflight respects the missing-region limit');
     const poor=deserialize(source);poor.ledger.balance=rational(1);
     assert.throws(()=>prepareVillageIsolated(module,serialize(poor),[...loaded.keys()],{id:'no-funds',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),error=>error.code==='hiring-reserve');
+    assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()],{id:'other-culture',culture:'mapungubwe',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),/cultura de la partida/);
     const duplicate=prepareVillageIsolated(module,prepared.snapshot,[...loaded.keys()],{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
     assert.equal(duplicate.value,false);assert.equal(duplicate.snapshot,prepared.snapshot,'replayed command does not charge twice');assert.deepEqual(duplicate.events,[]);
     assert.equal(serialize(state),source,'isolated preparation leaves the authoritative state untouched');

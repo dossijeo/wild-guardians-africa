@@ -689,6 +689,19 @@ preserve the existing authority's active physics, tutorial controller, native
 intent state, event subscriptions, view and command sequence; a snapshot alone
 does not establish that. It remains disconnected from gameplay.
 
+The native postgame preflight test was updated for the current rule that new
+villages share the game culture; it now starts and founds suajili villages and
+also checks rejection of another culture. Both native tests pass, including
+missing-chunk retries, duplicate commands and equality of the isolated and
+committed snapshots and events. The measured isolated preparation in this run
+was 1,973 ms; it remains a single diagnostic, not a performance benchmark.
+Three integration choices remain: replay against the live authority after
+preflight, which cannot yet rule out a partial native mutation; replace the live
+session with the isolated result, which must preserve physics and subscriptions;
+or apply a verified transaction plan containing the exact village, suppressions
+and center assignments, which requires an atomic native commit. None is yet
+safe enough to remove the Worker UI guard.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the
