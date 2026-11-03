@@ -1043,3 +1043,13 @@ For 227 ordered commands the state, events and poses matched, including 169
 steps with both physical bodies active. This is one mangrove fixture and does
 not validate other species, save/restore, presentation or real-game performance.
 The option should remain experimental until those comparisons are complete.
+
+`tools/experiments/audit_worker_shared_clips_raid.mjs` exercises two same-species
+attacks through the game input handler in the day-31 savanna Worker fixture.
+In one A/B/B/A headless sequence the second warthog's reported Worker preparation
+times were 912 and 754 ms without sharing, versus 497 and 488 ms with sharing;
+confirmation times were 1,277/846 versus 620/838 ms. Both attacks were confirmed
+in all four runs. These few runs support reduced repeated admission work, but do
+not establish frame-time improvement, first-attack improvement, memory cost,
+visual equivalence, or performance across species and machines. The first attack
+still performs full preparation, and the experiment remains opt-in.
