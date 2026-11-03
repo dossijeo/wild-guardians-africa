@@ -6,14 +6,15 @@ import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runt
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
  const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game;game.pauses=[];const source=serialize(game),state=deserialize(source);fixture.dispose();
- const world={createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},runtime=createWorkerHostedRuntime({world,session:'host-clock-test',clientOptions:{snapshot:source,chunkKeys:chunks},runtimeOptions:{stepSeconds:.05,maxBatchSteps:8}});
+ const world={createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},runtime=createWorkerHostedRuntime({world,session:'host-clock-test',clientOptions:{snapshot:source,chunkKeys:chunks},runtimeOptions:{stepSeconds:.05,maxBatchSteps:8,diagnostics:true}});
  try{
   await runtime.start();const initial=state.elapsed;await new Promise(resolve=>setTimeout(resolve,250));
   const before=state.elapsed,start=performance.now();while(performance.now()-start<500){} // Deliberately block presentation only.
   const paused=await runtime.submit({kind:'pause',reason:'host-test'}),pausedAt=state.elapsed;if(paused.elapsed-before<.3||!state.pauses.includes('host-test'))throw Error('Worker clock did not continue during main-thread stall');
   await new Promise(resolve=>setTimeout(resolve,250));const held=await runtime.submit({kind:'snapshot'});if(held.elapsed!==pausedAt)throw Error('Hosted pause did not hold simulation time');
-  await runtime.submit({kind:'resume',reason:'host-test'});await new Promise(resolve=>setTimeout(resolve,150));const after=await runtime.submit({kind:'snapshot'});if(after.elapsed<=pausedAt||state.pauses.includes('host-test'))throw Error('Hosted resume failed');
-  return {initial,before,pausedAt,resumedAt:after.elapsed,mainThreadStallMs:500,scope:'Real nested simulation Worker and coordinator Worker without rendering; deliberate main-thread stall, pause and resume. No full UI, physics, FPS or deterministic comparison.'};
+  await runtime.submit({kind:'resume',reason:'host-test'});await new Promise(resolve=>setTimeout(resolve,350));const after=await runtime.submit({kind:'snapshot'});if(after.elapsed<=pausedAt||state.pauses.includes('host-test'))throw Error('Hosted resume failed');
+  const peakPublicationBacklog=runtime.status().peakPublicationBacklog;if(!Number.isSafeInteger(peakPublicationBacklog)||peakPublicationBacklog<2)throw Error('Publication backlog was not observed during presentation stall');
+  return {initial,before,pausedAt,resumedAt:after.elapsed,peakPublicationBacklog,mainThreadStallMs:500,scope:'Real nested simulation Worker and coordinator Worker without rendering; deliberate main-thread stall, pause and resume. No full UI, physics, FPS or deterministic comparison.'};
  }finally{runtime.dispose();}
 };window.ready=true;
 </script>

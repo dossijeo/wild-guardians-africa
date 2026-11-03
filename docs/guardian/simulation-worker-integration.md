@@ -487,6 +487,17 @@ poses, and the scene receiver applies both before acknowledging a publication.
 Dropping intermediate snapshots without a separate, lossless event and pose
 protocol would therefore risk changing presentation or action ordering.
 
+With hosted runtime diagnostics enabled, the presentation acknowledges each
+successfully applied publication. The coordinator reports the current and
+peak number sent but not yet acknowledged; it never waits for these messages.
+This is diagnostic traffic, disabled without `diagnostics`, and the reported
+count includes acknowledgement transit time. In one Edge headless test of the
+two real Workers, a deliberate 500 ms main-thread block produced a peak of
+nine unacknowledged publications while simulation advanced 0.55 s. Pause and
+resume still succeeded. This test has no renderer or active physics and does
+not establish a production memory bound. The count exposes backlog; it does
+not limit it or justify dropping events or snapshots.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent

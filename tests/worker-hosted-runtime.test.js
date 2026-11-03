@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 
-function setup(){
+function setup(runtimeOptions={}){
  const messages=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}},seen=[];let sequence=0,elapsed=0;
  const world={createConfirmedReceiver(){return {accept(packet){seen.push(packet.sequence);sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},acceptUnchanged(packet){sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},status(){return {sequence,lastElapsed:elapsed};}};}};
- const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{snapshot:'x',chunkKeys:[]},workerFactory:()=>worker});return {runtime,worker,messages,seen};
+ const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{snapshot:'x',chunkKeys:[]},runtimeOptions,workerFactory:()=>worker});return {runtime,worker,messages,seen};
 }
 test('hosted runtime publishes before resolving commands and rejects work on disposal',async()=>{
  const {runtime,worker,messages,seen}=setup(),start=runtime.start();assert.equal(messages[0].kind,'initialize');
@@ -29,4 +29,11 @@ test('hosted runtime rejects startup and command results that precede their publ
  const second=setup(),ready=second.runtime.start();second.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});second.worker.onmessage({data:{kind:'started',session:'s',initial:{sequence:1},status:{}}});await ready;
  const command=second.runtime.submit({kind:'pause'}),rejected=assert.rejects(command,/command before confirmed publication/),id=second.messages.at(-1).id;
  second.worker.onmessage({data:{kind:'commandResult',session:'s',id,result:{sequence:2}}});await rejected;assert.equal(second.worker.terminated,true);
+});
+test('diagnostic acknowledgements follow successful publication and are disabled otherwise',async()=>{
+ const enabled=setup({diagnostics:true}),start=enabled.runtime.start();enabled.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});
+ assert.deepEqual(enabled.messages.at(-1),{kind:'publicationAck',session:'s',sequence:1});assert.deepEqual(enabled.seen,[1]);
+ enabled.worker.onmessage({data:{kind:'started',session:'s',initial:{sequence:1},status:{}}});await start;enabled.runtime.dispose();
+ const disabled=setup(),ready=disabled.runtime.start();disabled.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});assert.equal(disabled.messages.length,1);
+ disabled.worker.onmessage({data:{kind:'started',session:'s',initial:{sequence:1},status:{}}});await ready;disabled.runtime.dispose();
 });
