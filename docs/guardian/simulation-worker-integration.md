@@ -778,7 +778,9 @@ command is submitted, before the Worker responds. The target effect waits for
 its matching `SpellActivated.commandId`; rejection cancels the provisional
 summon. A provisional pose uses presentation time and holds while waiting, and
 a matching late event continues it instead of starting another summon. This is
-wired into the actual Worker-enabled input path but has only unit coverage so
-far, not a visual or latency measurement in a running raid. It does not cover
+wired into the actual Worker-enabled input path. A headless browser test uses a
+peaceful fixture and direct crop input handler to check confirmation and an
+overlapping rejected cast; it is not a visual comparison or latency measurement.
+It does not cover
 buildings, crops, awakenings, or speculative attack physics. The ordinary game
 still uses the non-Worker path.
