@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthority} from '../../src/simulation/simulation-authority.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const init=await createSimulation({mangrove:true,chunkKeys:chunks}),game=init.diagnosticWorld().game,first=game.raid.animals.find(a=>a.species==='hyena'&&!['gone','retreating'].includes(a.status)),second=game.raid.animals.find(a=>a.id!==first?.id&&['hyena','lion','warthog','buffalo','rhino'].includes(a.species)&&!['gone','retreating'].includes(a.status));if(!first||!second)throw Error('Need two active animals');
+ second.x=first.x+1.5;second.z=first.z;second.path=null;const source=serialize(game),ids=[first.id,second.id];init.dispose();
+ const response=await fetch('/src/world/wild-engine/spatial-savanna.wasm'),module=await WebAssembly.compile(await response.arrayBuffer()),reference=createSimulationAuthority(module,source,chunks),client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,session:'dynamic-physics'});let seq=0,overlap=0,firstSteps=0,secondSteps=0,secondHit=false,finished=false,last;
+ try{
+  await Promise.all([reference.enableBeastPhysics(undefined,{actorIds:[],allowEmpty:true}),client.ready]);
+  async function command(input){const req=client.submit(input);if(!req.accepted)throw Error('Rejected command');if(input.kind==='castAttack')await reference.prepareBeastAttack({...input,sequence:seq+1});const local=reference.execute({...input,sequence:++seq}),remote=await req.result;if(local.snapshot!==remote.snapshot||JSON.stringify(local.events)!==JSON.stringify(remote.events)||JSON.stringify(local.physicsPose)!==JSON.stringify(remote.physicsPose)||JSON.stringify(local.physicsPoses)!==JSON.stringify(remote.physicsPoses)||local.value!==remote.value)throw Error('Divergence at '+seq);last=remote;const poses=remote.physicsPoses??[remote.physicsPose];if(!poses[0]||poses.length>2||poses.some((p,i)=>p.actorId!==ids[i]))throw Error('Missing ordered poses');if(poses[0].active)firstSteps++;if(poses[1]?.active)secondSteps++;if(poses.length===2&&poses.every(p=>p.active))overlap++;return remote;}
+  await command({kind:'castAttack',id:'multi-attack-1',targetId:ids[0],x:first.x,z:first.z});
+  for(let i=0;i<500;i++){
+   const state=JSON.parse(last.snapshot),target=state.raid?.animals.find(a=>a.id===ids[1]);
+   if(!secondHit&&state.cooldowns.attack<=0&&target&&!['gone','retreating'].includes(target.status)){await command({kind:'castAttack',id:'multi-attack-2',targetId:ids[1],x:target.x,z:target.z});secondHit=true;}
+   else await command({kind:'advance',seconds:.05,nightFastForward:true});
+   if(secondHit&&secondSteps&&(last.physicsPoses??[last.physicsPose]).every(p=>!p.active)){finished=true;break;}
+  }
+  if(!secondHit||!finished||!firstSteps||!secondSteps)throw Error('Physical actors did not complete: '+JSON.stringify({secondHit,finished,firstSteps,secondSteps,overlap,cooldown:JSON.parse(last.snapshot).cooldowns.attack}));
+  const queuedClient=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,session:'dynamic-queued'});let framesWhilePending=0;
+  try{await queuedClient.ready;const a=queuedClient.submit({kind:'castAttack',id:'queued-dynamic-attack',targetId:ids[0],x:first.x,z:first.z}),b=queuedClient.submit({kind:'advance',seconds:.05,nightFastForward:true});if(!a.accepted||!b.accepted||queuedClient.status().queued!==1)throw Error('Expected second command to queue');let done=false,failure=null,results;Promise.all([a.result,b.result]).then(value=>{results=value;done=true;},error=>{failure=error;done=true;});const deadline=performance.now()+60000;while(!done&&performance.now()<deadline){await new Promise(requestAnimationFrame);framesWhilePending++;}if(failure)throw failure;if(!done||results[0].sequence!==1||results[1].sequence!==2||results[1].elapsed<results[0].elapsed||results[0].physicsPose?.actorId!==ids[0])throw Error('Dynamic admission command order failed');}finally{queuedClient.dispose();}
+  return {ids,species:[first.species,second.species],compared:seq,firstSteps,secondSteps,overlap,finished,framesWhilePending,scope:'Two dynamically admitted animals in one Rapier world from an island-mangrove capture, with ordered Worker commands compared to the same controller on the main thread. A separate queued advance follows an asynchronous admission while animation frames continue. Does not compare WorldScene physics, prove body contact, or exercise production input and save/restore.'};
+ }finally{client.dispose();reference.dispose();}
+};window.ready=true;
+</script>
