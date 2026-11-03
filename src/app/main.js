@@ -322,6 +322,11 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
       const guided=guidedPlacementKind(tool,world.hands,world.guardianSummons?.guiding?world.guardianSummons.guide:null);let committed=false;
+      if(world.workerRuntime&&(tool.kind==='center'||tool.kind==='wall'||tool.kind==='plant')){
+        const owner=world,ownerState=state,ownerTool=tool,runtime=owner.workerRuntime;if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+        const id=commandId(),command=ownerTool.kind==='plant'?{kind:'plant',id,species:ownerTool.species,x:point.x,z:point.z,nearTouch:true}:{kind:'placeStructure',id,structure:{...ownerTool,x:point.x,z:point.z}};
+        return runtime.submit(command).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value===false)return;uiAudio.guidedPlacement(guided);if(tool===ownerTool)toolSession.used(performance.now()/1000);owner.syncResidentProps();await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);});
+      }
       if(tool.kind==='center'||tool.kind==='wall')committed=Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
       else if(tool.kind==='plant')committed=plantNearTouch(state,commandId(),tool.species,point,nav);
       if(committed===false)return;

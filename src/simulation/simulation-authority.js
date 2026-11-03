@@ -9,6 +9,7 @@ import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-
 import {captureRaidWaitBindings,restoreRaidWaitBindings} from './raid-wait-handoff.js';
 import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.js';
 import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
+import {plantTouchTarget} from './plant-touch-target.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -88,12 +89,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(typeof command.id!=='string'||!command.id||!['growth','multiply'].includes(command.spell)||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid agricultural spell command');
      rejection=spellRejection(command,command.spell);value=rejection?false:cast(game,command.id,command.spell,command.x,command.z,nav,command.selection??null);
     }else if(command.kind==='plant'){
-     if(typeof command.id!=='string'||!command.id||typeof command.species!=='string'||!command.species||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid plant command');
-     try{withResidentChunks(()=>validatePlant(game,command.x,command.z,nav),commandLoadedChunks);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
+     if(typeof command.id!=='string'||!command.id||typeof command.species!=='string'||!command.species||!Number.isFinite(command.x)||!Number.isFinite(command.z)||command.nearTouch!==undefined&&typeof command.nearTouch!=='boolean')throw TypeError('Invalid plant command');
+     let target={x:command.x,z:command.z};
+     try{target=withResidentChunks(()=>command.nearTouch?plantTouchTarget(game,target,nav):target,commandLoadedChunks);withResidentChunks(()=>validatePlant(game,target.x,target.z,nav),commandLoadedChunks);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
      if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
      if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
-     value=rejection?false:plant(game,command.id,command.species,command.x,command.z,nav);
+     value=rejection?false:plant(game,command.id,command.species,target.x,target.z,nav);
     }else if(command.kind==='harvest'||command.kind==='requestRepair'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid farm command');
      try{(command.kind==='harvest'?validateHarvest:validateRepair)(game,command.targetId);}catch(error){rejection=error.message;}

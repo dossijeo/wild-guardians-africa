@@ -250,3 +250,12 @@ island-mangrove raid checkpoint and matched an uninterrupted Worker for 30
 ticks. That capture contained no active waits; current and stale waits are
 covered separately by handoff tests, not by this end-to-end comparison. Active
 physics, longer campaigns and production UI save/restore remain unverified.
+
+The main scene's placement handler can now dispatch planting and individual
+structures to an installed Worker runtime. Touch planting finds its nearby
+valid point inside the authority, including loading missing regions, and the
+normal local path remains available. A real Worker test compares the adjusted
+planting state and events against the original placement decision in a peaceful
+island-mangrove capture. The application does not yet install that runtime;
+this is not a claim that the production game is Worker-driven. Wall strokes,
+other UI commands, tutorial mutations and save/restore still need integration.
