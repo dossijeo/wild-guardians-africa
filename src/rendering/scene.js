@@ -53,6 +53,7 @@ import {initializeProgramBindings,initializeProgramBindingsAsync} from './progra
 import {VfxGpuPreload} from './vfx-preload.js';
 import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
 import {WallStrokePreview} from './wall-stroke-preview.js';
+import {ProvisionalCrops} from './provisional-crops.js';
 import {AnimalPreload,releaseActorRig} from './animal-preload.js';
 import {updateSkinEnvelopeSphere} from './skin-envelope.js';
 import {installSkinPicking} from './skin-pick-bounds.js';
@@ -151,7 +152,7 @@ export class WorldScene {
     // Depth for soft particles needs the ground surface. Prepare and render a
     // terrain-only scene; keep the full pass as a reversible diagnostic option.
     if(new URLSearchParams(this.requestedVisualSearch).get('depthGround')!=='0')this.groundDepth=installGroundDepthProxy(this,{prepareWorldDepth:true});
-    this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
+    this.provisionalCrops=new ProvisionalCrops();this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
     this.spellPreview=new SpellPreview(this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.strokePreview=new WallStrokePreview(canvas);
     this.wallDrawing=new WallDrawing(canvas,{screenSpace:true,point:e=>this.pick(e,{terrainOnly:true}).point,stroke:points=>this.onWallStroke?.(points),tap:e=>onPick(this.pick(e)),preview:points=>this.showWallStroke(points),gesture:(old,next)=>this.wallCameraGesture(old,next),activity:phase=>this.onWallGesture?.(phase)});
@@ -816,8 +817,8 @@ export class WorldScene {
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
-    const visiblePlants=activeCrops(s.plants).filter(p=>Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
-    this.microeventVisiblePlants=visiblePlants;
+    const actualPlants=activeCrops(s.plants).filter(p=>Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
+    this.microeventVisiblePlants=actualPlants;const visiblePlants=this.provisionalCrops.visible(actualPlants);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field,this.blessingVfx));
     else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field,this.blessingVfx);

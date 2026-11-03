@@ -782,5 +782,14 @@ wired into the actual Worker-enabled input path. A headless browser test uses a
 peaceful fixture and direct crop input handler to check confirmation and an
 overlapping rejected cast; it is not a visual comparison or latency measurement.
 It does not cover
-buildings, crops, awakenings, or speculative attack physics. The ordinary game
+buildings, awakenings, or speculative attack physics. The ordinary game
 still uses the non-Worker path.
+
+The Worker input path now draws a provisional crop at the selected point without
+adding it to the simulation, picking, or collision data. A confirmed CropPlaced
+event identifies the command and the renderer interpolates to the authoritative
+position over 200 ms; a rejected command removes the preview. Unit tests cover
+interpolation and rejection. A headless browser test uses the peaceful fixture
+and submits on an occupied crop, confirming that the Worker selects an adjusted
+position and only one authoritative crop appears. This is not a visual quality
+or performance comparison, and building/awakening/attack feedback remains open.

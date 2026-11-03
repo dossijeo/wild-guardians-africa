@@ -618,7 +618,7 @@ export function plant(s,id,species,x,z,nav) {
     s.plants.push(p);enqueue(s,center.id,'initial',p.id);
     const removedProps=check.suppress??[];s.suppressed.push(...removedProps);
     if(nav.syncCropPlacement)nav.syncCropPlacement(s,removedProps);else nav.setState(s);
-    emit(s,'CropPlaced',{targetId:p.id});
+    emit(s,'CropPlaced',{commandId:id,targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
 }
