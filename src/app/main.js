@@ -339,6 +339,10 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
 function hideHudPanel({silent=false}={}){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close({silent});}}
 function buildWallStroke(points){
   if(state.pauses.includes('hiring')||tool?.kind!=='wall'||tool.gate)return;
+  if(world.workerRuntime){
+    const owner=world,ownerState=state,ownerTool=tool;if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+    return owner.workerRuntime.submit({kind:'buildWallChain',id:commandId(),material:ownerTool.material,points,capacityLimit:true}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection){if(result.rejection===RESERVE_MESSAGE)uiAudio.error({force:true});throw Error(result.rejection);}if(result.value===false){uiAudio.error({force:true});return;}if(tool===ownerTool)toolSession.used(performance.now()/1000);owner.clearWallPreview();owner.syncResidentProps();await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);});
+  }
   const maxPieces=Game.wallCapacity(state,tool.material);if(!maxPieces){uiAudio.error({force:true});error(RESERVE_MESSAGE,{silent:true});return;}
   if(Game.buildWallChain(state,commandId(),tool.material,points,nav,{maxPieces})===false){uiAudio.error({force:true});return;}
   toolSession.used(performance.now()/1000);world.clearWallPreview();world.syncResidentProps();save();

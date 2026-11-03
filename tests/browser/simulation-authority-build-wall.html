@@ -1,8 +1,10 @@
 <!doctype html><meta charset="utf-8"><script type="module">
 import {createSimulation} from './mobility-worker-simulation-core.js';
-import {serialize} from '../../src/persistence/snapshots.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
-import {previewWallChain,buildWallChain,advanceReal,observeGameEvents} from '../../src/simulation/game.js';
+import {previewWallChain,buildWallChain,wallCapacity,advanceReal,observeGameEvents} from '../../src/simulation/game.js';
+import {rational} from '../../src/simulation/money.js';
+import {RESERVE_MESSAGE} from '../../src/simulation/budget.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
@@ -20,7 +22,11 @@ window.audit=async()=>{
   if(!built.value||!built.events.some(e=>e.type==='WallChainBuilt')||duplicate.value!==false||!invalid.rejection||!badMaterial.rejection||client.status().state!=='ready')throw Error('Incomplete wall build coverage');
   const empty=createSimulationAuthorityClient({snapshot:source,chunkKeys:[],session:'build-wall-empty'});let loaded;
   try{await empty.ready;const request=empty.submit(input),result=await request.result;if(!result.value||!result.commandLoadedChunks?.length||result.snapshot!==built.snapshot||JSON.stringify(result.events)!==JSON.stringify(built.events))throw Error('Wall build with missing chunks diverged');loaded=result.commandLoadedChunks;}finally{empty.dispose();}
-  return {sequence,points,wallEvent:built.events.find(e=>e.type==='WallChainBuilt'),duplicate:duplicate.value,invalid:invalid.rejection,loaded,subsequentAdvances:20,scope:'Programmatic wall chain in a modified peaceful island-mangrove capture, compared against direct Game functions and a Worker initially without resident regions. No user gesture, changing raid barriers, save/restore or production integration.'};
+  const capacity=wallCapacity(deserialize(source),'zarzas'),limited=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'wall-capacity'}),explicit=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'wall-explicit'});
+  try{await Promise.all([limited.ready,explicit.ready]);const shared={kind:'buildWallChain',id:'capacity-wall',material:'zarzas',points},[a,b]=await Promise.all([limited.submit({...shared,capacityLimit:true}).result,explicit.submit({...shared,options:{maxPieces:capacity}}).result]);if(a.snapshot!==b.snapshot||a.value!==b.value||JSON.stringify(a.events)!==JSON.stringify(b.events))throw Error('Authoritative capacity differs from direct limit');}finally{limited.dispose();explicit.dispose();}
+  const poor=deserialize(source);poor.ledger.balance=rational(30);const poorClient=createSimulationAuthorityClient({snapshot:serialize(poor),chunkKeys:chunks,session:'wall-no-capacity'});
+  try{await poorClient.ready;const result=await poorClient.submit({kind:'buildWallChain',id:'poor-wall',material:'zarzas',points,capacityLimit:true}).result;if(result.value!==false||result.rejection!==RESERVE_MESSAGE||result.events.length)throw Error('Reserve limit was not preserved');}finally{poorClient.dispose();}
+  return {sequence,points,wallEvent:built.events.find(e=>e.type==='WallChainBuilt'),duplicate:duplicate.value,invalid:invalid.rejection,loaded,capacity,subsequentAdvances:20,scope:'Programmatic wall chain in a modified peaceful island-mangrove capture, including Worker-owned capacity and reserve. No user gesture, changing raid barriers, save/restore or production integration.'};
  }finally{stop();client.dispose();fixture.dispose();}
 };window.ready=true;
 </script>
