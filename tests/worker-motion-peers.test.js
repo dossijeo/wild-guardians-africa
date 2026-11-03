@@ -13,3 +13,8 @@ test('marks a changed roster and releases its observers',()=>{
  const capture=captureMotionPeers(game,target);game.raid.animals.pop();game.workers.push({id:'c',x:3,z:0,status:'idle'});game.elapsed=2;const result=capture.finish();assert.equal(result.rosterChanged,true);assert.equal(result.peers[0].continuous,false);
  const again=captureMotionPeers({elapsed:2,raid:{animals:[target,peer]},workers:[]},target);again.finish();
 });
+test('retains a roster change seen between batch steps even if restored',()=>{
+ const target={id:'a',x:0,z:0,status:'walking'},peer={id:'b',x:1,z:0,status:'idle'},game={elapsed:1,raid:{animals:[target,peer]},workers:[]};
+ const capture=captureMotionPeers(game,target);game.workers.push({id:'c',x:2,z:0,status:'idle'});capture.checkpoint();game.workers.pop();game.elapsed=2;
+ const result=capture.finish();assert.equal(result.rosterChanged,true);assert.equal(result.peers[0].continuous,true);
+});
