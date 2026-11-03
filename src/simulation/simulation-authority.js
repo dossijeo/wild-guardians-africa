@@ -85,7 +85,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    execute(command){
     if(closed)throw Error('Simulation authority is closed');if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
-    let value=null,rejection=null,stepsExecuted=null,motionTrace=null;const commandLoadedChunks=[],previousTrackedActor=trackedActor;
+    let value=null,rejection=null,stepsExecuted=null,motionTrace=null;const commandLoadedChunks=[],previousTrackedActor=trackedActor,wasSuspended=game.pauses.length>0||!!game.result;
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean'||command.steps!==undefined&&(!Number.isSafeInteger(command.steps)||command.steps<1||command.steps>256))throw TypeError('Invalid real-time interval');
      const start=trackedActor?{at:game.elapsed,x:trackedActor.x,z:trackedActor.z}:null;if(start)motionSegments=[];
@@ -200,8 +200,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      else if(!duplicate&&!game.structures.some(s=>s.id===command.targetId&&s.kind==='wall'))rejection='No existe esa defensa';
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
-    const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true);
-    const motionInvalidation=invalidated?{actorId:previousTrackedActor.id,at:game.elapsed,x:previousTrackedActor.x,z:previousTrackedActor.z,reason:command.kind}:null;
+    const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
+    const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
+    // Until event-level dependencies and continuous contacts are certified,
+    // stop at the beginning of an affected batch rather than extrapolating
+    // through an event, an untimed segment or an unobserved displacement.
+    const batchInvalidation=motionTrace&&(events.length>0||!motionTrace.continuous||!motionTrace.timed);
+    const motionInvalidation=batchInvalidation?{actorId:motionTrace.actorId,...motionTrace.start,reason:events.length?'simulation-event':!motionTrace.continuous?'unobserved-motion':'untimed-motion'}:invalidated?{actorId:previousTrackedActor.id,at:game.elapsed,x:previousTrackedActor.x,z:previousTrackedActor.z,reason:command.kind}:null;
     sequence=command.sequence;const emitted=events;events=[];
     const resident=residency();
     if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};

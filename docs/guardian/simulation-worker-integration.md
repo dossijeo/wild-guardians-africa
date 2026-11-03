@@ -1204,3 +1204,22 @@ An additional day-31 savanna game run received a `castAttack` invalidation for
 the tracked animal and confirmed the hit; Edge reported a GTX 1660. This used
 direct QA input and does not establish collision-safe playback or frame-time
 independence.
+
+The trace now carries a conservative batch boundary when an advance emits a
+game event or contains untimed or unobserved movement: it points to the start
+of the affected batch, and the scene retains the invalidation instead of
+adopting that trace as its latest candidate. Trace endpoints are checked
+against the confirmed state and simulation clock. This does not certify dynamic
+body separation, and invalidating for every event is deliberately broader than
+a spatial dependency index; it must not drive production replanning.
+
+In a 30-advance mangrove comparison, two batches carried event boundaries and
+the observed and unobserved Workers retained matching state and events. A
+single day-31 savanna run recorded 24 invalidations before filtering, including
+18 tutorial commands; two later runs recorded six and five, including none for
+tutorial commands whose suspended/running state did not change. Those runs
+still contained four and three broad simulation-event boundaries. They differ in timing,
+the diagnostic history retains at most 64 entries, and neither is a performance
+or full-game frequency benchmark. They justify avoiding unconditional tutorial
+invalidations, not declaring an absence of invalidation storms. Twenty-four
+focused tests passed; GPU playback and a safe dynamic-body horizon remain open.

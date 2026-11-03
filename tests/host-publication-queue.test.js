@@ -15,6 +15,11 @@ test('a motion invalidation stays ordered between observed path publications',()
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),p={at:1,x:0,z:0},trace={actorId:'a',start:p,end:p,segments:[],continuous:true,timed:true},invalidation={actorId:'a',at:1,x:0,z:0,reason:'pause'};
  q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace},true);q.publication({...packet(3),motionInvalidation:invalidation},false);q.publication({...packet(4),motionTrace:trace},true);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.deepEqual(sent[2].publication.motionInvalidation,invalidation);q.ack(3);assert.equal(sent[3].publication.sequence,4);
 });
+test('an eventful batch retains its boundary when earlier path samples are folded',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),point=(at,x)=>({at,x,z:0}),trace=(a,b)=>({actorId:'a',start:point(a,a),end:point(b,b),segments:[{at:b,x0:a,z0:0,x1:b,z1:0,t0:a,t1:b}],continuous:true,timed:true});
+ const barrier={actorId:'a',...point(1,1),reason:'simulation-event'};q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace(0,1)},true);q.publication({...packet(3,[{id:'event-1'}]),motionTrace:trace(1,2),motionInvalidation:barrier},true);q.ack(1);
+ assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.motionTrace.segments.length,2);assert.deepEqual(sent[1].publication.motionInvalidation,barrier);assert.equal(sent[1].publication.events[0].id,'event-1');
+});
 test('coalesces only adjacent quiet ticks while preserving events, poses and command barriers',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});
  q.publication(packet(1),true);q.publication(packet(2),true);q.publication(packet(3),true);q.publication(packet(4,[{id:'e'}]),true);q.publication(packet(5),true);q.message({kind:'commandResult',id:4,sequence:5});q.publication(packet(6),true);q.publication(packet(7,[],{active:true}),true);
