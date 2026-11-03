@@ -31,3 +31,13 @@ test('view folding rejects mismatched confirmed state',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
  q.publication(full(1),true);q.publication(full(2),true);assert.equal(q.publication({sequence:3,unchanged:true,slotId:'slot',stateSequence:8,elapsed:1,pauses:[],events:[],saveAvailable:true},false),false);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);
 });
+test('unobserved views merge only with adjacent equal states or a later tick',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),view=sequence=>({sequence,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true});
+ q.publication(packet(1),true);q.publication(view(2),false,{backgroundView:true});q.publication(view(3),false,{backgroundView:true});
+ assert.equal(q.status().queued,1);q.publication(packet(4,[{id:'e'}]),true);assert.equal(q.status().queued,1);q.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,4);assert.deepEqual(sent[1].publication.events,[{id:'e'}]);
+ q.publication(view(5),false,{backgroundView:true});q.publication(view(6),false,{backgroundView:true});q.message({kind:'commandResult',sequence:6});q.publication(view(7),false,{backgroundView:true});q.ack(4);assert.equal(sent[2].firstSequence,5);assert.equal(sent[2].publication.sequence,6);q.ack(6);assert.equal(sent[3].kind,'commandResult');assert.equal(sent[4].publication.sequence,7);
+});
+test('observed camera receipts and mismatched states remain separate barriers',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),view=(sequence,stateSequence)=>({sequence,unchanged:true,slotId:'slot',stateSequence,elapsed:1,pauses:[],events:[],saveAvailable:true});
+ q.publication(packet(1),true);q.publication(view(2,7),false,{backgroundView:true});q.publication(view(3,8),false,{backgroundView:true});q.publication(view(4,8),false);assert.equal(q.status().queued,3);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);q.ack(3);assert.equal(sent[3].publication.sequence,4);
+});

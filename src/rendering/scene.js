@@ -503,7 +503,7 @@ export class WorldScene {
     this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(includeRaidBounds(logicalBounds,raidPins));this.nav.setRaidView?.(this.camera.position,this.controls.target);
     if(this.workerRuntime){
       const owner=this.workerRuntime,view={bounds:[...this.nav.activeBounds],eye:{...this.nav.raidView.eye},target:{...this.nav.raidView.target}},key=JSON.stringify(view);
-      if(this.workerNavigationViewKey!==key){this.workerNavigationViewKey=key;owner.submit({kind:'setNavigationView',view}).catch(error=>{if(this.workerRuntime===owner){if(this.workerNavigationViewKey===key)this.workerNavigationViewKey=null;this.onError?.(error);}});}
+      if(this.workerNavigationViewKey!==key){this.workerNavigationViewKey=key;if(owner.backgroundViews){try{owner.setNavigationView(view);}catch(error){this.workerNavigationViewKey=null;this.onError?.(error);}}else owner.submit({kind:'setNavigationView',view}).catch(error=>{if(this.workerRuntime===owner){if(this.workerNavigationViewKey===key)this.workerNavigationViewKey=null;this.onError?.(error);}});}
     }
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     // Retain the adopted hole while preparing the destination in parallel.

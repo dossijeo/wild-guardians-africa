@@ -5,7 +5,7 @@ import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime
 function setup(runtimeOptions={}){
  const messages=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}},seen=[];let sequence=0,elapsed=0;
  const world={createConfirmedReceiver(){return {accept(packet){seen.push(packet.sequence);sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},acceptUnchanged(packet){sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},status(){return {sequence,lastElapsed:elapsed};}};}};
- const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{snapshot:'x',chunkKeys:[]},runtimeOptions,workerFactory:()=>worker});return {runtime,worker,messages,seen};
+ const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{snapshot:'x',chunkKeys:[],compactViewAcks:runtimeOptions.backgroundViews===true},runtimeOptions,workerFactory:()=>worker});return {runtime,worker,messages,seen};
 }
 test('hosted runtime publishes before resolving commands and rejects work on disposal',async()=>{
  const {runtime,worker,messages,seen}=setup(),start=runtime.start();assert.equal(messages[0].kind,'initialize');
@@ -40,4 +40,9 @@ test('diagnostic acknowledgements follow successful publication and are disabled
 test('folded camera confirmation returns the original unchanged receipt',async()=>{
  const {runtime,worker,messages}=setup({coalescePublications:true,foldViews:true}),start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
  const result=runtime.submit({kind:'setNavigationView',view:{}}),id=messages.at(-1).id,receipt={session:'s',sequence:3,unchanged:true,events:[],stateSequence:1};worker.onmessage({data:{kind:'publication',session:'s',tick:true,firstSequence:2,publication:{sequence:3,elapsed:.1}}});worker.onmessage({data:{kind:'commandResult',session:'s',id,sequence:3,receipt}});assert.equal(await result,receipt);runtime.dispose();
+});
+test('background camera updates do not wait for a command result and accept ordered unchanged ranges',async()=>{
+ const {runtime,worker,messages}=setup({coalescePublications:true,backgroundViews:true}),start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ const view={bounds:[0,1,2,3],eye:{x:1,z:2},target:{x:3,z:4}};assert.equal(runtime.setNavigationView(view),undefined);assert.deepEqual(messages.at(-1),{kind:'view',session:'s',command:{kind:'setNavigationView',view}});
+ worker.onmessage({data:{kind:'publication',session:'s',backgroundView:true,firstSequence:2,publication:{sequence:3,elapsed:0,unchanged:true}}});assert.equal(runtime.status().confirmedSequence,3);assert.equal(messages.at(-1).kind,'publicationAck');runtime.dispose();
 });

@@ -839,3 +839,17 @@ were 333 ms and 1,200 ms respectively. The compact run observed 17 queued items
 at its attack sample and a 93-sequence peak backlog; eventful and command
 barriers remain unbounded. Do not treat these numbers as a controlled benchmark
 or the queue problem as solved.
+
+An additional `qa-worker-background-views` experiment sends camera metadata
+without allocating a presentation-side command promise or returning individual
+view receipts. The visual camera continues to update locally; view commands
+still execute in simulation order before any subsequent tick or action. Only
+adjacent unchanged view publications are merged, or absorbed into a following
+tick; command responses and event-bearing states remain barriers. Two Workers
+executed 300 ticks and 300 ordered views with physics on two species: all event
+observations and final poses matched, with 17 published states and 585 merges.
+The test has no rendered frames and no simultaneous ragdolls. A separate
+headless savanna raid accepted an attack with the experiment enabled, with seven
+queued items at one sample and a 1,300 ms maximum in eight measured frames;
+this is not an A/B performance result. Camera gestures, eventful saturation and
+hardware rendering still require validation; the experiment remains opt-in.
