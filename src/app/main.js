@@ -499,12 +499,22 @@ function villageConfirmPanel() {
   const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatWholeCoins(p.cost,moneyLocale())} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
   bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
+function repairStructure(targetId,{persist=false}={}){
+  const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){const value=Game.requestRepair(state,commandId(),targetId);if(persist)save();return value;}
+  if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+  return runtime.submit({kind:'requestRepair',id:commandId(),targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value&&persist)await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);return result.value;});
+}
+function removeSelectedWall(targetId){
+  const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){Game.removeWall(state,commandId(),targetId,nav);selection=null;save();return;}
+  if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+  return runtime.submit({kind:'removeWall',id:commandId(),targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){if(selection===targetId)selection=null;await owner.workerSave();}if(owner===world&&ownerState===state)updateUI(true);});
+}
 function contextPanel() {
   const el=document.querySelector('#context');if(!state.structures.some(s=>s.id===selection)){selection=null;el.replaceChildren();if(surfaces.active==='context'){surfaces.active=null;uiAudio.close({silent:true});}return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
   const key=JSON.stringify(p?[p.id,Math.floor(p.growth/cropSpec(p.species).growth_seconds*100),p.water.map(w=>w.status),p.harvestRequested,p.centerId,permission(state,'harvest')]:structure?[structure.id,structure.hp,structure.status,permission(state,'wall')]:null);if(el.dataset.key===key&&el.children.length)return;el.dataset.key=key;
   if(p) {selection=null;el.replaceChildren();return;  } else if(structure) {
-    el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${structure.kind==='wall'?button('remove-wall',structure.status==='ruined'?'Retirar escombros':'Eliminar muralla · +'+localMoney(Game.wallRefund(structure))+' monedas'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>Game.requestRepair(state,commandId(),structure.id));
-    bind('remove-wall',()=>{Game.removeWall(state,commandId(),structure.id,nav);selection=null;save();});if(document.querySelector('#remove-wall'))document.querySelector('#remove-wall').disabled=!permission(state,'wall');
+    el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${structure.kind==='wall'?button('remove-wall',structure.status==='ruined'?'Retirar escombros':'Eliminar muralla · +'+localMoney(Game.wallRefund(structure))+' monedas'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>repairStructure(structure.id));
+    bind('remove-wall',()=>removeSelectedWall(structure.id));if(document.querySelector('#remove-wall'))document.querySelector('#remove-wall').disabled=!permission(state,'wall');
   } else el.innerHTML='';if(el.querySelector('.context'))el.querySelector('.context').scrollTop=scroll;bind('close-context',closeSurface);
 }
 function setTutorialInteraction(blocking){
@@ -556,7 +566,7 @@ function hiringDialog(centerId=null) {
     document.querySelector('.panel-subtitle').textContent='Jornada en curso';
     document.querySelector('#hiringIntro').textContent='Contrata más personas para este centro. Pagas solo la parte de su jornada que queda, redondeada hacia arriba.';
     const close=document.createElement('button');close.id='close-additional-hiring';close.textContent='Cerrar';document.querySelector('.hiring-footer').append(close);close.onclick=closeSurface;
-    const center=state.structures.find(s=>s.id===centerId);if(center.hp<center.maxHp){const repair=document.createElement('button');repair.textContent='Solicitar reparación';document.querySelector('.hiring-footer').append(repair);repair.onclick=()=>safe(()=>{closeSurface();Game.requestRepair(state,commandId(),centerId);save();});}
+    const center=state.structures.find(s=>s.id===centerId);if(center.hp<center.maxHp){const repair=document.createElement('button');repair.textContent='Solicitar reparación';document.querySelector('.hiring-footer').append(repair);repair.onclick=()=>safe(()=>{closeSurface();return repairStructure(centerId,{persist:true});});}
     for(const [i,p] of NPC_TYPES.entries()){
       const card=document.querySelector(`[data-crew-card="${i}"]`),shift=card.querySelector('.hire-shift span');shift.textContent=Game.clockLabel(state)+'–'+shift.textContent.split('–')[1];
       if(state.time>=PROFILES.find(profile=>profile.id===p.id).end){const input=document.querySelector(`#crewCount${i}`);input.disabled=true;document.querySelectorAll(`[data-crew-step="${i}"]`).forEach(button=>button.disabled=true);}

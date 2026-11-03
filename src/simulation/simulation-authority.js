@@ -127,7 +127,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      value=addResidentChunk(command.key);
     }else if(command.kind==='removeWall'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');
-     value=removeWall(game,command.id,command.targetId,nav);
+     const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
+     if(!duplicate&&!permission(game,'wall'))rejection='Esta acción no está disponible ahora';
+     else if(!duplicate&&!game.structures.some(s=>s.id===command.targetId&&s.kind==='wall'))rejection='No existe esa defensa';
+     value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
     sequence=command.sequence;const emitted=events;events=[];
     const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();

@@ -266,3 +266,10 @@ trusting the potentially stale presentation state. Programmatic Worker tests
 cover matching construction and events, missing resident chunks, duplicates,
 invalid input and the hiring reserve. A real pointer gesture and an active
 raid with changing barriers remain to be tested in the integrated game.
+
+Context-menu wall removal and repair, and repair from the hiring dialog, now
+have a conditional Worker dispatch. Missing or paused wall-removal commands
+return normal rejections instead of terminating the authority. Browser tests
+compare repair and removal with direct game commands in a peaceful mangrove
+fixture, including 50 intervals after removal. These tests do not cover the
+actual menus or prove that menu pauses have been migrated to the Worker.
