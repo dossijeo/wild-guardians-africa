@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame,observeGameEvents} from '../../src/simulation/game.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {TutorialController} from '../../src/tutorial/controller.js';
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const fixture=await createSimulation({mangrove:true}),villages=structuredClone(fixture.diagnosticWorld().game.villages);fixture.dispose();
+ const initial=newGame({seed:712,biome:'manglares',slotId:'worker-tutorial'});initial.villages=villages;const source=serialize(initial),local=deserialize(source),records=[],events=[],seen=new Set(),profile={read:()=>new Set(seen),record(id){seen.add(id);records.push(id);},get basicCompleted(){return seen.has('basic.complete');}};
+ const stop=observeGameEvents(local,e=>events.push(structuredClone(e)));let controller,narrated=null;const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'tutorial-controller'});
+ try{
+  await client.ready;
+  const compare=async(command,action)=>{const expected=action(),presentation=controller.presentation({record:false}),expectedEvents=events.splice(0),expectedRecords=records.splice(0),request=client.submit(command);if(!request.accepted)throw Error('Command rejected');const remote=await request.result;if(JSON.stringify(remote.value.value)!==JSON.stringify(expected)||JSON.stringify(remote.value.presentation)!==JSON.stringify(presentation)||JSON.stringify(remote.value.profileRecords)!==JSON.stringify(expectedRecords)||remote.snapshot!==serialize(local)||JSON.stringify(remote.events)!==JSON.stringify(expectedEvents))throw Error('Tutorial differs for '+JSON.stringify(command));return remote.value;};
+  const start=await compare({kind:'tutorialStart',seen:[]},()=>{controller=new TutorialController(local,profile,{isNarrating:id=>id===narrated});controller.update();return null;});
+  if(start.presentation?.id!=='basic.introduction')throw Error('Missing introduction');
+  await compare({kind:'tutorialCommand',action:'present'},()=>controller.presentation());
+  const stale=await compare({kind:'tutorialCommand',action:'dismiss',automatic:false,messageId:'basic.plant'},()=>false);if(stale.value!==false)throw Error('Stale message dismissed');
+  const dismissed=await compare({kind:'tutorialCommand',action:'dismiss',automatic:true,messageId:'basic.introduction'},()=>controller.dismiss({automatic:true,message:controller.presentation({record:false})}));
+  if(!dismissed.value||!dismissed.profileRecords.includes('basic.introduction')||dismissed.presentation?.id!=='basic.center')throw Error('Introduction did not advance');
+  await compare({kind:'tutorialCommand',action:'update'},()=>{controller.update();return null;});
+  await compare({kind:'tutorialCommand',action:'advance',seconds:1,visible:false},()=>controller.advance(1,{visible:false}));
+  await compare({kind:'tutorialCommand',action:'advance',seconds:30,visible:true},()=>controller.advance(30,{visible:true}));
+  return {introduction:start.presentation.id,next:dismissed.presentation.id,profileRecords:dismissed.profileRecords,scope:'Programmatic tutorial controller commands compared with the original controller on a new game; no rendered tutorial, voice or profile persistence.'};
+ }finally{stop();client.dispose();}
+};window.ready=true;
+</script>

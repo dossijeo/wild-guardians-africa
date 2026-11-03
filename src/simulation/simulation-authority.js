@@ -11,6 +11,7 @@ import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.
 import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
 import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
+import {createWorkerTutorial} from './worker-tutorial.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -22,7 +23,7 @@ export function parseSimulationChunkKey(key){
 export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null}={}){
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length)throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
- const game=deserialize(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null;delete game.workerRaidWaitBindings;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,closed=false,sequence=0,events=[];
+ const game=deserialize(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null;delete game.workerRaidWaitBindings;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[];
  try{
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
@@ -78,6 +79,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='pause'||command.kind==='resume'){
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
+    }else if(command.kind==='tutorialStart'){
+     if(tutorial)throw Error('Tutorial already started');tutorial=createWorkerTutorial(game,command.seen);value=tutorial.execute({action:'update',narrating:null});
+    }else if(command.kind==='tutorialCommand'){
+     if(!tutorial)throw Error('Tutorial not started');value=tutorial.execute(command);
     }else if(command.kind==='tutorialActionPause'){
      if(typeof command.hudTarget!=='boolean'||typeof command.worldTarget!=='boolean'||typeof command.selectionOpen!=='boolean')throw TypeError('Invalid tutorial guidance');
      value=syncTutorialActionPause(game,command);

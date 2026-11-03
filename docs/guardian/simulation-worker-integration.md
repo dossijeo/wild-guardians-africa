@@ -296,6 +296,14 @@ open selection, an intervening menu pause and resumption. Tutorial message
 selection, profile recording, reading and dismissal still execute locally;
 the full tutorial remains an integration blocker.
 
+An optional authoritative tutorial controller now accepts profile history,
+updates, presentation, dismissal, skipping and presentation-time commands. It
+returns profile records separately for persistence and rejects dismissals for
+an obsolete message. A real Worker test compares the initial introduction,
+its dismissal and timed guidance with the existing controller. The game UI
+does not yet connect this controller to voice, persistent profile storage or
+its per-frame tutorial flow; longer lessons and interruptions need validation.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the
