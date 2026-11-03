@@ -1668,18 +1668,28 @@ export function previewVillage(s,culture,x,z,payload,nav) {
   const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
   return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
-export function foundVillage(s,id,culture,x,z,payload,nav) {
+export function foundVillage(s,id,culture,x,z,payload,nav,{prepareRoutes=false}={}) {
   return commit(s,id,'village',()=>{
     // Replayed commands must stop before validating their already occupied site.
     // New confirmations still revalidate the complete layout before charging.
     const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);x=preview.x;z=preview.z;
-    ensurePurchaseBudget(s,preview.cost);transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
-    nav.setState(s);
-    for(const center of s.structures.filter(operational)) {
-      const departure=centerServicePoint(center,s);
-      const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
-      if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
+    ensurePurchaseBudget(s,preview.cost);
+    if(!prepareRoutes){
+      transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);nav.setState(s);
+      for(const center of s.structures.filter(operational)){const route=nearestVillageRoute(nav,centerServicePoint(center,s),s.villages);if(route){center.culture??=centerCulture(center,s);center.villageId=route.v.id;}}
+      emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});return;
     }
+    // Route queries can require nonresident regions. Install the proposed
+    // geometry provisionally, and make all such queries before charging or
+    // changing center ownership. Restore both state and navigation on failure.
+    const village={id:`village-${s.nextId}`,culture,x,z,buildings:preview.buildings,entry:preview.entry},suppressedLength=s.suppressed.length;
+    s.villages.push(village);s.suppressed.push(...preview.suppress);let assignments;
+    try{
+      nav.setState(s);
+      assignments=s.structures.filter(operational).map(center=>({center,route:nearestVillageRoute(nav,centerServicePoint(center,s),s.villages)}));
+    }catch(error){s.villages.pop();s.suppressed.length=suppressedLength;nav.setState(s);throw error;}
+    transact(s.ledger,id,rational(-preview.cost));s.nextId++;
+    for(const {center,route} of assignments)if(route){center.culture??=centerCulture(center,s);center.villageId=route.v.id;}
     emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }

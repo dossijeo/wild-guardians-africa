@@ -531,6 +531,18 @@ would risk partial effects. The eventual Worker implementation must establish
 all required residency or make the whole command transactional before applying
 those mutations. This experiment does not yet provide that guarantee.
 
+An isolated `prepareRoutes` option on `foundVillage` now installs the proposed
+geometry provisionally and computes center routes before charging. If a route
+query throws, it restores villages, suppressions and navigation before the
+error escapes; the original game path remains the default. A controlled
+suajili test matches the successful original snapshot and events, and an
+injected route failure leaves money, geometry and other saved game fields
+unchanged and allows a retry. The legacy navigation version advances during
+rollback, so the failed attempt is not byte-identical. Native Wild Engine
+rollback, actual missing-chunk retries, observers, multiple centers and
+Worker/UI integration still require validation. The option is not used by the
+game or Worker and is not yet a complete transaction guarantee.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

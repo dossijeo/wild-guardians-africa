@@ -30,6 +30,20 @@ function fixture(culture='mapungubwe',balance=200000000){
  s.ledger.balance=rational(balance);return {s,nav};
 }
 function saved(s){const values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)};const repo=new SaveRepository(storage);repo.save(s);return repo.load(s.slotId);}
+test('village route failure rolls back provisional geometry before charging and can be retried',()=>{
+ const {s,nav}=fixture('suajili'),native=payload('suajili'),before=serialize(s),obstacles=JSON.stringify(nav.obstacles),path=nav.path.bind(nav);let calls=0;
+ nav.path=(...args)=>{calls++;throw Error('missing region');};
+ assert.throws(()=>Game.foundVillage(s,'retry-village','suajili',150,0,native,nav,{prepareRoutes:true}),/missing region/);
+ assert.ok(calls>0);const after=JSON.parse(serialize(s)),original=JSON.parse(before);assert.ok(after.navigationVersion>original.navigationVersion);delete after.navigationVersion;delete original.navigationVersion;assert.deepEqual(after,original);assert.equal(JSON.stringify(nav.obstacles),obstacles);
+ nav.path=path;assert.equal(Game.foundVillage(s,'retry-village','suajili',150,0,native,nav,{prepareRoutes:true}),true);
+ assert.equal(s.villages.length,2);assert.equal(s.events.filter(e=>e.type==='VillageFounded').length,1);
+});
+test('prepared village routes preserve a successful original founding',()=>{
+ const a=fixture('suajili'),b=fixture('suajili'),native=payload('suajili');
+ assert.equal(Game.foundVillage(a.s,'village-compare','suajili',150,0,native,a.nav),true);
+ assert.equal(Game.foundVillage(b.s,'village-compare','suajili',150,0,native,b.nav,{prepareRoutes:true}),true);
+ assert.equal(serialize(a.s),serialize(b.s));assert.deepEqual(a.s.events,b.s.events);
+});
 const expectedVillageCost=ordinal=>{
  const power=BigInt(ordinal-2),numerator=50n*8n**power,denominator=5n**power;
  return ((2n*numerator+denominator)/(2n*denominator))*1000n;
