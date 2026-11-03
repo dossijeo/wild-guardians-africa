@@ -50,7 +50,7 @@ import {CameraWallRegistry} from './camera-wall-registry.js';
 import {CameraExclusionMotion} from './camera-exclusion-motion.js';
 import {constrainCameraToTerrain} from './camera-terrain-exclusion.js';
 import {installCameraPoseResolver} from './terrain-camera.js';
-import {initializeProgramBindings,initializeProgramBindingsAsync} from './program-bindings.js';
+import {initializeProgramBindings,initializeProgramBindingsAsync,initializeValidatedProgramBindings} from './program-bindings.js';
 import {VfxGpuPreload} from './vfx-preload.js';
 import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
 import {WallStrokePreview} from './wall-stroke-preview.js';
@@ -710,6 +710,14 @@ export class WorldScene {
   }
   raidReady(){return (this.state?.raid?.animals??[]).every(a=>a.status==='gone'||this.mixers.has(a.id));}
   actorsReady(){return this.raidReady()&&(this.state?.workers??[]).every(w=>w.status==='home'||this.mixers.has(w.id));}
+  prepareCharacterLodCandidate(lod){
+    const task=(this.lodCandidateTail??Promise.resolve()).catch(()=>{}).then(async()=>{
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+      if(this.disposed||lod.disposed)return;
+      if(!this.renderer.getContext().getExtension('KHR_parallel_shader_compile'))return false;
+      await compileLoadingPrograms(this.renderer,lod.root,this.camera,this.scene,{screen:true,signal:this.loading.signal,cancelled:()=>this.disposed||lod.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onSubmit:this.onLoadingSpan,onProgramReady:program=>loadingSyncWitness(this.onLoadingSpan,'lod-program-bindings',()=>initializeValidatedProgramBindings(this.renderer,program))});
+    });this.lodCandidateTail=task.catch(()=>{});return task;
+  }
   requestActor(entity,type,root){
     if(root.userData.actorLoading||performance.now()<(root.userData.actorRetryAt??0))return;
     root.userData.actorLoading=true;
@@ -745,7 +753,8 @@ export class WorldScene {
           installSkinPicking(model);root.add(model);this.mixers.set(entity.id,rig);adopted=true;
           this.updateActor(entity,0,type);root.updateMatrixWorld(true);
           model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
-          attachCharacterLod(this,rig,entity.profile??entity.species).catch(error=>this.onError?.(error));
+          const prepareLod=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-character-lod-warm')?lod=>this.prepareCharacterLodCandidate(lod):null;
+          attachCharacterLod(this,rig,entity.profile??entity.species,{prepare:prepareLod}).catch(error=>this.onError?.(error));
         }catch(error){cleanup();throw error;}
       });
     };

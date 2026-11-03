@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import sharp from 'sharp';
-import {Group,OrthographicCamera,PerspectiveCamera,Vector3,AnimationMixer} from 'three';
+import {Group,Mesh,BoxGeometry,MeshBasicMaterial,OrthographicCamera,PerspectiveCamera,Vector3,AnimationMixer} from 'three';
 import {actorAsset} from './helpers/actor-geometry.js';
 import {CharacterLod,projectedCharacterPixels} from '../src/rendering/character-lod.js';
 const entries=JSON.parse(fs.readFileSync('tests/fixtures/character-lod-sources.json'));
@@ -15,6 +15,7 @@ for(const entry of entries)test(entry.id+' LOD budgets, skin ownership and lifec
  const bytes=fs.readFileSync('public'+entry.url),size=bytes.readUInt32LE(12),g=JSON.parse(bytes.subarray(20,20+size)),bin=bytes.subarray(28+size);for(const image of g.images??[]){const view=g.bufferViews[image.bufferView],meta=await sharp(bin.subarray(view.byteOffset,view.byteOffset+view.byteLength)).metadata();assert.ok(meta.width<=256&&meta.height<=256,`${meta.width}x${meta.height}`);}
 });
 test('screen-space selection respects zoom and perspective depth',()=>{const o=new OrthographicCamera(-10,10,10,-10);assert.equal(projectedCharacterPixels(o,2,new Vector3(),900),90);o.zoom=2;assert.equal(projectedCharacterPixels(o,2,new Vector3(),900),180);const p=new PerspectiveCamera(60,1,.1,100);p.updateMatrixWorld();assert.ok(projectedCharacterPixels(p,2,new Vector3(0,0,-10),900)>projectedCharacterPixels(p,2,new Vector3(0,0,-20),900));});
+test('pending LOD preparation keeps the original visible until ready',()=>{const geometry=new BoxGeometry(),material=new MeshBasicMaterial(),root=new Group(),original=new Group(),low=new Group(),mesh=new Mesh(geometry,material);original.add(mesh);low.add(new Mesh(geometry,material));root.add(original);const lod=new CharacterLod(original,low),camera=new OrthographicCamera(-10,10,10,-10);lod.pendingPreparation=true;lod.update(camera,900,true);assert.equal(mesh.visible,true);assert.equal(lod.root.visible,false);lod.pendingPreparation=false;lod.update(camera,900,true);assert.equal(mesh.visible,false);assert.equal(lod.root.visible,true);lod.dispose();assert.equal(mesh.visible,true);geometry.dispose();material.dispose();});
 
 test('LOD surface metadata exists before scene registry observes insertion',async()=>{
  const original=await actorAsset(entries[1].source),low=await actorAsset('public'+entries[1].url),root=new Group();root.add(original.scene);let observed=0;
