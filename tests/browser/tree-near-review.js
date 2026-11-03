@@ -6,7 +6,7 @@ const renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
 const scene=new T.Scene();scene.background=new T.Color('#a3b8c5');scene.add(new T.HemisphereLight(0xc8dcff,0x87744c,2));
 const sun=new T.DirectionalLight(0xffe4af,3);sun.position.set(-6,12,8);scene.add(sun);
 const camera=new T.PerspectiveCamera(40,innerWidth/innerHeight,.1,1000),controls=new OrbitControls(camera,renderer.domElement);
-const assets=new Assets();assets.visualSearch='?noNativeAO';
+const assets=new Assets();assets.visualSearch='?noNativeAO';const ktx=query.get('qa-ktx2-atlas');if((ktx==='etc1s'||ktx==='uastc')&&biome==='savanna'&&slot==='tree_01')assets.experimentalKtx={renderer,variant:ktx,asset:'tree01'};
 try{
  const pack=await fetch(`/content/biome-${biome}.json`).then(r=>r.json());
  // This isolated side-by-side view compares full texture endpoints at any
@@ -24,6 +24,6 @@ try{
  if(Math.cos(angle)<0)document.querySelector('#labels').innerHTML='<b>Near texture</b><b>Original</b>';
  controls.target.set(0,size.y*.48,0);camera.position.set(Math.sin(angle)*distance,size.y*.65,Math.cos(angle)*distance);controls.update();
  document.querySelector('#status').textContent=`${biome} / ${slot} — native materials, original normals; distance ${distance.toFixed(1)} m`;
- window.review={ready:true,biome,slot,size:size.toArray(),distance,renderer:renderer.info};
+ window.review={ready:true,biome,slot,size:size.toArray(),distance,texture:{compressed:!!levels[0].material.map?.isCompressedTexture,channel:levels[0].material.map?.channel,mipLevels:levels[0].material.map?.mipmaps?.length??0,configured:!!assets.experimentalKtx,keys:[...assets.cache.keys()].filter(k=>k.includes('tree_01'))},renderer:renderer.info};
 }catch(error){document.querySelector('#status').textContent=error.stack;window.review={error:String(error)};}
 renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});

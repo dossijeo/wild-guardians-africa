@@ -13,6 +13,10 @@ test('experimental compressed atlas matches absolute URLs and retains normal tex
  const url='http://localhost/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp',watched=counts([compressed,original]);
  assert.equal(await assets.texture(url,true),compressed);assert.equal(await assets.texture(url,true),compressed);assert.equal(await assets.texture('http://localhost/other.webp',true),original);assert.equal(compressedLoads,1);assert.equal(ordinaryLoads,1);assert.equal(compressed.colorSpace,THREE.SRGBColorSpace);assets.disposeModels();assets.disposeModels();assert.deepEqual([...watched.values()],[1,1]);assert.equal(loaderDisposed,1);
 });
+test('experimental near-tree texture matches relative URLs and remains cloneable for its second UV channel',async()=>{
+ const assets=new Assets(),texture=new THREE.CompressedTexture([{data:new Uint8Array(16),width:4,height:4}],4,4);assets.experimentalKtx={renderer:{},variant:'etc1s',asset:'tree01'};assets.experimentalKtxTexture=async()=>texture;
+ const loaded=await assets.texture('content/trees-near/savanna/tree_01/baseColor.webp',true),copy=loaded.clone();copy.channel=1;assert.equal(copy.isCompressedTexture,true);assert.equal(copy.source,texture.source);assert.equal(copy.channel,1);assert.equal(copy.colorSpace,THREE.SRGBColorSpace);copy.dispose();assets.disposeModels();
+});
 test('pending shared GLTF promises are not cache hits and a completed model is',async()=>{
  const owner=new LoadingTransferOwner(),assets=new Assets();let finish;assets.loader={loadAsync:()=>new Promise(resolve=>finish=resolve)};
  const first=assets.model('/same.glb'),second=assets.model('/same.glb');assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.downloads.snapshot().cacheHits,0);
